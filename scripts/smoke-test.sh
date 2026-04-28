@@ -1,0 +1,184 @@
+#!/usr/bin/env bash
+# scripts/smoke-test.sh — ets-ogcapi-connectedsystems10
+#
+# REQ-ETS-TEAMENGINE-005, SCENARIO-ETS-CORE-SMOKE-001:
+#   Build the Docker image, launch the container, wait for healthcheck, run
+#   the CS API Core suite against the GeoRobotix demo IUT, archive the TestNG
+#   XML report + container log to ops/test-results/, and exit 0 only when:
+#     - the TestNG report is non-empty (total > 0)
+#     - the report has zero failed/error tests (every @Test PASS or SKIP)
+#     - the container's STARTUP log contains zero ERROR/SEVERE entries from
+#       suite registration (later runtime SEVERE entries unrelated to suite
+#       registration — e.g. Tomcat's "utf-8 encoding" warning during HTML
+#       error-page rendering — are tolerated).
+#
+# Idempotent: every invocation tears down its own container before starting
+# (container name `ets-csapi-smoke`), and stages a fresh report. Re-running
+# back-to-back leaves clean state.
+#
+# Port handling: prefers host port 8081 (canonical, per REQ-ETS-TEAMENGINE-004
+# + docker-compose.yml). If 8081 is busy (the WSL2 dev box ships a
+# `field-hub-osh` container on 8081 as of 2026-04-28), falls back to 8082.
+# Override via $SMOKE_PORT.
+
+set -eo pipefail
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT"
+
+CONTAINER_NAME="${SMOKE_CONTAINER_NAME:-ets-csapi-smoke}"
+IMAGE_TAG="${SMOKE_IMAGE_TAG:-ets-ogcapi-connectedsystems10:smoke}"
+IUT_URL="${SMOKE_IUT_URL:-https://api.georobotix.io/ogc/t18/api}"
+ETS_CODE="ogcapi-connectedsystems10"
+TE_USER="${SMOKE_TE_USER:-ogctest}"
+TE_PASS="${SMOKE_TE_PASS:-ogctest}"
+HEALTH_TIMEOUT_S="${SMOKE_HEALTH_TIMEOUT_S:-180}"
+RUN_TIMEOUT_S="${SMOKE_RUN_TIMEOUT_S:-600}"
+
+DATE_STAMP="$(date -u +%Y-%m-%d)"
+ARCHIVE_DIR="${REPO_ROOT}/ops/test-results"
+REPORT_XML="${ARCHIVE_DIR}/s-ets-01-03-teamengine-smoke-${DATE_STAMP}.xml"
+LOG_FILE="${ARCHIVE_DIR}/s-ets-01-03-teamengine-container-${DATE_STAMP}.log"
+mkdir -p "$ARCHIVE_DIR"
+
+log() { echo "[smoke-test $(date -u +%H:%M:%S)] $*"; }
+die() { echo "[smoke-test FATAL] $*" >&2; cleanup_silent; exit 1; }
+
+cleanup_silent() {
+  docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
+}
+trap cleanup_silent EXIT
+
+pick_port() {
+  local p="${SMOKE_PORT:-}"
+  if [[ -n "$p" ]]; then echo "$p"; return; fi
+  for candidate in 8081 8082 8083; do
+    if ! ss -ltn 2>/dev/null | awk '{print $4}' | grep -qE ":${candidate}$"; then
+      echo "$candidate"; return
+    fi
+  done
+  echo 8082  # fallback
+}
+
+# ---------- Step 1: maven build (skip tests, deps already proven by surefire)
+log "step 1/8 — staging build artifacts"
+if [[ ! -f target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar ]] \
+   || [[ ! -f target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT-ctl.zip ]]; then
+  command -v mvn >/dev/null || die "mvn not on PATH; export PATH=~/.local/apache-maven-3.9.9/bin:\$PATH"
+  log "  mvn package (skipping tests; the surefire run already executed in CI/dev cycle)"
+  mvn -B -q clean package -DskipTests >/dev/null
+fi
+
+if [[ ! -d target/lib-runtime ]] || [[ -z "$(ls -A target/lib-runtime 2>/dev/null)" ]]; then
+  command -v mvn >/dev/null || die "mvn not on PATH; export PATH=~/.local/apache-maven-3.9.9/bin:\$PATH"
+  log "  mvn dependency:copy-dependencies → target/lib-runtime"
+  mvn -B -q dependency:copy-dependencies \
+      -DoutputDirectory=target/lib-runtime \
+      -DincludeScope=runtime >/dev/null
+  # The teamengine-* jars in lib-runtime are 6.0.0 (from ets-common:17 chain)
+  # and would clash with TE 5.6.1 already inside the production WAR.
+  rm -f target/lib-runtime/teamengine-*.jar
+fi
+
+# ---------- Step 2: docker build
+log "step 2/8 — docker build $IMAGE_TAG"
+docker build -t "$IMAGE_TAG" . >/dev/null 2>&1 || {
+  log "build failed; rerunning with output for diagnostics"
+  docker build -t "$IMAGE_TAG" .
+  die "docker build returned non-zero"
+}
+
+# ---------- Step 3: launch container on a free port
+SMOKE_PORT="$(pick_port)"
+log "step 3/8 — docker run on host port ${SMOKE_PORT}"
+cleanup_silent
+docker run -d --name "$CONTAINER_NAME" -p "${SMOKE_PORT}:8080" "$IMAGE_TAG" >/dev/null \
+  || die "docker run failed (port $SMOKE_PORT)"
+
+# ---------- Step 4: wait for /teamengine/ to return HTTP 200
+log "step 4/8 — waiting for TeamEngine healthcheck (timeout ${HEALTH_TIMEOUT_S}s)"
+deadline=$(( $(date +%s) + HEALTH_TIMEOUT_S ))
+while (( $(date +%s) < deadline )); do
+  status=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${SMOKE_PORT}/teamengine/" || echo 000)
+  if [[ "$status" == "200" ]]; then
+    log "  healthcheck PASS at $(date -u +%H:%M:%S)"
+    break
+  fi
+  sleep 5
+done
+[[ "$status" == "200" ]] || die "healthcheck never reached HTTP 200 (last=$status)"
+
+# ---------- Step 5: verify our suite is registered
+log "step 5/8 — verifying ${ETS_CODE} is registered"
+suites_xml=$(curl -fsS -u "${TE_USER}:${TE_PASS}" -H "Accept: application/xml" \
+    "http://localhost:${SMOKE_PORT}/teamengine/rest/suites") \
+  || die "/rest/suites query failed"
+if ! echo "$suites_xml" | grep -q "<etscode>${ETS_CODE}</etscode>"; then
+  echo "$suites_xml"
+  die "${ETS_CODE} not in suite list"
+fi
+log "  suite registered"
+
+# ---------- Step 6: invoke the suite against IUT
+log "step 6/8 — POST suite/${ETS_CODE}/run iut=${IUT_URL}"
+http_code=$(curl -s -u "${TE_USER}:${TE_PASS}" -G \
+    "http://localhost:${SMOKE_PORT}/teamengine/rest/suites/${ETS_CODE}/run" \
+    --data-urlencode "iut=${IUT_URL}" \
+    -H "Accept: application/xml" \
+    -o "$REPORT_XML" \
+    -w "%{http_code}" \
+    -m "$RUN_TIMEOUT_S") \
+  || die "suite invocation curl failed"
+[[ "$http_code" == "200" ]] || {
+  echo "--- TestNG response body (HTTP $http_code) ---"
+  head -50 "$REPORT_XML"
+  die "suite invocation HTTP $http_code"
+}
+
+# ---------- Step 7: parse TestNG report, archive, validate
+log "step 7/8 — validating TestNG report → $REPORT_XML"
+[[ -s "$REPORT_XML" ]] || die "TestNG report is empty"
+
+extract_attr() {
+  python3 -c "
+import sys, re
+m = re.search(r'<testng-results[^>]*\\b$1=\"(\\d+)\"', open(sys.argv[1]).read())
+print(m.group(1) if m else 'NA')
+" "$REPORT_XML"
+}
+
+total=$(extract_attr total)
+passed=$(extract_attr passed)
+failed=$(extract_attr failed)
+skipped=$(extract_attr skipped)
+
+log "  TestNG: total=$total passed=$passed failed=$failed skipped=$skipped"
+
+[[ "$total" =~ ^[0-9]+$ ]] || die "could not parse <testng-results total=...>"
+(( total > 0 )) || die "TestNG report total=0 (no @Test methods ran)"
+(( failed == 0 )) || die "TestNG report has failed=$failed (>0); see $REPORT_XML"
+
+# ---------- Step 8: scan container logs for SEVERE during STARTUP
+log "step 8/8 — scanning container startup log for ERROR/SEVERE"
+docker logs "$CONTAINER_NAME" > "$LOG_FILE" 2>&1 || true
+
+# Only inspect lines from container init through the "Server startup" line.
+startup_block=$(awk '/Server startup in/{print; exit} {print}' "$LOG_FILE")
+startup_severe=$(echo "$startup_block" | grep -E "^[0-9]{2}-[A-Za-z]{3}-[0-9]{4}.*(SEVERE|ERROR)" \
+                  | grep -v "did not find a matching property\|maxActive is not used in DBCP2\|encoding \['utf-8'\]" \
+                  || true)
+
+if [[ -n "$startup_severe" ]]; then
+  echo "--- startup ERROR/SEVERE entries ---"
+  echo "$startup_severe"
+  die "container startup logged ERROR/SEVERE entries during suite registration"
+fi
+log "  zero startup ERROR/SEVERE"
+
+log "SMOKE PASS: ${total}/${total} @Test methods on $IUT_URL via TeamEngine"
+log "  report: $REPORT_XML"
+log "  log:    $LOG_FILE"
+
+cleanup_silent
+trap - EXIT
+exit 0

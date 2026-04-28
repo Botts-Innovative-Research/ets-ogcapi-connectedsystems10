@@ -1,0 +1,201 @@
+NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+28-Apr-2026 19:46:44.990 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/8.5.100
+28-Apr-2026 19:46:44.992 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Mar 19 2024 13:54:42 UTC
+28-Apr-2026 19:46:44.993 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 8.5.100.0
+28-Apr-2026 19:46:44.993 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+28-Apr-2026 19:46:44.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.6.87.2-microsoft-standard-WSL2
+28-Apr-2026 19:46:44.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+28-Apr-2026 19:46:44.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /opt/java/openjdk
+28-Apr-2026 19:46:44.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.10+7
+28-Apr-2026 19:46:44.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+28-Apr-2026 19:46:44.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /usr/local/tomcat
+28-Apr-2026 19:46:44.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /usr/local/tomcat
+28-Apr-2026 19:46:44.995 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+28-Apr-2026 19:46:44.995 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+28-Apr-2026 19:46:44.995 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+28-Apr-2026 19:46:44.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+28-Apr-2026 19:46:44.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+28-Apr-2026 19:46:44.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties
+28-Apr-2026 19:46:44.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+28-Apr-2026 19:46:44.997 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+28-Apr-2026 19:46:44.997 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx2048m
+28-Apr-2026 19:46:44.997 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -DTE_BASE=/usr/local/tomcat/te_base
+28-Apr-2026 19:46:44.997 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djavax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl
+28-Apr-2026 19:46:44.997 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+28-Apr-2026 19:46:44.998 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+28-Apr-2026 19:46:44.998 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+28-Apr-2026 19:46:44.998 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dlog4j2.formatMsgNoLookups=true
+28-Apr-2026 19:46:44.998 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dignore.endorsed.dirs=
+28-Apr-2026 19:46:44.998 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/usr/local/tomcat
+28-Apr-2026 19:46:44.998 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/usr/local/tomcat
+28-Apr-2026 19:46:44.999 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/usr/local/tomcat/temp
+28-Apr-2026 19:46:44.999 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [1.2.39] using APR version [1.7.0].
+28-Apr-2026 19:46:44.999 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true], UDS [{4}].
+28-Apr-2026 19:46:44.999 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+28-Apr-2026 19:46:45.002 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.0.2 15 Mar 2022]
+28-Apr-2026 19:46:45.029 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+28-Apr-2026 19:46:45.048 INFO [main] org.apache.catalina.startup.Catalina.load Initialization processed in 395 ms
+28-Apr-2026 19:46:45.073 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+28-Apr-2026 19:46:45.073 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/8.5.100]
+28-Apr-2026 19:46:45.078 INFO [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/usr/local/tomcat/webapps/teamengine]
+28-Apr-2026 19:46:45.093 WARNING [localhost-startStop-1] org.apache.catalina.startup.SetContextPropertiesRule.begin [SetContextPropertiesRule]{Context} Setting property 'processTlds' to 'false' did not find a matching property.
+28-Apr-2026 19:46:45.093 WARNING [localhost-startStop-1] org.apache.catalina.startup.SetContextPropertiesRule.begin [SetContextPropertiesRule]{Context} Setting property 'aliases' to '/docs=/usr/local/tomcat/te_base/resources/docs,/about=/usr/local/tomcat/te_base/scripts,/reports=/usr/local/tomcat/te_base/users,/site=/usr/local/tomcat/te_base/resources/site' did not find a matching property.
+28-Apr-2026 19:46:45.095 WARNING [localhost-startStop-1] org.apache.tomcat.util.digester.SetPropertiesRule.begin [SetPropertiesRule]{Context/Realm} Setting property 'root' to '/usr/local/tomcat/te_base/users' did not find a matching property.
+Apr 28, 2026 7:46:46 PM org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory getObjectInstance
+WARNING: Name = EPSG Property maxActive is not used in DBCP2, use maxTotal instead. maxTotal default value is 8. You have set value of "8" for "maxActive" property, which is being ignored.
+28-Apr-2026 19:46:48.144 INFO [localhost-startStop-1] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/usr/local/tomcat/webapps/teamengine] has finished in [3,065] ms
+28-Apr-2026 19:46:48.147 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+28-Apr-2026 19:46:48.154 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in 3105 ms
+28-Apr-2026 19:46:50.040 WARNING [http-nio-8080-exec-4] org.apache.catalina.connector.Response.setContentType The encoding ['utf-8'] is not recognised by the JRE
+	java.lang.IllegalArgumentException: java.io.UnsupportedEncodingException: The character encoding ['utf-8'] is not supported
+		at org.apache.coyote.Response.setCharacterEncoding(Response.java:479)
+		at org.apache.catalina.connector.Response.setContentType(Response.java:760)
+		at org.apache.catalina.connector.Response.checkSpecialHeader(Response.java:1055)
+		at org.apache.catalina.connector.Response.addHeader(Response.java:1037)
+		at org.apache.catalina.connector.Response.addHeader(Response.java:1016)
+		at org.apache.catalina.connector.ResponseFacade.addHeader(ResponseFacade.java:406)
+		at com.sun.jersey.spi.container.servlet.WebComponent$Writer.writeHeaders(WebComponent.java:340)
+		at com.sun.jersey.spi.container.servlet.WebComponent$Writer.writeStatusAndHeaders(WebComponent.java:328)
+		at com.sun.jersey.spi.container.servlet.WebComponent$Writer.initiate(WebComponent.java:319)
+		at com.sun.jersey.spi.container.servlet.WebComponent$Writer.write(WebComponent.java:299)
+		at com.sun.jersey.spi.container.ContainerResponse$CommittingOutputStream.write(ContainerResponse.java:135)
+		at java.base/sun.nio.cs.StreamEncoder.writeBytes(Unknown Source)
+		at java.base/sun.nio.cs.StreamEncoder.implFlushBuffer(Unknown Source)
+		at java.base/sun.nio.cs.StreamEncoder.implFlush(Unknown Source)
+		at java.base/sun.nio.cs.StreamEncoder.flush(Unknown Source)
+		at java.base/java.io.OutputStreamWriter.flush(Unknown Source)
+		at java.base/java.io.BufferedWriter.flush(Unknown Source)
+		at net.sf.saxon.event.XMLEmitter.close(XMLEmitter.java:262)
+		at net.sf.saxon.event.UncommittedSerializer.close(UncommittedSerializer.java:53)
+		at net.sf.saxon.event.ProxyReceiver.close(ProxyReceiver.java:90)
+		at net.sf.saxon.dom.DOMSender.send(DOMSender.java:100)
+		at net.sf.saxon.dom.DOMObjectModel.sendSource(DOMObjectModel.java:112)
+		at net.sf.saxon.event.Sender.send(Sender.java:218)
+		at net.sf.saxon.IdentityTransformer.transform(IdentityTransformer.java:29)
+		at com.sun.jersey.core.impl.provider.entity.SourceProvider$SourceWriter.writeTo(SourceProvider.java:208)
+		at com.sun.jersey.core.impl.provider.entity.SourceProvider$SourceWriter.writeTo(SourceProvider.java:172)
+		at com.sun.jersey.spi.container.ContainerResponse.write(ContainerResponse.java:302)
+		at com.sun.jersey.server.impl.application.WebApplicationImpl._handleRequest(WebApplicationImpl.java:1510)
+		at com.sun.jersey.server.impl.application.WebApplicationImpl.handleRequest(WebApplicationImpl.java:1419)
+		at com.sun.jersey.server.impl.application.WebApplicationImpl.handleRequest(WebApplicationImpl.java:1409)
+		at com.sun.jersey.spi.container.servlet.WebComponent.service(WebComponent.java:409)
+		at com.sun.jersey.spi.container.servlet.ServletContainer.service(ServletContainer.java:558)
+		at com.sun.jersey.spi.container.servlet.ServletContainer.service(ServletContainer.java:733)
+		at javax.servlet.http.HttpServlet.service(HttpServlet.java:583)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:212)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:156)
+		at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:181)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:156)
+		at com.occamlab.te.realm.RestAuthenticationFilter.doFilter(RestAuthenticationFilter.java:72)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:181)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:156)
+		at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:168)
+		at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+		at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+		at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:130)
+		at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+		at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:679)
+		at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+		at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:346)
+		at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:617)
+		at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+		at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:934)
+		at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1690)
+		at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+		at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+		at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+		at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+		at java.base/java.lang.Thread.run(Unknown Source)
+	Caused by: java.io.UnsupportedEncodingException: The character encoding ['utf-8'] is not supported
+		at org.apache.tomcat.util.buf.B2CConverter.getCharsetLower(B2CConverter.java:85)
+		at org.apache.tomcat.util.buf.B2CConverter.getCharset(B2CConverter.java:63)
+		at org.apache.coyote.Response.setCharacterEncoding(Response.java:477)
+		... 58 more
+log4j:WARN No appenders could be found for logger (Jena).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+Apr 28, 2026 7:46:50 PM org.glassfish.jersey.client.innate.inject.NonInjectionManager <init>
+WARNING: Jersey-HK2 module is missing. Falling back to injection-less client. Injection may not be supported on the client.
+Apr 28, 2026 7:46:50 PM org.glassfish.jersey.message.internal.MessagingBinders$EnabledProvidersBinder bindToBinder
+WARNING: A class jakarta.activation.DataSource for a default provider MessageBodyWriter<jakarta.activation.DataSource> was not found. The provider is not available.
+[Fatal Error] entity-6082685207430026324.tmp:14:7: The element type "link" must be terminated by the matching end-tag "</link>".
+28-Apr-2026 19:46:53.243 WARNING [http-nio-8080-exec-6] org.apache.catalina.connector.Response.setContentType The encoding ['utf-8'] is not recognised by the JRE
+	java.lang.IllegalArgumentException: java.io.UnsupportedEncodingException: The character encoding ['utf-8'] is not supported
+		at org.apache.coyote.Response.setCharacterEncoding(Response.java:479)
+		at org.apache.catalina.connector.Response.setContentType(Response.java:760)
+		at org.apache.catalina.connector.Response.checkSpecialHeader(Response.java:1055)
+		at org.apache.catalina.connector.Response.addHeader(Response.java:1037)
+		at org.apache.catalina.connector.Response.addHeader(Response.java:1016)
+		at org.apache.catalina.connector.ResponseFacade.addHeader(ResponseFacade.java:406)
+		at com.sun.jersey.spi.container.servlet.WebComponent$Writer.writeHeaders(WebComponent.java:340)
+		at com.sun.jersey.spi.container.servlet.WebComponent$Writer.writeStatusAndHeaders(WebComponent.java:328)
+		at com.sun.jersey.spi.container.servlet.WebComponent$Writer.initiate(WebComponent.java:319)
+		at com.sun.jersey.spi.container.servlet.WebComponent$Writer.write(WebComponent.java:299)
+		at com.sun.jersey.spi.container.ContainerResponse$CommittingOutputStream.write(ContainerResponse.java:135)
+		at java.base/sun.nio.cs.StreamEncoder.writeBytes(Unknown Source)
+		at java.base/sun.nio.cs.StreamEncoder.implWrite(Unknown Source)
+		at java.base/sun.nio.cs.StreamEncoder.implWrite(Unknown Source)
+		at java.base/sun.nio.cs.StreamEncoder.write(Unknown Source)
+		at java.base/java.io.OutputStreamWriter.write(Unknown Source)
+		at java.base/java.io.BufferedWriter.flushBuffer(Unknown Source)
+		at java.base/java.io.BufferedWriter.flush(Unknown Source)
+		at net.sf.saxon.event.XMLEmitter.close(XMLEmitter.java:262)
+		at net.sf.saxon.event.UncommittedSerializer.close(UncommittedSerializer.java:53)
+		at net.sf.saxon.event.ProxyReceiver.close(ProxyReceiver.java:90)
+		at net.sf.saxon.event.ReceivingContentHandler.endDocument(ReceivingContentHandler.java:218)
+		at org.apache.xerces.parsers.AbstractSAXParser.endDocument(Unknown Source)
+		at org.apache.xerces.impl.XMLDocumentScannerImpl.endEntity(Unknown Source)
+		at org.apache.xerces.impl.XMLEntityManager.endEntity(Unknown Source)
+		at org.apache.xerces.impl.XMLEntityScanner.load(Unknown Source)
+		at org.apache.xerces.impl.XMLEntityScanner.skipSpaces(Unknown Source)
+		at org.apache.xerces.impl.XMLDocumentScannerImpl$TrailingMiscDispatcher.dispatch(Unknown Source)
+		at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+		at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+		at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+		at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+		at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+		at org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser.parse(Unknown Source)
+		at net.sf.saxon.event.Sender.sendSAXSource(Sender.java:371)
+		at net.sf.saxon.event.Sender.send(Sender.java:164)
+		at net.sf.saxon.IdentityTransformer.transform(IdentityTransformer.java:29)
+		at com.sun.jersey.core.impl.provider.entity.SourceProvider$SourceWriter.writeTo(SourceProvider.java:208)
+		at com.sun.jersey.core.impl.provider.entity.SourceProvider$SourceWriter.writeTo(SourceProvider.java:172)
+		at com.sun.jersey.spi.container.ContainerResponse.write(ContainerResponse.java:302)
+		at com.sun.jersey.server.impl.application.WebApplicationImpl._handleRequest(WebApplicationImpl.java:1510)
+		at com.sun.jersey.server.impl.application.WebApplicationImpl.handleRequest(WebApplicationImpl.java:1419)
+		at com.sun.jersey.server.impl.application.WebApplicationImpl.handleRequest(WebApplicationImpl.java:1409)
+		at com.sun.jersey.spi.container.servlet.WebComponent.service(WebComponent.java:409)
+		at com.sun.jersey.spi.container.servlet.ServletContainer.service(ServletContainer.java:558)
+		at com.sun.jersey.spi.container.servlet.ServletContainer.service(ServletContainer.java:733)
+		at javax.servlet.http.HttpServlet.service(HttpServlet.java:583)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:212)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:156)
+		at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:181)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:156)
+		at com.occamlab.te.realm.RestAuthenticationFilter.doFilter(RestAuthenticationFilter.java:72)
+		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:181)
+		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:156)
+		at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:168)
+		at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+		at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+		at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:130)
+		at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+		at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:679)
+		at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+		at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:346)
+		at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:617)
+		at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+		at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:934)
+		at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1690)
+		at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+		at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+		at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+		at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+		at java.base/java.lang.Thread.run(Unknown Source)
+	Caused by: java.io.UnsupportedEncodingException: The character encoding ['utf-8'] is not supported
+		at org.apache.tomcat.util.buf.B2CConverter.getCharsetLower(B2CConverter.java:85)
+		at org.apache.tomcat.util.buf.B2CConverter.getCharset(B2CConverter.java:63)
+		at org.apache.coyote.Response.setCharacterEncoding(Response.java:477)
+		... 71 more

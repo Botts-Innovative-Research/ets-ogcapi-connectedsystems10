@@ -29,3 +29,6 @@ Thumbs.db
 # Local config
 .env
 .env.local
+
+# Ops test-result archives are committed evidence (S-ETS-01-03 smoke artifacts).
+!ops/test-results/*.log

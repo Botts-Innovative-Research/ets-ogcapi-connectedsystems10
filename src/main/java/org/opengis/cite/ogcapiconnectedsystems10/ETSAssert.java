@@ -1,9 +1,12 @@
 package org.opengis.cite.ogcapiconnectedsystems10;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
@@ -137,6 +140,198 @@ public class ETSAssert {
 		DOMResult result = (DOMResult) validator.validate(xmlSource);
 		Assert.assertFalse(validator.ruleViolationsDetected(), ErrorMessage.format(ErrorMessageKeys.NOT_SCHEMA_VALID,
 				validator.getRuleViolationCount(), XMLUtils.writeNodeToString(result.getNode())));
+	}
+
+	// ---------------------------------------------------------------------
+	// REST/JSON helpers (REQ-ETS-CLEANUP-001, ADR-008 — Sprint 2 forward-looking)
+	//
+	// Every helper raises java.lang.AssertionError (NOT TestNG SkipException) with the
+	// supplied OGC /req/* URI as the message prefix per REQ-ETS-CORE-001 structured-FAIL
+	// discipline. These helpers replace the 21 bare-throw sites in conformance.core.*
+	// (Sprint 1 GAP-1 from Quinn s02 + Raze s02) and bind every conformance.* class
+	// added in Sprint 2+ (zero `throw new AssertionError` permitted).
+	//
+	// Helpers operate on REST-Assured io.restassured.response.Response and parsed-JSON
+	// Map<String,Object>/List<?> shapes (the same shapes Sprint 1 already produces via
+	// `.jsonPath().getMap("$")` / `.getList("links")`). They do NOT take raw JSON
+	// strings.
+	// ---------------------------------------------------------------------
+
+	/**
+	 * Asserts the HTTP response status code matches expected. On failure, raises
+	 * AssertionError with prefix "{reqUri} — expected HTTP {expected}, got {actual}".
+	 *
+	 * <p>
+	 * Use for the most common Sprint 1 pattern:
+	 * {@code if (resp.getStatusCode() != 200) throw new AssertionError(REQ_X + ...)}.
+	 * </p>
+	 * @param resp the REST-Assured Response under test (non-null)
+	 * @param expected expected HTTP status code
+	 * @param reqUri the OGC /req/* URI being asserted (non-null, non-empty)
+	 * @throws IllegalArgumentException if {@code resp} or {@code reqUri} is null
+	 * @throws AssertionError if the actual status differs from expected
+	 */
+	public static void assertStatus(io.restassured.response.Response resp, int expected, String reqUri) {
+		requireUri(reqUri);
+		if (resp == null) {
+			throw new IllegalArgumentException("ETSAssert.assertStatus: resp must not be null (reqUri=" + reqUri + ")");
+		}
+		int actual = resp.getStatusCode();
+		if (actual != expected) {
+			throw new AssertionError(reqUri + " — expected HTTP " + expected + ", got " + actual);
+		}
+	}
+
+	/**
+	 * Asserts a parsed JSON object body has the named key with a value of the expected
+	 * Java type. On failure, raises AssertionError with prefix "{reqUri} — expected key
+	 * '{key}' of type {type.getSimpleName()}; got {actual}".
+	 *
+	 * <p>
+	 * Type may be {@code String.class}, {@code Number.class}, {@code Boolean.class},
+	 * {@code List.class}, {@code Map.class}, or {@code Object.class}
+	 * ({@code Object.class} accepts any non-null value — used for "key must be present"
+	 * checks where the type is not load-bearing).
+	 * </p>
+	 * @param body parsed JSON body as a Map (non-null)
+	 * @param key the JSON key to look up (non-null, non-empty)
+	 * @param type expected Java type of the value (non-null; use Object.class for "any
+	 * non-null")
+	 * @param reqUri the OGC /req/* URI being asserted
+	 * @throws IllegalArgumentException if any required argument is null
+	 * @throws AssertionError if the key is missing or the value type does not match
+	 */
+	public static void assertJsonObjectHas(Map<String, Object> body, String key, Class<?> type, String reqUri) {
+		requireUri(reqUri);
+		if (body == null) {
+			throw new AssertionError(reqUri + " — expected JSON object body but body was null (key='" + key + "')");
+		}
+		if (key == null || key.isEmpty()) {
+			throw new IllegalArgumentException("ETSAssert.assertJsonObjectHas: key must be non-null/non-empty");
+		}
+		if (type == null) {
+			throw new IllegalArgumentException("ETSAssert.assertJsonObjectHas: type must be non-null");
+		}
+		if (!body.containsKey(key)) {
+			throw new AssertionError(reqUri + " — expected key '" + key + "' of type " + type.getSimpleName()
+					+ " in JSON body; key is missing. Available keys: " + body.keySet());
+		}
+		Object value = body.get(key);
+		if (value == null) {
+			throw new AssertionError(reqUri + " — expected key '" + key + "' of type " + type.getSimpleName()
+					+ " in JSON body; value is null");
+		}
+		if (!type.isInstance(value)) {
+			throw new AssertionError(reqUri + " — expected key '" + key + "' of type " + type.getSimpleName()
+					+ " in JSON body; got " + value.getClass().getSimpleName() + " (value=" + value + ")");
+		}
+	}
+
+	/**
+	 * Asserts a parsed JSON array contains at least one element matching the predicate.
+	 * On failure, raises AssertionError with prefix "{reqUri} — array did not contain any
+	 * element matching: {desc}".
+	 *
+	 * <p>
+	 * Use for "links contains rel=conformance" / "conformsTo contains URI X" assertions.
+	 * </p>
+	 * @param array parsed JSON array (non-null; empty array is a failure)
+	 * @param pred predicate to test each element (non-null)
+	 * @param desc human-readable description of what the predicate is looking for (e.g.
+	 * "rel=conformance link"); used in the FAIL message
+	 * @param reqUri the OGC /req/* URI being asserted
+	 * @throws IllegalArgumentException if {@code pred}, {@code desc}, or {@code reqUri}
+	 * is null
+	 * @throws AssertionError if no element matches the predicate
+	 */
+	public static void assertJsonArrayContains(List<?> array, Predicate<Object> pred, String desc, String reqUri) {
+		requireUri(reqUri);
+		if (pred == null) {
+			throw new IllegalArgumentException("ETSAssert.assertJsonArrayContains: pred must not be null");
+		}
+		if (desc == null) {
+			throw new IllegalArgumentException("ETSAssert.assertJsonArrayContains: desc must not be null");
+		}
+		if (array == null) {
+			throw new AssertionError(
+					reqUri + " — array did not contain any element matching: " + desc + " (array was null)");
+		}
+		for (Object element : array) {
+			if (pred.test(element)) {
+				return;
+			}
+		}
+		throw new AssertionError(reqUri + " — array did not contain any element matching: " + desc + " (array size="
+				+ array.size() + ")");
+	}
+
+	/**
+	 * Asserts a parsed JSON array contains at least one element matching at least ONE of
+	 * a list of acceptable predicates. Used for OR-fallback patterns (e.g. service-desc
+	 * OR service-doc; rel=collection OR rel=items). On failure, raises AssertionError
+	 * with prefix "{reqUri} — array did not contain any element matching ANY of:
+	 * {descs}".
+	 * @param array parsed JSON array (non-null)
+	 * @param alternatives list of (description, predicate) pairs; the array must match at
+	 * least one of these alternatives
+	 * @param reqUri the OGC /req/* URI being asserted
+	 * @throws IllegalArgumentException if {@code alternatives} is null/empty or
+	 * {@code reqUri} is null
+	 * @throws AssertionError if no element matches any of the alternatives
+	 */
+	public static void assertJsonArrayContainsAnyOf(List<?> array,
+			List<Map.Entry<String, Predicate<Object>>> alternatives, String reqUri) {
+		requireUri(reqUri);
+		if (alternatives == null || alternatives.isEmpty()) {
+			throw new IllegalArgumentException(
+					"ETSAssert.assertJsonArrayContainsAnyOf: alternatives must be non-null and non-empty");
+		}
+		String descs = alternatives.stream().map(Map.Entry::getKey).collect(Collectors.joining(", "));
+		if (array == null) {
+			throw new AssertionError(
+					reqUri + " — array did not contain any element matching ANY of: " + descs + " (array was null)");
+		}
+		for (Map.Entry<String, Predicate<Object>> alt : alternatives) {
+			Predicate<Object> pred = alt.getValue();
+			if (pred == null) {
+				continue;
+			}
+			for (Object element : array) {
+				if (pred.test(element)) {
+					return;
+				}
+			}
+		}
+		throw new AssertionError(reqUri + " — array did not contain any element matching ANY of: " + descs
+				+ " (array size=" + array.size() + ")");
+	}
+
+	/**
+	 * Universal escape hatch: raise AssertionError with the standard URI-prefixed format,
+	 * for use when the assertion logic is too custom for the type-specific helpers above.
+	 * Equivalent to {@code throw new AssertionError(reqUri + " — " + message)}.
+	 * @param reqUri the OGC /req/* URI being asserted
+	 * @param message free-form failure message (the URI is prepended; do not include it
+	 * in {@code message})
+	 * @throws IllegalArgumentException if {@code reqUri} is null
+	 * @throws AssertionError always (this method never returns normally)
+	 */
+	public static void failWithUri(String reqUri, String message) {
+		requireUri(reqUri);
+		String msg = (message == null) ? "" : message;
+		throw new AssertionError(reqUri + " — " + msg);
+	}
+
+	/**
+	 * Internal guard: every REST/JSON helper requires a non-null /req/* URI. A null URI
+	 * is a programming error (the structured-FAIL discipline requires it), not a test
+	 * failure, so this raises IllegalArgumentException not AssertionError.
+	 */
+	private static void requireUri(String reqUri) {
+		if (reqUri == null) {
+			throw new IllegalArgumentException(
+					"ETSAssert: reqUri must not be null (REQ-ETS-CORE-001 structured-FAIL discipline).");
+		}
 	}
 
 	/**

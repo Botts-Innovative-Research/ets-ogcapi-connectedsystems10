@@ -207,30 +207,13 @@
           <releaseProfiles>release</releaseProfiles>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.7.1</version>
-        <executions>
-          <execution>
-            <id>site-package</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.asciidoctor</groupId>
-            <artifactId>asciidoctor-maven-plugin</artifactId>
-            <version>1.5.7.1</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <relativizeDecorationLinks>false</relativizeDecorationLinks>
-        </configuration>
-      </plugin>
+      <!-- maven-site-plugin removed from default lifecycle (was bound to prepare-package
+           via the archetype's site-package execution). The archetype's pin of
+           asciidoctor-maven-plugin 1.5.7.1 fails on JDK 17 (JRuby NameError).
+           Per ADR-004 Group E-2: full mvn site / Asciidoc documentation is a Sprint 3+
+           deliverable. To run site generation explicitly, invoke `mvn site` directly
+           (it will use the version inherited from ets-common:17 pluginManagement). -->
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>

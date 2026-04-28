@@ -1,4 +1,4 @@
-package org.opengis.cite.ogcapiconnectedsystems10;
+package org.opengis.cite.ogcapiconnectedsystems10.listener;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.net.URI;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.TestRunArg;
 import org.opengis.cite.ogcapiconnectedsystems10.util.ClientUtils;
 import org.opengis.cite.ogcapiconnectedsystems10.util.TestSuiteLogger;
 import org.opengis.cite.ogcapiconnectedsystems10.util.URIUtils;

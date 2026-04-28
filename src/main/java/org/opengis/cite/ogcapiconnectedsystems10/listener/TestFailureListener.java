@@ -1,7 +1,8 @@
-package org.opengis.cite.ogcapiconnectedsystems10;
+package org.opengis.cite.ogcapiconnectedsystems10.listener;
 
 import java.nio.charset.StandardCharsets;
 
+import org.opengis.cite.ogcapiconnectedsystems10.CommonFixture;
 import org.opengis.cite.ogcapiconnectedsystems10.util.XMLUtils;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
@@ -39,8 +40,8 @@ public class TestFailureListener extends TestListenerAdapter {
 		Object instance = result.getInstance();
 		if (CommonFixture.class.isInstance(instance)) {
 			CommonFixture fixture = CommonFixture.class.cast(instance);
-			result.setAttribute("request", getRequestMessageInfo(fixture.request));
-			result.setAttribute("response", getResponseMessageInfo(fixture.response));
+			result.setAttribute("request", getRequestMessageInfo(fixture.getRequest()));
+			result.setAttribute("response", getResponseMessageInfo(fixture.getResponse()));
 		}
 	}
 

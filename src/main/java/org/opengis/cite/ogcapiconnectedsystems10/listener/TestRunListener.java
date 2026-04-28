@@ -1,4 +1,4 @@
-package org.opengis.cite.ogcapiconnectedsystems10;
+package org.opengis.cite.ogcapiconnectedsystems10.listener;
 
 import org.testng.IExecutionListener;
 

@@ -50,6 +50,30 @@ public class CommonFixture {
 	protected Response response;
 
 	/**
+	 * Returns the most recently built HTTP request invocation (may be {@code null}).
+	 * Exposed for cross-package listeners (e.g.
+	 * {@link org.opengis.cite.ogcapiconnectedsystems10.listener.TestFailureListener
+	 * TestFailureListener}) to capture diagnostic info on test failure.
+	 * @return The current {@link Invocation}, or {@code null} if no request has been
+	 * built.
+	 */
+	public Invocation getRequest() {
+		return this.request;
+	}
+
+	/**
+	 * Returns the most recently received HTTP response (may be {@code null}). Exposed for
+	 * cross-package listeners (e.g.
+	 * {@link org.opengis.cite.ogcapiconnectedsystems10.listener.TestFailureListener
+	 * TestFailureListener}) to capture diagnostic info on test failure.
+	 * @return The current {@link Response}, or {@code null} if no response has been
+	 * received.
+	 */
+	public Response getResponse() {
+		return this.response;
+	}
+
+	/**
 	 * Initializes the common test fixture with a client component for interacting with
 	 * HTTP endpoints.
 	 * @param testContext The test context that contains all the information for a test

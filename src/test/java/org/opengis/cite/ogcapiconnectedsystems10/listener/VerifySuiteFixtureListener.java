@@ -1,4 +1,4 @@
-package org.opengis.cite.ogcapiconnectedsystems10;
+package org.opengis.cite.ogcapiconnectedsystems10.listener;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
+import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.TestRunArg;
 import org.testng.ISuite;
 import org.testng.xml.XmlSuite;
 

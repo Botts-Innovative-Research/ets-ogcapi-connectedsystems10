@@ -50,11 +50,8 @@ The general structure of the test suite is shown in Table 1.
 |Conformance class
 |Test classes
 
-|Conformance Level 1
-|org.opengis.cite.ogcapiconnectedsystems10.level1.*
-
-|Conformance Level 2
-|org.opengis.cite.ogcapiconnectedsystems10.level2.*
+|Core (OGC 23-001 /conf/core)
+|org.opengis.cite.ogcapiconnectedsystems10.conformance.core.*
 
 |===
 

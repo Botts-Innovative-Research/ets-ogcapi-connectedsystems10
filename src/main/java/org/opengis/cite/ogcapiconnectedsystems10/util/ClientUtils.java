@@ -17,7 +17,7 @@ import javax.xml.transform.dom.DOMSource;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientResponse;
-import org.opengis.cite.ogcapiconnectedsystems10.ReusableEntityFilter;
+import org.opengis.cite.ogcapiconnectedsystems10.listener.ReusableEntityFilter;
 import org.w3c.dom.Document;
 
 import jakarta.ws.rs.client.Client;

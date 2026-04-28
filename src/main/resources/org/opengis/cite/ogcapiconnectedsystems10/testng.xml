@@ -5,18 +5,18 @@
   <parameter name="ics"  value=""/>
 
   <listeners>
-    <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.TestRunListener" />
-    <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.SuiteFixtureListener" />
-    <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.TestFailureListener" />
+    <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.listener.TestRunListener" />
+    <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.listener.SuiteFixtureListener" />
+    <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.listener.TestFailureListener" />
   </listeners>
 
-  <test name="Conformance Level 1">
-    <packages>
-      <package name="org.opengis.cite.ogcapiconnectedsystems10.level1" />
-    </packages>
+  <test name="Conformance Class - Core (OGC 23-001 /conf/core)">
     <classes>
       <class name="org.opengis.cite.ogcapiconnectedsystems10.SuitePreconditions" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests" />
     </classes>
   </test>
-  <!-- Add test sets for other conformance classes/levels -->
+  <!-- Add test sets for other conformance classes/levels in Sprint 2+ -->
 </suite>

@@ -139,13 +139,14 @@
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
+        <!-- Version inherited from ets-common:17 pluginManagement (3.10.1). ADR-004 C-1. -->
         <configuration>
           <docfilessubdirs>true</docfilessubdirs>
           <show>package</show>
-          <links>
-            <link>http://testng.org/javadocs/</link>
-          </links>
+          <!-- Removed <links> to http://testng.org/javadocs/ — the upstream package-list
+               is no longer served (returns 404), causing the javadoc build to fail when
+               the offline-link is mandatory. Removing the link does not affect generated
+               output beyond stripping cross-references to TestNG's API docs. -->
         </configuration>
         <executions>
           <execution>

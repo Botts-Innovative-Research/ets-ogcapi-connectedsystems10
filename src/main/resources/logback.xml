@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  logback.xml — ets-ogcapi-connectedsystems10
+
+  REQ-ETS-CLEANUP-003 + NFR-ETS-08 + NFR-ETS-10 (Sprint 2 S-ETS-02-04):
+    structured logging via slf4j → logback. Pattern intentionally does NOT include
+    %X{*} (MDC dump) — defense-in-depth in case any future code path bypasses
+    CredentialMaskingFilter and accidentally puts an Authorization / X-API-Key /
+    Cookie value into the MDC.
+
+  CredentialMaskingFilter (REST-Assured Filter, registered via SuiteFixtureListener)
+  is the primary credential-masking layer; this logback config is the secondary
+  belt-and-braces measure. SCENARIO-ETS-CLEANUP-LOGBACK-MASKING-001 verifies the
+  end-to-end behavior (literal credential-middle MUST NOT appear in any log
+  attachment).
+
+  Reference: design.md §"Logback configuration" lines 511-529.
+-->
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <!-- Pattern intentionally excludes %X{*} MDC dump (defense-in-depth). -->
+      <pattern>%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+  <!-- REST-Assured + this ETS at DEBUG for development; INFO in CI for log volume. -->
+  <logger name="io.restassured" level="DEBUG"/>
+  <logger name="org.opengis.cite.ogcapiconnectedsystems10" level="DEBUG"/>
+
+  <!-- TeamEngine controllers + suite-fixture wiring at INFO. -->
+  <logger name="org.opengis.cite.teamengine" level="INFO"/>
+
+</configuration>

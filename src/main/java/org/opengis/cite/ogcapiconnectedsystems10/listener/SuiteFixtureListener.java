@@ -16,6 +16,7 @@ import org.testng.ISuite;
 import org.testng.ISuiteListener;
 import org.w3c.dom.Document;
 
+import io.restassured.RestAssured;
 import jakarta.ws.rs.client.Client;
 
 /**
@@ -37,6 +38,33 @@ public class SuiteFixtureListener implements ISuiteListener {
 	public void onStart(ISuite suite) {
 		processSuiteParameters(suite);
 		registerClientComponent(suite);
+		registerRestAssuredFilters();
+	}
+
+	/**
+	 * Registers the global REST-Assured filter chain for the whole suite. Currently:
+	 * {@link CredentialMaskingFilter} (REQ-ETS-CLEANUP-003 / NFR-ETS-08) — masks
+	 * Authorization, X-API-Key, Cookie, Set-Cookie, Proxy-Authorization headers in any
+	 * REST-Assured request log output before downstream observers (TestNG report
+	 * attachments, container logs) see them.
+	 *
+	 * <p>
+	 * Idempotent: safe to call multiple times in the same JVM (REST-Assured filters list
+	 * is replaced wholesale).
+	 * </p>
+	 *
+	 * <p>
+	 * Wired here per design.md §"CredentialMaskingFilter wiring (Sprint 2 S-ETS-02-04)".
+	 * </p>
+	 */
+	void registerRestAssuredFilters() {
+		try {
+			RestAssured.filters(new CredentialMaskingFilter());
+		}
+		catch (RuntimeException ex) {
+			TestSuiteLogger.log(Level.WARNING, "Failed to register REST-Assured CredentialMaskingFilter: "
+					+ ex.getMessage() + " — proceeding without masking (Sprint 2 cleanup gap)");
+		}
 	}
 
 	@Override

@@ -93,7 +93,8 @@ public class ResourceShapeTests {
 	 * </p>
 	 */
 	@Test(description = "OGC-19-072 " + REQ_OAS30_OAS_IMPL
-			+ ": api-definition resource resolves to HTTP 200 with non-empty body (REQ-ETS-CORE-004, SCENARIO-ETS-CORE-RESOURCE-SHAPE-001)")
+			+ ": api-definition resource resolves to HTTP 200 with non-empty body (REQ-ETS-CORE-004, SCENARIO-ETS-CORE-RESOURCE-SHAPE-001)",
+			groups = "core")
 	@SuppressWarnings("unchecked")
 	public void apiDefinitionResourceReturnsContent() {
 		if (this.landingBody == null) {
@@ -132,7 +133,8 @@ public class ResourceShapeTests {
 	 * pattern for Sprint 1.
 	 */
 	@Test(description = "OGC-19-072 " + REQ_CONFORMANCE_SUCCESS
-			+ ": /conformance resource is a JSON object (REQ-ETS-CORE-004, SCENARIO-ETS-CORE-RESOURCE-SHAPE-001)")
+			+ ": /conformance resource is a JSON object (REQ-ETS-CORE-004, SCENARIO-ETS-CORE-RESOURCE-SHAPE-001)",
+			groups = "core")
 	public void conformanceResourceShapeIsObject() {
 		String iutString = this.iutUri.toString();
 		String conformancePath = iutString.endsWith("/") ? iutString + "conformance" : iutString + "/conformance";

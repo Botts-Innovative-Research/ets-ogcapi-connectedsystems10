@@ -104,7 +104,8 @@ public class LandingPageTests {
 	 * @see #REQ_ROOT_SUCCESS
 	 */
 	@Test(description = "OGC-19-072 " + REQ_ROOT_SUCCESS
-			+ ": landing page (GET /) returns HTTP 200 (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)")
+			+ ": landing page (GET /) returns HTTP 200 (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)",
+			groups = "core")
 	public void landingPageReturnsHttp200() {
 		ETSAssert.assertStatus(this.landingResponse, 200, REQ_ROOT_SUCCESS);
 	}
@@ -122,7 +123,8 @@ public class LandingPageTests {
 	 * </p>
 	 */
 	@Test(description = "OGC-19-072 " + REQ_ROOT_SUCCESS
-			+ ": landing page body is parseable JSON (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)")
+			+ ": landing page body is parseable JSON (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)",
+			groups = "core")
 	public void landingPageReturnsJson() {
 		if (this.landingBody == null) {
 			ETSAssert.failWithUri(REQ_ROOT_SUCCESS, "landing page body did not parse as JSON. Content-Type was: "
@@ -135,7 +137,7 @@ public class LandingPageTests {
 	 */
 	@Test(description = "OGC-19-072 " + REQ_ROOT_SUCCESS
 			+ ": landing page body has a links array (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)",
-			dependsOnMethods = "landingPageReturnsJson")
+			dependsOnMethods = "landingPageReturnsJson", groups = "core")
 	public void landingPageHasLinks() {
 		if (this.landingBody == null) {
 			ETSAssert.failWithUri(REQ_ROOT_SUCCESS, "landing page body did not parse as JSON");
@@ -148,7 +150,7 @@ public class LandingPageTests {
 	 */
 	@Test(description = "OGC-19-072 " + REQ_CONFORMANCE_SUCCESS
 			+ ": landing page links contain rel=conformance (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)",
-			dependsOnMethods = "landingPageHasLinks")
+			dependsOnMethods = "landingPageHasLinks", groups = "core")
 	public void landingPageHasConformanceLink() {
 		List<?> links = linksList();
 		Predicate<Object> isConformance = l -> (l instanceof Map) && "conformance".equals(((Map<?, ?>) l).get("rel"));
@@ -169,7 +171,7 @@ public class LandingPageTests {
 	 */
 	@Test(description = "OGC-19-072 " + REQ_API_DEFINITION_SUCCESS
 			+ ": landing page links contain rel=service-desc OR rel=service-doc (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-API-DEF-FALLBACK-001)",
-			dependsOnMethods = "landingPageHasLinks")
+			dependsOnMethods = "landingPageHasLinks", groups = "core")
 	public void landingPageHasApiDefinitionLink() {
 		List<?> links = linksList();
 		Predicate<Object> isServiceDesc = l -> (l instanceof Map) && "service-desc".equals(((Map<?, ?>) l).get("rel"));
@@ -199,7 +201,7 @@ public class LandingPageTests {
 	 */
 	@Test(description = "OGC-19-072 " + REQ_ROOT_SUCCESS
 			+ ": landing page does NOT require rel=self (sentinel — preserves v1.0 GH#3 fix; SCENARIO-ETS-CORE-LINKS-NORMATIVE-001)",
-			dependsOnMethods = "landingPageHasLinks")
+			dependsOnMethods = "landingPageHasLinks", groups = "core")
 	public void landingPageDoesNotRequireSelfRel() {
 		Set<String> rels = collectRels();
 		// Both branches are PASS. We assert that *either* state is acceptable.

@@ -84,7 +84,8 @@ public class ConformanceTests {
 	 * SCENARIO-ETS-CORE-CONFORMANCE-001: GET /conformance returns HTTP 200.
 	 */
 	@Test(description = "OGC-19-072 " + REQ_CONFORMANCE_SUCCESS
-			+ ": GET /conformance returns HTTP 200 (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)")
+			+ ": GET /conformance returns HTTP 200 (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)",
+			groups = "core")
 	public void conformancePageReturnsHttp200() {
 		ETSAssert.assertStatus(this.response, 200, REQ_CONFORMANCE_SUCCESS);
 	}
@@ -101,7 +102,8 @@ public class ConformanceTests {
 	 * </p>
 	 */
 	@Test(description = "OGC-19-072 " + REQ_CONFORMANCE_SUCCESS
-			+ ": /conformance body is parseable JSON (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)")
+			+ ": /conformance body is parseable JSON (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)",
+			groups = "core")
 	public void conformancePageReturnsJson() {
 		if (this.body == null) {
 			ETSAssert.failWithUri(REQ_CONFORMANCE_SUCCESS,
@@ -115,7 +117,7 @@ public class ConformanceTests {
 	 */
 	@Test(description = "OGC-19-072 " + REQ_CONFORMANCE_SUCCESS
 			+ ": /conformance body has non-empty conformsTo array, captured into suite context (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)",
-			dependsOnMethods = "conformancePageReturnsJson")
+			dependsOnMethods = "conformancePageReturnsJson", groups = "core")
 	@SuppressWarnings("unchecked")
 	public void conformancePageHasConformsToArray(ITestContext testContext) {
 		if (this.body == null) {
@@ -138,7 +140,7 @@ public class ConformanceTests {
 	 */
 	@Test(description = "OGC-23-001 " + CS_CORE_CONFORMANCE_URI
 			+ ": /conformance declares the CS API Core conformance class URI (REQ-ETS-CORE-003)",
-			dependsOnMethods = "conformancePageHasConformsToArray")
+			dependsOnMethods = "conformancePageHasConformsToArray", groups = "core")
 	@SuppressWarnings("unchecked")
 	public void conformancePageDeclaresCsCore() {
 		List<Object> conformsList = (List<Object>) this.body.get("conformsTo");

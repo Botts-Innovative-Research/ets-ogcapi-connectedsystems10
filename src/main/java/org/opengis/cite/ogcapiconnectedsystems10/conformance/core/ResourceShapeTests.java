@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
 import org.testng.ITestContext;
 import org.testng.SkipException;
@@ -96,35 +97,32 @@ public class ResourceShapeTests {
 	@SuppressWarnings("unchecked")
 	public void apiDefinitionResourceReturnsContent() {
 		if (this.landingBody == null) {
-			throw new AssertionError(REQ_OAS30_OAS_IMPL + " — landing page body did not parse as JSON");
+			ETSAssert.failWithUri(REQ_OAS30_OAS_IMPL, "landing page body did not parse as JSON");
 		}
-		Object links = this.landingBody.get("links");
-		if (!(links instanceof List)) {
-			throw new AssertionError(REQ_OAS30_OAS_IMPL + " — landing page has no 'links' array");
-		}
-		List<Map<String, Object>> linkList = (List<Map<String, Object>>) links;
+		ETSAssert.assertJsonObjectHas(this.landingBody, "links", List.class, REQ_OAS30_OAS_IMPL);
+		List<Map<String, Object>> linkList = (List<Map<String, Object>>) this.landingBody.get("links");
 		Map<String, Object> chosen = pickFirstByRel(linkList, "service-desc");
 		if (chosen == null) {
 			chosen = pickFirstByRel(linkList, "service-doc");
 		}
 		if (chosen == null) {
-			throw new AssertionError(REQ_OAS30_OAS_IMPL
-					+ " — neither rel=service-desc nor rel=service-doc present on landing page (api-definition fallback exhausted)");
+			ETSAssert.failWithUri(REQ_OAS30_OAS_IMPL,
+					"neither rel=service-desc nor rel=service-doc present on landing page (api-definition fallback exhausted)");
 		}
 		Object hrefObj = chosen.get("href");
 		if (!(hrefObj instanceof String) || ((String) hrefObj).isEmpty()) {
-			throw new AssertionError(REQ_OAS30_OAS_IMPL + " — api-definition link has no usable 'href': " + chosen);
+			ETSAssert.failWithUri(REQ_OAS30_OAS_IMPL, "api-definition link has no usable 'href': " + chosen);
 		}
 		URI apiDefUri = URI.create((String) hrefObj);
 		Response apiDef = given().when().get(apiDefUri).andReturn();
 		if (apiDef.getStatusCode() != 200) {
-			throw new AssertionError(REQ_OAS30_OAS_IMPL + " — expected HTTP 200 from api-definition (rel='"
-					+ chosen.get("rel") + "', href=" + apiDefUri + "), got " + apiDef.getStatusCode());
+			ETSAssert.failWithUri(REQ_OAS30_OAS_IMPL, "expected HTTP 200 from api-definition (rel='" + chosen.get("rel")
+					+ "', href=" + apiDefUri + "), got " + apiDef.getStatusCode());
 		}
 		String body = apiDef.getBody().asString();
 		if (body == null || body.trim().isEmpty()) {
-			throw new AssertionError(REQ_OAS30_OAS_IMPL + " — api-definition body is empty (rel='" + chosen.get("rel")
-					+ "', href=" + apiDefUri + ")");
+			ETSAssert.failWithUri(REQ_OAS30_OAS_IMPL,
+					"api-definition body is empty (rel='" + chosen.get("rel") + "', href=" + apiDefUri + ")");
 		}
 	}
 
@@ -139,15 +137,12 @@ public class ResourceShapeTests {
 		String iutString = this.iutUri.toString();
 		String conformancePath = iutString.endsWith("/") ? iutString + "conformance" : iutString + "/conformance";
 		Response resp = given().accept("application/json").when().get(URI.create(conformancePath)).andReturn();
-		if (resp.getStatusCode() != 200) {
-			throw new AssertionError(REQ_CONFORMANCE_SUCCESS + " — expected HTTP 200 from " + conformancePath + ", got "
-					+ resp.getStatusCode());
-		}
+		ETSAssert.assertStatus(resp, 200, REQ_CONFORMANCE_SUCCESS);
 		String raw = resp.getBody().asString().trim();
 		if (raw.isEmpty() || raw.charAt(0) != '{') {
-			throw new AssertionError(REQ_CONFORMANCE_SUCCESS
-					+ " — expected /conformance body to be a JSON object (start with '{'); got: "
-					+ (raw.length() > 60 ? raw.substring(0, 60) + "..." : raw));
+			ETSAssert.failWithUri(REQ_CONFORMANCE_SUCCESS,
+					"expected /conformance body to be a JSON object (start with '{'); got: "
+							+ (raw.length() > 60 ? raw.substring(0, 60) + "..." : raw));
 		}
 	}
 

@@ -15,8 +15,8 @@
   <packaging>jar</packaging>
 
   <name>ogcapi-connectedsystems10 Conformance Test Suite</name>
-  <description>Describe purpose of test suite.</description>
-  <url>http://opengeospatial.github.io/ets-ogcapi-connectedsystems10/</url>
+  <description>Executable Test Suite (ETS) for OGC API - Connected Systems Part 1 (OGC 23-001). Targets the OGC TeamEngine certification track. Sibling repository to csapi_compliance (developer pre-flight web app, frozen at v1.0).</description>
+  <url>https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10</url>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -25,24 +25,26 @@
   </licenses>
 
   <organization>
-    <name>Open Geospatial Consortium</name>
-    <url>http://www.opengeospatial.org/</url>
+    <name>Botts Innovative Research, Inc.</name>
+    <url>https://www.botts-inc.com/</url>
   </organization>
   <scm>
-    <connection>scm:git:https://github.com/opengeospatial/ets-ogcapi-connectedsystems10.git</connection>
-    <developerConnection>scm:git:git@github.com:opengeospatial/ets-ogcapi-connectedsystems10.git</developerConnection>
-    <url>https://github.com/opengeospatial/ets-ogcapi-connectedsystems10</url>
+    <connection>scm:git:https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git</connection>
+    <developerConnection>scm:git:git@github.com:Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git</developerConnection>
+    <url>https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>GitHub Issue Tracker</system>
-    <url>https://github.com/opengeospatial/ets-ogcapi-connectedsystems10/issues</url>
+    <url>https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10/issues</url>
   </issueManagement>
   <developers>
     <developer>
-      <name>Alpha Beta</name>
-      <url>https://github.com/</url>
-      <timezone>UTC</timezone>
+      <name>Cameron Hunt</name>
+      <email>cameron.s.hunt@noble-hunt.com</email>
+      <organization>Botts Innovative Research, Inc.</organization>
+      <organizationUrl>https://www.botts-inc.com/</organizationUrl>
+      <timezone>America/New_York</timezone>
     </developer>
   </developers>
 

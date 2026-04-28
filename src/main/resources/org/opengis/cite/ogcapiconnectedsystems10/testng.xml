@@ -10,6 +10,12 @@
     <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.listener.TestFailureListener" />
   </listeners>
 
+  <!-- Core conformance class — every @Test in conformance.core.* declares
+       groups = "core" so downstream conformance classes can declare suite-level
+       dependency via TestNG group wiring (REQ-ETS-PART1-002,
+       SCENARIO-ETS-PART1-002-SYSTEMFEATURES-DEPENDENCY-SKIP-001). No <run><include>
+       filter on Core itself — runs all classes/methods listed below regardless of
+       group membership. -->
   <test name="Conformance Class - Core (OGC 23-001 /conf/core)">
     <classes>
       <class name="org.opengis.cite.ogcapiconnectedsystems10.SuitePreconditions" />
@@ -18,5 +24,26 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests" />
     </classes>
   </test>
-  <!-- Add test sets for other conformance classes/levels in Sprint 2+ -->
+
+  <!-- SystemFeatures (OGC 23-001 /conf/system) — REQ-ETS-PART1-002, S-ETS-02-06.
+       Group "systemfeatures" depends on group "core" so all SystemFeatures @Tests
+       SKIP gracefully if any Core @Test FAILs (closes
+       SCENARIO-ETS-PART1-002-SYSTEMFEATURES-DEPENDENCY-SKIP-001 per design.md
+       §"SystemFeatures conformance class scope" snippet). The <run><include> filter
+       restricts this <test> block to systemfeatures-tagged methods only — Core
+       methods are NOT re-run inside this block. -->
+  <test name="Conformance Class - SystemFeatures (OGC 23-001 /conf/system)">
+    <groups>
+      <dependencies>
+        <group name="systemfeatures" depends-on="core"/>
+      </dependencies>
+      <run>
+        <include name="systemfeatures"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests" />
+    </classes>
+  </test>
+  <!-- Add test sets for other conformance classes/levels in Sprint 3+ -->
 </suite>

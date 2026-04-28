@@ -20,8 +20,19 @@
 # + docker-compose.yml). If 8081 is busy (the WSL2 dev box ships a
 # `field-hub-osh` container on 8081 as of 2026-04-28), falls back to 8082.
 # Override via $SMOKE_PORT.
+#
+# Sprint 2 S-ETS-02-05 simplification (per ADR-009 + Raze s03 CONCERN-2/3):
+#   - DROPPED host `mvn -B clean package -DskipTests` (now baked into Dockerfile
+#     stage 1)
+#   - DROPPED host `mvn dependency:copy-dependencies` (now baked into Dockerfile
+#     stage 1)
+#   - Smoke now requires ONLY Docker; no host JDK / Maven required.
+#   - Step 5 metadata parse tightened (Raze s03 CONCERN-4): asserts ets-code +
+#     version + title from /rest/suites/<code> JSON-or-XML metadata, not just
+#     the etscode element.
 
 set -eo pipefail
+export DOCKER_BUILDKIT=1   # ADR-009 §Notes — required for --mount=type=cache
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
@@ -60,28 +71,16 @@ pick_port() {
   echo 8082  # fallback
 }
 
-# ---------- Step 1: maven build (skip tests, deps already proven by surefire)
-log "step 1/8 — staging build artifacts"
-if [[ ! -f target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar ]] \
-   || [[ ! -f target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT-ctl.zip ]]; then
-  command -v mvn >/dev/null || die "mvn not on PATH; export PATH=~/.local/apache-maven-3.9.9/bin:\$PATH"
-  log "  mvn package (skipping tests; the surefire run already executed in CI/dev cycle)"
-  mvn -B -q clean package -DskipTests >/dev/null
-fi
+# ---------- Step 1: sanity check (multi-stage Dockerfile bakes mvn package + deps)
+# Per ADR-009 (Sprint 2 S-ETS-02-05), the Dockerfile's builder stage runs the full
+# Maven lifecycle inside the container with a BuildKit cache mount. Host mvn is no
+# longer required — `git clone && bash scripts/smoke-test.sh` is sufficient.
+log "step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)"
+[[ -f Dockerfile ]] || die "Dockerfile missing — run from repo root"
+[[ -f pom.xml ]] || die "pom.xml missing — run from repo root"
 
-if [[ ! -d target/lib-runtime ]] || [[ -z "$(ls -A target/lib-runtime 2>/dev/null)" ]]; then
-  command -v mvn >/dev/null || die "mvn not on PATH; export PATH=~/.local/apache-maven-3.9.9/bin:\$PATH"
-  log "  mvn dependency:copy-dependencies → target/lib-runtime"
-  mvn -B -q dependency:copy-dependencies \
-      -DoutputDirectory=target/lib-runtime \
-      -DincludeScope=runtime >/dev/null
-  # The teamengine-* jars in lib-runtime are 6.0.0 (from ets-common:17 chain)
-  # and would clash with TE 5.6.1 already inside the production WAR.
-  rm -f target/lib-runtime/teamengine-*.jar
-fi
-
-# ---------- Step 2: docker build
-log "step 2/8 — docker build $IMAGE_TAG"
+# ---------- Step 2: docker build (BuildKit; cold ~5-6min, warm ~30-90s)
+log "step 2/8 — docker build $IMAGE_TAG (BuildKit ${DOCKER_BUILDKIT})"
 docker build -t "$IMAGE_TAG" . >/dev/null 2>&1 || {
   log "build failed; rerunning with output for diagnostics"
   docker build -t "$IMAGE_TAG" .
@@ -108,16 +107,30 @@ while (( $(date +%s) < deadline )); do
 done
 [[ "$status" == "200" ]] || die "healthcheck never reached HTTP 200 (last=$status)"
 
-# ---------- Step 5: verify our suite is registered
-log "step 5/8 — verifying ${ETS_CODE} is registered"
+# ---------- Step 5: verify our suite is registered (tightened per Raze s03 CONCERN-4)
+# Sprint 2 tightening: assert ets-code AND version-from-pom AND title-from-pom in the
+# /rest/suites listing. Mismatch on any of the three is a FATAL — surfaces drift
+# between the deployed jar metadata and the pom.xml expectations.
+EXPECTED_VERSION="${SMOKE_EXPECTED_VERSION:-0.1-SNAPSHOT}"
+EXPECTED_TITLE_FRAGMENT="${SMOKE_EXPECTED_TITLE_FRAGMENT:-ogcapi-connectedsystems10}"
+log "step 5/8 — verifying ${ETS_CODE} is registered (code + version + title metadata)"
 suites_xml=$(curl -fsS -u "${TE_USER}:${TE_PASS}" -H "Accept: application/xml" \
     "http://localhost:${SMOKE_PORT}/teamengine/rest/suites") \
   || die "/rest/suites query failed"
+
 if ! echo "$suites_xml" | grep -q "<etscode>${ETS_CODE}</etscode>"; then
   echo "$suites_xml"
-  die "${ETS_CODE} not in suite list"
+  die "${ETS_CODE} not in suite list (etscode element missing)"
 fi
-log "  suite registered"
+if ! echo "$suites_xml" | grep -q "<version>${EXPECTED_VERSION}</version>"; then
+  echo "$suites_xml"
+  die "${ETS_CODE}: version mismatch (expected '${EXPECTED_VERSION}'); see /rest/suites response above"
+fi
+if ! echo "$suites_xml" | grep -qF "${EXPECTED_TITLE_FRAGMENT}"; then
+  echo "$suites_xml"
+  die "${ETS_CODE}: title metadata missing fragment '${EXPECTED_TITLE_FRAGMENT}'; see /rest/suites response above"
+fi
+log "  suite registered (code=${ETS_CODE} version=${EXPECTED_VERSION} title contains '${EXPECTED_TITLE_FRAGMENT}')"
 
 # ---------- Step 6: invoke the suite against IUT
 log "step 6/8 — POST suite/${ETS_CODE}/run iut=${IUT_URL}"

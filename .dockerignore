@@ -1,0 +1,28 @@
+# .dockerignore — ets-ogcapi-connectedsystems10
+#
+# Sprint 2 S-ETS-02-05 (multi-stage Dockerfile per ADR-009): the builder stage runs
+# the full Maven lifecycle inside the container, so the only build inputs needed in
+# the build context are pom.xml, src/, and .git/ (for buildnumber-maven-plugin).
+# Everything else is excluded to keep the build context small + the cache layers
+# tight.
+
+# Local Maven build outputs (the in-container builder produces its own target/)
+target/
+ops/test-results/
+
+# IDE / editor noise
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Sprint 1 in-repo artifacts that aren't build inputs
+ci/
+jenkinsfiles/
+
+# Local Docker / smoke-test debris
+docker-compose.override.yml

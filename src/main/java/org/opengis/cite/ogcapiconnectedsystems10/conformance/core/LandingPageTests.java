@@ -3,11 +3,14 @@ package org.opengis.cite.ogcapiconnectedsystems10.conformance.core;
 import static io.restassured.RestAssured.given;
 
 import java.net.URI;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
 import org.testng.ITestContext;
 import org.testng.SkipException;
@@ -102,11 +105,7 @@ public class LandingPageTests {
 	@Test(description = "OGC-19-072 " + REQ_ROOT_SUCCESS
 			+ ": landing page (GET /) returns HTTP 200 (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)")
 	public void landingPageReturnsHttp200() {
-		int status = this.landingResponse.getStatusCode();
-		if (status != 200) {
-			throw new AssertionError(REQ_ROOT_SUCCESS + " — expected HTTP 200 from landing page (GET " + this.iutUri
-					+ "), got " + status);
-		}
+		ETSAssert.assertStatus(this.landingResponse, 200, REQ_ROOT_SUCCESS);
 	}
 
 	/**
@@ -125,7 +124,7 @@ public class LandingPageTests {
 			+ ": landing page body is parseable JSON (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)")
 	public void landingPageReturnsJson() {
 		if (this.landingBody == null) {
-			throw new AssertionError(REQ_ROOT_SUCCESS + " — landing page body did not parse as JSON. Content-Type was: "
+			ETSAssert.failWithUri(REQ_ROOT_SUCCESS, "landing page body did not parse as JSON. Content-Type was: "
 					+ this.landingResponse.getContentType());
 		}
 	}
@@ -138,14 +137,9 @@ public class LandingPageTests {
 			dependsOnMethods = "landingPageReturnsJson")
 	public void landingPageHasLinks() {
 		if (this.landingBody == null) {
-			throw new AssertionError(REQ_ROOT_SUCCESS + " — landing page body did not parse as JSON");
+			ETSAssert.failWithUri(REQ_ROOT_SUCCESS, "landing page body did not parse as JSON");
 		}
-		Object links = this.landingBody.get("links");
-		if (!(links instanceof List)) {
-			throw new AssertionError(
-					REQ_ROOT_SUCCESS + " — expected landing page body to contain a 'links' array; got: "
-							+ (links == null ? "missing" : links.getClass().getSimpleName()));
-		}
+		ETSAssert.assertJsonObjectHas(this.landingBody, "links", List.class, REQ_ROOT_SUCCESS);
 	}
 
 	/**
@@ -155,11 +149,10 @@ public class LandingPageTests {
 			+ ": landing page links contain rel=conformance (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)",
 			dependsOnMethods = "landingPageHasLinks")
 	public void landingPageHasConformanceLink() {
-		Set<String> rels = collectRels();
-		if (!rels.contains("conformance")) {
-			throw new AssertionError(
-					REQ_CONFORMANCE_SUCCESS + " — landing page links must contain rel=conformance; got rels: " + rels);
-		}
+		List<?> links = linksList();
+		Predicate<Object> isConformance = l -> (l instanceof Map) && "conformance".equals(((Map<?, ?>) l).get("rel"));
+		ETSAssert.assertJsonArrayContains(links, isConformance,
+				"rel=conformance link (got rels: " + collectRels() + ")", REQ_CONFORMANCE_SUCCESS);
 	}
 
 	/**
@@ -177,13 +170,13 @@ public class LandingPageTests {
 			+ ": landing page links contain rel=service-desc OR rel=service-doc (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-API-DEF-FALLBACK-001)",
 			dependsOnMethods = "landingPageHasLinks")
 	public void landingPageHasApiDefinitionLink() {
-		Set<String> rels = collectRels();
-		boolean hasApiDefLink = rels.contains("service-desc") || rels.contains("service-doc");
-		if (!hasApiDefLink) {
-			throw new AssertionError(REQ_API_DEFINITION_SUCCESS
-					+ " — landing page links must contain rel=service-desc OR rel=service-doc (api-definition fallback); "
-					+ "FAIL only when both absent. Got rels: " + rels);
-		}
+		List<?> links = linksList();
+		Predicate<Object> isServiceDesc = l -> (l instanceof Map) && "service-desc".equals(((Map<?, ?>) l).get("rel"));
+		Predicate<Object> isServiceDoc = l -> (l instanceof Map) && "service-doc".equals(((Map<?, ?>) l).get("rel"));
+		ETSAssert.assertJsonArrayContainsAnyOf(links,
+				List.of(new AbstractMap.SimpleEntry<>("rel=service-desc link", isServiceDesc),
+						new AbstractMap.SimpleEntry<>("rel=service-doc link", isServiceDoc)),
+				REQ_API_DEFINITION_SUCCESS);
 	}
 
 	/**
@@ -213,8 +206,7 @@ public class LandingPageTests {
 		boolean selfAbsent = !rels.contains("self");
 		if (!(selfPresent || selfAbsent)) {
 			// Logically unreachable — kept defensive in case rels is somehow null.
-			throw new AssertionError(
-					REQ_ROOT_SUCCESS + " — sentinel could not determine self-rel state from rels: " + rels);
+			ETSAssert.failWithUri(REQ_ROOT_SUCCESS, "sentinel could not determine self-rel state from rels: " + rels);
 		}
 	}
 
@@ -231,6 +223,16 @@ public class LandingPageTests {
 			.filter(r -> r instanceof String)
 			.map(r -> (String) r)
 			.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Returns the parsed {@code links} array as a {@code List<?>} for use with
+	 * {@link ETSAssert#assertJsonArrayContains} and friends. Returns an empty list if the
+	 * body or {@code links} field is missing/null.
+	 */
+	private List<?> linksList() {
+		Object links = (this.landingBody == null) ? null : this.landingBody.get("links");
+		return (links instanceof List) ? (List<?>) links : List.of();
 	}
 
 }

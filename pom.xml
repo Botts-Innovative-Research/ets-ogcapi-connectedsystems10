@@ -58,6 +58,26 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Reproducible builds (Maven 3.6.2+ property approach) — ADR-004 C-5. -->
     <project.build.outputTimestamp>2026-04-27T00:00:00Z</project.build.outputTimestamp>
+
+    <!--
+      Schema bundle provenance (ADR-002):
+      src/main/resources/schemas/ is a verbatim copy from the sibling repo
+      csapi_compliance@ab53658 (tagged v1.0-frozen), originally derived from
+      github.com/opengeospatial/ogcapi-connected-systems@${connected-systems-yaml.sha}.
+
+      The SHA below tracks the upstream OGC master at the schema-copy time
+      (2026-04-28). The actual bundled bytes were fetched by csapi_compliance/
+      scripts/fetch-schemas.ts on 2026-04-17, which did NOT pin the upstream
+      SHA in csapi_compliance's manifest.json (only generatedAt timestamp).
+      Treat this property as a forward-tracking marker for Sprint 2's
+      schema-refresh reconcile, NOT as a hash that authenticates the bundled
+      bytes. See ets-ogcapi-connectedsystems10/ops/server.md "Schema
+      provenance" for the full audit trail.
+
+      When the schema bundle is re-fetched, update this SHA in the same
+      commit so a future reviewer can re-derive bytes from upstream + SHA.
+    -->
+    <connected-systems-yaml.sha>3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f</connected-systems-yaml.sha>
   </properties>
 
   <dependencies>

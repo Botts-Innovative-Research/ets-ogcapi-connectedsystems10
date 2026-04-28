@@ -1,0 +1,31 @@
+# Maven build output
+target/
+dependency-reduced-pom.xml
+
+# IDE — IntelliJ
+.idea/
+*.iml
+
+# IDE — VSCode
+.vscode/
+
+# IDE — Eclipse
+*.classpath
+*.project
+.settings/
+bin/
+
+# Java
+out/
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local config
+.env
+.env.local

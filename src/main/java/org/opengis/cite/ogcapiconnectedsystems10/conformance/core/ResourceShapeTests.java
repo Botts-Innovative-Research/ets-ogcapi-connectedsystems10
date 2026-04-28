@@ -52,7 +52,7 @@ import io.restassured.response.Response;
 public class ResourceShapeTests {
 
 	/** Canonical OGC requirement URI for OpenAPI 3.0 implementation. */
-	static final String REQ_OAS30_OAS_IMPL = "http://www.opengis.net/spec/ogcapi-common-2/0.0/req/oas30/oas-impl";
+	static final String REQ_OAS30_OAS_IMPL = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/oas30/oas-impl";
 
 	/**
 	 * Canonical OGC requirement URI for conformance success (re-used for shape check).

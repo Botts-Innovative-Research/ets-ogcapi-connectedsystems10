@@ -59,25 +59,70 @@
   </properties>
 
   <dependencies>
+    <!-- TeamEngine integration: SPI registration -->
     <dependency>
       <groupId>org.opengis.cite.teamengine</groupId>
       <artifactId>teamengine-spi</artifactId>
     </dependency>
+
+    <!-- Test framework: TestNG (declared by ets-common's depMgmt) -->
     <dependency>
-      <groupId>org.opengis.cite</groupId>
-      <artifactId>schema-utils</artifactId>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
     </dependency>
+
+    <!-- HTTP DSL: REST Assured (auth, response capture) -->
     <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-client</artifactId>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
     </dependency>
+
+    <!-- OpenAPI 3.0 + JSON Schema validation (Sprint 2+, available now for shared utilities) -->
+    <dependency>
+      <groupId>com.reprezen.kaizen</groupId>
+      <artifactId>openapi-parser</artifactId>
+    </dependency>
+
+    <!-- Geometry types (used in feature/observation body validation) -->
+    <dependency>
+      <groupId>org.locationtech.jts</groupId>
+      <artifactId>jts-core</artifactId>
+    </dependency>
+
+    <!-- CRS transformation -->
+    <dependency>
+      <groupId>org.locationtech.proj4j</groupId>
+      <artifactId>proj4j</artifactId>
+    </dependency>
+
+    <!-- GeoJSON read/write -->
+    <dependency>
+      <groupId>org.locationtech.jts.io</groupId>
+      <artifactId>jts-io-common</artifactId>
+    </dependency>
+
+    <!-- Logging facade -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <!-- Logging backend (slf4j binding) -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+
+    <!-- Test-scoped deps inherited via ets-common's depMgmt -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

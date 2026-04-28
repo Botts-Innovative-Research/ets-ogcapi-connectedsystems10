@@ -1,0 +1,109 @@
+= OGC API - Connected Systems Part 1 — Executable Test Suite (ETS)
+:toc:
+:toc-placement!:
+
+== Cross-repo note
+
+[NOTE]
+====
+This repository (`ets-ogcapi-connectedsystems10`) is the *Java/TestNG ETS*
+targeted at the OGC TeamEngine certification track.
+
+A *sibling repository* exists:
+https://github.com/Botts-Innovative-Research/csapi_compliance[csapi_compliance]
+— the v1.0-frozen *developer pre-flight tool* (a Next.js web application
+that lets a server developer self-check conformance interactively before
+submitting to OGC CITE). The web app is frozen at tag `v1.0-frozen`
+(2026-04-27); ongoing CITE-track work happens here.
+
+The two repositories share the same JSON Schema corpus (verbatim copy)
+but no code. See `_bmad/adrs/ADR-005` (in csapi_compliance) for the
+cross-repo relationship.
+====
+
+toc::[]
+
+== Overview
+
+This Executable Test Suite (ETS) verifies that an implementation of
+*OGC API - Connected Systems Part 1: Feature Resources* (OGC 23-001)
+conforms to the standard.
+
+It is built on the OGC TeamEngine framework (TeamEngine 5.6.x) and
+uses TestNG + REST Assured + Glassfish Jersey 3.x to drive HTTP
+exchanges with the implementation under test (IUT).
+
+* *Spec*: OGC API - Connected Systems Part 1 (OGC 23-001), v1.0
+* *TeamEngine*: 5.6.1 (production deployment default)
+* *JDK*: 17
+* *Build*: Maven 3.9+
+* *Parent*: `org.opengis.cite:ets-common:17`
+
+== Conformance classes covered
+
+[NOTE]
+====
+The full enumeration of conformance classes covered by this ETS is
+*deferred to S-ETS-01-02*. Sprint 1 (S-ETS-01-01) lands the green build
+scaffold only; real conformance tests follow.
+
+The target coverage at v1.0 is the 14 Part 1 conformance classes
+(Core + 13 dependent classes). Part 2 is explicitly out of scope of
+this ETS until a follow-on epic.
+====
+
+== How to run locally
+
+=== With Maven (developer build)
+
+[source,bash]
+----
+# Prerequisite: JDK 17, Maven 3.9+
+mvn clean install
+----
+
+The produced jar lives at
+`target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar`. The all-in-one
+(AIO) jar with dependencies is also produced via the assembly plugin
+under the same `target/` directory.
+
+=== With Docker (TeamEngine integration)
+
+[source,bash]
+----
+# Build the Docker image bundling the ETS into TeamEngine 5.6.1
+mvn -P docker package
+docker run --rm -p 8081:8080 ogccite/ets-ogcapi-connectedsystems10:0.1-SNAPSHOT-teamengine-5.6.1
+# Then visit http://localhost:8081/teamengine
+----
+
+=== Smoke test against a live server
+
+[source,bash]
+----
+# Smoke test (S-ETS-01-03 — to land in a follow-up sprint):
+# scripts/smoke-test.sh https://your.server.example/api/v1/
+----
+
+== How to submit a bug
+
+Open a GitHub issue at
+https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10/issues
+including:
+
+* The IUT URL (or a redacted description of the server)
+* The TestNG report XML (or a CTL log if running via TeamEngine)
+* Expected vs. observed behavior
+* Spec section reference (`/req/...` URI) if known
+
+Bugs in the *spec text itself* (e.g. ambiguous requirements, unmet
+preconditions in normative examples) should be filed against the
+upstream OGC repository:
+https://github.com/opengeospatial/ogcapi-connected-systems
+
+== License
+
+This work is licensed under the
+http://opensource.org/licenses/Apache-2.0[Apache License, Version 2.0].
+
+See `LICENSE.txt` for the full text.

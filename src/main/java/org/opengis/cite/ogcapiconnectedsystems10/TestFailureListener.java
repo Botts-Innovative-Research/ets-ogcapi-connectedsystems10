@@ -1,19 +1,28 @@
 package org.opengis.cite.ogcapiconnectedsystems10;
 
-import com.sun.jersey.api.client.ClientRequest;
-import com.sun.jersey.api.client.ClientResponse;
 import java.nio.charset.StandardCharsets;
-import javax.ws.rs.core.MediaType;
-import org.opengis.cite.ogcapiconnectedsystems10.util.ClientUtils;
+
 import org.opengis.cite.ogcapiconnectedsystems10.util.XMLUtils;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 import org.w3c.dom.Document;
 
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 /**
  * A listener that augments a test result with diagnostic information in the event that a
  * test method failed. This information will appear in the XML report when the test run is
  * completed.
+ *
+ * <p>
+ * Ported from the archetype's Jersey-1 listener: Invocation/Response replace
+ * ClientRequest/ClientResponse. Jakarta's {@link Invocation} does not expose request
+ * headers/method/URI directly, so request diagnostics are reduced to a marker string.
+ * Rich request/response capture moves to REST Assured logging filters in Sprint 2+
+ * conformance classes (per features10@java17Tomcat10TeamEngine6).
+ * </p>
  */
 public class TestFailureListener extends TestListenerAdapter {
 
@@ -36,33 +45,17 @@ public class TestFailureListener extends TestListenerAdapter {
 	}
 
 	/**
-	 * Gets diagnostic information about a request message. If the request contains a
-	 * message body, it should be represented as a DOM Document node or as an object
-	 * having a meaningful toString() implementation.
-	 * @param req An object representing an HTTP request message.
-	 * @return A string containing information gleaned from the request message.
+	 * Gets diagnostic information about a request invocation. Jakarta's Invocation does
+	 * not expose method/headers/URI; for richer capture, Sprint 2+ tests use REST
+	 * Assured's request logging filter.
+	 * @param req A built Invocation, or null if no request was made.
+	 * @return A short string describing the request invocation.
 	 */
-	String getRequestMessageInfo(ClientRequest req) {
+	String getRequestMessageInfo(Invocation req) {
 		if (null == req) {
 			return "No request message.";
 		}
-		StringBuilder msgInfo = new StringBuilder();
-		msgInfo.append("Method: ").append(req.getMethod()).append('\n');
-		msgInfo.append("Target URI: ").append(req.getURI()).append('\n');
-		msgInfo.append("Headers: ").append(req.getHeaders()).append('\n');
-		if (null != req.getEntity()) {
-			Object entity = req.getEntity();
-			String body;
-			if (Document.class.isInstance(entity)) {
-				Document doc = Document.class.cast(entity);
-				body = XMLUtils.writeNodeToString(doc);
-			}
-			else {
-				body = entity.toString();
-			}
-			msgInfo.append(body).append('\n');
-		}
-		return msgInfo.toString();
+		return "Invocation: " + req.toString();
 	}
 
 	/**
@@ -70,20 +63,21 @@ public class TestFailureListener extends TestListenerAdapter {
 	 * @param rsp An object representing an HTTP response message.
 	 * @return A string containing information gleaned from the response message.
 	 */
-	String getResponseMessageInfo(ClientResponse rsp) {
+	String getResponseMessageInfo(Response rsp) {
 		if (null == rsp) {
 			return "No response message.";
 		}
 		StringBuilder msgInfo = new StringBuilder();
 		msgInfo.append("Status: ").append(rsp.getStatus()).append('\n');
-		msgInfo.append("Headers: ").append(rsp.getHeaders()).append('\n');
+		msgInfo.append("Headers: ").append(rsp.getStringHeaders()).append('\n');
 		if (rsp.hasEntity()) {
-			if (rsp.getType().isCompatible(MediaType.APPLICATION_XML_TYPE)) {
-				Document doc = ClientUtils.getResponseEntityAsDocument(rsp, null);
+			MediaType mediaType = rsp.getMediaType();
+			if (null != mediaType && mediaType.isCompatible(MediaType.APPLICATION_XML_TYPE)) {
+				Document doc = rsp.readEntity(Document.class);
 				msgInfo.append(XMLUtils.writeNodeToString(doc));
 			}
 			else {
-				byte[] body = rsp.getEntity(byte[].class);
+				byte[] body = rsp.readEntity(byte[].class);
 				msgInfo.append(new String(body, StandardCharsets.UTF_8));
 			}
 			msgInfo.append('\n');

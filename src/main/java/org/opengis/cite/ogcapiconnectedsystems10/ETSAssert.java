@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.jersey.api.client.ClientResponse;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Provides a set of custom assertion methods.
@@ -161,16 +161,16 @@ public class ETSAssert {
 	 * <li>[local name] = "ExceptionReport"</li>
 	 * <li>[namespace name] = "http://www.opengis.net/ows/2.0"</li>
 	 * </ul>
-	 * @param rsp A ClientResponse object representing an HTTP response message.
+	 * @param rsp A Jakarta Response object representing an HTTP response message.
 	 * @param exceptionCode The expected OGC exception code.
 	 * @param locator A case-insensitive string value expected to occur in the locator
 	 * attribute (e.g. a parameter name); the attribute value will be ignored if the
 	 * argument is null or empty.
 	 */
-	public static void assertExceptionReport(ClientResponse rsp, String exceptionCode, String locator) {
-		Assert.assertEquals(rsp.getStatus(), ClientResponse.Status.BAD_REQUEST.getStatusCode(),
+	public static void assertExceptionReport(Response rsp, String exceptionCode, String locator) {
+		Assert.assertEquals(rsp.getStatus(), Response.Status.BAD_REQUEST.getStatusCode(),
 				ErrorMessage.get(ErrorMessageKeys.UNEXPECTED_STATUS));
-		Document doc = rsp.getEntity(Document.class);
+		Document doc = rsp.readEntity(Document.class);
 		String expr = String.format("//ows:Exception[@exceptionCode = '%s']", exceptionCode);
 		NodeList nodeList = null;
 		try {

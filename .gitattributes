@@ -1,0 +1,27 @@
+# Enforce LF line endings on text files for cross-platform reproducible
+# builds (NFR-ETS-01). Without this, Windows checkouts via git autocrlf
+# mutate JSON/XML/CTL/properties resource files inside the produced jar,
+# breaking byte-equality between Linux and Windows builds.
+#
+# See architect-handoff.yaml constraints_for_generator + ADR-004 D-1.
+
+*.json     text eol=lf
+*.xml      text eol=lf
+*.ctl      text eol=lf
+*.properties text eol=lf
+*.adoc     text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.java     text eol=lf
+*.md       text eol=lf
+*.txt      text eol=lf
+*.sh       text eol=lf
+
+# Treat binary blobs explicitly so git never tries to mutate them.
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.jar      binary
+*.zip      binary
+*.war      binary

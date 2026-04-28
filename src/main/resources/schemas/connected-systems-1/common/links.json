@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Link Collection",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/common/commonDefs.json#/$defs/Link"
+  },
+  "$id": "https://csapi-compliance.local/schemas/connected-systems-1/common/links.json"
+}

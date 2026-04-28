@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "title": "Deployed System Feature",
+    "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/sensorml/deployedSystem.json"
+  },
+  "$id": "https://csapi-compliance.local/schemas/connected-systems-1/sensorml/deployedSystemArray.json"
+}

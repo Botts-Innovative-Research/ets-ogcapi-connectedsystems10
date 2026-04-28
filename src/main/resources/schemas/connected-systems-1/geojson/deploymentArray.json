@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "title": "Deployment Feature",
+    "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/geojson/deployment.json"
+  },
+  "$id": "https://csapi-compliance.local/schemas/connected-systems-1/geojson/deploymentArray.json"
+}

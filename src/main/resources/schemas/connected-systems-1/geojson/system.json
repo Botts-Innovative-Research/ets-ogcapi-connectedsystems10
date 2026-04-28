@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "allOf": [
+    {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/geojson/feature.json"
+    },
+    {
+      "properties": {
+        "properties": {
+          "properties": {
+            "featureType": {
+              "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/common/uris.json#/$defs/SystemTypeUris"
+            },
+            "assetType": {
+              "description": "Type of asset represented by this system.",
+              "type": "string",
+              "enum": [
+                "Equipment",
+                "Human",
+                "LivingThing",
+                "Simulation",
+                "Process",
+                "Group",
+                "Other"
+              ]
+            },
+            "validTime": {
+              "description": "Time period during which the system description is valid.",
+              "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/common/commonDefs.json#/$defs/TimePeriod"
+            },
+            "systemKind@link": {
+              "description": "Link to the system kind description (i.e., its nature or specifications).",
+              "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/common/commonDefs.json#/$defs/Link"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$id": "https://csapi-compliance.local/schemas/connected-systems-1/geojson/system.json"
+}

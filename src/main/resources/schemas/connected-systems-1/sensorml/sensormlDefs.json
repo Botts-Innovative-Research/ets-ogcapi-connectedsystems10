@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "DescribedObject": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/DescribedObject.json"
+    },
+    "AbstractProcess": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/AbstractProcess.json"
+    },
+    "PhysicalComponent": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/PhysicalComponent.json"
+    },
+    "PhysicalSystem": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/PhysicalSystem.json"
+    },
+    "SimpleProcess": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/SimpleProcess.json"
+    },
+    "AggregateProcess": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/AggregateProcess.json"
+    },
+    "Deployment": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/Deployment.json"
+    },
+    "DeployedSystem": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/DeployedSystem.json"
+    },
+    "DerivedProperty": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/DerivedProperty.json"
+    },
+    "Pose": {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-shared/sensorml/schemas/json/Pose.json"
+    }
+  },
+  "$id": "https://csapi-compliance.local/schemas/connected-systems-1/sensorml/sensormlDefs.json"
+}

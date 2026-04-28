@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SamplingFeature",
+  "allOf": [
+    {
+      "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/geojson/feature.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "type": "object",
+          "required": [
+            "featureType",
+            "sampledFeature@link"
+          ],
+          "properties": {
+            "validTime": {
+              "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/common/commonDefs.json#/$defs/TimePeriod"
+            },
+            "sampledFeature@link": {
+              "$ref": "https://csapi-compliance.local/schemas/connected-systems-1/common/commonDefs.json#/$defs/Link"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$id": "https://csapi-compliance.local/schemas/connected-systems-1/geojson/samplingFeature.json"
+}

@@ -188,6 +188,15 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
+        <!-- Version inherited from ets-common:17 pluginManagement (3.4.2). ADR-004 C-4. -->
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <Implementation-Title>${project.name}</Implementation-Title>
+            </manifestEntries>
+          </archive>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>

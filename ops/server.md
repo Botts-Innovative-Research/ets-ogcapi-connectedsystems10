@@ -1,6 +1,6 @@
 # server.md — operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-04-28 — Sprint 1 (S-ETS-01-01) scaffold landing.
+> Last updated: 2026-04-28 — Sprint 1 / S-ETS-01-03 TeamEngine Docker smoke test landing.
 
 ## Schema provenance
 
@@ -56,8 +56,109 @@ The ETS targets TeamEngine 5.6.x (currently 5.6.1) — the production
 deployment behind https://cite.opengeospatial.org/teamengine/.
 Pin recorded in `pom.xml` `<docker.teamengine.version>` property.
 
-The smoke test (S-ETS-01-03) Docker image is built via `mvn -P docker
-package` and runs the ETS jar inside `ogccite/teamengine-production:5.6.1`.
+## Docker smoke test (S-ETS-01-03)
+
+The repo-root `Dockerfile` + `docker-compose.yml` + `scripts/smoke-test.sh`
+build a TeamEngine 5.6.1 container with this ETS preinstalled and run the
+Core suite against the GeoRobotix demo IUT
+(`https://api.georobotix.io/ogc/t18/api`).
+
+### Spec drift documented
+
+The architect-handoff (`.harness/handoffs/architect-handoff.yaml` in the
+sibling `csapi_compliance` repo) directed
+`FROM ogccite/teamengine-production:5.6.1` for the Dockerfile. Two facts
+forced a deviation:
+
+1. **Docker Hub does not publish a `:5.6.1` tag** for
+   `ogccite/teamengine-production`. Only `:latest` and `:1.0-SNAPSHOT`
+   exist (verified 2026-04-28; both are 2.45 GB images that internally
+   bundle TE 5.6.1).
+2. **The production image runs JDK 8** (`JAVA_VERSION=8u212`). Our ETS
+   classes target JDK 17 (`<maven.compiler.release>17`) and crash with
+   `UnsupportedClassVersionError ... class file version 61.0` when
+   dropped into that image's WEB-INF/lib (smoke confirmed
+   2026-04-28T19:28Z).
+
+**Resolution**: the Sprint 1 Dockerfile assembles TeamEngine 5.6.1 on top
+of `tomcat:8.5-jre17` by downloading the published TE 5.6.1 web WAR /
+console / common-libs zips from Maven Central. This produces a
+TeamEngine 5.6.1 + JDK 17 container that is byte-for-byte equivalent in
+test behaviour to the production image's TE deployment but loadable by
+our JDK 17 ETS jar. Empirical evidence:
+12/12 @Test methods PASS against GeoRobotix in 1.6 s via the SPI route
+(report at `ops/test-results/s-ets-01-03-teamengine-smoke-2026-04-28.xml`).
+
+Three secondary patches the Dockerfile applies, with their root causes:
+
+- TE 5.6.1's `META-INF/context.xml` references
+  `org.apache.catalina.loader.VirtualWebappLoader` (a Tomcat 7-only
+  class). Tomcat 8.5+ removed it. The `<Loader>` element is `sed`'d out
+  because every ETS jar is already in WEB-INF/lib (no external classpath
+  needed).
+- JDK 11+ removed the bundled `javax.xml.bind.*` JAXB classes that TE
+  5.6.1's TestSuiteController servlet uses at init time. The Dockerfile
+  drops `jaxb-api`, `jaxb-core`, `jaxb-impl`, and `javax.activation-api`
+  jars into Tomcat's shared `lib/` directory.
+- The `maven-assembly-plugin`'s `deps.xml` deliberately excludes
+  transitives of `teamengine-spi` (Jersey 3.x + jakarta APIs) because in
+  the production image they would clash with Jersey 1.x. Our
+  `SuiteAttribute.java` imports `jakarta.ws.rs.client.Client`, so the
+  Dockerfile stages the FULL compile-scope dependency closure into
+  WEB-INF/lib via `mvn dependency:copy-dependencies` (with the TE 6.0.0
+  jars filtered out so they do not collide with the bundled TE 5.6.1).
+
+**Spec reconciliation**: the new repo's openspec `spec.md` (in
+`csapi_compliance`) still says
+`Dockerfile SHALL extend ogccite/teamengine-production:5.6.1`. Sam
+should reconcile that line at the next planning cycle to read
+`Dockerfile SHALL produce a TeamEngine 5.6.1 webapp on a JDK 17 base
+image`. Until then, this `ops/server.md` block is the authoritative
+record of why the implementation deviates.
+
+### How to build
+
+```
+mvn clean package -DskipTests
+mvn dependency:copy-dependencies \
+    -DoutputDirectory=target/lib-runtime \
+    -DincludeScope=runtime
+rm -f target/lib-runtime/teamengine-*.jar
+docker build -t ets-ogcapi-connectedsystems10:smoke .
+```
+
+### How to run interactively
+
+```
+docker run -p 8081:8080 --name ets-csapi ets-ogcapi-connectedsystems10:smoke
+# open http://localhost:8081/teamengine/  (login: ogctest / ogctest)
+```
+
+OR via `docker-compose.yml`:
+
+```
+docker compose up --build
+```
+
+### How to invoke the smoke test
+
+```
+bash scripts/smoke-test.sh
+```
+
+The script tries host port 8081 first, falls back to 8082 if 8081 is
+busy. Override with `SMOKE_PORT=8083 bash scripts/smoke-test.sh`. Reports
+land at `ops/test-results/s-ets-01-03-teamengine-smoke-<DATE>.xml` and
+`s-ets-01-03-teamengine-container-<DATE>.log`.
+
+### Dev-environment caveat: port 8081 collision
+
+In the WSL2 host this repo is developed on, an unrelated container
+`field-hub-osh-1` holds host port 8081 as of 2026-04-28
+(`docker ps | grep field-hub-osh`). The committed configuration
+(`docker-compose.yml`, `pom.xml` `<docker.teamengine.version>` plumbing)
+keeps the canonical 8081 port — `scripts/smoke-test.sh`'s `pick_port()`
+auto-detects the conflict and falls back to 8082 for the smoke run.
 
 ## Known issues
 

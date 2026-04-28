@@ -348,7 +348,7 @@
     </repository>
     <site>
       <id>site</id>
-      <url>scm:git:git@github.com:opengeospatial/ets-ogcapi-connectedsystems10.git</url>
+      <url>scm:git:git@github.com:Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git</url>
     </site>
   </distributionManagement>
 </project>

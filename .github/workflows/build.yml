@@ -1,0 +1,50 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Maven build (JDK 17, Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn -B clean verify
+
+      - name: Upload jar (on success)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ets-jar-${{ github.sha }}
+          path: target/ets-ogcapi-connectedsystems10-*.jar
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Upload surefire reports (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports-${{ github.sha }}
+          path: target/surefire-reports/
+          retention-days: 7
+
+# Sprint 1 deferment note (NFR-ETS-06 macOS + WSL2 matrix):
+# This workflow is Linux-only for Sprint 1. Cross-OS verification on macOS
+# and WSL2 is desirable per NFR-ETS-06 but is deferred to a follow-up sprint
+# once the Linux build is fully green and the suite has real conformance
+# tests. The macOS + WSL2 paths are mainly relevant for the developer
+# command-line build, which is exercised manually today.

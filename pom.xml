@@ -107,10 +107,11 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
 
-    <!-- Logging backend (slf4j binding) -->
+    <!-- Logging backend (slf4j 2.x binding); not managed by ets-common:17, pin explicitly. -->
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
+      <version>1.5.18</version>
     </dependency>
 
     <!-- Test-scoped deps inherited via ets-common's depMgmt -->

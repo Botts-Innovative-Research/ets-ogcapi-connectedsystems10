@@ -1,8 +1,8 @@
 package org.opengis.cite.ogcapiconnectedsystems10;
 
-import com.sun.jersey.api.client.Client;
-
 import java.io.File;
+
+import jakarta.ws.rs.client.Client;
 
 import org.w3c.dom.Document;
 

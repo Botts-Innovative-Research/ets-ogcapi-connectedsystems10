@@ -5,7 +5,9 @@ import static io.restassured.RestAssured.given;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
+import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
 import org.testng.ISuite;
 import org.testng.ITestContext;
@@ -83,11 +85,7 @@ public class ConformanceTests {
 	@Test(description = "OGC-19-072 " + REQ_CONFORMANCE_SUCCESS
 			+ ": GET /conformance returns HTTP 200 (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)")
 	public void conformancePageReturnsHttp200() {
-		int status = this.response.getStatusCode();
-		if (status != 200) {
-			throw new AssertionError(
-					REQ_CONFORMANCE_SUCCESS + " — expected HTTP 200 from " + this.conformanceUri + ", got " + status);
-		}
+		ETSAssert.assertStatus(this.response, 200, REQ_CONFORMANCE_SUCCESS);
 	}
 
 	/**
@@ -105,9 +103,8 @@ public class ConformanceTests {
 			+ ": /conformance body is parseable JSON (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)")
 	public void conformancePageReturnsJson() {
 		if (this.body == null) {
-			throw new AssertionError(
-					REQ_CONFORMANCE_SUCCESS + " — /conformance body did not parse as JSON. Content-Type was: "
-							+ this.response.getContentType());
+			ETSAssert.failWithUri(REQ_CONFORMANCE_SUCCESS,
+					"/conformance body did not parse as JSON. Content-Type was: " + this.response.getContentType());
 		}
 	}
 
@@ -121,17 +118,13 @@ public class ConformanceTests {
 	@SuppressWarnings("unchecked")
 	public void conformancePageHasConformsToArray(ITestContext testContext) {
 		if (this.body == null) {
-			throw new AssertionError(REQ_CONFORMANCE_SUCCESS + " — /conformance body did not parse as JSON");
+			ETSAssert.failWithUri(REQ_CONFORMANCE_SUCCESS, "/conformance body did not parse as JSON");
 		}
-		Object conformsTo = this.body.get("conformsTo");
-		if (!(conformsTo instanceof List)) {
-			throw new AssertionError(REQ_CONFORMANCE_SUCCESS + " — expected 'conformsTo' to be a JSON array; got: "
-					+ (conformsTo == null ? "missing" : conformsTo.getClass().getSimpleName()));
-		}
-		List<Object> conformsList = (List<Object>) conformsTo;
+		ETSAssert.assertJsonObjectHas(this.body, "conformsTo", List.class, REQ_CONFORMANCE_SUCCESS);
+		List<Object> conformsList = (List<Object>) this.body.get("conformsTo");
 		if (conformsList.isEmpty()) {
-			throw new AssertionError(REQ_CONFORMANCE_SUCCESS
-					+ " — 'conformsTo' array is empty; expected at least one declared conformance class URI");
+			ETSAssert.failWithUri(REQ_CONFORMANCE_SUCCESS,
+					"'conformsTo' array is empty; expected at least one declared conformance class URI");
 		}
 		ISuite suite = testContext.getSuite();
 		suite.setAttribute(CONFORMS_TO_ATTR, conformsList);
@@ -148,12 +141,9 @@ public class ConformanceTests {
 	@SuppressWarnings("unchecked")
 	public void conformancePageDeclaresCsCore() {
 		List<Object> conformsList = (List<Object>) this.body.get("conformsTo");
-		boolean hasCore = conformsList.stream()
-			.anyMatch(uri -> uri instanceof String && CS_CORE_CONFORMANCE_URI.equals(uri));
-		if (!hasCore) {
-			throw new AssertionError("OGC-23-001 — IUT must declare the CS API Core conformance class '"
-					+ CS_CORE_CONFORMANCE_URI + "' in conformsTo. Declared classes: " + conformsList);
-		}
+		Predicate<Object> isCsCore = uri -> CS_CORE_CONFORMANCE_URI.equals(uri);
+		ETSAssert.assertJsonArrayContains(conformsList, isCsCore, "CS API Core conformance class URI '"
+				+ CS_CORE_CONFORMANCE_URI + "' (declared classes: " + conformsList + ")", CS_CORE_CONFORMANCE_URI);
 	}
 
 }

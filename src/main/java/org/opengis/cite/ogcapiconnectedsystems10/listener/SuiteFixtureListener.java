@@ -62,12 +62,31 @@ public class SuiteFixtureListener implements ISuiteListener {
 			throw new IllegalArgumentException("Required test run parameter not found: " + TestRunArg.IUT.toString());
 		}
 		URI iutRef = URI.create(iutParam.trim());
+		// Stash the raw IUT URI on the suite so REST Assured-based test classes (Sprint 1
+		// onwards) can read it without re-parsing the XmlSuite parameter map. Coexists
+		// with
+		// the legacy TEST_SUBJECT/TEST_SUBJ_FILE attributes used by archetype-style
+		// tests.
+		suite.setAttribute(SuiteAttribute.IUT.getName(), iutRef);
 		File entityFile = null;
 		try {
 			entityFile = URIUtils.dereferenceURI(iutRef);
 		}
 		catch (IOException iox) {
-			throw new RuntimeException("Failed to dereference resource located at " + iutRef, iox);
+			// Non-fatal: a CS API IUT may legitimately reject the default Accept header
+			// or
+			// be temporarily unreachable. Sprint 1 Core tests reach the IUT via REST
+			// Assured
+			// directly using the `iut` suite attribute set above; the legacy DOM-based
+			// TEST_SUBJECT path is not exercised by the new conformance.core.* classes.
+			// Log
+			// and continue; tests that actually require TEST_SUBJECT will SkipException
+			// via
+			// CommonFixture.initCommonFixture.
+			TestSuiteLogger.log(Level.WARNING, "Failed to dereference IUT URI " + iutRef
+					+ " — REST Assured tests in conformance.core.* will still run; legacy DOM tests will SKIP. ("
+					+ iox.getMessage() + ")");
+			return;
 		}
 		TestSuiteLogger.log(Level.FINE, String.format("Wrote test subject to file: %s (%d bytes)",
 				entityFile.getAbsolutePath(), entityFile.length()));
@@ -77,7 +96,12 @@ public class SuiteFixtureListener implements ISuiteListener {
 			iutDoc = URIUtils.parseURI(entityFile.toURI());
 		}
 		catch (Exception x) {
-			throw new RuntimeException("Failed to parse resource retrieved from " + iutRef, x);
+			// JSON / non-XML IUT representations are expected for CS API. Skip DOM
+			// population; REST Assured-based tests proceed via the iut attribute.
+			TestSuiteLogger.log(Level.WARNING, "Resource retrieved from " + iutRef
+					+ " is not parseable as XML (likely JSON for CS API). DOM-based legacy tests will SKIP via CommonFixture. ("
+					+ x.getMessage() + ")");
+			return;
 		}
 		suite.setAttribute(SuiteAttribute.TEST_SUBJECT.getName(), iutDoc);
 		if (TestSuiteLogger.isLoggable(Level.FINE)) {

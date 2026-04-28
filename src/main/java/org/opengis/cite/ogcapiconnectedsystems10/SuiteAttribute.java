@@ -1,6 +1,7 @@
 package org.opengis.cite.ogcapiconnectedsystems10;
 
 import java.io.File;
+import java.net.URI;
 
 import jakarta.ws.rs.client.Client;
 
@@ -24,7 +25,13 @@ public enum SuiteAttribute {
 	/**
 	 * A File containing the test subject or a description of it.
 	 */
-	TEST_SUBJ_FILE("testSubjectFile", File.class);
+	TEST_SUBJ_FILE("testSubjectFile", File.class),
+	/**
+	 * The raw IUT (Implementation Under Test) URI as supplied via TestNG suite parameter.
+	 * Used by REST Assured-based conformance.core.* test classes (Sprint 1+) which reach
+	 * the IUT directly rather than via the legacy DOM-parsing TEST_SUBJECT path.
+	 */
+	IUT("iut", URI.class);
 
 	private final Class attrType;
 

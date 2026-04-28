@@ -1,0 +1,45 @@
+# docker-compose.yml — ets-ogcapi-connectedsystems10
+#
+# REQ-ETS-TEAMENGINE-004: bring up the TeamEngine + ETS service at
+# http://localhost:8081/teamengine/ with a health check.
+#
+# Usage:
+#   1. Build the ETS jar + stage runtime deps:
+#        mvn clean package -DskipTests
+#        mvn dependency:copy-dependencies \
+#            -DoutputDirectory=target/lib-runtime -DincludeScope=runtime
+#        rm -f target/lib-runtime/teamengine-*.jar
+#   2. Bring up the stack:
+#        docker compose up --build
+#   3. Open http://localhost:8081/teamengine/ (default credentials:
+#        ogctest / ogctest)
+#   4. Hit the suite list:
+#        curl -u ogctest:ogctest -H 'Accept: application/xml' \
+#             http://localhost:8081/teamengine/rest/suites
+#
+# Dev-environment caveat (recorded in ops/server.md): on the WSL2 host this
+# repo is developed on, port 8081 is occupied by the unrelated `field-hub-osh`
+# container as of 2026-04-28. The smoke-test script (`scripts/smoke-test.sh`)
+# falls back to host port 8082 in that case via `docker run -p`. Compose stays
+# pinned to the canonical 8081 to match REQ-ETS-TEAMENGINE-004 and the
+# pom.xml `<docker.teamengine.version>` profile.
+
+services:
+  teamengine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ets-ogcapi-connectedsystems10:latest
+    container_name: ets-ogcapi-connectedsystems10
+    ports:
+      - "8081:8080"
+    environment:
+      JAVA_OPTS: "-Xms1024m -Xmx2048m -DTE_BASE=/usr/local/tomcat/te_base -Djavax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl"
+      CATALINA_OPTS: "-Dlog4j2.formatMsgNoLookups=true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -o /dev/null http://localhost:8080/teamengine/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 12
+    restart: unless-stopped

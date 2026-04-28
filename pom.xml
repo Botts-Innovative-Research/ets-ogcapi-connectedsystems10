@@ -194,6 +194,12 @@
             <manifestEntries>
               <Implementation-Version>${project.version}</Implementation-Version>
               <Implementation-Title>${project.name}</Implementation-Title>
+              <!-- ADR-004 C-5 reproducibility: override the inherited Build-Time
+                   (which uses ${maven.build.timestamp}, fresh per build) with the
+                   pinned ${project.build.outputTimestamp} so two builds of the same
+                   commit produce byte-identical jars. -->
+              <Build-Time>${project.build.outputTimestamp}</Build-Time>
+              <Build-Host>reproducible-build</Build-Host>
             </manifestEntries>
           </archive>
         </configuration>

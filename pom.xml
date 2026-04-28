@@ -101,6 +101,12 @@
       <artifactId>jts-io-common</artifactId>
     </dependency>
 
+    <!-- XML/Schematron/RelaxNG validators (org.opengis.cite.validation.*); managed by ets-common:17 -->
+    <dependency>
+      <groupId>org.opengis.cite</groupId>
+      <artifactId>schema-utils</artifactId>
+    </dependency>
+
     <!-- Logging facade -->
     <dependency>
       <groupId>org.slf4j</groupId>

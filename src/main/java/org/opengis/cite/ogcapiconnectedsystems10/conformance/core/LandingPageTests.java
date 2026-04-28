@@ -27,7 +27,8 @@ import io.restassured.response.Response;
  * REQ-ETS-CORE-001 (one {@code @Test} per OGC ATS assertion, each carrying the canonical
  * OGC requirement URI in its description). Direct port of v1.0
  * {@code csapi_compliance/src/engine/registry/common.ts} canonical URIs (verified against
- * {@code http://www.opengis.net/spec/ogcapi-common-1/1.0/req/ogcapi-common/landing-page*}).
+ * {@code http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/*} per
+ * S-ETS-02-03 OGC canonical {@code .adoc} sweep).
  * </p>
  *
  * <p>
@@ -47,9 +48,9 @@ import io.restassured.response.Response;
  *
  * <p>
  * Reference: OGC API – Common Part 1 (19-072) §7.5
- * <em>{@code /req/core/root-success}</em>; OGC API – Connected Systems Part 1 (23-001) §7
- * inherits Common Core. The canonical URIs below match the v1.0 TypeScript registry
- * verbatim per architect-handoff {@code evaluation_focus} #1 (URI fidelity).
+ * <em>{@code /req/landing-page/root-success}</em>; OGC API – Connected Systems Part 1
+ * (23-001) §7 inherits Common Core. The canonical URIs below match the v1.0 TypeScript
+ * registry verbatim per architect-handoff {@code evaluation_focus} #1 (URI fidelity).
  * </p>
  *
  * <p>
@@ -62,13 +63,13 @@ import io.restassured.response.Response;
 public class LandingPageTests {
 
 	/** Canonical OGC requirement URI for landing-page success. */
-	static final String REQ_ROOT_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/core/root-success";
+	static final String REQ_ROOT_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/root-success";
 
 	/** Canonical OGC requirement URI for conformance-success. */
-	static final String REQ_CONFORMANCE_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/core/conformance-success";
+	static final String REQ_CONFORMANCE_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success";
 
 	/** Canonical OGC requirement URI for api-definition-success. */
-	static final String REQ_API_DEFINITION_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/core/api-definition-success";
+	static final String REQ_API_DEFINITION_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/api-definition-success";
 
 	private URI iutUri;
 
@@ -161,9 +162,9 @@ public class LandingPageTests {
 	 *
 	 * <p>
 	 * <strong>Preserves v1.0 SCENARIO-API-DEF-FALLBACK-001 fix</strong>: per OGC 19-072
-	 * {@code /req/core/api-definition-success}, either link relation satisfies the
-	 * API-definition requirement. service-desc is preferred (machine-readable OpenAPI);
-	 * service-doc is the fallback (human-readable HTML).
+	 * {@code /req/landing-page/api-definition-success}, either link relation satisfies
+	 * the API-definition requirement. service-desc is preferred (machine-readable
+	 * OpenAPI); service-doc is the fallback (human-readable HTML).
 	 * </p>
 	 */
 	@Test(description = "OGC-19-072 " + REQ_API_DEFINITION_SUCCESS

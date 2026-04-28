@@ -35,14 +35,15 @@ import io.restassured.response.Response;
  * </p>
  *
  * <p>
- * Reference: OGC API – Common Part 1 (19-072) {@code /req/core/conformance-success}; OGC
- * API – Connected Systems Part 1 (23-001) Annex A {@code /conf/core}.
+ * Reference: OGC API – Common Part 1 (19-072)
+ * {@code /req/landing-page/conformance-success}; OGC API – Connected Systems Part 1
+ * (23-001) Annex A {@code /conf/core}.
  * </p>
  */
 public class ConformanceTests {
 
 	/** Canonical OGC requirement URI for conformance-success. */
-	static final String REQ_CONFORMANCE_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/core/conformance-success";
+	static final String REQ_CONFORMANCE_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success";
 
 	/** Canonical OGC requirement URI for the CS API Core conformance class. */
 	static final String CS_CORE_CONFORMANCE_URI = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core";

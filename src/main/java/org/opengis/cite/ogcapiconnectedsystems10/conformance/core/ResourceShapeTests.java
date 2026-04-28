@@ -58,7 +58,7 @@ public class ResourceShapeTests {
 	/**
 	 * Canonical OGC requirement URI for conformance success (re-used for shape check).
 	 */
-	static final String REQ_CONFORMANCE_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/core/conformance-success";
+	static final String REQ_CONFORMANCE_SUCCESS = "http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success";
 
 	private URI iutUri;
 

@@ -56,6 +56,8 @@
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Reproducible builds (Maven 3.6.2+ property approach) — ADR-004 C-5. -->
+    <project.build.outputTimestamp>2026-04-27T00:00:00Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>

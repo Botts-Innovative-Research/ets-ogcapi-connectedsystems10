@@ -1,0 +1,50 @@
+S-ETS-04-01: CI workflow ESCALATION binary close — Path B (formal-drop)
+=======================================================================
+Date: 2026-04-29
+Sprint: ets-04
+Generator run: 1 (mechanical-first batch)
+
+GH AUTH SCOPE PROBE
+-------------------
+$ gh auth status 2>&1 | grep -i scopes
+  - Token scopes: 'gist', 'read:org', 'repo'
+
+VERDICT: workflow scope ABSENT.
+
+Per epics/stories/s-ets-04-01-ci-workflow-escalation.md acceptance criteria:
+  - Path A (preferred — git mv into .github/workflows/) requires `workflow`
+    scope; not present at HEAD c56df10. Path A skipped.
+  - Path B (formal-drop) elected per:
+      * Pat's planner-handoff binary-close design
+      * Raze cumulative APPROVE_WITH_CONCERNS Sprint 3 ESCALATION TERRITORY flag
+      * 5-sprint user-action carryover (S-ETS-01-01..03 + S-ETS-02-05 +
+        S-ETS-03-03) — structurally invalid to defer a 6th time
+
+PATH B ACTIONS TAKEN
+--------------------
+1. Created ci/README.md documenting:
+   - Why the workflow is staged at ci/github-workflows-build.yml (not
+     .github/workflows/) — the OAuth-scope blocker
+   - Two activation paths for any future session:
+       (Option 1) `gh auth refresh -s workflow` + `git mv` + push
+       (Option 2) Manual upload via GitHub web UI (Settings → Actions →
+                  Workflows → New workflow) — bypasses gh-cli scope entirely
+   - Why ci/github-workflows-build.yml is PRESERVED (not deleted) — keeps
+     one-line activation cheap if user later wants CI
+
+2. Updated ops/status.md with "Perpetual Environmental Blockers (DROPPED
+   from sprint cadence)" section listing ci_workflow_live with rationale
+   + link to ci/README.md activation paths.
+
+3. Story status updated to PASS via Path B (binary close achieved); future
+   sprints will not re-litigate.
+
+ACCEPTANCE CRITERIA OUTCOMES
+----------------------------
+[x] PATH A or PATH B: PATH B (binary close, not 6th-sprint defer)
+[ ] PATH A acceptance: N/A (PATH A not chosen)
+[x] PATH B acceptance: ops/status.md "Perpetual Environmental Blockers"
+    section present with ci_workflow_live + rationale + link
+[x] Sprint 4 close artifact archived: this file
+[x] SCENARIO-ETS-CLEANUP-CI-WORKFLOW-ESCALATION-001 PASSES (Path B branch)
+

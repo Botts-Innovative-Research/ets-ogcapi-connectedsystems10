@@ -91,7 +91,15 @@ docker build -t "$IMAGE_TAG" . >/dev/null 2>&1 || {
 SMOKE_PORT="$(pick_port)"
 log "step 3/8 — docker run on host port ${SMOKE_PORT}"
 cleanup_silent
-docker run -d --name "$CONTAINER_NAME" -p "${SMOKE_PORT}:8080" "$IMAGE_TAG" >/dev/null \
+# Sprint 4 S-ETS-04-04 fix (b): --add-host=host.docker.internal:host-gateway
+# lets the container resolve host.docker.internal to the host's Docker
+# bridge IP. Docker Desktop (macOS/Windows) auto-injects this; Docker Engine
+# on Linux WITHOUT Desktop does NOT — the flag is required for the bash
+# sabotage-test.sh stub-server primitive to be reachable from inside the
+# container. Requires Docker 20.10+ (host-gateway keyword).
+docker run -d --name "$CONTAINER_NAME" \
+  --add-host=host.docker.internal:host-gateway \
+  -p "${SMOKE_PORT}:8080" "$IMAGE_TAG" >/dev/null \
   || die "docker run failed (port $SMOKE_PORT)"
 
 # ---------- Step 4: wait for /teamengine/ to return HTTP 200

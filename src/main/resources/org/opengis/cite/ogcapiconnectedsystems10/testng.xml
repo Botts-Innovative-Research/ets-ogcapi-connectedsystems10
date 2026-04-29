@@ -35,10 +35,22 @@
        dependency map handles ordering and skip semantics.
        Core tests stay in group "core"; SystemFeatures tests stay in group
        "systemfeatures"; Common tests stay in group "common". -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common (OGC 23-001 /conf/core, /conf/system; OGC 19-072 /conf/common)">
+  <!-- Sprint 4 S-ETS-04-05 (REQ-ETS-PART1-003): Subsystems group added; FIRST
+       two-level dependency chain in this ETS (Subsystems → SystemFeatures → Core).
+       Per ADR-010 v2 amendment (Architect 2026-04-29) defense-in-depth: the
+       <group depends-on> declaration here is the structural cascade; a
+       @BeforeClass SkipException fallback in SubsystemsTests.fetchSubsystemsCollection
+       cascades all 4 @Tests to SKIP if (a) IUT attribute missing, (b) no parent
+       system has subsystems, or (c) /subsystems returns non-200. This mitigates
+       Architect-surfaced risk TESTNG-BEFORE-SUITE-VS-DEPENDS-ON-GROUPS-INTERACTION-
+       ORDERING (TestNG 7.9.0 transitive cascade behavior is undocumented; the
+       @BeforeClass fallback is conditionally inert if cascade works as expected,
+       load-bearing if not). -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems (OGC 23-001 /conf/core, /conf/system, /conf/subsystem; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
+        <group name="subsystems" depends-on="systemfeatures"/>
       </dependencies>
     </groups>
     <classes>
@@ -48,6 +60,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

@@ -55,6 +55,12 @@ public class VerifyTestNGSuiteDependency {
 
 	private static final String SYSTEMFEATURES_GROUP = "systemfeatures";
 
+	/**
+	 * Sprint 4 S-ETS-04-05 / ADR-010 v2 amendment — Subsystems group (FIRST two-level
+	 * chain).
+	 */
+	private static final String SUBSYSTEMS_GROUP = "subsystems";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -62,6 +68,10 @@ public class VerifyTestNGSuiteDependency {
 
 	private static final List<Class<?>> SYSTEMFEATURES_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests.class);
+
+	/** Sprint 4 S-ETS-04-05 — Subsystems class set for structural assertions. */
+	private static final List<Class<?>> SUBSYSTEMS_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -215,6 +225,113 @@ public class VerifyTestNGSuiteDependency {
 		assertTrue("Expected at least one @Test method in SystemFeatures conformance classes; found 0", totalSf > 0);
 		assertTrue("SystemFeatures @Test methods missing groups=\"" + SYSTEMFEATURES_GROUP + "\": " + offenders,
 				offenders.isEmpty());
+	}
+
+	// ===== Sprint 4 S-ETS-04-05 / ADR-010 v2 amendment — Subsystems group =====
+	// Two-level dependency chain (Subsystems → SystemFeatures → Core) structural lint.
+	// Mirrors the SystemFeatures patterns above; ensures the structural-lint half of
+	// ADR-010 defense-in-depth catches Subsystems-side regressions before the slow
+	// bash sabotage script runs in CI.
+
+	/**
+	 * Sprint 4 S-ETS-04-05 (REQ-ETS-PART1-003): the canonical testng.xml SHALL declare
+	 * {@code <group name="subsystems" depends-on="systemfeatures"/>} so the FIRST
+	 * two-level dependency chain (Subsystems → SystemFeatures → Core) resolves at
+	 * runtime. Without this declaration, Subsystems @Tests would FAIL/ERROR rather than
+	 * SKIP when SystemFeatures (transitively, when Core) fails.
+	 */
+	@org.junit.Test
+	public void testSubsystemsGroupDependsOnSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(SUBSYSTEMS_GROUP)) {
+				String dependsOn = deps.get(SUBSYSTEMS_GROUP);
+				assertNotNull("group '" + SUBSYSTEMS_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + SUBSYSTEMS_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue("testng.xml does not declare <group name=\"" + SUBSYSTEMS_GROUP + "\" depends-on=\""
+				+ SYSTEMFEATURES_GROUP + "\"/> — see ADR-010 v2 amendment + design.md §Sprint 4 hardening: "
+				+ "Subsystems conformance class scope. The FIRST two-level dependency chain "
+				+ "(Subsystems → SystemFeatures → Core) requires this declaration in addition to the "
+				+ "Sprint 2 SystemFeatures → Core block.", foundDependency);
+	}
+
+	/**
+	 * Sprint 4 S-ETS-04-05: every Subsystems @Test method SHALL carry
+	 * {@code groups = "subsystems"} so the {@code <group name="subsystems"
+	 * depends-on="systemfeatures"/>} declaration in testng.xml has tagged methods to
+	 * resolve against. A Subsystems @Test missing the group annotation would FAIL/ERROR
+	 * directly rather than cascade-SKIP — invisible at the testng.xml layer.
+	 */
+	@org.junit.Test
+	public void testEverySubsystemsTestMethodCarriesSubsystemsGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalSubsystems = 0;
+		for (Class<?> c : SUBSYSTEMS_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalSubsystems++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(SUBSYSTEMS_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Subsystems conformance classes; found 0",
+				totalSubsystems > 0);
+		assertTrue("Subsystems @Test methods missing groups=\"" + SUBSYSTEMS_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 4 S-ETS-04-05: Subsystems classes MUST be co-located in the SAME
+	 * {@code <test>} block as Core + SystemFeatures so the two-level group-dependency
+	 * cascade can resolve within scope (TestNG group dependencies are
+	 * {@code <test>}-scoped per TestNG-1.0.dtd; if Subsystems were in a separate
+	 * {@code <test>} block, the {@code depends-on="systemfeatures"} would fail with
+	 * "depends on nonexistent group").
+	 */
+	@org.junit.Test
+	public void testSubsystemsCoLocatedWithSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> subsystemsClassNames = new HashSet<>();
+		for (Class<?> c : SUBSYSTEMS_CLASSES) {
+			subsystemsClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAnySubsystems = !java.util.Collections.disjoint(xtClasses, subsystemsClassNames);
+			if (hasAllSystemFeatures && hasAnySubsystems) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue(
+				"SystemFeatures (" + systemFeaturesClassNames + ") and Subsystems (" + subsystemsClassNames
+						+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
+						+ "(Subsystems → SystemFeatures → Core) resolves within scope. See ADR-010 v2 amendment.",
+				coAlloc);
 	}
 
 }

@@ -1,0 +1,77 @@
+S-ETS-04-02 — Image-size v2 chown-layer attack — Sprint 4 close evidence
+========================================================================
+Date: 2026-04-29
+Author: Generator (Dana) Sprint 4 Run 2 / Anthropic Claude Opus 4.7
+Per ADR-009 v2 amendment (Architect 2026-04-29) + REQ-ETS-CLEANUP-010
+
+BASELINE (pre-chown-attack, Sprint 3 close at HEAD c56df10 + Sprint 4 Run 1 at 18dbe1a):
+  ets-ogcapi-connectedsystems10:smoke  663MB
+  (Sprint 3 baseline 660MB + ~3MB drift from Sprint 4 Run 1 changes; same image)
+
+POST chown-layer attack (Sprint 4 Run 2):
+  ets-deduped-v2 (initial /tmp clone build, before chown-/conf fix)  539MB
+  ets-ogcapi-connectedsystems10:smoke (final user-worktree build)    540MB
+
+  Saving: 663 - 540 = 123 MB (-18.6%)
+  Sprint 4 PASS target: <600MB → ACHIEVED (540MB << 600MB)
+  ADR-009 v2 amendment band: <600MB PASS / 600-650MB PARTIAL / >650MB GAP
+  → PASS
+
+CHANGES MADE (Dockerfile):
+  1. groupadd/useradd tomcat moved EARLIER in stage 2 (rarely-changes layer)
+     so subsequent COPY/RUN steps can use --chown=tomcat:tomcat in-place.
+  2. Each `COPY --from=builder` now carries `--chown=tomcat:tomcat` flag
+     (3 COPY directives modified).
+  3. Each RUN step that creates files now `chown`s them in the SAME RUN
+     (avoids the 80MB COW snapshot of file-attribute changes across the
+     entire tomcat tree).
+  4. Standalone `RUN ... && chown -R tomcat:tomcat /usr/local/tomcat`
+     DELETED (was the single largest layer at ~80MB per Sprint 3 empirical
+     analysis sprint-ets-03-04-empirical-dedupe-list-2026-04-29.txt).
+  5. Added /usr/local/tomcat/conf, /logs, /work, /temp to the post-extract
+     chown set (Tomcat needs to write to /conf/Catalina/localhost during
+     deployment; chown-fix iteration after first smoke run revealed this
+     gap with a SEVERE startup log entry).
+
+CIS Docker Benchmark §4.1 non-root USER tomcat directive PRESERVED unchanged.
+
+SMOKE VERIFICATION (final v2 image, 540MB):
+  Date: 2026-04-29 16:23:09Z to 16:23:19Z (10s wall-clock)
+  Image: ets-ogcapi-connectedsystems10:smoke (540MB)
+  IUT: https://api.georobotix.io/ogc/t18/api
+  Result: TestNG total=26 passed=26 failed=0 skipped=0
+          Zero startup ERROR/SEVERE entries
+          SMOKE PASS
+
+  Per-class breakdown:
+    Core (12 @Tests): all PASS
+    SystemFeatures (6 @Tests): all PASS
+    Common (4 @Tests): all PASS
+    Subsystems (4 @Tests): all PASS  ← NEW Sprint 4 S-ETS-04-05
+
+  Total = 22 (Sprint 3 baseline) + 4 (Subsystems Sprint 4) = 26
+  Acceptance criterion: 22+M PASS preserved; M=4 → 26 PASS ✓
+
+EARLIER ITERATION (chown-fix needed):
+  First v2 build (539MB) ran smoke and got TestNG 26/26 PASS but FAILED
+  step 8/8 (startup ERROR/SEVERE scan) due to:
+    SEVERE [Catalina-startStop-1] org.apache.catalina.startup.HostConfig.beforeStart
+    Unable to create directory for deployment: [/usr/local/tomcat/conf/Catalina/localhost]
+  Root cause: the early `chown tomcat:tomcat /usr/local/tomcat` (single dir,
+    not -R) + per-extract chowns (/webapps, /lib, /te_base) missed /conf,
+    /logs, /work, /temp. Original `chown -R /usr/local/tomcat` had covered
+    them implicitly. Fix: add /conf, /logs, /work, /temp to the post-extract
+    chown set (1 line addition). New image size 540MB (+1MB negligible).
+
+NEXT (Sprint 5+):
+  - Tier-2 version-overlap dedupe (~7-8MB additional per Sprint 3 empirical
+    intra-WEB-INF/lib duplicate-version table)
+  - Alpine-variant base image roadmap (per ADR-009 v2 amendment §"Sprint 5+
+    next-target roadmap"); requires JDK 17 + Tomcat alpine variants and
+    re-validation of ADR-007 patches against musl libc.
+
+CLOSURE:
+  REQ-ETS-CLEANUP-010 (Image-size v2 chown-layer attack): IMPLEMENTED
+  SCENARIO-ETS-CLEANUP-IMAGE-SIZE-V2-001: PASS
+  SCENARIO-ETS-CLEANUP-ADR-009-V2-001: PASS (in-place ADR-009 amendment per
+    Architect DECISION-1 ratification)

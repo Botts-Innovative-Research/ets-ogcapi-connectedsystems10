@@ -1,14 +1,35 @@
 #!/usr/bin/env bash
 # scripts/sabotage-test.sh — ets-ogcapi-connectedsystems10
 #
-# REQ-ETS-CLEANUP-005, SCENARIO-ETS-CLEANUP-DEPENDENCY-SKIP-LIVE-001:
-#   Behavioral verification that TestNG's group-dependency mechanism causes
-#   SystemFeatures @Tests to SKIP (not FAIL/ERROR) when Core fails. This is
-#   the "approach (b) bash sabotage script" canonical CITE-SC-grade artifact
-#   per ADR-010, complementing the structural-lint unit test
-#   VerifyTestNGSuiteDependency.
+# REQ-ETS-CLEANUP-005, SCENARIO-ETS-CLEANUP-DEPENDENCY-SKIP-LIVE-001 (Sprint 3
+# default mode) +
+# REQ-ETS-CLEANUP-015, SCENARIO-ETS-CLEANUP-SABOTAGE-TARGET-001 (Sprint 5
+# --target=systemfeatures mode):
 #
-# Strategy (per ADR-010 §"Approach to sabotage" — stub-server preferred):
+#   Behavioural verification that TestNG's group-dependency mechanism causes
+#   downstream @Tests to SKIP (not FAIL/ERROR) when an upstream conformance
+#   class fails. The script supports TWO sabotage modes:
+#
+#   --target=core (DEFAULT — backward compatible with Sprint 3 + 4):
+#     Launch a Python HTTP-500 stub server, run smoke against the stub URL,
+#     observe Core FAIL + SystemFeatures SKIP (one-level cascade). This is
+#     the "approach (b) bash sabotage script" canonical CITE-SC-grade artifact
+#     per ADR-010, complementing the structural-lint unit test
+#     VerifyTestNGSuiteDependency.
+#
+#   --target=systemfeatures (Sprint 5 S-ETS-05-03 — NEW for two-level
+#     cascade gate evidence; lets Quinn/Raze invoke without manual Java edits):
+#     Copy the source tree to a temp directory, sed-patch the FIRST @Test of
+#     SystemFeaturesTests.java to throw AssertionError unconditionally,
+#     rebuild the Docker image from the temp tree (different IMAGE_TAG to
+#     avoid clobbering the dev cache), and run smoke against the
+#     real GeoRobotix IUT. Observe SystemFeatures FAIL (1) + SKIP (5) +
+#     Subsystems SKIP (4) + Procedures SKIP (P) + Deployments SKIP (D); Core
+#     and Common PASS. The original SystemFeaturesTests.java in the user's
+#     worktree is NEVER modified — all sabotage happens in the temp clone.
+#
+# Strategy for --target=core (per ADR-010 §"Approach to sabotage" —
+# stub-server preferred):
 #   1. Launch a Python HTTP stub server bound to an ephemeral port that
 #      returns HTTP 500 to every request (sabotages Core's landing-page
 #      assertion).
@@ -22,6 +43,32 @@
 #   4. Exit 0 on correct cascading-SKIP behavior; exit 1 if SystemFeatures
 #      @Tests show FAIL or PASS (which would mean the dependency wiring is
 #      broken — exactly the regression this script catches).
+#
+# Strategy for --target=systemfeatures (Sprint 5 — REQ-ETS-CLEANUP-015):
+#   1. Validate prerequisites: docker daemon reachable; SystemFeaturesTests.java
+#      present at the expected path.
+#   2. mktemp -d a working dir under SABOTAGE_TMPDIR.
+#   3. cp -r the source tree (excluding .git, target/, node_modules/) into
+#      the temp dir to keep the user worktree pristine.
+#   4. Use sed to inject `throw new AssertionError("SABOTAGED by --target=
+#      systemfeatures Sprint 5 S-ETS-05-03");` as the FIRST line of the
+#      systemsCollectionReturns200 method body in the temp copy of
+#      SystemFeaturesTests.java. Verify the patch landed (grep check).
+#   5. Run scripts/smoke-test.sh from inside the temp dir with a unique
+#      IMAGE_TAG and CONTAINER_NAME to avoid clobbering the dev cache. Smoke
+#      builds the image, runs against GeoRobotix, archives the TestNG XML.
+#   6. Parse the TestNG XML. Assert:
+#        (a) Core @Tests all PASS (Core unaffected)
+#        (b) Common @Tests all PASS (Common is independent)
+#        (c) at least one SystemFeatures @Test has status="FAIL" (sabotage
+#            worked)
+#        (d) every Subsystems @Test has status="SKIP" (two-level cascade)
+#        (e) every Procedures @Test has status="SKIP" (two-level cascade)
+#        (f) every Deployments @Test has status="SKIP" (two-level cascade)
+#   7. Restore via temp-dir-discard (the original tree is never touched —
+#      verify worktree status post-run for documentation; if dirty, that's a
+#      script bug, not a temporary-state leak).
+#   8. Archive the cascade evidence XML for the audit trail.
 #
 # Hermeticity / worktree-pollution constraint (per ADR-010 §Risks +
 # Sprint 3 contract worktree_pollution_constraint):
@@ -55,6 +102,41 @@ set -eo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# Sprint 5 S-ETS-05-03 (REQ-ETS-CLEANUP-015): parse --target=<class> flag.
+# Default (no flag, or --target=core) preserves Sprint 3 + 4 backward-compatible
+# behaviour. --target=systemfeatures runs the temp-dir sed-patch + Docker
+# rebuild + smoke + cascade-parse path.
+SABOTAGE_TARGET="core"
+for arg in "$@"; do
+  case "$arg" in
+    --target=core)
+      SABOTAGE_TARGET="core"
+      ;;
+    --target=systemfeatures)
+      SABOTAGE_TARGET="systemfeatures"
+      ;;
+    --target=*)
+      echo "[sabotage-test FATAL] unsupported --target value: $arg" >&2
+      echo "                       valid: --target=core (default) | --target=systemfeatures" >&2
+      exit 2
+      ;;
+    -h|--help)
+      echo "Usage: $(basename "$0") [--target=core|systemfeatures]"
+      echo ""
+      echo "  --target=core (default): HTTP-500 stub-server sabotage of Core; "
+      echo "                           observe one-level SKIP cascade in SystemFeatures."
+      echo "  --target=systemfeatures: temp-dir sed-patch sabotage of SystemFeatures; "
+      echo "                           rebuild + smoke against GeoRobotix; observe "
+      echo "                           two-level SKIP cascade in Subsystems + Procedures + "
+      echo "                           Deployments. User worktree NEVER modified."
+      exit 0
+      ;;
+    *)
+      echo "[sabotage-test WARN] unknown argument ignored: $arg" >&2
+      ;;
+  esac
+done
+
 # Configuration with safe defaults
 TS="$(date -u +%Y-%m-%dT%H%M%SZ)"
 SABOTAGE_TMPDIR="${SABOTAGE_TMPDIR:-/tmp/sabotage-fresh-${TS}}"
@@ -69,6 +151,16 @@ mkdir -p "$SABOTAGE_TMPDIR"
 
 CONTAINER_NAME="${SMOKE_CONTAINER_NAME:-ets-csapi-sabotage}"
 IMAGE_TAG="${SMOKE_IMAGE_TAG:-ets-ogcapi-connectedsystems10:smoke}"
+
+# Sprint 5 S-ETS-05-03: when --target=systemfeatures, override IMAGE_TAG +
+# CONTAINER_NAME so the dev cache (smoke) is not clobbered by the sabotaged
+# build artifacts.
+if [[ "$SABOTAGE_TARGET" == "systemfeatures" ]]; then
+  IMAGE_TAG="${SMOKE_IMAGE_TAG:-ets-ogcapi-connectedsystems10:sabotage-sf}"
+  CONTAINER_NAME="${SMOKE_CONTAINER_NAME:-ets-csapi-sabotage-sf}"
+  SABOTAGE_REPORT_XML="${SABOTAGE_ARCHIVE_DIR}/sprint-ets-05-03-sabotage-systemfeatures-cascade-${TS}.xml"
+  SABOTAGE_LOG="${SABOTAGE_ARCHIVE_DIR}/sprint-ets-05-03-sabotage-systemfeatures-cascade-${TS}.log"
+fi
 
 log() { echo "[sabotage-test $(date -u +%H:%M:%S)] $*" | tee -a "$SABOTAGE_LOG"; }
 die() { echo "[sabotage-test FATAL] $*" >&2; cleanup_all; exit 1; }
@@ -89,6 +181,209 @@ cleanup_all() {
   docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
 }
 trap cleanup_all EXIT
+
+log "sabotage mode: --target=$SABOTAGE_TARGET"
+
+# =========================================================================
+# Sprint 5 S-ETS-05-03 (REQ-ETS-CLEANUP-015) — --target=systemfeatures branch
+# =========================================================================
+if [[ "$SABOTAGE_TARGET" == "systemfeatures" ]]; then
+
+  # ---------- Step 1: prerequisites
+  log "step 1/6 — validating prerequisites for --target=systemfeatures"
+  command -v docker >/dev/null 2>&1 || die "docker not found in PATH; --target=systemfeatures requires Docker"
+  docker info >/dev/null 2>&1 || die "docker daemon not reachable; --target=systemfeatures requires a running Docker daemon"
+  SF_TESTS_REL="src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java"
+  [[ -f "$REPO_ROOT/$SF_TESTS_REL" ]] || die "expected SystemFeaturesTests.java at $REPO_ROOT/$SF_TESTS_REL; cannot sabotage"
+
+  # ---------- Step 2: copy source tree to temp dir
+  SABOTAGE_WORKTREE="${SABOTAGE_TMPDIR}/worktree"
+  log "step 2/6 — copying repo to temp worktree at $SABOTAGE_WORKTREE"
+  mkdir -p "$SABOTAGE_WORKTREE"
+  # Use rsync if available (faster + better excludes); fall back to cp -r.
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a --exclude='.git/' --exclude='target/' --exclude='node_modules/' \
+      --exclude='ops/test-results/*.xml' --exclude='ops/test-results/*.log' \
+      "$REPO_ROOT/" "$SABOTAGE_WORKTREE/"
+  else
+    cp -a "$REPO_ROOT/." "$SABOTAGE_WORKTREE/"
+    rm -rf "$SABOTAGE_WORKTREE/.git" "$SABOTAGE_WORKTREE/target"
+  fi
+
+  # ---------- Step 3: sed-patch SystemFeaturesTests.java in temp tree
+  SF_TESTS_TMP="$SABOTAGE_WORKTREE/$SF_TESTS_REL"
+  log "step 3/6 — sed-patching $SF_TESTS_TMP (FIRST @Test method body)"
+  [[ -f "$SF_TESTS_TMP" ]] || die "expected sabotaged copy at $SF_TESTS_TMP; rsync/cp failed"
+  # Inject `throw new AssertionError("SABOTAGED ...");` as the FIRST statement of
+  # systemsCollectionReturns200's body. Robust to whitespace: the @Test block
+  # ends with `public void systemsCollectionReturns200() {`; we insert the
+  # throw immediately after that opening brace. The python form is more robust
+  # than sed for multi-line block matching across distros (BSD vs GNU sed
+  # quirks), so we use python to do the targeted insertion.
+  SABOTAGE_MARKER='throw new AssertionError("SABOTAGED by --target=systemfeatures Sprint 5 S-ETS-05-03");'
+  python3 - "$SF_TESTS_TMP" "$SABOTAGE_MARKER" <<'PY'
+import re
+import sys
+
+path, marker = sys.argv[1], sys.argv[2]
+with open(path, 'r', encoding='utf-8') as f:
+    src = f.read()
+
+# Match `public void systemsCollectionReturns200() {` followed by optional
+# whitespace + a newline; insert the throw on the next line.
+pat = re.compile(
+    r'(public\s+void\s+systemsCollectionReturns200\s*\(\s*\)\s*\{)',
+    re.MULTILINE,
+)
+m = pat.search(src)
+if not m:
+    print(f"FATAL: could not find systemsCollectionReturns200 method header in {path}", file=sys.stderr)
+    sys.exit(2)
+
+new_src = src[:m.end()] + "\n\t\t" + marker + src[m.end():]
+with open(path, 'w', encoding='utf-8') as f:
+    f.write(new_src)
+print(f"OK: injected sabotage marker after method header in {path}")
+PY
+  # Verify the patch landed
+  if ! grep -q 'SABOTAGED by --target=systemfeatures' "$SF_TESTS_TMP"; then
+    die "sabotage marker not found in $SF_TESTS_TMP after patch step"
+  fi
+  log "  sabotage marker grep-verified in temp tree"
+  # Critical worktree-pollution guard: confirm the user's original file is UNTOUCHED.
+  if grep -q 'SABOTAGED by --target=systemfeatures' "$REPO_ROOT/$SF_TESTS_REL"; then
+    die "WORKTREE POLLUTION: sabotage marker leaked into $REPO_ROOT/$SF_TESTS_REL — abort."
+  fi
+
+  # ---------- Step 4: run smoke from temp worktree against GeoRobotix
+  log "step 4/6 — running smoke from sabotaged temp tree (image $IMAGE_TAG, container $CONTAINER_NAME)"
+  log "  IUT: ${SMOKE_IUT_URL:-https://api.georobotix.io/ogc/t18/api}"
+  pushd "$SABOTAGE_WORKTREE" >/dev/null
+  SMOKE_CONTAINER_NAME="$CONTAINER_NAME" \
+    SMOKE_IMAGE_TAG="$IMAGE_TAG" \
+    SMOKE_OUTPUT_DIR="${SABOTAGE_TMPDIR}/test-results" \
+    bash scripts/smoke-test.sh 2>&1 | tee -a "$SABOTAGE_LOG" \
+    || log "  smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test)"
+  popd >/dev/null
+
+  # Locate the smoke-test report — written to SMOKE_OUTPUT_DIR per S-ETS-05-02.
+  LATEST_REPORT="$(ls -t "${SABOTAGE_TMPDIR}/test-results"/s-ets-01-03-teamengine-smoke-*.xml 2>/dev/null | head -1)"
+  [[ -n "$LATEST_REPORT" ]] || die "smoke-test.sh did not produce a TestNG report under ${SABOTAGE_TMPDIR}/test-results"
+  cp -f "$LATEST_REPORT" "$SABOTAGE_REPORT_XML"
+  log "  TestNG report captured to $SABOTAGE_REPORT_XML"
+
+  # ---------- Step 5: parse TestNG XML; assert two-level cascade
+  log "step 5/6 — parsing TestNG report; asserting two-level cascade pattern"
+  PARSE_RESULT="$(python3 - "$SABOTAGE_REPORT_XML" <<'PY'
+import sys
+import xml.etree.ElementTree as ET
+
+report = sys.argv[1]
+try:
+    tree = ET.parse(report)
+except ET.ParseError as e:
+    print(f"FATAL: report unparseable: {e}", file=sys.stderr)
+    sys.exit(2)
+root = tree.getroot()
+
+def classify(sig):
+    if "conformance.core" in sig:
+        return "core"
+    if "conformance.systemfeatures" in sig:
+        return "systemfeatures"
+    if "conformance.common" in sig:
+        return "common"
+    if "conformance.subsystems" in sig:
+        return "subsystems"
+    if "conformance.procedures" in sig:
+        return "procedures"
+    if "conformance.deployments" in sig:
+        return "deployments"
+    return "other"
+
+buckets = {k: [] for k in ("core", "systemfeatures", "common", "subsystems",
+                            "procedures", "deployments", "other")}
+for tm in root.iter("test-method"):
+    if tm.get("is-config", "false").lower() == "true":
+        continue
+    sig = tm.get("signature", "") or ""
+    name = tm.get("name", "")
+    status = tm.get("status", "")
+    buckets[classify(sig)].append((name, status))
+
+for cls in ("core", "common", "systemfeatures", "subsystems", "procedures", "deployments"):
+    rows = buckets[cls]
+    print(f"{cls} @Tests seen: {len(rows)}")
+    for n, s in rows:
+        print(f"  {cls:14s} {s:8s}  {n}")
+
+failures = []
+# Core PASS, Common PASS
+for cls in ("core", "common"):
+    rows = buckets[cls]
+    if not rows:
+        failures.append(f"VERDICT FAIL: no {cls} @Tests seen (suite scope wrong)")
+        continue
+    not_pass = [r for r in rows if r[1] != "PASS"]
+    if not_pass:
+        failures.append(f"VERDICT FAIL: {cls} has {len(not_pass)} non-PASS results "
+                        f"(should be all PASS — Core+Common are independent of SystemFeatures): {not_pass}")
+
+# SystemFeatures: at least 1 FAIL (sabotage worked)
+sf = buckets["systemfeatures"]
+if not sf:
+    failures.append("VERDICT FAIL: no SystemFeatures @Tests seen (suite scope wrong)")
+else:
+    sf_failed = [r for r in sf if r[1] == "FAIL"]
+    if not sf_failed:
+        failures.append("VERDICT FAIL: no SystemFeatures @Test FAILed (sabotage marker did not fire)")
+
+# Subsystems, Procedures, Deployments: every @Test SKIP
+for cls in ("subsystems", "procedures", "deployments"):
+    rows = buckets[cls]
+    if not rows:
+        # If the class has no smoke @Tests yet (Sprint 5 may not include all
+        # classes), skip the assertion rather than fail.
+        print(f"NOTE: no {cls} @Tests seen; skipping cascade assertion for {cls}")
+        continue
+    not_skipped = [r for r in rows if r[1] != "SKIP"]
+    if not_skipped:
+        failures.append(f"VERDICT FAIL: {cls} has {len(not_skipped)} non-SKIP results "
+                        f"(should be all SKIP via two-level cascade): {not_skipped}")
+
+print()
+if failures:
+    for f in failures:
+        print(f, file=sys.stderr)
+    sys.exit(1)
+print("VERDICT: PASS — Core+Common PASS, SystemFeatures FAILed, "
+      "Subsystems+Procedures+Deployments cascade-SKIPped (two-level cascade verified)")
+sys.exit(0)
+PY
+)" || PARSE_EXIT=$?
+  PARSE_EXIT="${PARSE_EXIT:-0}"
+  echo "$PARSE_RESULT" | tee -a "$SABOTAGE_LOG"
+
+  if [[ "$PARSE_EXIT" -ne 0 ]]; then
+    log "step 6/6 — VERDICT: FAIL (two-level cascade not verified)"
+    log "  evidence archived at $SABOTAGE_REPORT_XML"
+    exit 1
+  fi
+
+  # ---------- Step 6: cleanup + report
+  log "step 6/6 — VERDICT: PASS (two-level cascade verified end-to-end)"
+  log "  report: $SABOTAGE_REPORT_XML"
+  log "  log:    $SABOTAGE_LOG"
+  log "SABOTAGE PASS: SystemFeatures FAILed; Subsystems+Procedures+Deployments cascade-SKIPped"
+  log "  (User worktree at $REPO_ROOT/$SF_TESTS_REL UNMODIFIED — sabotage was hermetic via temp clone.)"
+  cleanup_all
+  trap - EXIT
+  exit 0
+fi
+# =========================================================================
+# End of --target=systemfeatures branch.
+# Below: Sprint 3 default mode (--target=core; HTTP-500 stub-server sabotage)
+# =========================================================================
 
 # ---------- Step 1: launch HTTP stub server on ephemeral port (HTTP 500 to all)
 log "step 1/5 — launching HTTP-500 stub server on ephemeral port"

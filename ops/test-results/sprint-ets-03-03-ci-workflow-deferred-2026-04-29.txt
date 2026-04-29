@@ -1,0 +1,37 @@
+S-ETS-03-03: CI workflow `git mv` to .github/workflows/ — DEFERRED-WITH-RATIONALE (4th sprint)
+
+Date: 2026-04-29
+Generator: Dana (Sprint 3 Run 2)
+
+PRE-CONDITION CHECK (per story acceptance criteria):
+  $ gh auth status
+  github.com
+    ✓ Logged in to github.com account cam-s-hunt
+    - Token scopes: 'gist', 'read:org', 'repo'
+
+  REQUIRED: 'workflow' scope. PRESENT: 'gist', 'read:org', 'repo'.
+  Result: pre-condition NOT MET. Story is Generator-blocked.
+
+ACTION: Story DEFERRED-WITH-RATIONALE — carryover to Sprint 4.
+        Mark in ops/status.md as 4th-sprint-defer (S-ETS-01-01 → S-ETS-01-03 →
+        S-ETS-02-05 → S-ETS-03-03 — fourth consecutive sprint blocked on the
+        same user-action). Per Sprint 3 contract risks.medium.GH-WORKFLOW-
+        SCOPE-STILL-MISSING-4TH-SPRINT, this is escalation territory.
+
+USER ACTION REQUIRED to unblock:
+  $ gh auth refresh -s workflow
+  (interactive — opens browser; orchestrator must handle when user is at terminal)
+
+FILE STATE:
+  ci/github-workflows-build.yml          — present, unchanged (1438 bytes)
+  .github/workflows/build.yml            — does NOT exist
+
+NEXT-RUN GENERATOR PATH (when scope granted):
+  cd ~/docker/gir/ets-ogcapi-connectedsystems10
+  mkdir -p .github/workflows
+  git mv ci/github-workflows-build.yml .github/workflows/build.yml
+  git commit -m "chore(ci): move CI workflow to .github/workflows/ (S-ETS-03-03)"
+  git push origin main
+  gh workflow run build.yml --ref main
+  # poll: gh run list --workflow=build.yml --limit 5
+  # archive: ops/test-results/sprint-ets-03-ci-workflow-live-<date>.txt

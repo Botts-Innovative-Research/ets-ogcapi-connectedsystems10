@@ -118,13 +118,13 @@ class Sabotage500(http.server.BaseHTTPRequestHandler):
 class Reusable(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
 
-# Bind to 0.0.0.0 so Docker container can reach it via the host gateway
-# (--add-host=host.docker.internal). For now, bind to localhost — the
-# smoke pipeline will need a network bridge if the IUT must be reachable
-# from inside the container; the script's primary purpose is verification
-# of the dependency-skip mechanism (sabotage works; SKIP cascades) — the
-# stub server's exact placement is configurable.
-with Reusable(("127.0.0.1", 0), Sabotage500) as srv:
+# Bind to 0.0.0.0 (all interfaces) so a Docker container running the smoke
+# pipeline can reach this stub via the host's Docker bridge IP exposed as
+# host.docker.internal (set by smoke-test.sh's
+# --add-host=host.docker.internal:host-gateway flag — Docker on Linux
+# without Docker Desktop does NOT auto-resolve host.docker.internal).
+# Sprint 4 S-ETS-04-04 fix (a): was 127.0.0.1 → unreachable from container.
+with Reusable(("0.0.0.0", 0), Sabotage500) as srv:
     port = srv.server_address[1]
     with open(portfile, "w") as f:
         f.write(str(port))

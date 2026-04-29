@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="22" passed="22" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2026-04-29T10:41:08 EDT" name="dana-run3-georobotix" finished-at="2026-04-29T10:41:11 EDT" duration-ms="2757">
+    <groups>
+      <group name="core">
+        <method signature="ConformanceTests.conformancePageReturnsHttp200()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" name="conformancePageReturnsHttp200" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests"/>
+        <method signature="ConformanceTests.conformancePageReturnsJson()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" name="conformancePageReturnsJson" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests"/>
+        <method signature="ConformanceTests.conformancePageHasConformsToArray(org.testng.ITestContext)[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" name="conformancePageHasConformsToArray" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests"/>
+        <method signature="ConformanceTests.conformancePageDeclaresCsCore()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" name="conformancePageDeclaresCsCore" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests"/>
+        <method signature="LandingPageTests.landingPageReturnsJson()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" name="landingPageReturnsJson" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests"/>
+        <method signature="LandingPageTests.landingPageHasLinks()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" name="landingPageHasLinks" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests"/>
+        <method signature="LandingPageTests.landingPageDoesNotRequireSelfRel()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" name="landingPageDoesNotRequireSelfRel" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests"/>
+        <method signature="LandingPageTests.landingPageHasApiDefinitionLink()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" name="landingPageHasApiDefinitionLink" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests"/>
+        <method signature="LandingPageTests.landingPageHasConformanceLink()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" name="landingPageHasConformanceLink" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests"/>
+        <method signature="ResourceShapeTests.apiDefinitionResourceReturnsContent()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests@6f3c660a]" name="apiDefinitionResourceReturnsContent" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests"/>
+        <method signature="ResourceShapeTests.conformanceResourceShapeIsObject()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests@6f3c660a]" name="conformanceResourceShapeIsObject" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests"/>
+        <method signature="LandingPageTests.landingPageReturnsHttp200()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" name="landingPageReturnsHttp200" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests"/>
+      </group> <!-- core -->
+      <group name="common">
+        <method signature="CommonTests.commonCollectionsEndpointReturnsCollectionsArray()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" name="commonCollectionsEndpointReturnsCollectionsArray" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests"/>
+        <method signature="CommonTests.commonConformanceDeclaresCommonCore()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" name="commonConformanceDeclaresCommonCore" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests"/>
+        <method signature="CommonTests.commonContentNegotiationHonoursFJsonParameter()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" name="commonContentNegotiationHonoursFJsonParameter" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests"/>
+        <method signature="CommonTests.commonLandingPageConformanceLinkHasJsonType()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" name="commonLandingPageConformanceLinkHasJsonType" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests"/>
+      </group> <!-- common -->
+      <group name="systemfeatures">
+        <method signature="SystemFeaturesTests.systemsCollectionReturns200()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" name="systemsCollectionReturns200" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests"/>
+        <method signature="SystemFeaturesTests.systemsCollectionHasItemsArray()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" name="systemsCollectionHasItemsArray" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests"/>
+        <method signature="SystemFeaturesTests.systemItemHasIdTypeLinks()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" name="systemItemHasIdTypeLinks" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests"/>
+        <method signature="SystemFeaturesTests.systemItemHasGeometryOrValidTime()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" name="systemItemHasGeometryOrValidTime" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests"/>
+        <method signature="SystemFeaturesTests.systemsCollectionLinksDiscipline()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" name="systemsCollectionLinksDiscipline" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests"/>
+        <method signature="SystemFeaturesTests.systemsDiscoverableViaCollectionsOrLandingPage()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" name="systemsDiscoverableViaCollectionsOrLandingPage" class="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests"/>
+      </group> <!-- systemfeatures -->
+    </groups>
+    <test started-at="2026-04-29T10:41:08 EDT" name="Dana Run 3 — Core+SystemFeatures+Common smoke" finished-at="2026-04-29T10:41:11 EDT" duration-ms="2757">
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests">
+        <test-method is-config="true" signature="fetchConformancePage(org.testng.ITestContext)[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" started-at="2026-04-29T10:41:09 EDT" name="fetchConformancePage" finished-at="2026-04-29T10:41:09 EDT" duration-ms="158" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.testng.TestRunner@51eb0e84]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- fetchConformancePage -->
+        <test-method signature="conformancePageReturnsHttp200()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" started-at="2026-04-29T10:41:09 EDT" name="conformancePageReturnsHttp200" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success: GET /conformance returns HTTP 200 (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)" finished-at="2026-04-29T10:41:09 EDT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- conformancePageReturnsHttp200 -->
+        <test-method signature="conformancePageReturnsJson()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" started-at="2026-04-29T10:41:09 EDT" name="conformancePageReturnsJson" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success: /conformance body is parseable JSON (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)" finished-at="2026-04-29T10:41:09 EDT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- conformancePageReturnsJson -->
+        <test-method signature="conformancePageHasConformsToArray(org.testng.ITestContext)[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" started-at="2026-04-29T10:41:10 EDT" name="conformancePageHasConformsToArray" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success: /conformance body has non-empty conformsTo array, captured into suite context (REQ-ETS-CORE-003, SCENARIO-ETS-CORE-CONFORMANCE-001)" finished-at="2026-04-29T10:41:10 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.conformancePageReturnsJson" duration-ms="0" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.testng.TestRunner@51eb0e84]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- conformancePageHasConformsToArray -->
+        <test-method signature="conformancePageDeclaresCsCore()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests@460ebd80]" started-at="2026-04-29T10:41:10 EDT" name="conformancePageDeclaresCsCore" description="OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core: /conformance declares the CS API Core conformance class URI (REQ-ETS-CORE-003)" finished-at="2026-04-29T10:41:10 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.conformancePageHasConformsToArray" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- conformancePageDeclaresCsCore -->
+      </class> <!-- org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests -->
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests">
+        <test-method is-config="true" signature="fetchLandingPage(org.testng.ITestContext)[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests@6f3c660a]" started-at="2026-04-29T10:41:09 EDT" name="fetchLandingPage" finished-at="2026-04-29T10:41:10 EDT" duration-ms="161" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.testng.TestRunner@51eb0e84]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- fetchLandingPage -->
+        <test-method signature="apiDefinitionResourceReturnsContent()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests@6f3c660a]" started-at="2026-04-29T10:41:10 EDT" name="apiDefinitionResourceReturnsContent" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/oas30/oas-impl: api-definition resource resolves to HTTP 200 with non-empty body (REQ-ETS-CORE-004, SCENARIO-ETS-CORE-RESOURCE-SHAPE-001)" finished-at="2026-04-29T10:41:10 EDT" duration-ms="156" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- apiDefinitionResourceReturnsContent -->
+        <test-method signature="conformanceResourceShapeIsObject()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests@6f3c660a]" started-at="2026-04-29T10:41:10 EDT" name="conformanceResourceShapeIsObject" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success: /conformance resource is a JSON object (REQ-ETS-CORE-004, SCENARIO-ETS-CORE-RESOURCE-SHAPE-001)" finished-at="2026-04-29T10:41:10 EDT" duration-ms="143" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- conformanceResourceShapeIsObject -->
+      </class> <!-- org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests -->
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests">
+        <test-method is-config="true" signature="fetchLandingPage(org.testng.ITestContext)[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" started-at="2026-04-29T10:41:08 EDT" name="fetchLandingPage" finished-at="2026-04-29T10:41:09 EDT" duration-ms="861" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.testng.TestRunner@51eb0e84]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- fetchLandingPage -->
+        <test-method signature="landingPageReturnsJson()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" started-at="2026-04-29T10:41:09 EDT" name="landingPageReturnsJson" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/root-success: landing page body is parseable JSON (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)" finished-at="2026-04-29T10:41:09 EDT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- landingPageReturnsJson -->
+        <test-method signature="landingPageReturnsHttp200()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" started-at="2026-04-29T10:41:09 EDT" name="landingPageReturnsHttp200" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/root-success: landing page (GET /) returns HTTP 200 (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)" finished-at="2026-04-29T10:41:09 EDT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- landingPageReturnsHttp200 -->
+        <test-method signature="landingPageHasLinks()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" started-at="2026-04-29T10:41:10 EDT" name="landingPageHasLinks" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/root-success: landing page body has a links array (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)" finished-at="2026-04-29T10:41:10 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.landingPageReturnsJson" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- landingPageHasLinks -->
+        <test-method signature="landingPageDoesNotRequireSelfRel()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" started-at="2026-04-29T10:41:10 EDT" name="landingPageDoesNotRequireSelfRel" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/root-success: landing page does NOT require rel=self (sentinel — preserves v1.0 GH#3 fix; SCENARIO-ETS-CORE-LINKS-NORMATIVE-001)" finished-at="2026-04-29T10:41:10 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.landingPageHasLinks" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- landingPageDoesNotRequireSelfRel -->
+        <test-method signature="landingPageHasApiDefinitionLink()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" started-at="2026-04-29T10:41:10 EDT" name="landingPageHasApiDefinitionLink" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/api-definition-success: landing page links contain rel=service-desc OR rel=service-doc (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-API-DEF-FALLBACK-001)" finished-at="2026-04-29T10:41:10 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.landingPageHasLinks" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- landingPageHasApiDefinitionLink -->
+        <test-method signature="landingPageHasConformanceLink()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests@6436a7db]" started-at="2026-04-29T10:41:10 EDT" name="landingPageHasConformanceLink" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success: landing page links contain rel=conformance (REQ-ETS-CORE-002, SCENARIO-ETS-CORE-LANDING-001)" finished-at="2026-04-29T10:41:10 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.landingPageHasLinks" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- landingPageHasConformanceLink -->
+      </class> <!-- org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests -->
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.SuitePreconditions">
+        <test-method is-config="true" signature="verifyIutSet(org.testng.ITestContext)[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.SuitePreconditions@5dcb4f5f]" started-at="2026-04-29T10:41:08 EDT" name="verifyIutSet" finished-at="2026-04-29T10:41:08 EDT" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.testng.TestRunner@51eb0e84]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- verifyIutSet -->
+      </class> <!-- org.opengis.cite.ogcapiconnectedsystems10.SuitePreconditions -->
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests">
+        <test-method is-config="true" signature="fetchSystemsCollection(org.testng.ITestContext)[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" started-at="2026-04-29T10:41:10 EDT" name="fetchSystemsCollection" finished-at="2026-04-29T10:41:11 EDT" duration-ms="350" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.testng.TestRunner@51eb0e84]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- fetchSystemsCollection -->
+        <test-method signature="systemsCollectionReturns200()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" started-at="2026-04-29T10:41:11 EDT" name="systemsCollectionReturns200" description="OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/resources-endpoint: GET /systems returns HTTP 200 (REQ-ETS-PART1-002, SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LANDING-001)" depends-on-groups="core" finished-at="2026-04-29T10:41:11 EDT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- systemsCollectionReturns200 -->
+        <test-method signature="systemsCollectionHasItemsArray()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" started-at="2026-04-29T10:41:11 EDT" name="systemsCollectionHasItemsArray" description="OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/resources-endpoint: /systems body has non-empty items array (REQ-ETS-PART1-002, SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LANDING-001)" depends-on-groups="core" finished-at="2026-04-29T10:41:11 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests.systemsCollectionReturns200" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- systemsCollectionHasItemsArray -->
+        <test-method signature="systemsDiscoverableViaCollectionsOrLandingPage()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" started-at="2026-04-29T10:41:11 EDT" name="systemsDiscoverableViaCollectionsOrLandingPage" description="OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/collections: /systems is discoverable via /collections OR landing-page rel=systems link (REQ-ETS-PART1-002, SCENARIO-ETS-PART1-002-SYSTEMFEATURES-COLLECTIONS-001)" depends-on-groups="core" finished-at="2026-04-29T10:41:11 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests.systemsCollectionReturns200" duration-ms="299" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- systemsDiscoverableViaCollectionsOrLandingPage -->
+        <test-method signature="systemItemHasIdTypeLinks()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" started-at="2026-04-29T10:41:11 EDT" name="systemItemHasIdTypeLinks" description="OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/canonical-endpoint: GET /systems/{id} has id+type+links per base resource shape (REQ-ETS-PART1-002, SCENARIO-ETS-PART1-002-SYSTEMFEATURES-RESOURCE-SHAPE-001)" depends-on-groups="core" finished-at="2026-04-29T10:41:11 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests.systemsCollectionHasItemsArray" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- systemItemHasIdTypeLinks -->
+        <test-method signature="systemItemHasGeometryOrValidTime()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" started-at="2026-04-29T10:41:11 EDT" name="systemItemHasGeometryOrValidTime" description="OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/location-time: /systems/{id} has validTime OR geometry (REQ-ETS-PART1-002, SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LOCATION-TIME-001 — MAY-priority)" depends-on-groups="core" finished-at="2026-04-29T10:41:11 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests.systemItemHasIdTypeLinks" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- systemItemHasGeometryOrValidTime -->
+        <test-method signature="systemsCollectionLinksDiscipline()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests@74f5ce22]" started-at="2026-04-29T10:41:11 EDT" name="systemsCollectionLinksDiscipline" description="OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/canonical-url: /systems/{id} links contain rel=canonical; absence of rel=self is NOT FAIL (REQ-ETS-PART1-002, SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LINKS-NORMATIVE-001 — preserves v1.0 GH#3 fix)" depends-on-groups="core" finished-at="2026-04-29T10:41:11 EDT" depends-on-methods="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests.systemItemHasIdTypeLinks" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- systemsCollectionLinksDiscipline -->
+      </class> <!-- org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests -->
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests">
+        <test-method is-config="true" signature="fetchCommonResources(org.testng.ITestContext)[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" started-at="2026-04-29T10:41:10 EDT" name="fetchCommonResources" finished-at="2026-04-29T10:41:10 EDT" duration-ms="565" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.testng.TestRunner@51eb0e84]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- fetchCommonResources -->
+        <test-method signature="commonConformanceDeclaresCommonCore()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" started-at="2026-04-29T10:41:10 EDT" name="commonConformanceDeclaresCommonCore" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/landing-page/conformance-success: /conformance conformsTo declares OGC API Common Part 1 Core (REQ-ETS-PART1-001, SCENARIO-ETS-PART1-001-COMMON-CONFORMANCE-001)" finished-at="2026-04-29T10:41:10 EDT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- commonConformanceDeclaresCommonCore -->
+        <test-method signature="commonCollectionsEndpointReturnsCollectionsArray()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" started-at="2026-04-29T10:41:10 EDT" name="commonCollectionsEndpointReturnsCollectionsArray" description="OGC-20-024 http://www.opengis.net/spec/ogcapi-common-2/0.0/req/collections/collections-list-success: /collections returns 200 with collections array (REQ-ETS-PART1-001, SCENARIO-ETS-PART1-001-COMMON-COLLECTIONS-001)" finished-at="2026-04-29T10:41:10 EDT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- commonCollectionsEndpointReturnsCollectionsArray -->
+        <test-method signature="commonContentNegotiationHonoursFJsonParameter()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" started-at="2026-04-29T10:41:10 EDT" name="commonContentNegotiationHonoursFJsonParameter" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/json/content: GET /?f=json returns JSON (REQ-ETS-PART1-001, SCENARIO-ETS-PART1-001-COMMON-CONTENT-NEGOTIATION-001)" finished-at="2026-04-29T10:41:10 EDT" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- commonContentNegotiationHonoursFJsonParameter -->
+        <test-method signature="commonLandingPageConformanceLinkHasJsonType()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests@25aca718]" started-at="2026-04-29T10:41:10 EDT" name="commonLandingPageConformanceLinkHasJsonType" description="OGC-19-072 http://www.opengis.net/spec/ogcapi-common-1/1.0/req/json/definition: landing-page rel=conformance link has type attribute identifying JSON (REQ-ETS-PART1-001, SCENARIO-ETS-PART1-001-COMMON-LANDING-001)" finished-at="2026-04-29T10:41:10 EDT" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- commonLandingPageConformanceLinkHasJsonType -->
+      </class> <!-- org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests -->
+    </test> <!-- Dana Run 3 — Core+SystemFeatures+Common smoke -->
+  </suite> <!-- dana-run3-georobotix -->
+</testng-results>

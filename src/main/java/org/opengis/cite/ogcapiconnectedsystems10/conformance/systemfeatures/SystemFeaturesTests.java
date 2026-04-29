@@ -442,10 +442,14 @@ public class SystemFeaturesTests {
 			throw new SkipException(
 					REQ_SYSTEM_LOCATION_TIME + " — no single-item body available to assert location/time discipline.");
 		}
-		boolean hasValidTime = this.systemItemBody.containsKey("validTime")
-				&& this.systemItemBody.get("validTime") != null;
-		boolean hasGeometry = this.systemItemBody.containsKey("geometry")
-				&& this.systemItemBody.get("geometry") != null;
+		// GeoRobotix curl evidence (2026-04-29): items follow GeoJSON Feature shape —
+		// {type:"Feature", id:..., geometry: null|<geom>, properties: {validTime: [...]}.
+		// Accept BOTH top-level keys (canonical resource shape) AND nested under
+		// properties (GeoJSON Feature shape) for defense-in-depth.
+		boolean hasValidTime = (this.systemItemBody.get("validTime") != null)
+				|| nestedHasNonNull(this.systemItemBody, "properties", "validTime");
+		boolean hasGeometry = (this.systemItemBody.get("geometry") != null)
+				|| nestedHasNonNull(this.systemItemBody, "properties", "geometry");
 		if (!hasValidTime && !hasGeometry) {
 			throw new SkipException(REQ_SYSTEM_LOCATION_TIME + " — /systems/" + this.firstSystemId
 					+ " has neither validTime nor geometry. "
@@ -461,6 +465,20 @@ public class SystemFeaturesTests {
 	}
 
 	// --------------- helpers ---------------
+
+	/**
+	 * Returns true iff {@code body} has a key {@code outer} whose value is a Map
+	 * containing a non-null entry under {@code inner}. Used by
+	 * {@link #systemItemHasGeometryOrValidTime} to handle both flat and nested
+	 * (GeoJSON-Feature {@code properties}) shapes.
+	 */
+	private static boolean nestedHasNonNull(Map<String, Object> body, String outer, String inner) {
+		Object outerVal = (body == null) ? null : body.get(outer);
+		if (!(outerVal instanceof Map)) {
+			return false;
+		}
+		return ((Map<?, ?>) outerVal).get(inner) != null;
+	}
 
 	/**
 	 * Extracts the {@code id} of the first item in the cached {@code /systems}

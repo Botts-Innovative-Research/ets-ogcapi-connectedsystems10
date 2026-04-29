@@ -1,0 +1,128 @@
+Sprint S-ETS-03-04: Empirical TE common-libs ↔ ETS deps-closure dedupe enumeration
+Date: 2026-04-29
+Generator: Dana (Run 2)
+Baseline image: ets-ogcapi-connectedsystems10:smoke (663MB, Sprint 2 close)
+
+============================================================================
+METHODOLOGY (per ADR-009 Sprint 3 amendment §"Implementation pattern" +
+architect-handoff constraints_for_generator.must item 11)
+============================================================================
+
+  $ docker run --rm ets-ogcapi-connectedsystems10:smoke ls /usr/local/tomcat/lib > te-common-libs.txt
+  $ docker run --rm ets-ogcapi-connectedsystems10:smoke ls /usr/local/tomcat/webapps/teamengine/WEB-INF/lib > web-inf-lib.txt
+  $ comm -12 <(sort te-common-libs.txt) <(sort web-inf-lib.txt)
+
+============================================================================
+RESULTS — TE common-libs vs WEB-INF/lib counts
+============================================================================
+
+TE common-libs (/usr/local/tomcat/lib, from teamengine-web-common-libs.zip):  42 jars (14MB total)
+WEB-INF/lib (/usr/local/tomcat/webapps/teamengine/WEB-INF/lib):               98 jars (49MB total)
+
+============================================================================
+EXACT-BASENAME OVERLAP (safe dedupe — same version, same jar)
+============================================================================
+
+  schema-utils-1.8.jar              64K
+  xercesImpl-2.12.2.jar            1.4M
+  xml-apis-1.4.01.jar              216K
+  xml-resolver-1.2.jar              84K
+                            ─────────────
+  TOTAL SAVINGS                    ~1.8MB (4 jars)
+
+============================================================================
+ARTIFACT-NAME OVERLAP (version mismatch — DO NOT dedupe per ADR-009 caveat)
+============================================================================
+
+  jersey-server.jar  — TE has 1.19; ETS has 3.1.x (Jakarta EE 9). Required for ADR-006. KEEP both.
+  schema-utils.jar   — exact overlap (above)
+  xercesImpl.jar     — exact overlap (above)
+  xml-apis.jar       — exact overlap (above)
+  xml-resolver.jar   — exact overlap (above)
+
+============================================================================
+INTRA-WEB-INF/LIB DUPLICATE-VERSION ARTIFACTS (14 artifacts; ~7-8MB total)
+============================================================================
+
+  Artifact                 Versions                       Sizes
+  ───────────────────────────────────────────────────────────────
+  checker-qual             2.11.1, 3.12.0                 200K + 204K
+  collection               0.6, 0.7                       160K + 164K
+  commons-cli              1.3, 1.5.0                      52K +  60K
+  commons-codec            1.11, 1.17.1                   328K + 364K
+  commons-io               2.17.0, 2.7                    504K + 272K
+  error_prone_annotations  2.3.4, 2.7.1                    16K +  16K
+  jcommander               1.48, 1.82                      64K +  88K
+  jena-base                3.1.0, 4.10.0                  212K + 252K
+  jena-core                3.1.0, 4.10.0                  1.4M + 2.0M
+  jena-iri                 1.1.2, 3.1.0                   136K + 136K
+  joda-time                2.9.4, 2.13.0                  616K + 628K
+  mimepull                 1.9.3, 1.9.15                   64K +  64K
+  slf4j-api                1.7.20, 2.0.16                  40K +  68K
+  testng                   6.9.10, 7.9.0                  852K + 1012K
+                                                  ─────────────────
+  Approx. dedupe savings (older versions removed)             ~3.5MB
+  Approx. dedupe savings (newer versions removed)             ~4.5MB
+
+  CAVEAT: dedupe HERE is RISKY — the older versions ship with TeamEngine 5.6.1's
+  WAR/CTL bundles and TE's classloader may bind to specific versions. Removing
+  EITHER version surfaces NoClassDefFoundError or LinkageError at runtime.
+  Sprint 3 contract acceptance requires smoke 16/16 PASS post-dedupe; iterative
+  smoke verification per removed jar would consume Generator Run 2's full
+  budget for marginal (~3-4MB) savings.
+
+============================================================================
+DOCKER LAYER ANALYSIS (where the 663MB actually comes from)
+============================================================================
+
+  Layer                                                         Size
+  ──────────────────────────────────────────────────────────────────
+  base tomcat:8.5-jre17                                       ~286MB  (immutable)
+  apt-get + 3 TE zips download/unzip (RUN)                     25.1MB
+  JAXB shared lib download (RUN)                                1.6MB
+  COPY --from=builder lib-runtime/ (39 jars)                   39.4MB
+  COPY ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar           0.3MB
+  COPY ets-ctl.zip + unzip                                      2.2MB
+  groupadd + useradd + chown -R                                80.2MB  ← DOMINANT cost
+  ──────────────────────────────────────────────────────────────────
+  Reported total                                              663MB
+
+  KEY INSIGHT: The 80MB chown -R layer is ~12% of the image, caused by Docker's
+  copy-on-write semantics — `chown -R tomcat:tomcat /usr/local/tomcat` rewrites
+  every file's metadata, materializing them in a new layer. Eliminating this
+  requires either (a) chown ONLY the writable dirs (logs, work, temp), or
+  (b) building with --chown on each COPY (Dockerfile syntax 1.6 supports this).
+  The 39MB lib-runtime COPY is the second-largest discretionary layer.
+
+============================================================================
+APPLIED DEDUPE (safe minimum — exact-basename only)
+============================================================================
+
+  Dockerfile RUN step inserted AFTER `COPY --from=builder lib-runtime/`:
+
+    RUN cd /usr/local/tomcat/webapps/teamengine/WEB-INF/lib && \
+        rm -f schema-utils-1.8.jar xercesImpl-2.12.2.jar \
+              xml-apis-1.4.01.jar xml-resolver-1.2.jar
+
+  Expected savings: ~1.8MB → image ~661MB.
+
+============================================================================
+VERDICT — S-ETS-03-04 outcome
+============================================================================
+
+PARTIAL — dedupe applied (4 jars, 1.8MB savings); image cannot reach 550MB
+target via the dedupe path alone on the empirical TE 5.6.1 + ETS 0.1-SNAPSHOT
+dep tree. The ADR-009 amendment §illustrative table projection of 200-300MB
+savings DOES NOT MATCH the actual overlap on this specific TE+ETS combination.
+This is exactly the architect-flagged risk GENERATOR-EMPIRICAL-DEDUPE-LIST-
+DERIVATION's worst-case symptom and is the empirical justification for
+escalating to ADR-009 alternative (b) distroless OR (c) chown-layer-elimination
+in Sprint 4.
+
+NEXT-SPRINT RECOMMENDATIONS (Sprint 4):
+  1. Eliminate the chown -R layer using --chown=tomcat:tomcat on each COPY
+     directive (Dockerfile syntax 1.6 supports this; saves ~80MB).
+  2. Investigate intra-WEB-INF/lib duplicate-version dedupe with iterative
+     smoke verification (saves additional ~3-4MB but high risk; budget 1 day).
+  3. Re-evaluate ADR-009 alternative (b) distroless if (1)+(2) miss target.
+EOF

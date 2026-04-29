@@ -118,6 +118,22 @@ RUN cd /usr/local/tomcat/lib \
 # closure also dropped under WEB-INF/lib. Sprint 1 single-stage pattern preserved.
 COPY --from=builder /build/target/lib-runtime/ /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
 COPY --from=builder /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
+
+# S-ETS-03-04: TE common-libs ↔ deps-closure dedupe per ADR-009 Sprint 3
+# amendment + ops/test-results/sprint-ets-03-04-empirical-dedupe-list-2026-04-29.txt.
+# Removes the 4 exact-basename overlaps between /usr/local/tomcat/lib (TE
+# common-libs from teamengine-web-common-libs.zip) and WEB-INF/lib (our
+# mvn dependency:copy-dependencies closure). Same version in both places
+# means duplicate code on the classpath; TE's classloader prefers
+# /usr/local/tomcat/lib so removing the WEB-INF/lib copies is safe.
+#
+# Approx. savings: 1.8MB (schema-utils + xercesImpl + xml-apis + xml-resolver).
+# This is the SAFE minimum dedupe; intra-WEB-INF/lib duplicate-version dedupe
+# (~3-4MB additional) deferred to Sprint 4 with iterative smoke verification.
+#
+# TE 5.6.1 + ETS 0.1-SNAPSHOT — re-derive on TE version bump per ADR-009.
+RUN cd /usr/local/tomcat/webapps/teamengine/WEB-INF/lib \
+ && rm -f schema-utils-1.8.jar xercesImpl-2.12.2.jar xml-apis-1.4.01.jar xml-resolver-1.2.jar
 COPY --from=builder /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT-ctl.zip /tmp/ets-ctl.zip
 RUN unzip -q -o /tmp/ets-ctl.zip -d /usr/local/tomcat/te_base/scripts \
  && rm /tmp/ets-ctl.zip

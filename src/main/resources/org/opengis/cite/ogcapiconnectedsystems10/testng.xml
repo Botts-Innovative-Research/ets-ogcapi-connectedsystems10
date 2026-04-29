@@ -46,11 +46,22 @@
        ORDERING (TestNG 7.9.0 transitive cascade behavior is undocumented; the
        @BeforeClass fallback is conditionally inert if cascade works as expected,
        load-bearing if not). -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems (OGC 23-001 /conf/core, /conf/system, /conf/subsystem; OGC 19-072 /conf/common)">
+  <!-- Sprint 5 S-ETS-05-05 (REQ-ETS-PART1-006) + S-ETS-05-06 (REQ-ETS-PART1-004):
+       Procedures and Deployments groups added; both depend on SystemFeatures via
+       the now-VERIFIED-LIVE TestNG 7.9.0 transitive cascade (ADR-010 v3 amendment
+       2026-04-29 — Sprint 4 Raze sabotage exec total=26/passed=16/failed=1/skipped=9
+       confirms two-level cascade fires end-to-end). Mechanical pattern extension of
+       Subsystems Sprint 4 baseline: same single-block consolidation, same
+       <group depends-on="systemfeatures"/> declaration, same @BeforeClass
+       SkipException fallback in each new class (defense-in-depth retained as
+       inert insurance per Sprint 4 live verification). -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
         <group name="subsystems" depends-on="systemfeatures"/>
+        <group name="procedures" depends-on="systemfeatures"/>
+        <group name="deployments" depends-on="systemfeatures"/>
       </dependencies>
     </groups>
     <classes>
@@ -61,6 +72,8 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

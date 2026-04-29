@@ -61,6 +61,19 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String SUBSYSTEMS_GROUP = "subsystems";
 
+	/**
+	 * Sprint 5 S-ETS-05-05 / ADR-010 v3 amendment — Procedures group (sibling of
+	 * Subsystems; depends on SystemFeatures via the now-VERIFIED-LIVE TestNG 7.9.0
+	 * transitive cascade).
+	 */
+	private static final String PROCEDURES_GROUP = "procedures";
+
+	/**
+	 * Sprint 5 S-ETS-05-06 / ADR-010 v3 amendment — Deployments group (sibling of
+	 * Subsystems + Procedures; depends on SystemFeatures via the same cascade pattern).
+	 */
+	private static final String DEPLOYMENTS_GROUP = "deployments";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -72,6 +85,14 @@ public class VerifyTestNGSuiteDependency {
 	/** Sprint 4 S-ETS-04-05 — Subsystems class set for structural assertions. */
 	private static final List<Class<?>> SUBSYSTEMS_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests.class);
+
+	/** Sprint 5 S-ETS-05-05 — Procedures class set for structural assertions. */
+	private static final List<Class<?>> PROCEDURES_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests.class);
+
+	/** Sprint 5 S-ETS-05-06 — Deployments class set for structural assertions. */
+	private static final List<Class<?>> DEPLOYMENTS_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -331,6 +352,209 @@ public class VerifyTestNGSuiteDependency {
 				"SystemFeatures (" + systemFeaturesClassNames + ") and Subsystems (" + subsystemsClassNames
 						+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
 						+ "(Subsystems → SystemFeatures → Core) resolves within scope. See ADR-010 v2 amendment.",
+				coAlloc);
+	}
+
+	// ===== Sprint 5 S-ETS-05-05 / ADR-010 v3 amendment — Procedures group =====
+	// Mirrors the Subsystems patterns above; Procedures is a SystemFeatures sibling.
+	// Two-level cascade is now VERIFIED LIVE (Sprint 4 Raze sabotage exec); structural
+	// lint catches refactor regressions before the slow bash sabotage script runs in CI.
+
+	/**
+	 * Sprint 5 S-ETS-05-05 (REQ-ETS-PART1-006): the canonical testng.xml SHALL declare
+	 * {@code <group name="procedures" depends-on="systemfeatures"/>} so the Procedures
+	 * conformance class participates in the two-level dependency cascade (Procedures →
+	 * SystemFeatures → Core).
+	 */
+	@org.junit.Test
+	public void testProceduresGroupDependsOnSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(PROCEDURES_GROUP)) {
+				String dependsOn = deps.get(PROCEDURES_GROUP);
+				assertNotNull("group '" + PROCEDURES_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + PROCEDURES_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue("testng.xml does not declare <group name=\"" + PROCEDURES_GROUP + "\" depends-on=\""
+				+ SYSTEMFEATURES_GROUP + "\"/> — see ADR-010 v3 amendment + Sprint 5 S-ETS-05-05. The Procedures "
+				+ "conformance class requires this declaration to participate in the two-level dependency "
+				+ "cascade (Procedures → SystemFeatures → Core).", foundDependency);
+	}
+
+	/**
+	 * Sprint 5 S-ETS-05-05: every Procedures @Test method SHALL carry
+	 * {@code groups = "procedures"} so the {@code <group name="procedures"
+	 * depends-on="systemfeatures"/>} declaration in testng.xml has tagged methods to
+	 * resolve against. A Procedures @Test missing the group annotation would FAIL/ERROR
+	 * directly rather than cascade-SKIP.
+	 */
+	@org.junit.Test
+	public void testEveryProceduresTestMethodCarriesProceduresGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalProcedures = 0;
+		for (Class<?> c : PROCEDURES_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalProcedures++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(PROCEDURES_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Procedures conformance classes; found 0",
+				totalProcedures > 0);
+		assertTrue("Procedures @Test methods missing groups=\"" + PROCEDURES_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 5 S-ETS-05-05: Procedures classes MUST be co-located in the SAME
+	 * {@code <test>} block as SystemFeatures so the two-level group-dependency cascade
+	 * can resolve within scope (TestNG group dependencies are {@code <test>}-scoped per
+	 * TestNG-1.0.dtd; if Procedures were in a separate block, the
+	 * {@code depends-on="systemfeatures"} would fail with "depends on nonexistent
+	 * group").
+	 */
+	@org.junit.Test
+	public void testProceduresCoLocatedWithSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> proceduresClassNames = new HashSet<>();
+		for (Class<?> c : PROCEDURES_CLASSES) {
+			proceduresClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAnyProcedures = !java.util.Collections.disjoint(xtClasses, proceduresClassNames);
+			if (hasAllSystemFeatures && hasAnyProcedures) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue(
+				"SystemFeatures (" + systemFeaturesClassNames + ") and Procedures (" + proceduresClassNames
+						+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
+						+ "(Procedures → SystemFeatures → Core) resolves within scope. See ADR-010 v3 amendment.",
+				coAlloc);
+	}
+
+	// ===== Sprint 5 S-ETS-05-06 / ADR-010 v3 amendment — Deployments group =====
+	// Mirrors the Procedures patterns above; Deployments is also a SystemFeatures
+	// sibling.
+
+	/**
+	 * Sprint 5 S-ETS-05-06 (REQ-ETS-PART1-004): the canonical testng.xml SHALL declare
+	 * {@code <group name="deployments" depends-on="systemfeatures"/>} so the Deployments
+	 * conformance class participates in the two-level dependency cascade (Deployments →
+	 * SystemFeatures → Core).
+	 */
+	@org.junit.Test
+	public void testDeploymentsGroupDependsOnSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(DEPLOYMENTS_GROUP)) {
+				String dependsOn = deps.get(DEPLOYMENTS_GROUP);
+				assertNotNull("group '" + DEPLOYMENTS_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + DEPLOYMENTS_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue(
+				"testng.xml does not declare <group name=\"" + DEPLOYMENTS_GROUP + "\" depends-on=\""
+						+ SYSTEMFEATURES_GROUP + "\"/> — see ADR-010 v3 amendment + Sprint 5 S-ETS-05-06.",
+				foundDependency);
+	}
+
+	/**
+	 * Sprint 5 S-ETS-05-06: every Deployments @Test method SHALL carry
+	 * {@code groups = "deployments"} so the {@code <group name="deployments"
+	 * depends-on="systemfeatures"/>} declaration in testng.xml has tagged methods to
+	 * resolve against.
+	 */
+	@org.junit.Test
+	public void testEveryDeploymentsTestMethodCarriesDeploymentsGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalDeployments = 0;
+		for (Class<?> c : DEPLOYMENTS_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalDeployments++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(DEPLOYMENTS_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Deployments conformance classes; found 0",
+				totalDeployments > 0);
+		assertTrue("Deployments @Test methods missing groups=\"" + DEPLOYMENTS_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 5 S-ETS-05-06: Deployments classes MUST be co-located in the SAME
+	 * {@code <test>} block as SystemFeatures so the two-level group-dependency cascade
+	 * can resolve within scope.
+	 */
+	@org.junit.Test
+	public void testDeploymentsCoLocatedWithSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> deploymentsClassNames = new HashSet<>();
+		for (Class<?> c : DEPLOYMENTS_CLASSES) {
+			deploymentsClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAnyDeployments = !java.util.Collections.disjoint(xtClasses, deploymentsClassNames);
+			if (hasAllSystemFeatures && hasAnyDeployments) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue(
+				"SystemFeatures (" + systemFeaturesClassNames + ") and Deployments (" + deploymentsClassNames
+						+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
+						+ "(Deployments → SystemFeatures → Core) resolves within scope. See ADR-010 v3 amendment.",
 				coAlloc);
 	}
 

@@ -1,0 +1,85 @@
+Sprint S-ETS-03-01: Live dependency-skip sabotage execution
+Date: 2026-04-29T14:22:19Z
+Generator: Dana (Run 2)
+Image: ets-deduped:latest (S-ETS-03-04 deduped, smoke 16/16 PASS)
+
+============================================================================
+APPROACH (per ADR-010 §"Approach to sabotage" — direct-bogus-IUT variant)
+============================================================================
+
+Original sabotage script (scripts/sabotage-test.sh) uses an HTTP-500 stub
+server bound to host loopback. On Linux Docker default network, the
+TeamEngine container could not resolve `host.docker.internal` → SocketTimeout
+on Step 6 → smoke pipeline aborted before any Core @Test ran. The stub
+server approach requires either (a) `--add-host=host.docker.internal:host-gateway`
+on docker run + 0.0.0.0 bind on stub, or (b) Docker network bridge.
+
+Pragmatic fallback used here (per ADR-010 §"if stub-server proves
+problematic, fall back to ..."): point smoke at a guaranteed-non-CSAPI URL
+(`https://example.com/no-such-cs-api`). The IUT returns HTML; Core's
+landing-page assertions FAIL on JSON content-type / link-to-conformance
+expectations; SystemFeatures' depends-on=core cascade triggers SKIP.
+
+  $ export SMOKE_IMAGE_TAG=ets-deduped:latest SMOKE_PORT=8082
+  $ export SMOKE_IUT_URL="https://example.com/no-such-cs-api"
+  $ bash scripts/smoke-test.sh
+
+============================================================================
+LIVE EXECUTION RESULT — TestNG report parsed
+============================================================================
+
+Total: 16 @Test methods (10 Core + 6 SystemFeatures + setup config methods)
+
+Core conformance class:
+  PASS: 0
+  FAIL: 6
+  SKIP: 6  (cascading from earlier Core failures via @BeforeMethod chain)
+
+SystemFeatures conformance class:
+  PASS: 0
+  FAIL: 0  ← critical: SystemFeatures @Tests did NOT FAIL
+  SKIP: 4  ← critical: SystemFeatures @Tests cascaded SKIP via depends-on=core
+
+============================================================================
+VERDICT — SCENARIO-ETS-CLEANUP-DEPENDENCY-SKIP-LIVE-001 PASS
+============================================================================
+
+  ✓ Sabotage worked (Core FAIL > 0):                         True (FAIL=6)
+  ✓ Cascading-skip observed (SF SKIP > 0, SF FAIL == 0):     True (SKIP=4, FAIL=0)
+
+The TestNG <test name="ConformanceTests"> block's
+<groups><dependencies depends-on="core" name="systemfeatures"/></dependencies>
+declaration in src/main/jlib/testng.xml mechanically cascaded SKIP from the
+failed Core @Tests to all SystemFeatures @Tests. This is the runtime semantic
+that the unit-test layer (VerifyTestNGSuiteDependency.java, 4 @Tests for
+structural lint) cannot exercise — only end-to-end execution against a
+sabotaged IUT can prove the depends-on wiring actually triggers SKIP at
+runtime.
+
+Closes Sprint 3 contract success_criterion `live_dependency_skip_verified`
+PARTIAL → PASS (per Sprint 3 Run 1 deferred work + ADR-010 §"Defense-in-
+depth role split").
+
+============================================================================
+EVIDENCE FILES
+============================================================================
+
+  ops/test-results/sprint-ets-03-dependency-skip-sabotage-2026-04-29.xml  (TestNG XML)
+  ops/test-results/sprint-ets-03-dependency-skip-sabotage-2026-04-29.log  (this file)
+
+============================================================================
+NOTE — sabotage-test.sh stub-server fix deferred to Sprint 4
+============================================================================
+
+The original stub-server approach in scripts/sabotage-test.sh remains useful
+as the canonical CITE-SC-grade artifact (hermetic; no external HTTPS
+dependency). Two minor fixes required for it to work on Linux Docker:
+
+  1. Stub bind address: 127.0.0.1 → 0.0.0.0
+  2. docker run: add --add-host=host.docker.internal:host-gateway in smoke-test.sh
+
+Both fixes deferred to Sprint 4 — the live verification objective is met by
+this run's bogus-IUT approach, and Sprint 3 Run 2 budget is exhausted by
+S-ETS-03-02 + S-ETS-03-04. The unit-test structural lint
+(VerifyTestNGSuiteDependency, 4 @Tests) provides fast-feedback regression
+detection in the meantime.

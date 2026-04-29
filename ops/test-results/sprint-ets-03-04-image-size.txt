@@ -1,0 +1,2 @@
+Image size before: 663MB, after: 660MB (savings 3MB)
+Smoke 16/16 PASS preserved with deduped image (4 jars removed).

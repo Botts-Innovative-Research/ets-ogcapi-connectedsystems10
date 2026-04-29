@@ -10,7 +10,7 @@
     <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.listener.TestFailureListener" />
   </listeners>
 
-  <!-- Single <test> block hosts BOTH Core and SystemFeatures classes so TestNG's
+  <!-- Single <test> block hosts Core, SystemFeatures, AND Common classes so TestNG's
        group-dependency mechanism resolves group "core" within the same scope as
        the "systemfeatures" group (group dependencies are <test>-scoped — methods
        in different <test> blocks cannot reference each other's groups, per
@@ -22,11 +22,20 @@
        SCENARIO-ETS-PART1-002-SYSTEMFEATURES-DEPENDENCY-SKIP-001 per design.md
        §"SystemFeatures conformance class scope" snippet).
 
+       Group "common" is INDEPENDENT of Core (same group-dependency-DAG-root level
+       — see architect-handoff S-ETS-03-07 readiness rationale + Sprint 3 contract
+       acceptance criterion). Common runs in parallel with Core; the load-bearing
+       Common assertions are at the JSON-encoding-class layer + Common Part 2
+       collections layer which Core does NOT cover (Core asserts the
+       landing-page+oas30 SUCCESS-side sub-requirements only). Sprint 4+ may
+       reconsider when 4+ classes need the BeforeSuite SkipException pattern noted
+       in Sprint 2 inline comment.
+
        <run> block has no <include>/<exclude> filter so all groups run; the
        dependency map handles ordering and skip semantics.
        Core tests stay in group "core"; SystemFeatures tests stay in group
-       "systemfeatures". -->
-  <test name="Conformance Classes - Core + SystemFeatures (OGC 23-001 /conf/core, /conf/system)">
+       "systemfeatures"; Common tests stay in group "common". -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common (OGC 23-001 /conf/core, /conf/system; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -38,9 +47,10 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests" />
     </classes>
   </test>
-  <!-- Add per-class <test> blocks for other conformance classes in Sprint 3+ as
+  <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as
        a separate refactor (consider a cross-block group-dependency strategy
        e.g. test-method dependsOnMethods in BeforeSuite that throws
        SkipException; or a SuitePreconditions-style listener that propagates

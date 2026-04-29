@@ -26,15 +26,15 @@ import io.restassured.specification.FilterableResponseSpecification;
  * <p>
  * <strong>Pattern</strong>: subclass + try/finally header swap (architect-ratified
  * "option (a)" per design.md). Subclassing inherits all of REST-Assured's payload
- * formatting (200+ LOC); only the header-emission step is intercepted via the swap.
- * The {@code try/finally} guarantees the IUT receives the real credential header even
- * if {@code super.filter()} throws — masked headers exist only during the formatter's
- * read.
+ * formatting (200+ LOC); only the header-emission step is intercepted via the swap. The
+ * {@code try/finally} guarantees the IUT receives the real credential header even if
+ * {@code super.filter()} throws — masked headers exist only during the formatter's read.
  * </p>
  *
  * <p>
- * Header set rationale: SUPERSET of {@link CredentialMaskingFilter#DEFAULT_SENSITIVE_HEADERS}
- * — adds {@code Set-Cookie} (response side; the formatter logs response headers too) and
+ * Header set rationale: SUPERSET of
+ * {@link CredentialMaskingFilter#DEFAULT_SENSITIVE_HEADERS} — adds {@code Set-Cookie}
+ * (response side; the formatter logs response headers too) and
  * {@code Proxy-Authorization} (rare but present in some CITE harness configs). The
  * intersection is intentional defense-in-depth.
  * </p>
@@ -53,8 +53,8 @@ public class MaskingRequestLoggingFilter extends RequestLoggingFilter {
 	 * adds nothing new since CredentialMaskingFilter already covers Set-Cookie + Proxy-
 	 * Authorization). Lower-cased for case-insensitive comparison.
 	 */
-	public static final Set<String> DEFAULT_HEADERS_TO_MASK = Set.of("authorization", "proxy-authorization", "x-api-key",
-			"cookie", "set-cookie");
+	public static final Set<String> DEFAULT_HEADERS_TO_MASK = Set.of("authorization", "proxy-authorization",
+			"x-api-key", "cookie", "set-cookie");
 
 	private final Set<String> headersToMaskLower;
 

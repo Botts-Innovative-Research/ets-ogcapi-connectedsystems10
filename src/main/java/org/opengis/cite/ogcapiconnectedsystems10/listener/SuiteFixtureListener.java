@@ -43,10 +43,14 @@ public class SuiteFixtureListener implements ISuiteListener {
 
 	/**
 	 * Registers the global REST-Assured filter chain for the whole suite. Currently:
-	 * {@link CredentialMaskingFilter} (REQ-ETS-CLEANUP-003 / NFR-ETS-08) — masks
-	 * Authorization, X-API-Key, Cookie, Set-Cookie, Proxy-Authorization headers in any
-	 * REST-Assured request log output before downstream observers (TestNG report
-	 * attachments, container logs) see them.
+	 * <ul>
+	 * <li>{@link MaskingRequestLoggingFilter} (REQ-ETS-CLEANUP-006 / Sprint 3
+	 * S-ETS-03-02) — wraps REST-Assured's built-in {@code RequestLoggingFilter} with a
+	 * try/finally header swap so the unmasked side-channel is closed; sensitive headers
+	 * appear masked in the formatter output but the IUT receives the originals.</li>
+	 * <li>{@link CredentialMaskingFilter} (REQ-ETS-CLEANUP-003 / NFR-ETS-08) — parallel
+	 * FINE-level masked log entry; defense-in-depth retained.</li>
+	 * </ul>
 	 *
 	 * <p>
 	 * Idempotent: safe to call multiple times in the same JVM (REST-Assured filters list
@@ -54,16 +58,17 @@ public class SuiteFixtureListener implements ISuiteListener {
 	 * </p>
 	 *
 	 * <p>
-	 * Wired here per design.md §"CredentialMaskingFilter wiring (Sprint 2 S-ETS-02-04)".
+	 * Wired per design.md §"Sprint 3 hardening: MaskingRequestLoggingFilter wrap pattern
+	 * (S-ETS-03-02)" + §"Wiring point" — KEEP both filters registered.
 	 * </p>
 	 */
 	void registerRestAssuredFilters() {
 		try {
-			RestAssured.filters(new CredentialMaskingFilter());
+			RestAssured.filters(new MaskingRequestLoggingFilter(), new CredentialMaskingFilter());
 		}
 		catch (RuntimeException ex) {
-			TestSuiteLogger.log(Level.WARNING, "Failed to register REST-Assured CredentialMaskingFilter: "
-					+ ex.getMessage() + " — proceeding without masking (Sprint 2 cleanup gap)");
+			TestSuiteLogger.log(Level.WARNING, "Failed to register REST-Assured masking filters: " + ex.getMessage()
+					+ " — proceeding without masking (Sprint 3 cleanup gap)");
 		}
 	}
 

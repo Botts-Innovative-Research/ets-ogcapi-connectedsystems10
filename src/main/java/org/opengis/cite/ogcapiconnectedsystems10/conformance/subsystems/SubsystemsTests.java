@@ -95,12 +95,28 @@ import io.restassured.response.Response;
  * <p>
  * <strong>Canonical URI form</strong>: per OGC source
  * {@code raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/subsystem/}
- * (5 subsystem reqs verified HTTP 200 on 2026-04-29:
+ * (6 .adoc files present in the GitHub directory listing as of 2026-04-29 — corrected
+ * Sprint 5 S-ETS-05-04 from prior 5-file enumeration per Raze CONCERN-1):
  * {@code requirements_class_system_components.adoc}, {@code req_subcollection.adoc},
- * {@code req_recursive_param.adoc}, {@code req_recursive_search_systems.adoc},
- * {@code req_recursive_search_subsystems.adoc}). The IUT also declares
- * {@code .../conf/subsystem} in {@code /conformance} (per OGC 23-001 Annex A conformance
- * class declaration).
+ * {@code req_subcollection_time.adoc}, {@code req_recursive_param.adoc},
+ * {@code req_recursive_search_systems.adoc},
+ * {@code req_recursive_search_subsystems.adoc}.
+ * </p>
+ *
+ * <p>
+ * <strong>NOTE</strong> on {@code req_subcollection_time.adoc}: the file exists in the
+ * GitHub directory listing but is <em>not</em> enumerated in
+ * {@code requirements_class_system_components.adoc}'s {@code requirement::} list (the
+ * .adoc that defines the Subsystems requirements class membership). It represents a
+ * separate, optional sub-requirement (subcollection time-extent filter) that is
+ * <em>not</em> asserted by this class at Sprint 4 minimal scope. Deferred to Sprint 5+
+ * recursive-* expansion. Distinct from {@code req_subcollection.adoc} (which IS in the
+ * requirements class and IS asserted via the SUBSYSTEMS-RESOURCES SCENARIO).
+ * </p>
+ *
+ * <p>
+ * The IUT also declares {@code .../conf/subsystem} in {@code /conformance} (per OGC
+ * 23-001 Annex A conformance class declaration).
  * </p>
  *
  * <p>

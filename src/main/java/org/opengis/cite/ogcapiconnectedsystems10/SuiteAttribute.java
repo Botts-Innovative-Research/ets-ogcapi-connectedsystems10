@@ -31,7 +31,17 @@ public enum SuiteAttribute {
 	 * Used by REST Assured-based conformance.core.* test classes (Sprint 1+) which reach
 	 * the IUT directly rather than via the legacy DOM-parsing TEST_SUBJECT path.
 	 */
-	IUT("iut", URI.class);
+	IUT("iut", URI.class),
+
+	/**
+	 * Optional credential string sent as the {@code Authorization} request header on
+	 * every REST Assured-issued request (REQ-ETS-CLEANUP-013 / Sprint 5 GAP-1 wedge fix).
+	 * Set by
+	 * {@link org.opengis.cite.ogcapiconnectedsystems10.listener.SuiteFixtureListener#processSuiteParameters
+	 * SuiteFixtureListener.processSuiteParameters} from the suite-level
+	 * {@code auth-credential} parameter; absent when the parameter is unset or empty.
+	 */
+	AUTH_CREDENTIAL("authCredential", String.class);
 
 	private final Class attrType;
 

@@ -17,6 +17,8 @@ import org.testng.ISuiteListener;
 import org.w3c.dom.Document;
 
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
 import jakarta.ws.rs.client.Client;
 
 /**
@@ -39,6 +41,15 @@ public class SuiteFixtureListener implements ISuiteListener {
 		processSuiteParameters(suite);
 		registerClientComponent(suite);
 		registerRestAssuredFilters();
+		// REQ-ETS-CLEANUP-013 (Sprint 5 GAP-1 wedge fix): if the suite was started
+		// with an `auth-credential` parameter, configure REST-Assured's default
+		// request specification so every REST Assured-issued request to the IUT
+		// carries an `Authorization` header. The MaskingRequestLoggingFilter
+		// registered above intercepts the header at log time.
+		Object authCred = suite.getAttribute(SuiteAttribute.AUTH_CREDENTIAL.getName());
+		if (authCred instanceof String) {
+			configureRestAssuredAuthCredential((String) authCred);
+		}
 	}
 
 	/**
@@ -72,6 +83,46 @@ public class SuiteFixtureListener implements ISuiteListener {
 		}
 	}
 
+	/**
+	 * Configures REST-Assured's static {@link RestAssured#requestSpecification} so every
+	 * subsequent REST Assured-issued request carries an {@code Authorization} header with
+	 * the supplied credential value. No-op when {@code authCredential} is null or empty
+	 * (preserves Sprint 1-4 unauthenticated baseline behavior).
+	 *
+	 * <p>
+	 * <strong>REQ-ETS-CLEANUP-013</strong> (Sprint 5 GAP-1 wedge fix). Closes the Sprint
+	 * 4 cross-corroborated GAP-1: the synthetic credential set by
+	 * {@code scripts/credential-leak-e2e-test.sh} previously never reached the wire
+	 * because nothing in the bash → CTL → Java chain wired it onto a request. This method
+	 * is the Java-side terminus of that chain — once the credential lands in
+	 * REST-Assured's default request spec, the {@link MaskingRequestLoggingFilter}
+	 * registered above intercepts the {@code Authorization} header at log time
+	 * (mask-on-log / restore-before-wire).
+	 * </p>
+	 *
+	 * <p>
+	 * Idempotent: replacing {@link RestAssured#requestSpecification} twice with the same
+	 * builder result is safe (the prior spec is overwritten wholesale).
+	 * </p>
+	 * @param authCredential the credential value to send (e.g.
+	 * {@code "Bearer abc123..."}); null or empty values cause this method to return
+	 * without modifying REST-Assured state.
+	 */
+	void configureRestAssuredAuthCredential(String authCredential) {
+		if (authCredential == null || authCredential.isEmpty()) {
+			return;
+		}
+		try {
+			RequestSpecification spec = new RequestSpecBuilder().addHeader("Authorization", authCredential).build();
+			RestAssured.requestSpecification = spec;
+		}
+		catch (RuntimeException ex) {
+			TestSuiteLogger.log(Level.WARNING,
+					"Failed to configure REST-Assured Authorization header from auth-credential suite parameter: "
+							+ ex.getMessage() + " — proceeding without auth header (REQ-ETS-CLEANUP-013 wedge gap)");
+		}
+	}
+
 	@Override
 	public void onFinish(ISuite suite) {
 		if (null != System.getProperty("deleteSubjectOnFinish")) {
@@ -93,6 +144,17 @@ public class SuiteFixtureListener implements ISuiteListener {
 		String iutParam = params.get(TestRunArg.IUT.toString());
 		if ((null == iutParam) || iutParam.isEmpty()) {
 			throw new IllegalArgumentException("Required test run parameter not found: " + TestRunArg.IUT.toString());
+		}
+		// REQ-ETS-CLEANUP-013: stash optional auth-credential on the suite so onStart
+		// can configure REST-Assured AFTER processSuiteParameters returns. Empty
+		// string treated as absent — backward-compat with Sprint 1-4 unauthenticated
+		// smoke runs (don't add an empty Authorization header).
+		String authCredential = params.get(TestRunArg.AUTH_CREDENTIAL.toString());
+		if (authCredential != null && !authCredential.isEmpty()) {
+			suite.setAttribute(SuiteAttribute.AUTH_CREDENTIAL.getName(), authCredential);
+			TestSuiteLogger.log(Level.CONFIG, String.format(
+					"auth-credential suite parameter present (length=%d) — REST-Assured Authorization header will be configured (REQ-ETS-CLEANUP-013).",
+					authCredential.length()));
 		}
 		URI iutRef = URI.create(iutParam.trim());
 		// Stash the raw IUT URI on the suite so REST Assured-based test classes (Sprint 1

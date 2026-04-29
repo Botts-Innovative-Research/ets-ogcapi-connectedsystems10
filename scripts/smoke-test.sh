@@ -47,7 +47,14 @@ HEALTH_TIMEOUT_S="${SMOKE_HEALTH_TIMEOUT_S:-180}"
 RUN_TIMEOUT_S="${SMOKE_RUN_TIMEOUT_S:-600}"
 
 DATE_STAMP="$(date -u +%Y-%m-%d)"
-ARCHIVE_DIR="${REPO_ROOT}/ops/test-results"
+# REQ-ETS-CLEANUP-014 (Sprint 5 S-ETS-05-02): SMOKE_OUTPUT_DIR override.
+#   Default: ${REPO_ROOT}/ops/test-results (preserves Sprint 1-4 behaviour for
+#   normal developer runs). Gate runs MUST set
+#   SMOKE_OUTPUT_DIR=/tmp/<role>-fresh-sprint5/test-results so artifacts never
+#   touch the user worktree (closes the Sprint 2 + Sprint 4 worktree-pollution
+#   recurrence — Quinn GAP-2 + Raze CONCERN). Absolute or relative path both
+#   honoured (relative paths resolve against the current working directory).
+ARCHIVE_DIR="${SMOKE_OUTPUT_DIR:-${REPO_ROOT}/ops/test-results}"
 REPORT_XML="${ARCHIVE_DIR}/s-ets-01-03-teamengine-smoke-${DATE_STAMP}.xml"
 LOG_FILE="${ARCHIVE_DIR}/s-ets-01-03-teamengine-container-${DATE_STAMP}.log"
 mkdir -p "$ARCHIVE_DIR"
@@ -141,10 +148,30 @@ fi
 log "  suite registered (code=${ETS_CODE} version=${EXPECTED_VERSION} title contains '${EXPECTED_TITLE_FRAGMENT}')"
 
 # ---------- Step 6: invoke the suite against IUT
+# REQ-ETS-CLEANUP-013 (Sprint 5 S-ETS-05-01 GAP-1 wedge fix):
+#   When SMOKE_AUTH_CREDENTIAL is non-empty, propagate it as the
+#   `auth-credential` TestNG suite parameter via an extra
+#   `--data-urlencode` arg. The Java SuiteFixtureListener reads it and
+#   configures REST-Assured's default request specification with an
+#   `Authorization: <SMOKE_AUTH_CREDENTIAL>` header (so the
+#   MaskingRequestLoggingFilter is exercised and the deeper-E2E
+#   credential-leak verification in scripts/credential-leak-e2e-test.sh
+#   actually proves end-to-end propagation rather than passing by
+#   default-on-zero-credential accident). Closes Sprint 4 GAP-1.
+#
+# Backward-compat: when SMOKE_AUTH_CREDENTIAL is unset/empty, no
+# auth-credential param is sent — Sprint 1-4 unauthenticated smoke against
+# GeoRobotix continues to behave identically.
+AUTH_CRED_ARGS=()
+if [[ -n "${SMOKE_AUTH_CREDENTIAL:-}" ]]; then
+  AUTH_CRED_ARGS+=(--data-urlencode "auth-credential=${SMOKE_AUTH_CREDENTIAL}")
+  log "  SMOKE_AUTH_CREDENTIAL set (length=${#SMOKE_AUTH_CREDENTIAL}) — propagating as auth-credential suite parameter (REQ-ETS-CLEANUP-013)"
+fi
 log "step 6/8 — POST suite/${ETS_CODE}/run iut=${IUT_URL}"
 http_code=$(curl -s -u "${TE_USER}:${TE_PASS}" -G \
     "http://localhost:${SMOKE_PORT}/teamengine/rest/suites/${ETS_CODE}/run" \
     --data-urlencode "iut=${IUT_URL}" \
+    "${AUTH_CRED_ARGS[@]}" \
     -H "Accept: application/xml" \
     -o "$REPORT_XML" \
     -w "%{http_code}" \

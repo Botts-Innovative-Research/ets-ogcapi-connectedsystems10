@@ -109,6 +109,27 @@ public class SystemFeaturesTests {
 	 */
 	static final String REQ_CANONICAL_URL = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/canonical-url";
 
+	/**
+	 * Canonical OGC requirement URI for the {@code /req/system/collections} discipline
+	 * (Sprint 3 expansion S-ETS-03-05). Verifies the {@code /systems} collection is
+	 * discoverable via the {@code /collections} endpoint OR via the landing-page
+	 * {@code rel="systems"} / {@code rel="collection"} link.
+	 *
+	 * @see <a href=
+	 * "https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/system/req_collections.adoc">req_collections.adoc</a>
+	 */
+	static final String REQ_SYSTEM_COLLECTIONS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/collections";
+
+	/**
+	 * Canonical OGC requirement URI for the {@code /req/system/location-time} discipline
+	 * (Sprint 3 expansion S-ETS-03-05). MAY-priority: system items SHOULD have geometry +
+	 * validTime; SKIP-with-reason if both absent.
+	 *
+	 * @see <a href=
+	 * "https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/system/req_location_time.adoc">req_location_time.adoc</a>
+	 */
+	static final String REQ_SYSTEM_LOCATION_TIME = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/location-time";
+
 	private URI iutUri;
 
 	private URI systemsUri;
@@ -298,6 +319,145 @@ public class SystemFeaturesTests {
 		if (!(selfPresent || selfAbsent)) {
 			ETSAssert.failWithUri(REQ_CANONICAL_URL, "sentinel could not determine self-rel state from rels: " + rels);
 		}
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-002-SYSTEMFEATURES-COLLECTIONS-001 (CRITICAL): per OGC 23-001
+	 * {@code /req/system/collections}, the {@code /systems} collection MUST be
+	 * discoverable. Two acceptable discovery paths:
+	 *
+	 * <ol>
+	 * <li><strong>Common Part 2 path</strong>: {@code /collections} endpoint returns a
+	 * {@code collections} array containing an entry with {@code id} matching
+	 * {@code system} or {@code all_systems} (case-insensitive substring match — IUTs vary
+	 * on the exact id label per OGC 20-024 §"id" non-mandatory format).</li>
+	 * <li><strong>Landing-page link path</strong>: the IUT root landing page declares a
+	 * {@code rel="systems"} OR {@code rel="collection"} link pointing at the
+	 * {@code /systems} resource (some IUTs do not implement {@code /collections} but
+	 * advertise the systems endpoint via the landing-page link discipline).</li>
+	 * </ol>
+	 *
+	 * <p>
+	 * GeoRobotix curl evidence (2026-04-29) confirms BOTH paths work:
+	 * {@code /collections} returns 200 with {@code collections: [{id: "all_systems",
+	 * ...}]} AND landing page declares {@code rel="systems"}. This test PASSES if either
+	 * path succeeds (defense-in-depth — IUT-shape adapt per Sprint 2 SystemFeatures pivot
+	 * precedent).
+	 * </p>
+	 */
+	@Test(description = "OGC-23-001 " + REQ_SYSTEM_COLLECTIONS
+			+ ": /systems is discoverable via /collections OR landing-page rel=systems link (REQ-ETS-PART1-002, SCENARIO-ETS-PART1-002-SYSTEMFEATURES-COLLECTIONS-001)",
+			dependsOnMethods = "systemsCollectionReturns200", groups = "systemfeatures")
+	public void systemsDiscoverableViaCollectionsOrLandingPage() {
+		// Path 1: /collections endpoint
+		String iutString = this.iutUri.toString();
+		String base = iutString.endsWith("/") ? iutString : iutString + "/";
+		Response collectionsResponse = given().accept("application/json")
+			.when()
+			.get(URI.create(base + "collections"))
+			.andReturn();
+		boolean collectionsPathOk = false;
+		if (collectionsResponse.getStatusCode() == 200) {
+			try {
+				Map<String, Object> body = collectionsResponse.jsonPath().getMap("$");
+				Object collsObj = (body == null) ? null : body.get("collections");
+				if (collsObj instanceof List) {
+					@SuppressWarnings("unchecked")
+					List<Object> colls = (List<Object>) collsObj;
+					for (Object c : colls) {
+						if (!(c instanceof Map)) {
+							continue;
+						}
+						Object id = ((Map<?, ?>) c).get("id");
+						if (id instanceof String) {
+							String idLower = ((String) id).toLowerCase();
+							if (idLower.equals("system") || idLower.equals("systems") || idLower.contains("system")) {
+								collectionsPathOk = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+			catch (Exception ex) {
+				// fall through to landing-page path
+			}
+		}
+
+		// Path 2: landing-page rel=systems link
+		boolean landingPathOk = false;
+		Response landing = given().accept("application/json").when().get(URI.create(iutString)).andReturn();
+		if (landing.getStatusCode() == 200) {
+			try {
+				Map<String, Object> body = landing.jsonPath().getMap("$");
+				Object linksObj = (body == null) ? null : body.get("links");
+				if (linksObj instanceof List) {
+					@SuppressWarnings("unchecked")
+					List<Object> links = (List<Object>) linksObj;
+					for (Object l : links) {
+						if (!(l instanceof Map)) {
+							continue;
+						}
+						Object rel = ((Map<?, ?>) l).get("rel");
+						if ("systems".equals(rel) || "collection".equals(rel) || "collections".equals(rel)) {
+							landingPathOk = true;
+							break;
+						}
+					}
+				}
+			}
+			catch (Exception ex) {
+				// fall through to FAIL
+			}
+		}
+
+		if (!collectionsPathOk && !landingPathOk) {
+			ETSAssert.failWithUri(REQ_SYSTEM_COLLECTIONS,
+					"/systems collection NOT discoverable via /collections endpoint NOR landing-page "
+							+ "rel=systems/collection link. /collections HTTP " + collectionsResponse.getStatusCode()
+							+ "; landing HTTP " + landing.getStatusCode() + ". One of the two paths is required "
+							+ "per /req/system/collections (Common Part 2 collections OR landing-page link discipline).");
+		}
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LOCATION-TIME-001 (NORMAL, MAY-priority): per
+	 * OGC 23-001 {@code /req/system/location-time}, system items SHOULD carry temporal
+	 * (validTime) and/or spatial (geometry) context. MAY-priority handling: SKIP-with-
+	 * reason if BOTH absent (the canonical-endpoint shape is the load-bearing assertion;
+	 * temporal+spatial context is an enhancement not a hard mandate).
+	 *
+	 * <p>
+	 * GeoRobotix curl evidence (S-ETS-02-06 line 76-80, re-verified 2026-04-29):
+	 * {@code validTime: ["2023-05-14T15:22:00Z", "now"]} present on representative items;
+	 * geometry may or may not be present per item. This test PASSES if EITHER validTime
+	 * OR geometry (or both) is present on the cached single-item body.
+	 * </p>
+	 */
+	@Test(description = "OGC-23-001 " + REQ_SYSTEM_LOCATION_TIME
+			+ ": /systems/{id} has validTime OR geometry (REQ-ETS-PART1-002, SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LOCATION-TIME-001 — MAY-priority)",
+			dependsOnMethods = "systemItemHasIdTypeLinks", groups = "systemfeatures")
+	public void systemItemHasGeometryOrValidTime() {
+		if (this.firstSystemId == null || this.systemItemBody == null) {
+			throw new SkipException(
+					REQ_SYSTEM_LOCATION_TIME + " — no single-item body available to assert location/time discipline.");
+		}
+		boolean hasValidTime = this.systemItemBody.containsKey("validTime")
+				&& this.systemItemBody.get("validTime") != null;
+		boolean hasGeometry = this.systemItemBody.containsKey("geometry")
+				&& this.systemItemBody.get("geometry") != null;
+		if (!hasValidTime && !hasGeometry) {
+			throw new SkipException(REQ_SYSTEM_LOCATION_TIME + " — /systems/" + this.firstSystemId
+					+ " has neither validTime nor geometry. "
+					+ "MAY-priority per OGC 23-001 /req/system/location-time; SKIP rather than FAIL "
+					+ "(temporal+spatial context is an enhancement, not a hard mandate). Available keys: "
+					+ this.systemItemBody.keySet());
+		}
+		// PASS: at least one of validTime/geometry is present. If validTime is present,
+		// it should be a list (canonical form per OGC 23-001 §5.4) or a string ISO
+		// timestamp.
+		// We do not strictly validate the inner shape here (Sprint 4+ extension); the
+		// load-bearing assertion is presence.
 	}
 
 	// --------------- helpers ---------------

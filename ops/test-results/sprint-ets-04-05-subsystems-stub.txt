@@ -1,0 +1,2 @@
+2026-04-29T16:10:38Z
+STUB - Sprint 4 Run 2: S-ETS-04-05 Subsystems conformance class — curl-verified GeoRobotix /systems/0n3rtpmuihc0/subsystems returns 12 items; canonical URIs /req/subsystem/collection + /recursive-* verified at OGC repo

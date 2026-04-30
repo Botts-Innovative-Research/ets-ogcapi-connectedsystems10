@@ -88,6 +88,19 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String PROPERTYDEFINITIONS_GROUP = "propertydefinitions";
 
+	/**
+	 * Sprint 8 S-ETS-08-02 — Subdeployments group (FIRST three-deep dependency chain in
+	 * this ETS: Subdeployments → Deployments → SystemFeatures → Core). depends-on the
+	 * {@code deployments} group (NOT {@code systemfeatures} directly); the SystemFeatures
+	 * dependency is transitive through Deployments per TestNG 7.9.0 cascade semantics.
+	 * ADR-010 v4 amendment (Sprint 8 — Generator close, 2026-04-30) records the 3-deep
+	 * chain wiring; sister cascade XML
+	 * {@code ops/test-results/sprint-ets-08-cascade-2026-04-30.xml} verifies the cascade
+	 * end-to-end (6 sibling classes SKIP when SystemFeatures is sabotaged: 5
+	 * SystemFeatures-level direct + 1 Subdeployments transitive via Deployments).
+	 */
+	private static final String SUBDEPLOYMENTS_GROUP = "subdeployments";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -115,6 +128,10 @@ public class VerifyTestNGSuiteDependency {
 	/** Sprint 7 S-ETS-07-03 — PropertyDefinitions class set for structural assertions. */
 	private static final List<Class<?>> PROPERTYDEFINITIONS_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests.class);
+
+	/** Sprint 8 S-ETS-08-02 — Subdeployments class set for structural assertions. */
+	private static final List<Class<?>> SUBDEPLOYMENTS_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -779,6 +796,115 @@ public class VerifyTestNGSuiteDependency {
 				+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
 				+ "(PropertyDefinitions → SystemFeatures → Core) resolves within scope. See Sprint 7 S-ETS-07-03.",
 				coAlloc);
+	}
+
+	// ===== Sprint 8 S-ETS-08-02 — Subdeployments group =====
+	// Mirrors the patterns above; Subdeployments is the FIRST three-deep dependency chain
+	// in this ETS (Subdeployments → Deployments → SystemFeatures → Core). Critical
+	// distinction: Subdeployments depends-on="deployments" (NOT "systemfeatures") — the
+	// transitive cascade is carried by Deployments' own depends-on="systemfeatures".
+
+	/**
+	 * Sprint 8 S-ETS-08-02 (REQ-ETS-PART1-005): the canonical testng.xml SHALL declare
+	 * {@code <group name="subdeployments" depends-on="deployments"/>} so the
+	 * Subdeployments conformance class participates in the THREE-deep dependency cascade
+	 * (Subdeployments → Deployments → SystemFeatures → Core). Critical: depends-on must
+	 * be {@code "deployments"} (NOT {@code "systemfeatures"} directly) — the
+	 * SystemFeatures dependency is transitive through Deployments.
+	 */
+	@org.junit.Test
+	public void testSubdeploymentsGroupDependsOnDeployments() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(SUBDEPLOYMENTS_GROUP)) {
+				String dependsOn = deps.get(SUBDEPLOYMENTS_GROUP);
+				assertNotNull("group '" + SUBDEPLOYMENTS_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + SUBDEPLOYMENTS_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ DEPLOYMENTS_GROUP
+						+ "' (3-deep chain Subdeployments → Deployments → SystemFeatures → Core requires Deployments as direct parent, NOT SystemFeatures)",
+						dependsOn.contains(DEPLOYMENTS_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue("testng.xml does not declare <group name=\"" + SUBDEPLOYMENTS_GROUP + "\" depends-on=\""
+				+ DEPLOYMENTS_GROUP + "\"/> — see Sprint 8 S-ETS-08-02 + ADR-010 v4 amendment. The "
+				+ "Subdeployments conformance class requires this declaration to participate in the three-level "
+				+ "dependency cascade (Subdeployments → Deployments → SystemFeatures → Core).", foundDependency);
+	}
+
+	/**
+	 * Sprint 8 S-ETS-08-02: every Subdeployments @Test method SHALL carry
+	 * {@code groups = "subdeployments"} so the {@code <group name="subdeployments"
+	 * depends-on="deployments"/>} declaration in testng.xml has tagged methods to resolve
+	 * against. A Subdeployments @Test missing the group annotation would FAIL/ERROR
+	 * directly rather than cascade-SKIP via the 3-deep chain.
+	 */
+	@org.junit.Test
+	public void testEverySubdeploymentsTestMethodCarriesSubdeploymentsGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalSubdeployments = 0;
+		for (Class<?> c : SUBDEPLOYMENTS_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalSubdeployments++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(SUBDEPLOYMENTS_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Subdeployments conformance classes; found 0",
+				totalSubdeployments > 0);
+		assertTrue("Subdeployments @Test methods missing groups=\"" + SUBDEPLOYMENTS_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 8 S-ETS-08-02: Subdeployments classes MUST be co-located in the SAME
+	 * {@code <test>} block as Deployments so the three-level group-dependency cascade can
+	 * resolve within scope. Stronger condition than the SystemFeatures co-location lint:
+	 * the 3-deep chain requires the parent (Deployments) to be in the same block, which
+	 * ALSO transitively requires Deployments' own parent (SystemFeatures) to be in the
+	 * same block (already covered by
+	 * {@link #testDeploymentsCoLocatedWithSystemFeatures}).
+	 */
+	@org.junit.Test
+	public void testSubdeploymentsCoLocatedWithDeployments() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> deploymentsClassNames = new HashSet<>();
+		for (Class<?> c : DEPLOYMENTS_CLASSES) {
+			deploymentsClassNames.add(c.getName());
+		}
+		Set<String> subdeploymentsClassNames = new HashSet<>();
+		for (Class<?> c : SUBDEPLOYMENTS_CLASSES) {
+			subdeploymentsClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllDeployments = xtClasses.containsAll(deploymentsClassNames);
+			boolean hasAnySubdeployments = !java.util.Collections.disjoint(xtClasses, subdeploymentsClassNames);
+			if (hasAllDeployments && hasAnySubdeployments) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue("Deployments (" + deploymentsClassNames + ") and Subdeployments (" + subdeploymentsClassNames
+				+ ") must be declared in the SAME <test> block of testng.xml so the three-level group dependency "
+				+ "(Subdeployments → Deployments → SystemFeatures → Core) resolves within scope. See Sprint 8 "
+				+ "S-ETS-08-02 + ADR-010 v4 amendment.", coAlloc);
 	}
 
 }

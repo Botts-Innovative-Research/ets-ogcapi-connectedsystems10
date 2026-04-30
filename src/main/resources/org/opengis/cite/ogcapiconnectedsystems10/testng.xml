@@ -63,7 +63,20 @@
        2026-04-30.xml retroactively VERIFIES the 3-class cascade (Subsystems +
        Procedures + Deployments) — adding SamplingFeatures + PropertyDefinitions
        extends the cascade to 5 sibling classes at the SystemFeatures level. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property; OGC 19-072 /conf/common)">
+  <!-- Sprint 8 S-ETS-08-02 (REQ-ETS-PART1-005): Subdeployments group added; FIRST
+       three-deep dependency chain in this ETS (Subdeployments to Deployments to
+       SystemFeatures to Core). Subdeployments depends-on="deployments" (NOT
+       "systemfeatures"); the cascade is transitive — when SystemFeatures is
+       sabotaged, Deployments cascade-SKIPs, and Subdeployments cascade-SKIPs
+       transitively via its dependency on Deployments. ADR-010 v4 amendment
+       (this sprint) records the 3-deep chain wiring. Sister cascade XML
+       ops/test-results/sprint-ets-08-cascade-2026-04-30.xml VERIFIES the
+       6-class cascade (5 SystemFeatures-level + 1 Deployments-transitive).
+       GeoRobotix IUT state at sprint time: 1 deployment (16sp744ch58g) with
+       empty subdeployments — IUT-state-honest SKIP applies for all 4 @Tests
+       (HTTP 200 + items: [] empty pattern, per Sprint 7 PropertyDefinitions
+       precedent). -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -72,6 +85,7 @@
         <group name="deployments" depends-on="systemfeatures"/>
         <group name="samplingfeatures" depends-on="systemfeatures"/>
         <group name="propertydefinitions" depends-on="systemfeatures"/>
+        <group name="subdeployments" depends-on="deployments"/>
       </dependencies>
     </groups>
     <classes>
@@ -86,6 +100,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

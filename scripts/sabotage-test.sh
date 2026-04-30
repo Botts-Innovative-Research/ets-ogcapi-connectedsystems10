@@ -201,13 +201,21 @@ if [[ "$SABOTAGE_TARGET" == "systemfeatures" ]]; then
   log "step 2/6 — copying repo to temp worktree at $SABOTAGE_WORKTREE"
   mkdir -p "$SABOTAGE_WORKTREE"
   # Use rsync if available (faster + better excludes); fall back to cp -r.
+  # Sprint 6 S-ETS-06-02 (REQ-ETS-CLEANUP-015 → FULLY-IMPLEMENTED): the
+  # `.git/` exclude was REMOVED. The project Dockerfile has `COPY .git ./.git`
+  # for git-commit-sha manifest pinning per ADR-002; without `.git` in the
+  # temp worktree, `docker build` fails at that COPY step. Sister `.git` is
+  # ~5.2MB (well under any reasonable size threshold), so including it has
+  # negligible rsync cost. Fallback `cp -a "$REPO_ROOT/." "$SABOTAGE_WORKTREE/"`
+  # already preserves `.git` (it copied everything then `rm -rf`'d only
+  # `target`); we drop the explicit `.git` removal there too for symmetry.
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a --exclude='.git/' --exclude='target/' --exclude='node_modules/' \
+    rsync -a --exclude='target/' --exclude='node_modules/' \
       --exclude='ops/test-results/*.xml' --exclude='ops/test-results/*.log' \
       "$REPO_ROOT/" "$SABOTAGE_WORKTREE/"
   else
     cp -a "$REPO_ROOT/." "$SABOTAGE_WORKTREE/"
-    rm -rf "$SABOTAGE_WORKTREE/.git" "$SABOTAGE_WORKTREE/target"
+    rm -rf "$SABOTAGE_WORKTREE/target"
   fi
 
   # ---------- Step 3: sed-patch SystemFeaturesTests.java in temp tree
@@ -258,17 +266,36 @@ PY
   # ---------- Step 4: run smoke from temp worktree against GeoRobotix
   log "step 4/6 — running smoke from sabotaged temp tree (image $IMAGE_TAG, container $CONTAINER_NAME)"
   log "  IUT: ${SMOKE_IUT_URL:-https://api.georobotix.io/ogc/t18/api}"
+  # Sprint 6 S-ETS-06-02 honest log message — capture smoke exit code so we
+  # can distinguish Docker build failure from smoke @Test failure. Pre-Sprint
+  # 6 the unconditional "EXPECTED — SystemFeatures FAIL on first @Test"
+  # message fired even when the Docker build step failed (which was the
+  # actual failure mode in Sprint 5 due to the .git rsync exclude).
+  SMOKE_EXIT_CODE=0
   pushd "$SABOTAGE_WORKTREE" >/dev/null
   SMOKE_CONTAINER_NAME="$CONTAINER_NAME" \
     SMOKE_IMAGE_TAG="$IMAGE_TAG" \
     SMOKE_OUTPUT_DIR="${SABOTAGE_TMPDIR}/test-results" \
     bash scripts/smoke-test.sh 2>&1 | tee -a "$SABOTAGE_LOG" \
-    || log "  smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test)"
+    || SMOKE_EXIT_CODE=$?
+  # Note: with `set -o pipefail`, the pipeline exit code is the rightmost
+  # non-zero in the pipe; the `|| ...` captures that. SMOKE_EXIT_CODE is 0
+  # for clean smoke pass; non-zero for any failure mode. We disambiguate
+  # using the presence/absence of the TestNG XML below.
   popd >/dev/null
 
   # Locate the smoke-test report — written to SMOKE_OUTPUT_DIR per S-ETS-05-02.
   LATEST_REPORT="$(ls -t "${SABOTAGE_TMPDIR}/test-results"/s-ets-01-03-teamengine-smoke-*.xml 2>/dev/null | head -1)"
-  [[ -n "$LATEST_REPORT" ]] || die "smoke-test.sh did not produce a TestNG report under ${SABOTAGE_TMPDIR}/test-results"
+  if [[ -z "$LATEST_REPORT" ]]; then
+    if [[ "$SMOKE_EXIT_CODE" -ne 0 ]]; then
+      log "  smoke exited non-zero with NO TestNG report — Docker build FAILED (not a sabotage-marker hit)"
+      log "  (this is NOT the expected SystemFeatures-FAIL cascade; check container build for COPY/.git or other Docker errors above)"
+    fi
+    die "smoke-test.sh did not produce a TestNG report under ${SABOTAGE_TMPDIR}/test-results"
+  fi
+  if [[ "$SMOKE_EXIT_CODE" -ne 0 ]]; then
+    log "  smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test); TestNG report present at $LATEST_REPORT"
+  fi
   cp -f "$LATEST_REPORT" "$SABOTAGE_REPORT_XML"
   log "  TestNG report captured to $SABOTAGE_REPORT_XML"
 

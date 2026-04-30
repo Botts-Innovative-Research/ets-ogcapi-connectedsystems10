@@ -74,6 +74,20 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String DEPLOYMENTS_GROUP = "deployments";
 
+	/**
+	 * Sprint 7 S-ETS-07-02 — SamplingFeatures group (sibling of Subsystems + Procedures +
+	 * Deployments; depends on SystemFeatures via the now-VERIFIED-LIVE 3-class cascade —
+	 * Sprint 7 S-ETS-07-01 Wedge 1 closed the sabotage-marker javac defect that had
+	 * blocked live verification for 2 sprints).
+	 */
+	private static final String SAMPLINGFEATURES_GROUP = "samplingfeatures";
+
+	/**
+	 * Sprint 7 S-ETS-07-03 — PropertyDefinitions group (sibling of all the above; depends
+	 * on SystemFeatures).
+	 */
+	private static final String PROPERTYDEFINITIONS_GROUP = "propertydefinitions";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -93,6 +107,14 @@ public class VerifyTestNGSuiteDependency {
 	/** Sprint 5 S-ETS-05-06 — Deployments class set for structural assertions. */
 	private static final List<Class<?>> DEPLOYMENTS_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests.class);
+
+	/** Sprint 7 S-ETS-07-02 — SamplingFeatures class set for structural assertions. */
+	private static final List<Class<?>> SAMPLINGFEATURES_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests.class);
+
+	/** Sprint 7 S-ETS-07-03 — PropertyDefinitions class set for structural assertions. */
+	private static final List<Class<?>> PROPERTYDEFINITIONS_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -555,6 +577,207 @@ public class VerifyTestNGSuiteDependency {
 				"SystemFeatures (" + systemFeaturesClassNames + ") and Deployments (" + deploymentsClassNames
 						+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
 						+ "(Deployments → SystemFeatures → Core) resolves within scope. See ADR-010 v3 amendment.",
+				coAlloc);
+	}
+
+	// ===== Sprint 7 S-ETS-07-02 — SamplingFeatures group =====
+	// Mirrors the Deployments patterns above; SamplingFeatures is also a SystemFeatures
+	// sibling. The 3-class cascade (Subsystems + Procedures + Deployments) was VERIFIED
+	// LIVE by Sprint 7 S-ETS-07-01 Wedge 1; SamplingFeatures + PropertyDefinitions extend
+	// the cascade to 5 sibling classes at the SystemFeatures level.
+
+	/**
+	 * Sprint 7 S-ETS-07-02 (REQ-ETS-PART1-007): the canonical testng.xml SHALL declare
+	 * {@code <group name="samplingfeatures" depends-on="systemfeatures"/>} so the
+	 * SamplingFeatures conformance class participates in the two-level dependency cascade
+	 * (SamplingFeatures → SystemFeatures → Core).
+	 */
+	@org.junit.Test
+	public void testSamplingFeaturesGroupDependsOnSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(SAMPLINGFEATURES_GROUP)) {
+				String dependsOn = deps.get(SAMPLINGFEATURES_GROUP);
+				assertNotNull("group '" + SAMPLINGFEATURES_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + SAMPLINGFEATURES_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue(
+				"testng.xml does not declare <group name=\"" + SAMPLINGFEATURES_GROUP + "\" depends-on=\""
+						+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 7 S-ETS-07-02 + ADR-010 v3 amendment.",
+				foundDependency);
+	}
+
+	/**
+	 * Sprint 7 S-ETS-07-02: every SamplingFeatures @Test method SHALL carry
+	 * {@code groups = "samplingfeatures"} so the
+	 * {@code <group name="samplingfeatures" depends-on="systemfeatures"/>} declaration
+	 * has tagged methods to resolve against.
+	 */
+	@org.junit.Test
+	public void testEverySamplingFeaturesTestMethodCarriesSamplingFeaturesGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalSamplingFeatures = 0;
+		for (Class<?> c : SAMPLINGFEATURES_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalSamplingFeatures++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(SAMPLINGFEATURES_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in SamplingFeatures conformance classes; found 0",
+				totalSamplingFeatures > 0);
+		assertTrue("SamplingFeatures @Test methods missing groups=\"" + SAMPLINGFEATURES_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 7 S-ETS-07-02: SamplingFeatures classes MUST be co-located in the SAME
+	 * {@code <test>} block as SystemFeatures so the two-level group-dependency cascade
+	 * can resolve within scope.
+	 */
+	@org.junit.Test
+	public void testSamplingFeaturesCoLocatedWithSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> samplingFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SAMPLINGFEATURES_CLASSES) {
+			samplingFeaturesClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAnySamplingFeatures = !java.util.Collections.disjoint(xtClasses, samplingFeaturesClassNames);
+			if (hasAllSystemFeatures && hasAnySamplingFeatures) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue(
+				"SystemFeatures (" + systemFeaturesClassNames + ") and SamplingFeatures (" + samplingFeaturesClassNames
+						+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
+						+ "(SamplingFeatures → SystemFeatures → Core) resolves within scope. See Sprint 7 S-ETS-07-02.",
+				coAlloc);
+	}
+
+	// ===== Sprint 7 S-ETS-07-03 — PropertyDefinitions group =====
+	// Mirrors the SamplingFeatures patterns above.
+
+	/**
+	 * Sprint 7 S-ETS-07-03 (REQ-ETS-PART1-008): the canonical testng.xml SHALL declare
+	 * {@code <group name="propertydefinitions" depends-on="systemfeatures"/>} so the
+	 * PropertyDefinitions conformance class participates in the two-level dependency
+	 * cascade (PropertyDefinitions → SystemFeatures → Core).
+	 */
+	@org.junit.Test
+	public void testPropertyDefinitionsGroupDependsOnSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(PROPERTYDEFINITIONS_GROUP)) {
+				String dependsOn = deps.get(PROPERTYDEFINITIONS_GROUP);
+				assertNotNull("group '" + PROPERTYDEFINITIONS_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + PROPERTYDEFINITIONS_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue(
+				"testng.xml does not declare <group name=\"" + PROPERTYDEFINITIONS_GROUP + "\" depends-on=\""
+						+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 7 S-ETS-07-03 + ADR-010 v3 amendment.",
+				foundDependency);
+	}
+
+	/**
+	 * Sprint 7 S-ETS-07-03: every PropertyDefinitions @Test method SHALL carry
+	 * {@code groups = "propertydefinitions"} so the
+	 * {@code <group name="propertydefinitions" depends-on="systemfeatures"/>} declaration
+	 * has tagged methods to resolve against.
+	 */
+	@org.junit.Test
+	public void testEveryPropertyDefinitionsTestMethodCarriesPropertyDefinitionsGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalPropertyDefinitions = 0;
+		for (Class<?> c : PROPERTYDEFINITIONS_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalPropertyDefinitions++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(PROPERTYDEFINITIONS_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in PropertyDefinitions conformance classes; found 0",
+				totalPropertyDefinitions > 0);
+		assertTrue(
+				"PropertyDefinitions @Test methods missing groups=\"" + PROPERTYDEFINITIONS_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 7 S-ETS-07-03: PropertyDefinitions classes MUST be co-located in the SAME
+	 * {@code <test>} block as SystemFeatures so the two-level group-dependency cascade
+	 * can resolve within scope.
+	 */
+	@org.junit.Test
+	public void testPropertyDefinitionsCoLocatedWithSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> propertyDefinitionsClassNames = new HashSet<>();
+		for (Class<?> c : PROPERTYDEFINITIONS_CLASSES) {
+			propertyDefinitionsClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAnyPropertyDefinitions = !java.util.Collections.disjoint(xtClasses,
+					propertyDefinitionsClassNames);
+			if (hasAllSystemFeatures && hasAnyPropertyDefinitions) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue("SystemFeatures (" + systemFeaturesClassNames + ") and PropertyDefinitions ("
+				+ propertyDefinitionsClassNames
+				+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
+				+ "(PropertyDefinitions → SystemFeatures → Core) resolves within scope. See Sprint 7 S-ETS-07-03.",
 				coAlloc);
 	}
 

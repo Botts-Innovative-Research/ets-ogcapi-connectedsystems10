@@ -55,13 +55,23 @@
        <group depends-on="systemfeatures"/> declaration, same @BeforeClass
        SkipException fallback in each new class (defense-in-depth retained as
        inert insurance per Sprint 4 live verification). -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment; OGC 19-072 /conf/common)">
+  <!-- Sprint 7 S-ETS-07-02 (REQ-ETS-PART1-007) + S-ETS-07-03 (REQ-ETS-PART1-008):
+       SamplingFeatures and PropertyDefinitions groups added; both depend on
+       SystemFeatures via the same cascade pattern. Sprint 7 S-ETS-07-01 Wedge 1
+       (REQ-ETS-CLEANUP-018) closed the 2-sprint-old sabotage-marker javac defect;
+       cascade XML at ops/test-results/sprint-ets-07-01-wedge1-sabotage-cascade-
+       2026-04-30.xml retroactively VERIFIES the 3-class cascade (Subsystems +
+       Procedures + Deployments) — adding SamplingFeatures + PropertyDefinitions
+       extends the cascade to 5 sibling classes at the SystemFeatures level. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
         <group name="subsystems" depends-on="systemfeatures"/>
         <group name="procedures" depends-on="systemfeatures"/>
         <group name="deployments" depends-on="systemfeatures"/>
+        <group name="samplingfeatures" depends-on="systemfeatures"/>
+        <group name="propertydefinitions" depends-on="systemfeatures"/>
       </dependencies>
     </groups>
     <classes>
@@ -74,6 +84,8 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

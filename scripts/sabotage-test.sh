@@ -228,7 +228,19 @@ if [[ "$SABOTAGE_TARGET" == "systemfeatures" ]]; then
   # throw immediately after that opening brace. The python form is more robust
   # than sed for multi-line block matching across distros (BSD vs GNU sed
   # quirks), so we use python to do the targeted insertion.
-  SABOTAGE_MARKER='throw new AssertionError("SABOTAGED by --target=systemfeatures Sprint 5 S-ETS-05-03");'
+  # Sprint 7 S-ETS-07-01 Wedge 1 (REQ-ETS-CLEANUP-018) — javac unreachable-statement fix:
+  # The bare `throw new AssertionError(...)` injection makes the existing
+  # `ETSAssert.assertStatus(...)` line below it unreachable per JLS §14.21,
+  # which javac rejects with `[210,17] unreachable statement`. The
+  # `if (true) throw new AssertionError(...)` idiom defeats javac reachability
+  # analysis: an `if` with a constant boolean expression is reachable in BOTH
+  # branches statically, so the existing assertStatus line remains compilable;
+  # at runtime the `if (true)` guard ALWAYS fires and the sabotage semantics
+  # are preserved (the assertion error still throws, SystemFeatures FAILs,
+  # downstream cascade-SKIPs). 2-sprint-old latent defect (Sprint 5 GAP-2
+  # `.git`-exclude masked it; Sprint 6 .git-include exposed it; Sprint 7
+  # closes it).
+  SABOTAGE_MARKER='if (true) throw new AssertionError("SABOTAGED by --target=systemfeatures Sprint 5 S-ETS-05-03");'
   python3 - "$SF_TESTS_TMP" "$SABOTAGE_MARKER" <<'PY'
 import re
 import sys
@@ -285,7 +297,19 @@ PY
   popd >/dev/null
 
   # Locate the smoke-test report — written to SMOKE_OUTPUT_DIR per S-ETS-05-02.
-  LATEST_REPORT="$(ls -t "${SABOTAGE_TMPDIR}/test-results"/s-ets-01-03-teamengine-smoke-*.xml 2>/dev/null | head -1)"
+  # Sprint 7 S-ETS-07-01 Wedge 4 (REQ-ETS-CLEANUP-018) — pipefail-unreachable fix:
+  # The previous `LATEST_REPORT="$(ls -t ... | head -1)"` pipeline killed the
+  # script under `set -eo pipefail` when `ls` found no matching glob (the
+  # normal case after Docker build failure — no XML produced). The disambig-
+  # uation block at lines ~289-298 was never reached. Replace with a glob-safe
+  # `for` idiom: nullglob would also work, but the `[[ -e ... ]]` guard inside
+  # a default-glob loop returns the literal pattern when no match exists, and
+  # the `-e` test rejects it gracefully. This idiom is portable across bash
+  # versions and avoids the pipeline-exit-code issue under pipefail.
+  LATEST_REPORT=""
+  for _f in "${SABOTAGE_TMPDIR}/test-results"/s-ets-01-03-teamengine-smoke-*.xml; do
+    [[ -e "$_f" ]] && LATEST_REPORT="$_f"
+  done
   if [[ -z "$LATEST_REPORT" ]]; then
     if [[ "$SMOKE_EXIT_CODE" -ne 0 ]]; then
       log "  smoke exited non-zero with NO TestNG report — Docker build FAILED (not a sabotage-marker hit)"

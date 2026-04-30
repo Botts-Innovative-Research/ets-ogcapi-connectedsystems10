@@ -123,8 +123,30 @@ SMOKE_IUT_URL="$STUB_URL" \
 log ""
 
 # Step 3: capture container catalina.out (the in-container TE+ETS log stream).
+# Sprint 7 S-ETS-07-01 Wedge 3 (REQ-ETS-CLEANUP-018) — prong-b retarget fix:
+# Previous code ran `docker logs $CONTAINER_NAME` AFTER smoke-test.sh's
+# `cleanup_silent` torn down the container; result was a 1-line "Error response
+# from daemon: No such container" stub. Prong-b grepped that vacuous file and
+# returned 0 hits, causing the script to exit FAIL despite the wire-layer fix
+# being correct (Quinn GAP-Q1 from sprint-ets-06-evaluator-cumulative.yaml).
+# Sprint 6 S-ETS-06-01 added smoke-test.sh container-log timing fix that
+# archives catalina.out to ${SMOKE_OUTPUT_DIR}/s-ets-01-03-teamengine-container-*.log
+# BEFORE the container is removed. Try that archive first, fall back to
+# `docker logs` only if archive missing (e.g. older smoke-test.sh, or test run
+# without container-log capture).
 log "Step 3/5 — capturing container catalina.out + per-suite TestNG XML"
-docker logs "$CONTAINER_NAME" > "$CONTAINER_LOG" 2>&1 || true
+SMOKE_CONTAINER_LOG_GLOB="${SMOKE_OUTPUT_DIR:-ops/test-results}/s-ets-01-03-teamengine-container-*.log"
+SMOKE_CONTAINER_LOG_HIT=""
+for _cl in $SMOKE_CONTAINER_LOG_GLOB; do
+  [[ -e "$_cl" ]] && SMOKE_CONTAINER_LOG_HIT="$_cl"
+done
+if [[ -n "$SMOKE_CONTAINER_LOG_HIT" ]]; then
+  cp -f "$SMOKE_CONTAINER_LOG_HIT" "$CONTAINER_LOG"
+  log "  container catalina.out copied from smoke archive: $SMOKE_CONTAINER_LOG_HIT"
+else
+  docker logs "$CONTAINER_NAME" > "$CONTAINER_LOG" 2>&1 || true
+  log "  container catalina.out captured via docker logs (no archive found at $SMOKE_CONTAINER_LOG_GLOB)"
+fi
 LATEST_REPORT="$(ls -t ops/test-results/s-ets-01-03-teamengine-smoke-*.xml 2>/dev/null | head -1)"
 if [[ -n "$LATEST_REPORT" ]]; then
   cp -f "$LATEST_REPORT" "$ARCHIVE_DIR/testng-results.xml"

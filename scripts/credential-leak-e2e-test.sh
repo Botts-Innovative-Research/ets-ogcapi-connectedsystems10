@@ -152,18 +152,27 @@ log "      container log unmasked hits: $A_HITS_CONTAINER (must be 0)"
 log "      smoke log unmasked hits: $A_HITS_SMOKE (must be 0)"
 A_TOTAL=$((A_HITS_TESTNG + A_HITS_CONTAINER + A_HITS_SMOKE))
 
-# (b) >=1 MASKED-form hit in container log OR test artifacts
-log "  (b) >=1 masked-form hit in container log or test artifacts (proves filter ran)"
+# (b) >=1 MASKED-form hit in container log OR test artifacts OR stub-IUT log
+# Sprint 6 S-ETS-06-01 (CONCERN-2 from Sprint 5 Raze): grep target expanded
+# to include the stub-IUT log. Rationale: under approach (i) the masked form
+# may appear in the stub-IUT log (if the stub captures the masked log line
+# from container stdout via shared mount) or in container log (catalina.out)
+# or in the smoke log (smoke-test.sh teed output) or in the TestNG XML. Any
+# one of these qualifies as "masked form observed" evidence; without the
+# stub-log inclusion, prong (b) was structurally incomplete.
+log "  (b) >=1 masked-form hit in container log / test artifacts / stub-IUT log (proves filter ran)"
 B_HITS_CONTAINER=$(grep -cF "$MASKED_FORM_PROBE" "$CONTAINER_LOG" 2>/dev/null || true)
 B_HITS_TESTNG=0
 if [[ -f "$ARCHIVE_DIR/testng-results.xml" ]]; then
   B_HITS_TESTNG=$(grep -cF "$MASKED_FORM_PROBE" "$ARCHIVE_DIR/testng-results.xml" 2>/dev/null || true)
 fi
 B_HITS_SMOKE=$(grep -cF "$MASKED_FORM_PROBE" "$SMOKE_LOG" 2>/dev/null || true)
+B_HITS_STUB=$(grep -cF "$MASKED_FORM_PROBE" "$STUB_LOGFILE" 2>/dev/null || true)
 log "      container log masked hits: $B_HITS_CONTAINER"
 log "      TestNG XML masked hits: $B_HITS_TESTNG"
 log "      smoke log masked hits: $B_HITS_SMOKE"
-B_TOTAL=$((B_HITS_CONTAINER + B_HITS_TESTNG + B_HITS_SMOKE))
+log "      stub-IUT log masked hits: $B_HITS_STUB"
+B_TOTAL=$((B_HITS_CONTAINER + B_HITS_TESTNG + B_HITS_SMOKE + B_HITS_STUB))
 
 # (c) >=1 UNMASKED-credential hit in stub-IUT log (proves try/finally
 # restoration unmasked the header before HTTP transport)

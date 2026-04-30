@@ -202,12 +202,26 @@ skipped=$(extract_attr skipped)
 
 log "  TestNG: total=$total passed=$passed failed=$failed skipped=$skipped"
 
+# Sprint 6 S-ETS-06-01 (REQ-ETS-CLEANUP-016) — container log capture timing fix.
+# Capture catalina.out from the container BEFORE any die() trigger that would
+# fire cleanup_silent (which removes the container, after which `docker logs`
+# returns nothing). The downstream credential-leak-e2e three-fold cross-check
+# prong (a)+(b) grep against this log; pre-Sprint-6 the log was empty because
+# the die() path tore down the container first, making prong (a) pass
+# vacuously and prong (b) miss the masked form. The capture itself is harmless
+# (it does not stop the container; cleanup_silent on EXIT trap still tears
+# down). Capture is non-fatal (`|| true`) so a transient docker error does
+# not mask the real test verdict below.
+docker logs "$CONTAINER_NAME" > "$LOG_FILE" 2>&1 || true
+
 [[ "$total" =~ ^[0-9]+$ ]] || die "could not parse <testng-results total=...>"
 (( total > 0 )) || die "TestNG report total=0 (no @Test methods ran)"
 (( failed == 0 )) || die "TestNG report has failed=$failed (>0); see $REPORT_XML"
 
 # ---------- Step 8: scan container logs for SEVERE during STARTUP
 log "step 8/8 — scanning container startup log for ERROR/SEVERE"
+# Container log already captured above (Sprint 6 timing fix); refresh in case
+# additional log lines were written between the prior capture and this point.
 docker logs "$CONTAINER_NAME" > "$LOG_FILE" 2>&1 || true
 
 # Only inspect lines from container init through the "Server startup" line.

@@ -1,0 +1,25 @@
++ set -eo pipefail
++++ dirname scripts/mvn-test-via-docker.sh
+++ cd scripts/..
+++ pwd
++ REPO_ROOT=/tmp/dana-fresh-sprint8
++ cd /tmp/dana-fresh-sprint8
++ MAVEN_IMAGE=maven:3.9-eclipse-temurin-17
++ echo '[mvn-test-via-docker] repo root: /tmp/dana-fresh-sprint8'
+[mvn-test-via-docker] repo root: /tmp/dana-fresh-sprint8
++ echo '[mvn-test-via-docker] image:     maven:3.9-eclipse-temurin-17'
+[mvn-test-via-docker] image:     maven:3.9-eclipse-temurin-17
++ echo '[mvn-test-via-docker] command:   mvn clean test -B -v'
+[mvn-test-via-docker] command:   mvn clean test -B -v
++ echo '[mvn-test-via-docker] (Sprint 8 S-ETS-08-01 Wedge 6 -- closes Quinn host-PATH gap.)'
+[mvn-test-via-docker] (Sprint 8 S-ETS-08-01 Wedge 6 -- closes Quinn host-PATH gap.)
++ echo
+
+++ id -u
+++ id -g
++ docker run --rm --user 1000:1000 -v /tmp/dana-fresh-sprint8:/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=-Duser.home=/tmp maven:3.9-eclipse-temurin-17 mvn clean test -B -v
+Apache Maven 3.9.15 (98b2cdbfdb5f1ac8781f537ea9acccaed7922349)
+Maven home: /usr/share/maven
+Java version: 17.0.18, vendor: Eclipse Adoptium, runtime: /opt/java/openjdk
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "6.6.87.2-microsoft-standard-wsl2", arch: "amd64", family: "unix"

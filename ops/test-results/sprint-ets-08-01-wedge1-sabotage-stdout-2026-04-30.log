@@ -1,0 +1,85 @@
+[sabotage-test 20:38:13] sabotage mode: --target=systemfeatures
+[sabotage-test 20:38:13] step 1/6 — validating prerequisites for --target=systemfeatures
+[sabotage-test 20:38:13] step 2/6 — copying repo to temp worktree at /tmp/dana-sabotage-sprint8-final/worktree
+[sabotage-test 20:38:13] step 3/6 — sed-patching /tmp/dana-sabotage-sprint8-final/worktree/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java (FIRST @Test method body)
+OK: injected sabotage marker after method header in /tmp/dana-sabotage-sprint8-final/worktree/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java
+[sabotage-test 20:38:13]   sabotage marker grep-verified in temp tree
+[sabotage-test 20:38:13] step 4/6 — running smoke from sabotaged temp tree (image ets-ogcapi-connectedsystems10:sabotage-sf, container ets-csapi-sabotage-sf)
+[sabotage-test 20:38:13]   IUT: https://api.georobotix.io/ogc/t18/api
+[smoke-test 20:38:13] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 20:38:13] step 2/8 — docker build ets-ogcapi-connectedsystems10:sabotage-sf (BuildKit 1)
+[smoke-test 20:38:43] step 3/8 — docker run on host port 8082
+[smoke-test 20:38:43] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 20:38:49]   healthcheck PASS at 20:38:49
+[smoke-test 20:38:49] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 20:38:49]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'ogcapi-connectedsystems10')
+[smoke-test 20:38:49] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=https://api.georobotix.io/ogc/t18/api
+[smoke-test 20:38:55] step 7/8 — validating TestNG report → /tmp/dana-sabotage-sprint8-final/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml
+[smoke-test 20:38:55]   TestNG: total=46 passed=16 failed=1 skipped=29
+[smoke-test FATAL] TestNG report has failed=1 (>0); see /tmp/dana-sabotage-sprint8-final/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml
+[sabotage-test 20:38:56]   smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test); TestNG report present at /tmp/dana-sabotage-sprint8-final/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml
+[sabotage-test 20:38:56]   TestNG report captured to /tmp/dana-sabotage-sprint8-final/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T203813Z.xml
+[sabotage-test 20:38:56] step 5/6 — parsing TestNG report; asserting two-level cascade pattern
+core @Tests seen: 12
+  core               PASS      conformancePageReturnsHttp200
+  core               PASS      conformancePageReturnsJson
+  core               PASS      conformancePageHasConformsToArray
+  core               PASS      conformancePageDeclaresCsCore
+  core               PASS      apiDefinitionResourceReturnsContent
+  core               PASS      conformanceResourceShapeIsObject
+  core               PASS      landingPageReturnsHttp200
+  core               PASS      landingPageReturnsJson
+  core               PASS      landingPageHasLinks
+  core               PASS      landingPageHasApiDefinitionLink
+  core               PASS      landingPageDoesNotRequireSelfRel
+  core               PASS      landingPageHasConformanceLink
+common @Tests seen: 4
+  common             PASS      commonCollectionsEndpointReturnsCollectionsArray
+  common             PASS      commonConformanceDeclaresCommonCore
+  common             PASS      commonContentNegotiationHonoursFJsonParameter
+  common             PASS      commonLandingPageConformanceLinkHasJsonType
+systemfeatures @Tests seen: 6
+  systemfeatures     FAIL      systemsCollectionReturns200
+  systemfeatures     SKIP      systemsDiscoverableViaCollectionsOrLandingPage
+  systemfeatures     SKIP      systemItemHasIdTypeLinks
+  systemfeatures     SKIP      systemsCollectionHasItemsArray
+  systemfeatures     SKIP      systemsCollectionLinksDiscipline
+  systemfeatures     SKIP      systemItemHasGeometryOrValidTime
+deployments @Tests seen: 4
+  deployments        SKIP      deploymentsCollectionReturns200
+  deployments        SKIP      deploymentDeployedSystemEncodingDeclared
+  deployments        SKIP      deploymentItemHasIdTypeLinks
+  deployments        SKIP      deploymentItemHasCanonicalLink
+procedures @Tests seen: 4
+  procedures         SKIP      proceduresCollectionReturns200
+  procedures         SKIP      procedureItemsHaveNoGeometry
+  procedures         SKIP      procedureItemHasIdTypeLinks
+  procedures         SKIP      procedureItemHasCanonicalLink
+propertydefinitions @Tests seen: 4
+  propertydefinitions SKIP      propertiesCollectionReturns200
+  propertydefinitions SKIP      propertyItemHasIdType
+  propertydefinitions SKIP      propertyDefinitionsDependencyCascadeRuntime
+  propertydefinitions SKIP      propertyCanonicalUrlReturns200
+samplingfeatures @Tests seen: 4
+  samplingfeatures   SKIP      samplingFeaturesCollectionReturns200
+  samplingfeatures   SKIP      samplingFeatureItemHasIdType
+  samplingfeatures   SKIP      samplingFeaturesDependencyCascadeRuntime
+  samplingfeatures   SKIP      samplingFeatureCanonicalUrlReturns200
+subdeployments @Tests seen: 4
+  subdeployments     SKIP      subdeploymentItemHasIdTypeLinks
+  subdeployments     SKIP      subdeploymentItemHasCanonicalLink
+  subdeployments     SKIP      subdeploymentsDependencyCascadeRuntime
+  subdeployments     SKIP      subdeploymentsCollectionReturns200
+subsystems @Tests seen: 4
+  subsystems         SKIP      subsystemsCollectionReturns200
+  subsystems         SKIP      subsystemItemHasCanonicalLink
+  subsystems         SKIP      subsystemHasParentSystemLink
+  subsystems         SKIP      subsystemItemHasIdTypeLinks
+
+VERDICT-summary (siblings observed: 6): core+common PASS | systemfeatures FAIL | deployments, procedures, propertydefinitions, samplingfeatures, subdeployments, subsystems SKIP
+VERDICT: PASS -- Core+Common PASS, systemfeatures FAILed, deployments, procedures, propertydefinitions, samplingfeatures, subdeployments, subsystems cascade-SKIPped (6-class cascade verified)
+[sabotage-test 20:38:56] step 6/6 — VERDICT: PASS (two-level cascade verified end-to-end)
+[sabotage-test 20:38:56]   report: /tmp/dana-sabotage-sprint8-final/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T203813Z.xml
+[sabotage-test 20:38:56]   log:    /tmp/dana-sabotage-sprint8-final/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T203813Z.log
+[sabotage-test 20:38:56] SABOTAGE PASS: SystemFeatures FAILed; Subsystems+Procedures+Deployments cascade-SKIPped
+[sabotage-test 20:38:56]   (User worktree at /tmp/dana-fresh-sprint8/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java UNMODIFIED — sabotage was hermetic via temp clone.)

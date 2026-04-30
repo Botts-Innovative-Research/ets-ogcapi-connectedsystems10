@@ -344,6 +344,7 @@ PY
   # ---------- Step 5: parse TestNG XML; assert two-level cascade
   log "step 5/6 — parsing TestNG report; asserting two-level cascade pattern"
   PARSE_RESULT="$(python3 - "$SABOTAGE_REPORT_XML" <<'PY'
+import re
 import sys
 import xml.etree.ElementTree as ET
 
@@ -355,64 +356,89 @@ except ET.ParseError as e:
     sys.exit(2)
 root = tree.getroot()
 
+# Sprint 8 S-ETS-08-01 Wedge 1 (REQ-ETS-CLEANUP-019, Raze GAP-1 Sprint 7):
+# Dynamic sibling-class enumeration. Previous Sprint 5 baseline hard-coded
+# 3 buckets (subsystems, procedures, deployments). Sprint 7 added 2 more
+# (samplingfeatures, propertydefinitions) -- bringing the SystemFeatures-
+# level cascade DAG width to 5 sibling classes. The hard-coded enumeration
+# lagged behind the testng.xml group declarations: the Raze gate-time XML
+# had all 5 sibling classes SKIPped, but the script's stdout VERDICT-summary
+# still said "Subsystems+Procedures+Deployments" -- false-narrowing.
+# Sprint 8 fix: enumerate ALL sibling buckets DYNAMICALLY from the cascade
+# XML test-method signatures rather than from a hard-coded list. The
+# package convention is
+# `org.opengis.cite.ogcapiconnectedsystems10.conformance.<class>.<TestClass>`,
+# so we extract the segment immediately after `conformance.` from each
+# signature. Independent and dependent classes are then partitioned via a
+# fixed top-level set (core, common, systemfeatures), with everything else
+# treated as a dependent sibling subject to cascade-SKIP. Sprint 8+ classes
+# (e.g. subdeployments) appear automatically without further script edits.
+INDEPENDENT_CLASSES = ("core", "common")
+SABOTAGE_TARGET_CLASS = "systemfeatures"
+
 def classify(sig):
-    if "conformance.core" in sig:
-        return "core"
-    if "conformance.systemfeatures" in sig:
-        return "systemfeatures"
-    if "conformance.common" in sig:
-        return "common"
-    if "conformance.subsystems" in sig:
-        return "subsystems"
-    if "conformance.procedures" in sig:
-        return "procedures"
-    if "conformance.deployments" in sig:
-        return "deployments"
+    # Match `conformance.<segment>` to identify the conformance class name.
+    m = re.search(r"conformance\.([a-z][a-z0-9_]*)", sig)
+    if m:
+        return m.group(1)
     return "other"
 
-buckets = {k: [] for k in ("core", "systemfeatures", "common", "subsystems",
-                            "procedures", "deployments", "other")}
+buckets = {}
 for tm in root.iter("test-method"):
     if tm.get("is-config", "false").lower() == "true":
         continue
     sig = tm.get("signature", "") or ""
     name = tm.get("name", "")
     status = tm.get("status", "")
-    buckets[classify(sig)].append((name, status))
+    cls = classify(sig)
+    buckets.setdefault(cls, []).append((name, status))
 
-for cls in ("core", "common", "systemfeatures", "subsystems", "procedures", "deployments"):
-    rows = buckets[cls]
+# Stable display order: independent classes first, then sabotage target,
+# then alphabetical for the cascade siblings.
+ordered = list(INDEPENDENT_CLASSES) + [SABOTAGE_TARGET_CLASS]
+sibling_classes = sorted(
+    c for c in buckets
+    if c not in INDEPENDENT_CLASSES and c != SABOTAGE_TARGET_CLASS and c != "other"
+)
+ordered.extend(sibling_classes)
+
+for cls in ordered:
+    rows = buckets.get(cls, [])
     print(f"{cls} @Tests seen: {len(rows)}")
     for n, s in rows:
-        print(f"  {cls:14s} {s:8s}  {n}")
+        print(f"  {cls:18s} {s:8s}  {n}")
 
 failures = []
-# Core PASS, Common PASS
-for cls in ("core", "common"):
-    rows = buckets[cls]
+# Independent classes (core, common): every @Test PASS
+for cls in INDEPENDENT_CLASSES:
+    rows = buckets.get(cls, [])
     if not rows:
         failures.append(f"VERDICT FAIL: no {cls} @Tests seen (suite scope wrong)")
         continue
     not_pass = [r for r in rows if r[1] != "PASS"]
     if not_pass:
         failures.append(f"VERDICT FAIL: {cls} has {len(not_pass)} non-PASS results "
-                        f"(should be all PASS — Core+Common are independent of SystemFeatures): {not_pass}")
+                        f"(should be all PASS -- independent of {SABOTAGE_TARGET_CLASS}): {not_pass}")
 
-# SystemFeatures: at least 1 FAIL (sabotage worked)
-sf = buckets["systemfeatures"]
-if not sf:
-    failures.append("VERDICT FAIL: no SystemFeatures @Tests seen (suite scope wrong)")
+# Sabotage target (systemfeatures): at least 1 FAIL (sabotage worked)
+sabot = buckets.get(SABOTAGE_TARGET_CLASS, [])
+if not sabot:
+    failures.append(f"VERDICT FAIL: no {SABOTAGE_TARGET_CLASS} @Tests seen (suite scope wrong)")
 else:
-    sf_failed = [r for r in sf if r[1] == "FAIL"]
-    if not sf_failed:
-        failures.append("VERDICT FAIL: no SystemFeatures @Test FAILed (sabotage marker did not fire)")
+    sabot_failed = [r for r in sabot if r[1] == "FAIL"]
+    if not sabot_failed:
+        failures.append(
+            f"VERDICT FAIL: no {SABOTAGE_TARGET_CLASS} @Test FAILed "
+            "(sabotage marker did not fire)")
 
-# Subsystems, Procedures, Deployments: every @Test SKIP
-for cls in ("subsystems", "procedures", "deployments"):
-    rows = buckets[cls]
+# Cascade siblings (subsystems, procedures, deployments, samplingfeatures,
+# propertydefinitions, ...): every @Test SKIP (dynamic -- whatever sibling
+# classes are declared in testng.xml at run time).
+for cls in sibling_classes:
+    rows = buckets.get(cls, [])
     if not rows:
-        # If the class has no smoke @Tests yet (Sprint 5 may not include all
-        # classes), skip the assertion rather than fail.
+        # If the class has no smoke @Tests yet (e.g. mid-sprint dev state),
+        # skip the assertion rather than fail.
         print(f"NOTE: no {cls} @Tests seen; skipping cascade assertion for {cls}")
         continue
     not_skipped = [r for r in rows if r[1] != "SKIP"]
@@ -420,13 +446,24 @@ for cls in ("subsystems", "procedures", "deployments"):
         failures.append(f"VERDICT FAIL: {cls} has {len(not_skipped)} non-SKIP results "
                         f"(should be all SKIP via two-level cascade): {not_skipped}")
 
+# Sprint 8 S-ETS-08-01 Wedge 1: human-readable VERDICT-summary now enumerates
+# the ACTUAL sibling classes that received SKIP verdict (dynamic -- derived
+# from cascade XML signatures, NOT a hard-coded 3-class list).
+sibling_summary = (", ".join(sibling_classes) if sibling_classes
+                   else "(no cascade siblings observed)")
 print()
 if failures:
     for f in failures:
         print(f, file=sys.stderr)
+    print(f"VERDICT-summary (siblings observed: {len(sibling_classes)}): "
+          f"core+common PASS | {SABOTAGE_TARGET_CLASS} FAIL | "
+          f"{sibling_summary} SKIP-expected", file=sys.stderr)
     sys.exit(1)
-print("VERDICT: PASS — Core+Common PASS, SystemFeatures FAILed, "
-      "Subsystems+Procedures+Deployments cascade-SKIPped (two-level cascade verified)")
+print(f"VERDICT-summary (siblings observed: {len(sibling_classes)}): "
+      f"core+common PASS | {SABOTAGE_TARGET_CLASS} FAIL | "
+      f"{sibling_summary} SKIP")
+print(f"VERDICT: PASS -- Core+Common PASS, {SABOTAGE_TARGET_CLASS} FAILed, "
+      f"{sibling_summary} cascade-SKIPped ({len(sibling_classes)}-class cascade verified)")
 sys.exit(0)
 PY
 )" || PARSE_EXIT=$?

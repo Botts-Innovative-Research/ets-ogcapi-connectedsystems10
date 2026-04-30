@@ -254,6 +254,27 @@
     </plugins>
     <pluginManagement>
       <plugins>
+        <!--
+          Sprint 8 S-ETS-08-01 Wedge 5 (REQ-ETS-CLEANUP-019, Quinn W3 Sprint 7 close):
+          spring-javaformat-maven-plugin version explicitly pinned to 0.0.43. The
+          version is currently inherited transitively from ets-common:17 (parent POM),
+          which also pins 0.0.43. We pin it locally as defense-in-depth so a future
+          parent-POM bump does not silently change formatter rules. Sprint 7
+          demonstrated that this exact version accepts the two-line `if (true)` /
+          `throw new AssertionError(...)` sabotage marker shape (sister commit
+          94a4971); a future version with different `if`-without-block formatter
+          rules could break the sabotage marker injection in
+          scripts/sabotage-test.sh. Bump only after re-running
+          `scripts/sabotage-test.sh` (target=systemfeatures) from a /tmp clone and
+          verifying the cascade XML is still produced. The literal CLI flag is
+          intentionally avoided in this comment because XML 1.0 §2.5 forbids
+          double-dash sequences inside comment content.
+        -->
+        <plugin>
+          <groupId>io.spring.javaformat</groupId>
+          <artifactId>spring-javaformat-maven-plugin</artifactId>
+          <version>0.0.43</version>
+        </plugin>
         <plugin>
           <groupId>io.fabric8</groupId>
           <artifactId>docker-maven-plugin</artifactId>

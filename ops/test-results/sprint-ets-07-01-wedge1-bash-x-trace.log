@@ -1,0 +1,211 @@
++ set -eo pipefail
++++ dirname scripts/sabotage-test.sh
+++ cd scripts/..
+++ pwd
++ REPO_ROOT=/tmp/dana-fresh-sprint7
++ cd /tmp/dana-fresh-sprint7
++ SABOTAGE_TARGET=core
++ for arg in "$@"
++ case "$arg" in
++ SABOTAGE_TARGET=systemfeatures
+++ date -u +%Y-%m-%dT%H%M%SZ
++ TS=2026-04-30T163634Z
++ SABOTAGE_TMPDIR=/tmp/dana-sabotage-sprint7
++ SABOTAGE_ARCHIVE_DIR=/tmp/dana-sabotage-sprint7
++ SABOTAGE_REPORT_XML=/tmp/dana-sabotage-sprint7/sprint-ets-03-dependency-skip-sabotage-2026-04-30T163634Z.xml
++ SABOTAGE_LOG=/tmp/dana-sabotage-sprint7/sprint-ets-03-dependency-skip-sabotage-2026-04-30T163634Z.log
++ mkdir -p /tmp/dana-sabotage-sprint7
++ STUB_PIDFILE=/tmp/dana-sabotage-sprint7/stub.pid
++ STUB_PORTFILE=/tmp/dana-sabotage-sprint7/stub.port
++ mkdir -p /tmp/dana-sabotage-sprint7
++ CONTAINER_NAME=ets-csapi-sabotage
++ IMAGE_TAG=ets-ogcapi-connectedsystems10:smoke
++ [[ systemfeatures == \s\y\s\t\e\m\f\e\a\t\u\r\e\s ]]
++ IMAGE_TAG=ets-ogcapi-connectedsystems10:sabotage-sf
++ CONTAINER_NAME=ets-csapi-sabotage-sf
++ SABOTAGE_REPORT_XML=/tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.xml
++ SABOTAGE_LOG=/tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
++ trap cleanup_all EXIT
++ log 'sabotage mode: --target=systemfeatures'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:36:34] sabotage mode: --target=systemfeatures'
++ [[ systemfeatures == \s\y\s\t\e\m\f\e\a\t\u\r\e\s ]]
++ log 'step 1/6 — validating prerequisites for --target=systemfeatures'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:36:34] step 1/6 — validating prerequisites for --target=systemfeatures'
++ command -v docker
++ docker info
++ SF_TESTS_REL=src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java
++ [[ -f /tmp/dana-fresh-sprint7/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java ]]
++ SABOTAGE_WORKTREE=/tmp/dana-sabotage-sprint7/worktree
++ log 'step 2/6 — copying repo to temp worktree at /tmp/dana-sabotage-sprint7/worktree'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:36:34] step 2/6 — copying repo to temp worktree at /tmp/dana-sabotage-sprint7/worktree'
++ mkdir -p /tmp/dana-sabotage-sprint7/worktree
++ command -v rsync
++ rsync -a --exclude=target/ --exclude=node_modules/ '--exclude=ops/test-results/*.xml' '--exclude=ops/test-results/*.log' /tmp/dana-fresh-sprint7/ /tmp/dana-sabotage-sprint7/worktree/
++ SF_TESTS_TMP=/tmp/dana-sabotage-sprint7/worktree/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java
++ log 'step 3/6 — sed-patching /tmp/dana-sabotage-sprint7/worktree/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java (FIRST @Test method body)'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:36:34] step 3/6 — sed-patching /tmp/dana-sabotage-sprint7/worktree/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java (FIRST @Test method body)'
++ [[ -f /tmp/dana-sabotage-sprint7/worktree/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java ]]
++ python3 - /tmp/dana-sabotage-sprint7/worktree/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java
++ grep -q 'SABOTAGED by --target=systemfeatures' /tmp/dana-sabotage-sprint7/worktree/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java
++ log '  sabotage marker grep-verified in temp tree'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:36:34]   sabotage marker grep-verified in temp tree'
++ grep -q 'SABOTAGED by --target=systemfeatures' /tmp/dana-fresh-sprint7/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java
++ log 'step 4/6 — running smoke from sabotaged temp tree (image ets-ogcapi-connectedsystems10:sabotage-sf, container ets-csapi-sabotage-sf)'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:36:34] step 4/6 — running smoke from sabotaged temp tree (image ets-ogcapi-connectedsystems10:sabotage-sf, container ets-csapi-sabotage-sf)'
++ log '  IUT: https://api.georobotix.io/ogc/t18/api'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:36:34]   IUT: https://api.georobotix.io/ogc/t18/api'
++ SMOKE_EXIT_CODE=0
++ pushd /tmp/dana-sabotage-sprint7/worktree
++ SMOKE_CONTAINER_NAME=ets-csapi-sabotage-sf
++ SMOKE_IMAGE_TAG=ets-ogcapi-connectedsystems10:sabotage-sf
++ SMOKE_OUTPUT_DIR=/tmp/dana-sabotage-sprint7/test-results
++ bash scripts/smoke-test.sh
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
++ SMOKE_EXIT_CODE=1
++ popd
++ LATEST_REPORT=
++ for _f in "${SABOTAGE_TMPDIR}/test-results"/s-ets-01-03-teamengine-smoke-*.xml
++ [[ -e /tmp/dana-sabotage-sprint7/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml ]]
++ LATEST_REPORT=/tmp/dana-sabotage-sprint7/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml
++ [[ -z /tmp/dana-sabotage-sprint7/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml ]]
++ [[ 1 -ne 0 ]]
++ log '  smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test); TestNG report present at /tmp/dana-sabotage-sprint7/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:37:15]   smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test); TestNG report present at /tmp/dana-sabotage-sprint7/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml'
++ cp -f /tmp/dana-sabotage-sprint7/test-results/s-ets-01-03-teamengine-smoke-2026-04-30.xml /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.xml
++ log '  TestNG report captured to /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.xml'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:37:15]   TestNG report captured to /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.xml'
++ log 'step 5/6 — parsing TestNG report; asserting two-level cascade pattern'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:37:15] step 5/6 — parsing TestNG report; asserting two-level cascade pattern'
+++ python3 - /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.xml
++ PARSE_RESULT='core @Tests seen: 12
+  core           PASS      conformancePageReturnsHttp200
+  core           PASS      conformancePageReturnsJson
+  core           PASS      conformancePageHasConformsToArray
+  core           PASS      conformancePageDeclaresCsCore
+  core           PASS      apiDefinitionResourceReturnsContent
+  core           PASS      conformanceResourceShapeIsObject
+  core           PASS      landingPageReturnsHttp200
+  core           PASS      landingPageReturnsJson
+  core           PASS      landingPageHasLinks
+  core           PASS      landingPageDoesNotRequireSelfRel
+  core           PASS      landingPageHasApiDefinitionLink
+  core           PASS      landingPageHasConformanceLink
+common @Tests seen: 4
+  common         PASS      commonCollectionsEndpointReturnsCollectionsArray
+  common         PASS      commonConformanceDeclaresCommonCore
+  common         PASS      commonContentNegotiationHonoursFJsonParameter
+  common         PASS      commonLandingPageConformanceLinkHasJsonType
+systemfeatures @Tests seen: 6
+  systemfeatures FAIL      systemsCollectionReturns200
+  systemfeatures SKIP      systemsDiscoverableViaCollectionsOrLandingPage
+  systemfeatures SKIP      systemsCollectionHasItemsArray
+  systemfeatures SKIP      systemItemHasGeometryOrValidTime
+  systemfeatures SKIP      systemItemHasIdTypeLinks
+  systemfeatures SKIP      systemsCollectionLinksDiscipline
+subsystems @Tests seen: 4
+  subsystems     SKIP      subsystemsCollectionReturns200
+  subsystems     SKIP      subsystemHasParentSystemLink
+  subsystems     SKIP      subsystemItemHasIdTypeLinks
+  subsystems     SKIP      subsystemItemHasCanonicalLink
+procedures @Tests seen: 4
+  procedures     SKIP      proceduresCollectionReturns200
+  procedures     SKIP      procedureItemHasCanonicalLink
+  procedures     SKIP      procedureItemsHaveNoGeometry
+  procedures     SKIP      procedureItemHasIdTypeLinks
+deployments @Tests seen: 4
+  deployments    SKIP      deploymentsCollectionReturns200
+  deployments    SKIP      deploymentDeployedSystemEncodingDeclared
+  deployments    SKIP      deploymentItemHasIdTypeLinks
+  deployments    SKIP      deploymentItemHasCanonicalLink
+
+VERDICT: PASS — Core+Common PASS, SystemFeatures FAILed, Subsystems+Procedures+Deployments cascade-SKIPped (two-level cascade verified)'
++ PARSE_EXIT=0
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
++ echo 'core @Tests seen: 12
+  core           PASS      conformancePageReturnsHttp200
+  core           PASS      conformancePageReturnsJson
+  core           PASS      conformancePageHasConformsToArray
+  core           PASS      conformancePageDeclaresCsCore
+  core           PASS      apiDefinitionResourceReturnsContent
+  core           PASS      conformanceResourceShapeIsObject
+  core           PASS      landingPageReturnsHttp200
+  core           PASS      landingPageReturnsJson
+  core           PASS      landingPageHasLinks
+  core           PASS      landingPageDoesNotRequireSelfRel
+  core           PASS      landingPageHasApiDefinitionLink
+  core           PASS      landingPageHasConformanceLink
+common @Tests seen: 4
+  common         PASS      commonCollectionsEndpointReturnsCollectionsArray
+  common         PASS      commonConformanceDeclaresCommonCore
+  common         PASS      commonContentNegotiationHonoursFJsonParameter
+  common         PASS      commonLandingPageConformanceLinkHasJsonType
+systemfeatures @Tests seen: 6
+  systemfeatures FAIL      systemsCollectionReturns200
+  systemfeatures SKIP      systemsDiscoverableViaCollectionsOrLandingPage
+  systemfeatures SKIP      systemsCollectionHasItemsArray
+  systemfeatures SKIP      systemItemHasGeometryOrValidTime
+  systemfeatures SKIP      systemItemHasIdTypeLinks
+  systemfeatures SKIP      systemsCollectionLinksDiscipline
+subsystems @Tests seen: 4
+  subsystems     SKIP      subsystemsCollectionReturns200
+  subsystems     SKIP      subsystemHasParentSystemLink
+  subsystems     SKIP      subsystemItemHasIdTypeLinks
+  subsystems     SKIP      subsystemItemHasCanonicalLink
+procedures @Tests seen: 4
+  procedures     SKIP      proceduresCollectionReturns200
+  procedures     SKIP      procedureItemHasCanonicalLink
+  procedures     SKIP      procedureItemsHaveNoGeometry
+  procedures     SKIP      procedureItemHasIdTypeLinks
+deployments @Tests seen: 4
+  deployments    SKIP      deploymentsCollectionReturns200
+  deployments    SKIP      deploymentDeployedSystemEncodingDeclared
+  deployments    SKIP      deploymentItemHasIdTypeLinks
+  deployments    SKIP      deploymentItemHasCanonicalLink
+
+VERDICT: PASS — Core+Common PASS, SystemFeatures FAILed, Subsystems+Procedures+Deployments cascade-SKIPped (two-level cascade verified)'
++ [[ 0 -ne 0 ]]
++ log 'step 6/6 — VERDICT: PASS (two-level cascade verified end-to-end)'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:37:15] step 6/6 — VERDICT: PASS (two-level cascade verified end-to-end)'
++ log '  report: /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.xml'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:37:15]   report: /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.xml'
++ log '  log:    /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:37:15]   log:    /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log'
++ log 'SABOTAGE PASS: SystemFeatures FAILed; Subsystems+Procedures+Deployments cascade-SKIPped'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:37:15] SABOTAGE PASS: SystemFeatures FAILed; Subsystems+Procedures+Deployments cascade-SKIPped'
++ log '  (User worktree at /tmp/dana-fresh-sprint7/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java UNMODIFIED — sabotage was hermetic via temp clone.)'
++ tee -a /tmp/dana-sabotage-sprint7/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-04-30T163634Z.log
+++ date -u +%H:%M:%S
++ echo '[sabotage-test 16:37:15]   (User worktree at /tmp/dana-fresh-sprint7/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/systemfeatures/SystemFeaturesTests.java UNMODIFIED — sabotage was hermetic via temp clone.)'
++ cleanup_all
++ [[ -f /tmp/dana-sabotage-sprint7/stub.pid ]]
++ docker rm -f ets-csapi-sabotage-sf
++ trap - EXIT
++ exit 0

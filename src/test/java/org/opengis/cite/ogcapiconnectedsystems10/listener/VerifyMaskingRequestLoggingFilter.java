@@ -1,14 +1,11 @@
 package org.opengis.cite.ogcapiconnectedsystems10.listener;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -20,26 +17,53 @@ import io.restassured.specification.FilterableResponseSpecification;
 import io.restassured.specification.RequestSender;
 
 /**
- * Unit tests for {@link MaskingRequestLoggingFilter} per S-ETS-03-02 acceptance criteria.
+ * <strong>WIRING-ONLY unit tests</strong> for {@link MaskingRequestLoggingFilter}'s
+ * static / configuration surface (REQ-ETS-CLEANUP-013, originally per S-ETS-03-02).
  *
  * <p>
- * Covers (per design.md §"Sprint 3 hardening" + architect-handoff
- * constraints_for_generator.must items 5-9):
+ * <strong>Scope caveat (Sprint 6 S-ETS-06-01 + S-ETS-06-03 reclassification per
+ * META-GAP-1)</strong>: the tests in this class use a {@code StubFilterContext} that
+ * returns {@code null} from {@code ctx.next()} and CANNOT prove wire-side credential
+ * integrity. They cover only:
  * </p>
  * <ul>
- * <li>SCENARIO-ETS-CLEANUP-CREDENTIAL-LEAK-INTEGRATION-001 — Bearer 24-char masked in
- * formatter output (literal middle MUST NOT appear in stream output).</li>
- * <li>X-API-Key masked in formatter output.</li>
- * <li>Cookie / Set-Cookie / Proxy-Authorization superset coverage.</li>
- * <li>IUT-side header restoration verified — after {@code filter()} returns, the request
- * spec carries the ORIGINAL credential value (not the masked form).</li>
- * <li>try/finally restoration even when {@code super.filter()} throws.</li>
- * <li>Non-credential headers pass through unchanged.</li>
+ * <li>{@link MaskingRequestLoggingFilter#isMasked} case-insensitive header-set
+ * membership.</li>
+ * <li>Mask format on the stream output ({@code Bear***WXYZ} / {@code 0123***CDEF}
+ * present; literal credential middle absent).</li>
+ * <li>Constructor null-argument guard.</li>
+ * <li>Default header set is the SUPERSET of
+ * {@link CredentialMaskingFilter#DEFAULT_SENSITIVE_HEADERS}.</li>
  * </ul>
  *
  * <p>
+ * <strong>Wire-side proof lives elsewhere</strong>: see
+ * {@link VerifyWireRestoresOriginalCredential} (Sprint 6 / REQ-ETS-CLEANUP-016) which
+ * uses a {@code CapturingFilterContext} (records the spec passed to {@code ctx.next()}
+ * and snapshots header values BY VALUE at call time) — that test is the structural proof
+ * that the wire carries the ORIGINAL credential, not the masked form. The 8-test
+ * "wiring-only" PASS metric SHOULD NOT be conflated with credential safety; refer to
+ * VerifyWireRestoresOriginalCredential for the latter.
+ * </p>
+ *
+ * <p>
+ * <strong>Sprint 6 deletions</strong>: two legacy tests
+ * ({@code filter_restoresOriginalAuthorizationHeaderAfterMaskedSuperFilterCall} and
+ * {@code filter_restoresOriginalApiKeyAndCookieEvenWhenSuperFilterThrows}) verified
+ * try/finally semantics around the Sprint 3 mutate/restore implementation. Sprint 6
+ * approach (i) (no mutation; bypass {@code super.filter()}) eliminates that try/finally
+ * codepath entirely, so the tests would test non-existent code. They are DELETED rather
+ * than retained as decorative passes (Plan-Raze 2026-04-30 finer-granularity disposition:
+ * "partial-delete is healthier than preserving tests for non-existent code"). The
+ * wire-side correctness invariant they purported to prove now lives in
+ * VerifyWireRestoresOriginalCredential. Likewise the {@code ThrowingFilterContext} helper
+ * (only used by the deleted #2) is removed.
+ * </p>
+ *
+ * <p>
  * Reference: design.md §"Sprint 3 hardening: MaskingRequestLoggingFilter wrap pattern
- * (S-ETS-03-02)" lines 531-642; ADR-010 §"Notes / references" cross-reference.
+ * (S-ETS-03-02)" + Sprint 6 S-ETS-06-01 implementation notes (Sprint 3 wrap pattern
+ * superseded by approach (i)) + ADR-010 §"Notes / references".
  * </p>
  */
 public class VerifyMaskingRequestLoggingFilter {
@@ -70,10 +94,10 @@ public class VerifyMaskingRequestLoggingFilter {
 	@Test
 	public void isMasked_supersetOfCredentialMaskingFilterDefaults() {
 		MaskingRequestLoggingFilter filter = new MaskingRequestLoggingFilter();
-		// Architect-handoff constraints_for_generator.must item 8: header set is SUPERSET
-		// of CredentialMaskingFilter.DEFAULT_SENSITIVE_HEADERS — adds Set-Cookie +
-		// Proxy-Authorization (the CredentialMaskingFilter already has them in Sprint 2,
-		// so the SUPERSET semantics is reduced to "matches all of them").
+		// Header set is SUPERSET of CredentialMaskingFilter.DEFAULT_SENSITIVE_HEADERS —
+		// adds Set-Cookie + Proxy-Authorization (the CredentialMaskingFilter already has
+		// them in Sprint 2, so the SUPERSET semantics is reduced to "matches all of
+		// them").
 		for (String h : CredentialMaskingFilter.DEFAULT_SENSITIVE_HEADERS) {
 			assertTrue("MaskingRequestLoggingFilter should mask " + h, filter.isMasked(h));
 		}
@@ -89,72 +113,18 @@ public class VerifyMaskingRequestLoggingFilter {
 		assertFalse(filter.isMasked(null));
 	}
 
-	// ----- IUT-side header restoration (try/finally invariant) -----
-
-	@Test
-	public void filter_restoresOriginalAuthorizationHeaderAfterMaskedSuperFilterCall() {
-		// Critical S-ETS-03-02 invariant: the IUT MUST receive the unmasked credential.
-		// The masked form exists ONLY for the duration of super.filter()'s stream write.
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintStream stream = new PrintStream(baos, true, StandardCharsets.UTF_8);
-		MaskingRequestLoggingFilter filter = new MaskingRequestLoggingFilter(
-				MaskingRequestLoggingFilter.DEFAULT_HEADERS_TO_MASK, stream);
-
-		FilterableRequestSpecification reqSpec = buildRequestSpec();
-		reqSpec.header("Authorization", SYNTHETIC_BEARER);
-		reqSpec.header("Content-Type", "application/json");
-
-		// Stub FilterContext that does NOT actually issue an HTTP request; returns null
-		// after the super.filter() call has performed its stream write.
-		FilterContext ctx = new StubFilterContext();
-		try {
-			filter.filter(reqSpec, /* responseSpec */ null, ctx);
-		}
-		catch (RuntimeException expected) {
-			// REST-Assured's super.filter() may try to issue the actual request via
-			// ctx.next() and fail with a connection error; that's OK — our header
-			// restoration must still have run via finally.
-		}
-
-		// CRITICAL: post-filter, the spec MUST carry the ORIGINAL Authorization header.
-		String restoredAuth = reqSpec.getHeaders().getValue("Authorization");
-		assertNotNull("Authorization header must exist post-filter", restoredAuth);
-		assertEquals("Authorization MUST be restored to original (unmasked) value", SYNTHETIC_BEARER, restoredAuth);
-		// Non-credential headers untouched
-		assertEquals("application/json", reqSpec.getHeaders().getValue("Content-Type"));
-	}
-
-	@Test
-	public void filter_restoresOriginalApiKeyAndCookieEvenWhenSuperFilterThrows() {
-		// Sub-case: even if the underlying super.filter() throws, finally must restore
-		// originals. Use a FilterContext that throws to simulate a transport failure.
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintStream stream = new PrintStream(baos, true, StandardCharsets.UTF_8);
-		MaskingRequestLoggingFilter filter = new MaskingRequestLoggingFilter(
-				MaskingRequestLoggingFilter.DEFAULT_HEADERS_TO_MASK, stream);
-
-		FilterableRequestSpecification reqSpec = buildRequestSpec();
-		reqSpec.header("X-API-Key", SYNTHETIC_API_KEY);
-		reqSpec.header("Cookie", "sessionId=abcdefghijklmnop");
-
-		FilterContext ctx = new ThrowingFilterContext();
-		try {
-			filter.filter(reqSpec, null, ctx);
-		}
-		catch (RuntimeException expected) {
-			// expected — ThrowingFilterContext throws
-		}
-
-		assertEquals(SYNTHETIC_API_KEY, reqSpec.getHeaders().getValue("X-API-Key"));
-		assertEquals("sessionId=abcdefghijklmnop", reqSpec.getHeaders().getValue("Cookie"));
-	}
+	// ----- Stream output mask format (wiring-only — does NOT prove wire-side
+	// credential integrity; see VerifyWireRestoresOriginalCredential) -----
 
 	@Test
 	public void filter_streamOutputContainsMaskedFormNotLiteralCredential() {
 		// SCENARIO-ETS-CLEANUP-CREDENTIAL-LEAK-INTEGRATION-001 unit-level proxy:
-		// the ByteArrayOutputStream that super.filter() writes to MUST contain the
-		// masked form (Bear***WXYZ) and MUST NOT contain the literal credential body
-		// (EFGH12345678WXYZ).
+		// the ByteArrayOutputStream that the filter writes to MUST contain the masked
+		// form (Bear***WXYZ) and MUST NOT contain the literal credential body
+		// (EFGH12345678WXYZ). Sprint 6 approach (i): the filter emits the masked log
+		// line directly (no super.filter()); this test verifies the format remains
+		// correct. WIRING-ONLY caveat: this does NOT prove what the wire carries —
+		// see VerifyWireRestoresOriginalCredential for that.
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream stream = new PrintStream(baos, true, StandardCharsets.UTF_8);
 		MaskingRequestLoggingFilter filter = new MaskingRequestLoggingFilter(
@@ -168,7 +138,8 @@ public class VerifyMaskingRequestLoggingFilter {
 			filter.filter(reqSpec, null, ctx);
 		}
 		catch (RuntimeException expected) {
-			// per other tests
+			// approach (i) calls ctx.next which returns null from StubFilterContext —
+			// no exception expected, but caught for symmetry with the apiKey test.
 		}
 
 		String output = baos.toString(StandardCharsets.UTF_8);
@@ -185,6 +156,7 @@ public class VerifyMaskingRequestLoggingFilter {
 
 	@Test
 	public void filter_apiKeyMaskedInStreamOutput() {
+		// Wiring-only — same caveat as above.
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream stream = new PrintStream(baos, true, StandardCharsets.UTF_8);
 		MaskingRequestLoggingFilter filter = new MaskingRequestLoggingFilter(
@@ -207,6 +179,8 @@ public class VerifyMaskingRequestLoggingFilter {
 				output.contains("0123***CDEF"));
 	}
 
+	// ----- Constructor invariants -----
+
 	@Test
 	public void constructor_nullHeaderSetThrows() {
 		try {
@@ -221,9 +195,11 @@ public class VerifyMaskingRequestLoggingFilter {
 	// ----- Stub FilterContext that does NOT actually issue a request -----
 
 	/**
-	 * Stub that returns null from ctx.next(...) — REST-Assured's RequestLoggingFilter's
-	 * super.filter() invokes ctx.next() to chain to the next filter / send the request.
-	 * Here we short-circuit so the unit test does not actually open a socket.
+	 * Stub that returns null from ctx.next(...). Sprint 6 approach (i) calls ctx.next
+	 * directly (rather than going through super.filter), so the test still uses this stub
+	 * to short-circuit the transport call without opening a socket. NOTE: this is
+	 * "wiring-only" coverage — see {@link VerifyWireRestoresOriginalCredential} for the
+	 * wire-side proof using a CapturingFilterContext.
 	 */
 	private static final class StubFilterContext implements FilterContext {
 
@@ -255,39 +231,6 @@ public class VerifyMaskingRequestLoggingFilter {
 		@Override
 		public Response send(RequestSender requestSender) {
 			return null;
-		}
-
-	}
-
-	private static final class ThrowingFilterContext implements FilterContext {
-
-		@Override
-		public Response next(FilterableRequestSpecification req, FilterableResponseSpecification resp) {
-			throw new RuntimeException("simulated transport failure for try/finally test");
-		}
-
-		@Override
-		public <T> T getValue(String name) {
-			return null;
-		}
-
-		@Override
-		public boolean hasValue(String name) {
-			return false;
-		}
-
-		@Override
-		public boolean hasValue(String name, Object value) {
-			return false;
-		}
-
-		@Override
-		public void setValue(String name, Object value) {
-		}
-
-		@Override
-		public Response send(RequestSender requestSender) {
-			throw new RuntimeException("send not implemented in test stub");
 		}
 
 	}

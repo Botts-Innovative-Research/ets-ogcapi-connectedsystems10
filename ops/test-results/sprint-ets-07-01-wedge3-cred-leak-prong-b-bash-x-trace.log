@@ -1,0 +1,21 @@
++ set -eo pipefail
++ ARCHIVE_DIR=/tmp/dana-cred-leak-trace/archive
++ mkdir -p /tmp/dana-cred-leak-trace/archive
++ CONTAINER_LOG=/tmp/dana-cred-leak-trace/archive/container.log
++ SMOKE_OUTPUT_DIR=/tmp/dana-cred-leak-trace/smoke-out
++ mkdir -p /tmp/dana-cred-leak-trace/smoke-out
++ echo 'FAKE catalina.out content with Bear***WXYZ masked credential'
++ SMOKE_CONTAINER_LOG_GLOB='/tmp/dana-cred-leak-trace/smoke-out/s-ets-01-03-teamengine-container-*.log'
++ SMOKE_CONTAINER_LOG_HIT=
++ for _cl in $SMOKE_CONTAINER_LOG_GLOB
++ [[ -e /tmp/dana-cred-leak-trace/smoke-out/s-ets-01-03-teamengine-container-2026-04-30T160000Z.log ]]
++ SMOKE_CONTAINER_LOG_HIT=/tmp/dana-cred-leak-trace/smoke-out/s-ets-01-03-teamengine-container-2026-04-30T160000Z.log
++ [[ -n /tmp/dana-cred-leak-trace/smoke-out/s-ets-01-03-teamengine-container-2026-04-30T160000Z.log ]]
++ cp -f /tmp/dana-cred-leak-trace/smoke-out/s-ets-01-03-teamengine-container-2026-04-30T160000Z.log /tmp/dana-cred-leak-trace/archive/container.log
++ echo '  container catalina.out copied from smoke archive: /tmp/dana-cred-leak-trace/smoke-out/s-ets-01-03-teamengine-container-2026-04-30T160000Z.log'
++ MASKED_FORM_PROBE='Bear***WXYZ'
+++ grep -cF 'Bear***WXYZ' /tmp/dana-cred-leak-trace/archive/container.log
++ B_HITS_CONTAINER=1
++ echo 'B_HITS_CONTAINER=1 (must be >=1 for prong-b PASS)'
++ [[ 1 -ge 1 ]]
++ echo 'PRONG-B WOULD PASS'

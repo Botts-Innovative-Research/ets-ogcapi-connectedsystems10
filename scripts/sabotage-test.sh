@@ -240,12 +240,21 @@ if [[ "$SABOTAGE_TARGET" == "systemfeatures" ]]; then
   # downstream cascade-SKIPs). 2-sprint-old latent defect (Sprint 5 GAP-2
   # `.git`-exclude masked it; Sprint 6 .git-include exposed it; Sprint 7
   # closes it).
-  SABOTAGE_MARKER='if (true) throw new AssertionError("SABOTAGED by --target=systemfeatures Sprint 5 S-ETS-05-03");'
-  python3 - "$SF_TESTS_TMP" "$SABOTAGE_MARKER" <<'PY'
+  #
+  # Sprint 7 Generator note: the injected text MUST conform to the project
+  # spring-javaformat-maven-plugin rules — javaformat:validate runs in
+  # `mvn clean package` (Dockerfile builder stage 8/8). Spring-javaformat
+  # requires `if (true)\n\t\t\tthrow ...;` (the `throw` body is on its own
+  # line, indented one tab deeper than `if`). A single-line
+  # `if (true) throw new AssertionError(...);` PASSES javac (defeats
+  # reachability analysis as designed) but FAILS spring-javaformat:validate.
+  # The injection below is split across two lines with the formatter-mandated
+  # indentation discipline preserved.
+  python3 - "$SF_TESTS_TMP" <<'PY'
 import re
 import sys
 
-path, marker = sys.argv[1], sys.argv[2]
+path = sys.argv[1]
 with open(path, 'r', encoding='utf-8') as f:
     src = f.read()
 
@@ -260,7 +269,16 @@ if not m:
     print(f"FATAL: could not find systemsCollectionReturns200 method header in {path}", file=sys.stderr)
     sys.exit(2)
 
-new_src = src[:m.end()] + "\n\t\t" + marker + src[m.end():]
+# Spring-javaformat-compliant + javac-reachability-defeating shape:
+#   public void systemsCollectionReturns200() {
+#   \t\tif (true)
+#   \t\t\tthrow new AssertionError("SABOTAGED ...");
+#   \t\tETSAssert.assertStatus(...);
+#   \t}
+marker = ('\n\t\tif (true)'
+          '\n\t\t\tthrow new AssertionError'
+          '("SABOTAGED by --target=systemfeatures Sprint 5 S-ETS-05-03");')
+new_src = src[:m.end()] + marker + src[m.end():]
 with open(path, 'w', encoding='utf-8') as f:
     f.write(new_src)
 print(f"OK: injected sabotage marker after method header in {path}")

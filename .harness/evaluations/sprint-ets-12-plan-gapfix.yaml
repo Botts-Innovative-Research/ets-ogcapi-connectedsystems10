@@ -1,0 +1,81 @@
+agent: raze
+role: "Red Team / Adversarial Reviewer"
+artifact_type: planning_gapfix_review
+sprint: "ets-12"
+sprint_name: "create-replace-delete-safety-gated-systems-subset"
+created: "2026-05-05T21:14:00Z"
+verdict: GAPS_FOUND
+confidence: 0.84
+planning_only: true
+docker_maven_e2e_rerun: false
+reviewed_scope:
+  - ".harness/evaluations/sprint-ets-12-plan-adversarial.yaml"
+  - ".harness/contracts/sprint-ets-12.yaml"
+  - ".harness/handoffs/planner-handoff.yaml"
+  - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - "ops/status.md"
+  - "ops/known-issues.md"
+  - "ops/changelog.md"
+review_method:
+  - "Static planning review only, per user instruction."
+  - "No Docker, Maven, TeamEngine, or E2E execution was rerun."
+  - "Compared the current uncommitted planning docs against the four required fixes from sprint-ets-12-plan-adversarial.yaml."
+gap_closure:
+  - id: "RAZE-ETS12-PLAN-GAP-001"
+    prior_title: "OPTIONS readiness separated from OGC CRD lifecycle conformance"
+    status: "CLOSED"
+    evidence:
+      - ".harness/contracts/sprint-ets-12.yaml lines 19-25 state OPTIONS readiness evidence is not lifecycle conformance and lifecycle SKIPs by default."
+      - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md lines 37-39 name OPTIONS tests as readiness preconditions and not OGC lifecycle PASS."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md lines 469, 494-511 explicitly separate OPTIONS readiness PASS from `/req/create-replace-delete/system` lifecycle conformance."
+  - id: "RAZE-ETS12-PLAN-GAP-002"
+    prior_title: "Closed-by-default mutation parameter wiring plus hard deny for public GeoRobotix"
+    status: "CLOSED"
+    evidence:
+      - ".harness/contracts/sprint-ets-12.yaml lines 100-118 define `mutation-tests-enabled`, `mutation-iut-policy`, TestRunArg/SuiteAttribute/SuiteFixtureListener/TestNGController/CTL/smoke wiring, and GeoRobotix hard-deny behavior."
+      - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md lines 42-60 make the same end-to-end parameter path in-scope and require hard denial before POST/PUT/DELETE."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md line 470 requires opt-in plumbing and hard denial for known shared public GeoRobotix URLs."
+  - id: "RAZE-ETS12-PLAN-GAP-003"
+    prior_title: "Precise IUT-bound request-log oracle for no-mutation smoke proof"
+    status: "PARTIAL"
+    evidence:
+      - ".harness/contracts/sprint-ets-12.yaml lines 120-125 correctly define adjacent `Request method:` plus `Request URI:` parsing filtered to the IUT base URL and exclude TeamEngine control-plane POST."
+      - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md lines 64-72 correctly define the same IUT-bound oracle."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md line 471 correctly defines the IUT-bound oracle, and lines 530-535 apply it to the smoke no-mutation scenario."
+      - "However, openspec/capabilities/ets-ogcapi-connectedsystems/spec.md line 491 still says no POST, PUT, or DELETE may be present in the default smoke container log. That contradicts the fixed oracle because TeamEngine's suite-run control POST is expected and explicitly excluded elsewhere."
+  - id: "RAZE-ETS12-PLAN-GAP-004"
+    prior_title: "Sprint 11 traceability/status drift"
+    status: "CLOSED"
+    evidence:
+      - "_bmad/traceability.md Sprint 11 row now states PARTIAL-IMPLEMENTED with Generator + gates and cites Quinn/Raze APPROVE_WITH_CONCERNS evidence."
+      - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md has moved to Done with implementation and gate evidence."
+      - "ops/status.md Current Code State and Sprint ets-11 Generator Evidence now reflect the completed Sprint 11 gates, and Dirty Worktree Notes describe current Sprint 12 planning/review docs."
+findings:
+  - id: "RAZE-ETS12-GAPFIX-001"
+    severity: "MEDIUM"
+    title: "One OpenSpec scenario still uses process-wide method absence instead of the IUT-bound oracle"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md line 491: `no POST, PUT, or DELETE is present in the default smoke container log`."
+      - "The same file line 471 and the contract/story correctly require filtering adjacent REST Assured request method/URI pairs to the IUT base URL."
+      - "TeamEngine smoke itself starts suite execution through a control-plane POST, which the fixed oracle must exclude."
+    impact: "Generator and gate reviewers still have a conflicting acceptance criterion. A naive line-491 implementation can fail valid smoke due to TeamEngine control-plane POST, or waste effort suppressing unrelated logs instead of proving no GeoRobotix-bound mutation."
+    required_fix: "Revise SCENARIO-ETS-PART1-010-CRD-MUTATION-SAFETY-GATE-001 so its final assertion uses the same IUT-bound adjacent `Request method:` + `Request URI:` pair oracle, or references SCENARIO-ETS-PART1-010-CRD-SMOKE-NO-MUTATION-001, rather than requiring no POST/PUT/DELETE anywhere in the container log."
+concerns:
+  - id: "RAZE-ETS12-GAPFIX-CONCERN-001"
+    severity: "LOW"
+    title: "Story scope line is less precise than its oracle section"
+    evidence:
+      - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md line 18 says default smoke MUST NOT issue POST, PUT, or DELETE, without the `IUT-bound` qualifier."
+      - "The later story oracle and DoD lines 64-72 and 104 correctly qualify the proof as IUT-bound request-log pairs."
+    recommendation: "Optional cleanup: add `IUT-bound` to the broad scope sentence to avoid reintroducing a naive grep interpretation."
+required_fixes:
+  - "Before Generator, fix openspec/capabilities/ets-ogcapi-connectedsystems/spec.md line 491 to use the IUT-bound request-log oracle instead of process-wide absence of POST/PUT/DELETE."
+  - "After that wording fix, update this gap-fix review or run a short follow-up Raze static review before Generator."
+positive_observations:
+  - "The high-risk safety items are now mostly anchored across contract, story, OpenSpec, handoff, traceability, and ops status."
+  - "OPTIONS readiness is consistently labeled as non-lifecycle conformance evidence in the main planning surfaces."
+  - "Mutation enablement is closed by default and public GeoRobotix hard-denial is no longer conditional."
+  - "Sprint 11 gate/status drift was reconciled enough for Sprint 12 planning continuity."

@@ -1,150 +1,153 @@
 agent: planner
 status: complete
-timestamp: "2026-05-05T19:32:08Z"
-sprint_number: "ets-11"
-sprint_name: "advanced-filtering-read-only-subset"
-contract_path: ".harness/contracts/sprint-ets-11.yaml"
+timestamp: "2026-05-05T20:59:24Z"
+sprint_number: "ets-12"
+sprint_name: "create-replace-delete-safety-gated-systems-subset"
+contract_path: ".harness/contracts/sprint-ets-12.yaml"
 triggered_by: |
-  User instructed "Start the next step" after Sprint 10 Quinn + Raze gates completed and gate-close commit 58d70f5 was present.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 10 handoff 2026-05-05T17:41:19Z)"
+  User instructed "Go onto the next step" after Sprint 11 Generator and gate commits
+  were complete (`331f3ed`, `65d48db`).
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 11 handoff 2026-05-05T19:32:08Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-05T19:32:08Z"
+  checked_at: "2026-05-05T20:59:24Z"
   stale_over_30_days: false
   disposition: "OK to start new capability planning."
 
 strategic_decisions:
   q1_next_class:
-    question: "Which remaining Part 1 class should Sprint 11 implement?"
-    decision: "advanced_filtering"
+    question: "Which remaining Part 1 class should Sprint 12 implement?"
+    decision: "create_replace_delete"
     rationale: |
-      AdvancedFiltering is the only remaining non-mutation Part 1 requirement class. It can be
-      advanced with read-only query checks and declaration-gated SKIP behavior, while create-replace-delete
-      and update remain deferred until a write-safety/IUT policy exists.
+      After Sprint 11, the only remaining Part 1 classes are mutation-side classes:
+      Create/Replace/Delete and Update. Create/Replace/Delete should precede Update
+      because it establishes the mutation-safety contract, opt-in parameters, and cleanup
+      discipline needed before PATCH/update work.
     alternatives_rejected:
-      - create_replace_delete: "Mutation-side class; requires explicit write target, cleanup, and shared-IUT safety policy."
-      - update: "Mutation-side class; should follow create-replace-delete or a dedicated write-operation planning cycle."
+      - update: "PATCH/update should follow the write-safety gate established by Create/Replace/Delete."
       - part2_dynamic_data: "Explicitly out of current Part 1 incremental lane."
 
   q2_scope:
-    question: "Full AdvancedFiltering class or a read-only subset?"
-    decision: "systems/common-resource read-only subset"
+    question: "Full Create/Replace/Delete class or safety-gated subset?"
+    decision: "safety-gated systems subset"
     rationale: |
-      The upstream class is broad and cross-cuts resources, association filters, geometry filters,
-      and combined filters. Sprint 11 targets a small verifiable subset: conformance declaration,
-      local ID_List helper behavior, systems id/keyword filters, geometry smoke shape, and dependency wiring.
-      Current GeoRobotix does not declare /conf/advanced-filtering, so default smoke must SKIP rather than PASS.
+      GeoRobotix declares /conf/create-replace-delete and advertises POST/PUT/DELETE
+      via OPTIONS, but it is a public shared smoke target. Sprint 12 must avoid unguarded
+      writes. The sprint targets declaration, non-mutating OPTIONS readiness, explicit
+      mutation opt-in plumbing, default lifecycle SKIP-before-POST, dependency wiring,
+      and no-mutation smoke evidence. OPTIONS checks are readiness preconditions only,
+      not OGC lifecycle conformance PASS.
 
 upstream_ogc_verification:
   repository: "opengeospatial/ogcapi-connected-systems"
   branch: "master"
   commit: "3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
-  advanced_filtering_requirements_path: "api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc"
-  advanced_filtering_clause_path: "api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc"
-  advanced_filtering_identifier: "/req/advanced-filtering"
+  crd_requirements_path: "api/part1/standard/requirements/crud/requirements_class_crd.adoc"
+  crd_clause_path: "api/part1/standard/sections/clause_16_requirements_class_create_replace_delete.adoc"
+  crd_identifier: "/req/create-replace-delete"
+  inherits:
+    - "/req/api-common"
+    - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/create-replace-delete"
   listed_subrequirements:
-    - "/req/advanced-filtering/id-list-schema"
-    - "/req/advanced-filtering/resource-by-id"
-    - "/req/advanced-filtering/resource-by-keyword"
-    - "/req/advanced-filtering/feature-by-geom"
-    - "/req/advanced-filtering/system-by-parent"
-    - "/req/advanced-filtering/system-by-procedure"
-    - "/req/advanced-filtering/system-by-foi"
-    - "/req/advanced-filtering/system-by-observed-property"
-    - "/req/advanced-filtering/system-by-controlled-property"
-    - "/req/advanced-filtering/procedure-by-observed-property"
-    - "/req/advanced-filtering/procedure-by-controlled-property"
-    - "/req/advanced-filtering/deployment-by-parent"
-    - "/req/advanced-filtering/deployment-by-system"
-    - "/req/advanced-filtering/deployment-by-foi"
-    - "/req/advanced-filtering/deployment-by-observed-property"
-    - "/req/advanced-filtering/deployment-by-controlled-property"
-    - "/req/advanced-filtering/sampling-feature-by-foi"
-    - "/req/advanced-filtering/sampling-feature-by-observed-property"
-    - "/req/advanced-filtering/sampling-feature-by-controlled-property"
-    - "/req/advanced-filtering/property-by-base-property"
-    - "/req/advanced-filtering/property-by-object-type"
-    - "/req/advanced-filtering/combined-filters"
-  id_list_schema_path: "api/part1/openapi/parameters/idListSchema.yaml"
-  id_list_schema_summary: "Non-empty list of local resource IDs or URI UIDs; mixed local-ID/UID lists are prohibited by clause 15."
+    - "/req/create-replace-delete/system"
+    - "/req/create-replace-delete/system-delete-cascade"
+    - "/req/create-replace-delete/subsystem"
+    - "/req/create-replace-delete/deployment"
+    - "/req/create-replace-delete/subdeployment"
+    - "/req/create-replace-delete/procedure"
+    - "/req/create-replace-delete/sampling-feature"
+    - "/req/create-replace-delete/property"
+    - "/req/create-replace-delete/create-in-collection"
+    - "/req/create-replace-delete/replace-in-collection"
+    - "/req/create-replace-delete/delete-in-collection"
+    - "/req/create-replace-delete/add-to-collection"
 
 georobotix_planning_probe:
-  conformance: "Does not declare http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering as of 2026-05-05."
-  systems_limit: "GET /systems?limit=1 -> HTTP 200 JSON, one item."
-  systems_id_candidate: "GET /systems?validTime=2015-01-01T00:00:00Z/2026-01-01T00:00:00Z&limit=1 -> HTTP 200 JSON, first id 0mqcvdnfoca0."
-  systems_uid_candidate: "GET /systems?uid=urn:osh:sensor:simweather:0123456879&limit=1 -> HTTP 200 JSON, first id 0ngu9lvstls0."
-  systems_keyword_candidate: "GET /systems?q=Weather&limit=1 -> HTTP 200 JSON, first id 0ngu9lvstls0."
-  systems_bbox_probe: "GET /systems?bbox=-1,-1,1,1&limit=1 -> HTTP 200 JSON, empty items."
-  planning_interpretation: "Read-only query behavior exists, but undeclared behavior is not conformance PASS evidence."
+  conformance: "Declares http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete as of 2026-05-05."
+  systems_options: "OPTIONS /systems -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS."
+  system_item_options: "OPTIONS /systems/0mqcvdnfoca0 -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS."
+  systems_seed: "GET /systems?limit=1 -> HTTP 200 JSON, first id 0mqcvdnfoca0."
+  planning_interpretation: "Method advertisement is readiness evidence only. It is not permission to mutate GeoRobotix during default smoke."
 
 stories:
-  - id: "S-ETS-11-01"
-    title: "AdvancedFiltering systems/common-resource read-only subset - depends on SystemFeatures"
-    file: "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+  - id: "S-ETS-12-01"
+    title: "Create/Replace/Delete safety-gated systems subset - depends on SystemFeatures"
+    file: "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "1-2h"
-    sequencing: "ONLY story in Sprint 11"
+    sequencing: "ONLY story in Sprint 12"
 
 new_requirements:
-  - "REQ-ETS-PART1-009"
+  - "REQ-ETS-PART1-010"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-009-ADVFILTER-CONFORMANCE-DECLARED-001"
-  - "SCENARIO-ETS-PART1-009-ADVFILTER-ID-LIST-SCHEMA-001"
-  - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-ID-001"
-  - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-KEYWORD-001"
-  - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-GEOM-SMOKE-001"
-  - "SCENARIO-ETS-PART1-009-ADVFILTER-DEPENDENCY-SMOKE-001"
-  - "SCENARIO-ETS-PART1-009-ADVFILTER-SMOKE-NO-REGRESSION-001"
+  - "SCENARIO-ETS-PART1-010-CRD-CONFORMANCE-DECLARED-001"
+  - "SCENARIO-ETS-PART1-010-CRD-MUTATION-SAFETY-GATE-001"
+  - "SCENARIO-ETS-PART1-010-CRD-SYSTEMS-OPTIONS-001"
+  - "SCENARIO-ETS-PART1-010-CRD-SYSTEM-RESOURCE-OPTIONS-001"
+  - "SCENARIO-ETS-PART1-010-CRD-SYSTEM-LIFECYCLE-OPTIN-001"
+  - "SCENARIO-ETS-PART1-010-CRD-DEPENDENCY-SMOKE-001"
+  - "SCENARIO-ETS-PART1-010-CRD-SMOKE-NO-MUTATION-001"
 
-id_list_helper_examples:
-  valid:
-    - "0mqcvdnfoca0"
-    - "0mqcvdnfoca0,0ngu9lvstls0"
-    - "urn:osh:sensor:simweather:0123456879"
-    - "urn:osh:sensor:simweather:0123456879,urn:osh:sensor:simweather:9876543210"
-    - "urn:osh:sensor:simweather:*"
-  invalid:
-    - ""
-    - ","
-    - "0mqcvdnfoca0,urn:osh:sensor:simweather:0123456879"
-    - "urn:osh:sensor:bad value"
-  note: "Local helper only; does not prove full query semantics at every endpoint."
+mutation_opt_in_parameters:
+  mutation_tests_enabled:
+    suite_parameter: "mutation-tests-enabled"
+    required_value: "true"
+  mutation_iut_policy:
+    suite_parameter: "mutation-iut-policy"
+    required_value: "dedicated-mutable-iut"
+  default_behavior: "Lifecycle mutation assertions SKIP before POST/PUT/DELETE."
+  end_to_end_wiring_required:
+    - "TestRunArg exposes mutation-tests-enabled and mutation-iut-policy."
+    - "SuiteAttribute stores both mutation controls."
+    - "SuiteFixtureListener copies suite parameters onto the TestNG suite."
+    - "TestNGController accepts the optional parameters without requiring them."
+    - "CTL exposes explicit mutation controls."
+    - "scripts/smoke-test.sh may forward SMOKE_MUTATION_TESTS_ENABLED and SMOKE_MUTATION_IUT_POLICY; default env leaves them unset."
+  hard_denies:
+    - "https://api.georobotix.io/ogc/t18/api"
+    - "Any IUT host equal to api.georobotix.io"
+  hard_deny_behavior: "If mutation tests are enabled against a hard-denied public IUT, lifecycle test SKIPs or FAILs before POST; it MUST NOT issue POST/PUT/DELETE."
+
+no_mutation_smoke_oracle:
+  method: "Parse adjacent Request method + Request URI pairs from REST Assured logs."
+  filter: "Only pairs whose URI starts with the IUT base URL are in scope."
+  pass_condition: "Zero in-scope pairs with method POST, PUT, or DELETE."
+  excluded: "TeamEngine control-plane POST that starts the suite run."
 
 next_agent: "generator"
 next_agent_rationale: |
-  Planning artifacts are complete and no Architect cycle is needed. AdvancedFiltering can follow the
-  existing declaration-gated TestNG class pattern, but Generator must preserve SKIP honesty because
-  the default GeoRobotix smoke target does not currently advertise the class.
+  Planning artifacts are complete and no Architect cycle is needed. Generator can follow
+  the established TestNG class pattern while adding the first write-operation safety gate.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
-    - "Re-verify GeoRobotix /conformance for /conf/advanced-filtering before implementing."
-    - "Implement AdvancedFilteringTests.java with 6 read-only @Tests."
-    - "Add testng.xml group dependency: advancedfiltering depends-on systemfeatures."
-    - "Add 3 VerifyTestNGSuiteDependency lint tests for advancedfiltering."
-    - "Make all AdvancedFiltering tests SKIP-with-reason when /conf/advanced-filtering is absent."
-    - "For declaring IUTs, FAIL empty filtered results after selecting a seed System id or keyword; SKIP only when seed id/keyword cannot be selected."
-    - "Keep dependency cascade evidence separate from default smoke no-regression totals."
+    - "Re-verify GeoRobotix /conformance and OPTIONS probes before implementing."
+    - "Implement CreateReplaceDeleteTests.java with 6 @Tests."
+    - "Add testng.xml group dependency: createreplacedelete depends-on systemfeatures."
+    - "Add 3 VerifyTestNGSuiteDependency lint tests for createreplacedelete."
+    - "Add mutation-tests-enabled and mutation-iut-policy propagation through TestRunArg/SuiteAttribute/SuiteFixtureListener."
+    - "Ensure default lifecycle test SKIPs before POST when mutation opt-in parameters are absent."
     - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh from a /tmp clone."
-    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep unimplemented AdvancedFiltering subrequirements open."
+    - "Inspect smoke logs for zero IUT-bound POST/PUT/DELETE request-log pairs from the Create/Replace/Delete suite."
+    - "Name/report OPTIONS checks as ETS readiness preconditions, not OGC lifecycle conformance PASS."
+    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep unimplemented CRD subrequirements open."
   must_not_do:
-    - "Do not implement create-replace-delete, update, or Part 2."
-    - "Do not add POST, PUT, PATCH, or DELETE assertions in Sprint 11."
-    - "Do not count GeoRobotix undeclared query behavior as conformance PASS."
-    - "Do not claim full geometry intersection or combined-filter truth-table validation."
-    - "Do not claim full AdvancedFiltering class closure."
+    - "Do not issue IUT-bound POST, PUT, or DELETE during default GeoRobotix smoke."
+    - "Do not mutate public GeoRobotix even when mutation opt-in parameters are present; hard-deny known shared public GeoRobotix URLs."
+    - "Do not implement /conf/update or Part 2."
+    - "Do not claim full Create/Replace/Delete class closure from OPTIONS evidence."
 
 gate_expectations:
   quinn:
-    primary: "Run mvn-test-via-docker.sh from /tmp clone; verify surefire includes AdvancedFiltering lint tests with 0 failures/errors."
+    primary: "Run mvn-test-via-docker.sh from /tmp clone; verify mutation opt-in parameters and CRD lint tests."
   raze:
-    primary: "Run smoke-test.sh from separate /tmp clone; verify failed=0 and PASS+SKIP total >= 63."
-    adversarial_focus: "Inspect for false PASS when /conf/advanced-filtering is absent, geometry semantics overclaim, and accidental write operations."
-  independence: "Quinn and Raze must write their own Sprint 11 YAML before reading the other gate's YAML."
+    primary: "Run smoke-test.sh from separate /tmp clone; verify failed=0 and no GeoRobotix-bound CRD POST/PUT/DELETE request-log pairs."
+    adversarial_focus: "Inspect for false PASS from OPTIONS readiness and any accidental public-IUT mutation."
+  independence: "Quinn and Raze must write their own Sprint 12 YAML before reading the other gate's YAML."
 
-confidence: 0.83
+confidence: 0.82

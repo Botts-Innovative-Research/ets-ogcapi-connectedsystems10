@@ -141,7 +141,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART1-007..013: Remaining Per-Class Conformance Suites
 - **Priority**: MUST
-- **Status**: PLACEHOLDER for REQ-ETS-PART1-010..011; REQ-ETS-PART1-007..008 are IMPLEMENTED in Sprint 7, REQ-ETS-PART1-009 is PARTIAL-IMPLEMENTED in Sprint 11 below, REQ-ETS-PART1-012 is PARTIAL-IMPLEMENTED in Sprint 9, and REQ-ETS-PART1-013 is PARTIAL-IMPLEMENTED in Sprint 10 below.
+- **Status**: PLACEHOLDER for REQ-ETS-PART1-011; REQ-ETS-PART1-007..008 are IMPLEMENTED in Sprint 7, REQ-ETS-PART1-009 is PARTIAL-IMPLEMENTED in Sprint 11 below, REQ-ETS-PART1-010 is SPECIFIED for Sprint 12 below, REQ-ETS-PART1-012 is PARTIAL-IMPLEMENTED in Sprint 9, and REQ-ETS-PART1-013 is PARTIAL-IMPLEMENTED in Sprint 10 below.
 - **Description**: For each remaining OGC 23-001 conformance class (009=`advanced-filtering`, 010=`create-replace-delete`, 011=`update`, 012=`geojson`, 013=`sensorml`), the ETS SHALL provide a TestNG suite class structurally equivalent to Core (REQ-ETS-CORE-001..004), SystemFeatures (REQ-ETS-PART1-002), Common (REQ-ETS-PART1-001), Subsystems (REQ-ETS-PART1-003), Procedures (REQ-ETS-PART1-006), Deployments (REQ-ETS-PART1-004), Sampling Features (REQ-ETS-PART1-007), Property Definitions (REQ-ETS-PART1-008), Subdeployments (REQ-ETS-PART1-005), and GeoJSON (REQ-ETS-PART1-012): one `@Test` per ATS assertion subset selected for the sprint, `description` attribute carries the OGC canonical `.adoc` requirement URI form, suite-level dependency declared via TestNG `dependsOnGroups` if a prerequisite class fails.
 - **Rationale**: PRD SC-2 requires Part 1 coverage. Sprint 9 selected a GeoJSON systems read-only subset first because it was lower risk than create-replace-delete mutation coverage and lower schema breadth than SensorML. Sprint 10 continues the low-risk read-only encoding path with SensorML systems before any mutation-side class.
 - **Maps to**: PRD FR-ETS-17..23.
@@ -391,7 +391,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
 - **Priority**: MUST
-- **Status**: PARTIAL-IMPLEMENTED by Sprint 11 Generator (2026-05-05; story S-ETS-11-01; pending independent Quinn/Raze gate close). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests` with 6 read-only @Tests. Verification: Java formatter via Docker Maven BUILD SUCCESS; Docker Maven `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results` reported `63 total / 48 passed / 0 failed / 15 skipped`. Current GeoRobotix does not declare `/conf/advanced-filtering`, so all 6 AdvancedFiltering @Tests SKIP with reason and no undeclared query behavior is counted as PASS.
+- **Status**: PARTIAL-IMPLEMENTED by Sprint 11 Generator and gates (2026-05-05; story S-ETS-11-01; Quinn Gate 3.5 APPROVE_WITH_CONCERNS 0.90; Raze Gate 4 APPROVE_WITH_CONCERNS 0.90). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests` with 6 read-only @Tests. Verification: Java formatter via Docker Maven BUILD SUCCESS; Docker Maven `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results` reported `63 total / 48 passed / 0 failed / 15 skipped`. Independent Quinn/Raze gate smoke runs also reported `63 total / 48 passed / 0 failed / 15 skipped`. Current GeoRobotix does not declare `/conf/advanced-filtering`, so all 6 AdvancedFiltering @Tests SKIP with reason and no undeclared query behavior is counted as PASS.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc`. The OpenAPI fragment for `ID_List` exists at `api/part1/openapi/parameters/idListSchema.yaml`. The class identifier is `/req/advanced-filtering`, inherits `/req/api-common`, and lists query-parameter subrequirements for ID lists, common resource keyword/id filters, geometry filters, system/deployment/procedure/sampling-feature/property association filters, and combined filters.
 - **Sprint 11 coverage scope**: AdvancedFiltering systems/common-resource read-only subset with 6 @Tests: (1) IUT declares `/conf/advanced-filtering`, otherwise every AdvancedFiltering @Test SKIPs with reason; (2) ID-list schema validator helper accepts homogeneous non-empty local-ID lists and homogeneous non-empty UID lists while rejecting mixed local/UID lists and empty/malformed lists; (3) `/systems?id=<known-id>` returns HTTP 200 and a non-empty result set whose returned items all preserve the selected id when the conformance class is declared and a seed System id was selected; (4) `/systems?q=<known keyword>` returns HTTP 200 and a non-empty result set whose returned items include keyword evidence in `name` or `description` when declared and a seed keyword was selected from a System name/description; (5) `/systems?geom=<WKT>` is exercised with a broad WKT geometry and validated only for HTTP 200 + JSON response shape in this sprint; (6) TestNG dependency wiring and smoke no-regression. The sprint deliberately does not close all 24 listed advanced-filtering subrequirements.
 - **ID_List examples for Sprint 11 helper**: Based on upstream `idListSchema.yaml` and clause 15 text, valid examples include `0mqcvdnfoca0`, `0mqcvdnfoca0,0ngu9lvstls0`, `urn:osh:sensor:simweather:0123456879`, `urn:osh:sensor:simweather:0123456879,urn:osh:sensor:simweather:9876543210`, and the resource-by-id UID-prefix query value `urn:osh:sensor:simweather:*`. Invalid examples include an empty value, `,`, `0mqcvdnfoca0,urn:osh:sensor:simweather:0123456879`, and `urn:osh:sensor:bad value`. This is a local schema-helper test only; it does not prove every endpoint's query semantics.
@@ -459,6 +459,81 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **AND** total PASS+SKIP is at least 63 (Sprint 10 baseline 57 plus 6 AdvancedFiltering @Tests)
 **AND** AdvancedFiltering results SKIP-with-reason if `/conf/advanced-filtering` remains absent.
 *Maps to*: REQ-ETS-PART1-009.
+
+> Sprint 12 starts the mutation-side Part 1 work with Create/Replace/Delete, but it does not permit unguarded writes against the public GeoRobotix smoke target. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, so default smoke must prove declaration and non-mutating readiness while every lifecycle mutation assertion SKIPs unless an operator explicitly enables mutation tests against a dedicated mutable IUT.
+
+#### REQ-ETS-PART1-010: Create/Replace/Delete Conformance Class (`/conf/create-replace-delete`) (Sprint 12 target)
+- **Priority**: MUST
+- **Status**: SPECIFIED for Sprint 12 planning (2026-05-05; story S-ETS-12-01). Target outcome is PARTIAL-IMPLEMENTED only: declaration, non-mutating method-advertisement readiness, TestNG wiring, explicit mutation opt-in plumbing, and default-smoke safety. Full create/replace/delete lifecycle conformance remains OPEN until a dedicated mutable IUT and cleanup policy are available.
+- **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/crud/requirements_class_crd.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_16_requirements_class_create_replace_delete.adoc`. The class identifier is `/req/create-replace-delete`, inherits `/req/api-common` and OGC API Features Part 4 Create/Replace/Delete, and lists subrequirements for systems, system delete cascade, subsystems, deployments, subdeployments, procedures, sampling features, properties, collection propagation, and adding resources to collections by `text/uri-list`.
+- **Sprint 12 coverage scope**: Create/Replace/Delete safety-gated systems subset with 6 planned @Tests: (1) IUT declares `/conf/create-replace-delete`; (2) default mutation safety gate is active unless suite parameter `mutation-tests-enabled=true` is supplied together with `mutation-iut-policy=dedicated-mutable-iut`; (3) `OPTIONS /systems` is recorded as an ETS readiness precondition for POST advertisement without issuing POST; (4) `OPTIONS /systems/{id}` is recorded as an ETS readiness precondition for PUT/DELETE advertisement without issuing PUT/DELETE; (5) systems lifecycle create/replace/delete test SKIPs by default with reason and, only when explicitly enabled against a dedicated mutable IUT that is not a known shared public GeoRobotix URL, performs POST/PUT/DELETE with best-effort cleanup; (6) TestNG dependency wiring and smoke no-regression. OPTIONS readiness PASS does not satisfy `/req/create-replace-delete/system`; lifecycle conformance remains SKIP by default until POST/PUT/DELETE run against a dedicated mutable IUT. The sprint deliberately does not close deployment/procedure/sampling-feature/property CRUD, cascade delete semantics, collection propagation, `text/uri-list`, or update/PATCH.
+- **Mutation safety policy**: Mutating HTTP methods MUST NOT run during default GeoRobotix smoke even though GeoRobotix currently declares `/conf/create-replace-delete` and advertises `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS` on `/systems` and `/systems/{id}`. Generator MUST introduce explicit opt-in parameters and a hard safety gate before any POST/PUT/DELETE request is issued. The parameter path is in scope end-to-end: `TestRunArg`, `SuiteAttribute`, `SuiteFixtureListener`, optional `TestNGController` validation/acceptance, CTL controls, and optional smoke-script env forwarding (`SMOKE_MUTATION_TESTS_ENABLED`, `SMOKE_MUTATION_IUT_POLICY`). Even when both opt-in parameters are present, the implementation MUST hard-deny mutation against known shared public GeoRobotix URLs, including `https://api.georobotix.io/ogc/t18/api`. Default smoke MUST report lifecycle mutation assertions as SKIP-with-reason, not PASS.
+- **No-mutation smoke oracle**: Default smoke no-mutation proof MUST inspect IUT-bound REST Assured request-log pairs, not naive process-wide method strings. The oracle pairs adjacent `Request method:` and `Request URI:` lines, filters to URIs starting with the IUT base URL, and requires zero POST/PUT/DELETE pairs for GeoRobotix. The TeamEngine control-plane POST that starts the suite run is excluded from this oracle.
+- **Dependency wiring**: Create/Replace/Delete depends on SystemFeatures via `<group name="createreplacedelete" depends-on="systemfeatures"/>`; the Sprint 12 systems subset requires canonical System resource availability before method-advertisement or lifecycle checks.
+- **Open subrequirements after Sprint 12**: System delete cascade, subsystem creation, deployment/subdeployment/procedure/sampling-feature/property create/replace/delete, custom collection propagation, adding resources to collections by `text/uri-list`, positive lifecycle verification against a dedicated mutable IUT, and all `/conf/update` PATCH behavior remain OPEN unless separately planned.
+- **Maps to**: PRD FR-ETS-20.
+
+### Acceptance Scenarios for Sprint 12
+
+#### SCENARIO-ETS-PART1-010-CRD-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the IUT is `https://api.georobotix.io/ogc/t18/api`
+**WHEN** the Create/Replace/Delete suite reads `/conformance`
+**THEN** the response contains `/conf/create-replace-delete`
+**OR IF** `/conf/create-replace-delete` is absent
+**THEN** every Create/Replace/Delete @Test SKIPs with reason citing the missing conformance declaration.
+*Maps to*: REQ-ETS-PART1-010.
+
+#### SCENARIO-ETS-PART1-010-CRD-MUTATION-SAFETY-GATE-001 (CRITICAL)
+**GIVEN** the suite is running with default smoke parameters
+**WHEN** any Create/Replace/Delete lifecycle assertion would issue POST, PUT, or DELETE
+**THEN** the assertion SKIPs before issuing the mutating request
+**AND** the SKIP reason names the missing explicit mutation opt-in parameter
+**AND** default smoke logs contain zero IUT-bound POST, PUT, or DELETE request-log pairs, using adjacent `Request method:` and `Request URI:` lines filtered to the IUT base URL.
+*Maps to*: REQ-ETS-PART1-010.
+
+#### SCENARIO-ETS-PART1-010-CRD-SYSTEMS-OPTIONS-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/create-replace-delete`
+**WHEN** the suite sends `OPTIONS /systems`
+**THEN** the response is HTTP 200 or 204
+**AND** the `Allow` header advertises POST
+**AND** the suite does not issue POST in this assertion
+**AND** the result is reported as ETS readiness evidence, not as lifecycle conformance for `/req/create-replace-delete/system`.
+*Maps to*: REQ-ETS-PART1-010.
+
+#### SCENARIO-ETS-PART1-010-CRD-SYSTEM-RESOURCE-OPTIONS-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/create-replace-delete`
+**AND** a seed System id can be selected from `/systems?limit=1`
+**WHEN** the suite sends `OPTIONS /systems/{id}`
+**THEN** the response is HTTP 200 or 204
+**AND** the `Allow` header advertises PUT and DELETE
+**AND** the suite does not issue PUT or DELETE in this assertion
+**AND** the result is reported as ETS readiness evidence, not as lifecycle conformance for `/req/create-replace-delete/system`.
+*Maps to*: REQ-ETS-PART1-010.
+
+#### SCENARIO-ETS-PART1-010-CRD-SYSTEM-LIFECYCLE-OPTIN-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/create-replace-delete`
+**WHEN** mutation tests are not explicitly enabled for a dedicated mutable IUT
+**THEN** the systems lifecycle create/replace/delete assertion SKIPs with reason before POST
+**OR IF** mutation tests are explicitly enabled under the Sprint 12 safety contract
+**THEN** the suite first hard-denies known shared public GeoRobotix URLs
+**AND IF** the target is a dedicated mutable IUT
+**THEN** the suite creates a System with POST, replaces it with PUT, deletes it with DELETE, verifies expected status codes and canonical id behavior, and records best-effort cleanup evidence.
+*Maps to*: REQ-ETS-PART1-010.
+
+#### SCENARIO-ETS-PART1-010-CRD-DEPENDENCY-SMOKE-001 (CRITICAL)
+**GIVEN** the SystemFeatures group fails or is sabotaged
+**WHEN** the Create/Replace/Delete suite attempts to run
+**THEN** Create/Replace/Delete tests SKIP because `<group name="createreplacedelete" depends-on="systemfeatures"/>` is present
+**AND** this dependency behavior is evidenced by structural lint and/or targeted sabotage/runtime cascade checks.
+*Maps to*: REQ-ETS-PART1-010.
+
+#### SCENARIO-ETS-PART1-010-CRD-SMOKE-NO-MUTATION-001 (CRITICAL)
+**GIVEN** Sprint 12 adds the Create/Replace/Delete safety-gated systems subset
+**WHEN** `scripts/smoke-test.sh` runs from a `/tmp` clone against the default GeoRobotix target
+**THEN** failed=0
+**AND** total PASS+SKIP increases by the number of new Create/Replace/Delete @Tests
+**AND** default smoke logs contain zero IUT-bound POST, PUT, or DELETE request-log pairs from the Create/Replace/Delete suite, using adjacent `Request method:` and `Request URI:` lines filtered to the IUT base URL.
+*Maps to*: REQ-ETS-PART1-010.
 
 > Sprint 9 starts the remaining encoding classes with GeoJSON only. This is intentionally narrower than the v1.0 web-app story that paired GeoJSON + SensorML: GeoJSON is read-only, declared by GeoRobotix, and reuses existing Feature/FeatureCollection validation patterns, while SensorML has broader SensorML 3.0 schema inheritance and remains deferred.
 

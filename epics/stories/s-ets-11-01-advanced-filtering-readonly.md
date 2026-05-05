@@ -1,7 +1,7 @@
 # Story S-ETS-11-01: AdvancedFiltering Read-Only Subset
 
 > Sprint: ets-11
-> Status: Generator Complete - Pending Raze/Quinn Gates
+> Status: Partial-Implemented - Quinn/Raze Gates Complete
 > Priority: P0
 > Complexity: M
 > Epic: epic-ets-02-part1-classes

@@ -1,0 +1,48 @@
+agent: raze
+role: "Red Team / Adversarial Reviewer"
+artifact_type: planning_gapfix_recheck
+sprint: "ets-12"
+sprint_name: "create-replace-delete-safety-gated-systems-subset"
+created: "2026-05-05T21:19:21Z"
+verdict: APPROVE
+confidence: 0.93
+planning_only: true
+docker_maven_e2e_rerun: false
+reviewed_scope:
+  - "_bmad/agents/adversarial-reviewer.md"
+  - ".harness/evaluations/sprint-ets-12-plan-gapfix.yaml"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
+review_method:
+  - "Static planning recheck only, per user instruction."
+  - "No Docker, Maven, TeamEngine, or E2E execution was rerun."
+  - "Focused narrowly on prior GAP-003: process-wide mutation-method absence wording versus the IUT-bound adjacent request-log oracle."
+gap_closure:
+  - id: "RAZE-ETS12-PLAN-GAP-003"
+    prior_title: "Precise IUT-bound request-log oracle for no-mutation smoke proof"
+    status: "CLOSED"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md line 471 defines the no-mutation proof as IUT-bound REST Assured request-log pairs, not naive process-wide method strings."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md line 491 now requires zero IUT-bound POST/PUT/DELETE request-log pairs using adjacent `Request method:` and `Request URI:` lines filtered to the IUT base URL."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md line 535 uses the same adjacent `Request method:` + `Request URI:` IUT-bound oracle for the smoke no-mutation scenario."
+      - "The prior conflicting process-wide wording `no POST, PUT, or DELETE is present in the default smoke container log` is no longer present in the Sprint 12 OpenSpec section."
+      - "The oracle explicitly excludes the TeamEngine control-plane POST that starts the suite run."
+  - id: "RAZE-ETS12-GAPFIX-CONCERN-001"
+    prior_title: "Story scope line is less precise than its oracle section"
+    status: "CLOSED"
+    evidence:
+      - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md line 18 now says default TeamEngine smoke against GeoRobotix MUST NOT issue IUT-bound POST, PUT, or DELETE."
+      - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md lines 66-72 retain the adjacent request-log pair oracle and exclude the TeamEngine REST control POST."
+findings: []
+required_fixes: []
+residual_concerns:
+  - id: "RAZE-ETS12-GAPFIX2-CONCERN-001"
+    severity: "LOW"
+    title: "Positive lifecycle mutation evidence still depends on a future dedicated mutable IUT"
+    evidence:
+      - "This is expected for Sprint 12 planning: default GeoRobotix smoke remains non-mutating and lifecycle conformance stays SKIP until a dedicated mutable IUT is available."
+    recommendation: "Generator and gates should preserve the PARTIAL-IMPLEMENTED status and avoid claiming full `/req/create-replace-delete/system` lifecycle conformance from OPTIONS readiness or default smoke."
+evidence:
+  - "Static line-number inspection: `nl -ba openspec/capabilities/ets-ogcapi-connectedsystems/spec.md | sed -n '460,540p'`."
+  - "Static line-number inspection: `nl -ba epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md | sed -n '1,120p'`."
+  - "Targeted grep for `IUT-bound`, `process-wide`, `POST`, `PUT`, `DELETE`, `Request method:`, and `Request URI:` across Sprint 12 planning artifacts."

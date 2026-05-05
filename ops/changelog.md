@@ -2,6 +2,55 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T21:19Z — Sprint ets-12 Raze planning gap-fix recheck
+
+**Triggered by user instruction**: Act as Red Team / Raze to recheck Sprint ets-12 after only GAP-003 remained open.
+
+- Performed a narrow planning-only static recheck; did not rerun Docker, Maven, TeamEngine, or E2E per instruction.
+- Wrote `.harness/evaluations/sprint-ets-12-plan-gapfix-2.yaml` with verdict `APPROVE` confidence 0.93.
+- Confirmed OpenSpec no longer requires process-wide absence of POST/PUT/DELETE and consistently uses the IUT-bound adjacent `Request method:` + `Request URI:` oracle.
+- Confirmed the oracle excludes TeamEngine control-plane POST and the story broad scope sentence now says `IUT-bound`.
+
+---
+
+## 2026-05-05T21:15Z — Sprint ets-12 Raze planning gap-fix review
+
+**Triggered by user instruction**: Act as Red Team / Raze to review Sprint ets-12 planning gap fixes after four prior gaps.
+
+- Reviewed current uncommitted Sprint ets-12 planning gap fixes only; did not rerun Docker, Maven, TeamEngine, or E2E per instruction.
+- Wrote `.harness/evaluations/sprint-ets-12-plan-gapfix.yaml` with verdict `GAPS_FOUND` confidence 0.84.
+- Verified GAP-001, GAP-002, and GAP-004 closed.
+- Found GAP-003 only partially closed: most artifacts define the correct IUT-bound adjacent `Request method:` + `Request URI:` oracle, but one OpenSpec scenario line still says no POST/PUT/DELETE may appear anywhere in the default smoke container log.
+- Revised that OpenSpec scenario wording same turn to use the IUT-bound request-log oracle.
+
+---
+
+## 2026-05-05T21:08Z — Sprint ets-12 Raze planning review
+
+**Triggered by user instruction**: Act as Red Team / Raze for current uncommitted Sprint ets-12 planning changes.
+
+- Reviewed Sprint ets-12 Create/Replace/Delete planning only; did not rerun Docker, Maven, or E2E per instruction.
+- Wrote `.harness/evaluations/sprint-ets-12-plan-adversarial.yaml` with verdict `GAPS_FOUND` confidence 0.87.
+- Required fixes: separate OPTIONS readiness from OGC CRD lifecycle conformance, specify closed-by-default mutation parameter wiring plus GeoRobotix hard denial, define an IUT-bound log oracle for no-mutation smoke evidence, and reconcile stale Sprint 11 traceability/status drift.
+- Applied planning gap fixes same turn: OPTIONS is now readiness-only, mutation parameter wiring is specified through TestRunArg/SuiteAttribute/SuiteFixtureListener/TestNGController/CTL/smoke env, public GeoRobotix is hard-denied even when opt-in parameters are present, no-mutation smoke proof uses adjacent IUT-bound request-log pairs, and Sprint 11 traceability/story status now reflects completed Quinn/Raze gates.
+
+---
+
+## 2026-05-05T21:00Z — Sprint ets-12 Create/Replace/Delete planning
+
+**Triggered by user instruction**: "Go onto the next step."
+
+- Planned `S-ETS-12-01` as the next Part 1 increment: `/conf/create-replace-delete` safety-gated systems subset.
+- Architecture freshness checked: `_bmad/architecture.md` last reconciled 2026-04-28, checked 2026-05-05, not stale.
+- Verified OGC upstream at `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`; requirement class file is `api/part1/standard/requirements/crud/requirements_class_crd.adoc`, identifier `/req/create-replace-delete`.
+- Probed GeoRobotix: `/conformance` declares `/conf/create-replace-delete`; `OPTIONS /systems` and `OPTIONS /systems/0mqcvdnfoca0` return `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`.
+- Added Sprint 12 OpenSpec detail for `REQ-ETS-PART1-010` and seven critical scenarios covering declaration, mutation safety gate, OPTIONS readiness, default lifecycle SKIP-before-POST, dependency wiring, and no-mutation smoke evidence.
+- Created `.harness/contracts/sprint-ets-12.yaml` and `epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md`.
+- Updated `_bmad/traceability.md`, `epics/epic-ets-02-part1-classes.md`, `.harness/handoffs/planner-handoff.yaml`, `ops/status.md`, and `ops/known-issues.md`.
+- Planning guardrail: default TeamEngine smoke MUST NOT issue IUT-bound POST/PUT/DELETE against GeoRobotix. Mutating lifecycle checks require `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`, and public GeoRobotix remains hard-denied even when those parameters are present.
+
+---
+
 ## 2026-05-05T20:49Z — Sprint ets-11 Quinn Gate 3.5
 
 **Triggered by user instruction**: Act as Quinn Gate 3.5 Evaluator for Sprint ets-11 commit `331f3ed1266767da4e45c7842d56c78d2a993f50`.

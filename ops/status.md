@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T20:56Z
+Last updated: 2026-05-05T21:19Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-11.yaml`
+- `.harness/contracts/sprint-ets-12.yaml`
 
 ## Current State
 
@@ -41,7 +41,36 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD at Sprint 11 Generator start: `5cdcdf4`
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-11-01` Generator complete; Quinn Gate 3.5 and Raze Gate 4 approved with concerns
-- Current sprint status: Sprint ets-11 AdvancedFiltering read-only subset gates reconciled; gate artifact commit is in progress
+- Current sprint status: Sprint ets-12 Create/Replace/Delete safety-gated systems subset planning gap-fix recheck is approved; Generator is next.
+
+## Sprint ets-12 Plan
+
+Create/Replace/Delete safety-gated systems subset:
+
+- Story: `epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md`
+- Contract: `.harness/contracts/sprint-ets-12.yaml`
+- OpenSpec: `REQ-ETS-PART1-010`, status SPECIFIED for Sprint 12
+- Scope: declaration-gated `/conf/create-replace-delete`, explicit mutation opt-in parameters, OPTIONS readiness preconditions, default lifecycle SKIP-before-POST, public GeoRobotix hard-denial, IUT-bound no-mutation log oracle, and `createreplacedelete -> systemfeatures` dependency wiring
+- Explicitly excluded: unguarded mutation against GeoRobotix, deployments/subdeployments/procedures/sampling-features/properties CRUD, system delete cascade, custom collection propagation, `text/uri-list`, update/PATCH, and Part 2
+- GeoRobotix planning state: `/conformance` declares `/conf/create-replace-delete`; `OPTIONS /systems` and `OPTIONS /systems/0mqcvdnfoca0` advertise POST/PUT/DELETE; this is readiness evidence only and is not permission to mutate the public smoke target
+
+Sprint 12 Generator guardrails:
+
+- Default TeamEngine smoke MUST NOT issue IUT-bound POST, PUT, or DELETE from the Create/Replace/Delete suite.
+- Lifecycle mutation assertions must SKIP before POST unless `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
+- Even when mutation parameters are present, known shared public GeoRobotix URLs are hard-denied before POST/PUT/DELETE.
+- OPTIONS checks may PASS only as non-mutating ETS readiness evidence, not OGC lifecycle conformance.
+- No-mutation smoke proof uses adjacent `Request method:` + `Request URI:` REST Assured log pairs filtered to the IUT base URL; TeamEngine control-plane POST is excluded.
+- Do not promote REQ-ETS-PART1-010 beyond PARTIAL-IMPLEMENTED after this sprint.
+- Do not implement `/conf/update` until the CRD safety gate is in place.
+
+Raze planning review:
+
+- Artifact: `.harness/evaluations/sprint-ets-12-plan-adversarial.yaml`
+- Verdict: `GAPS_FOUND` confidence 0.87
+- Required before Generator: separate OPTIONS readiness from OGC CRD lifecycle conformance; specify full mutation opt-in plumbing plus hard denial for public GeoRobotix; define an IUT-bound log oracle for no-mutation smoke evidence; reconcile stale Sprint 11 traceability/status drift
+- Gap-fix review: `.harness/evaluations/sprint-ets-12-plan-gapfix.yaml` verdict `GAPS_FOUND` confidence 0.84. GAP-001, GAP-002, and GAP-004 are closed; GAP-003 was partial because one OpenSpec acceptance-scenario line still required no POST/PUT/DELETE anywhere in the container log instead of the IUT-bound request-log oracle.
+- Final wording fix recheck: `.harness/evaluations/sprint-ets-12-plan-gapfix-2.yaml` verdict `APPROVE` confidence 0.93. OpenSpec now consistently uses the IUT-bound adjacent `Request method:` + `Request URI:` oracle, excludes TeamEngine control-plane POST, and the story broad scope sentence uses `IUT-bound`.
 
 ## Sprint ets-11 Plan
 
@@ -134,19 +163,16 @@ Gate Results:
 
 ## Next Action
 
-1. Start next planning cycle from the remaining Part 1 backlog: create-replace-delete or update require mutation-safety planning before Generator.
+1. Kick off Generator for `S-ETS-12-01`.
 2. When a declaring `/conf/advanced-filtering` IUT is available, rerun positive id/q/geom paths and record evidence.
 3. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
 
 ## Dirty Worktree Notes
 
-The repo already had unrelated modified scripts before this migration:
+Current dirty worktree is expected Sprint ets-12 planning/review documentation until the planning commit lands:
 
-- `scripts/credential-leak-e2e-test.sh`
-- `scripts/credential-leak-integration-test.sh`
-- `scripts/mvn-test-via-docker.sh`
-- `scripts/sabotage-test.sh`
-- `scripts/smoke-test.sh`
-- `scripts/stub-iut.sh`
+- Sprint 12 planning artifacts
+- Sprint 12 Raze planning evaluation
+- Ops metrics/changelog/status updates for this review
 
-The previously untracked `*:Zone.Identifier` files were removed on 2026-05-05 after explicit user instruction. Worktree was clean at Sprint 10 planning start and implementation start. No dirty files are expected after the Sprint 10 gate-close commit.
+Sprint 12 planning gaps are closed by Raze gap-fix-2 APPROVE 0.93; implementation code can start after the planning commit.

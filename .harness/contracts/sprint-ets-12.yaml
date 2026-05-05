@@ -1,0 +1,151 @@
+# Sprint 12 contract - create-replace-delete safety-gated systems subset
+# Created 2026-05-05 after Sprint 11 gates closed.
+
+sprint: "ets-12"
+sprint_name: "create-replace-delete-safety-gated-systems-subset"
+type: "feature-expansion"
+created: "2026-05-05T20:59:24Z"
+description: |
+  Sprint 12 implements one Part 1 class subset:
+
+  S-ETS-12-01 - Create/Replace/Delete safety-gated systems subset
+  (`/conf/create-replace-delete`) (P0/M).
+
+  Scope is PARTIAL for REQ-ETS-PART1-010:
+    - `/conformance` declares `/conf/create-replace-delete`, otherwise SKIP-with-reason.
+    - Default smoke MUST NOT issue IUT-bound POST, PUT, or DELETE.
+    - Add explicit mutation opt-in parameters: `mutation-tests-enabled=true`
+      and `mutation-iut-policy=dedicated-mutable-iut`.
+    - `OPTIONS /systems` readiness precondition records POST advertisement without issuing POST.
+    - `OPTIONS /systems/{id}` readiness precondition records PUT and DELETE advertisement without issuing PUT/DELETE.
+    - OPTIONS readiness evidence MUST NOT be reported as satisfying OGC lifecycle conformance.
+    - Systems lifecycle create/replace/delete assertion SKIPs by default before POST;
+      only an explicitly enabled dedicated mutable IUT may execute it.
+    - Runtime or structural dependency proof: `createreplacedelete` depends on `systemfeatures`.
+    - Separate default-smoke no-mutation evidence: failed=0 and no IUT-bound POST/PUT/DELETE request-log pairs from the CRD suite.
+
+  Explicitly excluded:
+    - unguarded mutation against GeoRobotix or any shared public IUT
+    - deployments, subdeployments, procedures, sampling features, and properties CRUD
+    - system delete cascade
+    - custom collection propagation and text/uri-list add-to-collection
+    - update/PATCH
+    - Part 2 mutation classes
+
+upstream_inputs:
+  - "Current ETS repo HEAD after Sprint 11 gates: 65d48db"
+  - ".harness/evaluations/sprint-ets-11-evaluator-gate.yaml (Quinn APPROVE_WITH_CONCERNS 0.90)"
+  - ".harness/evaluations/sprint-ets-11-adversarial-gate.yaml (Raze APPROVE_WITH_CONCERNS 0.90)"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md (REQ-ETS-PART1-010 SPECIFIED for Sprint 12)"
+  - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
+  - "OGC upstream opengeospatial/ogcapi-connected-systems commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+
+stories:
+  - id: "S-ETS-12-01"
+    title: "Create/Replace/Delete safety-gated systems subset - depends on SystemFeatures"
+    file: "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "systemfeatures"
+    parallelizable: false
+    rationale: |
+      Create/Replace/Delete is the next remaining Part 1 class. GeoRobotix declares the class
+      and advertises mutating methods, but it is a shared public demo target. Sprint 12 must
+      therefore establish mutation-safety plumbing and non-mutating readiness checks before
+      any future positive lifecycle execution against a dedicated mutable IUT.
+
+requirements:
+  new_reqs:
+    - "REQ-ETS-PART1-010 (Create/Replace/Delete Conformance Class /conf/create-replace-delete - SPECIFIED -> target PARTIAL-IMPLEMENTED for safety-gated systems subset)"
+  modified_reqs:
+    - "REQ-ETS-PART1-007..013 placeholder narrative narrowed to reflect Sprint 12 Create/Replace/Delete detail"
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-010-CRD-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART1-010-CRD-MUTATION-SAFETY-GATE-001"
+    - "SCENARIO-ETS-PART1-010-CRD-SYSTEMS-OPTIONS-001"
+    - "SCENARIO-ETS-PART1-010-CRD-SYSTEM-RESOURCE-OPTIONS-001"
+    - "SCENARIO-ETS-PART1-010-CRD-SYSTEM-LIFECYCLE-OPTIN-001"
+    - "SCENARIO-ETS-PART1-010-CRD-DEPENDENCY-SMOKE-001"
+    - "SCENARIO-ETS-PART1-010-CRD-SMOKE-NO-MUTATION-001"
+  normal: []
+
+success_criteria:
+  all_critical_scenarios_pass_or_skip_with_reason: true
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  no_regression: true
+  build_green_jdk17: true
+  smoke_test_green_against_georobotix: true
+  no_part2_work_in_sprint: true
+  zero_bare_assertionerror_in_conformance: true
+  worktree_not_polluted_at_gate: true
+  create_replace_delete_subset_implemented: true
+  create_replace_delete_testng_wired: true
+  create_replace_delete_lint_tests: true
+  mutation_opt_in_parameters_added: true
+  default_smoke_no_mutating_requests: true
+  lifecycle_skips_before_post_by_default: true
+  options_readiness_checks_non_mutating: true
+  options_not_lifecycle_conformance: true
+  public_georobotix_hard_denied_when_mutation_enabled: true
+  iut_bound_request_log_oracle_defined: true
+  smoke_failed_zero: true
+  spec_status_honesty_principle: true
+
+mutation_opt_in_parameters:
+  mutation_tests_enabled:
+    suite_parameter: "mutation-tests-enabled"
+    required_value: "true"
+  mutation_iut_policy:
+    suite_parameter: "mutation-iut-policy"
+    required_value: "dedicated-mutable-iut"
+  default_behavior: "Lifecycle mutation assertions SKIP before POST/PUT/DELETE."
+  end_to_end_wiring_required:
+    - "TestRunArg exposes mutation-tests-enabled and mutation-iut-policy."
+    - "SuiteAttribute stores both mutation controls."
+    - "SuiteFixtureListener copies suite parameters onto the TestNG suite."
+    - "TestNGController accepts the optional parameters without requiring them."
+    - "CTL exposes explicit mutation controls."
+    - "scripts/smoke-test.sh may forward SMOKE_MUTATION_TESTS_ENABLED and SMOKE_MUTATION_IUT_POLICY; default env leaves them unset."
+  hard_denies:
+    - "https://api.georobotix.io/ogc/t18/api"
+    - "Any IUT host equal to api.georobotix.io"
+  hard_deny_behavior: "If mutation tests are enabled against a hard-denied public IUT, lifecycle test SKIPs or FAILs before POST; it MUST NOT issue POST/PUT/DELETE."
+
+no_mutation_smoke_oracle:
+  description: "Default smoke must prove absence of IUT-bound mutation, not absence of every POST string in all logs."
+  method: "Parse adjacent `Request method:` and `Request URI:` pairs from REST Assured logs."
+  filter: "Only pairs whose URI starts with the IUT base URL are in scope."
+  pass_condition: "Zero in-scope pairs with method POST, PUT, or DELETE."
+  excluded: "TeamEngine control-plane POST that starts the suite run."
+
+evaluation_focus:
+  - "Generator must re-verify GeoRobotix /conformance for /conf/create-replace-delete before implementing."
+  - "Generator must not issue IUT-bound POST/PUT/DELETE during default smoke."
+  - "Raze should inspect TeamEngine container logs using adjacent Request method/Request URI pairs filtered to GeoRobotix-bound REST Assured requests."
+  - "Quinn should verify mutation opt-in parameters are present in TestRunArg/SuiteAttribute and default to disabled."
+  - "Quinn should verify CTL and smoke-script parameter wiring is closed by default."
+  - "For default GeoRobotix, lifecycle mutation tests must SKIP with reason before issuing POST."
+  - "Even with mutation parameters enabled, known shared public GeoRobotix URLs must be hard-denied before POST."
+  - "OPTIONS checks must be named and reported as readiness preconditions, not as OGC lifecycle conformance PASS."
+  - "Generator must keep full REQ-ETS-PART1-010 status PARTIAL-IMPLEMENTED."
+  - "Generator must not implement /conf/update or Part 2 mutation behavior."
+
+risk_register:
+  - id: "CRD-PUBLIC-IUT-MUTATION"
+    severity: "HIGH"
+    mitigation: "Default smoke disables lifecycle tests. Mutating methods require mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut."
+  - id: "CRD-READINESS-OVERCLAIM"
+    severity: "MEDIUM"
+    mitigation: "OPTIONS Allow evidence is readiness only, not lifecycle conformance PASS; lifecycle test remains SKIP by default."
+  - id: "CRD-CLEANUP-FAILURE"
+    severity: "MEDIUM"
+    mitigation: "Positive lifecycle execution remains skipped by default and must record best-effort cleanup if enabled."
+  - id: "UPDATE-SCOPE-CREEP"
+    severity: "LOW"
+    mitigation: "Contract excludes PATCH/update and Part 2 mutation classes."

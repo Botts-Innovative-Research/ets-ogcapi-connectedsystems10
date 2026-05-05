@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 11 Generator implemented AdvancedFiltering declaration-gated read-only subset | Last updated: 2026-05-05
+> Status: Active - Sprint 12 planned Create/Replace/Delete safety-gated systems subset | Last updated: 2026-05-05
 
 ## Goal
 Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with each `@Test` method mapped 1:1 to an OGC ATS assertion via the canonical requirement URI in the test's `description` attribute. Owns sub-deliverable 2 of the new ETS capability.
@@ -27,8 +27,8 @@ Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with e
 | S-ETS-07-02 | **(Sprint 7 Active)** Implement `/conf/sf` (Sampling Features) suite — depends on SystemFeatures; GeoRobotix /samplingFeatures HTTP 200 confirmed | **Active (Sprint 7)** | REQ-ETS-PART1-007 |
 | S-ETS-07-03 | **(Sprint 7 Active)** Implement `/conf/property` (Property Definitions) suite — depends on SystemFeatures; GeoRobotix /properties HTTP 200 confirmed | **Active (Sprint 7)** | REQ-ETS-PART1-008 |
 | S-ETS-08-02 | Implement `/conf/subdeployment` suite — first 3-deep Subdeployments→Deployments→SystemFeatures→Core chain | Done (Sprint 8, Quinn follow-up APPROVE_WITH_CONCERNS 0.91, Raze gap-fix APPROVE 0.94) | REQ-ETS-PART1-005 |
-| S-ETS-11-01 | Implement `/conf/advanced-filtering` suite - declaration-gated systems/common-resource read-only subset | Generator Complete - Pending Gates | REQ-ETS-PART1-009 |
-| S-ETS-07-02 | (placeholder) Implement `/conf/create-replace-delete` suite | Backlog | REQ-ETS-PART1-010 |
+| S-ETS-11-01 | Implement `/conf/advanced-filtering` suite - declaration-gated systems/common-resource read-only subset | Partial-Implemented (Sprint 11, Quinn/Raze APPROVE_WITH_CONCERNS) | REQ-ETS-PART1-009 |
+| S-ETS-12-01 | Implement `/conf/create-replace-delete` suite - safety-gated systems subset, no default public-IUT mutation | Planned (Sprint 12) | REQ-ETS-PART1-010 |
 | S-ETS-07-03 | (placeholder) Implement `/conf/update` suite | Backlog | REQ-ETS-PART1-011 |
 | S-ETS-09-01 | Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Partial-Implemented (Sprint 9, Quinn/Raze APPROVE_WITH_CONCERNS) | REQ-ETS-PART1-012 |
 | S-ETS-10-01 | Implement `/conf/sensorml` encoding suite - systems read-only subset, depends on SystemFeatures | Partial-Implemented (Sprint 10, Quinn APPROVE_WITH_CONCERNS, Raze APPROVE) | REQ-ETS-PART1-013 |

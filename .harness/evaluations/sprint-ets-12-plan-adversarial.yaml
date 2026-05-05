@@ -1,0 +1,90 @@
+agent: raze
+role: "Red Team / Adversarial Reviewer"
+artifact_type: planning_review
+sprint: "ets-12"
+sprint_name: "create-replace-delete-safety-gated-systems-subset"
+created: "2026-05-05T21:08:00Z"
+verdict: GAPS_FOUND
+confidence: 0.87
+planning_only: true
+docker_maven_e2e_rerun: false
+reviewed_scope:
+  - ".harness/contracts/sprint-ets-12.yaml"
+  - ".harness/handoffs/planner-handoff.yaml"
+  - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - "ops/status.md"
+  - "ops/known-issues.md"
+  - "ops/changelog.md"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/TestRunArg.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/SuiteAttribute.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/listener/SuiteFixtureListener.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/TestNGController.java"
+  - "src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl"
+  - "scripts/smoke-test.sh"
+upstream_source_check:
+  commit: "3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+  requirements_class_crd_adoc: "PASS - api/part1/standard/requirements/crud/requirements_class_crd.adoc has identifier /req/create-replace-delete and listed subrequirements match the plan."
+  clause_16_adoc: "PASS - clause_16_requirements_class_create_replace_delete.adoc maps Systems CREATE to /systems and REPLACE/DELETE to /systems/{id}; PATCH/update is not part of this class."
+findings:
+  - id: RAZE-ETS12-PLAN-GAP-001
+    severity: HIGH
+    title: "OPTIONS readiness checks are planned as @Tests but OPTIONS is not the OGC create/replace/delete assertion"
+    evidence:
+      - "Spec Sprint 12 coverage scope plans `OPTIONS /systems` and `OPTIONS /systems/{id}` @Tests as two of six Create/Replace/Delete tests."
+      - "Story Planned Test Surface items 3 and 4 require Allow: POST/PUT/DELETE without issuing mutating requests."
+      - "Upstream clause 16 `/req/create-replace-delete/system` requires CREATE via HTTP POST at `/systems` and REPLACE/DELETE via HTTP PUT/DELETE at `/systems/{id}`; it does not define OPTIONS advertisement as conformance."
+    impact: "A declaring IUT can produce PASS results for Create/Replace/Delete readiness while zero normative lifecycle operations have run. That is a false PASS risk if reports or traceability read these as OGC CRD assertion closure."
+    required_fix: "Reclassify OPTIONS checks as explicit ETS safety/readiness preconditions in names, descriptions, story, and traceability. Do not present their PASS status as satisfying `/req/create-replace-delete/system`; keep lifecycle conformance SKIP by default and PARTIAL overall until POST/PUT/DELETE run against a dedicated mutable IUT."
+  - id: RAZE-ETS12-PLAN-GAP-002
+    severity: HIGH
+    title: "Mutation opt-in plumbing is underspecified for TeamEngine and public-IUT hard denial"
+    evidence:
+      - "Plan requires `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`, and mentions TestRunArg/SuiteAttribute/SuiteFixtureListener propagation."
+      - "Current `TestNGController.validateTestRunArgs` only requires `iut`; current CTL form emits only `iut` and `ics`; current smoke script only forwards optional `auth-credential`."
+      - "Story DoD says the implementation refuses GeoRobotix only 'If opt-in is implemented in Generator', making the public-IUT denial sound conditional."
+    impact: "The safety gate can be half-wired: invisible from TeamEngine UI/REST smoke, or enabled by self-attestation while still targeting GeoRobotix. That leaves both false SKIP coverage and accidental public-IUT mutation risk."
+    required_fix: "Make end-to-end parameter paths explicit and mandatory: TestRunArg, SuiteAttribute, SuiteFixtureListener, TestNGController validation semantics, CTL/TeamEngine REST inputs if supported, and smoke-script env forwarding if smoke is allowed to exercise opt-in. Add a hard deny for known shared public GeoRobotix URLs whenever mutation tests are enabled, regardless of the policy string."
+  - id: RAZE-ETS12-PLAN-GAP-003
+    severity: MEDIUM
+    title: "No-mutation smoke evidence needs a precise IUT-bound request log oracle"
+    evidence:
+      - "Contract requires 'no POST/PUT/DELETE from the CRD suite' and asks Raze to inspect TeamEngine container logs."
+      - "scripts/smoke-test.sh itself logs `step 6/8 - POST suite/ogcapi-connectedsystems10/run`, which is a TeamEngine control-plane POST, not an IUT mutation."
+      - "Container logs include REST-Assured request records with `Request method:` and `Request URI:` lines; these can distinguish GeoRobotix-bound requests from control-plane execution."
+    impact: "A naive grep for POST/PUT/DELETE can either fail because of the TeamEngine control POST or pass without proving the mutating method was absent for GeoRobotix-bound REST-Assured requests."
+    required_fix: "Define the smoke oracle as adjacent `Request method` plus `Request URI` pairs where the URI starts with the IUT base URL, and require zero POST/PUT/DELETE pairs for GeoRobotix in default smoke. Keep TeamEngine control-plane POST out of that check."
+  - id: RAZE-ETS12-PLAN-GAP-004
+    severity: MEDIUM
+    title: "Sprint 11 traceability/status reconciliation is inconsistent before Sprint 12 starts"
+    evidence:
+      - "_bmad/traceability.md still says Sprint 11 AdvancedFiltering is 'pending Raze/Quinn gates'."
+      - "epics/epic-ets-02-part1-classes.md and ops/status.md say Sprint 11 Quinn/Raze gates approved with concerns."
+      - "ops/status.md Dirty Worktree Notes still says no dirty files are expected after the Sprint 10 gate-close commit, which is stale during Sprint 12 planning."
+    impact: "The handoff tells Generator two different states for the previous sprint and leaves stale worktree guidance. That weakens spec-anchored traceability before implementing a higher-risk mutation class."
+    required_fix: "Update Sprint 11 traceability to the gate-closed state with exact Quinn/Raze evidence, and refresh ops/status Dirty Worktree Notes for the current Sprint 12 planning worktree."
+concerns:
+  - id: RAZE-ETS12-PLAN-CONCERN-001
+    severity: LOW
+    title: "TestNG dependency planning is broadly correct but the contract story dependency field is empty"
+    evidence:
+      - "The plan consistently requires `<group name=\"createreplacedelete\" depends-on=\"systemfeatures\"/>` plus three VerifyTestNGSuiteDependency lint tests."
+      - ".harness/contracts/sprint-ets-12.yaml has `depends_on: []` for S-ETS-12-01 despite the title and story saying it depends on SystemFeatures."
+    recommendation: "Set the contract story dependency metadata to SystemFeatures or explain that `depends_on` means inter-story dependency only."
+  - id: RAZE-ETS12-PLAN-CONCERN-002
+    severity: LOW
+    title: "No update/PATCH or Part 2 implementation scope leaked into Sprint 12"
+    evidence:
+      - "Contract, story, handoff, ops/status, and known-issues explicitly exclude update/PATCH and Part 2."
+      - "The only PATCH/Part 2 hits in planning scope are exclusion/deferred-scope references."
+required_fixes:
+  - "Fix RAZE-ETS12-PLAN-GAP-001 before Generator: separate OPTIONS readiness from OGC CRD lifecycle conformance in names/descriptions/traceability."
+  - "Fix RAZE-ETS12-PLAN-GAP-002 before Generator: specify full closed-by-default mutation parameter wiring and a hard deny for public GeoRobotix when mutation is enabled."
+  - "Fix RAZE-ETS12-PLAN-GAP-003 before Generator or gate: define an IUT-bound request-log oracle for default smoke no-mutation proof."
+  - "Fix RAZE-ETS12-PLAN-GAP-004 before Generator handoff: reconcile Sprint 11 traceability/status and stale dirty-worktree notes."
+positive_observations:
+  - "The OGC source path, identifier `/req/create-replace-delete`, inherited OGC API Features Part 4 URI, and listed CRD subrequirements match upstream at the cited commit."
+  - "The plan repeatedly states that default smoke must not issue POST/PUT/DELETE against GeoRobotix and that OPTIONS evidence is readiness only."
+  - "The scope correctly excludes update/PATCH, Part 2, non-system resource lifecycles, cascade delete, collection propagation, and text/uri-list."

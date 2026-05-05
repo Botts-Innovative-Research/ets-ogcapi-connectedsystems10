@@ -1,0 +1,112 @@
+agent: adversarial-reviewer
+agent_role: raze
+status: complete
+created_at: "2026-05-05T20:35:07Z"
+review_type: implementation
+sprint: "ets-11"
+story: "S-ETS-11-01"
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.89
+
+reviewed_scope:
+  summary: >
+    Static adversarial review of the current uncommitted Sprint ets-11 Generator
+    implementation for the AdvancedFiltering systems/common-resource read-only
+    subset. Docker, Maven, and E2E were not rerun per user instruction; existing
+    surefire and TeamEngine artifacts were inspected.
+  implementation_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  docs_and_traceability:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-02-part1-classes.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - ".harness/handoffs/generator-handoff.yaml"
+  evidence_artifacts:
+    - "target/surefire-reports/org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency.txt"
+    - "target/surefire-reports/TEST-org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency.xml"
+    - "/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    - "/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log"
+
+findings:
+  - id: RAZE-ETS11-CONCERN-001
+    severity: LOW
+    title: "Default smoke cannot execute ID_List/id/keyword positive paths because GeoRobotix does not declare AdvancedFiltering"
+    status: open_concern
+    evidence:
+      - "Smoke XML records total=63, passed=48, failed=0, skipped=15."
+      - "All 6 AdvancedFiltering @Tests are SKIP because @BeforeClass throws SkipException when /conf/advanced-filtering is absent."
+      - "Static code review confirms the intended declaring-IUT behavior is present: id and keyword tests fail on empty filtered results after seed selection, and skip only when seed id/keyword cannot be selected."
+    impact: >
+      This is not a blocking implementation defect for the declared Sprint 11 scope,
+      because the story and contract explicitly require SKIP-honesty for the current
+      GeoRobotix target. It remains a residual evidence gap until a declaring IUT is
+      available or targeted fixtures are added in a future sprint.
+    required_fix: null
+
+positive_findings:
+  - id: RAZE-ETS11-PASS-001
+    area: "False PASS when /conf/advanced-filtering is absent"
+    evidence:
+      - "AdvancedFilteringTests.fetchAdvancedFilteringInputs reads /conformance and throws SkipException before seed/query checks when the class URI is absent."
+      - "Smoke XML line evidence shows the skip reason: IUT does not declare the CS API AdvancedFiltering conformance class; undeclared query behavior is not PASS evidence."
+      - "No AdvancedFiltering test is reported PASS in the provided smoke artifact."
+  - id: RAZE-ETS11-PASS-002
+    area: "Non-vacuous id and keyword behavior for declaring IUTs"
+    evidence:
+      - "systemsFilterById selects a seed System id, requests /systems?id=<seed-id>, fails empty items, and fails any returned item whose id differs."
+      - "systemsFilterByKeyword selects a seed keyword from name/description, requests /systems?q=<keyword>, fails empty items, and requires keyword evidence in returned name/description."
+      - "Both methods SKIP only when seed id or keyword cannot be selected."
+  - id: RAZE-ETS11-PASS-003
+    area: "ID_List helper examples"
+    evidence:
+      - "advancedFilteringIdListSchema contains the planned valid examples: one local id, two local ids, one UID, two UIDs, and UID-prefix wildcard."
+      - "The method contains the planned invalid examples: empty string, comma-only, mixed local/UID, and UID with embedded space."
+      - "The helper is local-only and docs do not overclaim endpoint-wide query semantics."
+  - id: RAZE-ETS11-PASS-004
+    area: "No mutation scope creep"
+    evidence:
+      - "Targeted grep found only REST Assured GET calls in the AdvancedFiltering implementation."
+      - "Docs keep create-replace-delete, update, Part 2, full association filters, full geometry semantics, combined filters, and endpoint parity out of scope."
+  - id: RAZE-ETS11-PASS-005
+    area: "TestNG wiring and lint tests"
+    evidence:
+      - "testng.xml declares <group name=\"advancedfiltering\" depends-on=\"systemfeatures\"/> and co-locates AdvancedFilteringTests with SystemFeatures."
+      - "VerifyTestNGSuiteDependency adds tests for group dependency, method group tagging, and class co-location."
+      - "Surefire evidence: VerifyTestNGSuiteDependency ran 31 tests with 0 failures/errors, including the three AdvancedFiltering lint tests."
+  - id: RAZE-ETS11-PASS-006
+    area: "Docs, status, and test-results consistency"
+    evidence:
+      - "OpenSpec, story, traceability, epic, status, changelog, known issues, test-results, and generator handoff consistently mark Sprint 11 as PARTIAL-IMPLEMENTED or Generator Complete pending gates."
+      - "The smoke evidence is recorded consistently as 63 total / 48 passed / 0 failed / 15 skipped."
+      - "Known issues preserve the remaining AdvancedFiltering scope instead of claiming full closure."
+
+required_fixes: []
+
+recommended_followups:
+  - id: RAZE-ETS11-FOLLOWUP-001
+    recommendation: >
+      When a declaring IUT or hermetic fixture is available, add positive-path evidence
+      for ID_List helper execution and /systems id/keyword filter failures on empty
+      filtered results. This should not block Sprint 11 Generator approval.
+
+verification:
+  reran_docker: false
+  reran_maven: false
+  reran_e2e: false
+  rationale: "User explicitly requested static review and existing artifacts only unless needed; artifacts were sufficient."
+  existing_maven_evidence:
+    source: "target/surefire-reports"
+    summary: "98 tests / 0 failures / 0 errors / 3 skipped per docs; VerifyTestNGSuiteDependency 31 / 0 / 0 / 0 with three AdvancedFiltering lint testcases present."
+  existing_smoke_evidence:
+    report: "/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    summary: "63 total / 48 passed / 0 failed / 15 skipped"
+    advanced_filtering_outcome: "6 SKIP with explicit missing /conf/advanced-filtering reason; 0 PASS."
+
+required_fixes_before_completion: []

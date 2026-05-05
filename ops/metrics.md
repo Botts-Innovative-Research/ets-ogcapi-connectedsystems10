@@ -11,6 +11,7 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 132 | 2026-05-05T20:32:52Z | 2026-05-05T20:36:39Z | 3m47s | User instruction: Kick off the Generator. Continued Sprint ets-11 AdvancedFiltering Generator implementation through mandatory Raze implementation review; reconciled specs/story/traceability/ops artifacts; committed after formatter, Maven, and TeamEngine smoke evidence. |
 | 131 | 2026-05-05T19:32:08Z | 2026-05-05T19:47:34Z | 15m26s | User instruction: Start the next step. Planned Sprint ets-11 AdvancedFiltering read-only subset after Sprint 10 gates; updated OpenSpec, story, contract, planner handoff, traceability, epic, status, changelog, and known issues. Raze plan review found GAP-1/GAP-2/CONCERN-1; applied non-vacuous id/keyword, explicit ID_List examples, and dependency/smoke separation fixes; Raze gap-fix review APPROVE 0.92. |
 | 130 | 2026-05-05T19:44:50Z | 2026-05-05T19:47:05Z | 2m15s | User instruction: Act as Red Team / Raze for Sprint ets-11 planning gap-fix review after prior GAP-1, GAP-2, and CONCERN-1; reviewed current uncommitted planning/docs changes only with targeted static checks, did not run Docker/Maven/E2E, wrote `.harness/evaluations/sprint-ets-11-plan-gapfix.yaml` APPROVE 0.92, and updated ops status/changelog. |
 | 129 | 2026-05-05T19:38:15Z | 2026-05-05T19:41:18Z | 3m03s | User instruction: Act as Red Team / Raze for current uncommitted Sprint ets-11 AdvancedFiltering planning changes; performed planning-only review without Docker/Maven/E2E, wrote `.harness/evaluations/sprint-ets-11-plan-adversarial.yaml` with `GAPS_FOUND` 0.88, and updated ops status/changelog with required planning fixes before Generator. |
@@ -147,6 +148,7 @@
 
 | Agent | Tokens | Duration | Task |
 |-------|--------|----------|------|
+| Raze-Sprint11-Implementation | not exposed by agent result metadata | ~2m | Adversarial implementation review of Sprint ets-11 AdvancedFiltering Generator work. Verdict APPROVE_WITH_CONCERNS 0.89; wrote `.harness/evaluations/sprint-ets-11-adversarial-implementation.yaml`; no Docker/Maven/E2E rerun. |
 | Raze-Sprint11-Plan-Gapfix | not exposed by agent result metadata | ~2m | Adversarial gap-fix review of Sprint ets-11 planning. Verdict APPROVE 0.92; wrote `.harness/evaluations/sprint-ets-11-plan-gapfix.yaml`; no Docker/Maven/E2E run. |
 | Raze-Sprint11-Plan | not exposed by agent result metadata | ~3m | Adversarial review of Sprint ets-11 AdvancedFiltering planning. Verdict GAPS_FOUND 0.88; wrote `.harness/evaluations/sprint-ets-11-plan-adversarial.yaml`; no Docker/Maven/E2E run. |
 | Quinn-Sprint10-Gate | not exposed by agent result metadata | ~6m | Independent Sprint ets-10 Gate 3.5 evaluator. Verdict APPROVE_WITH_CONCERNS 0.91; Maven `95/0/0/3`; smoke `57/48/0/9`; wrote `.harness/evaluations/sprint-ets-10-evaluator-gate.yaml`. |

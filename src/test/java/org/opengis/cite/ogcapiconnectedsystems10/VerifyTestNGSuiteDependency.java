@@ -113,6 +113,12 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String SENSORML_GROUP = "sensorml";
 
+	/**
+	 * Sprint 11 S-ETS-11-01 — AdvancedFiltering systems/common-resource read-only subset
+	 * group (depends on SystemFeatures).
+	 */
+	private static final String ADVANCEDFILTERING_GROUP = "advancedfiltering";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -152,6 +158,10 @@ public class VerifyTestNGSuiteDependency {
 	/** Sprint 10 S-ETS-10-01 — SensorML class set for structural assertions. */
 	private static final List<Class<?>> SENSORML_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests.class);
+
+	/** Sprint 11 S-ETS-11-01 — AdvancedFiltering class set for structural assertions. */
+	private static final List<Class<?>> ADVANCEDFILTERING_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -1115,6 +1125,105 @@ public class VerifyTestNGSuiteDependency {
 				"SystemFeatures (" + systemFeaturesClassNames + ") and SensorML (" + sensorMlClassNames
 						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
 						+ "(SensorML → SystemFeatures → Core) resolves within scope. See Sprint 10 S-ETS-10-01.",
+				coAlloc);
+	}
+
+	// ===== Sprint 11 S-ETS-11-01 — AdvancedFiltering group =====
+	// AdvancedFiltering systems/common-resource read-only subset depends on
+	// SystemFeatures
+	// because it validates /systems query behavior. This is intentionally a PARTIAL
+	// implementation of REQ-ETS-PART1-009.
+
+	/**
+	 * Sprint 11 S-ETS-11-01 (REQ-ETS-PART1-009): the canonical testng.xml SHALL declare
+	 * {@code <group name="advancedfiltering" depends-on="systemfeatures"/>} so
+	 * AdvancedFiltering tests cascade-SKIP when the SystemFeatures prerequisite fails.
+	 */
+	@org.junit.Test
+	public void testAdvancedFilteringGroupDependsOnSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(ADVANCEDFILTERING_GROUP)) {
+				String dependsOn = deps.get(ADVANCEDFILTERING_GROUP);
+				assertNotNull("group '" + ADVANCEDFILTERING_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + ADVANCEDFILTERING_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue("testng.xml does not declare <group name=\"" + ADVANCEDFILTERING_GROUP + "\" depends-on=\""
+				+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 11 S-ETS-11-01. The AdvancedFiltering "
+				+ "systems/common-resource read-only subset requires SystemFeatures as its direct prerequisite.",
+				foundDependency);
+	}
+
+	/**
+	 * Sprint 11 S-ETS-11-01: every AdvancedFiltering @Test method SHALL carry
+	 * {@code groups = "advancedfiltering"} so the suite-level dependency declaration has
+	 * tagged methods to resolve against.
+	 */
+	@org.junit.Test
+	public void testEveryAdvancedFilteringTestMethodCarriesAdvancedFilteringGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalAdvancedFiltering = 0;
+		for (Class<?> c : ADVANCEDFILTERING_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalAdvancedFiltering++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(ADVANCEDFILTERING_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in AdvancedFiltering conformance classes; found 0",
+				totalAdvancedFiltering > 0);
+		assertTrue("AdvancedFiltering @Test methods missing groups=\"" + ADVANCEDFILTERING_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 11 S-ETS-11-01: AdvancedFiltering classes MUST be co-located in the SAME
+	 * {@code <test>} block as SystemFeatures so the group-dependency cascade resolves
+	 * within TestNG's test-scoped dependency map.
+	 */
+	@org.junit.Test
+	public void testAdvancedFilteringCoLocatedWithSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> advancedFilteringClassNames = new HashSet<>();
+		for (Class<?> c : ADVANCEDFILTERING_CLASSES) {
+			advancedFilteringClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAnyAdvancedFiltering = !java.util.Collections.disjoint(xtClasses, advancedFilteringClassNames);
+			if (hasAllSystemFeatures && hasAnyAdvancedFiltering) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue("SystemFeatures (" + systemFeaturesClassNames + ") and AdvancedFiltering ("
+				+ advancedFilteringClassNames
+				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
+				+ "(AdvancedFiltering → SystemFeatures → Core) resolves within scope. See Sprint 11 S-ETS-11-01.",
 				coAlloc);
 	}
 

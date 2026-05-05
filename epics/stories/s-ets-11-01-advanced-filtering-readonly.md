@@ -1,7 +1,7 @@
 # Story S-ETS-11-01: AdvancedFiltering Read-Only Subset
 
 > Sprint: ets-11
-> Status: Planned
+> Status: Generator Complete - Pending Raze/Quinn Gates
 > Priority: P0
 > Complexity: M
 > Epic: epic-ets-02-part1-classes
@@ -78,19 +78,28 @@ AdvancedFiltering depends on SystemFeatures:
 
 ## Definition of Done
 
-- [ ] `AdvancedFilteringTests.java` added with the six planned read-only @Tests.
-- [ ] Every AdvancedFiltering @Test has `groups = "advancedfiltering"`.
-- [ ] Every AdvancedFiltering @Test `description` includes the OGC requirement URI and `SCENARIO-ETS-PART1-009-*` reference.
-- [ ] `testng.xml` declares `advancedfiltering` depends on `systemfeatures`.
-- [ ] `VerifyTestNGSuiteDependency` adds three AdvancedFiltering lint tests: group dependency, method group tagging, and class co-location.
-- [ ] No POST/PUT/PATCH/DELETE calls are introduced.
-- [ ] ID and keyword filter tests fail, not pass, on empty filtered results after selecting seed data.
-- [ ] Default smoke no-regression totals are documented separately from dependency cascade evidence.
-- [ ] `bash scripts/mvn-test-via-docker.sh` passes.
-- [ ] `scripts/smoke-test.sh` passes from a /tmp clone with `SMOKE_OUTPUT_DIR` outside the worktree.
-- [ ] Smoke total is at least 63 with failed=0.
-- [ ] OpenSpec, story status, traceability, ops status, changelog, and test-results are reconciled after implementation.
-- [ ] Raze implementation review is run before reporting completion.
+- [x] `AdvancedFilteringTests.java` added with the six planned read-only @Tests.
+- [x] Every AdvancedFiltering @Test has `groups = "advancedfiltering"`.
+- [x] Every AdvancedFiltering @Test `description` includes the OGC requirement URI and `SCENARIO-ETS-PART1-009-*` reference.
+- [x] `testng.xml` declares `advancedfiltering` depends on `systemfeatures`.
+- [x] `VerifyTestNGSuiteDependency` adds three AdvancedFiltering lint tests: group dependency, method group tagging, and class co-location.
+- [x] No POST/PUT/PATCH/DELETE calls are introduced.
+- [x] ID and keyword filter tests fail, not pass, on empty filtered results after selecting seed data.
+- [x] Default smoke no-regression totals are documented separately from dependency cascade evidence.
+- [x] `bash scripts/mvn-test-via-docker.sh` passes.
+- [x] `scripts/smoke-test.sh` passes from a /tmp clone with `SMOKE_OUTPUT_DIR` outside the worktree.
+- [x] Smoke total is at least 63 with failed=0.
+- [x] OpenSpec, story status, traceability, ops status, changelog, and test-results are reconciled after implementation.
+- [x] Raze implementation review is run before reporting completion.
+
+## Implementation Notes
+
+- Added `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests`.
+- Added TestNG group wiring: `<group name="advancedfiltering" depends-on="systemfeatures"/>`.
+- Added three structural lint tests in `VerifyTestNGSuiteDependency`: group dependency, method group tagging, and co-location with SystemFeatures.
+- Re-verified GeoRobotix `/conformance` on 2026-05-05: `/conf/advanced-filtering` is absent.
+- Default TeamEngine smoke therefore reports all 6 AdvancedFiltering @Tests as SKIP with reason; undeclared query behavior is not counted as PASS.
+- Verification: Java formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke `63 total / 48 passed / 0 failed / 15 skipped`.
 
 ## Out Of Scope
 

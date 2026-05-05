@@ -87,7 +87,13 @@
        fails. This sprint intentionally leaves mediatype-write, relation-types,
        deployment/procedure/property schema/mapping, and full SensorML 3.0 schema
        validation open. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml; OGC 19-072 /conf/common)">
+  <!-- Sprint 11 S-ETS-11-01 (REQ-ETS-PART1-009): AdvancedFiltering group added as a
+       PARTIAL systems/common-resource read-only subset. AdvancedFiltering depends-on
+       "systemfeatures" because the subset validates /systems query behavior and must
+       cascade-SKIP if SystemFeatures fails. Current default smoke target does not
+       declare /conf/advanced-filtering, so this class is declaration-gated and
+       SKIP-honest until a declaring IUT is used. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -99,6 +105,7 @@
         <group name="subdeployments" depends-on="deployments"/>
         <group name="geojson" depends-on="systemfeatures"/>
         <group name="sensorml" depends-on="systemfeatures"/>
+        <group name="advancedfiltering" depends-on="systemfeatures"/>
       </dependencies>
     </groups>
     <classes>
@@ -116,6 +123,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

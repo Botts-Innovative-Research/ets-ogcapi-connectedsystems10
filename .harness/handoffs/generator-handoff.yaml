@@ -1,37 +1,36 @@
 agent: generator
 agent_role: dana
 status: complete
-sprint_number: "ets-10"
+sprint_number: "ets-11"
 sprint_run: "1 of 1"
-sprint_run_scope: ["S-ETS-10-01"]
-supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 9 close 2026-05-05T15:45:27Z)"
-started_at: "2026-05-05T18:39:22Z"
-finished_at: "2026-05-05T18:55:42Z"
+sprint_run_scope: ["S-ETS-11-01"]
+supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 10 close 2026-05-05T18:55:42Z)"
+started_at: "2026-05-05T20:20:02Z"
+finished_at: "2026-05-05T20:28:12Z"
 sprint_complete_after_run: true
 
 run_summary:
   status: complete
   story:
-    id: "S-ETS-10-01"
-    title: "SensorML systems read-only subset"
+    id: "S-ETS-11-01"
+    title: "AdvancedFiltering systems/common-resource read-only subset"
     status: "PARTIAL-IMPLEMENTED"
     scope_closed:
-      - "/conf/sensorml declaration check"
-      - "system SensorML representation discovery through direct Accept or explicit application/sml+json alternate link"
-      - "HTTP 200 + parseable SensorML JSON representation fetch"
-      - "minimal SensorML system type and identity shape"
-      - "CS API System id/uid to SensorML id/uniqueId/uid mapping sanity check"
-      - "TestNG sensorml group dependency on systemfeatures"
+      - "/conf/advanced-filtering declaration gate with SKIP-with-reason when absent"
+      - "local ID_List helper examples for homogeneous local IDs, homogeneous UIDs, UID-prefix wildcard, empty/malformed rejection, and mixed local/UID rejection"
+      - "/systems?id=<seed-id> non-empty result and selected-id preservation for declaring IUTs"
+      - "/systems?q=<seed-keyword> non-empty result and name/description keyword evidence for declaring IUTs"
+      - "/systems?geom=<broad WKT polygon> HTTP 200 + JSON collection-shape smoke for declaring IUTs"
+      - "TestNG advancedfiltering group dependency on systemfeatures"
     scope_open:
-      - "/req/sensorml/mediatype-write"
-      - "/req/sensorml/relation-types"
-      - "/req/sensorml/deployment-schema and deployment-mappings"
-      - "/req/sensorml/procedure-schema, procedure-sml-class, and procedure-mappings"
-      - "/req/sensorml/property-schema and property-mappings"
-      - "full SensorML 3.0 JSON Schema validation"
-      - "AdvancedFiltering, create-replace-delete, Update, and Part 2"
+      - "create-replace-delete and update mutation behavior"
+      - "Part 2 query requirements"
+      - "full association filters across deployments, procedures, sampling features, properties, and all system association parameters"
+      - "full geometry intersection correctness"
+      - "combined-filter truth-table validation"
+      - "endpoint parity across every CS API resource endpoint"
     files_changed:
-      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringTests.java"
       - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
       - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
 
@@ -42,22 +41,19 @@ verification:
   mvn_via_docker:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "Tests run: 95, Failures: 0, Errors: 0, Skipped: 3"
+    surefire: "Tests run: 98, Failures: 0, Errors: 0, Skipped: 3"
   teamengine_smoke:
-    clone: "/tmp/sprint-ets-10-generator-smoke-git-r2"
-    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2 bash scripts/smoke-test.sh"
+    clone: "/tmp/sprint-ets-11-generator-smoke"
+    command: "SMOKE_CONTAINER_NAME=sprint-ets-11-generator-smoke SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results bash scripts/smoke-test.sh"
     result: "PASS"
-    testng: "total=57 passed=48 failed=0 skipped=9"
-    report: "/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
-    log: "/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2/s-ets-01-03-teamengine-container-2026-05-05.log"
+    testng: "total=63 passed=48 failed=0 skipped=15"
+    report: "/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    log: "/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log"
 
 iut_state:
-  georobotix_conformance: "declares CS API /conf/sensorml"
-  systems_accept_sml_json: "HTTP 200, Content-Type application/json, top-level items wrapper; not counted as SensorML PASS"
-  selected_system: "0mqcvdnfoca0"
-  sensorml_runtime_source: "application/sml+json alternate link"
-  sensorml_runtime_uri: "https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3"
-  sensorml_runtime_outcome: "6 PASS; fetched body type PhysicalSystem, id 0mqcvdnfoca0, uniqueId urn:osh:sensor:uas:predator001-RT"
+  georobotix_conformance: "does not declare CS API /conf/advanced-filtering; declares create-replace-delete, geojson, and sensorml"
+  advanced_filtering_runtime_outcome: "6 SKIP with reason; no undeclared query behavior counted as PASS"
+  smoke_total_delta: "Sprint 10 baseline 57 -> Sprint 11 Generator 63 (6 AdvancedFiltering @Tests)"
 
-next_agent: "evaluator"
-next_action: "Run independent Quinn + Raze Sprint 10 gates, with Raze checking scope honesty and alternate-link fallback claims."
+next_agent: "adversarial-reviewer"
+next_action: "Run Raze implementation review before reporting completion; then run independent Quinn + Raze Sprint 11 gates."

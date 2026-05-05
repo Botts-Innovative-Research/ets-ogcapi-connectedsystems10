@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T19:46Z
+Last updated: 2026-05-05T20:35Z
 
 ## Fresh-Session Entry Point
 
@@ -38,10 +38,10 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD at Sprint 11 planning start: `58d70f5`
+- ETS HEAD at Sprint 11 Generator start: `5cdcdf4`
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-10-01` Generator complete; Quinn gate approved with concerns and Raze Gate 4 approved
-- Current sprint status: Sprint ets-11 AdvancedFiltering read-only subset planned; Raze planning gap-fix review approved locally and pending commit
+- Current sprint status: Sprint ets-11 AdvancedFiltering read-only subset Generator complete; Raze implementation review approved with concerns and commit plus independent Quinn/Raze gates are next
 
 ## Sprint ets-11 Plan
 
@@ -62,6 +62,24 @@ Sprint 11 Generator guardrails:
 - All AdvancedFiltering tests must SKIP-with-reason when `/conf/advanced-filtering` is absent.
 - Do not add POST/PUT/PATCH/DELETE requests.
 - Do not promote REQ-ETS-PART1-009 beyond PARTIAL-IMPLEMENTED after this sprint.
+
+## Sprint ets-11 Generator Evidence
+
+AdvancedFiltering systems/common-resource read-only subset:
+
+- `AdvancedFilteringTests.java` added with 6 read-only @Tests.
+- `testng.xml` wires `<group name="advancedfiltering" depends-on="systemfeatures"/>`.
+- `VerifyTestNGSuiteDependency` adds 3 AdvancedFiltering lint tests.
+- Current GeoRobotix `/conformance` does not declare `/conf/advanced-filtering`; all 6 AdvancedFiltering @Tests SKIP-with-reason in default smoke.
+- No POST/PUT/PATCH/DELETE calls were introduced.
+
+Verification:
+
+- Java formatter via Docker Maven - BUILD SUCCESS
+- `bash scripts/mvn-test-via-docker.sh` - BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`
+- TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` - `63 total / 48 passed / 0 failed / 15 skipped`
+- Smoke report: `/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml`
+- Container log: `/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log`
 
 ## Sprint ets-10 Evidence
 
@@ -114,10 +132,8 @@ Gate Results:
 
 ## Next Action
 
-1. Commit the Sprint ets-11 planning set after final static checks.
-2. Kick off Generator for Sprint ets-11 `S-ETS-11-01`.
-3. Run Docker Maven and TeamEngine smoke from `/tmp` clones after implementation.
-4. Run Quinn and Raze gates before closing Sprint 11.
+1. Commit Sprint ets-11 Generator implementation.
+2. Run independent Quinn and Raze gates before closing Sprint 11.
 
 ## Dirty Worktree Notes
 

@@ -2,6 +2,34 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T20:35Z — Sprint ets-11 Raze implementation review
+
+**Triggered by user instruction**: Act as Red Team / Raze for current uncommitted Sprint ets-11 AdvancedFiltering Generator implementation.
+
+- Performed static adversarial review and inspected existing Maven/smoke artifacts only; did not rerun Docker, Maven, or E2E.
+- Wrote `.harness/evaluations/sprint-ets-11-adversarial-implementation.yaml` with verdict `APPROVE_WITH_CONCERNS` and confidence `0.89`.
+- Confirmed no false PASS when `/conf/advanced-filtering` is absent: smoke artifact `/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml` reports `63 total / 48 passed / 0 failed / 15 skipped`, with all 6 AdvancedFiltering tests SKIP-with-reason.
+- Confirmed static implementation evidence for non-vacuous declaring-IUT id/keyword behavior, explicit ID_List helper examples, no mutation calls, TestNG wiring/lint tests, and docs/status/test-results consistency.
+- Recorded one LOW concern: current GeoRobotix smoke cannot execute positive AdvancedFiltering paths because GeoRobotix does not declare the class; no required fixes before gates.
+
+---
+
+## 2026-05-05T20:28Z — Sprint ets-11 AdvancedFiltering Generator implementation
+
+**Triggered by user instruction**: "Kick of the Generator."
+
+- Implemented `S-ETS-11-01` as a PARTIAL AdvancedFiltering systems/common-resource read-only subset.
+- Added `AdvancedFilteringTests.java` with 6 read-only @Tests for `/conf/advanced-filtering` declaration, explicit local `ID_List` helper examples, `/systems?id=<seed-id>`, `/systems?q=<seed-keyword>`, `/systems?geom=<broad WKT polygon>` smoke shape, and dependency tracing.
+- Wired `testng.xml` with `<group name="advancedfiltering" depends-on="systemfeatures"/>` and added `AdvancedFilteringTests` to the consolidated Part 1 suite block.
+- Added three `VerifyTestNGSuiteDependency` lint tests for AdvancedFiltering group dependency, method group tagging, and co-location with SystemFeatures.
+- Re-verified GeoRobotix `/conformance`: `/conf/advanced-filtering` is absent, while `/conf/create-replace-delete`, `/conf/geojson`, and `/conf/sensorml` are present.
+- Verified no AdvancedFiltering POST/PUT/PATCH/DELETE calls were introduced.
+- Verification: Java formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external output reported `63 total / 48 passed / 0 failed / 15 skipped`.
+- AdvancedFiltering runtime evidence: all 6 AdvancedFiltering @Tests SKIP with reason because current GeoRobotix does not declare `/conf/advanced-filtering`; undeclared query behavior is not counted as PASS.
+- Reconciled OpenSpec, story, epic, traceability, ops status, known issues, test results, changelog, and Generator handoff for Sprint 11.
+
+---
+
 ## 2026-05-05T19:46Z — Sprint ets-11 Raze planning gap-fix review
 
 **Triggered by user instruction**: Act as Red Team / Raze for Sprint ets-11 planning gap fixes after prior GAP-1, GAP-2, and CONCERN-1.

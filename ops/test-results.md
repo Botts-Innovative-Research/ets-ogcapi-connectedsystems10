@@ -1,8 +1,23 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T19:27Z
+Last updated: 2026-05-05T20:28Z
 
 ## Current Sprint Evidence
+
+Sprint ets-11 AdvancedFiltering read-only subset:
+
+- Current repo base before implementation: `5cdcdf4`
+- Maven verification: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `98 tests / 0 failures / 0 errors / 3 skipped`
+- TeamEngine E2E smoke:
+  - Clone/copy: `/tmp/sprint-ets-11-generator-smoke`
+  - Command: `SMOKE_CONTAINER_NAME=sprint-ets-11-generator-smoke SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results bash scripts/smoke-test.sh`
+  - Result: `63 total / 48 passed / 0 failed / 15 skipped`
+  - Report: `/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml`
+  - Log: `/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log`
+- AdvancedFiltering outcome: 6 AdvancedFiltering @Tests SKIP with reason because current GeoRobotix does not declare `/conf/advanced-filtering`.
+- Scope note: this is PARTIAL for REQ-ETS-PART1-009; mutation behavior, Part 2, full cross-resource association filters, full geometry intersection semantics, combined-filter truth tables, and endpoint parity remain open.
 
 Sprint ets-10 SensorML systems read-only subset:
 
@@ -71,7 +86,7 @@ Gate verdicts: Quinn APPROVE_WITH_CONCERNS 0.90 and Raze APPROVE_WITH_CONCERNS 0
 
 ## Artifact Location
 
-Persistent ETS evidence lives in this repository under `ops/test-results/`. Recent Sprint 10 and Sprint 9 smoke artifacts currently live under `/tmp/...` gate directories, including `/tmp/quinn-sprint-ets-10-smoke-results/` and `/tmp/raze-sprint-ets-10-smoke-results/`, because the gate runs intentionally avoided polluting the worktree.
+Persistent ETS evidence lives in this repository under `ops/test-results/`. Recent Sprint 11, Sprint 10, and Sprint 9 smoke artifacts currently live under `/tmp/...` gate directories, including `/tmp/sprint-ets-11-generator-smoke-results/`, `/tmp/quinn-sprint-ets-10-smoke-results/`, and `/tmp/raze-sprint-ets-10-smoke-results/`, because the gate runs intentionally avoided polluting the worktree.
 
 ## Historical Evidence
 

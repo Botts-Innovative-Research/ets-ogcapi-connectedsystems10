@@ -86,4 +86,4 @@ The repo already had unrelated modified scripts before this migration:
 - `scripts/smoke-test.sh`
 - `scripts/stub-iut.sh`
 
-There are also many `*:Zone.Identifier` files. Do not stage or revert them unless explicitly requested.
+The previously untracked `*:Zone.Identifier` files were removed on 2026-05-05 after explicit user instruction.

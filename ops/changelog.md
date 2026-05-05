@@ -2,6 +2,16 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T17:02Z — Zone.Identifier files removed
+
+**Triggered by user instruction**: remove the Zone.Identifier files.
+
+- Deleted 262 untracked `*:Zone.Identifier` files from the ETS repo.
+- Verified `git status --short | rg ':Zone\\.Identifier$' | wc -l` returns `0`.
+- Left the pre-existing unrelated modified scripts untouched.
+
+---
+
 ## 2026-05-05T16:44Z — Sprint ets-09 Quinn + Raze gates completed from ETS repo
 
 **Triggered by user instruction**: find the handoff doc and keep going.

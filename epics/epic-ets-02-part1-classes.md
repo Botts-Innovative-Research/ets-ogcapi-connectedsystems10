@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active — Sprint 9 planning selects GeoJSON as next Part 1 class | Last updated: 2026-05-05
+> Status: Active — Sprint 10 planning selects SensorML systems read-only subset | Last updated: 2026-05-05
 
 ## Goal
 Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with each `@Test` method mapped 1:1 to an OGC ATS assertion via the canonical requirement URI in the test's `description` attribute. Owns sub-deliverable 2 of the new ETS capability.
@@ -30,8 +30,8 @@ Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with e
 | S-ETS-07-01 | (placeholder) Implement `/conf/advanced-filtering` suite | Backlog | REQ-ETS-PART1-009 |
 | S-ETS-07-02 | (placeholder) Implement `/conf/create-replace-delete` suite | Backlog | REQ-ETS-PART1-010 |
 | S-ETS-07-03 | (placeholder) Implement `/conf/update` suite | Backlog | REQ-ETS-PART1-011 |
-| S-ETS-09-01 | **(Sprint 9 Planned)** Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Planned | REQ-ETS-PART1-012 |
-| S-ETS-07-05 | (placeholder) Implement `/conf/sensorml` suite | Backlog | REQ-ETS-PART1-013 |
+| S-ETS-09-01 | Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Partial-Implemented (Sprint 9, Quinn/Raze APPROVE_WITH_CONCERNS) | REQ-ETS-PART1-012 |
+| S-ETS-10-01 | **(Sprint 10 Planned)** Implement `/conf/sensorml` encoding suite — systems read-only subset, depends on SystemFeatures | Planned | REQ-ETS-PART1-013 |
 | S-ETS-06-04 | (optional) Common conformance class expansion 4 → 8 @Tests (Sprint 3+ minimal-then-expand by design per Quinn CONCERN-2) | Backlog | REQ-ETS-PART1-001 (modified) |
 
 ## Acceptance Criteria

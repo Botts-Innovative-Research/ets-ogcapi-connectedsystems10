@@ -1,112 +1,122 @@
 agent: planner
 status: complete
-timestamp: "2026-05-05T15:06:38Z"
-sprint_number: "ets-09"
-sprint_name: "geojson-systems-read-only-subset"
-contract_path: ".harness/contracts/sprint-ets-09.yaml"
+timestamp: "2026-05-05T17:41:19Z"
+sprint_number: "ets-10"
+sprint_name: "sensorml-systems-read-only-subset"
+contract_path: ".harness/contracts/sprint-ets-10.yaml"
 triggered_by: |
-  Sprint 8 close housekeeping committed at fb01e40 and Raze gap-fix review APPROVE 0.94.
-  User instructed "OK, keep going." Orchestrator selected the next low-risk Part 1 class.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 8 handoff 2026-04-30T18:35:00Z)"
+  User instructed "Do ets-10 planning" after Sprint 9 Quinn + Raze gates completed and the worktree was cleaned.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 9 handoff 2026-05-05T15:06:38Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-05T15:06:38Z"
+  checked_at: "2026-05-05T17:41:19Z"
   stale_over_30_days: false
   disposition: "OK to start new capability planning."
 
 strategic_decisions:
   q1_next_class:
-    question: "Which remaining Part 1 class should Sprint 9 implement?"
-    decision: "geojson"
+    question: "Which remaining Part 1 class should Sprint 10 implement?"
+    decision: "sensorml"
     rationale: |
-      GeoJSON systems read-only coverage is lower risk than create-replace-delete mutation coverage.
-      It has narrower schema inheritance than SensorML and less cross-cutting behavior than AdvancedFiltering.
-      GeoRobotix has historically declared /conf/geojson, but Generator must re-verify at sprint time.
+      SensorML systems read-only coverage keeps the project in the low-risk encoding lane after GeoJSON.
+      It avoids AdvancedFiltering cross-cutting query semantics and avoids create-replace-delete/update mutation risk.
+      GeoRobotix currently declares /conf/sensorml and exposes application/sml+json alternate links on single System resources.
     alternatives_rejected:
-      - advanced_filtering: "Cross-cutting query behavior; better after more encoding/resource classes are stable."
-      - create_replace_delete: "Mutation-side risk; no ETS write-operation precedent yet."
-      - update: "Mutation-side risk; should not be first post-Sprint-8 class."
-      - sensorml: "Broader SensorML 3.0 schema inheritance; defer until GeoJSON encoding pattern lands."
+      - advanced_filtering: "Cross-cutting query semantics; better after read-only encoding classes are stable."
+      - create_replace_delete: "Mutation-side risk; should be planned with explicit write-safety and target-IUT policy."
+      - update: "Mutation-side risk; should follow create-replace-delete or a dedicated write-operation planning cycle."
+      - remaining_geojson: "Viable, but SensorML is the last untouched Part 1 encoding class and GeoRobotix advertises it now."
 
   q2_scope:
-    question: "Full GeoJSON class or systems read-only subset?"
+    question: "Full SensorML class or systems read-only subset?"
     decision: "systems read-only subset"
     rationale: |
-      The upstream class lists 12 subrequirements, including mediatype-write and non-system schema/mapping
-      requirements. Sprint 9 deliberately targets only the systems read-only subset. mediatype-write remains
-      OPEN until create-replace-delete is implemented or explicitly selected.
+      The upstream class lists 15 subrequirements and inherits SensorML 3.0 JSON requirement classes.
+      Sprint 10 deliberately targets only conformance declaration, system representation discovery, media-type read/fallback honesty,
+      minimal system shape, identity mapping, and dependency wiring. Full schema closure and write-side behavior remain open.
 
 upstream_ogc_verification:
   repository: "opengeospatial/ogcapi-connected-systems"
   branch: "master"
   commit: "3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
-  commit_date: "2026-04-20T20:23:50Z"
-  geojson_requirements_path: "api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
-  geojson_identifier: "/req/geojson"
+  sensorml_requirements_path: "api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc"
+  sensorml_identifier: "/req/sensorml"
   listed_subrequirements:
-    - "/req/geojson/mediatype-read"
-    - "/req/geojson/mediatype-write"
-    - "/req/geojson/relation-types"
-    - "/req/geojson/feature-attribute-mapping"
-    - "/req/geojson/system-schema"
-    - "/req/geojson/system-mappings"
-    - "/req/geojson/deployment-schema"
-    - "/req/geojson/deployment-mappings"
-    - "/req/geojson/procedure-schema"
-    - "/req/geojson/procedure-mappings"
-    - "/req/geojson/sf-schema"
-    - "/req/geojson/sf-mappings"
+    - "/req/sensorml/mediatype-read"
+    - "/req/sensorml/mediatype-write"
+    - "/req/sensorml/relation-types"
+    - "/req/sensorml/resource-id"
+    - "/req/sensorml/feature-attribute-mapping"
+    - "/req/sensorml/system-schema"
+    - "/req/sensorml/system-sml-class"
+    - "/req/sensorml/system-mappings"
+    - "/req/sensorml/deployment-schema"
+    - "/req/sensorml/deployment-mappings"
+    - "/req/sensorml/procedure-schema"
+    - "/req/sensorml/procedure-sml-class"
+    - "/req/sensorml/procedure-mappings"
+    - "/req/sensorml/property-schema"
+    - "/req/sensorml/property-mappings"
+
+georobotix_planning_probe:
+  conformance: "Declares http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml."
+  systems_collection_accept_sml_json: "HTTP 200, Content-Type application/json, top-level items wrapper; not SensorML PASS by itself."
+  single_system_accept_sml_json: "HTTP 200, Content-Type auto/default body; single System JSON includes alternate application/sml+json links."
+  alternate_links:
+    - "https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3"
+    - "https://api.georobotix.io/ogc/t18/api/systems/0m5ojudgr570?f=sml3"
 
 stories:
-  - id: "S-ETS-09-01"
-    title: "GeoJSON systems read-only subset — depends on SystemFeatures"
-    file: "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md"
+  - id: "S-ETS-10-01"
+    title: "SensorML systems read-only subset — depends on SystemFeatures"
+    file: "epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "1-2h"
-    sequencing: "ONLY story in Sprint 9"
+    sequencing: "ONLY story in Sprint 10"
 
 new_requirements:
-  - "REQ-ETS-PART1-012"
+  - "REQ-ETS-PART1-013"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-012-GEOJSON-CONFORMANCE-DECLARED-001"
-  - "SCENARIO-ETS-PART1-012-GEOJSON-MEDIATYPE-READ-001"
-  - "SCENARIO-ETS-PART1-012-GEOJSON-FEATURECOLLECTION-001"
-  - "SCENARIO-ETS-PART1-012-GEOJSON-FEATURE-MAPPING-001"
-  - "SCENARIO-ETS-PART1-012-GEOJSON-DEPENDENCY-SMOKE-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-CONFORMANCE-DECLARED-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-REPRESENTATION-DISCOVERY-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-READ-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-SYSTEM-SHAPE-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-SYSTEM-MAPPING-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-DEPENDENCY-SMOKE-001"
 
 next_agent: "generator"
 next_agent_rationale: |
-  Planning artifacts are complete and no Architect cycle is needed. GeoJSON follows established
-  TestNG conformance-class patterns and depends on SystemFeatures. Escalate to Architect only if
-  Generator finds that current GeoRobotix responses cannot be honestly classified as GeoJSON or
-  if media-type negotiation behavior conflicts with the upstream requirement class.
+  Planning artifacts are complete and no Architect cycle is needed. SensorML follows the established
+  read-only encoding pattern from GeoJSON but uses explicit alternate-link fallback because GeoRobotix
+  currently returns default JSON for direct collection-level Accept application/sml+json.
 
 generator_brief:
   must_do:
-    - "Start from the sister ETS repo Sprint 8 close state and record exact HEAD."
-    - "Re-verify GeoRobotix /conformance for /conf/geojson before implementing."
-    - "Implement GeoJsonTests.java with 5 read-only @Tests."
-    - "Add testng.xml group dependency: geojson depends-on systemfeatures."
-    - "Add 3 VerifyTestNGSuiteDependency lint tests for geojson."
+    - "Record exact HEAD before editing."
+    - "Re-verify GeoRobotix /conformance for /conf/sensorml before implementing."
+    - "Re-verify at least one System resource exposes an alternate link with type application/sml+json."
+    - "Implement SensorMlTests.java with 6 read-only @Tests."
+    - "Add testng.xml group dependency: sensorml depends-on systemfeatures."
+    - "Add 3 VerifyTestNGSuiteDependency lint tests for sensorml."
     - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh from a /tmp clone."
-    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep untested GeoJSON subrequirements open."
+    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep untested SensorML subrequirements open."
   must_not_do:
-    - "Do not implement SensorML."
     - "Do not implement AdvancedFiltering, CRUD, Update, or Part 2."
-    - "Do not implement mediatype-write, POST, PUT, PATCH, or DELETE assertions in Sprint 9."
-    - "Do not treat a CS API `items` wrapper as a passing GeoJSON FeatureCollection; PASS requires type=FeatureCollection and a features array."
-    - "Do not claim application/geo+json media-type support unless observed; use explicit fallback wording if only default JSON is valid GeoJSON."
+    - "Do not implement mediatype-write, POST, PUT, PATCH, or DELETE assertions in Sprint 10."
+    - "Do not treat a CS API `items` wrapper as passing SensorML."
+    - "Do not report alternate-link fallback as full mediatype-read closure unless the fetched body proves SensorML JSON support and the fallback is documented."
+    - "Do not claim full SensorML 3.0 JSON Schema validation unless a schema validator is actually wired and verified."
 
 gate_expectations:
   quinn:
-    primary: "Run mvn-test-via-docker.sh from /tmp clone; verify surefire includes GeoJSON lint tests with 0 failures/errors."
+    primary: "Run mvn-test-via-docker.sh from /tmp clone; verify surefire includes SensorML lint tests with 0 failures/errors."
   raze:
-    primary: "Run smoke-test.sh from separate /tmp clone; verify failed=0 and PASS+SKIP total >= 51."
-    adversarial_focus: "Inspect for media-type overclaim, full-class closure overclaim, and items-vs-features false positives."
-  independence: "Quinn and Raze must write their own Sprint 9 YAML before reading the other gate's YAML."
+    primary: "Run smoke-test.sh from separate /tmp clone; verify failed=0 and PASS+SKIP total >= 57."
+    adversarial_focus: "Inspect for SensorML overclaim from generic JSON, accidental write operations, and full-class closure overclaim."
+  independence: "Quinn and Raze must write their own Sprint 10 YAML before reading the other gate's YAML."
 
-confidence: 0.86
+confidence: 0.84

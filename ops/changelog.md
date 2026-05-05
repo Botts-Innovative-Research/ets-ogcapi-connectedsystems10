@@ -2,6 +2,20 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T17:41Z — Sprint ets-10 SensorML plan
+
+**Triggered by user instruction**: "Do ets-10 planning."
+
+- Ran architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28, within the 30-day threshold.
+- Selected `S-ETS-10-01` SensorML systems read-only subset as the next low-risk Part 1 increment, avoiding AdvancedFiltering query/filtering work and create-replace-delete/Update mutation-side work.
+- Verified upstream OGC SensorML requirement class at `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`: class identifier `/req/sensorml`, 15 listed subrequirements.
+- Probed GeoRobotix: `/conformance` declares `/conf/sensorml`; collection-level `Accept: application/sml+json` returns default JSON `items`; single System resources expose `alternate` links with `type="application/sml+json"` to `?f=sml3`.
+- Added Sprint 10 OpenSpec detail for `REQ-ETS-PART1-013` and six critical scenarios.
+- Created `.harness/contracts/sprint-ets-10.yaml` and `epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md`.
+- Updated planner handoff, `_bmad/traceability.md`, epic status, ops status, and known issues.
+
+---
+
 ## 2026-05-05T17:02Z — Zone.Identifier files removed
 
 **Triggered by user instruction**: remove the Zone.Identifier files.

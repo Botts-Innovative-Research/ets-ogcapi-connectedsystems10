@@ -11,6 +11,7 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 122 | 2026-05-05T17:41:19Z | 2026-05-05T17:51:28Z | 10m09s | User instruction: Do Sprint ets-10 planning. Planned `S-ETS-10-01` SensorML systems read-only subset for REQ-ETS-PART1-013; architecture freshness checked (2026-04-28, within 30 days); OGC upstream SensorML class verified at commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`; GeoRobotix probed for `/conf/sensorml`, collection-level default JSON `items`, and item-level `application/sml+json` alternate links. Updated OpenSpec, story, sprint contract, planner handoff, traceability, epic, status, changelog, and known issues. Raze plan review wrote `.harness/evaluations/sprint-ets-10-plan-adversarial.yaml` with APPROVE_WITH_CONCERNS 0.86; applied terminology/fallback-closure tightening. |
 | 121 | 2026-05-05T17:40:20Z | 2026-05-05T17:40:33Z | 13s | User question: What's next? Checked ops status, git status, epic backlog, traceability, and known issues. Worktree is clean; next substantive step is Sprint ets-10 planning from the remaining Part 1 backlog. |
 | 120 | 2026-05-05T17:31:36Z | 2026-05-05T17:31:45Z | 9s | User instruction: Restore executable bits on the six modified scripts. Ran `chmod +x` on the six shell scripts and verified `git status --short` is clean. |
 | 119 | 2026-05-05T17:29:30Z | 2026-05-05T17:30:03Z | 33s | User question: What are the remaining modified scripts and what are they supposed to do? Inspected the six script headers and git diff summary; found no content changes, only executable mode drift from `100755` to `100644`. |
@@ -137,6 +138,7 @@
 
 | Agent | Tokens | Duration | Task |
 |-------|--------|----------|------|
+| Raze-Sprint10-Plan | not exposed by agent result metadata | ~7m | Adversarial review of Sprint ets-10 SensorML planning. Verdict APPROVE_WITH_CONCERNS 0.86; wrote `.harness/evaluations/sprint-ets-10-plan-adversarial.yaml`; no Docker/Maven run. |
 | Quinn-Sprint9-Gate | not exposed by agent result metadata | ~6m | Independent Sprint ets-09 Gate 3.5 evaluator. Verdict APPROVE_WITH_CONCERNS 0.90; Maven `92/0/0/3`; final smoke `51/42/0/9`; wrote `.harness/evaluations/sprint-ets-09-evaluator-gate.yaml`. |
 | Raze-Sprint9-Gate | not exposed by agent result metadata | ~6m | Independent Sprint ets-09 Gate 4 adversarial reviewer. Verdict APPROVE_WITH_CONCERNS 0.88; Maven `92/0/0/3`; smoke `51/42/0/9`; wrote `.harness/evaluations/sprint-ets-09-adversarial-gate.yaml`. |
 | Raze-Review-Quinn-S8 | 33,649 | 56s | Read-only adversarial review of Quinn Sprint 8 evaluator YAML; APPROVE 0.86, confirmed findings and noted one path-precision issue corrected same turn. |

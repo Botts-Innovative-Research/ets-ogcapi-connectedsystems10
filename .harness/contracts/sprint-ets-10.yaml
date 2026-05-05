@@ -1,0 +1,104 @@
+# Sprint 10 contract — sensorml-systems-read-only
+# Created 2026-05-05 after Sprint 9 Quinn + Raze gates approved with concerns.
+
+sprint: "ets-10"
+sprint_name: "sensorml-systems-read-only-subset"
+type: "feature-expansion"
+created: "2026-05-05T17:41:19Z"
+description: |
+  Sprint 10 implements one Part 1 class subset:
+
+  S-ETS-10-01 — SensorML systems read-only subset (`/conf/sensorml`) (P0/M).
+  Scope is PARTIAL for REQ-ETS-PART1-013:
+    - `/conformance` declares `/conf/sensorml`, otherwise SKIP-with-reason.
+    - Select a System resource and discover SensorML JSON through direct media-type negotiation or an explicit item-level `alternate` link with `type=application/sml+json`.
+    - Fetch the SensorML representation and assert HTTP 200 + parseable JSON.
+    - Minimal SensorML system shape and identity-mapping sanity checks.
+    - Runtime or structural dependency proof: `sensorml` depends on `systemfeatures`.
+
+  Explicitly excluded:
+    - `/req/sensorml/mediatype-write`
+    - `/req/sensorml/relation-types`
+    - Deployment/Procedure/Property SensorML schema and mapping assertions
+    - Full SensorML 3.0 JSON Schema validation
+    - AdvancedFiltering query/filtering work, create-replace-delete, and Update
+    - Part 2 work
+
+upstream_inputs:
+  - "Current ETS repo HEAD at planning start: 8af9f70"
+  - ".harness/evaluations/sprint-ets-09-evaluator-gate.yaml (Quinn APPROVE_WITH_CONCERNS 0.90)"
+  - ".harness/evaluations/sprint-ets-09-adversarial-gate.yaml (Raze APPROVE_WITH_CONCERNS 0.88)"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md (REQ-ETS-PART1-013 SPECIFIED for Sprint 10)"
+  - "epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
+  - "OGC upstream opengeospatial/ogcapi-connected-systems commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+
+stories:
+  - id: "S-ETS-10-01"
+    title: "SensorML systems read-only subset — depends on SystemFeatures"
+    file: "epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on: []
+    parallelizable: false
+    rationale: |
+      SensorML read-only coverage keeps the project on low-risk Part 1 encoding progress
+      before mutation-side classes. GeoRobotix declares /conf/sensorml and exposes
+      application/sml+json alternate links on single System resources.
+
+requirements:
+  new_reqs:
+    - "REQ-ETS-PART1-013 (SensorML Encoding Conformance Class /conf/sensorml — SPECIFIED → target PARTIAL-IMPLEMENTED for systems read-only subset)"
+  modified_reqs:
+    - "REQ-ETS-PART1-007..013 placeholder narrative narrowed to reflect Sprint 10 SensorML detail"
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-013-SENSORML-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-REPRESENTATION-DISCOVERY-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-READ-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-SYSTEM-SHAPE-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-SYSTEM-MAPPING-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-DEPENDENCY-SMOKE-001"
+  normal: []
+
+success_criteria:
+  all_critical_scenarios_pass_or_skip_with_reason: true
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  no_regression: true
+  build_green_jdk17: true
+  smoke_test_green_against_georobotix: true
+  no_part2_work_in_sprint: true
+  zero_bare_assertionerror_in_conformance: true
+  worktree_not_polluted_at_gate: true
+  sensorml_systems_read_subset_implemented: true
+  sensorml_testng_wired: true
+  sensorml_lint_tests: true
+  sensorml_iut_state_honest: true
+  no_write_operations_in_sensorml_sprint: true
+  smoke_total_at_least_57_failed_zero: true
+  spec_status_honesty_principle: true
+  gate_independence_no_peek: true
+
+evaluation_focus:
+  - "Generator must re-verify GeoRobotix /conformance for /conf/sensorml before implementing assertion behavior."
+  - "Generator must not claim collection-level `Accept: application/sml+json` PASS when the IUT returns CS API default `items` JSON."
+  - "Generator may use item-level alternate links with `type=application/sml+json` as explicit fallback evidence, but must record that behavior in test descriptions or messages and must not report it as full mediatype-read closure unless the fetched body proves SensorML JSON support."
+  - "Generator must not implement mediatype-write, create-replace-delete, update, or any write-operation check in Sprint 10."
+  - "Quinn should run scripts/mvn-test-via-docker.sh from a /tmp clone and verify surefire includes the SensorML lint tests."
+  - "Raze should run scripts/smoke-test.sh from a separate /tmp clone and verify failed=0 and total PASS+SKIP >= 57."
+  - "Raze should inspect SensorMlTests.java for over-claiming SensorML support from CS API `items` wrappers or generic application/json single-item Feature documents."
+  - "Both gates must avoid reading each other's Sprint 10 YAML before writing their own result."
+
+risk_register:
+  - id: "SENSORML-ALTERNATE-LINK-OVERCLAIM"
+    severity: "MEDIUM"
+    mitigation: "Accept alternate-link fallback only when the link advertises application/sml+json and the fetched body has SensorML-like structure; do not PASS from generic CS API JSON alone."
+  - id: "SENSORML-SCHEMA-INHERITANCE-SCOPE-CREEP"
+    severity: "MEDIUM"
+    mitigation: "Keep full SensorML 3.0 JSON Schema validation out of Sprint 10 unless separately planned."
+  - id: "MUTATION-SCOPE-CREEP"
+    severity: "LOW"
+    mitigation: "Contract excludes mediatype-write and all POST/PUT/PATCH/DELETE behavior."

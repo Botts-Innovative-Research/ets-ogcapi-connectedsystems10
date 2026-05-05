@@ -141,9 +141,9 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART1-007..013: Remaining Per-Class Conformance Suites
 - **Priority**: MUST
-- **Status**: PLACEHOLDER for REQ-ETS-PART1-009..011 and 013; REQ-ETS-PART1-007..008 are IMPLEMENTED in Sprint 7, and REQ-ETS-PART1-012 is SPECIFIED for Sprint 9 below.
-- **Description**: For each remaining OGC 23-001 conformance class (009=`advanced-filtering`, 010=`create-replace-delete`, 011=`update`, 012=`geojson`, 013=`sensorml`), the ETS SHALL provide a TestNG suite class structurally equivalent to Core (REQ-ETS-CORE-001..004), SystemFeatures (REQ-ETS-PART1-002), Common (REQ-ETS-PART1-001), Subsystems (REQ-ETS-PART1-003), Procedures (REQ-ETS-PART1-006), Deployments (REQ-ETS-PART1-004), Sampling Features (REQ-ETS-PART1-007), Property Definitions (REQ-ETS-PART1-008), and Subdeployments (REQ-ETS-PART1-005): one `@Test` per ATS assertion subset selected for the sprint, `description` attribute carries the OGC canonical `.adoc` requirement URI form, suite-level dependency declared via TestNG `dependsOnGroups` if a prerequisite class fails.
-- **Rationale**: PRD SC-2 requires Part 1 coverage. Sprint 9 selects a GeoJSON systems read-only subset first because it is lower risk than create-replace-delete mutation coverage and lower schema breadth than SensorML.
+- **Status**: PLACEHOLDER for REQ-ETS-PART1-009..011; REQ-ETS-PART1-007..008 are IMPLEMENTED in Sprint 7, REQ-ETS-PART1-012 is PARTIAL-IMPLEMENTED in Sprint 9, and REQ-ETS-PART1-013 is SPECIFIED for Sprint 10 below.
+- **Description**: For each remaining OGC 23-001 conformance class (009=`advanced-filtering`, 010=`create-replace-delete`, 011=`update`, 012=`geojson`, 013=`sensorml`), the ETS SHALL provide a TestNG suite class structurally equivalent to Core (REQ-ETS-CORE-001..004), SystemFeatures (REQ-ETS-PART1-002), Common (REQ-ETS-PART1-001), Subsystems (REQ-ETS-PART1-003), Procedures (REQ-ETS-PART1-006), Deployments (REQ-ETS-PART1-004), Sampling Features (REQ-ETS-PART1-007), Property Definitions (REQ-ETS-PART1-008), Subdeployments (REQ-ETS-PART1-005), and GeoJSON (REQ-ETS-PART1-012): one `@Test` per ATS assertion subset selected for the sprint, `description` attribute carries the OGC canonical `.adoc` requirement URI form, suite-level dependency declared via TestNG `dependsOnGroups` if a prerequisite class fails.
+- **Rationale**: PRD SC-2 requires Part 1 coverage. Sprint 9 selected a GeoJSON systems read-only subset first because it was lower risk than create-replace-delete mutation coverage and lower schema breadth than SensorML. Sprint 10 continues the low-risk read-only encoding path with SensorML systems before any mutation-side class.
 - **Maps to**: PRD FR-ETS-17..23.
 
 ### Sub-deliverable 4 — Part 2 Conformance Classes (placeholders, NOT in Sprint 1)
@@ -437,6 +437,63 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** GeoJSON tests SKIP because `<group name="geojson" depends-on="systemfeatures"/>` is present
 **AND** `scripts/smoke-test.sh` from a /tmp clone reports failed=0 and total PASS+SKIP at least 51 (Sprint 8 baseline 46 plus 5 GeoJSON @Tests).
 *Maps to*: REQ-ETS-PART1-012.
+
+> Sprint 10 targets SensorML as another read-only encoding increment. The sprint is intentionally PARTIAL for the SensorML requirement class: it proves conformance declaration, discovers a SensorML alternate representation for an existing System resource, fetches that representation, and checks a minimal SensorML system shape. It does not close write media type behavior, relation types, deployments/procedures/properties SensorML schema or mapping assertions, or full JSON Schema validation. Alternate-link fallback is evidence for this sprint subset only unless the fetched body proves SensorML JSON support and the fallback is documented in runtime output.
+
+#### REQ-ETS-PART1-013: SensorML Encoding Conformance Class (`/conf/sensorml`) (Sprint 10 target)
+- **Priority**: MUST
+- **Status**: SPECIFIED for Sprint 10 (target PARTIAL-IMPLEMENTED after Generator live verification; story S-ETS-10-01).
+- **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc`. The class identifier is `/req/sensorml`, inherits `/req/api-common` and SensorML 3.0 JSON requirement classes (`json-simple-process`, `json-physical-system`, `json-deployment`, `json-derived-property`), and lists 15 subrequirements: `mediatype-read`, `mediatype-write`, `relation-types`, `resource-id`, `feature-attribute-mapping`, `system-schema`, `system-sml-class`, `system-mappings`, `deployment-schema`, `deployment-mappings`, `procedure-schema`, `procedure-sml-class`, `procedure-mappings`, `property-schema`, and `property-mappings`.
+- **Sprint 10 coverage scope**: SensorML systems read-only subset with 6 @Tests: (1) IUT declares `/conf/sensorml`; (2) a System resource exposes or can be requested as a SensorML JSON representation; (3) the SensorML representation returns HTTP 200 with parseable JSON; (4) the representation has minimal SensorML identity/class shape such as `type` plus identifier/member structure sufficient for a non-schema sanity check; (5) the representation links or maps back to the canonical CS API System id/UID when present; (6) TestNG dependency wiring and smoke no-regression. The Generator MAY use the existing single-system `alternate` link with `type="application/sml+json"` and `?f=sml3` when content negotiation on `Accept: application/sml+json` returns default CS API JSON. Current GeoRobotix verification at planning time: `/conformance` declares `/conf/sensorml`; collection-level `GET /systems` with `Accept: application/sml+json` returns `Content-Type: application/json` with top-level `items`; single-system JSON exposes `alternate` links of type `application/sml+json` to `?f=sml3`.
+- **Dependency wiring**: SensorML depends on SystemFeatures via `<group name="sensorml" depends-on="systemfeatures"/>`. SensorML system encoding assertions are meaningful only after the canonical SystemFeatures resource layer is available.
+- **Open subrequirements after Sprint 10**: `mediatype-write`, `relation-types`, deployment/procedure/property SensorML schema and mapping assertions, full SensorML 3.0 JSON Schema validation, and mutation-side behavior remain OPEN unless separately planned.
+- **IUT-state policy**: If the IUT does not declare `/conf/sensorml`, every SensorML @Test SKIPs with reason. If the IUT declares SensorML but only exposes a SensorML representation through an `alternate` link rather than direct `Accept: application/sml+json` negotiation, the sprint may PASS discovery/fetch checks through the alternate link and MUST record that fallback explicitly. A CS API `items` wrapper alone MUST NOT be counted as SensorML PASS.
+- **Maps to**: PRD FR-ETS-23.
+
+### Acceptance Scenarios for Sprint 10
+
+#### SCENARIO-ETS-PART1-013-SENSORML-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the IUT is `https://api.georobotix.io/ogc/t18/api`
+**WHEN** the SensorML suite reads `/conformance`
+**THEN** the response contains `/conf/sensorml`
+**OR IF** `/conf/sensorml` is absent
+**THEN** every SensorML @Test SKIPs with reason citing the missing conformance declaration.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-SENSORML-REPRESENTATION-DISCOVERY-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/sensorml`
+**WHEN** the SensorML suite selects a System resource
+**THEN** it discovers a SensorML JSON representation either through `Accept: application/sml+json` or through an item-level `alternate` link with `type="application/sml+json"`
+**AND** a collection-level CS API `items` wrapper alone does NOT pass this representation-discovery assertion.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-READ-001 (CRITICAL)
+**GIVEN** a SensorML representation URL was selected
+**WHEN** the suite fetches that representation
+**THEN** the response is HTTP 200 with parseable JSON
+**AND** the suite records whether the representation came from direct media type negotiation or from an explicit `alternate` link fallback
+**AND** alternate-link fallback alone is not reported as full SensorML `mediatype-read` closure unless the fetched body proves SensorML JSON support.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-SENSORML-SYSTEM-SHAPE-001 (CRITICAL)
+**GIVEN** a SensorML system representation was fetched
+**WHEN** the suite validates the sprint subset shape
+**THEN** the body has a minimal SensorML system identity/class structure, including a string `type` member and an identifier member or UID mapping sufficient to relate the representation to the selected System resource.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-SENSORML-SYSTEM-MAPPING-001 (CRITICAL)
+**GIVEN** the selected CS API System resource has `id` or `properties.uid`
+**WHEN** the SensorML representation is inspected
+**THEN** the representation preserves an equivalent system identity through `id`, `uniqueId`, `uid`, or a documented SensorML identifier member
+**OR** the assertion SKIPs with reason if the IUT exposes SensorML but omits a machine-checkable identity mapping in the selected resource.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-SENSORML-DEPENDENCY-SMOKE-001 (CRITICAL)
+**GIVEN** the SystemFeatures group fails or is sabotaged
+**WHEN** the SensorML suite attempts to run
+**THEN** SensorML tests SKIP because `<group name="sensorml" depends-on="systemfeatures"/>` is present
+**AND** `scripts/smoke-test.sh` from a /tmp clone reports failed=0 and total PASS+SKIP at least 57 (Sprint 9 baseline 51 plus 6 SensorML @Tests).
+*Maps to*: REQ-ETS-PART1-013.
 
 ### Acceptance Scenarios for Sprint 8
 

@@ -1,0 +1,110 @@
+agent: raze
+gate: "Gate 4 Adversarial Reviewer"
+sprint: "ets-10"
+scope: "planning-only"
+artifact_created: "2026-05-05T17:50:17Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.86
+
+reviewed_scope:
+  - ".harness/contracts/sprint-ets-10.yaml"
+  - ".harness/handoffs/planner-handoff.yaml"
+  - "epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/known-issues.md"
+  - "upstream opengeospatial/ogcapi-connected-systems commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+
+commands_run:
+  - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+  - "sed -n '1,240p' _bmad/agents/adversarial-reviewer.md"
+  - "sed -n '1,260p' .harness/prompts/adversarial.md"
+  - "git status --short"
+  - "git diff --stat"
+  - "git diff -- .harness/handoffs/planner-handoff.yaml"
+  - "sed -n '1,260p' .harness/contracts/sprint-ets-10.yaml"
+  - "sed -n '1,260p' epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
+  - "git diff -- openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "git diff -- _bmad/traceability.md"
+  - "git diff -- epics/epic-ets-02-part1-classes.md"
+  - "git diff -- ops/status.md"
+  - "git diff -- ops/changelog.md"
+  - "git diff -- ops/known-issues.md"
+  - "curl -fsSL https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f/api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc | sed -n '1,220p'"
+  - "curl -fsSL https://api.github.com/repos/opengeospatial/ogcapi-connected-systems/commits/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f | sed -n '1,80p'"
+  - "rg -n \"REQ-ETS-PART1-013|SENSORML|sensorml|sml\\+json|sml3|Feature documents|FeatureCollection|57|SPECIFIED|PLANNED|PARTIAL\" .harness/contracts/sprint-ets-10.yaml .harness/handoffs/planner-handoff.yaml epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md openspec/capabilities/ets-ogcapi-connectedsystems/spec.md _bmad/traceability.md epics/epic-ets-02-part1-classes.md ops/status.md ops/changelog.md ops/known-issues.md"
+  - "curl -fsSL https://api.github.com/repos/opengeospatial/ogcapi-connected-systems/git/trees/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f?recursive=1 | rg 'requirements/encoding/sensorml/.+\\.adoc'"
+  - "for f in mediatype-read resource-id feature-attribute-mapping system-schema system-sml-class system-mappings relation-types; do echo \"### $f\"; curl -fsSL \"https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f/api/part1/standard/requirements/encoding/sensorml/REQ_${f}.adoc\" | sed -n '1,160p'; done"
+  - "curl -fsSL https://api.github.com/repos/opengeospatial/ogcapi-connected-systems/git/trees/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f?recursive=1 | rg -n 'sensorml|mediatype-read|system-sml-class|system-mappings'"
+  - "curl -fsSL https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f/api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc | nl -ba"
+  - "git diff --name-only && git ls-files --others --exclude-standard"
+
+not_run:
+  - "Docker"
+  - "Maven"
+  - "TeamEngine smoke"
+  - "E2E"
+
+findings:
+  - id: "CONCERN-1"
+    severity: "MEDIUM"
+    title: "Alternate-link fallback must not be reported as full mediatype-read closure"
+    status: "requires_generator_attention"
+    evidence:
+      - "The plan is honest that collection-level Accept application/sml+json currently returns Content-Type application/json with a top-level items wrapper and that this alone must not PASS."
+      - "The spec and contract allow a single-system alternate link with type application/sml+json to satisfy discovery/fetch checks, but Sprint 10 remains PARTIAL and does not close the full SensorML class."
+      - "Upstream class file at commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f lists /req/sensorml/mediatype-read and inherited SensorML JSON classes, but no separate per-subrequirement files were present under api/part1/standard/requirements/encoding/sensorml/ at that commit."
+    impact: "If Generator names the alternate-link path as a full /req/sensorml/mediatype-read PASS without checking fetched representation type/body and documenting fallback, the ETS could overclaim SensorML media-type support from generic CS API JSON."
+    required_fix: "During implementation, keep this as partial/fallback evidence unless the fetched response proves SensorML JSON representation support. Test descriptions/messages must distinguish direct Accept negotiation from alternate-link fallback."
+
+  - id: "CONCERN-2"
+    severity: "LOW"
+    title: "AdvancedFiltering is incorrectly grouped with mutation-side work in ops wording"
+    status: "documentation_cleanup_recommended"
+    evidence:
+      - "ops/changelog.md says the plan avoids mutation-side AdvancedFiltering/CRUD/Update work."
+      - "ops/status.md next action excludes AdvancedFiltering/CRUD/Update together; this is fine as exclusion, but AdvancedFiltering is query/filtering behavior, not mutation-side behavior."
+      - "Planner handoff itself correctly describes AdvancedFiltering as cross-cutting query semantics."
+    impact: "This is not a blocker for SensorML planning, but it is a terminology error that can confuse future sprint selection and risk classification."
+    required_fix: "When touching ops docs next, change wording to distinguish AdvancedFiltering query semantics from CRUD/Update mutation-side work."
+
+evidence:
+  scope_honesty:
+    verdict: "acceptable"
+    notes:
+      - "Contract, story, spec, traceability, status, changelog, and known-issues consistently call Sprint 10 a SensorML systems read-only subset, not full SensorML."
+      - "mediatype-write, relation-types, deployment/procedure/property schema/mapping, full SensorML 3.0 JSON Schema validation, AdvancedFiltering, CRUD, Update, and Part 2 are excluded."
+      - "Traceability marks REQ-ETS-PART1-013 as PLANNED, not implemented."
+  generic_json_overclaim:
+    verdict: "guarded"
+    notes:
+      - "The plan explicitly says CS API items wrappers must not count as SensorML PASS."
+      - "The plan requires alternate-link fallback to be recorded explicitly."
+      - "Residual risk remains if Generator treats parseable JSON alone as SensorML mediatype-read success."
+  upstream_reference_accuracy:
+    verdict: "accurate_for_class_file"
+    notes:
+      - "Commit SHA and commit date verified through GitHub API."
+      - "requirements_class_sensorml.adoc lines 5-26 verify identifier /req/sensorml, inherited classes, and the 15 listed subrequirements."
+      - "No separate REQ_*.adoc files were found under the SensorML encoding requirements directory at that commit, so implementation should avoid claiming finer textual semantics than the class file supports unless another upstream source is verified."
+  documentation_consistency:
+    verdict: "mostly_consistent"
+    notes:
+      - "Handoff, contract, story, spec, traceability, epic, status, changelog, and known-issues align on S-ETS-10-01 and REQ-ETS-PART1-013."
+      - "Smoke threshold 57 is consistently based on Sprint 9 baseline 51 plus six planned SensorML tests."
+      - "Only noted inconsistency is low-severity AdvancedFiltering mutation terminology in ops wording."
+
+required_fixes:
+  before_generator_completion:
+    - "Do not count collection-level CS API items JSON as SensorML PASS."
+    - "Do not mark full REQ-ETS-PART1-013 implemented after Sprint 10; use PARTIAL-IMPLEMENTED only if live verification supports the subset."
+    - "Keep mediatype-write, relation-types, deployment/procedure/property schema/mapping, full SensorML schema validation, and all mutation operations out of Sprint 10."
+    - "Record whether SensorML fetch used direct Accept negotiation or alternate-link fallback in test descriptions/messages and post-implementation docs."
+  cleanup_recommended:
+    - "Correct ops wording that implies AdvancedFiltering is mutation-side work."
+
+files_changed_by_review:
+  - ".harness/evaluations/sprint-ets-10-plan-adversarial.yaml"

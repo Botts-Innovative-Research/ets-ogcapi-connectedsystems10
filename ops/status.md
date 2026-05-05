@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T16:44Z
+Last updated: 2026-05-05T17:41Z
 
 ## Fresh-Session Entry Point
 
@@ -16,8 +16,8 @@ Read these first:
 - `ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md`
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
-- `.harness/handoffs/generator-handoff.yaml`
-- `.harness/contracts/sprint-ets-09.yaml`
+- `.harness/handoffs/planner-handoff.yaml`
+- `.harness/contracts/sprint-ets-10.yaml`
 
 ## Current State
 
@@ -38,10 +38,10 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD: `880b391`
+- ETS HEAD at Sprint 10 planning start: `8af9f70`
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-09-01`
-- Current sprint status: Sprint ets-09 PARTIAL-IMPLEMENTED, Quinn + Raze gates APPROVE_WITH_CONCERNS
+- Current sprint status: Sprint ets-10 PLANNED; SensorML systems read-only subset selected
 
 ## Sprint ets-09 Evidence
 
@@ -71,9 +71,11 @@ Gate Results:
 
 ## Next Action
 
-1. Commit the Sprint 9 gate artifacts and ops reconciliation, staging only intentional files.
-2. Plan Sprint ets-10 from the remaining Part 1 backlog. Recommended next candidates: AdvancedFiltering/CRUD/Update wedge if mutation risk is acceptable, or SensorML/remaining GeoJSON read-only expansion if keeping the next sprint read-only.
-3. Track two non-blocking gate concerns as future cleanup candidates: smoke log archival when `docker logs` misses the container, and clearer runtime reporting for default-JSON GeoJSON fallback PASS branches.
+1. Run Generator for Sprint ets-10 story `S-ETS-10-01`.
+2. Implement `SensorMlTests.java` as a PARTIAL read-only subset for REQ-ETS-PART1-013: conformance declaration, system SensorML representation discovery, media-type read or alternate-link fallback, minimal system shape, identity mapping sanity check, and dependency tracer.
+3. Add TestNG wiring and 3 SensorML dependency lint tests.
+4. Verify with `bash scripts/mvn-test-via-docker.sh` and TeamEngine smoke from a /tmp clone with `SMOKE_OUTPUT_DIR` outside the worktree.
+5. Keep all SensorML write-side, relation-type, non-system schema/mapping, full SensorML 3.0 schema validation, AdvancedFiltering query/filtering, create-replace-delete, Update, and Part 2 work out of Sprint 10.
 
 ## Dirty Worktree Notes
 
@@ -86,4 +88,4 @@ The repo already had unrelated modified scripts before this migration:
 - `scripts/smoke-test.sh`
 - `scripts/stub-iut.sh`
 
-The previously untracked `*:Zone.Identifier` files were removed on 2026-05-05 after explicit user instruction.
+The previously untracked `*:Zone.Identifier` files were removed on 2026-05-05 after explicit user instruction. Worktree was clean at Sprint 10 planning start.

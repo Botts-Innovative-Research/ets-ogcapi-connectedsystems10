@@ -1,0 +1,71 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+reviewer: Raze
+review_type: adversarial_gapfix_review
+sprint: ets-12
+story: S-ETS-12-01
+timestamp_utc: "2026-05-05T21:57:11Z"
+reviewed_scope:
+  - "Narrow recheck of prior RAZE-ETS12-GAP-001, RAZE-ETS12-GAP-002, and Allow-header parsing concern only."
+  - "Current working tree files in /home/nh/docker/gir/ets-ogcapi-connectedsystems10."
+  - "Latest r3 smoke artifacts under /tmp/sprint-ets-12-generator-smoke-current-r3 and /tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r3."
+  - "No Docker or Maven rerun; only static inspection and cheap oracle replay/self-test."
+findings:
+  - id: RAZE-ETS12-GAP-001
+    prior_severity: HIGH
+    status: CLOSED
+    title: "Default-smoke no-mutation proof is now non-vacuous for current and adjacent-pair log formats"
+    evidence:
+      - "scripts/no-mutation-oracle.py parses current single-line `Request: METHOD URI` entries with `SINGLE_LINE_RE` and older adjacent `Request method:` / `Request URI:` pairs."
+      - "scripts/no-mutation-oracle.py requires `iut_request_count > 0`; it returns exit 2 with `No IUT-bound request log lines found` when no IUT-bound entries are recognized."
+      - "scripts/smoke-test.sh invokes `python3 scripts/no-mutation-oracle.py \"$LOG_FILE\" \"$IUT_URL\"` after capturing container logs and before startup-log scanning; exit 1 fails mutation violations, exit 2 fails inconclusive/vacuous logs."
+      - "Direct replay against `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r3/s-ets-01-03-teamengine-container-2026-05-05.log` returned `recognized_iut_request_logs=40` and exit 0."
+      - "`bash scripts/no-mutation-oracle-test.sh` returned `no-mutation oracle self-test PASS`; additional spot checks confirmed pair-format GET passes, single-line DELETE fails with exit 1, and control-plane-only POST fails inconclusive with exit 2."
+      - "r3 TestNG XML reports `69 total / 52 passed / 0 failed / 17 skipped`; CreateReplaceDelete remains 4 PASS + 2 SKIP-by-safety-gate."
+    residual_concern: "The smoke script stdout line containing `recognized_iut_request_logs=40` is not archived as a separate r3 stdout artifact; the result is reproducible from the archived container log and integrated script, but future gates would benefit from archiving smoke stdout."
+  - id: RAZE-ETS12-GAP-002
+    prior_severity: MEDIUM
+    status: CLOSED
+    title: "Docs reconciliation now reflects Sprint 12 PARTIAL-IMPLEMENTED r3 evidence"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md now says `REQ-ETS-PART1-010 is PARTIAL-IMPLEMENTED in Sprint 12 below` and the detailed REQ block cites r3 smoke plus the 40 recognized IUT request entries."
+      - "epics/epic-ets-02-part1-classes.md header and S-ETS-12-01 row now say Partial-Implemented rather than planned."
+      - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md is Partial-Implemented, marks DoD complete, and cites `/tmp/sprint-ets-12-generator-smoke-current-r3` plus `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r3`."
+      - "_bmad/traceability.md, ops/status.md, ops/changelog.md, and ops/test-results.md cite r3 smoke evidence, `105 tests / 0 failures / 0 errors / 3 skipped`, `69 total / 52 passed / 0 failed / 17 skipped`, and `recognized 40 IUT-bound request entries / zero IUT-bound POST/PUT/DELETE`."
+      - ".harness/contracts/sprint-ets-12.yaml now clarifies its `SPECIFIED` wording was planning-time input and updates the no-mutation oracle method to include both recognized formats."
+    residual_concern: "ops/status.md still retains historical planning-review text mentioning the earlier adjacent-pair oracle, but it is clearly in the prior planning-evidence section and no longer contradicts current Sprint 12 Generator status."
+  - id: RAZE-ETS12-CONCERN-001
+    prior_severity: LOW
+    status: CLOSED
+    title: "Allow-header checks now parse comma-separated method tokens"
+    evidence:
+      - "CreateReplaceDeleteTests.java imports `java.util.Arrays` and implements `Arrays.stream(allow.split(\",\")).map(String::trim).map(...toUpperCase...).anyMatch(method::equals)`."
+      - "The prior substring pattern `allow.toUpperCase(Locale.ROOT).contains(method)` is no longer present in the CreateReplaceDelete test class."
+    residual_concern: "None for this concern."
+evidence:
+  smoke_artifacts:
+    report: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r3/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r3/s-ets-01-03-teamengine-container-2026-05-05.log"
+    totals: "69 total / 52 passed / 0 failed / 17 skipped"
+    createreplacedelete_runtime: "4 PASS + 2 SKIP-by-safety-gate"
+  oracle_replay:
+    command: "python3 scripts/no-mutation-oracle.py /tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r3/s-ets-01-03-teamengine-container-2026-05-05.log https://api.georobotix.io/ogc/t18/api"
+    output: "recognized_iut_request_logs=40"
+    exit_code: 0
+  oracle_self_test:
+    command: "bash scripts/no-mutation-oracle-test.sh"
+    output: "no-mutation oracle self-test PASS"
+    exit_code: 0
+  verification_not_rerun:
+    - "Docker Maven was not rerun; prior required evidence remains `105 tests / 0 failures / 0 errors / 3 skipped`."
+    - "TeamEngine smoke was not rerun; r3 artifacts were inspected and the oracle was replayed against the archived r3 log."
+residual_concerns:
+  - id: RAZE-ETS12-RESIDUAL-001
+    severity: LOW
+    title: "Archive smoke stdout for future non-mutation oracle claims"
+    detail: "Current r3 result is reproducible from the archived container log and current oracle, but the smoke script's own stdout line is not present in the r3 evidence directory."
+  - id: RAZE-ETS12-RESIDUAL-002
+    severity: LOW
+    title: "No committed positive mutable-IUT lifecycle evidence"
+    detail: "Expected for this sprint: REQ-ETS-PART1-010 remains PARTIAL-IMPLEMENTED until POST/PUT/DELETE run against a dedicated mutable IUT with cleanup evidence."
+required_fixes: []

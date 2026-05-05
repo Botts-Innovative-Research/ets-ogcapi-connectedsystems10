@@ -1,7 +1,7 @@
 # Story S-ETS-12-01: Create/Replace/Delete Safety-Gated Systems Subset
 
 > Sprint: ets-12
-> Status: Planned
+> Status: Partial-Implemented
 > Priority: P0
 > Complexity: M
 > Epic: epic-ets-02-part1-classes
@@ -65,9 +65,10 @@ The default GeoRobotix smoke target declares `/conf/create-replace-delete`, and 
 
 Default smoke evidence must distinguish TeamEngine control-plane requests from IUT-bound REST Assured requests. The no-mutation check is:
 
-1. Parse request-log entries as adjacent `Request method:` and `Request URI:` pairs.
+1. Parse request-log entries in current `Request: METHOD URI` format or older adjacent `Request method:` and `Request URI:` pair format.
 2. Consider only pairs whose URI starts with the IUT base URL.
-3. Require zero IUT-bound pairs whose method is POST, PUT, or DELETE.
+3. Require at least one recognized IUT-bound request entry, so the oracle cannot pass vacuously.
+4. Require zero IUT-bound entries whose method is POST, PUT, or DELETE.
 
 The TeamEngine REST control POST that starts a suite run is not part of this oracle.
 
@@ -95,20 +96,29 @@ Create/Replace/Delete depends on SystemFeatures:
 
 ## Definition of Done
 
-- [ ] `CreateReplaceDeleteTests.java` added with the six planned @Tests.
-- [ ] Every Create/Replace/Delete @Test has `groups = "createreplacedelete"`.
-- [ ] Every Create/Replace/Delete @Test `description` includes the OGC requirement URI and `SCENARIO-ETS-PART1-010-*` reference.
-- [ ] `testng.xml` declares `createreplacedelete` depends on `systemfeatures`.
-- [ ] `VerifyTestNGSuiteDependency` adds three Create/Replace/Delete lint tests: group dependency, method group tagging, and class co-location.
-- [ ] `TestRunArg`, `SuiteAttribute`, and suite parameter propagation support `mutation-tests-enabled` and `mutation-iut-policy`.
-- [ ] Default smoke emits no IUT-bound POST/PUT/DELETE requests from the Create/Replace/Delete suite, using adjacent `Request method:` + `Request URI:` log-pair parsing.
-- [ ] Lifecycle mutation assertion SKIPs before POST when opt-in parameters are absent.
-- [ ] Mutation opt-in is wired end-to-end through `TestRunArg`, `SuiteAttribute`, `SuiteFixtureListener`, `TestNGController`, CTL, and optional smoke env forwarding.
-- [ ] Even when mutation opt-in parameters are present, the implementation hard-denies mutation against public GeoRobotix URLs before POST/PUT/DELETE.
-- [ ] `bash scripts/mvn-test-via-docker.sh` completes with exact totals recorded.
-- [ ] `scripts/smoke-test.sh` runs from a `/tmp` clone with `SMOKE_OUTPUT_DIR` outside the worktree and exact totals recorded.
-- [ ] OpenSpec, story status, traceability, ops status, changelog, and test-results are reconciled after implementation.
-- [ ] Raze implementation review is run before reporting completion.
+- [x] `CreateReplaceDeleteTests.java` added with the six planned @Tests.
+- [x] Every Create/Replace/Delete @Test has `groups = "createreplacedelete"`.
+- [x] Every Create/Replace/Delete @Test `description` includes the OGC requirement URI and `SCENARIO-ETS-PART1-010-*` reference.
+- [x] `testng.xml` declares `createreplacedelete` depends on `systemfeatures`.
+- [x] `VerifyTestNGSuiteDependency` adds three Create/Replace/Delete lint tests: group dependency, method group tagging, and class co-location.
+- [x] `TestRunArg`, `SuiteAttribute`, and suite parameter propagation support `mutation-tests-enabled` and `mutation-iut-policy`.
+- [x] Default smoke emits no IUT-bound POST/PUT/DELETE requests from the Create/Replace/Delete suite, using `Request: METHOD URI` and adjacent `Request method:` + `Request URI:` log parsing.
+- [x] Lifecycle mutation assertion SKIPs before POST when opt-in parameters are absent.
+- [x] Mutation opt-in is wired end-to-end through `TestRunArg`, `SuiteAttribute`, `SuiteFixtureListener`, `TestNGController`, CTL, and optional smoke env forwarding.
+- [x] Even when mutation opt-in parameters are present, the implementation hard-denies mutation against public GeoRobotix URLs before POST/PUT/DELETE.
+- [x] `bash scripts/mvn-test-via-docker.sh` completes with exact totals recorded.
+- [x] `scripts/smoke-test.sh` runs from a `/tmp` clone with `SMOKE_OUTPUT_DIR` outside the worktree and exact totals recorded.
+- [x] OpenSpec, story status, traceability, ops status, changelog, and test-results are reconciled after implementation.
+- [x] Raze implementation review is run before reporting completion.
+
+## Generator Evidence
+
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `105 tests / 0 failures / 0 errors / 3 skipped`.
+- TeamEngine smoke: `/tmp/sprint-ets-12-generator-smoke-current-r3`, command `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r3 bash scripts/smoke-test.sh`, result `69 total / 52 passed / 0 failed / 17 skipped`.
+- CreateReplaceDelete runtime outcome against GeoRobotix: 4 PASS (`conformance`, dependency tracer, collection OPTIONS readiness, resource OPTIONS readiness) and 2 SKIP (`mutation safety gate`, lifecycle opt-in).
+- Smoke log oracle: zero IUT-bound POST/PUT/DELETE entries for `https://api.georobotix.io/ogc/t18/api`; integrated smoke oracle recognized 40 IUT-bound request log entries.
+- Raze implementation review: `.harness/evaluations/sprint-ets-12-adversarial-implementation.yaml` verdict `GAPS_FOUND` confidence 0.88; same-turn fixes applied for the no-mutation oracle, stale status strings, and Allow header token parsing.
+- Raze gap-fix review: `.harness/evaluations/sprint-ets-12-adversarial-gapfix.yaml` verdict `APPROVE_WITH_CONCERNS` confidence 0.91; no required fixes remain.
 
 ## Out Of Scope
 

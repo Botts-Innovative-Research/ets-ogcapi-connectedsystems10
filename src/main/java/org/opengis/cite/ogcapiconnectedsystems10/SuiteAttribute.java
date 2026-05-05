@@ -41,7 +41,19 @@ public enum SuiteAttribute {
 	 * SuiteFixtureListener.processSuiteParameters} from the suite-level
 	 * {@code auth-credential} parameter; absent when the parameter is unset or empty.
 	 */
-	AUTH_CREDENTIAL("authCredential", String.class);
+	AUTH_CREDENTIAL("authCredential", String.class),
+
+	/**
+	 * Optional Sprint 12 safety-gate flag copied from the suite-level
+	 * {@code mutation-tests-enabled} parameter.
+	 */
+	MUTATION_TESTS_ENABLED("mutationTestsEnabled", String.class),
+
+	/**
+	 * Optional Sprint 12 safety-gate policy copied from the suite-level
+	 * {@code mutation-iut-policy} parameter.
+	 */
+	MUTATION_IUT_POLICY("mutationIutPolicy", String.class);
 
 	private final Class attrType;
 

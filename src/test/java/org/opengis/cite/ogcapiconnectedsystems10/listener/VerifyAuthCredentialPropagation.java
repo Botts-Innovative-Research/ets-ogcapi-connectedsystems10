@@ -86,6 +86,16 @@ public class VerifyAuthCredentialPropagation {
 	}
 
 	/**
+	 * Sprint 12 S-ETS-12-01: TestRunArg enum exposes mutation controls with the exact
+	 * keys accepted by TeamEngine and scripts/smoke-test.sh.
+	 */
+	@Test
+	public void testRunArg_MutationControls_keyMatchesContract() {
+		assertEquals("mutation-tests-enabled", TestRunArg.MUTATION_TESTS_ENABLED.toString());
+		assertEquals("mutation-iut-policy", TestRunArg.MUTATION_IUT_POLICY.toString());
+	}
+
+	/**
 	 * Test 2: SuiteAttribute enum exposes AUTH_CREDENTIAL so the suite-fixture listener
 	 * can stash the resolved credential for downstream consumers.
 	 */
@@ -93,6 +103,18 @@ public class VerifyAuthCredentialPropagation {
 	public void suiteAttribute_AuthCredential_present() {
 		assertEquals("authCredential", SuiteAttribute.AUTH_CREDENTIAL.getName());
 		assertEquals(String.class, SuiteAttribute.AUTH_CREDENTIAL.getType());
+	}
+
+	/**
+	 * Sprint 12 S-ETS-12-01: SuiteAttribute enum exposes mutation controls so the
+	 * CreateReplaceDelete tests can evaluate the safety gate from suite state.
+	 */
+	@Test
+	public void suiteAttribute_MutationControls_present() {
+		assertEquals("mutationTestsEnabled", SuiteAttribute.MUTATION_TESTS_ENABLED.getName());
+		assertEquals(String.class, SuiteAttribute.MUTATION_TESTS_ENABLED.getType());
+		assertEquals("mutationIutPolicy", SuiteAttribute.MUTATION_IUT_POLICY.getName());
+		assertEquals(String.class, SuiteAttribute.MUTATION_IUT_POLICY.getType());
 	}
 
 	/**
@@ -116,6 +138,28 @@ public class VerifyAuthCredentialPropagation {
 		org.mockito.Mockito.verify(suite)
 			.setAttribute(org.mockito.ArgumentMatchers.eq(SuiteAttribute.AUTH_CREDENTIAL.getName()), captor.capture());
 		assertEquals("Bearer ABCDEFGH12345678WXYZ", captor.getValue());
+	}
+
+	/**
+	 * Sprint 12 S-ETS-12-01: when both mutation suite params are supplied, the listener
+	 * stashes them on the ISuite for the CreateReplaceDelete safety gate.
+	 */
+	@Test
+	public void processSuiteParameters_setsMutationControlAttributes() throws Exception {
+		URL url = this.getClass().getResource("/atom-feed.xml");
+		assertNotNull("atom-feed.xml fixture missing", url);
+		Map<String, String> params = new HashMap<>();
+		params.put(TestRunArg.IUT.toString(), url.toURI().toString());
+		params.put(TestRunArg.MUTATION_TESTS_ENABLED.toString(), "true");
+		params.put(TestRunArg.MUTATION_IUT_POLICY.toString(), "dedicated-mutable-iut");
+		when(xmlSuite.getParameters()).thenReturn(params);
+
+		SuiteFixtureListener iut = new SuiteFixtureListener();
+		iut.processSuiteParameters(suite);
+
+		org.mockito.Mockito.verify(suite).setAttribute(SuiteAttribute.MUTATION_TESTS_ENABLED.getName(), "true");
+		org.mockito.Mockito.verify(suite)
+			.setAttribute(SuiteAttribute.MUTATION_IUT_POLICY.getName(), "dedicated-mutable-iut");
 	}
 
 	/**
@@ -155,6 +199,30 @@ public class VerifyAuthCredentialPropagation {
 
 		org.mockito.Mockito.verify(suite, org.mockito.Mockito.never())
 			.setAttribute(org.mockito.ArgumentMatchers.eq(SuiteAttribute.AUTH_CREDENTIAL.getName()),
+					org.mockito.ArgumentMatchers.any());
+	}
+
+	/**
+	 * Sprint 12 S-ETS-12-01: empty mutation suite params are treated as absent so normal
+	 * smoke runs do not unlock POST/PUT/DELETE.
+	 */
+	@Test
+	public void processSuiteParameters_emptyMutationControls_noAttribute() throws Exception {
+		URL url = this.getClass().getResource("/atom-feed.xml");
+		Map<String, String> params = new HashMap<>();
+		params.put(TestRunArg.IUT.toString(), url.toURI().toString());
+		params.put(TestRunArg.MUTATION_TESTS_ENABLED.toString(), "");
+		params.put(TestRunArg.MUTATION_IUT_POLICY.toString(), "");
+		when(xmlSuite.getParameters()).thenReturn(params);
+
+		SuiteFixtureListener iut = new SuiteFixtureListener();
+		iut.processSuiteParameters(suite);
+
+		org.mockito.Mockito.verify(suite, org.mockito.Mockito.never())
+			.setAttribute(org.mockito.ArgumentMatchers.eq(SuiteAttribute.MUTATION_TESTS_ENABLED.getName()),
+					org.mockito.ArgumentMatchers.any());
+		org.mockito.Mockito.verify(suite, org.mockito.Mockito.never())
+			.setAttribute(org.mockito.ArgumentMatchers.eq(SuiteAttribute.MUTATION_IUT_POLICY.getName()),
 					org.mockito.ArgumentMatchers.any());
 	}
 

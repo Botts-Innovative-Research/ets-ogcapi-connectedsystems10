@@ -119,6 +119,12 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String ADVANCEDFILTERING_GROUP = "advancedfiltering";
 
+	/**
+	 * Sprint 12 S-ETS-12-01 — CreateReplaceDelete systems safety-gated subset group
+	 * (depends on SystemFeatures).
+	 */
+	private static final String CREATE_REPLACE_DELETE_GROUP = "createreplacedelete";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -162,6 +168,12 @@ public class VerifyTestNGSuiteDependency {
 	/** Sprint 11 S-ETS-11-01 — AdvancedFiltering class set for structural assertions. */
 	private static final List<Class<?>> ADVANCEDFILTERING_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests.class);
+
+	/**
+	 * Sprint 12 S-ETS-12-01 — CreateReplaceDelete class set for structural assertions.
+	 */
+	private static final List<Class<?>> CREATE_REPLACE_DELETE_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -1224,6 +1236,106 @@ public class VerifyTestNGSuiteDependency {
 				+ advancedFilteringClassNames
 				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
 				+ "(AdvancedFiltering → SystemFeatures → Core) resolves within scope. See Sprint 11 S-ETS-11-01.",
+				coAlloc);
+	}
+
+	// ===== Sprint 12 S-ETS-12-01 — CreateReplaceDelete group =====
+	// CreateReplaceDelete systems subset depends on SystemFeatures because it validates
+	// /systems mutation behavior behind an explicit safety gate. This is intentionally a
+	// PARTIAL implementation of REQ-ETS-PART1-010.
+
+	/**
+	 * Sprint 12 S-ETS-12-01 (REQ-ETS-PART1-010): the canonical testng.xml SHALL declare
+	 * {@code <group name="createreplacedelete" depends-on="systemfeatures"/>} so
+	 * CreateReplaceDelete tests cascade-SKIP when the SystemFeatures prerequisite fails.
+	 */
+	@org.junit.Test
+	public void testCreateReplaceDeleteGroupDependsOnSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(CREATE_REPLACE_DELETE_GROUP)) {
+				String dependsOn = deps.get(CREATE_REPLACE_DELETE_GROUP);
+				assertNotNull("group '" + CREATE_REPLACE_DELETE_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + CREATE_REPLACE_DELETE_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue(
+				"testng.xml does not declare <group name=\"" + CREATE_REPLACE_DELETE_GROUP + "\" depends-on=\""
+						+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 12 S-ETS-12-01. The CreateReplaceDelete "
+						+ "systems safety-gated subset requires SystemFeatures as its direct prerequisite.",
+				foundDependency);
+	}
+
+	/**
+	 * Sprint 12 S-ETS-12-01: every CreateReplaceDelete @Test method SHALL carry
+	 * {@code groups = "createreplacedelete"} so the suite-level dependency declaration
+	 * has tagged methods to resolve against.
+	 */
+	@org.junit.Test
+	public void testEveryCreateReplaceDeleteTestMethodCarriesCreateReplaceDeleteGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalCreateReplaceDelete = 0;
+		for (Class<?> c : CREATE_REPLACE_DELETE_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalCreateReplaceDelete++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(CREATE_REPLACE_DELETE_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in CreateReplaceDelete conformance classes; found 0",
+				totalCreateReplaceDelete > 0);
+		assertTrue("CreateReplaceDelete @Test methods missing groups=\"" + CREATE_REPLACE_DELETE_GROUP + "\": "
+				+ offenders, offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 12 S-ETS-12-01: CreateReplaceDelete classes MUST be co-located in the SAME
+	 * {@code <test>} block as SystemFeatures so the group-dependency cascade resolves
+	 * within TestNG's test-scoped dependency map.
+	 */
+	@org.junit.Test
+	public void testCreateReplaceDeleteCoLocatedWithSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> createReplaceDeleteClassNames = new HashSet<>();
+		for (Class<?> c : CREATE_REPLACE_DELETE_CLASSES) {
+			createReplaceDeleteClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAnyCreateReplaceDelete = !java.util.Collections.disjoint(xtClasses,
+					createReplaceDeleteClassNames);
+			if (hasAllSystemFeatures && hasAnyCreateReplaceDelete) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue("SystemFeatures (" + systemFeaturesClassNames + ") and CreateReplaceDelete ("
+				+ createReplaceDeleteClassNames
+				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
+				+ "(CreateReplaceDelete → SystemFeatures → Core) resolves within scope. See Sprint 12 S-ETS-12-01.",
 				coAlloc);
 	}
 

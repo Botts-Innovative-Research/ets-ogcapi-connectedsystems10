@@ -22,7 +22,7 @@ description: |
     - Systems lifecycle create/replace/delete assertion SKIPs by default before POST;
       only an explicitly enabled dedicated mutable IUT may execute it.
     - Runtime or structural dependency proof: `createreplacedelete` depends on `systemfeatures`.
-    - Separate default-smoke no-mutation evidence: failed=0 and no IUT-bound POST/PUT/DELETE request-log pairs from the CRD suite.
+    - Separate default-smoke no-mutation evidence: failed=0 and no IUT-bound POST/PUT/DELETE request-log entries from the CRD suite.
 
   Explicitly excluded:
     - unguarded mutation against GeoRobotix or any shared public IUT
@@ -36,7 +36,7 @@ upstream_inputs:
   - "Current ETS repo HEAD after Sprint 11 gates: 65d48db"
   - ".harness/evaluations/sprint-ets-11-evaluator-gate.yaml (Quinn APPROVE_WITH_CONCERNS 0.90)"
   - ".harness/evaluations/sprint-ets-11-adversarial-gate.yaml (Raze APPROVE_WITH_CONCERNS 0.90)"
-  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md (REQ-ETS-PART1-010 SPECIFIED for Sprint 12)"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md (REQ-ETS-PART1-010 was SPECIFIED at planning time; implementation status is reconciled post-Generator)"
   - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
   - "OGC upstream opengeospatial/ogcapi-connected-systems commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
 
@@ -119,7 +119,7 @@ mutation_opt_in_parameters:
 
 no_mutation_smoke_oracle:
   description: "Default smoke must prove absence of IUT-bound mutation, not absence of every POST string in all logs."
-  method: "Parse adjacent `Request method:` and `Request URI:` pairs from REST Assured logs."
+  method: "Parse current `Request: METHOD URI` entries and older adjacent `Request method:` / `Request URI:` pairs from REST Assured logs."
   filter: "Only pairs whose URI starts with the IUT base URL are in scope."
   pass_condition: "Zero in-scope pairs with method POST, PUT, or DELETE."
   excluded: "TeamEngine control-plane POST that starts the suite run."
@@ -127,7 +127,7 @@ no_mutation_smoke_oracle:
 evaluation_focus:
   - "Generator must re-verify GeoRobotix /conformance for /conf/create-replace-delete before implementing."
   - "Generator must not issue IUT-bound POST/PUT/DELETE during default smoke."
-  - "Raze should inspect TeamEngine container logs using adjacent Request method/Request URI pairs filtered to GeoRobotix-bound REST Assured requests."
+  - "Raze should inspect TeamEngine container logs using recognized REST Assured request entries filtered to GeoRobotix-bound requests."
   - "Quinn should verify mutation opt-in parameters are present in TestRunArg/SuiteAttribute and default to disabled."
   - "Quinn should verify CTL and smoke-script parameter wiring is closed by default."
   - "For default GeoRobotix, lifecycle mutation tests must SKIP with reason before issuing POST."

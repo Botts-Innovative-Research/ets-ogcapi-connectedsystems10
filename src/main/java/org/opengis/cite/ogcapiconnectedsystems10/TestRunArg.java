@@ -33,7 +33,20 @@ public enum TestRunArg {
 	 * added (Sprint 1-4 smoke against unauthenticated GeoRobotix continues to work).
 	 * </p>
 	 */
-	AUTH_CREDENTIAL;
+	AUTH_CREDENTIAL,
+
+	/**
+	 * Optional Sprint 12 safety-gate flag. Create/replace/delete lifecycle tests may
+	 * issue POST/PUT/DELETE only when this parameter is exactly {@code true} and the
+	 * companion {@link #MUTATION_IUT_POLICY} parameter asserts a dedicated mutable IUT.
+	 */
+	MUTATION_TESTS_ENABLED,
+
+	/**
+	 * Optional Sprint 12 safety-gate policy marker. The only value that unlocks IUT-bound
+	 * mutation requests is {@code dedicated-mutable-iut}.
+	 */
+	MUTATION_IUT_POLICY;
 
 	@Override
 	public String toString() {

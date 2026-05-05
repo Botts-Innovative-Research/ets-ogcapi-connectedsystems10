@@ -156,6 +156,20 @@ public class SuiteFixtureListener implements ISuiteListener {
 					"auth-credential suite parameter present (length=%d) — REST-Assured Authorization header will be configured (REQ-ETS-CLEANUP-013).",
 					authCredential.length()));
 		}
+		String mutationTestsEnabled = params.get(TestRunArg.MUTATION_TESTS_ENABLED.toString());
+		if (mutationTestsEnabled != null && !mutationTestsEnabled.isEmpty()) {
+			suite.setAttribute(SuiteAttribute.MUTATION_TESTS_ENABLED.getName(), mutationTestsEnabled);
+			TestSuiteLogger.log(Level.CONFIG, String.format(
+					"mutation-tests-enabled suite parameter present (value=%s) — Sprint 12 create/replace/delete safety gate will evaluate it.",
+					mutationTestsEnabled));
+		}
+		String mutationIutPolicy = params.get(TestRunArg.MUTATION_IUT_POLICY.toString());
+		if (mutationIutPolicy != null && !mutationIutPolicy.isEmpty()) {
+			suite.setAttribute(SuiteAttribute.MUTATION_IUT_POLICY.getName(), mutationIutPolicy);
+			TestSuiteLogger.log(Level.CONFIG, String.format(
+					"mutation-iut-policy suite parameter present (value=%s) — Sprint 12 create/replace/delete safety gate will evaluate it.",
+					mutationIutPolicy));
+		}
 		URI iutRef = URI.create(iutParam.trim());
 		// Stash the raw IUT URI on the suite so REST Assured-based test classes (Sprint 1
 		// onwards) can read it without re-parsing the XmlSuite parameter map. Coexists

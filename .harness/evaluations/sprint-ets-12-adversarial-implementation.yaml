@@ -1,0 +1,79 @@
+verdict: GAPS_FOUND
+confidence: 0.88
+reviewer: Raze
+review_type: adversarial_implementation_review
+sprint: ets-12
+story: S-ETS-12-01
+timestamp_utc: "2026-05-05T21:47:15Z"
+reviewed_scope:
+  - "Current uncommitted working tree in /home/nh/docker/gir/ets-ogcapi-connectedsystems10."
+  - "Sprint ets-12 Generator implementation for Create/Replace/Delete safety-gated systems subset."
+  - "Static inspection of changed Java/TestNG/CTL/shell/docs files."
+  - "Artifact inspection only for Maven and TeamEngine smoke evidence; no expensive Docker rerun."
+  - "Smoke artifacts: /tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r2/."
+  - "Smoke clone: /tmp/sprint-ets-12-generator-smoke-current."
+findings:
+  - id: RAZE-ETS12-GAP-001
+    severity: HIGH
+    title: "Default-smoke no-mutation proof is vacuous for the actual log format"
+    risk: "False PASS / false safety proof. The script reports zero IUT-bound POST/PUT/DELETE request-log pairs, but the current container log does not contain the `Request method:` + `Request URI:` pairs that the parser scans."
+    evidence:
+      - "scripts/smoke-test.sh:231-267 scans only adjacent lines beginning `Request method:` and `Request URI:`."
+      - "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r2/s-ets-01-03-teamengine-container-2026-05-05.log contains REST request lines in `Request: METHOD URI` form, e.g. `Request: OPTIONS https://api.georobotix.io/ogc/t18/api/systems` and `Request: GET ...`, not the parsed pair format."
+      - "Targeted parser replay over the smoke log found `all_mutation_pairs=0` and `iut_mutation_pairs=0` because no matching pair-format lines exist at all, not because the oracle proved every emitted request was non-mutating."
+      - "The artifact does show no visible `Request: POST`, `Request: PUT`, or `Request: DELETE` lines for the IUT, but that was not the oracle implemented in `scripts/smoke-test.sh`."
+    required_fix: "Update the smoke no-mutation oracle to match the emitted request log format, or make the emitted log format match the planned adjacent-pair oracle. At minimum parse `Request: METHOD URI` IUT-bound lines in addition to pair-format lines, fail if neither log format is present, and add a focused script/unit check with synthetic logs proving POST/PUT/DELETE are caught and TeamEngine control-plane POST is excluded."
+  - id: RAZE-ETS12-GAP-002
+    severity: MEDIUM
+    title: "Docs reconciliation left stale Sprint 12 status references"
+    risk: "Spec/story/ops drift after implementation can mislead the next role about whether REQ-ETS-PART1-010 is still only planned or already partially implemented."
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:144 still says `REQ-ETS-PART1-010 is SPECIFIED for Sprint 12 below` even though the detailed REQ-ETS-PART1-010 block is now PARTIAL-IMPLEMENTED."
+      - "epics/epic-ets-02-part1-classes.md:3 still says `Sprint 12 planned Create/Replace/Delete safety-gated systems subset` while the story row says Partial-Implemented."
+      - ".harness/contracts/sprint-ets-12.yaml:39 still labels the spec input as `REQ-ETS-PART1-010 SPECIFIED for Sprint 12`; this is acceptable as a planning contract snapshot only if the implementation report/status explicitly treats it as pre-Generator input, but it currently reads like live source-of-truth drift."
+    required_fix: "Reconcile the stale status strings or explicitly mark planning-contract wording as historical input. Keep the authoritative implementation status consistently PARTIAL-IMPLEMENTED until dedicated mutable-IUT lifecycle evidence exists."
+  - id: RAZE-ETS12-CONCERN-001
+    severity: LOW
+    title: "Allow-header method checks use substring matching"
+    risk: "Minor false PASS surface if an unusual Allow header contains method names as substrings rather than tokens."
+    evidence:
+      - "CreateReplaceDeleteTests.java:295-300 checks `allow.toUpperCase(Locale.ROOT).contains(method)` for POST/PUT/DELETE."
+    required_fix: "Prefer comma-token parsing with trimming/case-folding before counting OPTIONS readiness as PASS."
+  - id: RAZE-ETS12-CONCERN-002
+    severity: LOW
+    title: "Worktree is dirty but not polluted by runtime artifacts"
+    risk: "No blocking pollution found; current dirty set appears to be expected Sprint 12 implementation/docs plus the new untracked CreateReplaceDelete package."
+    evidence:
+      - "git status --short shows modified Sprint 12 Java/TestNG/CTL/smoke/docs files and untracked `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/`."
+      - "Smoke outputs reviewed under /tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r2; no new ops/test-results runtime artifact files were added to the worktree."
+      - "git diff --check produced no whitespace errors."
+    required_fix: "Stage/commit only intentional Sprint 12 files after gaps are fixed; keep /tmp smoke artifacts out of the worktree unless deliberately archived."
+evidence:
+  maven:
+    source: "User-provided required evidence and reconciled docs."
+    result: "BUILD SUCCESS; 105 tests / 0 failures / 0 errors / 3 skipped."
+    note: "No Docker rerun performed; review was not blocked by missing Maven evidence."
+  teamengine_smoke:
+    source_report: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r2/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    source_log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r2/s-ets-01-03-teamengine-container-2026-05-05.log"
+    result: "69 total / 52 passed / 0 failed / 17 skipped."
+    createreplacedelete_outcome: "4 PASS and 2 SKIP-by-safety-gate in the smoke XML."
+    no_mutation_artifact_observation: "No visible IUT-bound `Request: POST|PUT|DELETE` lines were found, but the implemented smoke oracle did not parse the actual `Request: METHOD URI` log format."
+  mutation_safety_static:
+    - "CreateReplaceDeleteTests.ensureMutationEnabledOrSkip() runs before POST in systemsCreateReplaceDeleteLifecycle()."
+    - "Default absent mutation parameters throw SkipException before POST/PUT/DELETE."
+    - "Known public GeoRobotix host/base URL is hard-denied even when opt-in parameters are present."
+  testng_wiring:
+    - "testng.xml declares `<group name=\"createreplacedelete\" depends-on=\"systemfeatures\"/>` and co-locates CreateReplaceDeleteTests with SystemFeatures."
+    - "VerifyTestNGSuiteDependency adds group dependency, method tagging, and co-location lint coverage."
+    - "Smoke XML records CreateReplaceDelete test methods with `groups=\"createreplacedelete\"` and `depends-on-groups=\"systemfeatures\"`."
+  canonical_uri_and_scope:
+    - "Code uses canonical-looking CS Part 1 URIs for `/conf/create-replace-delete`, `/req/create-replace-delete`, `/req/create-replace-delete/system`, and `/req/create-replace-delete/system-delete-cascade` consistent with Sprint 12 planning artifacts."
+    - "Implementation did not add `/conf/update`, PATCH, Part 2, or non-system CRUD behavior."
+required_fixes:
+  - "Fix the smoke no-mutation oracle so the reported zero IUT-bound POST/PUT/DELETE result is non-vacuous for current logs."
+  - "Reconcile stale Sprint 12 status wording in OpenSpec/epic/contract-or-historical-note."
+  - "Tokenize Allow header checks before relying on OPTIONS readiness PASS."
+approval_conditions:
+  - "After RAZE-ETS12-GAP-001 and RAZE-ETS12-GAP-002 are fixed, rerun or replay the no-mutation oracle against the existing smoke log and a synthetic violating log."
+  - "Do not claim full `/req/create-replace-delete/system` lifecycle conformance until POST/PUT/DELETE run successfully against a dedicated mutable IUT with cleanup evidence."

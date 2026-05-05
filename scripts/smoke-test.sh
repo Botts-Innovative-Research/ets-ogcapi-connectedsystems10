@@ -167,11 +167,21 @@ if [[ -n "${SMOKE_AUTH_CREDENTIAL:-}" ]]; then
   AUTH_CRED_ARGS+=(--data-urlencode "auth-credential=${SMOKE_AUTH_CREDENTIAL}")
   log "  SMOKE_AUTH_CREDENTIAL set (length=${#SMOKE_AUTH_CREDENTIAL}) — propagating as auth-credential suite parameter (REQ-ETS-CLEANUP-013)"
 fi
+MUTATION_ARGS=()
+if [[ -n "${SMOKE_MUTATION_TESTS_ENABLED:-}" ]]; then
+  MUTATION_ARGS+=(--data-urlencode "mutation-tests-enabled=${SMOKE_MUTATION_TESTS_ENABLED}")
+  log "  SMOKE_MUTATION_TESTS_ENABLED set (value=${SMOKE_MUTATION_TESTS_ENABLED}) — forwarding to Sprint 12 CRD safety gate"
+fi
+if [[ -n "${SMOKE_MUTATION_IUT_POLICY:-}" ]]; then
+  MUTATION_ARGS+=(--data-urlencode "mutation-iut-policy=${SMOKE_MUTATION_IUT_POLICY}")
+  log "  SMOKE_MUTATION_IUT_POLICY set (value=${SMOKE_MUTATION_IUT_POLICY}) — forwarding to Sprint 12 CRD safety gate"
+fi
 log "step 6/8 — POST suite/${ETS_CODE}/run iut=${IUT_URL}"
 http_code=$(curl -s -u "${TE_USER}:${TE_PASS}" -G \
     "http://localhost:${SMOKE_PORT}/teamengine/rest/suites/${ETS_CODE}/run" \
     --data-urlencode "iut=${IUT_URL}" \
     "${AUTH_CRED_ARGS[@]}" \
+    "${MUTATION_ARGS[@]}" \
     -H "Accept: application/xml" \
     -o "$REPORT_XML" \
     -w "%{http_code}" \
@@ -217,6 +227,23 @@ docker logs "$CONTAINER_NAME" > "$LOG_FILE" 2>&1 || true
 [[ "$total" =~ ^[0-9]+$ ]] || die "could not parse <testng-results total=...>"
 (( total > 0 )) || die "TestNG report total=0 (no @Test methods ran)"
 (( failed == 0 )) || die "TestNG report has failed=$failed (>0); see $REPORT_XML"
+
+# Sprint 12 S-ETS-12-01: default smoke against GeoRobotix must never issue IUT-bound
+# mutation requests. The oracle scans REST-Assured "Request: METHOD URI" entries
+# and the older adjacent "Request method:" / "Request URI:" pair format. It
+# ignores TeamEngine control-plane POSTs because their URI is not the IUT.
+oracle_output=$(python3 scripts/no-mutation-oracle.py "$LOG_FILE" "$IUT_URL" 2>&1) || oracle_status=$?
+oracle_status="${oracle_status:-0}"
+if [[ "$oracle_status" == "1" ]]; then
+  echo "--- IUT-bound mutation request log pairs ---"
+  echo "$oracle_output"
+  die "default smoke observed IUT-bound POST/PUT/DELETE request(s)"
+fi
+if [[ "$oracle_status" != "0" ]]; then
+  echo "$oracle_output"
+  die "no-mutation oracle could not find IUT-bound request log lines"
+fi
+log "  zero IUT-bound POST/PUT/DELETE request-log entries for ${IUT_URL} (${oracle_output})"
 
 # ---------- Step 8: scan container logs for SEVERE during STARTUP
 log "step 8/8 — scanning container startup log for ERROR/SEVERE"

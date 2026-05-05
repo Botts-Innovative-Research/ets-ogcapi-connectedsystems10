@@ -65,6 +65,16 @@
                  <input id="level-2" type="radio" name="level" value="2" />
                  <label class="form-label" for="level-2"> Level 2</label>
                </p>
+               <p>
+                 <input id="mutation-tests-enabled" name="mutation-tests-enabled" type="checkbox" value="true" />
+                 <label for="mutation-tests-enabled"> Enable create/replace/delete mutation tests</label>
+               </p>
+               <p>
+                 <label for="mutation-iut-policy">
+                   <h4 style="margin-bottom: 0.5em">Mutation IUT policy</h4>
+                 </label>
+                 <input id="mutation-iut-policy" name="mutation-iut-policy" size="48" type="text" value="" />
+               </p>
              </fieldset>
              <p>
                <input class="form-button" type="submit" value="Start"/> | 
@@ -86,6 +96,8 @@
             </xsl:choose>
           </entry>
           <entry key="ics"><xsl:value-of select="$form-data/values/value[@key='level']"/></entry>
+          <entry key="mutation-tests-enabled"><xsl:value-of select="normalize-space($form-data/values/value[@key='mutation-tests-enabled'])"/></entry>
+          <entry key="mutation-iut-policy"><xsl:value-of select="normalize-space($form-data/values/value[@key='mutation-iut-policy'])"/></entry>
 		    </properties>
 		   </xsl:variable>
        <xsl:variable name="testRunDir">

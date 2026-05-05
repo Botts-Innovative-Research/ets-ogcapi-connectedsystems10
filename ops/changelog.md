@@ -2,6 +2,21 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T21:41Z — Sprint ets-12 Generator implementation
+
+**Triggered by user instruction**: "Start Generator for S-ETS-12-01."
+
+- Implemented `S-ETS-12-01` as a PARTIAL Create/Replace/Delete systems subset with default-safe behavior.
+- Added `CreateReplaceDeleteTests.java` with six `createreplacedelete` @Tests: conformance declaration, mutation safety gate, collection OPTIONS readiness, resource OPTIONS readiness, guarded lifecycle opt-in, and dependency tracer.
+- Wired `testng.xml` with `<group name="createreplacedelete" depends-on="systemfeatures"/>` and added three `VerifyTestNGSuiteDependency` lint tests for group dependency, method tagging, and co-location.
+- Added mutation opt-in plumbing through `TestRunArg`, `SuiteAttribute`, `SuiteFixtureListener`, CTL controls, and optional smoke env forwarding (`SMOKE_MUTATION_TESTS_ENABLED`, `SMOKE_MUTATION_IUT_POLICY`).
+- Added smoke request-entry oracle requiring zero IUT-bound POST/PUT/DELETE requests for default GeoRobotix smoke; TeamEngine control-plane POST is excluded by IUT URL filtering.
+- Verification: Docker formatter BUILD SUCCESS; `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS with `105 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-12-generator-smoke-current-r3` reported `69 total / 52 passed / 0 failed / 17 skipped`. Initial Raze review found the oracle parsed the wrong log format; fixed by adding `scripts/no-mutation-oracle.py` and `scripts/no-mutation-oracle-test.sh`; the integrated smoke oracle recognized 40 IUT-bound request entries with zero IUT-bound POST/PUT/DELETE entries.
+- Raze gap-fix review wrote `.harness/evaluations/sprint-ets-12-adversarial-gapfix.yaml` with `APPROVE_WITH_CONCERNS` confidence 0.91 and no required fixes remaining.
+- Reconciled OpenSpec, story status, traceability, epic status, ops status, and test-results for Sprint 12 Generator evidence.
+
+---
+
 ## 2026-05-05T21:19Z — Sprint ets-12 Raze planning gap-fix recheck
 
 **Triggered by user instruction**: Act as Red Team / Raze to recheck Sprint ets-12 after only GAP-003 remained open.

@@ -134,6 +134,10 @@ public class GeoJsonTests {
 					"/systems response has neither GeoJSON 'features' nor CS API default 'items' wrapper. Keys: "
 							+ this.systemsGeoJsonBody.keySet());
 		}
+		if (this.systemsGeoJsonBody.containsKey("items") && !this.systemsGeoJsonBody.containsKey("features")) {
+			throw new SkipException(REQ_MEDIATYPE_READ
+					+ " — IUT declares /conf/geojson but /systems with Accept application/geo+json returned the CS API default 'items' wrapper, not GeoJSON 'features'. This is fallback evidence, not a mediatype-read PASS.");
+		}
 	}
 
 	/**

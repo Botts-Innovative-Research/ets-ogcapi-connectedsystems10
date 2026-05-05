@@ -1,0 +1,113 @@
+# Sprint 11 contract - advanced-filtering-read-only
+# Created 2026-05-05 after Sprint 10 gates closed.
+
+sprint: "ets-11"
+sprint_name: "advanced-filtering-read-only-subset"
+type: "feature-expansion"
+created: "2026-05-05T19:32:08Z"
+description: |
+  Sprint 11 implements one Part 1 class subset:
+
+  S-ETS-11-01 - AdvancedFiltering systems/common-resource read-only subset
+  (`/conf/advanced-filtering`) (P0/M).
+
+  Scope is PARTIAL for REQ-ETS-PART1-009:
+    - `/conformance` declares `/conf/advanced-filtering`, otherwise SKIP-with-reason.
+    - Local ID_List schema helper for explicit valid/invalid examples derived from upstream clause 15 and `idListSchema.yaml`.
+    - `/systems?id=<known-id>` non-empty result evidence and selected-id preservation after selecting a seed System id.
+    - `/systems?q=<known keyword>` non-empty result evidence and keyword evidence in name/description after selecting a seed keyword.
+    - `/systems?geom=<broad WKT polygon>` HTTP 200 + JSON shape smoke only.
+    - Runtime or structural dependency proof: `advancedfiltering` depends on `systemfeatures`.
+    - Separate default-smoke no-regression evidence: total PASS+SKIP >= 63 and failed=0.
+
+  Explicitly excluded:
+    - create-replace-delete and update mutation behavior
+    - Part 2 query requirements
+    - full association filters across deployments/procedures/sampling features/properties
+    - full geometry intersection correctness
+    - combined-filter truth-table validation
+    - endpoint parity across every CS API resource endpoint
+
+upstream_inputs:
+  - "Current ETS repo HEAD after Sprint 10 gates: 58d70f5"
+  - ".harness/evaluations/sprint-ets-10-evaluator-gate.yaml (Quinn APPROVE_WITH_CONCERNS 0.91)"
+  - ".harness/evaluations/sprint-ets-10-adversarial-gate.yaml (Raze APPROVE 0.91)"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md (REQ-ETS-PART1-009 SPECIFIED for Sprint 11)"
+  - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+  - "OGC upstream opengeospatial/ogcapi-connected-systems commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+
+stories:
+  - id: "S-ETS-11-01"
+    title: "AdvancedFiltering systems/common-resource read-only subset - depends on SystemFeatures"
+    file: "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on: []
+    parallelizable: false
+    rationale: |
+      AdvancedFiltering is the only remaining non-mutation Part 1 requirement class.
+      GeoRobotix does not declare /conf/advanced-filtering, so Sprint 11 must be
+      declaration-gated and SKIP-honest in default smoke while still implementing the
+      suite structure and read-only checks for IUTs that do declare the class.
+
+requirements:
+  new_reqs:
+    - "REQ-ETS-PART1-009 (AdvancedFiltering Conformance Class /conf/advanced-filtering - SPECIFIED -> target PARTIAL-IMPLEMENTED for systems/common-resource read-only subset)"
+  modified_reqs:
+    - "REQ-ETS-PART1-007..013 placeholder narrative narrowed to reflect Sprint 11 AdvancedFiltering detail"
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-009-ADVFILTER-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART1-009-ADVFILTER-ID-LIST-SCHEMA-001"
+    - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-ID-001"
+    - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-KEYWORD-001"
+    - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-GEOM-SMOKE-001"
+    - "SCENARIO-ETS-PART1-009-ADVFILTER-DEPENDENCY-SMOKE-001"
+    - "SCENARIO-ETS-PART1-009-ADVFILTER-SMOKE-NO-REGRESSION-001"
+  normal: []
+
+success_criteria:
+  all_critical_scenarios_pass_or_skip_with_reason: true
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  no_regression: true
+  build_green_jdk17: true
+  smoke_test_green_against_georobotix: true
+  no_part2_work_in_sprint: true
+  zero_bare_assertionerror_in_conformance: true
+  worktree_not_polluted_at_gate: true
+  advanced_filtering_subset_implemented: true
+  advanced_filtering_testng_wired: true
+  advanced_filtering_lint_tests: true
+  advanced_filtering_iut_state_honest: true
+  no_write_operations_in_advanced_filtering_sprint: true
+  non_vacuous_id_and_keyword_filters: true
+  explicit_id_list_examples: true
+  dependency_evidence_separated_from_smoke_totals: true
+  smoke_total_at_least_63_failed_zero: true
+  spec_status_honesty_principle: true
+
+evaluation_focus:
+  - "Generator must re-verify GeoRobotix /conformance and preserve SKIP-with-reason when /conf/advanced-filtering is absent."
+  - "Generator must not count undeclared GeoRobotix query behavior as conformance PASS."
+  - "For a declaring IUT, Generator must fail empty `/systems?id=<seed-id>` and `/systems?q=<seed-keyword>` results after seed selection; only missing seed data may SKIP."
+  - "Generator must implement the explicit ID_List helper examples from the story/contract without extending the sprint into full endpoint query semantics."
+  - "Generator must not implement POST/PUT/PATCH/DELETE or create-replace-delete/update checks."
+  - "Generator must keep geometry filtering at smoke level only unless a full spatial semantics oracle is implemented."
+  - "Quinn should run scripts/mvn-test-via-docker.sh from a /tmp clone and verify surefire includes AdvancedFiltering lint tests."
+  - "Raze should run scripts/smoke-test.sh from a separate /tmp clone and verify failed=0 and total PASS+SKIP >= 63."
+  - "Raze should inspect for false PASS from absent /conf/advanced-filtering and from unvalidated query result semantics."
+
+risk_register:
+  - id: "ADVFILTER-IUT-NOT-DECLARED"
+    severity: "MEDIUM"
+    mitigation: "Default smoke should SKIP AdvancedFiltering with reason; do not fail or pass from undeclared query behavior."
+  - id: "ADVFILTER-SEMANTIC-OVERCLAIM"
+    severity: "MEDIUM"
+    mitigation: "Sprint 11 validates only scoped systems/common-resource behavior and documents all unimplemented subrequirements."
+  - id: "MUTATION-SCOPE-CREEP"
+    severity: "LOW"
+    mitigation: "Contract excludes create-replace-delete/update and all POST/PUT/PATCH/DELETE behavior."

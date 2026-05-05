@@ -1,0 +1,103 @@
+agent: raze
+gate: "Gate 4 Adversarial Reviewer"
+sprint: "ets-11"
+scope: "planning-gap-fix-review"
+artifact_created: "2026-05-05T19:46:30Z"
+verdict: "APPROVE"
+confidence: 0.92
+
+reviewed_scope:
+  basis: "Current uncommitted changes only; static checks against prior GAP-1, GAP-2, and CONCERN-1."
+  files_reviewed:
+    - "AGENTS.md"
+    - "_bmad/agents/adversarial-reviewer.md"
+    - ".harness/evaluations/sprint-ets-11-plan-adversarial.yaml"
+    - ".harness/contracts/sprint-ets-11.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-02-part1-classes.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "ops/metrics.md"
+  uncommitted_files_considered:
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-02-part1-classes.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "ops/metrics.md"
+    - "ops/status.md"
+    - ".harness/contracts/sprint-ets-11.yaml"
+    - ".harness/evaluations/sprint-ets-11-plan-adversarial.yaml"
+    - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+
+commands_run:
+  - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+  - "sed -n '1,220p' _bmad/agents/adversarial-reviewer.md"
+  - "sed -n '1,220p' ops/metrics.md"
+  - "git status --short"
+  - "sed -n '1,240p' .harness/evaluations/sprint-ets-11-plan-adversarial.yaml"
+  - "git diff -- .harness/handoffs/planner-handoff.yaml .harness/contracts/sprint-ets-11.yaml epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+  - "git diff -- openspec/capabilities/ets-ogcapi-connectedsystems/spec.md _bmad/traceability.md ops/status.md ops/changelog.md ops/known-issues.md"
+  - "rg -n \"non-empty|seed|ID_List|idListSchema|clause 15|SMOKE-NO-REGRESSION|DEPENDENCY|systems\\?id|systems\\?q|known keyword|known-id\" .harness/contracts/sprint-ets-11.yaml epics/stories/s-ets-11-01-advanced-filtering-readonly.md .harness/handoffs/planner-handoff.yaml openspec/capabilities/ets-ogcapi-connectedsystems/spec.md ops/status.md"
+  - "sed -n '1,260p' .harness/contracts/sprint-ets-11.yaml"
+  - "sed -n '1,320p' epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+  - "git diff --name-only"
+  - "sed -n '1,180p' AGENTS.md"
+  - "git diff -- epics/epic-ets-02-part1-classes.md"
+
+not_run:
+  - "Docker"
+  - "Maven"
+  - "TeamEngine smoke"
+  - "E2E"
+
+gapfix_verification:
+  - id: "GAP-1"
+    prior_title: "ID and keyword filter scenarios can pass vacuously on empty results"
+    status: "closed"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md now requires `/systems?id=<id>` to be called after selecting a known System id from a non-empty `/systems` seed response, and requires the filtered response to contain at least one item."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md now requires `/systems?q=<known keyword>` after selecting a keyword from a System name/description, and requires at least one filtered item with keyword evidence."
+      - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md states empty filtered results after selecting a seed id or seed keyword are FAIL, with SKIP limited to inability to select seed data."
+      - ".harness/contracts/sprint-ets-11.yaml evaluation focus explicitly says declaring IUTs must fail empty `/systems?id=<seed-id>` and `/systems?q=<seed-keyword>` results after seed selection."
+      - ".harness/handoffs/planner-handoff.yaml carries the same Generator guardrail."
+    residual_risk: "Generator still has to implement seed-selection and empty-result failure correctly; planning language is now non-vacuous."
+
+  - id: "GAP-2"
+    prior_title: "ID_List helper acceptance rules are underspecified for implementation"
+    status: "closed"
+    evidence:
+      - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md adds an ID_List helper examples table with valid local IDs, comma-separated local IDs, valid UIDs, comma-separated UIDs, UID-prefix wildcard, empty value, comma-only value, mixed local/UID, and malformed URI examples."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md includes the same examples and states they are based on upstream `idListSchema.yaml` and clause 15 text."
+      - ".harness/handoffs/planner-handoff.yaml records `id_list_schema_path: api/part1/openapi/parameters/idListSchema.yaml` and summarizes the clause 15 mixed-ID prohibition."
+      - ".harness/contracts/sprint-ets-11.yaml now names explicit valid/invalid examples derived from upstream clause 15 and `idListSchema.yaml` as in-scope, and warns against expanding into full endpoint query semantics."
+    residual_risk: "The exact Java helper regex/parser is not reviewed here because implementation code has not been written."
+
+  - id: "CONCERN-1"
+    prior_title: "Dependency scenario mixes structural cascade proof with default smoke totals"
+    status: "closed"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md now splits `ADVFILTER-DEPENDENCY-SMOKE-001` from `ADVFILTER-SMOKE-NO-REGRESSION-001`."
+      - "The dependency scenario is limited to SystemFeatures sabotage/failure and structural lint and/or targeted runtime cascade evidence."
+      - "The smoke no-regression scenario separately requires `scripts/smoke-test.sh`, failed=0, PASS+SKIP >= 63, and SKIP-with-reason when `/conf/advanced-filtering` remains absent."
+      - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md and `.harness/contracts/sprint-ets-11.yaml` both call out separate dependency proof and smoke-total evidence."
+    residual_risk: "Generator/gates still need to archive both evidence types separately after implementation."
+
+open_findings: []
+
+closed_findings:
+  - "GAP-1 closed: `/systems?id=<seed-id>` and `/systems?q=<seed-keyword>` are no longer vacuous in planning artifacts."
+  - "GAP-2 closed: ID_List helper examples are explicit and tied to upstream clause 15 plus `idListSchema.yaml`."
+  - "CONCERN-1 closed: dependency cascade evidence is separated from default smoke no-regression totals."
+
+evidence_summary:
+  planning_readiness: "Ready for Generator, subject to implementation-time re-verification of `/conformance` and mandatory SKIP honesty when `/conf/advanced-filtering` is absent."
+  scope_honesty: "No implementation code changed; no mutation behavior, Part 2 work, full geometry semantics, association filters, combined-filter truth tables, or full AdvancedFiltering closure are claimed."
+  verification_limit: "Static planning review only, per user instruction. No runtime claims are made."
+
+required_fixes: []

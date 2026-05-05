@@ -2,6 +2,44 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T19:46Z — Sprint ets-11 Raze planning gap-fix review
+
+**Triggered by user instruction**: Act as Red Team / Raze for Sprint ets-11 planning gap fixes after prior GAP-1, GAP-2, and CONCERN-1.
+
+- Reviewed current uncommitted planning/docs changes only; did not run Docker, Maven, TeamEngine smoke, or E2E.
+- Wrote `.harness/evaluations/sprint-ets-11-plan-gapfix.yaml` with verdict `APPROVE`, confidence 0.92.
+- Confirmed GAP-1 closed: `/systems?id=<seed-id>` and `/systems?q=<seed-keyword>` planning behavior is non-vacuous after seed selection.
+- Confirmed GAP-2 closed: explicit ID_List helper examples are tied to upstream clause 15 and `idListSchema.yaml`.
+- Confirmed CONCERN-1 closed: dependency cascade evidence is separated from default smoke no-regression totals.
+
+---
+
+## 2026-05-05T19:39Z — Sprint ets-11 Raze planning review
+
+**Triggered by user instruction**: Act as Red Team / Raze for current uncommitted Sprint ets-11 AdvancedFiltering planning changes.
+
+- Reviewed the Sprint 11 contract, planner handoff, story, OpenSpec, traceability, epic, ops status, changelog, and known issues as planning-only; did not run Docker, Maven, or E2E.
+- Wrote `.harness/evaluations/sprint-ets-11-plan-adversarial.yaml` with verdict `GAPS_FOUND`, confidence 0.88.
+- Required planning fixes before Generator: make `/systems?id=<known-id>` and `/systems?q=<known keyword>` non-vacuous after selecting seed data, add explicit ID_List helper examples, and separate dependency proof from default smoke no-regression totals.
+- Confirmed no mutation-scope creep and no full AdvancedFiltering closure overclaim in the reviewed planning artifacts.
+- Applied the required planning fixes same-turn across OpenSpec, story, contract, handoff, and ops status.
+
+---
+
+## 2026-05-05T19:32Z — Sprint ets-11 AdvancedFiltering plan
+
+**Triggered by user instruction**: "Start the next step."
+
+- Ran architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28, within the 30-day threshold.
+- Selected `S-ETS-11-01` AdvancedFiltering systems/common-resource read-only subset as the next Part 1 increment because it is the remaining non-mutation class.
+- Verified upstream OGC AdvancedFiltering source at `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`, path `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`.
+- Probed GeoRobotix: `/conformance` does not declare `/conf/advanced-filtering`; `/systems` read-only query probes return HTTP 200 JSON but are not conformance PASS evidence while undeclared.
+- Added Sprint 11 OpenSpec detail for `REQ-ETS-PART1-009` and six critical scenarios.
+- Created `.harness/contracts/sprint-ets-11.yaml` and `epics/stories/s-ets-11-01-advanced-filtering-readonly.md`.
+- Updated planner handoff, traceability, epic status, ops status, and known issues.
+
+---
+
 ## 2026-05-05T19:27Z — Sprint ets-10 Quinn gate
 
 **Triggered by user instruction**: Act as Quinn, Gate 3.5 Evaluator, for Sprint ets-10.

@@ -141,7 +141,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART1-007..013: Remaining Per-Class Conformance Suites
 - **Priority**: MUST
-- **Status**: PLACEHOLDER for REQ-ETS-PART1-009..011; REQ-ETS-PART1-007..008 are IMPLEMENTED in Sprint 7, REQ-ETS-PART1-012 is PARTIAL-IMPLEMENTED in Sprint 9, and REQ-ETS-PART1-013 is SPECIFIED for Sprint 10 below.
+- **Status**: PLACEHOLDER for REQ-ETS-PART1-010..011; REQ-ETS-PART1-007..008 are IMPLEMENTED in Sprint 7, REQ-ETS-PART1-009 is SPECIFIED for Sprint 11 below, REQ-ETS-PART1-012 is PARTIAL-IMPLEMENTED in Sprint 9, and REQ-ETS-PART1-013 is PARTIAL-IMPLEMENTED in Sprint 10 below.
 - **Description**: For each remaining OGC 23-001 conformance class (009=`advanced-filtering`, 010=`create-replace-delete`, 011=`update`, 012=`geojson`, 013=`sensorml`), the ETS SHALL provide a TestNG suite class structurally equivalent to Core (REQ-ETS-CORE-001..004), SystemFeatures (REQ-ETS-PART1-002), Common (REQ-ETS-PART1-001), Subsystems (REQ-ETS-PART1-003), Procedures (REQ-ETS-PART1-006), Deployments (REQ-ETS-PART1-004), Sampling Features (REQ-ETS-PART1-007), Property Definitions (REQ-ETS-PART1-008), Subdeployments (REQ-ETS-PART1-005), and GeoJSON (REQ-ETS-PART1-012): one `@Test` per ATS assertion subset selected for the sprint, `description` attribute carries the OGC canonical `.adoc` requirement URI form, suite-level dependency declared via TestNG `dependsOnGroups` if a prerequisite class fails.
 - **Rationale**: PRD SC-2 requires Part 1 coverage. Sprint 9 selected a GeoJSON systems read-only subset first because it was lower risk than create-replace-delete mutation coverage and lower schema breadth than SensorML. Sprint 10 continues the low-risk read-only encoding path with SensorML systems before any mutation-side class.
 - **Maps to**: PRD FR-ETS-17..23.
@@ -387,6 +387,79 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - **Rationale**: Subdeployments completes the deepest dependency chain in Part 1. Deployments (S-ETS-05-06, Sprint 5 IMPLEMENTED) is the parent. Subdeployments→Deployments→SystemFeatures→Core is the same structural depth as the Subsystems→SystemFeatures→Core chain proven at Sprint 4, extended one level. Completing this chain proves the n-level cascade pattern scales to 3 levels.
 - **Maps to**: PRD FR-ETS-15.
 
+> Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
+
+#### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
+- **Priority**: MUST
+- **Status**: SPECIFIED for Sprint 11 (target PARTIAL-IMPLEMENTED after Generator live verification; story S-ETS-11-01).
+- **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc`. The OpenAPI fragment for `ID_List` exists at `api/part1/openapi/parameters/idListSchema.yaml`. The class identifier is `/req/advanced-filtering`, inherits `/req/api-common`, and lists query-parameter subrequirements for ID lists, common resource keyword/id filters, geometry filters, system/deployment/procedure/sampling-feature/property association filters, and combined filters.
+- **Sprint 11 coverage scope**: AdvancedFiltering systems/common-resource read-only subset with 6 @Tests: (1) IUT declares `/conf/advanced-filtering`, otherwise every AdvancedFiltering @Test SKIPs with reason; (2) ID-list schema validator helper accepts homogeneous non-empty local-ID lists and homogeneous non-empty UID lists while rejecting mixed local/UID lists and empty/malformed lists; (3) `/systems?id=<known-id>` returns HTTP 200 and a non-empty result set whose returned items all preserve the selected id when the conformance class is declared and a seed System id was selected; (4) `/systems?q=<known keyword>` returns HTTP 200 and a non-empty result set whose returned items include keyword evidence in `name` or `description` when declared and a seed keyword was selected from a System name/description; (5) `/systems?geom=<WKT>` is exercised with a broad WKT geometry and validated only for HTTP 200 + JSON response shape in this sprint; (6) TestNG dependency wiring and smoke no-regression. The sprint deliberately does not close all 24 listed advanced-filtering subrequirements.
+- **ID_List examples for Sprint 11 helper**: Based on upstream `idListSchema.yaml` and clause 15 text, valid examples include `0mqcvdnfoca0`, `0mqcvdnfoca0,0ngu9lvstls0`, `urn:osh:sensor:simweather:0123456879`, `urn:osh:sensor:simweather:0123456879,urn:osh:sensor:simweather:9876543210`, and the resource-by-id UID-prefix query value `urn:osh:sensor:simweather:*`. Invalid examples include an empty value, `,`, `0mqcvdnfoca0,urn:osh:sensor:simweather:0123456879`, and `urn:osh:sensor:bad value`. This is a local schema-helper test only; it does not prove every endpoint's query semantics.
+- **Dependency wiring**: AdvancedFiltering depends on SystemFeatures via `<group name="advancedfiltering" depends-on="systemfeatures"/>`; the planned tests exercise System resources first and must cascade-SKIP when SystemFeatures fails.
+- **Open subrequirements after Sprint 11**: Deployment/procedure/sampling-feature/property association filters, system-by-parent/procedure/foi/observedProperty/controlledProperty semantic result validation, full geometry intersection correctness, combined filter truth-table validation, collection-wide all-resource endpoint parity, and any Part 2 query requirements remain OPEN unless separately planned.
+- **IUT-state policy**: If the IUT does not declare `/conf/advanced-filtering`, every AdvancedFiltering @Test SKIPs with reason. Query parameters that appear to work on GeoRobotix without a declaration are planning evidence only and MUST NOT be reported as conformance PASS.
+- **Maps to**: PRD FR-ETS-19.
+
+### Acceptance Scenarios for Sprint 11
+
+#### SCENARIO-ETS-PART1-009-ADVFILTER-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the IUT is `https://api.georobotix.io/ogc/t18/api`
+**WHEN** the AdvancedFiltering suite reads `/conformance`
+**THEN** the response contains `/conf/advanced-filtering`
+**OR IF** `/conf/advanced-filtering` is absent
+**THEN** every AdvancedFiltering @Test SKIPs with reason citing the missing conformance declaration.
+*Maps to*: REQ-ETS-PART1-009.
+
+#### SCENARIO-ETS-PART1-009-ADVFILTER-ID-LIST-SCHEMA-001 (CRITICAL)
+**GIVEN** Sprint 11 validates the `ID_List` contract locally
+**WHEN** `0mqcvdnfoca0`, `0mqcvdnfoca0,0ngu9lvstls0`, `urn:osh:sensor:simweather:0123456879`, `urn:osh:sensor:simweather:0123456879,urn:osh:sensor:simweather:9876543210`, `urn:osh:sensor:simweather:*`, empty values, mixed local/UID values, and malformed URI values are checked
+**THEN** homogeneous local-ID and UID lists are accepted
+**AND** the UID-prefix wildcard is accepted for resource-by-id query planning
+**AND** empty, malformed, and mixed local/UID lists are rejected before a query is issued.
+*Maps to*: REQ-ETS-PART1-009.
+
+#### SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-ID-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/advanced-filtering`
+**WHEN** the suite selects a known System id from a non-empty `/systems` seed response and calls `/systems?id=<id>`
+**THEN** the response is HTTP 200 JSON
+**AND** the filtered response contains at least one item
+**AND** every returned item preserves the selected id
+**OR IF** no seed System id can be selected from `/systems`
+**THEN** the test SKIPs with reason.
+*Maps to*: REQ-ETS-PART1-009.
+
+#### SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-KEYWORD-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/advanced-filtering`
+**WHEN** the suite selects a keyword from a known System `name` or `description` and calls `/systems?q=<known keyword>`
+**THEN** the response is HTTP 200 JSON
+**AND** the filtered response contains at least one item
+**AND** every returned item includes keyword evidence in human-readable `name` or `description` fields
+**OR IF** no seed keyword can be selected from `/systems`
+**THEN** the test SKIPs with reason.
+*Maps to*: REQ-ETS-PART1-009.
+
+#### SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-GEOM-SMOKE-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/advanced-filtering`
+**WHEN** the suite calls `/systems?geom=<broad WKT polygon>`
+**THEN** the response is HTTP 200 JSON with a valid CS API collection shape
+**AND** this sprint records the result as geometry-filter smoke, not full spatial-intersection conformance.
+*Maps to*: REQ-ETS-PART1-009.
+
+#### SCENARIO-ETS-PART1-009-ADVFILTER-DEPENDENCY-SMOKE-001 (CRITICAL)
+**GIVEN** the SystemFeatures group fails or is sabotaged
+**WHEN** the AdvancedFiltering suite attempts to run
+**THEN** AdvancedFiltering tests SKIP because `<group name="advancedfiltering" depends-on="systemfeatures"/>` is present
+**AND** this dependency behavior is evidenced by structural lint and/or a targeted sabotage/runtime cascade check.
+*Maps to*: REQ-ETS-PART1-009.
+
+#### SCENARIO-ETS-PART1-009-ADVFILTER-SMOKE-NO-REGRESSION-001 (CRITICAL)
+**GIVEN** Sprint 11 adds 6 AdvancedFiltering @Tests
+**WHEN** `scripts/smoke-test.sh` runs from a `/tmp` clone against the default GeoRobotix target
+**THEN** failed=0
+**AND** total PASS+SKIP is at least 63 (Sprint 10 baseline 57 plus 6 AdvancedFiltering @Tests)
+**AND** AdvancedFiltering results SKIP-with-reason if `/conf/advanced-filtering` remains absent.
+*Maps to*: REQ-ETS-PART1-009.
+
 > Sprint 9 starts the remaining encoding classes with GeoJSON only. This is intentionally narrower than the v1.0 web-app story that paired GeoJSON + SensorML: GeoJSON is read-only, declared by GeoRobotix, and reuses existing Feature/FeatureCollection validation patterns, while SensorML has broader SensorML 3.0 schema inheritance and remains deferred.
 
 #### REQ-ETS-PART1-012: GeoJSON Encoding Conformance Class (`/conf/geojson`) (Sprint 9 target)
@@ -442,7 +515,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART1-013: SensorML Encoding Conformance Class (`/conf/sensorml`) (Sprint 10 target)
 - **Priority**: MUST
-- **Status**: PARTIAL-IMPLEMENTED by Sprint 10 Generator (2026-05-05; story S-ETS-10-01; pending independent Quinn/Raze gate close). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests` with 6 read-only @Tests. Verification: Docker Maven BUILD SUCCESS, `95 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-10-generator-smoke-git-r2` with external `SMOKE_OUTPUT_DIR` reported `57 total / 48 passed / 0 failed / 9 skipped`. GeoRobotix runtime used the explicit `application/sml+json` alternate link `https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3`; the collection-level CS API `items` wrapper is not counted as SensorML PASS.
+- **Status**: PARTIAL-IMPLEMENTED by Sprint 10 Generator and gate-closed 2026-05-05 (story S-ETS-10-01; Quinn APPROVE_WITH_CONCERNS 0.91, Raze APPROVE 0.91). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests` with 6 read-only @Tests. Verification: Docker Maven BUILD SUCCESS, `95 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-10-generator-smoke-git-r2` with external `SMOKE_OUTPUT_DIR` reported `57 total / 48 passed / 0 failed / 9 skipped`. GeoRobotix runtime used the explicit `application/sml+json` alternate link `https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3`; the collection-level CS API `items` wrapper is not counted as SensorML PASS.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc`. The class identifier is `/req/sensorml`, inherits `/req/api-common` and SensorML 3.0 JSON requirement classes (`json-simple-process`, `json-physical-system`, `json-deployment`, `json-derived-property`), and lists 15 subrequirements: `mediatype-read`, `mediatype-write`, `relation-types`, `resource-id`, `feature-attribute-mapping`, `system-schema`, `system-sml-class`, `system-mappings`, `deployment-schema`, `deployment-mappings`, `procedure-schema`, `procedure-sml-class`, `procedure-mappings`, `property-schema`, and `property-mappings`.
 - **Sprint 10 coverage scope**: SensorML systems read-only subset with 6 @Tests: (1) IUT declares `/conf/sensorml`; (2) a System resource exposes or can be requested as a SensorML JSON representation; (3) the SensorML representation returns HTTP 200 with parseable JSON; (4) the representation has minimal SensorML identity/class shape such as `type` plus identifier/member structure sufficient for a non-schema sanity check; (5) the representation links or maps back to the canonical CS API System id/UID when present; (6) TestNG dependency wiring and smoke no-regression. The Generator MAY use the existing single-system `alternate` link with `type="application/sml+json"` and `?f=sml3` when content negotiation on `Accept: application/sml+json` returns default CS API JSON. Current GeoRobotix verification at planning time: `/conformance` declares `/conf/sensorml`; collection-level `GET /systems` with `Accept: application/sml+json` returns `Content-Type: application/json` with top-level `items`; single-system JSON exposes `alternate` links of type `application/sml+json` to `?f=sml3`.
 - **Dependency wiring**: SensorML depends on SystemFeatures via `<group name="sensorml" depends-on="systemfeatures"/>`. SensorML system encoding assertions are meaningful only after the canonical SystemFeatures resource layer is available.

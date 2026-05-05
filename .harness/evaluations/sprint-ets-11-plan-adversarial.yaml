@@ -1,0 +1,136 @@
+agent: raze
+gate: "Gate 4 Adversarial Reviewer"
+sprint: "ets-11"
+scope: "planning-only"
+artifact_created: "2026-05-05T19:39:14Z"
+verdict: "GAPS_FOUND"
+confidence: 0.88
+
+reviewed_scope:
+  - "_bmad/agents/adversarial-reviewer.md"
+  - "AGENTS.md"
+  - ".harness/contracts/sprint-ets-11.yaml"
+  - ".harness/handoffs/planner-handoff.yaml"
+  - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/known-issues.md"
+
+commands_run:
+  - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+  - "sed -n '1,220p' _bmad/agents/adversarial-reviewer.md"
+  - "sed -n '1,260p' AGENTS.md"
+  - "sed -n '1,260p' .harness/contracts/sprint-ets-11.yaml"
+  - "sed -n '1,260p' .harness/handoffs/planner-handoff.yaml"
+  - "sed -n '1,340p' epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+  - "rg -n \"REQ-ETS-PART1-009|AdvancedFiltering|advanced-filtering|SCENARIO-ETS-PART1-009\" openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "sed -n '1,280p' _bmad/traceability.md"
+  - "sed -n '1,260p' epics/epic-ets-02-part1-classes.md"
+  - "sed -n '360,456p' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "sed -n '1,260p' ops/status.md"
+  - "sed -n '1,260p' ops/changelog.md"
+  - "sed -n '1,260p' ops/known-issues.md"
+  - "git status --short"
+  - "git diff -- .harness/contracts/sprint-ets-11.yaml .harness/handoffs/planner-handoff.yaml epics/stories/s-ets-11-01-advanced-filtering-readonly.md openspec/capabilities/ets-ogcapi-connectedsystems/spec.md _bmad/traceability.md epics/epic-ets-02-part1-classes.md ops/status.md ops/changelog.md ops/known-issues.md"
+
+not_run:
+  - "Docker"
+  - "Maven"
+  - "TeamEngine smoke"
+  - "E2E"
+
+findings:
+  - id: "GAP-1"
+    severity: "MEDIUM"
+    title: "ID and keyword filter scenarios can pass vacuously on empty results"
+    status: "requires_planning_fix"
+    evidence:
+      - "spec.md SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-ID-001 says returned items, if any, all preserve the selected id."
+      - "spec.md SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-KEYWORD-001 says returned items, if any, include keyword evidence."
+      - "The story mirrors the same wording: systemsFilterById verifies returned items all preserve the selected id; systemsFilterByKeyword verifies keyword evidence in returned fields."
+      - "The handoff records GeoRobotix candidate ids and keyword probes, but GeoRobotix does not declare /conf/advanced-filtering, so these probes are planning data rather than conformance PASS evidence."
+    impact: "For an IUT that declares /conf/advanced-filtering, a broken implementation could return an empty collection for /systems?id=<known-id> or /systems?q=<known-keyword> and still satisfy the current 'if any' wording. That is a false PASS risk for resource-by-id and resource-by-keyword."
+    required_fix: "Before Generator starts, update contract/story/spec/handoff to require non-empty evidence for id and keyword filters when the suite selected the known id/keyword from a non-empty /systems response. If no suitable seed system or keyword can be selected on a declaring IUT, SKIP-with-reason is acceptable; empty filtered results after selecting a known seed must FAIL, not PASS."
+
+  - id: "GAP-2"
+    severity: "MEDIUM"
+    title: "ID_List helper acceptance rules are underspecified for implementation"
+    status: "requires_planning_fix"
+    evidence:
+      - "The contract says local ID_List schema helper for homogeneous local IDs vs UIDs and UID-prefix * form."
+      - "The story says local helper validates homogeneous local-ID lists and UID lists, rejects mixed local/UID lists, and accepts UID-prefix * form."
+      - "The spec scenario does not define the concrete examples, separators, UID pattern, local-id disallow rules, or which upstream clause/table those rules come from."
+    impact: "Generator has enough direction to write a helper-shaped test but not enough to avoid inventing semantics. That creates risk of either testing the wrong grammar or overclaiming /req/advanced-filtering/id-list-schema from an ad hoc local regex."
+    required_fix: "Add a small explicit acceptance/rejection table to the contract/story/spec or handoff, tied to the upstream ID_List wording. Include examples for one local id, comma-separated local ids, one UID, comma-separated UIDs, UID-prefix wildcard, mixed local/UID rejection, and malformed/empty rejection. State that this is a local schema-helper test only, not full query semantics."
+
+  - id: "CONCERN-1"
+    severity: "LOW"
+    title: "Dependency scenario mixes structural cascade proof with default smoke totals"
+    status: "clarify_recommended"
+    evidence:
+      - "SCENARIO-ETS-PART1-009-ADVFILTER-DEPENDENCY-SMOKE-001 begins with SystemFeatures failing or being sabotaged, then also requires scripts/smoke-test.sh from a /tmp clone to report failed=0 and total PASS+SKIP at least 63."
+      - "The contract allows runtime or structural dependency proof, while the story calls for a runtime tracer and three structural lint tests."
+    impact: "This is not a blocker, but Generator and gates may blur two checks: suite dependency wiring under sabotage and default GeoRobotix smoke no-regression. They should be separately evidenced."
+    required_fix: "Prefer splitting the scenario or adding wording that default smoke total >=63 is no-regression evidence, while dependency behavior is proven by TestNG group wiring lint and/or sabotage/runtime cascade evidence."
+
+  - id: "CONCERN-2"
+    severity: "LOW"
+    title: "Planning artifacts are otherwise consistent and scope-honest"
+    status: "no_fix_required"
+    evidence:
+      - "Contract, handoff, story, spec, traceability, epic, status, changelog, and known-issues consistently mark Sprint 11 as PLANNED/SPECIFIED, not implemented."
+      - "The plan repeatedly states GeoRobotix absence of /conf/advanced-filtering must SKIP-with-reason and must not count undeclared query behavior as PASS."
+      - "Mutation operations, create-replace-delete, update, Part 2, full association filters, full geometry correctness, combined-filter truth tables, and endpoint parity are explicitly excluded."
+    impact: "No detected mutation-scope creep or full AdvancedFiltering closure overclaim in the planning set."
+    required_fix: "None."
+
+evidence:
+  false_pass_when_conformance_absent:
+    verdict: "guarded"
+    notes:
+      - "All reviewed planning artifacts explicitly require SKIP-with-reason when /conf/advanced-filtering is absent."
+      - "GeoRobotix read-only query probes are consistently described as planning evidence only."
+      - "The remaining false PASS risk is for a declaring IUT returning empty results for known id/keyword filters, not for the current undeclared GeoRobotix default."
+  mutation_scope:
+    verdict: "clean"
+    notes:
+      - "No POST, PUT, PATCH, or DELETE behavior is requested."
+      - "create-replace-delete and update remain deferred behind write-safety policy."
+  advanced_filtering_semantics:
+    verdict: "partial_and_honest_with_gaps"
+    notes:
+      - "The plan does not claim full association filters, full geometry intersection correctness, combined-filter truth tables, or all-resource endpoint parity."
+      - "Geometry is correctly limited to HTTP 200 plus JSON collection shape smoke."
+      - "ID_List and id/keyword tests need sharper expected outcomes before Generator proceeds."
+  docs_consistency:
+    verdict: "mostly_consistent"
+    notes:
+      - "Spec/story/contract/handoff/traceability/status/known-issues align on S-ETS-11-01, REQ-ETS-PART1-009, partial scope, and skip honesty."
+      - "Traceability marks Sprint 11 PLANNED; spec marks REQ-ETS-PART1-009 SPECIFIED; story status is Planned."
+      - "Changelog entry is traceable to the prior user instruction that created the plan."
+  generator_readiness:
+    verdict: "not_ready_until_required_fixes"
+    notes:
+      - "Generator has enough package/suite/wiring/test-count guidance."
+      - "Generator lacks precise non-vacuous assertions for id/keyword filters and concrete ID_List examples."
+
+required_fixes:
+  before_generator:
+    - "Require non-empty result evidence for /systems?id=<known-id> after selecting that known id from /systems; empty filtered results must FAIL unless no seed id can be selected, in which case SKIP-with-reason."
+    - "Require non-empty result evidence for /systems?q=<known-keyword> after selecting a keyword from a known system name/description; empty filtered results must FAIL unless no seed keyword can be selected, in which case SKIP-with-reason."
+    - "Add explicit ID_List helper examples and expected valid/invalid outcomes, tied to upstream wording, so Generator does not invent the grammar."
+    - "Clarify dependency evidence separation between default smoke no-regression totals and sabotage/runtime/structural dependency proof."
+  during_generator:
+    - "Re-verify GeoRobotix /conformance and preserve SKIP-with-reason when /conf/advanced-filtering is absent."
+    - "Do not count undeclared GeoRobotix query behavior as conformance PASS."
+    - "Keep geometry smoke at HTTP 200 plus JSON shape only unless a separate spatial oracle is implemented."
+    - "Do not add write operations or claim full REQ-ETS-PART1-009 closure."
+
+files_changed_by_review:
+  - ".harness/evaluations/sprint-ets-11-plan-adversarial.yaml"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/metrics.md"

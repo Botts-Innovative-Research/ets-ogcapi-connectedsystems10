@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T19:27Z
+Last updated: 2026-05-05T19:46Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-10.yaml`
+- `.harness/contracts/sprint-ets-11.yaml`
 
 ## Current State
 
@@ -38,10 +38,30 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD at Sprint 10 implementation start: `e7ba5f1`
+- ETS HEAD at Sprint 11 planning start: `58d70f5`
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-10-01` Generator complete; Quinn gate approved with concerns and Raze Gate 4 approved
-- Current sprint status: Sprint ets-10 SensorML systems read-only subset gate-reviewed with no blockers
+- Current sprint status: Sprint ets-11 AdvancedFiltering read-only subset planned; Raze planning gap-fix review approved locally and pending commit
+
+## Sprint ets-11 Plan
+
+AdvancedFiltering systems/common-resource read-only subset:
+
+- Story: `epics/stories/s-ets-11-01-advanced-filtering-readonly.md`
+- Contract: `.harness/contracts/sprint-ets-11.yaml`
+- OpenSpec: `REQ-ETS-PART1-009`, status SPECIFIED for Sprint 11
+- Scope: declaration-gated `/conf/advanced-filtering`, local ID_List helper, `/systems?id=...`, `/systems?q=...`, `/systems?geom=...` smoke shape, and `advancedfiltering -> systemfeatures` dependency wiring
+- Explicitly excluded: create-replace-delete, update, Part 2, full association filters, full geometry intersection semantics, combined-filter truth tables, and endpoint parity across every resource type
+- GeoRobotix planning state: `/conformance` does not currently declare `/conf/advanced-filtering`; undeclared read-only query behavior is planning evidence only, not conformance PASS evidence
+
+Sprint 11 Generator guardrails:
+
+- Raze planning review gaps were addressed by making ID/keyword filters non-vacuous after seed selection, adding explicit ID_List examples, and separating dependency evidence from default smoke totals.
+- Raze gap-fix review: `.harness/evaluations/sprint-ets-11-plan-gapfix.yaml` APPROVE 0.92, static-only per instruction.
+- Re-verify `/conformance` before implementing.
+- All AdvancedFiltering tests must SKIP-with-reason when `/conf/advanced-filtering` is absent.
+- Do not add POST/PUT/PATCH/DELETE requests.
+- Do not promote REQ-ETS-PART1-009 beyond PARTIAL-IMPLEMENTED after this sprint.
 
 ## Sprint ets-10 Evidence
 
@@ -94,8 +114,10 @@ Gate Results:
 
 ## Next Action
 
-1. Plan the next Part 1 increment from the remaining backlog.
-2. Keep all SensorML write-side, relation-type, non-system schema/mapping, full SensorML 3.0 schema validation, AdvancedFiltering query/filtering, create-replace-delete, Update, and Part 2 work out of Sprint 10.
+1. Commit the Sprint ets-11 planning set after final static checks.
+2. Kick off Generator for Sprint ets-11 `S-ETS-11-01`.
+3. Run Docker Maven and TeamEngine smoke from `/tmp` clones after implementation.
+4. Run Quinn and Raze gates before closing Sprint 11.
 
 ## Dirty Worktree Notes
 

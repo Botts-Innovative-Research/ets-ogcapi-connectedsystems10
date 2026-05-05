@@ -1,122 +1,150 @@
 agent: planner
 status: complete
-timestamp: "2026-05-05T17:41:19Z"
-sprint_number: "ets-10"
-sprint_name: "sensorml-systems-read-only-subset"
-contract_path: ".harness/contracts/sprint-ets-10.yaml"
+timestamp: "2026-05-05T19:32:08Z"
+sprint_number: "ets-11"
+sprint_name: "advanced-filtering-read-only-subset"
+contract_path: ".harness/contracts/sprint-ets-11.yaml"
 triggered_by: |
-  User instructed "Do ets-10 planning" after Sprint 9 Quinn + Raze gates completed and the worktree was cleaned.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 9 handoff 2026-05-05T15:06:38Z)"
+  User instructed "Start the next step" after Sprint 10 Quinn + Raze gates completed and gate-close commit 58d70f5 was present.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 10 handoff 2026-05-05T17:41:19Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-05T17:41:19Z"
+  checked_at: "2026-05-05T19:32:08Z"
   stale_over_30_days: false
   disposition: "OK to start new capability planning."
 
 strategic_decisions:
   q1_next_class:
-    question: "Which remaining Part 1 class should Sprint 10 implement?"
-    decision: "sensorml"
+    question: "Which remaining Part 1 class should Sprint 11 implement?"
+    decision: "advanced_filtering"
     rationale: |
-      SensorML systems read-only coverage keeps the project in the low-risk encoding lane after GeoJSON.
-      It avoids AdvancedFiltering cross-cutting query semantics and avoids create-replace-delete/update mutation risk.
-      GeoRobotix currently declares /conf/sensorml and exposes application/sml+json alternate links on single System resources.
+      AdvancedFiltering is the only remaining non-mutation Part 1 requirement class. It can be
+      advanced with read-only query checks and declaration-gated SKIP behavior, while create-replace-delete
+      and update remain deferred until a write-safety/IUT policy exists.
     alternatives_rejected:
-      - advanced_filtering: "Cross-cutting query semantics; better after read-only encoding classes are stable."
-      - create_replace_delete: "Mutation-side risk; should be planned with explicit write-safety and target-IUT policy."
-      - update: "Mutation-side risk; should follow create-replace-delete or a dedicated write-operation planning cycle."
-      - remaining_geojson: "Viable, but SensorML is the last untouched Part 1 encoding class and GeoRobotix advertises it now."
+      - create_replace_delete: "Mutation-side class; requires explicit write target, cleanup, and shared-IUT safety policy."
+      - update: "Mutation-side class; should follow create-replace-delete or a dedicated write-operation planning cycle."
+      - part2_dynamic_data: "Explicitly out of current Part 1 incremental lane."
 
   q2_scope:
-    question: "Full SensorML class or systems read-only subset?"
-    decision: "systems read-only subset"
+    question: "Full AdvancedFiltering class or a read-only subset?"
+    decision: "systems/common-resource read-only subset"
     rationale: |
-      The upstream class lists 15 subrequirements and inherits SensorML 3.0 JSON requirement classes.
-      Sprint 10 deliberately targets only conformance declaration, system representation discovery, media-type read/fallback honesty,
-      minimal system shape, identity mapping, and dependency wiring. Full schema closure and write-side behavior remain open.
+      The upstream class is broad and cross-cuts resources, association filters, geometry filters,
+      and combined filters. Sprint 11 targets a small verifiable subset: conformance declaration,
+      local ID_List helper behavior, systems id/keyword filters, geometry smoke shape, and dependency wiring.
+      Current GeoRobotix does not declare /conf/advanced-filtering, so default smoke must SKIP rather than PASS.
 
 upstream_ogc_verification:
   repository: "opengeospatial/ogcapi-connected-systems"
   branch: "master"
   commit: "3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
-  sensorml_requirements_path: "api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc"
-  sensorml_identifier: "/req/sensorml"
+  advanced_filtering_requirements_path: "api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc"
+  advanced_filtering_clause_path: "api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc"
+  advanced_filtering_identifier: "/req/advanced-filtering"
   listed_subrequirements:
-    - "/req/sensorml/mediatype-read"
-    - "/req/sensorml/mediatype-write"
-    - "/req/sensorml/relation-types"
-    - "/req/sensorml/resource-id"
-    - "/req/sensorml/feature-attribute-mapping"
-    - "/req/sensorml/system-schema"
-    - "/req/sensorml/system-sml-class"
-    - "/req/sensorml/system-mappings"
-    - "/req/sensorml/deployment-schema"
-    - "/req/sensorml/deployment-mappings"
-    - "/req/sensorml/procedure-schema"
-    - "/req/sensorml/procedure-sml-class"
-    - "/req/sensorml/procedure-mappings"
-    - "/req/sensorml/property-schema"
-    - "/req/sensorml/property-mappings"
+    - "/req/advanced-filtering/id-list-schema"
+    - "/req/advanced-filtering/resource-by-id"
+    - "/req/advanced-filtering/resource-by-keyword"
+    - "/req/advanced-filtering/feature-by-geom"
+    - "/req/advanced-filtering/system-by-parent"
+    - "/req/advanced-filtering/system-by-procedure"
+    - "/req/advanced-filtering/system-by-foi"
+    - "/req/advanced-filtering/system-by-observed-property"
+    - "/req/advanced-filtering/system-by-controlled-property"
+    - "/req/advanced-filtering/procedure-by-observed-property"
+    - "/req/advanced-filtering/procedure-by-controlled-property"
+    - "/req/advanced-filtering/deployment-by-parent"
+    - "/req/advanced-filtering/deployment-by-system"
+    - "/req/advanced-filtering/deployment-by-foi"
+    - "/req/advanced-filtering/deployment-by-observed-property"
+    - "/req/advanced-filtering/deployment-by-controlled-property"
+    - "/req/advanced-filtering/sampling-feature-by-foi"
+    - "/req/advanced-filtering/sampling-feature-by-observed-property"
+    - "/req/advanced-filtering/sampling-feature-by-controlled-property"
+    - "/req/advanced-filtering/property-by-base-property"
+    - "/req/advanced-filtering/property-by-object-type"
+    - "/req/advanced-filtering/combined-filters"
+  id_list_schema_path: "api/part1/openapi/parameters/idListSchema.yaml"
+  id_list_schema_summary: "Non-empty list of local resource IDs or URI UIDs; mixed local-ID/UID lists are prohibited by clause 15."
 
 georobotix_planning_probe:
-  conformance: "Declares http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml."
-  systems_collection_accept_sml_json: "HTTP 200, Content-Type application/json, top-level items wrapper; not SensorML PASS by itself."
-  single_system_accept_sml_json: "HTTP 200, Content-Type auto/default body; single System JSON includes alternate application/sml+json links."
-  alternate_links:
-    - "https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3"
-    - "https://api.georobotix.io/ogc/t18/api/systems/0m5ojudgr570?f=sml3"
+  conformance: "Does not declare http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering as of 2026-05-05."
+  systems_limit: "GET /systems?limit=1 -> HTTP 200 JSON, one item."
+  systems_id_candidate: "GET /systems?validTime=2015-01-01T00:00:00Z/2026-01-01T00:00:00Z&limit=1 -> HTTP 200 JSON, first id 0mqcvdnfoca0."
+  systems_uid_candidate: "GET /systems?uid=urn:osh:sensor:simweather:0123456879&limit=1 -> HTTP 200 JSON, first id 0ngu9lvstls0."
+  systems_keyword_candidate: "GET /systems?q=Weather&limit=1 -> HTTP 200 JSON, first id 0ngu9lvstls0."
+  systems_bbox_probe: "GET /systems?bbox=-1,-1,1,1&limit=1 -> HTTP 200 JSON, empty items."
+  planning_interpretation: "Read-only query behavior exists, but undeclared behavior is not conformance PASS evidence."
 
 stories:
-  - id: "S-ETS-10-01"
-    title: "SensorML systems read-only subset — depends on SystemFeatures"
-    file: "epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
+  - id: "S-ETS-11-01"
+    title: "AdvancedFiltering systems/common-resource read-only subset - depends on SystemFeatures"
+    file: "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "1-2h"
-    sequencing: "ONLY story in Sprint 10"
+    sequencing: "ONLY story in Sprint 11"
 
 new_requirements:
-  - "REQ-ETS-PART1-013"
+  - "REQ-ETS-PART1-009"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-013-SENSORML-CONFORMANCE-DECLARED-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-REPRESENTATION-DISCOVERY-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-READ-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-SYSTEM-SHAPE-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-SYSTEM-MAPPING-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-DEPENDENCY-SMOKE-001"
+  - "SCENARIO-ETS-PART1-009-ADVFILTER-CONFORMANCE-DECLARED-001"
+  - "SCENARIO-ETS-PART1-009-ADVFILTER-ID-LIST-SCHEMA-001"
+  - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-ID-001"
+  - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-KEYWORD-001"
+  - "SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-GEOM-SMOKE-001"
+  - "SCENARIO-ETS-PART1-009-ADVFILTER-DEPENDENCY-SMOKE-001"
+  - "SCENARIO-ETS-PART1-009-ADVFILTER-SMOKE-NO-REGRESSION-001"
+
+id_list_helper_examples:
+  valid:
+    - "0mqcvdnfoca0"
+    - "0mqcvdnfoca0,0ngu9lvstls0"
+    - "urn:osh:sensor:simweather:0123456879"
+    - "urn:osh:sensor:simweather:0123456879,urn:osh:sensor:simweather:9876543210"
+    - "urn:osh:sensor:simweather:*"
+  invalid:
+    - ""
+    - ","
+    - "0mqcvdnfoca0,urn:osh:sensor:simweather:0123456879"
+    - "urn:osh:sensor:bad value"
+  note: "Local helper only; does not prove full query semantics at every endpoint."
 
 next_agent: "generator"
 next_agent_rationale: |
-  Planning artifacts are complete and no Architect cycle is needed. SensorML follows the established
-  read-only encoding pattern from GeoJSON but uses explicit alternate-link fallback because GeoRobotix
-  currently returns default JSON for direct collection-level Accept application/sml+json.
+  Planning artifacts are complete and no Architect cycle is needed. AdvancedFiltering can follow the
+  existing declaration-gated TestNG class pattern, but Generator must preserve SKIP honesty because
+  the default GeoRobotix smoke target does not currently advertise the class.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
-    - "Re-verify GeoRobotix /conformance for /conf/sensorml before implementing."
-    - "Re-verify at least one System resource exposes an alternate link with type application/sml+json."
-    - "Implement SensorMlTests.java with 6 read-only @Tests."
-    - "Add testng.xml group dependency: sensorml depends-on systemfeatures."
-    - "Add 3 VerifyTestNGSuiteDependency lint tests for sensorml."
+    - "Re-verify GeoRobotix /conformance for /conf/advanced-filtering before implementing."
+    - "Implement AdvancedFilteringTests.java with 6 read-only @Tests."
+    - "Add testng.xml group dependency: advancedfiltering depends-on systemfeatures."
+    - "Add 3 VerifyTestNGSuiteDependency lint tests for advancedfiltering."
+    - "Make all AdvancedFiltering tests SKIP-with-reason when /conf/advanced-filtering is absent."
+    - "For declaring IUTs, FAIL empty filtered results after selecting a seed System id or keyword; SKIP only when seed id/keyword cannot be selected."
+    - "Keep dependency cascade evidence separate from default smoke no-regression totals."
     - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh from a /tmp clone."
-    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep untested SensorML subrequirements open."
+    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep unimplemented AdvancedFiltering subrequirements open."
   must_not_do:
-    - "Do not implement AdvancedFiltering, CRUD, Update, or Part 2."
-    - "Do not implement mediatype-write, POST, PUT, PATCH, or DELETE assertions in Sprint 10."
-    - "Do not treat a CS API `items` wrapper as passing SensorML."
-    - "Do not report alternate-link fallback as full mediatype-read closure unless the fetched body proves SensorML JSON support and the fallback is documented."
-    - "Do not claim full SensorML 3.0 JSON Schema validation unless a schema validator is actually wired and verified."
+    - "Do not implement create-replace-delete, update, or Part 2."
+    - "Do not add POST, PUT, PATCH, or DELETE assertions in Sprint 11."
+    - "Do not count GeoRobotix undeclared query behavior as conformance PASS."
+    - "Do not claim full geometry intersection or combined-filter truth-table validation."
+    - "Do not claim full AdvancedFiltering class closure."
 
 gate_expectations:
   quinn:
-    primary: "Run mvn-test-via-docker.sh from /tmp clone; verify surefire includes SensorML lint tests with 0 failures/errors."
+    primary: "Run mvn-test-via-docker.sh from /tmp clone; verify surefire includes AdvancedFiltering lint tests with 0 failures/errors."
   raze:
-    primary: "Run smoke-test.sh from separate /tmp clone; verify failed=0 and PASS+SKIP total >= 57."
-    adversarial_focus: "Inspect for SensorML overclaim from generic JSON, accidental write operations, and full-class closure overclaim."
-  independence: "Quinn and Raze must write their own Sprint 10 YAML before reading the other gate's YAML."
+    primary: "Run smoke-test.sh from separate /tmp clone; verify failed=0 and PASS+SKIP total >= 63."
+    adversarial_focus: "Inspect for false PASS when /conf/advanced-filtering is absent, geometry semantics overclaim, and accidental write operations."
+  independence: "Quinn and Raze must write their own Sprint 11 YAML before reading the other gate's YAML."
 
-confidence: 0.84
+confidence: 0.83

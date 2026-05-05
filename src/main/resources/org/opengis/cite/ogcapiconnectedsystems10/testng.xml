@@ -76,7 +76,12 @@
        empty subdeployments — IUT-state-honest SKIP applies for all 4 @Tests
        (HTTP 200 + items: [] empty pattern, per Sprint 7 PropertyDefinitions
        precedent). -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment; OGC 19-072 /conf/common)">
+  <!-- Sprint 9 S-ETS-09-01 (REQ-ETS-PART1-012): GeoJSON group added as a PARTIAL
+       systems read-only subset. GeoJSON depends-on="systemfeatures" because the subset
+       validates /systems GeoJSON encoding and must cascade-SKIP if SystemFeatures fails.
+       This sprint intentionally leaves mediatype-write, relation-types, and non-system
+       schema/mapping subrequirements open. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -86,6 +91,7 @@
         <group name="samplingfeatures" depends-on="systemfeatures"/>
         <group name="propertydefinitions" depends-on="systemfeatures"/>
         <group name="subdeployments" depends-on="deployments"/>
+        <group name="geojson" depends-on="systemfeatures"/>
       </dependencies>
     </groups>
     <classes>
@@ -101,6 +107,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

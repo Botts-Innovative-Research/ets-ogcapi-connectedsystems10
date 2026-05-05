@@ -1,0 +1,113 @@
+# Sprint 9 contract — geojson-encoding-read-only
+# Created by Codex orchestrator 2026-05-05 after Sprint 8 close commit fb01e40.
+#
+# Strategic decision: GeoJSON only.
+# Rationale:
+#   (1) GeoJSON systems read-only subset is lower risk than create-replace-delete mutation coverage.
+#   (2) GeoJSON has narrower schema inheritance than SensorML, which remains deferred.
+#   (3) GeoRobotix has historically declared /conf/geojson; Generator must re-verify at sprint time.
+#   (4) Sprint 9 should preserve Sprint 8's gate discipline without bundling another cleanup wedge unless Quinn/Raze surface one.
+
+sprint: "ets-09"
+sprint_name: "geojson-systems-read-only-subset"
+type: "feature-expansion"
+created: "2026-05-05T15:06:38Z"
+description: |
+  Sprint 9 implements one Part 1 class:
+
+  S-ETS-09-01 — GeoJSON systems read-only subset (`/conf/geojson`) (P0/M).
+  Scope is PARTIAL for REQ-ETS-PART1-012:
+    - `/conformance` declares `/conf/geojson`, otherwise SKIP-with-reason.
+    - `GET /systems` with `Accept: application/geo+json` or documented default JSON fallback.
+    - Strict GeoJSON FeatureCollection validation for `/systems`: type="FeatureCollection" + `features` array.
+    - First system feature shape and attribute mapping validation.
+    - Runtime or structural dependency proof: `geojson` depends on `systemfeatures`.
+
+  Explicitly excluded:
+    - `/req/geojson/mediatype-write` (OPEN until create-replace-delete is implemented or explicitly selected)
+    - Any POST/PUT/PATCH/DELETE assertion
+    - SensorML
+    - AdvancedFiltering, CRUD, Update
+    - Part 2 work
+
+upstream_inputs:
+  - "csapi_compliance commit fb01e40 (Sprint 8 close follow-up)"
+  - ".harness/evaluations/sprint-ets-08-evaluator-followup.yaml (Quinn APPROVE_WITH_CONCERNS 0.91)"
+  - ".harness/evaluations/sprint-ets-08-adversarial-gapfix.yaml (Raze APPROVE 0.94)"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md (REQ-ETS-PART1-012 SPECIFIED)"
+  - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md"
+  - "OGC upstream opengeospatial/ogcapi-connected-systems master 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+
+new_repo:
+  url: "github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10"
+  base_head_at_sprint_start: "Sprint 8 close state; Generator must record exact HEAD before editing"
+
+stories:
+  - id: "S-ETS-09-01"
+    title: "GeoJSON systems read-only subset — depends on SystemFeatures"
+    file: "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on: []
+    parallelizable: false
+    rationale: |
+      GeoJSON systems read-only coverage is the lowest-risk remaining Part 1 increment because it reuses
+      existing SystemFeatures Feature patterns. create-replace-delete stays deferred due mutation risk.
+      SensorML stays deferred due broader SensorML 3.0 schema inheritance.
+
+requirements:
+  new_reqs:
+    - "REQ-ETS-PART1-012 (GeoJSON Encoding Conformance Class /conf/geojson — SPECIFIED → target PARTIAL-IMPLEMENTED for systems read-only subset)"
+  modified_reqs:
+    - "REQ-ETS-PART1-007..013 placeholder narrative narrowed to reflect implemented 007/008 and Sprint 9 012 detail"
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-012-GEOJSON-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-MEDIATYPE-READ-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-FEATURECOLLECTION-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-FEATURE-MAPPING-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-DEPENDENCY-SMOKE-001"
+  normal: []
+
+success_criteria:
+  all_critical_scenarios_pass: true
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  no_regression: true
+  build_green_jdk17: true
+  reproducible_build: true
+  smoke_test_green_against_georobotix: true
+  no_part2_work_in_sprint: true
+  zero_bare_assertionerror_in_conformance: true
+  worktree_not_polluted_at_gate: true
+  geojson_systems_read_subset_implemented: true
+  geojson_testng_wired: true
+  geojson_lint_tests: true
+  geojson_iut_state_honest: true
+  no_write_operations_in_geojson_sprint: true
+  smoke_total_at_least_51_failed_zero: true
+  spec_status_honesty_principle: true
+  gate_independence_no_peek: true
+
+evaluation_focus:
+  - "Generator must re-verify GeoRobotix /conformance for /conf/geojson before implementing assertion behavior."
+  - "Generator must not implement mediatype-write or any mutation-side check in Sprint 9; mediatype-write remains OPEN until create-replace-delete is implemented or selected."
+  - "Quinn should run scripts/mvn-test-via-docker.sh from a /tmp clone and verify surefire includes the 3 new GeoJSON lint tests."
+  - "Raze should run scripts/smoke-test.sh from a separate /tmp clone and verify failed=0 and total PASS+SKIP >= 51."
+  - "Raze should inspect GeoJsonTests.java for over-claiming application/geo+json support when the IUT only returns valid default JSON."
+  - "Raze should reject any plan or code path that treats a CS API `items` wrapper as a passing GeoJSON FeatureCollection; the GeoJSON assertion requires `type=FeatureCollection` and `features`."
+  - "Both gates must avoid reading each other's Sprint 9 YAML before writing their own result."
+
+risk_register:
+  - id: "GEOJSON-MEDIATYPE-NEGOTIATION-OVERCLAIM"
+    severity: "MEDIUM"
+    mitigation: "Allow an explicitly recorded fallback only when representation is valid GeoJSON; do not claim mediatype-read PASS solely from default JSON without a note."
+  - id: "GEOJSON-ITEMS-VS-FEATURES-WRAPPER"
+    severity: "MEDIUM"
+    mitigation: "Require `type=FeatureCollection` and `features` for PASS. If the IUT returns only `items`, record fallback/SKIP/CONCERN, not PASS."
+  - id: "SENSORML-SCOPE-CREEP"
+    severity: "LOW"
+    mitigation: "Contract excludes SensorML; any SensorML edit is out of scope unless separately requested."

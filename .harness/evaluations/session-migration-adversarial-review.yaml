@@ -1,0 +1,151 @@
+review_id: session-migration-adversarial-review
+reviewer: Raze
+role: Red Team adversarial reviewer
+timestamp: "2026-05-05T16:18:52Z"
+repository: /home/nh/docker/gir/ets-ogcapi-connectedsystems10
+user_request: >
+  Review the ETS repo working tree after migration of BMAD/OpenSpec/harness context
+  from csapi_compliance, verify expected migration artifacts and preservation of ETS
+  runtime evidence, and ensure stale web-app instructions or unrelated dirty files are
+  not treated as migration changes.
+verdict: GAPS_FOUND
+confidence: 0.89
+
+scope_reviewed:
+  present:
+    - AGENTS.md
+    - .harness/
+    - _bmad/
+    - epics/
+    - openspec/
+    - ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md
+    - ops/changelog.md
+    - ops/e2e-test-plan.md
+    - ops/known-issues.md
+    - ops/metrics.md
+    - ops/status.md
+    - ops/test-results.md
+    - scripts/orchestrate.py
+    - scripts/session-metrics.py
+  preserved_ets_artifacts:
+    ops_server_md: present
+    ops_test_results_directory: present
+    observed_runtime_artifact_count: 34
+  not_rerun_by_instruction:
+    - Docker
+    - Maven
+    - TeamEngine smoke
+
+findings:
+  - id: GAP-001
+    severity: HIGH
+    category: stale_harness_instructions
+    status: open
+    summary: >
+      The migrated harness still contains web-app/npm/vitest/Playwright instructions,
+      so a fresh session that follows the harness can run the wrong verification stack
+      despite AGENTS.md being correctly Java/Maven/TeamEngine-native.
+    evidence:
+      - ".harness/config.yaml:14-25 still defines Node/nvm, npx vitest, eslint, tsc, Playwright, npm run dev, and npm run build."
+      - ".harness/config.yaml:115-119 still marks TypeScript web-app paths such as src/server/middleware, src/engine/credential-masker.ts, src/engine/registry, and src/services/api-client.ts as security-relevant."
+      - ".harness/prompts/adversarial.md:37-70 instructs Raze to source nvm, run npx vitest/tsc/eslint, start PORT=4000 CSAPI_PORT=4000 npm run dev, and run Playwright."
+      - ".harness/prompts/evaluator.md and .harness/prompts/generator.md also contain npm/vitest/Playwright and TypeScript registry guidance."
+    impact: >
+      This is materially misleading for future orchestrated sessions in the ETS repo.
+      It can cause Quinn/Raze/Dana to verify a non-existent Next.js app instead of the
+      Java/TestNG TeamEngine ETS.
+    required_fix: >
+      Rewrite .harness/config.yaml and .harness/prompts/{generator,evaluator,adversarial}.md
+      for ETS commands: scripts/mvn-test-via-docker.sh, scripts/smoke-test.sh with
+      SMOKE_OUTPUT_DIR outside the worktree, and targeted sabotage/credential scripts
+      when relevant. Replace TypeScript path gates with Java/TestNG/TeamEngine paths.
+
+  - id: GAP-002
+    severity: HIGH
+    category: stale_openspec_project_conventions
+    status: open
+    summary: >
+      openspec/project.md remains the old CS API Compliance Assessor / Next.js project
+      convention document rather than ETS project conventions.
+    evidence:
+      - "openspec/project.md:10-15 identifies the project as CS API Compliance Assessor, TypeScript, Next.js, Node.js, and npm."
+      - "openspec/project.md:18-46 documents the csapi_compliance directory layout with app/, components/, engine/, api/, and Playwright tests."
+      - "openspec/project.md:100-136 prescribes Vitest, Playwright, npm install/dev/build, eslint, and tsc."
+    impact: >
+      OpenSpec is one of the first files a fresh agent is told to read. This file can
+      misdirect new ETS changes into web-app naming, structure, and verification rules.
+    required_fix: >
+      Replace openspec/project.md with ETS-native conventions: Java 17, Maven/TestNG,
+      REST Assured, TeamEngine, Docker smoke, src/main/java, src/test/java, and the
+      existing scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh commands.
+
+  - id: GAP-003
+    severity: MEDIUM
+    category: stale_bmad_role_wrapper
+    status: open
+    summary: >
+      The canonical _bmad Raze role is still partly product-specific to the old web
+      app and references CLAUDE.md plus TypeScript/Express surfaces, although the user
+      requested review under AGENTS.md for the ETS repo.
+    evidence:
+      - "_bmad/agents/adversarial-reviewer.md describes the OGC CS API Compliance Assessor and includes web-app-specific checks such as Express routes and src/engine/registry URL construction."
+      - "AGENTS.md correctly points to _bmad/agents/adversarial-reviewer.md, so this stale role text will remain active for future Raze invocations."
+    impact: >
+      Some generic Raze principles still apply, but future reviews can anchor on the
+      wrong product surface unless the ETS-specific adversarial role is reconciled.
+    required_fix: >
+      Amend the Raze role to ETS-specific language and checks: Java conformance classes,
+      TestNG group dependencies, REST Assured URI preservation, TeamEngine smoke evidence,
+      Maven/TestNG counts, credential log masking scripts, and AGENTS.md compliance.
+
+  - id: OK-001
+    severity: INFO
+    category: agents_commands
+    status: verified
+    summary: >
+      AGENTS.md build/test/deploy commands are Java/Maven/TeamEngine-native rather than
+      npm/vitest.
+    evidence:
+      - "AGENTS.md Build / Test / Deploy block uses spring-javaformat via Maven Docker, scripts/mvn-test-via-docker.sh, scripts/smoke-test.sh, and docker-compose up -d."
+
+  - id: OK-002
+    severity: INFO
+    category: ops_docs
+    status: verified_with_caveat
+    summary: >
+      The selected ops files that a fresh session is directed to read are now ETS-oriented,
+      and the migration handoff explicitly warns about dirty scripts and Zone.Identifier files.
+    evidence:
+      - "ops/status.md is 83 lines and points future sessions to the ETS repo, Sprint ets-09 state, Maven/smoke evidence, and dirty worktree notes."
+      - "ops/known-issues.md records Sprint ets-09 open scope and worktree hygiene warnings."
+      - "ops/e2e-test-plan.md defines TeamEngine smoke against GeoRobotix as ETS E2E."
+      - "ops/test-results.md records Maven BUILD SUCCESS 92/0/0/3 and TeamEngine smoke 51 total / 42 passed / 0 failed / 9 skipped."
+    caveat: >
+      ops/changelog.md necessarily retains historical v1.0 web-app entries. That is acceptable
+      because current status, handoff, known-issues, e2e plan, and test-results establish ETS
+      as active, but fresh agents should start with ops/status.md and the handoff.
+
+  - id: OK-003
+    severity: INFO
+    category: dirty_worktree_classification
+    status: verified
+    summary: >
+      The six dirty shell scripts and the Zone.Identifier files are documented as pre-existing
+      worktree hygiene issues and should not be treated as migration changes.
+    evidence:
+      - "git status shows modified scripts/credential-leak-e2e-test.sh, scripts/credential-leak-integration-test.sh, scripts/mvn-test-via-docker.sh, scripts/sabotage-test.sh, scripts/smoke-test.sh, and scripts/stub-iut.sh."
+      - "ops/status.md:72-83 and ops/known-issues.md:11-23 explicitly say these script edits and Zone.Identifier files predate the migration and should not be staged or reverted unless requested."
+      - "find reports 1538 *:Zone.Identifier files; they are worktree/OS artifacts, not migration content."
+
+required_fixes:
+  - Rewrite .harness/config.yaml to remove Node/npm/vitest/Playwright commands and TypeScript security paths; replace them with ETS-native Maven/TestNG/TeamEngine commands and Java/script paths.
+  - Rewrite .harness/prompts/generator.md, .harness/prompts/evaluator.md, and .harness/prompts/adversarial.md so all verification and review steps use Java/Maven/TestNG/TeamEngine, not the frozen web app.
+  - Replace openspec/project.md with ETS-native project identity, layout, naming, test, and build conventions.
+  - Reconcile _bmad/agents/adversarial-reviewer.md to ETS terminology and AGENTS.md rather than CLAUDE.md/web-app specifics.
+
+final_assessment: >
+  The migration successfully placed the expected major context directories, handoff file,
+  selected ops summaries, scripts/orchestrate.py, scripts/session-metrics.py, AGENTS.md,
+  and preserved ETS server/test-results artifacts. It is not yet safe to treat the harness
+  as migrated because core harness config and prompt wrappers still direct agents toward
+  the old npm/vitest/Playwright web-app workflow.

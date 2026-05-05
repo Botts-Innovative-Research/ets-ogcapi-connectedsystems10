@@ -1,0 +1,171 @@
+sprint: "ets-08"
+story: "S-ETS-08-01 + S-ETS-08-02"
+reviewer: "Raze"
+timestamp: "2026-05-04T20:31:30Z"
+raze_peek_attempted: false
+user_request: "Perform Sprint 8 cumulative adversarial gate independently, without reading Quinn's cumulative evaluator YAML first, using fresh /tmp workdirs and writing this Raze YAML."
+verdict: "GAPS_FOUND"
+confidence: 0.82
+overrides_evaluator: false
+evaluator_yaml_read_before_finalizing: false
+
+request_fulfillment:
+  fully_delivered:
+    - "S-ETS-08-01 wedge artifacts exist: sabotage-test.sh dynamic sibling parser, ADR/spec 5-class evidence amendments, project-wide grep archive, ETS-pointer block, spring-javaformat pin, and mvn-test-via-docker.sh."
+    - "S-ETS-08-02 Subdeployments class exists with 4 @Tests and TestNG group dependency output shows depends-on-groups='deployments'."
+    - "testng.xml creates the 3-deep chain: subdeployments -> deployments -> systemfeatures -> core."
+    - "Archived Generator smoke XML records total=46, passed=40, failed=0, skipped=6, satisfying PASS+SKIP >= 46 with failed=0."
+    - "No AdvancedFilteringTests, CRUDTests, UpdateTests, GeoJSONTests, or SensorMLTests classes were found in the sister repo source/test trees."
+  gaps:
+    - id: "RAZE-LIVE-EXEC-GAP-001"
+      severity: "MEDIUM"
+      issue: "Raze's fresh smoke-test.sh run from /tmp/raze-fresh-sprint8 did not reach TestNG; it stalled in Docker build while Quinn's concurrent sabotage Docker build was active. I stopped only my smoke process after several minutes. Archived Generator smoke evidence is clean, but Raze did not independently reproduce the smoke total in this gate."
+      evidence:
+        - "Command attempted: SMOKE_OUTPUT_DIR=/tmp/raze-fresh-sprint8/test-results-raze-smoke bash scripts/smoke-test.sh | tee /tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-2026-05-04.txt"
+        - "Observed output before stop: step 1/8 sanity check; step 2/8 docker build ets-ogcapi-connectedsystems10:smoke."
+        - "Concurrent process observed: /tmp/quinn-fresh-sprint8 sabotage run building ets-ogcapi-connectedsystems10:sabotage-sf."
+    - id: "RAZE-LIVE-EXEC-GAP-002"
+      severity: "MEDIUM"
+      issue: "Raze did not launch an additional sabotage-test.sh run because Quinn's sabotage Docker build was already running for more than 11 minutes. Static inspection plus archived Generator sabotage stdout/bash-x evidence confirms the dynamic parser, but this gate lacks Raze-owned sabotage stdout and bash-x artifacts."
+      evidence:
+        - "scripts/sabotage-test.sh lines around the parser use re.search(r\"conformance\\.([a-z][a-z0-9_]*)\", sig)."
+        - "Archived stdout shows 'VERDICT-summary (siblings observed: 6): core+common PASS | systemfeatures FAIL | deployments, procedures, propertydefinitions, samplingfeatures, subdeployments, subsystems SKIP'."
+  scope_creep: []
+  buried_caveats:
+    - "The spec still contains planning-era plural wording in scenario GIVEN clauses (/conf/subdeployments), while the implemented requirement/status narrative correctly records the OGC/IUT singular /conf/subdeployment correction. This is documentation inconsistency, not observed code behavior."
+
+claude_md_compliance:
+  step_1_spec_first: "OK"
+  step_2_write_tests: "OK"
+  step_3_implement: "OK"
+  step_4_verify: "OK"
+  step_5_e2e_verify: "WEAK"
+  step_6_reconcile_specs: "WEAK"
+  step_7_update_ops: "OK"
+  step_8_update_bmad: "OK"
+  notes: "Generator artifacts show mvn 89/0/0/3 and smoke 46/46 failed=0; Raze independently reproduced mvn via Docker but could not independently complete smoke/sabotage due concurrent Docker build contention. Spec REQ-ETS-PART1-005 status is implemented, but several scenario clauses still say /conf/subdeployments while implementation/IUT evidence uses /conf/subdeployment."
+
+spec_gaps:
+  - id: "REQ-ETS-PART1-005"
+    issue: "Scenario wording at spec.md lines 448, 453, 458, and 466 still references plural /conf/subdeployments after Sprint 8 corrected the class identifier to singular /conf/subdeployment in the status narrative and implementation."
+  - id: "REQ-ETS-PART1-005"
+    issue: "SubdeploymentsTests source @Test annotations carry groups='subdeployments' but do not explicitly declare dependsOnGroups='deployments'. TestNG output still records depends-on-groups='deployments' via testng.xml group dependency, so behavior is correct; this is a contract-wording/source-inspection mismatch rather than a runtime defect."
+
+cross_agent_blind_spots:
+  - "Concurrent Quinn/Raze Docker executions can block gate independence in practice. This run shows the risk: Quinn sabotage build prevented Raze from completing independent smoke/sabotage live-execs within a reasonable gate interval."
+  - "The generator grep burden was met: ops/test-results/sprint-ets-08-01-self-audit-grep.txt exists, records the project-wide command, has 15 hits, and adjudicates design.md:666 as stale with remediation."
+
+conformance_correctness:
+  false_positives_found: []
+  false_negatives_found: []
+  url_construction_bugs: []
+  dynamic_schema_violations: []
+  assertion_spec_drift:
+    - id: "SUBDEP-CANONICAL-SOURCE-COVERAGE"
+      issue: "The subdeployment canonical id+type+links assertion cites inherited /req/deployment/canonical-endpoint. The raw deployment canonical endpoint requirement confirms the endpoint path/exposure but does not itself spell out id/type/links. The assertion may be valid through the Deployment resource schema/base shape, but the comment does not cite that normative source directly."
+      evidence:
+        - "SubdeploymentsTests.java lines 385-401 assert id, type, links under REQ_CANONICAL_ENDPOINT."
+        - "Raw /req/deployment/canonical-endpoint text fetched during review states the server SHALL expose the deployment resources endpoint at {api_root}/deployments and expose all Deployment resources."
+  spec_source_mismatches: []
+
+recommendations:
+  - "Re-run Raze-owned smoke-test.sh and sabotage-test.sh from /tmp/raze-fresh-sprint8 after Quinn's Docker build completes, then append the Raze-owned stdout/bash-x/TestNG artifact paths."
+  - "Normalize spec scenario text from plural /conf/subdeployments to singular /conf/subdeployment where the Sprint 8 correction applies."
+  - "Add a direct normative citation for the Deployment resource shape or schema behind the id/type/links assertion in SubdeploymentsTests, or narrow the assertion description to the exact inherited canonical endpoint requirement."
+
+severity_summary:
+  blockers: 0
+  gaps: 4
+  concerns: 2
+
+evidence:
+  fresh_workdirs:
+    - "/tmp/raze-fresh-sprint8"
+    - "/tmp/raze-fresh-sprint8-bis"
+  implementation_inspection:
+    - "SubdeploymentsTests.java: 4 @Test methods at lines 351, 385, 417, 460; @BeforeClass SkipException fallback at lines 215-306."
+    - "testng.xml lines 82, 85, 88: systemfeatures depends on core; deployments depends on systemfeatures; subdeployments depends on deployments."
+    - "VerifyTestNGSuiteDependency.java lines 815-907: three Subdeployments lint tests."
+  live_checks:
+    - "curl https://api.georobotix.io/ogc/t18/api/deployments/16sp744ch58g/subdeployments -> HTTP 200 with body {\"items\": []}."
+    - "bash scripts/mvn-test-via-docker.sh from /tmp/raze-fresh-sprint8-bis -> BUILD SUCCESS; Tests run: 89, Failures: 0, Errors: 0, Skipped: 3."
+  archived_artifact_checks:
+    - "ops/test-results/sprint-ets-08-smoke-46-tests-2026-04-30.xml -> total=46 passed=40 failed=0 skipped=6."
+    - "ops/test-results/sprint-ets-08-cascade-2026-04-30.xml -> includes common, core, deployments, procedures, propertydefinitions, samplingfeatures, subdeployments, subsystems, systemfeatures; SystemFeatures FAIL cascades to Deployments and Subdeployments."
+    - "ops/test-results/sprint-ets-08-01-wedge1-sabotage-stdout-2026-04-30.log -> dynamic 6-sibling VERDICT-summary."
+    - "csapi ops/test-results/sprint-ets-08-01-self-audit-grep.txt -> grep burden met."
+
+commands_run:
+  - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+  - "sed -n '1,220p' _bmad/agents/adversarial-reviewer.md"
+  - "sed -n '1,260p' .harness/prompts/adversarial.md"
+  - "sed -n '1,260p' .harness/contracts/sprint-ets-08.yaml"
+  - "sed -n '1,260p' .harness/handoffs/generator-handoff.yaml"
+  - "sed -n '1,260p' ops/SESSION-HANDOFF-2026-04-30-SPRINT-08-IMPLEMENTED.md"
+  - "sed -n '1,260p' ops/status.md"
+  - "sed -n '1,260p' ops/changelog.md"
+  - "sed -n '1,260p' ops/test-results.md"
+  - "rg -n 'REQ-ETS-(CLEANUP-018|CLEANUP-019|PART1-005)|SCENARIO-ETS-(CLEANUP|PART1-005)|Implementation Status|Subdeployment|subdeployment|AdvancedFiltering|CRUD|Update|GeoJSON|SensorML' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "rg -n 'REQ-ETS-(CLEANUP-018|CLEANUP-019|PART1-005)|Sprint 8|Subdeployments|subdeployment' _bmad/traceability.md"
+  - "git clone /home/nh/docker/gir/ets-ogcapi-connectedsystems10 /tmp/raze-fresh-sprint8"
+  - "git clone /home/nh/docker/gir/ets-ogcapi-connectedsystems10 /tmp/raze-fresh-sprint8-bis"
+  - "sed -n '1,180p' ops/test-results/sprint-ets-08-01-self-audit-grep.txt"
+  - "rg -n '<group name=|SubdeploymentsTests|class AdvancedFilteringTests|class CRUDTests|class UpdateTests|class GeoJSONTests|class SensorMLTests' src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml src/main/java src/test/java"
+  - "rg -n 'new AssertionError|Assert\\.fail|TODO|FIXME|stub|placeholder|not yet implemented' src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance"
+  - "curl -sS -D /tmp/raze-subdep-headers.txt -o /tmp/raze-subdep-body.json https://api.georobotix.io/ogc/t18/api/deployments/16sp744ch58g/subdeployments"
+  - "SMOKE_OUTPUT_DIR=/tmp/raze-fresh-sprint8/test-results-raze-smoke bash scripts/smoke-test.sh | tee /tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-2026-05-04.txt"
+  - "kill 487615 487621 487629"
+  - "bash scripts/mvn-test-via-docker.sh | tee /tmp/raze-fresh-sprint8-bis/sprint-ets-08-mvn-via-docker-raze-2026-05-04.txt"
+  - "rg -o 'conformance\\.[a-z]+' ops/test-results/sprint-ets-08-cascade-2026-04-30.xml | sort -u"
+  - "rg -n '<group name=\"(subdeployments|deployments|systemfeatures)\"|<class name=.*(SubdeploymentsTests|DeploymentsTests|SystemFeaturesTests|ConformanceTests|LandingPageTests|ResourceShapeTests)' src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  - "curl -fsSL raw OGC requirements for subdeployment/collection and deployment/canonical-*"
+
+artifacts:
+  written:
+    - ".harness/evaluations/sprint-ets-08-adversarial-cumulative.yaml"
+    - "/tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-2026-05-04.txt"
+    - "/tmp/raze-fresh-sprint8-bis/sprint-ets-08-mvn-via-docker-raze-2026-05-04.txt"
+  read_or_verified:
+    - "/tmp/raze-subdep-headers.txt"
+    - "/tmp/raze-subdep-body.json"
+    - "/tmp/raze-fresh-sprint8/ops/test-results/sprint-ets-08-smoke-46-tests-2026-04-30.xml"
+    - "/tmp/raze-fresh-sprint8/ops/test-results/sprint-ets-08-cascade-2026-04-30.xml"
+    - "/tmp/raze-fresh-sprint8/ops/test-results/sprint-ets-08-01-wedge1-sabotage-stdout-2026-04-30.log"
+
+gaps:
+  - "No Raze-owned completed smoke TestNG XML because Docker build stalled under concurrent Quinn sabotage build."
+  - "No Raze-owned completed sabotage stdout/bash-x artifact for the same contention reason."
+  - "Did not read .harness/evaluations/sprint-ets-08-evaluator-cumulative.yaml before writing this report."
+
+files_changed:
+  - ".harness/evaluations/sprint-ets-08-adversarial-cumulative.yaml"
+
+post_gate_rerun_2026_05_04:
+  requested_by_user: "Do 5"
+  timestamp: "2026-05-04T20:50:01Z"
+  status: "LIVE_EXEC_GAPS_CLOSED"
+  summary: |
+    The two Raze-owned live-execution gaps caused by concurrent Docker build
+    contention were rerun after Quinn's Docker-backed checks completed. Both
+    reruns completed successfully from the fresh Raze clone.
+  closed_gaps:
+    - id: "RAZE-LIVE-EXEC-GAP-001"
+      closure_status: "CLOSED"
+      command: "SMOKE_OUTPUT_DIR=/tmp/raze-fresh-sprint8/test-results-raze-smoke-rerun bash scripts/smoke-test.sh"
+      artifact: "/tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-rerun-2026-05-04.txt"
+      testng_xml: "/tmp/raze-fresh-sprint8/test-results-raze-smoke-rerun/s-ets-01-03-teamengine-smoke-2026-05-04.xml"
+      observed: "SMOKE PASS; TestNG total=46 passed=40 failed=0 skipped=6; zero startup ERROR/SEVERE."
+    - id: "RAZE-LIVE-EXEC-GAP-002"
+      closure_status: "CLOSED"
+      command: "SABOTAGE_TMPDIR=/tmp/raze-sabotage-sprint8-rerun SMOKE_OUTPUT_DIR=/tmp/raze-fresh-sprint8/test-results-raze-sabotage-rerun bash -x scripts/sabotage-test.sh --target=systemfeatures"
+      stdout_bashx_artifact: "/tmp/raze-fresh-sprint8/sprint-ets-08-sabotage-raze-rerun-stdout-bashx-2026-05-04.log"
+      cascade_xml: "/tmp/raze-sabotage-sprint8-rerun/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-05-04T204846Z.xml"
+      cascade_log: "/tmp/raze-sabotage-sprint8-rerun/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-05-04T204846Z.log"
+      observed: "VERDICT-summary (siblings observed: 6): core+common PASS | systemfeatures FAIL | deployments, procedures, propertydefinitions, samplingfeatures, subdeployments, subsystems SKIP; exit 0."
+  remaining_gaps_after_rerun:
+    - "Spec scenario wording still needs singular /conf/subdeployment normalization where Sprint 8 corrected the class identifier."
+    - "Subdeployments id/type/links assertion still needs either a more direct normative shape citation or narrowed assertion wording."
+  verdict_impact: |
+    This addendum closes the two live-execution gaps only. It does not close the
+    separate documentation/spec reconciliation gaps also recorded in this report
+    or Quinn's evaluator report.

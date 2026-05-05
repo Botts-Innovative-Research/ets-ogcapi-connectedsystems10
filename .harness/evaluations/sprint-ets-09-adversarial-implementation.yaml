@@ -1,0 +1,112 @@
+sprint: "ets-09"
+story: "S-ETS-09-01"
+agent: "Raze"
+role: "Red Team adversarial reviewer"
+review_type: "implementation"
+created_utc: "2026-05-05T15:47:47Z"
+verdict: "GAPS_FOUND"
+confidence: 0.86
+scope_reviewed:
+  csapi_compliance:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+  sister_repo:
+    path: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+    commit: "28f4ddf3539cb6a85e77cec79025ddb107c92c93"
+    inspected_files:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java"
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  smoke_artifacts:
+    - "/tmp/sprint-ets-09-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    - "/tmp/sprint-ets-09-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log"
+summary: >
+  Sprint 9 is mostly honest about being a PARTIAL GeoJSON systems read-only subset:
+  docs, traceability, story DoD, and testng wiring do not claim the full
+  REQ-ETS-PART1-012 is closed, and the live smoke XML shows the CS API `items`
+  wrapper is not counted as a GeoJSON FeatureCollection PASS. One adversarial gap
+  remains: the `/req/geojson/mediatype-read` test passes when `/systems` returns
+  default `application/json` with `items`, even though the Sprint 9 spec/contract
+  only allowed fallback PASS when the representation is still valid GeoJSON.
+findings:
+  - id: "RAZE-ETS09-GAP-001"
+    severity: "MEDIUM"
+    category: "scope_honesty"
+    status: "open"
+    title: "`geoJsonMediaTypeRead` passes on default CS API `items` JSON"
+    evidence:
+      - "GeoJsonTests.java:123-135 asserts HTTP 200 and then passes when the body contains either `features` or `items`; it does not require `Content-Type: application/geo+json`, `type=FeatureCollection`, or `features` for the mediatype-read PASS."
+      - "OpenSpec SCENARIO-ETS-PART1-012-GEOJSON-MEDIATYPE-READ-001 says fallback is acceptable when the payload is a valid GeoJSON FeatureCollection but the server does not advertise `application/geo+json`."
+      - "Sprint contract risk GEOJSON-MEDIATYPE-NEGOTIATION-OVERCLAIM says not to claim mediatype-read PASS solely from default JSON without a note; the implementation includes a note, but still records a PASS for `items`-only JSON."
+      - "Smoke XML line 99 records `geoJsonMediaTypeRead` status PASS; lines 103-111 record `systemsCollectionIsGeoJsonFeatureCollection` SKIP because `/systems` returned `items`, not `features`."
+    impact: >
+      This is not a full-scope overclaim, but it is a per-assertion overclaim: a
+      conformant-looking PASS is emitted for `/req/geojson/mediatype-read` against
+      evidence that is explicitly not GeoJSON FeatureCollection evidence.
+    required_fix: >
+      Change `geoJsonMediaTypeRead` so default `items` JSON does not produce PASS
+      for `/req/geojson/mediatype-read`. Acceptable fixes: SKIP with the same
+      fallback-honesty reason used by the FeatureCollection test, or split this into
+      a non-normative diagnostic/fallback test that does not cite mediatype-read as
+      satisfied.
+request_fulfillment:
+  verdict: "mostly_fulfilled_with_gap"
+  checks:
+    - item: "PARTIAL only for REQ-ETS-PART1-012"
+      status: "PASS"
+      evidence: "OpenSpec status is PARTIAL-IMPLEMENTED and traceability says full REQ remains open."
+    - item: "`mediatype-write`, `relation-types`, and non-system GeoJSON mappings remain open"
+      status: "PASS"
+      evidence: "OpenSpec/story/testng comments list these as explicitly open; grep found no implementation references outside scope notes."
+    - item: "`/systems` `items` wrapper not counted as FeatureCollection PASS"
+      status: "PASS"
+      evidence: "GeoJsonTests.java throws SkipException when `items` exists without `features`; smoke XML records FeatureCollection SKIP."
+    - item: "`/systems` `items` wrapper not counted as mediatype-read PASS"
+      status: "GAP"
+      evidence: "`geoJsonMediaTypeRead` currently passes if the body contains `items`."
+evidence:
+  mvn_via_docker:
+    claimed: "92 tests / 0 failures / 0 errors / 3 skipped; BUILD SUCCESS"
+    inspected: true
+    notes:
+      - "Target surefire reports in sister repo are timestamped 2026-05-05 11:41 Eastern."
+      - "VerifyTestNGSuiteDependency report shows tests=25, failures=0, errors=0, skipped=0, including the 3 new GeoJSON lint tests."
+      - "Summed surefire XML reports match 92 total and 3 skipped."
+      - "No expensive Docker rerun performed per user instruction; no concrete blocker required reproduction."
+  smoke:
+    inspected: true
+    artifact: "/tmp/sprint-ets-09-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    totals: "51 total / 43 passed / 0 failed / 8 skipped"
+    geojson_breakdown:
+      passed:
+        - "geoJsonConformanceDeclared"
+        - "geoJsonDependencyCascadeRuntime"
+        - "geoJsonMediaTypeRead"
+      skipped:
+        - "systemsCollectionIsGeoJsonFeatureCollection"
+        - "systemFeatureHasGeoJsonShapeAndProperties"
+    notes:
+      - "All GeoJSON methods in smoke XML carry depends-on-groups=\"systemfeatures\"."
+      - "FeatureCollection SKIP reason explicitly says `items` wrapper is fallback evidence, not GeoJSON PASS."
+  static_checks:
+    no_write_scope_creep: "PASS: grep found no GeoJSON POST/PUT/PATCH/DELETE, mediatype-write, relation-types, or non-system mapping implementation."
+    testng_wiring: "PASS: testng.xml declares `<group name=\"geojson\" depends-on=\"systemfeatures\"/>` and includes GeoJsonTests in the consolidated test block."
+    lint_tests: "PASS: VerifyTestNGSuiteDependency contains `testGeoJsonGroupDependsOnSystemFeatures`, `testEveryGeoJsonTestMethodCarriesGeoJsonGroup`, and `testGeoJsonCoLocatedWithSystemFeatures`."
+conformance_correctness:
+  spec_source_mismatches: []
+  url_construction_bugs: []
+  dynamic_schema_violations: []
+  false_positive_risks:
+    - finding: "RAZE-ETS09-GAP-001"
+      assertion: "GeoJsonTests.geoJsonMediaTypeRead"
+      cited_requirement: "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/mediatype-read"
+      risk: "PASS can be emitted for default CS API JSON `items` wrapper."
+required_fixes:
+  - "Resolve RAZE-ETS09-GAP-001 before reporting Sprint ets-09 as gate-clean."
+non_blocking_notes:
+  - "The sister repo worktree has pre-existing modified scripts and many `:Zone.Identifier` files; reviewed commit `28f4ddf` as requested and did not attribute unrelated dirt to Sprint 9 implementation."
+  - "No implementation files were edited during this review."

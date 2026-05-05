@@ -1,0 +1,54 @@
+project: ets-ogcapi-connectedsystems10
+active_repo: /home/nh/docker/gir/ets-ogcapi-connectedsystems10
+project_type: java_testng_teamengine_ets
+
+commands:
+  format: >
+    docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/workspace -w /workspace
+    -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS="-Duser.home=/tmp"
+    maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply
+  unit: "bash scripts/mvn-test-via-docker.sh"
+  e2e: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/smoke-test.sh"
+  sabotage: "bash scripts/sabotage-test.sh --target=systemfeatures"
+  credential_e2e: "bash scripts/credential-leak-e2e-test.sh"
+  deploy: "docker-compose up -d"
+
+verification_policy:
+  unit_required: true
+  e2e_required: true
+  e2e_should_use_tmp_clone: true
+  report_skips_explicitly: true
+  no_all_tests_pass_claim_when_skipped: true
+
+critical_paths:
+  java_sources:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/"
+  java_tests:
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/"
+  suite_wiring:
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  scripts:
+    - "scripts/smoke-test.sh"
+    - "scripts/sabotage-test.sh"
+    - "scripts/mvn-test-via-docker.sh"
+    - "scripts/credential-leak-e2e-test.sh"
+    - "scripts/credential-leak-integration-test.sh"
+  specs:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md"
+  bmad:
+    - "_bmad/"
+    - ".harness/"
+    - "epics/"
+    - "ops/"
+
+gate_roles:
+  generator: ".harness/prompts/generator.md"
+  evaluator: ".harness/prompts/evaluator.md"
+  adversarial: ".harness/prompts/adversarial.md"
+
+current_sprint:
+  id: ets-09
+  story: S-ETS-09-01
+  status: PARTIAL-IMPLEMENTED
+  next_gate: "Quinn + Raze Sprint 9 gates"

@@ -1,0 +1,154 @@
+agent: evaluator
+agent_role: quinn
+sprint_number: "ets-08"
+story_ids:
+  - "S-ETS-08-01"
+  - "S-ETS-08-02"
+timestamp: "2026-05-04T22:58:05Z"
+quinn_peek_attempted: false
+
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.91
+followup_scope: "Evaluate whether Sprint 8 reconciliation follow-up edits close Quinn/Raze prior blockers without rerunning full Docker smoke/sabotage."
+
+summary: |
+  The Sprint 8 follow-up edits close the prior blocking reconciliation issues Quinn
+  identified and the live-execution gaps Raze later reran. There is now a single
+  authoritative REQ-ETS-PART1-005 section with IMPLEMENTED status, both Sprint 8
+  story DoD lists are checked, the Subdeployments dependsOnGroups wording has been
+  reconciled to the suite-level dependency pattern, active Sprint 8 spec/story text
+  uses singular /conf/subdeployment, and Raze's smoke/sabotage rerun artifacts close
+  RAZE-LIVE-EXEC-GAP-001/-002.
+
+  Remaining concern is operational handoff hygiene only: ops/status.md still presents
+  Sprint 8 as "ready for Quinn + Raze cumulative gates" and does not reflect the
+  follow-up reconciliation closure. This does not reopen the prior blockers because
+  ops/changelog.md records the closure and the authoritative spec/story artifacts are
+  reconciled, but it should be refreshed before final Sprint 8 close/handoff.
+
+findings:
+  - id: "QUINN-S8-FU-001"
+    severity: "LOW"
+    status: "OPEN"
+    title: "ops/status.md was not refreshed after the follow-up reconciliation"
+    evidence:
+      - "ops/status.md top line still says Last updated: 2026-04-30T20:40Z and frames Sprint 8 as ready for Quinn + Raze cumulative gates."
+      - "ops/changelog.md has the 2026-05-04T21:00Z follow-up entry documenting blocker closure."
+    impact: "Session handoff readers starting from ops/status.md will see stale gate-ready framing even though the spec/story/changelog evidence has moved past that state."
+    recommendation: "Update ops/status.md to state that the Sprint 8 follow-up reconciliation blockers are closed, with remaining close-out depending on final gate acceptance/meta-review if applicable."
+
+closed_prior_blockers:
+  - id: "QUINN-S8-001"
+    title: "Duplicate REQ-ETS-PART1-005 placeholder vs implemented section"
+    status: "CLOSED"
+    evidence:
+      - "rg -c '^#### REQ-ETS-PART1-005' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md -> 1."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:380 is the only REQ-ETS-PART1-005 heading."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:382 records Status: IMPLEMENTED."
+      - "git diff shows the old placeholder section at former lines 132-137 was removed."
+  - id: "QUINN-S8-002"
+    title: "Unchecked Sprint 8 story DoD lists"
+    status: "CLOSED"
+    evidence:
+      - "rg -n '^\\s*- \\[ \\]' epics/stories/s-ets-08-01-sprint7-carryover-wedges.md epics/stories/s-ets-08-02-subdeployments-conformance-class.md returned no hits."
+      - "epics/stories/s-ets-08-01-sprint7-carryover-wedges.md:187-198 are checked."
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:178-188 are checked."
+  - id: "QUINN-S8-003"
+    title: "Explicit dependsOnGroups/story-source mismatch"
+    status: "CLOSED"
+    evidence:
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:81-85 now documents the project-standard suite-level dependency pattern."
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:179 now says @Tests carry groups={\"subdeployments\"} and testng.xml supplies depends-on=\"deployments\"."
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:88 declares <group name=\"subdeployments\" depends-on=\"deployments\"/>."
+      - "/tmp/raze-fresh-sprint8/test-results-raze-smoke-rerun/s-ets-01-03-teamengine-smoke-2026-05-04.xml lines 388, 392, 396, and 405 show runtime depends-on-groups=\"deployments\" for Subdeployments @Tests."
+  - id: "RAZE-S8-SPEC-DRIFT-001"
+    title: "Plural /conf/subdeployments wording drift"
+    status: "CLOSED_FOR_ACTIVE_SPEC_STORY_TEXT"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md active REQ/scenario text now uses /conf/subdeployment at lines 380, 382-386, 442, 447, 452, and 460."
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md uses /conf/subdeployment in the description, Spec References, IUT verification, and DoD."
+      - "Remaining /conf/subdeployments hits are historical/planning references in the Sprint 8 contract and the explicit correction note in spec.md/ops/changelog.md, not active implemented requirements."
+  - id: "RAZE-LIVE-EXEC-GAP-001"
+    title: "Raze-owned smoke rerun missing at cumulative gate"
+    status: "CLOSED"
+    evidence:
+      - ".harness/evaluations/sprint-ets-08-adversarial-cumulative.yaml:143-169 records post_gate_rerun_2026_05_04 with LIVE_EXEC_GAPS_CLOSED."
+      - "/tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-rerun-2026-05-04.txt:10 reports TestNG total=46 passed=40 failed=0 skipped=6."
+      - "/tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-rerun-2026-05-04.txt:13 reports SMOKE PASS."
+  - id: "RAZE-LIVE-EXEC-GAP-002"
+    title: "Raze-owned sabotage stdout/bash-x rerun missing at cumulative gate"
+    status: "CLOSED"
+    evidence:
+      - "/tmp/raze-fresh-sprint8/sprint-ets-08-sabotage-raze-rerun-stdout-bashx-2026-05-04.log:178 reports VERDICT-summary (siblings observed: 6)."
+      - "/tmp/raze-sabotage-sprint8-rerun/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-05-04T204846Z.xml shows systemfeatures FAIL and dependent sibling groups SKIP, including subdeployments with depends-on-groups=\"deployments\"."
+
+commands:
+  - command: "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "2026-05-04T22:58:05Z"
+  - command: "sed -n '1,220p' .harness/prompts/evaluator.md"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Read evaluator instructions."
+  - command: "sed -n '1,260p' .harness/contracts/sprint-ets-08.yaml"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Read Sprint 8 contract and follow-up target criteria."
+  - command: "sed -n '1,260p' .harness/evaluations/sprint-ets-08-evaluator-cumulative.yaml"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Read prior Quinn blockers."
+  - command: "sed -n '1,260p' .harness/evaluations/sprint-ets-08-adversarial-cumulative.yaml"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Read cumulative Raze report and post-gate rerun addendum; did not read any separate/new Raze follow-up YAML."
+  - command: "sed -n '1,260p' ops/changelog.md"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Confirmed 2026-05-04T21:00Z follow-up entry."
+  - command: "sed -n '1,260p' ops/status.md"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Found stale Sprint 8 gate-ready framing."
+  - command: "sed -n '1,260p' ops/metrics.md"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Read existing turn log before appending this evaluation turn."
+  - command: "rg -n 'REQ-ETS-PART1-005|SCENARIO-ETS-PART1-005|subdeployments|subdeployment|Implementation Status|Status:' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Confirmed single active Subdeployments IMPLEMENTED section and singular active scenario wording."
+  - command: "rg -n '^\\s*- \\[ \\]' epics/stories/s-ets-08-01-sprint7-carryover-wedges.md epics/stories/s-ets-08-02-subdeployments-conformance-class.md"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "No unchecked Sprint 8 DoD items."
+  - command: "rg -n 'post_gate_rerun_2026_05_04|RAZE-LIVE-EXEC-GAP|LIVE_EXEC_GAPS_CLOSED|sprint-ets-08-smoke-raze-rerun|sabotage-raze-rerun' .harness/evaluations/sprint-ets-08-adversarial-cumulative.yaml /tmp/raze-fresh-sprint8 /tmp/raze-sabotage-sprint8-rerun"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Confirmed Raze rerun addendum and artifact paths."
+  - command: "rg -n '@Test|dependsOnGroups|groups = \\{ \"subdeployments\" \\}|depends-on=\"deployments\"|depends-on-groups=\"deployments\"' src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/subdeployments/SubdeploymentsTests.java src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java /tmp/raze-fresh-sprint8/test-results-raze-smoke-rerun/s-ets-01-03-teamengine-smoke-2026-05-04.xml"
+    cwd: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+    result: "Confirmed source uses groups-only pattern, suite-level dependency exists, and TestNG emits depends-on-groups at runtime."
+  - command: "rg -c '^#### REQ-ETS-PART1-005' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "1"
+  - command: "rg -n '/conf/subdeployments' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md epics/stories/s-ets-08-01-sprint7-carryover-wedges.md epics/stories/s-ets-08-02-subdeployments-conformance-class.md .harness/contracts/sprint-ets-08.yaml ops/changelog.md"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Only historical/correction or planning-contract hits remain; active spec/story text is singular."
+  - command: "rg -n 'VERDICT-summary|siblings observed|SMOKE PASS|TestNG: total=46|status=\"FAIL\"|status=\"SKIP\"' /tmp/raze-fresh-sprint8/sprint-ets-08-sabotage-raze-rerun-stdout-bashx-2026-05-04.log /tmp/raze-sabotage-sprint8-rerun/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-05-04T204846Z.xml /tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-rerun-2026-05-04.txt"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "Confirmed smoke PASS and 6-sibling sabotage VERDICT-summary."
+
+evidence:
+  primary_artifacts:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-08-01-sprint7-carryover-wedges.md"
+    - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md"
+    - ".harness/evaluations/sprint-ets-08-adversarial-cumulative.yaml"
+    - "/tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-rerun-2026-05-04.txt"
+    - "/tmp/raze-fresh-sprint8/sprint-ets-08-sabotage-raze-rerun-stdout-bashx-2026-05-04.log"
+    - "/tmp/raze-sabotage-sprint8-rerun/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-05-04T204846Z.xml"
+    - "/tmp/raze-fresh-sprint8/test-results-raze-smoke-rerun/s-ets-01-03-teamengine-smoke-2026-05-04.xml"
+  not_rerun:
+    - "Full Docker smoke and sabotage were not rerun by Quinn in this follow-up because the user explicitly allowed prior rerun artifacts and targeted evidence was present."
+  independence:
+    - "No separate/new Raze follow-up YAML was read; only the requested cumulative adversarial report and its embedded post-gate rerun addendum were inspected."
+
+changed_files:
+  followup_changes_evaluated:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-08-01-sprint7-carryover-wedges.md"
+    - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md"
+    - "ops/changelog.md"
+  evaluator_changes:
+    - ".harness/evaluations/sprint-ets-08-evaluator-followup.yaml"

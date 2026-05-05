@@ -1,0 +1,104 @@
+agent: raze
+role: adversarial_reviewer
+sprint: ets-09
+review_type: planning_gapfix_followup
+reviewed_at: "2026-05-05T15:18:48Z"
+scope: "Static review only of whether RAZE-S9-PLAN-001 through RAZE-S9-PLAN-003 are closed in current uncommitted Sprint 9 planning docs"
+verdict: APPROVE
+confidence: 0.93
+
+constraints_observed:
+  docker_run: false
+  static_checks_only: true
+  edited_files:
+    - ".harness/evaluations/sprint-ets-09-plan-gapfix.yaml"
+  files_reviewed:
+    - ".harness/evaluations/sprint-ets-09-plan-adversarial.yaml"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md"
+    - ".harness/contracts/sprint-ets-09.yaml"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "epics/epic-ets-02-part1-classes.md"
+
+summary: >
+  Required fixes RAZE-S9-PLAN-001 through RAZE-S9-PLAN-003 are closed in the
+  current uncommitted Sprint 9 planning documents. The plan no longer permits
+  full-class closure of REQ-ETS-PART1-012 from the five-test systems-only subset,
+  no longer accepts a CS API `items` wrapper as a passing GeoJSON
+  FeatureCollection, and ties `mediatype-write` explicitly to future
+  create-replace-delete scope.
+
+findings:
+  - id: RAZE-S9-PLAN-001
+    prior_severity: HIGH
+    status: closed
+    title: "REQ-ETS-PART1-012 full IMPLEMENTED overclaim removed"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:394 now says target PARTIAL-IMPLEMENTED for the systems read-only subset and says the full REQ remains open until all listed GeoJSON subrequirements are covered."
+      - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md:9 says the story intentionally does not close the full GeoJSON requirement class."
+      - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md:28 says SPECIFIED -> target PARTIAL-IMPLEMENTED for systems read-only subset."
+      - ".harness/contracts/sprint-ets-09.yaml:19-24 labels scope PARTIAL for REQ-ETS-PART1-012 and enumerates the limited five-test slice."
+      - "_bmad/traceability.md:37 marks REQ-ETS-PART1-012 as Planned PARTIAL and explicitly keeps untested GeoJSON subrequirements open."
+      - ".harness/handoffs/planner-handoff.yaml:96 tells Generator to update statuses to PARTIAL-IMPLEMENTED only after live smoke evidence."
+    adversarial_assessment: >
+      The previous overclaim path is closed. A future Generator could still
+      violate status honesty, but current planning artifacts now constrain Sprint
+      9 to a partial systems read-only subset.
+
+  - id: RAZE-S9-PLAN-002
+    prior_severity: HIGH
+    status: closed
+    title: "`items` no longer passes GeoJSON FeatureCollection assertion"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:421-423 requires type=\"FeatureCollection\" plus a `features` array and says an `items`-only CS API wrapper does NOT pass."
+      - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md:63 requires type=\"FeatureCollection\" and `features`; `items` alone is fallback/SKIP/CONCERN evidence."
+      - ".harness/contracts/sprint-ets-09.yaml:22 requires strict FeatureCollection validation with `features`."
+      - ".harness/contracts/sprint-ets-09.yaml:101 tells Raze to reject any plan or code path that treats `items` as passing GeoJSON FeatureCollection."
+      - ".harness/contracts/sprint-ets-09.yaml:108-110 keeps the `items` wrapper as a risk with mitigation: require `features` for PASS."
+      - ".harness/handoffs/planner-handoff.yaml:101 repeats that PASS requires type=FeatureCollection and a features array."
+    adversarial_assessment: >
+      The conformance false-positive risk identified in the original plan review
+      is closed at planning level. The docs now distinguish default CS API JSON
+      fallback evidence from a passing GeoJSON FeatureCollection assertion.
+
+  - id: RAZE-S9-PLAN-003
+    prior_severity: MEDIUM
+    status: closed
+    title: "`mediatype-write` remains OPEN and is tied to create-replace-delete"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:396 says `mediatype-write` remains OPEN and is conditional on create-replace-delete being implemented or explicitly selected."
+      - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md:57 states the same condition and leaves deployment/procedure/sampling-feature schema/mapping open."
+      - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md:112 ties no write-operation assertions to future create-replace-delete scope."
+      - ".harness/contracts/sprint-ets-09.yaml:26-30 excludes `mediatype-write`, any mutation assertion, and separately excludes CRUD/Update."
+      - ".harness/contracts/sprint-ets-09.yaml:97 says Generator must not implement mediatype-write and that it remains OPEN until create-replace-delete is implemented or selected."
+      - "_bmad/traceability.md:37 says `mediatype-write` remains OPEN and conditional on create-replace-delete being implemented or selected."
+      - "ops/status.md:3 says `mediatype-write` remains OPEN until create-replace-delete is implemented or selected."
+    adversarial_assessment: >
+      The prior loose CRUD/Update coupling is resolved. Update remains excluded as
+      a separate future class; the write-media-type condition is now specifically
+      create-replace-delete.
+
+residual_risks:
+  - id: "S9-GENERATOR-STATUS-HONESTY"
+    severity: "LOW"
+    description: >
+      This review only covers planning docs. Generator must still preserve
+      PARTIAL-IMPLEMENTED wording after implementation unless additional
+      GeoJSON subrequirements are actually tested and verified.
+  - id: "S9-RUNTIME-NOT-RUN"
+    severity: "LOW"
+    description: "No Docker, Maven, smoke, or live IUT checks were run per user constraint."
+
+static_checks:
+  - command: "rg -n \"REQ-ETS-PART1-012|items|features|mediatype-write|CRUD|create-replace-delete|CRD|IMPLEMENTED|PARTIAL|GeoJSON\" openspec epics .harness/contracts _bmad ops -g '!**/*Zone.Identifier'"
+    result: "Confirmed required partial-scope, features-not-items, and create-replace-delete wording in active Sprint 9 planning docs."
+  - command: "rg -n \"target IMPLEMENTED|fully IMPLEMENTED|items.*pass|items.*acceptable|mediatype-write.*CRUD|CRUD/Update|PARTIAL-IMPLEMENTED|Planned PARTIAL|remains OPEN|create-replace-delete\" <Sprint 9 planning docs>"
+    result: "No active RAZE-S9-PLAN-001..003 blocker wording found in the Sprint 9 planning docs reviewed."
+
+recommendation: >
+  Proceed to Generator for S-ETS-09-01 under the current contract. At implementation
+  gate, Quinn and Raze should verify that code and post-smoke documentation retain
+  PARTIAL-IMPLEMENTED status, require `features` for GeoJSON PASS, and leave
+  `mediatype-write` open until create-replace-delete scope.

@@ -1,0 +1,125 @@
+review_id: session-migration-adversarial-gapfix
+reviewer: Raze
+role: Red Team adversarial reviewer
+timestamp: "2026-05-05T16:26:05Z"
+repository: /home/nh/docker/gir/ets-ogcapi-connectedsystems10
+user_request: >
+  Verify the migration gapfix for active ETS control docs after edits to AGENTS.md,
+  .harness/config.yaml, .harness/prompts/generator.md,
+  .harness/prompts/evaluator.md, .harness/prompts/adversarial.md,
+  openspec/project.md, and _bmad/agents/adversarial-reviewer.md. Check for stale
+  csapi/web/Next/npm/vitest/Playwright/local web app guidance and whether the
+  session handoff is restart-ready. Do not run Docker/Maven.
+verdict: APPROVE
+confidence: 0.91
+
+scope_reviewed:
+  active_control_docs:
+    - AGENTS.md
+    - .harness/config.yaml
+    - .harness/prompts/generator.md
+    - .harness/prompts/evaluator.md
+    - .harness/prompts/adversarial.md
+    - openspec/project.md
+    - _bmad/agents/adversarial-reviewer.md
+  restart_handoff_docs:
+    - ops/status.md
+    - ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md
+    - .harness/handoffs/generator-handoff.yaml
+  commands_not_run_by_instruction:
+    - Docker
+    - Maven
+    - TeamEngine smoke
+
+gapfix_findings:
+  - id: GAPFIX-001
+    prior_gap: GAP-001 stale_harness_instructions
+    severity: INFO
+    status: closed
+    summary: >
+      The active harness config and role prompts now use Java/TestNG/TeamEngine ETS
+      commands instead of npm, vitest, Playwright, or local Next.js app commands.
+    evidence:
+      - ".harness/config.yaml identifies project_type as java_testng_teamengine_ets and sets unit to bash scripts/mvn-test-via-docker.sh."
+      - ".harness/config.yaml sets e2e to SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/smoke-test.sh."
+      - ".harness/prompts/generator.md directs Dana to implement Java/TestNG/REST Assured code and verify with Maven plus TeamEngine smoke."
+      - ".harness/prompts/evaluator.md directs Quinn to inspect Java/TestNG implementation, testng.xml, Maven results, and TeamEngine smoke."
+      - ".harness/prompts/adversarial.md directs Raze to inspect OGC requirement URIs, PASS/SKIP honesty, TestNG dependency wiring, and TeamEngine evidence."
+
+  - id: GAPFIX-002
+    prior_gap: GAP-002 stale_openspec_project_conventions
+    severity: INFO
+    status: closed
+    summary: >
+      openspec/project.md is now ETS-native and no longer describes the old
+      CS API Compliance Assessor web app conventions.
+    evidence:
+      - "openspec/project.md identifies the project as ets-ogcapi-connectedsystems10, Java 17, Maven, TestNG/JUnit structural tests, REST Assured, and Dockerized TeamEngine smoke."
+      - "openspec/project.md layout points to src/main/java, src/test/java, testng.xml, scripts/smoke-test.sh, and scripts/mvn-test-via-docker.sh."
+      - "openspec/project.md verification block uses spring-javaformat via Maven Docker, scripts/mvn-test-via-docker.sh, and scripts/smoke-test.sh."
+
+  - id: GAPFIX-003
+    prior_gap: GAP-003 stale_bmad_role_wrapper
+    severity: INFO
+    status: closed
+    summary: >
+      The canonical Raze role under _bmad is now specific to the OGC API Connected
+      Systems Java/TestNG TeamEngine ETS.
+    evidence:
+      - "_bmad/agents/adversarial-reviewer.md describes Raze as reviewer for the Java/TestNG TeamEngine ETS."
+      - "_bmad/agents/adversarial-reviewer.md prioritizes false PASS results, OGC requirement URI mapping, IUT-state assumptions, TestNG dependency wiring, Maven/TeamEngine smoke artifacts, and worktree pollution."
+      - "_bmad/agents/adversarial-reviewer.md lists ETS commands only: mvn-test-via-docker.sh, smoke-test.sh, sabotage-test.sh, and credential-leak-e2e-test.sh."
+
+  - id: GAPFIX-004
+    severity: INFO
+    status: verified
+    summary: >
+      The active scoped documents contain no stale Next.js, npm, vitest, Playwright,
+      TypeScript frontend, or local web-app workflow guidance.
+    evidence:
+      - "rg over the seven scoped control docs found no Next.js, npm, vitest, Playwright, React, Vite, tsc, eslint, npx, or npm run guidance."
+      - "Remaining scoped hits are docker-compose up -d in AGENTS.md and .harness/config.yaml, which is ETS TeamEngine deployment guidance, not stale web-app guidance."
+
+  - id: GAPFIX-005
+    severity: INFO
+    status: verified_with_caveat
+    summary: >
+      Historical handoff, contract, architecture, and traceability files still mention
+      csapi and web-app artifacts, but those references are historical/source-context
+      records rather than active migrated control instructions.
+    evidence:
+      - ".harness/handoffs/discovery-handoff.yaml records the 2026-04-27 pivot from the old web app to the ETS and explicitly says the Next.js UI, Vitest, and Playwright tests are throwaway in the ETS context."
+      - "_bmad/architecture.md explicitly states the ETS is not a web application and has no browser UI or authored REST endpoints."
+      - "_bmad/traceability.md has a Frozen v1.0 web app section clearly marked historical, with new work directed into the ETS section above."
+    caveat: >
+      Broad grep will continue to find old web-app names in archived contracts and
+      historical records. That is acceptable because current status/handoff/control
+      docs direct restart work to ETS-native commands and artifacts.
+
+handoff_readiness:
+  status: restart_ready
+  evidence:
+    - "ops/status.md Fresh-Session Entry Point tells future sessions to cd /home/nh/docker/gir/ets-ogcapi-connectedsystems10."
+    - "ops/status.md read-first list includes AGENTS.md, the migration handoff, current ETS spec, traceability, generator handoff, and sprint-ets-09 contract."
+    - "ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md records ETS HEAD b4a97de, Sprint ets-09 PARTIAL-IMPLEMENTED state, latest Maven/smoke totals, migrated context, known dirty scripts, Zone.Identifier warning, and recommended next steps."
+    - ".harness/handoffs/generator-handoff.yaml identifies Sprint ets-09 status, exact verification totals, smoke artifact paths, IUT GeoJSON behavior, and next agent action."
+
+residual_risks:
+  - id: RR-001
+    severity: LOW
+    summary: >
+      The worktree remains very noisy with pre-existing modified scripts and many
+      Zone.Identifier files.
+    evidence:
+      - "git status shows the same modified script set documented in ops/status.md and the migration handoff."
+    impact: >
+      Commit staging remains error-prone, but this is documented and does not block
+      restart-readiness.
+
+required_fixes: []
+
+final_assessment: >
+  The previously reported active migration gaps are closed. The scoped control docs
+  now point agents at the ETS Java/Maven/TestNG/TeamEngine workflow, and the session
+  handoff is sufficient for a fresh agent to restart in the ETS repo without falling
+  back to csapi web-app guidance.

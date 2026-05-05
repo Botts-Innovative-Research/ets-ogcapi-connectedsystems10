@@ -1,0 +1,157 @@
+sprint: "ets-08"
+story: "S-ETS-08-01 + S-ETS-08-02"
+reviewer: "Raze"
+timestamp: "2026-05-04T22:59:41Z"
+raze_peek_attempted: false
+user_request: "Adversarially evaluate whether Sprint 8 follow-up edits truly close the prior blockers/gaps without reading any new Quinn follow-up YAML, then write this follow-up verdict."
+verdict: "GAPS_FOUND"
+confidence: 0.90
+overrides_evaluator: false
+evaluator_followup_yaml_read_before_finalizing: false
+evaluator_cumulative_yaml_read_because_user_listed_it: true
+
+request_fulfillment:
+  fully_delivered:
+    - "Duplicate REQ-ETS-PART1-005 is closed: static grep found exactly one '#### REQ-ETS-PART1-005' section in openspec/capabilities/ets-ogcapi-connectedsystems/spec.md."
+    - "Both Sprint 8 story Definition-of-Done checklists are reconciled: no unchecked '[ ]' items remain in epics/stories/s-ets-08-01-sprint7-carryover-wedges.md or epics/stories/s-ets-08-02-subdeployments-conformance-class.md."
+    - "The source/story dependsOnGroups mismatch is mostly closed: S-ETS-08-02 now states @Tests carry groups='subdeployments' and testng.xml supplies suite-level depends-on='deployments'; TestNG XML artifacts emit depends-on-groups='deployments'."
+    - "Plural /conf/subdeployments drift is closed in active Sprint 8 requirement/scenario text: grep found only one remaining plural occurrence, explicitly in a historical priority-correction note."
+    - "Raze live-exec gaps are closed by rerun artifacts under /tmp/raze-fresh-sprint8 and /tmp/raze-sabotage-sprint8-rerun: smoke total=46 passed=40 failed=0 skipped=6; sabotage VERDICT-summary lists 6 skipped sibling groups."
+    - "The canonical-shape citation concern was materially improved: spec/story/source now acknowledge Subdeployments inherit deployment canonical endpoint and canonical URL discipline from /req/deployment."
+  gaps:
+    - id: "RAZE-S8-FOLLOWUP-001"
+      severity: "LOW"
+      title: "Canonical subdeployment path/citation reconciliation is still incomplete"
+      evidence:
+        - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:96 still says 'GET /subdeployments/{id} -> canonical shape'."
+        - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:100 still says '/subdeployments/{id} links contain rel=canonical'."
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:462 still allows path-based fallback URL '/subdeployments/{id}' for canonical URL."
+        - "SubdeploymentsTests.java:314-322, 374-386, and 417-428 dereference/assert '/deployments/{id}', matching OGC /req/deployment/canonical-url."
+        - "OGC req_canonical_url.adoc says every Deployment resource canonical URL is '{api_root}/deployments/{id}', not '/subdeployments/{id}'."
+      impact: "The implemented code appears aligned with the OGC deployment canonical URL source, but follow-up docs still carry a stale '/subdeployments/{id}' path in story/spec acceptance text."
+      recommendation: "Normalize the remaining story/spec canonical endpoint and canonical URL text to '/deployments/{id}' or explicitly state any '/subdeployments/{id}' behavior is not part of the current Sprint 8 inherited-deployment assertion."
+    - id: "RAZE-S8-FOLLOWUP-002"
+      severity: "LOW"
+      title: "id/type/links assertion still lacks a direct normative shape citation"
+      evidence:
+        - "SubdeploymentsTests.java:385-401 asserts id, type, and links under REQ_CANONICAL_ENDPOINT."
+        - "OGC deployment req_canonical_endpoint.adoc says the server SHALL expose /deployments and expose all Deployment resources, but does not itself spell out id/type/links."
+        - "SubdeploymentsTests.java:373-376 mentions REQ-ETS-CORE-004 base shape, which is local spec text rather than the direct OGC Deployment resource schema/source citation."
+      impact: "This is lower risk than before because inheritance is now explicit, but the exact id/type/links assertion still needs either a direct OGC schema/base-resource citation or narrower wording."
+      recommendation: "Add a direct normative source for Deployment resource shape, or narrow the @Test/story wording so /req/deployment/canonical-endpoint is not presented as the sole source for id/type/links."
+    - id: "RAZE-S8-FOLLOWUP-003"
+      severity: "LOW"
+      title: "ops/status.md was not refreshed for the follow-up"
+      evidence:
+        - "ops/changelog.md has a 2026-05-04T21:00Z follow-up entry."
+        - "ops/status.md still starts with Last updated: 2026-04-30T20:40Z and describes Sprint 8 as SPRINT-IMPLEMENTED, ready for gates."
+      impact: "Workflow Step 7 says ops/status.md is the session handoff document. The follow-up result is in changelog but not reflected in status."
+      recommendation: "Update ops/status.md with the follow-up state: prior blockers closed, remaining low canonical citation/path gap if accepted."
+  scope_creep: []
+  buried_caveats:
+    - "The sister repo worktree has mode-only diffs on scripts/*.sh (100755 -> 100644) and multiple untracked Zone.Identifier files. These appear environmental/unrelated to the follow-up edits, but they mean the sister worktree is not clean."
+
+claude_md_compliance:
+  step_1_spec_first: "OK"
+  step_2_write_tests: "OK"
+  step_3_implement: "OK"
+  step_4_verify: "OK"
+  step_5_e2e_verify: "OK"
+  step_6_reconcile_specs: "WEAK"
+  step_7_update_ops: "WEAK"
+  step_8_update_bmad: "OK"
+  notes: "Follow-up is docs/reconciliation, not new ETS code. Static checks plus existing Raze rerun artifacts close the prior live-exec gaps. Spec/story reconciliation is still weak around canonical /deployments/{id} vs /subdeployments/{id} and direct id/type/links normative source. ops/changelog.md was updated, but ops/status.md was not."
+
+spec_gaps:
+  - id: "REQ-ETS-PART1-005"
+    issue: "Remaining story/spec path drift for canonical assertions: story lines 96/100 and spec line 462 still mention /subdeployments/{id}, while OGC /req/deployment/canonical-url and implementation use /deployments/{id}."
+  - id: "REQ-ETS-PART1-005"
+    issue: "The inherited canonical endpoint citation now points to /req/deployment/canonical-endpoint, but the id/type/links shape assertion still needs a direct OGC schema/base-resource citation or narrower wording."
+
+cross_agent_blind_spots:
+  - "No new Quinn follow-up YAML was read. The only Quinn artifact read was the user-listed cumulative evaluator YAML."
+  - "scripts/orchestrate.py and ops/metrics.md were already dirty before this report; scripts/orchestrate.py was not part of the Sprint 8 follow-up evidence reviewed here."
+  - "Sister repo /home/nh/docker/gir/ets-ogcapi-connectedsystems10 has mode-only script diffs and untracked Zone.Identifier files, so any future gate should avoid treating its worktree as clean."
+
+conformance_correctness:
+  false_positives_found: []
+  false_negatives_found: []
+  url_construction_bugs: []
+  dynamic_schema_violations: []
+  assertion_spec_drift:
+    - id: "SUBDEP-CANONICAL-PATH-DRIFT"
+      issue: "Docs still mention /subdeployments/{id} for canonical item/link assertions, but OGC deployment canonical URL source and implementation use /deployments/{id}."
+      evidence:
+        - "OGC req_canonical_url.adoc: canonical Deployment URL is {api_root}/deployments/{id}."
+        - "SubdeploymentsTests.java builds itemUri = base + 'deployments/' + firstSubdeploymentId."
+  spec_source_mismatches:
+    - id: "SUBDEP-ID-TYPE-LINKS-SOURCE"
+      issue: "The id/type/links assertion is still attributed mainly to /req/deployment/canonical-endpoint, whose .adoc text does not spell out those fields."
+
+recommendations:
+  - "Fix S-ETS-08-02 story lines 96/100 and spec line 462 to use /deployments/{id} for inherited Deployment canonical URL assertions, or mark /subdeployments/{id} out of scope for Sprint 8."
+  - "Add or cite a direct normative Deployment resource shape source for id/type/links, or narrow the assertion wording to match /req/deployment/canonical-endpoint exactly."
+  - "Refresh ops/status.md to reflect the Sprint 8 follow-up state."
+
+severity_summary:
+  blockers: 0
+  gaps: 3
+  concerns: 2
+
+evidence:
+  static_checks:
+    - "rg '^#### REQ-ETS-PART1-005' spec.md | wc -l -> 1"
+    - "rg '\\[ \\]' epics/stories/s-ets-08-01... epics/stories/s-ets-08-02... -> no unchecked DoD hits"
+    - "rg '/conf/subdeployments' spec/story -> one historical correction note only"
+    - "rg '/subdeployments/{id}|/deployments/{id}' spec/story/SubdeploymentsTests.java -> docs still have /subdeployments/{id}; implementation uses /deployments/{id}"
+  live_artifacts_inspected:
+    - "/tmp/raze-fresh-sprint8/sprint-ets-08-smoke-raze-rerun-2026-05-04.txt: SMOKE PASS; TestNG total=46 passed=40 failed=0 skipped=6"
+    - "/tmp/raze-fresh-sprint8/test-results-raze-smoke-rerun/s-ets-01-03-teamengine-smoke-2026-05-04.xml: total=46 passed=40 failed=0 skipped=6; Subdeployments tests SKIP-with-reason"
+    - "/tmp/raze-fresh-sprint8/sprint-ets-08-sabotage-raze-rerun-stdout-bashx-2026-05-04.log: VERDICT-summary siblings observed=6, including subdeployments"
+    - "/tmp/raze-sabotage-sprint8-rerun/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-05-04T204846Z.xml: total=46 passed=16 failed=1 skipped=29; subdeployments skipped due deployments group"
+  ogc_sources_checked:
+    - "requirements_class_subdeployments.adoc: identifier /req/subdeployment; inherit /req/deployment"
+    - "req_subcollection.adoc: SHALL expose subdeployments at {api_root}/deployments/{parentId}/subdeployments"
+    - "req_canonical_endpoint.adoc: SHALL expose /deployments and all Deployment resources"
+    - "req_canonical_url.adoc: canonical Deployment URL form is {api_root}/deployments/{id}"
+
+commands:
+  - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+  - "sed -n '1,220p' _bmad/agents/adversarial-reviewer.md"
+  - "sed -n '1,260p' .harness/prompts/adversarial.md"
+  - "sed -n '1,260p' .harness/contracts/sprint-ets-08.yaml"
+  - "sed -n '1,260p' .harness/evaluations/sprint-ets-08-adversarial-cumulative.yaml"
+  - "sed -n '1,260p' .harness/evaluations/sprint-ets-08-evaluator-cumulative.yaml"
+  - "sed -n '1,260p' ops/changelog.md"
+  - "sed -n '1,260p' ops/status.md"
+  - "tail -80 ops/metrics.md"
+  - "sed -n '1,620p' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "sed -n '1,260p' epics/stories/s-ets-08-01-sprint7-carryover-wedges.md"
+  - "sed -n '1,280p' epics/stories/s-ets-08-02-subdeployments-conformance-class.md"
+  - "git status --short && git log --oneline -5"
+  - "rg -n '^#### REQ-ETS-PART1-005|REQ-ETS-PART1-005|/conf/subdeployments|/conf/subdeployment|dependsOnGroups|Definition of Done|\\[ \\]|\\[x\\]' spec/story files"
+  - "rg -n 'REQ-ETS-PART1-005|Subdeployment|subdeployment|/conf/subdeployment|/conf/subdeployments' _bmad/traceability.md ops/changelog.md ops/status.md ops/metrics.md"
+  - "find /tmp/raze-fresh-sprint8 /tmp/raze-sabotage-sprint8-rerun -maxdepth 4 -type f"
+  - "git -C /home/nh/docker/gir/ets-ogcapi-connectedsystems10 status --short && git -C /home/nh/docker/gir/ets-ogcapi-connectedsystems10 log --oneline -5"
+  - "git diff -- spec/story/changelog/status/traceability files"
+  - "rg -n 'SMOKE PASS|total=|passed=|failed=|skipped=|VERDICT-summary|siblings observed|subdeployments' /tmp/raze-fresh-sprint8 and /tmp/raze-sabotage-sprint8-rerun artifacts"
+  - "nl -ba /home/nh/docker/gir/ets-ogcapi-connectedsystems10/src/main/java/.../SubdeploymentsTests.java | sed -n '300,445p'"
+  - "curl -fsSL raw.githubusercontent.com/opengeospatial/.../requirements/subdeployment/requirements_class_subdeployments.adoc"
+  - "curl -fsSL raw.githubusercontent.com/opengeospatial/.../requirements/subdeployment/req_subcollection.adoc"
+  - "curl -fsSL raw.githubusercontent.com/opengeospatial/.../requirements/deployment/req_canonical_endpoint.adoc"
+  - "curl -fsSL raw.githubusercontent.com/opengeospatial/.../requirements/deployment/req_canonical_url.adoc"
+  - "find .harness/evaluations -maxdepth 1 -type f -name '*sprint-ets-08*follow*' ..."
+
+changed_files_reviewed:
+  - "epics/stories/s-ets-08-01-sprint7-carryover-wedges.md"
+  - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "ops/changelog.md"
+  - "ops/status.md (read; not changed by follow-up)"
+  - "_bmad/traceability.md (read; no follow-up diff)"
+  - "/home/nh/docker/gir/ets-ogcapi-connectedsystems10/src/main/java/.../SubdeploymentsTests.java (read evidence)"
+  - "/home/nh/docker/gir/ets-ogcapi-connectedsystems10/src/main/resources/.../testng.xml (read evidence)"
+  - "/home/nh/docker/gir/ets-ogcapi-connectedsystems10/src/test/java/.../VerifyTestNGSuiteDependency.java (read evidence)"
+
+files_written_by_this_review:
+  - ".harness/evaluations/sprint-ets-08-adversarial-followup.yaml"

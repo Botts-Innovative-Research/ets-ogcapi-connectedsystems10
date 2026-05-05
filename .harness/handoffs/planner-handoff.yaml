@@ -1,0 +1,112 @@
+agent: planner
+status: complete
+timestamp: "2026-05-05T15:06:38Z"
+sprint_number: "ets-09"
+sprint_name: "geojson-systems-read-only-subset"
+contract_path: ".harness/contracts/sprint-ets-09.yaml"
+triggered_by: |
+  Sprint 8 close housekeeping committed at fb01e40 and Raze gap-fix review APPROVE 0.94.
+  User instructed "OK, keep going." Orchestrator selected the next low-risk Part 1 class.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 8 handoff 2026-04-30T18:35:00Z)"
+
+architecture_freshness_check:
+  required: true
+  architecture_last_reconciled: "2026-04-28"
+  checked_at: "2026-05-05T15:06:38Z"
+  stale_over_30_days: false
+  disposition: "OK to start new capability planning."
+
+strategic_decisions:
+  q1_next_class:
+    question: "Which remaining Part 1 class should Sprint 9 implement?"
+    decision: "geojson"
+    rationale: |
+      GeoJSON systems read-only coverage is lower risk than create-replace-delete mutation coverage.
+      It has narrower schema inheritance than SensorML and less cross-cutting behavior than AdvancedFiltering.
+      GeoRobotix has historically declared /conf/geojson, but Generator must re-verify at sprint time.
+    alternatives_rejected:
+      - advanced_filtering: "Cross-cutting query behavior; better after more encoding/resource classes are stable."
+      - create_replace_delete: "Mutation-side risk; no ETS write-operation precedent yet."
+      - update: "Mutation-side risk; should not be first post-Sprint-8 class."
+      - sensorml: "Broader SensorML 3.0 schema inheritance; defer until GeoJSON encoding pattern lands."
+
+  q2_scope:
+    question: "Full GeoJSON class or systems read-only subset?"
+    decision: "systems read-only subset"
+    rationale: |
+      The upstream class lists 12 subrequirements, including mediatype-write and non-system schema/mapping
+      requirements. Sprint 9 deliberately targets only the systems read-only subset. mediatype-write remains
+      OPEN until create-replace-delete is implemented or explicitly selected.
+
+upstream_ogc_verification:
+  repository: "opengeospatial/ogcapi-connected-systems"
+  branch: "master"
+  commit: "3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+  commit_date: "2026-04-20T20:23:50Z"
+  geojson_requirements_path: "api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
+  geojson_identifier: "/req/geojson"
+  listed_subrequirements:
+    - "/req/geojson/mediatype-read"
+    - "/req/geojson/mediatype-write"
+    - "/req/geojson/relation-types"
+    - "/req/geojson/feature-attribute-mapping"
+    - "/req/geojson/system-schema"
+    - "/req/geojson/system-mappings"
+    - "/req/geojson/deployment-schema"
+    - "/req/geojson/deployment-mappings"
+    - "/req/geojson/procedure-schema"
+    - "/req/geojson/procedure-mappings"
+    - "/req/geojson/sf-schema"
+    - "/req/geojson/sf-mappings"
+
+stories:
+  - id: "S-ETS-09-01"
+    title: "GeoJSON systems read-only subset — depends on SystemFeatures"
+    file: "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md"
+    priority: P0
+    complexity: M
+    estimated_generator_wall_clock: "1-2h"
+    sequencing: "ONLY story in Sprint 9"
+
+new_requirements:
+  - "REQ-ETS-PART1-012"
+
+critical_scenarios:
+  - "SCENARIO-ETS-PART1-012-GEOJSON-CONFORMANCE-DECLARED-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-MEDIATYPE-READ-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-FEATURECOLLECTION-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-FEATURE-MAPPING-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-DEPENDENCY-SMOKE-001"
+
+next_agent: "generator"
+next_agent_rationale: |
+  Planning artifacts are complete and no Architect cycle is needed. GeoJSON follows established
+  TestNG conformance-class patterns and depends on SystemFeatures. Escalate to Architect only if
+  Generator finds that current GeoRobotix responses cannot be honestly classified as GeoJSON or
+  if media-type negotiation behavior conflicts with the upstream requirement class.
+
+generator_brief:
+  must_do:
+    - "Start from the sister ETS repo Sprint 8 close state and record exact HEAD."
+    - "Re-verify GeoRobotix /conformance for /conf/geojson before implementing."
+    - "Implement GeoJsonTests.java with 5 read-only @Tests."
+    - "Add testng.xml group dependency: geojson depends-on systemfeatures."
+    - "Add 3 VerifyTestNGSuiteDependency lint tests for geojson."
+    - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh from a /tmp clone."
+    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep untested GeoJSON subrequirements open."
+  must_not_do:
+    - "Do not implement SensorML."
+    - "Do not implement AdvancedFiltering, CRUD, Update, or Part 2."
+    - "Do not implement mediatype-write, POST, PUT, PATCH, or DELETE assertions in Sprint 9."
+    - "Do not treat a CS API `items` wrapper as a passing GeoJSON FeatureCollection; PASS requires type=FeatureCollection and a features array."
+    - "Do not claim application/geo+json media-type support unless observed; use explicit fallback wording if only default JSON is valid GeoJSON."
+
+gate_expectations:
+  quinn:
+    primary: "Run mvn-test-via-docker.sh from /tmp clone; verify surefire includes GeoJSON lint tests with 0 failures/errors."
+  raze:
+    primary: "Run smoke-test.sh from separate /tmp clone; verify failed=0 and PASS+SKIP total >= 51."
+    adversarial_focus: "Inspect for media-type overclaim, full-class closure overclaim, and items-vs-features false positives."
+  independence: "Quinn and Raze must write their own Sprint 9 YAML before reading the other gate's YAML."
+
+confidence: 0.86

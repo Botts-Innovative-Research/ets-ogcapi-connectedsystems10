@@ -1,0 +1,87 @@
+sprint: "ets-09"
+story: "S-ETS-09-01"
+agent: "Raze"
+role: "Red Team adversarial reviewer"
+review_type: "gap-fix"
+created_utc: "2026-05-05T15:56:02Z"
+verdict: "APPROVE"
+confidence: 0.94
+gap_under_review:
+  id: "RAZE-ETS09-GAP-001"
+  prior_status: "open"
+  current_status: "closed"
+  summary: >
+    Sister repo commit b4a97de closes the prior per-assertion overclaim:
+    GeoJsonTests.geoJsonMediaTypeRead now SKIPs, rather than PASSes, when
+    /systems with Accept application/geo+json returns the CS API default
+    `items` wrapper without GeoJSON `features`.
+scope_reviewed:
+  csapi_compliance:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+  sister_repo:
+    path: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+    commits:
+      implementation: "28f4ddf"
+      gap_fix: "b4a97de4072a37127bc1726359f1342f377092d8"
+    inspected_files:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java"
+      - "target/surefire-reports/TEST-*.xml"
+  smoke_artifact:
+    - "/tmp/sprint-ets-09-smoke-fix-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+evidence:
+  code_delta:
+    status: "PASS"
+    details:
+      - "git show b4a97de changes only GeoJsonTests.java (+4 lines)."
+      - "GeoJsonTests.java lines 137-140 now throw SkipException when `items` exists and `features` does not."
+      - "The SkipException message explicitly says the default `items` wrapper is fallback evidence, not a mediatype-read PASS."
+  mvn_via_docker:
+    status: "PASS"
+    expected: "92/0/0/3"
+    observed: "92 tests / 0 failures / 0 errors / 3 skipped"
+    source: "Parsed sister repo target/surefire-reports/TEST-*.xml after the b4a97de run."
+    rerun: "not_performed"
+    rerun_rationale: "User requested no Docker rerun unless a concrete blocker was found; static and smoke evidence matched expectations."
+  smoke:
+    status: "PASS"
+    artifact: "/tmp/sprint-ets-09-smoke-fix-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    expected: "51 total / 42 passed / 0 failed / 9 skipped"
+    observed: "51 total / 42 passed / 0 failed / 9 skipped"
+    geojson_breakdown:
+      pass:
+        - "geoJsonConformanceDeclared"
+        - "geoJsonDependencyCascadeRuntime"
+      skip:
+        - "geoJsonMediaTypeRead"
+        - "systemsCollectionIsGeoJsonFeatureCollection"
+        - "systemFeatureHasGeoJsonShapeAndProperties"
+    key_lines:
+      - "XML root has total=51 passed=42 failed=0 skipped=9."
+      - "geoJsonMediaTypeRead status=SKIP with message: default `items` wrapper is fallback evidence, not a mediatype-read PASS."
+      - "FeatureCollection and feature-mapping tests SKIP by dependency after mediatype-read SKIPs."
+  csapi_docs:
+    status: "PASS"
+    details:
+      - "OpenSpec REQ-ETS-PART1-012 remains PARTIAL-IMPLEMENTED, cites sister HEAD b4a97de, and records GeoJSON 2 PASS + 3 SKIP."
+      - "Traceability row for REQ-ETS-PART1-012 records b4a97de, mvn 92/0/0/3, smoke 51/42/0/9, and remaining full-REQ scope open."
+      - "Story implementation notes state mediatype-read, FeatureCollection, and feature-mapping assertions SKIP when /systems returns application/json with items."
+      - "ops/status.md and ops/changelog.md report the same gap-fix evidence and do not claim full GeoJSON closure."
+  static_checks:
+    status: "PASS"
+    details:
+      - "grep found no GeoJSON POST/PUT/PATCH/DELETE implementation."
+      - "grep found only scope notes for mediatype-write, relation-types, and non-system schema/mapping requirements."
+      - "testng.xml still declares `<group name=\"geojson\" depends-on=\"systemfeatures\"/>`."
+findings: []
+remaining_findings: []
+request_fulfillment:
+  verdict: "fulfilled"
+  details:
+    - "RAZE-ETS09-GAP-001 is closed."
+    - "No implementation files were edited during this review."
+    - "No Docker rerun was needed because the requested smoke and surefire evidence matched exactly."

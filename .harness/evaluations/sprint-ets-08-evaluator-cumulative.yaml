@@ -1,0 +1,193 @@
+agent: evaluator
+agent_role: quinn
+sprint_number: "ets-08"
+story_ids:
+  - "S-ETS-08-01"
+  - "S-ETS-08-02"
+timestamp: "2026-05-04T20:34:00Z"
+quinn_peek_attempted: false
+
+verdict: "RETRY"
+confidence: 0.88
+weighted_score: 0.86
+
+summary: |
+  Sprint 8 implementation behavior is mostly sound: Quinn independently ran the new
+  Docker Maven wrapper, sabotage cascade script, and GeoRobotix smoke from a fresh
+  /tmp clone. All live executions reproduced the claimed counts: mvn 89/0/0/3,
+  sabotage 6-class cascade, and smoke 46 total with 40 pass / 0 fail / 6 skip.
+  However, the Sprint 8 gate cannot PASS because reconciliation artifacts are not
+  honest/complete: spec.md contains two REQ-ETS-PART1-005 sections, one still
+  PLACEHOLDER and one IMPLEMENTED, and both Sprint 8 story DoD checklists remain
+  unchecked. This violates the contract's spec-status-honesty and reconcile-specs
+  criteria even though runtime behavior is acceptable.
+
+findings:
+  - id: "QUINN-S8-001"
+    severity: "MAJOR"
+    status: "OPEN"
+    title: "spec.md contains duplicate REQ-ETS-PART1-005 with contradictory statuses"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:135 still says REQ-ETS-PART1-005 Subdeployments status PLACEHOLDER."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:386 introduces a second REQ-ETS-PART1-005 section with status IMPLEMENTED."
+    impact: "A reviewer can reasonably conclude Subdeployments is both deferred and implemented. This fails the Sprint 8 spec_status_honesty_principle / Reconcile Specs requirement."
+    recommendation: "Merge the placeholder section into the implemented Sprint 8 section or replace the placeholder in-place; keep a single authoritative REQ-ETS-PART1-005."
+
+  - id: "QUINN-S8-002"
+    severity: "MEDIUM"
+    status: "OPEN"
+    title: "Sprint 8 story Definition-of-Done checklists were not reconciled"
+    evidence:
+      - "epics/stories/s-ets-08-01-sprint7-carryover-wedges.md:187-198 remain unchecked."
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:178-188 remain unchecked."
+    impact: "The generator handoff claims both stories are Implemented, but story artifacts do not record completion. This violates the mandatory reconcile-specs/story-status workflow."
+    recommendation: "Update both story files with completed DoD checkboxes and implementation notes matching the live evidence."
+
+  - id: "QUINN-S8-003"
+    severity: "LOW"
+    status: "OPEN"
+    title: "Subdeployments source annotations omit explicit dependsOnGroups despite story wording"
+    evidence:
+      - "src/main/java/.../SubdeploymentsTests.java:351,385,417,460 carry groups=\"subdeployments\"."
+      - "testng.xml:88 correctly declares <group name=\"subdeployments\" depends-on=\"deployments\"/>."
+      - "Smoke XML shows each Subdeployments test with depends-on-groups=\"deployments\" at runtime."
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:179 asks for all @Tests to carry dependsOnGroups={\"deployments\"}."
+    impact: "Runtime dependency is correct via TestNG XML, but the story wording and source form disagree. Not a functional blocker, but it should be reconciled explicitly."
+    recommendation: "Either add explicit dependsOnGroups in source or amend the story/contract note to say suite-level group dependency is the intended mechanism."
+
+scenario_results:
+  critical:
+    - id: "SCENARIO-ETS-CLEANUP-SABOTAGE-STDOUT-5CLASS-001"
+      status: "PASS"
+      evidence: "/tmp/quinn-fresh-sprint8/sprint-ets-08-sabotage-stdout-2026-05-04.txt lines 79-80: VERDICT-summary lists deployments, procedures, propertydefinitions, samplingfeatures, subdeployments, subsystems; script exited 0."
+      notes: "Quinn also archived bash-x trace at /tmp/quinn-fresh-sprint8/sprint-ets-08-sabotage-bash-x-2026-05-04.log."
+    - id: "SCENARIO-ETS-CLEANUP-SPEC-REQ018-5CLASS-EVIDENCE-001"
+      status: "PASS"
+      evidence: "spec.md REQ-ETS-CLEANUP-018 Sprint 8 amendment cites Raze Sprint 7 5-class XML; ADR-010 v4 amendment present at lines 326-343; retired sentence recorded as retired."
+      notes: "This scenario passes, separate from the duplicate REQ-ETS-PART1-005 status issue."
+    - id: "SCENARIO-ETS-CLEANUP-DESIGN-MD-PROJECTWIDE-GREP-001"
+      status: "PASS"
+      evidence: "ops/test-results/sprint-ets-08-01-self-audit-grep.txt exists; 15 hits with per-hit adjudication; design.md:666 annotated INVALIDATED at design.md:666-668."
+      notes: "Generator archive was read as required; Quinn did not rerun the grep as primary evidence."
+    - id: "SCENARIO-ETS-PART1-005-SUBDEP-RESOURCES-001"
+      status: "PASS"
+      evidence: "Quinn smoke XML /tmp/quinn-fresh-sprint8/test-results-quinn-smoke/s-ets-01-03-teamengine-smoke-2026-05-04.xml: Subdeployments @BeforeClass SKIPs with non-vacuous reason at lines 380-383; live curl returned HTTP 200 with items: []."
+      notes: "IUT-state-honest SKIP is acceptable because GeoRobotix exposes an empty subdeployments collection."
+    - id: "SCENARIO-ETS-PART1-005-SUBDEP-CANONICAL-001"
+      status: "PASS"
+      evidence: "SubdeploymentsTests.java:385-402 implements inherited canonical-endpoint assertion; Quinn smoke XML shows SKIP due empty IUT state, not FAIL/ERROR."
+      notes: "Not exercised against a populated IUT; acceptable under Sprint 8 SKIP-with-reason policy."
+    - id: "SCENARIO-ETS-PART1-005-SUBDEP-CANONICAL-URL-001"
+      status: "PASS"
+      evidence: "SubdeploymentsTests.java:417-429 implements inherited canonical-url rel=canonical assertion; Quinn smoke XML shows SKIP due dependency on empty collection."
+      notes: "Not exercised against a populated IUT; acceptable under Sprint 8 SKIP-with-reason policy."
+    - id: "SCENARIO-ETS-PART1-005-SUBDEP-DEPENDENCY-SKIP-001"
+      status: "PASS"
+      evidence: "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:82-88 gives systemfeatures->core, deployments->systemfeatures, subdeployments->deployments; sabotage stdout lines 69-80 shows subdeployments cascade-SKIP in 6-class run."
+      notes: "VerifyTestNGSuiteDependency subdeployment lint tests are present at lines 815-907 and pass in mvn."
+    - id: "SCENARIO-ETS-PART1-005-SUBDEP-SMOKE-NO-REGRESSION-001"
+      status: "PASS"
+      evidence: "/tmp/quinn-fresh-sprint8/sprint-ets-08-smoke-quinn-2026-05-04.txt: total=46 passed=40 failed=0 skipped=6; SMOKE PASS."
+      notes: "Preserves existing classes and adds 4 Subdeployments SKIPs."
+  normal:
+    - id: "SCENARIO-ETS-CLEANUP-TEST-RESULTS-ETS-POINTER-001"
+      status: "PASS"
+      evidence: "ops/test-results.md top block points to ets-ogcapi-connectedsystems10/ops/test-results/ and GitHub URL."
+      notes: ""
+    - id: "SCENARIO-ETS-CLEANUP-SPRING-JAVAFORMAT-PINNED-001"
+      status: "PASS"
+      evidence: "/tmp/quinn-fresh-sprint8/pom.xml:275-276 pins io.spring.javaformat:spring-javaformat-maven-plugin version 0.0.43."
+      notes: ""
+    - id: "SCENARIO-ETS-CLEANUP-MVN-TEST-VIA-DOCKER-001"
+      status: "PASS"
+      evidence: "/tmp/quinn-fresh-sprint8/sprint-ets-08-surefire-2026-05-04.txt: Tests run: 89, Failures: 0, Errors: 0, Skipped: 3; BUILD SUCCESS."
+      notes: "Quinn ran bash scripts/mvn-test-via-docker.sh from /tmp/quinn-fresh-sprint8."
+
+contract_checks:
+  mvn_test_via_docker:
+    status: "PASS"
+    command: "bash scripts/mvn-test-via-docker.sh"
+    artifact: "/tmp/quinn-fresh-sprint8/sprint-ets-08-surefire-2026-05-04.txt"
+    observed: "Tests run: 89, Failures: 0, Errors: 0, Skipped: 3; BUILD SUCCESS."
+  sabotage_stdout_and_bash_x:
+    status: "PASS"
+    command: "SABOTAGE_TMPDIR=/tmp/quinn-sabotage-sprint8 SMOKE_OUTPUT_DIR=/tmp/quinn-fresh-sprint8/test-results-sabotage bash -x scripts/sabotage-test.sh --target=systemfeatures"
+    artifacts:
+      - "/tmp/quinn-fresh-sprint8/sprint-ets-08-sabotage-stdout-2026-05-04.txt"
+      - "/tmp/quinn-fresh-sprint8/sprint-ets-08-sabotage-bash-x-2026-05-04.log"
+      - "/tmp/quinn-sabotage-sprint8/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-05-04T202022Z.xml"
+    observed: "VERDICT-summary (siblings observed: 6) includes all five required Sprint 7 siblings plus subdeployments."
+  smoke_regression:
+    status: "PASS"
+    command: "SMOKE_OUTPUT_DIR=/tmp/quinn-fresh-sprint8/test-results-quinn-smoke bash scripts/smoke-test.sh"
+    artifacts:
+      - "/tmp/quinn-fresh-sprint8/sprint-ets-08-smoke-quinn-2026-05-04.txt"
+      - "/tmp/quinn-fresh-sprint8/test-results-quinn-smoke/s-ets-01-03-teamengine-smoke-2026-05-04.xml"
+    observed: "total=46 passed=40 failed=0 skipped=6."
+  subdeployments_skip_reason:
+    status: "PASS"
+    evidence: "BeforeClass SkipException reason states: probed 1 parent deployments; none have non-empty /subdeployments collections; IUT-state-honest SKIP policy; all 4 tests SKIP-with-reason."
+  projectwide_grep_archive:
+    status: "PASS"
+    artifact: "ops/test-results/sprint-ets-08-01-self-audit-grep.txt"
+    observed: "15 hits; every hit adjudicated; design.md:666 remediated."
+  spec_status_honesty:
+    status: "FAIL"
+    evidence: "Duplicate REQ-ETS-PART1-005 sections with PLACEHOLDER and IMPLEMENTED statuses."
+  no_scope_creep:
+    status: "PASS"
+    command: "rg -n 'class AdvancedFilteringTests|class CRUDTests|class UpdateTests|class GeoJSONTests|class SensorMLTests' src"
+    observed: "No hits."
+
+commands_run:
+  - command: "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "2026-05-04T20:17:57Z"
+  - command: "git clone /home/nh/docker/gir/ets-ogcapi-connectedsystems10 /tmp/quinn-fresh-sprint8"
+    cwd: "/home/nh/docker/gir/csapi_compliance"
+    result: "fresh clone at b349edf (command also emitted a harmless Zone.Identifier ref warning)"
+  - command: "bash scripts/mvn-test-via-docker.sh"
+    cwd: "/tmp/quinn-fresh-sprint8"
+    result: "PASS: 89 tests, 0 failures, 0 errors, 3 skipped"
+  - command: "SABOTAGE_TMPDIR=/tmp/quinn-sabotage-sprint8 SMOKE_OUTPUT_DIR=/tmp/quinn-fresh-sprint8/test-results-sabotage bash -x scripts/sabotage-test.sh --target=systemfeatures"
+    cwd: "/tmp/quinn-fresh-sprint8"
+    result: "PASS: 6-class cascade verified"
+  - command: "SMOKE_OUTPUT_DIR=/tmp/quinn-fresh-sprint8/test-results-quinn-smoke bash scripts/smoke-test.sh"
+    cwd: "/tmp/quinn-fresh-sprint8"
+    result: "PASS: total=46 passed=40 failed=0 skipped=6"
+  - command: "curl -sS -o /tmp/quinn-subdeployments.json -w '%{http_code}\\n' https://api.georobotix.io/ogc/t18/api/deployments/16sp744ch58g/subdeployments"
+    cwd: "/tmp/quinn-fresh-sprint8"
+    result: "HTTP 200 with {\"items\": []}"
+  - command: "rg -n 'class AdvancedFilteringTests|class CRUDTests|class UpdateTests|class GeoJSONTests|class SensorMLTests' src"
+    cwd: "/tmp/quinn-fresh-sprint8"
+    result: "no hits"
+
+artifacts:
+  created:
+    - ".harness/evaluations/sprint-ets-08-evaluator-cumulative.yaml"
+    - "/tmp/quinn-fresh-sprint8/sprint-ets-08-surefire-2026-05-04.txt"
+    - "/tmp/quinn-fresh-sprint8/sprint-ets-08-sabotage-stdout-2026-05-04.txt"
+    - "/tmp/quinn-fresh-sprint8/sprint-ets-08-sabotage-bash-x-2026-05-04.log"
+    - "/tmp/quinn-sabotage-sprint8/sprint-ets-05-03-sabotage-systemfeatures-cascade-2026-05-04T202022Z.xml"
+    - "/tmp/quinn-fresh-sprint8/sprint-ets-08-smoke-quinn-2026-05-04.txt"
+    - "/tmp/quinn-fresh-sprint8/test-results-quinn-smoke/s-ets-01-03-teamengine-smoke-2026-05-04.xml"
+  read_not_modified:
+    - ".harness/prompts/evaluator.md"
+    - ".harness/contracts/sprint-ets-08.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "ops/SESSION-HANDOFF-2026-04-30-SPRINT-08-IMPLEMENTED.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+    - "_bmad/traceability.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "ops/test-results/sprint-ets-08-01-self-audit-grep.txt"
+    - "_bmad/adrs/ADR-010-dependency-skip-verification-strategy.md"
+
+gaps:
+  - "No known-good populated Subdeployments IUT was available; canonical and canonical-url tests were verified by source inspection plus IUT-state-honest SKIP, not by PASS against data."
+  - "Quinn did not read .harness/evaluations/sprint-ets-08-adversarial-cumulative.yaml before finalizing this report."
+  - "A concurrent /tmp/raze-fresh-sprint8 smoke process was observed during Quinn's sabotage build; Quinn did not inspect any Raze YAML and did not use Raze results as evidence."
+
+changed_files:
+  - ".harness/evaluations/sprint-ets-08-evaluator-cumulative.yaml"

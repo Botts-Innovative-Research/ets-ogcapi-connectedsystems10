@@ -1,0 +1,134 @@
+agent: raze
+role: adversarial_reviewer
+sprint: ets-09
+review_type: planning
+reviewed_at: "2026-05-05T15:13:39Z"
+scope: "Current uncommitted Sprint 9 planning changes in csapi_compliance only"
+verdict: GAPS_FOUND
+confidence: 0.91
+
+constraints_observed:
+  edited_files:
+    - ".harness/evaluations/sprint-ets-09-plan-adversarial.yaml"
+  docker_run: false
+  static_shell_checks: true
+  primary_source_checks: true
+  source_refs:
+    - "https://github.com/opengeospatial/ogcapi-connected-systems/commit/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+    - "https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f/api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
+    - "https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f/api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc"
+    - "https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f/api/part1/openapi/schemas/geojson/systemCollection.json"
+    - "https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f/api/part1/openapi/schemas/geojson/feature.json"
+
+summary: >
+  Sprint 9 planning is directionally sound but overstates what a five-test,
+  systems-only read-only subset can close. The OGC commit/path claim is accurate,
+  and ops handoff is fresh. The blockers are scope honesty and one conformance
+  correctness trap: the plan permits an `items` wrapper as "FeatureCollection-like"
+  even though the pinned OGC GeoJSON system collection schema requires the GeoJSON
+  `features` member.
+
+findings:
+  - id: RAZE-S9-PLAN-001
+    severity: HIGH
+    category: ogc_requirement_overclaim
+    status: open
+    title: "Plan targets IMPLEMENTED for REQ-ETS-PART1-012 while covering only a subset of the GeoJSON requirement class"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:394 says target IMPLEMENTED after live smoke."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:395 lists all 12 OGC GeoJSON subrequirements."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:396 scopes Sprint 9 to five tests over conformance, mediatype-read/default fallback, systems collection, first system feature, and dependency/smoke."
+      - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md:28 repeats SPECIFIED -> target IMPLEMENTED."
+      - ".harness/contracts/sprint-ets-09.yaml:61 repeats SPECIFIED -> target IMPLEMENTED."
+    adversarial_analysis: >
+      The upstream requirements class includes mediatype-read, mediatype-write,
+      relation-types, common feature attribute mapping, and schema/mapping
+      requirements for System, Deployment, Procedure, and Sampling Feature
+      representations. A systems-only read-only slice is a useful Sprint 9
+      increment, but calling the whole GeoJSON class IMPLEMENTED after five tests
+      would be an overclaim unless the plan explicitly defines "partial
+      implementation" and keeps untested subrequirements open.
+    required_fix: >
+      Change REQ-ETS-PART1-012 and story/contract wording from "target
+      IMPLEMENTED" to "target PARTIAL/SUBSET IMPLEMENTED" or split the requirement
+      into subrequirements such as REQ-ETS-PART1-012A for the systems read-only
+      subset. Keep remaining GeoJSON requirements open in traceability until
+      deployment/procedure/sampling-feature schema+mappings and relation-types are
+      tested.
+
+  - id: RAZE-S9-PLAN-002
+    severity: HIGH
+    category: conformance_correctness
+    status: open
+    title: "FeatureCollection scenario accepts `items`, but OGC GeoJSON systemCollection schema requires `features`"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:421 accepts `features` or `items`."
+      - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md:63 says CS API `items` wrappers are acceptable with explicit normalization."
+      - ".harness/contracts/sprint-ets-09.yaml:107-109 mitigates items-vs-features by documentation rather than by failing or skipping non-GeoJSON shape."
+      - "Pinned upstream systemCollection.json allOf includes geojson.org FeatureCollection and properties.features -> systemArray.json; no `items` collection member is defined there."
+    adversarial_analysis: >
+      Documentation is not enough. A response with `items` can be valid CS API JSON
+      collection shape but is not a GeoJSON FeatureCollection as defined by the
+      pinned GeoJSON schema. Accepting `items` under a GeoJSON requirement can
+      create false positives against servers that declare /conf/geojson but return
+      the non-GeoJSON collection encoding.
+    required_fix: >
+      Require `type == "FeatureCollection"` and a `features` array for the
+      GeoJSON test path. If the IUT returns `items`, record that as default CS API
+      JSON fallback and SKIP/CONCERN for GeoJSON mediatype-read rather than PASSing
+      the GeoJSON FeatureCollection assertion.
+
+  - id: RAZE-S9-PLAN-003
+    severity: MEDIUM
+    category: mediatype_write_deferral
+    status: open
+    title: "mediatype-write deferral is mostly valid, but it is tied too loosely to CRUD/Update"
+    evidence:
+      - "OGC clause_20 requirement /req/geojson/mediatype-write has condition: server implements clause-resource-crd."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:396 defers mediatype-write to REQ-ETS-PART1-010/011."
+      - "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md:57 says mediatype-write and mutation-side checks are out of scope."
+      - "_bmad/traceability.md:37 says mediatype-write and mutation-side checks are deferred to CRUD/Update scope."
+    adversarial_analysis: >
+      Deferring write-side media type checks from a read-only sprint is acceptable
+      only if the plan avoids full-class closure. The upstream condition is CRD,
+      not Update generally. Tying this to both CRUD and Update muddies the
+      dependency and invites later drift.
+    required_fix: >
+      State that /req/geojson/mediatype-write remains OPEN and is conditional on
+      the create-replace-delete requirement class being implemented or selected,
+      with Update only mentioned if a later design explicitly needs it.
+
+  - id: RAZE-S9-PLAN-004
+    severity: LOW
+    category: upstream_source_verification
+    status: closed
+    title: "Upstream OGC path and commit claim verified accurate"
+    evidence:
+      - "GitHub master currently resolves to 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f."
+      - "GitHub commit API reports commit date 2026-04-20T20:23:50Z."
+      - "requirements_class_geojson.adoc at the pinned commit declares identifier /req/geojson and the 12 listed subrequirements."
+    required_fix: "None."
+
+  - id: RAZE-S9-PLAN-005
+    severity: LOW
+    category: traceability_ops_handoff
+    status: closed
+    title: "Traceability/spec/story/ops are updated, but should be revised after scope-honesty fixes"
+    evidence:
+      - "ops/status.md:3 has a fresh Sprint 9 handoff."
+      - "_bmad/traceability.md:37 adds REQ-ETS-PART1-012 with the five planned scenarios."
+      - "epics/epic-ets-02-part1-classes.md marks S-ETS-09-01 Planned."
+    required_fix: >
+      After fixing RAZE-S9-PLAN-001 through 003, propagate the same partial-scope
+      language to ops/status.md, _bmad/traceability.md, the contract, and the story.
+
+required_fixes:
+  - "Do not allow REQ-ETS-PART1-012 to close as fully IMPLEMENTED from the current five-test subset."
+  - "Remove `items` as an acceptable GeoJSON FeatureCollection member; require `features` for the GeoJSON assertion."
+  - "Keep mediatype-write open and condition it specifically on create-replace-delete/CRD scope."
+  - "Propagate corrected partial-scope wording across spec, story, contract, traceability, and ops status."
+
+non_findings:
+  - "No evidence that upstream OGC commit/path/date are misstated."
+  - "No ops handoff staleness at review time."
+  - "No Docker or runtime tests were run, per user constraint."

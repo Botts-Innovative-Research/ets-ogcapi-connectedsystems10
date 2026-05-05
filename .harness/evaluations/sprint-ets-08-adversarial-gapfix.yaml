@@ -1,0 +1,131 @@
+sprint: "ets-08"
+story: "S-ETS-08-02"
+reviewer: "Raze"
+timestamp: "2026-05-05T14:53:03Z"
+user_request: "Determine whether the three remaining Raze follow-up gaps are now closed, using docs-only static checks and without rerunning Docker tests."
+verdict: "APPROVE"
+confidence: 0.94
+overrides_evaluator: false
+docker_tests_rerun: false
+
+request_fulfillment:
+  fully_delivered:
+    - "Gap 1 closed: active spec/story canonical assertion wording now uses inherited Deployment canonical endpoint/canonical URL `/deployments/{id}` instead of stale `/subdeployments/{id}`."
+    - "Gap 2 closed: active spec/story wording now narrows `id/type/links` checks to ETS structural sanity checks and explicitly says they are not direct fields spelled out solely by `req_canonical_endpoint.adoc`."
+    - "Gap 3 closed: ops/status.md now has a 2026-05-05T14:48Z top entry recording the Raze follow-up gapfix state."
+  gaps: []
+  scope_creep: []
+  buried_caveats: []
+
+gap_closure:
+  stale_active_subdeployments_canonical_wording:
+    status: "CLOSED"
+    evidence:
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:96 now says `GET /deployments/{id}` for `subdeploymentItemHasIdType`."
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:100 now says `/deployments/{id}` for canonical URL behavior."
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:168 explicitly says there is no standalone `/subdeployments/{id}` assertion in Sprint 8."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:451-462 uses `GET /deployments/{firstId}` and inherited Deployment canonical URL `/deployments/{id}`."
+    remaining_mentions_classification:
+      historical_or_changelog_only:
+        - "ops/changelog.md:10 describes that stale `/subdeployments/{id}` wording was replaced."
+        - "ops/status.md:3 describes the former Raze gap being fixed."
+        - ".harness/evaluations/sprint-ets-08-adversarial-followup.yaml retains the old finding as historical evaluation evidence."
+      active_requirement_text:
+        - "No active spec/story requirement or scenario hit remains for stale `/subdeployments/{id}` canonical assertion wording."
+  id_type_links_direct_normative_citation_overclaim:
+    status: "CLOSED"
+    evidence:
+      - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:52 states `id`, `type`, and `links` checks are ETS structural sanity checks, not fields spelled out directly by `req_canonical_endpoint.adoc`."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:384 says those checks are structural sanity checks and not attributed solely to `req_canonical_endpoint.adoc`."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:455-456 separates Deployment resource exposure per `/req/deployment/canonical-endpoint` from the structural sanity checks."
+      - "ops/changelog.md:11 records the narrower wording."
+    remaining_mentions_classification:
+      historical_or_changelog_only:
+        - ".harness/evaluations/sprint-ets-08-adversarial-followup.yaml retains the old direct-citation concern as historical evaluation evidence."
+        - "ops/changelog.md:11 and ops/status.md:3 describe the fixed overclaim."
+      active_requirement_text:
+        - "Active text still cites inherited `/req/deployment/canonical-endpoint`, but no longer presents it as the sole normative source for `id/type/links`."
+  stale_ops_status:
+    status: "CLOSED"
+    evidence:
+      - "ops/status.md:3 begins with `Last updated: 2026-05-05T14:48Z` and summarizes the Raze follow-up gapfix."
+      - "ops/changelog.md:5-14 has a matching 2026-05-05T14:48Z entry documenting the same user-triggered follow-up."
+    remaining_mentions_classification:
+      historical_or_changelog_only:
+        - ".harness/evaluations/sprint-ets-08-adversarial-followup.yaml still says ops/status.md was stale at prior review time."
+      active_requirement_text:
+        - "Current ops/status.md is no longer stale for this follow-up."
+
+claude_md_compliance:
+  step_1_spec_first: "OK"
+  step_2_write_tests: "OK"
+  step_3_implement: "OK"
+  step_4_verify: "OK"
+  step_5_e2e_verify: "OK"
+  step_6_reconcile_specs: "OK"
+  step_7_update_ops: "OK"
+  step_8_update_bmad: "OK"
+  notes: "This was docs-only reconciliation of prior Raze gaps; the user explicitly instructed not to rerun Docker tests. No code/test implementation changed in this review."
+
+spec_gaps: []
+cross_agent_blind_spots:
+  - "Working tree contains unrelated dirty files and many Zone.Identifier artifacts; this review did not revert or classify them as part of the gapfix."
+conformance_correctness:
+  false_positives_found: []
+  false_negatives_found: []
+  url_construction_bugs: []
+  dynamic_schema_violations: []
+  assertion_spec_drift: []
+  spec_source_mismatches: []
+
+recommendations: []
+
+severity_summary:
+  blockers: 0
+  gaps: 0
+  concerns: 1
+
+commands:
+  - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+  - "sed -n '1,220p' _bmad/agents/adversarial-reviewer.md"
+  - "sed -n '1,220p' .harness/prompts/adversarial.md"
+  - "sed -n '1,240p' .harness/evaluations/sprint-ets-08-adversarial-followup.yaml"
+  - "git diff -- openspec/capabilities/ets-ogcapi-connectedsystems/spec.md epics/stories/s-ets-08-02-subdeployments-conformance-class.md ops/status.md ops/changelog.md .harness/evaluations/sprint-ets-08-adversarial-gapfix.yaml ops/metrics.md"
+  - "nl -ba openspec/capabilities/ets-ogcapi-connectedsystems/spec.md | sed -n '374,420p;450,475p;600,630p'"
+  - "nl -ba epics/stories/s-ets-08-02-subdeployments-conformance-class.md | sed -n '35,115p;160,205p'"
+  - "nl -ba ops/status.md | sed -n '1,80p'"
+  - "nl -ba ops/changelog.md | sed -n '1,80p'"
+  - "rg -n '/subdeployments/\\{id\\}|/subdeployments\\{id\\}|GET /subdeployments|canonical.*subdeployments|subdeploymentItemHasIdType|subdeploymentCanonicalUrlReturns200' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md epics/stories/s-ets-08-02-subdeployments-conformance-class.md ops/status.md ops/changelog.md .harness/evaluations/sprint-ets-08-adversarial-followup.yaml"
+  - "rg -n 'id, type, and links|id/type/links|canonical-endpoint|req_canonical_endpoint|sole source|structural sanity' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md epics/stories/s-ets-08-02-subdeployments-conformance-class.md ops/status.md ops/changelog.md .harness/evaluations/sprint-ets-08-adversarial-followup.yaml"
+  - "rg -n 'Last updated: 2026-05-05|Raze follow-up|remaining gaps|/deployments/\\{id\\}|req_canonical_endpoint\\.adoc|structural sanity' ops/status.md ops/changelog.md"
+  - "git status --short && git diff --stat && git diff -- .harness/evaluations/sprint-ets-08-adversarial-gapfix.yaml openspec/capabilities/ets-ogcapi-connectedsystems/spec.md epics/stories/s-ets-08-02-subdeployments-conformance-class.md ops/status.md ops/changelog.md"
+
+evidence:
+  grep_summary:
+    stale_subdeployments_canonical:
+      active_hits:
+        - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md:168 only says there is no standalone `/subdeployments/{id}` assertion in Sprint 8."
+      historical_hits:
+        - "ops/changelog.md:10"
+        - "ops/status.md:3"
+        - ".harness/evaluations/sprint-ets-08-adversarial-followup.yaml old finding lines"
+    id_type_links_overclaim:
+      active_hits:
+        - "story line 52 and spec lines 384/455-456 narrow attribution to structural sanity checks."
+      historical_hits:
+        - "prior Raze follow-up YAML old finding lines"
+    ops_status:
+      active_hits:
+        - "ops/status.md:3 updated 2026-05-05T14:48Z."
+        - "ops/changelog.md:5-14 updated 2026-05-05T14:48Z."
+
+files_changed_by_gapfix_review:
+  - ".harness/evaluations/sprint-ets-08-adversarial-gapfix.yaml"
+  - "ops/metrics.md"
+
+files_changed_reviewed:
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "epics/stories/s-ets-08-02-subdeployments-conformance-class.md"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - ".harness/evaluations/sprint-ets-08-adversarial-followup.yaml"

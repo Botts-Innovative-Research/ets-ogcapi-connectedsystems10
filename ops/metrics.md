@@ -11,6 +11,7 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 120 | 2026-05-05T17:31:36Z | 2026-05-05T17:31:45Z | 9s | User instruction: Restore executable bits on the six modified scripts. Ran `chmod +x` on the six shell scripts and verified `git status --short` is clean. |
 | 119 | 2026-05-05T17:29:30Z | 2026-05-05T17:30:03Z | 33s | User question: What are the remaining modified scripts and what are they supposed to do? Inspected the six script headers and git diff summary; found no content changes, only executable mode drift from `100755` to `100644`. |
 | 118 | 2026-05-05T17:02:21Z | 2026-05-05T17:02:35Z | 14s | User instruction: Remove the Zone.Identifier files. Deleted 262 untracked `*:Zone.Identifier` files with `find`; verified zero remain. Left the pre-existing unrelated modified scripts untouched. |
 | 117 | 2026-05-05T16:35:28Z | 2026-05-05T16:45:14Z | 9m46s | User instruction: Find the handoff doc and keep going from the ETS repo migration restart point. Located `ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md`, confirmed migration commit `880b391`, spawned independent Sprint ets-09 Quinn + Raze gates from this ETS repo, and reconciled gate evidence into ops docs. Quinn APPROVE_WITH_CONCERNS 0.90 after independent Maven `92/0/0/3` and smoke `51/42/0/9`; Raze APPROVE_WITH_CONCERNS 0.88 after independent Maven `92/0/0/3` and smoke `51/42/0/9`. |

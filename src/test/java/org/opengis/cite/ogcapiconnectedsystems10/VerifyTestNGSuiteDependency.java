@@ -107,6 +107,12 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String GEOJSON_GROUP = "geojson";
 
+	/**
+	 * Sprint 10 S-ETS-10-01 — SensorML systems read-only subset group (depends on
+	 * SystemFeatures).
+	 */
+	private static final String SENSORML_GROUP = "sensorml";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -142,6 +148,10 @@ public class VerifyTestNGSuiteDependency {
 	/** Sprint 9 S-ETS-09-01 — GeoJSON class set for structural assertions. */
 	private static final List<Class<?>> GEOJSON_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests.class);
+
+	/** Sprint 10 S-ETS-10-01 — SensorML class set for structural assertions. */
+	private static final List<Class<?>> SENSORML_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -1009,6 +1019,102 @@ public class VerifyTestNGSuiteDependency {
 				"SystemFeatures (" + systemFeaturesClassNames + ") and GeoJSON (" + geoJsonClassNames
 						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
 						+ "(GeoJSON → SystemFeatures → Core) resolves within scope. See Sprint 9 S-ETS-09-01.",
+				coAlloc);
+	}
+
+	// ===== Sprint 10 S-ETS-10-01 — SensorML group =====
+	// SensorML systems read-only subset depends on SystemFeatures because it validates
+	// system SensorML representations. This is intentionally a PARTIAL implementation of
+	// REQ-ETS-PART1-013.
+
+	/**
+	 * Sprint 10 S-ETS-10-01 (REQ-ETS-PART1-013): the canonical testng.xml SHALL declare
+	 * {@code <group name="sensorml" depends-on="systemfeatures"/>} so SensorML tests
+	 * cascade-SKIP when the SystemFeatures prerequisite fails.
+	 */
+	@org.junit.Test
+	public void testSensorMlGroupDependsOnSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(SENSORML_GROUP)) {
+				String dependsOn = deps.get(SENSORML_GROUP);
+				assertNotNull("group '" + SENSORML_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + SENSORML_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue("testng.xml does not declare <group name=\"" + SENSORML_GROUP + "\" depends-on=\""
+				+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 10 S-ETS-10-01. The SensorML systems read-only "
+				+ "subset requires SystemFeatures as its direct prerequisite.", foundDependency);
+	}
+
+	/**
+	 * Sprint 10 S-ETS-10-01: every SensorML @Test method SHALL carry
+	 * {@code groups = "sensorml"} so the suite-level dependency declaration has tagged
+	 * methods to resolve against.
+	 */
+	@org.junit.Test
+	public void testEverySensorMlTestMethodCarriesSensorMlGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalSensorMl = 0;
+		for (Class<?> c : SENSORML_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalSensorMl++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(SENSORML_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in SensorML conformance classes; found 0", totalSensorMl > 0);
+		assertTrue("SensorML @Test methods missing groups=\"" + SENSORML_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 10 S-ETS-10-01: SensorML classes MUST be co-located in the SAME
+	 * {@code <test>} block as SystemFeatures so the group-dependency cascade resolves
+	 * within TestNG's test-scoped dependency map.
+	 */
+	@org.junit.Test
+	public void testSensorMlCoLocatedWithSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> sensorMlClassNames = new HashSet<>();
+		for (Class<?> c : SENSORML_CLASSES) {
+			sensorMlClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAnySensorMl = !java.util.Collections.disjoint(xtClasses, sensorMlClassNames);
+			if (hasAllSystemFeatures && hasAnySensorMl) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue(
+				"SystemFeatures (" + systemFeaturesClassNames + ") and SensorML (" + sensorMlClassNames
+						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
+						+ "(SensorML → SystemFeatures → Core) resolves within scope. See Sprint 10 S-ETS-10-01.",
 				coAlloc);
 	}
 

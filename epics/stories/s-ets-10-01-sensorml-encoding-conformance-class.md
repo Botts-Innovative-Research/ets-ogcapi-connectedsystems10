@@ -1,7 +1,7 @@
 # Story S-ETS-10-01: SensorML Systems Read-Only Subset
 
 > Sprint: ets-10  
-> Status: Planned  
+> Status: Generator Complete - Pending Quinn/Raze Gates
 > Priority: P0  
 > Complexity: M  
 > Epic: epic-ets-02-part1-classes  
@@ -59,17 +59,25 @@ SensorML depends on SystemFeatures:
 
 ## Definition of Done
 
-- [ ] `SensorMlTests.java` added with the six planned read-only @Tests.
-- [ ] Every SensorML @Test has `groups = "sensorml"`.
-- [ ] Every SensorML @Test `description` includes the OGC requirement URI and `SCENARIO-ETS-PART1-013-*` reference.
-- [ ] `testng.xml` declares `sensorml` depends on `systemfeatures`.
-- [ ] `VerifyTestNGSuiteDependency` adds three SensorML lint tests: group dependency, method group tagging, and class co-location.
-- [ ] No POST/PUT/PATCH/DELETE calls are introduced in SensorML tests.
-- [ ] `bash scripts/mvn-test-via-docker.sh` passes.
-- [ ] `scripts/smoke-test.sh` passes from a /tmp clone with `SMOKE_OUTPUT_DIR` outside the worktree.
-- [ ] Smoke total is at least 57 with failed=0.
-- [ ] OpenSpec, story status, traceability, ops status, changelog, and test-results are reconciled after implementation.
+- [x] `SensorMlTests.java` added with the six planned read-only @Tests.
+- [x] Every SensorML @Test has `groups = "sensorml"`.
+- [x] Every SensorML @Test `description` includes the OGC requirement URI and `SCENARIO-ETS-PART1-013-*` reference.
+- [x] `testng.xml` declares `sensorml` depends on `systemfeatures`.
+- [x] `VerifyTestNGSuiteDependency` adds three SensorML lint tests: group dependency, method group tagging, and class co-location.
+- [x] No POST/PUT/PATCH/DELETE calls are introduced in SensorML tests.
+- [x] `bash scripts/mvn-test-via-docker.sh` passes.
+- [x] `scripts/smoke-test.sh` passes from a /tmp clone with `SMOKE_OUTPUT_DIR` outside the worktree.
+- [x] Smoke total is at least 57 with failed=0.
+- [x] OpenSpec, story status, traceability, ops status, changelog, and test-results are reconciled after implementation.
 - [ ] Quinn + Raze gates are run independently after implementation.
+
+## Generator Implementation Evidence
+
+- Added `SensorMlTests.java` with read-only discovery, media-type read, minimal system shape, identity mapping, conformance declaration, and dependency tracer checks.
+- GeoRobotix runtime used the explicit `application/sml+json` alternate link `https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3`; direct item `Accept: application/sml+json` is attempted first, and collection-level `items` JSON is not counted as SensorML PASS.
+- Docker Maven: `bash scripts/mvn-test-via-docker.sh` -> BUILD SUCCESS, `95 tests / 0 failures / 0 errors / 3 skipped`.
+- TeamEngine smoke from `/tmp/sprint-ets-10-generator-smoke-git-r2`: `57 total / 48 passed / 0 failed / 9 skipped`.
+- Smoke report SensorML outcome: 6 SensorML @Tests PASS; runtime output records `SensorML representation source: application/sml+json alternate link`.
 
 ## Out Of Scope
 

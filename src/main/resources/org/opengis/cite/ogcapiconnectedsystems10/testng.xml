@@ -81,7 +81,13 @@
        validates /systems GeoJSON encoding and must cascade-SKIP if SystemFeatures fails.
        This sprint intentionally leaves mediatype-write, relation-types, and non-system
        schema/mapping subrequirements open. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson; OGC 19-072 /conf/common)">
+  <!-- Sprint 10 S-ETS-10-01 (REQ-ETS-PART1-013): SensorML group added as a PARTIAL
+       systems read-only subset. SensorML depends-on="systemfeatures" because the subset
+       validates system SensorML representations and must cascade-SKIP if SystemFeatures
+       fails. This sprint intentionally leaves mediatype-write, relation-types,
+       deployment/procedure/property schema/mapping, and full SensorML 3.0 schema
+       validation open. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -92,6 +98,7 @@
         <group name="propertydefinitions" depends-on="systemfeatures"/>
         <group name="subdeployments" depends-on="deployments"/>
         <group name="geojson" depends-on="systemfeatures"/>
+        <group name="sensorml" depends-on="systemfeatures"/>
       </dependencies>
     </groups>
     <classes>
@@ -108,6 +115,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

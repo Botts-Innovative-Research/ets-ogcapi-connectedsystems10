@@ -1,56 +1,63 @@
 agent: generator
 agent_role: dana
 status: complete
-sprint_number: "ets-09"
+sprint_number: "ets-10"
 sprint_run: "1 of 1"
-sprint_run_scope: ["S-ETS-09-01"]
-supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 8 close 2026-04-30T20:42:00Z)"
-started_at: "2026-05-05T15:36:47Z"
-finished_at: "2026-05-05T15:45:27Z"
+sprint_run_scope: ["S-ETS-10-01"]
+supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 9 close 2026-05-05T15:45:27Z)"
+started_at: "2026-05-05T18:39:22Z"
+finished_at: "2026-05-05T18:55:42Z"
 sprint_complete_after_run: true
 
 run_summary:
   status: complete
   story:
-    id: "S-ETS-09-01"
-    title: "GeoJSON encoding conformance class — systems read-only subset"
+    id: "S-ETS-10-01"
+    title: "SensorML systems read-only subset"
     status: "PARTIAL-IMPLEMENTED"
-    sister_repo_commit: "b4a97de"
     scope_closed:
-      - "/conf/geojson declaration check"
-      - "/req/geojson/mediatype-read fallback-honest read check for /systems"
-      - "/req/geojson/system-schema FeatureCollection assertion, SKIP when only items wrapper is returned"
-      - "/req/geojson/system-mappings first-feature shape assertion behind FeatureCollection prerequisite"
-      - "TestNG geojson group dependency on systemfeatures"
+      - "/conf/sensorml declaration check"
+      - "system SensorML representation discovery through direct Accept or explicit application/sml+json alternate link"
+      - "HTTP 200 + parseable SensorML JSON representation fetch"
+      - "minimal SensorML system type and identity shape"
+      - "CS API System id/uid to SensorML id/uniqueId/uid mapping sanity check"
+      - "TestNG sensorml group dependency on systemfeatures"
     scope_open:
-      - "/req/geojson/mediatype-write"
-      - "/req/geojson/relation-types"
-      - "/req/geojson/deployment-schema and deployment-mappings"
-      - "/req/geojson/procedure-schema and procedure-mappings"
-      - "/req/geojson/sf-schema and sf-mappings"
-      - "SensorML, AdvancedFiltering, create-replace-delete, Update, and Part 2"
-    files_changed_sister_repo:
-      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java"
+      - "/req/sensorml/mediatype-write"
+      - "/req/sensorml/relation-types"
+      - "/req/sensorml/deployment-schema and deployment-mappings"
+      - "/req/sensorml/procedure-schema, procedure-sml-class, and procedure-mappings"
+      - "/req/sensorml/property-schema and property-mappings"
+      - "full SensorML 3.0 JSON Schema validation"
+      - "AdvancedFiltering, create-replace-delete, Update, and Part 2"
+    files_changed:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
       - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
       - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
 
 verification:
+  formatter:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+    result: "BUILD SUCCESS"
   mvn_via_docker:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "Tests run: 92, Failures: 0, Errors: 0, Skipped: 3"
+    surefire: "Tests run: 95, Failures: 0, Errors: 0, Skipped: 3"
   teamengine_smoke:
-    clone: "/tmp/sprint-ets-09-smoke-fix"
-    command: "SMOKE_OUTPUT_DIR=/tmp/sprint-ets-09-smoke-fix-results bash scripts/smoke-test.sh"
+    clone: "/tmp/sprint-ets-10-generator-smoke-git-r2"
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2 bash scripts/smoke-test.sh"
     result: "PASS"
-    testng: "total=51 passed=42 failed=0 skipped=9"
-    report: "/tmp/sprint-ets-09-smoke-fix-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
-    log: "/tmp/sprint-ets-09-smoke-fix-results/s-ets-01-03-teamengine-container-2026-05-05.log"
+    testng: "total=57 passed=48 failed=0 skipped=9"
+    report: "/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    log: "/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2/s-ets-01-03-teamengine-container-2026-05-05.log"
 
 iut_state:
-  georobotix_conformance: "declares CS API /conf/geojson, /conf/sensorml, and /conf/subdeployment"
-  systems_accept_geojson: "HTTP 200, Content-Type application/json, top-level items wrapper"
-  geojson_runtime_outcome: "2 PASS + 3 SKIP; items wrapper is not counted as mediatype-read or FeatureCollection PASS"
+  georobotix_conformance: "declares CS API /conf/sensorml"
+  systems_accept_sml_json: "HTTP 200, Content-Type application/json, top-level items wrapper; not counted as SensorML PASS"
+  selected_system: "0mqcvdnfoca0"
+  sensorml_runtime_source: "application/sml+json alternate link"
+  sensorml_runtime_uri: "https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3"
+  sensorml_runtime_outcome: "6 PASS; fetched body type PhysicalSystem, id 0mqcvdnfoca0, uniqueId urn:osh:sensor:uas:predator001-RT"
 
 next_agent: "evaluator"
-next_action: "Run independent Quinn + Raze Sprint 9 gates, with Raze reviewing the PARTIAL scope and FeatureCollection SKIP honesty."
+next_action: "Run independent Quinn + Raze Sprint 10 gates, with Raze checking scope honesty and alternate-link fallback claims."

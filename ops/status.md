@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T17:41Z
+Last updated: 2026-05-05T18:55Z
 
 ## Fresh-Session Entry Point
 
@@ -38,10 +38,29 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD at Sprint 10 planning start: `8af9f70`
+- ETS HEAD at Sprint 10 implementation start: `e7ba5f1`
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-09-01`
-- Current sprint status: Sprint ets-10 PLANNED; SensorML systems read-only subset selected
+- Latest implemented story: `S-ETS-10-01` Generator complete, pending Quinn/Raze gates
+- Current sprint status: Sprint ets-10 Generator implemented SensorML systems read-only subset
+
+## Sprint ets-10 Evidence
+
+SensorML systems read-only subset:
+
+- `SensorMlTests.java` added with 6 read-only @Tests
+- `testng.xml` wires `<group name="sensorml" depends-on="systemfeatures"/>`
+- VerifyTestNGSuiteDependency adds 3 SensorML lint tests
+- Full REQ-ETS-PART1-013 remains open for `mediatype-write`, `relation-types`, deployment/procedure/property SensorML schema/mapping, and full SensorML 3.0 JSON Schema validation
+
+Verification:
+
+- Generator: Java formatter via Docker Maven - BUILD SUCCESS
+- Generator: `bash scripts/mvn-test-via-docker.sh` - BUILD SUCCESS, `95 tests / 0 failures / 0 errors / 3 skipped`
+- Generator TeamEngine smoke from `/tmp/sprint-ets-10-generator-smoke-git-r2` - `57 total / 48 passed / 0 failed / 9 skipped`
+- SensorML runtime - 6 PASS; current GeoRobotix direct item `Accept: application/sml+json` falls back to explicit `application/sml+json` alternate link `https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3`
+- Collection-level `GET /systems` `items` JSON is not counted as SensorML PASS
+- Raze implementation review initially found two gaps; both were fixed same-turn.
+- Raze gap-fix review: `.harness/evaluations/sprint-ets-10-adversarial-gapfix.yaml` APPROVE 0.93, no final blockers.
 
 ## Sprint ets-09 Evidence
 
@@ -71,11 +90,8 @@ Gate Results:
 
 ## Next Action
 
-1. Run Generator for Sprint ets-10 story `S-ETS-10-01`.
-2. Implement `SensorMlTests.java` as a PARTIAL read-only subset for REQ-ETS-PART1-013: conformance declaration, system SensorML representation discovery, media-type read or alternate-link fallback, minimal system shape, identity mapping sanity check, and dependency tracer.
-3. Add TestNG wiring and 3 SensorML dependency lint tests.
-4. Verify with `bash scripts/mvn-test-via-docker.sh` and TeamEngine smoke from a /tmp clone with `SMOKE_OUTPUT_DIR` outside the worktree.
-5. Keep all SensorML write-side, relation-type, non-system schema/mapping, full SensorML 3.0 schema validation, AdvancedFiltering query/filtering, create-replace-delete, Update, and Part 2 work out of Sprint 10.
+1. Run independent Quinn + Raze Sprint ets-10 gates from fresh `/tmp` clones.
+2. Keep all SensorML write-side, relation-type, non-system schema/mapping, full SensorML 3.0 schema validation, AdvancedFiltering query/filtering, create-replace-delete, Update, and Part 2 work out of Sprint 10.
 
 ## Dirty Worktree Notes
 
@@ -88,4 +104,4 @@ The repo already had unrelated modified scripts before this migration:
 - `scripts/smoke-test.sh`
 - `scripts/stub-iut.sh`
 
-The previously untracked `*:Zone.Identifier` files were removed on 2026-05-05 after explicit user instruction. Worktree was clean at Sprint 10 planning start.
+The previously untracked `*:Zone.Identifier` files were removed on 2026-05-05 after explicit user instruction. Worktree was clean at Sprint 10 planning start and implementation start. Current dirty files are intentional Sprint 10 Generator implementation/reconciliation artifacts.

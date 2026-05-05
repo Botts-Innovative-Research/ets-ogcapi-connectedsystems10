@@ -2,6 +2,24 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T18:39Z — Sprint ets-10 SensorML Generator implementation
+
+**Triggered by user instruction**: "Kick off Generator implementation."
+
+- Implemented `S-ETS-10-01` as a PARTIAL SensorML systems read-only subset in this ETS repo.
+- Added `SensorMlTests.java` with 6 read-only @Tests for `/conf/sensorml` declaration, system SensorML representation discovery, media-type read with direct-vs-alternate recording, minimal system shape, identity mapping, and dependency tracing.
+- Wired `testng.xml` with `<group name="sensorml" depends-on="systemfeatures"/>` and added `SensorMlTests` to the consolidated Part 1 suite block.
+- Added three `VerifyTestNGSuiteDependency` lint tests for SensorML group dependency, method group tagging, and co-location with SystemFeatures.
+- Verified no SensorML POST/PUT/PATCH/DELETE calls were introduced.
+- Verification: Java formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS `95 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-10-generator-smoke-git-r2` with external output reported `57 total / 48 passed / 0 failed / 9 skipped`.
+- Runtime SensorML evidence: GeoRobotix used `application/sml+json` alternate link `https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3`; the CS API `items` wrapper is not counted as SensorML PASS.
+- Raze implementation review first found two gaps: alternate-link fallback was unnecessarily gated by collection-level SensorML Accept 200, and `ops/status.md` was stale. Fixed both same-turn.
+- Post-fix verification: Docker Maven BUILD SUCCESS `95 tests / 0 failures / 0 errors / 3 skipped`; fresh `/tmp` TeamEngine smoke from `/tmp/sprint-ets-10-generator-smoke-git-r2` reported `57 total / 48 passed / 0 failed / 9 skipped`.
+- Raze gap-fix review wrote `.harness/evaluations/sprint-ets-10-adversarial-gapfix.yaml` with APPROVE 0.93 and no final blockers.
+- Reconciled OpenSpec, story, epic, traceability, ops status, known issues, test results, changelog, metrics, and Generator handoff for Sprint 10.
+
+---
+
 ## 2026-05-05T17:41Z — Sprint ets-10 SensorML plan
 
 **Triggered by user instruction**: "Do ets-10 planning."

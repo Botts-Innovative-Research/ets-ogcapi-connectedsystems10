@@ -1,0 +1,117 @@
+agent: raze
+role: adversarial_reviewer
+sprint: ets-10
+sprint_name: sensorml-systems-read-only-subset
+artifact_type: implementation_review
+created: "2026-05-05T18:50:16Z"
+verdict: GAPS_FOUND
+confidence: 0.86
+
+reviewed_scope:
+  contract: ".harness/contracts/sprint-ets-10.yaml"
+  role_prompt: "_bmad/agents/adversarial-reviewer.md"
+  story: "epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
+  spec: "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  traceability: "_bmad/traceability.md"
+  implementation_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  evidence_files:
+    - "/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    - "/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git/s-ets-01-03-teamengine-container-2026-05-05.log"
+
+summary: |
+  SensorML implementation is directionally sound and avoids the major false-PASS traps:
+  it documents partial scope, does not implement write-side checks, rejects CS API
+  `items` wrappers and generic `Feature` JSON as SensorML evidence, records alternate-link
+  fallback in the TeamEngine report, and wires TestNG group dependency/lint coverage.
+  However, completion cannot be approved yet because the implementation has one
+  generality gap where alternate-link support is unnecessarily gated by collection-level
+  SensorML `Accept` returning 200. A narrower documentation gap remains because
+  `ops/status.md` still describes Sprint 10 as planned despite other reconciliation docs
+  being updated.
+
+findings:
+  - id: RAZE-ETS10-GAP-001
+    severity: MEDIUM
+    title: "Alternate-link fallback is still gated by collection-level SensorML Accept 200"
+    file: "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+    lines: "94-99, 166-178"
+    evidence: |
+      `fetchSensorMlInputs` probes `GET /systems` with `Accept: application/sml+json`,
+      then `sensorMlRepresentationDiscoveredForSystem` unconditionally asserts
+      `systemsAcceptSensorMlResponse` status 200 before accepting the already-selected
+      direct or alternate item-level representation. The contract allows discovering
+      SensorML through an item-level `alternate` link with `type=application/sml+json`.
+      An IUT that returns 406 or another non-200 response for collection-level SensorML
+      negotiation but exposes a valid item-level alternate SensorML link would fail this
+      Sprint 10 subset despite satisfying the planned fallback route.
+    impact: |
+      GeoRobotix smoke does not expose the issue because its collection-level probe returns
+      HTTP 200 with a CS API `items` wrapper. Other conforming implementations may be
+      incorrectly failed before alternate-link evidence can count.
+    required_fix: |
+      Do not assert collection-level `Accept: application/sml+json` status 200 when a
+      direct item SensorML response or explicit item-level alternate link has been found.
+      Keep the existing `items` wrapper rejection, but treat the collection probe as
+      diagnostic/fallback-honesty evidence rather than a prerequisite for alternate-link PASS.
+
+  - id: RAZE-ETS10-GAP-002
+    severity: LOW
+    title: "ops/status.md still describes Sprint 10 as planned"
+    files:
+      - "ops/status.md"
+    evidence: |
+      A concurrent reconciliation edit updated the story to Generator Complete,
+      traceability to PARTIAL-IMPLEMENTED, OpenSpec with Maven/smoke evidence,
+      ops/changelog, ops/test-results, known issues, and the epic. But `ops/status.md`
+      still has `Last updated: 2026-05-05T17:41Z`, says `Current sprint status:
+      Sprint ets-10 PLANNED`, and lists the next action as running Generator and
+      implementing SensorML.
+    impact: |
+      Future-session handoff remains misleading even though the main spec/story/result
+      artifacts now support the Generator-complete claim.
+    required_fix: |
+      Update `ops/status.md` to Sprint 10 Generator Complete - Pending Quinn/Raze Gates,
+      include Maven/smoke evidence, and replace the Generator-next-action list with the
+      gate/fix-next-action list. Keep full SensorML class closure open.
+
+strengths:
+  - "SensorML class header and test descriptions are explicit that Sprint 10 is a systems read-only partial subset."
+  - "No POST/PUT/PATCH/DELETE calls were found in the SensorML implementation or suite wiring."
+  - "Direct item negotiation is attempted before alternate-link fallback."
+  - "Alternate-link fallback requires `rel=alternate` and `type=application/sml+json`."
+  - "Fetched SensorML body is rejected if it is a CS API `items` wrapper or generic `Feature` JSON."
+  - "TeamEngine report records `SensorML representation source: application/sml+json alternate link`."
+  - "TestNG suite declares `sensorml` depends-on `systemfeatures` and includes `SensorMlTests` in the consolidated block."
+  - "Structural lint tests cover SensorML group dependency, method group tagging, and co-location."
+
+verification_evidence:
+  provided_maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    result: "BUILD SUCCESS; 95 tests / 0 failures / 0 errors / 3 skipped"
+    note: "Accepted as provided evidence; no Docker rerun performed."
+  inspected_smoke:
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git bash scripts/smoke-test.sh"
+    source_clone: "/tmp/sprint-ets-10-generator-smoke-git"
+    result: "57 total / 48 passed / 0 failed / 9 skipped"
+    sensorml_methods:
+      total: 6
+      passed: 6
+      failed: 0
+      skipped: 0
+    sensorml_representation_source: "application/sml+json alternate link (https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3)"
+  static_checks:
+    no_write_operations: "PASS - rg found no POST/PUT/PATCH/DELETE usage in SensorML changed files."
+    worktree_scope: "Implementation diff includes SensorML class, testng.xml, VerifyTestNGSuiteDependency, and concurrent reconciliation docs; `ops/status.md` remains stale."
+
+required_fixes:
+  - "Fix RAZE-ETS10-GAP-001 so alternate-link fallback is not blocked by collection-level SensorML negotiation status."
+  - "Fix RAZE-ETS10-GAP-002 by refreshing `ops/status.md` while preserving PARTIAL status honesty."
+
+recommendation: |
+  After the two gaps are fixed, a targeted static review plus artifact inspection should
+  be enough unless the implementation logic changes materially. Re-run Maven and smoke
+  if the SensorML discovery control flow is changed beyond removing the collection-level
+  status gate.

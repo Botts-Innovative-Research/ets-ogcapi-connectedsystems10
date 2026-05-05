@@ -1,8 +1,25 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T16:44Z
+Last updated: 2026-05-05T18:55Z
 
 ## Current Sprint Evidence
+
+Sprint ets-10 SensorML systems read-only subset:
+
+- Current repo base before implementation: `e7ba5f1`
+- Maven verification: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `95 tests / 0 failures / 0 errors / 3 skipped`
+- TeamEngine E2E smoke:
+  - Clone: `/tmp/sprint-ets-10-generator-smoke-git-r2`
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2 bash scripts/smoke-test.sh`
+  - Result: `57 total / 48 passed / 0 failed / 9 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2/s-ets-01-03-teamengine-smoke-2026-05-05.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2/s-ets-01-03-teamengine-container-2026-05-05.log`
+- SensorML outcome: 6 SensorML @Tests PASS. Runtime report records `SensorML representation source: application/sml+json alternate link (https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3)`.
+- Scope note: this is PARTIAL for REQ-ETS-PART1-013; write media type, relation types, non-system schema/mapping, and full SensorML 3.0 JSON Schema validation remain open.
+- Raze implementation review: `.harness/evaluations/sprint-ets-10-adversarial-implementation.yaml` found two gaps; both were fixed.
+- Raze gap-fix review: `.harness/evaluations/sprint-ets-10-adversarial-gapfix.yaml` APPROVE 0.93, no final blockers.
 
 Sprint ets-09 GeoJSON systems read-only subset:
 

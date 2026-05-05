@@ -1,0 +1,82 @@
+agent: raze
+role: adversarial_reviewer
+sprint: ets-10
+sprint_name: sensorml-systems-read-only-subset
+artifact_type: adversarial_gapfix_review
+created: "2026-05-05T18:56:20Z"
+verdict: APPROVE
+confidence: 0.93
+
+reviewed_prior_artifact: ".harness/evaluations/sprint-ets-10-adversarial-implementation.yaml"
+reviewed_gaps:
+  - id: RAZE-ETS10-GAP-001
+    prior_severity: MEDIUM
+    status: CLOSED
+    title: "Alternate-link fallback no longer gated by collection-level SensorML Accept 200"
+    evidence: |
+      `SensorMlTests.sensorMlRepresentationDiscoveredForSystem` no longer calls
+      `ETSAssert.assertStatus(this.systemsAcceptSensorMlResponse, 200, REQ_MEDIATYPE_READ)`.
+      The method now treats the collection-level `/systems` `Accept: application/sml+json`
+      response as diagnostic evidence: it only fails unparsable JSON when that response is
+      HTTP 200, only uses the `items` wrapper to produce SKIP when no item-level SensorML
+      representation was found, and otherwise accepts a valid direct item SensorML response
+      or explicit `application/sml+json` alternate link.
+    files:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+
+  - id: RAZE-ETS10-GAP-002
+    prior_severity: LOW
+    status: CLOSED
+    title: "ops/status.md now reflects Sprint 10 Generator implemented state"
+    evidence: |
+      `ops/status.md` is updated to `Last updated: 2026-05-05T18:55Z`, lists
+      `S-ETS-10-01` as Generator complete pending Quinn/Raze gates, records Sprint 10
+      SensorML implementation evidence, and replaces the stale Generator-next-action list
+      with gate/fix/commit next actions. It also preserves the full SensorML open-scope
+      caveat for mediatype-write, relation-types, non-system mappings, and full SensorML
+      3.0 JSON Schema validation.
+    files:
+      - "ops/status.md"
+
+verification_evidence:
+  docker_maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    result: "BUILD SUCCESS; 95 tests / 0 failures / 0 errors / 3 skipped"
+    note: "Accepted provided post-fix evidence; Docker was not rerun for this gap-fix review."
+  formatter:
+    result: "BUILD SUCCESS"
+    note: "Accepted provided post-fix evidence; formatter was not rerun for this gap-fix review."
+  inspected_teamengine_smoke:
+    source_clone: "/tmp/sprint-ets-10-generator-smoke-git-r2"
+    output_dir: "/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2"
+    report: "/tmp/ets-ogcapi-connectedsystems10-sprint10-smoke-results-git-r2/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    result: "57 total / 48 passed / 0 failed / 9 skipped"
+    sensorml_methods:
+      total: 6
+      passed: 6
+      failed: 0
+      skipped: 0
+    sensorml_representation_source: "application/sml+json alternate link (https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3)"
+  targeted_static_checks:
+    collection_accept_gate_removed: "PASS"
+    ops_status_refreshed: "PASS"
+    write_side_scope: "PASS - no POST/PUT/PATCH/DELETE usage found in SensorML changed file during targeted grep."
+
+residual_risks:
+  - id: SENSORML-PARTIAL-SCOPE
+    severity: INFO
+    note: |
+      Sprint 10 remains a deliberately partial systems read-only subset. This approval
+      does not close SensorML mediatype-write, relation-types, deployment/procedure/property
+      SensorML schema or mapping assertions, or full SensorML 3.0 JSON Schema validation.
+  - id: TEAMENGINE-UTF8-WARNING
+    severity: INFO
+    note: |
+      The TeamEngine container log still includes the pre-existing Tomcat/Jersey
+      unsupported encoding warning for `utf-8`; the TestNG result XML reports failed=0
+      and this warning is not a Sprint 10 SensorML blocker.
+
+final_blockers: []
+recommendation: |
+  Raze gaps are closed. Proceed to independent Sprint 10 Quinn/Raze gate close or commit
+  according to the project workflow.

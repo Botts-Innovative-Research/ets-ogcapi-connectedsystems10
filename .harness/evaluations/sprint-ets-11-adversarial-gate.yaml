@@ -1,0 +1,131 @@
+gate: "Gate 4"
+agent: "Raze"
+agent_role: "Red Team / Adversarial Reviewer"
+sprint: "ets-11"
+story: "S-ETS-11-01"
+commit_under_review: "331f3ed1266767da4e45c7842d56c78d2a993f50"
+created_at_utc: "2026-05-05T20:48:00Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.90
+
+independence:
+  quinn_sprint_11_gate_yaml_read_before_writing: false
+  quinn_sprint_11_gate_yaml_present_at_review_time: false
+  review_clone: "/tmp/raze-sprint-ets-11"
+  smoke_output_dir: "/tmp/raze-sprint-ets-11-smoke-results"
+  smoke_container_name: "raze-ets-csapi-smoke-s11"
+
+reviewed_scope:
+  - "AGENTS.md"
+  - ".harness/prompts/adversarial.md"
+  - "_bmad/agents/adversarial-reviewer.md"
+  - ".harness/contracts/sprint-ets-11.yaml"
+  - ".harness/handoffs/generator-handoff.yaml"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+  - "_bmad/traceability.md"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringTests.java"
+  - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/test-results.md"
+  - "ops/known-issues.md"
+  - "OGC upstream files at commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f: requirements_class_advanced_filtering.adoc, clause_15_requirements_class_advanced_filtering.adoc, idListSchema.yaml"
+
+verification:
+  maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    workdir: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+    result: "BUILD SUCCESS"
+    totals:
+      tests: 98
+      failures: 0
+      errors: 0
+      skipped: 3
+    lint_evidence:
+      surefire_report: "target/surefire-reports/TEST-org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency.xml"
+      verify_testng_suite_dependency_totals: "31 tests / 0 failures / 0 errors / 0 skipped"
+      sprint_11_lint_tests_present:
+        - "testAdvancedFilteringGroupDependsOnSystemFeatures"
+        - "testEveryAdvancedFilteringTestMethodCarriesAdvancedFilteringGroup"
+        - "testAdvancedFilteringCoLocatedWithSystemFeatures"
+  teamengine_smoke:
+    command: "SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s11 SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-11-smoke-results bash scripts/smoke-test.sh"
+    workdir: "/tmp/raze-sprint-ets-11"
+    result: "SMOKE PASS"
+    totals:
+      total: 63
+      passed: 48
+      failed: 0
+      skipped: 15
+    report: "/tmp/raze-sprint-ets-11-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    log: "/tmp/raze-sprint-ets-11-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log"
+    advanced_filtering_runtime:
+      tests_total: 6
+      passed: 0
+      failed: 0
+      skipped: 6
+      skip_reason: "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering - IUT does not declare the CS API AdvancedFiltering conformance class in /conformance. Undeclared query-parameter behavior is not conformance PASS evidence."
+  georobotix_conformance_probe:
+    command: "curl -fsSL https://api.georobotix.io/ogc/t18/api/conformance | rg -o 'http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/[^\\\"]+' | sort"
+    observed_absent:
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering"
+    observed_present:
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system"
+
+findings:
+  - id: "RAZE-ETS11-GATE-CONCERN-001"
+    severity: "LOW"
+    status: "OPEN"
+    title: "Default GeoRobotix smoke cannot execute positive AdvancedFiltering query paths"
+    evidence: |
+      GeoRobotix does not declare /conf/advanced-filtering on 2026-05-05, so all six
+      AdvancedFiltering @Tests correctly SKIP in the Raze smoke report. This is honest
+      and contract-compliant, but it leaves systemsFilterById, systemsFilterByKeyword,
+      systemsFilterByGeomSmoke, and the local ID_List helper unexercised end-to-end
+      against a declaring IUT at Gate 4.
+    impact: "Residual confidence gap only; not a blocker because Sprint 11 explicitly required declaration-gated SKIP honesty for the default IUT."
+    required_fix: null
+
+risk_checks:
+  false_pass_risk:
+    result: "PASS"
+    evidence: "AdvancedFiltering report entries are SKIP, not PASS, when /conf/advanced-filtering is absent."
+  skip_honesty:
+    result: "PASS"
+    evidence: "Skip reason explicitly cites the missing /conf/advanced-filtering declaration and states undeclared query behavior is not PASS evidence."
+  declaring_iut_id_behavior:
+    result: "STATIC_PASS"
+    evidence: "systemsFilterById selects a seed System id, fails empty filtered items after selection, and fails returned items whose id differs from the seed."
+  declaring_iut_keyword_behavior:
+    result: "STATIC_PASS_WITH_SCOPE_NOTE"
+    evidence: "systemsFilterByKeyword selects a seed keyword and fails empty filtered items or returned items lacking keyword evidence in name/description. This follows the Sprint 11 story scope; it is not full OGC keyword-search semantics."
+  mutation_scope_creep:
+    result: "PASS"
+    evidence: "AdvancedFiltering implementation uses GET with queryParam only; no POST/PUT/PATCH/DELETE calls were introduced in the Sprint 11 class."
+  testng_wiring:
+    result: "PASS"
+    evidence: "testng.xml contains <group name=\"advancedfiltering\" depends-on=\"systemfeatures\"/> and co-locates AdvancedFilteringTests with SystemFeatures in the same <test> block; surefire includes three Sprint 11 lint tests."
+  requirement_uri_fidelity:
+    result: "PASS"
+    evidence: "OGC upstream requirement class at commit 3fd86c73... identifies /req/advanced-filtering and listed subrequirements used by the Sprint 11 tests."
+  docs_reconciliation:
+    result: "PASS"
+    evidence: "OpenSpec/story/traceability/ops docs preserve PARTIAL status and no false PASS claim. ops/status.md now records Raze Gate 4 complete and Quinn Gate 3.5 next."
+
+required_fixes: []
+
+recommendations:
+  - "When a declaring AdvancedFiltering IUT is available, run a targeted positive-path smoke to execute id/q/geom behavior instead of only the current declaration-gated SKIP path."
+  - "After Quinn Gate 3.5 runs, reconcile ops/status.md and ops/test-results.md with both independent gate outcomes."

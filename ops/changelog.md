@@ -2,6 +2,32 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T20:49Z — Sprint ets-11 Quinn Gate 3.5
+
+**Triggered by user instruction**: Act as Quinn Gate 3.5 Evaluator for Sprint ets-11 commit `331f3ed1266767da4e45c7842d56c78d2a993f50`.
+
+- Wrote `.harness/evaluations/sprint-ets-11-evaluator-gate.yaml` with verdict `APPROVE_WITH_CONCERNS` and confidence `0.90`.
+- Read the evaluator prompt, Sprint 11 contract, Generator handoff, OpenSpec/story/traceability artifacts, implementation, `testng.xml`, and lint tests; did not read `.harness/evaluations/sprint-ets-11-adversarial-gate.yaml` before writing Quinn's artifact.
+- Ran `bash scripts/mvn-test-via-docker.sh`: first worktree invocation exited BUILD FAILURE after report XML totals `98 tests / 0 failures / 0 errors / 3 skipped` due surefire fork ClassNotFoundException; later `/tmp/quinn-sprint-ets-11-gate` rerun completed BUILD SUCCESS with `98 tests / 0 failures / 0 errors / 3 skipped` and log `/tmp/quinn-ets-csapi-mvn-s11.log`.
+- Ran TeamEngine smoke from fresh `/tmp/quinn-sprint-ets-11-gate` clone with `SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke-s11` and external output `/tmp/quinn-ets-csapi-smoke-s11-results`: `63 total / 48 passed / 0 failed / 15 skipped`.
+- Confirmed all 6 AdvancedFiltering @Tests SKIP with missing `/conf/advanced-filtering` reason on GeoRobotix; no undeclared query behavior is counted as PASS.
+- Required follow-up: rerun positive AdvancedFiltering id/q/geom paths against a declaring IUT when available and monitor the transient surefire scan/load failure.
+
+---
+
+## 2026-05-05T20:48Z — Sprint ets-11 Raze Gate 4
+
+**Triggered by user instruction**: Act as Red Team / Raze Gate 4 for Sprint ets-11 commit `331f3ed1266767da4e45c7842d56c78d2a993f50`.
+
+- Wrote `.harness/evaluations/sprint-ets-11-adversarial-gate.yaml` with verdict `APPROVE_WITH_CONCERNS` and confidence `0.90`.
+- Ran `bash scripts/mvn-test-via-docker.sh`: BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`.
+- Ran TeamEngine smoke from fresh `/tmp/raze-sprint-ets-11` clone with `SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s11` and external output `/tmp/raze-sprint-ets-11-smoke-results`: `63 total / 48 passed / 0 failed / 15 skipped`.
+- Confirmed all 6 AdvancedFiltering @Tests SKIP with missing `/conf/advanced-filtering` reason on GeoRobotix; no undeclared query behavior is counted as PASS.
+- Confirmed TestNG wiring/lint evidence, no mutation-scope creep, canonical OGC AdvancedFiltering URI mapping, and PARTIAL docs reconciliation. Required fixes: none.
+- Recorded one LOW concern: positive AdvancedFiltering id/q/geom paths remain unexecuted end-to-end until a declaring IUT is available.
+
+---
+
 ## 2026-05-05T20:35Z — Sprint ets-11 Raze implementation review
 
 **Triggered by user instruction**: Act as Red Team / Raze for current uncommitted Sprint ets-11 AdvancedFiltering Generator implementation.

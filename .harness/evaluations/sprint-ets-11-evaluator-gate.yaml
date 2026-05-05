@@ -1,0 +1,95 @@
+agent: evaluator
+agent_role: quinn
+gate: "3.5"
+sprint: "ets-11"
+story: "S-ETS-11-01"
+commit: "331f3ed1266767da4e45c7842d56c78d2a993f50"
+evaluated_at: "2026-05-05T20:49:00Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.90
+
+artifact_independence:
+  did_not_read_before_writing:
+    - ".harness/evaluations/sprint-ets-11-adversarial-gate.yaml"
+  note: "A Sprint 11 Raze gate YAML was present as an untracked worktree file during final checks; Quinn did not read it before writing this evaluator artifact."
+
+scope_reviewed:
+  contract: ".harness/contracts/sprint-ets-11.yaml"
+  generator_handoff: ".harness/handoffs/generator-handoff.yaml"
+  story: "epics/stories/s-ets-11-01-advanced-filtering-readonly.md"
+  openspec: "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  traceability: "_bmad/traceability.md"
+  implementation:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+
+evidence:
+  static_review:
+    result: "PASS"
+    notes:
+      - "AdvancedFiltering suite is partial and declaration-gated; GeoRobotix absent /conf/advanced-filtering produces SkipException before query tests run."
+      - "Six AdvancedFiltering @Test methods carry group advancedfiltering and SCENARIO-ETS-PART1-009 references in descriptions."
+      - "testng.xml declares <group name=\"advancedfiltering\" depends-on=\"systemfeatures\"/> in the same <test> block as SystemFeatures."
+      - "No POST, PUT, PATCH, or DELETE calls were found in the AdvancedFiltering implementation or new lint test surface."
+      - "ID and keyword filter checks fail on empty filtered results after selecting seed data; missing seed data is the only local SKIP path for declaring IUTs."
+  maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    clone: "/tmp/quinn-sprint-ets-11-gate"
+    log: "/tmp/quinn-ets-csapi-mvn-s11.log"
+    surefire_reports: "/tmp/quinn-sprint-ets-11-gate/target/surefire-reports/TEST-*.xml"
+    final_result: "BUILD SUCCESS"
+    totals:
+      tests: 98
+      failures: 0
+      errors: 0
+      skipped: 3
+    completed_at: "2026-05-05T20:53:37Z"
+    note: "Initial worktree invocation exited BUILD FAILURE after report XMLs showed 98/0/0/3, due surefire fork ClassNotFoundException for VerifyMaskingRequestLoggingFilter during scan. A later Maven run from the fresh /tmp clone completed BUILD SUCCESS with persisted log evidence and the same 98/0/0/3 totals."
+  teamengine_smoke:
+    command: "SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke-s11 SMOKE_OUTPUT_DIR=/tmp/quinn-ets-csapi-smoke-s11-results bash scripts/smoke-test.sh"
+    clone: "/tmp/quinn-sprint-ets-11-gate"
+    clone_head: "331f3ed1266767da4e45c7842d56c78d2a993f50"
+    output_dir: "/tmp/quinn-ets-csapi-smoke-s11-results"
+    result: "PASS"
+    totals:
+      total: 63
+      passed: 48
+      failed: 0
+      skipped: 15
+    report: "/tmp/quinn-ets-csapi-smoke-s11-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    log: "/tmp/quinn-ets-csapi-smoke-s11-results/s-ets-01-03-teamengine-container-2026-05-05.log"
+    advanced_filtering_runtime:
+      result: "SKIP_WITH_REASON"
+      skipped_methods: 6
+      config_skip_reason: "IUT does not declare the CS API AdvancedFiltering conformance class in /conformance. Undeclared query-parameter behavior is not conformance PASS evidence."
+      dependency_evidence: "TestNG report lists AdvancedFiltering methods with depends-on-groups=\"systemfeatures\"."
+
+scenario_results:
+  SCENARIO-ETS-PART1-009-ADVFILTER-CONFORMANCE-DECLARED-001: "PASS_BY_SKIP_HONESTY_FOR_UNDECLARED_GEOROBOTIX"
+  SCENARIO-ETS-PART1-009-ADVFILTER-ID-LIST-SCHEMA-001: "STRUCTURAL_PASS; RUNTIME_SKIPPED_BY_DECLARATION_GATE"
+  SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-ID-001: "STRUCTURAL_PASS; RUNTIME_SKIPPED_BY_DECLARATION_GATE"
+  SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-KEYWORD-001: "STRUCTURAL_PASS; RUNTIME_SKIPPED_BY_DECLARATION_GATE"
+  SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-GEOM-SMOKE-001: "STRUCTURAL_PASS; RUNTIME_SKIPPED_BY_DECLARATION_GATE"
+  SCENARIO-ETS-PART1-009-ADVFILTER-DEPENDENCY-SMOKE-001: "PASS"
+  SCENARIO-ETS-PART1-009-ADVFILTER-SMOKE-NO-REGRESSION-001: "PASS"
+
+findings:
+  - id: "QUINN-ETS11-CONCERN-001"
+    severity: "LOW"
+    status: "OPEN"
+    title: "Positive AdvancedFiltering query semantics remain unexecuted against default GeoRobotix smoke target"
+    evidence: "GeoRobotix does not declare /conf/advanced-filtering; smoke correctly reports all 6 AdvancedFiltering tests SKIP-with-reason."
+    impact: "The sprint contract allows this, but actual id/q/geom positive runtime behavior still needs a declaring IUT before full confidence in the query paths."
+  - id: "QUINN-ETS11-CONCERN-002"
+    severity: "LOW"
+    status: "OPEN"
+    title: "One Maven invocation showed surefire scan flakiness before the successful rerun"
+    evidence: "First worktree bash scripts/mvn-test-via-docker.sh invocation failed with surefire ClassNotFoundException for VerifyMaskingRequestLoggingFilter after writing report XML totals 98/0/0/3; later /tmp clone rerun succeeded with persisted log `/tmp/quinn-ets-csapi-mvn-s11.log` and 98/0/0/3."
+    impact: "Not a Sprint 11 functional blocker, but gate reproducibility should be watched."
+
+required_follow_up:
+  - "When a declaring /conf/advanced-filtering IUT is available, rerun Sprint 11 paths and record positive /systems?id, /systems?q, and /systems?geom evidence."
+  - "Monitor the transient surefire scan/load failure; if it recurs, open a cleanup story for deterministic surefire execution."
+
+verdict_rationale: "Sprint ets-11 satisfies the contract's partial AdvancedFiltering read-only subset, remains skip-honest for the undeclared default IUT, preserves no-regression smoke totals, and passes independent Maven rerun and TeamEngine smoke. Concerns are residual execution coverage and one transient Maven flake, not blockers."

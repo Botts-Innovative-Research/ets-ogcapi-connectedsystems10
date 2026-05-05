@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T20:28Z
+Last updated: 2026-05-05T20:49Z
 
 ## Current Sprint Evidence
 
@@ -18,6 +18,26 @@ Sprint ets-11 AdvancedFiltering read-only subset:
   - Log: `/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log`
 - AdvancedFiltering outcome: 6 AdvancedFiltering @Tests SKIP with reason because current GeoRobotix does not declare `/conf/advanced-filtering`.
 - Scope note: this is PARTIAL for REQ-ETS-PART1-009; mutation behavior, Part 2, full cross-resource association filters, full geometry intersection semantics, combined-filter truth tables, and endpoint parity remain open.
+- Quinn independent Gate 3.5:
+  - Maven command: `bash scripts/mvn-test-via-docker.sh`
+  - Maven clone: `/tmp/quinn-sprint-ets-11-gate`
+  - Maven result: BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`
+  - Maven log: `/tmp/quinn-ets-csapi-mvn-s11.log`
+  - Maven note: first worktree invocation exited BUILD FAILURE after report XML totals `98/0/0/3` due surefire fork ClassNotFoundException for `VerifyMaskingRequestLoggingFilter`; the later `/tmp` clone rerun succeeded with persisted log evidence and the same totals.
+  - Smoke clone: `/tmp/quinn-sprint-ets-11-gate`
+  - Smoke command: `SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke-s11 SMOKE_OUTPUT_DIR=/tmp/quinn-ets-csapi-smoke-s11-results bash scripts/smoke-test.sh`
+  - Smoke result: `63 total / 48 passed / 0 failed / 15 skipped`
+  - AdvancedFiltering runtime outcome: 6 SKIP, 0 PASS, 0 FAIL, with missing `/conf/advanced-filtering` reason
+  - Report: `/tmp/quinn-ets-csapi-smoke-s11-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml`
+  - Gate artifact: `.harness/evaluations/sprint-ets-11-evaluator-gate.yaml`
+- Raze independent Gate 4:
+  - Maven result: BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`
+  - AdvancedFiltering lint evidence: `testAdvancedFilteringGroupDependsOnSystemFeatures`, `testEveryAdvancedFilteringTestMethodCarriesAdvancedFilteringGroup`, and `testAdvancedFilteringCoLocatedWithSystemFeatures` present in `VerifyTestNGSuiteDependency` surefire XML
+  - Smoke command: `SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s11 SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-11-smoke-results bash scripts/smoke-test.sh`
+  - Smoke result: `63 total / 48 passed / 0 failed / 15 skipped`
+  - AdvancedFiltering runtime outcome: 6 SKIP, 0 PASS, 0 FAIL, with missing `/conf/advanced-filtering` reason
+  - Report: `/tmp/raze-sprint-ets-11-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml`
+  - Gate artifact: `.harness/evaluations/sprint-ets-11-adversarial-gate.yaml`
 
 Sprint ets-10 SensorML systems read-only subset:
 

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T20:35Z
+Last updated: 2026-05-05T20:56Z
 
 ## Fresh-Session Entry Point
 
@@ -40,8 +40,8 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 - ETS HEAD at Sprint 11 Generator start: `5cdcdf4`
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-10-01` Generator complete; Quinn gate approved with concerns and Raze Gate 4 approved
-- Current sprint status: Sprint ets-11 AdvancedFiltering read-only subset Generator complete; Raze implementation review approved with concerns and commit plus independent Quinn/Raze gates are next
+- Latest implemented story: `S-ETS-11-01` Generator complete; Quinn Gate 3.5 and Raze Gate 4 approved with concerns
+- Current sprint status: Sprint ets-11 AdvancedFiltering read-only subset gates reconciled; gate artifact commit is in progress
 
 ## Sprint ets-11 Plan
 
@@ -49,7 +49,7 @@ AdvancedFiltering systems/common-resource read-only subset:
 
 - Story: `epics/stories/s-ets-11-01-advanced-filtering-readonly.md`
 - Contract: `.harness/contracts/sprint-ets-11.yaml`
-- OpenSpec: `REQ-ETS-PART1-009`, status SPECIFIED for Sprint 11
+- OpenSpec: `REQ-ETS-PART1-009`, status PARTIAL-IMPLEMENTED after Sprint 11 Generator
 - Scope: declaration-gated `/conf/advanced-filtering`, local ID_List helper, `/systems?id=...`, `/systems?q=...`, `/systems?geom=...` smoke shape, and `advancedfiltering -> systemfeatures` dependency wiring
 - Explicitly excluded: create-replace-delete, update, Part 2, full association filters, full geometry intersection semantics, combined-filter truth tables, and endpoint parity across every resource type
 - GeoRobotix planning state: `/conformance` does not currently declare `/conf/advanced-filtering`; undeclared read-only query behavior is planning evidence only, not conformance PASS evidence
@@ -80,6 +80,8 @@ Verification:
 - TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` - `63 total / 48 passed / 0 failed / 15 skipped`
 - Smoke report: `/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml`
 - Container log: `/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log`
+- Raze Gate 4: `.harness/evaluations/sprint-ets-11-adversarial-gate.yaml` APPROVE_WITH_CONCERNS 0.90; independent Maven from the worktree BUILD SUCCESS `98 tests / 0 failures / 0 errors / 3 skipped`; independent TeamEngine smoke from `/tmp/raze-sprint-ets-11` with `SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s11` reported `63 total / 48 passed / 0 failed / 15 skipped`. All 6 AdvancedFiltering @Tests SKIP-with-reason because GeoRobotix does not declare `/conf/advanced-filtering`.
+- Quinn Gate 3.5: `.harness/evaluations/sprint-ets-11-evaluator-gate.yaml` APPROVE_WITH_CONCERNS 0.90; independent Maven from `/tmp/quinn-sprint-ets-11-gate` BUILD SUCCESS `98 tests / 0 failures / 0 errors / 3 skipped` with log `/tmp/quinn-ets-csapi-mvn-s11.log` after one transient worktree surefire scan/load failure; independent TeamEngine smoke from `/tmp/quinn-sprint-ets-11-gate` with `SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke-s11` reported `63 total / 48 passed / 0 failed / 15 skipped`. All 6 AdvancedFiltering @Tests SKIP-with-reason because GeoRobotix does not declare `/conf/advanced-filtering`.
 
 ## Sprint ets-10 Evidence
 
@@ -132,8 +134,9 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint ets-11 Generator implementation.
-2. Run independent Quinn and Raze gates before closing Sprint 11.
+1. Start next planning cycle from the remaining Part 1 backlog: create-replace-delete or update require mutation-safety planning before Generator.
+2. When a declaring `/conf/advanced-filtering` IUT is available, rerun positive id/q/geom paths and record evidence.
+3. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
 
 ## Dirty Worktree Notes
 

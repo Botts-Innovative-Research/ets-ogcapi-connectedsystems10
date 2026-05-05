@@ -1,0 +1,96 @@
+gate: "3.5"
+agent: "Quinn"
+role: "Evaluator"
+sprint: "ets-10"
+story: "S-ETS-10-01"
+commit_evaluated: "fc511494c07ccc3df4886f358f095358c0bf2d4e"
+created: "2026-05-05T19:26:30Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.91
+
+independence:
+  fresh_context: true
+  avoided_sprint_10_raze_gate_yaml_before_artifact: true
+  note: "Did not read a Sprint 10 Raze gate YAML before writing this evaluator artifact. Existing ops/status.md and ops/test-results.md mention earlier Sprint 10 Raze implementation/gapfix artifacts, but this evaluation is based on Quinn-read contract/spec/story/code and live /tmp verification."
+
+scope_evaluated:
+  implemented_requirement: "REQ-ETS-PART1-013"
+  implemented_subset: "SensorML systems read-only subset for /conf/sensorml"
+  explicitly_not_closed:
+    - "/req/sensorml/mediatype-write"
+    - "/req/sensorml/relation-types"
+    - "Deployment/Procedure/Property SensorML schema and mapping assertions"
+    - "Full SensorML 3.0 JSON Schema validation"
+    - "AdvancedFiltering, create-replace-delete, Update, and Part 2 behavior"
+
+evidence:
+  documents_reviewed:
+    - ".harness/prompts/evaluator.md"
+    - ".harness/contracts/sprint-ets-10.yaml"
+    - "epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "commit fc51149"
+  implementation_review:
+    files:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    observations:
+      - "SensorMlTests has six sensorml @Test methods matching the sprint scenarios."
+      - "testng.xml declares <group name=\"sensorml\" depends-on=\"systemfeatures\"/> and includes SensorMlTests in the shared TestNG block."
+      - "SensorML discovery rejects generic CS API items wrappers as SensorML PASS evidence and requires direct SensorML-like JSON or an explicit application/sml+json alternate link."
+      - "SensorML media-type read rejects items wrappers and generic Feature/FeatureCollection JSON before passing SensorML shape checks."
+      - "Targeted static search found no POST/PUT/PATCH/DELETE calls in the SensorML test package."
+      - "Targeted static search found no new Part 2 SensorML implementation surface; Part 2 references are pre-existing spec/placeholders and comments."
+  maven_verification:
+    clone: "/tmp/quinn-sprint-ets-10"
+    command: "bash scripts/mvn-test-via-docker.sh"
+    result: "BUILD SUCCESS"
+    surefire_totals: "95 tests / 0 failures / 0 errors / 3 skipped"
+    sensorml_lint_tests_present:
+      - "testSensorMlGroupDependsOnSystemFeatures"
+      - "testEverySensorMlTestMethodCarriesSensorMlGroup"
+      - "testSensorMlCoLocatedWithSystemFeatures"
+    surefire_report: "/tmp/quinn-sprint-ets-10/target/surefire-reports/TEST-org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency.xml"
+  teamengine_smoke:
+    clone: "/tmp/quinn-sprint-ets-10"
+    command: "SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke-s10 SMOKE_OUTPUT_DIR=/tmp/quinn-sprint-ets-10-smoke-results bash scripts/smoke-test.sh"
+    result: "SMOKE PASS"
+    totals:
+      total: 57
+      passed: 48
+      failed: 0
+      skipped: 9
+      pass_plus_skip: 57
+    report: "/tmp/quinn-sprint-ets-10-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    container_log: "/tmp/quinn-sprint-ets-10-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log"
+    sensorml_methods_represented:
+      - "sensorMlConformanceDeclared: PASS"
+      - "sensorMlRepresentationDiscoveredForSystem: PASS"
+      - "sensorMlDependencyCascadeRuntime: PASS"
+      - "sensorMlMediaTypeRead: PASS"
+      - "sensorMlSystemHasMinimalShape: PASS"
+      - "sensorMlSystemPreservesIdentityMapping: PASS"
+    sensorml_runtime_evidence: "SensorML representation source: application/sml+json alternate link (https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3)"
+
+findings:
+  - id: "QUINN-ETS10-CONCERN-001"
+    severity: "LOW"
+    status: "OPEN"
+    title: "SensorML subset remains intentionally partial"
+    detail: "The implementation correctly labels REQ-ETS-PART1-013 as PARTIAL-IMPLEMENTED, but the full SensorML conformance class still lacks mediatype-write, relation-types, non-system schema/mapping checks, and full SensorML 3.0 schema validation. This is contract-compliant for Sprint 10 and should stay visible in future planning."
+    required_follow_up: "Plan remaining SensorML subrequirements in a future sprint before promoting REQ-ETS-PART1-013 beyond PARTIAL-IMPLEMENTED."
+
+decision_rationale: |
+  APPROVE_WITH_CONCERNS because all Sprint 10 critical criteria passed under independent
+  Quinn verification: Maven from a clean /tmp clone succeeded, surefire includes the three
+  SensorML lint tests, TeamEngine smoke reported failed=0 with PASS+SKIP=57, and the smoke
+  report contains all six SensorML methods with PASS status. Code inspection did not find
+  Part 2 or write-operation scope creep, and the implementation is honest about the remaining
+  SensorML requirement surface.
+
+required_follow_up:
+  - "Keep REQ-ETS-PART1-013 marked PARTIAL-IMPLEMENTED until the explicitly excluded SensorML subrequirements are planned and implemented."

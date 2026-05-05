@@ -1,0 +1,137 @@
+agent: raze
+role: adversarial_reviewer
+sprint: ets-10
+sprint_name: sensorml-systems-read-only-subset
+artifact_type: adversarial_gate_4
+created: "2026-05-05T19:27:00Z"
+commit_reviewed: "fc511494c07ccc3df4886f358f095358c0bf2d4e"
+verdict: APPROVE
+confidence: 0.91
+quinn_yaml_read_before_artifact: false
+
+reviewed_scope:
+  role:
+    - "_bmad/agents/adversarial-reviewer.md"
+    - ".harness/prompts/adversarial.md"
+  contract: ".harness/contracts/sprint-ets-10.yaml"
+  prior_sprint_10_raze_artifacts:
+    - ".harness/evaluations/sprint-ets-10-adversarial-implementation.yaml"
+    - ".harness/evaluations/sprint-ets-10-adversarial-gapfix.yaml"
+  story: "epics/stories/s-ets-10-01-sensorml-encoding-conformance-class.md"
+  spec: "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  traceability: "_bmad/traceability.md"
+  ops:
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+  implementation_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+
+summary: |
+  Gate 4 approves Sprint ets-10 at commit fc51149. I independently re-ran Maven
+  and TeamEngine smoke from a fresh /tmp clone and inspected the implementation
+  for the named false-PASS risks. The earlier Raze implementation gaps are closed:
+  alternate-link fallback is not gated by collection-level SensorML Accept status,
+  and ops/status.md no longer describes Sprint 10 as merely planned. The suite does
+  not count the CS API collection `items` wrapper or generic Feature JSON as SensorML
+  PASS evidence, records the alternate-link fallback in the TestNG report, has no
+  write-operation checks, and wires SensorML under SystemFeatures with structural
+  lint coverage. Approval is for the documented systems read-only PARTIAL subset only.
+
+findings: []
+
+required_fixes: []
+
+evidence:
+  live_maven:
+    clone: "/tmp/raze-sprint-ets-10"
+    command: "bash scripts/mvn-test-via-docker.sh"
+    result: "BUILD SUCCESS"
+    surefire: "95 tests / 0 failures / 0 errors / 3 skipped"
+    finished_at: "2026-05-05T19:24:16Z"
+  live_teamengine_smoke:
+    clone: "/tmp/raze-sprint-ets-10"
+    command: "SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s10 SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-10-smoke-results bash scripts/smoke-test.sh"
+    iut: "https://api.georobotix.io/ogc/t18/api"
+    result: "SMOKE PASS"
+    testng_totals: "57 total / 48 passed / 0 failed / 9 skipped"
+    report: "/tmp/raze-sprint-ets-10-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    log: "/tmp/raze-sprint-ets-10-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log"
+    sensorml_methods:
+      total: 6
+      passed: 6
+      failed: 0
+      skipped: 0
+    sensorml_reporter_output: "SensorML representation source: application/sml+json alternate link (https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3)"
+    startup_log_scan: "zero startup ERROR/SEVERE"
+  false_pass_risk_checks:
+    alternate_link_fallback:
+      status: "PASS"
+      evidence: |
+        SensorMlTests first attempts direct item Accept negotiation, then accepts an
+        item-level link only when rel=alternate and type=application/sml+json. The
+        representation discovery assertion no longer requires collection-level
+        /systems Accept application/sml+json to return HTTP 200 before alternate-link
+        evidence can pass.
+    collection_items_wrapper:
+      status: "PASS"
+      evidence: |
+        Collection-level `items` JSON is only diagnostic. If no direct or alternate
+        SensorML representation exists and the collection Accept probe returned
+        `items`, the test SKIPs with an explicit reason rather than passing.
+    generic_feature_json:
+      status: "PASS"
+      evidence: |
+        `sensorMlMediaTypeRead` fails if the selected SensorML URI returns top-level
+        `items` or `type=Feature`, and `isSensorMlLike` rejects `Feature` and
+        `FeatureCollection`.
+    write_operation_leakage:
+      status: "PASS"
+      evidence: |
+        Targeted grep found no POST/PUT/PATCH/DELETE call usage in the SensorML
+        implementation or Sprint 10 TestNG wiring. Story/spec/status keep
+        mediatype-write, relation-types, mutation-side behavior, and non-system
+        SensorML schema/mapping out of scope.
+    dependency_wiring:
+      status: "PASS"
+      evidence: |
+        testng.xml declares `<group name="sensorml" depends-on="systemfeatures"/>`
+        in the single consolidated test block and includes SensorMlTests. Maven
+        executed VerifyTestNGSuiteDependency with 28 passing tests, including the
+        three SensorML structural lint tests for dependency, group tagging, and
+        co-location.
+    scope_overclaiming:
+      status: "PASS"
+      evidence: |
+        OpenSpec/story/ops consistently mark REQ-ETS-PART1-013 as PARTIAL-IMPLEMENTED
+        and list the remaining open subrequirements. This gate does not close full
+        SensorML 3.0 JSON Schema validation or write-side/relation/non-system work.
+    docs_consistency:
+      status: "PASS"
+      evidence: |
+        Story status is Generator Complete - Pending Quinn/Raze Gates, OpenSpec records
+        PARTIAL-IMPLEMENTED, ops/status.md records Sprint ets-10 Generator implemented,
+        ops/test-results.md records Maven/smoke evidence, and traceability references
+        Sprint 10 PARTIAL implementation.
+
+residual_risks:
+  - id: SENSORML-PARTIAL-SCOPE
+    severity: INFO
+    note: |
+      Approval is limited to the Sprint 10 systems read-only subset. Full SensorML
+      class closure remains open for mediatype-write, relation-types,
+      deployment/procedure/property schema and mapping assertions, and full SensorML
+      3.0 JSON Schema validation.
+  - id: SENSORML-SHAPE-HEURISTIC
+    severity: INFO
+    note: |
+      Minimal SensorML-likeness is intentionally heuristic (`type` contains System or
+      Process plus identity evidence), not JSON Schema validation. This matches the
+      contract but should not be treated as full SensorML schema conformance.
+
+recommendation: |
+  Proceed to Sprint ets-10 gate close/commit flow. Do not broaden the status beyond
+  PARTIAL-IMPLEMENTED until the remaining SensorML subrequirements are planned,
+  implemented, and live-verified.

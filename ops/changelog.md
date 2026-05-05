@@ -2,6 +2,33 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T19:27Z — Sprint ets-10 Quinn gate
+
+**Triggered by user instruction**: Act as Quinn, Gate 3.5 Evaluator, for Sprint ets-10.
+
+- Wrote `.harness/evaluations/sprint-ets-10-evaluator-gate.yaml` with verdict APPROVE_WITH_CONCERNS 0.91.
+- Independently reviewed Sprint 10 contract, story, OpenSpec, traceability, status, test results, commit `fc51149`, SensorML implementation, TestNG wiring, and SensorML structural lint tests.
+- Verified in fresh clone `/tmp/quinn-sprint-ets-10`: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `95 tests / 0 failures / 0 errors / 3 skipped`.
+- Confirmed surefire includes `testSensorMlGroupDependsOnSystemFeatures`, `testEverySensorMlTestMethodCarriesSensorMlGroup`, and `testSensorMlCoLocatedWithSystemFeatures`.
+- Ran TeamEngine smoke with unique container and external output: `SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke-s10 SMOKE_OUTPUT_DIR=/tmp/quinn-sprint-ets-10-smoke-results bash scripts/smoke-test.sh` reported `57 total / 48 passed / 0 failed / 9 skipped`.
+- Confirmed the smoke report represents all six SensorML methods and logs the `application/sml+json` alternate-link source.
+- Static inspection found no SensorML POST/PUT/PATCH/DELETE calls and no Part 2 implementation scope creep. Remaining SensorML subrequirements stay openly partial.
+
+---
+
+## 2026-05-05T19:27Z — Sprint ets-10 Raze Gate 4
+
+**Triggered by user instruction**: Act as Red Team / Raze, Gate 4 Adversarial Reviewer, for Sprint ets-10.
+
+- Wrote `.harness/evaluations/sprint-ets-10-adversarial-gate.yaml` with verdict APPROVE, confidence 0.91.
+- Independently reviewed commit `fc51149` for alternate-link fallback, `items` wrapper false PASS, generic Feature JSON, write-operation leakage, dependency wiring, scope overclaiming, and docs consistency.
+- Fresh clone: `/tmp/raze-sprint-ets-10` detached at `fc51149`.
+- Maven via Docker: BUILD SUCCESS, `95 tests / 0 failures / 0 errors / 3 skipped`.
+- TeamEngine smoke: `SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s10 SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-10-smoke-results bash scripts/smoke-test.sh` -> `57 total / 48 passed / 0 failed / 9 skipped`.
+- SensorML smoke evidence: 6 SensorML @Tests PASS; report records `SensorML representation source: application/sml+json alternate link (https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3)`.
+
+---
+
 ## 2026-05-05T18:39Z — Sprint ets-10 SensorML Generator implementation
 
 **Triggered by user instruction**: "Kick off Generator implementation."

@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T18:55Z
+Last updated: 2026-05-05T19:27Z
 
 ## Current Sprint Evidence
 
@@ -20,6 +20,22 @@ Sprint ets-10 SensorML systems read-only subset:
 - Scope note: this is PARTIAL for REQ-ETS-PART1-013; write media type, relation types, non-system schema/mapping, and full SensorML 3.0 JSON Schema validation remain open.
 - Raze implementation review: `.harness/evaluations/sprint-ets-10-adversarial-implementation.yaml` found two gaps; both were fixed.
 - Raze gap-fix review: `.harness/evaluations/sprint-ets-10-adversarial-gapfix.yaml` APPROVE 0.93, no final blockers.
+- Quinn independent gate:
+  - Maven clone: `/tmp/quinn-sprint-ets-10`
+  - Maven result: BUILD SUCCESS, `95 tests / 0 failures / 0 errors / 3 skipped`
+  - SensorML lint evidence: `testSensorMlGroupDependsOnSystemFeatures`, `testEverySensorMlTestMethodCarriesSensorMlGroup`, and `testSensorMlCoLocatedWithSystemFeatures` present in `VerifyTestNGSuiteDependency` surefire XML
+  - Smoke command: `SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke-s10 SMOKE_OUTPUT_DIR=/tmp/quinn-sprint-ets-10-smoke-results bash scripts/smoke-test.sh`
+  - Smoke result: `57 total / 48 passed / 0 failed / 9 skipped`
+  - Report: `/tmp/quinn-sprint-ets-10-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml`
+  - Gate artifact: `.harness/evaluations/sprint-ets-10-evaluator-gate.yaml`
+- Raze independent Gate 4:
+  - Maven clone: `/tmp/raze-sprint-ets-10`
+  - Maven result: BUILD SUCCESS, `95 tests / 0 failures / 0 errors / 3 skipped`
+  - Smoke command: `SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s10 SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-10-smoke-results bash scripts/smoke-test.sh`
+  - Smoke result: `57 total / 48 passed / 0 failed / 9 skipped`
+  - SensorML outcome: 6 PASS, 0 failed, 0 skipped
+  - Report: `/tmp/raze-sprint-ets-10-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml`
+  - Gate artifact: `.harness/evaluations/sprint-ets-10-adversarial-gate.yaml`
 
 Sprint ets-09 GeoJSON systems read-only subset:
 
@@ -55,7 +71,7 @@ Gate verdicts: Quinn APPROVE_WITH_CONCERNS 0.90 and Raze APPROVE_WITH_CONCERNS 0
 
 ## Artifact Location
 
-Persistent ETS evidence lives in this repository under `ops/test-results/`. Recent Sprint 9 smoke artifacts currently live under `/tmp/sprint-ets-09-smoke-fix-results/`, `/tmp/quinn-sprint-ets-09-smoke-results-2/`, and `/tmp/raze-sprint-ets-09-smoke-results/` because the gate runs intentionally avoided polluting the worktree.
+Persistent ETS evidence lives in this repository under `ops/test-results/`. Recent Sprint 10 and Sprint 9 smoke artifacts currently live under `/tmp/...` gate directories, including `/tmp/quinn-sprint-ets-10-smoke-results/` and `/tmp/raze-sprint-ets-10-smoke-results/`, because the gate runs intentionally avoided polluting the worktree.
 
 ## Historical Evidence
 

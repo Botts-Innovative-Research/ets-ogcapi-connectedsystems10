@@ -2,6 +2,18 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-05T16:44Z — Sprint ets-09 Quinn + Raze gates completed from ETS repo
+
+**Triggered by user instruction**: find the handoff doc and keep going.
+
+- Followed `ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md`; migration commit `880b391` was already present, so the next handoff action was the independent Sprint 9 gate pair.
+- Quinn wrote `.harness/evaluations/sprint-ets-09-evaluator-gate.yaml` with APPROVE_WITH_CONCERNS 0.90. Independent Maven from `/tmp/quinn-sprint-ets-09` passed with `92/0/0/3`; final TeamEngine smoke with a unique container name passed with `51 total / 42 passed / 0 failed / 9 skipped`.
+- Raze wrote `.harness/evaluations/sprint-ets-09-adversarial-gate.yaml` with APPROVE_WITH_CONCERNS 0.88. Independent Maven from `/tmp/raze-sprint-ets-09-review` passed with `92/0/0/3`; TeamEngine smoke passed with `51 total / 42 passed / 0 failed / 9 skipped`.
+- Both gates confirmed Sprint 9 remains an honest PARTIAL implementation of REQ-ETS-PART1-012: current GeoRobotix `Accept: application/geo+json` returns `application/json` with top-level `items`, so mediatype-read, FeatureCollection, and mapping checks SKIP rather than false-PASS.
+- Non-blocking follow-ups: harden `scripts/smoke-test.sh` container-log archival when Docker cleanup races `docker logs`, and make any future default-JSON GeoJSON FeatureCollection fallback PASS more explicit in TestNG runtime output.
+
+---
+
 ## 2026-05-05T16:15Z — Session context migrated into ETS repo
 
 **Triggered by user instruction**: move the active session from `csapi_compliance` to `ets-ogcapi-connectedsystems10`.

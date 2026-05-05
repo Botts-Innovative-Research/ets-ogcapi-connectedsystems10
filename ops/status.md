@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T16:15Z
+Last updated: 2026-05-05T16:44Z
 
 ## Fresh-Session Entry Point
 
@@ -38,10 +38,10 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD: `b4a97de`
+- ETS HEAD: `880b391`
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-09-01`
-- Current sprint status: Sprint ets-09 PARTIAL-IMPLEMENTED, pending full Quinn + Raze gate pair
+- Current sprint status: Sprint ets-09 PARTIAL-IMPLEMENTED, Quinn + Raze gates APPROVE_WITH_CONCERNS
 
 ## Sprint ets-09 Evidence
 
@@ -54,20 +54,26 @@ GeoJSON systems read-only subset:
 
 Verification:
 
-- `bash scripts/mvn-test-via-docker.sh` — BUILD SUCCESS, `92 tests / 0 failures / 0 errors / 3 skipped`
-- TeamEngine smoke from `/tmp/sprint-ets-09-smoke-fix` — `51 total / 42 passed / 0 failed / 9 skipped`
+- Generator: `bash scripts/mvn-test-via-docker.sh` — BUILD SUCCESS, `92 tests / 0 failures / 0 errors / 3 skipped`
+- Generator TeamEngine smoke from `/tmp/sprint-ets-09-smoke-fix` — `51 total / 42 passed / 0 failed / 9 skipped`
+- Quinn independent Maven from `/tmp/quinn-sprint-ets-09` — BUILD SUCCESS, `92 tests / 0 failures / 0 errors / 3 skipped`
+- Quinn independent TeamEngine smoke with unique container name — `51 total / 42 passed / 0 failed / 9 skipped`
+- Raze independent Maven from `/tmp/raze-sprint-ets-09-review` — BUILD SUCCESS, `92 tests / 0 failures / 0 errors / 3 skipped`
+- Raze independent TeamEngine smoke — `51 total / 42 passed / 0 failed / 9 skipped`
 - GeoJSON runtime — 2 PASS + 3 SKIP; current GeoRobotix `items` JSON is not counted as GeoJSON PASS
 
-Raze:
+Gate Results:
 
 - `.harness/evaluations/sprint-ets-09-adversarial-implementation.yaml` — GAPS_FOUND 0.86 on mediatype-read overclaim
 - `.harness/evaluations/sprint-ets-09-adversarial-gapfix.yaml` — APPROVE 0.94 after `b4a97de`
+- `.harness/evaluations/sprint-ets-09-evaluator-gate.yaml` — Quinn APPROVE_WITH_CONCERNS 0.90; no blockers
+- `.harness/evaluations/sprint-ets-09-adversarial-gate.yaml` — Raze APPROVE_WITH_CONCERNS 0.88; no required fixes
 
 ## Next Action
 
-1. Commit this migration in the ETS repo, staging only migrated context files.
-2. Restart the session in `/home/nh/docker/gir/ets-ogcapi-connectedsystems10`.
-3. Run independent Quinn + Raze Sprint 9 gates from this repo.
+1. Commit the Sprint 9 gate artifacts and ops reconciliation, staging only intentional files.
+2. Plan Sprint ets-10 from the remaining Part 1 backlog. Recommended next candidates: AdvancedFiltering/CRUD/Update wedge if mutation risk is acceptable, or SensorML/remaining GeoJSON read-only expansion if keeping the next sprint read-only.
+3. Track two non-blocking gate concerns as future cleanup candidates: smoke log archival when `docker logs` misses the container, and clearer runtime reporting for default-JSON GeoJSON fallback PASS branches.
 
 ## Dirty Worktree Notes
 

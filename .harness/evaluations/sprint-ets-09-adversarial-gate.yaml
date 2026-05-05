@@ -1,0 +1,120 @@
+agent: raze
+agent_role: adversarial_reviewer
+gate: 4
+sprint: ets-09
+artifact: .harness/evaluations/sprint-ets-09-adversarial-gate.yaml
+created_at: "2026-05-05T16:41:19Z"
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.88
+
+reviewed_scope:
+  - S-ETS-09-01 GeoJSON systems read-only subset for REQ-ETS-PART1-012.
+  - GeoJSON conformance declaration, mediatype-read fallback honesty, FeatureCollection strictness, first-feature mapping, and dependency wiring.
+  - Explicit exclusions: mediatype-write, relation-types, write operations, SensorML, AdvancedFiltering, CRUD, Update, and Part 2.
+  - Gate independence: did not read any new Sprint 9 Quinn YAML before writing this result.
+
+inputs_reviewed:
+  - _bmad/agents/adversarial-reviewer.md
+  - .harness/prompts/adversarial.md
+  - .harness/contracts/sprint-ets-09.yaml
+  - .harness/handoffs/generator-handoff.yaml
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md
+  - ops/e2e-test-plan.md
+  - ops/test-results.md
+  - _bmad/traceability.md
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java
+  - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+
+findings:
+  - id: RAZE-S9-CONCERN-1
+    severity: LOW
+    status: NON_BLOCKING
+    title: "Independent smoke container-log archive is not reliable"
+    evidence:
+      - "Independent smoke command exited 0 and produced a valid TestNG XML at /tmp/raze-sprint-ets-09-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml."
+      - "The XML reports total=51, passed=42, failed=0, skipped=9."
+      - "The archived container log at /tmp/raze-sprint-ets-09-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log contains only: 'Error response from daemon: No such container: ets-csapi-smoke'."
+      - "Generator's earlier smoke evidence under /tmp/sprint-ets-09-smoke-fix-results includes a larger container log, so this does not block Sprint 9 behavior approval, but it weakens independent replay evidence."
+    required_fix: "For a future cleanup wedge, make smoke-test.sh fail or preserve the pre-cleanup log if docker logs cannot read the TeamEngine container."
+  - id: RAZE-S9-CONCERN-2
+    severity: LOW
+    status: NON_BLOCKING
+    title: "Mediatype-read PASS path could be more explicit for future default-JSON FeatureCollection fallback"
+    evidence:
+      - "Current GeoRobotix state is handled honestly: Accept application/geo+json returns Content-Type application/json with top-level items, and geoJsonMediaTypeRead SKIPs rather than PASSes."
+      - "If a future IUT returns a valid FeatureCollection with Content-Type application/json, geoJsonMediaTypeRead would PASS without recording a runtime note beyond the test description."
+      - "The Sprint 9 contract allows fallback only when explicitly recorded and representation is valid GeoJSON; current live IUT does not exercise this PASS branch."
+    required_fix: "Before broadening GeoJSON coverage, consider adding a Reporter log or explicit content-type assertion branch so application/json FeatureCollection fallback is auditable in TestNG output."
+
+evidence:
+  source_inspection:
+    geojson_overclaiming:
+      result: "PASS for current IUT state"
+      details:
+        - "GeoJsonTests.java requests /systems with Accept application/geo+json."
+        - "Current GeoRobotix response is application/json with top-level items; mediatype-read SKIPs with a reason that this is fallback evidence, not PASS."
+        - "FeatureCollection and feature-mapping tests depend on that method and therefore SKIP, not PASS."
+    featurecollection_strictness:
+      result: "PASS"
+      details:
+        - "systemsCollectionIsGeoJsonFeatureCollection requires type=FeatureCollection and features array."
+        - "CS API items wrapper alone triggers SkipException and is not counted as a GeoJSON PASS."
+    no_write_operation_creep:
+      result: "PASS"
+      details:
+        - "rg found no .post(), .put(), .patch(), or .delete() calls in GeoJsonTests.java."
+        - "Only mediatype-write references are exclusion notes in testng.xml/spec/story."
+    dependency_wiring:
+      result: "PASS"
+      details:
+        - "testng.xml declares <group name=\"geojson\" depends-on=\"systemfeatures\"/>."
+        - "VerifyTestNGSuiteDependency contains testGeoJsonGroupDependsOnSystemFeatures, testEveryGeoJsonTestMethodCarriesGeoJsonGroup, and testGeoJsonCoLocatedWithSystemFeatures."
+    upstream_requirement_shape:
+      result: "PASS"
+      details:
+        - "Fetched opengeospatial/ogcapi-connected-systems commit 3fd86c73... requirements_class_geojson.adoc."
+        - "Requirement class lists /req/geojson plus 12 subrequirements matching story/spec scope."
+
+verification_commands:
+  - command: "rm -rf /tmp/raze-sprint-ets-09-review /tmp/raze-sprint-ets-09-smoke-results && git clone --no-local . /tmp/raze-sprint-ets-09-review && git -C /tmp/raze-sprint-ets-09-review rev-parse --short HEAD && git -C /tmp/raze-sprint-ets-09-review status --short"
+    cwd: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+    result: "exit 0; clone HEAD 880b391; clean clone status. Git emitted a non-blocking funny-ref warning for refs/remotes/origin/main:Zone.Identifier."
+  - command: "bash scripts/mvn-test-via-docker.sh"
+    cwd: "/tmp/raze-sprint-ets-09-review"
+    result: "exit 0; BUILD SUCCESS; Tests run: 92, Failures: 0, Errors: 0, Skipped: 3."
+  - command: "SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-09-smoke-results bash scripts/smoke-test.sh"
+    cwd: "/tmp/raze-sprint-ets-09-review"
+    result: "exit 0; SMOKE PASS; TestNG total=51, passed=42, failed=0, skipped=9; report /tmp/raze-sprint-ets-09-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml."
+  - command: "rg -n 'GeoJsonTests|geoJson|systemsCollectionIsGeoJsonFeatureCollection|systemFeatureHasGeoJsonShapeAndProperties|mediatype-read|FeatureCollection|items|SKIP|PASS|FAIL' /tmp/raze-sprint-ets-09-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    cwd: "/tmp/raze-sprint-ets-09-review"
+    result: "exit 0; GeoJSON methods: geoJsonConformanceDeclared PASS, geoJsonDependencyCascadeRuntime PASS, geoJsonMediaTypeRead SKIP, systemsCollectionIsGeoJsonFeatureCollection SKIP, systemFeatureHasGeoJsonShapeAndProperties SKIP."
+  - command: "curl -sS -D /tmp/raze-sprint-ets-09-systems-headers.txt -H 'Accept: application/geo+json' 'https://api.georobotix.io/ogc/t18/api/systems' -o /tmp/raze-sprint-ets-09-systems.json"
+    cwd: "/tmp/raze-sprint-ets-09-review"
+    result: "exit 0; HTTP 200; Content-Type application/json; body starts with top-level items array, not FeatureCollection/features."
+  - command: "curl -sS 'https://api.georobotix.io/ogc/t18/api/conformance' | rg -n 'conf/geojson|conf/sensorml|conf/subdeployment|conformsTo'"
+    cwd: "/tmp/raze-sprint-ets-09-review"
+    result: "exit 0; GeoRobotix declares CS API /conf/geojson."
+  - command: "curl -sS 'https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f/api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc' | sed -n '1,220p'"
+    cwd: "/tmp/raze-sprint-ets-09-review"
+    result: "exit 0; upstream class identifier /req/geojson and 12 subrequirements confirmed."
+  - command: "rg -n '\\.post\\(|\\.put\\(|\\.patch\\(|\\.delete\\(|POST|PUT|PATCH|DELETE|mediatype-write' src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    cwd: "/tmp/raze-sprint-ets-09-review"
+    result: "exit 0; only mediatype-write exclusion note found in testng.xml; no write-operation calls in GeoJSON implementation."
+
+decision_rationale:
+  approve_basis:
+    - "Sprint 9 implements the contracted read-only subset only."
+    - "Current IUT fallback behavior is represented as SKIP, not false PASS."
+    - "Items wrapper is not accepted as FeatureCollection PASS."
+    - "No write-operation creep was found."
+    - "Independent TeamEngine smoke produced failed=0 with total=51, satisfying the contract threshold."
+  concerns_basis:
+    - "Independent smoke log archive was not trustworthy even though XML and script verdict were good."
+    - "A future application/json FeatureCollection fallback PASS would benefit from a stronger runtime audit note."
+
+required_fixes: []
+follow_up_recommendations:
+  - "Harden smoke-test.sh container-log archival in a cleanup sprint."
+  - "Add explicit runtime logging for any future default-JSON FeatureCollection fallback branch before expanding GeoJSON coverage."

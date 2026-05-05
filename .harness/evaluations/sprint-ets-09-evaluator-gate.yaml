@@ -1,0 +1,108 @@
+agent: evaluator
+agent_role: quinn
+gate: "3.5"
+sprint: "ets-09"
+artifact: ".harness/evaluations/sprint-ets-09-evaluator-gate.yaml"
+created_at: "2026-05-05T16:42:00Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.90
+
+independence:
+  reviewed_raze_sprint_9_yaml_before_writing: false
+  note: "Did not open or read Sprint 9 Raze YAML contents before writing this evaluator artifact."
+
+scope_assessment:
+  story: "S-ETS-09-01"
+  requirement: "REQ-ETS-PART1-012"
+  scope_label: "PARTIAL-IMPLEMENTED"
+  partial_scope_honest: true
+  rationale: >
+    Code, spec, story, traceability, and ops evidence consistently limit Sprint 9 to the
+    GeoJSON systems read-only subset. mediatype-write, relation-types, deployment/procedure/
+    sampling-feature GeoJSON schema and mapping assertions, SensorML, mutation classes, and
+    Part 2 remain explicitly open.
+
+commands_run:
+  - command: "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+    cwd: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+    result: "2026-05-05T16:36:47Z"
+  - command: "git clone /home/nh/docker/gir/ets-ogcapi-connectedsystems10 /tmp/quinn-sprint-ets-09"
+    cwd: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+    result: "PASS; clean /tmp clone at HEAD 880b391. Git warned about ignored funny ref refs/remotes/origin/main:Zone.Identifier."
+  - command: "bash scripts/mvn-test-via-docker.sh"
+    cwd: "/tmp/quinn-sprint-ets-09"
+    result: "PASS; BUILD SUCCESS; Surefire Tests run: 92, Failures: 0, Errors: 0, Skipped: 3."
+  - command: "SMOKE_OUTPUT_DIR=/tmp/quinn-sprint-ets-09-smoke-results bash scripts/smoke-test.sh"
+    cwd: "/tmp/quinn-sprint-ets-09"
+    result: "RETRY_NEEDED; first run failed at docker run because stale container name ets-csapi-smoke already existed."
+  - command: "SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke SMOKE_OUTPUT_DIR=/tmp/quinn-sprint-ets-09-smoke-results bash scripts/smoke-test.sh"
+    cwd: "/tmp/quinn-sprint-ets-09"
+    result: "RETRY_NEEDED; suite invocation curl returned non-zero, but wrote a partial XML with header total=51 passed=42 failed=0 skipped=9."
+  - command: "SMOKE_CONTAINER_NAME=quinn-ets-csapi-smoke-2 SMOKE_OUTPUT_DIR=/tmp/quinn-sprint-ets-09-smoke-results-2 SMOKE_RUN_TIMEOUT_S=1200 bash scripts/smoke-test.sh"
+    cwd: "/tmp/quinn-sprint-ets-09"
+    result: "PASS; TeamEngine smoke total=51 passed=42 failed=0 skipped=9; zero startup ERROR/SEVERE."
+  - command: "python3 XML extraction for GeoJsonTests statuses"
+    cwd: "/tmp/quinn-sprint-ets-09"
+    result: "PASS; GeoJSON contributed 2 PASS and 3 SKIP, all with depends-on-groups=systemfeatures."
+
+evidence:
+  maven:
+    source: "/tmp/quinn-sprint-ets-09"
+    total: 92
+    failures: 0
+    errors: 0
+    skipped: 3
+    build: "SUCCESS"
+    geojson_lint_tests_present:
+      - "testGeoJsonGroupDependsOnSystemFeatures"
+      - "testEveryGeoJsonTestMethodCarriesGeoJsonGroup"
+      - "testGeoJsonCoLocatedWithSystemFeatures"
+  teamengine_smoke:
+    source: "/tmp/quinn-sprint-ets-09"
+    report: "/tmp/quinn-sprint-ets-09-smoke-results-2/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
+    log: "/tmp/quinn-sprint-ets-09-smoke-results-2/s-ets-01-03-teamengine-container-2026-05-05.log"
+    total: 51
+    passed: 42
+    failed: 0
+    skipped: 9
+    startup_errors_or_severe: 0
+  geojson_runtime:
+    geoJsonConformanceDeclared: "PASS"
+    geoJsonDependencyCascadeRuntime: "PASS"
+    geoJsonMediaTypeRead: "SKIP; IUT returned CS API items wrapper, not GeoJSON features; not counted as mediatype-read PASS."
+    systemsCollectionIsGeoJsonFeatureCollection: "SKIP; depends on skipped mediatype-read prerequisite."
+    systemFeatureHasGeoJsonShapeAndProperties: "SKIP; depends on skipped FeatureCollection prerequisite."
+    dependency_group: "All GeoJsonTests @Test records in smoke XML carry depends-on-groups=systemfeatures."
+
+consistency_checks:
+  spec: "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md marks REQ-ETS-PART1-012 PARTIAL-IMPLEMENTED and lists the same open subrequirements."
+  story: "epics/stories/s-ets-09-01-geojson-encoding-conformance-class.md is complete for the systems read-only subset and records 2 PASS + 3 SKIP IUT state."
+  traceability: "_bmad/traceability.md row for REQ-ETS-PART1-012 is PARTIAL-IMPLEMENTED with remaining GeoJSON subrequirements open."
+  ops: "ops/test-results.md records the same Maven and TeamEngine totals and the same GeoRobotix items-wrapper behavior."
+  testng_wiring: "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml declares geojson depends-on systemfeatures and co-locates GeoJsonTests with SystemFeatures."
+  implementation: "GeoJsonTests.java avoids write operations and does not count a CS API items wrapper as GeoJSON FeatureCollection PASS."
+
+findings:
+  blockers: []
+  concerns:
+    - id: "Q09-C1"
+      severity: "LOW"
+      summary: "The current working tree is dirty with unrelated script edits and many Zone.Identifier files."
+      impact: "Gate verification was performed from a clean /tmp clone of tracked HEAD, so this did not affect the verdict; it remains a handoff hygiene risk."
+    - id: "Q09-C2"
+      severity: "LOW"
+      summary: "The first two smoke attempts were environment/transient failures before the clean successful run."
+      impact: "Final smoke evidence is valid and exited 0, but the stale default container name and one truncated curl response are worth watching in future gates."
+    - id: "Q09-C3"
+      severity: "LOW"
+      summary: "FeatureCollection and feature-mapping SKIPs are method-dependency SKIPs rather than direct IUT-state SKIPs."
+      impact: "The mediatype-read SKIP message records the actual items-wrapper reason, so this is acceptable for Sprint 9, but direct skip reasons would improve report readability."
+
+required_follow_up:
+  - "Raze Gate 4 should independently review the partial-scope honesty and the FeatureCollection false-positive guard."
+  - "Before merge/release, clean or intentionally account for the unrelated dirty worktree and Zone.Identifier artifacts."
+
+final_assessment: >
+  APPROVE_WITH_CONCERNS. Sprint ets-09 satisfies the contracted GeoJSON systems read-only
+  partial scope with independent Maven and TeamEngine evidence. No blocking false positives
+  were found: the IUT's CS API items wrapper is SKIP evidence, not a GeoJSON PASS.

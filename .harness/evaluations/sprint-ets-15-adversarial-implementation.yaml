@@ -1,0 +1,181 @@
+agent: Raze
+role: Red Team / Adversarial Reviewer
+artifact_type: implementation_review
+sprint: ets-15
+story: S-ETS-15-01
+created_utc: "2026-05-06T18:51:30Z"
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+
+reviewed_scope:
+  summary: >
+    Current uncommitted Sprint 15 Generator implementation for GeoJSON non-system
+    read-only expansion under REQ-ETS-PART1-012.
+  included:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/VerifyGeoJsonResourceMappingAssertions.java
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md
+    - _bmad/traceability.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/test-results/sprint-ets-15-maven-2026-05-06.log
+    - /tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator/
+  excluded_by_instruction:
+    - Docker rerun
+    - Maven rerun
+    - TeamEngine rerun
+
+evidence:
+  maven:
+    path: ops/test-results/sprint-ets-15-maven-2026-05-06.log
+    observed: "Tests run: 122, Failures: 0, Errors: 0, Skipped: 3"
+    build_result: BUILD SUCCESS
+    note: >
+      Archived log includes VerifyGeoJsonResourceMappingAssertions with 5 tests,
+      0 failures, 0 errors, 0 skipped.
+  smoke:
+    directory: /tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator/
+    observed: "77 total / 52 passed / 0 failed / 25 skipped"
+    relevant_geojson_result: >
+      New deployment/procedure/samplingFeature GeoJSON tests skipped against
+      GeoRobotix because the IUT returned CS API items wrappers instead of
+      GeoJSON features wrappers for those resources. The final implementation
+      checks matching resource conformance declarations before inspecting these
+      resource-specific GeoJSON mappings.
+  no_mutation:
+    oracle: scripts/no-mutation-oracle.py
+    observed: "recognized_iut_request_logs=44"
+    mutating_iut_requests: 0
+    source_scan: >
+      No GeoJSON test source calls to RestAssured post/put/patch/delete were
+      observed during this review.
+  worktree:
+    dirty_files_considered: true
+    unrelated_dirty_files_found: false
+    note: >
+      Dirty files are aligned with Sprint 15 implementation, docs, evidence, and
+      this review/metrics work; no unrelated files were identified in the ETS
+      worktree during this review.
+
+findings:
+  - id: RAZE-ETS15-IMPL-001
+    severity: info
+    status: closed
+    category: false_pass_risk
+    title: CS API items wrappers do not produce GeoJSON PASS verdicts
+    evidence:
+      - "GeoJsonTests.firstGeoJsonFeature skips when a response contains items without features."
+      - "Smoke evidence shows /deployments, /procedures, and /samplingFeatures skipped for items-wrapper fallback, not passed."
+      - "VerifyGeoJsonResourceMappingAssertions.skipsItemsWrapperWithoutFeatures covers the regression path."
+    assessment: >
+      The core Sprint 15 false PASS risk is addressed. A server declaring
+      /conf/geojson but returning a CS API default items wrapper for non-system
+      resources is recorded as fallback evidence and skipped rather than passed.
+
+  - id: RAZE-ETS15-IMPL-002
+    severity: info
+    status: closed
+    category: resource_specific_predicates
+    title: Resource-specific schema and mapping predicates are implemented
+    evidence:
+      - "Deployment requires properties.uid and non-empty properties.deployedSystems@link before PASS."
+      - "Procedure requires Feature shape, geometry == null, properties.uid, and properties.featureType."
+      - "Sampling feature requires properties.uid, properties.featureType, and either hostedProcedure@link or radius."
+      - "Generic GeoJSON Feature shape alone cannot satisfy the new non-system mapping assertions."
+    assessment: >
+      The gap identified during Sprint 15 planning is closed in implementation.
+      The tests require resource-specific mapping evidence and use SKIP where
+      first-feature fixture data is insufficient to prove the mapping.
+
+  - id: RAZE-ETS15-IMPL-003
+    severity: info
+    status: closed
+    category: conformance_scope_gating
+    title: Non-system GeoJSON tests are gated by matching resource conformance classes
+    evidence:
+      - "deploymentFeatureHasGeoJsonSchemaAndMapping calls skipIfConformanceMissing(CONF_DEPLOYMENT, ...)."
+      - "procedureFeatureHasGeoJsonSchemaAndMapping calls skipIfConformanceMissing(CONF_PROCEDURE, ...)."
+      - "samplingFeatureHasGeoJsonSchemaAndMapping calls skipIfConformanceMissing(CONF_SF, ...)."
+      - "skipIfConformanceMissing emits SKIP when /conf/geojson is declared but the relevant resource class is not declared."
+    assessment: >
+      The final patch closes the overreach risk where a server could declare
+      GeoJSON without declaring deployment/procedure/sampling-feature support
+      and still be judged on those resource-specific mapping requirements.
+
+  - id: RAZE-ETS15-IMPL-004
+    severity: info
+    status: closed
+    category: ogc_requirement_fidelity
+    title: OGC GeoJSON requirement URI and scope mapping is faithful
+    evidence:
+      - "Implementation uses canonical OGC 23-001 GeoJSON requirement URIs for deployment-schema, deployment-mappings, procedure-schema, procedure-mappings, sf-schema, and sf-mappings."
+      - "Test descriptions include REQ-ETS-PART1-012 and the Sprint 15 SCENARIO identifiers."
+      - "Tests are scoped to read-only GET requests with Accept: application/geo+json."
+    assessment: >
+      No URI remapping error or scope creep into mutation, SensorML, Update, or
+      broader schema validation was found.
+
+  - id: RAZE-ETS15-IMPL-005
+    severity: info
+    status: closed
+    category: no_mutation_safety
+    title: Archived evidence supports no-mutation safety
+    evidence:
+      - "Smoke no-mutation oracle: recognized_iut_request_logs=44."
+      - "No IUT-bound POST, PUT, DELETE, or PATCH requests were found in the supplied smoke evidence."
+      - "GeoJSON implementation fetches conformance and collections with GET."
+    assessment: >
+      The Generator evidence supports the claimed read-only/no-mutation safety
+      posture without needing Docker, Maven, or TeamEngine reruns.
+
+  - id: RAZE-ETS15-IMPL-006
+    severity: info
+    status: closed
+    category: partial_status_honesty
+    title: REQ-ETS-PART1-012 remains honestly PARTIAL
+    evidence:
+      - "OpenSpec and traceability mark the GeoJSON class PARTIAL/PARTIAL-IMPLEMENTED, not complete."
+      - "Docs keep write-side media-type checks, relation-types, property GeoJSON mapping, and full schema validation open."
+      - "Story/status/test-results describe Sprint 15 as a non-system read-only expansion."
+    assessment: >
+      The documentation does not overclaim full GeoJSON conformance based on the
+      Sprint 15 subset.
+
+  - id: RAZE-ETS15-IMPL-CONCERN-001
+    severity: low
+    status: open
+    category: docs_consistency
+    title: GeoJsonTests class javadoc is stale after Sprint 15 implementation
+    location:
+      path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java
+      lines: "24-27"
+    evidence:
+      - "The class javadoc still says Deployment/Procedure/SamplingFeature GeoJSON schema and mapping assertions remain open for future sprints."
+      - "The same class now implements deploymentFeatureHasGeoJsonSchemaAndMapping, procedureFeatureHasGeoJsonSchemaAndMapping, and samplingFeatureHasGeoJsonSchemaAndMapping."
+    impact: >
+      This is documentation drift inside source code. It does not create a false
+      PASS in the executable assertions, but it can mislead future reviewers
+      about what Sprint 15 closed.
+    recommended_fix: >
+      Before commit, revise the class javadoc to say Sprint 15 adds the
+      deployment/procedure/samplingFeature read-only subset while the remaining
+      GeoJSON requirement areas still stay open.
+
+required_fixes: []
+
+concerns:
+  - id: RAZE-ETS15-IMPL-CONCERN-001
+    summary: >
+      Stale GeoJsonTests class javadoc should be corrected before committing the
+      Generator work, but it is not a blocking conformance implementation gap.
+
+final_assessment: >
+  APPROVE_WITH_CONCERNS. The implementation blocks the main false PASS paths:
+  CS API items wrappers skip instead of pass, non-system resources first require
+  their matching resource conformance classes, resource-specific mapping
+  predicates are enforced, OGC requirement URIs are scoped to the GeoJSON
+  read-only subset, and refreshed Maven/smoke/no-mutation evidence is consistent
+  with the docs. The only remaining issue found is stale source javadoc
+  describing the newly implemented non-system assertions as future work.

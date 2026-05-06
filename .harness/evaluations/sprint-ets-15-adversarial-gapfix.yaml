@@ -1,0 +1,64 @@
+agent: Raze
+role: Red Team / Adversarial Reviewer
+artifact_type: focused_gapfix_recheck
+sprint: ets-15
+story: S-ETS-15-01
+created_utc: "2026-05-06T18:54:28Z"
+verdict: APPROVE
+confidence: 0.96
+
+focused_scope:
+  prior_artifact: .harness/evaluations/sprint-ets-15-adversarial-implementation.yaml
+  prior_verdict: APPROVE_WITH_CONCERNS
+  rechecked_concern:
+    id: RAZE-ETS15-IMPL-CONCERN-001
+    title: GeoJsonTests class javadoc is stale after Sprint 15 implementation
+  excluded_by_instruction:
+    - Docker rerun by reviewer
+    - Maven rerun by reviewer
+    - TeamEngine rerun by reviewer
+
+evidence:
+  source_recheck:
+    path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java
+    lines: "24-29"
+    observed: >
+      Javadoc now states that the class implements the Sprint 9 systems read-only
+      subset and the Sprint 15 Deployment/Procedure/SamplingFeature read-only
+      subset of REQ-ETS-PART1-012.
+    remaining_open_work_statement: >
+      The same javadoc honestly leaves write-side media-type checks,
+      relation-types, property GeoJSON mapping, and full external GeoJSON schema
+      validation open for future sprints.
+  maven:
+    path: ops/test-results/sprint-ets-15-maven-2026-05-06.log
+    observed: "Tests run: 122, Failures: 0, Errors: 0, Skipped: 3"
+    build_result: BUILD SUCCESS
+    finished_at: "2026-05-06T18:53:57Z"
+  smoke:
+    directory: /tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator/
+    observed: "77 total / 52 passed / 0 failed / 25 skipped"
+    note: "Unchanged from final Sprint 15 implementation run per user instruction."
+  no_mutation:
+    oracle: scripts/no-mutation-oracle.py
+    observed: "recognized_iut_request_logs=44"
+    mutating_iut_requests: 0
+
+findings:
+  - id: RAZE-ETS15-IMPL-CONCERN-001
+    severity: low
+    status: closed
+    category: docs_consistency
+    title: GeoJsonTests class javadoc now matches Sprint 15 implementation scope
+    assessment: >
+      The prior stale-javadoc concern is closed. The source comment now
+      acknowledges the Sprint 15 non-system read-only subset and still avoids
+      overclaiming full REQ-ETS-PART1-012 completion.
+
+required_fixes: []
+remaining_concerns: []
+
+final_assessment: >
+  APPROVE. The only concern from the Sprint 15 implementation adversarial review
+  has been fixed. The refreshed Maven evidence and unchanged smoke/no-mutation
+  evidence remain consistent with the narrowed recheck scope.

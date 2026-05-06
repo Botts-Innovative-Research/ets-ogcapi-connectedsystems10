@@ -1,7 +1,7 @@
 # Story S-ETS-15-01: GeoJSON Non-System Read-Only Expansion
 
 > Sprint: ets-15
-> Status: PLANNED
+> Status: IMPLEMENTED
 > Priority: P0
 > Complexity: M
 > Epic: epic-ets-02-part1-classes
@@ -56,17 +56,30 @@ The sprint remains PARTIAL for `REQ-ETS-PART1-012`.
 6. Preserve the existing `geojson -> systemfeatures -> core` dependency wiring.
 7. Keep default GeoRobotix smoke non-mutating.
 
+## Implementation Notes
+
+- Added three read-only GeoJSON @Tests in `GeoJsonTests` for `/deployments`, `/procedures`, and `/samplingFeatures`.
+- Each non-system path requires GeoJSON `FeatureCollection` + `features` before PASS and SKIPs CS API default `items` wrappers with requirement-cited fallback reasons.
+- Resource-specific predicates prevent generic Feature shape from closing schema/mapping claims:
+  - Deployment: `properties.uid` and non-empty `properties.deployedSystems@link`.
+  - Procedure: `geometry == null`, `properties.uid`, and `properties.featureType`.
+  - Sampling Feature: `properties.uid`, `properties.featureType`, and non-empty `properties.hostedProcedure@link` or `properties.radius`.
+- Added `VerifyGeoJsonResourceMappingAssertions` regression coverage for fallback SKIP and mapping-value helper behavior.
+- Maven verification: `bash scripts/mvn-test-via-docker.sh`, BUILD SUCCESS, `122 tests / 0 failures / 0 errors / 3 skipped`; log `ops/test-results/sprint-ets-15-maven-2026-05-06.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator bash scripts/smoke-test.sh`, `77 total / 52 passed / 0 failed / 25 skipped`; report `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml`.
+- No-mutation oracle: smoke recognized 44 IUT-bound request-log entries and found zero IUT-bound POST/PUT/DELETE/PATCH entries against GeoRobotix.
+
 ## Definition of Done
 
-- [ ] `GeoJsonTests` covers deployment, procedure, and sampling feature read-only GeoJSON schema/mapping paths.
-- [ ] New tests include comments or descriptions referencing `REQ-ETS-PART1-012` and the matching `SCENARIO-*` IDs.
-- [ ] CS API `items` wrappers without GeoJSON `features` do not count as PASS evidence.
-- [ ] Generic GeoJSON Feature shape alone does not close deployment/procedure/sampling-feature schema and mapping predicates.
-- [ ] No POST, PUT, PATCH, or DELETE is issued by default smoke.
-- [ ] Docker Maven and TeamEngine smoke are run and recorded.
-- [ ] OpenSpec, story, traceability, status, changelog, and test-results are reconciled.
+- [x] `GeoJsonTests` covers deployment, procedure, and sampling feature read-only GeoJSON schema/mapping paths.
+- [x] New tests include comments or descriptions referencing `REQ-ETS-PART1-012` and the matching `SCENARIO-*` IDs.
+- [x] CS API `items` wrappers without GeoJSON `features` do not count as PASS evidence.
+- [x] Generic GeoJSON Feature shape alone does not close deployment/procedure/sampling-feature schema and mapping predicates.
+- [x] No POST, PUT, PATCH, or DELETE is issued by default smoke.
+- [x] Docker Maven and TeamEngine smoke are run and recorded.
+- [x] OpenSpec, story, traceability, status, changelog, and test-results are reconciled.
 - [x] Raze reviews Sprint 15 planning changes.
-- [ ] Raze reviews implementation changes before completion.
+- [x] Raze reviews implementation changes before completion.
 
 ## Out Of Scope
 

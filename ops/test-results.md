@@ -1,10 +1,10 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T17:12Z
+Last updated: 2026-05-06T18:56Z
 
 ## Current Sprint Evidence
 
-Sprint ets-15 GeoJSON non-system read-only expansion planning:
+Sprint ets-15 GeoJSON non-system read-only expansion:
 
 - OGC source verification:
   - Source: `api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc`
@@ -19,7 +19,23 @@ Sprint ets-15 GeoJSON non-system read-only expansion planning:
   - Deployment item: `properties.deployedSystems@link`.
   - Procedure item: `geometry: null` and `properties.featureType`.
   - Sampling Feature item: `properties.hostedProcedure@link` and `properties.radius`.
-- Interpretation: Sprint 15 Generator must not count CS API default `items` wrappers as GeoJSON FeatureCollection PASS evidence. They should SKIP or document fallback until `features` is observed, and generic Feature shape alone must not close resource-specific schema/mapping assertions.
+- Generator implementation:
+  - `GeoJsonTests` now adds read-only `/deployments`, `/procedures`, and `/samplingFeatures` GeoJSON schema/mapping checks.
+  - CS API default `items` wrappers without GeoJSON `features` SKIP with requirement-cited fallback reasons rather than PASS.
+  - Generic Feature shape alone does not close schema/mapping assertions; deployment, procedure, and sampling feature checks require resource-specific predicates.
+  - `VerifyGeoJsonResourceMappingAssertions` adds focused helper coverage for fallback SKIP and mapping-value handling.
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `122 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-15-maven-2026-05-06.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator bash scripts/smoke-test.sh`
+  - Result: `77 total / 52 passed / 0 failed / 25 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator/s-ets-01-03-teamengine-container-2026-05-06.log`
+  - No-mutation oracle: recognized 44 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Interpretation: Sprint 15 does not count CS API default `items` wrappers as GeoJSON FeatureCollection PASS evidence. They SKIP until `features` is observed, and generic Feature shape alone does not close resource-specific schema/mapping assertions.
 - Raze planning review:
   - Artifact: `.harness/evaluations/sprint-ets-15-plan-adversarial.yaml`
   - Verdict: `GAPS_FOUND` confidence 0.86.
@@ -27,6 +43,14 @@ Sprint ets-15 GeoJSON non-system read-only expansion planning:
 - Raze planning gap-fix recheck:
   - Artifact: `.harness/evaluations/sprint-ets-15-plan-gapfix.yaml`
   - Verdict: `APPROVE` confidence 0.93.
+  - Required fixes: none remaining.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-15-adversarial-implementation.yaml`
+  - Verdict: `APPROVE_WITH_CONCERNS` confidence 0.91.
+  - Concern: stale `GeoJsonTests` class javadoc still described non-system GeoJSON as future work.
+- Raze implementation gap-fix recheck:
+  - Artifact: `.harness/evaluations/sprint-ets-15-adversarial-gapfix.yaml`
+  - Verdict: `APPROVE` confidence 0.96.
   - Required fixes: none remaining.
 
 Sprint ets-14 Update positive mutable-IUT hardening:

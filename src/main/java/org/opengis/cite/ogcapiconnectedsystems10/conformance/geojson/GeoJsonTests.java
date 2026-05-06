@@ -21,15 +21,23 @@ import io.restassured.response.Response;
  * 23-001 Annex A).
  *
  * <p>
- * Implements the Sprint 9 systems read-only subset of <strong>REQ-ETS-PART1-012</strong>.
- * This class deliberately does not close the full GeoJSON requirement class: write-side
- * media-type checks, relation-types, and Deployment/Procedure/SamplingFeature GeoJSON
- * schema and mapping assertions remain open for future sprints.
+ * Implements the Sprint 9 systems read-only subset and the Sprint 15
+ * Deployment/Procedure/SamplingFeature read-only subset of
+ * <strong>REQ-ETS-PART1-012</strong>. This class deliberately does not close the full
+ * GeoJSON requirement class: write-side media-type checks, relation-types, property
+ * GeoJSON mapping, and full external GeoJSON schema validation remain open for future
+ * sprints.
  * </p>
  */
 public class GeoJsonTests {
 
 	static final String CONF_GEOJSON = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson";
+
+	static final String CONF_DEPLOYMENT = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment";
+
+	static final String CONF_PROCEDURE = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure";
+
+	static final String CONF_SF = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf";
 
 	static final String REQ_GEOJSON_CLASS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson";
 
@@ -40,6 +48,18 @@ public class GeoJsonTests {
 	static final String REQ_SYSTEM_SCHEMA = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-schema";
 
 	static final String REQ_SYSTEM_MAPPINGS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-mappings";
+
+	static final String REQ_DEPLOYMENT_SCHEMA = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/deployment-schema";
+
+	static final String REQ_DEPLOYMENT_MAPPINGS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/deployment-mappings";
+
+	static final String REQ_PROCEDURE_SCHEMA = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/procedure-schema";
+
+	static final String REQ_PROCEDURE_MAPPINGS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/procedure-mappings";
+
+	static final String REQ_SF_SCHEMA = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/sf-schema";
+
+	static final String REQ_SF_MAPPINGS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/sf-mappings";
 
 	private URI iutUri;
 
@@ -52,6 +72,24 @@ public class GeoJsonTests {
 	private Response systemsGeoJsonResponse;
 
 	private Map<String, Object> systemsGeoJsonBody;
+
+	private URI deploymentsUri;
+
+	private Response deploymentsGeoJsonResponse;
+
+	private Map<String, Object> deploymentsGeoJsonBody;
+
+	private URI proceduresUri;
+
+	private Response proceduresGeoJsonResponse;
+
+	private Map<String, Object> proceduresGeoJsonBody;
+
+	private URI samplingFeaturesUri;
+
+	private Response samplingFeaturesGeoJsonResponse;
+
+	private Map<String, Object> samplingFeaturesGeoJsonBody;
 
 	/**
 	 * Fetches /conformance and /systems once for all GeoJSON subset assertions.
@@ -82,12 +120,19 @@ public class GeoJsonTests {
 
 		this.systemsUri = URI.create(base + "systems");
 		this.systemsGeoJsonResponse = given().accept("application/geo+json").when().get(this.systemsUri).andReturn();
-		try {
-			this.systemsGeoJsonBody = this.systemsGeoJsonResponse.jsonPath().getMap("$");
-		}
-		catch (Exception ex) {
-			this.systemsGeoJsonBody = null;
-		}
+		this.systemsGeoJsonBody = parseJsonObject(this.systemsGeoJsonResponse);
+
+		this.deploymentsUri = URI.create(base + "deployments");
+		this.deploymentsGeoJsonResponse = fetchGeoJsonCollection(this.deploymentsUri);
+		this.deploymentsGeoJsonBody = parseJsonObject(this.deploymentsGeoJsonResponse);
+
+		this.proceduresUri = URI.create(base + "procedures");
+		this.proceduresGeoJsonResponse = fetchGeoJsonCollection(this.proceduresUri);
+		this.proceduresGeoJsonBody = parseJsonObject(this.proceduresGeoJsonResponse);
+
+		this.samplingFeaturesUri = URI.create(base + "samplingFeatures");
+		this.samplingFeaturesGeoJsonResponse = fetchGeoJsonCollection(this.samplingFeaturesUri);
+		this.samplingFeaturesGeoJsonBody = parseJsonObject(this.samplingFeaturesGeoJsonResponse);
 	}
 
 	/**
@@ -193,6 +238,71 @@ public class GeoJsonTests {
 	}
 
 	/**
+	 * SCENARIO-ETS-PART1-012-GEOJSON-DEPLOYMENT-SCHEMA-MAPPING-001 and
+	 * SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_DEPLOYMENT_SCHEMA + " and " + REQ_DEPLOYMENT_MAPPINGS
+			+ ": /deployments GeoJSON FeatureCollection exposes deployment-specific properties before PASS (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-DEPLOYMENT-SCHEMA-MAPPING-001, SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001)",
+			groups = "geojson")
+	public void deploymentFeatureHasGeoJsonSchemaAndMapping() {
+		skipIfConformanceMissing(CONF_DEPLOYMENT, REQ_DEPLOYMENT_SCHEMA, "/deployments");
+		ETSAssert.assertStatus(this.deploymentsGeoJsonResponse, 200, REQ_DEPLOYMENT_SCHEMA);
+		Map<String, Object> feature = firstGeoJsonFeature(this.deploymentsGeoJsonBody, "/deployments",
+				REQ_DEPLOYMENT_SCHEMA);
+		assertGeoJsonFeatureShape(feature, "/deployments", REQ_DEPLOYMENT_SCHEMA);
+		Map<String, Object> properties = featureProperties(feature, REQ_DEPLOYMENT_MAPPINGS);
+		ETSAssert.assertJsonObjectHas(properties, "uid", String.class, REQ_DEPLOYMENT_MAPPINGS);
+		if (!hasMappingValue(properties, "deployedSystems@link")) {
+			throw new SkipException(REQ_DEPLOYMENT_MAPPINGS
+					+ " — first /deployments GeoJSON feature has no non-empty properties.deployedSystems@link mapping; generic Feature shape alone is not deployment mapping PASS evidence.");
+		}
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-012-GEOJSON-PROCEDURE-SCHEMA-MAPPING-001 and
+	 * SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_PROCEDURE_SCHEMA + " and " + REQ_PROCEDURE_MAPPINGS
+			+ ": /procedures GeoJSON FeatureCollection exposes procedure-specific null geometry and featureType before PASS (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-PROCEDURE-SCHEMA-MAPPING-001, SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001)",
+			groups = "geojson")
+	public void procedureFeatureHasGeoJsonSchemaAndMapping() {
+		skipIfConformanceMissing(CONF_PROCEDURE, REQ_PROCEDURE_SCHEMA, "/procedures");
+		ETSAssert.assertStatus(this.proceduresGeoJsonResponse, 200, REQ_PROCEDURE_SCHEMA);
+		Map<String, Object> feature = firstGeoJsonFeature(this.proceduresGeoJsonBody, "/procedures",
+				REQ_PROCEDURE_SCHEMA);
+		assertGeoJsonFeatureShape(feature, "/procedures", REQ_PROCEDURE_SCHEMA);
+		if (feature.get("geometry") != null) {
+			ETSAssert.failWithUri(REQ_PROCEDURE_SCHEMA,
+					"First /procedures GeoJSON feature geometry is not null; procedure location mapping expects null geometry.");
+		}
+		Map<String, Object> properties = featureProperties(feature, REQ_PROCEDURE_MAPPINGS);
+		ETSAssert.assertJsonObjectHas(properties, "uid", String.class, REQ_PROCEDURE_MAPPINGS);
+		ETSAssert.assertJsonObjectHas(properties, "featureType", String.class, REQ_PROCEDURE_MAPPINGS);
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-012-GEOJSON-SF-SCHEMA-MAPPING-001 and
+	 * SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_SF_SCHEMA + " and " + REQ_SF_MAPPINGS
+			+ ": /samplingFeatures GeoJSON FeatureCollection exposes sampling-feature-specific properties before PASS (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-SF-SCHEMA-MAPPING-001, SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001)",
+			groups = "geojson")
+	public void samplingFeatureHasGeoJsonSchemaAndMapping() {
+		skipIfConformanceMissing(CONF_SF, REQ_SF_SCHEMA, "/samplingFeatures");
+		ETSAssert.assertStatus(this.samplingFeaturesGeoJsonResponse, 200, REQ_SF_SCHEMA);
+		Map<String, Object> feature = firstGeoJsonFeature(this.samplingFeaturesGeoJsonBody, "/samplingFeatures",
+				REQ_SF_SCHEMA);
+		assertGeoJsonFeatureShape(feature, "/samplingFeatures", REQ_SF_SCHEMA);
+		Map<String, Object> properties = featureProperties(feature, REQ_SF_MAPPINGS);
+		ETSAssert.assertJsonObjectHas(properties, "uid", String.class, REQ_SF_MAPPINGS);
+		ETSAssert.assertJsonObjectHas(properties, "featureType", String.class, REQ_SF_MAPPINGS);
+		if (!hasMappingValue(properties, "hostedProcedure@link") && !hasMappingValue(properties, "radius")) {
+			throw new SkipException(REQ_SF_MAPPINGS
+					+ " — first /samplingFeatures GeoJSON feature has neither non-empty properties.hostedProcedure@link nor properties.radius; generic Feature shape alone is not sampling feature mapping PASS evidence.");
+		}
+	}
+
+	/**
 	 * SCENARIO-ETS-PART1-012-GEOJSON-DEPENDENCY-SMOKE-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_GEOJSON_CLASS
@@ -205,6 +315,11 @@ public class GeoJsonTests {
 
 	@SuppressWarnings("unchecked")
 	private boolean declaresGeoJsonConformance() {
+		return declaresConformance(CONF_GEOJSON);
+	}
+
+	@SuppressWarnings("unchecked")
+	private boolean declaresConformance(String conformanceUri) {
 		if (this.conformanceBody == null) {
 			return false;
 		}
@@ -212,7 +327,7 @@ public class GeoJsonTests {
 		if (!(conformsToObj instanceof List)) {
 			return false;
 		}
-		return ((List<Object>) conformsToObj).contains(CONF_GEOJSON);
+		return ((List<Object>) conformsToObj).contains(conformanceUri);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -223,6 +338,95 @@ public class GeoJsonTests {
 					+ " — /systems response has no GeoJSON 'features' array; cannot inspect feature mapping.");
 		}
 		return (List<Object>) featuresObj;
+	}
+
+	private void skipIfConformanceMissing(String conformanceUri, String requirementUri, String collectionLabel) {
+		if (!declaresConformance(conformanceUri)) {
+			throw new SkipException(requirementUri + " — IUT declares /conf/geojson but not " + conformanceUri
+					+ "; skipping " + collectionLabel + " GeoJSON resource-specific mapping assertions.");
+		}
+	}
+
+	private static Response fetchGeoJsonCollection(URI uri) {
+		return given().accept("application/geo+json").queryParam("limit", 1).when().get(uri).andReturn();
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Map<String, Object> parseJsonObject(Response response) {
+		try {
+			return response.jsonPath().getMap("$");
+		}
+		catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	static Map<String, Object> firstGeoJsonFeature(Map<String, Object> body, String collectionLabel,
+			String requirementUri) {
+		if (body == null) {
+			ETSAssert.failWithUri(requirementUri, collectionLabel + " body did not parse as JSON.");
+		}
+		if (body.containsKey("items") && !body.containsKey("features")) {
+			throw new SkipException(requirementUri + " — IUT declares /conf/geojson but " + collectionLabel
+					+ " with Accept application/geo+json returned the CS API default 'items' wrapper, not GeoJSON 'features'. This is fallback evidence, not a GeoJSON PASS.");
+		}
+		ETSAssert.assertJsonObjectHas(body, "type", String.class, requirementUri);
+		Object type = body.get("type");
+		if (!"FeatureCollection".equals(type)) {
+			ETSAssert.failWithUri(requirementUri,
+					collectionLabel + " GeoJSON response type is '" + type + "', expected 'FeatureCollection'.");
+		}
+		ETSAssert.assertJsonObjectHas(body, "features", List.class, requirementUri);
+		List<?> features = (List<?>) body.get("features");
+		if (features.isEmpty()) {
+			throw new SkipException(requirementUri + " — " + collectionLabel
+					+ " GeoJSON FeatureCollection has empty features array; cannot inspect resource-specific mapping.");
+		}
+		Object first = features.get(0);
+		if (!(first instanceof Map)) {
+			ETSAssert.failWithUri(requirementUri,
+					"First " + collectionLabel + " features[] entry is not a JSON object: " + first);
+		}
+		return (Map<String, Object>) first;
+	}
+
+	static void assertGeoJsonFeatureShape(Map<String, Object> feature, String collectionLabel, String requirementUri) {
+		ETSAssert.assertJsonObjectHas(feature, "type", String.class, requirementUri);
+		if (!"Feature".equals(feature.get("type"))) {
+			ETSAssert.failWithUri(requirementUri,
+					"First " + collectionLabel + " feature type is '" + feature.get("type") + "', expected 'Feature'.");
+		}
+		ETSAssert.assertJsonObjectHas(feature, "id", String.class, requirementUri);
+		if (!feature.containsKey("geometry")) {
+			ETSAssert.failWithUri(requirementUri, "First " + collectionLabel + " feature has no 'geometry' member.");
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	static Map<String, Object> featureProperties(Map<String, Object> feature, String requirementUri) {
+		ETSAssert.assertJsonObjectHas(feature, "properties", Map.class, requirementUri);
+		return (Map<String, Object>) feature.get("properties");
+	}
+
+	static boolean hasMappingValue(Map<String, Object> properties, String propertyName) {
+		if (!properties.containsKey(propertyName)) {
+			return false;
+		}
+		Object value = properties.get(propertyName);
+		if (value == null) {
+			return false;
+		}
+		if (value instanceof String) {
+			return !((String) value).isBlank();
+		}
+		if (value instanceof List) {
+			return !((List<?>) value).isEmpty();
+		}
+		if (value instanceof Map) {
+			return !((Map<?, ?>) value).isEmpty();
+		}
+		return true;
 	}
 
 }

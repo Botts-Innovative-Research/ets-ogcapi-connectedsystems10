@@ -2,6 +2,21 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T18:45Z — Sprint 15 GeoJSON expansion Generator
+
+**Triggered by user instruction**: "Start Generator for S-ETS-15-01."
+
+- Implemented `S-ETS-15-01` as a PARTIAL read-only expansion of `REQ-ETS-PART1-012`.
+- Extended `GeoJsonTests` with `/deployments`, `/procedures`, and `/samplingFeatures` `Accept: application/geo+json` checks.
+- Preserved fallback honesty: CS API default `items` wrappers without GeoJSON `features` SKIP with requirement-cited reasons rather than PASSing schema/mapping assertions.
+- Added resource-specific predicates so generic Feature shape alone cannot close mapping claims: deployment `deployedSystems@link`, procedure `geometry == null` plus `featureType`, and sampling feature `hostedProcedure@link` or `radius`.
+- Added `VerifyGeoJsonResourceMappingAssertions` helper regressions for fallback SKIP and mapping-value handling.
+- Verification: formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS with `122 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke against GeoRobotix `77 total / 52 passed / 0 failed / 25 skipped`, with zero IUT-bound POST/PUT/DELETE/PATCH across 44 recognized request-log entries.
+- Reconciled OpenSpec, story, traceability, epic, ops status, and test-results.
+- Raze implementation review `.harness/evaluations/sprint-ets-15-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.91 for stale class javadoc only; fixed the javadoc and Raze gap-fix `.harness/evaluations/sprint-ets-15-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.96.
+
+---
+
 ## 2026-05-06T17:12Z — Sprint 15 GeoJSON expansion planning
 
 **Triggered by user instruction**: "All continue with the next task."

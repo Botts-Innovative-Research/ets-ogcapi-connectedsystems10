@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T17:12Z
+Last updated: 2026-05-06T18:56Z
 
 ## Fresh-Session Entry Point
 
@@ -38,30 +38,35 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD after Sprint 14 Generator commit.
+- ETS HEAD after Sprint 15 planning commit; Sprint 15 Generator changes are implemented and ready to commit after Raze approval.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-14-01` Generator complete as PARTIAL and committed.
-- Current sprint status: Sprint ets-15 planning is drafted for `S-ETS-15-01` GeoJSON non-system read-only expansion.
-- Latest committed planning: `4392bab` (`Plan Sprint 14 update hardening`).
+- Latest implemented story: `S-ETS-15-01` Generator complete as PARTIAL, pending commit.
+- Current sprint status: Sprint ets-15 Generator implemented read-only non-system GeoJSON checks for deployment, procedure, and sampling feature collections.
+- Latest committed planning: `a45178c` (`Plan Sprint 15 GeoJSON expansion`).
 
-## Sprint ets-15 Planning
+## Sprint ets-15 Generator Evidence
 
 GeoJSON non-system read-only expansion:
 
 - Story: `epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md`
 - Contract: `.harness/contracts/sprint-ets-15.yaml`
-- OpenSpec: extends `REQ-ETS-PART1-012`; status remains PARTIAL.
-- Scope planned: deployment, procedure, and sampling feature GeoJSON schema/mapping checks using read-only collection requests.
+- OpenSpec: extends `REQ-ETS-PART1-012`; status remains PARTIAL-IMPLEMENTED.
+- Scope implemented: deployment, procedure, and sampling feature GeoJSON schema/mapping checks using read-only collection requests.
 - Out of scope: `/req/geojson/mediatype-write`, `/req/geojson/relation-types`, property GeoJSON mapping, full external GeoJSON schema validation, SensorML, Part 2, and any mutation request.
 - Architecture freshness: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-06 and not stale.
 - OGC source: `api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc`, fetched HTTP 200 on 2026-05-06. Relevant subrequirements are `/req/geojson/deployment-schema`, `/req/geojson/deployment-mappings`, `/req/geojson/procedure-schema`, `/req/geojson/procedure-mappings`, `/req/geojson/sf-schema`, and `/req/geojson/sf-mappings`.
 - GeoRobotix planning probe: `/conformance` returned HTTP 200 and declares `/conf/geojson`, `/conf/deployment`, `/conf/procedure`, and `/conf/sf`.
 - GeoRobotix non-system GeoJSON probe: `GET /deployments?limit=1`, `/procedures?limit=1`, and `/samplingFeatures?limit=1` with `Accept: application/geo+json` all returned HTTP 200 with `Content-Type: application/json` and top-level `items`; this is fallback evidence, not GeoJSON FeatureCollection PASS evidence.
-- Guardrail: CS API default `items` wrappers without GeoJSON `features` must SKIP with reason, not PASS schema/mapping assertions.
-- Resource-specific predicates: deployment mapping must check `properties.deployedSystems@link`; procedure mapping must check `geometry == null` plus `properties.featureType`; sampling feature mapping must check `properties.featureType` plus `properties.hostedProcedure@link` or `properties.radius`. Generic Feature shape alone is not enough for schema/mapping PASS.
+- Implementation: `GeoJsonTests` now has 8 @Tests, adding `/deployments`, `/procedures`, and `/samplingFeatures` read-only GeoJSON checks. CS API default `items` wrappers without GeoJSON `features` SKIP with reason, not PASS schema/mapping assertions.
+- Resource-specific predicates: deployment mapping checks `properties.deployedSystems@link`; procedure mapping checks `geometry == null` plus `properties.featureType`; sampling feature mapping checks `properties.featureType` plus `properties.hostedProcedure@link` or `properties.radius`. Generic Feature shape alone is not enough for schema/mapping PASS.
+- Unit coverage: `VerifyGeoJsonResourceMappingAssertions` adds 5 helper regression tests for fallback SKIP and mapping-value behavior.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `122 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-15-maven-2026-05-06.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s15-generator bash scripts/smoke-test.sh`, result `77 total / 52 passed / 0 failed / 25 skipped`.
+- Smoke no-mutation oracle: recognized 44 IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries for GeoRobotix.
 - Raze planning review: `.harness/evaluations/sprint-ets-15-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.86; required fix was to add resource-specific schema/mapping predicates.
 - Raze planning gap-fix recheck: `.harness/evaluations/sprint-ets-15-plan-gapfix.yaml` returned `APPROVE` confidence 0.93 with no remaining required fixes.
-- Generator next: extend `GeoJsonTests` with read-only non-system checks, run Docker Maven and default TeamEngine smoke, and verify zero IUT-bound POST/PUT/DELETE/PATCH.
+- Raze implementation review: `.harness/evaluations/sprint-ets-15-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.91 for stale class javadoc only.
+- Raze gap-fix recheck: `.harness/evaluations/sprint-ets-15-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.96 with no remaining required fixes or concerns.
 
 ## Sprint ets-14 Planning
 
@@ -234,7 +239,7 @@ GeoJSON systems read-only subset:
 - `GeoJsonTests.java` added with 5 read-only @Tests
 - `testng.xml` wires `<group name="geojson" depends-on="systemfeatures"/>`
 - VerifyTestNGSuiteDependency adds 3 GeoJSON lint tests
-- Full REQ-ETS-PART1-012 remains open for `mediatype-write`, `relation-types`, property GeoJSON mapping, and full schema-validation closure; Sprint 15 now plans deployment/procedure/sampling-feature read-only schema/mapping checks.
+- Full REQ-ETS-PART1-012 remains open for `mediatype-write`, `relation-types`, property GeoJSON mapping, and full schema-validation closure; Sprint 15 now implements deployment/procedure/sampling-feature read-only schema/mapping checks.
 
 Verification:
 
@@ -255,15 +260,15 @@ Gate Results:
 
 ## Next Action
 
-1. Run Raze planning review for Sprint 15.
-2. Apply any required planning fixes.
-3. Commit Sprint 15 planning, then start Generator for `S-ETS-15-01`.
+1. Commit Sprint 15 Generator.
+2. Start the next highest-leverage Part 1 scope item from the backlog.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-15 planning plus metrics:
+Current dirty worktree is expected Sprint ets-15 Generator work plus metrics:
 
-- `.harness/contracts/sprint-ets-15.yaml`
 - `epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md`
-- OpenSpec/story/traceability/status/changelog/test-results planning reconciliation.
+- `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java`
+- `src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/VerifyGeoJsonResourceMappingAssertions.java`
+- OpenSpec/story/traceability/status/changelog/test-results Generator reconciliation.
 - `ops/metrics.md` turn-log updates.

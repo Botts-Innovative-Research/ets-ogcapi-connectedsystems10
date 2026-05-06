@@ -29,7 +29,7 @@ Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with e
 | S-ETS-08-02 | Implement `/conf/subdeployment` suite — first 3-deep Subdeployments→Deployments→SystemFeatures→Core chain | Done (Sprint 8, Quinn follow-up APPROVE_WITH_CONCERNS 0.91, Raze gap-fix APPROVE 0.94) | REQ-ETS-PART1-005 |
 | S-ETS-11-01 | Implement `/conf/advanced-filtering` suite - declaration-gated systems/common-resource read-only subset | Partial-Implemented (Sprint 11, Quinn/Raze APPROVE_WITH_CONCERNS) | REQ-ETS-PART1-009 |
 | S-ETS-12-01 | Implement `/conf/create-replace-delete` suite - safety-gated systems subset, no default public-IUT mutation | Partial-Implemented (Sprint 12 Generator) | REQ-ETS-PART1-010 |
-| S-ETS-07-03 | (placeholder) Implement `/conf/update` suite | Backlog | REQ-ETS-PART1-011 |
+| S-ETS-13-01 | Implement `/conf/update` suite - PATCH safety-gated systems subset, no default public-IUT mutation | Planned (Sprint 13) | REQ-ETS-PART1-011 |
 | S-ETS-09-01 | Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Partial-Implemented (Sprint 9, Quinn/Raze APPROVE_WITH_CONCERNS) | REQ-ETS-PART1-012 |
 | S-ETS-10-01 | Implement `/conf/sensorml` encoding suite - systems read-only subset, depends on SystemFeatures | Partial-Implemented (Sprint 10, Quinn APPROVE_WITH_CONCERNS, Raze APPROVE) | REQ-ETS-PART1-013 |
 | S-ETS-06-04 | (optional) Common conformance class expansion 4 → 8 @Tests (Sprint 3+ minimal-then-expand by design per Quinn CONCERN-2) | Backlog | REQ-ETS-PART1-001 (modified) |

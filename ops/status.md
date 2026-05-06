@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T13:53Z
+Last updated: 2026-05-06T14:48Z
 
 ## Fresh-Session Entry Point
 
@@ -40,8 +40,36 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 - ETS HEAD at Sprint 12 Generator start: `7427c3c`
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-12-01` Generator complete as PARTIAL; Raze gap-fix review approved with low residual concerns, with local OSH mutable-IUT fixture seeding now producing full smoke failed=0.
-- Current sprint status: Sprint ets-12 Create/Replace/Delete safety-gated systems subset implemented, verified by Maven plus TeamEngine smoke, and Raze gap-fix reviewed. Local OSH now proves the guarded System POST/PUT/DELETE lifecycle path against a dedicated mutable IUT and runs the current full TeamEngine smoke with zero failures.
+- Latest implemented story: `S-ETS-12-01` Generator complete as PARTIAL; local OSH mutable-IUT fixture seeding produces full smoke failed=0.
+- Current sprint status: Sprint ets-13 planning has Raze review `APPROVE_WITH_CONCERNS` 0.88; both low-severity planning tightenings have been applied and the plan is ready for Generator.
+- Latest commit before Sprint 13 planning: `27c182c` (`Validate local OSH full-health fixture`).
+
+## Sprint ets-13 Plan
+
+Update/PATCH safety-gated systems subset:
+
+- Story: `epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md`
+- Contract: `.harness/contracts/sprint-ets-13.yaml`
+- OpenSpec: `REQ-ETS-PART1-011`, status SPECIFIED for Sprint 13 planning
+- Scope planned: declaration-gated `/conf/update`, reuse Sprint 12 mutation opt-in parameters, non-mutating `OPTIONS /systems/{id}` PATCH readiness, default lifecycle SKIP-before-PATCH, public GeoRobotix hard-denial, Update -> CreateReplaceDelete dependency wiring, and PATCH-aware no-mutation smoke oracle
+- Explicitly excluded: unguarded PATCH against GeoRobotix, deployment/procedure/sampling-feature/property PATCH, Feature Collection update paths from OGC ATS A.79-A.83, Part 2 `/conf/update`, optimistic locking, and PATCH media-type matrix including JSON Patch, merge patch, and content negotiation
+- Corrected story ID: prior epic placeholder reused `S-ETS-07-03`; Sprint 13 planning corrected the Update story to `S-ETS-13-01`.
+- Architecture freshness: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-06 and not stale.
+- OGC source: OGC API - Connected Systems Part 1 Clause 18, Requirements Class 11 `/req/update`; prerequisite `/req/create-replace-delete`; systems endpoint `{api_root}/systems/{id}` uses HTTP PATCH.
+- GeoRobotix planning probe: `/conformance` does not declare `/conf/update`; `OPTIONS /systems/0mqcvdnfoca0` returns HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS` and no PATCH.
+- Local OSH planning probe: unauthenticated `/conformance` returns HTTP 401; unauthenticated `OPTIONS /systems/040g` returns HTTP 200 with no PATCH in `Allow`.
+- Planning interpretation: Sprint 13 should implement skip-first safety and wiring. Current default/public IUT evidence supports no positive PATCH conformance claim.
+- Raze planning review: `.harness/evaluations/sprint-ets-13-plan-adversarial.yaml` verdict `APPROVE_WITH_CONCERNS` confidence 0.88. Two planning tightenings were applied: contract media-type exclusions now match story/spec, and OGC ATS A.79-A.83 collection item update paths are cited as deferred.
+
+Sprint 13 guardrails:
+
+- Default TeamEngine smoke MUST NOT issue IUT-bound PATCH.
+- PATCH lifecycle assertions must SKIP before PATCH unless `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
+- Even when mutation parameters are present, known shared public GeoRobotix URLs are hard-denied before PATCH.
+- OPTIONS checks may PASS only as non-mutating ETS readiness evidence, not OGC update conformance.
+- No-mutation smoke proof must treat PATCH as a mutating method alongside POST, PUT, and DELETE.
+- Do not promote REQ-ETS-PART1-011 beyond PARTIAL-IMPLEMENTED after this sprint.
+- Do not implement Part 2 `/conf/update`.
 
 ## Sprint ets-12 Generator Evidence
 
@@ -176,19 +204,20 @@ Gate Results:
 
 ## Next Action
 
-1. Commit the local OSH follow-up when ready, including the external `../sar-ops/field-hub/osh/config/config.json` proxyBaseUrl change if that repo is in scope for the commit.
-2. Archive smoke stdout in future gates when relying on no-mutation oracle output.
-3. When a declaring `/conf/advanced-filtering` IUT is available, rerun positive id/q/geom paths and record evidence.
-4. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
+1. Commit Sprint 13 planning when ready.
+2. Kick off Generator for `S-ETS-13-01`.
+3. During implementation gates, verify exact default-smoke totals and zero IUT-bound PATCH request-log entries.
+4. Archive smoke stdout in future gates when relying on no-mutation oracle output.
+5. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-12 local OSH mutable-IUT/full-health follow-up until Raze review and commit:
+Current dirty worktree is expected Sprint ets-13 planning until Raze review and commit:
 
-- `CreateReplaceDeleteTests` OSH `Location` resolution and UID-preserving replacement fix
-- `VerifyCreateReplaceDeleteLocationResolution` OSH regression tests
-- `scripts/smoke-test.sh` Docker-network and explicit mutable-smoke oracle behavior
-- `scripts/smoke-test.sh` exact PASS summary totals fix
-- `ops/local-osh-seed-fixtures.json` reproducible local OSH seed manifest
-- Ops/OpenSpec/story/traceability reconciliation for local OSH evidence
-- External local fixture change: `../sar-ops/field-hub/osh/config/config.json` `proxyBaseUrl` now points to `http://field-hub-osh-1:8081`
+- `S-ETS-13-01` story and Sprint 13 contract
+- OpenSpec `REQ-ETS-PART1-011` and Sprint 13 scenarios
+- Traceability and epic row corrected from stale duplicate `S-ETS-07-03` to `S-ETS-13-01`
+- Planner handoff updated for Sprint 13
+- Ops docs updated for Sprint 13 planning
+- Raze planning review artifact `.harness/evaluations/sprint-ets-13-plan-adversarial.yaml`
+- External local fixture change still exists in separate `sar-ops` repo and is intentionally not part of ETS commits.

@@ -1,0 +1,167 @@
+# Sprint 13 contract - update/PATCH safety-gated systems subset
+# Created 2026-05-06 after Sprint 12 local OSH follow-up commit.
+
+sprint: "ets-13"
+sprint_name: "update-patch-safety-gated-systems-subset"
+type: "feature-expansion"
+created: "2026-05-06T14:34:34Z"
+description: |
+  Sprint 13 implements one Part 1 class subset:
+
+  S-ETS-13-01 - Update/PATCH safety-gated systems subset
+  (`/conf/update`) (P0/M).
+
+  Scope is PARTIAL for REQ-ETS-PART1-011:
+    - `/conformance` declares `/conf/update`, otherwise SKIP-with-reason.
+    - Default smoke MUST NOT issue IUT-bound PATCH.
+    - Reuse Sprint 12 mutation opt-in parameters: `mutation-tests-enabled=true`
+      and `mutation-iut-policy=dedicated-mutable-iut`.
+    - `OPTIONS /systems/{id}` readiness precondition records PATCH advertisement
+      without issuing PATCH.
+    - OPTIONS readiness evidence MUST NOT be reported as satisfying OGC update
+      lifecycle conformance.
+    - Systems PATCH lifecycle assertion SKIPs by default before PATCH; only an
+      explicitly enabled dedicated mutable IUT that declares `/conf/update` and
+      advertises PATCH may execute it.
+    - Runtime or structural dependency proof: `update` depends on `createreplacedelete`.
+    - Default-smoke no-mutation evidence must include zero IUT-bound PATCH entries.
+
+  Explicitly excluded:
+    - unguarded PATCH against GeoRobotix or any shared public IUT
+    - deployment, procedure, sampling-feature, and property PATCH
+    - Feature Collection update paths under `/collections/{collectionId}/items/{id}`
+    - Part 2 `/conf/update`
+    - optimistic locking
+    - PATCH media-type matrix, including JSON Patch, merge patch, and content negotiation
+
+upstream_inputs:
+  - "Current ETS repo HEAD after local OSH follow-up commit: 27c182c"
+  - ".harness/evaluations/sprint-ets-12-local-osh-full-health-gapfix-raze.yaml (Raze APPROVE 0.92)"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md (REQ-ETS-PART1-011 placeholder before Sprint 13 planning)"
+  - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+  - "OGC API - Connected Systems Part 1, Clause 18 / Requirements Class 11 Update"
+
+stories:
+  - id: "S-ETS-13-01"
+    title: "Update/PATCH safety-gated systems subset - depends on CreateReplaceDelete"
+    file: "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "createreplacedelete"
+    parallelizable: false
+    rationale: |
+      Update is the next remaining Part 1 class after Create/Replace/Delete. Sprint 12
+      established mutation opt-in controls, public-IUT hard denial, and no-mutation
+      smoke parsing. Sprint 13 reuses that safety contract for PATCH while keeping
+      the default public smoke target non-mutating and honest: GeoRobotix does not
+      currently declare `/conf/update` and does not advertise PATCH on the sampled
+      System resource.
+
+requirements:
+  new_reqs:
+    - "REQ-ETS-PART1-011 (Update Conformance Class /conf/update - SPECIFIED -> target PARTIAL-IMPLEMENTED for safety-gated systems subset)"
+  modified_reqs:
+    - "REQ-ETS-PART1-007..013 placeholder narrative narrowed to reflect Sprint 13 Update detail"
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-011-UPDATE-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART1-011-UPDATE-MUTATION-SAFETY-GATE-001"
+    - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-RESOURCE-OPTIONS-001"
+    - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-LIFECYCLE-OPTIN-001"
+    - "SCENARIO-ETS-PART1-011-UPDATE-DEPENDENCY-SMOKE-001"
+    - "SCENARIO-ETS-PART1-011-UPDATE-SMOKE-NO-PATCH-001"
+  normal: []
+
+success_criteria:
+  all_critical_scenarios_pass_or_skip_with_reason: true
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  no_regression: true
+  build_green_jdk17: true
+  smoke_test_green_against_georobotix: true
+  no_part2_work_in_sprint: true
+  zero_bare_assertionerror_in_conformance: true
+  worktree_not_polluted_at_gate: true
+  update_subset_implemented: true
+  update_testng_wired: true
+  update_lint_tests: true
+  mutation_opt_in_reused: true
+  default_smoke_no_patch_requests: true
+  lifecycle_skips_before_patch_by_default: true
+  options_readiness_checks_non_mutating: true
+  options_not_update_conformance: true
+  public_georobotix_hard_denied_when_mutation_enabled: true
+  iut_bound_request_log_oracle_includes_patch: true
+  smoke_failed_zero: true
+  spec_status_honesty_principle: true
+
+mutation_opt_in_parameters:
+  mutation_tests_enabled:
+    suite_parameter: "mutation-tests-enabled"
+    required_value: "true"
+  mutation_iut_policy:
+    suite_parameter: "mutation-iut-policy"
+    required_value: "dedicated-mutable-iut"
+  default_behavior: "PATCH lifecycle assertions SKIP before PATCH."
+  reuse_existing_wiring: true
+  hard_denies:
+    - "https://api.georobotix.io/ogc/t18/api"
+    - "Any IUT host equal to api.georobotix.io"
+  hard_deny_behavior: "If mutation tests are enabled against a hard-denied public IUT, lifecycle test SKIPs or FAILs before PATCH; it MUST NOT issue PATCH."
+
+no_mutation_smoke_oracle:
+  description: "Default smoke must prove absence of IUT-bound mutation, including PATCH."
+  method: "Parse current `Request: METHOD URI` entries and older adjacent `Request method:` / `Request URI:` pairs from REST Assured logs."
+  filter: "Only pairs whose URI starts with the IUT base URL are in scope."
+  pass_condition: "Zero in-scope pairs with method POST, PUT, DELETE, or PATCH."
+  excluded: "TeamEngine control-plane POST that starts the suite run."
+
+planning_probes:
+  georobotix:
+    conformance: "Does not declare http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update as of 2026-05-06."
+    system_item_options: "OPTIONS /systems/0mqcvdnfoca0 -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+  local_osh:
+    conformance: "Unauthenticated /conformance returns HTTP 401; authenticated full health remains the evidence path."
+    system_item_options: "Unauthenticated OPTIONS /systems/040g -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+  planning_interpretation: "Current public/default IUT evidence supports declaration-gated SKIP and PATCH-safety plumbing, not positive PATCH conformance."
+
+evaluation_focus:
+  - "Generator must re-verify GeoRobotix /conformance for /conf/update before implementing."
+  - "Generator must not issue IUT-bound PATCH during default smoke."
+  - "Raze should inspect TeamEngine container logs using recognized REST Assured request entries filtered to GeoRobotix-bound requests."
+  - "Quinn should verify Update reuses existing mutation opt-in parameters without broadening default mutation behavior."
+  - "Quinn should verify Update depends on CreateReplaceDelete, not only SystemFeatures."
+  - "For default GeoRobotix, Update tests must SKIP-with-reason if /conf/update remains absent."
+  - "Even with mutation parameters enabled, known shared public GeoRobotix URLs must be hard-denied before PATCH."
+  - "OPTIONS checks must be named and reported as ETS readiness preconditions, not as OGC update conformance PASS."
+  - "Generator must keep full REQ-ETS-PART1-011 status PARTIAL-IMPLEMENTED."
+  - "Generator must not implement Part 2 /conf/update."
+
+risk_register:
+  - id: "UPDATE-PUBLIC-IUT-PATCH"
+    severity: "HIGH"
+    mitigation: "Default smoke disables lifecycle PATCH. Mutating methods require mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut."
+  - id: "UPDATE-ABSENT-CONFORMANCE-FALSE-PASS"
+    severity: "HIGH"
+    mitigation: "GeoRobotix does not declare /conf/update; Update assertions must SKIP-with-reason, not PASS from OPTIONS or method absence."
+  - id: "UPDATE-READINESS-OVERCLAIM"
+    severity: "MEDIUM"
+    mitigation: "OPTIONS Allow evidence is readiness only, not update lifecycle conformance PASS."
+  - id: "UPDATE-DEPENDENCY-WIRING"
+    severity: "MEDIUM"
+    mitigation: "Update must depend on CreateReplaceDelete per OGC prerequisite; add structural lint tests for group dependency and class order."
+  - id: "UPDATE-PATCH-MEDIA-TYPE-SCOPE-CREEP"
+    severity: "LOW"
+    mitigation: "Contract excludes PATCH media-type matrix work, including JSON Patch, merge patch, content negotiation, and optimistic locking."
+
+next_agent: "generator"
+next_agent_rationale: |
+  Planning artifacts are complete and no Architect cycle is needed. Generator can follow
+  the established mutation-safety pattern from Sprint 12 and add a narrow UpdateTests
+  class plus PATCH-aware no-mutation oracle changes.
+
+confidence: 0.84

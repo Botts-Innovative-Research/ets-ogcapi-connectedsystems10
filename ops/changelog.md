@@ -2,6 +2,29 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T14:48Z — Sprint 13 planning Raze review
+
+**Triggered by user instruction**: Act as Red Team / Raze for current uncommitted Sprint 13 planning changes for `S-ETS-13-01`; planning-only static review, no Docker/Maven rerun.
+
+- Reviewed Sprint 13 planning artifacts for absent `/conf/update` false PASS risk, PATCH safety, Update -> CreateReplaceDelete dependency, OGC Part 1 source fidelity, corrected `S-ETS-13-01` story ID, and Part 2/optimistic-locking/media-type scope boundaries.
+- Wrote `.harness/evaluations/sprint-ets-13-plan-adversarial.yaml` with `APPROVE_WITH_CONCERNS` confidence 0.88.
+- Applied both planning tightenings before Generator: contract media-type exclusions now cover PATCH media-type matrix work including JSON Patch, merge patch, and content negotiation; story/spec/handoff/status cite OGC ATS A.79-A.83 as the source for deferred collection item update paths.
+
+---
+
+## 2026-05-06T14:34Z — Sprint 13 Update/PATCH planning
+
+**Triggered by user instruction**: "OK, do Sprint 13 planning with the corrected story ID."
+
+- Planned Sprint ets-13 as `S-ETS-13-01` for `/conf/update` / `REQ-ETS-PART1-011`, correcting the stale duplicate epic placeholder that reused `S-ETS-07-03`.
+- Added `.harness/contracts/sprint-ets-13.yaml` and `epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md`.
+- Updated OpenSpec with `REQ-ETS-PART1-011` and six critical scenarios for declaration gating, mutation safety, non-mutating OPTIONS readiness, opt-in PATCH lifecycle, dependency wiring, and no-PATCH smoke evidence.
+- Updated `_bmad/traceability.md`, `.harness/handoffs/planner-handoff.yaml`, `epics/epic-ets-02-part1-classes.md`, and `ops/status.md`.
+- Planning probes: GeoRobotix does not declare `/conf/update`; `OPTIONS /systems/0mqcvdnfoca0` has no PATCH. Local OSH unauthenticated `/conformance` returns HTTP 401, and unauthenticated `OPTIONS /systems/040g` has no PATCH.
+- Sprint 13 guardrail: default smoke must not issue IUT-bound PATCH, and the no-mutation oracle must treat PATCH as mutating alongside POST, PUT, and DELETE.
+
+---
+
 ## 2026-05-06T13:48Z — Local OSH full-health fixture seeding
 
 **Triggered by user instruction**: "You need to populate the local OSH with synthetic data for procedures, deployments, and samplingFeatures, and an update proxyBaseUrl, then run the full suite health."

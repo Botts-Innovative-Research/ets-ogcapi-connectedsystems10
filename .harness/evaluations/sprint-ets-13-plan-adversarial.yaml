@@ -1,0 +1,144 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.88
+reviewed_scope:
+  sprint: ets-13
+  story: S-ETS-13-01
+  title: Update/PATCH safety-gated systems subset
+  mode: planning-only static review
+  docker_maven_rerun: false
+  rationale_for_no_rerun: User explicitly requested planning-only static review and no Docker/Maven rerun.
+  focus:
+    - false PASS risk when /conf/update is absent
+    - mutation/PATCH safety gate
+    - TestNG dependency choice update depends on createreplacedelete
+    - OGC source fidelity for Part 1 Update
+    - corrected story id replacing duplicate S-ETS-07-03
+    - docs/spec/story/traceability/status/changelog/handoff/contract consistency
+    - scope boundaries for Part 2, optimistic locking, and PATCH media-type testing
+
+findings:
+  - id: RAZE-ETS13-CONCERN-001
+    severity: LOW
+    status: concern
+    title: Contract media-type exclusion is narrower than story/spec wording.
+    false_pass_risk: low
+    evidence:
+      - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:20 excludes JSON Patch and any PATCH media-type matrix beyond the minimal systems subset."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:489 keeps PATCH media-type matrix open."
+      - ".harness/contracts/sprint-ets-13.yaml:29-35 excludes only JSON Patch media-type matrix."
+      - ".harness/contracts/sprint-ets-13.yaml:157-159 names UPDATE-PATCH-MEDIA-TYPE-SCOPE-CREEP but again says JSON Patch/media-type matrix."
+    impact: >
+      Generator could read the contract as excluding only JSON Patch while allowing other
+      PATCH media-type negotiation work to creep into Sprint 13. That would broaden the
+      planning scope beyond the requested safety-gated systems subset.
+    required_fix: >
+      Before Generator, align the contract exclusion/risk wording with OpenSpec and story:
+      "PATCH media-type matrix, including JSON Patch, merge patch, and content negotiation,
+      remains out of scope unless separately planned."
+
+  - id: RAZE-ETS13-CONCERN-002
+    severity: LOW
+    status: concern
+    title: ATS collection-endpoint source note should be explicit where collection paths are deferred.
+    false_pass_risk: low
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:489 and epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:20 defer Feature Collection update paths."
+      - "OGC 23-001 A.11 /conf/update abstract tests list canonical endpoints and collection item endpoints, e.g. A.79 System includes /systems/{id} and /collections/{systemCollectionId}/items/{id}."
+      - "Planning evidence currently emphasizes Requirements Class 11 and /req/update/system, but not the ATS collection endpoint source for the deferred collection-path scope."
+    impact: >
+      The scope boundary is substantively correct, but future reviewers will need to infer
+      why collection item PATCH paths are open from the ATS rather than from the planning
+      source note itself.
+    required_fix: >
+      Add one sentence to the story or OpenSpec planning evidence citing OGC 23-001 A.11
+      abstract tests A.79-A.83 as the source for deferred collection item update paths.
+
+evidence:
+  positives:
+    - id: absent_conf_update_skip
+      assessment: >
+        The plan directly addresses GeoRobotix not declaring /conf/update and requires
+        SKIP-with-reason instead of PASS.
+      files:
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:494-500"
+        - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:34,51,95"
+        - ".harness/contracts/sprint-ets-13.yaml:148-150"
+    - id: patch_safety
+      assessment: >
+        Default smoke must not issue IUT-bound PATCH; opt-in requires both mutation
+        parameters, declaration, PATCH advertisement, and public GeoRobotix hard denial.
+      files:
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:485-486,517-526,536-542"
+        - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:18,49,53-62,92-96"
+        - ".harness/contracts/sprint-ets-13.yaml:102-121"
+    - id: dependency_choice
+      assessment: >
+        The planned TestNG dependency is update -> createreplacedelete, matching the
+        Part 1 Update requirements-class prerequisite and the requested focus.
+      files:
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:483,487,529-534"
+        - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:64-72,90-91"
+        - ".harness/contracts/sprint-ets-13.yaml:46-52,154-156"
+    - id: story_id_correction
+      assessment: >
+        The duplicate Update placeholder S-ETS-07-03 was replaced by S-ETS-13-01 while
+        the existing S-ETS-07-03 Property Definitions row remains intact.
+      files:
+        - "epics/epic-ets-02-part1-classes.md:28,32"
+        - "_bmad/traceability.md:41"
+        - ".harness/handoffs/planner-handoff.yaml:23-28"
+    - id: ogc_source_fidelity
+      assessment: >
+        OGC Part 1 source check supports the core planning claims: Requirements Class 11
+        /req/update has prerequisite /req/create-replace-delete plus OGC API Features
+        Part 4 /req/update, lists /req/update/system through /property, and uses HTTP
+        PATCH at canonical resource endpoints.
+      sources:
+        - "https://docs.ogc.org/is/23-001/23-001.html#_requirements_class_update"
+        - "https://docs.ogc.org/is/23-001/23-001.html#_conformance_class_update"
+    - id: scope_boundaries
+      assessment: >
+        The plan explicitly excludes Part 2 /conf/update, optimistic locking, non-system
+        PATCH, collection update paths, and broad PATCH media-type testing.
+      files:
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:482,489"
+        - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:20,102-109"
+        - "ops/status.md:48-66"
+  not_rerun:
+    - "Docker Maven was not rerun."
+    - "TeamEngine smoke was not rerun."
+    - "Review relied on uncommitted planning diff, local static inspection, and official OGC Part 1 HTML."
+
+required_fixes:
+  before_generator:
+    - "RAZE-ETS13-CONCERN-001: align contract media-type exclusion with story/spec."
+    - "RAZE-ETS13-CONCERN-002: add explicit ATS A.79-A.83 source note for deferred collection item update paths."
+  before_reporting_implementation_done:
+    - "Run Docker Maven and TeamEngine smoke per project workflow."
+    - "Verify exact default-smoke totals and zero IUT-bound PATCH request-log entries."
+    - "Run Raze implementation review after Generator changes."
+
+files_changed_by_review:
+  - ".harness/evaluations/sprint-ets-13-plan-adversarial.yaml"
+  - "ops/changelog.md"
+  - "ops/metrics.md"
+  - "ops/status.md"
+
+files_reviewed:
+  changed_planning_files:
+    - ".harness/contracts/sprint-ets-13.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-02-part1-classes.md"
+    - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "ops/changelog.md"
+    - "ops/status.md"
+  context_files:
+    - "_bmad/agents/adversarial-reviewer.md"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "scripts/no-mutation-oracle.py"
+    - "scripts/smoke-test.sh"
+    - ".harness/contracts/sprint-ets-12.yaml"
+    - "ops/metrics.md"

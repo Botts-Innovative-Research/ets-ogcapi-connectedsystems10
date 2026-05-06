@@ -1,96 +1,93 @@
 agent: planner
 status: complete
-timestamp: "2026-05-05T20:59:24Z"
-sprint_number: "ets-12"
-sprint_name: "create-replace-delete-safety-gated-systems-subset"
-contract_path: ".harness/contracts/sprint-ets-12.yaml"
+timestamp: "2026-05-06T14:34:34Z"
+sprint_number: "ets-13"
+sprint_name: "update-patch-safety-gated-systems-subset"
+contract_path: ".harness/contracts/sprint-ets-13.yaml"
 triggered_by: |
-  User instructed "Go onto the next step" after Sprint 11 Generator and gate commits
-  were complete (`331f3ed`, `65d48db`).
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 11 handoff 2026-05-05T19:32:08Z)"
+  User instructed "OK, do Sprint 13 planning with the corrected story ID" after
+  the Sprint 12 local OSH full-health follow-up was committed as `27c182c`.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 12 handoff 2026-05-05T20:59:24Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-05T20:59:24Z"
+  checked_at: "2026-05-06T14:34:34Z"
   stale_over_30_days: false
   disposition: "OK to start new capability planning."
 
 strategic_decisions:
   q1_next_class:
-    question: "Which remaining Part 1 class should Sprint 12 implement?"
-    decision: "create_replace_delete"
+    question: "Which remaining Part 1 class should Sprint 13 implement?"
+    decision: "update"
+    corrected_story_id: "S-ETS-13-01"
     rationale: |
-      After Sprint 11, the only remaining Part 1 classes are mutation-side classes:
-      Create/Replace/Delete and Update. Create/Replace/Delete should precede Update
-      because it establishes the mutation-safety contract, opt-in parameters, and cleanup
-      discipline needed before PATCH/update work.
+      After Sprint 12, the next named Part 1 class in the backlog is Update/PATCH
+      (`/conf/update`, REQ-ETS-PART1-011). The prior epic row reused `S-ETS-07-03`,
+      which already belongs to Property Definitions. Sprint 13 corrects the story id
+      to `S-ETS-13-01`.
     alternatives_rejected:
-      - update: "PATCH/update should follow the write-safety gate established by Create/Replace/Delete."
-      - part2_dynamic_data: "Explicitly out of current Part 1 incremental lane."
+      - part2_update: "Part 2 update is a different conformance class and remains deferred."
+      - expanding_crd_non_system_crud: "Useful later, but the user asked for the next Sprint item after identifying /conf/update."
 
   q2_scope:
-    question: "Full Create/Replace/Delete class or safety-gated subset?"
+    question: "Full Update class or safety-gated subset?"
     decision: "safety-gated systems subset"
     rationale: |
-      GeoRobotix declares /conf/create-replace-delete and advertises POST/PUT/DELETE
-      via OPTIONS, but it is a public shared smoke target. Sprint 12 must avoid unguarded
-      writes. The sprint targets declaration, non-mutating OPTIONS readiness, explicit
-      mutation opt-in plumbing, default lifecycle SKIP-before-POST, dependency wiring,
-      and no-mutation smoke evidence. OPTIONS checks are readiness preconditions only,
-      not OGC lifecycle conformance PASS.
+      Update uses HTTP PATCH and is destructive/mutating. Sprint 12 established the
+      mutation opt-in contract and no-mutation oracle. Sprint 13 should reuse that
+      contract, add PATCH to the no-mutation oracle, and implement the systems subset
+      as declaration-gated and skip-first. Current default/public IUT evidence does
+      not support positive PATCH conformance: GeoRobotix does not declare `/conf/update`
+      and does not advertise PATCH on the sampled System resource.
 
 upstream_ogc_verification:
-  repository: "opengeospatial/ogcapi-connected-systems"
-  branch: "master"
-  commit: "3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
-  crd_requirements_path: "api/part1/standard/requirements/crud/requirements_class_crd.adoc"
-  crd_clause_path: "api/part1/standard/sections/clause_16_requirements_class_create_replace_delete.adoc"
-  crd_identifier: "/req/create-replace-delete"
-  inherits:
-    - "/req/api-common"
-    - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/create-replace-delete"
+  standard: "OGC API - Connected Systems Part 1: Feature Resources"
+  clause: "18 Requirements Class Update"
+  update_identifier: "/req/update"
+  conformance_class: "/conf/update"
+  prerequisites:
+    - "/req/create-replace-delete"
+    - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/update"
   listed_subrequirements:
-    - "/req/create-replace-delete/system"
-    - "/req/create-replace-delete/system-delete-cascade"
-    - "/req/create-replace-delete/subsystem"
-    - "/req/create-replace-delete/deployment"
-    - "/req/create-replace-delete/subdeployment"
-    - "/req/create-replace-delete/procedure"
-    - "/req/create-replace-delete/sampling-feature"
-    - "/req/create-replace-delete/property"
-    - "/req/create-replace-delete/create-in-collection"
-    - "/req/create-replace-delete/replace-in-collection"
-    - "/req/create-replace-delete/delete-in-collection"
-    - "/req/create-replace-delete/add-to-collection"
+    - "/req/update/system"
+    - "/req/update/deployment"
+    - "/req/update/procedure"
+    - "/req/update/sampling-feature"
+    - "/req/update/property"
+  systems_endpoint: "{api_root}/systems/{id}"
+  ats_collection_item_paths: "A.79-A.83 also list /collections/{collectionId}/items/{id} paths for each resource type; deferred from Sprint 13."
+  method: "HTTP PATCH"
 
-georobotix_planning_probe:
-  conformance: "Declares http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete as of 2026-05-05."
-  systems_options: "OPTIONS /systems -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS."
-  system_item_options: "OPTIONS /systems/0mqcvdnfoca0 -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS."
-  systems_seed: "GET /systems?limit=1 -> HTTP 200 JSON, first id 0mqcvdnfoca0."
-  planning_interpretation: "Method advertisement is readiness evidence only. It is not permission to mutate GeoRobotix during default smoke."
+planning_probes:
+  georobotix:
+    conformance: "Does not declare http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update as of 2026-05-06."
+    system_item_options: "OPTIONS /systems/0mqcvdnfoca0 -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+    planning_interpretation: "Default GeoRobotix Update tests must SKIP-with-reason and default smoke must prove no PATCH."
+  local_osh:
+    conformance: "Unauthenticated /conformance returns HTTP 401; authenticated smoke remains the established local evidence path."
+    system_item_options: "Unauthenticated OPTIONS /systems/040g -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+    planning_interpretation: "Local OSH remains a mutable fixture for CRD, but current probe does not provide positive PATCH evidence."
 
 stories:
-  - id: "S-ETS-12-01"
-    title: "Create/Replace/Delete safety-gated systems subset - depends on SystemFeatures"
-    file: "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
+  - id: "S-ETS-13-01"
+    title: "Update/PATCH safety-gated systems subset - depends on CreateReplaceDelete"
+    file: "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "1-2h"
-    sequencing: "ONLY story in Sprint 12"
+    sequencing: "ONLY story in Sprint 13"
 
 new_requirements:
-  - "REQ-ETS-PART1-010"
+  - "REQ-ETS-PART1-011"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-010-CRD-CONFORMANCE-DECLARED-001"
-  - "SCENARIO-ETS-PART1-010-CRD-MUTATION-SAFETY-GATE-001"
-  - "SCENARIO-ETS-PART1-010-CRD-SYSTEMS-OPTIONS-001"
-  - "SCENARIO-ETS-PART1-010-CRD-SYSTEM-RESOURCE-OPTIONS-001"
-  - "SCENARIO-ETS-PART1-010-CRD-SYSTEM-LIFECYCLE-OPTIN-001"
-  - "SCENARIO-ETS-PART1-010-CRD-DEPENDENCY-SMOKE-001"
-  - "SCENARIO-ETS-PART1-010-CRD-SMOKE-NO-MUTATION-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-CONFORMANCE-DECLARED-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-MUTATION-SAFETY-GATE-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-RESOURCE-OPTIONS-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-LIFECYCLE-OPTIN-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-DEPENDENCY-SMOKE-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-SMOKE-NO-PATCH-001"
 
 mutation_opt_in_parameters:
   mutation_tests_enabled:
@@ -99,55 +96,51 @@ mutation_opt_in_parameters:
   mutation_iut_policy:
     suite_parameter: "mutation-iut-policy"
     required_value: "dedicated-mutable-iut"
-  default_behavior: "Lifecycle mutation assertions SKIP before POST/PUT/DELETE."
-  end_to_end_wiring_required:
-    - "TestRunArg exposes mutation-tests-enabled and mutation-iut-policy."
-    - "SuiteAttribute stores both mutation controls."
-    - "SuiteFixtureListener copies suite parameters onto the TestNG suite."
-    - "TestNGController accepts the optional parameters without requiring them."
-    - "CTL exposes explicit mutation controls."
-    - "scripts/smoke-test.sh may forward SMOKE_MUTATION_TESTS_ENABLED and SMOKE_MUTATION_IUT_POLICY; default env leaves them unset."
+  default_behavior: "PATCH lifecycle assertions SKIP before PATCH."
+  reuse_existing_sprint12_wiring: true
   hard_denies:
     - "https://api.georobotix.io/ogc/t18/api"
     - "Any IUT host equal to api.georobotix.io"
-  hard_deny_behavior: "If mutation tests are enabled against a hard-denied public IUT, lifecycle test SKIPs or FAILs before POST; it MUST NOT issue POST/PUT/DELETE."
+  hard_deny_behavior: "If mutation tests are enabled against a hard-denied public IUT, lifecycle test SKIPs or FAILs before PATCH; it MUST NOT issue PATCH."
 
 no_mutation_smoke_oracle:
-  method: "Parse adjacent Request method + Request URI pairs from REST Assured logs."
+  method: "Parse `Request: METHOD URI` entries and older adjacent `Request method:` / `Request URI:` pairs from REST Assured logs."
   filter: "Only pairs whose URI starts with the IUT base URL are in scope."
-  pass_condition: "Zero in-scope pairs with method POST, PUT, or DELETE."
+  pass_condition: "Zero in-scope pairs with method POST, PUT, DELETE, or PATCH."
   excluded: "TeamEngine control-plane POST that starts the suite run."
 
 next_agent: "generator"
 next_agent_rationale: |
   Planning artifacts are complete and no Architect cycle is needed. Generator can follow
-  the established TestNG class pattern while adding the first write-operation safety gate.
+  the established Sprint 12 mutation-safety pattern while adding UpdateTests, Update
+  TestNG dependency wiring, structural lint tests, and PATCH-aware no-mutation oracle behavior.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
     - "Re-verify GeoRobotix /conformance and OPTIONS probes before implementing."
-    - "Implement CreateReplaceDeleteTests.java with 6 @Tests."
-    - "Add testng.xml group dependency: createreplacedelete depends-on systemfeatures."
-    - "Add 3 VerifyTestNGSuiteDependency lint tests for createreplacedelete."
-    - "Add mutation-tests-enabled and mutation-iut-policy propagation through TestRunArg/SuiteAttribute/SuiteFixtureListener."
-    - "Ensure default lifecycle test SKIPs before POST when mutation opt-in parameters are absent."
-    - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh from a /tmp clone."
-    - "Inspect smoke logs for zero IUT-bound POST/PUT/DELETE request-log pairs from the Create/Replace/Delete suite."
-    - "Name/report OPTIONS checks as ETS readiness preconditions, not OGC lifecycle conformance PASS."
-    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep unimplemented CRD subrequirements open."
+    - "Implement UpdateTests.java with the planned @Tests."
+    - "Add testng.xml group dependency: update depends-on createreplacedelete."
+    - "Add 3 VerifyTestNGSuiteDependency lint tests for update."
+    - "Reuse existing mutation-tests-enabled and mutation-iut-policy propagation."
+    - "Ensure default lifecycle test SKIPs before PATCH when mutation opt-in parameters are absent."
+    - "Extend scripts/no-mutation-oracle.py and smoke expectations so PATCH is treated as mutating."
+    - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh."
+    - "Inspect smoke logs for zero IUT-bound PATCH request-log entries from the Update suite."
+    - "Name/report OPTIONS checks as ETS readiness preconditions, not OGC update conformance PASS."
+    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep unimplemented Update subrequirements open."
   must_not_do:
-    - "Do not issue IUT-bound POST, PUT, or DELETE during default GeoRobotix smoke."
+    - "Do not issue IUT-bound PATCH during default GeoRobotix smoke."
     - "Do not mutate public GeoRobotix even when mutation opt-in parameters are present; hard-deny known shared public GeoRobotix URLs."
-    - "Do not implement /conf/update or Part 2."
-    - "Do not claim full Create/Replace/Delete class closure from OPTIONS evidence."
+    - "Do not implement Part 2 /conf/update."
+    - "Do not claim full Update class closure from OPTIONS evidence."
 
 gate_expectations:
   quinn:
-    primary: "Run mvn-test-via-docker.sh from /tmp clone; verify mutation opt-in parameters and CRD lint tests."
+    primary: "Run mvn-test-via-docker.sh; verify mutation opt-in reuse, Update lint tests, and TestNG dependency."
   raze:
-    primary: "Run smoke-test.sh from separate /tmp clone; verify failed=0 and no GeoRobotix-bound CRD POST/PUT/DELETE request-log pairs."
-    adversarial_focus: "Inspect for false PASS from OPTIONS readiness and any accidental public-IUT mutation."
-  independence: "Quinn and Raze must write their own Sprint 12 YAML before reading the other gate's YAML."
+    primary: "Run smoke-test.sh or inspect fresh smoke artifact; verify failed=0 and no GeoRobotix-bound PATCH request-log entries."
+    adversarial_focus: "Inspect for false PASS from absent /conf/update, OPTIONS readiness overclaim, and accidental public-IUT PATCH."
+  independence: "Quinn and Raze must write their own Sprint 13 YAML before reading the other gate's YAML."
 
-confidence: 0.82
+confidence: 0.84

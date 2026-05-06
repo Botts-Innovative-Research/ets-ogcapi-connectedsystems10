@@ -38,11 +38,29 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD after Sprint 15 planning commit; Sprint 15 Generator changes are implemented and ready to commit after Raze approval.
+- ETS HEAD after Sprint 15 Generator commit `5dcbd3f` (`Implement Sprint 15 GeoJSON expansion`); Sprint 16 planning is in progress.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-15-01` Generator complete as PARTIAL, pending commit.
-- Current sprint status: Sprint ets-15 Generator implemented read-only non-system GeoJSON checks for deployment, procedure, and sampling feature collections.
-- Latest committed planning: `a45178c` (`Plan Sprint 15 GeoJSON expansion`).
+- Latest implemented story: `S-ETS-15-01` Generator complete as PARTIAL and committed.
+- Current sprint status: Sprint ets-16 planning drafted and Raze-approved for read-only non-system SensorML deployment/procedure/property checks.
+- Latest committed planning: `a45178c` (`Plan Sprint 15 GeoJSON expansion`); Sprint 16 planning pending commit.
+
+## Sprint ets-16 Planning Evidence
+
+SensorML non-system read-only expansion:
+
+- Story: `epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md`
+- Contract: `.harness/contracts/sprint-ets-16.yaml`
+- OpenSpec: extends `REQ-ETS-PART1-013`; status remains PARTIAL.
+- Scope planned: deployment, procedure, and property SensorML schema/mapping checks using read-only GET requests.
+- Out of scope: `/req/sensorml/mediatype-write`, `/req/sensorml/relation-types`, full external SensorML 3.0 schema validation, sampling feature SensorML claims, GeoJSON, Part 2, and any mutation request.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-06 and not stale.
+- OGC source verification: `api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc` fetched HTTP 200 on 2026-05-06; upstream subrequirements list deployment/procedure/property schema and mapping paths.
+- GeoRobotix probes: `/conformance` declares `/conf/sensorml`, `/conf/deployment`, `/conf/procedure`, and `/conf/property`.
+- GeoRobotix fallback state: collection `Accept: application/sml+json` requests for `/deployments`, `/procedures`, and `/properties` returned `Content-Type: application/json` CS API wrappers; those wrappers must SKIP rather than PASS SensorML assertions.
+- Positive item evidence: `/deployments/16sp744ch58g?f=sml3` returned SensorML JSON with `type=Deployment`, matching identity, and `deployedSystems`; `/procedures/164p7ed8l47g?f=sml3` returned SensorML JSON with `type=PhysicalSystem`, matching identity, and procedure structure.
+- Current IUT state: `/properties` is empty, so property SensorML assertions must SKIP honestly until an IUT supplies a property item.
+- Raze planning review `.harness/evaluations/sprint-ets-16-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.86. Required fixes applied in planning: added resource conformance-class gating for `/conf/deployment`, `/conf/procedure`, and `/conf/property`; tightened procedure mapping so `identifiers` alone cannot satisfy procedure-specific SensorML evidence.
+- Raze planning gap-fix `.harness/evaluations/sprint-ets-16-plan-gapfix.yaml` returned `APPROVE` confidence 0.94 with no remaining required fixes.
 
 ## Sprint ets-15 Generator Evidence
 
@@ -260,15 +278,14 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 15 Generator.
-2. Start the next highest-leverage Part 1 scope item from the backlog.
+1. Commit Sprint 16 planning.
+2. Start Generator for `S-ETS-16-01`.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-15 Generator work plus metrics:
+Current dirty worktree is expected Sprint ets-16 planning work plus metrics:
 
-- `epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md`
-- `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java`
-- `src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/VerifyGeoJsonResourceMappingAssertions.java`
-- OpenSpec/story/traceability/status/changelog/test-results Generator reconciliation.
+- `.harness/contracts/sprint-ets-16.yaml`
+- `epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md`
+- OpenSpec/story/traceability/status/changelog/test-results planning reconciliation.
 - `ops/metrics.md` turn-log updates.

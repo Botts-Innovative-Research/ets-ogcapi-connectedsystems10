@@ -1,0 +1,71 @@
+agent: Raze
+role: Red Team / Adversarial Reviewer
+artifact_type: focused_gapfix_recheck
+sprint: ets-16
+story: S-ETS-16-01
+created_utc: "2026-05-06T19:13:21Z"
+verdict: APPROVE
+confidence: 0.94
+
+focused_scope:
+  prior_artifact: .harness/evaluations/sprint-ets-16-plan-adversarial.yaml
+  prior_verdict: GAPS_FOUND
+  rechecked_findings:
+    - RAZE-ETS16-PLAN-GAP-001
+    - RAZE-ETS16-PLAN-GAP-002
+  reviewed_artifacts:
+    - .harness/contracts/sprint-ets-16.yaml
+    - epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - .harness/handoffs/planner-handoff.yaml
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+  excluded_by_instruction:
+    - Docker
+    - Maven
+    - TeamEngine
+
+findings:
+  - id: RAZE-ETS16-PLAN-GAP-001
+    status: closed
+    severity: high
+    category: conformance_scope_gating
+    title: >
+      Deployment/procedure/property SensorML checks now explicitly require
+      matching resource conformance classes before resource-specific judgment.
+    evidence:
+      - ".harness/contracts/sprint-ets-16.yaml defines resource_conformance_gating for /conf/deployment, /conf/procedure, and /conf/property with SKIP-before-judgment absent verdicts."
+      - "The story Planned Test Surface and DoD require deployment/procedure/property SensorML checks to SKIP before judgment when the matching resource conformance class is absent."
+      - "OpenSpec Sprint 16 deployment/procedure/property scenarios each first require the matching /conf/* class and define SKIP before fetching or judging resource-specific SensorML evidence when absent."
+      - "planner-handoff.yaml repeats the resource_conformance_gating matrix and Generator brief requires gating each non-system SensorML check on the matching resource class."
+    assessment: >
+      The Sprint 16 planning now closes the overreach risk where an IUT declaring
+      /conf/sensorml but not the relevant resource class could be judged on
+      deployment, procedure, or property SensorML mapping assertions.
+
+  - id: RAZE-ETS16-PLAN-GAP-002
+    status: closed
+    severity: medium
+    category: false_positive_sensorml_pass
+    title: >
+      Procedure-specific mapping no longer allows identifiers alone as PASS
+      evidence.
+    evidence:
+      - "Contract procedure predicates require at least one non-identity procedure/process structure such as definition, inputs, outputs, parameters, characteristics, or capabilities before PASS, and state identifiers alone are not sufficient."
+      - "Story planned predicates require non-identity process/procedure structure and explicitly reject identifiers alone."
+      - "OpenSpec procedure scenario requires non-identity process/procedure structure and says identifiers alone are not sufficient."
+      - "planner-handoff.yaml mirrors the tightened non-identity procedure predicate."
+    assessment: >
+      The procedure mapping false-positive path is closed at planning level.
+      Identity mapping remains required, but it cannot be the sole
+      procedure-specific evidence.
+
+required_fixes: []
+remaining_concerns: []
+
+final_assessment: >
+  APPROVE. Both Raze Sprint 16 planning gaps are closed in the current
+  uncommitted planning artifacts. No Docker, Maven, or TeamEngine commands were
+  run during this focused static recheck.

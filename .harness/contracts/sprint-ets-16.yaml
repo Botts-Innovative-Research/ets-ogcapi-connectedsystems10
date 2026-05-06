@@ -1,0 +1,172 @@
+# Sprint 16 contract - SensorML non-system read-only expansion
+# Created 2026-05-06 after Sprint 15 Generator commit.
+
+sprint: "ets-16"
+sprint_name: "sensorml-non-system-readonly-expansion"
+type: "feature-expansion"
+created: "2026-05-06T19:03:00Z"
+description: |
+  Sprint 16 extends REQ-ETS-PART1-013 rather than adding a new Part 1 class.
+  Sprint 10 implemented only the systems read-only SensorML subset. Sprint 16
+  plans deployment, procedure, and property SensorML schema/mapping coverage
+  while preserving fallback honesty when an IUT returns CS API default JSON
+  instead of SensorML JSON.
+
+stories:
+  - id: "S-ETS-16-01"
+    title: "SensorML non-system read-only expansion"
+    file: "epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-10-01"
+      - "S-ETS-05-06"
+      - "S-ETS-05-05"
+      - "S-ETS-07-03"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART1-013 (SensorML Encoding Conformance Class /conf/sensorml - remains PARTIAL; add deployment/procedure/property read-only SensorML schema and mapping checks)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-013-SENSORML-DEPLOYMENT-SCHEMA-MAPPING-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-PROCEDURE-SCHEMA-MAPPING-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-PROPERTY-SCHEMA-MAPPING-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-NON-SYSTEM-FALLBACK-HONESTY-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-SMOKE-NO-MUTATION-001"
+  normal: []
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  build_green_jdk17: true
+  default_georobotix_smoke_green: true
+  default_smoke_no_mutation_requests: true
+  deployment_sensorml_shape_or_skip_honestly: true
+  procedure_sensorml_shape_or_skip_honestly: true
+  property_sensorml_shape_or_skip_honestly: true
+  deployment_resource_specific_mapping_checked: true
+  procedure_resource_specific_mapping_checked: true
+  property_resource_specific_mapping_checked: true
+  resource_conformance_class_gating_required: true
+  csapi_items_wrapper_not_counted_as_sensorml_pass: true
+  no_sensorml_mediatype_write_in_sprint: true
+  sensorml_req_remains_partial_without_write_relation_types_and_full_schema_closure: true
+  no_samplingfeature_sensorml_claim_in_sprint: true
+  no_part2_work_in_sprint: true
+
+upstream_ogc_verification:
+  repo: "opengeospatial/ogcapi-connected-systems"
+  branch: "master"
+  requirement_class_source: "api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc"
+  source_http_status: "HTTP/2 200 on 2026-05-06"
+  identifier: "/req/sensorml"
+  inherits:
+    - "/req/api-common"
+    - "http://www.opengis.net/spec/sensorML/3.0/req/json-simple-process"
+    - "http://www.opengis.net/spec/sensorML/3.0/req/json-physical-system"
+    - "http://www.opengis.net/spec/sensorML/3.0/req/json-deployment"
+    - "http://www.opengis.net/spec/sensorML/3.0/req/json-derived-property"
+  subrequirements:
+    - "/req/sensorml/mediatype-read"
+    - "/req/sensorml/mediatype-write"
+    - "/req/sensorml/relation-types"
+    - "/req/sensorml/resource-id"
+    - "/req/sensorml/feature-attribute-mapping"
+    - "/req/sensorml/system-schema"
+    - "/req/sensorml/system-sml-class"
+    - "/req/sensorml/system-mappings"
+    - "/req/sensorml/deployment-schema"
+    - "/req/sensorml/deployment-mappings"
+    - "/req/sensorml/procedure-schema"
+    - "/req/sensorml/procedure-sml-class"
+    - "/req/sensorml/procedure-mappings"
+    - "/req/sensorml/property-schema"
+    - "/req/sensorml/property-mappings"
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "HTTP 200; declares /conf/sensorml, /conf/deployment, /conf/procedure, and /conf/property."
+    deployments_accept_sensorml_collection: "HTTP 200; Content-Type application/json; top-level keys ['items']."
+    procedures_accept_sensorml_collection: "HTTP 200; Content-Type application/json; top-level keys ['items', 'links']."
+    properties_accept_sensorml_collection: "HTTP 200; Content-Type application/json; top-level keys ['items']; current items length 0."
+    deployment_item_sml3: "GET /deployments/16sp744ch58g?f=sml3 returned HTTP 200, Content-Type application/sml+json, type Deployment, id 16sp744ch58g, uniqueId urn:x-osh:saildrone:mission:2025, and deployedSystems[]."
+    procedure_item_sml3: "GET /procedures/164p7ed8l47g?f=sml3 returned HTTP 200, Content-Type application/sml+json, type PhysicalSystem, id 164p7ed8l47g, uniqueId urn:x-dahua:cam:sd22204t-gn."
+    property_state: "Current public IUT has an empty /properties collection, so property SensorML assertions must SKIP honestly until a property item exists."
+    interpretation: "Generator should prefer explicit item-level ?f=sml3 or alternate application/sml+json evidence for PASS; CS API `items` wrappers and empty collections are not SensorML PASS evidence."
+
+resource_conformance_gating:
+  deployment:
+    required_conformance_class: "/conf/deployment"
+    absent_verdict: "SKIP before fetching or judging deployment SensorML schema/mapping evidence."
+  procedure:
+    required_conformance_class: "/conf/procedure"
+    absent_verdict: "SKIP before fetching or judging procedure SensorML schema/mapping evidence."
+  property:
+    required_conformance_class: "/conf/property"
+    absent_verdict: "SKIP before fetching or judging property SensorML schema/mapping evidence."
+
+resource_specific_predicates:
+  deployment:
+    schema_requirement: "/req/sensorml/deployment-schema"
+    mapping_requirement: "/req/sensorml/deployment-mappings"
+    predicates:
+      - "Fetched representation is parseable SensorML JSON before PASS."
+      - "Representation type is Deployment."
+      - "id and uniqueId or equivalent identifier preserve the selected deployment id/uid."
+      - "deployedSystems is present and non-empty, or the mapping assertion SKIPs with reason."
+  procedure:
+    schema_requirement: "/req/sensorml/procedure-schema"
+    class_requirement: "/req/sensorml/procedure-sml-class"
+    mapping_requirement: "/req/sensorml/procedure-mappings"
+    predicates:
+      - "Fetched representation is parseable SensorML JSON before PASS."
+      - "Representation type is a SensorML procedure class such as PhysicalSystem or SimpleProcess."
+      - "id and uniqueId or equivalent identifier preserve the selected procedure id/uid."
+      - "At least one non-identity procedure/process structure such as definition, inputs, outputs, parameters, characteristics, or capabilities is present before PASS; identifiers alone are not sufficient."
+  property:
+    schema_requirement: "/req/sensorml/property-schema"
+    mapping_requirement: "/req/sensorml/property-mappings"
+    predicates:
+      - "If /properties is empty, SKIP with reason citing IUT state."
+      - "When a property item exists, fetched representation is parseable SensorML JSON before PASS."
+      - "Representation type is a SensorML derived property or other property-compatible type."
+      - "id and uniqueId/definition/identifier mapping preserves selected property identity before PASS."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Extend SensorMlTests with deployment, procedure, and property read-only schema/mapping checks."
+  - "Gate each non-system SensorML check on its matching resource conformance class: /conf/deployment, /conf/procedure, or /conf/property."
+  - "For each new resource type, assert resource-specific predicates before claiming schema/mapping PASS."
+  - "Use fallback honesty: CS API `items` wrappers and empty collections SKIP, not PASS."
+  - "Keep all requests read-only and scoped to GET requests."
+  - "Add focused unit coverage if helper extraction logic grows beyond trivial local code."
+  - "Run Docker Maven and default GeoRobotix TeamEngine smoke."
+  - "Run the no-mutation oracle or otherwise verify zero IUT-bound POST/PUT/DELETE/PATCH."
+  - "Update OpenSpec/story/traceability/status/changelog/test-results."
+
+generator_must_not_do:
+  - "Do not implement /req/sensorml/mediatype-write."
+  - "Do not issue POST, PUT, PATCH, or DELETE."
+  - "Do not count CS API default `items` wrappers as SensorML PASS."
+  - "Do not treat generic JSON identity shape alone as deployment/procedure/property schema/mapping closure."
+  - "Do not claim samplingFeature SensorML coverage; the upstream SensorML class lists property, not sampling feature, subrequirements."
+  - "Do not implement GeoJSON or Part 2 work in this sprint."
+  - "Do not promote REQ-ETS-PART1-013 beyond PARTIAL unless write behavior, relation-types, all schema/mapping gaps, and full schema validation are actually closed."
+
+evaluation_focus:
+  quinn:
+    - "Verify new non-system SensorML tests are read-only and dependency-gated."
+    - "Verify CS API wrappers and empty /properties SKIP honestly."
+  raze:
+    - "Attack false-positive SensorML claims from Content-Type application/json or CS API `items` wrappers."
+    - "Check no IUT-bound mutation appears in default smoke."
+    - "Check the sprint does not claim samplingFeature SensorML subrequirements that are not listed upstream."
+
+confidence: 0.84

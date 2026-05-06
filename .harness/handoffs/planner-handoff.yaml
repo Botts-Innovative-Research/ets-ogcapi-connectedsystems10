@@ -1,153 +1,166 @@
 agent: planner
 status: complete
-timestamp: "2026-05-06T17:12:30Z"
-sprint_number: "ets-15"
-sprint_name: "geojson-non-system-readonly-expansion"
-contract_path: ".harness/contracts/sprint-ets-15.yaml"
+timestamp: "2026-05-06T19:03:00Z"
+sprint_number: "ets-16"
+sprint_name: "sensorml-non-system-readonly-expansion"
+contract_path: ".harness/contracts/sprint-ets-16.yaml"
 triggered_by: |
-  User instructed "All continue with the next task" after asking for the
-  expected sprint count. Sprint 15 planning was selected as the next task.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 14 handoff 2026-05-06T15:31:37Z)"
+  User instructed "Continue" after Sprint 15 Generator was committed. Sprint 16
+  planning was selected as the next task.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 15 handoff 2026-05-06T17:12:30Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-06T17:12:30Z"
+  checked_at: "2026-05-06T19:03:00Z"
   stale_over_30_days: false
-  disposition: "OK to start Sprint 15 planning."
+  disposition: "OK to start Sprint 16 planning."
 
 strategic_decisions:
   q1_next_work:
-    question: "After Sprint 14, what is the next Sprint item?"
-    decision: "S-ETS-15-01 GeoJSON non-system read-only expansion"
+    question: "After Sprint 15, what is the next Sprint item?"
+    decision: "S-ETS-16-01 SensorML non-system read-only expansion"
     rationale: |
-      Update remains blocked from positive promotion because local OSH does not
-      advertise PATCH. GeoJSON has a clear open Part 1 gap from Sprint 9:
-      deployment/procedure/sampling-feature schema and mapping checks. The work
-      is read-only, low mutation risk, and directly advances REQ-ETS-PART1-012.
+      SensorML has a clear open Part 1 gap from Sprint 10:
+      deployment/procedure/property schema and mapping checks. The work is
+      read-only, low mutation risk, and directly advances REQ-ETS-PART1-013.
 
   q2_scope_boundary:
-    question: "Should Sprint 15 close full GeoJSON?"
-    decision: "No. Keep REQ-ETS-PART1-012 PARTIAL."
+    question: "Should Sprint 16 close full SensorML?"
+    decision: "No. Keep REQ-ETS-PART1-013 PARTIAL."
     rationale: |
-      Sprint 15 covers deployment/procedure/sampling-feature read-only schema
-      and mapping checks only. `/req/geojson/mediatype-write`,
-      `/req/geojson/relation-types`, property mapping, full schema validation,
-      SensorML, and Part 2 remain out of scope.
+      Sprint 16 covers deployment/procedure/property read-only schema and
+      mapping checks only. `/req/sensorml/mediatype-write`,
+      `/req/sensorml/relation-types`, full SensorML 3.0 JSON Schema validation,
+      mutation-side behavior, GeoJSON, and Part 2 remain out of scope.
 
   q3_fallback_honesty:
     question: "How should default CS API JSON responses be treated?"
-    decision: "CS API `items` wrappers without GeoJSON `features` are fallback evidence, not PASS."
+    decision: "CS API `items` wrappers and default Feature JSON are fallback evidence, not PASS."
     rationale: |
-      GeoRobotix currently declares `/conf/geojson`, but deployment, procedure,
-      and sampling feature collection requests with `Accept: application/geo+json`
-      returned `Content-Type: application/json` and top-level `items`. Counting
-      that as GeoJSON FeatureCollection PASS would repeat the Sprint 9 false-positive
-      risk that Raze already identified and fixed.
+      GeoRobotix currently declares `/conf/sensorml`, but deployment, procedure,
+      and property collection requests with `Accept: application/sml+json`
+      returned `Content-Type: application/json` CS API wrappers. Counting that
+      as SensorML PASS would repeat the encoding false-positive risk addressed
+      in Sprint 9 and Sprint 10.
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems Part 1: Feature Resources"
-  requirement_class_source: "api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
+  requirement_class_source: "api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc"
   source_http_status: "HTTP/2 200"
-  checked_at: "2026-05-06T17:12:30Z"
-  identifier: "/req/geojson"
-  inherits:
-    - "/req/api-common"
-    - "http://www.opengis.net/spec/ogcapi-features-1/1.0/req/geojson"
+  checked_at: "2026-05-06T19:03:00Z"
+  identifier: "/req/sensorml"
   listed_subrequirements:
-    - "/req/geojson/mediatype-read"
-    - "/req/geojson/mediatype-write"
-    - "/req/geojson/relation-types"
-    - "/req/geojson/feature-attribute-mapping"
-    - "/req/geojson/system-schema"
-    - "/req/geojson/system-mappings"
-    - "/req/geojson/deployment-schema"
-    - "/req/geojson/deployment-mappings"
-    - "/req/geojson/procedure-schema"
-    - "/req/geojson/procedure-mappings"
-    - "/req/geojson/sf-schema"
-    - "/req/geojson/sf-mappings"
+    - "/req/sensorml/mediatype-read"
+    - "/req/sensorml/mediatype-write"
+    - "/req/sensorml/relation-types"
+    - "/req/sensorml/resource-id"
+    - "/req/sensorml/feature-attribute-mapping"
+    - "/req/sensorml/system-schema"
+    - "/req/sensorml/system-sml-class"
+    - "/req/sensorml/system-mappings"
+    - "/req/sensorml/deployment-schema"
+    - "/req/sensorml/deployment-mappings"
+    - "/req/sensorml/procedure-schema"
+    - "/req/sensorml/procedure-sml-class"
+    - "/req/sensorml/procedure-mappings"
+    - "/req/sensorml/property-schema"
+    - "/req/sensorml/property-mappings"
 
 planning_probes:
   georobotix:
     iut_url: "https://api.georobotix.io/ogc/t18/api"
-    conformance: "HTTP 200; declares /conf/geojson plus deployment/procedure/sf resource classes."
-    deployments_accept_geojson: "HTTP 200; Content-Type application/json; keys ['items']."
-    procedures_accept_geojson: "HTTP 200; Content-Type application/json; keys ['items', 'links']."
-    samplingfeatures_accept_geojson: "HTTP 200; Content-Type application/json; keys ['items', 'links']."
-    planning_interpretation: "Plan read-only tests that SKIP fallback wrappers rather than PASSing GeoJSON schema/mapping assertions."
+    conformance: "HTTP 200; declares /conf/sensorml plus deployment/procedure/property resource classes."
+    deployments_accept_sensorml_collection: "HTTP 200; Content-Type application/json; keys ['items']."
+    procedures_accept_sensorml_collection: "HTTP 200; Content-Type application/json; keys ['items', 'links']."
+    properties_accept_sensorml_collection: "HTTP 200; Content-Type application/json; keys ['items']; items length 0."
+    deployment_sml3: "HTTP 200 application/sml+json; type Deployment; id 16sp744ch58g; uniqueId urn:x-osh:saildrone:mission:2025; deployedSystems present."
+    procedure_sml3: "HTTP 200 application/sml+json; type PhysicalSystem; id 164p7ed8l47g; uniqueId urn:x-dahua:cam:sd22204t-gn; procedure structure present."
+    planning_interpretation: "Plan read-only tests that use explicit SensorML item evidence when available and SKIP fallback wrappers or empty collections."
+
+resource_conformance_gating:
+  deployment:
+    required_conformance_class: "/conf/deployment"
+    absent_verdict: "SKIP before fetching or judging deployment SensorML schema/mapping evidence."
+  procedure:
+    required_conformance_class: "/conf/procedure"
+    absent_verdict: "SKIP before fetching or judging procedure SensorML schema/mapping evidence."
+  property:
+    required_conformance_class: "/conf/property"
+    absent_verdict: "SKIP before fetching or judging property SensorML schema/mapping evidence."
 
 resource_specific_predicates:
   deployment:
-    requirements: ["/req/geojson/deployment-schema", "/req/geojson/deployment-mappings"]
+    requirements: ["/req/sensorml/deployment-schema", "/req/sensorml/deployment-mappings"]
     predicates:
-      - "FeatureCollection/features before PASS."
-      - "Feature has id, geometry, and properties."
-      - "properties.uid is present."
-      - "properties.deployedSystems@link is present as deployment mapping evidence, or mapping SKIPs with reason."
+      - "Parseable SensorML JSON before PASS."
+      - "type=Deployment."
+      - "id and uniqueId or equivalent identifier preserve selected deployment identity."
+      - "deployedSystems is present and non-empty, or mapping SKIPs with reason."
   procedure:
-    requirements: ["/req/geojson/procedure-schema", "/req/geojson/procedure-mappings"]
+    requirements: ["/req/sensorml/procedure-schema", "/req/sensorml/procedure-sml-class", "/req/sensorml/procedure-mappings"]
     predicates:
-      - "FeatureCollection/features before PASS."
-      - "Feature has id, geometry, and properties."
-      - "geometry is null."
-      - "properties.uid and properties.featureType are present."
-  sampling_feature:
-    requirements: ["/req/geojson/sf-schema", "/req/geojson/sf-mappings"]
+      - "Parseable SensorML JSON before PASS."
+      - "Procedure-compatible SensorML type such as PhysicalSystem or SimpleProcess."
+      - "id and uniqueId or equivalent identifier preserve selected procedure identity."
+      - "At least one non-identity procedure/process structure such as definition, inputs, outputs, parameters, characteristics, or capabilities is present; identifiers alone are not sufficient."
+  property:
+    requirements: ["/req/sensorml/property-schema", "/req/sensorml/property-mappings"]
     predicates:
-      - "FeatureCollection/features before PASS."
-      - "Feature has id, geometry, and properties."
-      - "properties.uid and properties.featureType are present."
-      - "properties.hostedProcedure@link or properties.radius is present, or mapping SKIPs with reason."
+      - "Empty /properties SKIPs with reason."
+      - "When an item exists, parseable SensorML JSON before PASS."
+      - "Property-compatible SensorML type plus identity/definition/identifier mapping before PASS."
 
 stories:
-  - id: "S-ETS-15-01"
-    title: "GeoJSON non-system read-only expansion"
-    file: "epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md"
+  - id: "S-ETS-16-01"
+    title: "SensorML non-system read-only expansion"
+    file: "epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "1-2h"
-    sequencing: "ONLY story in Sprint 15"
+    sequencing: "ONLY story in Sprint 16"
 
 new_requirements: []
 modified_requirements:
-  - "REQ-ETS-PART1-012"
+  - "REQ-ETS-PART1-013"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-012-GEOJSON-DEPLOYMENT-SCHEMA-MAPPING-001"
-  - "SCENARIO-ETS-PART1-012-GEOJSON-PROCEDURE-SCHEMA-MAPPING-001"
-  - "SCENARIO-ETS-PART1-012-GEOJSON-SF-SCHEMA-MAPPING-001"
-  - "SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001"
-  - "SCENARIO-ETS-PART1-012-GEOJSON-SMOKE-NO-MUTATION-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-DEPLOYMENT-SCHEMA-MAPPING-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-PROCEDURE-SCHEMA-MAPPING-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-PROPERTY-SCHEMA-MAPPING-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-NON-SYSTEM-FALLBACK-HONESTY-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-SMOKE-NO-MUTATION-001"
 
 next_agent: "generator"
 next_agent_rationale: |
   Planning artifacts are complete and no Architect cycle is needed. Generator can
-  extend GeoJsonTests with read-only collection helpers and keep the existing
-  dependency/no-mutation patterns.
+  extend SensorMlTests with read-only item representation helpers and keep the
+  existing dependency/no-mutation patterns.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
-    - "Extend GeoJsonTests with deployment, procedure, and samplingFeature read-only schema/mapping checks."
+    - "Extend SensorMlTests with deployment, procedure, and property read-only schema/mapping checks."
+    - "Gate each non-system SensorML check on /conf/deployment, /conf/procedure, or /conf/property as applicable."
     - "Assert the resource-specific predicates above before claiming schema/mapping PASS."
-    - "Keep fallback honesty: CS API `items` wrappers without GeoJSON `features` SKIP, not PASS."
+    - "Keep fallback honesty: CS API wrappers and empty /properties SKIP, not PASS."
     - "Keep all requests read-only GETs."
     - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh."
     - "Verify default smoke has zero IUT-bound POST/PUT/DELETE/PATCH."
     - "Update spec/story/traceability/status/changelog/test-results."
   must_not_do:
-    - "Do not implement GeoJSON mediatype-write or relation-types."
-    - "Do not implement SensorML or Part 2 work."
+    - "Do not implement SensorML mediatype-write or relation-types."
+    - "Do not implement GeoJSON or Part 2 work."
+    - "Do not claim samplingFeature SensorML coverage."
     - "Do not issue mutation requests."
-    - "Do not promote REQ-ETS-PART1-012 beyond PARTIAL."
-    - "Do not treat generic Feature shape alone as resource-specific schema/mapping closure."
+    - "Do not promote REQ-ETS-PART1-013 beyond PARTIAL."
+    - "Do not treat generic JSON identity shape alone as resource-specific schema/mapping closure."
 
 gate_expectations:
   quinn:
-    primary: "Verify read-only GeoJSON non-system expansion and fallback honesty."
+    primary: "Verify read-only SensorML non-system expansion and fallback honesty."
   raze:
-    primary: "Attack false-positive GeoJSON PASS claims from Content-Type application/json or `items` wrappers."
-    adversarial_focus: "No mutation, no full-REQ overclaim, no hidden SensorML/Part 2 scope creep."
+    primary: "Attack false-positive SensorML PASS claims from Content-Type application/json, CS API `items` wrappers, or empty /properties."
+    adversarial_focus: "No mutation, no full-REQ overclaim, no hidden samplingFeature/GeoJSON/Part 2 scope creep."
 
 confidence: 0.84

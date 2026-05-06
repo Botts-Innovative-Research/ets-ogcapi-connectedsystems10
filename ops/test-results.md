@@ -1,8 +1,28 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T18:56Z
+Last updated: 2026-05-06T19:14Z
 
 ## Current Sprint Evidence
+
+Sprint ets-16 SensorML non-system read-only expansion planning:
+
+- OGC source verification:
+  - Source: `api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc`
+  - Result: HTTP 200 on 2026-05-06.
+  - Listed subrequirements include deployment, procedure, and property SensorML schema/mapping paths.
+- GeoRobotix planning probes:
+  - `/conformance`: HTTP 200; declares `/conf/sensorml`, `/conf/deployment`, `/conf/procedure`, and `/conf/property`.
+  - `GET /deployments?limit=1` with `Accept: application/sml+json`: HTTP 200, `Content-Type: application/json`, top-level `items`.
+  - `GET /procedures?limit=1` with `Accept: application/sml+json`: HTTP 200, `Content-Type: application/json`, top-level `items` and `links`.
+  - `GET /properties?limit=1` with `Accept: application/sml+json`: HTTP 200, `Content-Type: application/json`, top-level `items`, currently empty.
+- SensorML item evidence:
+  - `GET /deployments/16sp744ch58g?f=sml3`: HTTP 200, `Content-Type: application/sml+json`, `type=Deployment`, matching `id`, `uniqueId`, and `deployedSystems`.
+  - `GET /procedures/164p7ed8l47g?f=sml3`: HTTP 200, `Content-Type: application/sml+json`, `type=PhysicalSystem`, matching `id`, `uniqueId`, and procedure structure.
+- Interpretation: Sprint 16 must not count CS API default `items` wrappers or Feature JSON as SensorML PASS evidence. Empty `/properties` is an IUT-state SKIP condition, not PASS. Sampling features are out of scope because upstream SensorML subrequirements list property schema/mapping, not sampling feature schema/mapping.
+- Planning review:
+  - `.harness/evaluations/sprint-ets-16-plan-adversarial.yaml`: `GAPS_FOUND` confidence 0.86.
+  - Required fixes applied: explicit resource conformance-class gating for `/conf/deployment`, `/conf/procedure`, and `/conf/property`; procedure-specific mapping now requires non-identity process/procedure structure, not `identifiers` alone.
+  - `.harness/evaluations/sprint-ets-16-plan-gapfix.yaml`: `APPROVE` confidence 0.94, no remaining required fixes.
 
 Sprint ets-15 GeoJSON non-system read-only expansion:
 

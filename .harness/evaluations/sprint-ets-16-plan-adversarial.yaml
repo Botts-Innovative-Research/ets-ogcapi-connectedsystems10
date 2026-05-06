@@ -1,0 +1,179 @@
+agent: Raze
+role: Red Team / Adversarial Reviewer
+artifact_type: planning_review
+sprint: ets-16
+story: S-ETS-16-01
+created_utc: "2026-05-06T19:10:05Z"
+verdict: GAPS_FOUND
+confidence: 0.86
+
+reviewed_scope:
+  summary: >
+    Planning-only static review for Sprint 16 SensorML non-system read-only
+    expansion under REQ-ETS-PART1-013.
+  included:
+    - .harness/contracts/sprint-ets-16.yaml
+    - epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - .harness/handoffs/planner-handoff.yaml
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+  excluded_by_instruction:
+    - Docker
+    - Maven
+    - TeamEngine
+
+source_checks:
+  ogc_sensorml_requirement_class:
+    source: https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc
+    status: HTTP 200 during review
+    observed_identifier: /req/sensorml
+    observed_subrequirements:
+      - /req/sensorml/mediatype-read
+      - /req/sensorml/mediatype-write
+      - /req/sensorml/relation-types
+      - /req/sensorml/resource-id
+      - /req/sensorml/feature-attribute-mapping
+      - /req/sensorml/system-schema
+      - /req/sensorml/system-sml-class
+      - /req/sensorml/system-mappings
+      - /req/sensorml/deployment-schema
+      - /req/sensorml/deployment-mappings
+      - /req/sensorml/procedure-schema
+      - /req/sensorml/procedure-sml-class
+      - /req/sensorml/procedure-mappings
+      - /req/sensorml/property-schema
+      - /req/sensorml/property-mappings
+    assessment: >
+      Planning correctly targets deployment, procedure, and property
+      subrequirements and correctly excludes samplingFeature SensorML claims.
+      No per-subrequirement .adoc files were present in the upstream directory;
+      the planning source-fidelity claim should remain tied to the requirement
+      class file's listed identifiers.
+
+findings:
+  - id: RAZE-ETS16-PLAN-GAP-001
+    severity: high
+    status: open
+    category: conformance_scope_gating
+    title: >
+      Planning does not explicitly require resource conformance-class gating for
+      deployment, procedure, and property SensorML assertions.
+    locations:
+      - .harness/contracts/sprint-ets-16.yaml
+      - epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      - .harness/handoffs/planner-handoff.yaml
+    evidence:
+      - "Planning records that GeoRobotix declares /conf/deployment, /conf/procedure, and /conf/property."
+      - "The Sprint 16 scenarios say the suite selects resources from /deployments, /procedures, and /properties, but they do not state that each assertion first requires the matching resource conformance class."
+      - "Contract generator_must_do does not require skipIfConformanceMissing-style behavior for /conf/deployment, /conf/procedure, or /conf/property."
+    risk: >
+      A future IUT could declare /conf/sensorml without declaring one of the
+      resource classes. The Generator could then test an out-of-scope resource
+      path and produce misleading FAIL/SKIP/PASS semantics that are not anchored
+      to the IUT's declared resource conformance surface. Sprint 15 needed this
+      exact style of tightening for non-system GeoJSON.
+    required_fix: >
+      Add an explicit verdict matrix to the contract, story, OpenSpec scenarios,
+      and handoff: deployment SensorML checks require /conf/deployment, procedure
+      checks require /conf/procedure, and property checks require /conf/property.
+      If the matching resource class is absent, the corresponding SensorML
+      schema/mapping assertion must SKIP with a requirement-cited reason before
+      fetching or judging resource-specific SensorML representations.
+
+  - id: RAZE-ETS16-PLAN-GAP-002
+    severity: medium
+    status: open
+    category: false_positive_sensorml_pass
+    title: Procedure predicate can still pass on generic SensorML identity evidence.
+    locations:
+      - .harness/contracts/sprint-ets-16.yaml
+      - epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      - .harness/handoffs/planner-handoff.yaml
+    evidence:
+      - "The procedure predicate allows procedure structure such as definition, identifiers, inputs, or characteristics."
+      - "`identifiers` is also generic identity evidence and is already part of the id/uniqueId mapping predicate."
+      - "The story's DoD says generic JSON identity shape alone must not close schema/mapping assertions."
+    risk: >
+      A SensorML object selected from /procedures with type PhysicalSystem and an
+      identifiers array could satisfy the planned procedure mapping predicate
+      without any non-identity procedure structure. That weakens the intended
+      guard against generic SensorML JSON being counted as procedure mapping
+      PASS evidence.
+    required_fix: >
+      Tighten procedure mapping text so identifiers alone cannot satisfy the
+      procedure-specific predicate. Require at least one non-identity
+      procedure/process structure before PASS, such as definition, inputs,
+      outputs, parameters, characteristics, capabilities, or another explicitly
+      named SensorML process/procedure member, in addition to id/uniqueId mapping.
+
+  - id: RAZE-ETS16-PLAN-OBS-001
+    severity: info
+    status: closed
+    category: fallback_honesty
+    title: CS API items wrappers and default Feature JSON are not planned as SensorML PASS evidence.
+    evidence:
+      - "Contract requires csapi_items_wrapper_not_counted_as_sensorml_pass."
+      - "Story says CS API items wrappers and default Feature JSON SKIP rather than PASS."
+      - "OpenSpec fallback scenario states those responses must not satisfy SensorML schema or mapping PASS conditions without explicit SensorML JSON."
+    assessment: >
+      The planning directly addresses false-positive PASS risk from collection
+      wrappers and default Feature JSON.
+
+  - id: RAZE-ETS16-PLAN-OBS-002
+    severity: info
+    status: closed
+    category: empty_property_state
+    title: Empty /properties is treated as honest SKIP, not PASS.
+    evidence:
+      - "Contract property predicates start with empty /properties SKIPs with reason."
+      - "Story and ops evidence record current GeoRobotix /properties as empty."
+      - "OpenSpec property scenario requires empty property collections to SKIP with current-IUT-state reason."
+    assessment: >
+      The empty property collection risk is handled honestly in planning.
+
+  - id: RAZE-ETS16-PLAN-OBS-003
+    severity: info
+    status: closed
+    category: partial_status_honesty
+    title: REQ-ETS-PART1-013 remains honestly PARTIAL.
+    evidence:
+      - "Contract states Sprint 16 modifies REQ-ETS-PART1-013 and keeps it PARTIAL."
+      - "OpenSpec leaves mediatype-write, relation-types, full SensorML 3.0 JSON Schema validation, and mutation-side behavior open."
+      - "Story out-of-scope section excludes write media-type checks, relation-types, full schema validation, sampling feature claims, GeoJSON, Part 2, and mutation."
+    assessment: >
+      The planning does not overclaim full SensorML conformance closure.
+
+  - id: RAZE-ETS16-PLAN-OBS-004
+    severity: info
+    status: closed
+    category: read_only_safety
+    title: Sprint 16 is planned as read-only with no default mutation.
+    evidence:
+      - "Contract success criteria include default_smoke_no_mutation_requests and SensorML smoke no-mutation."
+      - "Generator must not issue POST, PUT, PATCH, or DELETE."
+      - "OpenSpec smoke scenario requires zero IUT-bound POST, PUT, DELETE, or PATCH requests."
+    assessment: >
+      No mutation scope creep was found in planning.
+
+required_fixes:
+  - id: RAZE-ETS16-PLAN-GAP-001
+    fix: >
+      Add explicit resource conformance-class gating and SKIP-before-judgment
+      semantics for /conf/deployment, /conf/procedure, and /conf/property.
+  - id: RAZE-ETS16-PLAN-GAP-002
+    fix: >
+      Tighten procedure-specific mapping predicates so identifiers alone cannot
+      satisfy procedure mapping PASS evidence.
+
+final_assessment: >
+  GAPS_FOUND. Sprint 16 planning is directionally sound on SensorML source
+  fidelity, no samplingFeature scope creep, empty /properties honesty,
+  read-only/no-mutation safety, and PARTIAL status. Two planning gaps remain
+  before Generator: explicit resource conformance-class gating must be added,
+  and procedure mapping predicates must exclude identifiers-only false PASS
+  evidence.

@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T19:14Z — Sprint 16 SensorML expansion planning
+
+**Triggered by user instruction**: "Continue."
+
+- Planned `S-ETS-16-01` as a read-only expansion of `REQ-ETS-PART1-013`, not a new conformance class.
+- Added `.harness/contracts/sprint-ets-16.yaml` and `epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md`.
+- Updated OpenSpec, traceability, epic status, ops status, and test-results for deployment/procedure/property SensorML schema/mapping scope.
+- Verified OGC SensorML requirement class source at `api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc`.
+- Planning probe: GeoRobotix declares `/conf/sensorml`, but collection requests for `/deployments`, `/procedures`, and `/properties` with `Accept: application/sml+json` return CS API JSON wrappers, so Sprint 16 must SKIP fallback wrappers rather than count them as SensorML PASS.
+- Positive planning evidence: `?f=sml3` item requests returned SensorML JSON for one deployment and one procedure; `/properties` is currently empty and must SKIP honestly.
+- Sampling feature SensorML is explicitly out of scope because upstream `/req/sensorml` lists property schema/mapping subrequirements, not sampling feature subrequirements.
+- Raze planning review `.harness/evaluations/sprint-ets-16-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.86.
+- Applied required planning fixes: explicit resource conformance-class gating for `/conf/deployment`, `/conf/procedure`, and `/conf/property`, and procedure-specific mapping now requires non-identity process/procedure structure rather than `identifiers` alone.
+- Raze gap-fix recheck `.harness/evaluations/sprint-ets-16-plan-gapfix.yaml` returned `APPROVE` confidence 0.94 with no remaining required fixes.
+
+---
+
 ## 2026-05-06T18:45Z — Sprint 15 GeoJSON expansion Generator
 
 **Triggered by user instruction**: "Start Generator for S-ETS-15-01."

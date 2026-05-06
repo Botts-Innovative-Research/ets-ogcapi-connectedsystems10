@@ -2,6 +2,19 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T15:48Z — Sprint 14 Update hardening Generator
+
+**Triggered by user instruction**: "OK, keep going."
+
+- Implemented `S-ETS-14-01` changed-field hardening for the guarded Update/PATCH systems lifecycle.
+- Updated `UpdateTests.systemsPatchLifecycleOptIn` so positive PATCH evidence requires GET after PATCH and `properties.name` equality with the intended patched value.
+- Added `VerifyUpdateChangedFieldAssertion` with focused coverage for nested-name extraction, happy path, missing-name failure, and unchanged-name failure, including REQ/SCENARIO trace comments for `REQ-ETS-PART1-011`.
+- Verification: formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS with `117 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke against GeoRobotix `74 total / 52 passed / 0 failed / 22 skipped` with zero IUT-bound POST/PUT/DELETE/PATCH across 41 recognized request-log entries.
+- Local OSH readiness probe still does not support positive Update evidence: `/conformance` returned HTTP 401 and `OPTIONS /systems/040g` omitted PATCH.
+- Raze implementation review `.harness/evaluations/sprint-ets-14-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.84 for missing test trace comments; gap-fix recheck `.harness/evaluations/sprint-ets-14-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.94 with no required fixes remaining.
+
+---
+
 ## 2026-05-06T15:31Z — Sprint 14 Update hardening planning
 
 **Triggered by user instruction**: "OK, keep going."

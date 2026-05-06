@@ -1,10 +1,10 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T15:31Z
+Last updated: 2026-05-06T15:58Z
 
 ## Current Sprint Evidence
 
-Sprint ets-14 Update positive mutable-IUT hardening planning:
+Sprint ets-14 Update positive mutable-IUT hardening:
 
 - Planning probe:
   - Local OSH IUT host URL: `http://localhost:8081/sensorhub/api`
@@ -12,6 +12,29 @@ Sprint ets-14 Update positive mutable-IUT hardening planning:
   - `OPTIONS /systems/040g`: HTTP 200, `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH absent.
   - Simple authenticated `/conformance` curl probe returned HTTP 401 with attempted basic credentials; established TeamEngine smoke credential path remains the authoritative local path.
 - Interpretation: local OSH remains a dedicated mutable CRD fixture, but current evidence does not support positive Update/PATCH execution. Sprint 14 Generator must not issue PATCH unless `/conf/update`, `OPTIONS PATCH`, and changed-field verification are all available. If a future probe confirms `/conf/update` while successful `OPTIONS /systems/{id}` still omits PATCH, the readiness assertion should FAIL for `/req/update/system` and lifecycle should SKIP before PATCH.
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `117 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-14-maven-2026-05-06.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator bash scripts/smoke-test.sh`
+  - Result: `74 total / 52 passed / 0 failed / 22 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator/s-ets-01-03-teamengine-container-2026-05-06.log`
+  - No-mutation oracle: recognized 41 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Local OSH readiness probe:
+  - `/conformance`: HTTP 401 at `http://localhost:8081/sensorhub/api/conformance`.
+  - `OPTIONS /systems/040g`: HTTP 200, `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH absent.
+  - No local OSH PATCH was issued.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-14-adversarial-implementation.yaml`
+  - Verdict: `GAPS_FOUND` confidence 0.84.
+  - Required fix: add REQ/SCENARIO trace comments to `VerifyUpdateChangedFieldAssertion`.
+- Raze gap-fix recheck:
+  - Artifact: `.harness/evaluations/sprint-ets-14-adversarial-gapfix.yaml`
+  - Verdict: `APPROVE` confidence 0.94.
+  - Required fixes: none remaining.
 
 Sprint ets-13 Update/PATCH safety-gated systems subset:
 

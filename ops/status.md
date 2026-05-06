@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T15:31Z
+Last updated: 2026-05-06T15:58Z
 
 ## Fresh-Session Entry Point
 
@@ -38,11 +38,11 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD after Sprint 13 gate commit: `1a14775`
+- ETS HEAD after Sprint 14 Generator commit.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-13-01` Generator complete as PARTIAL at commit `cd38223`; gates committed at `1a14775`.
-- Current sprint status: Sprint ets-14 planning is complete for `S-ETS-14-01` Update positive mutable-IUT hardening; Raze gap-fix recheck approved with confidence 0.93.
-- Latest committed planning: `21c409c` (`Plan Sprint 13 update safety gate`).
+- Latest implemented story: `S-ETS-14-01` Generator complete as PARTIAL and committed.
+- Current sprint status: Sprint ets-14 Generator implementation is committed for `S-ETS-14-01` Update positive mutable-IUT hardening; Raze implementation gap-fix recheck approved with no remaining required fixes.
+- Latest committed planning: `4392bab` (`Plan Sprint 14 update hardening`).
 
 ## Sprint ets-14 Planning
 
@@ -57,6 +57,13 @@ Update positive mutable-IUT hardening:
 - Guardrail: do not claim local OSH positive Update support without observed `/conf/update`, `OPTIONS PATCH`, and changed-field evidence. Default GeoRobotix smoke must still issue zero IUT-bound PATCH.
 - Raze planning review: `.harness/evaluations/sprint-ets-14-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.87; required fixes applied.
 - Raze planning gap-fix review: `.harness/evaluations/sprint-ets-14-plan-gapfix.yaml` returned `APPROVE` confidence 0.93 with no remaining required fixes.
+- Implementation: `UpdateTests.systemsPatchLifecycleOptIn` now requires GET after PATCH and asserts `properties.name` equals the intended patched value; `VerifyUpdateChangedFieldAssertion` adds four focused unit tests.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `117 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-14-maven-2026-05-06.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator bash scripts/smoke-test.sh`, result `74 total / 52 passed / 0 failed / 22 skipped`.
+- Smoke no-mutation oracle: recognized 41 IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries for GeoRobotix.
+- Local OSH readiness probe: `/conformance` HTTP 401; `OPTIONS /systems/040g` HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH absent. No local OSH PATCH was issued.
+- Raze implementation review: `.harness/evaluations/sprint-ets-14-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.84 for missing REQ/SCENARIO trace comments in `VerifyUpdateChangedFieldAssertion`.
+- Raze gap-fix recheck: `.harness/evaluations/sprint-ets-14-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.94 with no remaining required fixes.
 
 ## Sprint ets-13 Generator Evidence
 
@@ -229,15 +236,15 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 14 planning.
-2. Kick off Generator for `S-ETS-14-01`.
+1. Run Raze implementation review for Sprint 14.
+2. Apply any required fixes, then commit Sprint 14 Generator.
 3. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-14 planning until Raze review and commit:
+Current dirty worktree is expected Sprint ets-14 Generator implementation until Raze review and commit:
 
-- `.harness/contracts/sprint-ets-14.yaml`
-- `epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md`
-- OpenSpec/story/traceability/status/changelog/test-results planning reconciliation
+- `UpdateTests.java` changed-field assertion after PATCH.
+- `VerifyUpdateChangedFieldAssertion.java` unit coverage.
+- OpenSpec/story/traceability/status/changelog/test-results Generator reconciliation.
 - External local fixture change still exists in separate `sar-ops` repo and is intentionally not part of ETS commits.

@@ -145,8 +145,9 @@ public class UpdateTests {
 		}
 
 		try {
+			String patchedName = "ETS Sprint 14 Update patch " + Instant.now();
 			Map<String, Object> patchBody = Map.of("type", "Feature", "properties",
-					Map.of("uid", systemUid, "name", "ETS Sprint 13 Update patch " + Instant.now()));
+					Map.of("uid", systemUid, "name", patchedName));
 			Response patchResponse = given().accept("application/json")
 				.contentType("application/json")
 				.body(patchBody)
@@ -157,6 +158,7 @@ public class UpdateTests {
 
 			Response getResponse = given().accept("application/json").when().get(URI.create(resourceUri)).andReturn();
 			ETSAssert.assertStatus(getResponse, 200, REQ_UPDATE_SYSTEM);
+			assertPatchedSystemName(parseBody(getResponse), patchedName);
 		}
 		finally {
 			Response deleteResponse = given().accept("application/json")
@@ -313,6 +315,28 @@ public class UpdateTests {
 
 	private String asString(Object value) {
 		return value instanceof String ? (String) value : null;
+	}
+
+	static void assertPatchedSystemName(Map<String, Object> systemBody, String expectedName) {
+		String actualName = systemName(systemBody);
+		if (!expectedName.equals(actualName)) {
+			ETSAssert.failWithUri(REQ_UPDATE_SYSTEM,
+					"PATCH status was accepted, but GET after PATCH did not expose the expected properties.name. "
+							+ "Expected '" + expectedName + "', got '" + actualName + "'.");
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	static String systemName(Map<String, Object> systemBody) {
+		if (systemBody == null) {
+			return null;
+		}
+		Object propertiesObj = systemBody.get("properties");
+		if (!(propertiesObj instanceof Map)) {
+			return null;
+		}
+		return ((Map<String, Object>) propertiesObj).get("name") instanceof String
+				? (String) ((Map<String, Object>) propertiesObj).get("name") : null;
 	}
 
 }

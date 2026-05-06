@@ -1,0 +1,49 @@
+agent: "Raze"
+role: "Red Team / Adversarial Reviewer"
+artifact_type: "gapfix_review"
+sprint: "ets-14"
+story: "S-ETS-14-01"
+created_utc: "2026-05-06T15:57:29Z"
+verdict: "APPROVE"
+confidence: 0.94
+
+reviewed_scope:
+  instruction: "Focused gap-fix recheck only for RAZE-ETS14-IMPL-GAP-001."
+  reviewed_file:
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/VerifyUpdateChangedFieldAssertion.java"
+  prior_artifact:
+    - ".harness/evaluations/sprint-ets-14-adversarial-implementation.yaml"
+  evidence_reused:
+    - "ops/test-results/sprint-ets-14-maven-2026-05-06.log"
+    - "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+  commands_run:
+    - "sed -n '1,120p' src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/VerifyUpdateChangedFieldAssertion.java"
+    - "rg -n 'RAZE-ETS14-IMPL-GAP-001|REQ-ETS-PART1-011|SCENARIO-ETS-PART1-011' src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/VerifyUpdateChangedFieldAssertion.java .harness/evaluations/sprint-ets-14-adversarial-implementation.yaml"
+    - "tail -n 25 ops/test-results/sprint-ets-14-maven-2026-05-06.log"
+    - "head -c 120 /tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+  not_run:
+    - "Docker"
+    - "Maven"
+    - "TeamEngine"
+
+findings:
+  - id: "RAZE-ETS14-IMPL-GAP-001"
+    severity: "medium"
+    category: "traceability"
+    prior_status: "open"
+    current_status: "closed"
+    title: "New status-only PATCH regression tests now reference the required REQ/SCENARIO IDs."
+    evidence:
+      - "VerifyUpdateChangedFieldAssertion.java now includes a Traceability comment with REQ-ETS-PART1-011."
+      - "The same comment includes SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-CHANGED-FIELD-001."
+      - "The same comment includes SCENARIO-ETS-PART1-011-UPDATE-OPTIONS-PATCH-SKIP-SEMANTICS-001."
+    assessment: "The prior workflow traceability gap is closed."
+
+verification_summary:
+  maven_existing_evidence: "ops/test-results/sprint-ets-14-maven-2026-05-06.log reports 117 tests / 0 failures / 0 errors / 3 skipped and BUILD SUCCESS."
+  smoke_existing_evidence: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml reports total=74, passed=52, failed=0, skipped=22."
+  rerun_decision: "No Docker/Maven/TeamEngine rerun was necessary for this comment-only traceability gap-fix recheck."
+
+required_fixes: []
+remaining_risk:
+  - "This recheck only evaluates RAZE-ETS14-IMPL-GAP-001. It does not expand positive mutable-IUT PATCH evidence beyond the prior implementation review."

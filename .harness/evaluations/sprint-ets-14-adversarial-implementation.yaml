@@ -1,0 +1,128 @@
+agent: "Raze"
+role: "Red Team / Adversarial Reviewer"
+artifact_type: "implementation_review"
+sprint: "ets-14"
+story: "S-ETS-14-01"
+created_utc: "2026-05-06T15:53:00Z"
+verdict: "GAPS_FOUND"
+confidence: 0.84
+
+reviewed_scope:
+  instruction: "Review current uncommitted Sprint 14 Generator implementation changes only; do not modify source code."
+  focus:
+    - "false-positive Update/PATCH conformance"
+    - "status-only PATCH evidence"
+    - "OPTIONS/PATCH verdict matrix"
+    - "local OSH evidence overclaim"
+    - "default GeoRobotix no-PATCH safety"
+    - "docs/spec/story/traceability consistency"
+    - "unrelated dirty files"
+  source_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/UpdateTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/VerifyUpdateChangedFieldAssertion.java"
+  docs_and_specs:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-02-part1-classes.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+    - ".harness/contracts/sprint-ets-14.yaml"
+  evidence_artifacts:
+    - "ops/test-results/sprint-ets-14-maven-2026-05-06.log"
+    - "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    - "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s14-generator/s-ets-01-03-teamengine-container-2026-05-06.log"
+    - "/tmp/ets-s14-local-osh-conformance.txt"
+    - "/tmp/ets-s14-local-osh-options.txt"
+
+findings:
+  - id: "RAZE-ETS14-IMPL-GAP-001"
+    severity: "medium"
+    category: "traceability"
+    status: "open"
+    title: "New status-only PATCH regression tests do not reference the required REQ/SCENARIO IDs in comments."
+    location:
+      file: "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/VerifyUpdateChangedFieldAssertion.java"
+      lines: "11-13"
+    evidence:
+      - "The only class-level trace comment is: 'Regression coverage for S-ETS-14-01 status-only PATCH false-positive prevention.'"
+      - "The project workflow requires tests to reference REQ-* and SCENARIO-* in comments."
+      - "The relevant IDs are REQ-ETS-PART1-011 and SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-CHANGED-FIELD-001; optionally also SCENARIO-ETS-PART1-011-UPDATE-OPTIONS-PATCH-SKIP-SEMANTICS-001 for the false-positive context."
+    impact: "Spec-to-test traceability is incomplete for the four new unit tests, even though the behavior they assert is correct."
+    required_fix: "Add REQ-ETS-PART1-011 and the applicable SCENARIO-ETS-PART1-011-* IDs to the test comment or per-test comments."
+
+  - id: "RAZE-ETS14-IMPL-OBS-001"
+    severity: "info"
+    category: "implementation"
+    status: "closed"
+    title: "Status-only PATCH false-positive path is materially closed."
+    evidence:
+      - "UpdateTests.systemsPatchLifecycleOptIn now captures a unique patchedName, issues PATCH, performs GET on the resource URI, and calls assertPatchedSystemName."
+      - "assertPatchedSystemName fails with /req/update/system when GET does not expose the expected properties.name."
+      - "VerifyUpdateChangedFieldAssertion covers extraction, happy path, missing name failure, and unchanged name failure."
+    assessed_risk: "Low; positive PATCH cannot pass on status code alone in the implemented systems lifecycle path."
+
+  - id: "RAZE-ETS14-IMPL-OBS-002"
+    severity: "info"
+    category: "verdict_matrix"
+    status: "closed"
+    title: "OPTIONS/PATCH matrix behavior matches the Sprint 14 intent for the reviewed cases."
+    evidence:
+      - "systemResourceOptionsPatchReadinessPrecondition asserts successful OPTIONS status and fails /req/update/system if Allow omits PATCH."
+      - "systemsPatchLifecycleOptIn skips before PATCH when Allow does not include PATCH."
+      - "Default GeoRobotix smoke skips Update because /conf/update is absent and CreateReplaceDelete dependency is skipped; no PATCH is issued."
+    assessed_risk: "Low for the declared focus. A future mutable-IUT gate should still exercise declared /conf/update plus OPTIONS-without-PATCH live."
+
+  - id: "RAZE-ETS14-IMPL-OBS-003"
+    severity: "info"
+    category: "evidence"
+    status: "closed"
+    title: "Verification artifacts support the Maven and default GeoRobotix no-PATCH claims."
+    evidence:
+      - "Maven log reports: Tests run: 117, Failures: 0, Errors: 0, Skipped: 3; BUILD SUCCESS."
+      - "Smoke XML reports: total=74, passed=52, failed=0, skipped=22."
+      - "Replayed scripts/no-mutation-oracle.py against the smoke container log: recognized_iut_request_logs=41."
+      - "Targeted grep found no IUT-bound Request method POST/PUT/DELETE/PATCH entries for https://api.georobotix.io/ogc/t18/api."
+    assessed_risk: "Low; I did not rerun Docker/Maven/TeamEngine per instruction."
+
+  - id: "RAZE-ETS14-IMPL-OBS-004"
+    severity: "info"
+    category: "local_osh"
+    status: "closed"
+    title: "Local OSH evidence is not overclaimed as positive Update/PATCH support."
+    evidence:
+      - "/tmp/ets-s14-local-osh-conformance.txt shows HTTP 401 Unauthorized for /sensorhub/api/conformance."
+      - "/tmp/ets-s14-local-osh-options.txt shows HTTP 200 with Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+      - "OpenSpec, story, status, changelog, and test-results keep REQ-ETS-PART1-011 PARTIAL and state that local OSH does not currently provide positive Update evidence."
+    assessed_risk: "Low."
+
+  - id: "RAZE-ETS14-IMPL-OBS-005"
+    severity: "info"
+    category: "docs_consistency"
+    status: "closed"
+    title: "Current changelog ordering is correct after the user's correction."
+    evidence:
+      - "ops/changelog.md now has 2026-05-06T15:48Z Sprint 14 Generator above the 2026-05-06T15:31Z planning entry."
+    assessed_risk: "Low."
+
+  - id: "RAZE-ETS14-IMPL-OBS-006"
+    severity: "info"
+    category: "worktree"
+    status: "closed"
+    title: "No unrelated dirty files were found in the ETS worktree."
+    evidence:
+      - "git status --short shows expected Sprint 14 implementation/docs files, the archived Maven log, and the new Update unit-test file."
+      - "No external sar-ops file is dirty inside this ETS worktree."
+    assessed_risk: "Low."
+
+required_fixes:
+  - id: "RAZE-ETS14-IMPL-GAP-001"
+    fix: "Add REQ-ETS-PART1-011 and applicable SCENARIO-ETS-PART1-011-* IDs to the new JUnit regression test comments."
+    verify_with:
+      - "rg -n \"REQ-ETS-PART1-011|SCENARIO-ETS-PART1-011\" src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/VerifyUpdateChangedFieldAssertion.java"
+      - "bash scripts/mvn-test-via-docker.sh, unless the main agent elects a narrower no-code-comment verification policy for a comment-only fix."
+
+non_blocking_observations:
+  - "A future positive mutable-IUT gate should include live evidence for declared /conf/update plus OPTIONS PATCH plus changed-field GET proof. Current Sprint 14 appropriately does not claim that."
+  - "The current implementation is behaviorally acceptable for false-positive PATCH hardening; the open gap is workflow traceability on the new unit-test file."

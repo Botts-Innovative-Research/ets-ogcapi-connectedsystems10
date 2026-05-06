@@ -1,7 +1,7 @@
 # Story S-ETS-14-01: Update Positive Mutable-IUT Hardening
 
 > Sprint: ets-14
-> Status: PLANNED
+> Status: IMPLEMENTED
 > Priority: P0
 > Complexity: M
 > Epic: epic-ets-02-part1-classes
@@ -64,13 +64,26 @@ The Generator must:
 
 ## Definition of Done
 
-- [ ] `UpdateTests` positive PATCH lifecycle asserts changed representation content after PATCH.
-- [ ] Unit tests cover changed-field extraction/assertion behavior.
-- [ ] Missing `OPTIONS Allow: PATCH` uses the verdict matrix: declared `/conf/update` plus successful OPTIONS without PATCH FAILs readiness, while lifecycle still SKIPs before PATCH.
-- [ ] GeoRobotix default smoke still emits zero IUT-bound PATCH requests.
-- [ ] Local OSH readiness probe is run or explicitly blocked with exact reason and recorded in `ops/test-results.md`.
-- [ ] OpenSpec, story, traceability, status, changelog, and test-results are reconciled.
-- [ ] Raze reviews non-trivial planning and implementation changes before completion.
+- [x] `UpdateTests` positive PATCH lifecycle asserts changed representation content after PATCH.
+- [x] Unit tests cover changed-field extraction/assertion behavior.
+- [x] Missing `OPTIONS Allow: PATCH` uses the verdict matrix: declared `/conf/update` plus successful OPTIONS without PATCH FAILs readiness, while lifecycle still SKIPs before PATCH.
+- [x] GeoRobotix default smoke still emits zero IUT-bound PATCH requests.
+- [x] Local OSH readiness probe is run or explicitly blocked with exact reason and recorded in `ops/test-results.md`.
+- [x] OpenSpec, story, traceability, status, changelog, and test-results are reconciled.
+- [x] Raze reviews non-trivial planning and implementation changes before completion.
+
+## Implementation Notes
+
+Status: IMPLEMENTED by Sprint 14 Generator on 2026-05-06.
+
+- Updated `systemsPatchLifecycleOptIn` so a successful PATCH must be followed by GET and a `properties.name` equality assertion against the intended patched value. PATCH status alone no longer counts as positive lifecycle evidence.
+- Added `VerifyUpdateChangedFieldAssertion` with four focused unit tests for nested `properties.name` extraction, happy path, missing name failure, and unchanged name failure.
+- Preserved the OPTIONS/PATCH verdict split: the existing readiness test fails successful OPTIONS without PATCH when Update is declared, while lifecycle still skips before PATCH if readiness is absent.
+- Verification: formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS with `117 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-14-maven-2026-05-06.log`.
+- E2E verification: default TeamEngine smoke against GeoRobotix reported `74 total / 52 passed / 0 failed / 22 skipped`, with 41 recognized IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH.
+- Local OSH readiness probe: unauthenticated `/conformance` returned HTTP 401, and `OPTIONS /systems/040g` returned HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH is still absent. No local OSH PATCH was issued.
+- Raze implementation review: `.harness/evaluations/sprint-ets-14-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.84 for missing REQ/SCENARIO trace comments in the new regression test. Gap fix added `REQ-ETS-PART1-011`, `SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-CHANGED-FIELD-001`, and `SCENARIO-ETS-PART1-011-UPDATE-OPTIONS-PATCH-SKIP-SEMANTICS-001` to the test comment.
+- Raze gap-fix recheck: `.harness/evaluations/sprint-ets-14-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.94 with no remaining required fixes.
 
 ## Out Of Scope
 

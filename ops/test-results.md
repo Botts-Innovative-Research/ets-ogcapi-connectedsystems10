@@ -1,10 +1,10 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T19:14Z
+Last updated: 2026-05-06T19:26Z
 
 ## Current Sprint Evidence
 
-Sprint ets-16 SensorML non-system read-only expansion planning:
+Sprint ets-16 SensorML non-system read-only expansion:
 
 - OGC source verification:
   - Source: `api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc`
@@ -23,6 +23,33 @@ Sprint ets-16 SensorML non-system read-only expansion planning:
   - `.harness/evaluations/sprint-ets-16-plan-adversarial.yaml`: `GAPS_FOUND` confidence 0.86.
   - Required fixes applied: explicit resource conformance-class gating for `/conf/deployment`, `/conf/procedure`, and `/conf/property`; procedure-specific mapping now requires non-identity process/procedure structure, not `identifiers` alone.
   - `.harness/evaluations/sprint-ets-16-plan-gapfix.yaml`: `APPROVE` confidence 0.94, no remaining required fixes.
+- Generator implementation:
+  - `SensorMlTests` now has 9 read-only @Tests, adding deployment, procedure, and property SensorML schema/mapping checks.
+  - Deployment/procedure/property checks gate on matching resource conformance classes before judging SensorML evidence.
+  - CS API default `items` wrappers and empty collections SKIP with requirement-cited reasons rather than PASS.
+  - Deployment mapping requires explicit SensorML `type=Deployment`, preserved identity, and non-empty `deployedSystems`.
+  - Procedure mapping requires explicit SensorML procedure-compatible type, preserved identity, and non-identity process/procedure structure beyond identifiers.
+  - Property mapping requires property-compatible SensorML and mapping evidence when a property item exists; GeoRobotix currently has no property items.
+  - `VerifySensorMlResourceMappingAssertions` adds 6 focused helper regressions.
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `128 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-16-maven-2026-05-06.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator bash scripts/smoke-test.sh`
+  - Result: `80 total / 54 passed / 0 failed / 26 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator/s-ets-01-03-teamengine-container-2026-05-06.log`
+  - No-mutation oracle: recognized 53 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Runtime outcome:
+  - `deploymentSensorMlHasSchemaAndMapping`: PASS using `application/sml+json` alternate link `https://api.georobotix.io/ogc/t18/api/deployments/16sp744ch58g?f=sml3`.
+  - `procedureSensorMlHasSchemaAndMapping`: PASS using `application/sml+json` alternate link `https://api.georobotix.io/ogc/t18/api/procedures/164p7ed8l47g?f=sml3`.
+  - `propertySensorMlHasSchemaAndMapping`: SKIP because `/properties` returned an empty collection.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-16-adversarial-implementation.yaml`
+  - Verdict: `APPROVE` confidence 0.92.
+  - Required fixes: none.
 
 Sprint ets-15 GeoJSON non-system read-only expansion:
 

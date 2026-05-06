@@ -2,6 +2,22 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T19:26Z — Sprint 16 SensorML expansion Generator
+
+**Triggered by user instruction**: "Start Generator for S-ETS-16-01."
+
+- Implemented `S-ETS-16-01` as a PARTIAL read-only expansion of `REQ-ETS-PART1-013`.
+- Extended `SensorMlTests` with `/deployments`, `/procedures`, and `/properties` SensorML schema/mapping checks.
+- Preserved fallback honesty: CS API default `items` wrappers, default Feature JSON, and empty collections SKIP with requirement-cited reasons rather than PASSing SensorML assertions.
+- Added resource-specific predicates so generic identity JSON alone cannot close mapping claims: deployment `type=Deployment` plus `deployedSystems`, procedure-compatible SensorML plus non-identity process/procedure structure beyond identifiers, and property-compatible SensorML with identity/definition/identifier evidence when present.
+- Added `VerifySensorMlResourceMappingAssertions` helper regressions for empty collection SKIP, first item extraction, identifiers-only procedure rejection, procedure structure acceptance, property evidence, and non-empty mapping values.
+- Verification: formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS with `128 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke against GeoRobotix `80 total / 54 passed / 0 failed / 26 skipped`, with zero IUT-bound POST/PUT/DELETE/PATCH across 53 recognized request-log entries.
+- Runtime evidence: deployment and procedure SensorML checks PASS through `application/sml+json` alternate links; property SensorML check SKIPs because GeoRobotix `/properties` is empty.
+- Reconciled OpenSpec, story, traceability, epic, ops status, and test-results.
+- Raze implementation review `.harness/evaluations/sprint-ets-16-adversarial-implementation.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
+
+---
+
 ## 2026-05-06T19:14Z — Sprint 16 SensorML expansion planning
 
 **Triggered by user instruction**: "Continue."

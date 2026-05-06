@@ -1,0 +1,127 @@
+schema_version: "1.0"
+artifact_type: adversarial_implementation_review
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-06T19:28:25Z"
+sprint: "sprint-ets-16"
+story_id: "S-ETS-16-01"
+story_title: "SensorML non-system read-only expansion"
+scope: "Current uncommitted Sprint 16 Generator implementation only"
+verdict: APPROVE
+confidence: 0.92
+
+review_constraints:
+  source_code_modified: false
+  docker_rerun: false
+  maven_rerun: false
+  teamengine_rerun: false
+  evidence_strategy: "Used current working tree and archived Maven/smoke/no-mutation evidence; only replayed lightweight no-mutation oracle against the supplied smoke container log."
+
+evidence_reviewed:
+  working_tree:
+    status: "Dirty worktree contains expected Sprint 16 Generator implementation, documentation, handoff, Maven evidence log, and new SensorML regression test file; no unrelated dirty files were identified in git status."
+    files_reviewed:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/VerifySensorMlResourceMappingAssertions.java"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+      - "epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md"
+      - "epics/epic-ets-02-part1-classes.md"
+      - "_bmad/traceability.md"
+      - ".harness/handoffs/generator-handoff.yaml"
+      - "ops/status.md"
+      - "ops/test-results.md"
+      - "ops/changelog.md"
+  formatter:
+    result: "BUILD SUCCESS"
+    source: "User-supplied final gate evidence; not rerun by Raze."
+  maven:
+    log: "ops/test-results/sprint-ets-16-maven-2026-05-06.log"
+    observed_result: "BUILD SUCCESS; Tests run: 128, Failures: 0, Errors: 0, Skipped: 3"
+    targeted_regressions: "VerifySensorMlResourceMappingAssertions ran 6 tests with 0 failures, 0 errors, 0 skipped."
+  teamengine_smoke:
+    output_dir: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator"
+    result_xml: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    observed_result: "80 total / 54 passed / 0 failed / 26 skipped"
+    sprint_16_observations:
+      - "deploymentSensorMlHasSchemaAndMapping passed using an application/sml+json alternate link."
+      - "procedureSensorMlHasSchemaAndMapping passed using an application/sml+json alternate link."
+      - "propertySensorMlHasSchemaAndMapping skipped because /properties returned an empty items array."
+  no_mutation:
+    oracle_log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator/s-ets-01-03-teamengine-container-2026-05-06.log"
+    observed_result: "recognized_iut_request_logs=53; no IUT-bound POST/PUT/DELETE/PATCH reported."
+    source_scan: "No .post/.put/.patch/.delete invocations found in SensorML implementation or SensorML regression test sources."
+
+findings:
+  - id: "RAZE-ETS16-IMPL-001"
+    severity: pass
+    title: "CS API items wrapper and default Feature JSON false PASS risk is blocked"
+    evidence:
+      - "SensorMlTests.assertExplicitSensorMlRepresentation fails when the candidate SensorML body contains an items wrapper or has type Feature/FeatureCollection."
+      - "fetchSensorMlResource treats generic JSON and direct Accept application/sml+json Feature responses as fallback evidence, not as conformance PASS evidence."
+      - "VerifySensorMlResourceMappingAssertions.skipsEmptyCollectionWithoutVacuousPass covers the empty-collection path."
+    conclusion: "The implementation does not pass merely because a CS API collection or item returns default Feature JSON."
+  - id: "RAZE-ETS16-IMPL-002"
+    severity: pass
+    title: "Resource conformance-class gating uses SKIP-before-judgment semantics"
+    evidence:
+      - "Deployment SensorML checks require /conf/deployment before judging /deployments."
+      - "Procedure SensorML checks require /conf/procedure before judging /procedures."
+      - "Property SensorML checks require /conf/property before judging /properties."
+      - "The skipIfConformanceMissing helper reads /conformance and throws SkipException before resource assertions execute."
+    conclusion: "Absent resource conformance classes are not converted into false failures or false passes."
+  - id: "RAZE-ETS16-IMPL-003"
+    severity: pass
+    title: "Resource-specific SensorML mapping predicates are narrow enough for Sprint 16 scope"
+    evidence:
+      - "Deployment requires explicit SensorML, type Deployment, preserved identity, and non-empty deployedSystems mapping evidence."
+      - "Procedure requires explicit SensorML, process/system/component-compatible type, preserved identity, and non-identity procedure/process structure such as definition, inputs, outputs, parameters, characteristics, or capabilities."
+      - "Procedure identifiers alone are explicitly rejected by regression coverage."
+      - "Property requires explicit SensorML, Property-compatible type, and non-empty id/uniqueId/definition/identifiers mapping evidence."
+    conclusion: "The checks are not satisfied by generic identity-only JSON or resource-agnostic SensorML-looking documents."
+  - id: "RAZE-ETS16-IMPL-004"
+    severity: pass
+    title: "Empty /properties is represented honestly as SKIP"
+    evidence:
+      - "firstCollectionItem throws SkipException when items is empty."
+      - "Smoke evidence shows propertySensorMlHasSchemaAndMapping skipped with the reason that /properties returned an empty items array."
+      - "Story, traceability, status, and test-results keep positive property evidence open instead of claiming observed PASS."
+    conclusion: "The implementation does not overclaim property SensorML closure from an empty GeoRobotix /properties collection."
+  - id: "RAZE-ETS16-IMPL-005"
+    severity: pass
+    title: "No-mutation evidence is adequate for the read-only SensorML subset"
+    evidence:
+      - "SensorML implementation paths use GET requests for collections, items, and alternate links."
+      - "The no-mutation oracle recognized 53 IUT-bound request-log entries and reported no IUT-bound POST/PUT/DELETE/PATCH."
+      - "No mutating HTTP client calls were found in the SensorML source or helper regression tests."
+    conclusion: "The Sprint 16 implementation is consistent with the read-only/no-mutation planning constraint."
+  - id: "RAZE-ETS16-IMPL-006"
+    severity: pass
+    title: "OGC SensorML requirement scope remains PARTIAL and does not creep into samplingFeature"
+    evidence:
+      - "OpenSpec REQ-ETS-PART1-013 marks Sprint 16 as PARTIAL-IMPLEMENTED and keeps write-side media-type checks, relation-types, full external SensorML 3.0 schema validation, mutation-side behavior, and positive property evidence open."
+      - "The Generator handoff and traceability table describe deployment/procedure/property only; samplingFeature SensorML is not claimed."
+      - "SensorMlTests class documentation states the implemented read-only subset and lists remaining open SensorML work."
+    conclusion: "Docs and implementation do not claim full REQ-ETS-PART1-013 closure."
+  - id: "RAZE-ETS16-IMPL-007"
+    severity: pass
+    title: "Docs, story, traceability, status, and evidence are reconciled"
+    evidence:
+      - "Story status is Generator complete pending Raze review, with Sprint 16 DoD evidence aligned to Maven and smoke results."
+      - "ops/status.md, ops/test-results.md, ops/changelog.md, _bmad/traceability.md, the epic row, and generator handoff consistently report Maven 128/0/0/3, smoke 80/54/0/26, no-mutation recognized_iut_request_logs=53, deployment/procedure PASS, and property SKIP."
+      - "No conflicting claim was found that REQ-ETS-PART1-013 is fully implemented."
+    conclusion: "The current documentation state is coherent with implementation and archived evidence."
+  - id: "RAZE-ETS16-IMPL-008"
+    severity: pass
+    title: "Unrelated dirty-file risk is low"
+    evidence:
+      - "git status entries are limited to Sprint 16 implementation/docs/handoff/evidence and the new SensorML regression test file."
+      - "No source changes outside the SensorML Sprint 16 scope were identified."
+    conclusion: "No unrelated dirty-file blocker was found."
+
+required_fixes: []
+
+remaining_concerns: []
+
+recommendations:
+  - "Keep REQ-ETS-PART1-013 PARTIAL until write-side media-type checks, relation-types, full SensorML 3.0 external schema validation, mutation-side behavior, and positive property evidence are implemented and verified."
+  - "When an IUT with non-empty /properties is available, rerun Sprint 16 smoke to replace the current property SKIP with positive evidence or a concrete failure."

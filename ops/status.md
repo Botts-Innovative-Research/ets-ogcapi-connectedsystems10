@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T18:56Z
+Last updated: 2026-05-06T19:34Z
 
 ## Fresh-Session Entry Point
 
@@ -16,8 +16,8 @@ Read these first:
 - `ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md`
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
-- `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-15.yaml`
+- `.harness/handoffs/generator-handoff.yaml`
+- `.harness/contracts/sprint-ets-16.yaml`
 
 ## Current State
 
@@ -38,29 +38,38 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD after Sprint 15 Generator commit `5dcbd3f` (`Implement Sprint 15 GeoJSON expansion`); Sprint 16 planning is in progress.
+- ETS HEAD before Sprint 16 Generator commit is `0f198ec` (`Plan Sprint 16 SensorML expansion`); Sprint 16 Generator is implemented and Raze-approved, with commit next.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-15-01` Generator complete as PARTIAL and committed.
-- Current sprint status: Sprint ets-16 planning drafted and Raze-approved for read-only non-system SensorML deployment/procedure/property checks.
-- Latest committed planning: `a45178c` (`Plan Sprint 15 GeoJSON expansion`); Sprint 16 planning pending commit.
+- Latest implemented story: `S-ETS-16-01` Generator complete as PARTIAL and Raze-approved; commit is next.
+- Current sprint status: Sprint ets-16 Generator added read-only non-system SensorML deployment/procedure/property checks.
+- Latest committed planning: `0f198ec` (`Plan Sprint 16 SensorML expansion`).
 
-## Sprint ets-16 Planning Evidence
+## Sprint ets-16 Generator Evidence
 
 SensorML non-system read-only expansion:
 
 - Story: `epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md`
 - Contract: `.harness/contracts/sprint-ets-16.yaml`
-- OpenSpec: extends `REQ-ETS-PART1-013`; status remains PARTIAL.
-- Scope planned: deployment, procedure, and property SensorML schema/mapping checks using read-only GET requests.
-- Out of scope: `/req/sensorml/mediatype-write`, `/req/sensorml/relation-types`, full external SensorML 3.0 schema validation, sampling feature SensorML claims, GeoJSON, Part 2, and any mutation request.
+- OpenSpec: extends `REQ-ETS-PART1-013`; status remains PARTIAL-IMPLEMENTED.
+- Scope implemented: deployment, procedure, and property SensorML schema/mapping checks using read-only GET requests.
+- Out of scope: `/req/sensorml/mediatype-write`, `/req/sensorml/relation-types`, full external SensorML 3.0 schema validation, mutation-side behavior, sampling feature SensorML claims, GeoJSON, Part 2, and any mutation request.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-06 and not stale.
 - OGC source verification: `api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc` fetched HTTP 200 on 2026-05-06; upstream subrequirements list deployment/procedure/property schema and mapping paths.
 - GeoRobotix probes: `/conformance` declares `/conf/sensorml`, `/conf/deployment`, `/conf/procedure`, and `/conf/property`.
 - GeoRobotix fallback state: collection `Accept: application/sml+json` requests for `/deployments`, `/procedures`, and `/properties` returned `Content-Type: application/json` CS API wrappers; those wrappers must SKIP rather than PASS SensorML assertions.
 - Positive item evidence: `/deployments/16sp744ch58g?f=sml3` returned SensorML JSON with `type=Deployment`, matching identity, and `deployedSystems`; `/procedures/164p7ed8l47g?f=sml3` returned SensorML JSON with `type=PhysicalSystem`, matching identity, and procedure structure.
-- Current IUT state: `/properties` is empty, so property SensorML assertions must SKIP honestly until an IUT supplies a property item.
+- Implementation: `SensorMlTests` now has 9 @Tests, adding deployment, procedure, and property read-only SensorML checks with per-resource `/conf/deployment`, `/conf/procedure`, and `/conf/property` gating.
+- Resource-specific predicates: deployment requires explicit SensorML `type=Deployment`, preserved identity, and non-empty `deployedSystems`; procedure requires explicit SensorML procedure-compatible type, preserved identity, and non-identity process/procedure structure beyond identifiers; property requires explicit property-compatible SensorML and id/uniqueId/definition/identifier mapping evidence when a property item exists.
+- Current IUT state: `/properties` is empty, so `propertySensorMlHasSchemaAndMapping` SKIPs honestly until an IUT supplies a property item.
+- Unit coverage: `VerifySensorMlResourceMappingAssertions` adds 6 helper regression tests for empty collection SKIP, first item extraction, identifiers-only procedure rejection, procedure structure acceptance, property evidence, and non-empty mapping values.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `128 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-16-maven-2026-05-06.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator bash scripts/smoke-test.sh`, result `80 total / 54 passed / 0 failed / 26 skipped`.
+- Smoke no-mutation oracle: recognized 53 IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries for GeoRobotix.
+- Runtime outcome: deployment and procedure SensorML checks PASS through `application/sml+json` alternate links; property SensorML check SKIPs because GeoRobotix `/properties` is empty.
 - Raze planning review `.harness/evaluations/sprint-ets-16-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.86. Required fixes applied in planning: added resource conformance-class gating for `/conf/deployment`, `/conf/procedure`, and `/conf/property`; tightened procedure mapping so `identifiers` alone cannot satisfy procedure-specific SensorML evidence.
 - Raze planning gap-fix `.harness/evaluations/sprint-ets-16-plan-gapfix.yaml` returned `APPROVE` confidence 0.94 with no remaining required fixes.
+- Raze implementation review `.harness/evaluations/sprint-ets-16-adversarial-implementation.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
+- Next action: commit Sprint 16 Generator.
 
 ## Sprint ets-15 Generator Evidence
 
@@ -278,14 +287,14 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 16 planning.
-2. Start Generator for `S-ETS-16-01`.
+1. Commit Sprint 16 Generator.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-16 planning work plus metrics:
+Current dirty worktree is expected Sprint ets-16 Generator work plus metrics:
 
-- `.harness/contracts/sprint-ets-16.yaml`
+- `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java`
+- `src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/VerifySensorMlResourceMappingAssertions.java`
 - `epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md`
-- OpenSpec/story/traceability/status/changelog/test-results planning reconciliation.
+- OpenSpec/story/traceability/status/changelog/test-results Generator reconciliation.
 - `ops/metrics.md` turn-log updates.

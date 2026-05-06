@@ -1,7 +1,7 @@
 # Story S-ETS-16-01: SensorML Non-System Read-Only Expansion
 
 > Sprint: ets-16
-> Status: PLANNED
+> Status: PARTIAL-IMPLEMENTED - GENERATOR COMPLETE AND RAZE-APPROVED
 > Priority: P0
 > Complexity: M
 > Epic: epic-ets-02-part1-classes
@@ -58,19 +58,34 @@ The sprint remains PARTIAL for `REQ-ETS-PART1-013`.
 7. Preserve the existing `sensorml -> systemfeatures -> core` dependency wiring.
 8. Keep default GeoRobotix smoke non-mutating.
 
+## Implementation Notes
+
+- Extended `SensorMlTests` from 6 to 9 read-only @Tests by adding deployment, procedure, and property SensorML schema/mapping checks.
+- Each new resource check gates on its matching resource conformance class before judgment: `/conf/deployment`, `/conf/procedure`, or `/conf/property`.
+- Deployment and procedure checks fetch explicit `application/sml+json` alternate links from GeoRobotix item resources:
+  - Deployment: `/deployments/16sp744ch58g?f=sml3`, `type=Deployment`, matching `id`/`uniqueId`, non-empty `deployedSystems`.
+  - Procedure: `/procedures/164p7ed8l47g?f=sml3`, `type=PhysicalSystem`, matching `id`/`uniqueId`, non-identity process structure.
+- Property check SKIPs honestly when `/properties` has an empty `items` array; it does not pass vacuously.
+- CS API `items` wrappers and default Feature JSON are fallback evidence only, not SensorML PASS evidence.
+- Added `VerifySensorMlResourceMappingAssertions` with six helper regression tests covering empty collection SKIP, first-item extraction, non-identity procedure predicate behavior, property-compatible type checks, and non-empty mapping values.
+- Maven verification: `bash scripts/mvn-test-via-docker.sh`, BUILD SUCCESS, `128 tests / 0 failures / 0 errors / 3 skipped`; log `ops/test-results/sprint-ets-16-maven-2026-05-06.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator bash scripts/smoke-test.sh`, `80 total / 54 passed / 0 failed / 26 skipped`; report `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s16-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml`.
+- No-mutation oracle: smoke recognized 53 IUT-bound request-log entries and found zero IUT-bound POST/PUT/DELETE/PATCH entries against GeoRobotix.
+- Raze implementation review: `.harness/evaluations/sprint-ets-16-adversarial-implementation.yaml`, `APPROVE` confidence 0.92, no required fixes.
+
 ## Definition of Done
 
-- [ ] `SensorMlTests` covers deployment, procedure, and property read-only SensorML schema/mapping paths.
-- [ ] New tests include comments or descriptions referencing `REQ-ETS-PART1-013` and the matching `SCENARIO-*` IDs.
-- [ ] Deployment/procedure/property SensorML checks SKIP before judgment when the matching resource conformance class is absent.
-- [ ] CS API `items` wrappers and default Feature JSON do not count as SensorML PASS evidence.
-- [ ] Empty `/properties` SKIPs honestly rather than failing or passing vacuously.
-- [ ] Generic JSON identity shape alone does not close deployment/procedure/property schema and mapping predicates.
-- [ ] No POST, PUT, PATCH, or DELETE is issued by default smoke.
-- [ ] Docker Maven and TeamEngine smoke are run and recorded.
-- [ ] OpenSpec, story, traceability, status, changelog, and test-results are reconciled.
-- [ ] Raze reviews Sprint 16 planning changes.
-- [ ] Raze reviews implementation changes before completion.
+- [x] `SensorMlTests` covers deployment, procedure, and property read-only SensorML schema/mapping paths.
+- [x] New tests include comments or descriptions referencing `REQ-ETS-PART1-013` and the matching `SCENARIO-*` IDs.
+- [x] Deployment/procedure/property SensorML checks SKIP before judgment when the matching resource conformance class is absent.
+- [x] CS API `items` wrappers and default Feature JSON do not count as SensorML PASS evidence.
+- [x] Empty `/properties` SKIPs honestly rather than failing or passing vacuously.
+- [x] Generic JSON identity shape alone does not close deployment/procedure/property schema and mapping predicates.
+- [x] No POST, PUT, PATCH, or DELETE is issued by default smoke.
+- [x] Docker Maven and TeamEngine smoke are run and recorded.
+- [x] OpenSpec, story, traceability, status, changelog, and test-results are reconciled.
+- [x] Raze reviews Sprint 16 planning changes.
+- [x] Raze reviews implementation changes before completion.
 
 ## Out Of Scope
 

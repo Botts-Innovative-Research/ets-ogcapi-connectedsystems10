@@ -480,13 +480,14 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 #### REQ-ETS-PART1-011: Update Conformance Class (`/conf/update`) (Sprint 13)
 - **Priority**: MUST
 - **Status**: PARTIAL-IMPLEMENTED by Sprint 13 Generator (2026-05-06; story S-ETS-13-01). Implemented declaration-gated `/conf/update`, PATCH mutation safety gate, non-mutating `OPTIONS /systems/{id}` readiness, default lifecycle SKIP-before-PATCH, hard-denial for public GeoRobotix, TestNG dependency on Create/Replace/Delete, and default-smoke no-PATCH evidence. Full Update conformance remains OPEN for deployment/procedure/sampling-feature/property PATCH, Feature Collection update paths, Part 2 update, optimistic locking, and PATCH media-type matrix.
-- **OGC source verified**: OGC API - Connected Systems Part 1 Clause 18, Requirements Class 11 `/req/update`, Conformance Class A.11 `/conf/update`. The class prerequisite is `/req/create-replace-delete` plus OGC API Features Part 4 `/req/update`. Normative statements are `/req/update/system`, `/req/update/deployment`, `/req/update/procedure`, `/req/update/sampling-feature`, and `/req/update/property`. OGC Part 1 ATS A.79-A.83 also lists Feature Collection item update paths under `/collections/{collectionId}/items/{id}` for systems, deployments, procedures, sampling features, and properties; Sprint 13 explicitly defers those collection item PATCH paths.
+- **OGC source verified**: OGC API - Connected Systems Part 1 Clause 17, Requirements Class "Update" `/req/update`, Conformance Class A.11 `/conf/update`. The upstream requirement class source is `api/part1/standard/requirements/crud/update/requirements_class_update.adoc` at `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`; the explanatory clause is `api/part1/standard/sections/clause_17_requirements_class_update.adoc`. The class prerequisite is `/req/create-replace-delete` plus OGC API Features Part 4 `/req/update`. Normative statements are `/req/update/system`, `/req/update/deployment`, `/req/update/procedure`, `/req/update/sampling-feature`, and `/req/update/property`. OGC Part 1 ATS A.79-A.83 also lists Feature Collection item update paths under `/collections/{collectionId}/items/{id}` for systems, deployments, procedures, sampling features, and properties; Sprint 13 explicitly defers those collection item PATCH paths.
 - **Sprint 13 coverage scope**: Update safety-gated systems subset with 5 @Tests: (1) IUT declares `/conf/update`, otherwise Update tests SKIP with reason; (2) default mutation safety gate is active unless suite parameter `mutation-tests-enabled=true` is supplied together with `mutation-iut-policy=dedicated-mutable-iut`; (3) `OPTIONS /systems/{id}` is recorded as an ETS readiness precondition for PATCH advertisement without issuing PATCH; (4) systems PATCH lifecycle test SKIPs by default with reason and, only when explicitly enabled against a dedicated mutable IUT that declares `/conf/update`, advertises PATCH, and is not a known shared public GeoRobotix URL, performs PATCH with best-effort cleanup; (5) TestNG dependency wiring and smoke no-regression. OPTIONS readiness PASS does not satisfy `/req/update/system`; lifecycle conformance remains SKIP by default until PATCH runs against a dedicated mutable IUT.
 - **Mutation safety policy**: PATCH MUST NOT run during default GeoRobotix smoke. Sprint 13 reuses Sprint 12's mutation opt-in parameters and hard-denial list. Even when both opt-in parameters are present, the implementation MUST hard-deny mutation against known shared public GeoRobotix URLs, including `https://api.georobotix.io/ogc/t18/api`, before any PATCH is issued. Default smoke MUST report lifecycle mutation assertions as SKIP-with-reason, not PASS.
 - **No-mutation smoke oracle**: Default smoke no-mutation proof MUST include PATCH as a mutating method. The existing IUT-bound request-log oracle parses current `Request: METHOD URI` entries and older adjacent `Request method:` / `Request URI:` pair format, filters to URIs starting with the IUT base URL, requires at least one recognized IUT-bound request entry, and requires zero POST/PUT/DELETE/PATCH entries for GeoRobotix. The TeamEngine control-plane POST that starts the suite run is excluded from this oracle because its URI is not IUT-bound.
 - **Dependency wiring**: Update depends on Create/Replace/Delete via `<group name="update" depends-on="createreplacedelete"/>`. The Sprint 13 systems subset requires the Sprint 12 mutation safety gate and Create/Replace/Delete prerequisite wiring before PATCH behavior can be assessed.
 - **Planning probe evidence**: GeoRobotix `/conformance` on 2026-05-06 does not declare `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update`. `OPTIONS https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0` returned HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH is absent. Local OSH unauthenticated `/conformance` returned HTTP 401, and unauthenticated `OPTIONS /systems/040g` returned HTTP 200 with no PATCH in `Allow`; authenticated local OSH remains useful as a mutable fixture but does not currently provide positive PATCH evidence.
 - **Generator verification evidence**: Docker Maven `bash scripts/mvn-test-via-docker.sh` completed BUILD SUCCESS with `113 tests / 0 failures / 0 errors / 3 skipped`; Maven log archived at `ops/test-results/sprint-ets-13-maven-2026-05-06.log`. TeamEngine default smoke against GeoRobotix reported `74 total / 52 passed / 0 failed / 22 skipped` with 41 recognized IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries. Because Update depends on Create/Replace/Delete and the default CRD mutation gate skips, the Update configuration method records missing `/conf/update`, while the five Update @Tests are dependency-skipped through `createreplacedelete`; no PATCH is issued.
+- **Sprint 14 planned hardening**: `S-ETS-14-01` keeps REQ-ETS-PART1-011 PARTIAL and strengthens only the guarded systems PATCH path. Positive PATCH lifecycle evidence requires a GET after PATCH and an assertion that the intended changed field, initially `properties.name`, changed to the expected value. A PATCH status code alone is not conformance evidence. Missing `OPTIONS Allow: PATCH` follows an explicit verdict matrix: absent `/conf/update`, missing mutation opt-in, public IUT hard-denial, no candidate resource, or inconclusive OPTIONS are SKIP-before-PATCH states; declared `/conf/update` plus successful `OPTIONS /systems/{id}` whose `Allow` omits PATCH FAILs the readiness assertion for `/req/update/system`, while the lifecycle test still SKIPs before PATCH because the precondition failed; declared `/conf/update` plus explicit mutation opt-in plus `Allow: PATCH` may run the guarded lifecycle. Local OSH remains a dedicated mutable CRD fixture, but current planning evidence shows `OPTIONS /systems/040g` does not advertise PATCH and the simple authenticated `/conformance` probe returned HTTP 401 with attempted basic credentials; Sprint 14 must not claim local OSH positive Update support without observed `/conf/update`, `OPTIONS PATCH`, and changed-field evidence.
 - **Open subrequirements after Sprint 13**: Deployment, procedure, sampling-feature, and property PATCH; Feature Collection update paths under `/collections/{collectionId}/items/{id}`; Part 2 `/conf/update`; optimistic locking; and PATCH media-type matrix, including JSON Patch, merge patch, and content negotiation, remain OPEN unless separately planned.
 - **Maps to**: PRD FR-ETS-21.
 
@@ -541,6 +542,33 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **AND** finds zero IUT-bound PATCH entries
 **AND** still excludes the TeamEngine control-plane POST.
 *Maps to*: REQ-ETS-PART1-011, REQ-ETS-TEAMENGINE-005.
+
+#### SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-CHANGED-FIELD-001 (CRITICAL)
+**GIVEN** mutation tests are explicitly enabled against a dedicated mutable IUT
+**AND** the IUT declares `/conf/update`
+**AND** `OPTIONS /systems/{id}` advertises PATCH
+**WHEN** the systems PATCH lifecycle assertion issues PATCH against a temporary System resource
+**THEN** a follow-up GET returns the temporary System
+**AND** the ETS asserts the patched field value, initially `properties.name`, equals the intended new value
+**AND** a PATCH status code without changed representation evidence does not PASS the lifecycle assertion.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-UPDATE-LOCAL-OSH-READINESS-001 (CRITICAL)
+**GIVEN** the seeded local OSH mutable fixture is reachable at `http://field-hub-osh-1:8081/sensorhub/api`
+**WHEN** Sprint 14 probes `/conformance` and `OPTIONS /systems/040g`
+**THEN** the ETS records whether `/conf/update` is declared and whether PATCH is advertised
+**AND** if either precondition is absent, no PATCH is issued and the result is recorded as honest readiness SKIP evidence.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-UPDATE-OPTIONS-PATCH-SKIP-SEMANTICS-001 (CRITICAL)
+**GIVEN** mutation tests are explicitly enabled against a non-public IUT
+**AND** the IUT declares `/conf/update`
+**AND** `OPTIONS /systems/{id}` succeeds but does not advertise PATCH
+**WHEN** the systems PATCH lifecycle assertion reaches the readiness check
+**THEN** the readiness assertion FAILs for `/req/update/system`
+**AND** the lifecycle assertion SKIPs before PATCH because the readiness precondition failed
+**AND** no PATCH is issued.
+*Maps to*: REQ-ETS-PART1-011.
 
 ### Acceptance Scenarios for Sprint 12
 

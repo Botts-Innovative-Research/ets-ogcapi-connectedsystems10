@@ -1,8 +1,17 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T15:27Z
+Last updated: 2026-05-06T15:31Z
 
 ## Current Sprint Evidence
+
+Sprint ets-14 Update positive mutable-IUT hardening planning:
+
+- Planning probe:
+  - Local OSH IUT host URL: `http://localhost:8081/sensorhub/api`
+  - Seeded System resource: `/systems/040g`
+  - `OPTIONS /systems/040g`: HTTP 200, `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH absent.
+  - Simple authenticated `/conformance` curl probe returned HTTP 401 with attempted basic credentials; established TeamEngine smoke credential path remains the authoritative local path.
+- Interpretation: local OSH remains a dedicated mutable CRD fixture, but current evidence does not support positive Update/PATCH execution. Sprint 14 Generator must not issue PATCH unless `/conf/update`, `OPTIONS PATCH`, and changed-field verification are all available. If a future probe confirms `/conf/update` while successful `OPTIONS /systems/{id}` still omits PATCH, the readiness assertion should FAIL for `/req/update/system` and lifecycle should SKIP before PATCH.
 
 Sprint ets-13 Update/PATCH safety-gated systems subset:
 

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T15:27Z
+Last updated: 2026-05-06T15:31Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-13.yaml`
+- `.harness/contracts/sprint-ets-14.yaml`
 
 ## Current State
 
@@ -38,11 +38,25 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD after Sprint 13 Generator commit: `cd38223`
+- ETS HEAD after Sprint 13 gate commit: `1a14775`
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-13-01` Generator complete as PARTIAL at commit `cd38223`.
-- Current sprint status: Sprint ets-13 Generator is committed and passed Quinn Gate 3.5 plus Raze Gate 4 with approve-class verdicts. Default GeoRobotix smoke issued zero IUT-bound PATCH requests.
+- Latest implemented story: `S-ETS-13-01` Generator complete as PARTIAL at commit `cd38223`; gates committed at `1a14775`.
+- Current sprint status: Sprint ets-14 planning is complete for `S-ETS-14-01` Update positive mutable-IUT hardening; Raze gap-fix recheck approved with confidence 0.93.
 - Latest committed planning: `21c409c` (`Plan Sprint 13 update safety gate`).
+
+## Sprint ets-14 Planning
+
+Update positive mutable-IUT hardening:
+
+- Story: `epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md`
+- Contract: `.harness/contracts/sprint-ets-14.yaml`
+- OpenSpec: extends `REQ-ETS-PART1-011`; status remains PARTIAL unless positive PATCH executes and verifies a changed field.
+- Scope planned: correct Update source-path citation to `requirements/crud/update`, add an OPTIONS/PATCH verdict matrix, require GET-after-PATCH changed-field assertion for `properties.name`, add focused unit coverage for status-only PATCH false positives, and record local OSH readiness honestly.
+- OPTIONS/PATCH verdict matrix: missing `/conf/update`, absent mutation opt-in, public-IUT hard denial, no candidate System, or inconclusive OPTIONS are SKIP-before-PATCH states; declared `/conf/update` plus successful OPTIONS omitting PATCH FAILs readiness for `/req/update/system`, while lifecycle still SKIPs before PATCH; declared `/conf/update` plus explicit mutation opt-in plus `Allow: PATCH` may run guarded PATCH and must assert the changed field.
+- Local OSH planning probe: `OPTIONS /systems/040g` returned HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH absent. Simple authenticated `/conformance` curl returned HTTP 401 with attempted basic credentials, so TeamEngine smoke credential path remains the authoritative local path.
+- Guardrail: do not claim local OSH positive Update support without observed `/conf/update`, `OPTIONS PATCH`, and changed-field evidence. Default GeoRobotix smoke must still issue zero IUT-bound PATCH.
+- Raze planning review: `.harness/evaluations/sprint-ets-14-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.87; required fixes applied.
+- Raze planning gap-fix review: `.harness/evaluations/sprint-ets-14-plan-gapfix.yaml` returned `APPROVE` confidence 0.93 with no remaining required fixes.
 
 ## Sprint ets-13 Generator Evidence
 
@@ -55,7 +69,7 @@ Update/PATCH safety-gated systems subset:
 - Explicitly excluded: unguarded PATCH against GeoRobotix, deployment/procedure/sampling-feature/property PATCH, Feature Collection update paths from OGC ATS A.79-A.83, Part 2 `/conf/update`, optimistic locking, and PATCH media-type matrix including JSON Patch, merge patch, and content negotiation
 - Corrected story ID: prior epic placeholder reused `S-ETS-07-03`; Sprint 13 planning corrected the Update story to `S-ETS-13-01`.
 - Architecture freshness: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-06 and not stale.
-- OGC source: OGC API - Connected Systems Part 1 Clause 18, Requirements Class 11 `/req/update`; prerequisite `/req/create-replace-delete`; systems endpoint `{api_root}/systems/{id}` uses HTTP PATCH.
+- OGC source: OGC API - Connected Systems Part 1 Clause 17, Requirements Class "Update" `/req/update`; upstream source path `api/part1/standard/requirements/crud/update/requirements_class_update.adoc`; prerequisite `/req/create-replace-delete`; systems endpoint `{api_root}/systems/{id}` uses HTTP PATCH.
 - GeoRobotix planning probe: `/conformance` does not declare `/conf/update`; `OPTIONS /systems/0mqcvdnfoca0` returns HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS` and no PATCH.
 - Local OSH planning probe: unauthenticated `/conformance` returns HTTP 401; unauthenticated `OPTIONS /systems/040g` returns HTTP 200 with no PATCH in `Allow`.
 - Planning interpretation: Sprint 13 should implement skip-first safety and wiring. Current default/public IUT evidence supports no positive PATCH conformance claim.
@@ -215,15 +229,15 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 13 gate artifacts and ops reconciliation.
-2. Start Sprint 14 planning from the remaining Part 1/Part 2 backlog.
+1. Commit Sprint 14 planning.
+2. Kick off Generator for `S-ETS-14-01`.
 3. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-13 Generator implementation until Raze review and commit:
+Current dirty worktree is expected Sprint ets-14 planning until Raze review and commit:
 
-- `UpdateTests.java`, TestNG wiring, and Update dependency lint tests
-- PATCH-aware no-mutation oracle and smoke messaging
-- OpenSpec/story/traceability/status/changelog/test-results Generator reconciliation
+- `.harness/contracts/sprint-ets-14.yaml`
+- `epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md`
+- OpenSpec/story/traceability/status/changelog/test-results planning reconciliation
 - External local fixture change still exists in separate `sar-ops` repo and is intentionally not part of ETS commits.

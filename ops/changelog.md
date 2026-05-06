@@ -2,6 +2,19 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T15:31Z — Sprint 14 Update hardening planning
+
+**Triggered by user instruction**: "OK, keep going."
+
+- Planned `S-ETS-14-01` as an extension of `REQ-ETS-PART1-011`, not a new Part 1 class.
+- Added `.harness/contracts/sprint-ets-14.yaml` and `epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md`.
+- Updated OpenSpec, traceability, epic, planner handoff, and ops status for changed-field PATCH evidence, local OSH readiness truth, and an OPTIONS/PATCH verdict matrix.
+- Corrected Sprint 14 source citation to upstream `api/part1/standard/requirements/crud/update/requirements_class_update.adoc`.
+- Planning probe: local OSH `OPTIONS /systems/040g` still does not advertise PATCH, so local OSH is CRD-positive but not yet Update-positive evidence.
+- Raze planning review `.harness/evaluations/sprint-ets-14-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.87; applied required fixes by adding the verdict matrix and restoring reverse-chronological changelog order.
+
+---
+
 ## 2026-05-06T15:27Z — Sprint 13 Raze Gate 4 evaluation
 
 **Triggered by user instruction**: "Run those gates."

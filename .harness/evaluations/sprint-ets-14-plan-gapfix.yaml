@@ -1,0 +1,43 @@
+verdict: APPROVE
+confidence: 0.93
+reviewer:
+  agent: "Red Team / Raze"
+  role_definition: "_bmad/agents/adversarial-reviewer.md"
+  mode: "focused planning gap-fix recheck"
+  docker_maven_teamengine: "not run per user instruction"
+reviewed_scope:
+  sprint: "ets-14"
+  story: "S-ETS-14-01"
+  prior_artifact: ".harness/evaluations/sprint-ets-14-plan-adversarial.yaml"
+  focus:
+    - "RAZE-ETS14-PLAN-GAP-001 OPTIONS/PATCH verdict matrix"
+    - "RAZE-ETS14-PLAN-CONCERN-001 changelog ordering"
+result:
+  required_fixes_remaining: []
+  concerns_remaining: []
+findings_rechecked:
+  - id: "RAZE-ETS14-PLAN-GAP-001"
+    prior_status: "open"
+    current_status: "closed"
+    evidence:
+      - "Story lines 27-36 now define an OPTIONS/PATCH verdict matrix."
+      - "Story line 34 specifically says declared /conf/update plus successful OPTIONS whose Allow omits PATCH FAILs the /req/update/system readiness assertion, while lifecycle SKIPs before PATCH and no PATCH is issued."
+      - "Story line 69 makes the same matrix a Definition of Done item."
+      - "Contract lines 76-99 encode the same states, including declared_update_successful_options_allow_omits_patch readiness_verdict=FAIL and patch_issued=false."
+      - "OpenSpec line 490 records the matrix in REQ-ETS-PART1-011 planning status."
+      - "OpenSpec lines 563-570 update SCENARIO-ETS-PART1-011-UPDATE-OPTIONS-PATCH-SKIP-SEMANTICS-001 so readiness FAILs for /req/update/system while lifecycle SKIPs before PATCH."
+      - "Handoff lines 79-84 and test-results line 14 carry the same no-PATCH-but-readiness-FAIL distinction."
+    assessment: "The original false-confidence path is closed. Missing PATCH is no longer an unconditional SKIP when /conf/update is declared and OPTIONS succeeds; it becomes a readiness FAIL without issuing PATCH."
+  - id: "RAZE-ETS14-PLAN-CONCERN-001"
+    prior_status: "open"
+    current_status: "closed"
+    evidence:
+      - "ops/changelog.md lines 5-14 now place the 15:31 Sprint 14 planning entry before the 15:27 Sprint 13 Raze gate entry at lines 18-28."
+      - "The Sprint 14 entry line 14 explicitly records that the verdict matrix and reverse-chronological ordering fixes were applied."
+    assessment: "Reverse chronological changelog order is restored."
+notes:
+  - "This was a static planning-only recheck. Docker, Maven, and TeamEngine were intentionally not run."
+  - "No unrelated dirty files were reverted or modified by this review."
+changed_files_expected_from_review:
+  - ".harness/evaluations/sprint-ets-14-plan-gapfix.yaml"
+  - "ops/metrics.md"

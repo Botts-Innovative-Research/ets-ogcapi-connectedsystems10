@@ -1,51 +1,61 @@
 agent: planner
 status: complete
-timestamp: "2026-05-06T14:34:34Z"
-sprint_number: "ets-13"
-sprint_name: "update-patch-safety-gated-systems-subset"
-contract_path: ".harness/contracts/sprint-ets-13.yaml"
+timestamp: "2026-05-06T15:31:37Z"
+sprint_number: "ets-14"
+sprint_name: "update-positive-mutable-iut-hardening"
+contract_path: ".harness/contracts/sprint-ets-14.yaml"
 triggered_by: |
-  User instructed "OK, do Sprint 13 planning with the corrected story ID" after
-  the Sprint 12 local OSH full-health follow-up was committed as `27c182c`.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 12 handoff 2026-05-05T20:59:24Z)"
+  User instructed "OK, keep going" after Sprint 13 Quinn and Raze gates were
+  committed as `1a14775`.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 13 handoff 2026-05-06T14:34:34Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-06T14:34:34Z"
+  checked_at: "2026-05-06T15:31:37Z"
   stale_over_30_days: false
   disposition: "OK to start new capability planning."
 
 strategic_decisions:
-  q1_next_class:
-    question: "Which remaining Part 1 class should Sprint 13 implement?"
-    decision: "update"
-    corrected_story_id: "S-ETS-13-01"
+  q1_next_work:
+    question: "After Sprint 13 gates, what is the next Sprint item?"
+    decision: "S-ETS-14-01 Update positive mutable-IUT hardening"
     rationale: |
-      After Sprint 12, the next named Part 1 class in the backlog is Update/PATCH
-      (`/conf/update`, REQ-ETS-PART1-011). The prior epic row reused `S-ETS-07-03`,
-      which already belongs to Property Definitions. Sprint 13 corrects the story id
-      to `S-ETS-13-01`.
-    alternatives_rejected:
-      - part2_update: "Part 2 update is a different conformance class and remains deferred."
-      - expanding_crd_non_system_crud: "Useful later, but the user asked for the next Sprint item after identifying /conf/update."
+      Part 1 already has at least partial coverage for all remaining named classes.
+      Sprint 13 gates left specific Update follow-ups: positive PATCH needs a dedicated
+      mutable IUT, the positive path must assert a changed field, and OPTIONS PATCH
+      readiness semantics must be decided. Sprint 14 addresses those without starting
+      Part 2 or overclaiming local OSH support.
 
-  q2_scope:
-    question: "Full Update class or safety-gated subset?"
-    decision: "safety-gated systems subset"
+  q2_options_semantics:
+    question: "Should missing OPTIONS Allow: PATCH fail, skip, or be supplemented?"
+    decision: "Use an explicit verdict matrix."
     rationale: |
-      Update uses HTTP PATCH and is destructive/mutating. Sprint 12 established the
-      mutation opt-in contract and no-mutation oracle. Sprint 13 should reuse that
-      contract, add PATCH to the no-mutation oracle, and implement the systems subset
-      as declaration-gated and skip-first. Current default/public IUT evidence does
-      not support positive PATCH conformance: GeoRobotix does not declare `/conf/update`
-      and does not advertise PATCH on the sampled System resource.
+      Sprint 13 currently uses OPTIONS as ETS readiness evidence, not a normative
+      lifecycle PASS. Raze correctly identified that unconditional SKIP could hide
+      a declared `/conf/update` violation. Sprint 14 distinguishes states: missing
+      `/conf/update`, absent mutation opt-in, public IUT, no candidate System, or
+      inconclusive OPTIONS are SKIP-before-PATCH states; declared `/conf/update`
+      plus successful OPTIONS whose Allow omits PATCH FAILs the readiness assertion
+      for `/req/update/system`, while lifecycle still skips before PATCH because
+      the precondition failed.
+
+  q3_positive_patch_oracle:
+    question: "What evidence is required before a positive PATCH lifecycle can count?"
+    decision: "GET after PATCH must assert the intended changed field value."
+    rationale: |
+      Sprint 13 accepts PATCH status codes and then only checks GET 200. Quinn and
+      Raze both identified that as insufficient for future promotion. Sprint 14
+      requires `properties.name` changed-field assertion after PATCH, with focused
+      unit coverage so status-only PATCH cannot pass.
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems Part 1: Feature Resources"
-  clause: "18 Requirements Class Update"
+  clause: "17 Requirements Class Update"
   update_identifier: "/req/update"
   conformance_class: "/conf/update"
+  requirement_class_source: "api/part1/standard/requirements/crud/update/requirements_class_update.adoc"
+  clause_source: "api/part1/standard/sections/clause_17_requirements_class_update.adoc"
   prerequisites:
     - "/req/create-replace-delete"
     - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/update"
@@ -56,37 +66,40 @@ upstream_ogc_verification:
     - "/req/update/sampling-feature"
     - "/req/update/property"
   systems_endpoint: "{api_root}/systems/{id}"
-  ats_collection_item_paths: "A.79-A.83 also list /collections/{collectionId}/items/{id} paths for each resource type; deferred from Sprint 13."
+  ats_collection_item_paths: "A.79-A.83 also list /collections/{collectionId}/items/{id} paths for each resource type; still deferred."
   method: "HTTP PATCH"
 
 planning_probes:
-  georobotix:
-    conformance: "Does not declare http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update as of 2026-05-06."
-    system_item_options: "OPTIONS /systems/0mqcvdnfoca0 -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
-    planning_interpretation: "Default GeoRobotix Update tests must SKIP-with-reason and default smoke must prove no PATCH."
   local_osh:
-    conformance: "Unauthenticated /conformance returns HTTP 401; authenticated smoke remains the established local evidence path."
-    system_item_options: "Unauthenticated OPTIONS /systems/040g -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
-    planning_interpretation: "Local OSH remains a mutable fixture for CRD, but current probe does not provide positive PATCH evidence."
+    conformance: "Simple authenticated curl probe returned HTTP 401 with attempted basic credentials; TeamEngine smoke credential path remains authoritative."
+    system_item_options: "OPTIONS /systems/040g -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+    planning_interpretation: "Local OSH remains a mutable CRD fixture, but current evidence does not provide positive PATCH support."
+
+options_patch_verdict_matrix:
+  missing_update_conformance: "readiness SKIP; lifecycle SKIP; no PATCH"
+  mutation_not_explicit_or_public_iut: "readiness SKIP where applicable; lifecycle SKIP before PATCH; no PATCH"
+  no_candidate_system: "readiness SKIP; lifecycle SKIP; no PATCH"
+  declared_update_successful_options_allow_omits_patch: "readiness FAIL for /req/update/system; lifecycle SKIP before PATCH; no PATCH"
+  options_unavailable_or_inconclusive: "readiness SKIP with blocked-readiness reason unless future OGC/CITE policy requires FAIL; lifecycle SKIP; no PATCH"
+  declared_update_allow_includes_patch_with_mutation_opt_in: "readiness PASS; guarded PATCH lifecycle runs and asserts changed field"
 
 stories:
-  - id: "S-ETS-13-01"
-    title: "Update/PATCH safety-gated systems subset - depends on CreateReplaceDelete"
-    file: "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+  - id: "S-ETS-14-01"
+    title: "Update positive mutable-IUT hardening"
+    file: "epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "1-2h"
-    sequencing: "ONLY story in Sprint 13"
+    sequencing: "ONLY story in Sprint 14"
 
-new_requirements:
+new_requirements: []
+modified_requirements:
   - "REQ-ETS-PART1-011"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-011-UPDATE-CONFORMANCE-DECLARED-001"
-  - "SCENARIO-ETS-PART1-011-UPDATE-MUTATION-SAFETY-GATE-001"
-  - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-RESOURCE-OPTIONS-001"
-  - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-LIFECYCLE-OPTIN-001"
-  - "SCENARIO-ETS-PART1-011-UPDATE-DEPENDENCY-SMOKE-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-CHANGED-FIELD-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-LOCAL-OSH-READINESS-001"
+  - "SCENARIO-ETS-PART1-011-UPDATE-OPTIONS-PATCH-SKIP-SEMANTICS-001"
   - "SCENARIO-ETS-PART1-011-UPDATE-SMOKE-NO-PATCH-001"
 
 mutation_opt_in_parameters:
@@ -111,36 +124,32 @@ no_mutation_smoke_oracle:
 
 next_agent: "generator"
 next_agent_rationale: |
-  Planning artifacts are complete and no Architect cycle is needed. Generator can follow
-  the established Sprint 12 mutation-safety pattern while adding UpdateTests, Update
-  TestNG dependency wiring, structural lint tests, and PATCH-aware no-mutation oracle behavior.
+  Planning artifacts are complete and no Architect cycle is needed. Generator can harden
+  the existing UpdateTests positive path, add focused unit coverage, and rerun default
+  GeoRobotix plus local OSH readiness evidence.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
-    - "Re-verify GeoRobotix /conformance and OPTIONS probes before implementing."
-    - "Implement UpdateTests.java with the planned @Tests."
-    - "Add testng.xml group dependency: update depends-on createreplacedelete."
-    - "Add 3 VerifyTestNGSuiteDependency lint tests for update."
-    - "Reuse existing mutation-tests-enabled and mutation-iut-policy propagation."
-    - "Ensure default lifecycle test SKIPs before PATCH when mutation opt-in parameters are absent."
-    - "Extend scripts/no-mutation-oracle.py and smoke expectations so PATCH is treated as mutating."
+    - "Correct Update OGC source path citations to requirements/crud/update."
+    - "Strengthen systemsPatchLifecycleOptIn so GET after PATCH asserts the patched properties.name value."
+    - "Add focused unit tests for changed-field extraction/assertion behavior."
+    - "Implement the OPTIONS/PATCH verdict matrix: declared /conf/update plus successful OPTIONS without PATCH FAILs readiness while lifecycle still skips before PATCH."
     - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh."
-    - "Inspect smoke logs for zero IUT-bound PATCH request-log entries from the Update suite."
-    - "Name/report OPTIONS checks as ETS readiness preconditions, not OGC update conformance PASS."
-    - "Update spec/story/traceability statuses to PARTIAL-IMPLEMENTED only after live smoke evidence; keep unimplemented Update subrequirements open."
+    - "Run or document a blocked local OSH readiness probe; do not issue PATCH unless /conf/update and OPTIONS PATCH are observed."
+    - "Update spec/story/traceability/status/changelog/test-results."
   must_not_do:
     - "Do not issue IUT-bound PATCH during default GeoRobotix smoke."
-    - "Do not mutate public GeoRobotix even when mutation opt-in parameters are present; hard-deny known shared public GeoRobotix URLs."
+    - "Do not claim local OSH positive Update support without /conf/update, OPTIONS PATCH, and changed-field evidence."
     - "Do not implement Part 2 /conf/update."
-    - "Do not claim full Update class closure from OPTIONS evidence."
+    - "Do not promote REQ-ETS-PART1-011 beyond PARTIAL from status-only PATCH."
 
 gate_expectations:
   quinn:
-    primary: "Run mvn-test-via-docker.sh; verify mutation opt-in reuse, Update lint tests, and TestNG dependency."
+    primary: "Run mvn-test-via-docker.sh; verify status-only PATCH cannot pass and default smoke remains no-PATCH."
   raze:
-    primary: "Run smoke-test.sh or inspect fresh smoke artifact; verify failed=0 and no GeoRobotix-bound PATCH request-log entries."
-    adversarial_focus: "Inspect for false PASS from absent /conf/update, OPTIONS readiness overclaim, and accidental public-IUT PATCH."
-  independence: "Quinn and Raze must write their own Sprint 13 YAML before reading the other gate's YAML."
+    primary: "Attack false-positive Update claims from missing OPTIONS PATCH, missing /conf/update, status-only PATCH, or overclaimed local OSH readiness."
+    adversarial_focus: "Inspect changed-field assertion, local OSH evidence, and default public-IUT PATCH safety."
+  independence: "Quinn and Raze must write their own Sprint 14 YAML before reading the other gate's YAML."
 
-confidence: 0.84
+confidence: 0.86

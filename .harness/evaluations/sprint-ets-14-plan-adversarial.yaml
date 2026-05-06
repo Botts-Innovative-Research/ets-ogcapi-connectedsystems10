@@ -1,0 +1,90 @@
+verdict: GAPS_FOUND
+confidence: 0.87
+reviewer:
+  agent: "Red Team / Raze"
+  role_definition: "_bmad/agents/adversarial-reviewer.md"
+  mode: "planning-only static review"
+  docker_maven_teamengine: "not run per user instruction"
+reviewed_scope:
+  sprint: "ets-14"
+  story: "S-ETS-14-01"
+  focus:
+    - "false positive Update/PATCH conformance"
+    - "status-only PATCH evidence"
+    - "missing OPTIONS PATCH semantics"
+    - "local OSH evidence overclaim"
+    - "OGC source-path accuracy"
+    - "Part 2/scope leakage"
+    - "docs consistency"
+  artifacts:
+    - ".harness/contracts/sprint-ets-14.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md"
+    - "epics/epic-ets-02-part1-classes.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/UpdateTests.java"
+evidence:
+  upstream_source_check:
+    result: "PASS"
+    details:
+      - "HTTP 200 verified for api/part1/standard/requirements/crud/update/requirements_class_update.adoc at commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f."
+      - "HTTP 200 verified for api/part1/standard/sections/clause_17_requirements_class_update.adoc at the same commit."
+      - "The requirement class source declares identifier /req/update, inherits /req/create-replace-delete and OGC API Features Part 4 /req/update, and lists system/deployment/procedure/sampling-feature/property subrequirements."
+  positive_patch_oracle:
+    result: "mostly planned correctly"
+    details:
+      - "Story lines 37-40 and OpenSpec lines 546-553 require GET-after-PATCH and changed properties.name evidence."
+      - "Contract lines 46-48 and 78-79 explicitly reject status-only PATCH as conformance evidence."
+  local_osh_claims:
+    result: "no positive Update overclaim found"
+    details:
+      - "Story lines 51-52 and ops/test-results current-sprint evidence state that OPTIONS /systems/040g lacks PATCH and local OSH is not positive Update/PATCH evidence."
+      - "Contract lines 71-73 records the HTTP 401 conformance probe and PATCH-absent OPTIONS result without claiming /conf/update support."
+  scope_boundaries:
+    result: "acceptable"
+    details:
+      - "Story lines 64-71 exclude deployment/procedure/sampling-feature/property PATCH, collection item update paths, Part 2 /conf/update, optimistic locking, and PATCH media-type matrix."
+      - "OpenSpec lines 490-491 keep REQ-ETS-PART1-011 PARTIAL and list the same open areas."
+findings:
+  - id: "RAZE-ETS14-PLAN-GAP-001"
+    severity: "high"
+    title: "Missing OPTIONS PATCH verdict matrix can mask a declared /conf/update violation as SKIP"
+    evidence:
+      - "Story line 21 says missing OPTIONS Allow: PATCH is SKIP for lifecycle execution, not FAIL."
+      - "Story line 58 makes that SKIP semantics a Definition of Done item."
+      - "Contract line 48 sets options_missing_patch_skips_before_patch=true, and line 80 instructs Generator to keep missing PATCH as SKIP-before-PATCH."
+      - "OpenSpec lines 563-568 require SKIP when mutation tests are enabled against a non-public IUT and OPTIONS lacks PATCH."
+      - "The verified OGC clause says the Update class SHALL support UPDATE at /systems/{id}; if the IUT declares /conf/update and the selected resource's Allow excludes PATCH, unconditional SKIP risks under-reporting a conformance failure."
+    risk: "A mutable IUT could declare /conf/update, omit PATCH on System resources, and the lifecycle path would produce SKIP instead of a failing /req/update/system assertion. This avoids a false PASS, but still records false confidence by hiding a testable declared-class violation."
+    required_fix: "Before Generator, replace the single SKIP rule with an explicit verdict matrix. At minimum distinguish: missing /conf/update -> SKIP; public/default mutation gate -> SKIP; no candidate mutable resource -> SKIP; declared /conf/update plus successful OPTIONS whose Allow omits PATCH on the selected System resource -> FAIL for a readiness/assertion test or document a CITE/OGC rationale for why this remains SKIP. Keep lifecycle PATCH itself non-issued until safe."
+  - id: "RAZE-ETS14-PLAN-CONCERN-001"
+    severity: "medium"
+    title: "Docs ordering inconsistency in changelog"
+    evidence:
+      - "ops/changelog.md lines 5-15 show the 15:27 Sprint 13 Raze gate entry before the newer 15:31 Sprint 14 planning entry at lines 19-27."
+    risk: "Low behavioral risk, but it weakens handoff readability and makes the latest Sprint 14 planning change easy to miss."
+    recommended_fix: "Move the Sprint 14 planning entry above the 15:27 Sprint 13 gate entry, or otherwise preserve strict reverse chronological ordering."
+concerns:
+  - id: "RAZE-ETS14-PLAN-CONCERN-002"
+    severity: "low"
+    title: "Local OSH readiness probe should preserve exact blocked reason without implying credential validity"
+    evidence:
+      - "Story line 24 asks Generator to probe with credentials supplied through the established smoke path."
+      - "Story line 51 says the simple authenticated curl probe returned 401 with attempted basic credentials."
+      - "Contract line 72 says the TeamEngine smoke credential path remains authoritative."
+    recommendation: "When implementing, record the exact command shape or blocked reason in ops/test-results.md without logging secrets, and avoid wording that implies authenticated /conformance succeeded until it actually does."
+approvals:
+  - "OGC source path correction is accurate."
+  - "Status-only PATCH false positive is explicitly targeted by story, contract, and OpenSpec."
+  - "Local OSH is not overclaimed as positive Update evidence."
+  - "Part 2 and collection item update paths are kept out of Sprint 14 scope."
+required_fixes:
+  - "Fix RAZE-ETS14-PLAN-GAP-001 before Generator starts."
+  - "Address or explicitly accept RAZE-ETS14-PLAN-CONCERN-001 before committing planning docs."
+changed_files_expected_from_review:
+  - ".harness/evaluations/sprint-ets-14-plan-adversarial.yaml"
+  - "ops/metrics.md"

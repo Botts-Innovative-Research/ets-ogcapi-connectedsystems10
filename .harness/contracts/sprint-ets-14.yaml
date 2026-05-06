@@ -1,0 +1,125 @@
+# Sprint 14 contract - update positive mutable-IUT hardening
+# Created 2026-05-06 after Sprint 13 gate close.
+
+sprint: "ets-14"
+sprint_name: "update-positive-mutable-iut-hardening"
+type: "feature-hardening"
+created: "2026-05-06T15:31:37Z"
+description: |
+  Sprint 14 extends REQ-ETS-PART1-011 rather than adding a new Part 1 class.
+  Sprint 13 made Update/PATCH default-safe and declaration-gated. Sprint 14
+  hardens the guarded positive PATCH path so it proves an actual changed field
+  when a dedicated mutable IUT supports Update, and records honest local OSH
+  readiness evidence when PATCH is not advertised.
+
+stories:
+  - id: "S-ETS-14-01"
+    title: "Update positive mutable-IUT hardening"
+    file: "epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-13-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART1-011 (Update Conformance Class /conf/update - remains PARTIAL; harden positive systems PATCH oracle)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-CHANGED-FIELD-001"
+    - "SCENARIO-ETS-PART1-011-UPDATE-LOCAL-OSH-READINESS-001"
+    - "SCENARIO-ETS-PART1-011-UPDATE-OPTIONS-PATCH-SKIP-SEMANTICS-001"
+    - "SCENARIO-ETS-PART1-011-UPDATE-SMOKE-NO-PATCH-001"
+  normal: []
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  build_green_jdk17: true
+  default_georobotix_smoke_green: true
+  default_smoke_no_patch_requests: true
+  changed_field_assertion_required_for_positive_patch: true
+  status_only_patch_not_conformance_evidence: true
+  options_missing_patch_verdict_matrix: true
+  local_osh_readiness_truthfully_recorded: true
+  no_part2_work_in_sprint: true
+  update_req_remains_partial_without_positive_patch: true
+
+upstream_ogc_verification:
+  repo: "opengeospatial/ogcapi-connected-systems"
+  commit: "3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f"
+  requirement_class_source: "api/part1/standard/requirements/crud/update/requirements_class_update.adoc"
+  clause_source: "api/part1/standard/sections/clause_17_requirements_class_update.adoc"
+  identifier: "/req/update"
+  subrequirements:
+    - "/req/update/system"
+    - "/req/update/deployment"
+    - "/req/update/procedure"
+    - "/req/update/sampling-feature"
+    - "/req/update/property"
+
+planning_probes:
+  local_osh:
+    iut_host_url: "http://localhost:8081/sensorhub/api"
+    iut_docker_url: "http://field-hub-osh-1:8081/sensorhub/api"
+    system_resource: "/systems/040g"
+    options_observed: "HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+    conformance_observed: "Simple authenticated curl probe returned HTTP 401 with attempted basic credentials; TeamEngine smoke credential path remains the authoritative local path."
+    interpretation: "Local OSH is a mutable CRD fixture but is not yet positive Update/PATCH evidence."
+
+options_patch_verdict_matrix:
+  missing_update_conformance:
+    readiness_verdict: "SKIP"
+    lifecycle_verdict: "SKIP"
+    patch_issued: false
+  mutation_not_explicit_or_public_iut:
+    readiness_verdict: "SKIP where applicable"
+    lifecycle_verdict: "SKIP before PATCH"
+    patch_issued: false
+  no_candidate_system:
+    readiness_verdict: "SKIP"
+    lifecycle_verdict: "SKIP"
+    patch_issued: false
+  declared_update_successful_options_allow_omits_patch:
+    readiness_verdict: "FAIL for /req/update/system readiness assertion"
+    lifecycle_verdict: "SKIP before PATCH because readiness failed"
+    patch_issued: false
+  options_unavailable_or_inconclusive:
+    readiness_verdict: "SKIP with blocked-readiness reason unless future OGC/CITE policy requires FAIL"
+    lifecycle_verdict: "SKIP"
+    patch_issued: false
+  declared_update_allow_includes_patch_with_mutation_opt_in:
+    readiness_verdict: "PASS"
+    lifecycle_verdict: "Run guarded PATCH lifecycle and assert changed field"
+    patch_issued: true
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Correct Sprint 13 Update source-path citation to requirements/crud/update."
+  - "Strengthen systemsPatchLifecycleOptIn so GET after PATCH asserts the patched properties.name value."
+  - "Add focused unit tests for changed-field extraction/assertion behavior."
+  - "Implement the OPTIONS/PATCH verdict matrix: declared /conf/update plus successful OPTIONS without PATCH FAILs readiness while lifecycle still skips before PATCH."
+  - "Run Docker Maven and default GeoRobotix TeamEngine smoke."
+  - "Run or document a blocked local OSH readiness probe; do not issue PATCH unless /conf/update and OPTIONS PATCH are observed."
+  - "Update OpenSpec/story/traceability/status/changelog/test-results."
+
+generator_must_not_do:
+  - "Do not issue PATCH against GeoRobotix."
+  - "Do not claim local OSH positive Update support without /conf/update, OPTIONS PATCH, and changed-field evidence."
+  - "Do not implement Part 2 /conf/update."
+  - "Do not promote REQ-ETS-PART1-011 beyond PARTIAL from status-only PATCH."
+
+evaluation_focus:
+  quinn:
+    - "Verify status-only PATCH cannot pass; changed field is asserted after GET."
+    - "Verify default smoke still has zero IUT-bound PATCH."
+  raze:
+    - "Attack false-positive Update claims from missing OPTIONS PATCH, missing /conf/update, or status-only PATCH."
+    - "Check local OSH evidence is not overclaimed."
+
+confidence: 0.86

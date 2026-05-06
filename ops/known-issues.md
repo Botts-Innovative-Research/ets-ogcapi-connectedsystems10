@@ -1,11 +1,11 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T13:48Z
+Last updated: 2026-05-06T23:38Z
 
 ## Active Issues
 
-- Sprint ets-09 is PARTIAL-IMPLEMENTED only. Full GeoJSON remains open for `mediatype-write`, `relation-types`, deployment/procedure/sampling-feature GeoJSON schema and mappings, and future stricter schema validation.
-- Sprint ets-10 Generator implementation is PARTIAL SensorML only. Full SensorML remains open for `mediatype-write`, `relation-types`, deployment/procedure/property SensorML schema and mappings, and full SensorML 3.0 JSON Schema validation.
+- GeoJSON is PARTIAL-IMPLEMENTED only. Sprint 15 added deployment/procedure/sampling-feature read-only schema and mapping checks, but full GeoJSON remains open for `mediatype-write`, relation-types implementation, property GeoJSON mapping, and future stricter schema validation. Sprint 17 planning targets relation-types only.
+- SensorML is PARTIAL-IMPLEMENTED only. Sprint 16 added deployment/procedure/property read-only schema and mapping checks, but full SensorML remains open for `mediatype-write`, relation-types implementation, full SensorML 3.0 JSON Schema validation, mutation-side behavior, and positive property evidence against a populated IUT. Sprint 17 planning targets relation-types only.
 - Sprint ets-11 Generator implementation is PARTIAL AdvancedFiltering only. GeoRobotix does not currently declare `/conf/advanced-filtering`, so default smoke SKIPs with reason rather than PASS from undeclared query behavior. Full AdvancedFiltering remains open for association filters, full geometry semantics, combined filters, endpoint parity, and any Part 2 query requirements.
 - Sprint ets-12 is mutation-safety constrained. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, but default smoke MUST NOT mutate the public IUT. OPTIONS evidence is readiness only, not lifecycle conformance. Local OSH now proves the guarded System POST/PUT/DELETE lifecycle path, but full Create/Replace/Delete remains PARTIAL until the non-system CRUD and cascade requirements are implemented.
 - Local OSH is now a seeded mutable full-smoke health target for the current ETS surface: `proxyBaseUrl` points at `http://field-hub-osh-1:8081`, synthetic system/procedure/deployment/samplingFeature resources exist with payloads versioned in `ops/local-osh-seed-fixtures.json`, and `/tmp/ets-csapi-osh-full-health-r3` reported `69 total / 50 passed / 0 failed / 19 skipped`. It is still not evidence for out-of-scope CRD subrequirements such as non-system CRUD, cascade behavior, `text/uri-list`, or `/conf/update`.

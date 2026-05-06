@@ -1,0 +1,123 @@
+schema_version: "1.0"
+artifact_type: adversarial_planning_review
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-06T23:45:23Z"
+sprint: "sprint-ets-17"
+story_id: "S-ETS-17-01"
+story_title: "Encoding relation-types read-only link checks"
+scope: "Planning-only review of current uncommitted Sprint 17 planning changes"
+verdict: GAPS_FOUND
+confidence: 0.88
+
+review_constraints:
+  source_code_modified: false
+  docker_rerun: false
+  maven_rerun: false
+  teamengine_rerun: false
+  network_source_check: "Used lightweight curl only to verify upstream OGC source text; no Docker/Maven/TeamEngine run."
+
+evidence_reviewed:
+  planning_artifacts:
+    - ".harness/contracts/sprint-ets-17.yaml"
+    - "epics/stories/s-ets-17-01-encoding-relation-types-readonly.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "epics/epic-ets-02-part1-classes.md"
+  upstream_ogc_sources:
+    - path: "api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc"
+      result: "HTTP 200; verified /req/geojson/relation-types text and resource-specific association tables."
+    - path: "api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc"
+      result: "HTTP 200; verified /req/sensorml/relation-types text and resource-specific association tables."
+  worktree:
+    status_summary: "Dirty worktree contains expected Sprint 17 planning files plus existing Sprint 16 handoff/status artifacts; no code implementation files are changed for Sprint 17 planning."
+
+findings:
+  - id: "RAZE-ETS17-PLAN-GAP-001"
+    severity: high
+    title: "Global association-name allowlist can false-PASS a relation type on the wrong resource class"
+    evidence:
+      - ".harness/contracts/sprint-ets-17.yaml defines one global association_rel_names list rather than resource-specific allowed link relations."
+      - "The story says PASS when a links-member association uses a known association name, with examples spanning systems, deployments, procedures, sampling features, and Part 2 associations."
+      - "The upstream GeoJSON and SensorML clauses provide resource-specific association tables. For example, procedure links-member associations are limited to implementingSystems, while deployment links-member associations include parentDeployment, subdeployments, featuresOfInterest, samplingFeatures, datastreams, and controlstreams."
+      - "Under the current planning text, a malformed Procedure representation with a links-member rel such as samplingFeatures could be treated as a recognized association-name rel even though it is not the Procedure association name for that resource."
+    impact: "A Generator following the global allowlist literally could produce a false PASS for relation-types by accepting any known association name on any resource type."
+    required_fix: "Tighten the contract/story/OpenSpec/handoff to require resource-specific links-member association allowlists derived from the OGC tables. PASS must require every detected links-member association on the selected representation to use the association name valid for that selected resource type; a links-member association rel from another resource's table must FAIL, not PASS."
+  - id: "RAZE-ETS17-PLAN-PASS-001"
+    severity: pass
+    title: "Canonical, alternate, pagination, collection, and service links are excluded from PASS evidence"
+    evidence:
+      - "Contract success criteria require canonical_alternate_links_not_counted_as_associations."
+      - "Story planned test surface ignores canonical, alternate, pagination, collection, service-description, and service-document links."
+      - "OpenSpec scenario SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001 explicitly ignores generic links for this assertion."
+    conclusion: "The planning blocks the most obvious false PASS from representation-management links."
+  - id: "RAZE-ETS17-PLAN-PASS-002"
+    severity: pass
+    title: "Property-level @link members are correctly out of relation-types scope"
+    evidence:
+      - "Story and contract explicitly exclude deployedSystems@link and hostedProcedure@link from links-member relation-types evidence."
+      - "Planning probes document deployedSystems@link and hostedProcedure@link as properties, not links-member associations."
+      - "The OGC source check confirms some association mappings are property members rather than links-member relations."
+    conclusion: "The planning avoids converting mapping evidence into relation-types PASS evidence."
+  - id: "RAZE-ETS17-PLAN-PASS-003"
+    severity: pass
+    title: "Missing links-member associations are planned as SKIP rather than PASS"
+    evidence:
+      - "Contract verdict policy says SKIP when the selected representation has no links-member association links."
+      - "Story planning evidence records deployment/procedure/samplingFeature and observed SensorML bodies that lack links-member associations."
+      - "ops/status.md and ops/test-results.md repeat that SensorML relation-types may SKIP honestly on GeoRobotix until links-member associations exist."
+    conclusion: "The planning does not overclaim current-IUT PASS from absent association links."
+  - id: "RAZE-ETS17-PLAN-PASS-004"
+    severity: pass
+    title: "OGC relation-types source fidelity is basically correct"
+    evidence:
+      - "The upstream GeoJSON clause contains identifier /req/geojson/relation-types and the planned association-links text."
+      - "The upstream SensorML clause contains identifier /req/sensorml/relation-types and the same planned association-links text."
+      - "The planning correctly treats the relation-types work as subrequirements of REQ-ETS-PART1-012 and REQ-ETS-PART1-013, not as new conformance classes."
+    conclusion: "The URI scope is correct; the remaining gap is the missing resource-specific table fidelity in executable planning."
+  - id: "RAZE-ETS17-PLAN-PASS-005"
+    severity: pass
+    title: "No mutation, mediatype-write, full schema validation, and Part 2 scope creep are excluded"
+    evidence:
+      - "Contract generator_must_not_do excludes mediatype-write, POST/PUT/PATCH/DELETE, full schema validation, and Part 2 work."
+      - "Story out-of-scope section repeats those exclusions."
+      - "Planner handoff tells Generator not to issue mutation requests and not to promote GeoJSON or SensorML beyond PARTIAL."
+    conclusion: "The planning keeps Sprint 17 as read-only relation-types work."
+  - id: "RAZE-ETS17-PLAN-PASS-006"
+    severity: pass
+    title: "REQ-ETS-PART1-012 and REQ-ETS-PART1-013 remain honestly PARTIAL"
+    evidence:
+      - "OpenSpec status text says Sprint 17 plans relation-types while mediatype-write, full schema validation, property evidence, and other open work remain unimplemented."
+      - "_bmad/traceability.md marks both rows PARTIAL-IMPLEMENTED with Sprint 17 relation-types planned."
+      - "ops/known-issues.md continues to list both encoding classes as PARTIAL-IMPLEMENTED."
+    conclusion: "Planning does not claim full GeoJSON or SensorML closure."
+  - id: "RAZE-ETS17-PLAN-PASS-007"
+    severity: pass
+    title: "Planning docs are internally consistent apart from the allowlist gap"
+    evidence:
+      - "Contract, story, OpenSpec, traceability, planner handoff, status, test-results, changelog, known-issues, and epic row all describe Sprint 17 as pending Raze planning review."
+      - "The documented GeoRobotix probes are consistent across status, test-results, contract, handoff, and story."
+      - "No Sprint 17 Java implementation claim or test-result claim was found."
+    conclusion: "Docs are reconciled enough for planning once RAZE-ETS17-PLAN-GAP-001 is fixed."
+
+required_fixes:
+  - id: "RAZE-ETS17-PLAN-GAP-001"
+    fix: "Replace or supplement the global association_rel_names policy with resource-specific links-member association allowlists for GeoJSON and SensorML based on the OGC association tables. Require the Generator to fail a links-member association whose rel is missing, generic, not equal to the association name, or belongs only to another resource type."
+    files_to_update:
+      - ".harness/contracts/sprint-ets-17.yaml"
+      - "epics/stories/s-ets-17-01-encoding-relation-types-readonly.md"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+      - ".harness/handoffs/planner-handoff.yaml"
+      - "ops/status.md"
+      - "ops/test-results.md"
+      - "ops/changelog.md"
+
+recommended_generator_regressions_after_fix:
+  - "A Procedure representation with links-member rel=samplingFeatures must FAIL or be rejected as wrong-resource association evidence, not PASS."
+  - "A System representation with canonical/alternate plus no resource-valid association links must SKIP, not PASS."
+  - "A representation with one valid association rel and one malformed links-member association rel must FAIL rather than PASS from the single valid link."

@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 16 SensorML non-system read-only expansion implemented | Last updated: 2026-05-06
+> Status: Active - Sprint 17 encoding relation-types planning drafted | Last updated: 2026-05-06
 
 ## Goal
 Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with each `@Test` method mapped 1:1 to an OGC ATS assertion via the canonical requirement URI in the test's `description` attribute. Owns sub-deliverable 2 of the new ETS capability.
@@ -35,6 +35,7 @@ Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with e
 | S-ETS-15-01 | Expand `/conf/geojson` non-system read-only schema/mapping checks for deployments, procedures, and sampling features | Partial-Implemented (Sprint 15 Generator) | REQ-ETS-PART1-012 |
 | S-ETS-10-01 | Implement `/conf/sensorml` encoding suite - systems read-only subset, depends on SystemFeatures | Partial-Implemented (Sprint 10, Quinn APPROVE_WITH_CONCERNS, Raze APPROVE) | REQ-ETS-PART1-013 |
 | S-ETS-16-01 | Expand `/conf/sensorml` non-system read-only schema/mapping checks for deployments, procedures, and properties | Partial-Implemented (Sprint 16 Generator, Raze-approved) | REQ-ETS-PART1-013 |
+| S-ETS-17-01 | Add read-only `/req/geojson/relation-types` and `/req/sensorml/relation-types` association-link checks | Planned (Sprint 17, Raze-approved) | REQ-ETS-PART1-012, REQ-ETS-PART1-013 |
 | S-ETS-06-04 | (optional) Common conformance class expansion 4 → 8 @Tests (Sprint 3+ minimal-then-expand by design per Quinn CONCERN-2) | Backlog | REQ-ETS-PART1-001 (modified) |
 
 ## Acceptance Criteria

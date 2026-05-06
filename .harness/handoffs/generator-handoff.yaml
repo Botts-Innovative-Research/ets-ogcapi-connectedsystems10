@@ -72,4 +72,8 @@ raze_review:
   confidence: 0.92
   required_fixes_status: "none"
 
-next_action: "Commit Sprint 16 Generator."
+commit:
+  sha: "72820e3"
+  message: "Implement Sprint 16 SensorML expansion"
+
+next_action: "Use .harness/handoffs/planner-handoff.yaml for Sprint 17 planning state."

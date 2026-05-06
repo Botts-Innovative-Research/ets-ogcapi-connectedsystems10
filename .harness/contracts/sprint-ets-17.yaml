@@ -1,0 +1,172 @@
+# Sprint 17 contract - encoding relation-types read-only checks
+# Created 2026-05-06 after Sprint 16 Generator commit.
+
+sprint: "ets-17"
+sprint_name: "encoding-relation-types-readonly"
+type: "feature-expansion"
+created: "2026-05-06T23:38:16Z"
+description: |
+  Sprint 17 extends the existing GeoJSON and SensorML encoding requirements
+  rather than adding a new Part 1 conformance class. It targets the shared
+  read-only relation-types subrequirement: when an association is encoded in
+  a JSON `links` member, the link relation type must be the association name.
+
+stories:
+  - id: "S-ETS-17-01"
+    title: "Encoding relation-types read-only link checks"
+    file: "epics/stories/s-ets-17-01-encoding-relation-types-readonly.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "S"
+    depends_on:
+      - "S-ETS-09-01"
+      - "S-ETS-10-01"
+      - "S-ETS-15-01"
+      - "S-ETS-16-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART1-012 (/req/geojson relation-types subset - remains PARTIAL)"
+    - "REQ-ETS-PART1-013 (/req/sensorml relation-types subset - remains PARTIAL)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001"
+    - "SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001"
+    - "SCENARIO-ETS-PART1-012-013-RELATION-TYPES-SMOKE-NO-MUTATION-001"
+  normal: []
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  build_green_jdk17: true
+  default_georobotix_smoke_green: true
+  default_smoke_no_mutation_requests: true
+  geojson_relation_types_checked_or_skipped_honestly: true
+  sensorml_relation_types_checked_or_skipped_honestly: true
+  canonical_alternate_links_not_counted_as_associations: true
+  no_mediatype_write_in_sprint: true
+  no_full_schema_validation_in_sprint: true
+  no_part2_work_in_sprint: true
+
+upstream_ogc_verification:
+  repo: "opengeospatial/ogcapi-connected-systems"
+  branch: "master"
+  checked_at: "2026-05-06T23:38:16Z"
+  geojson_clause: "api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc"
+  sensorml_clause: "api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc"
+  geojson_requirement_class: "api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
+  sensorml_requirement_class: "api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc"
+  source_http_status: "HTTP 200 on 2026-05-06"
+  relation_types_text: "For all associations encoded in the `links` member of the JSON response, the link relation type must be set to the association name."
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares /conf/geojson and /conf/sensorml, plus relevant resource classes already used by Sprints 15 and 16."
+    system_item_links: "Default System item /systems/0mqcvdnfoca0 has canonical, alternate, samplingFeatures, and datastreams links. Association links observed in links member use rel=samplingFeatures and rel=datastreams."
+    deployment_item_links: "Default Deployment item /deployments/16sp744ch58g has canonical and alternate links; deployedSystems is encoded under properties/deployedSystems@link, not the links member."
+    procedure_item_links: "Default Procedure item /procedures/164p7ed8l47g has canonical and alternate links only."
+    sampling_feature_item_links: "Default SamplingFeature item /samplingFeatures/0mtff3l0oofg has no links member; hostedProcedure@link is a property link, not a links-member association."
+    sensorml_items: "GeoRobotix SensorML system/deployment/procedure examples expose no links-member association links in the fetched SensorML bodies observed during planning."
+
+relation_type_policy:
+  resource_specific_links_member_association_rels:
+    geojson:
+      system:
+        - "parentSystem"
+        - "subsystems"
+        - "samplingFeatures"
+        - "deployments"
+        - "procedures"
+        - "datastreams"
+        - "controlstreams"
+      deployment:
+        - "parentDeployment"
+        - "subdeployments"
+        - "featuresOfInterest"
+        - "samplingFeatures"
+        - "datastreams"
+        - "controlstreams"
+      procedure:
+        - "implementingSystems"
+      samplingFeature:
+        - "parentSystem"
+        - "sampleOf"
+        - "datastreams"
+        - "controlstreams"
+      property:
+        []
+    sensorml:
+      system:
+        - "subsystems"
+        - "samplingFeatures"
+        - "deployments"
+        - "procedures"
+        - "datastreams"
+        - "controlstreams"
+      deployment:
+        - "parentDeployment"
+        - "subdeployments"
+        - "featuresOfInterest"
+        - "samplingFeatures"
+        - "datastreams"
+        - "controlstreams"
+      procedure:
+        - "implementingSystems"
+      property:
+        []
+  excluded_generic_rels:
+    - "self"
+    - "canonical"
+    - "alternate"
+    - "next"
+    - "prev"
+    - "first"
+    - "last"
+    - "collection"
+    - "service-desc"
+    - "service-doc"
+  verdict_policy:
+    - "PASS only when every detected association link encoded in a links member uses a rel valid for the selected resource type."
+    - "SKIP when the selected representation has no links-member association links."
+    - "FAIL when a links-member association URL is present but its rel is generic, missing, not the association name, or valid only for a different resource type."
+    - "Do not apply this requirement to property-level @link members such as deployedSystems@link or hostedProcedure@link."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Add focused read-only relation-types checks to the appropriate encoding suite(s) or a small shared helper."
+  - "Gate GeoJSON relation-types checks on /conf/geojson and relevant resource conformance classes before judging resource links."
+  - "Gate SensorML relation-types checks on /conf/sensorml and representation availability before judging SensorML links."
+  - "Ignore canonical, alternate, pagination, and service-description links as non-association links for this requirement."
+  - "Use resource-specific links-member association allowlists derived from the OGC association tables."
+  - "SKIP honestly if no association is encoded in a links member for the selected representation."
+  - "Add focused unit coverage for association-link classification and generic-link exclusion."
+  - "Run Docker Maven and default GeoRobotix TeamEngine smoke."
+  - "Verify zero IUT-bound POST/PUT/DELETE/PATCH in default smoke."
+  - "Update OpenSpec/story/traceability/status/changelog/test-results."
+
+generator_must_not_do:
+  - "Do not implement /req/geojson/mediatype-write or /req/sensorml/mediatype-write."
+  - "Do not issue POST, PUT, PATCH, or DELETE."
+  - "Do not count canonical or alternate links as association relation-types evidence."
+  - "Do not accept an association rel from one resource type as valid evidence for another resource type."
+  - "Do not apply links-member relation-types rules to property-level @link members."
+  - "Do not claim full GeoJSON or SensorML schema validation closure."
+  - "Do not implement Part 2 work."
+
+evaluation_focus:
+  quinn:
+    - "Verify relation-types checks are read-only and skip honestly when no links-member associations exist."
+    - "Verify association rel allowlists are resource-specific."
+    - "Verify canonical/alternate/pagination links are not misclassified as association links."
+  raze:
+    - "Attack false PASS claims from generic links, wrong-resource association rels, property-level @link members, or missing association links."
+    - "Check no mutation and no mediatype-write scope creep."
+    - "Check both REQ-ETS-PART1-012 and REQ-ETS-PART1-013 remain PARTIAL."
+
+confidence: 0.83

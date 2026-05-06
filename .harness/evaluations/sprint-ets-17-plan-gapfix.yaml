@@ -1,0 +1,64 @@
+schema_version: "1.0"
+artifact_type: adversarial_gapfix_review
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-06T23:50:27Z"
+sprint: "sprint-ets-17"
+story_id: "S-ETS-17-01"
+review_scope: "Focused planning gap-fix recheck for RAZE-ETS17-PLAN-GAP-001 only"
+verdict: APPROVE
+confidence: 0.94
+
+constraints:
+  docker_rerun: false
+  maven_rerun: false
+  teamengine_rerun: false
+  source_code_modified: false
+
+gap_rechecked:
+  id: "RAZE-ETS17-PLAN-GAP-001"
+  original_gap: "Global association-name allowlist could false-PASS a relation type that is valid for a different resource class."
+  status: CLOSED
+
+evidence:
+  contract:
+    path: ".harness/contracts/sprint-ets-17.yaml"
+    observations:
+      - "relation_type_policy now defines resource_specific_links_member_association_rels split by encoding and resource type."
+      - "GeoJSON allowlists cover system, deployment, procedure, samplingFeature, and empty property scope."
+      - "SensorML allowlists cover system, deployment, procedure, and empty property scope; SensorML system intentionally excludes parentSystem because upstream maps it to attachedTo rather than links."
+      - "verdict_policy now FAILs links-member association URLs whose rel is valid only for a different resource type."
+      - "generator_must_not_do explicitly says not to accept an association rel from one resource type as valid evidence for another resource type."
+  story:
+    path: "epics/stories/s-ets-17-01-encoding-relation-types-readonly.md"
+    observations:
+      - "Planned Test Surface now requires PASS only when every detected association in links uses a rel valid for the selected encoding and resource type."
+      - "The story enumerates resource-specific GeoJSON and SensorML association tables."
+      - "The story requires FAIL when a links-member association rel is valid only for another resource type."
+      - "Definition of Done includes resource-specific links-member association allowlists, not a single global allowlist."
+  openspec:
+    path: "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    observations:
+      - "SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001 now requires a rel value equal to an association name valid for the selected resource type."
+      - "SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001 states relation types valid only for a different resource type do not satisfy the assertion."
+      - "REQ-ETS-PART1-013 Sprint 17 planned scope now lists SensorML resource-specific links-member allowlists and explains excluded parentSystem / samplingFeature scope."
+      - "SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001 mirrors wrong-resource rel rejection."
+  handoff:
+    path: ".harness/handoffs/planner-handoff.yaml"
+    observations:
+      - "planner handoff now includes resource_specific_links_member_association_rels by encoding/resource."
+      - "generator brief requires PASS only from association rel names valid for the selected encoding and resource type."
+      - "generator brief requires unit coverage for wrong-resource rel rejection."
+  ops_docs:
+    paths:
+      - "ops/status.md"
+      - "ops/test-results.md"
+      - "ops/changelog.md"
+    observations:
+      - "Ops docs describe Sprint 17 as resource-specific relation-types planning and retain PARTIAL status for GeoJSON and SensorML."
+
+remaining_required_fixes: []
+
+notes:
+  - "No Docker, Maven, or TeamEngine commands were run, per focused planning recheck scope."
+  - "This review did not reassess implementation because Sprint 17 remains planning-only."

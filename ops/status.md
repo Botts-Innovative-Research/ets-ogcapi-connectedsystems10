@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T19:34Z
+Last updated: 2026-05-06T23:38Z
 
 ## Fresh-Session Entry Point
 
@@ -16,8 +16,8 @@ Read these first:
 - `ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md`
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
-- `.harness/handoffs/generator-handoff.yaml`
-- `.harness/contracts/sprint-ets-16.yaml`
+- `.harness/handoffs/planner-handoff.yaml`
+- `.harness/contracts/sprint-ets-17.yaml`
 
 ## Current State
 
@@ -38,11 +38,32 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD before Sprint 16 Generator commit is `0f198ec` (`Plan Sprint 16 SensorML expansion`); Sprint 16 Generator is implemented and Raze-approved, with commit next.
+- ETS HEAD after Sprint 16 Generator commit is `72820e3` (`Implement Sprint 16 SensorML expansion`); Sprint 17 planning is drafted and Raze-approved, with commit next.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-16-01` Generator complete as PARTIAL and Raze-approved; commit is next.
-- Current sprint status: Sprint ets-16 Generator added read-only non-system SensorML deployment/procedure/property checks.
-- Latest committed planning: `0f198ec` (`Plan Sprint 16 SensorML expansion`).
+- Latest implemented story: `S-ETS-16-01` Generator complete as PARTIAL and Raze-approved.
+- Current sprint status: Sprint ets-17 planning drafted and Raze-approved for read-only GeoJSON/SensorML relation-types checks.
+- Latest committed Generator: `72820e3` (`Implement Sprint 16 SensorML expansion`).
+
+## Sprint ets-17 Planning Evidence
+
+Encoding relation-types read-only link checks:
+
+- Story: `epics/stories/s-ets-17-01-encoding-relation-types-readonly.md`
+- Contract: `.harness/contracts/sprint-ets-17.yaml`
+- OpenSpec: extends `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`; both remain PARTIAL.
+- Scope planned: `/req/geojson/relation-types` and `/req/sensorml/relation-types` for associations encoded in JSON `links` members.
+- Out of scope: GeoJSON/SensorML `mediatype-write`, mutation behavior, full schema validation, Part 2, and property-level `@link` mapping checks beyond existing mapping assertions.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-06 and not stale.
+- OGC source verification: `api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc` and `api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc` fetched HTTP 200 on 2026-05-06. Both clauses state that associations encoded in `links` must use the association name as the link relation type.
+- GeoRobotix planning probe: `/systems/0mqcvdnfoca0` has links with generic `canonical`/`alternate` rels plus association rels `samplingFeatures` and `datastreams`; the association links already use association-name rels.
+- GeoRobotix planning probe: `/deployments/16sp744ch58g` and `/procedures/164p7ed8l47g` expose only generic `canonical` and `alternate` links in `links`; deployment `deployedSystems@link` is under `properties`, not `links`.
+- GeoRobotix planning probe: `/samplingFeatures/0mtff3l0oofg` has no `links` member; `hostedProcedure@link` is under `properties`, not `links`.
+- GeoRobotix planning probe: observed SensorML system/deployment/procedure bodies did not expose links-member association links, so SensorML relation-types checks may SKIP honestly on this IUT until such links exist.
+- Planned verdict policy: PASS only when every detected links-member association uses a `rel` valid for the selected encoding and resource type; SKIP when no links-member association exists; FAIL when a links-member association URL is present but `rel` is missing, generic, not the association name, or valid only for another resource type.
+- Resource-specific allowlists: GeoJSON System permits `parentSystem`, `subsystems`, `samplingFeatures`, `deployments`, `procedures`, `datastreams`, and `controlstreams`; GeoJSON Deployment permits `parentDeployment`, `subdeployments`, `featuresOfInterest`, `samplingFeatures`, `datastreams`, and `controlstreams`; GeoJSON Procedure permits `implementingSystems`; GeoJSON Sampling Feature permits `parentSystem`, `sampleOf`, `datastreams`, and `controlstreams`. SensorML System excludes `parentSystem` because it maps to `attachedTo`, not `links`; SensorML has no Sampling Feature representation.
+- Raze planning review `.harness/evaluations/sprint-ets-17-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for a global association-name allowlist false PASS risk.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-17-plan-gapfix.yaml` returned `APPROVE` confidence 0.94 with no remaining required fixes.
+- Next action: commit Sprint 17 planning, then start Generator.
 
 ## Sprint ets-16 Generator Evidence
 
@@ -287,14 +308,14 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 16 Generator.
+1. Commit Sprint 17 planning.
+2. Start Generator for `S-ETS-17-01`.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-16 Generator work plus metrics:
+Current dirty worktree is expected Sprint ets-17 planning work plus metrics:
 
-- `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java`
-- `src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/VerifySensorMlResourceMappingAssertions.java`
-- `epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md`
-- OpenSpec/story/traceability/status/changelog/test-results Generator reconciliation.
+- `.harness/contracts/sprint-ets-17.yaml`
+- `epics/stories/s-ets-17-01-encoding-relation-types-readonly.md`
+- OpenSpec/story/traceability/status/changelog/test-results planning reconciliation.
 - `ops/metrics.md` turn-log updates.

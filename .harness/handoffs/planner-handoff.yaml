@@ -1,166 +1,156 @@
 agent: planner
 status: complete
-timestamp: "2026-05-06T19:03:00Z"
-sprint_number: "ets-16"
-sprint_name: "sensorml-non-system-readonly-expansion"
-contract_path: ".harness/contracts/sprint-ets-16.yaml"
+timestamp: "2026-05-06T23:38:16Z"
+sprint_number: "ets-17"
+sprint_name: "encoding-relation-types-readonly"
+contract_path: ".harness/contracts/sprint-ets-17.yaml"
 triggered_by: |
-  User instructed "Continue" after Sprint 15 Generator was committed. Sprint 16
-  planning was selected as the next task.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 15 handoff 2026-05-06T17:12:30Z)"
+  User instructed "keep going" after Sprint 16 Generator was committed.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 16 handoff 2026-05-06T19:03:00Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-06T19:03:00Z"
+  checked_at: "2026-05-06T23:38:16Z"
   stale_over_30_days: false
-  disposition: "OK to start Sprint 16 planning."
+  disposition: "OK to start Sprint 17 planning."
 
 strategic_decisions:
   q1_next_work:
-    question: "After Sprint 15, what is the next Sprint item?"
-    decision: "S-ETS-16-01 SensorML non-system read-only expansion"
+    question: "After Sprint 16, what is the next Sprint item?"
+    decision: "S-ETS-17-01 Encoding relation-types read-only link checks"
     rationale: |
-      SensorML has a clear open Part 1 gap from Sprint 10:
-      deployment/procedure/property schema and mapping checks. The work is
-      read-only, low mutation risk, and directly advances REQ-ETS-PART1-013.
+      GeoJSON and SensorML both still have open relation-types
+      subrequirements. The work is read-only, lower risk than additional
+      mutation-side work, and directly advances both encoding classes.
 
   q2_scope_boundary:
-    question: "Should Sprint 16 close full SensorML?"
-    decision: "No. Keep REQ-ETS-PART1-013 PARTIAL."
+    question: "Should Sprint 17 close full GeoJSON or SensorML?"
+    decision: "No. Keep REQ-ETS-PART1-012 and REQ-ETS-PART1-013 PARTIAL."
     rationale: |
-      Sprint 16 covers deployment/procedure/property read-only schema and
-      mapping checks only. `/req/sensorml/mediatype-write`,
-      `/req/sensorml/relation-types`, full SensorML 3.0 JSON Schema validation,
-      mutation-side behavior, GeoJSON, and Part 2 remain out of scope.
+      Sprint 17 covers links-member association relation types only.
+      mediatype-write, full schema validation, property GeoJSON mapping,
+      positive populated-property SensorML evidence, mutation-side behavior,
+      and Part 2 remain out of scope.
 
-  q3_fallback_honesty:
-    question: "How should default CS API JSON responses be treated?"
-    decision: "CS API `items` wrappers and default Feature JSON are fallback evidence, not PASS."
+  q3_false_positive_policy:
+    question: "What should count as relation-types evidence?"
+    decision: "Only associations encoded in a JSON links member."
     rationale: |
-      GeoRobotix currently declares `/conf/sensorml`, but deployment, procedure,
-      and property collection requests with `Accept: application/sml+json`
-      returned `Content-Type: application/json` CS API wrappers. Counting that
-      as SensorML PASS would repeat the encoding false-positive risk addressed
-      in Sprint 9 and Sprint 10.
+      The OGC clause text says the rule applies to associations encoded in the
+      `links` member. Canonical/alternate/pagination/service links are generic
+      web links, not association evidence. Property-level @link members such as
+      deployedSystems@link and hostedProcedure@link belong to mapping checks.
+
+raze_review:
+  plan_artifact: ".harness/evaluations/sprint-ets-17-plan-adversarial.yaml"
+  plan_verdict: "GAPS_FOUND"
+  plan_confidence: 0.88
+  required_fixes:
+    - "RAZE-ETS17-PLAN-GAP-001"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-17-plan-gapfix.yaml"
+  gapfix_verdict: "APPROVE"
+  gapfix_confidence: 0.94
+  required_fixes_status: "closed"
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems Part 1: Feature Resources"
-  requirement_class_source: "api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc"
-  source_http_status: "HTTP/2 200"
-  checked_at: "2026-05-06T19:03:00Z"
-  identifier: "/req/sensorml"
-  listed_subrequirements:
-    - "/req/sensorml/mediatype-read"
-    - "/req/sensorml/mediatype-write"
+  checked_at: "2026-05-06T23:38:16Z"
+  geojson_clause: "api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc"
+  geojson_clause_http_status: "HTTP 200"
+  sensorml_clause: "api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc"
+  sensorml_clause_http_status: "HTTP 200"
+  requirement_text: "For all associations encoded in the `links` member of the JSON response, the link relation type must be set to the association name."
+  modified_requirements:
+    - "/req/geojson/relation-types"
     - "/req/sensorml/relation-types"
-    - "/req/sensorml/resource-id"
-    - "/req/sensorml/feature-attribute-mapping"
-    - "/req/sensorml/system-schema"
-    - "/req/sensorml/system-sml-class"
-    - "/req/sensorml/system-mappings"
-    - "/req/sensorml/deployment-schema"
-    - "/req/sensorml/deployment-mappings"
-    - "/req/sensorml/procedure-schema"
-    - "/req/sensorml/procedure-sml-class"
-    - "/req/sensorml/procedure-mappings"
-    - "/req/sensorml/property-schema"
-    - "/req/sensorml/property-mappings"
 
 planning_probes:
   georobotix:
     iut_url: "https://api.georobotix.io/ogc/t18/api"
-    conformance: "HTTP 200; declares /conf/sensorml plus deployment/procedure/property resource classes."
-    deployments_accept_sensorml_collection: "HTTP 200; Content-Type application/json; keys ['items']."
-    procedures_accept_sensorml_collection: "HTTP 200; Content-Type application/json; keys ['items', 'links']."
-    properties_accept_sensorml_collection: "HTTP 200; Content-Type application/json; keys ['items']; items length 0."
-    deployment_sml3: "HTTP 200 application/sml+json; type Deployment; id 16sp744ch58g; uniqueId urn:x-osh:saildrone:mission:2025; deployedSystems present."
-    procedure_sml3: "HTTP 200 application/sml+json; type PhysicalSystem; id 164p7ed8l47g; uniqueId urn:x-dahua:cam:sd22204t-gn; procedure structure present."
-    planning_interpretation: "Plan read-only tests that use explicit SensorML item evidence when available and SKIP fallback wrappers or empty collections."
+    system_item: "GET /systems/0mqcvdnfoca0 returned canonical, alternate, samplingFeatures, and datastreams links. Association links use rel=samplingFeatures and rel=datastreams."
+    deployment_item: "GET /deployments/16sp744ch58g returned canonical and alternate links only; deployedSystems@link is under properties."
+    procedure_item: "GET /procedures/164p7ed8l47g returned canonical and alternate links only."
+    sampling_feature_item: "GET /samplingFeatures/0mtff3l0oofg returned no links member; hostedProcedure@link is under properties."
+    sensorml_items: "System/deployment/procedure SensorML bodies observed during planning did not expose links-member association links."
+    planning_interpretation: "Generator must PASS only from links-member association rel names, SKIP when no such association exists, and not count generic links or property-level @link members."
 
-resource_conformance_gating:
-  deployment:
-    required_conformance_class: "/conf/deployment"
-    absent_verdict: "SKIP before fetching or judging deployment SensorML schema/mapping evidence."
-  procedure:
-    required_conformance_class: "/conf/procedure"
-    absent_verdict: "SKIP before fetching or judging procedure SensorML schema/mapping evidence."
-  property:
-    required_conformance_class: "/conf/property"
-    absent_verdict: "SKIP before fetching or judging property SensorML schema/mapping evidence."
-
-resource_specific_predicates:
-  deployment:
-    requirements: ["/req/sensorml/deployment-schema", "/req/sensorml/deployment-mappings"]
-    predicates:
-      - "Parseable SensorML JSON before PASS."
-      - "type=Deployment."
-      - "id and uniqueId or equivalent identifier preserve selected deployment identity."
-      - "deployedSystems is present and non-empty, or mapping SKIPs with reason."
-  procedure:
-    requirements: ["/req/sensorml/procedure-schema", "/req/sensorml/procedure-sml-class", "/req/sensorml/procedure-mappings"]
-    predicates:
-      - "Parseable SensorML JSON before PASS."
-      - "Procedure-compatible SensorML type such as PhysicalSystem or SimpleProcess."
-      - "id and uniqueId or equivalent identifier preserve selected procedure identity."
-      - "At least one non-identity procedure/process structure such as definition, inputs, outputs, parameters, characteristics, or capabilities is present; identifiers alone are not sufficient."
-  property:
-    requirements: ["/req/sensorml/property-schema", "/req/sensorml/property-mappings"]
-    predicates:
-      - "Empty /properties SKIPs with reason."
-      - "When an item exists, parseable SensorML JSON before PASS."
-      - "Property-compatible SensorML type plus identity/definition/identifier mapping before PASS."
+relation_type_policy:
+  resource_specific_links_member_association_rels:
+    geojson:
+      system: ["parentSystem", "subsystems", "samplingFeatures", "deployments", "procedures", "datastreams", "controlstreams"]
+      deployment: ["parentDeployment", "subdeployments", "featuresOfInterest", "samplingFeatures", "datastreams", "controlstreams"]
+      procedure: ["implementingSystems"]
+      samplingFeature: ["parentSystem", "sampleOf", "datastreams", "controlstreams"]
+      property: []
+    sensorml:
+      system: ["subsystems", "samplingFeatures", "deployments", "procedures", "datastreams", "controlstreams"]
+      deployment: ["parentDeployment", "subdeployments", "featuresOfInterest", "samplingFeatures", "datastreams", "controlstreams"]
+      procedure: ["implementingSystems"]
+      property: []
+  excluded_generic_rels:
+    - "self"
+    - "canonical"
+    - "alternate"
+    - "next"
+    - "prev"
+    - "first"
+    - "last"
+    - "collection"
+    - "service-desc"
+    - "service-doc"
 
 stories:
-  - id: "S-ETS-16-01"
-    title: "SensorML non-system read-only expansion"
-    file: "epics/stories/s-ets-16-01-sensorml-non-system-readonly-expansion.md"
+  - id: "S-ETS-17-01"
+    title: "Encoding relation-types read-only link checks"
+    file: "epics/stories/s-ets-17-01-encoding-relation-types-readonly.md"
     priority: P0
-    complexity: M
-    estimated_generator_wall_clock: "1-2h"
-    sequencing: "ONLY story in Sprint 16"
+    complexity: S
+    estimated_generator_wall_clock: "1h"
+    sequencing: "ONLY story in Sprint 17"
 
 new_requirements: []
 modified_requirements:
+  - "REQ-ETS-PART1-012"
   - "REQ-ETS-PART1-013"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-013-SENSORML-DEPLOYMENT-SCHEMA-MAPPING-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-PROCEDURE-SCHEMA-MAPPING-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-PROPERTY-SCHEMA-MAPPING-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-NON-SYSTEM-FALLBACK-HONESTY-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-SMOKE-NO-MUTATION-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001"
+  - "SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001"
+  - "SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001"
+  - "SCENARIO-ETS-PART1-012-013-RELATION-TYPES-SMOKE-NO-MUTATION-001"
 
 next_agent: "generator"
 next_agent_rationale: |
-  Planning artifacts are complete and no Architect cycle is needed. Generator can
-  extend SensorMlTests with read-only item representation helpers and keep the
-  existing dependency/no-mutation patterns.
+  Planning artifacts are complete pending Raze review. No Architect cycle is
+  needed because the sprint is a narrow read-only extension of existing
+  encoding suites.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
-    - "Extend SensorMlTests with deployment, procedure, and property read-only schema/mapping checks."
-    - "Gate each non-system SensorML check on /conf/deployment, /conf/procedure, or /conf/property as applicable."
-    - "Assert the resource-specific predicates above before claiming schema/mapping PASS."
-    - "Keep fallback honesty: CS API wrappers and empty /properties SKIP, not PASS."
-    - "Keep all requests read-only GETs."
+    - "Implement focused read-only relation-types checks for GeoJSON and SensorML."
+    - "Classify links-member association links separately from generic representation links."
+    - "PASS only from association rel names valid for the selected encoding and resource type."
+    - "SKIP honestly when selected representations have no links-member association links."
+    - "Do not count property-level @link members as relation-types evidence."
+    - "Add focused unit coverage for association/generic/property-link classification and wrong-resource rel rejection."
     - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh."
     - "Verify default smoke has zero IUT-bound POST/PUT/DELETE/PATCH."
     - "Update spec/story/traceability/status/changelog/test-results."
   must_not_do:
-    - "Do not implement SensorML mediatype-write or relation-types."
-    - "Do not implement GeoJSON or Part 2 work."
-    - "Do not claim samplingFeature SensorML coverage."
+    - "Do not implement mediatype-write."
     - "Do not issue mutation requests."
-    - "Do not promote REQ-ETS-PART1-013 beyond PARTIAL."
-    - "Do not treat generic JSON identity shape alone as resource-specific schema/mapping closure."
+    - "Do not implement full schema validation."
+    - "Do not implement Part 2."
+    - "Do not promote GeoJSON or SensorML beyond PARTIAL."
+    - "Do not use one global association rel allowlist across all resource types."
 
 gate_expectations:
   quinn:
-    primary: "Verify read-only SensorML non-system expansion and fallback honesty."
+    primary: "Verify read-only relation-types checks and honest SKIPs."
   raze:
-    primary: "Attack false-positive SensorML PASS claims from Content-Type application/json, CS API `items` wrappers, or empty /properties."
-    adversarial_focus: "No mutation, no full-REQ overclaim, no hidden samplingFeature/GeoJSON/Part 2 scope creep."
+    primary: "Attack false PASS from canonical/alternate links, wrong-resource rels, property-level @link members, or missing links-member associations."
+    adversarial_focus: "No mutation, no mediatype-write scope creep, and no full-REQ overclaim."
 
-confidence: 0.84
+confidence: 0.83

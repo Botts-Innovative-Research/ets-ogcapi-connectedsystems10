@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T23:38Z — Sprint 17 encoding relation-types planning
+
+**Triggered by user instruction**: "keep going."
+
+- Planned `S-ETS-17-01` as a read-only expansion of `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`, not a new conformance class.
+- Added `.harness/contracts/sprint-ets-17.yaml` and `epics/stories/s-ets-17-01-encoding-relation-types-readonly.md`.
+- Updated OpenSpec, traceability, epic status, planner handoff, ops status, known issues, and test-results for GeoJSON/SensorML relation-types scope.
+- Verified OGC GeoJSON and SensorML encoding clauses at `api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc` and `api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc`.
+- Planning probe: GeoRobotix `/systems/0mqcvdnfoca0` exposes association links `samplingFeatures` and `datastreams` in `links`, with relation types matching association names.
+- Planning probe: GeoRobotix deployment/procedure/samplingFeature items and observed SensorML bodies mostly expose no links-member association links, so Sprint 17 must SKIP absent association links honestly.
+- Planning guardrail: canonical, alternate, pagination, service, and property-level `@link` entries are not relation-types PASS evidence.
+- Raze planning review `.harness/evaluations/sprint-ets-17-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for a global association-name allowlist false PASS risk.
+- Applied the required planning fix: relation-types PASS criteria now require resource-specific GeoJSON and SensorML links-member association allowlists, and wrong-resource rels fail rather than pass.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-17-plan-gapfix.yaml` returned `APPROVE` confidence 0.94 with no remaining required fixes.
+
+---
+
 ## 2026-05-06T19:26Z — Sprint 16 SensorML expansion Generator
 
 **Triggered by user instruction**: "Start Generator for S-ETS-16-01."

@@ -1,8 +1,26 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T19:26Z
+Last updated: 2026-05-06T23:38Z
 
 ## Current Sprint Evidence
+
+Sprint ets-17 encoding relation-types read-only planning:
+
+- OGC source verification:
+  - GeoJSON clause: `api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc`, HTTP 200 on 2026-05-06.
+  - SensorML clause: `api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc`, HTTP 200 on 2026-05-06.
+  - Both clauses define `/req/*/relation-types` as requiring association links in JSON `links` members to use the association name as `rel`.
+- GeoRobotix planning probes:
+  - `/systems/0mqcvdnfoca0`: generic `canonical`/`alternate` links plus association links `samplingFeatures` and `datastreams`; association rels match association names.
+  - `/deployments/16sp744ch58g`: `links` contains only generic `canonical`/`alternate`; `deployedSystems@link` is under `properties`.
+  - `/procedures/164p7ed8l47g`: `links` contains only generic `canonical`/`alternate`.
+  - `/samplingFeatures/0mtff3l0oofg`: no `links` member; `hostedProcedure@link` is under `properties`.
+  - SensorML system/deployment/procedure bodies observed during planning: no links-member association links.
+- Interpretation: Sprint 17 must not count canonical/alternate/pagination links or property-level `@link` objects as relation-types PASS evidence. It should PASS only from links-member association rels valid for the selected encoding and resource type, SKIP when no links-member association exists, and FAIL malformed or wrong-resource association-link rels.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-17-plan-adversarial.yaml`: `GAPS_FOUND` confidence 0.88.
+  - Required fix: close the global association-name allowlist false PASS risk by requiring resource-specific GeoJSON and SensorML links-member association allowlists.
+  - `.harness/evaluations/sprint-ets-17-plan-gapfix.yaml`: `APPROVE` confidence 0.94, no remaining required fixes.
 
 Sprint ets-16 SensorML non-system read-only expansion:
 

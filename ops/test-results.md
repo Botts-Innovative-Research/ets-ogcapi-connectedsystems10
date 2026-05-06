@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T15:03Z
+Last updated: 2026-05-06T15:27Z
 
 ## Current Sprint Evidence
 
@@ -19,6 +19,32 @@ Sprint ets-13 Update/PATCH safety-gated systems subset:
 - No-mutation oracle: integrated smoke oracle recognized 41 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
 - Update runtime outcome against GeoRobotix: the Update configuration method skips with the missing `/conf/update` reason, and the 5 Update @Tests are skipped in default smoke through the `update -> createreplacedelete` dependency because Create/Replace/Delete's public-IUT mutation safety gate intentionally skips. No PATCH was issued.
 - Raze implementation review: `.harness/evaluations/sprint-ets-13-adversarial-implementation.yaml` reported `GAPS_FOUND` 0.86 for documentation/evidence gaps; required fixes applied by updating stale headers/status, archiving the Maven log, and documenting dependency-skip masking.
+- Quinn independent Gate 3.5:
+  - Gate artifact: `.harness/evaluations/sprint-ets-13-evaluator-gate.yaml`
+  - Verdict: `APPROVE_WITH_CONCERNS` confidence 0.91
+  - Clone: `/tmp/quinn-sprint-ets-13-cd38223` at `cd3822369f3c9b3d99efb61ea623560ca9516446`
+  - Maven command: `bash scripts/mvn-test-via-docker.sh`
+  - Maven result: BUILD SUCCESS, `113 tests / 0 failures / 0 errors / 3 skipped`
+  - Smoke command: `SMOKE_CONTAINER_NAME=quinn-ets13-gate-smoke SMOKE_IMAGE_TAG=ets-ogcapi-connectedsystems10:quinn-ets13-gate SMOKE_OUTPUT_DIR=/tmp/quinn-ets13-gate-smoke-results bash scripts/smoke-test.sh`
+  - Smoke result: `74 total / 52 passed / 0 failed / 22 skipped`
+  - Smoke report: `/tmp/quinn-ets13-gate-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-06.xml`
+  - Smoke log: `/tmp/quinn-ets13-gate-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log`
+  - No-mutation oracle replay: `recognized_iut_request_logs=41`; zero IUT-bound POST/PUT/DELETE/PATCH.
+  - Update runtime outcome: `fetchUpdateInputs` SKIP cites missing `/conf/update`; the 5 Update @Tests SKIP through the `update -> createreplacedelete` dependency because the default CRD mutation safety gate skips lifecycle mutation. No PATCH was issued.
+- Raze review of Quinn artifact: `.harness/evaluations/sprint-ets-13-quinn-gate-raze-review.yaml` `APPROVE` confidence 0.89 after correcting the Quinn artifact file list.
+- Raze independent Gate 4:
+  - Gate artifact: `.harness/evaluations/sprint-ets-13-adversarial-gate.yaml`
+  - Verdict: `APPROVE_WITH_CONCERNS` confidence 0.90
+  - Clone: `/tmp/raze-sprint-ets-13-gate` at `cd38223`
+  - Maven command: `bash scripts/mvn-test-via-docker.sh`
+  - Maven result: BUILD SUCCESS, `113 tests / 0 failures / 0 errors / 3 skipped`
+  - No-mutation oracle self-test: PASS
+  - Smoke command: `SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s13-gate SMOKE_IMAGE_TAG=ets-ogcapi-connectedsystems10:raze-s13-gate SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-13-gate-smoke-results SMOKE_RUN_TIMEOUT_S=900 bash scripts/smoke-test.sh`
+  - Smoke result: `74 total / 52 passed / 0 failed / 22 skipped`
+  - Smoke report: `/tmp/raze-sprint-ets-13-gate-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-06.xml`
+  - Smoke log: `/tmp/raze-sprint-ets-13-gate-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log`
+  - No-mutation oracle replay: `recognized_iut_request_logs=41`; zero IUT-bound POST/PUT/DELETE/PATCH.
+  - Required fixes: none. Low follow-up: decide `OPTIONS Allow: PATCH` readiness semantics before using Sprint 13 as a positive mutable-IUT conformance gate.
 - Scope note: this is PARTIAL for REQ-ETS-PART1-011. Deployment/procedure/sampling-feature/property PATCH, Feature Collection update paths, Part 2 update, optimistic locking, and PATCH media-type matrix remain open.
 
 Sprint ets-12 Create/Replace/Delete safety-gated systems subset:

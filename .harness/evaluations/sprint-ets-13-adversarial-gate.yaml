@@ -1,0 +1,152 @@
+agent: raze
+agent_role: adversarial_reviewer
+review_type: sprint_ets_13_gate_4_adversarial
+sprint: ets-13
+story: S-ETS-13-01
+commit_reviewed: cd38223
+title: "Update/PATCH safety-gated systems subset"
+generated_at: "2026-05-06T15:22:00Z"
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.90
+
+reviewed_scope:
+  - ".harness/prompts/adversarial.md"
+  - "_bmad/agents/adversarial-reviewer.md"
+  - "AGENTS.md"
+  - ".harness/contracts/sprint-ets-13.yaml"
+  - ".harness/handoffs/generator-handoff.yaml"
+  - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "ops/status.md"
+  - "ops/test-results.md"
+  - "ops/changelog.md"
+  - "ops/e2e-test-plan.md"
+  - ".harness/evaluations/sprint-ets-13-adversarial-implementation.yaml"
+  - ".harness/evaluations/sprint-ets-13-adversarial-gapfix.yaml"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/UpdateTests.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java"
+  - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  - "scripts/no-mutation-oracle.py"
+  - "scripts/no-mutation-oracle-test.sh"
+  - "scripts/smoke-test.sh"
+
+independence_controls:
+  avoided_new_quinn_gate_yaml_before_write: true
+  review_only_no_implementation_edits: true
+  tmp_clone: "/tmp/raze-sprint-ets-13-gate"
+  smoke_container_name: "raze-ets-csapi-smoke-s13-gate"
+  smoke_image_tag: "ets-ogcapi-connectedsystems10:raze-s13-gate"
+  smoke_output_dir: "/tmp/raze-sprint-ets-13-gate-smoke-results"
+
+totals:
+  maven_docker:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    workdir: "/tmp/raze-sprint-ets-13-gate"
+    result: "BUILD SUCCESS"
+    tests_run: 113
+    failures: 0
+    errors: 0
+    skipped: 3
+  teamengine_smoke:
+    command: "SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s13-gate SMOKE_IMAGE_TAG=ets-ogcapi-connectedsystems10:raze-s13-gate SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-13-gate-smoke-results SMOKE_RUN_TIMEOUT_S=900 bash scripts/smoke-test.sh"
+    workdir: "/tmp/raze-sprint-ets-13-gate"
+    result: "SMOKE PASS"
+    total: 74
+    passed: 52
+    failed: 0
+    skipped: 22
+    report: "/tmp/raze-sprint-ets-13-gate-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    log: "/tmp/raze-sprint-ets-13-gate-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log"
+    recognized_iut_request_logs: 41
+    iut_bound_mutation_requests: 0
+
+findings:
+  - id: RAZE-S13-GATE-CONCERN-001
+    severity: low
+    category: mutable_iut_portability
+    summary: "The systems OPTIONS readiness test is intentionally safety-oriented, but it may be stricter than the normative Update assertion for future declaring mutable IUTs."
+    evidence:
+      - "UpdateTests.systemResourceOptionsPatchReadinessPrecondition asserts the OPTIONS Allow header contains PATCH before treating the readiness precondition as satisfied."
+      - "OGC 23-001 published Part 1 Clause 18 requires UPDATE/PATCH support at {api_root}/systems/{id}; it does not make OPTIONS Allow advertisement the positive conformance oracle."
+      - "The story and OpenSpec correctly say OPTIONS readiness is not an OGC update conformance PASS, and systemsPatchLifecycleOptIn still skips before PATCH if PATCH is not advertised."
+    risk: "A future dedicated mutable IUT that supports PATCH but omits PATCH from OPTIONS Allow could fail the readiness precondition before lifecycle evidence is attempted."
+    required_fix: null
+    recommended_follow_up: "Before using Sprint 13 as a positive mutable-IUT gate, decide whether no PATCH in OPTIONS Allow should remain FAIL, become SKIP-with-reason, or be supplemented by an OpenAPI/405 Allow probe."
+
+positive_evidence:
+  false_pass_risks:
+    verdict: "acceptable"
+    evidence:
+      - "GeoRobotix does not declare /conf/update; UpdateTests.fetchUpdateInputs throws SkipException with an undeclared-PATCH-is-not-PASS message."
+      - "Independent smoke XML has zero Update PASS methods: fetchUpdateInputs SKIP plus five Update @Tests dependency-SKIP through createreplacedelete."
+      - "Default smoke totals remain honest: 74 total / 52 passed / 0 failed / 22 skipped."
+  patch_safety_no_mutation:
+    verdict: "acceptable"
+    evidence:
+      - "systemsPatchLifecycleOptIn calls ensureMutationEnabledOrSkip before POST/PATCH/DELETE."
+      - "ensureMutationEnabledOrSkip requires mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut."
+      - "Known public GeoRobotix host/base URL is hard-denied before PATCH."
+      - "Independent smoke no-mutation oracle reported recognized_iut_request_logs=41 and zero IUT-bound POST/PUT/DELETE/PATCH."
+  no_mutation_oracle:
+    verdict: "acceptable"
+    evidence:
+      - "MUTATION_METHODS includes PATCH."
+      - "no-mutation-oracle-test.sh includes a failing IUT-bound PATCH fixture and passed."
+      - "Oracle was rerun directly against the independent smoke container log and returned recognized_iut_request_logs=41."
+  testng_dependency:
+    verdict: "acceptable"
+    evidence:
+      - "testng.xml declares update depends-on createreplacedelete in the same TestNG <test> block."
+      - "UpdateTests is listed after CreateReplaceDeleteTests."
+      - "VerifyTestNGSuiteDependency includes Update dependency, group-tagging, and co-location structural tests."
+      - "Independent Maven run includes VerifyTestNGSuiteDependency: 37 tests / 0 failures / 0 errors / 0 skipped."
+  ogc_scope_uri_fidelity:
+    verdict: "acceptable"
+    evidence:
+      - "Published OGC 23-001 Part 1 Clause 18 confirms /req/update, /conf/update, /req/create-replace-delete prerequisite, OGC API Features Part 4 /req/update prerequisite, and normative statements /req/update/{system,deployment,procedure,sampling-feature,property}."
+      - "Primary GitHub source requirements/crud/update/requirements_class_update.adoc confirms /req/update and the same normative statement set."
+      - "Implementation limits positive behavior to the systems subset and docs explicitly defer non-system PATCH, Feature Collection item paths, Part 2 update, optimistic locking, and PATCH media-type matrix."
+  docs_reconciliation:
+    verdict: "acceptable"
+    evidence:
+      - "Story front matter is PARTIAL-IMPLEMENTED and DoD is checked."
+      - "OpenSpec, traceability, status, test-results, changelog, and generator handoff all record Sprint 13 as PARTIAL-IMPLEMENTED."
+      - "Existing Sprint 13 implementation Raze gaps were fixed by the gapfix review artifact."
+  dirty_files:
+    verdict: "acceptable_with_note"
+    evidence:
+      - "Before this gate artifact was written, the main ETS worktree showed ops/metrics.md modified only."
+      - "That pre-existing metrics diff described a Quinn Gate 3.5 turn, so this review did not overwrite it."
+      - "The /tmp review clone was clean at cd38223 before verification."
+      - "After this Raze artifact was written, concurrent dirty files appeared: ops/changelog.md, ops/status.md, ops/test-results.md, .harness/evaluations/sprint-ets-13-evaluator-gate.yaml, and .harness/evaluations/sprint-ets-13-quinn-gate-raze-review.yaml. Raze did not read those new Quinn artifacts before writing this gate YAML."
+
+verification:
+  commands_run:
+    - command: "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+      result: "2026-05-06T15:17:43Z"
+    - command: "git clone --quiet . /tmp/raze-sprint-ets-13-gate && git -C /tmp/raze-sprint-ets-13-gate checkout --quiet cd38223"
+      result: "clean review clone created at cd38223"
+    - command: "bash scripts/mvn-test-via-docker.sh"
+      result: "BUILD SUCCESS; Tests run: 113, Failures: 0, Errors: 0, Skipped: 3"
+    - command: "bash scripts/no-mutation-oracle-test.sh"
+      result: "no-mutation oracle self-test PASS"
+    - command: "SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s13-gate SMOKE_IMAGE_TAG=ets-ogcapi-connectedsystems10:raze-s13-gate SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-13-gate-smoke-results SMOKE_RUN_TIMEOUT_S=900 bash scripts/smoke-test.sh"
+      result: "SMOKE PASS: total=74 passed=52 failed=0 skipped=22; recognized_iut_request_logs=41; zero IUT-bound POST/PUT/DELETE/PATCH"
+    - command: "python3 scripts/no-mutation-oracle.py /tmp/raze-sprint-ets-13-gate-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log https://api.georobotix.io/ogc/t18/api"
+      result: "recognized_iut_request_logs=41"
+    - command: "git diff --check"
+      result: "PASS"
+    - command: "curl primary OGC 23-001 Update source paths"
+      result: "Published docs and GitHub source confirm Update class identifiers and normative statements."
+
+required_fixes: []
+
+recommended_follow_up:
+  - "Decide OPTIONS Allow semantics before treating Sprint 13 as a positive mutable-IUT conformance gate."
+  - "Run a dedicated mutable IUT PATCH-positive smoke once a declaring IUT advertises or otherwise proves PATCH support."
+
+files_changed_by_raze:
+  - ".harness/evaluations/sprint-ets-13-adversarial-gate.yaml"
+  - "ops/metrics.md"

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T15:13Z
+Last updated: 2026-05-06T15:27Z
 
 ## Fresh-Session Entry Point
 
@@ -38,10 +38,10 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD after Sprint 13 planning commit: `21c409c`
+- ETS HEAD after Sprint 13 Generator commit: `cd38223`
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-13-01` Generator complete as PARTIAL pending commit.
-- Current sprint status: Sprint ets-13 Generator is implemented locally, verified by Docker Maven plus TeamEngine smoke, and Raze gap-fix recheck approved. Default GeoRobotix smoke issued zero IUT-bound PATCH requests.
+- Latest implemented story: `S-ETS-13-01` Generator complete as PARTIAL at commit `cd38223`.
+- Current sprint status: Sprint ets-13 Generator is committed and passed Quinn Gate 3.5 plus Raze Gate 4 with approve-class verdicts. Default GeoRobotix smoke issued zero IUT-bound PATCH requests.
 - Latest committed planning: `21c409c` (`Plan Sprint 13 update safety gate`).
 
 ## Sprint ets-13 Generator Evidence
@@ -68,6 +68,9 @@ Update/PATCH safety-gated systems subset:
 - Runtime note: default GeoRobotix Update config records missing `/conf/update`, then the five Update @Tests are dependency-skipped because the Update group depends on the default-skipped Create/Replace/Delete mutation safety gate. No PATCH was issued.
 - Raze implementation review: `.harness/evaluations/sprint-ets-13-adversarial-implementation.yaml` verdict `GAPS_FOUND` confidence 0.86; required documentation/evidence fixes applied. Code safety, no-mutation oracle, TestNG dependency, OGC URI/scope fidelity, and unrelated dirty-file checks were acceptable.
 - Raze gap-fix recheck: `.harness/evaluations/sprint-ets-13-adversarial-gapfix.yaml` verdict `APPROVE` confidence 0.91; no required fixes remain.
+- Quinn Gate 3.5: `.harness/evaluations/sprint-ets-13-evaluator-gate.yaml` verdict `APPROVE_WITH_CONCERNS` confidence 0.91. Independent `/tmp` clone Maven reported `113 tests / 0 failures / 0 errors / 3 skipped`; independent TeamEngine smoke reported `74 total / 52 passed / 0 failed / 22 skipped`, with 41 recognized IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH. Concerns are positive PATCH coverage pending a dedicated mutable IUT and stronger patched-field assertion before future promotion beyond PARTIAL.
+- Raze review of Quinn artifact: `.harness/evaluations/sprint-ets-13-quinn-gate-raze-review.yaml` verdict `APPROVE` confidence 0.89 after correcting the Quinn artifact's sprint file list.
+- Raze Gate 4: `.harness/evaluations/sprint-ets-13-adversarial-gate.yaml` verdict `APPROVE_WITH_CONCERNS` confidence 0.90. Independent `/tmp` clone Maven reported `113 tests / 0 failures / 0 errors / 3 skipped`; no-mutation oracle self-test passed; independent TeamEngine smoke reported `74 total / 52 passed / 0 failed / 22 skipped`, with 41 recognized IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH. No required fixes. Low follow-up: decide whether missing `OPTIONS Allow: PATCH` should fail, skip, or be supplemented before positive mutable-IUT Update gates.
 
 Sprint 13 guardrails:
 
@@ -212,8 +215,8 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 13 Generator changes.
-2. Run independent Quinn/Raze gates after commit.
+1. Commit Sprint 13 gate artifacts and ops reconciliation.
+2. Start Sprint 14 planning from the remaining Part 1/Part 2 backlog.
 3. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
 
 ## Dirty Worktree Notes

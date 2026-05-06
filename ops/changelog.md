@@ -2,6 +2,34 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T15:27Z — Sprint 13 Raze Gate 4 evaluation
+
+**Triggered by user instruction**: "Run those gates."
+
+- Wrote `.harness/evaluations/sprint-ets-13-adversarial-gate.yaml` with verdict `APPROVE_WITH_CONCERNS` confidence 0.90.
+- Independently verified commit `cd38223` from `/tmp/raze-sprint-ets-13-gate`.
+- Docker Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `113 tests / 0 failures / 0 errors / 3 skipped`.
+- No-mutation oracle self-test: PASS.
+- TeamEngine smoke: `SMOKE_CONTAINER_NAME=raze-ets-csapi-smoke-s13-gate SMOKE_IMAGE_TAG=ets-ogcapi-connectedsystems10:raze-s13-gate SMOKE_OUTPUT_DIR=/tmp/raze-sprint-ets-13-gate-smoke-results SMOKE_RUN_TIMEOUT_S=900 bash scripts/smoke-test.sh`, result `74 total / 52 passed / 0 failed / 22 skipped`.
+- No-mutation oracle independently replayed against the Raze smoke log: `recognized_iut_request_logs=41`; zero IUT-bound POST/PUT/DELETE/PATCH.
+- No required fixes. Low follow-up: decide whether missing `OPTIONS Allow: PATCH` should fail, skip, or be supplemented before positive mutable-IUT Update gates.
+
+---
+
+## 2026-05-06T15:24Z — Sprint 13 Quinn Gate 3.5 evaluation
+
+**Triggered by user instruction**: "Run those gates."
+
+- Wrote `.harness/evaluations/sprint-ets-13-evaluator-gate.yaml` with verdict `APPROVE_WITH_CONCERNS` confidence 0.91.
+- Independently verified commit `cd3822369f3c9b3d99efb61ea623560ca9516446` from `/tmp/quinn-sprint-ets-13-cd38223`.
+- Docker Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `113 tests / 0 failures / 0 errors / 3 skipped`.
+- TeamEngine smoke: `SMOKE_CONTAINER_NAME=quinn-ets13-gate-smoke SMOKE_IMAGE_TAG=ets-ogcapi-connectedsystems10:quinn-ets13-gate SMOKE_OUTPUT_DIR=/tmp/quinn-ets13-gate-smoke-results bash scripts/smoke-test.sh`, result `74 total / 52 passed / 0 failed / 22 skipped`.
+- No-mutation oracle independently replayed against the Quinn smoke log: `recognized_iut_request_logs=41`; zero IUT-bound POST/PUT/DELETE/PATCH.
+- Findings are non-blocking: positive PATCH remains unexecuted until a dedicated mutable IUT declares `/conf/update`, and the guarded positive PATCH path should assert changed representation content before any future promotion beyond PARTIAL.
+- Per AGENTS.md, performed a focused Raze review of the Quinn artifact and wrote `.harness/evaluations/sprint-ets-13-quinn-gate-raze-review.yaml` with `APPROVE` confidence 0.89 after correcting the artifact's sprint file list.
+
+---
+
 ## 2026-05-06T15:03Z — Sprint 13 Update/PATCH Generator
 
 **Triggered by user instruction**: "Commit planning, then kick off Generator."

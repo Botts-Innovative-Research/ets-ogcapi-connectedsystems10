@@ -1,0 +1,144 @@
+agent: evaluator
+agent_role: quinn
+gate: "3.5"
+sprint: "ets-13"
+story: "S-ETS-13-01"
+commit: "cd3822369f3c9b3d99efb61ea623560ca9516446"
+evaluated_at: "2026-05-06T15:22:00Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.91
+
+artifact_independence:
+  did_not_read_before_writing:
+    - ".harness/evaluations/sprint-ets-13-adversarial-gate.yaml"
+  note: "Quinn did not read any new Sprint 13 Raze gate YAML before writing this evaluator artifact."
+
+scope_reviewed:
+  prompt: ".harness/prompts/evaluator.md"
+  agents: "AGENTS.md"
+  contract: ".harness/contracts/sprint-ets-13.yaml"
+  generator_handoff: ".harness/handoffs/generator-handoff.yaml"
+  story: "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+  openspec: "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  traceability: "_bmad/traceability.md"
+  status: "ops/status.md"
+  test_results: "ops/test-results.md"
+  implementation:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/UpdateTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "scripts/no-mutation-oracle.py"
+    - "scripts/no-mutation-oracle-test.sh"
+    - "scripts/smoke-test.sh"
+
+files_changed_by_sprint:
+  - ".harness/evaluations/sprint-ets-13-adversarial-gapfix.yaml"
+  - ".harness/evaluations/sprint-ets-13-adversarial-implementation.yaml"
+  - ".harness/handoffs/generator-handoff.yaml"
+  - "_bmad/traceability.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "ops/changelog.md"
+  - "ops/metrics.md"
+  - "ops/status.md"
+  - "ops/test-results.md"
+  - "ops/test-results/sprint-ets-13-maven-2026-05-06.log"
+  - "scripts/no-mutation-oracle-test.sh"
+  - "scripts/no-mutation-oracle.py"
+  - "scripts/smoke-test.sh"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/UpdateTests.java"
+  - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+
+files_changed_by_quinn:
+  - ".harness/evaluations/sprint-ets-13-evaluator-gate.yaml"
+  - "ops/metrics.md"
+
+evidence:
+  static_review:
+    result: "PASS"
+    notes:
+      - "UpdateTests.java adds 5 update-group @Tests with REQ-ETS-PART1-011 and SCENARIO-ETS-PART1-011 references in descriptions."
+      - "fetchUpdateInputs reads /conformance and SKIPs when /conf/update is absent, with a reason that says undeclared PATCH behavior is not conformance PASS evidence."
+      - "PATCH lifecycle is guarded by mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut before any PATCH path is reached."
+      - "Known public GeoRobotix IUTs are hard-denied before PATCH even when mutation opt-in parameters are supplied."
+      - "OPTIONS /systems/{id} readiness uses non-mutating OPTIONS and fails if PATCH is not advertised for a declaring IUT."
+      - "testng.xml declares <group name=\"update\" depends-on=\"createreplacedelete\"/> and places UpdateTests after CreateReplaceDeleteTests in the same <test> block."
+      - "VerifyTestNGSuiteDependency adds structural checks for Update group dependency, Update @Test group tagging, and co-location with CreateReplaceDelete."
+      - "no-mutation-oracle.py treats PATCH as a mutation method and remains non-vacuous by requiring at least one IUT-bound request log entry."
+  maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    clone: "/tmp/quinn-sprint-ets-13-cd38223"
+    clone_head: "cd3822369f3c9b3d99efb61ea623560ca9516446"
+    final_result: "BUILD SUCCESS"
+    totals:
+      tests: 113
+      failures: 0
+      errors: 0
+      skipped: 3
+    completed_at: "2026-05-06T15:19:49Z"
+    note: "Independent Docker Maven run from detached /tmp clone at cd38223."
+  teamengine_smoke:
+    command: "SMOKE_CONTAINER_NAME=quinn-ets13-gate-smoke SMOKE_IMAGE_TAG=ets-ogcapi-connectedsystems10:quinn-ets13-gate SMOKE_OUTPUT_DIR=/tmp/quinn-ets13-gate-smoke-results bash scripts/smoke-test.sh"
+    clone: "/tmp/quinn-sprint-ets-13-cd38223"
+    clone_head: "cd3822369f3c9b3d99efb61ea623560ca9516446"
+    output_dir: "/tmp/quinn-ets13-gate-smoke-results"
+    result: "PASS"
+    totals:
+      total: 74
+      passed: 52
+      failed: 0
+      skipped: 22
+    report: "/tmp/quinn-ets13-gate-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    log: "/tmp/quinn-ets13-gate-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log"
+    no_mutation_oracle:
+      command: "python3 scripts/no-mutation-oracle.py /tmp/quinn-ets13-gate-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log https://api.georobotix.io/ogc/t18/api"
+      result: "PASS"
+      recognized_iut_request_logs: 41
+      iut_bound_mutations: 0
+      mutation_methods_checked:
+        - "POST"
+        - "PUT"
+        - "DELETE"
+        - "PATCH"
+    update_runtime:
+      result: "SKIP_HONEST_DEFAULT_GEOROBOTIX"
+      config_method: "fetchUpdateInputs"
+      config_status: "SKIP"
+      config_skip_reason: "IUT does not declare the CS API Update conformance class in /conformance. Undeclared PATCH behavior is not conformance PASS evidence."
+      update_test_methods: 5
+      update_test_status: "SKIP"
+      dependency_reason: "Update methods depend on group createreplacedelete; default CRD mutation safety gate skips lifecycle mutation tests."
+      patch_issued: false
+
+scenario_results:
+  SCENARIO-ETS-PART1-011-UPDATE-CONFORMANCE-DECLARED-001: "PASS_BY_SKIP_HONESTY_FOR_UNDECLARED_GEOROBOTIX"
+  SCENARIO-ETS-PART1-011-UPDATE-MUTATION-SAFETY-GATE-001: "STRUCTURAL_PASS; DEFAULT_RUNTIME_SKIPPED_BEFORE_PATCH"
+  SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-RESOURCE-OPTIONS-001: "STRUCTURAL_PASS; DEFAULT_RUNTIME_SKIPPED_BY_DECLARATION_AND_CRD_GATE"
+  SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-LIFECYCLE-OPTIN-001: "STRUCTURAL_PASS; POSITIVE_PATCH_RUNTIME_UNEXECUTED_FOR_DEFAULT_PUBLIC_IUT"
+  SCENARIO-ETS-PART1-011-UPDATE-DEPENDENCY-SMOKE-001: "PASS"
+  SCENARIO-ETS-PART1-011-UPDATE-SMOKE-NO-PATCH-001: "PASS"
+
+findings:
+  - id: "QUINN-ETS13-CONCERN-001"
+    severity: "LOW"
+    status: "OPEN"
+    title: "Positive PATCH lifecycle behavior remains unexecuted against the default IUT"
+    evidence: "GeoRobotix does not declare /conf/update; TeamEngine smoke correctly reports fetchUpdateInputs SKIP and all 5 Update @Tests SKIP, with zero PATCH requests."
+    impact: "The sprint contract allows this partial, safety-gated result, but real positive PATCH semantics still require a dedicated mutable IUT that declares /conf/update and advertises PATCH."
+  - id: "QUINN-ETS13-CONCERN-002"
+    severity: "LOW"
+    status: "OPEN"
+    title: "The guarded positive PATCH path verifies reachability after PATCH, not a patched field value"
+    evidence: "systemsPatchLifecycleOptIn accepts PATCH status 200/204 and then checks GET /systems/{id} returns 200, but does not assert that the patched representation contains the updated name or other changed value."
+    impact: "Not a blocker for this safety-gated partial sprint because the positive path was not executable against GeoRobotix, but it is too weak to support a future positive Update conformance claim without additional assertions."
+
+required_follow_up:
+  - "When a dedicated mutable IUT declares /conf/update and advertises PATCH, rerun the Update suite with mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut, then archive positive PATCH evidence."
+  - "Before elevating REQ-ETS-PART1-011 beyond PARTIAL, strengthen systemsPatchLifecycleOptIn to assert that the patched resource representation reflects the intended change when the IUT returns a readable updated representation."
+  - "Keep non-system PATCH, Feature Collection item update paths, Part 2 update, optimistic locking, and PATCH media-type matrix open until separately planned and verified."
+
+verdict_rationale: "Sprint ets-13 satisfies the contract for a partial, safety-gated Update/PATCH systems subset. Independent Docker Maven and TeamEngine smoke from a /tmp clone passed with exact totals, the default public IUT issued zero IUT-bound PATCH/POST/PUT/DELETE requests, and the docs/traceability/story status remain honest about PARTIAL coverage. Concerns are residual positive-PATCH coverage and assertion depth for a future mutable-IUT run, not blockers for this sprint gate."

@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T21:54Z
+Last updated: 2026-05-06T13:48Z
 
 ## Current Sprint Evidence
 
@@ -8,8 +8,8 @@ Sprint ets-12 Create/Replace/Delete safety-gated systems subset:
 
 - Current repo base before implementation: `7427c3c`
 - Maven verification: `bash scripts/mvn-test-via-docker.sh`
-  - Result: BUILD SUCCESS
-  - Surefire: `105 tests / 0 failures / 0 errors / 3 skipped`
+  - Original Generator result: BUILD SUCCESS, `105 tests / 0 failures / 0 errors / 3 skipped`
+  - Local OSH follow-up result after Location/UID regressions: BUILD SUCCESS, `110 tests / 0 failures / 0 errors / 3 skipped`
 - TeamEngine E2E smoke:
   - Copy: `/tmp/sprint-ets-12-generator-smoke-current-r3`
   - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s12-generator-r3 bash scripts/smoke-test.sh`
@@ -19,7 +19,24 @@ Sprint ets-12 Create/Replace/Delete safety-gated systems subset:
 - CreateReplaceDelete runtime outcome: 4 PASS and 2 SKIP against GeoRobotix. PASS: declaration, dependency tracer, `OPTIONS /systems`, `OPTIONS /systems/{id}`. SKIP: mutation safety gate and lifecycle opt-in because default smoke does not set mutation parameters.
 - No-mutation oracle: integrated smoke oracle recognized 40 IUT-bound request log entries and reported zero IUT-bound POST/PUT/DELETE entries for `https://api.georobotix.io/ogc/t18/api`.
 - Raze gap-fix review: `.harness/evaluations/sprint-ets-12-adversarial-gapfix.yaml` `APPROVE_WITH_CONCERNS` 0.91, with no required fixes remaining. Residual low concern: smoke stdout was not archived separately, but the oracle result is reproducible from the r3 container log.
-- Scope note: this is PARTIAL for REQ-ETS-PART1-010. Positive POST/PUT/DELETE lifecycle evidence remains open until a dedicated mutable IUT is available; deployment/procedure/sampling-feature/property CRUD, system delete cascade, collection propagation, `text/uri-list`, `/conf/update`, PATCH, and Part 2 are out of scope.
+- Local OSH mutable-IUT probe:
+  - IUT: local OpenSensorHub 2.0-beta2 at `http://localhost:8081/sensorhub/api`; TeamEngine reached it as `http://field-hub-osh-1:8081/sensorhub/api` on Docker network `field-hub_default`.
+  - Command shape: `SMOKE_DOCKER_NETWORK=field-hub_default`, `SMOKE_MUTATION_TESTS_ENABLED=true`, `SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut`, output `/tmp/ets-csapi-osh-mutable-smoke-r4`.
+  - Result: `69 total / 32 passed / 3 failed / 34 skipped`; not a full-suite PASS.
+  - CRD lifecycle outcome: `systemsCreateReplaceDeleteLifecycle` PASS. OSH log evidence shows POST added `/systems/0410`, PUT updated `/systems/0410`, and DELETE removed `/systems/0410`.
+  - Remaining local OSH failures: empty `/procedures`, `/deployments`, and `/samplingFeatures`; prior probe also exposed public `https://osh.gis.tw` SensorML alternate links from OSH `proxyBaseUrl`.
+  - Cleanup: manual seed `/systems/040g` deleted after the run; `/systems` returned `{"items":[]}`.
+- Local OSH full-health run after fixture seeding:
+  - OSH config: `proxyBaseUrl` updated to `http://field-hub-osh-1:8081` in `../sar-ops/field-hub/osh/config/config.json`, then OSH restarted.
+  - Seed state: synthetic `/systems/040g`, `/procedures/040g`, `/deployments/040g`, and `/samplingFeatures/040g` exist. Exact payloads are versioned in `ops/local-osh-seed-fixtures.json`. System seed uses `featureType=http://www.w3.org/ns/sosa/System`; direct `/systems/040g?f=sml3` returned HTTP 200 and `Content-Type: application/sml+json`.
+  - Command: `SMOKE_CONTAINER_NAME=ets-csapi-osh-full-health-r3 SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_MUTATION_TESTS_ENABLED=true SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut SMOKE_OUTPUT_DIR=/tmp/ets-csapi-osh-full-health-r3 bash scripts/smoke-test.sh`
+  - Result: SMOKE PASS, `69 total / 50 passed / 0 failed / 19 skipped`.
+  - Smoke stdout now prints exact parsed totals: `SMOKE PASS: total=69 passed=50 failed=0 skipped=19 ...`.
+  - Report: `/tmp/ets-csapi-osh-full-health-r3/s-ets-01-03-teamengine-smoke-2026-05-06.xml`
+  - Log: `/tmp/ets-csapi-osh-full-health-r3/s-ets-01-03-teamengine-container-2026-05-06.log`
+  - CRD lifecycle: real POST, PUT, and DELETE against temporary `/systems/0410`; no-mutation oracle skipped by design because the run explicitly enabled dedicated mutable-IUT mutation tests.
+- Raze local OSH full-health review: `.harness/evaluations/sprint-ets-12-local-osh-full-health-raze.yaml` `GAPS_FOUND` 0.87. Required fixes applied: `scripts/smoke-test.sh` now prints exact totals (`total/passed/failed/skipped`) instead of `${total}/${total}`, and `ops/local-osh-seed-fixtures.json` versions the fixture payloads.
+- Scope note: this is PARTIAL for REQ-ETS-PART1-010. Positive System CRD lifecycle evidence now exists against local OSH, but deployment/procedure/sampling-feature/property CRUD, system delete cascade, collection propagation, `text/uri-list`, `/conf/update`, PATCH, and Part 2 are still out of scope.
 
 Sprint ets-11 AdvancedFiltering read-only subset:
 

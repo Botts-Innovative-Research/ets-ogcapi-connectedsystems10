@@ -155,7 +155,8 @@ public class CreateReplaceDeleteTests {
 	public void systemsCreateReplaceDeleteLifecycle() {
 		ensureMutationEnabledOrSkip();
 
-		Map<String, Object> createBody = mutableSystemBody("create");
+		String systemUid = mutableSystemUid();
+		Map<String, Object> createBody = mutableSystemBody("create", systemUid);
 		Response createResponse = given().accept("application/json")
 			.contentType("application/json")
 			.body(createBody)
@@ -171,7 +172,7 @@ public class CreateReplaceDeleteTests {
 		}
 
 		try {
-			Map<String, Object> replaceBody = mutableSystemBody("replace");
+			Map<String, Object> replaceBody = mutableSystemBody("replace", systemUid);
 			Response replaceResponse = given().accept("application/json")
 				.contentType("application/json")
 				.body(replaceBody)
@@ -313,18 +314,20 @@ public class CreateReplaceDeleteTests {
 		}
 	}
 
-	private Map<String, Object> mutableSystemBody(String phase) {
-		String suffix = UUID.randomUUID().toString();
+	private String mutableSystemUid() {
+		return "urn:ets:ogcapi-connectedsystems10:crd:" + UUID.randomUUID();
+	}
+
+	static Map<String, Object> mutableSystemBody(String phase, String systemUid) {
 		return Map.of("type", "Feature", "properties",
-				Map.of("uid", "urn:ets:ogcapi-connectedsystems10:crd:" + suffix, "name",
-						"ETS Sprint 12 CRD " + phase + " " + Instant.now(), "description",
+				Map.of("uid", systemUid, "name", "ETS Sprint 12 CRD " + phase + " " + Instant.now(), "description",
 						"Temporary system resource created by the ETS create-replace-delete lifecycle test."));
 	}
 
 	private String createdResourceUri(Response response) {
 		String location = response.getHeader("Location");
 		if (location != null && !location.isBlank()) {
-			return this.iutUri.resolve(location).toString();
+			return resolveCreatedResourceUri(this.iutUri, this.base, location);
 		}
 		Map<String, Object> body = parseBody(response);
 		String id = systemId(body);
@@ -332,6 +335,23 @@ public class CreateReplaceDeleteTests {
 			return null;
 		}
 		return this.base + "systems/" + id;
+	}
+
+	static String resolveCreatedResourceUri(URI iutUri, String base, String location) {
+		URI locationUri = URI.create(location);
+		if (locationUri.isAbsolute()) {
+			return locationUri.toString();
+		}
+		if (location.startsWith("/")) {
+			String iutPath = iutUri.getPath();
+			boolean alreadyIncludesIutPath = iutPath != null && !iutPath.isBlank() && !"/".equals(iutPath)
+					&& (location.equals(iutPath) || location.startsWith(iutPath + "/"));
+			if (!alreadyIncludesIutPath) {
+				return base + location.substring(1);
+			}
+			return iutUri.resolve(location).toString();
+		}
+		return URI.create(base).resolve(location).toString();
 	}
 
 	private String asString(Object value) {

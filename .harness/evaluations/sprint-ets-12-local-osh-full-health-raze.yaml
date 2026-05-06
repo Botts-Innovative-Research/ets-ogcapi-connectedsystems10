@@ -1,0 +1,180 @@
+verdict: GAPS_FOUND
+confidence: 0.87
+reviewer: "Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_at: "2026-05-06T13:40:58Z"
+duration: "not available from tool metadata; wall-clock tracked in ops/metrics.md"
+tokens: "not available from tool metadata"
+
+reviewed_scope:
+  request: "Review current uncommitted local OpenSensorHub full-health follow-up plus external OSH config diff."
+  mode: "artifact and diff inspection only; Docker/Maven not rerun"
+  primary_repo: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  external_config: "/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json"
+  smoke_artifacts:
+    - "/tmp/ets-csapi-osh-full-health-r2/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    - "/tmp/ets-csapi-osh-full-health-r2/s-ets-01-03-teamengine-container-2026-05-06.log"
+  focus:
+    - "false confidence around seeded OSH data"
+    - "proxyBaseUrl correction"
+    - "exact smoke totals"
+    - "mutation safety"
+    - "docs/spec/story/traceability/status/changelog/test-results/server consistency"
+    - "credential leakage in docs/artifacts"
+    - "unrelated dirty file handling"
+  not_rerun:
+    - "Docker Maven"
+    - "TeamEngine smoke"
+
+summary:
+  completion_can_be_reported: false
+  rationale: >
+    The archived XML supports the local OSH full-health evidence as failed=0 with
+    exact totals 69 total / 50 passed / 0 failed / 19 skipped, and the CRD lifecycle
+    issued real POST/PUT/DELETE only under explicit dedicated mutable-IUT parameters.
+    However, scripts/smoke-test.sh still formats the terminal PASS line as total/total
+    @Test methods, which would overstate a skipped run as 69/69. That is exactly the
+    false-confidence class this review was asked to find.
+
+findings:
+  - id: "RAZE-OSH-FULLHEALTH-GAP-001"
+    severity: HIGH
+    status: "required_fix"
+    title: "Smoke PASS summary can falsely report all @Tests as passed when skips exist"
+    evidence:
+      - "scripts/smoke-test.sh:213-218 parses total, passed, failed, skipped."
+      - "scripts/smoke-test.sh:234 only fails on failed > 0, so skipped tests can coexist with SMOKE PASS."
+      - "scripts/smoke-test.sh:278 prints `SMOKE PASS: ${total}/${total} @Test methods ...`, which would render the r2 run as 69/69 even though the XML says passed=50 skipped=19."
+      - "/tmp/ets-csapi-osh-full-health-r2/s-ets-01-03-teamengine-smoke-2026-05-06.xml header: total=\"69\" passed=\"50\" failed=\"0\" skipped=\"19\"."
+    impact: >
+      Anyone relying on smoke stdout instead of the XML or reconciled docs can conclude
+      all 69 tests passed. That directly undermines the exact-totals discipline and can
+      mask expected SKIP-with-reason outcomes as PASS.
+    required_fix: >
+      Change the smoke PASS line to include exact parsed totals, for example
+      `SMOKE PASS: total=$total passed=$passed failed=$failed skipped=$skipped ...`.
+      After the fix, update docs that say "smoke script reported SMOKE PASS" so they
+      either cite the exact totals or the archived XML, not an all-pass shorthand.
+
+  - id: "RAZE-OSH-FULLHEALTH-GAP-002"
+    severity: MEDIUM
+    status: "required_fix"
+    title: "Seeded OSH health state is documented but not reproducible from a versioned seed manifest"
+    evidence:
+      - "ops/server.md documents long-lived seed resources /systems/040g, /procedures/040g, /deployments/040g, and /samplingFeatures/040g."
+      - "ops/test-results.md says these resources exist and the System seed uses featureType=http://www.w3.org/ns/sosa/System."
+      - "No reviewed diff adds a checked-in seed payload, seed script, or artifact containing the exact POST bodies used to create those resources."
+    impact: >
+      The current r2 evidence is valid for the current local H2 datastore, but future
+      maintainers cannot recreate the fixture exactly from this repo plus the single
+      proxyBaseUrl diff. That creates false confidence if "local OSH full-health" is
+      treated as a maintained target rather than a one-off health snapshot.
+    required_fix: >
+      Add a fixture manifest or seed script reference with the exact synthetic resource
+      payloads, or explicitly downgrade the docs to "one-off local H2 state snapshot"
+      rather than a reproducible full-health fixture.
+
+  - id: "RAZE-OSH-FULLHEALTH-CONCERN-001"
+    severity: LOW
+    status: "non_blocking_concern"
+    title: "proxyBaseUrl fix is correct for TeamEngine network reachability but is environment-specific"
+    evidence:
+      - "External diff changes field-hub/osh/config/config.json proxyBaseUrl from https://osh.gis.tw to http://field-hub-osh-1:8081."
+      - "r2 XML reporter output uses local alternate link http://field-hub-osh-1:8081/sensorhub/api/systems/040g?f=sml3."
+      - "No https://osh.gis.tw hits were found in the r2 XML/log artifacts."
+    assessment: >
+      This closes the prior public-link leak for the Docker-network smoke. The tradeoff
+      is that the OSH config is no longer a public-host config; commit it only if that
+      field-hub repo is intended to be a local TeamEngine fixture configuration.
+    required_fix: null
+
+  - id: "RAZE-OSH-FULLHEALTH-CONCERN-002"
+    severity: LOW
+    status: "non_blocking_concern"
+    title: "Explicit mutable smoke correctly bypasses the no-mutation oracle, but default safety still depends on separate GeoRobotix evidence"
+    evidence:
+      - "scripts/smoke-test.sh:239-240 skips the no-mutation oracle only when SMOKE_MUTATION_TESTS_ENABLED=true and SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut."
+      - "CreateReplaceDeleteTests hard-denies api.georobotix.io before mutation."
+      - "r2 container log shows POST /systems, PUT /systems/0410, and DELETE /systems/0410 against field-hub-osh-1 only."
+    assessment: >
+      The mutation behavior matches the story: explicit local mutable runs should mutate,
+      default public smoke should not. The docs preserve that distinction.
+    required_fix: null
+
+  - id: "RAZE-OSH-FULLHEALTH-CONCERN-003"
+    severity: LOW
+    status: "non_blocking_concern"
+    title: "External sar-ops worktree has substantial unrelated dirty state"
+    evidence:
+      - "git -C /home/nh/docker/gir/sar-ops diff --stat reports 64 modified tracked files."
+      - "Only field-hub/osh/config/config.json is in this review scope."
+      - "The ETS repo status contains the expected local OSH follow-up files plus this new evaluation artifact."
+    assessment: >
+      The reviewed external config change is isolated, but any commit from sar-ops must
+      stage only field-hub/osh/config/config.json unless the unrelated TAK/infrastructure/
+      OSH viewer changes are intentionally part of that repo's work.
+    required_fix: null
+
+evidence:
+  exact_smoke_totals:
+    xml_header: "/tmp/ets-csapi-osh-full-health-r2/s-ets-01-03-teamengine-smoke-2026-05-06.xml: total=69 passed=50 failed=0 skipped=19"
+    fail_scan: "No <test-method status=\"FAIL\"> entries found."
+    skipped_methods: "19 @Test methods skipped, primarily GeoJSON fallback, empty subsystem/subdeployment/property item checks, and undeclared AdvancedFiltering."
+  crd_lifecycle:
+    xml_methods:
+      - "createReplaceDeleteConformanceDeclared PASS"
+      - "createReplaceDeleteDependencyCascadeRuntime PASS"
+      - "createReplaceDeleteMutationSafetyGate PASS"
+      - "systemResourceOptionsReadinessPrecondition PASS"
+      - "systemsCollectionOptionsReadinessPrecondition PASS"
+      - "systemsCreateReplaceDeleteLifecycle PASS"
+    request_log:
+      - "Request: POST http://field-hub-osh-1:8081/sensorhub/api/systems"
+      - "Request: PUT http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+      - "Request: DELETE http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+  regression_tests:
+    surefire: "VerifyCreateReplaceDeleteLocationResolution: Tests run 5, Failures 0, Errors 0, Skipped 0"
+    covered:
+      - "absolute Location unchanged"
+      - "service-relative /systems/{id} resolved against IUT base"
+      - "path already including /sensorhub/api resolved against origin"
+      - "relative systems/{id} resolved against IUT base"
+      - "replacement body preserves created System uid"
+  static_checks:
+    - "git diff --check: pass"
+    - "bash -n scripts/smoke-test.sh: pass"
+  docs_consistency:
+    status: "Spec/story/traceability/status/changelog/test-results/server docs consistently keep REQ-ETS-PART1-010 PARTIAL and record r2 as 69/50/0/19."
+    caveat: "The docs should avoid relying on the current smoke script's all-pass-looking terminal summary until GAP-001 is fixed."
+  credential_review:
+    docs: "No new OSH admin credential was found in the reviewed local OSH docs diff; ops/server.md says credentials are supplied through environment."
+    artifacts: "r2 container log masks Authorization as Basi***MDI2; no full Authorization value was observed in the reviewed r2 artifact snippets."
+    external_config_note: "The external config diff context includes pre-existing credential-bearing keys in config.json; the reviewed change itself is proxyBaseUrl only."
+
+required_fixes:
+  - "Fix scripts/smoke-test.sh final PASS summary so skipped tests cannot be presented as passed tests."
+  - "Add reproducible seed fixture payloads/scripts, or downgrade local OSH full-health language to a one-off seeded-state snapshot."
+
+files_changed_by_this_review:
+  - ".harness/evaluations/sprint-ets-12-local-osh-full-health-raze.yaml"
+
+reviewed_changed_files:
+  primary_repo:
+    - "_bmad/traceability.md"
+    - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "ops/metrics.md"
+    - "ops/server.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "scripts/smoke-test.sh"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/VerifyCreateReplaceDeleteLocationResolution.java"
+  external_repo:
+    - "/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json"
+
+unrelated_dirty_files:
+  primary_repo: "No unrelated tracked files identified beyond the local OSH follow-up/metrics/evaluation set."
+  external_repo: "Many unrelated modified tracked files and untracked Zone.Identifier files exist in /home/nh/docker/gir/sar-ops; not reviewed and not reverted."

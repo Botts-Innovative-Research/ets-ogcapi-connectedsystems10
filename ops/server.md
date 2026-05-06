@@ -1,6 +1,6 @@
 # server.md — operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-04-28 — Sprint 1 / S-ETS-01-03 TeamEngine Docker smoke test landing.
+> Last updated: 2026-05-06 — Local OpenSensorHub mutable-IUT full-health fixture.
 
 ## Schema provenance
 
@@ -159,6 +159,60 @@ In the WSL2 host this repo is developed on, an unrelated container
 (`docker-compose.yml`, `pom.xml` `<docker.teamengine.version>` plumbing)
 keeps the canonical 8081 port — `scripts/smoke-test.sh`'s `pick_port()`
 auto-detects the conflict and falls back to 8082 for the smoke run.
+
+## Local OpenSensorHub mutable IUT
+
+The local OpenSensorHub stack used for Sprint 12 mutable-IUT follow-up is
+outside this ETS repository at:
+
+```
+/home/nh/docker/gir/sar-ops/field-hub
+```
+
+The OSH service container is `field-hub-osh-1`. It publishes the CS API on
+the host at `http://localhost:8081/sensorhub/api` and is reachable from the
+TeamEngine smoke container on Docker network `field-hub_default` at:
+
+```
+http://field-hub-osh-1:8081/sensorhub/api
+```
+
+The local OSH config file
+`/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json` was updated
+on 2026-05-06 so `proxyBaseUrl` is `http://field-hub-osh-1:8081`. This makes
+dereference links usable from the TeamEngine smoke container instead of
+pointing at the public `osh.gis.tw` host.
+
+The following synthetic mutable-IUT fixtures are intentionally present for
+full-suite health runs. The exact payloads are versioned in
+`ops/local-osh-seed-fixtures.json`.
+
+| Collection | Resource | UID / notable property |
+|---|---|---|
+| `/systems` | `/systems/040g` | `urn:ets:local-osh:system:alpha`, `featureType=http://www.w3.org/ns/sosa/System` |
+| `/procedures` | `/procedures/040g` | `urn:ets:local-osh:procedure:alpha` |
+| `/deployments` | `/deployments/040g` | `urn:ets:local-osh:deployment:alpha` |
+| `/samplingFeatures` | `/samplingFeatures/040g` | `urn:ets:local-osh:sampling-feature:alpha` |
+
+Run the seeded local OSH full-health smoke with credentials supplied through
+the environment:
+
+```
+SMOKE_CONTAINER_NAME=ets-csapi-osh-full-health \
+SMOKE_DOCKER_NETWORK=field-hub_default \
+SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
+SMOKE_MUTATION_TESTS_ENABLED=true \
+SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut \
+SMOKE_OUTPUT_DIR=/tmp/ets-csapi-osh-full-health-r3 \
+bash scripts/smoke-test.sh
+```
+
+Latest evidence: `/tmp/ets-csapi-osh-full-health-r3` completed on
+2026-05-06 with exact archived totals `69 total / 50 passed / 0 failed /
+19 skipped`. The 19 skips are expected for undeclared or unpopulated
+surfaces that remain outside the current implemented ETS scope. The CRD
+smoke exercised real POST/PUT/DELETE against a temporary `/systems/{id}`
+resource and cleaned it up.
 
 ## Known issues
 

@@ -120,6 +120,30 @@ Create/Replace/Delete depends on SystemFeatures:
 - Raze implementation review: `.harness/evaluations/sprint-ets-12-adversarial-implementation.yaml` verdict `GAPS_FOUND` confidence 0.88; same-turn fixes applied for the no-mutation oracle, stale status strings, and Allow header token parsing.
 - Raze gap-fix review: `.harness/evaluations/sprint-ets-12-adversarial-gapfix.yaml` verdict `APPROVE_WITH_CONCERNS` confidence 0.91; no required fixes remain.
 
+## Local Mutable-IUT Follow-Up Evidence
+
+Triggered by the 2026-05-05 user question about using a local OpenSensorHub instance, the ETS was exercised against the existing local OSH 2.0-beta2 stack at `http://localhost:8081/sensorhub/api`.
+
+- OSH probe: TeamEngine reached OSH over Docker network `field-hub_default` using IUT URL `http://field-hub-osh-1:8081/sensorhub/api` with explicit mutation parameters set to `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
+- ETS fix from probe: `Location: /systems/{id}` is now resolved relative to the IUT service base, and `systemsCreateReplaceDeleteLifecycle` preserves the created System `uid` during PUT replacement because OSH rejects UID changes as identity changes.
+- Unit regression: `VerifyCreateReplaceDeleteLocationResolution` covers absolute, service-relative, IUT-path-relative, and relative `Location` values plus create/replace UID preservation.
+- Verification after fix: Docker Maven BUILD SUCCESS, `110 tests / 0 failures / 0 errors / 3 skipped`.
+- Local OSH E2E result: `/tmp/ets-csapi-osh-mutable-smoke-r4` reported `69 total / 32 passed / 3 failed / 34 skipped`; `systemsCreateReplaceDeleteLifecycle` PASS with real POST, PUT, and DELETE requests, and OSH logs show resource `/systems/0410` was added, updated, then deleted.
+- Overall local OSH smoke is not a full suite PASS yet because the fixture has empty `/procedures`, `/deployments`, and `/samplingFeatures`; a prior run also showed local OSH `proxyBaseUrl` can emit public `https://osh.gis.tw` alternate links for SensorML.
+- Cleanup: the temporary lifecycle resource was deleted by the ETS, the manual seed `/systems/040g` was deleted after the run, and `/systems` returned an empty `items` array.
+
+## Local OSH Full-Health Follow-Up
+
+Triggered by the 2026-05-06 user instruction to populate local OSH and rerun full-suite health:
+
+- Updated local OSH `proxyBaseUrl` in `../sar-ops/field-hub/osh/config/config.json` to `http://field-hub-osh-1:8081`, then restarted the OSH container so alternate links resolve inside TeamEngine's Docker network.
+- Seeded synthetic resources through the transactional CS API: `/systems/040g`, `/procedures/040g`, `/deployments/040g`, and `/samplingFeatures/040g`. Exact payloads are versioned in `ops/local-osh-seed-fixtures.json`.
+- Corrected the System seed to include `properties.featureType = http://www.w3.org/ns/sosa/System`; direct `GET /systems/040g?f=sml3` then returned HTTP 200 with `Content-Type: application/sml+json`.
+- TeamEngine full local OSH health smoke: `/tmp/ets-csapi-osh-full-health-r3`, with `SMOKE_DOCKER_NETWORK=field-hub_default`, mutation opt-in enabled, and IUT `http://field-hub-osh-1:8081/sensorhub/api`.
+- Result from archived XML and corrected smoke stdout: `69 total / 50 passed / 0 failed / 19 skipped`. No-mutation oracle was intentionally skipped because this was an explicit dedicated mutable-IUT run.
+- CRD lifecycle remained PASS with real POST, PUT, DELETE against temporary `/systems/0410`; the seeded long-lived local fixture resources remain in OSH for subsequent health runs.
+- Raze local full-health review: `.harness/evaluations/sprint-ets-12-local-osh-full-health-raze.yaml` verdict `GAPS_FOUND` confidence 0.87; required fixes applied by changing `scripts/smoke-test.sh` to print exact totals instead of `${total}/${total}`, and by adding `ops/local-osh-seed-fixtures.json`.
+
 ## Out Of Scope
 
 - Unconditional mutation against GeoRobotix or any public shared IUT.

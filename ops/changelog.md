@@ -2,6 +2,38 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T13:48Z — Local OSH full-health fixture seeding
+
+**Triggered by user instruction**: "You need to populate the local OSH with synthetic data for procedures, deployments, and samplingFeatures, and an update proxyBaseUrl, then run the full suite health."
+
+- Updated local OSH config outside this repo at `../sar-ops/field-hub/osh/config/config.json`: `proxyBaseUrl` now points to `http://field-hub-osh-1:8081`, matching the Docker-network hostname TeamEngine uses.
+- Restarted `field-hub-osh-1` and verified `/sensorhub/api/conformance` returned HTTP 200.
+- Seeded synthetic resources through the transactional CS API: `/systems/040g`, `/procedures/040g`, `/deployments/040g`, and `/samplingFeatures/040g`.
+- Corrected the System seed to use `properties.featureType = http://www.w3.org/ns/sosa/System` after OSH SensorML conversion rejected the first feature type. Direct `GET /systems/040g?f=sml3` then returned HTTP 200 with `Content-Type: application/sml+json`.
+- Ran full TeamEngine local OSH health with mutation explicitly enabled for the dedicated mutable IUT: initial evidence `/tmp/ets-csapi-osh-full-health-r2`, then post-Raze gap-fix evidence `/tmp/ets-csapi-osh-full-health-r3`.
+- Result: SMOKE PASS, `69 total / 50 passed / 0 failed / 19 skipped`; CRD lifecycle issued real POST, PUT, and DELETE against temporary `/systems/0410`, then cleaned it up.
+- Raze local OSH full-health review found two false-confidence gaps. Fixed them by making `scripts/smoke-test.sh` print exact parsed totals instead of `${total}/${total}`, and by adding `ops/local-osh-seed-fixtures.json` with the exact seed payloads.
+- Raze gap-fix review approved the fixes: `.harness/evaluations/sprint-ets-12-local-osh-full-health-gapfix-raze.yaml` verdict `APPROVE` confidence 0.92 with no required fixes.
+- Reconciled OpenSpec/story/traceability/status/known-issues/test-results/server docs to distinguish local OSH full-smoke health from full Create/Replace/Delete requirement closure.
+
+---
+
+## 2026-05-05T22:29Z — Local OSH mutable-IUT CRD follow-up
+
+**Triggered by user instruction**: "Why not setup a local OpenSensorHub instance and use that?" followed by "Continue."
+
+- Started the existing local OpenSensorHub 2.0-beta2 stack from `../sar-ops/field-hub`; CS API is available at `http://localhost:8081/sensorhub/api`, with TeamEngine container access through Docker network `field-hub_default` as `http://field-hub-osh-1:8081/sensorhub/api`.
+- Confirmed local OSH declares `/conf/create-replace-delete`, exposes transactional methods, and permits admin-authenticated POST/PUT/DELETE against `/systems`.
+- Fixed two ETS interoperability issues found by the OSH probe: service-relative `Location: /systems/{id}` now resolves against the IUT service base, and the CRD lifecycle PUT preserves the created System `uid` instead of changing identity.
+- Added regression coverage in `VerifyCreateReplaceDeleteLocationResolution` for OSH-style `Location` resolution and create/replace UID preservation.
+- Extended `scripts/smoke-test.sh` with optional `SMOKE_DOCKER_NETWORK` and made the no-mutation oracle skip only when mutation smoke is explicitly enabled for a dedicated mutable IUT.
+- Verification: Docker formatter BUILD SUCCESS; `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS with `110 tests / 0 failures / 0 errors / 3 skipped`; `bash -n scripts/smoke-test.sh` PASS.
+- Local OSH mutable smoke `/tmp/ets-csapi-osh-mutable-smoke-r4` produced `69 total / 32 passed / 3 failed / 34 skipped`; `systemsCreateReplaceDeleteLifecycle` PASS with real POST, PUT, and DELETE, and OSH logs show `/systems/0410` added, updated, then deleted.
+- Local OSH is still not a full-suite passing smoke target until the fixture has procedures, deployments, and sampling features; earlier probe also showed SensorML alternate links can use public `https://osh.gis.tw` from OSH `proxyBaseUrl`.
+- Cleanup completed: manual seed `/systems/040g` deleted, lifecycle resource deleted by the ETS, and `/systems` returned an empty `items` array.
+
+---
+
 ## 2026-05-05T21:41Z — Sprint ets-12 Generator implementation
 
 **Triggered by user instruction**: "Start Generator for S-ETS-12-01."

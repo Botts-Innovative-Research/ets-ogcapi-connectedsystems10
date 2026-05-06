@@ -45,6 +45,10 @@ TE_USER="${SMOKE_TE_USER:-ogctest}"
 TE_PASS="${SMOKE_TE_PASS:-ogctest}"
 HEALTH_TIMEOUT_S="${SMOKE_HEALTH_TIMEOUT_S:-180}"
 RUN_TIMEOUT_S="${SMOKE_RUN_TIMEOUT_S:-600}"
+DOCKER_NETWORK_ARGS=()
+if [[ -n "${SMOKE_DOCKER_NETWORK:-}" ]]; then
+  DOCKER_NETWORK_ARGS+=(--network "$SMOKE_DOCKER_NETWORK")
+fi
 
 DATE_STAMP="$(date -u +%Y-%m-%d)"
 # REQ-ETS-CLEANUP-014 (Sprint 5 S-ETS-05-02): SMOKE_OUTPUT_DIR override.
@@ -106,6 +110,7 @@ cleanup_silent
 # container. Requires Docker 20.10+ (host-gateway keyword).
 docker run -d --name "$CONTAINER_NAME" \
   --add-host=host.docker.internal:host-gateway \
+  "${DOCKER_NETWORK_ARGS[@]}" \
   -p "${SMOKE_PORT}:8080" "$IMAGE_TAG" >/dev/null \
   || die "docker run failed (port $SMOKE_PORT)"
 
@@ -229,21 +234,27 @@ docker logs "$CONTAINER_NAME" > "$LOG_FILE" 2>&1 || true
 (( failed == 0 )) || die "TestNG report has failed=$failed (>0); see $REPORT_XML"
 
 # Sprint 12 S-ETS-12-01: default smoke against GeoRobotix must never issue IUT-bound
-# mutation requests. The oracle scans REST-Assured "Request: METHOD URI" entries
-# and the older adjacent "Request method:" / "Request URI:" pair format. It
-# ignores TeamEngine control-plane POSTs because their URI is not the IUT.
-oracle_output=$(python3 scripts/no-mutation-oracle.py "$LOG_FILE" "$IUT_URL" 2>&1) || oracle_status=$?
-oracle_status="${oracle_status:-0}"
-if [[ "$oracle_status" == "1" ]]; then
-  echo "--- IUT-bound mutation request log pairs ---"
-  echo "$oracle_output"
-  die "default smoke observed IUT-bound POST/PUT/DELETE request(s)"
+# mutation requests. Explicit dedicated-mutable-IUT runs are the opposite: they are
+# expected to exercise POST/PUT/DELETE and therefore bypass this no-mutation oracle.
+if [[ "${SMOKE_MUTATION_TESTS_ENABLED:-}" == "true" && "${SMOKE_MUTATION_IUT_POLICY:-}" == "dedicated-mutable-iut" ]]; then
+  log "  mutation smoke explicitly enabled for dedicated mutable IUT — skipping default no-mutation oracle"
+else
+  # The oracle scans REST-Assured "Request: METHOD URI" entries and the older adjacent
+  # "Request method:" / "Request URI:" pair format. It ignores TeamEngine control-plane
+  # POSTs because their URI is not the IUT.
+  oracle_output=$(python3 scripts/no-mutation-oracle.py "$LOG_FILE" "$IUT_URL" 2>&1) || oracle_status=$?
+  oracle_status="${oracle_status:-0}"
+  if [[ "$oracle_status" == "1" ]]; then
+    echo "--- IUT-bound mutation request log entries ---"
+    echo "$oracle_output"
+    die "default smoke observed IUT-bound POST/PUT/DELETE request(s)"
+  fi
+  if [[ "$oracle_status" != "0" ]]; then
+    echo "$oracle_output"
+    die "no-mutation oracle could not find IUT-bound request log lines"
+  fi
+  log "  zero IUT-bound POST/PUT/DELETE request-log entries for ${IUT_URL} (${oracle_output})"
 fi
-if [[ "$oracle_status" != "0" ]]; then
-  echo "$oracle_output"
-  die "no-mutation oracle could not find IUT-bound request log lines"
-fi
-log "  zero IUT-bound POST/PUT/DELETE request-log entries for ${IUT_URL} (${oracle_output})"
 
 # ---------- Step 8: scan container logs for SEVERE during STARTUP
 log "step 8/8 — scanning container startup log for ERROR/SEVERE"
@@ -264,7 +275,7 @@ if [[ -n "$startup_severe" ]]; then
 fi
 log "  zero startup ERROR/SEVERE"
 
-log "SMOKE PASS: ${total}/${total} @Test methods on $IUT_URL via TeamEngine"
+log "SMOKE PASS: total=$total passed=$passed failed=$failed skipped=$skipped on $IUT_URL via TeamEngine"
 log "  report: $REPORT_XML"
 log "  log:    $LOG_FILE"
 

@@ -1,0 +1,72 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.88
+reviewer: "Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+reviewed_scope:
+  base: "575c39f"
+  mode: "static review plus lightweight commands only"
+  included:
+    - "CreateReplaceDeleteTests Location resolution and UID preservation"
+    - "VerifyCreateReplaceDeleteLocationResolution regression coverage"
+    - "scripts/smoke-test.sh SMOKE_DOCKER_NETWORK and no-mutation-oracle skip behavior"
+    - "OpenSpec/story/traceability/ops reconciliation for local OSH mutable-IUT evidence"
+  excluded:
+    - "fresh Docker/TeamEngine rerun"
+    - "unrelated dirty worktree remediation"
+completion_can_be_reported: true
+blockers: []
+findings:
+  - id: "RAZE-ETS12-OSH-CONCERN-001"
+    severity: LOW
+    status: "non-blocking concern"
+    title: "Leading-slash Location handling intentionally treats /systems/{id} as service-relative"
+    evidence:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java:345"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java:349"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/VerifyCreateReplaceDeleteLocationResolution.java:27"
+    assessment: >
+      This closes the observed OSH behavior where Location is /systems/{id} under a
+      service deployed at /sensorhub/api. It is a deliberate interoperability workaround,
+      not pure RFC origin-relative Location semantics. The regression test locks that
+      behavior in, so future maintainers should keep the rationale explicit if another
+      IUT expects path-absolute origin-root resolution.
+    required_fix: null
+  - id: "RAZE-ETS12-OSH-CONCERN-002"
+    severity: LOW
+    status: "non-blocking concern"
+    title: "Mutable OSH evidence proves the CRD lifecycle only, not full-suite health"
+    evidence:
+      - "ops/test-results.md:18"
+      - "ops/test-results.md:23"
+      - "/tmp/ets-csapi-osh-mutable-smoke-r4/s-ets-01-03-teamengine-smoke-2026-05-05.xml total=69 passed=32 failed=3 skipped=34"
+      - "/tmp/ets-csapi-osh-mutable-smoke-r4/s-ets-01-03-teamengine-smoke-2026-05-05.xml CreateReplaceDeleteTests all 6 PASS"
+    assessment: >
+      Docs do not overclaim: they state the local OSH smoke is not a full-suite PASS
+      and identify the empty /procedures, /deployments, and /samplingFeatures fixture
+      failures. Completion may be reported for the OSH CRD follow-up, but not as a
+      full local-OSH conformance target.
+    required_fix: null
+evidence:
+  static_review:
+    - "git diff --check 575c39f --: clean"
+    - "bash -n scripts/smoke-test.sh: pass"
+    - "git diff --name-status 575c39f -- plus untracked regression test inspected"
+  unit_evidence:
+    - "target/surefire-reports/TEST-org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.VerifyCreateReplaceDeleteLocationResolution.xml: tests=5 errors=0 skipped=0 failures=0"
+    - "target/surefire-reports/org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.VerifyCreateReplaceDeleteLocationResolution.txt: Tests run: 5, Failures: 0, Errors: 0, Skipped: 0"
+  mutable_osh_e2e_artifact_review:
+    - "/tmp/ets-csapi-osh-mutable-smoke-r4/s-ets-01-03-teamengine-smoke-2026-05-05.xml: total=69 passed=32 failed=3 skipped=34"
+    - "CreateReplaceDeleteTests runtime methods: createReplaceDeleteConformanceDeclared PASS; createReplaceDeleteDependencyCascadeRuntime PASS; systemResourceOptionsReadinessPrecondition PASS; createReplaceDeleteMutationSafetyGate PASS; systemsCollectionOptionsReadinessPrecondition PASS; systemsCreateReplaceDeleteLifecycle PASS"
+    - "/tmp/ets-csapi-osh-mutable-smoke-r4/s-ets-01-03-teamengine-container-2026-05-05.log: Request POST http://field-hub-osh-1:8081/sensorhub/api/systems"
+    - "/tmp/ets-csapi-osh-mutable-smoke-r4/s-ets-01-03-teamengine-container-2026-05-05.log: Request PUT http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+    - "/tmp/ets-csapi-osh-mutable-smoke-r4/s-ets-01-03-teamengine-container-2026-05-05.log: Request DELETE http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+  docs_reconciliation:
+    - "_bmad/traceability.md records PARTIAL-IMPLEMENTED plus local OSH follow-up and explicitly notes the mutable smoke failures."
+    - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md records the OSH probe, 110-test Maven evidence, CRD PASS, full-smoke failures, and cleanup note."
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md keeps REQ-ETS-PART1-010 PARTIAL and lists remaining open CRUD scope."
+    - "ops/status.md and ops/test-results.md distinguish CRD lifecycle evidence from full local OSH fixture readiness."
+required_fixes: []
+recommended_followups:
+  - "Document the service-relative Location workaround rationale near resolveCreatedResourceUri if it becomes a durable compatibility policy."
+  - "Seed or configure local OSH procedures, deployments, and sampling features before promoting local OSH to a maintained full-suite fixture."
+  - "Update .harness/handoffs/generator-handoff.yaml when the next formal handoff is cut; it still describes Sprint 11 and was not part of this focused follow-up diff."

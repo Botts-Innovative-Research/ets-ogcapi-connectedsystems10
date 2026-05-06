@@ -1,13 +1,14 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T21:00Z
+Last updated: 2026-05-06T13:48Z
 
 ## Active Issues
 
 - Sprint ets-09 is PARTIAL-IMPLEMENTED only. Full GeoJSON remains open for `mediatype-write`, `relation-types`, deployment/procedure/sampling-feature GeoJSON schema and mappings, and future stricter schema validation.
 - Sprint ets-10 Generator implementation is PARTIAL SensorML only. Full SensorML remains open for `mediatype-write`, `relation-types`, deployment/procedure/property SensorML schema and mappings, and full SensorML 3.0 JSON Schema validation.
 - Sprint ets-11 Generator implementation is PARTIAL AdvancedFiltering only. GeoRobotix does not currently declare `/conf/advanced-filtering`, so default smoke SKIPs with reason rather than PASS from undeclared query behavior. Full AdvancedFiltering remains open for association filters, full geometry semantics, combined filters, endpoint parity, and any Part 2 query requirements.
-- Sprint ets-12 planning is mutation-safety constrained. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, but default smoke MUST NOT mutate the public IUT. OPTIONS evidence is readiness only, not lifecycle conformance. Full Create/Replace/Delete remains open until a dedicated mutable IUT and cleanup policy are available.
+- Sprint ets-12 is mutation-safety constrained. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, but default smoke MUST NOT mutate the public IUT. OPTIONS evidence is readiness only, not lifecycle conformance. Local OSH now proves the guarded System POST/PUT/DELETE lifecycle path, but full Create/Replace/Delete remains PARTIAL until the non-system CRUD and cascade requirements are implemented.
+- Local OSH is now a seeded mutable full-smoke health target for the current ETS surface: `proxyBaseUrl` points at `http://field-hub-osh-1:8081`, synthetic system/procedure/deployment/samplingFeature resources exist with payloads versioned in `ops/local-osh-seed-fixtures.json`, and `/tmp/ets-csapi-osh-full-health-r3` reported `69 total / 50 passed / 0 failed / 19 skipped`. It is still not evidence for out-of-scope CRD subrequirements such as non-system CRUD, cascade behavior, `text/uri-list`, or `/conf/update`.
 - GeoRobotix currently declares `/conf/geojson`, but `/systems` with `Accept: application/geo+json` returns `Content-Type: application/json` and a CS API `items` wrapper. Current ETS behavior is SKIP-with-reason for GeoJSON mediatype-read, FeatureCollection, and feature-mapping assertions.
 - Sprint 9 non-blocking gate concerns remain as cleanup candidates: smoke log archival can lose the container log when Docker cleanup races `docker logs`, and future default-JSON GeoJSON FeatureCollection fallback PASS branches need clearer runtime reporting.
 

@@ -1,0 +1,125 @@
+verdict: APPROVE
+confidence: 0.92
+reviewer: "Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_at: "2026-05-06T13:49:31Z"
+duration: "not available from subagent metadata; wall-clock tracked in ops/metrics.md"
+tokens: "not available from subagent metadata"
+
+reviewed_scope:
+  request: >
+    Focused gap-fix review after .harness/evaluations/sprint-ets-12-local-osh-full-health-raze.yaml
+    reported GAPS_FOUND.
+  mode: "artifact and diff inspection only; Docker/Maven/TeamEngine not rerun"
+  primary_repo: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  smoke_artifacts:
+    - "/tmp/ets-csapi-osh-full-health-r3/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    - "/tmp/ets-csapi-osh-full-health-r3/s-ets-01-03-teamengine-container-2026-05-06.log"
+  focus:
+    - "GAP-001: scripts/smoke-test.sh must not summarize skipped tests as passed"
+    - "GAP-002: local OSH seed state must be reproducible from a versioned fixture"
+    - "Docs must cite /tmp/ets-csapi-osh-full-health-r3 exact totals"
+    - "Docs must not overclaim skipped tests as passed"
+
+summary:
+  completion_can_be_reported: true
+  rationale: >
+    Both required fixes are present. The smoke script now prints exact parsed
+    total/passed/failed/skipped values in its final PASS line. The local OSH seed
+    payloads are versioned in ops/local-osh-seed-fixtures.json. The reviewed docs
+    cite /tmp/ets-csapi-osh-full-health-r3 as 69 total / 50 passed / 0 failed /
+    19 skipped and preserve PARTIAL scope language instead of treating skipped
+    tests as passed.
+
+findings:
+  - id: "RAZE-OSH-FULLHEALTH-GAPFIX-001"
+    severity: NONE
+    status: "closed"
+    title: "Smoke PASS summary now reports exact totals instead of total/total"
+    evidence:
+      - "scripts/smoke-test.sh:213-218 parses total, passed, failed, skipped and logs `TestNG: total=$total passed=$passed failed=$failed skipped=$skipped`."
+      - "scripts/smoke-test.sh:278 now logs `SMOKE PASS: total=$total passed=$passed failed=$failed skipped=$skipped ...`."
+      - "File timestamp shows scripts/smoke-test.sh was modified before the r3 XML/log artifacts were created."
+    required_fix: null
+
+  - id: "RAZE-OSH-FULLHEALTH-GAPFIX-002"
+    severity: NONE
+    status: "closed"
+    title: "Local OSH seed state is now versioned"
+    evidence:
+      - "ops/local-osh-seed-fixtures.json is valid JSON."
+      - "The fixture records host and Docker IUT base URLs, proxyBaseUrl, observed resource ids, and POST payloads for /systems, /procedures, /deployments, and /samplingFeatures."
+      - "The fixture records verification totals for /tmp/ets-csapi-osh-full-health-r3 as total=69, passed=50, failed=0, skipped=19."
+    required_fix: null
+
+  - id: "RAZE-OSH-FULLHEALTH-GAPFIX-003"
+    severity: NONE
+    status: "closed"
+    title: "Docs cite exact r3 totals and do not count skips as passes"
+    evidence:
+      - "ops/test-results.md cites r3 result as `69 total / 50 passed / 0 failed / 19 skipped` and separately states stdout now prints exact parsed totals."
+      - "ops/status.md cites r3 as `69 total / 50 passed / 0 failed / 19 skipped` and says the 19 skips are expected, not failed health checks."
+      - "ops/server.md cites r3 exact archived totals and says the 19 skips are expected for undeclared or unpopulated surfaces outside current scope."
+      - "openspec spec.md, story, traceability, changelog, and known-issues keep REQ-ETS-PART1-010 PARTIAL and cite 69/50/0/19 rather than 69/69."
+      - "Targeted grep found no stale `69/69`, `69 total / 69 passed`, `passed=69`, or `all tests pass` wording in the reviewed scoped files except the prior Raze report describing the old gap."
+    required_fix: null
+
+evidence:
+  r3_xml:
+    path: "/tmp/ets-csapi-osh-full-health-r3/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    header: "total=69 passed=50 failed=0 skipped=19"
+    fail_scan: "No test-method status=FAIL entries found by XML parse."
+    skipped_tests_observed:
+      - "geoJsonMediaTypeRead"
+      - "systemsCollectionIsGeoJsonFeatureCollection"
+      - "systemFeatureHasGeoJsonShapeAndProperties"
+      - "propertyItemHasIdType"
+      - "propertyCanonicalUrlReturns200"
+      - "subsystems/subdeployments skip-path methods"
+      - "advancedFiltering methods"
+  r3_log:
+    path: "/tmp/ets-csapi-osh-full-health-r3/s-ets-01-03-teamengine-container-2026-05-06.log"
+    mutable_iut_requests:
+      - "Request: POST http://field-hub-osh-1:8081/sensorhub/api/systems"
+      - "Request: PUT http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+      - "Request: DELETE http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+    credential_note: "Authorization values in reviewed r3 log are masked as Basi***MDI2."
+  static_checks:
+    - "python3 -m json.tool ops/local-osh-seed-fixtures.json: pass"
+    - "No Docker, Maven, or TeamEngine rerun per user instruction."
+  limitations:
+    - >
+      The output directory contains XML and container log artifacts, not a separate
+      shell stdout transcript. The corrected stdout claim is verified from the
+      smoke-test.sh diff and file/artifact timestamps, while the authoritative
+      totals are verified from the r3 XML.
+
+required_fixes: []
+
+files_changed:
+  primary_repo_tracked:
+    - "_bmad/traceability.md"
+    - "epics/stories/s-ets-12-01-create-replace-delete-safety-gated.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "ops/metrics.md"
+    - "ops/server.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "scripts/smoke-test.sh"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java"
+  primary_repo_untracked:
+    - ".harness/evaluations/sprint-ets-12-local-osh-full-health-raze.yaml"
+    - ".harness/evaluations/sprint-ets-12-local-osh-full-health-gapfix-raze.yaml"
+    - ".harness/evaluations/sprint-ets-12-local-osh-mutable-followup-raze.yaml"
+    - "ops/local-osh-seed-fixtures.json"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/VerifyCreateReplaceDeleteLocationResolution.java"
+
+files_changed_by_this_review:
+  - ".harness/evaluations/sprint-ets-12-local-osh-full-health-gapfix-raze.yaml"
+
+verdict_rationale: >
+  The two required false-confidence gaps from the prior Raze report are closed.
+  Remaining skipped tests are visible in every reviewed evidence path and are
+  not being counted as passed.

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T21:54Z
+Last updated: 2026-05-06T13:53Z
 
 ## Fresh-Session Entry Point
 
@@ -40,8 +40,8 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 - ETS HEAD at Sprint 12 Generator start: `7427c3c`
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-12-01` Generator complete as PARTIAL; Raze gap-fix review approved with low residual concerns
-- Current sprint status: Sprint ets-12 Create/Replace/Delete safety-gated systems subset implemented, verified by Maven plus TeamEngine smoke, and Raze gap-fix reviewed.
+- Latest implemented story: `S-ETS-12-01` Generator complete as PARTIAL; Raze gap-fix review approved with low residual concerns, with local OSH mutable-IUT fixture seeding now producing full smoke failed=0.
+- Current sprint status: Sprint ets-12 Create/Replace/Delete safety-gated systems subset implemented, verified by Maven plus TeamEngine smoke, and Raze gap-fix reviewed. Local OSH now proves the guarded System POST/PUT/DELETE lifecycle path against a dedicated mutable IUT and runs the current full TeamEngine smoke with zero failures.
 
 ## Sprint ets-12 Generator Evidence
 
@@ -59,6 +59,13 @@ Create/Replace/Delete safety-gated systems subset:
 - Smoke no-mutation oracle: integrated smoke oracle recognized 40 IUT-bound request log entries and zero IUT-bound POST/PUT/DELETE entries for `https://api.georobotix.io/ogc/t18/api`
 - Raze implementation review: `.harness/evaluations/sprint-ets-12-adversarial-implementation.yaml` verdict `GAPS_FOUND` confidence 0.88; GAP-001 and GAP-002 plus low-risk Allow parsing concern were fixed same turn.
 - Raze gap-fix review: `.harness/evaluations/sprint-ets-12-adversarial-gapfix.yaml` verdict `APPROVE_WITH_CONCERNS` confidence 0.91; no required fixes remain. Residual concerns: smoke stdout is not archived separately, and positive mutable-IUT lifecycle evidence remains future work.
+- Local OSH mutable-IUT follow-up: existing OSH 2.0-beta2 stack in `../sar-ops/field-hub` runs at `http://localhost:8081/sensorhub/api`; TeamEngine reaches it through Docker network `field-hub_default` as `http://field-hub-osh-1:8081/sensorhub/api`.
+- Local OSH fixes from probe: service-relative `Location: /systems/{id}` now resolves against the IUT service base; the replacement body preserves the created System `uid` so OSH accepts PUT.
+- Local OSH verification: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `110 tests / 0 failures / 0 errors / 3 skipped`; mutable smoke `/tmp/ets-csapi-osh-mutable-smoke-r4` reported `69 total / 32 passed / 3 failed / 34 skipped`, with `systemsCreateReplaceDeleteLifecycle` PASS and real POST, PUT, DELETE observed.
+- Local OSH fixture follow-up: `../sar-ops/field-hub/osh/config/config.json` `proxyBaseUrl` is set to `http://field-hub-osh-1:8081`, and the OSH H2 datastore now contains synthetic `/systems/040g`, `/procedures/040g`, `/deployments/040g`, and `/samplingFeatures/040g` seed resources. Exact payloads are versioned in `ops/local-osh-seed-fixtures.json`. The System seed uses `featureType=http://www.w3.org/ns/sosa/System`, which makes `/systems/040g?f=sml3` return local `application/sml+json`.
+- Local OSH full-health verification: `/tmp/ets-csapi-osh-full-health-r3` with explicit mutable-IUT parameters reported `69 total / 50 passed / 0 failed / 19 skipped`; corrected smoke stdout printed `SMOKE PASS: total=69 passed=50 failed=0 skipped=19 ...`. The 19 skips are expected for undeclared/unpopulated out-of-scope surfaces, not failed health checks.
+- Raze local OSH full-health review: `.harness/evaluations/sprint-ets-12-local-osh-full-health-raze.yaml` verdict `GAPS_FOUND` confidence 0.87. Required fixes applied: smoke stdout now prints exact parsed totals instead of `${total}/${total}`, and the seed payloads are versioned.
+- Raze local OSH full-health gap-fix review: `.harness/evaluations/sprint-ets-12-local-osh-full-health-gapfix-raze.yaml` verdict `APPROVE` confidence 0.92; no required fixes remain.
 
 Sprint 12 Generator guardrails:
 
@@ -169,16 +176,19 @@ Gate Results:
 
 ## Next Action
 
-1. Commit the Sprint 12 Generator set when ready.
+1. Commit the local OSH follow-up when ready, including the external `../sar-ops/field-hub/osh/config/config.json` proxyBaseUrl change if that repo is in scope for the commit.
 2. Archive smoke stdout in future gates when relying on no-mutation oracle output.
-3. When a dedicated mutable IUT is available, rerun the positive CRD lifecycle path and record POST/PUT/DELETE evidence.
-4. When a declaring `/conf/advanced-filtering` IUT is available, rerun positive id/q/geom paths and record evidence.
-5. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
+3. When a declaring `/conf/advanced-filtering` IUT is available, rerun positive id/q/geom paths and record evidence.
+4. Monitor the transient surefire scan/load failure; open a cleanup story if it recurs.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-12 Generator implementation until Raze review and commit:
+Current dirty worktree is expected Sprint ets-12 local OSH mutable-IUT/full-health follow-up until Raze review and commit:
 
-- Sprint 12 CreateReplaceDelete implementation and suite wiring
-- Sprint 12 mutation safety plumbing and smoke log oracle
-- Ops/OpenSpec/story/traceability reconciliation
+- `CreateReplaceDeleteTests` OSH `Location` resolution and UID-preserving replacement fix
+- `VerifyCreateReplaceDeleteLocationResolution` OSH regression tests
+- `scripts/smoke-test.sh` Docker-network and explicit mutable-smoke oracle behavior
+- `scripts/smoke-test.sh` exact PASS summary totals fix
+- `ops/local-osh-seed-fixtures.json` reproducible local OSH seed manifest
+- Ops/OpenSpec/story/traceability reconciliation for local OSH evidence
+- External local fixture change: `../sar-ops/field-hub/osh/config/config.json` `proxyBaseUrl` now points to `http://field-hub-osh-1:8081`

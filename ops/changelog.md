@@ -2,6 +2,20 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T17:12Z — Sprint 15 GeoJSON expansion planning
+
+**Triggered by user instruction**: "All continue with the next task."
+
+- Planned `S-ETS-15-01` as a read-only expansion of `REQ-ETS-PART1-012`, not a new conformance class.
+- Added `.harness/contracts/sprint-ets-15.yaml` and `epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md`.
+- Updated OpenSpec, traceability, epic status, planner handoff, ops status, and test-results for deployment/procedure/sampling-feature GeoJSON schema/mapping scope.
+- Verified OGC GeoJSON requirement class source at `api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc`.
+- Planning probe: GeoRobotix declares `/conf/geojson`, but `GET /deployments`, `/procedures`, and `/samplingFeatures` with `Accept: application/geo+json` currently return `Content-Type: application/json` with CS API `items` wrappers, so Sprint 15 must SKIP fallback wrappers rather than count them as GeoJSON PASS.
+- Raze planning review `.harness/evaluations/sprint-ets-15-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.86 because generic Feature shape was not enough for schema/mapping claims; planning was tightened with deployment, procedure, and sampling-feature-specific predicates.
+- Raze planning gap-fix review `.harness/evaluations/sprint-ets-15-plan-gapfix.yaml` returned `APPROVE` confidence 0.93 with no remaining required fixes.
+
+---
+
 ## 2026-05-06T15:48Z — Sprint 14 Update hardening Generator
 
 **Triggered by user instruction**: "OK, keep going."

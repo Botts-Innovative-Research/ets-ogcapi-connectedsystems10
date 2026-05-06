@@ -1,0 +1,138 @@
+agent: "Raze"
+role: "Red Team / Adversarial Reviewer"
+artifact_type: "planning_review"
+sprint: "ets-15"
+story: "S-ETS-15-01"
+created_utc: "2026-05-06T17:18:11Z"
+verdict: "GAPS_FOUND"
+confidence: 0.86
+
+reviewed_scope:
+  instruction: "Planning-only review for S-ETS-15-01 GeoJSON non-system read-only expansion."
+  reviewed_files:
+    - ".harness/contracts/sprint-ets-15.yaml"
+    - "epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+  focus:
+    - "false PASS risk from CS API items wrappers"
+    - "OGC GeoJSON URI/subrequirement fidelity"
+    - "scope creep beyond read-only/non-system GeoJSON"
+    - "no-mutation safety"
+    - "honest PARTIAL status for REQ-ETS-PART1-012"
+  explicitly_not_run:
+    - "Docker"
+    - "Maven"
+    - "TeamEngine"
+
+external_source_checks:
+  - source: "https://raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
+    result: "HTTP 200"
+    observed_identifiers:
+      - "/req/geojson"
+      - "/req/geojson/mediatype-read"
+      - "/req/geojson/mediatype-write"
+      - "/req/geojson/relation-types"
+      - "/req/geojson/feature-attribute-mapping"
+      - "/req/geojson/system-schema"
+      - "/req/geojson/system-mappings"
+      - "/req/geojson/deployment-schema"
+      - "/req/geojson/deployment-mappings"
+      - "/req/geojson/procedure-schema"
+      - "/req/geojson/procedure-mappings"
+      - "/req/geojson/sf-schema"
+      - "/req/geojson/sf-mappings"
+  - source: "GitHub contents API for api/part1/standard/requirements/encoding/geojson"
+    result: "Directory contains requirements_class_geojson.adoc only; the class file is the authoritative planning source for listed subrequirement identifiers."
+
+findings:
+  - id: "RAZE-ETS15-PLAN-GAP-001"
+    severity: "medium"
+    category: "false_positive_risk"
+    status: "open"
+    title: "Planned 'schema/mapping' scenarios can pass on generic GeoJSON Feature shape without proving resource-specific GeoJSON schema or mapping subrequirements."
+    locations:
+      - file: "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+        lines: "688-710"
+      - file: "epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md"
+        lines: "44-50"
+      - file: ".harness/contracts/sprint-ets-15.yaml"
+        lines: "90-98"
+    evidence:
+      - "The plan lists six OGC subrequirements: /req/geojson/deployment-schema, /deployment-mappings, /procedure-schema, /procedure-mappings, /sf-schema, and /sf-mappings."
+      - "Each new OpenSpec scenario says PASS requires FeatureCollection/features plus first feature type/id/geometry/properties."
+      - "The story's planned test surface repeats only generic Feature shape checks: type='Feature', id, geometry present-or-null, and properties."
+      - "Those checks are necessary but not sufficient to distinguish a generic GeoJSON FeatureCollection from a Deployment, Procedure, or Sampling Feature schema/mapping conformance check."
+    impact: "A future Generator could truthfully implement the current scenarios while still giving false confidence that the named deployment/procedure/sf schema and mapping subrequirements were covered."
+    required_fix: "Either tighten planning artifacts with explicit resource-specific schema/mapping predicates for deployments, procedures, and sampling features, tied to the relevant /req/geojson/*-schema and *-mappings identifiers, or rename/downgrade Sprint 15 scope to generic non-system GeoJSON FeatureCollection smoke and keep those six subrequirements explicitly open."
+
+  - id: "RAZE-ETS15-PLAN-OBS-001"
+    severity: "info"
+    category: "items_wrapper_false_pass"
+    status: "closed"
+    title: "CS API items-wrapper false PASS risk is explicitly guarded."
+    evidence:
+      - "Contract says CS API items wrappers without features are not GeoJSON PASS evidence."
+      - "Story says items wrappers without features SKIP with requirement-cited fallback reason."
+      - "OpenSpec scenarios require FeatureCollection/features before PASS and state items wrappers SKIP/fallback."
+      - "ops/status.md and ops/test-results.md record GeoRobotix application/json items responses as fallback evidence."
+    assessed_risk: "Low after planning; Generator must preserve this behavior."
+
+  - id: "RAZE-ETS15-PLAN-OBS-002"
+    severity: "info"
+    category: "ogc_uri_fidelity"
+    status: "closed"
+    title: "GeoJSON class URI and listed subrequirement identifiers match the upstream class source."
+    evidence:
+      - "Direct source check observed /req/geojson and all 12 listed subrequirements, including deployment/procedure/sf schema and mappings."
+      - "Planning artifacts consistently use /req/geojson, /conf/geojson, /conf/deployment, /conf/procedure, and /conf/sf."
+    assessed_risk: "Low for identifier fidelity; GAP-001 is about underspecified assertion content, not wrong identifiers."
+
+  - id: "RAZE-ETS15-PLAN-OBS-003"
+    severity: "info"
+    category: "scope_control"
+    status: "closed"
+    title: "Planning keeps scope read-only and excludes mutation, SensorML, Part 2, mediatype-write, relation-types, and property mapping."
+    evidence:
+      - "Story out-of-scope lists mediatype-write, relation-types, property definition GeoJSON mapping, full external schema validation, SensorML, Part 2, and any mutation request."
+      - "Contract generator_must_not_do repeats the no-write/no-mutation/no-SensorML/no-Part2 boundary."
+      - "Handoff and ops/status repeat the same boundaries."
+    assessed_risk: "Low."
+
+  - id: "RAZE-ETS15-PLAN-OBS-004"
+    severity: "info"
+    category: "no_mutation_safety"
+    status: "closed"
+    title: "Default-smoke no-mutation safety is planned."
+    evidence:
+      - "Contract requires running the no-mutation oracle or otherwise verifying zero IUT-bound POST/PUT/DELETE/PATCH."
+      - "Story Definition of Done includes no POST, PUT, PATCH, or DELETE by default smoke."
+      - "OpenSpec adds SCENARIO-ETS-PART1-012-GEOJSON-SMOKE-NO-MUTATION-001."
+    assessed_risk: "Low for planning."
+
+  - id: "RAZE-ETS15-PLAN-OBS-005"
+    severity: "info"
+    category: "status_honesty"
+    status: "closed"
+    title: "REQ-ETS-PART1-012 remains honestly PARTIAL across reviewed artifacts."
+    evidence:
+      - "Story says the sprint remains PARTIAL for REQ-ETS-PART1-012."
+      - "OpenSpec status keeps PARTIAL-IMPLEMENTED and names remaining mediatype-write, relation-types, property GeoJSON mapping, and full schema-validation closure."
+      - "Traceability row says PARTIAL-IMPLEMENTED; Sprint 15 planned."
+      - "ops/status.md says status remains PARTIAL."
+    assessed_risk: "Low."
+
+required_fixes:
+  - id: "RAZE-ETS15-PLAN-GAP-001"
+    fix: "Update OpenSpec/story/contract/handoff/status/traceability so Sprint 15 either defines resource-specific schema/mapping assertions for deployment, procedure, and sampling feature GeoJSON, or explicitly downgrades the sprint to generic non-system GeoJSON FeatureCollection smoke with the six schema/mapping subrequirements still open."
+    verify_with:
+      - "rg -n 'deployment-schema|deployment-mappings|procedure-schema|procedure-mappings|sf-schema|sf-mappings|resource-specific|mapping' .harness/contracts/sprint-ets-15.yaml epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md openspec/capabilities/ets-ogcapi-connectedsystems/spec.md _bmad/traceability.md .harness/handoffs/planner-handoff.yaml ops/status.md"
+      - "No Docker/Maven/TeamEngine rerun needed for this planning-only fix."
+
+non_blocking_observations:
+  - "The plan uses upstream master for the source check in some artifacts; OpenSpec also records commit 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f. Prefer preserving the commit SHA in Generator-facing docs if source stability matters."
+  - "No unrelated dirty files were found beyond expected Sprint 15 planning artifacts and ops/metrics.md."

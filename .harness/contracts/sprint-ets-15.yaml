@@ -1,0 +1,150 @@
+# Sprint 15 contract - GeoJSON non-system read-only expansion
+# Created 2026-05-06 after Sprint 14 Generator close.
+
+sprint: "ets-15"
+sprint_name: "geojson-non-system-readonly-expansion"
+type: "feature-expansion"
+created: "2026-05-06T17:12:30Z"
+description: |
+  Sprint 15 extends REQ-ETS-PART1-012 rather than adding a new Part 1 class.
+  Sprint 9 implemented only the systems read-only GeoJSON subset. Sprint 15
+  plans deployment, procedure, and sampling feature GeoJSON schema/mapping
+  coverage while preserving fallback honesty when an IUT returns CS API default
+  `items` JSON instead of a GeoJSON FeatureCollection.
+
+stories:
+  - id: "S-ETS-15-01"
+    title: "GeoJSON non-system read-only expansion"
+    file: "epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-09-01"
+      - "S-ETS-05-06"
+      - "S-ETS-05-05"
+      - "S-ETS-07-02"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART1-012 (GeoJSON Encoding Conformance Class /conf/geojson - remains PARTIAL; add deployment/procedure/sampling-feature read-only schema and mapping checks)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-012-GEOJSON-DEPLOYMENT-SCHEMA-MAPPING-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-PROCEDURE-SCHEMA-MAPPING-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-SF-SCHEMA-MAPPING-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-SMOKE-NO-MUTATION-001"
+  normal: []
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  build_green_jdk17: true
+  default_georobotix_smoke_green: true
+  default_smoke_no_mutation_requests: true
+  deployment_geojson_shape_or_skip_honestly: true
+  procedure_geojson_shape_or_skip_honestly: true
+  sampling_feature_geojson_shape_or_skip_honestly: true
+  deployment_resource_specific_mapping_checked: true
+  procedure_resource_specific_mapping_checked: true
+  sampling_feature_resource_specific_mapping_checked: true
+  csapi_items_wrapper_not_counted_as_geojson_pass: true
+  no_geojson_mediatype_write_in_sprint: true
+  geojson_req_remains_partial_without_write_relation_types_and_full_schema_closure: true
+  no_part2_work_in_sprint: true
+
+upstream_ogc_verification:
+  repo: "opengeospatial/ogcapi-connected-systems"
+  branch: "master"
+  requirement_class_source: "api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
+  source_http_status: "HTTP/2 200 on 2026-05-06"
+  identifier: "/req/geojson"
+  inherits:
+    - "/req/api-common"
+    - "http://www.opengis.net/spec/ogcapi-features-1/1.0/req/geojson"
+  subrequirements:
+    - "/req/geojson/mediatype-read"
+    - "/req/geojson/mediatype-write"
+    - "/req/geojson/relation-types"
+    - "/req/geojson/feature-attribute-mapping"
+    - "/req/geojson/system-schema"
+    - "/req/geojson/system-mappings"
+    - "/req/geojson/deployment-schema"
+    - "/req/geojson/deployment-mappings"
+    - "/req/geojson/procedure-schema"
+    - "/req/geojson/procedure-mappings"
+    - "/req/geojson/sf-schema"
+    - "/req/geojson/sf-mappings"
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "HTTP 200; declares /conf/geojson, /conf/deployment, /conf/procedure, /conf/sf, /conf/property, /conf/system, and /conf/sensorml."
+    deployments_accept_geojson: "HTTP 200; Content-Type application/json; top-level keys ['items']."
+    procedures_accept_geojson: "HTTP 200; Content-Type application/json; top-level keys ['items', 'links']."
+    samplingfeatures_accept_geojson: "HTTP 200; Content-Type application/json; top-level keys ['items', 'links']."
+    deployment_item_mapping_observed: "First default-JSON item has properties.uid/name/validTime and properties.deployedSystems@link[]."
+    procedure_item_mapping_observed: "First default-JSON item has geometry null and properties.uid/featureType/name/validTime."
+    sampling_feature_item_mapping_observed: "First default-JSON item has properties.uid/featureType/name plus hostedProcedure@link and radius."
+    interpretation: "Current public IUT supports the resource collections but does not provide GeoJSON FeatureCollection responses for these paths under Accept: application/geo+json. Generator must SKIP fallback wrappers rather than count them as GeoJSON PASS."
+
+resource_specific_predicates:
+  deployment:
+    schema_requirement: "/req/geojson/deployment-schema"
+    mapping_requirement: "/req/geojson/deployment-mappings"
+    predicates:
+      - "GeoJSON response is FeatureCollection/features before PASS."
+      - "First feature is type=Feature with id, geometry, and properties."
+      - "properties.uid is present as a string."
+      - "properties.name is present as a string when supplied by the IUT."
+      - "properties.deployedSystems@link is present as an array or deployment-specific mapping SKIPs with reason."
+  procedure:
+    schema_requirement: "/req/geojson/procedure-schema"
+    mapping_requirement: "/req/geojson/procedure-mappings"
+    predicates:
+      - "GeoJSON response is FeatureCollection/features before PASS."
+      - "First feature is type=Feature with id, geometry, and properties."
+      - "geometry is null for Procedure features, matching /req/procedure/location."
+      - "properties.uid and properties.featureType are present as strings."
+  sampling_feature:
+    schema_requirement: "/req/geojson/sf-schema"
+    mapping_requirement: "/req/geojson/sf-mappings"
+    predicates:
+      - "GeoJSON response is FeatureCollection/features before PASS."
+      - "First feature is type=Feature with id, geometry, and properties."
+      - "properties.uid and properties.featureType are present as strings."
+      - "At least one sampling-feature-specific association or attribute such as properties.hostedProcedure@link or properties.radius is present, or the mapping assertion SKIPs with reason."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Extend GeoJsonTests with deployment, procedure, and samplingFeature read-only schema/mapping checks."
+  - "For each new resource type, assert at least one resource-specific predicate beyond generic Feature shape before claiming schema/mapping PASS."
+  - "Use the same fallback honesty as Sprint 9: a CS API `items` wrapper without `features` is not a GeoJSON PASS."
+  - "Keep all new tests read-only and scoped to GET requests."
+  - "Add focused unit coverage if helper extraction logic grows beyond trivial local code."
+  - "Run Docker Maven and default GeoRobotix TeamEngine smoke."
+  - "Run the no-mutation oracle or otherwise verify zero IUT-bound POST/PUT/DELETE/PATCH."
+  - "Update OpenSpec/story/traceability/status/changelog/test-results."
+
+generator_must_not_do:
+  - "Do not implement /req/geojson/mediatype-write."
+  - "Do not issue POST, PUT, PATCH, or DELETE."
+  - "Do not count CS API default `items` wrappers as GeoJSON FeatureCollection PASS."
+  - "Do not treat generic Feature shape alone as deployment/procedure/sampling-feature schema/mapping closure."
+  - "Do not implement SensorML or Part 2 work in this sprint."
+  - "Do not promote REQ-ETS-PART1-012 beyond PARTIAL unless write behavior, relation-types, and all planned schema/mapping gaps are actually closed."
+
+evaluation_focus:
+  quinn:
+    - "Verify new non-system GeoJSON tests are read-only and dependency-gated."
+    - "Verify fallback `items` wrappers SKIP or document fallback, not PASS."
+  raze:
+    - "Attack false-positive GeoJSON claims from Content-Type application/json or CS API `items` wrappers."
+    - "Check no IUT-bound mutation appears in default smoke."
+
+confidence: 0.84

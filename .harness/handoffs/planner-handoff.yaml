@@ -1,155 +1,153 @@
 agent: planner
 status: complete
-timestamp: "2026-05-06T15:31:37Z"
-sprint_number: "ets-14"
-sprint_name: "update-positive-mutable-iut-hardening"
-contract_path: ".harness/contracts/sprint-ets-14.yaml"
+timestamp: "2026-05-06T17:12:30Z"
+sprint_number: "ets-15"
+sprint_name: "geojson-non-system-readonly-expansion"
+contract_path: ".harness/contracts/sprint-ets-15.yaml"
 triggered_by: |
-  User instructed "OK, keep going" after Sprint 13 Quinn and Raze gates were
-  committed as `1a14775`.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 13 handoff 2026-05-06T14:34:34Z)"
+  User instructed "All continue with the next task" after asking for the
+  expected sprint count. Sprint 15 planning was selected as the next task.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 14 handoff 2026-05-06T15:31:37Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-06T15:31:37Z"
+  checked_at: "2026-05-06T17:12:30Z"
   stale_over_30_days: false
-  disposition: "OK to start new capability planning."
+  disposition: "OK to start Sprint 15 planning."
 
 strategic_decisions:
   q1_next_work:
-    question: "After Sprint 13 gates, what is the next Sprint item?"
-    decision: "S-ETS-14-01 Update positive mutable-IUT hardening"
+    question: "After Sprint 14, what is the next Sprint item?"
+    decision: "S-ETS-15-01 GeoJSON non-system read-only expansion"
     rationale: |
-      Part 1 already has at least partial coverage for all remaining named classes.
-      Sprint 13 gates left specific Update follow-ups: positive PATCH needs a dedicated
-      mutable IUT, the positive path must assert a changed field, and OPTIONS PATCH
-      readiness semantics must be decided. Sprint 14 addresses those without starting
-      Part 2 or overclaiming local OSH support.
+      Update remains blocked from positive promotion because local OSH does not
+      advertise PATCH. GeoJSON has a clear open Part 1 gap from Sprint 9:
+      deployment/procedure/sampling-feature schema and mapping checks. The work
+      is read-only, low mutation risk, and directly advances REQ-ETS-PART1-012.
 
-  q2_options_semantics:
-    question: "Should missing OPTIONS Allow: PATCH fail, skip, or be supplemented?"
-    decision: "Use an explicit verdict matrix."
+  q2_scope_boundary:
+    question: "Should Sprint 15 close full GeoJSON?"
+    decision: "No. Keep REQ-ETS-PART1-012 PARTIAL."
     rationale: |
-      Sprint 13 currently uses OPTIONS as ETS readiness evidence, not a normative
-      lifecycle PASS. Raze correctly identified that unconditional SKIP could hide
-      a declared `/conf/update` violation. Sprint 14 distinguishes states: missing
-      `/conf/update`, absent mutation opt-in, public IUT, no candidate System, or
-      inconclusive OPTIONS are SKIP-before-PATCH states; declared `/conf/update`
-      plus successful OPTIONS whose Allow omits PATCH FAILs the readiness assertion
-      for `/req/update/system`, while lifecycle still skips before PATCH because
-      the precondition failed.
+      Sprint 15 covers deployment/procedure/sampling-feature read-only schema
+      and mapping checks only. `/req/geojson/mediatype-write`,
+      `/req/geojson/relation-types`, property mapping, full schema validation,
+      SensorML, and Part 2 remain out of scope.
 
-  q3_positive_patch_oracle:
-    question: "What evidence is required before a positive PATCH lifecycle can count?"
-    decision: "GET after PATCH must assert the intended changed field value."
+  q3_fallback_honesty:
+    question: "How should default CS API JSON responses be treated?"
+    decision: "CS API `items` wrappers without GeoJSON `features` are fallback evidence, not PASS."
     rationale: |
-      Sprint 13 accepts PATCH status codes and then only checks GET 200. Quinn and
-      Raze both identified that as insufficient for future promotion. Sprint 14
-      requires `properties.name` changed-field assertion after PATCH, with focused
-      unit coverage so status-only PATCH cannot pass.
+      GeoRobotix currently declares `/conf/geojson`, but deployment, procedure,
+      and sampling feature collection requests with `Accept: application/geo+json`
+      returned `Content-Type: application/json` and top-level `items`. Counting
+      that as GeoJSON FeatureCollection PASS would repeat the Sprint 9 false-positive
+      risk that Raze already identified and fixed.
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems Part 1: Feature Resources"
-  clause: "17 Requirements Class Update"
-  update_identifier: "/req/update"
-  conformance_class: "/conf/update"
-  requirement_class_source: "api/part1/standard/requirements/crud/update/requirements_class_update.adoc"
-  clause_source: "api/part1/standard/sections/clause_17_requirements_class_update.adoc"
-  prerequisites:
-    - "/req/create-replace-delete"
-    - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/update"
+  requirement_class_source: "api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
+  source_http_status: "HTTP/2 200"
+  checked_at: "2026-05-06T17:12:30Z"
+  identifier: "/req/geojson"
+  inherits:
+    - "/req/api-common"
+    - "http://www.opengis.net/spec/ogcapi-features-1/1.0/req/geojson"
   listed_subrequirements:
-    - "/req/update/system"
-    - "/req/update/deployment"
-    - "/req/update/procedure"
-    - "/req/update/sampling-feature"
-    - "/req/update/property"
-  systems_endpoint: "{api_root}/systems/{id}"
-  ats_collection_item_paths: "A.79-A.83 also list /collections/{collectionId}/items/{id} paths for each resource type; still deferred."
-  method: "HTTP PATCH"
+    - "/req/geojson/mediatype-read"
+    - "/req/geojson/mediatype-write"
+    - "/req/geojson/relation-types"
+    - "/req/geojson/feature-attribute-mapping"
+    - "/req/geojson/system-schema"
+    - "/req/geojson/system-mappings"
+    - "/req/geojson/deployment-schema"
+    - "/req/geojson/deployment-mappings"
+    - "/req/geojson/procedure-schema"
+    - "/req/geojson/procedure-mappings"
+    - "/req/geojson/sf-schema"
+    - "/req/geojson/sf-mappings"
 
 planning_probes:
-  local_osh:
-    conformance: "Simple authenticated curl probe returned HTTP 401 with attempted basic credentials; TeamEngine smoke credential path remains authoritative."
-    system_item_options: "OPTIONS /systems/040g -> HTTP 200, Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
-    planning_interpretation: "Local OSH remains a mutable CRD fixture, but current evidence does not provide positive PATCH support."
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "HTTP 200; declares /conf/geojson plus deployment/procedure/sf resource classes."
+    deployments_accept_geojson: "HTTP 200; Content-Type application/json; keys ['items']."
+    procedures_accept_geojson: "HTTP 200; Content-Type application/json; keys ['items', 'links']."
+    samplingfeatures_accept_geojson: "HTTP 200; Content-Type application/json; keys ['items', 'links']."
+    planning_interpretation: "Plan read-only tests that SKIP fallback wrappers rather than PASSing GeoJSON schema/mapping assertions."
 
-options_patch_verdict_matrix:
-  missing_update_conformance: "readiness SKIP; lifecycle SKIP; no PATCH"
-  mutation_not_explicit_or_public_iut: "readiness SKIP where applicable; lifecycle SKIP before PATCH; no PATCH"
-  no_candidate_system: "readiness SKIP; lifecycle SKIP; no PATCH"
-  declared_update_successful_options_allow_omits_patch: "readiness FAIL for /req/update/system; lifecycle SKIP before PATCH; no PATCH"
-  options_unavailable_or_inconclusive: "readiness SKIP with blocked-readiness reason unless future OGC/CITE policy requires FAIL; lifecycle SKIP; no PATCH"
-  declared_update_allow_includes_patch_with_mutation_opt_in: "readiness PASS; guarded PATCH lifecycle runs and asserts changed field"
+resource_specific_predicates:
+  deployment:
+    requirements: ["/req/geojson/deployment-schema", "/req/geojson/deployment-mappings"]
+    predicates:
+      - "FeatureCollection/features before PASS."
+      - "Feature has id, geometry, and properties."
+      - "properties.uid is present."
+      - "properties.deployedSystems@link is present as deployment mapping evidence, or mapping SKIPs with reason."
+  procedure:
+    requirements: ["/req/geojson/procedure-schema", "/req/geojson/procedure-mappings"]
+    predicates:
+      - "FeatureCollection/features before PASS."
+      - "Feature has id, geometry, and properties."
+      - "geometry is null."
+      - "properties.uid and properties.featureType are present."
+  sampling_feature:
+    requirements: ["/req/geojson/sf-schema", "/req/geojson/sf-mappings"]
+    predicates:
+      - "FeatureCollection/features before PASS."
+      - "Feature has id, geometry, and properties."
+      - "properties.uid and properties.featureType are present."
+      - "properties.hostedProcedure@link or properties.radius is present, or mapping SKIPs with reason."
 
 stories:
-  - id: "S-ETS-14-01"
-    title: "Update positive mutable-IUT hardening"
-    file: "epics/stories/s-ets-14-01-update-positive-mutable-iut-hardening.md"
+  - id: "S-ETS-15-01"
+    title: "GeoJSON non-system read-only expansion"
+    file: "epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "1-2h"
-    sequencing: "ONLY story in Sprint 14"
+    sequencing: "ONLY story in Sprint 15"
 
 new_requirements: []
 modified_requirements:
-  - "REQ-ETS-PART1-011"
+  - "REQ-ETS-PART1-012"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-011-UPDATE-SYSTEM-PATCH-CHANGED-FIELD-001"
-  - "SCENARIO-ETS-PART1-011-UPDATE-LOCAL-OSH-READINESS-001"
-  - "SCENARIO-ETS-PART1-011-UPDATE-OPTIONS-PATCH-SKIP-SEMANTICS-001"
-  - "SCENARIO-ETS-PART1-011-UPDATE-SMOKE-NO-PATCH-001"
-
-mutation_opt_in_parameters:
-  mutation_tests_enabled:
-    suite_parameter: "mutation-tests-enabled"
-    required_value: "true"
-  mutation_iut_policy:
-    suite_parameter: "mutation-iut-policy"
-    required_value: "dedicated-mutable-iut"
-  default_behavior: "PATCH lifecycle assertions SKIP before PATCH."
-  reuse_existing_sprint12_wiring: true
-  hard_denies:
-    - "https://api.georobotix.io/ogc/t18/api"
-    - "Any IUT host equal to api.georobotix.io"
-  hard_deny_behavior: "If mutation tests are enabled against a hard-denied public IUT, lifecycle test SKIPs or FAILs before PATCH; it MUST NOT issue PATCH."
-
-no_mutation_smoke_oracle:
-  method: "Parse `Request: METHOD URI` entries and older adjacent `Request method:` / `Request URI:` pairs from REST Assured logs."
-  filter: "Only pairs whose URI starts with the IUT base URL are in scope."
-  pass_condition: "Zero in-scope pairs with method POST, PUT, DELETE, or PATCH."
-  excluded: "TeamEngine control-plane POST that starts the suite run."
+  - "SCENARIO-ETS-PART1-012-GEOJSON-DEPLOYMENT-SCHEMA-MAPPING-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-PROCEDURE-SCHEMA-MAPPING-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-SF-SCHEMA-MAPPING-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001"
+  - "SCENARIO-ETS-PART1-012-GEOJSON-SMOKE-NO-MUTATION-001"
 
 next_agent: "generator"
 next_agent_rationale: |
-  Planning artifacts are complete and no Architect cycle is needed. Generator can harden
-  the existing UpdateTests positive path, add focused unit coverage, and rerun default
-  GeoRobotix plus local OSH readiness evidence.
+  Planning artifacts are complete and no Architect cycle is needed. Generator can
+  extend GeoJsonTests with read-only collection helpers and keep the existing
+  dependency/no-mutation patterns.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
-    - "Correct Update OGC source path citations to requirements/crud/update."
-    - "Strengthen systemsPatchLifecycleOptIn so GET after PATCH asserts the patched properties.name value."
-    - "Add focused unit tests for changed-field extraction/assertion behavior."
-    - "Implement the OPTIONS/PATCH verdict matrix: declared /conf/update plus successful OPTIONS without PATCH FAILs readiness while lifecycle still skips before PATCH."
+    - "Extend GeoJsonTests with deployment, procedure, and samplingFeature read-only schema/mapping checks."
+    - "Assert the resource-specific predicates above before claiming schema/mapping PASS."
+    - "Keep fallback honesty: CS API `items` wrappers without GeoJSON `features` SKIP, not PASS."
+    - "Keep all requests read-only GETs."
     - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh."
-    - "Run or document a blocked local OSH readiness probe; do not issue PATCH unless /conf/update and OPTIONS PATCH are observed."
+    - "Verify default smoke has zero IUT-bound POST/PUT/DELETE/PATCH."
     - "Update spec/story/traceability/status/changelog/test-results."
   must_not_do:
-    - "Do not issue IUT-bound PATCH during default GeoRobotix smoke."
-    - "Do not claim local OSH positive Update support without /conf/update, OPTIONS PATCH, and changed-field evidence."
-    - "Do not implement Part 2 /conf/update."
-    - "Do not promote REQ-ETS-PART1-011 beyond PARTIAL from status-only PATCH."
+    - "Do not implement GeoJSON mediatype-write or relation-types."
+    - "Do not implement SensorML or Part 2 work."
+    - "Do not issue mutation requests."
+    - "Do not promote REQ-ETS-PART1-012 beyond PARTIAL."
+    - "Do not treat generic Feature shape alone as resource-specific schema/mapping closure."
 
 gate_expectations:
   quinn:
-    primary: "Run mvn-test-via-docker.sh; verify status-only PATCH cannot pass and default smoke remains no-PATCH."
+    primary: "Verify read-only GeoJSON non-system expansion and fallback honesty."
   raze:
-    primary: "Attack false-positive Update claims from missing OPTIONS PATCH, missing /conf/update, status-only PATCH, or overclaimed local OSH readiness."
-    adversarial_focus: "Inspect changed-field assertion, local OSH evidence, and default public-IUT PATCH safety."
-  independence: "Quinn and Raze must write their own Sprint 14 YAML before reading the other gate's YAML."
+    primary: "Attack false-positive GeoJSON PASS claims from Content-Type application/json or `items` wrappers."
+    adversarial_focus: "No mutation, no full-REQ overclaim, no hidden SensorML/Part 2 scope creep."
 
-confidence: 0.86
+confidence: 0.84

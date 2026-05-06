@@ -1,8 +1,33 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T15:58Z
+Last updated: 2026-05-06T17:12Z
 
 ## Current Sprint Evidence
+
+Sprint ets-15 GeoJSON non-system read-only expansion planning:
+
+- OGC source verification:
+  - Source: `api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc`
+  - Result: HTTP 200 on 2026-05-06.
+  - Listed subrequirements include deployment, procedure, and sampling feature schema/mapping paths.
+- GeoRobotix planning probes:
+  - `/conformance`: HTTP 200; declares `/conf/geojson`, `/conf/deployment`, `/conf/procedure`, and `/conf/sf`.
+  - `GET /deployments?limit=1` with `Accept: application/geo+json`: HTTP 200, `Content-Type: application/json`, top-level `items`.
+  - `GET /procedures?limit=1` with `Accept: application/geo+json`: HTTP 200, `Content-Type: application/json`, top-level `items` and `links`.
+  - `GET /samplingFeatures?limit=1` with `Accept: application/geo+json`: HTTP 200, `Content-Type: application/json`, top-level `items` and `links`.
+- Resource-specific mapping evidence visible in fallback payloads:
+  - Deployment item: `properties.deployedSystems@link`.
+  - Procedure item: `geometry: null` and `properties.featureType`.
+  - Sampling Feature item: `properties.hostedProcedure@link` and `properties.radius`.
+- Interpretation: Sprint 15 Generator must not count CS API default `items` wrappers as GeoJSON FeatureCollection PASS evidence. They should SKIP or document fallback until `features` is observed, and generic Feature shape alone must not close resource-specific schema/mapping assertions.
+- Raze planning review:
+  - Artifact: `.harness/evaluations/sprint-ets-15-plan-adversarial.yaml`
+  - Verdict: `GAPS_FOUND` confidence 0.86.
+  - Required fix: add resource-specific predicates before schema/mapping PASS.
+- Raze planning gap-fix recheck:
+  - Artifact: `.harness/evaluations/sprint-ets-15-plan-gapfix.yaml`
+  - Verdict: `APPROVE` confidence 0.93.
+  - Required fixes: none remaining.
 
 Sprint ets-14 Update positive mutable-IUT hardening:
 

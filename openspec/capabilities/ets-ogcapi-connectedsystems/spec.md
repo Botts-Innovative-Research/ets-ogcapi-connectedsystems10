@@ -141,7 +141,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART1-007..013: Remaining Per-Class Conformance Suites
 - **Priority**: MUST
-- **Status**: REQ-ETS-PART1-011 is PARTIAL-IMPLEMENTED in Sprint 13 below; REQ-ETS-PART1-007..008 are IMPLEMENTED in Sprint 7, REQ-ETS-PART1-009 is PARTIAL-IMPLEMENTED in Sprint 11 below, REQ-ETS-PART1-010 is PARTIAL-IMPLEMENTED in Sprint 12 below, REQ-ETS-PART1-012 is PARTIAL-IMPLEMENTED in Sprint 9, and REQ-ETS-PART1-013 is PARTIAL-IMPLEMENTED in Sprint 10 below.
+- **Status**: REQ-ETS-PART1-011 is PARTIAL-IMPLEMENTED in Sprint 13/14 below; REQ-ETS-PART1-007..008 are IMPLEMENTED in Sprint 7, REQ-ETS-PART1-009 is PARTIAL-IMPLEMENTED in Sprint 11 below, REQ-ETS-PART1-010 is PARTIAL-IMPLEMENTED in Sprint 12 below, REQ-ETS-PART1-012 is PARTIAL-IMPLEMENTED in Sprint 9 with Sprint 15 expansion planned, and REQ-ETS-PART1-013 is PARTIAL-IMPLEMENTED in Sprint 10 below.
 - **Description**: For each remaining OGC 23-001 conformance class (009=`advanced-filtering`, 010=`create-replace-delete`, 011=`update`, 012=`geojson`, 013=`sensorml`), the ETS SHALL provide a TestNG suite class structurally equivalent to Core (REQ-ETS-CORE-001..004), SystemFeatures (REQ-ETS-PART1-002), Common (REQ-ETS-PART1-001), Subsystems (REQ-ETS-PART1-003), Procedures (REQ-ETS-PART1-006), Deployments (REQ-ETS-PART1-004), Sampling Features (REQ-ETS-PART1-007), Property Definitions (REQ-ETS-PART1-008), Subdeployments (REQ-ETS-PART1-005), and GeoJSON (REQ-ETS-PART1-012): one `@Test` per ATS assertion subset selected for the sprint, `description` attribute carries the OGC canonical `.adoc` requirement URI form, suite-level dependency declared via TestNG `dependsOnGroups` if a prerequisite class fails.
 - **Rationale**: PRD SC-2 requires Part 1 coverage. Sprint 9 selected a GeoJSON systems read-only subset first because it was lower risk than create-replace-delete mutation coverage and lower schema breadth than SensorML. Sprint 10 continues the low-risk read-only encoding path with SensorML systems before any mutation-side class.
 - **Maps to**: PRD FR-ETS-17..23.
@@ -636,7 +636,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART1-012: GeoJSON Encoding Conformance Class (`/conf/geojson`) (Sprint 9 target)
 - **Priority**: MUST
-- **Status**: PARTIAL-IMPLEMENTED (Sprint 9 Generator 2026-05-05; sister repo HEAD `b4a97de`; story S-ETS-09-01). This closes only the systems read-only subset. Full REQ-ETS-PART1-012 remains open until `mediatype-write`, `relation-types`, and deployment/procedure/sampling-feature GeoJSON schema and mapping subrequirements are implemented.
+- **Status**: PARTIAL-IMPLEMENTED (Sprint 9 Generator 2026-05-05; Sprint 15 non-system read-only expansion planned 2026-05-06; stories S-ETS-09-01 and S-ETS-15-01). Sprint 9 closes only the systems read-only subset. Sprint 15 plans deployment/procedure/sampling-feature read-only schema and mapping checks. Full REQ-ETS-PART1-012 remains open until `mediatype-write`, `relation-types`, property GeoJSON mapping, and full schema-validation closure are implemented.
 - **OGC source verified**: Upstream master commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f` dated 2026-04-20. Requirement class file exists at `api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc`. The class identifier is `/req/geojson`, inherits `/req/api-common` and OGC API Features 1.0 GeoJSON, and lists 12 subrequirements: `mediatype-read`, `mediatype-write`, `relation-types`, `feature-attribute-mapping`, `system-schema`, `system-mappings`, `deployment-schema`, `deployment-mappings`, `procedure-schema`, `procedure-mappings`, `sf-schema`, and `sf-mappings`.
 - **Sprint 9 coverage scope**: Sprint-1-style minimal systems read-only subset with 5 @Tests: (1) IUT declares `/conf/geojson`; (2) `Accept: application/geo+json` or default JSON response for `/systems` returns HTTP 200 + honest media-type/fallback reporting; (3) `/systems` GeoJSON path requires `type="FeatureCollection"` and a `features` array; (4) first system feature carries GeoJSON `Feature` shape with `id`, `type`, `geometry`, and `properties`; (5) TestNG dependency wiring and smoke no-regression. `mediatype-write` remains OPEN and is conditional on the create-replace-delete requirement class being implemented or explicitly selected; deployment/procedure/sampling-feature GeoJSON schema and mapping subrequirements also remain OPEN.
 - **Dependency wiring**: GeoJSON depends on SystemFeatures via `<group name="geojson" depends-on="systemfeatures"/>`. This keeps encoding validation behind the canonical system feature resource availability already implemented in REQ-ETS-PART1-002.
@@ -681,6 +681,49 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **WHEN** the GeoJSON suite attempts to run
 **THEN** GeoJSON tests SKIP because `<group name="geojson" depends-on="systemfeatures"/>` is present
 **AND** `scripts/smoke-test.sh` from a /tmp clone reports failed=0 and total PASS+SKIP at least 51 (Sprint 8 baseline 46 plus 5 GeoJSON @Tests).
+*Maps to*: REQ-ETS-PART1-012.
+
+> Sprint 15 expands GeoJSON read-only coverage beyond systems. It targets deployment, procedure, and sampling feature schema/mapping assertions, but it preserves Sprint 9 fallback honesty: an IUT response with the CS API default `items` wrapper and no GeoJSON `features` array is not GeoJSON PASS evidence.
+
+#### SCENARIO-ETS-PART1-012-GEOJSON-DEPLOYMENT-SCHEMA-MAPPING-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/geojson` and `/conf/deployment`
+**WHEN** the GeoJSON suite requests `/deployments` with `Accept: application/geo+json`
+**THEN** a PASS requires a GeoJSON FeatureCollection with `type="FeatureCollection"` and a `features` array
+**AND** the first feature, if present, has `type="Feature"`, an `id`, a `geometry` member that is either a GeoJSON geometry or null, and a `properties` object
+**AND** deployment-specific mapping evidence includes `properties.uid` and a deployment association such as `properties.deployedSystems@link`
+**AND** a CS API `items` wrapper without `features` SKIPs with fallback evidence rather than PASSing.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-GEOJSON-PROCEDURE-SCHEMA-MAPPING-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/geojson` and `/conf/procedure`
+**WHEN** the GeoJSON suite requests `/procedures` with `Accept: application/geo+json`
+**THEN** a PASS requires a GeoJSON FeatureCollection with `type="FeatureCollection"` and a `features` array
+**AND** the first feature, if present, has `type="Feature"`, an `id`, a `geometry` member that is either a GeoJSON geometry or null, and a `properties` object
+**AND** procedure-specific mapping evidence includes `geometry == null` plus `properties.uid` and `properties.featureType`
+**AND** a CS API `items` wrapper without `features` SKIPs with fallback evidence rather than PASSing.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-GEOJSON-SF-SCHEMA-MAPPING-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/geojson` and `/conf/sf`
+**WHEN** the GeoJSON suite requests `/samplingFeatures` with `Accept: application/geo+json`
+**THEN** a PASS requires a GeoJSON FeatureCollection with `type="FeatureCollection"` and a `features` array
+**AND** the first feature, if present, has `type="Feature"`, an `id`, a `geometry` member that is either a GeoJSON geometry or null, and a `properties` object
+**AND** sampling-feature-specific mapping evidence includes `properties.uid`, `properties.featureType`, and an association or attribute such as `properties.hostedProcedure@link` or `properties.radius`
+**AND** a CS API `items` wrapper without `features` SKIPs with fallback evidence rather than PASSing.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001 (CRITICAL)
+**GIVEN** GeoRobotix currently declares `/conf/geojson`
+**WHEN** deployment, procedure, or sampling feature collection requests with `Accept: application/geo+json` return `Content-Type: application/json` and top-level `items`
+**THEN** the ETS records that as default CS API JSON fallback evidence
+**AND** no schema or mapping assertion for GeoJSON FeatureCollection shape PASSes from that `items` wrapper.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-GEOJSON-SMOKE-NO-MUTATION-001 (CRITICAL)
+**GIVEN** Sprint 15 adds GeoJSON non-system read-only checks
+**WHEN** `scripts/smoke-test.sh` runs against the default GeoRobotix target
+**THEN** failed=0
+**AND** the smoke log contains zero IUT-bound POST, PUT, DELETE, or PATCH request-log entries.
 *Maps to*: REQ-ETS-PART1-012.
 
 > Sprint 10 targets SensorML as another read-only encoding increment. The sprint is intentionally PARTIAL for the SensorML requirement class: it proves conformance declaration, discovers a SensorML alternate representation for an existing System resource, fetches that representation, and checks a minimal SensorML system shape. It does not close write media type behavior, relation types, deployments/procedures/properties SensorML schema or mapping assertions, or full JSON Schema validation. Alternate-link fallback is evidence for this sprint subset only unless the fetched body proves SensorML JSON support and the fallback is documented in runtime output.

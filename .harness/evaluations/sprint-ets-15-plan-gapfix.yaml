@@ -1,0 +1,52 @@
+agent: "Raze"
+role: "Red Team / Adversarial Reviewer"
+artifact_type: "gapfix_review"
+sprint: "ets-15"
+story: "S-ETS-15-01"
+created_utc: "2026-05-06T17:22:27Z"
+verdict: "APPROVE"
+confidence: 0.93
+
+reviewed_scope:
+  instruction: "Focused Sprint 15 planning gap-fix recheck only for RAZE-ETS15-PLAN-GAP-001."
+  reviewed_files:
+    - ".harness/contracts/sprint-ets-15.yaml"
+    - "epics/stories/s-ets-15-01-geojson-non-system-readonly-expansion.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+  prior_artifact:
+    - ".harness/evaluations/sprint-ets-15-plan-adversarial.yaml"
+  explicitly_not_run:
+    - "Docker"
+    - "Maven"
+    - "TeamEngine"
+
+findings:
+  - id: "RAZE-ETS15-PLAN-GAP-001"
+    severity: "medium"
+    category: "false_positive_risk"
+    prior_status: "open"
+    current_status: "closed"
+    title: "Resource-specific GeoJSON schema/mapping predicates are now planned before PASS."
+    evidence:
+      - "Contract adds resource_specific_predicates for deployment, procedure, and sampling_feature tied to /req/geojson/*-schema and /req/geojson/*-mappings."
+      - "Deployment planning now requires properties.uid and properties.deployedSystems@link as deployment-specific mapping evidence, or mapping SKIP with reason."
+      - "Procedure planning now requires geometry is null plus properties.uid and properties.featureType."
+      - "Sampling Feature planning now requires properties.uid/properties.featureType plus properties.hostedProcedure@link or properties.radius, or mapping SKIP with reason."
+      - "Story Planned Test Surface and DoD now say generic Feature shape alone cannot close resource-specific schema/mapping predicates."
+      - "OpenSpec Sprint 15 scenarios now include deployment/procedure/sampling-feature-specific mapping evidence in addition to FeatureCollection/features and generic Feature shape."
+      - "Traceability, planner handoff, ops/status, ops/test-results, and ops/changelog now carry the resource-specific predicate guardrail."
+    assessment: "The prior false-confidence gap is closed for planning. Generator still must implement these predicates and preserve SKIP behavior for CS API items wrappers."
+
+verification_summary:
+  csapi_items_wrapper_guard: "Still present: CS API items wrappers without GeoJSON features cannot PASS GeoJSON FeatureCollection/schema/mapping assertions."
+  scope_honesty: "REQ-ETS-PART1-012 remains PARTIAL; mediatype-write, relation-types, property GeoJSON mapping, full schema validation, SensorML, Part 2, and mutation remain out of scope."
+  rerun_decision: "No Docker/Maven/TeamEngine rerun was necessary for this planning-only gap-fix recheck."
+
+required_fixes: []
+remaining_risk:
+  - "Implementation review should verify the code actually checks the resource-specific predicates and does not count fallback CS API items wrappers as PASS."

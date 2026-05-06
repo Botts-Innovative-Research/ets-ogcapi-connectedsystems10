@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Validate that smoke logs contain no IUT-bound POST/PUT/DELETE requests."""
+"""Validate that smoke logs contain no IUT-bound mutation requests."""
 
 import re
 import sys
 from urllib.parse import urlsplit
 
-MUTATION_METHODS = {"POST", "PUT", "DELETE"}
+MUTATION_METHODS = {"POST", "PUT", "DELETE", "PATCH"}
 SINGLE_LINE_RE = re.compile(r"^Request:\s+([A-Za-z]+)\s+(\S+)\s*$")
 
 

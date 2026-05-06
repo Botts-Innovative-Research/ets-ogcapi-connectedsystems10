@@ -233,9 +233,9 @@ docker logs "$CONTAINER_NAME" > "$LOG_FILE" 2>&1 || true
 (( total > 0 )) || die "TestNG report total=0 (no @Test methods ran)"
 (( failed == 0 )) || die "TestNG report has failed=$failed (>0); see $REPORT_XML"
 
-# Sprint 12 S-ETS-12-01: default smoke against GeoRobotix must never issue IUT-bound
-# mutation requests. Explicit dedicated-mutable-IUT runs are the opposite: they are
-# expected to exercise POST/PUT/DELETE and therefore bypass this no-mutation oracle.
+# Sprint 12/13: default smoke against GeoRobotix must never issue IUT-bound mutation
+# requests. Explicit dedicated-mutable-IUT runs are the opposite: they are expected to
+# exercise write methods and therefore bypass this no-mutation oracle.
 if [[ "${SMOKE_MUTATION_TESTS_ENABLED:-}" == "true" && "${SMOKE_MUTATION_IUT_POLICY:-}" == "dedicated-mutable-iut" ]]; then
   log "  mutation smoke explicitly enabled for dedicated mutable IUT — skipping default no-mutation oracle"
 else
@@ -247,13 +247,13 @@ else
   if [[ "$oracle_status" == "1" ]]; then
     echo "--- IUT-bound mutation request log entries ---"
     echo "$oracle_output"
-    die "default smoke observed IUT-bound POST/PUT/DELETE request(s)"
+    die "default smoke observed IUT-bound mutation request(s)"
   fi
   if [[ "$oracle_status" != "0" ]]; then
     echo "$oracle_output"
     die "no-mutation oracle could not find IUT-bound request log lines"
   fi
-  log "  zero IUT-bound POST/PUT/DELETE request-log entries for ${IUT_URL} (${oracle_output})"
+  log "  zero IUT-bound POST/PUT/DELETE/PATCH request-log entries for ${IUT_URL} (${oracle_output})"
 fi
 
 # ---------- Step 8: scan container logs for SEVERE during STARTUP

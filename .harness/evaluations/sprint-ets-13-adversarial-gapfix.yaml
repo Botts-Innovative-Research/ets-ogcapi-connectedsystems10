@@ -1,0 +1,74 @@
+agent: raze
+agent_role: adversarial_reviewer
+review_type: sprint_ets_13_generator_gapfix_recheck
+story: S-ETS-13-01
+title: "Update/PATCH safety-gated systems subset gap-fix recheck"
+generated_at: "2026-05-06T15:12:03Z"
+verdict: APPROVE
+confidence: 0.91
+
+reviewed_scope:
+  - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "ops/test-results.md"
+  - "ops/status.md"
+  - ".harness/handoffs/generator-handoff.yaml"
+  - "ops/test-results/sprint-ets-13-maven-2026-05-06.log"
+  - ".harness/evaluations/sprint-ets-13-adversarial-implementation.yaml"
+
+findings:
+  - id: RAZE-S13-GAPFIX-001
+    severity: none
+    category: docs_reconciliation
+    summary: "Story front matter and Raze DoD item are fixed."
+    evidence:
+      - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:4 now says '> Status: PARTIAL-IMPLEMENTED'."
+      - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:101 now checks the Raze implementation review DoD item."
+    required_fixes: []
+
+  - id: RAZE-S13-GAPFIX-002
+    severity: none
+    category: docs_reconciliation
+    summary: "Epic and OpenSpec stale headers are fixed."
+    evidence:
+      - "epics/epic-ets-02-part1-classes.md:3 now says Sprint 13 Update/PATCH safety-gated systems subset Partial-Implemented and Last updated 2026-05-06."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:3 now says Status: Active ETS implementation and Last updated: 2026-05-06."
+    required_fixes: []
+
+  - id: RAZE-S13-GAPFIX-003
+    severity: none
+    category: verification_evidence
+    summary: "Maven evidence is now archived and cross-referenced."
+    evidence:
+      - "ops/test-results/sprint-ets-13-maven-2026-05-06.log exists under ops/test-results."
+      - "The log tail records Tests run: 113, Failures: 0, Errors: 0, Skipped: 3 and BUILD SUCCESS."
+      - "Story, OpenSpec, ops/status.md, ops/test-results.md, and generator handoff reference the archived Maven log."
+    required_fixes: []
+
+  - id: RAZE-S13-GAPFIX-004
+    severity: none
+    category: skip_diagnostics
+    summary: "Docs now acknowledge Update config missing-/conf/update SKIP plus five @Test dependency SKIPs through createreplacedelete."
+    evidence:
+      - "Story Mutation Safety Contract now explains that the Update configuration method records missing /conf/update and five Update @Tests skip through update -> createreplacedelete."
+      - "OpenSpec Generator evidence records the same skip-masking behavior."
+      - "ops/status.md, ops/test-results.md, and generator-handoff.yaml repeat the runtime note."
+    required_fixes: []
+
+evidence:
+  docker_rerun:
+    run: false
+    rationale: "Focused recheck requested static/doc artifact review only; archived Maven log and existing smoke evidence were sufficient."
+  commands_run:
+    - command: "git status --short"
+      result: "Reviewed dirty worktree; gap-fix files and Sprint 13 implementation artifacts present."
+    - command: "tail -80 ops/test-results/sprint-ets-13-maven-2026-05-06.log"
+      result: "BUILD SUCCESS; Tests run: 113, Failures: 0, Errors: 0, Skipped: 3."
+    - command: "rg targeted Sprint 13 gap-fix strings"
+      result: "Found story status/Raze DoD, updated headers, Maven log references, and dependency-SKIP acknowledgement."
+
+required_fixes: []
+
+files_changed_by_raze:
+  - ".harness/evaluations/sprint-ets-13-adversarial-gapfix.yaml"

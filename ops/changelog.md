@@ -2,6 +2,22 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-06T15:03Z — Sprint 13 Update/PATCH Generator
+
+**Triggered by user instruction**: "Commit planning, then kick off Generator."
+
+- Committed Sprint 13 planning as `21c409c` (`Plan Sprint 13 update safety gate`).
+- Implemented `S-ETS-13-01` as a PARTIAL Update/PATCH safety-gated systems subset for `REQ-ETS-PART1-011`.
+- Added `UpdateTests.java` with 5 `update` @Tests for declaration gating, mutation safety, non-mutating `OPTIONS /systems/{id}` PATCH readiness, guarded systems PATCH lifecycle, and dependency tracing.
+- Wired TestNG `update` dependency on `createreplacedelete`, added 3 Update structural lint tests, and reused CreateReplaceDelete helper methods for opt-in temporary System lifecycle setup.
+- Extended the no-mutation oracle and smoke script messaging so default smoke rejects IUT-bound PATCH alongside POST, PUT, and DELETE.
+- Verification: formatter BUILD SUCCESS; `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS with `113 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke against GeoRobotix reported `74 total / 52 passed / 0 failed / 22 skipped` with 41 recognized IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries.
+- Reconciled OpenSpec, story, traceability, epic, ops status, test-results, and Generator handoff. Raze implementation review remains the next mandatory step before commit/reporting done.
+- Raze implementation review `.harness/evaluations/sprint-ets-13-adversarial-implementation.yaml` returned `GAPS_FOUND` 0.86 on documentation/evidence gaps only. Applied required fixes: story status and DoD, stale epic/OpenSpec headers, archived Maven log at `ops/test-results/sprint-ets-13-maven-2026-05-06.log`, and dependency-skip masking documentation.
+- Raze gap-fix recheck `.harness/evaluations/sprint-ets-13-adversarial-gapfix.yaml` returned `APPROVE` 0.91 with no required fixes remaining.
+
+---
+
 ## 2026-05-06T14:48Z — Sprint 13 planning Raze review
 
 **Triggered by user instruction**: Act as Red Team / Raze for current uncommitted Sprint 13 planning changes for `S-ETS-13-01`; planning-only static review, no Docker/Maven rerun.

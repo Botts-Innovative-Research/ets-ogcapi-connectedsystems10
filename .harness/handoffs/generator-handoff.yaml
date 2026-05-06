@@ -1,38 +1,42 @@
 agent: generator
 agent_role: dana
 status: complete
-sprint_number: "ets-11"
+sprint_number: "ets-13"
 sprint_run: "1 of 1"
-sprint_run_scope: ["S-ETS-11-01"]
-supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 10 close 2026-05-05T18:55:42Z)"
-started_at: "2026-05-05T20:20:02Z"
-finished_at: "2026-05-05T20:28:12Z"
+sprint_run_scope: ["S-ETS-13-01"]
+supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 11 close 2026-05-05T20:28:12Z)"
+started_at: "2026-05-06T14:52:41Z"
+finished_at: "2026-05-06T15:11:00Z"
 sprint_complete_after_run: true
 
 run_summary:
   status: complete
   story:
-    id: "S-ETS-11-01"
-    title: "AdvancedFiltering systems/common-resource read-only subset"
+    id: "S-ETS-13-01"
+    title: "Update/PATCH safety-gated systems subset"
     status: "PARTIAL-IMPLEMENTED"
     scope_closed:
-      - "/conf/advanced-filtering declaration gate with SKIP-with-reason when absent"
-      - "local ID_List helper examples for homogeneous local IDs, homogeneous UIDs, UID-prefix wildcard, empty/malformed rejection, and mixed local/UID rejection"
-      - "/systems?id=<seed-id> non-empty result and selected-id preservation for declaring IUTs"
-      - "/systems?q=<seed-keyword> non-empty result and name/description keyword evidence for declaring IUTs"
-      - "/systems?geom=<broad WKT polygon> HTTP 200 + JSON collection-shape smoke for declaring IUTs"
-      - "TestNG advancedfiltering group dependency on systemfeatures"
+      - "/conf/update declaration gate with SKIP when absent"
+      - "PATCH mutation safety gate reusing Sprint 12 mutation opt-in attributes"
+      - "non-mutating OPTIONS /systems/{id} PATCH readiness precondition"
+      - "guarded systems PATCH lifecycle path for dedicated mutable IUTs only"
+      - "public GeoRobotix hard-denial before PATCH"
+      - "TestNG update group dependency on createreplacedelete"
+      - "default-smoke no-mutation oracle includes PATCH"
     scope_open:
-      - "create-replace-delete and update mutation behavior"
-      - "Part 2 query requirements"
-      - "full association filters across deployments, procedures, sampling features, properties, and all system association parameters"
-      - "full geometry intersection correctness"
-      - "combined-filter truth-table validation"
-      - "endpoint parity across every CS API resource endpoint"
+      - "deployment, procedure, sampling-feature, and property PATCH"
+      - "Feature Collection item update paths under /collections/{collectionId}/items/{id}"
+      - "Part 2 update"
+      - "optimistic locking"
+      - "PATCH media-type matrix including JSON Patch, merge patch, and content negotiation"
     files_changed:
-      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringTests.java"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/UpdateTests.java"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java"
       - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
       - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+      - "scripts/no-mutation-oracle.py"
+      - "scripts/no-mutation-oracle-test.sh"
+      - "scripts/smoke-test.sh"
 
 verification:
   formatter:
@@ -41,19 +45,29 @@ verification:
   mvn_via_docker:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "Tests run: 98, Failures: 0, Errors: 0, Skipped: 3"
+    surefire: "Tests run: 113, Failures: 0, Errors: 0, Skipped: 3"
+    log: "ops/test-results/sprint-ets-13-maven-2026-05-06.log"
   teamengine_smoke:
-    clone: "/tmp/sprint-ets-11-generator-smoke"
-    command: "SMOKE_CONTAINER_NAME=sprint-ets-11-generator-smoke SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results bash scripts/smoke-test.sh"
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/smoke-test.sh"
     result: "PASS"
-    testng: "total=63 passed=48 failed=0 skipped=15"
-    report: "/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-05.xml"
-    log: "/tmp/sprint-ets-11-generator-smoke-results/s-ets-01-03-teamengine-container-2026-05-05.log"
+    testng: "total=74 passed=52 failed=0 skipped=22"
+    report: "/tmp/ets-ogcapi-connectedsystems10-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log"
+    no_mutation_oracle: "recognized_iut_request_logs=41; zero IUT-bound POST/PUT/DELETE/PATCH"
 
 iut_state:
-  georobotix_conformance: "does not declare CS API /conf/advanced-filtering; declares create-replace-delete, geojson, and sensorml"
-  advanced_filtering_runtime_outcome: "6 SKIP with reason; no undeclared query behavior counted as PASS"
-  smoke_total_delta: "Sprint 10 baseline 57 -> Sprint 11 Generator 63 (6 AdvancedFiltering @Tests)"
+  georobotix_conformance: "does not declare CS API /conf/update"
+  update_runtime_outcome: "fetchUpdateInputs SKIP records missing /conf/update; 5 Update @Tests dependency-SKIP through createreplacedelete safety gate; no PATCH issued"
+  smoke_total_delta: "Sprint 12 baseline 69 -> Sprint 13 Generator 74 (5 Update @Tests)"
 
 next_agent: "adversarial-reviewer"
-next_action: "Run Raze implementation review before reporting completion; then run independent Quinn + Raze Sprint 11 gates."
+raze_review:
+  artifact: ".harness/evaluations/sprint-ets-13-adversarial-implementation.yaml"
+  verdict: "GAPS_FOUND"
+  confidence: 0.86
+  required_fixes_status: "applied"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-13-adversarial-gapfix.yaml"
+  gapfix_verdict: "APPROVE"
+  gapfix_confidence: 0.91
+
+next_action: "Commit Sprint 13 Generator changes, then run independent Quinn/Raze gates."

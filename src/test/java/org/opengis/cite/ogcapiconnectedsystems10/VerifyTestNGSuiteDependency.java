@@ -125,6 +125,12 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String CREATE_REPLACE_DELETE_GROUP = "createreplacedelete";
 
+	/**
+	 * Sprint 13 S-ETS-13-01 — Update/PATCH systems safety-gated subset group (depends on
+	 * CreateReplaceDelete).
+	 */
+	private static final String UPDATE_GROUP = "update";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -174,6 +180,10 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final List<Class<?>> CREATE_REPLACE_DELETE_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests.class);
+
+	/** Sprint 13 S-ETS-13-01 — Update class set for structural assertions. */
+	private static final List<Class<?>> UPDATE_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -1337,6 +1347,102 @@ public class VerifyTestNGSuiteDependency {
 				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
 				+ "(CreateReplaceDelete → SystemFeatures → Core) resolves within scope. See Sprint 12 S-ETS-12-01.",
 				coAlloc);
+	}
+
+	// ===== Sprint 13 S-ETS-13-01 — Update group =====
+	// Update/PATCH systems subset depends on CreateReplaceDelete because OGC Part 1
+	// Update requires /req/create-replace-delete. This is intentionally a PARTIAL
+	// implementation of REQ-ETS-PART1-011.
+
+	/**
+	 * Sprint 13 S-ETS-13-01 (REQ-ETS-PART1-011): the canonical testng.xml SHALL declare
+	 * {@code <group name="update" depends-on="createreplacedelete"/>} so Update tests
+	 * cascade-SKIP when the CreateReplaceDelete prerequisite fails or skips.
+	 */
+	@org.junit.Test
+	public void testUpdateGroupDependsOnCreateReplaceDelete() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(UPDATE_GROUP)) {
+				String dependsOn = deps.get(UPDATE_GROUP);
+				assertNotNull("group '" + UPDATE_GROUP + "' has null depends-on attribute", dependsOn);
+				assertTrue("group '" + UPDATE_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ CREATE_REPLACE_DELETE_GROUP + "'", dependsOn.contains(CREATE_REPLACE_DELETE_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue(
+				"testng.xml does not declare <group name=\"" + UPDATE_GROUP + "\" depends-on=\""
+						+ CREATE_REPLACE_DELETE_GROUP + "\"/> — see Sprint 13 S-ETS-13-01. The Update "
+						+ "systems safety-gated subset requires CreateReplaceDelete as its direct prerequisite.",
+				foundDependency);
+	}
+
+	/**
+	 * Sprint 13 S-ETS-13-01: every Update @Test method SHALL carry
+	 * {@code groups = "update"} so the suite-level dependency declaration has tagged
+	 * methods to resolve against.
+	 */
+	@org.junit.Test
+	public void testEveryUpdateTestMethodCarriesUpdateGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalUpdate = 0;
+		for (Class<?> c : UPDATE_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalUpdate++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(UPDATE_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Update conformance classes; found 0", totalUpdate > 0);
+		assertTrue("Update @Test methods missing groups=\"" + UPDATE_GROUP + "\": " + offenders, offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 13 S-ETS-13-01: Update classes MUST be co-located in the SAME {@code <test>}
+	 * block as CreateReplaceDelete so the group-dependency cascade resolves within
+	 * TestNG's test-scoped dependency map.
+	 */
+	@org.junit.Test
+	public void testUpdateCoLocatedWithCreateReplaceDelete() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> createReplaceDeleteClassNames = new HashSet<>();
+		for (Class<?> c : CREATE_REPLACE_DELETE_CLASSES) {
+			createReplaceDeleteClassNames.add(c.getName());
+		}
+		Set<String> updateClassNames = new HashSet<>();
+		for (Class<?> c : UPDATE_CLASSES) {
+			updateClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllCreateReplaceDelete = xtClasses.containsAll(createReplaceDeleteClassNames);
+			boolean hasAnyUpdate = !java.util.Collections.disjoint(xtClasses, updateClassNames);
+			if (hasAllCreateReplaceDelete && hasAnyUpdate) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue("CreateReplaceDelete (" + createReplaceDeleteClassNames + ") and Update (" + updateClassNames
+				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
+				+ "(Update → CreateReplaceDelete → SystemFeatures → Core) resolves within scope. "
+				+ "See Sprint 13 S-ETS-13-01.", coAlloc);
 	}
 
 }

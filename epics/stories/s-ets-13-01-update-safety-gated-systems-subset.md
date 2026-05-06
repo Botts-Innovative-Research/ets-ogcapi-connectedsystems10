@@ -1,7 +1,7 @@
 # Story S-ETS-13-01: Update/PATCH Safety-Gated Systems Subset
 
 > Sprint: ets-13
-> Status: Planned
+> Status: PARTIAL-IMPLEMENTED
 > Priority: P0
 > Complexity: M
 > Epic: epic-ets-02-part1-classes
@@ -48,7 +48,7 @@ Sprint 13 reuses the Sprint 12 mutation controls:
 
 Even when both opt-in parameters are present, the implementation MUST hard-deny mutation against known shared public GeoRobotix URLs, including `https://api.georobotix.io/ogc/t18/api`, before any PATCH is issued.
 
-The default GeoRobotix smoke target does not currently declare `/conf/update`, and `OPTIONS /systems/{id}` advertises GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS but not PATCH. That means default Update runtime should SKIP-with-reason, not PASS.
+The default GeoRobotix smoke target does not currently declare `/conf/update`, and `OPTIONS /systems/{id}` advertises GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS but not PATCH. That means default Update runtime should SKIP-with-reason, not PASS. In default TestNG smoke, the Update configuration method records the missing `/conf/update` reason, and the five Update @Tests skip through the `update -> createreplacedelete` dependency because Create/Replace/Delete's mutation safety gate intentionally skips public-IUT lifecycle mutation.
 
 ## No-Mutation Smoke Oracle
 
@@ -85,20 +85,33 @@ Update depends on Create/Replace/Delete:
 
 ## Definition of Done
 
-- [ ] `UpdateTests.java` added with the planned @Tests.
-- [ ] Every Update @Test has `groups = "update"`.
-- [ ] Every Update @Test `description` includes the OGC requirement URI and `SCENARIO-ETS-PART1-011-*` reference.
-- [ ] `testng.xml` declares `update` depends on `createreplacedelete`.
-- [ ] `VerifyTestNGSuiteDependency` adds three Update lint tests: group dependency, method group tagging, and class co-location/order.
-- [ ] Default smoke emits no IUT-bound PATCH requests from the Update suite.
-- [ ] Existing no-mutation oracle treats PATCH as a mutation method alongside POST, PUT, and DELETE.
-- [ ] PATCH lifecycle assertion SKIPs before PATCH when opt-in parameters are absent.
-- [ ] PATCH lifecycle assertion SKIPs when `/conf/update` is absent or PATCH is not advertised.
-- [ ] Even when mutation opt-in parameters are present, the implementation hard-denies mutation against public GeoRobotix URLs before PATCH.
-- [ ] `bash scripts/mvn-test-via-docker.sh` completes with exact totals recorded.
-- [ ] `scripts/smoke-test.sh` runs with exact totals recorded.
-- [ ] OpenSpec, story status, traceability, ops status, changelog, and test-results are reconciled after implementation.
-- [ ] Raze implementation review is run before reporting completion.
+- [x] `UpdateTests.java` added with the planned @Tests.
+- [x] Every Update @Test has `groups = "update"`.
+- [x] Every Update @Test `description` includes the OGC requirement URI and `SCENARIO-ETS-PART1-011-*` reference.
+- [x] `testng.xml` declares `update` depends on `createreplacedelete`.
+- [x] `VerifyTestNGSuiteDependency` adds three Update lint tests: group dependency, method group tagging, and class co-location/order.
+- [x] Default smoke emits no IUT-bound PATCH requests from the Update suite.
+- [x] Existing no-mutation oracle treats PATCH as a mutation method alongside POST, PUT, and DELETE.
+- [x] PATCH lifecycle assertion SKIPs before PATCH when opt-in parameters are absent.
+- [x] PATCH lifecycle assertion SKIPs when `/conf/update` is absent or PATCH is not advertised.
+- [x] Even when mutation opt-in parameters are present, the implementation hard-denies mutation against public GeoRobotix URLs before PATCH.
+- [x] `bash scripts/mvn-test-via-docker.sh` completes with exact totals recorded.
+- [x] `scripts/smoke-test.sh` runs with exact totals recorded.
+- [x] OpenSpec, story status, traceability, ops status, changelog, and test-results are reconciled after implementation.
+- [x] Raze implementation review is run before reporting completion.
+
+## Implementation Notes
+
+Status: PARTIAL-IMPLEMENTED by Sprint 13 Generator on 2026-05-06.
+
+- Added `UpdateTests.java` with five `update` @Tests for conformance declaration gating, mutation safety, `OPTIONS /systems/{id}` PATCH readiness, guarded systems PATCH lifecycle, and dependency tracing.
+- Wired `update` after Create/Replace/Delete in `testng.xml` with `<group name="update" depends-on="createreplacedelete"/>`; added three structural lint tests in `VerifyTestNGSuiteDependency`.
+- Reused Sprint 12 mutation opt-in attributes and made CreateReplaceDelete helper methods public for shared temporary System creation and created-resource URI resolution.
+- Extended the no-mutation oracle and smoke script messaging so default GeoRobotix smoke rejects IUT-bound PATCH alongside POST, PUT, and DELETE.
+- Verification: formatter BUILD SUCCESS; `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS with `113 tests / 0 failures / 0 errors / 3 skipped`; archived Maven log at `ops/test-results/sprint-ets-13-maven-2026-05-06.log`.
+- E2E verification: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/smoke-test.sh` against GeoRobotix reported `74 total / 52 passed / 0 failed / 22 skipped` and zero IUT-bound POST/PUT/DELETE/PATCH entries across 41 recognized IUT-bound request-log entries.
+- Default Update runtime is skip-first because GeoRobotix does not declare `/conf/update` and because Update depends on the default-skipped Create/Replace/Delete mutation safety gate; no PATCH was issued. The smoke XML shows `fetchUpdateInputs` SKIP with the missing `/conf/update` reason, while the five Update @Tests show dependency SKIPs through `createreplacedelete`.
+- Raze implementation review: `.harness/evaluations/sprint-ets-13-adversarial-implementation.yaml` reported `GAPS_FOUND` 0.86 for documentation/evidence gaps only; code safety findings were acceptable. The required documentation/evidence fixes were applied in this follow-up.
 
 ## Out Of Scope
 

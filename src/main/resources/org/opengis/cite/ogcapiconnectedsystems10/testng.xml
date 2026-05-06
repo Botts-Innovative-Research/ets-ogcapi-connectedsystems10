@@ -101,7 +101,14 @@
        cascade-SKIP if SystemFeatures fails. POST/PUT/DELETE are guarded by explicit
        mutation-tests-enabled=true plus mutation-iut-policy=dedicated-mutable-iut; the
        known public GeoRobotix IUT is hard-denied even if both parameters are set. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete; OGC 19-072 /conf/common)">
+  <!-- Sprint 13 S-ETS-13-01 (REQ-ETS-PART1-011): Update group added as a
+       systems-only PATCH safety-gated subset. Update depends-on
+       "createreplacedelete" because OGC Part 1 Update requires Create/Replace/Delete
+       and OGC API Features Part 4 Update. PATCH is guarded by the same explicit
+       mutation-tests-enabled=true plus mutation-iut-policy=dedicated-mutable-iut
+       controls; the known public GeoRobotix IUT is hard-denied even if both parameters
+       are set. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -115,6 +122,7 @@
         <group name="sensorml" depends-on="systemfeatures"/>
         <group name="advancedfiltering" depends-on="systemfeatures"/>
         <group name="createreplacedelete" depends-on="systemfeatures"/>
+        <group name="update" depends-on="createreplacedelete"/>
       </dependencies>
     </groups>
     <classes>
@@ -134,6 +142,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

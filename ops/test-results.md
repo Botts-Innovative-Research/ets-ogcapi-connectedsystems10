@@ -1,8 +1,25 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T13:48Z
+Last updated: 2026-05-06T15:03Z
 
 ## Current Sprint Evidence
+
+Sprint ets-13 Update/PATCH safety-gated systems subset:
+
+- Current repo base before implementation: `21c409c`
+- Maven verification: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `113 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-13-maven-2026-05-06.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/smoke-test.sh`
+  - Result: `74 total / 52 passed / 0 failed / 22 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-06.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log`
+- No-mutation oracle: integrated smoke oracle recognized 41 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Update runtime outcome against GeoRobotix: the Update configuration method skips with the missing `/conf/update` reason, and the 5 Update @Tests are skipped in default smoke through the `update -> createreplacedelete` dependency because Create/Replace/Delete's public-IUT mutation safety gate intentionally skips. No PATCH was issued.
+- Raze implementation review: `.harness/evaluations/sprint-ets-13-adversarial-implementation.yaml` reported `GAPS_FOUND` 0.86 for documentation/evidence gaps; required fixes applied by updating stale headers/status, archiving the Maven log, and documenting dependency-skip masking.
+- Scope note: this is PARTIAL for REQ-ETS-PART1-011. Deployment/procedure/sampling-feature/property PATCH, Feature Collection update paths, Part 2 update, optimistic locking, and PATCH media-type matrix remain open.
 
 Sprint ets-12 Create/Replace/Delete safety-gated systems subset:
 

@@ -318,7 +318,7 @@ public class CreateReplaceDeleteTests {
 		return "urn:ets:ogcapi-connectedsystems10:crd:" + UUID.randomUUID();
 	}
 
-	static Map<String, Object> mutableSystemBody(String phase, String systemUid) {
+	public static Map<String, Object> mutableSystemBody(String phase, String systemUid) {
 		return Map.of("type", "Feature", "properties",
 				Map.of("uid", systemUid, "name", "ETS Sprint 12 CRD " + phase + " " + Instant.now(), "description",
 						"Temporary system resource created by the ETS create-replace-delete lifecycle test."));
@@ -337,7 +337,7 @@ public class CreateReplaceDeleteTests {
 		return this.base + "systems/" + id;
 	}
 
-	static String resolveCreatedResourceUri(URI iutUri, String base, String location) {
+	public static String resolveCreatedResourceUri(URI iutUri, String base, String location) {
 		URI locationUri = URI.create(location);
 		if (locationUri.isAbsolute()) {
 			return locationUri.toString();

@@ -32,6 +32,14 @@ if "$ORACLE" "${TMP_DIR}/pair-fail.log" "$IUT" >/dev/null 2>&1; then
   exit 1
 fi
 
+cat >"${TMP_DIR}/patch-fail.log" <<'LOG'
+Request: PATCH https://api.georobotix.io/ogc/t18/api/systems/abc
+LOG
+if "$ORACLE" "${TMP_DIR}/patch-fail.log" "$IUT" >/dev/null 2>&1; then
+  echo "expected single-line IUT PATCH to fail" >&2
+  exit 1
+fi
+
 cat >"${TMP_DIR}/empty.log" <<'LOG'
 No request log lines here.
 LOG

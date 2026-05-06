@@ -1,0 +1,132 @@
+agent: raze
+agent_role: adversarial_reviewer
+review_type: sprint_ets_13_generator_implementation
+story: S-ETS-13-01
+title: "Update/PATCH safety-gated systems subset"
+generated_at: "2026-05-06T15:06:50Z"
+verdict: GAPS_FOUND
+confidence: 0.86
+
+reviewed_scope:
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/update/UpdateTests.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java"
+  - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  - "scripts/no-mutation-oracle.py"
+  - "scripts/no-mutation-oracle-test.sh"
+  - "scripts/smoke-test.sh"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - "_bmad/traceability.md"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/test-results.md"
+  - ".harness/handoffs/generator-handoff.yaml"
+  - ".harness/contracts/sprint-ets-13.yaml"
+
+findings:
+  - id: RAZE-S13-GAP-001
+    severity: medium
+    category: docs_reconciliation
+    summary: "Story front matter still says Status: Planned even though the implementation notes and surrounding docs claim PARTIAL-IMPLEMENTED."
+    evidence:
+      - "epics/stories/s-ets-13-01-update-safety-gated-systems-subset.md:4 contains '> Status: Planned'."
+      - "The same story later says 'Status: PARTIAL-IMPLEMENTED by Sprint 13 Generator on 2026-05-06'."
+      - "Definition of Done still leaves Raze implementation review unchecked while this report now exists."
+    risk: "Next agent or release notes can read the story header and treat the implemented work as still only planned."
+    required_fix: "Update the story front matter and DoD checkbox after this review, preserving PARTIAL scope language."
+
+  - id: RAZE-S13-GAP-002
+    severity: medium
+    category: docs_reconciliation
+    summary: "Epic and OpenSpec headers remain stale after Sprint 13 reconciliation."
+    evidence:
+      - "epics/epic-ets-02-part1-classes.md:3 still says Sprint 12 Create/Replace/Delete and Last updated 2026-05-05."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:3 still says Last updated 2026-04-27 even though the Sprint 13 REQ-ETS-PART1-011 section was edited."
+    risk: "Header-level status disagrees with body-level Sprint 13 evidence and weakens audit traceability."
+    required_fix: "Update the stale front matter/header lines to reflect Sprint 13 Generator reconciliation."
+
+  - id: RAZE-S13-GAP-003
+    severity: low
+    category: verification_evidence
+    summary: "Maven verification totals are documented, but no Maven log artifact is referenced or present under ops/test-results for this sprint."
+    evidence:
+      - "ops/test-results.md records BUILD SUCCESS with 113 tests / 0 failures / 0 errors / 3 skipped."
+      - "No Sprint 13 Maven log artifact was found under ops/test-results during static inspection."
+      - "The TeamEngine smoke XML artifact exists in /tmp and supports the documented 74-test smoke run."
+    risk: "The exact Maven evidence depends on console history rather than an auditable artifact."
+    required_fix: "Either archive the Maven log under ops/test-results or document that the Maven total was captured from the current session console only."
+
+  - id: RAZE-S13-CONCERN-001
+    severity: low
+    category: skip_diagnostics
+    summary: "Update -> createreplacedelete dependency causes the five Update @Tests to show dependency SKIP messages in default smoke, while the config method separately records missing /conf/update."
+    evidence:
+      - "/tmp/ets-ogcapi-connectedsystems10-smoke-results/s-ets-01-03-teamengine-smoke-2026-05-06.xml shows fetchUpdateInputs SKIP with missing /conf/update."
+      - "The five Update @Tests then SKIP because methods in group createreplacedelete did not successfully finish."
+    risk: "This is not a false PASS risk, but the per-method skip reasons are less direct than the story/spec wording 'every Update @Test SKIPs with reason citing missing conformance declaration'."
+    required_fix: "Either adjust the wording to acknowledge dependency SKIP masking, or change TestNG wiring if direct per-method /conf/update skip reasons are required."
+
+positive_evidence:
+  false_pass_when_update_absent:
+    status: "acceptable_with_skip_diagnostic_concern"
+    evidence:
+      - "UpdateTests.fetchUpdateInputs throws SkipException when /conf/update is absent."
+      - "The exception text says undeclared PATCH behavior is not conformance PASS evidence."
+      - "Smoke XML records Update config SKIP and zero Update PASS methods."
+  patch_safety:
+    status: "acceptable"
+    evidence:
+      - "systemsPatchLifecycleOptIn calls ensureMutationEnabledOrSkip before any PATCH."
+      - "ensureMutationEnabledOrSkip requires mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut."
+      - "Public GeoRobotix hard-denial remains in the same guard before PATCH."
+      - "Default smoke no-mutation oracle recognizes 41 IUT-bound requests and exits 0 with no POST/PUT/DELETE/PATCH violations."
+  no_mutation_oracle:
+    status: "acceptable"
+    evidence:
+      - "scripts/no-mutation-oracle.py MUTATION_METHODS includes PATCH."
+      - "scripts/no-mutation-oracle-test.sh has a PATCH failure case."
+      - "git diff --check passed during review."
+  testng_dependency:
+    status: "acceptable_with_skip_diagnostic_concern"
+    evidence:
+      - "testng.xml declares <group name=\"update\" depends-on=\"createreplacedelete\"/>."
+      - "UpdateTests is co-located after CreateReplaceDeleteTests in the same TestNG <test> block."
+      - "VerifyTestNGSuiteDependency adds structural lint coverage for dependency, group tagging, and co-location."
+  ogc_uri_scope_fidelity:
+    status: "acceptable"
+    evidence:
+      - "Update conformance URI uses http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update."
+      - "Requirement URIs use /req/update and /req/update/system for the systems subset."
+      - "Docs explicitly defer non-system PATCH, Feature Collection item update paths, Part 2 update, optimistic locking, and PATCH media-type matrix."
+  unrelated_dirty_files:
+    status: "acceptable"
+    evidence:
+      - "git status --short shows Sprint 13 ETS files and this new report only after review."
+      - "No Zone.Identifier files found by find."
+      - "External sar-ops fixture dirt is not part of the ETS worktree status and was not touched by this review."
+
+verification_reviewed:
+  commands_rerun_by_raze:
+    - command: "python3 scripts/no-mutation-oracle.py /tmp/ets-ogcapi-connectedsystems10-smoke-results/s-ets-01-03-teamengine-container-2026-05-06.log https://api.georobotix.io/ogc/t18/api"
+      result: "recognized_iut_request_logs=41"
+    - command: "git diff --check"
+      result: "PASS"
+    - command: "find . -name '*Zone.Identifier*' -o -name '*:Zone.Identifier'"
+      result: "no matches"
+  expensive_docker_rerun:
+    run: false
+    rationale: "Existing smoke XML/log artifacts were present under /tmp and static inspection was sufficient for review scope."
+  generator_claimed_verification:
+    maven: "bash scripts/mvn-test-via-docker.sh BUILD SUCCESS, 113 tests / 0 failures / 0 errors / 3 skipped"
+    smoke: "74 total / 52 passed / 0 failed / 22 skipped against GeoRobotix"
+
+required_fixes:
+  - "Fix story front matter status and mark the Raze implementation review DoD item after incorporating this report."
+  - "Fix stale epic/OpenSpec header metadata so headers and body-level Sprint 13 evidence agree."
+  - "Resolve the Maven evidence artifact gap before commit: archive a Maven log or explicitly document session-console-only provenance."
+  - "Clarify docs around Update dependency SKIP masking if direct per-method missing-/conf/update skip reasons are not intended."
+
+files_changed_by_raze:
+  - ".harness/evaluations/sprint-ets-13-adversarial-implementation.yaml"

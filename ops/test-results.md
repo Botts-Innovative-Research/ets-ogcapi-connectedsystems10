@@ -1,8 +1,25 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T00:00Z
+Last updated: 2026-05-07T00:14Z
 
 ## Current Sprint Evidence
+
+Sprint ets-18 encoding relation-types breadth read-only planning:
+
+- OGC source verification:
+  - GeoJSON clause: `api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc`, HTTP 200 on 2026-05-07.
+  - SensorML clause: `api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc`, HTTP 200 on 2026-05-07.
+  - Both clauses define `/req/*/relation-types` as requiring association links in JSON `links` members to use the association name as `rel`.
+- GeoRobotix planning probes:
+  - `/systems/0mqcvdnfoca0`: generic `canonical`/`alternate` links plus association links `samplingFeatures` and `datastreams`; association rels match association names.
+  - `/deployments/16sp744ch58g`: `links` contains only generic `canonical`/`alternate`; `deployedSystems@link` is under `properties`.
+  - `/procedures/164p7ed8l47g`: `links` contains only generic `canonical`/`alternate`.
+  - `/samplingFeatures/0mtff3l0oofg`: no `links` member; `hostedProcedure@link` is under `properties`.
+  - SensorML system/deployment/procedure bodies observed during planning: no top-level `links` member.
+- Interpretation: Sprint 18 must add independent resource-specific relation-types assertions. The existing GeoJSON System PASS cannot create an aggregate PASS for Deployment, Procedure, Sampling Feature, or SensorML resources. Generic-only or absent links SKIP per resource.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-18-plan-adversarial.yaml`: `APPROVE` confidence 0.92.
+  - Required fixes: none.
 
 Sprint ets-17 encoding relation-types read-only Generator:
 

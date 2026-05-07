@@ -2,6 +2,20 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T00:14Z — Sprint 18 encoding relation-types breadth planning
+
+**Triggered by user instruction**: "Do Spring 18 planning." Interpreted as Sprint 18 planning.
+
+- Planned `S-ETS-18-01` as a read-only breadth expansion of `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`; both requirements remain PARTIAL.
+- Added `.harness/contracts/sprint-ets-18.yaml` and `epics/stories/s-ets-18-01-encoding-relation-types-breadth-readonly.md`.
+- Updated OpenSpec, traceability, epic status, planner handoff, ops status, known issues, and test-results for GeoJSON/SensorML relation-types breadth scope.
+- Verified OGC GeoJSON and SensorML encoding clauses at `api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc` and `api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc`.
+- Planning probe: GeoRobotix still has positive GeoJSON System relation-types evidence (`samplingFeatures`, `datastreams`), but Deployment and Procedure item `links` are generic-only, SamplingFeature has no `links` member, and observed SensorML bodies have no top-level `links` member.
+- Planning guardrail: Sprint 18 must use independent per-resource assertions so one System PASS cannot hide non-system or SensorML SKIPs.
+- Raze planning review `.harness/evaluations/sprint-ets-18-plan-adversarial.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
+
+---
+
 ## 2026-05-07T00:00Z — Sprint 17 encoding relation-types Generator
 
 **Triggered by user instruction**: "Kick off Generator for S-ETS-17-01."

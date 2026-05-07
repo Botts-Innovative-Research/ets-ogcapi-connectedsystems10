@@ -1,0 +1,115 @@
+schema_version: "1.0"
+artifact_type: adversarial_planning_review
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-07T00:20:30Z"
+sprint: "sprint-ets-18"
+story_id: "S-ETS-18-01"
+story_title: "Encoding relation-types breadth read-only checks"
+scope: "Planning-only review of current uncommitted Sprint 18 planning changes"
+verdict: APPROVE
+confidence: 0.92
+
+review_constraints:
+  source_code_modified: false
+  docker_rerun: false
+  maven_rerun: false
+  teamengine_rerun: false
+  evidence_strategy: "Static planning review only; used current worktree planning artifacts and documented planning evidence."
+
+evidence_reviewed:
+  planning_artifacts:
+    - ".harness/contracts/sprint-ets-18.yaml"
+    - "epics/stories/s-ets-18-01-encoding-relation-types-breadth-readonly.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "epics/epic-ets-02-part1-classes.md"
+  upstream_source_evidence:
+    - "Planning records OGC GeoJSON clause api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc fetched HTTP 200 on 2026-05-07."
+    - "Planning records OGC SensorML clause api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc fetched HTTP 200 on 2026-05-07."
+    - "Both planning references preserve the relation-types rule: associations encoded in JSON links members must use the association name as rel."
+  georobotix_planning_evidence:
+    - "System /systems/0mqcvdnfoca0 has links-member association rels samplingFeatures and datastreams."
+    - "Deployment /deployments/16sp744ch58g and Procedure /procedures/164p7ed8l47g have only generic canonical/alternate links."
+    - "SamplingFeature /samplingFeatures/0mtff3l0oofg has no links member; hostedProcedure@link is under properties."
+    - "Observed SensorML system/deployment/procedure bodies have no top-level links member."
+  worktree:
+    status_summary: "Dirty worktree contains Sprint 18 planning artifacts and expected docs/handoff updates only; no Sprint 18 implementation source files are present."
+
+findings:
+  - id: "RAZE-ETS18-PLAN-PASS-001"
+    severity: pass
+    title: "Aggregate false PASS risk is explicitly blocked"
+    evidence:
+      - "Contract success_criteria includes per_resource_assertions_prevent_aggregate_false_pass."
+      - "Contract generator_must_not_do says not to hide per-resource SKIPs behind one aggregate PASS."
+      - "Story says Sprint 18 broadens from selected System-only runtime assertions to selected-resource assertions for each relevant encoding/resource pair."
+      - "OpenSpec SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001 requires each resource type to be evaluated independently and says a PASS for one resource type does not satisfy another resource type's assertion."
+      - "Planner handoff tells Generator to keep resource assertions independent and not aggregate outcomes into one PASS."
+    conclusion: "The existing GeoJSON System PASS cannot satisfy Deployment, Procedure, Sampling Feature, or SensorML relation-types checks under the plan."
+  - id: "RAZE-ETS18-PLAN-PASS-002"
+    severity: pass
+    title: "Property-level @link members remain out of links-member evidence"
+    evidence:
+      - "Contract verdict policy says not to count property-level @link members as relation-types evidence."
+      - "Story Planned Test Surface excludes deployedSystems@link and hostedProcedure@link."
+      - "OpenSpec breadth scenario excludes property-level @link objects from links-member relation-types evidence."
+      - "Ops status/test-results repeat that hostedProcedure@link and deployedSystems@link are properties, not links-member associations."
+    conclusion: "The planning does not convert mapping evidence into relation-types PASS evidence."
+  - id: "RAZE-ETS18-PLAN-PASS-003"
+    severity: pass
+    title: "Wrong-resource relation type acceptance remains blocked"
+    evidence:
+      - "Sprint 18 contract reuses resource_specific_links_member_association_rels split by encoding and resource type."
+      - "Contract verdict policy FAILs non-generic links-member rels that are not valid for the selected encoding and resource type."
+      - "Story requires PASS only when every detected links-member association rel is valid for the exact encoding/resource pair."
+      - "Planner handoff repeats PASS only from links-member association rels valid for the selected encoding/resource type."
+    conclusion: "The Sprint 17 global-allowlist gap is not reintroduced by Sprint 18 breadth planning."
+  - id: "RAZE-ETS18-PLAN-PASS-004"
+    severity: pass
+    title: "Generic-only and absent-links IUT states are planned as per-resource SKIP"
+    evidence:
+      - "Contract verdict policy requires SKIP per resource when selected representation has no links-member association links."
+      - "Story says generic-only links or no links member SKIP for the selected resource."
+      - "GeoRobotix probes document Deployment/Procedure generic-only links, SamplingFeature no links member, and SensorML no top-level links member."
+      - "ops/test-results.md interpretation says generic-only or absent links SKIP per resource."
+    conclusion: "Current GeoRobotix limitations are represented honestly rather than converted into PASS."
+  - id: "RAZE-ETS18-PLAN-PASS-005"
+    severity: pass
+    title: "REQ-ETS-PART1-012 and REQ-ETS-PART1-013 remain honestly PARTIAL"
+    evidence:
+      - "Contract modified_reqs explicitly says both relation-types breadth subsets remain PARTIAL."
+      - "Story Scope says the sprint remains PARTIAL for both REQ-ETS-PART1-012 and REQ-ETS-PART1-013."
+      - "OpenSpec keeps GeoJSON open for mediatype-write, broader relation-types coverage, property GeoJSON mapping, and full schema validation."
+      - "OpenSpec keeps SensorML open for mediatype-write, broader positive relation-types evidence, full SensorML schema validation, mutation-side behavior, and positive property evidence."
+      - "ops/known-issues.md continues to list GeoJSON and SensorML as PARTIAL-IMPLEMENTED."
+    conclusion: "The planning does not claim full encoding-class closure."
+  - id: "RAZE-ETS18-PLAN-PASS-006"
+    severity: pass
+    title: "Mediatype-write, mutation, full schema validation, and Part 2 scope creep are excluded"
+    evidence:
+      - "Contract generator_must_not_do excludes mediatype-write, POST/PUT/PATCH/DELETE, full schema validation, and Part 2."
+      - "Story Out Of Scope repeats mediatype-write, mutation behavior, full schema validation, property-level mapping checks, and Part 2."
+      - "Planner handoff must_not_do repeats no mediatype-write, no mutation requests, no full schema validation, no Part 2, and no promotion beyond PARTIAL."
+    conclusion: "Sprint 18 planning stays read-only and scoped to relation-types breadth."
+  - id: "RAZE-ETS18-PLAN-PASS-007"
+    severity: pass
+    title: "Docs and handoff are consistent for planning"
+    evidence:
+      - "Contract, story, OpenSpec, traceability, planner handoff, status, test-results, changelog, known-issues, and epic row all describe Sprint 18 as planning pending Raze review."
+      - "The same GeoRobotix evidence appears consistently across story, contract, handoff, status, and test-results."
+      - "No Sprint 18 implementation evidence or test-result claim was found."
+    conclusion: "Planning artifacts are internally reconciled."
+
+required_fixes: []
+
+concerns: []
+
+recommendations:
+  - "Generator should add unit coverage proving one resource PASS does not mask another resource SKIP."
+  - "Generator should keep each breadth assertion as a distinct TestNG method or otherwise expose per-resource PASS/SKIP/FAIL outcomes in TeamEngine XML."

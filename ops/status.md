@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T00:00Z
+Last updated: 2026-05-07T00:14Z
 
 ## Fresh-Session Entry Point
 
@@ -16,8 +16,8 @@ Read these first:
 - `ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md`
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
-- `.harness/handoffs/generator-handoff.yaml`
-- `.harness/contracts/sprint-ets-17.yaml`
+- `.harness/handoffs/planner-handoff.yaml`
+- `.harness/contracts/sprint-ets-18.yaml`
 
 ## Current State
 
@@ -41,7 +41,7 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 17 Generator commit `Implement Sprint 17 encoding relation types`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-17-01` Generator complete as PARTIAL and Raze-approved.
-- Current sprint status: Sprint ets-17 Generator complete for selected-resource read-only GeoJSON/SensorML relation-types checks.
+- Current sprint status: Sprint ets-18 planning drafted and Raze-approved for read-only GeoJSON/SensorML relation-types breadth checks.
 - Latest committed Generator: `Implement Sprint 17 encoding relation types`.
 
 ## Sprint ets-17 Generator Evidence
@@ -69,7 +69,26 @@ Encoding relation-types read-only link checks:
 - Runtime outcome: GeoJSON relation-types PASSed on selected System links; SensorML relation-types SKIPped because the selected SensorML system representation has no top-level links-member association links.
 - Raze gap-fix review `.harness/evaluations/sprint-ets-17-plan-gapfix.yaml` returned `APPROVE` confidence 0.94 with no remaining required fixes.
 - Raze implementation review `.harness/evaluations/sprint-ets-17-adversarial-implementation.yaml` returned `APPROVE` confidence 0.91 with no required fixes.
-- Next action: start Sprint 18 planning.
+- Historical note: Sprint 18 planning has started.
+
+## Sprint ets-18 Planning Evidence
+
+Encoding relation-types breadth read-only checks:
+
+- Story: `epics/stories/s-ets-18-01-encoding-relation-types-breadth-readonly.md`
+- Contract: `.harness/contracts/sprint-ets-18.yaml`
+- OpenSpec: extends `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`; both remain PARTIAL.
+- Scope planned: broaden Sprint 17 relation-types checks across selected GeoJSON System/Deployment/Procedure/SamplingFeature and SensorML System/Deployment/Procedure resources.
+- Out of scope: GeoJSON/SensorML `mediatype-write`, mutation behavior, full schema validation, Part 2, property GeoJSON mapping, and property-level `@link` mapping checks beyond existing mapping assertions.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-07 and not stale.
+- OGC source verification: `api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc` and `api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc` fetched HTTP 200 on 2026-05-07. Both clauses state that associations encoded in `links` must use the association name as the link relation type.
+- GeoRobotix planning probe: `/systems/0mqcvdnfoca0` has links with generic `canonical`/`alternate` rels plus association rels `samplingFeatures` and `datastreams`; this remains positive GeoJSON System evidence.
+- GeoRobotix planning probe: `/deployments/16sp744ch58g` and `/procedures/164p7ed8l47g` expose only generic `canonical` and `alternate` links in `links`.
+- GeoRobotix planning probe: `/samplingFeatures/0mtff3l0oofg` has no `links` member; `hostedProcedure@link` is under `properties`, not `links`.
+- GeoRobotix planning probe: observed SensorML system/deployment/procedure bodies expose no top-level `links` member.
+- Planned verdict policy: each encoding/resource pair must PASS, FAIL, or SKIP independently; the existing GeoJSON System PASS cannot hide non-system or SensorML SKIPs.
+- Raze planning review `.harness/evaluations/sprint-ets-18-plan-adversarial.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
+- Next action: commit Sprint 18 planning, then start Generator.
 
 ## Sprint ets-16 Generator Evidence
 
@@ -314,7 +333,8 @@ Gate Results:
 
 ## Next Action
 
-1. Start Sprint 18 planning.
+1. Commit Sprint 18 planning.
+2. Start Generator for `S-ETS-18-01`.
 
 ## Dirty Worktree Notes
 

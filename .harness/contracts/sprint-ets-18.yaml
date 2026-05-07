@@ -1,0 +1,137 @@
+# Sprint 18 contract - encoding relation-types breadth read-only checks
+# Created 2026-05-07 after Sprint 17 Generator commit.
+
+sprint: "ets-18"
+sprint_name: "encoding-relation-types-breadth-readonly"
+type: "feature-expansion"
+created: "2026-05-07T00:14:04Z"
+description: |
+  Sprint 18 broadens Sprint 17 relation-types coverage across selected
+  GeoJSON and SensorML resource classes. It remains read-only and PARTIAL:
+  the goal is per-resource PASS/SKIP/FAIL honesty, not full encoding-class
+  closure.
+
+stories:
+  - id: "S-ETS-18-01"
+    title: "Encoding relation-types breadth read-only checks"
+    file: "epics/stories/s-ets-18-01-encoding-relation-types-breadth-readonly.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "S"
+    depends_on:
+      - "S-ETS-17-01"
+      - "S-ETS-15-01"
+      - "S-ETS-16-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART1-012 (/req/geojson relation-types breadth subset - remains PARTIAL)"
+    - "REQ-ETS-PART1-013 (/req/sensorml relation-types breadth subset - remains PARTIAL)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001"
+    - "SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-BREADTH-001"
+    - "SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001"
+    - "SCENARIO-ETS-PART1-012-013-RELATION-TYPES-BREADTH-NO-MUTATION-001"
+  normal: []
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  build_green_jdk17: true
+  default_georobotix_smoke_green: true
+  default_smoke_no_mutation_requests: true
+  geojson_system_relation_types_retained: true
+  geojson_non_system_relation_types_checked_or_skipped_honestly: true
+  sensorml_system_deployment_procedure_relation_types_checked_or_skipped_honestly: true
+  per_resource_assertions_prevent_aggregate_false_pass: true
+  property_level_links_not_counted_as_links_member_associations: true
+  no_mediatype_write_in_sprint: true
+  no_full_schema_validation_in_sprint: true
+  no_part2_work_in_sprint: true
+
+upstream_ogc_verification:
+  repo: "opengeospatial/ogcapi-connected-systems"
+  branch: "master"
+  checked_at: "2026-05-07T00:14:04Z"
+  geojson_clause: "api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc"
+  sensorml_clause: "api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc"
+  source_http_status: "HTTP 200 on 2026-05-07"
+  relation_types_text: "For all associations encoded in the `links` member of the JSON response, the link relation type must be set to the association name."
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    system_item_links: "Default System item /systems/0mqcvdnfoca0 has canonical, alternate, samplingFeatures, and datastreams links. Association links use rel=samplingFeatures and rel=datastreams."
+    deployment_item_links: "Default Deployment item /deployments/16sp744ch58g has canonical and alternate links only; deployedSystems is encoded under properties/deployedSystems@link, not links."
+    procedure_item_links: "Default Procedure item /procedures/164p7ed8l47g has canonical and alternate links only."
+    sampling_feature_item_links: "Default SamplingFeature item /samplingFeatures/0mtff3l0oofg has no links member; hostedProcedure@link is under properties."
+    property_collection: "Default /properties?limit=1 is empty; property relation-types remain out of Sprint 18 scope."
+    sensorml_items: "System, deployment, and procedure SensorML bodies expose no top-level links member in current GeoRobotix observations."
+
+relation_type_policy:
+  resource_specific_links_member_association_rels:
+    geojson:
+      system: ["parentSystem", "subsystems", "samplingFeatures", "deployments", "procedures", "datastreams", "controlstreams"]
+      deployment: ["parentDeployment", "subdeployments", "featuresOfInterest", "samplingFeatures", "datastreams", "controlstreams"]
+      procedure: ["implementingSystems"]
+      samplingFeature: ["parentSystem", "sampleOf", "datastreams", "controlstreams"]
+    sensorml:
+      system: ["subsystems", "samplingFeatures", "deployments", "procedures", "datastreams", "controlstreams"]
+      deployment: ["parentDeployment", "subdeployments", "featuresOfInterest", "samplingFeatures", "datastreams", "controlstreams"]
+      procedure: ["implementingSystems"]
+  excluded_generic_rels:
+    - "self"
+    - "canonical"
+    - "alternate"
+    - "next"
+    - "prev"
+    - "first"
+    - "last"
+    - "collection"
+    - "service-desc"
+    - "service-doc"
+  verdict_policy:
+    - "PASS only when every detected association link encoded in a links member uses a rel valid for the selected encoding and resource type."
+    - "SKIP per resource when the selected representation has no links-member association links."
+    - "FAIL when a links-member entry has missing or blank rel."
+    - "FAIL when a non-generic links-member rel is not valid for the selected encoding and resource type."
+    - "Do not count property-level @link members as relation-types evidence."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Keep existing GeoJSON System relation-types positive evidence."
+  - "Add per-resource GeoJSON relation-types checks for deployment, procedure, and sampling feature."
+  - "Add per-resource SensorML relation-types checks for deployment and procedure."
+  - "Gate each check on conformance declaration, selected item availability, and representation availability."
+  - "Use resource-specific links-member association allowlists."
+  - "SKIP honestly per resource when only generic links or no links member exist."
+  - "Add or extend unit coverage for per-resource classification and aggregate false PASS prevention."
+  - "Run Docker Maven and default GeoRobotix TeamEngine smoke."
+  - "Verify zero IUT-bound POST/PUT/DELETE/PATCH in default smoke."
+  - "Update OpenSpec/story/traceability/status/changelog/test-results."
+
+generator_must_not_do:
+  - "Do not implement /req/geojson/mediatype-write or /req/sensorml/mediatype-write."
+  - "Do not issue POST, PUT, PATCH, or DELETE."
+  - "Do not count canonical or alternate links as association evidence."
+  - "Do not count property-level @link members as links-member relation-types evidence."
+  - "Do not hide per-resource SKIPs behind one aggregate PASS."
+  - "Do not claim full GeoJSON or SensorML relation-types closure."
+  - "Do not implement Part 2 work."
+
+evaluation_focus:
+  raze:
+    - "Attack aggregate false PASS where one System PASS hides deployment/procedure/samplingFeature/SensorML SKIPs."
+    - "Attack property-level @link false PASS."
+    - "Attack wrong-resource relation type acceptance."
+    - "Check no mutation and no mediatype-write scope creep."
+    - "Check both REQ-ETS-PART1-012 and REQ-ETS-PART1-013 remain PARTIAL."
+
+confidence: 0.82

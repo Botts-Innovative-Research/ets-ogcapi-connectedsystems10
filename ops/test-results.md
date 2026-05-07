@@ -1,8 +1,25 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T00:33Z
+Last updated: 2026-05-07T16:57Z
 
 ## Current Sprint Evidence
+
+Sprint ets-19 encoding mediatype-write safety-gated planning:
+
+- OGC source verification:
+  - GeoJSON requirement class source includes `/req/geojson/mediatype-write`.
+  - SensorML requirement class source includes `/req/sensorml/mediatype-write`.
+  - GeoJSON clause requires `Content-Type: application/geo+json` parsing according to resource type when Create/Replace/Delete is implemented.
+  - SensorML clause requires `Content-Type: application/sml+json` parsing according to resource type when Create/Replace/Delete is implemented.
+- GeoRobotix planning probes:
+  - `/conformance`: declares `/conf/create-replace-delete`, `/conf/geojson`, and `/conf/sensorml`.
+  - `OPTIONS /systems`: `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`.
+  - `OPTIONS /systems/0mqcvdnfoca0`: `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`.
+- Interpretation: Sprint 19 must reuse mutation opt-in and public-IUT hard-denial gates. OPTIONS readiness is not mediatype-write conformance. A PASS requires exact `Content-Type` plus follow-up dereference evidence against a dedicated mutable IUT.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-19-plan-adversarial.yaml`: `GAPS_FOUND` confidence 0.88.
+  - Required fix: add missing OpenSpec body for `SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001`.
+  - `.harness/evaluations/sprint-ets-19-plan-gapfix.yaml`: `APPROVE` confidence 0.95, no remaining required fixes.
 
 Sprint ets-18 encoding relation-types breadth Generator:
 

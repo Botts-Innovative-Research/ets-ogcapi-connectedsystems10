@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T00:33Z
+Last updated: 2026-05-07T16:57Z
 
 ## Fresh-Session Entry Point
 
@@ -38,11 +38,28 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes Sprint 18 planning commit `Plan Sprint 18 relation types breadth`.
+- ETS HEAD includes Sprint 18 Generator commit `81b7dba Implement Sprint 18 relation types breadth`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-18-01` Generator complete as PARTIAL and Raze-approved.
-- Current sprint status: Sprint ets-18 Generator implemented read-only GeoJSON/SensorML relation-types breadth checks.
-- Latest committed Generator: `Implement Sprint 17 encoding relation types`.
+- Current sprint status: Sprint ets-19 planning drafted and Raze-approved for safety-gated GeoJSON/SensorML mediatype-write checks.
+- Latest committed Generator: `Implement Sprint 18 relation types breadth`.
+
+## Sprint ets-19 Planning Evidence
+
+Encoding mediatype-write safety-gated checks:
+
+- Story: `epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md`
+- Contract: `.harness/contracts/sprint-ets-19.yaml`
+- OpenSpec: extends `REQ-ETS-PART1-012`, `REQ-ETS-PART1-013`, and mutation-safety dependency `REQ-ETS-PART1-010`; GeoJSON/SensorML remain PARTIAL.
+- Scope planned: `Content-Type: application/geo+json` and `Content-Type: application/sml+json` parsing checks behind existing mutation opt-in and public-IUT hard-denial gates.
+- Out of scope: default mutation against GeoRobotix, Part 2, full external schema validation, and full GeoJSON/SensorML closure.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-07 and not stale.
+- OGC source verification: official upstream GeoJSON and SensorML encoding clauses list `mediatype-write`; both condition write-side media type parsing on Create/Replace/Delete support.
+- GeoRobotix planning probe: `/conformance` declares `/conf/create-replace-delete`, `/conf/geojson`, and `/conf/sensorml`; `OPTIONS /systems` and `OPTIONS /systems/0mqcvdnfoca0` advertise POST/PUT/DELETE.
+- Planning guardrail: GeoRobotix is still a shared public IUT. Default smoke must issue zero IUT-bound POST/PUT/DELETE/PATCH, and OPTIONS readiness cannot be reported as mediatype-write conformance.
+- Raze planning review `.harness/evaluations/sprint-ets-19-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for a missing SensorML OpenSpec scenario body.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-19-plan-gapfix.yaml` returned `APPROVE` confidence 0.95 after adding `SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001`.
+- Next action: commit Sprint 19 planning, then start Generator.
 
 ## Sprint ets-18 Generator Evidence
 
@@ -59,7 +76,7 @@ Encoding relation-types breadth read-only checks:
 - Smoke no-mutation oracle: recognized 69 IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries for GeoRobotix.
 - Runtime outcome: GeoJSON System relation-types PASSed; GeoJSON Deployment, Procedure, and Sampling Feature SKIPped independently; SensorML System, Deployment, and Procedure SKIPped independently.
 - Raze implementation review `.harness/evaluations/sprint-ets-18-adversarial-implementation.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
-- Next action: commit Sprint 18 Generator.
+- Historical note: Sprint 18 Generator was committed as `81b7dba`.
 
 ## Sprint ets-17 Generator Evidence
 
@@ -350,14 +367,14 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 18 Generator.
-2. Plan the next remaining Part 1 gap.
+1. Commit Sprint 19 planning.
+2. Start Generator for `S-ETS-19-01`.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-17 planning work plus metrics:
+Current dirty worktree is expected Sprint ets-19 planning work plus metrics:
 
-- `.harness/contracts/sprint-ets-17.yaml`
-- `epics/stories/s-ets-17-01-encoding-relation-types-readonly.md`
+- `.harness/contracts/sprint-ets-19.yaml`
+- `epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md`
 - OpenSpec/story/traceability/status/changelog/test-results planning reconciliation.
 - `ops/metrics.md` turn-log updates.

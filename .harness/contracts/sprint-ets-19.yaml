@@ -1,0 +1,121 @@
+# Sprint 19 contract - encoding mediatype-write safety-gated checks
+# Created 2026-05-07 after Sprint 18 Generator commit.
+
+sprint: "ets-19"
+sprint_name: "encoding-mediatype-write-safety-gated"
+type: "feature-expansion"
+created: "2026-05-07T16:55:33Z"
+description: |
+  Sprint 19 plans the next Part 1 encoding gap: /req/geojson/mediatype-write
+  and /req/sensorml/mediatype-write. The sprint is mutation-safety constrained.
+  Default GeoRobotix smoke must remain non-mutating; positive POST/PUT parsing
+  evidence may run only when explicit mutation opt-in targets a dedicated mutable
+  IUT.
+
+stories:
+  - id: "S-ETS-19-01"
+    title: "Encoding mediatype-write safety-gated checks"
+    file: "epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md"
+    epic: "epic-ets-02-part1-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-12-01"
+      - "S-ETS-14-01"
+      - "S-ETS-15-01"
+      - "S-ETS-16-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART1-012 (/req/geojson/mediatype-write subset - remains PARTIAL)"
+    - "REQ-ETS-PART1-013 (/req/sensorml/mediatype-write subset - remains PARTIAL)"
+    - "REQ-ETS-PART1-010 (mutation opt-in safety dependency)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART1-012-GEOJSON-MEDIATYPE-WRITE-SAFETY-GATED-001"
+    - "SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001"
+    - "SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-OPTIONS-READINESS-001"
+    - "SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-NO-PUBLIC-MUTATION-001"
+    - "SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-PARSE-EVIDENCE-001"
+  normal: []
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  build_green_jdk17: true
+  default_georobotix_smoke_green: true
+  default_smoke_no_mutation_requests: true
+  mutation_tests_reuse_existing_safety_gate: true
+  public_georobotix_hard_denial: true
+  content_type_geojson_checked_only_when_crd_and_geojson_declared: true
+  content_type_sensorml_checked_only_when_crd_and_sensorml_declared: true
+  positive_parse_evidence_requires_dedicated_mutable_iut: true
+  no_part2_work_in_sprint: true
+  no_full_schema_validation_in_sprint: true
+
+upstream_ogc_verification:
+  repo: "opengeospatial/ogcapi-connected-systems"
+  branch: "master"
+  checked_at: "2026-05-07T16:55:33Z"
+  geojson_requirement_class: "api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
+  sensorml_requirement_class: "api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc"
+  geojson_clause: "api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc"
+  sensorml_clause: "api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc"
+  mediatype_write_text:
+    geojson: "The server SHALL support the media type application/geo+json in the HTTP Content-Type header and parse the JSON body according to the resource type, conditioned on Create/Replace/Delete."
+    sensorml: "The server SHALL support the media type application/sml+json in the HTTP Content-Type header and parse the JSON body according to the resource type, conditioned on Create/Replace/Delete."
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares /conf/create-replace-delete, /conf/geojson, and /conf/sensorml; does not declare /conf/update."
+    systems_options: "OPTIONS /systems returns Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS."
+    system_item_options: "OPTIONS /systems/0mqcvdnfoca0 returns Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS."
+    planning_interpretation: "Public GeoRobotix appears write-capable but remains a shared public IUT; Sprint 19 default smoke must not issue POST/PUT/DELETE/PATCH."
+
+verdict_policy:
+  default_public_iut:
+    - "PASS conformance declaration/readiness checks without mutation where applicable."
+    - "SKIP lifecycle Content-Type parsing checks before POST/PUT when mutation opt-in is absent."
+    - "Hard-deny known shared public GeoRobotix URLs even if mutation opt-in is supplied."
+    - "Default smoke must prove zero IUT-bound POST/PUT/DELETE/PATCH."
+  dedicated_mutable_iut:
+    - "Only after mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut may the ETS issue POST/PUT."
+    - "A mediatype-write PASS requires the IUT to parse the request body with the tested Content-Type and return dereferenceable created/replaced resource evidence."
+    - "Status-only POST/PUT without follow-up GET evidence is not enough."
+    - "If the IUT declares the encoding and CRD but rejects the required Content-Type with 415 or equivalent, FAIL the relevant mediatype-write assertion."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Reuse Sprint 12 mutation opt-in and public-IUT hard-denial gates."
+  - "Add GeoJSON mediatype-write checks that require /conf/geojson and /conf/create-replace-delete."
+  - "Add SensorML mediatype-write checks that require /conf/sensorml and /conf/create-replace-delete."
+  - "Use POST/PUT only in explicitly enabled dedicated mutable-IUT mode."
+  - "Verify parse evidence by dereferencing Location or canonical id after mutation."
+  - "Preserve best-effort cleanup for any created resource."
+  - "Add focused unit tests for safety gating, Content-Type selection, public-IUT denial, and status-only false PASS prevention."
+  - "Run Docker Maven and default GeoRobotix TeamEngine smoke."
+  - "Verify zero IUT-bound POST/PUT/DELETE/PATCH in default smoke."
+  - "Update OpenSpec/story/traceability/status/changelog/test-results."
+
+generator_must_not_do:
+  - "Do not mutate GeoRobotix or any known shared public IUT."
+  - "Do not bypass the existing mutation safety parameters."
+  - "Do not count OPTIONS Allow as mediatype-write conformance."
+  - "Do not claim full GeoJSON or SensorML closure."
+  - "Do not implement Part 2 work."
+  - "Do not implement full external schema validation in this sprint."
+
+evaluation_focus:
+  raze:
+    - "Attack any path that can POST/PUT to GeoRobotix by default or by unsafe opt-in."
+    - "Attack OPTIONS-readiness false PASS as mediatype-write conformance."
+    - "Attack status-only mutation false PASS without parse/dereference evidence."
+    - "Check that Content-Type values are exact: application/geo+json and application/sml+json."
+    - "Check both REQ-ETS-PART1-012 and REQ-ETS-PART1-013 remain PARTIAL."
+
+confidence: 0.78

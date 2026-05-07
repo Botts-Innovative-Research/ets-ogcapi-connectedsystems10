@@ -1,0 +1,23 @@
+schema_version: "1.0"
+artifact_type: "adversarial_gapfix_review"
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-07T17:03:50Z"
+sprint: "sprint-ets-19"
+story_id: "S-ETS-19-01"
+scope: "focused recheck for RAZE-ETS19-PLAN-GAP-001 only; no Docker/Maven/TeamEngine reruns"
+verdict: "APPROVE"
+confidence: 0.95
+
+gap_rechecked:
+  id: "RAZE-ETS19-PLAN-GAP-001"
+  status: "closed"
+  evidence:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md now defines SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001."
+    - "The scenario requires /conf/sensorml plus /conf/create-replace-delete."
+    - "The scenario requires exact Content-Type: application/sml+json for positive write parsing evidence."
+    - "The scenario SKIPs before POST/PUT unless mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut."
+    - "The scenario hard-denies known shared public GeoRobotix URLs even when mutation opt-in is supplied."
+
+required_fixes: []
+concerns: []

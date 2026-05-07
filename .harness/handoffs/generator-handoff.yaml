@@ -83,7 +83,7 @@ raze_review:
   required_fixes_status: "none"
 
 commit:
-  sha: "pending"
+  sha: "81b7dba"
   message: "Implement Sprint 18 relation types breadth"
 
-next_action: "Commit Sprint 18 Generator, then plan the next remaining Part 1 gap."
+next_action: "Sprint 19 planning drafted; run Raze planning review, then start Generator if approved."

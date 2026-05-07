@@ -2,6 +2,21 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T16:57Z — Sprint 19 encoding mediatype-write planning
+
+**Triggered by user instruction**: "Continue."
+
+- Planned `S-ETS-19-01` as a safety-gated write-side encoding expansion for `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`; both requirements remain PARTIAL.
+- Added `.harness/contracts/sprint-ets-19.yaml` and `epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md`.
+- Updated OpenSpec, traceability, epic status, planner handoff, Generator handoff, ops status, known issues, and test-results for GeoJSON/SensorML mediatype-write planning scope.
+- Verified official upstream GeoJSON and SensorML encoding clauses list `mediatype-write` and condition write-side `Content-Type` parsing on Create/Replace/Delete support.
+- Planning probe: GeoRobotix declares `/conf/create-replace-delete`, `/conf/geojson`, and `/conf/sensorml`; `OPTIONS /systems` and `OPTIONS /systems/0mqcvdnfoca0` advertise POST/PUT/DELETE.
+- Planning guardrail: GeoRobotix remains a shared public IUT, so default smoke must not issue POST/PUT/DELETE/PATCH; OPTIONS readiness and mutation status codes cannot create mediatype-write PASS without parse/dereference evidence.
+- Raze planning review `.harness/evaluations/sprint-ets-19-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for a missing SensorML OpenSpec scenario body.
+- Added `SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001`; Raze gap-fix review `.harness/evaluations/sprint-ets-19-plan-gapfix.yaml` returned `APPROVE` confidence 0.95 with no required fixes.
+
+---
+
 ## 2026-05-07T00:33Z — Sprint 18 encoding relation-types breadth Generator
 
 **Triggered by user instruction**: "Continue."

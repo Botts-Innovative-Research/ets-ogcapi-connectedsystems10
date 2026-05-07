@@ -1,0 +1,61 @@
+schema_version: "1.0"
+artifact_type: "adversarial_planning_review"
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-07T17:02:30Z"
+sprint: "sprint-ets-19"
+story_id: "S-ETS-19-01"
+scope: "planning-only static review; no Docker/Maven/TeamEngine reruns"
+verdict: "GAPS_FOUND"
+confidence: 0.88
+
+evidence_reviewed:
+  - ".harness/contracts/sprint-ets-19.yaml"
+  - "epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - ".harness/handoffs/planner-handoff.yaml"
+  - ".harness/handoffs/generator-handoff.yaml"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/known-issues.md"
+  - "ops/test-results.md"
+  - "git status --short"
+
+findings:
+  - id: "RAZE-ETS19-PLAN-GAP-001"
+    severity: "medium"
+    area: "OpenSpec scenario traceability"
+    detail: "The contract, story, planner handoff, and traceability all list SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001, but OpenSpec does not define that scenario body. OpenSpec currently defines the GeoJSON safety-gated scenario plus shared OPTIONS/no-public-mutation/parse-evidence scenarios only."
+    risk: "Generator can implement or document SensorML mediatype-write behavior without a spec-anchored acceptance scenario for exact application/sml+json Content-Type handling, CRD conditioning, and public-IUT denial."
+    evidence:
+      - ".harness/contracts/sprint-ets-19.yaml:38-42 lists the SensorML scenario."
+      - "epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md:30-34 lists the SensorML scenario."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:678-705 defines GeoJSON and shared scenarios; rg found no SENSORML-MEDIATYPE-WRITE-SAFETY-GATED body."
+    required_fix: "Add the missing OpenSpec scenario body for SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001, explicitly requiring /conf/sensorml plus /conf/create-replace-delete gating, exact Content-Type: application/sml+json, SKIP-before-POST/PUT without dedicated mutable opt-in, and GeoRobotix/public-IUT hard denial."
+
+  - id: "RAZE-ETS19-PLAN-PASS-001"
+    severity: "pass"
+    area: "unsafe public mutation"
+    detail: "Planning consistently requires mutation opt-in, dedicated mutable IUT policy, public GeoRobotix hard denial, and default-smoke zero POST/PUT/DELETE/PATCH proof."
+
+  - id: "RAZE-ETS19-PLAN-PASS-002"
+    severity: "pass"
+    area: "false PASS controls"
+    detail: "OPTIONS readiness is explicitly readiness-only, not mediatype-write PASS; status-only POST/PUT is insufficient without follow-up dereference parse evidence."
+
+  - id: "RAZE-ETS19-PLAN-PASS-003"
+    severity: "pass"
+    area: "Content-Type and scope"
+    detail: "Planning uses exact Content-Type values application/geo+json and application/sml+json, conditions checks on CRD plus encoding conformance, excludes Part 2/full schema validation, and keeps REQ-ETS-PART1-012/013 PARTIAL."
+
+  - id: "RAZE-ETS19-PLAN-PASS-004"
+    severity: "pass"
+    area: "worktree hygiene"
+    detail: "Dirty files align with Sprint 19 planning/docs/handoff/metrics plus the current evaluation artifact; no Docker/Maven/TeamEngine rerun pollution observed."
+
+required_fixes:
+  - "Fix RAZE-ETS19-PLAN-GAP-001 before Generator starts: add the missing OpenSpec SensorML mediatype-write safety-gated scenario body and reconcile any scenario lists if wording changes."
+
+concerns: []

@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.EncodingRelationTypes;
 import org.testng.ITestContext;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
@@ -24,9 +25,8 @@ import io.restassured.response.Response;
  * Implements the Sprint 9 systems read-only subset and the Sprint 15
  * Deployment/Procedure/SamplingFeature read-only subset of
  * <strong>REQ-ETS-PART1-012</strong>. This class deliberately does not close the full
- * GeoJSON requirement class: write-side media-type checks, relation-types, property
- * GeoJSON mapping, and full external GeoJSON schema validation remain open for future
- * sprints.
+ * GeoJSON requirement class: write-side media-type checks, property GeoJSON mapping, and
+ * full external GeoJSON schema validation remain open for future sprints.
  * </p>
  */
 public class GeoJsonTests {
@@ -44,6 +44,8 @@ public class GeoJsonTests {
 	static final String REQ_MEDIATYPE_READ = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/mediatype-read";
 
 	static final String REQ_FEATURE_ATTRIBUTE_MAPPING = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping";
+
+	static final String REQ_RELATION_TYPES = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types";
 
 	static final String REQ_SYSTEM_SCHEMA = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-schema";
 
@@ -72,6 +74,8 @@ public class GeoJsonTests {
 	private Response systemsGeoJsonResponse;
 
 	private Map<String, Object> systemsGeoJsonBody;
+
+	private Map<String, Object> selectedSystemJsonBody;
 
 	private URI deploymentsUri;
 
@@ -121,6 +125,7 @@ public class GeoJsonTests {
 		this.systemsUri = URI.create(base + "systems");
 		this.systemsGeoJsonResponse = given().accept("application/geo+json").when().get(this.systemsUri).andReturn();
 		this.systemsGeoJsonBody = parseJsonObject(this.systemsGeoJsonResponse);
+		this.selectedSystemJsonBody = fetchFirstItemBody(this.systemsUri, "systems", REQ_RELATION_TYPES);
 
 		this.deploymentsUri = URI.create(base + "deployments");
 		this.deploymentsGeoJsonResponse = fetchGeoJsonCollection(this.deploymentsUri);
@@ -303,6 +308,18 @@ public class GeoJsonTests {
 	}
 
 	/**
+	 * SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001 and
+	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
+			+ ": links-member association rels use resource-specific association names, excluding canonical/alternate/property-level links (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			groups = "geojson")
+	public void geoJsonLinksMemberAssociationRelsUseResourceSpecificNames() {
+		EncodingRelationTypes.assertLinksMemberAssociationRels(this.selectedSystemJsonBody,
+				EncodingRelationTypes.ENCODING_GEOJSON, EncodingRelationTypes.RESOURCE_SYSTEM, REQ_RELATION_TYPES);
+	}
+
+	/**
 	 * SCENARIO-ETS-PART1-012-GEOJSON-DEPENDENCY-SMOKE-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_GEOJSON_CLASS
@@ -351,6 +368,29 @@ public class GeoJsonTests {
 		return given().accept("application/geo+json").queryParam("limit", 1).when().get(uri).andReturn();
 	}
 
+	private static Map<String, Object> fetchFirstItemBody(URI collectionUri, String collectionName,
+			String requirementUri) {
+		Response collectionResponse = given().accept("application/json")
+			.queryParam("limit", 1)
+			.when()
+			.get(collectionUri)
+			.andReturn();
+		ETSAssert.assertStatus(collectionResponse, 200, requirementUri);
+		Map<String, Object> collectionBody = parseJsonObject(collectionResponse);
+		Map<String, Object> first = firstCollectionItem(collectionBody, "/" + collectionName, requirementUri);
+		Object id = first.get("id");
+		if (!(id instanceof String) || ((String) id).isBlank()) {
+			throw new SkipException(requirementUri + " — /" + collectionName
+					+ " returned no item with a usable id; cannot inspect links-member relation-types.");
+		}
+		Response itemResponse = given().accept("application/json")
+			.when()
+			.get(URI.create(collectionUri + "/" + id))
+			.andReturn();
+		ETSAssert.assertStatus(itemResponse, 200, requirementUri);
+		return parseJsonObject(itemResponse);
+	}
+
 	@SuppressWarnings("unchecked")
 	private static Map<String, Object> parseJsonObject(Response response) {
 		try {
@@ -387,6 +427,30 @@ public class GeoJsonTests {
 		if (!(first instanceof Map)) {
 			ETSAssert.failWithUri(requirementUri,
 					"First " + collectionLabel + " features[] entry is not a JSON object: " + first);
+		}
+		return (Map<String, Object>) first;
+	}
+
+	@SuppressWarnings("unchecked")
+	static Map<String, Object> firstCollectionItem(Map<String, Object> body, String collectionLabel,
+			String requirementUri) {
+		if (body == null) {
+			ETSAssert.failWithUri(requirementUri, collectionLabel + " body did not parse as JSON.");
+		}
+		Object itemsObj = body.get("items");
+		if (!(itemsObj instanceof List)) {
+			ETSAssert.failWithUri(requirementUri,
+					collectionLabel + " response has no CS API 'items' array; cannot select resource.");
+		}
+		List<?> items = (List<?>) itemsObj;
+		if (items.isEmpty()) {
+			throw new SkipException(requirementUri + " — " + collectionLabel
+					+ " returned an empty items array; cannot inspect links-member relation-types.");
+		}
+		Object first = items.get(0);
+		if (!(first instanceof Map)) {
+			ETSAssert.failWithUri(requirementUri,
+					"First " + collectionLabel + " items[] entry is not a JSON object: " + first);
 		}
 		return (Map<String, Object>) first;
 	}

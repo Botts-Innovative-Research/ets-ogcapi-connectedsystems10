@@ -2,6 +2,20 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T00:00Z — Sprint 17 encoding relation-types Generator
+
+**Triggered by user instruction**: "Kick off Generator for S-ETS-17-01."
+
+- Implemented `S-ETS-17-01` as a selected-resource read-only expansion for `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`; both requirements remain PARTIAL.
+- Added `EncodingRelationTypes` with resource-specific GeoJSON and SensorML links-member association allowlists and FAIL behavior for missing or wrong-resource rels.
+- Added GeoJSON and SensorML runtime tests for links-member association relation-types, plus 5 helper regression tests.
+- Verified formatter BUILD SUCCESS, Maven `133 tests / 0 failures / 0 errors / 3 skipped`, and TeamEngine smoke `82 total / 55 passed / 0 failed / 27 skipped`.
+- Smoke no-mutation oracle recognized 55 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries.
+- GeoJSON relation-types PASSed on GeoRobotix `/systems/0mqcvdnfoca0`; SensorML relation-types SKIPped honestly because the selected SensorML system body exposes no links-member association links.
+- Raze implementation review `.harness/evaluations/sprint-ets-17-adversarial-implementation.yaml` returned `APPROVE` confidence 0.91 with no required fixes.
+
+---
+
 ## 2026-05-06T23:38Z — Sprint 17 encoding relation-types planning
 
 **Triggered by user instruction**: "keep going."

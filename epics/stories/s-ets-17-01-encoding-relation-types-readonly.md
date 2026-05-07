@@ -1,7 +1,7 @@
 # Story S-ETS-17-01: Encoding Relation-Types Read-Only Link Checks
 
 > Sprint: ets-17
-> Status: PLANNED - RAZE-APPROVED
+> Status: GENERATOR COMPLETE - RAZE-APPROVED
 > Priority: P0
 > Complexity: S
 > Epic: epic-ets-02-part1-classes
@@ -43,11 +43,11 @@ The sprint remains PARTIAL for both `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`.
 - Raze planning review `.harness/evaluations/sprint-ets-17-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for a global allowlist false PASS risk.
 - Raze gap-fix review `.harness/evaluations/sprint-ets-17-plan-gapfix.yaml` returned `APPROVE` confidence 0.94 after planning was tightened with resource-specific GeoJSON/SensorML links-member association allowlists and wrong-resource rel rejection.
 
-## Planned Test Surface
+## Implemented Test Surface
 
-1. Add read-only relation-types checks for GeoJSON and SensorML encoding suites.
-2. Gate GeoJSON checks on `/conf/geojson` and relevant resource conformance classes before judging resource links.
-3. Gate SensorML checks on `/conf/sensorml` and explicit SensorML representation availability before judging SensorML links.
+1. Added read-only relation-types checks for GeoJSON and SensorML encoding suites.
+2. GeoJSON relation-types checks are gated through the existing GeoJSON/SystemFeatures setup and fetch a selected `/systems/{id}` representation before judging resource links.
+3. SensorML relation-types checks are gated on `/conf/sensorml` and explicit SensorML representation availability before judging SensorML links.
 4. Treat `canonical`, `alternate`, pagination, collection, service-description, and service-document links as non-association links.
 5. PASS only when every detected association encoded in a JSON `links` member uses a relation type valid for the selected encoding and resource type, using resource-specific OGC association tables:
    - GeoJSON System links-member associations: `parentSystem`, `subsystems`, `samplingFeatures`, `deployments`, `procedures`, `datastreams`, `controlstreams`.
@@ -61,14 +61,27 @@ The sprint remains PARTIAL for both `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`.
 8. Do not apply this rule to property-level `@link` members such as `deployedSystems@link` or `hostedProcedure@link`; those belong to mapping assertions, not links-member relation-types.
 9. Keep default GeoRobotix smoke non-mutating.
 
+## Generator Implementation Evidence
+
+- Added `EncodingRelationTypes` shared helper with resource-specific GeoJSON and SensorML links-member association allowlists.
+- Added `geoJsonLinksMemberAssociationRelsUseResourceSpecificNames`; GeoRobotix PASSes from `/systems/0mqcvdnfoca0` association rels `samplingFeatures` and `datastreams`.
+- Added `sensorMlLinksMemberAssociationRelsUseResourceSpecificNames`; GeoRobotix SKIPs honestly because the selected SensorML system representation has no top-level links-member association links.
+- Added `VerifyEncodingRelationTypes` with 5 unit tests for resource-specific PASS, generic-only SKIP, wrong-resource FAIL, missing-rel FAIL, and SensorML rejection of GeoJSON-only `parentSystem`.
+- Formatter: Docker Maven `spring-javaformat:apply` BUILD SUCCESS.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `133 tests / 0 failures / 0 errors / 3 skipped`, log `ops/test-results/sprint-ets-17-maven-2026-05-06.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s17-generator bash scripts/smoke-test.sh`, `82 total / 55 passed / 0 failed / 27 skipped`.
+- Smoke no-mutation oracle: 55 recognized IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries.
+- Raze implementation review `.harness/evaluations/sprint-ets-17-adversarial-implementation.yaml` returned `APPROVE` confidence 0.91 with no required fixes.
+
 ## Definition of Done
 
-- [ ] OpenSpec, story, contract, traceability, planner handoff, status, changelog, and test-results are reconciled for Sprint 17 planning.
+- [x] OpenSpec, story, contract, traceability, planner handoff, status, changelog, and test-results are reconciled for Sprint 17 planning.
 - [x] Raze reviews Sprint 17 planning changes.
-- [ ] Generator receives clear PASS/SKIP/FAIL semantics for association links.
-- [ ] Planning uses resource-specific links-member association allowlists, not a single global allowlist.
-- [ ] Planning keeps both REQ-ETS-PART1-012 and REQ-ETS-PART1-013 PARTIAL.
-- [ ] Planning excludes mediatype-write, mutation, full schema validation, and Part 2.
+- [x] Generator implements clear PASS/SKIP/FAIL semantics for association links.
+- [x] Implementation uses resource-specific links-member association allowlists, not a single global allowlist.
+- [x] Implementation keeps both REQ-ETS-PART1-012 and REQ-ETS-PART1-013 PARTIAL.
+- [x] Implementation excludes mediatype-write, mutation, full schema validation, and Part 2.
+- [x] Raze reviews Sprint 17 implementation changes.
 
 ## Out Of Scope
 

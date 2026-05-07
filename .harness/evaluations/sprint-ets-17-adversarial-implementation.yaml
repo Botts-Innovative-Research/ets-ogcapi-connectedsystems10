@@ -1,0 +1,127 @@
+schema_version: "1.0"
+artifact_type: adversarial_implementation_review
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-07T00:05:13Z"
+sprint: "sprint-ets-17"
+story_id: "S-ETS-17-01"
+story_title: "Encoding relation-types read-only link checks"
+scope: "Current uncommitted Sprint 17 Generator implementation"
+verdict: APPROVE
+confidence: 0.91
+
+review_constraints:
+  source_code_modified: false
+  docker_rerun: false
+  maven_rerun: false
+  teamengine_rerun: false
+  evidence_strategy: "Used current working tree, archived Maven/smoke evidence, and lightweight no-mutation oracle replay only."
+
+evidence_reviewed:
+  implementation_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/EncodingRelationTypes.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/VerifyEncodingRelationTypes.java"
+  docs_and_traceability:
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "epics/stories/s-ets-17-01-encoding-relation-types-readonly.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-02-part1-classes.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+  maven:
+    log: "ops/test-results/sprint-ets-17-maven-2026-05-06.log"
+    result: "BUILD SUCCESS; Tests run: 133, Failures: 0, Errors: 0, Skipped: 3"
+    targeted_regressions: "VerifyEncodingRelationTypes ran 5 tests with 0 failures, 0 errors, 0 skipped."
+  teamengine_smoke:
+    stdout_log: "ops/test-results/sprint-ets-17-smoke-2026-05-06.log"
+    output_dir: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s17-generator"
+    result_xml: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s17-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml"
+    observed_result: "82 total / 55 passed / 0 failed / 27 skipped"
+    sprint_17_observations:
+      - "geoJsonLinksMemberAssociationRelsUseResourceSpecificNames PASSed against selected /systems/0mqcvdnfoca0 links-member association rels."
+      - "sensorMlLinksMemberAssociationRelsUseResourceSpecificNames SKIPped because the selected SensorML system representation has no JSON links member with associations to inspect."
+  no_mutation:
+    oracle_log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s17-generator/s-ets-01-03-teamengine-container-2026-05-06.log"
+    observed_result: "recognized_iut_request_logs=55; no IUT-bound POST/PUT/DELETE/PATCH reported."
+    source_scan: "No .post/.put/.patch/.delete invocations found in EncodingRelationTypes, VerifyEncodingRelationTypes, GeoJsonTests, or SensorMlTests."
+  worktree:
+    status_summary: "Dirty worktree contains expected Sprint 17 implementation, docs, handoff, metrics/evidence logs, and Raze planning artifacts; no unrelated implementation files were identified."
+
+findings:
+  - id: "RAZE-ETS17-IMPL-001"
+    severity: pass
+    title: "Generic links are not counted as association evidence"
+    evidence:
+      - "EncodingRelationTypes.GENERIC_RELATIONS excludes self, canonical, alternate, pagination, collection, service-desc, and service-doc rels."
+      - "assertLinksMemberAssociationRels continues past generic rels and throws SkipException when only generic links remain."
+      - "VerifyEncodingRelationTypes.genericLinksOnlySkipWithoutVacuousPass covers generic-only fallback honesty."
+    conclusion: "Canonical/alternate/pagination/service links cannot produce relation-types PASS."
+  - id: "RAZE-ETS17-IMPL-002"
+    severity: pass
+    title: "Wrong-resource relation types are rejected by resource-specific allowlists"
+    evidence:
+      - "EncodingRelationTypes.ALLOWED_ASSOCIATION_RELS is keyed by encoding and resource type, not one global allowlist."
+      - "GeoJSON procedure allows only implementingSystems, while GeoJSON system/deployment/samplingFeature use their own OGC-derived rel sets."
+      - "SensorML system intentionally excludes parentSystem because SensorML maps that association to attachedTo rather than links."
+      - "VerifyEncodingRelationTypes.wrongResourceAssociationRelFails and sensorMlSystemRejectsGeoJsonOnlyParentSystemRel exercise wrong-resource rejection."
+    conclusion: "RAZE-ETS17-PLAN-GAP-001 remains closed in implementation."
+  - id: "RAZE-ETS17-IMPL-003"
+    severity: pass
+    title: "Property-level @link objects are not links-member evidence"
+    evidence:
+      - "assertLinksMemberAssociationRels reads only representation.get(\"links\"); it does not traverse properties or @link members."
+      - "GeoJsonTests and SensorMlTests call the helper on selected representation bodies, and the helper's scope is top-level links-member only."
+      - "Story/spec/status continue to classify deployedSystems@link and hostedProcedure@link as mapping evidence, not relation-types evidence."
+    conclusion: "Property-level @link objects cannot produce relation-types PASS."
+  - id: "RAZE-ETS17-IMPL-004"
+    severity: pass
+    title: "Missing rel handling fails rather than skipping or passing"
+    evidence:
+      - "assertLinksMemberAssociationRels calls ETSAssert.failWithUri when a links[] object has a missing or blank rel."
+      - "VerifyEncodingRelationTypes.missingRelFailsRatherThanSkipping covers the behavior."
+    conclusion: "Missing rel values do not create false PASS or silent SKIP."
+  - id: "RAZE-ETS17-IMPL-005"
+    severity: pass
+    title: "SensorML no-association state is represented honestly as SKIP"
+    evidence:
+      - "SensorML relation-types test depends on sensorMlMediaTypeRead, then evaluates the selected SensorML representation body."
+      - "Smoke XML shows sensorMlLinksMemberAssociationRelsUseResourceSpecificNames status=SKIP with reason: selected system representation has no JSON links member with associations to inspect."
+      - "Docs keep broader positive SensorML relation-types evidence open."
+    conclusion: "Current GeoRobotix SensorML no-links state is not overclaimed as PASS."
+  - id: "RAZE-ETS17-IMPL-006"
+    severity: pass
+    title: "Read-only/no-mutation evidence is adequate"
+    evidence:
+      - "Sprint 17 code paths add GET-based selection/assertion logic only."
+      - "No mutating REST Assured calls were found in the Sprint 17 helper/test paths."
+      - "Smoke reported recognized_iut_request_logs=55 and zero IUT-bound POST/PUT/DELETE/PATCH."
+    conclusion: "The implementation matches the read-only Sprint 17 scope."
+  - id: "RAZE-ETS17-IMPL-007"
+    severity: pass
+    title: "REQ-ETS-PART1-012 and REQ-ETS-PART1-013 remain honestly PARTIAL"
+    evidence:
+      - "OpenSpec marks both encoding classes PARTIAL-IMPLEMENTED after Sprint 17 and keeps mediatype-write, broader traversal, full schema validation, and other open work explicit."
+      - "_bmad/traceability.md describes Sprint 17 as selected-resource relation-types Generator complete, not full conformance closure."
+      - "ops/known-issues.md continues to list both GeoJSON and SensorML as partial."
+    conclusion: "Docs do not overclaim full GeoJSON or SensorML closure."
+  - id: "RAZE-ETS17-IMPL-008"
+    severity: pass
+    title: "Verification evidence is coherent"
+    evidence:
+      - "Maven log reports 133/0/0/3 and includes the 5 targeted VerifyEncodingRelationTypes tests."
+      - "Smoke stdout and TestNG XML agree on 82 total / 55 passed / 0 failed / 27 skipped."
+      - "New GeoJSON and SensorML relation-types methods appear in the smoke XML with the expected PASS/SKIP outcomes."
+    conclusion: "Archived evidence is usable; no rerun was needed."
+
+required_fixes: []
+
+concerns: []
+
+recommendations:
+  - "Keep REQ-ETS-PART1-012 and REQ-ETS-PART1-013 PARTIAL until mediatype-write, broader relation-types traversal, full schema validation, and remaining resource-specific evidence are implemented."
+  - "When an IUT exposes SensorML links-member associations, rerun smoke to replace the current SensorML relation-types SKIP with positive or failing evidence."

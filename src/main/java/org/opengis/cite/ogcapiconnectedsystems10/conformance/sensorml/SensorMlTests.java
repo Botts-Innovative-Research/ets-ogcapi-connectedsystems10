@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.EncodingRelationTypes;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.SkipException;
@@ -25,8 +26,8 @@ import io.restassured.response.Response;
  * Implements the Sprint 10 systems read-only subset and the Sprint 16
  * Deployment/Procedure/Property read-only subset of <strong>REQ-ETS-PART1-013</strong>.
  * This class deliberately does not close the full SensorML requirement class: write-side
- * media-type checks, relation-types, full SensorML 3.0 JSON Schema validation, and
- * mutation-side behavior remain open for future sprints.
+ * media-type checks, full SensorML 3.0 JSON Schema validation, and mutation-side behavior
+ * remain open for future sprints.
  * </p>
  */
 public class SensorMlTests {
@@ -44,6 +45,8 @@ public class SensorMlTests {
 	static final String REQ_MEDIATYPE_READ = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read";
 
 	static final String REQ_RESOURCE_ID = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id";
+
+	static final String REQ_RELATION_TYPES = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types";
 
 	static final String REQ_SYSTEM_SML_CLASS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class";
 
@@ -346,6 +349,18 @@ public class SensorMlTests {
 		}
 		Reporter.log("Property SensorML representation source: " + evidence.source + " (" + evidence.sensorMlUri + ")",
 				true);
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001 and
+	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
+			+ ": SensorML links-member association rels use resource-specific association names, excluding generic representation links and non-links-member associations (REQ-ETS-PART1-013, SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			dependsOnMethods = "sensorMlMediaTypeRead", groups = "sensorml")
+	public void sensorMlLinksMemberAssociationRelsUseResourceSpecificNames() {
+		EncodingRelationTypes.assertLinksMemberAssociationRels(this.sensorMlRepresentationBody,
+				EncodingRelationTypes.ENCODING_SENSORML, EncodingRelationTypes.RESOURCE_SYSTEM, REQ_RELATION_TYPES);
 	}
 
 	/**

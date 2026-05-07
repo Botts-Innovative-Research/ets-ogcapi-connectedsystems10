@@ -1,10 +1,10 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-06T23:38Z
+Last updated: 2026-05-07T00:00Z
 
 ## Current Sprint Evidence
 
-Sprint ets-17 encoding relation-types read-only planning:
+Sprint ets-17 encoding relation-types read-only Generator:
 
 - OGC source verification:
   - GeoJSON clause: `api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc`, HTTP 200 on 2026-05-06.
@@ -21,6 +21,29 @@ Sprint ets-17 encoding relation-types read-only planning:
   - `.harness/evaluations/sprint-ets-17-plan-adversarial.yaml`: `GAPS_FOUND` confidence 0.88.
   - Required fix: close the global association-name allowlist false PASS risk by requiring resource-specific GeoJSON and SensorML links-member association allowlists.
   - `.harness/evaluations/sprint-ets-17-plan-gapfix.yaml`: `APPROVE` confidence 0.94, no remaining required fixes.
+- Generator implementation:
+  - `EncodingRelationTypes` centralizes generic-link filtering and resource-specific links-member association allowlists for GeoJSON and SensorML.
+  - `GeoJsonTests` adds `geoJsonLinksMemberAssociationRelsUseResourceSpecificNames`.
+  - `SensorMlTests` adds `sensorMlLinksMemberAssociationRelsUseResourceSpecificNames`.
+  - `VerifyEncodingRelationTypes` adds 5 focused helper regressions.
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `133 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-17-maven-2026-05-06.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s17-generator bash scripts/smoke-test.sh`
+  - Result: `82 total / 55 passed / 0 failed / 27 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s17-generator/s-ets-01-03-teamengine-smoke-2026-05-06.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s17-generator/s-ets-01-03-teamengine-container-2026-05-06.log`
+  - No-mutation oracle: recognized 55 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Runtime outcome:
+  - `geoJsonLinksMemberAssociationRelsUseResourceSpecificNames`: PASS on GeoRobotix selected System links.
+  - `sensorMlLinksMemberAssociationRelsUseResourceSpecificNames`: SKIP because the selected SensorML system representation has no top-level links-member association links.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-17-adversarial-implementation.yaml`
+  - Verdict: `APPROVE` confidence 0.91.
+  - Required fixes: none.
 
 Sprint ets-16 SensorML non-system read-only expansion:
 

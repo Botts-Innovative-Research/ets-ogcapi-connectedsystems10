@@ -1,8 +1,30 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T17:40Z
+Last updated: 2026-05-07T18:05Z
 
 ## Current Sprint Evidence
+
+Sprint ets-20 Part 2 API Common planning:
+
+- Planning only; no code gates required yet.
+- OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 8 "Requirements Class Common".
+  - Requirement class: `/req/api-common`.
+  - Conformance class: `/conf/api-common`.
+  - Normative statements: `/req/api-common/resources` and `/req/api-common/resource-collection`.
+  - Prerequisite: `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common`.
+- GeoRobotix probes:
+  - `/conformance`: declares sibling Part 2 classes (`/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/create-replace-delete`, `/conf/system-event`, `/conf/system-history`, SWE Common encodings) but not `/conf/api-common`.
+  - Landing page links: `datastreams` and `observations`.
+  - `GET /datastreams?limit=1`: HTTP 200, `application/json`, top-level `items` and `links`.
+  - `GET /observations?limit=1`: HTTP 200, `application/json`, top-level `items` and `links`.
+  - `GET /controlstreams?limit=1`: HTTP 200, `application/json`, top-level `items` and `links`.
+  - `GET /commands?limit=1`: HTTP 400, `text/html;charset=iso-8859-1`.
+- Planning interpretation: first Generator increment must be read-only, declaration-gated, and must not infer `/conf/api-common` from sibling Part 2 declarations.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-20-plan-adversarial.yaml`: `APPROVE_WITH_CONCERNS` confidence 0.92.
+  - Required fixes: none.
+  - Non-blocking concern: broader Part 2 placeholder taxonomy still says 14 classes and duplicates API Common under remaining placeholders.
 
 Sprint ets-19 encoding mediatype-write safety-gated Generator:
 

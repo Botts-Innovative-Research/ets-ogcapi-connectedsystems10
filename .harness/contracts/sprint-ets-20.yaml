@@ -1,0 +1,105 @@
+# Sprint 20 contract - Part 2 API Common activation planning
+# Created 2026-05-07 after Sprint 19 Generator push.
+
+sprint: "ets-20"
+sprint_name: "part2-api-common-planning"
+type: "planning"
+created: "2026-05-07T17:58:41Z"
+description: |
+  Sprint 20 activates OGC 23-002 Part 2 planning with the API Common
+  requirements class. This sprint plans the first Part 2 Generator increment
+  only; it does not implement Java code or mutation-side Part 2 behavior.
+
+stories:
+  - id: "S-ETS-20-01"
+    title: "Part 2 API Common planning"
+    file: "epics/stories/s-ets-20-01-part2-api-common-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-19-01"
+      - "S-ETS-03-07"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-001 (/req/api-common - planned)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-001-API-COMMON-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-001-RESOURCE-TERMINOLOGY-001"
+    - "SCENARIO-ETS-PART2-001-RESOURCE-COLLECTION-READONLY-001"
+    - "SCENARIO-ETS-PART2-001-DEPENDENCY-SKIP-001"
+    - "SCENARIO-ETS-PART2-001-GEOROBOTIX-DECLARATION-HONESTY-001"
+  normal: []
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  stale_dynamic_identifiers_rejected: true
+  no_code_changes: true
+  no_part2_mutation: true
+  no_json_encoding_implementation: true
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-07T17:58:41Z"
+  requirement_class: "Clause 8, Requirements Class Common"
+  requirement_class_identifier: "/req/api-common"
+  conformance_class_identifier: "/conf/api-common"
+  prerequisite: "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common"
+  normative_statements:
+    - "/req/api-common/resources"
+    - "/req/api-common/resource-collection"
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares several Part 2 classes including /conf/datastream, /conf/controlstream, /conf/json, /conf/create-replace-delete, /conf/system-event, /conf/system-history, and SWE Common encodings; does not currently declare /conf/api-common."
+    landing_links: "Landing page exposes datastreams and observations links."
+    datastreams: "GET /datastreams?limit=1 returned HTTP 200 application/json with top-level items and links."
+    observations: "GET /observations?limit=1 returned HTTP 200 application/json with top-level items and links."
+    controlstreams: "GET /controlstreams?limit=1 returned HTTP 200 application/json with top-level items and links."
+    commands: "GET /commands?limit=1 returned HTTP 400 in current IUT state."
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/api-common is not declared, Part 2 API Common conformance declaration and resource-judgment tests SKIP with a precise reason."
+    - "Do not infer /conf/api-common from sibling Part 2 class declarations."
+  read_only_probe:
+    - "Read-only collection availability probes may PASS only for endpoints actually exposed and returning HTTP 200 with a JSON object body."
+    - "Current GeoRobotix /commands HTTP 400 is planning evidence only; Generator must avoid assuming command collection availability."
+  dependency:
+    - "Part 2 API Common depends on Part 1 Core/Common availability. If the prerequisite fails, Part 2 API Common tests SKIP by dependency."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/api-common, /conf/api-common, /req/api-common/resources, and /req/api-common/resource-collection."
+  - "Add a Part 2 API Common TestNG group with dependency wiring to Part 1 prerequisites."
+  - "Implement declaration-gated SKIP honesty when /conf/api-common is absent."
+  - "Implement read-only collection probes for discoverable Part 2 resource collections without mutation."
+  - "Update OpenSpec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not use stale /req/dynamic-common or /conf/dynamic-common identifiers."
+  - "Do not implement /req/json in this story."
+  - "Do not implement Datastream, ControlStream, Command, SWE Common, CRD, Update, or mutation behavior."
+  - "Do not mutate GeoRobotix or local OSH."
+  - "Do not claim Part 2 Common PASS when /conf/api-common is absent."
+
+evaluation_focus:
+  raze:
+    - "Attack stale dynamic-* identifier drift from the frozen web app story."
+    - "Attack false PASS from sibling Part 2 class declarations when /conf/api-common is absent."
+    - "Attack overbroad endpoint assumptions, especially /commands current HTTP 400."
+    - "Check that Part 2 mutation and JSON encoding stay out of Sprint 20."
+
+confidence: 0.80

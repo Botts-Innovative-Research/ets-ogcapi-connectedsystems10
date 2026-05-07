@@ -2,6 +2,21 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T18:05Z — Sprint 20 Part 2 API Common planning
+
+**Triggered by user instruction**: "Continue."
+
+- Activated Sprint 20 planning for `S-ETS-20-01`, the first Part 2 planning item after Sprint 19 was pushed.
+- Verified architecture freshness: `_bmad/architecture.md` last reconciled 2026-04-28, so it is not stale.
+- Verified official OGC 23-002 identifiers from the published HTML: Part 2 Common is `/req/api-common` with conformance class `/conf/api-common`, not the frozen web-app `dynamic-common` naming.
+- Added `.harness/contracts/sprint-ets-20.yaml` and `epics/stories/s-ets-20-01-part2-api-common-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, and planner handoff for Part 2 API Common planning.
+- Probed GeoRobotix Part 2 state: sibling Part 2 classes are declared but `/conf/api-common` is absent; `/datastreams`, `/observations`, and `/controlstreams` return HTTP 200 JSON with `items` and `links`; `/commands` returns HTTP 400.
+- Planned verdict policy: absence of `/conf/api-common` is SKIP-with-reason, and sibling Part 2 class declarations cannot create API Common PASS.
+- Raze planning review `.harness/evaluations/sprint-ets-20-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes. Non-blocking concern: broader Part 2 placeholder taxonomy should be cleaned before later Part 2 decomposition.
+
+---
+
 ## 2026-05-07T17:45Z — Sprint 19 Generator mediatype-write safety gates
 
 **Triggered by user instruction**: "Commit and push to Github, then continue."

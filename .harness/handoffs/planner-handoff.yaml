@@ -1,129 +1,125 @@
 agent: planner
-status: complete
-timestamp: "2026-05-07T16:55:33Z"
-sprint_number: "ets-19"
-sprint_name: "encoding-mediatype-write-safety-gated"
-contract_path: ".harness/contracts/sprint-ets-19.yaml"
+status: complete_raze_approved_with_concerns
+timestamp: "2026-05-07T18:05:00Z"
+sprint_number: "ets-20"
+sprint_name: "part2-api-common-planning"
+contract_path: ".harness/contracts/sprint-ets-20.yaml"
 triggered_by: |
-  User instructed "Continue." Interpreted as planning the next remaining Part 1 gap after Sprint 18.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 18 handoff 2026-05-07T00:14:04Z)"
+  User instructed "Continue." Interpreted as starting the next sprint item
+  after Sprint 19 was committed and pushed over SSH.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 19 handoff 2026-05-07T16:55:33Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-07T16:55:33Z"
+  checked_at: "2026-05-07T17:58:41Z"
   stale_over_30_days: false
-  disposition: "OK to start Sprint 19 planning."
+  disposition: "OK to start Sprint 20 planning."
 
 strategic_decisions:
   q1_next_work:
-    question: "After Sprint 18, what is the next Part 1 gap?"
-    decision: "S-ETS-19-01 Encoding mediatype-write safety-gated checks"
+    question: "After Sprint 19, what is the next item?"
+    decision: "Activate Part 2 planning with S-ETS-20-01 Part 2 API Common."
     rationale: |
-      GeoJSON and SensorML both remain partial partly because mediatype-write is
-      open. Sprint 12/14 already built mutation opt-in and no-public-IUT
-      safety gates, so the next useful increment is to plan write-side encoding
-      checks that reuse those controls.
+      Part 1 now has all 14 conformance-class skeletons landed, though some
+      remain intentionally PARTIAL. The next project-scope deliverable is Part 2.
+      Starting with API Common is the lowest-risk Part 2 entry point because it
+      establishes dependency wiring and read-only resource collection handling.
 
-  q2_scope_boundary:
-    question: "Should Sprint 19 mutate GeoRobotix?"
-    decision: "No. Default GeoRobotix smoke remains strictly non-mutating."
+  q2_identifier_source:
+    question: "Should the Java ETS reuse frozen web-app dynamic-* identifiers?"
+    decision: "No. Use official OGC 23-002 identifiers."
     rationale: |
-      GeoRobotix declares Create/Replace/Delete and advertises POST/PUT/DELETE,
-      but it is a shared public IUT. Sprint 19 requires positive parse evidence
-      only against a dedicated mutable IUT with explicit mutation opt-in.
+      The frozen web-app story S09-01 refers to dynamic-common and dynamic-json.
+      The official OGC 23-002 published HTML defines Part 2 Common as
+      /req/api-common with conformance /conf/api-common, so Sprint 20 explicitly
+      rejects dynamic-* names for Java @Test descriptions.
 
-  q3_verdict_policy:
-    question: "What can PASS mediatype-write?"
-    decision: "Only exact Content-Type parse evidence followed by dereference evidence."
+  q3_georobotix_verdict:
+    question: "How should GeoRobotix be treated when it declares sibling Part 2 classes but not /conf/api-common?"
+    decision: "SKIP Part 2 API Common conformance judgment until /conf/api-common is declared."
     rationale: |
-      OPTIONS readiness and mutation status codes can show capability hints but
-      do not prove that the IUT parsed a GeoJSON or SensorML body according to
-      the resource type.
+      Sibling declarations such as /conf/datastream or /conf/json show useful
+      planning evidence, but they do not imply the API Common conformance class.
 
 upstream_ogc_verification:
-  standard: "OGC API - Connected Systems Part 1: Feature Resources"
-  checked_at: "2026-05-07T16:55:33Z"
-  geojson_requirement_class: "api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc"
-  sensorml_requirement_class: "api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc"
-  geojson_clause: "api/part1/standard/sections/clause_20_requirements_class_geojson_encoding.adoc"
-  sensorml_clause: "api/part1/standard/sections/clause_21_requirements_class_sensorml_encoding.adoc"
-  modified_requirements:
-    - "/req/geojson/mediatype-write"
-    - "/req/sensorml/mediatype-write"
+  standard: "OGC API - Connected Systems Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-07T17:58:41Z"
+  requirement_class: "Clause 8, Requirements Class Common"
+  requirement_class_identifier: "/req/api-common"
+  conformance_class_identifier: "/conf/api-common"
+  prerequisite: "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common"
+  normative_statements:
+    - "/req/api-common/resources"
+    - "/req/api-common/resource-collection"
 
 planning_probes:
   georobotix:
     iut_url: "https://api.georobotix.io/ogc/t18/api"
-    conformance: "Declares /conf/create-replace-delete, /conf/geojson, and /conf/sensorml."
-    systems_options: "OPTIONS /systems returns Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS."
-    system_item_options: "OPTIONS /systems/0mqcvdnfoca0 returns Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS."
-    planning_interpretation: "Generator must not mutate this public target; readiness metadata is not mediatype-write PASS evidence."
+    conformance: "Declares Part 2 /conf/datastream, /conf/controlstream, /conf/json, /conf/create-replace-delete, /conf/system-event, /conf/system-history, and SWE Common encodings; does not declare /conf/api-common."
+    landing_links: "Landing page exposes datastreams and observations links."
+    datastreams: "GET /datastreams?limit=1 returned HTTP 200 application/json with top-level items and links."
+    observations: "GET /observations?limit=1 returned HTTP 200 application/json with top-level items and links."
+    controlstreams: "GET /controlstreams?limit=1 returned HTTP 200 application/json with top-level items and links."
+    commands: "GET /commands?limit=1 returned HTTP 400 text/html;charset=iso-8859-1."
+    planning_interpretation: "Generator must be declaration-gated and read-only; do not infer API Common PASS from sibling declarations or assume /commands collection availability."
 
 stories:
-  - id: "S-ETS-19-01"
-    title: "Encoding mediatype-write safety-gated checks"
-    file: "epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md"
+  - id: "S-ETS-20-01"
+    title: "Part 2 API Common planning"
+    file: "epics/stories/s-ets-20-01-part2-api-common-planning.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "2h"
-    sequencing: "ONLY story in Sprint 19"
+    sequencing: "ONLY story in Sprint 20"
 
 new_requirements: []
 modified_requirements:
-  - "REQ-ETS-PART1-012"
-  - "REQ-ETS-PART1-013"
-  - "REQ-ETS-PART1-010"
+  - "REQ-ETS-PART2-001"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART1-012-GEOJSON-MEDIATYPE-WRITE-SAFETY-GATED-001"
-  - "SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001"
-  - "SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-OPTIONS-READINESS-001"
-  - "SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-NO-PUBLIC-MUTATION-001"
-  - "SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-PARSE-EVIDENCE-001"
+  - "SCENARIO-ETS-PART2-001-API-COMMON-CONFORMANCE-DECLARED-001"
+  - "SCENARIO-ETS-PART2-001-RESOURCE-TERMINOLOGY-001"
+  - "SCENARIO-ETS-PART2-001-RESOURCE-COLLECTION-READONLY-001"
+  - "SCENARIO-ETS-PART2-001-DEPENDENCY-SKIP-001"
+  - "SCENARIO-ETS-PART2-001-GEOROBOTIX-DECLARATION-HONESTY-001"
 
 next_agent: "adversarial-reviewer"
 next_agent_rationale: |
-  Planning changes touched mutation-side encoding behavior and were reviewed by
-  Raze before Generator start.
+  Planning activates a new project phase and corrects stale identifier drift,
+  so Raze should review before Generator starts.
 
 raze_review:
-  plan_artifact: ".harness/evaluations/sprint-ets-19-plan-adversarial.yaml"
-  plan_verdict: "GAPS_FOUND"
-  plan_confidence: 0.88
-  required_fixes_status: "closed"
-  gapfix_artifact: ".harness/evaluations/sprint-ets-19-plan-gapfix.yaml"
-  gapfix_verdict: "APPROVE"
-  gapfix_confidence: 0.95
-  gapfix_summary: "Added missing SensorML mediatype-write safety-gated OpenSpec scenario body."
+  plan_artifact: ".harness/evaluations/sprint-ets-20-plan-adversarial.yaml"
+  plan_verdict: "APPROVE_WITH_CONCERNS"
+  plan_confidence: 0.92
+  required_fixes_status: "none"
+  concern_summary: "Future Part 2 placeholder taxonomy still says 14 classes and duplicates API Common under remaining placeholders; not blocking S-ETS-20-01."
 
 next_agent_after_review: "generator"
 next_agent_after_review_rationale: |
-  Sprint 19 planning is Raze-approved after gap fix. Generator can start from
-  `.harness/contracts/sprint-ets-19.yaml`.
+  If Raze approves, Generator can start from `.harness/contracts/sprint-ets-20.yaml`.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
-    - "Reuse Sprint 12 mutation opt-in parameters and public-IUT hard denial."
-    - "Add GeoJSON mediatype-write checks gated on /conf/geojson and /conf/create-replace-delete."
-    - "Add SensorML mediatype-write checks gated on /conf/sensorml and /conf/create-replace-delete."
-    - "Default GeoRobotix smoke must SKIP lifecycle parse assertions before mutation."
-    - "Use exact Content-Type values: application/geo+json and application/sml+json."
-    - "Require follow-up dereference evidence; status-only mutation responses are not PASS."
-    - "Run scripts/mvn-test-via-docker.sh and scripts/smoke-test.sh."
-    - "Verify default smoke has zero IUT-bound POST/PUT/DELETE/PATCH."
+    - "Use official OGC 23-002 identifiers: /req/api-common and /conf/api-common."
+    - "Add Part 2 API Common TestNG group and dependency wiring to Part 1 prerequisites."
+    - "Implement declaration-gated SKIP honesty when /conf/api-common is absent."
+    - "Implement read-only collection probes only for discoverable Part 2 resource collections."
+    - "Run scripts/mvn-test-via-docker.sh and default GeoRobotix TeamEngine smoke."
     - "Update spec/story/traceability/status/changelog/test-results."
   must_not_do:
-    - "Do not mutate GeoRobotix or any known shared public IUT."
-    - "Do not count OPTIONS Allow as mediatype-write conformance."
-    - "Do not bypass mutation safety parameters."
-    - "Do not implement Part 2."
-    - "Do not promote GeoJSON or SensorML beyond PARTIAL."
+    - "Do not use dynamic-common or dynamic-json identifiers."
+    - "Do not implement Part 2 JSON, Datastream, ControlStream, Command, SWE Common, CRD, or Update behavior."
+    - "Do not mutate GeoRobotix or local OSH."
+    - "Do not claim /conf/api-common PASS from sibling Part 2 declarations."
+    - "Do not assume /commands is available when current planning probe returned HTTP 400."
 
 gate_expectations:
   raze:
-    primary: "Attack unsafe mutation and false PASS from readiness/status-only evidence."
-    adversarial_focus: "No public-IUT mutation; exact Content-Type; parse/dereference evidence; partial-status honesty."
+    primary: "Attack stale identifier drift and false PASS from sibling Part 2 declarations."
+    adversarial_focus: "No dynamic-* names, no Part 2 mutation, no /commands availability assumption, and continued honest SKIP when /conf/api-common is absent."
 
-confidence: 0.78
+confidence: 0.80

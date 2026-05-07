@@ -1,6 +1,6 @@
 # Epic ETS-03: CS API Part 2 Conformance Classes
 
-> Status: Deferred — Part 1 first per user gate 2026-04-27. Will activate after epic-ets-02 lands the 14 Part 1 classes. | Last updated: 2026-04-27
+> Status: Active — Sprint 20 starts Part 2 API Common planning after epic-ets-02 landed all 14 Part 1 class skeletons. | Last updated: 2026-05-07
 
 ## Goal
 Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynamic Data: datastreams, observations, control streams, commands, system events, system history, SWE Common formats, plus Part 2 Common/JSON/CRUD/Update/advanced-filtering). Owns sub-deliverable 3 of the new ETS capability.
@@ -13,7 +13,8 @@ Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynami
 
 | ID | Story | Status | OpenSpec Refs |
 |----|-------|--------|---------------|
-| S-ETS-03-01 | (placeholder) Implement `/conf/api-common` (Part 2) suite | Deferred | REQ-ETS-PART2-001 |
+| S-ETS-20-01 | Plan `/conf/api-common` (Part 2) suite using official OGC 23-002 identifiers | Planned | REQ-ETS-PART2-001 |
+| S-ETS-03-01 | (placeholder) Implement `/conf/api-common` (Part 2) suite | Superseded by S-ETS-20-01 planning | REQ-ETS-PART2-001 |
 | S-ETS-03-02 | (placeholder) Implement `/conf/datastream` suite | Deferred | REQ-ETS-PART2-002 |
 | S-ETS-03-03 | (placeholder) Implement `/conf/controlstream` suite | Deferred | REQ-ETS-PART2-003 |
 | S-ETS-03-04 | (placeholder) Implement `/conf/feasibility` suite | Deferred | REQ-ETS-PART2-004 |
@@ -36,5 +37,6 @@ Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynami
 - [ ] Part 2 suite pass rate ≥95% against GeoRobotix demo server for IUT-declared classes
 
 ## Notes
-- Sprint 1 explicitly **excludes** Part 2 work per user decision 2026-04-27.
-- Per-assertion REQ-* IDs to be drafted at epic activation time, not now.
+- Sprint 1 explicitly **excluded** Part 2 work per user decision 2026-04-27.
+- Sprint 20 activates the Part 2 track in planning mode only. The first Generator increment should implement Part 2 API Common read-only/declaration-gated behavior before Part 2 JSON or resource-specific classes.
+- Historical web-app Part 2 story IDs and `dynamic-*` names are not authoritative for the Java ETS; use official OGC 23-002 identifiers.

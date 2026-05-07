@@ -1,0 +1,102 @@
+schema_version: "1.0"
+artifact_type: "adversarial_planning_review"
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-07T18:03:08Z"
+sprint: "sprint-ets-20"
+story_id: "S-ETS-20-01"
+scope: "Current uncommitted Sprint 20 planning changes for Part 2 API Common"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.92
+
+reviewed_files:
+  - ".harness/contracts/sprint-ets-20.yaml"
+  - "epics/stories/s-ets-20-01-part2-api-common-planning.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "epics/epic-ets-03-part2-classes.md"
+  - "_bmad/traceability.md"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/test-results.md"
+  - ".harness/handoffs/planner-handoff.yaml"
+
+external_sources_checked:
+  - source: "https://docs.ogc.org/is/23-002/23-002.html"
+    evidence:
+      - "Clause 8 Requirements Class Common lists Identifier /req/api-common, Conformance class /conf/api-common, prerequisite Part 1 /req/api-common, and normative statements /req/api-common/resources plus /req/api-common/resource-collection."
+      - "Annex A.1 lists Conformance class /conf/api-common and tests /conf/api-common/resources and /conf/api-common/resource-collection."
+      - "No dynamic-common identifier was found in the official source."
+  - source: "https://api.georobotix.io/ogc/t18/api"
+    evidence:
+      - "Live /conformance probe confirms Part 2 sibling declarations /conf/datastream, /conf/controlstream, /conf/system-history, /conf/system-event, /conf/create-replace-delete, /conf/json, /conf/swecommon-json, /conf/swecommon-text, and /conf/swecommon-binary."
+      - "Live /conformance probe confirms /conf/api-common is absent."
+      - "Live GET probes: /datastreams?limit=1, /observations?limit=1, and /controlstreams?limit=1 returned HTTP 200 application/json with top-level items and links; /commands?limit=1 returned HTTP 400 text/html;charset=iso-8859-1."
+      - "Landing page with Accept: application/json exposes datastreams and observations links."
+
+findings:
+  - id: "RAZE-ETS20-PLAN-CONCERN-001"
+    severity: "low"
+    area: "future Part 2 placeholder taxonomy"
+    status: "open_followup"
+    title: "Epic/spec placeholder still describes 14 Part 2 conformance classes"
+    detail: >
+      The Sprint 20 API Common plan itself uses the correct official identifiers,
+      but the broader Part 2 placeholder text still says "14 OGC 23-002
+      conformance classes" and the REQ-ETS-PART2-002..014 placeholder list still
+      includes api-common even though REQ-ETS-PART2-001 now owns API Common.
+      Official Annex A presents 12 conformance classes, grouping Datastreams
+      with Observations and Control Streams with Commands. This does not create
+      a Sprint 20 API Common false PASS path, but it should be cleaned up before
+      planning later Part 2 class decomposition.
+    required_fix: null
+
+checks:
+  official_identifier_correction:
+    verdict: "pass"
+    evidence:
+      - "Contract, story, OpenSpec, traceability, status, test-results, and planner handoff use /req/api-common and /conf/api-common for Part 2 Common."
+      - "The same docs reject frozen web-app dynamic-common / dynamic-json naming for Java ETS @Test descriptions."
+      - "Official OGC 23-002 Clause 8 and Annex A.1 confirm the chosen identifiers."
+  dynamic_names_rejected:
+    verdict: "pass"
+    evidence:
+      - "dynamic-common and dynamic-json occur only as historical names to reject, not as planned Java requirement or conformance identifiers."
+      - "Contract generator_must_not_do forbids stale /req/dynamic-common and /conf/dynamic-common."
+  georobotix_declaration_honesty:
+    verdict: "pass"
+    evidence:
+      - "Planning docs record that GeoRobotix declares sibling Part 2 classes but not /conf/api-common."
+      - "Verdict policy requires SKIP-with-reason when /conf/api-common is absent."
+      - "Docs explicitly forbid inferring /conf/api-common PASS from /conf/datastream, /conf/controlstream, /conf/json, or other sibling declarations."
+  current_iut_probe_honesty:
+    verdict: "pass"
+    evidence:
+      - "Docs record HTTP 200 JSON items/links evidence for datastreams, observations, and controlstreams."
+      - "Docs record /commands?limit=1 as HTTP 400 and instruct Generator not to assume /commands availability."
+      - "Live probes performed during this review matched the documented outcomes."
+  no_part2_mutation:
+    verdict: "pass"
+    evidence:
+      - "Sprint type is planning; no Java code changes are present."
+      - "Contract, story, status, and handoff require read-only Generator behavior and forbid mutation."
+      - "Out-of-scope lists exclude Part 2 Create/Replace/Delete and Update mutation."
+  no_part2_json_implementation:
+    verdict: "pass"
+    evidence:
+      - "Contract and story explicitly exclude /req/json and Part 2 JSON encoding implementation."
+      - "GeoRobotix /conf/json is treated only as sibling declaration evidence, not API Common PASS evidence."
+  docs_reconciliation:
+    verdict: "pass_with_note"
+    evidence:
+      - "OpenSpec, story, contract, traceability, Epic ETS-03, status, changelog, test-results, and planner handoff consistently describe S-ETS-20-01 as planning-only API Common activation."
+      - "No changed Java/TestNG/shell files were observed in the Sprint 20 planning diff."
+      - "Non-blocking note: broader Part 2 placeholder taxonomy remains stale for future decomposition, captured as RAZE-ETS20-PLAN-CONCERN-001."
+
+required_fixes: []
+approval_rationale: >
+  Sprint 20 planning is sufficiently constrained for Generator start. It corrects
+  the identifier drift to official OGC 23-002 API Common identifiers, keeps
+  GeoRobotix declaration evidence honest, rejects false PASS from sibling Part 2
+  classes, prevents /commands availability assumptions, and excludes mutation,
+  Part 2 JSON, and resource-specific Part 2 implementations. The single concern
+  is future-facing placeholder taxonomy, not a blocker for S-ETS-20-01.

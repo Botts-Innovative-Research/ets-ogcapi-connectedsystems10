@@ -102,7 +102,10 @@ commit:
 push:
   attempted_before_generator: true
   attempted_after_amend: true
-  result: "failed_https_credentials_unavailable"
-  error: "fatal: could not read Username for 'https://github.com': No such device or address"
+  switched_remote_to_ssh: true
+  result: "succeeded"
+  remote: "git@github.com:Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git"
+  pushed_commit: "4bdc930"
+  prior_https_error: "fatal: could not read Username for 'https://github.com': No such device or address"
 
-next_action: "Provide GitHub credentials or switch remote to authenticated transport, then push current HEAD; otherwise continue next sprint item locally."
+next_action: "Continue with next sprint item from pushed commit 4bdc930."

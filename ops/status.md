@@ -43,7 +43,7 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
 - Current sprint status: Sprint ets-19 Generator completed safety-gated GeoJSON/SensorML mediatype-write checks.
 - Latest committed Generator: `Implement Sprint 19 mediatype write checks`.
-- Push status: `git push origin main` was retried after Sprint 19 amend and failed because GitHub HTTPS credentials are unavailable in this environment (`fatal: could not read Username for 'https://github.com': No such device or address`).
+- Push status: remote switched to SSH and `git push origin main` succeeded on 2026-05-07T17:54Z (`b349edf..4bdc930 main -> main`).
 
 ## Sprint ets-19 Generator Evidence
 
@@ -64,7 +64,7 @@ Encoding mediatype-write safety-gated checks:
 - Raze planning review `.harness/evaluations/sprint-ets-19-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for a missing SensorML OpenSpec scenario body.
 - Raze gap-fix review `.harness/evaluations/sprint-ets-19-plan-gapfix.yaml` returned `APPROVE` confidence 0.95 after adding `SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001`.
 - Raze implementation follow-up gapfix `.harness/evaluations/sprint-ets-19-adversarial-followup-gapfix.yaml` returned `APPROVE` confidence 0.94 after r3 reconciliation updates.
-- Next action: provide GitHub credentials or switch the remote to an authenticated transport, then push `current HEAD`; otherwise start the next sprint item locally from the committed state.
+- Next action: start the next sprint item from pushed commit `4bdc930`.
 
 ## Sprint ets-18 Generator Evidence
 

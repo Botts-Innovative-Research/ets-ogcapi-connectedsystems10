@@ -18,6 +18,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Raze follow-up review first found stale reconciliation docs, then gapfix review `.harness/evaluations/sprint-ets-19-adversarial-followup-gapfix.yaml` returned `APPROVE` confidence 0.94.
 - Reconciled OpenSpec, story, traceability, epic, ops status, test-results, known issues, and Generator handoff for the Generator outcome.
 - Amended Sprint 19 Generator commit to `current HEAD`; retrying `git push origin main` still failed with the same unavailable GitHub HTTPS credentials error.
+- Switched `origin` to SSH (`git@github.com:Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git`) and pushed Sprint 19 commit `4bdc930` to GitHub (`b349edf..4bdc930 main -> main`).
 
 ---
 

@@ -2,6 +2,22 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T19:35Z — Sprint 21 Part 2 Datastream Generator
+
+**Triggered by user instruction**: "Kick off Generator."
+
+- Implemented `S-ETS-21-01` as a read-only, declaration-gated Part 2 Datastreams & Observations subset.
+- Added `Part2DatastreamTests` for `/conf/datastream`, `/datastreams`, `/datastreams/{id}`, `/datastreams/{id}/schema`, `/observations`, `/observations/{id}`, `/datastreams/{id}/observations`, and bounded `/systems/{systemId}/datastreams` checks.
+- Preserved prerequisite honesty: scoped checks run when `/conf/datastream` is declared, while full `/conf/datastream` closure SKIPs when `/conf/api-common` is absent.
+- Added helper and TestNG structural regressions so generic JSON cannot masquerade as Datastream/Observation evidence and `part2datastream` remains co-located with Core/Common.
+- Fixed the initial TeamEngine smoke build blocker from a bad Javadoc ampersand before rerunning gates.
+- Ran formatter, Maven, and TeamEngine smoke. Maven: `160 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke: `104 total / 64 passed / 0 failed / 40 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 82 recognized request-log entries.
+- Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, known issues, and Generator handoff for the Generator outcome.
+- Raze implementation review returned `GAPS_FOUND` confidence 0.90 for reconciliation/evidence gaps only; archived Maven and smoke evidence under `ops/test-results/` and removed planning-only/next-Generator handoff language.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-21-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.96 with no required fixes.
+
+---
+
 ## 2026-05-07T19:12Z — Sprint 21 Part 2 Datastream planning
 
 **Triggered by user instruction**: "do it."

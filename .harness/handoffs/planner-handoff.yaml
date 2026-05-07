@@ -1,8 +1,8 @@
-agent: planner
-status: complete_raze_approved_after_gapfix
-timestamp: "2026-05-07T19:23:00Z"
+agent: generator
+status: generator_complete_raze_approved_ready_to_commit
+timestamp: "2026-05-07T19:52:10Z"
 sprint_number: "ets-21"
-sprint_name: "part2-datastream-planning"
+sprint_name: "part2-datastream-generator"
 contract_path: ".harness/contracts/sprint-ets-21.yaml"
 triggered_by: |
   User instructed "do it." Interpreted as starting Sprint 21 planning for
@@ -100,8 +100,9 @@ critical_scenarios:
 
 next_agent: "adversarial-reviewer"
 next_agent_rationale: |
-  Planning activates a new project phase and corrects stale identifier drift,
-  so Raze should review before Generator starts.
+  Generator implementation is complete and gates pass. Raze implementation
+  review found reconciliation/evidence gaps only, and gap-fix review approved
+  the archived evidence plus handoff/status cleanup.
 
 raze_review:
   plan_artifact: ".harness/evaluations/sprint-ets-21-plan-adversarial.yaml"
@@ -113,9 +114,26 @@ raze_review:
   gapfix_verdict: "APPROVE"
   gapfix_confidence: 0.95
 
-next_agent_after_review: "generator"
+next_agent_after_review: "committer"
 next_agent_after_review_rationale: |
-  If Raze approves, Generator can start from `.harness/contracts/sprint-ets-21.yaml`.
+  Commit and push Sprint 21 Generator over SSH, then plan Sprint 22.
+
+generator_result:
+  implementation_status: "PARTIAL_IMPLEMENTED"
+  implemented_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/VerifyPart2DatastreamTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  formatter: "Docker Maven spring-javaformat:apply BUILD SUCCESS"
+  maven: "160 tests / 0 failures / 0 errors / 3 skipped; archived at ops/test-results/sprint-ets-21-maven-2026-05-07.log"
+  smoke: "104 total / 64 passed / 0 failed / 40 skipped; archived at ops/test-results/sprint-ets-21-teamengine-smoke-2026-05-07.xml"
+  smoke_output_dir: "ops/test-results/"
+  no_mutation: "zero IUT-bound POST/PUT/DELETE/PATCH across 82 recognized IUT request logs"
+  full_closure_note: "GeoRobotix lacks /conf/api-common, so full /conf/datastream closure remains prerequisite-incomplete."
+  raze_implementation_review: ".harness/evaluations/sprint-ets-21-adversarial-implementation.yaml returned GAPS_FOUND 0.90 for reconciliation/evidence only; fixes applied."
+  raze_gapfix_review: ".harness/evaluations/sprint-ets-21-adversarial-gapfix.yaml returned APPROVE 0.96 with no required fixes."
+  next_work: "After commit/push, plan Sprint 22 for the next Part 2 item, likely /conf/controlstream."
 
 generator_brief:
   must_do:
@@ -141,4 +159,4 @@ gate_expectations:
     primary: "Attack false Datastream PASS and false API Common prerequisite PASS."
     adversarial_focus: "No generic JSON false PASS, no API Common inference, no mutation, no ControlStream/Command scope creep, and correct handling of empty nested Observation collections."
 
-confidence: 0.78
+confidence: 0.83

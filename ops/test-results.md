@@ -1,12 +1,15 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T19:12Z
+Last updated: 2026-05-07T19:52Z
 
 ## Current Sprint Evidence
 
-Sprint ets-21 Part 2 Datastreams & Observations planning:
+Sprint ets-21 Part 2 Datastreams & Observations Generator:
 
-- Planning-only change set; no Java code changed and no Maven/TeamEngine gates are required before Generator.
+- Generator implementation:
+  - `Part2DatastreamTests` adds declaration-gated read-only checks for `/conf/datastream`, `/datastreams`, `/datastreams/{id}`, `/datastreams/{id}/schema`, `/observations`, `/observations/{id}`, `/datastreams/{id}/observations`, and bounded `/systems/{systemId}/datastreams`.
+  - `VerifyPart2DatastreamTests` adds 5 helper regressions for Datastream shape, Observation shape, reference evidence, empty collection shape, and official identifier drift.
+  - `VerifyTestNGSuiteDependency` adds structural coverage for `part2datastream` group dependency and Core/Common co-location.
 - Official OGC source verification:
   - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 9 "Requirements Class Datastreams & Observations".
   - Requirements class identifier: `/req/datastream`.
@@ -21,11 +24,30 @@ Sprint ets-21 Part 2 Datastreams & Observations planning:
   - `GET /datastreams/0mirhn7lo1kg/schema`: HTTP 200 JSON with `obsFormat` and `resultSchema`.
   - `GET /datastreams/0mirhn7lo1kg/observations?limit=2`: HTTP 200 JSON with empty `items`; no top-level `links`; endpoint availability evidence only, not `/req/datastream/obs-ref-from-datastream` PASS evidence.
   - `GET /systems/0nar3cl0tk3g/datastreams?limit=1`: HTTP 200 JSON with a Datastream item.
-- Planned gate expectation: Generator must run formatter, Maven via Docker, GeoRobotix TeamEngine smoke, and Raze implementation review after code changes; full `/conf/datastream` closure remains blocked when `/req/api-common` is absent.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `160 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-21-maven-2026-05-07.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s21-generator bash scripts/smoke-test.sh`
+  - Result: `104 total / 64 passed / 0 failed / 40 skipped`
+  - Report: `ops/test-results/sprint-ets-21-teamengine-smoke-2026-05-07.xml`
+  - Log: `ops/test-results/sprint-ets-21-teamengine-container-2026-05-07.log`
+  - No-mutation oracle: recognized 82 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Runtime outcome: GeoRobotix scoped Datastream endpoint checks run under `/conf/datastream`; full `/conf/datastream` closure remains prerequisite-incomplete because `/conf/api-common` is absent. Empty nested observations SKIP `/req/datastream/obs-ref-from-datastream`.
 - Raze planning review:
   - `.harness/evaluations/sprint-ets-21-plan-adversarial.yaml`: `GAPS_FOUND` confidence 0.88.
   - Required fixes: split endpoint availability from `/req/datastream/obs-ref-from-datastream`; explicitly block full `/conf/datastream` closure while `/req/api-common` is absent.
   - `.harness/evaluations/sprint-ets-21-plan-gapfix.yaml`: `APPROVE` confidence 0.95 after fixes.
+- Raze implementation review:
+  - `.harness/evaluations/sprint-ets-21-adversarial-implementation.yaml`: `GAPS_FOUND` confidence 0.90.
+  - Required fixes were reconciliation/evidence only: remove planning-only/next-Generator language and archive Maven evidence durably.
+  - Fix status: addressed by updating status/test-results/changelog/handoff references and archiving `ops/test-results/sprint-ets-21-maven-2026-05-07.log`.
+  - `.harness/evaluations/sprint-ets-21-adversarial-gapfix.yaml`: `APPROVE` confidence 0.96 with no required fixes.
 
 Sprint ets-20 Part 2 API Common Generator:
 

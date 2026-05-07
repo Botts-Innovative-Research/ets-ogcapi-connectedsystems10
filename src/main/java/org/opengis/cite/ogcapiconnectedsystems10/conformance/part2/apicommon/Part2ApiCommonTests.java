@@ -36,9 +36,9 @@ public class Part2ApiCommonTests {
 
 	static final String GROUP = "part2apicommon";
 
-	static final String CONF_PART2_API_COMMON = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common";
+	public static final String CONF_PART2_API_COMMON = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common";
 
-	static final String REQ_API_COMMON = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common";
+	public static final String REQ_API_COMMON = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common";
 
 	static final String REQ_RESOURCES = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common/resources";
 
@@ -179,7 +179,7 @@ public class Part2ApiCommonTests {
 		}
 	}
 
-	static boolean declaresConformance(Map<String, Object> body, String conformanceUri) {
+	public static boolean declaresConformance(Map<String, Object> body, String conformanceUri) {
 		if (body == null || conformanceUri == null) {
 			return false;
 		}

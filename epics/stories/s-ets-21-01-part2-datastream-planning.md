@@ -1,6 +1,6 @@
 # Story S-ETS-21-01: Part 2 Datastreams & Observations Read-Only Subset
 
-> Status: Planned | Epic: epic-ets-03-part2-classes | Sprint: ets-21 | Last updated: 2026-05-07
+> Status: Partial Implemented | Epic: epic-ets-03-part2-classes | Sprint: ets-21 | Last updated: 2026-05-07
 
 ## Context
 
@@ -48,6 +48,17 @@ Plan the first read-only `REQ-ETS-PART2-002` Generator increment:
 - Do not require nested Observation collection `links` unless implementing `/req/datastream/obs-collections` specifically.
 - Do not implement ControlStream, Command, Part 2 JSON, SWE Common, Create/Replace/Delete, Update, or schema-body validation closure.
 
+## Generator Evidence
+
+- Implemented `Part2DatastreamTests` with declaration-gated read-only checks for `/conf/datastream`, `/datastreams`, `/datastreams/{id}`, `/datastreams/{id}/schema`, `/observations`, `/observations/{id}`, `/datastreams/{id}/observations`, and bounded `/systems/{systemId}/datastreams`.
+- Wired TestNG group `part2datastream` with `depends-on="core common"` so GeoRobotix can produce scoped Datastream endpoint evidence even though `/conf/api-common` is absent; a runtime prerequisite test SKIPs full `/conf/datastream` closure explicitly.
+- Added helper regressions in `VerifyPart2DatastreamTests` and structural suite regressions in `VerifyTestNGSuiteDependency`.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` BUILD SUCCESS.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `160 tests / 0 failures / 0 errors / 3 skipped`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s21-generator bash scripts/smoke-test.sh` PASS, `104 total / 64 passed / 0 failed / 40 skipped`.
+- No-mutation proof: smoke reported zero IUT-bound POST/PUT/DELETE/PATCH request-log entries for GeoRobotix across 82 recognized IUT request logs.
+- Raze implementation review found reconciliation/evidence gaps only (`GAPS_FOUND` 0.90); gap-fix review approved (`APPROVE` 0.96) after Maven and smoke artifacts were archived under `ops/test-results/`.
+
 ## Definition of Done
 
 - [x] OpenSpec defines `REQ-ETS-PART2-002` and Sprint 21 scenarios.
@@ -56,8 +67,8 @@ Plan the first read-only `REQ-ETS-PART2-002` Generator increment:
 - [x] Traceability maps `FR-ETS-31` to `S-ETS-21-01`.
 - [x] Ops status, changelog, test-results, and planner handoff record Sprint 21 planning evidence.
 - [x] Raze reviews Sprint 21 planning changes (`GAPS_FOUND` 0.88), required fixes are applied, and gap-fix review approves (`APPROVE` 0.95).
-- [ ] Generator implements the planned read-only Datastream subset.
-- [ ] Formatter, Maven, and GeoRobotix TeamEngine smoke are run after Generator code changes.
+- [x] Generator implements the planned read-only Datastream subset.
+- [x] Formatter, Maven, and GeoRobotix TeamEngine smoke are run after Generator code changes.
 
 ## Out Of Scope
 
@@ -78,3 +89,9 @@ Plan the first read-only `REQ-ETS-PART2-002` Generator increment:
 - Gap-fix artifact: `.harness/evaluations/sprint-ets-21-plan-gapfix.yaml`
 - Gap-fix verdict: `APPROVE`
 - Gap-fix confidence: 0.95
+- Implementation artifact: `.harness/evaluations/sprint-ets-21-adversarial-implementation.yaml`
+- Implementation verdict: `GAPS_FOUND` for reconciliation/evidence only
+- Implementation confidence: 0.90
+- Implementation gap-fix artifact: `.harness/evaluations/sprint-ets-21-adversarial-gapfix.yaml`
+- Implementation gap-fix verdict: `APPROVE`
+- Implementation gap-fix confidence: 0.96

@@ -1,0 +1,175 @@
+verdict: GAPS_FOUND
+confidence: 0.90
+reviewer: "Raze"
+role: "Red Team / Adversarial Reviewer"
+reviewed_at: "2026-05-07T19:47:00Z"
+scope:
+  sprint: "ets-21"
+  story: "S-ETS-21-01"
+  title: "Part 2 Datastreams & Observations Generator implementation"
+  workspace: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  review_type: "implementation"
+  implementation_files_edited_by_reviewer: []
+  expensive_gates_rerun_by_reviewer: false
+  reason_no_rerun: "User supplied formatter/Maven/smoke evidence; review verified available logs/artifacts and code paths without rerunning Docker gates."
+  changed_code_reviewed:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/VerifyPart2DatastreamTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  changed_docs_reviewed:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-21-01-part2-datastream-planning.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+
+findings:
+  - id: "RAZE-ETS21-IMPL-GAP-001"
+    severity: "HIGH"
+    status: "OPEN"
+    title: "Implementation evidence is not reconciled across required ops/traceability docs"
+    details: >
+      The Java implementation and smoke behavior match the Sprint 21 false-PASS
+      guardrails, but the repository documentation is not yet reconciled enough
+      for amend/commit. OpenSpec and the story contain implementation evidence,
+      and the epic row is partial-implemented, but _bmad/traceability.md still
+      marks REQ-ETS-PART2-002 as PLANNED, ops/status.md still says the next action
+      is to start Generator for S-ETS-21-01, and ops/test-results.md still labels
+      Sprint 21 as planning-only with no Java code changed. This conflicts with
+      the current uncommitted code and the supplied Maven/smoke evidence.
+    evidence:
+      - "_bmad/traceability.md row FR-ETS-31 / REQ-ETS-PART2-002 still begins **PLANNED** and describes Generator obligations."
+      - "ops/status.md says Sprint ets-21 planning is complete and the next action is to start Generator for S-ETS-21-01."
+      - "ops/test-results.md current Sprint section still says 'Planning-only change set; no Java code changed and no Maven/TeamEngine gates are required before Generator.'"
+      - "OpenSpec and story already claim Sprint 21 Generator evidence, so the docs disagree with each other."
+    required_fix: >
+      Reconcile _bmad/traceability.md, ops/status.md, ops/test-results.md,
+      ops/changelog.md, and any handoff artifact used for Generator close so they
+      consistently record Sprint 21 as PARTIAL_IMPLEMENTED with exact formatter,
+      Maven, smoke, no-mutation, runtime PASS/SKIP outcomes, and remaining scope
+      limitations.
+
+  - id: "RAZE-ETS21-IMPL-GAP-002"
+    severity: "MEDIUM"
+    status: "OPEN"
+    title: "Maven verification evidence is not durably archived in ops/test-results"
+    details: >
+      The user supplied Maven evidence of 160 tests, 0 failures, 0 errors, and
+      3 skipped, and the current target/surefire-reports directory is consistent
+      with the new Part2Datastream helper and structural lint tests. However, no
+      Sprint 21 Maven log exists under ops/test-results or another durable repo
+      path discoverable by the review. The story cites the Maven total without
+      a log path, while ops/test-results.md is still planning-only. This weakens
+      reproducibility of the implementation evidence.
+    evidence:
+      - "find/rg did not locate an ops/test-results Sprint 21 Maven log."
+      - "target/surefire-reports shows VerifyPart2DatastreamTests 5/0/0/0 and VerifyTestNGSuiteDependency 43/0/0/0, but target/ is build output, not an archived evidence artifact."
+      - "The supplied Maven total is not yet reflected in ops/test-results.md."
+    required_fix: >
+      Archive or reference the Sprint 21 Maven output in a durable evidence path
+      and update ops/test-results.md with the command, log path, and exact
+      `160 tests / 0 failures / 0 errors / 3 skipped` total.
+
+checks:
+  official_ogc_identifier_fidelity:
+    verdict: "PASS"
+    evidence:
+      - "Part2DatastreamTests uses http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream."
+      - "Part2DatastreamTests uses http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream and official subrequirement suffixes."
+      - "VerifyPart2DatastreamTests.constantsUseOfficialDatastreamIdentifiers rejects stale dynamic naming."
+      - "Official OGC 23-002 Clause 9 lists /req/datastream, /conf/datastream, and prerequisite /req/api-common."
+  false_pass_empty_nested_observations:
+    verdict: "PASS"
+    evidence:
+      - "observationEndpointsReadable treats /datastreams/{id}/observations as endpoint availability evidence only."
+      - "observationsReferenceSelectedDatastreamWhenNestedCollectionPopulated SKIPs when nested items are empty with wording that endpoint availability is not Observation reference PASS evidence."
+      - "Smoke XML shows observationsReferenceSelectedDatastreamWhenNestedCollectionPopulated SKIP for selected Datastream 0mirhn7lo1kg because the nested collection is empty."
+  api_common_prerequisite_honesty:
+    verdict: "PASS"
+    evidence:
+      - "part2datastream depends on core common, not part2apicommon, so scoped endpoint evidence can run against GeoRobotix."
+      - "datastreamApiCommonPrerequisiteVisibleForFullClosure SKIPs when /conf/api-common is absent and states full /conf/datastream closure is prerequisite-incomplete."
+      - "Smoke XML shows this prerequisite/full-closure test SKIP while scoped Datastream endpoint checks PASS."
+  generic_json_false_pass:
+    verdict: "PASS"
+    evidence:
+      - "hasDatastreamShape requires id plus Datastream-specific system, outputName, observedProperties, formats, and resultType evidence."
+      - "hasObservationShape requires id plus an Observation-specific member."
+      - "VerifyPart2DatastreamTests covers generic JSON objects that must not masquerade as Datastream or Observation resources."
+  testng_group_wiring:
+    verdict: "PASS"
+    evidence:
+      - "testng.xml declares <group name=\"part2datastream\" depends-on=\"core common\"/>."
+      - "Part2DatastreamTests is included in the consolidated TestNG class block."
+      - "VerifyTestNGSuiteDependency adds Part2Datastream dependency, group tagging, co-location, comma-rejection, and no-part2apicommon-dependency checks."
+      - "Smoke XML reports Part2Datastream methods with depends-on-groups=\"core, common\"."
+  read_only_and_scope_control:
+    verdict: "PASS"
+    evidence:
+      - "Part2DatastreamTests performs GET-only conformance, datastream, schema, observation, nested observation, and system-scoped datastream requests."
+      - "No ControlStream, Command, Part 2 JSON, SWE Common, CRD, Update, POST, PUT, PATCH, or DELETE implementation was added."
+      - "no-mutation oracle over the smoke container log reported recognized_iut_request_logs=82 and no IUT-bound mutating requests."
+  e2e_evidence:
+    verdict: "PASS_WITH_RECONCILIATION_GAP"
+    evidence:
+      - "Smoke XML at /tmp/ets-ogcapi-connectedsystems10-smoke-results-s21-generator/s-ets-01-03-teamengine-smoke-2026-05-07.xml reports total=104, passed=64, failed=0, skipped=40."
+      - "Smoke container log contains only GET requests for Sprint 21 Datastream/Observation probes."
+      - "Maven total was supplied by the user and current surefire reports support the new helper/structural tests, but the Maven log is not archived in ops/test-results."
+
+verification_evidence:
+  formatter:
+    result: "BUILD SUCCESS (supplied by user; not rerun by Raze)"
+  maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    result: "BUILD SUCCESS (supplied by user; not rerun by Raze)"
+    totals:
+      tests: 160
+      failures: 0
+      errors: 0
+      skipped: 3
+    archive_status: "GAP: no Sprint 21 Maven log found under ops/test-results during review"
+    local_surefire_spot_checks:
+      - "VerifyPart2DatastreamTests: 5 tests / 0 failures / 0 errors / 0 skipped"
+      - "VerifyTestNGSuiteDependency: 43 tests / 0 failures / 0 errors / 0 skipped"
+  smoke:
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s21-generator bash scripts/smoke-test.sh"
+    xml: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s21-generator/s-ets-01-03-teamengine-smoke-2026-05-07.xml"
+    container_log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s21-generator/s-ets-01-03-teamengine-container-2026-05-07.log"
+    result: "SMOKE PASS"
+    totals:
+      total: 104
+      passed: 64
+      failed: 0
+      skipped: 40
+    no_mutation_oracle:
+      recognized_iut_request_logs: 82
+      iut_bound_post_put_delete_patch: 0
+    part2_datastream_runtime:
+      datastreamConformanceDeclared: "PASS"
+      datastreamApiCommonPrerequisiteVisibleForFullClosure: "SKIP because /conf/api-common is absent"
+      observationsReferenceSelectedDatastreamWhenNestedCollectionPopulated: "SKIP because nested Observation collection is empty"
+      scoped_endpoint_checks: "PASS where GeoRobotix supplies readable Datastream/Observation endpoint evidence"
+
+required_fixes:
+  - "Reconcile _bmad/traceability.md, ops/status.md, ops/test-results.md, ops/changelog.md, and closeout handoff docs so they no longer describe Sprint 21 as planning-only or next-action Generator start."
+  - "Archive/reference the Sprint 21 Maven evidence in ops/test-results and update ops/test-results.md with exact 160/0/0/3 Maven totals and 104/64/0/40 smoke totals plus the 82-entry no-mutation oracle."
+
+approval_rationale: >
+  The implementation behavior itself is close to approval: official identifiers are
+  used, the two Sprint 21 planning false-PASS risks are enforced at runtime, TestNG
+  wiring is structurally covered, smoke evidence shows scoped endpoint PASSes and
+  honest SKIPs, and no IUT mutation was observed. The blockers are reconciliation
+  and durable evidence gaps, not Java behavior defects.
+
+sources:
+  - name: "OGC API - Connected Systems - Part 2: Dynamic Data"
+    url: "https://docs.ogc.org/is/23-002/23-002.html"
+    used_for:
+      - "/req/datastream and /conf/datastream identifier fidelity"
+      - "/req/api-common prerequisite"
+      - "Observation canonical/resources/ref-from-datastream requirement separation"

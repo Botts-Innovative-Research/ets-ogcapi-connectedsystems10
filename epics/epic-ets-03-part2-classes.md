@@ -1,6 +1,6 @@
 # Epic ETS-03: CS API Part 2 Conformance Classes
 
-> Status: Active — Sprint 21 plans the first Part 2 Datastreams & Observations read-only subset after Sprint 20 API Common. | Last updated: 2026-05-07
+> Status: Active — Sprint 21 partially implements the first Part 2 Datastreams & Observations read-only subset after Sprint 20 API Common. | Last updated: 2026-05-07
 
 ## Goal
 Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynamic Data: datastreams, observations, control streams, commands, system events, system history, SWE Common formats, plus Part 2 Common/JSON/CRUD/Update/advanced-filtering). Owns sub-deliverable 3 of the new ETS capability.
@@ -15,7 +15,7 @@ Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynami
 |----|-------|--------|---------------|
 | S-ETS-20-01 | Implement `/conf/api-common` (Part 2) read-only declaration-gated subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-001 |
 | S-ETS-03-01 | (placeholder) Implement `/conf/api-common` (Part 2) suite | Superseded by S-ETS-20-01 planning | REQ-ETS-PART2-001 |
-| S-ETS-21-01 | Plan `/conf/datastream` (Part 2 Datastreams & Observations) read-only declaration-gated subset using official OGC 23-002 identifiers | Planned | REQ-ETS-PART2-002 |
+| S-ETS-21-01 | Implement `/conf/datastream` (Part 2 Datastreams & Observations) read-only declaration-gated subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-002 |
 | S-ETS-03-02 | (placeholder) Implement `/conf/datastream` suite | Superseded by S-ETS-21-01 planning | REQ-ETS-PART2-002 |
 | S-ETS-03-03 | (placeholder) Implement `/conf/controlstream` suite | Deferred | REQ-ETS-PART2-003 |
 | S-ETS-03-04 | (placeholder) Implement `/conf/feasibility` suite | Deferred | REQ-ETS-PART2-004 |
@@ -40,5 +40,5 @@ Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynami
 ## Notes
 - Sprint 1 explicitly **excluded** Part 2 work per user decision 2026-04-27.
 - Sprint 20 activates the Part 2 track with a read-only, declaration-gated Part 2 API Common subset before Part 2 JSON or resource-specific classes.
-- Sprint 21 plans the first read-only Datastreams & Observations subset. OGC 23-002 Clause 9 names the class `/req/datastream` with conformance `/conf/datastream` and prerequisite `/req/api-common`.
+- Sprint 21 partially implements the first read-only Datastreams & Observations subset. OGC 23-002 Clause 9 names the class `/req/datastream` with conformance `/conf/datastream` and prerequisite `/req/api-common`; full closure remains prerequisite-incomplete on GeoRobotix because `/conf/api-common` is absent.
 - Historical web-app Part 2 story IDs and `dynamic-*` names are not authoritative for the Java ETS; use official OGC 23-002 identifiers.

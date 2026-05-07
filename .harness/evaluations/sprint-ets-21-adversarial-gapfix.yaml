@@ -1,0 +1,87 @@
+verdict: APPROVE
+confidence: 0.96
+reviewer: "Raze"
+role: "Red Team / Adversarial Reviewer"
+reviewed_at: "2026-05-07T19:52:00Z"
+scope:
+  sprint: "ets-21"
+  story: "S-ETS-21-01"
+  title: "Focused gap-fix review for Part 2 Datastreams & Observations implementation"
+  review_type: "implementation-gapfix-only"
+  prior_artifact: ".harness/evaluations/sprint-ets-21-adversarial-implementation.yaml"
+  prior_verdict: "GAPS_FOUND"
+  expensive_gates_rerun: false
+  reason_no_docker_rerun: "User requested no Docker rerun; review verified archived Maven and smoke artifacts."
+  reviewed_files:
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "ops/test-results/sprint-ets-21-maven-2026-05-07.log"
+    - "ops/test-results/sprint-ets-21-teamengine-smoke-2026-05-07.xml"
+    - "ops/test-results/sprint-ets-21-teamengine-container-2026-05-07.log"
+
+findings:
+  - id: "RAZE-ETS21-IMPL-GAP-001"
+    prior_severity: "HIGH"
+    status: "RESOLVED"
+    title: "Implementation reconciliation no longer describes Sprint 21 as planning-only"
+    evidence:
+      - "_bmad/traceability.md now marks FR-ETS-31 / REQ-ETS-PART2-002 as PARTIAL_IMPLEMENTED with Sprint 21 Datastream implementation scope and evidence."
+      - "ops/status.md current state says Sprint ets-21 Generator is complete locally with formatter, Maven, and smoke passing; it no longer says the next action is starting Generator."
+      - "ops/test-results.md current Sprint section is now Sprint ets-21 Part 2 Datastreams & Observations Generator, not planning-only."
+      - "ops/changelog.md records the Sprint 21 Generator implementation, gates, Raze implementation gap, and reconciliation/evidence fixes."
+      - ".harness/handoffs/planner-handoff.yaml now has agent=generator, status=generator_complete_gapfix_pending_raze_review, Generator evidence, and next_agent_after_review=committer."
+  - id: "RAZE-ETS21-IMPL-GAP-002"
+    prior_severity: "MEDIUM"
+    status: "RESOLVED"
+    title: "Maven and smoke evidence are durably archived"
+    evidence:
+      - "ops/test-results/sprint-ets-21-maven-2026-05-07.log exists and reports Tests run: 160, Failures: 0, Errors: 0, Skipped: 3 with BUILD SUCCESS."
+      - "ops/test-results/sprint-ets-21-teamengine-smoke-2026-05-07.xml exists and reports total=104, passed=64, failed=0, skipped=40."
+      - "ops/test-results/sprint-ets-21-teamengine-container-2026-05-07.log exists and the no-mutation oracle reports recognized_iut_request_logs=82."
+      - "ops/test-results.md references all three durable evidence paths and exact totals."
+
+checks:
+  archived_maven:
+    verdict: "PASS"
+    evidence:
+      command: "bash scripts/mvn-test-via-docker.sh"
+      log: "ops/test-results/sprint-ets-21-maven-2026-05-07.log"
+      totals:
+        tests: 160
+        failures: 0
+        errors: 0
+        skipped: 3
+      result: "BUILD SUCCESS"
+  archived_smoke:
+    verdict: "PASS"
+    evidence:
+      command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s21-generator bash scripts/smoke-test.sh"
+      report: "ops/test-results/sprint-ets-21-teamengine-smoke-2026-05-07.xml"
+      log: "ops/test-results/sprint-ets-21-teamengine-container-2026-05-07.log"
+      totals:
+        total: 104
+        passed: 64
+        failed: 0
+        skipped: 40
+      part2_datastream_runtime:
+        datastreamApiCommonPrerequisiteVisibleForFullClosure: "SKIP because /conf/api-common is absent"
+        observationsReferenceSelectedDatastreamWhenNestedCollectionPopulated: "SKIP because nested Observation collection is empty"
+      no_mutation_oracle:
+        recognized_iut_request_logs: 82
+        iut_bound_post_put_delete_patch: 0
+  docs_reconciliation:
+    verdict: "PASS"
+    evidence:
+      - "Targeted docs now consistently describe Sprint 21 as Generator complete / PARTIAL_IMPLEMENTED."
+      - "Remaining historical planning section text is preserved as planning history, not current state or next action."
+
+required_fixes: []
+approval_rationale: >
+  The two implementation review gaps are closed. Current traceability/status/test
+  results/changelog/handoff language no longer falsely presents Sprint 21 as
+  planning-only or waiting to start Generator, and all requested Maven and smoke
+  evidence artifacts are archived under ops/test-results with matching totals.
+  No Docker rerun was needed for this focused verification.

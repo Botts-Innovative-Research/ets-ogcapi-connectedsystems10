@@ -1,0 +1,121 @@
+# Sprint 21 contract - Part 2 Datastreams & Observations read-only planning
+
+sprint: "ets-21"
+sprint_name: "part2-datastream"
+type: "feature-expansion"
+created: "2026-05-07T19:12:03Z"
+description: |
+  Sprint 21 plans the first read-only, declaration-gated OGC 23-002
+  Datastreams & Observations Generator increment. It does not implement
+  mutation, ControlStream, Command, Part 2 JSON, SWE Common, or full
+  observation-body schema validation.
+
+stories:
+  - id: "S-ETS-21-01"
+    title: "Part 2 Datastreams & Observations read-only subset"
+    file: "epics/stories/s-ets-21-01-part2-datastream-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-20-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-002 (/req/datastream - planned)"
+    - "REQ-ETS-PART2-003..014 (remaining placeholders renumbered after Datastream split)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-002-DATASTREAM-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-002-DATASTREAM-COLLECTION-READONLY-001"
+    - "SCENARIO-ETS-PART2-002-DATASTREAM-ITEM-READONLY-001"
+    - "SCENARIO-ETS-PART2-002-DATASTREAM-SCHEMA-ENDPOINT-001"
+    - "SCENARIO-ETS-PART2-002-OBSERVATION-ENDPOINTS-READONLY-001"
+    - "SCENARIO-ETS-PART2-002-OBSERVATION-REFERENCE-EVIDENCE-001"
+    - "SCENARIO-ETS-PART2-002-DEPENDENCY-SKIP-001"
+  normal:
+    - "SCENARIO-ETS-PART2-002-SYSTEM-REFERENCE-READONLY-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  no_code_changes_in_planning: true
+  no_part2_mutation: true
+  no_controlstream_or_command_implementation: true
+  maven_verified: false
+  teamengine_smoke_verified: false
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-07T19:12:03Z"
+  requirement_class: "Clause 9, Requirements Class Datastreams & Observations"
+  requirement_class_identifier: "/req/datastream"
+  conformance_class_identifier: "/conf/datastream"
+  prerequisite: "/req/api-common"
+  selected_normative_statements:
+    - "/req/datastream/canonical-url"
+    - "/req/datastream/resources-endpoint"
+    - "/req/datastream/canonical-endpoint"
+    - "/req/datastream/ref-from-system"
+    - "/req/datastream/schema-op"
+    - "/req/datastream/obs-canonical-url"
+    - "/req/datastream/obs-resources-endpoint"
+    - "/req/datastream/obs-canonical-endpoint"
+    - "/req/datastream/obs-ref-from-datastream"
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares /conf/datastream but not /conf/api-common."
+    datastreams: "GET /datastreams?limit=2 returned HTTP 200 JSON with top-level items and links."
+    observations: "GET /observations?limit=2 returned HTTP 200 JSON with top-level items and links."
+    datastream_item: "GET /datastreams/0mirhn7lo1kg returned HTTP 200 JSON with id, system@id, outputName, observedProperties, resultType, formats, and observations link."
+    datastream_schema: "GET /datastreams/0mirhn7lo1kg/schema returned HTTP 200 JSON with obsFormat and resultSchema."
+    datastream_observations: "GET /datastreams/0mirhn7lo1kg/observations?limit=2 returned HTTP 200 JSON with empty items and no top-level links."
+    system_datastreams: "GET /systems/0nar3cl0tk3g/datastreams?limit=1 returned HTTP 200 JSON with a Datastream item."
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/datastream is not declared, Datastream conformance judgment SKIPs with a precise reason."
+    - "Do not infer /conf/api-common or API Common PASS from /conf/datastream or Datastream endpoint success."
+  prerequisite:
+    - "Keep /req/api-common prerequisite handling visible and honest."
+    - "When /conf/datastream is declared but /conf/api-common is absent, scoped endpoint checks may run but the ETS must not report full /conf/datastream class closure."
+    - "Prerequisite-dependent assertions SKIP rather than failing noisily when the prerequisite cannot be established."
+  read_only_probe:
+    - "Only HTTP GET requests are allowed in Sprint 21 Generator."
+    - "Empty Datastream-scoped Observation collections are acceptable endpoint availability evidence when HTTP 200 JSON with items is returned."
+    - "Empty Datastream-scoped Observation collections must not PASS /req/datastream/obs-ref-from-datastream; require actual Observation/reference evidence or SKIP."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/datastream and /conf/datastream."
+  - "Add Part 2 Datastream TestNG group and dependency/prerequisite handling."
+  - "Implement declaration-gated read-only Datastream, schema, Observation, and selected System-scoped endpoint checks."
+  - "Update OpenSpec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not mutate GeoRobotix or local OSH."
+  - "Do not implement Part 2 ControlStream, Command, JSON, SWE Common, CRD, or Update behavior."
+  - "Do not require non-empty nested Observation collections."
+  - "Do not require nested Observation collection links unless implementing the specific collections assertion."
+  - "Do not claim API Common PASS from Datastream evidence."
+  - "Do not report full /conf/datastream class closure when /req/api-common is absent."
+  - "Do not PASS obs-ref-from-datastream on an empty nested Observation collection."
+
+evaluation_focus:
+  raze:
+    - "Attack false PASS from generic JSON objects masquerading as Datastreams."
+    - "Attack false API Common PASS when GeoRobotix lacks /conf/api-common."
+    - "Attack overreach into ControlStream, Command, mutation, SWE Common, or schema-binding closure."
+    - "Check empty nested Observation collection handling."
+
+confidence: 0.78

@@ -2,6 +2,25 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T19:12Z — Sprint 21 Part 2 Datastream planning
+
+**Triggered by user instruction**: "do it."
+
+- Started Sprint 21 planning for `S-ETS-21-01`, the next Part 2 item after Sprint 20.
+- Verified architecture freshness: `_bmad/architecture.md` last reconciled 2026-04-28, so it is not stale.
+- Verified official OGC 23-002 Clause 9 identifiers from the published HTML: Datastreams & Observations is `/req/datastream` with conformance `/conf/datastream` and prerequisite `/req/api-common`.
+- Added `.harness/contracts/sprint-ets-21.yaml` and `epics/stories/s-ets-21-01-part2-datastream-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for Datastream planning.
+- Split `REQ-ETS-PART2-002` out for Datastreams & Observations and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-003..014`.
+- Probed GeoRobotix Datastream state: `/conformance` declares `/conf/datastream` but not `/conf/api-common`; `/datastreams`, `/observations`, `/datastreams/{id}`, `/datastreams/{id}/schema`, `/datastreams/{id}/observations`, and `/systems/{systemId}/datastreams` returned HTTP 200 JSON for selected read-only probes.
+- Planned verdict policy: scoped Datastream endpoint PASS evidence is gated on `/conf/datastream`; API Common remains separate prerequisite honesty; full `/conf/datastream` closure is blocked while `/req/api-common` is absent; empty nested Observation collections are endpoint evidence only and cannot PASS `/req/datastream/obs-ref-from-datastream`.
+- Raze planning review first returned `GAPS_FOUND` confidence 0.88 for the empty-observation false PASS risk and missing full-class closure blocker.
+- Applied both required fixes across OpenSpec, story, contract, traceability, handoff, status, test-results, known issues, and changelog.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-21-plan-gapfix.yaml` returned `APPROVE` confidence 0.95 with no required fixes.
+- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+
+---
+
 ## 2026-05-07T18:22Z — Sprint 20 Part 2 API Common Generator
 
 **Triggered by user instruction**: "Start Generator."

@@ -1,0 +1,123 @@
+verdict: GAPS_FOUND
+confidence: 0.88
+reviewer: "Raze"
+role: "Red Team / Adversarial Reviewer"
+reviewed_at: "2026-05-07T19:20:00Z"
+scope:
+  sprint: "ets-21"
+  story: "S-ETS-21-01"
+  title: "Part 2 Datastreams & Observations read-only planning"
+  workspace: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  review_type: "planning-only"
+  expensive_gates_rerun: false
+  reason_no_docker_maven_teamengine: "Planning/doc review only; concrete blockers are in planning text and do not require runtime reproduction."
+  reviewed_files:
+    - ".harness/contracts/sprint-ets-21.yaml"
+    - "epics/stories/s-ets-21-01-part2-datastream-planning.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+
+findings:
+  - id: "RAZE-ETS21-PLAN-GAP-001"
+    severity: "HIGH"
+    status: "OPEN"
+    title: "Empty nested observations can become false PASS evidence for obs-ref-from-datastream"
+    details: >
+      Sprint 21 planning correctly records that GeoRobotix's selected
+      /datastreams/{id}/observations response is HTTP 200 JSON with an empty
+      items array and no top-level links. However, the OpenSpec scenario
+      SCENARIO-ETS-PART2-002-OBSERVATION-ENDPOINTS-READONLY-001 groups
+      /req/datastream/obs-ref-from-datastream with endpoint availability and says
+      both responses only need HTTP 200 JSON objects with items arrays, while an
+      empty Datastream-scoped Observation collection is not a failure by itself.
+      That is safe for endpoint availability, but it is not sufficient evidence
+      for obs-ref-from-datastream, which requires actual Observation resource
+      evidence tied back to a Datastream. If Generator follows this wording, an
+      empty nested collection could PASS an observation-reference assertion.
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md scenario lists /req/datastream/obs-ref-from-datastream with endpoint checks, then allows empty nested observations."
+      - ".harness/contracts/sprint-ets-21.yaml includes /req/datastream/obs-ref-from-datastream in selected normative statements and says empty Datastream-scoped Observation collections are acceptable endpoint evidence."
+      - "epics/stories/s-ets-21-01-part2-datastream-planning.md records the selected nested Observation response as empty items and no top-level links."
+      - "Official OGC 23-002 Clause 9 lists /req/datastream/obs-ref-from-datastream separately from /req/datastream/obs-resources-endpoint."
+    required_fix: >
+      Split the planning language so HTTP 200 JSON with an items array can only
+      satisfy endpoint availability for /req/datastream/obs-resources-endpoint.
+      Any /req/datastream/obs-ref-from-datastream check must require at least one
+      Observation item/link with Datastream reference evidence, or SKIP with a
+      precise empty-IUT-state reason when no nested Observation is available.
+
+  - id: "RAZE-ETS21-PLAN-GAP-002"
+    severity: "MEDIUM"
+    status: "OPEN"
+    title: "API Common prerequisite handling does not clearly prevent full Datastream class PASS"
+    details: >
+      The docs consistently say GeoRobotix declares /conf/datastream but not
+      /conf/api-common, and they forbid inferring API Common PASS from Datastream
+      endpoint success. The remaining ambiguity is that several planning passages
+      say Datastream PASS evidence is gated on /conf/datastream and that GeoRobotix
+      can provide Datastream endpoint evidence because it declares /conf/datastream.
+      Since OGC 23-002 Clause 9 lists /req/api-common as a prerequisite, the plan
+      needs an explicit rule that the ETS must not report full /conf/datastream
+      conformance closure when the API Common prerequisite is absent or cannot be
+      established. Datastream-specific endpoint checks may still produce scoped
+      PASS evidence, but the prerequisite must remain a visible SKIP/WARN-style
+      blocker to full-class closure.
+    evidence:
+      - ".harness/contracts/sprint-ets-21.yaml verdict_policy says Datastream conformance judgment SKIPs if /conf/datastream is not declared, but does not state that full /conf/datastream closure is blocked by missing /conf/api-common."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md says Datastream-specific declaration-gated assertions run when /conf/datastream is declared, and missing /conf/api-common is recorded as an honest SKIP or prerequisite warning."
+      - ".harness/handoffs/planner-handoff.yaml says current GeoRobotix can still provide Datastream endpoint evidence because it declares /conf/datastream."
+      - "Official OGC 23-002 Clause 9 identifies /req/api-common as the prerequisite for /req/datastream."
+    required_fix: >
+      Add explicit wording to the contract, OpenSpec, story, and planner handoff:
+      when /conf/datastream is declared but /conf/api-common is absent, scoped
+      Datastream endpoint tests may run, but the ETS must not declare full
+      /conf/datastream class conformance/closure; a prerequisite check must SKIP
+      or otherwise visibly mark the class as prerequisite-incomplete.
+
+checks:
+  official_ogc_identifier_fidelity:
+    verdict: "PASS"
+    evidence:
+      - "Official OGC 23-002 Clause 9 reports Requirements Class Datastreams & Observations identifier /req/datastream and conformance class /conf/datastream."
+      - "Contract, story, OpenSpec, traceability, epic, status, changelog, test-results, known issues, and planner handoff use /req/datastream and /conf/datastream."
+      - "No stale dynamic-* identifier is used as the planned Sprint 21 identifier."
+  georobotix_api_common_honesty:
+    verdict: "GAP"
+    evidence:
+      - "Planning records GeoRobotix declares /conf/datastream but not /conf/api-common."
+      - "Planning forbids API Common PASS inference from Datastream endpoint success."
+      - "Planning still needs explicit full-class closure blocking when /req/api-common prerequisite is missing."
+  empty_nested_observations:
+    verdict: "GAP"
+    evidence:
+      - "Planning correctly notes empty nested Observation collections are not endpoint failures."
+      - "Planning must prevent that same empty response from satisfying obs-ref-from-datastream."
+  scope_creep:
+    verdict: "PASS"
+    evidence:
+      - "Contract/story/status/handoff exclude mutation, ControlStream, Command, Part 2 JSON, SWE Common, CRD, Update, and observation-result validation against Datastream schemas."
+      - "No Java/TestNG implementation files are in the Sprint 21 planning diff."
+  docs_reconciliation:
+    verdict: "PASS_WITH_GAPS_ABOVE"
+    evidence:
+      - "OpenSpec, story, traceability, epic, contract, ops status, changelog, test-results, known issues, and planner handoff all reflect Sprint 21 planning."
+      - "The reconciliation is broad, but the two false-PASS policy gaps must be corrected consistently across planning artifacts."
+
+required_fixes:
+  - "Fix RAZE-ETS21-PLAN-GAP-001: separate endpoint availability from obs-ref-from-datastream evidence; empty nested observations must SKIP reference assertions, not PASS them."
+  - "Fix RAZE-ETS21-PLAN-GAP-002: explicitly block full /conf/datastream closure when the /req/api-common prerequisite is absent, while allowing scoped endpoint checks to run if clearly reported."
+
+sources:
+  - name: "OGC API - Connected Systems - Part 2: Dynamic Data, Clause 9"
+    url: "https://docs.ogc.org/is/23-002/23-002.html"
+    used_for:
+      - "/req/datastream identifier"
+      - "/conf/datastream conformance class"
+      - "/req/api-common prerequisite"
+      - "separate observation endpoint and reference normative statements"

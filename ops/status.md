@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T18:34Z
+Last updated: 2026-05-07T19:12Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-20.yaml`
+- `.harness/contracts/sprint-ets-21.yaml`
 
 ## Current State
 
@@ -41,7 +41,7 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
-- Current sprint status: Sprint ets-20 Part 2 API Common Generator implemented, Raze-reviewed, committed, and pushed.
+- Current sprint status: Sprint ets-21 Part 2 Datastreams & Observations planning complete, Raze-approved after gap-fix, pending commit and push.
 - Latest pushed implementation commit: `53f542d Implement Sprint 20 Part 2 API Common`; a follow-up status/metrics reconciliation commit was pushed after it.
 - Push status: remote switched to SSH and `git push origin main` succeeded on 2026-05-07T17:54Z and 2026-05-07T17:55Z.
 
@@ -66,7 +66,25 @@ Part 2 API Common read-only declaration-gated subset:
 - Raze planning review `.harness/evaluations/sprint-ets-20-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes. Non-blocking concern: broader Part 2 placeholder taxonomy still says 14 classes and duplicates API Common in the remaining placeholder block.
 - Raze implementation review `.harness/evaluations/sprint-ets-20-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes after dependency lint hardening.
 - Out of scope: Part 2 JSON, Datastream/Observation closure, ControlStream/Command closure, SWE Common encodings, Part 2 CRD/Update mutation, and full schema validation.
-- Next action: plan Sprint 21 for the next Part 2 item, likely `REQ-ETS-PART2-002` `/conf/datastream` unless the user reprioritizes.
+- Next action: commit and push the Sprint 21 planning set, then start Generator for `S-ETS-21-01`.
+
+## Sprint ets-21 Planning Evidence
+
+Part 2 Datastreams & Observations read-only subset:
+
+- Story: `epics/stories/s-ets-21-01-part2-datastream-planning.md`
+- Contract: `.harness/contracts/sprint-ets-21.yaml`
+- OpenSpec: defines `REQ-ETS-PART2-002` for OGC 23-002 Clause 9 and renumbers remaining Part 2 placeholders to `REQ-ETS-PART2-003..014`.
+- Scope planned: first read-only, declaration-gated Datastreams & Observations subset using official `/req/datastream` and `/conf/datastream` identifiers.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-07 and not stale.
+- OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 9 "Requirements Class Datastreams & Observations"; prerequisite is `/req/api-common`.
+- GeoRobotix planning probe: `/conformance` declares `/conf/datastream` but not `/conf/api-common`.
+- GeoRobotix read-only probes: `GET /datastreams?limit=2`, `/observations?limit=2`, `/datastreams/0mirhn7lo1kg`, `/datastreams/0mirhn7lo1kg/schema`, `/datastreams/0mirhn7lo1kg/observations?limit=2`, and `/systems/0nar3cl0tk3g/datastreams?limit=1` returned HTTP 200 JSON.
+- Important IUT state: selected nested Datastream observations collection is empty and has `items` only. Generator may use this as endpoint availability evidence only; `/req/datastream/obs-ref-from-datastream` needs actual nested Observation/reference evidence or SKIPs with an empty-IUT-state reason.
+- Verdict policy planned: gate scoped Datastream endpoint PASS evidence on `/conf/datastream`; keep missing `/conf/api-common` prerequisite honesty separate; do not infer API Common PASS or full `/conf/datastream` closure from Datastream endpoint success.
+- Raze planning review `.harness/evaluations/sprint-ets-21-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for two false-PASS risks.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-21-plan-gapfix.yaml` returned `APPROVE` confidence 0.95 after endpoint-vs-reference and prerequisite-closure wording was fixed.
+- Out of scope: mutation, ControlStream, Command, Part 2 JSON, SWE Common encodings, Create/Replace/Delete, Update, and observation result validation against Datastream schema.
 
 ## Sprint ets-19 Generator Evidence
 
@@ -395,10 +413,14 @@ Gate Results:
 
 ## Next Action
 
-1. Plan Sprint 21 for the next Part 2 item, likely `REQ-ETS-PART2-002` `/conf/datastream`.
+1. Commit and push the Sprint 21 planning set.
+2. Start Generator for `S-ETS-21-01`.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree should contain only this push-status/metrics reconciliation commit if not yet committed:
+Current dirty worktree should contain only Sprint 21 planning docs until committed:
 
-- `ops/metrics.md` turn-log updates.
+- `.harness/contracts/sprint-ets-21.yaml`
+- `.harness/handoffs/planner-handoff.yaml`
+- `epics/stories/s-ets-21-01-part2-datastream-planning.md`
+- OpenSpec, traceability, epic, ops status/changelog/test-results/known-issues, and metrics updates.

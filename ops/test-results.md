@@ -1,8 +1,31 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T18:22Z
+Last updated: 2026-05-07T19:12Z
 
 ## Current Sprint Evidence
+
+Sprint ets-21 Part 2 Datastreams & Observations planning:
+
+- Planning-only change set; no Java code changed and no Maven/TeamEngine gates are required before Generator.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 9 "Requirements Class Datastreams & Observations".
+  - Requirements class identifier: `/req/datastream`.
+  - Conformance class identifier: `/conf/datastream`.
+  - Prerequisite: `/req/api-common`.
+  - Selected Sprint 21 requirements: `/req/datastream/canonical-url`, `/req/datastream/resources-endpoint`, `/req/datastream/canonical-endpoint`, `/req/datastream/ref-from-system`, `/req/datastream/schema-op`, `/req/datastream/obs-canonical-url`, `/req/datastream/obs-resources-endpoint`, `/req/datastream/obs-canonical-endpoint`, and `/req/datastream/obs-ref-from-datastream`.
+- GeoRobotix planning probes:
+  - `/conformance`: declares `/conf/datastream` but not `/conf/api-common`.
+  - `GET /datastreams?limit=2`: HTTP 200 JSON with `items` and `links`.
+  - `GET /observations?limit=2`: HTTP 200 JSON with `items` and `links`.
+  - `GET /datastreams/0mirhn7lo1kg`: HTTP 200 JSON with Datastream-specific fields and an `observations` link.
+  - `GET /datastreams/0mirhn7lo1kg/schema`: HTTP 200 JSON with `obsFormat` and `resultSchema`.
+  - `GET /datastreams/0mirhn7lo1kg/observations?limit=2`: HTTP 200 JSON with empty `items`; no top-level `links`; endpoint availability evidence only, not `/req/datastream/obs-ref-from-datastream` PASS evidence.
+  - `GET /systems/0nar3cl0tk3g/datastreams?limit=1`: HTTP 200 JSON with a Datastream item.
+- Planned gate expectation: Generator must run formatter, Maven via Docker, GeoRobotix TeamEngine smoke, and Raze implementation review after code changes; full `/conf/datastream` closure remains blocked when `/req/api-common` is absent.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-21-plan-adversarial.yaml`: `GAPS_FOUND` confidence 0.88.
+  - Required fixes: split endpoint availability from `/req/datastream/obs-ref-from-datastream`; explicitly block full `/conf/datastream` closure while `/req/api-common` is absent.
+  - `.harness/evaluations/sprint-ets-21-plan-gapfix.yaml`: `APPROVE` confidence 0.95 after fixes.
 
 Sprint ets-20 Part 2 API Common Generator:
 

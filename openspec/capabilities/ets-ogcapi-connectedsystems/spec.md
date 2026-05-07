@@ -189,12 +189,71 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** it SKIPs with a reason tied to the missing `/conf/api-common`
 **AND** it must not claim Part 2 API Common conformance from sibling declarations alone.
 
-#### REQ-ETS-PART2-002..014: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-002: Part 2 Datastreams & Observations Conformance Suite
+- **Priority**: MUST
+- **Status**: PLANNED (Sprint 21 planning 2026-05-07; story S-ETS-21-01)
+- **Description**: The ETS SHALL provide a TestNG suite class for OGC 23-002 Requirements Class "Datastreams & Observations" using official identifiers `/req/datastream` and `/conf/datastream`. Sprint 21 is the first read-only, declaration-gated subset and SHALL cover canonical Datastream and Observation endpoint availability, Datastream item canonical access, Datastream schema sub-resources, selected System-scoped Datastream sub-resource access, and Datastream-scoped Observation sub-resource access without mutating the IUT.
+- **OGC source verified**: OGC 23-002 official published HTML at `https://docs.ogc.org/is/23-002/23-002.html`, Clause 9 "Requirements Class Datastreams & Observations", checked 2026-05-07. The requirements class identifier is `/req/datastream`; conformance class is `/conf/datastream`; prerequisite is Requirements Class 1 `/req/api-common`. Normative statements include `/req/datastream/canonical-url`, `/req/datastream/resources-endpoint`, `/req/datastream/canonical-endpoint`, `/req/datastream/ref-from-system`, `/req/datastream/collections`, `/req/datastream/schema-op`, `/req/datastream/obs-canonical-url`, `/req/datastream/obs-resources-endpoint`, `/req/datastream/obs-canonical-endpoint`, `/req/datastream/obs-ref-from-datastream`, and `/req/datastream/obs-collections`.
+- **Dependency policy**: Sprint 21 SHALL keep `/req/api-common` prerequisite visibility explicit. Because GeoRobotix declares `/conf/datastream` but not `/conf/api-common`, Generator MAY evaluate clearly scoped Datastream endpoint assertions when `/conf/datastream` is declared, but SHALL NOT report full `/conf/datastream` class closure while the `/req/api-common` prerequisite is absent or cannot be established. The missing prerequisite must remain a visible SKIP/prerequisite-incomplete outcome, and Datastream evidence SHALL NOT imply API Common PASS.
+- **GeoRobotix planning probe**: `/conformance` declares `/conf/datastream` but not `/conf/api-common`. `GET /datastreams?limit=2`, `GET /observations?limit=2`, `GET /datastreams/{id}`, `GET /datastreams/{id}/schema`, `GET /datastreams/{id}/observations?limit=2`, and `GET /systems/{systemId}/datastreams?limit=1` returned HTTP 200 JSON. The selected Datastream exposes `system@id`, `outputName`, `observedProperties`, `resultType`, `formats`, and an `observations` link. The nested observations response for that Datastream was empty with `items` only, so Generator may count it only as endpoint availability evidence. Any `/req/datastream/obs-ref-from-datastream` assertion must require at least one nested Observation item or link with Datastream reference evidence, or SKIP with a precise empty-IUT-state reason.
+- **Maps to**: PRD FR-ETS-31.
+
+##### Acceptance Scenarios for Sprint 21
+
+#### SCENARIO-ETS-PART2-002-DATASTREAM-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the ETS is evaluating OGC 23-002 Datastreams & Observations
+**WHEN** it reads `/conformance`
+**THEN** `/conf/datastream` is required before producing Datastream conformance PASS evidence
+**AND** `/conf/api-common` remains a separate prerequisite judgment, not something inferred from Datastream behavior.
+
+#### SCENARIO-ETS-PART2-002-DATASTREAM-COLLECTION-READONLY-001 (CRITICAL)
+**GIVEN** `/req/datastream/resources-endpoint` and `/req/datastream/canonical-endpoint`
+**WHEN** the ETS issues `GET {api_root}/datastreams`
+**THEN** the response is HTTP 200 JSON with an `items` array
+**AND** the test records the canonical requirement URI in its `@Test` description.
+
+#### SCENARIO-ETS-PART2-002-DATASTREAM-ITEM-READONLY-001 (CRITICAL)
+**GIVEN** a Datastream identifier selected from the collection
+**WHEN** the ETS issues `GET {api_root}/datastreams/{id}`
+**THEN** the response is HTTP 200 JSON for the same Datastream resource
+**AND** the resource exposes enough Datastream-specific shape to avoid passing on a generic JSON object.
+
+#### SCENARIO-ETS-PART2-002-DATASTREAM-SCHEMA-ENDPOINT-001 (CRITICAL)
+**GIVEN** `/req/datastream/schema-op`
+**WHEN** the ETS issues `GET {api_root}/datastreams/{id}/schema`
+**THEN** the response is HTTP 200 JSON with Datastream observation schema evidence such as `obsFormat` and `resultSchema`.
+
+#### SCENARIO-ETS-PART2-002-OBSERVATION-ENDPOINTS-READONLY-001 (CRITICAL)
+**GIVEN** `/req/datastream/obs-canonical-endpoint` and `/req/datastream/obs-resources-endpoint`
+**WHEN** the ETS reads the global Observation collection and a Datastream-scoped Observation collection
+**THEN** both responses are HTTP 200 JSON objects with an `items` array
+**AND** an empty Datastream-scoped Observation collection is not treated as endpoint-availability failure by itself.
+
+#### SCENARIO-ETS-PART2-002-OBSERVATION-REFERENCE-EVIDENCE-001 (CRITICAL)
+**GIVEN** `/req/datastream/obs-ref-from-datastream`
+**WHEN** the ETS evaluates Datastream-to-Observation reference behavior
+**THEN** PASS requires at least one nested Observation item or link with evidence that the Observation is associated to the selected Datastream
+**AND** an empty Datastream-scoped Observation collection SKIPs the reference assertion with a precise empty-IUT-state reason.
+
+#### SCENARIO-ETS-PART2-002-SYSTEM-REFERENCE-READONLY-001 (NORMAL)
+**GIVEN** `/req/datastream/ref-from-system` and a Datastream resource with `system@id`
+**WHEN** the ETS issues `GET {api_root}/systems/{systemId}/datastreams`
+**THEN** the response is HTTP 200 JSON with an `items` array
+**AND** the selected Datastream is found when the IUT returns it in the current page, otherwise the check remains bounded and non-mutating.
+
+#### SCENARIO-ETS-PART2-002-DEPENDENCY-SKIP-001 (CRITICAL)
+**GIVEN** Datastream has prerequisite `/req/api-common`
+**WHEN** the prerequisite class cannot be established for the IUT
+**THEN** the ETS must not convert Datastream endpoint success into API Common PASS evidence
+**AND** it must not report full `/conf/datastream` class closure
+**AND** any prerequisite-dependent assertion SKIPs with a precise reason rather than failing downstream noisily.
+
+#### REQ-ETS-PART2-003..014: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (Part 2 work scheduled post-Part-1 per user gate 2026-04-27)
-- **Description**: For each of the remaining 13 OGC 23-002 conformance classes (`datastream`, `controlstream`, `feasibility`, `system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprints 20 and 21 planning)
+- **Description**: For each of the remaining 12 OGC 23-002 conformance classes or cross-class closures (`controlstream`, `feasibility`, `system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
-- **Maps to**: PRD FR-ETS-31..43.
+- **Maps to**: PRD FR-ETS-32..43.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -1820,7 +1879,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 ### Deferred
 - REQ-ETS-TEAMENGINE-002..005 (Dockerfile, docker-compose, smoke-test.sh, container-load verification) → S-ETS-01-03 (final Sprint 1 story).
 - REQ-ETS-PART1-001..013 (per-class detail beyond Core) — drafted as placeholders; per-assertion FRs and SCENARIOs to be expanded in sprints 2..N.
-- REQ-ETS-PART2-002..014 (remaining Part 2 classes) — deferred after Sprint 20 API Common first subset.
+- REQ-ETS-PART2-002 (Datastreams & Observations) — planned for Sprint 21 read-only subset.
+- REQ-ETS-PART2-003..014 (remaining Part 2 classes) — deferred after Sprint 21 Datastream planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

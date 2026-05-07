@@ -1,0 +1,70 @@
+verdict: APPROVE
+confidence: 0.95
+reviewer: "Raze"
+role: "Red Team / Adversarial Reviewer"
+reviewed_at: "2026-05-07T19:23:00Z"
+scope:
+  sprint: "ets-21"
+  story: "S-ETS-21-01"
+  title: "Focused gap-fix review for Part 2 Datastreams & Observations planning"
+  review_type: "planning-gapfix-only"
+  prior_artifact: ".harness/evaluations/sprint-ets-21-plan-adversarial.yaml"
+  prior_verdict: "GAPS_FOUND"
+  expensive_gates_rerun: false
+  reason_no_docker_maven_teamengine: "User requested planning-only gapfix review; changes are docs/policy reconciliation only."
+  reviewed_files:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-21-01-part2-datastream-planning.md"
+    - ".harness/contracts/sprint-ets-21.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+
+findings:
+  - id: "RAZE-ETS21-PLAN-GAP-001"
+    prior_severity: "HIGH"
+    status: "RESOLVED"
+    title: "Empty nested observations are endpoint availability evidence only"
+    evidence:
+      - "OpenSpec now separates OBSERVATION-ENDPOINTS-READONLY from OBSERVATION-REFERENCE-EVIDENCE."
+      - "OpenSpec states empty Datastream-scoped Observation collections are not endpoint-availability failures, but /req/datastream/obs-ref-from-datastream PASS requires at least one nested Observation item or link with Datastream association evidence."
+      - "Story generator requirements now forbid PASSing /req/datastream/obs-ref-from-datastream on an empty nested Observation collection."
+      - "Contract verdict_policy says empty nested Observation collections are endpoint availability evidence only and must not PASS /req/datastream/obs-ref-from-datastream."
+      - "Status, test-results, known-issues, changelog, traceability, and planner handoff repeat the same endpoint-only policy."
+  - id: "RAZE-ETS21-PLAN-GAP-002"
+    prior_severity: "MEDIUM"
+    status: "RESOLVED"
+    title: "Full /conf/datastream closure is blocked while /req/api-common is absent"
+    evidence:
+      - "OpenSpec dependency policy now allows scoped endpoint assertions when /conf/datastream is declared, but forbids full /conf/datastream class closure while /req/api-common is absent or cannot be established."
+      - "OpenSpec dependency-skip scenario explicitly says endpoint success must not become API Common PASS and must not report full /conf/datastream class closure."
+      - "Story planning evidence and generator requirements state GeoRobotix endpoint checks may run but full /conf/datastream closure remains prerequisite-incomplete until /req/api-common is established."
+      - "Contract prerequisite and generator_must_not_do sections explicitly forbid full /conf/datastream closure when /req/api-common is absent."
+      - "Planner handoff, traceability, status, test-results, known-issues, and changelog carry the same scoped-endpoint versus full-class-closure distinction."
+
+checks:
+  ogc_identifier_fidelity:
+    verdict: "PASS"
+    evidence:
+      - "Planning still uses official OGC 23-002 /req/datastream and /conf/datastream identifiers."
+      - "The /req/api-common prerequisite remains explicit."
+  scope_control:
+    verdict: "PASS"
+    evidence:
+      - "No Docker, Maven, TeamEngine, or Java implementation changes were required for this planning gapfix review."
+      - "Scope exclusions for mutation, ControlStream, Command, Part 2 JSON, SWE Common, CRD, Update, and schema-body validation closure remain intact."
+  docs_reconciliation:
+    verdict: "PASS"
+    evidence:
+      - "OpenSpec, story, contract, handoff, traceability, status, test-results, known-issues, and changelog now consistently reflect both gapfix policies."
+
+required_fixes: []
+approval_rationale: >
+  The two prior false-PASS risks are closed at the planning layer. Empty nested
+  observations can support endpoint availability only, not obs-ref-from-datastream
+  PASS. Scoped Datastream endpoint checks may run against a /conf/datastream IUT,
+  but full /conf/datastream closure is blocked until /req/api-common is present
+  or otherwise established. The planning set is sufficient for Generator handoff.

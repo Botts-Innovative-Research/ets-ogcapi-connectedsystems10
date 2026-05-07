@@ -1,0 +1,140 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.90
+reviewer: "Raze"
+role: "Red Team / Adversarial Reviewer"
+reviewed_at: "2026-05-07T17:22:23Z"
+scope:
+  story: "S-ETS-19-01"
+  sprint: "ets-19"
+  title: "Encoding mediatype-write safety-gated checks"
+  workspace: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  review_type: "implementation"
+  changed_code:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/EncodingMediatypeWrite.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/VerifyEncodingMediatypeWrite.java"
+  changed_docs:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-02-part1-classes.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - ".harness/handoffs/generator-handoff.yaml"
+
+findings:
+  - id: "RAZE-ETS19-IMPL-CONCERN-001"
+    severity: "LOW"
+    status: "OPEN_FOLLOWUP"
+    title: "Positive mutable-IUT mediatype-write evidence remains unproven"
+    details: >
+      The implementation correctly skips the new GeoJSON and SensorML mediatype-write
+      lifecycle checks in default GeoRobotix smoke and does not claim full closure.
+      However, the request bodies have not yet been exercised against a dedicated
+      mutable IUT with application/geo+json or application/sml+json. This is acceptable
+      for Sprint 19's safety-gated partial scope, but it remains the next proof point
+      before either requirement class can advance beyond PARTIAL.
+    required_fix: null
+  - id: "RAZE-ETS19-IMPL-CONCERN-002"
+    severity: "LOW"
+    status: "OPEN_FOLLOWUP"
+    title: "Cleanup DELETE result is best-effort only"
+    details: >
+      Created resource cleanup is attempted in finally blocks, but DELETE status is
+      not asserted or reported. This does not create a false PASS for mediatype-write
+      because PASS evidence depends on POST status, resource URI discovery, follow-up
+      GET status, and UID preservation. It does leave dedicated mutable-IUT runs with
+      weaker cleanup diagnostics if a server accepts create and dereference but rejects
+      delete.
+    required_fix: null
+
+checks:
+  unsafe_public_iut_mutation:
+    verdict: "PASS"
+    evidence:
+      - "EncodingMediatypeWrite.ensureMutationEnabledOrSkip requires mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut before POST."
+      - "Known public GeoRobotix host/base URL is hard-denied even when opt-in attributes are supplied."
+      - "Default smoke reported zero IUT-bound POST/PUT/DELETE/PATCH across 69 recognized GeoRobotix request logs."
+  status_only_false_pass:
+    verdict: "PASS"
+    evidence:
+      - "createdResourceUri must find Location or JSON id before dereference."
+      - "assertDereferencedResourcePreservesUid fails null/unparseable dereference bodies with explicit status-only wording."
+      - "VerifyEncodingMediatypeWrite.statusOnlyBodyCannotCreateParseEvidencePass covers the false-PASS path."
+  options_false_pass:
+    verdict: "PASS"
+    evidence:
+      - "Sprint 19 runtime mediatype-write checks do not use OPTIONS Allow as PASS evidence."
+      - "Docs state OPTIONS readiness alone is not conformance evidence."
+  exact_content_type_enforcement:
+    verdict: "PASS"
+    evidence:
+      - "GeoJSON POST uses Content-Type application/geo+json."
+      - "SensorML POST uses Content-Type application/sml+json."
+      - "VerifyEncodingMediatypeWrite.exactContentTypesAreExposedForRuntimeChecks locks both literal values."
+  crd_and_encoding_conditioning:
+    verdict: "PASS"
+    evidence:
+      - "GeoJsonTests class setup skips unless /conf/geojson is declared."
+      - "SensorMlTests class setup skips unless /conf/sensorml is declared."
+      - "Each new mediatype-write test additionally skips unless /conf/create-replace-delete is declared."
+  dereference_identity_evidence:
+    verdict: "PASS"
+    evidence:
+      - "Each new runtime check dereferences the created resource after POST."
+      - "UID preservation is required via direct uid, uniqueId, or properties.uid."
+      - "Wrong-identity regression coverage fails when dereferenced UID differs from the submitted UID."
+  full_closure_overclaiming:
+    verdict: "PASS"
+    evidence:
+      - "OpenSpec, story, traceability, status, and known issues keep REQ-ETS-PART1-012 and REQ-ETS-PART1-013 PARTIAL."
+      - "Docs explicitly require future positive dedicated mutable-IUT evidence."
+  docs_traceability:
+    verdict: "PASS"
+    evidence:
+      - "Spec, story, traceability, epic, status, changelog, test-results, known-issues, and handoff were reconciled for Sprint 19."
+      - "Runtime test descriptions include REQ-* and SCENARIO-* references."
+
+verification_evidence:
+  formatter:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+    result: "BUILD SUCCESS"
+  maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    log: "ops/test-results/sprint-ets-19-maven-2026-05-07.log"
+    result: "BUILD SUCCESS"
+    totals:
+      tests: 143
+      failures: 0
+      errors: 0
+      skipped: 3
+  smoke:
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s19-generator bash scripts/smoke-test.sh"
+    log: "ops/test-results/sprint-ets-19-smoke-2026-05-07.log"
+    xml: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s19-generator/s-ets-01-03-teamengine-smoke-2026-05-07.xml"
+    result: "SMOKE PASS"
+    totals:
+      total: 89
+      passed: 55
+      failed: 0
+      skipped: 34
+    no_mutation_oracle:
+      recognized_iut_request_logs: 69
+      iut_bound_post_put_delete_patch: 0
+    new_test_outcomes:
+      geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled: "SKIP before mutation opt-in"
+      sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled: "SKIP before mutation opt-in"
+  static_checks:
+    git_diff_check: "PASS"
+
+required_fixes: []
+approval_rationale: >
+  No blocking false-confidence path was found. The default public-IUT path remains
+  non-mutating, mediatype-write PASS requires actual dereference and identity
+  preservation evidence, OPTIONS readiness is not counted as conformance, exact
+  Content-Type values are used, and the documentation keeps both encoding classes
+  partial. The open concerns are follow-up evidence and diagnostics items, not
+  blockers for committing Sprint 19 Generator work.

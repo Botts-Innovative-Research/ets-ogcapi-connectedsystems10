@@ -1,8 +1,48 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T16:57Z
+Last updated: 2026-05-07T17:40Z
 
 ## Current Sprint Evidence
+
+Sprint ets-19 encoding mediatype-write safety-gated Generator:
+
+- Generator implementation:
+  - `EncodingMediatypeWrite` centralizes mutation opt-in, public GeoRobotix hard denial, exact `application/geo+json` and `application/sml+json` constants, created-resource URI resolution, and dereference/identity parse evidence.
+  - `GeoJsonTests` adds `geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled`.
+  - `SensorMlTests` adds `sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled`.
+  - `VerifyEncodingMediatypeWrite` adds 8 focused helper regressions.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `144 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-19-maven-r3-2026-05-07.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s19-generator-r3 bash scripts/smoke-test.sh`
+  - Result: `89 total / 55 passed / 0 failed / 34 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s19-generator-r3/s-ets-01-03-teamengine-smoke-2026-05-07.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s19-generator-r3/s-ets-01-03-teamengine-container-2026-05-07.log`
+  - No-mutation oracle: recognized 69 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Local OSH mutable-IUT evidence:
+  - Command: `SMOKE_CONTAINER_NAME=ets-csapi-osh-s19-mediatype-auth-r3 SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_AUTH_CREDENTIAL=... SMOKE_MUTATION_TESTS_ENABLED=true SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut SMOKE_OUTPUT_DIR=/tmp/ets-csapi-osh-s19-mediatype-auth-r3 bash scripts/smoke-test.sh`
+  - Result: `89 total / 52 passed / 4 failed / 33 skipped`
+  - Report: `/tmp/ets-csapi-osh-s19-mediatype-auth-r3/s-ets-01-03-teamengine-smoke-2026-05-07.xml`
+  - Log: `/tmp/ets-csapi-osh-s19-mediatype-auth-r3/s-ets-01-03-teamengine-container-2026-05-07.log`
+  - Positive Sprint 19 evidence: `geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled` PASS and `sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled` PASS with exact `Content-Type=application/geo+json` and `Content-Type=application/sml+json`, follow-up GET, and cleanup DELETE request-log evidence.
+  - Remaining local OSH failures are outside Sprint 19 mediatype-write: deployment/procedure SensorML schema/mapping and relation-types checks received HTTP 500 from local OSH SensorML non-system resources.
+- Runtime outcomes:
+  - `geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled`: SKIP before mutation because mutation tests are disabled by default.
+  - `sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled`: SKIP before mutation because mutation tests are disabled by default.
+  - Both SKIP messages require `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`; status-only writes are not PASS evidence.
+  - Local OSH mutable run proved the positive system-resource paths after disabling RestAssured default charset appending and using OSH-compatible ordered JSON bodies.
+- Raze implementation review:
+  - `.harness/evaluations/sprint-ets-19-adversarial-implementation.yaml`: `APPROVE_WITH_CONCERNS` confidence 0.90.
+  - Required fixes: none.
+  - Initial follow-up concerns: dedicated mutable-IUT mediatype-write evidence and cleanup DELETE diagnostics.
+  - Follow-up local OSH evidence addressed the positive mutable-IUT concern for system-resource GeoJSON and SensorML mediatype-write checks; cleanup remains best-effort request-log evidence.
+  - `.harness/evaluations/sprint-ets-19-adversarial-followup-gapfix.yaml`: `APPROVE` confidence 0.94 after reconciliation updates.
 
 Sprint ets-19 encoding mediatype-write safety-gated planning:
 

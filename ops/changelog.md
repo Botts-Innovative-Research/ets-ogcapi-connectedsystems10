@@ -2,6 +2,25 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T17:45Z — Sprint 19 Generator mediatype-write safety gates
+
+**Triggered by user instruction**: "Commit and push to Github, then continue."
+
+- Attempted `git push origin main`; push failed because GitHub HTTPS credentials are unavailable in this environment (`fatal: could not read Username for 'https://github.com': No such device or address`).
+- Continued with Sprint 19 Generator for `S-ETS-19-01`.
+- Added `EncodingMediatypeWrite` helper for exact media types, mutation opt-in, public GeoRobotix hard denial, created-resource URI resolution, and dereference/identity parse evidence.
+- Added safety-gated GeoJSON and SensorML mediatype-write runtime checks behind `/conf/create-replace-delete`, `mutation-tests-enabled=true`, and `mutation-iut-policy=dedicated-mutable-iut`.
+- Added 8 helper regressions preventing public-IUT mutation, status-only PASS, wrong-identity PASS, media-type drift, and OSH-compatible GeoJSON system-body drift.
+- Local OSH mutable verification exposed two practical interoperability fixes: RestAssured was appending a default charset to exact media types, and unordered JSON body maps could break OSH SensorML parsing. Fixed both by disabling default charset appending for write checks and using insertion-ordered write bodies.
+- Ran formatter, Maven, and TeamEngine smoke. Maven r3: `144 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke r3: `89 total / 55 passed / 0 failed / 34 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 69 recognized GeoRobotix request-log entries.
+- Ran authenticated local OSH mutable smoke against `field-hub-osh-1`: `89 total / 52 passed / 4 failed / 33 skipped`; both Sprint 19 mediatype-write tests passed with exact `application/geo+json` and `application/sml+json`. The four remaining failures are local OSH SensorML deployment/procedure HTTP 500 responses outside the mediatype-write story.
+- Raze implementation review `.harness/evaluations/sprint-ets-19-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.90 with no required fixes.
+- Raze follow-up review first found stale reconciliation docs, then gapfix review `.harness/evaluations/sprint-ets-19-adversarial-followup-gapfix.yaml` returned `APPROVE` confidence 0.94.
+- Reconciled OpenSpec, story, traceability, epic, ops status, test-results, known issues, and Generator handoff for the Generator outcome.
+- Amended Sprint 19 Generator commit to `current HEAD`; retrying `git push origin main` still failed with the same unavailable GitHub HTTPS credentials error.
+
+---
+
 ## 2026-05-07T16:57Z — Sprint 19 encoding mediatype-write planning
 
 **Triggered by user instruction**: "Continue."

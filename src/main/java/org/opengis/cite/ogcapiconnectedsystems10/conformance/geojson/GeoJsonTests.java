@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.EncodingMediatypeWrite;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.EncodingRelationTypes;
 import org.testng.ITestContext;
 import org.testng.SkipException;
@@ -42,6 +43,8 @@ public class GeoJsonTests {
 	static final String REQ_GEOJSON_CLASS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson";
 
 	static final String REQ_MEDIATYPE_READ = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/mediatype-read";
+
+	static final String REQ_MEDIATYPE_WRITE = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/mediatype-write";
 
 	static final String REQ_FEATURE_ATTRIBUTE_MAPPING = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping";
 
@@ -95,12 +98,15 @@ public class GeoJsonTests {
 
 	private Map<String, Object> samplingFeaturesGeoJsonBody;
 
+	private ITestContext testContext;
+
 	/**
 	 * Fetches /conformance and /systems once for all GeoJSON subset assertions.
 	 * @param testContext TestNG test context.
 	 */
 	@BeforeClass
 	public void fetchGeoJsonInputs(ITestContext testContext) {
+		this.testContext = testContext;
 		Object iutAttr = testContext.getSuite().getAttribute(SuiteAttribute.IUT.getName());
 		if (!(iutAttr instanceof URI)) {
 			throw new SkipException("Suite attribute '" + SuiteAttribute.IUT.getName() + "' is missing or not a URI.");
@@ -187,6 +193,51 @@ public class GeoJsonTests {
 		if (this.systemsGeoJsonBody.containsKey("items") && !this.systemsGeoJsonBody.containsKey("features")) {
 			throw new SkipException(REQ_MEDIATYPE_READ
 					+ " — IUT declares /conf/geojson but /systems with Accept application/geo+json returned the CS API default 'items' wrapper, not GeoJSON 'features'. This is fallback evidence, not a mediatype-read PASS.");
+		}
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-012-GEOJSON-MEDIATYPE-WRITE-SAFETY-GATED-001,
+	 * SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-NO-PUBLIC-MUTATION-001, and
+	 * SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-PARSE-EVIDENCE-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_MEDIATYPE_WRITE
+			+ ": Content-Type application/geo+json write parsing is checked only after CRD conformance, explicit dedicated-mutable-IUT opt-in, public-IUT hard denial, and follow-up dereference evidence (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-MEDIATYPE-WRITE-SAFETY-GATED-001, SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-NO-PUBLIC-MUTATION-001, SCENARIO-ETS-PART1-012-013-MEDIATYPE-WRITE-PARSE-EVIDENCE-001)",
+			groups = "geojson")
+	public void geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled() {
+		EncodingMediatypeWrite.skipIfConformanceMissing(this.conformanceBody,
+				EncodingMediatypeWrite.CONF_CREATE_REPLACE_DELETE, REQ_MEDIATYPE_WRITE);
+		EncodingMediatypeWrite.ensureMutationEnabledOrSkip(this.testContext, this.iutUri, REQ_MEDIATYPE_WRITE);
+
+		String systemUid = EncodingMediatypeWrite.mutableSystemUid("geojson");
+		Response createResponse = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json")
+			.contentType(EncodingMediatypeWrite.GEOJSON_CONTENT_TYPE)
+			.body(EncodingMediatypeWrite.geoJsonSystemBody("create", systemUid))
+			.when()
+			.post(this.systemsUri)
+			.andReturn();
+		EncodingMediatypeWrite.assertStatusIn(createResponse, List.of(200, 201, 202), REQ_MEDIATYPE_WRITE,
+				"POST /systems with Content-Type " + EncodingMediatypeWrite.GEOJSON_CONTENT_TYPE);
+
+		String resourceUri = EncodingMediatypeWrite.createdResourceUri(createResponse, this.iutUri, baseUriString());
+		if (resourceUri == null) {
+			ETSAssert.failWithUri(REQ_MEDIATYPE_WRITE,
+					"POST /systems did not expose Location or JSON id; status-only write response is not mediatype-write PASS evidence.");
+		}
+
+		try {
+			Response dereferenceResponse = given().accept("application/json")
+				.when()
+				.get(URI.create(resourceUri))
+				.andReturn();
+			EncodingMediatypeWrite.assertStatusIn(dereferenceResponse, List.of(200), REQ_MEDIATYPE_WRITE,
+					"GET " + resourceUri + " after GeoJSON mediatype-write POST");
+			EncodingMediatypeWrite.assertDereferencedResourcePreservesUid(
+					EncodingMediatypeWrite.parseBody(dereferenceResponse), systemUid, REQ_MEDIATYPE_WRITE);
+		}
+		finally {
+			given().accept("application/json").when().delete(URI.create(resourceUri)).andReturn();
 		}
 	}
 
@@ -536,6 +587,11 @@ public class GeoJsonTests {
 			return !((Map<?, ?>) value).isEmpty();
 		}
 		return true;
+	}
+
+	private String baseUriString() {
+		String value = this.iutUri.toString();
+		return value.endsWith("/") ? value : value + "/";
 	}
 
 }

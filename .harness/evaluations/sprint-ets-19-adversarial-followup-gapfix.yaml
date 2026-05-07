@@ -1,0 +1,88 @@
+schema_version: "1.0"
+artifact_type: "adversarial_followup_gapfix_review"
+reviewer: "Red Team / Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+created_utc: "2026-05-07T17:44:51Z"
+sprint: "sprint-ets-19"
+story_id: "S-ETS-19-01"
+scope: "Focused gapfix review for RAZE-ETS19-FOLLOWUP-GAP-001 documentation reconciliation only"
+previous_artifact: ".harness/evaluations/sprint-ets-19-adversarial-followup.yaml"
+verdict: "APPROVE"
+confidence: 0.94
+
+reviewed_files:
+  - "ops/status.md"
+  - "epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "ops/test-results.md"
+  - "ops/changelog.md"
+  - "ops/known-issues.md"
+  - "epics/epic-ets-02-part1-classes.md"
+  - ".harness/handoffs/generator-handoff.yaml"
+
+gapfix_result:
+  gap_id: "RAZE-ETS19-FOLLOWUP-GAP-001"
+  status: "closed"
+  rationale: >
+    The named reconciliation docs now consistently carry the r3 evidence required
+    by the follow-up review: Maven r3 144/0/0/3, GeoRobotix smoke r3
+    89/55/0/34 with zero IUT-bound mutation requests, and local OSH mutable-auth
+    smoke r3 89/52/4/33 with both Sprint 19 mediatype-write tests PASS using
+    exact no-charset application/geo+json and application/sml+json. The local
+    OSH failures are classified as four SensorML non-system HTTP 500 outcomes
+    outside the Sprint 19 mediatype-write story, and GeoJSON/SensorML remain
+    PARTIAL rather than overclaimed as fully closed.
+
+checks:
+  maven_r3:
+    verdict: "pass"
+    evidence:
+      - "ops/status.md reports Maven r3 BUILD SUCCESS with 144 tests / 0 failures / 0 errors / 3 skipped."
+      - "story, OpenSpec, traceability, test-results, changelog, and generator handoff cite sprint-ets-19-maven-r3-2026-05-07.log and 144/0/0/3."
+  georobotix_smoke_r3:
+    verdict: "pass"
+    evidence:
+      - "ops/status.md, story, OpenSpec, ops/test-results.md, and generator handoff report GeoRobotix smoke r3 89 total / 55 passed / 0 failed / 34 skipped."
+      - "The same docs record zero IUT-bound POST/PUT/DELETE/PATCH across 69 recognized GeoRobotix request-log entries."
+  local_osh_mutable_r3:
+    verdict: "pass"
+    evidence:
+      - "ops/status.md, story, OpenSpec, traceability, ops/test-results.md, changelog, and generator handoff report local OSH mutable r3 89 total / 52 passed / 4 failed / 33 skipped."
+      - "Docs identify both geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled and sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled as PASS."
+      - "Docs cite exact Content-Type=application/geo+json and Content-Type=application/sml+json, follow-up GET, and cleanup DELETE request-log evidence."
+  remaining_failures:
+    verdict: "pass"
+    evidence:
+      - "ops/status.md, story, ops/test-results.md, changelog, known-issues, and generator handoff classify the four local OSH failures as SensorML deployment/procedure non-system HTTP 500 outcomes outside Sprint 19."
+      - "OpenSpec records the GeoJSON and SensorML mediatype-write positive system-resource evidence while keeping non-system mutation-side encoding behavior open."
+  no_full_closure_overclaim:
+    verdict: "pass"
+    evidence:
+      - "OpenSpec, traceability, known-issues, epic, and generator handoff keep REQ-ETS-PART1-012 and REQ-ETS-PART1-013 PARTIAL."
+      - "Open items remain for relation-types breadth/positive evidence, property GeoJSON or SensorML evidence, non-system mutation-side encoding, schema validation, and Part 2 as applicable."
+  stale_pre_r3_claims:
+    verdict: "pass"
+    evidence:
+      - "Focused search found no remaining Sprint 19 reconciliation claim of Maven 143 tests in the named current Sprint 19 sections."
+      - "No current Sprint 19 doc still says positive dedicated mutable-IUT system-resource mediatype-write evidence is unproven."
+
+concerns:
+  - id: "RAZE-ETS19-FOLLOWUP-GAPFIX-CONCERN-001"
+    severity: "low"
+    status: "non_blocking"
+    detail: >
+      `epics/epic-ets-02-part1-classes.md` and `.harness/handoffs/generator-handoff.yaml`
+      still describe the follow-up gapfix review as in progress or pending. That
+      wording is temporally expected before this artifact is written and does not
+      conflict with the r3 evidence reconciliation. It can be refreshed during the
+      final amend/commit hygiene pass if desired.
+
+required_fixes: []
+can_commit_or_amend: true
+approval_rationale: >
+  The prior documentation reconciliation gap is closed. The mandatory Sprint 19
+  docs now align on r3 Maven, GeoRobotix smoke, local OSH mutable-auth evidence,
+  exact no-charset media types, local failure classification, and continued
+  PARTIAL status. This is sufficient for amending/committing the Sprint 19
+  follow-up.

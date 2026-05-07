@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T16:57Z
+Last updated: 2026-05-07T17:49Z
 
 ## Fresh-Session Entry Point
 
@@ -38,28 +38,33 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes Sprint 18 Generator commit `81b7dba Implement Sprint 18 relation types breadth`.
+- ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-18-01` Generator complete as PARTIAL and Raze-approved.
-- Current sprint status: Sprint ets-19 planning drafted and Raze-approved for safety-gated GeoJSON/SensorML mediatype-write checks.
-- Latest committed Generator: `Implement Sprint 18 relation types breadth`.
+- Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
+- Current sprint status: Sprint ets-19 Generator completed safety-gated GeoJSON/SensorML mediatype-write checks.
+- Latest committed Generator: `Implement Sprint 19 mediatype write checks`.
+- Push status: `git push origin main` was retried after Sprint 19 amend and failed because GitHub HTTPS credentials are unavailable in this environment (`fatal: could not read Username for 'https://github.com': No such device or address`).
 
-## Sprint ets-19 Planning Evidence
+## Sprint ets-19 Generator Evidence
 
 Encoding mediatype-write safety-gated checks:
 
 - Story: `epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md`
 - Contract: `.harness/contracts/sprint-ets-19.yaml`
 - OpenSpec: extends `REQ-ETS-PART1-012`, `REQ-ETS-PART1-013`, and mutation-safety dependency `REQ-ETS-PART1-010`; GeoJSON/SensorML remain PARTIAL.
-- Scope planned: `Content-Type: application/geo+json` and `Content-Type: application/sml+json` parsing checks behind existing mutation opt-in and public-IUT hard-denial gates.
-- Out of scope: default mutation against GeoRobotix, Part 2, full external schema validation, and full GeoJSON/SensorML closure.
+- Scope implemented: `Content-Type: application/geo+json` and `Content-Type: application/sml+json` parsing checks behind existing mutation opt-in and public-IUT hard-denial gates.
+- Out of scope: default mutation against GeoRobotix, Part 2, full external schema validation, full GeoJSON/SensorML closure, and non-system mutation-side encoding coverage.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-07 and not stale.
 - OGC source verification: official upstream GeoJSON and SensorML encoding clauses list `mediatype-write`; both condition write-side media type parsing on Create/Replace/Delete support.
 - GeoRobotix planning probe: `/conformance` declares `/conf/create-replace-delete`, `/conf/geojson`, and `/conf/sensorml`; `OPTIONS /systems` and `OPTIONS /systems/0mqcvdnfoca0` advertise POST/PUT/DELETE.
-- Planning guardrail: GeoRobotix is still a shared public IUT. Default smoke must issue zero IUT-bound POST/PUT/DELETE/PATCH, and OPTIONS readiness cannot be reported as mediatype-write conformance.
+- Implementation: `EncodingMediatypeWrite` helper plus GeoJSON and SensorML runtime tests; helper unit coverage prevents public-IUT mutation, status-only PASS, wrong-identity PASS, non-exact media type drift, and OSH-compatible GeoJSON body drift.
+- Verification: formatter BUILD SUCCESS; Maven r3 BUILD SUCCESS with `144 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix TeamEngine smoke r3 `89 total / 55 passed / 0 failed / 34 skipped`.
+- No-mutation proof: GeoRobotix smoke recognized 69 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries; both mediatype-write lifecycle tests SKIP before mutation by default.
+- Local mutable-IUT proof: authenticated local OSH smoke r3 reported `89 total / 52 passed / 4 failed / 33 skipped`; both Sprint 19 mediatype-write tests PASSed with exact `Content-Type=application/geo+json` and `Content-Type=application/sml+json`, follow-up GET, and cleanup DELETE request-log evidence. The four local failures are SensorML deployment/procedure HTTP 500 responses outside Sprint 19.
 - Raze planning review `.harness/evaluations/sprint-ets-19-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for a missing SensorML OpenSpec scenario body.
 - Raze gap-fix review `.harness/evaluations/sprint-ets-19-plan-gapfix.yaml` returned `APPROVE` confidence 0.95 after adding `SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001`.
-- Next action: commit Sprint 19 planning, then start Generator.
+- Raze implementation follow-up gapfix `.harness/evaluations/sprint-ets-19-adversarial-followup-gapfix.yaml` returned `APPROVE` confidence 0.94 after r3 reconciliation updates.
+- Next action: provide GitHub credentials or switch the remote to an authenticated transport, then push `current HEAD`; otherwise start the next sprint item locally from the committed state.
 
 ## Sprint ets-18 Generator Evidence
 
@@ -367,14 +372,17 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 19 planning.
-2. Start Generator for `S-ETS-19-01`.
+1. Retry GitHub push after credentials are available.
+2. Start the next sprint item after push or credential handoff.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-19 planning work plus metrics:
+Current dirty worktree is expected Sprint ets-19 Generator work plus metrics:
 
-- `.harness/contracts/sprint-ets-19.yaml`
+- `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/EncodingMediatypeWrite.java`
+- `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java`
+- `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java`
+- `src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/VerifyEncodingMediatypeWrite.java`
 - `epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md`
-- OpenSpec/story/traceability/status/changelog/test-results planning reconciliation.
+- OpenSpec/story/traceability/status/changelog/test-results Generator reconciliation.
 - `ops/metrics.md` turn-log updates.

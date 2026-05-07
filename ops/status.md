@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T18:22Z
+Last updated: 2026-05-07T18:34Z
 
 ## Fresh-Session Entry Point
 
@@ -41,8 +41,8 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
-- Current sprint status: Sprint ets-20 Part 2 API Common Generator implemented locally and Raze-reviewed; commit/push are next.
-- Latest pushed commit: `86d1afc Plan Sprint 20 Part 2 API Common`.
+- Current sprint status: Sprint ets-20 Part 2 API Common Generator implemented, Raze-reviewed, committed, and pushed.
+- Latest pushed commit: `53f542d Implement Sprint 20 Part 2 API Common`.
 - Push status: remote switched to SSH and `git push origin main` succeeded on 2026-05-07T17:54Z and 2026-05-07T17:55Z.
 
 ## Sprint ets-20 Generator Evidence
@@ -66,7 +66,7 @@ Part 2 API Common read-only declaration-gated subset:
 - Raze planning review `.harness/evaluations/sprint-ets-20-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes. Non-blocking concern: broader Part 2 placeholder taxonomy still says 14 classes and duplicates API Common in the remaining placeholder block.
 - Raze implementation review `.harness/evaluations/sprint-ets-20-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes after dependency lint hardening.
 - Out of scope: Part 2 JSON, Datastream/Observation closure, ControlStream/Command closure, SWE Common encodings, Part 2 CRD/Update mutation, and full schema validation.
-- Next action: commit and push Sprint 20 Generator.
+- Next action: plan Sprint 21 for the next Part 2 item, likely `REQ-ETS-PART2-002` `/conf/datastream` unless the user reprioritizes.
 
 ## Sprint ets-19 Generator Evidence
 
@@ -395,14 +395,10 @@ Gate Results:
 
 ## Next Action
 
-1. Commit and push Sprint 20 Generator.
-2. Plan the next Part 2 sprint item.
+1. Plan Sprint 21 for the next Part 2 item, likely `REQ-ETS-PART2-002` `/conf/datastream`.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-20 Generator work plus metrics:
+Current dirty worktree should contain only this push-status/metrics reconciliation commit if not yet committed:
 
-- `epics/stories/s-ets-20-01-part2-api-common-planning.md`
-- `.harness/contracts/sprint-ets-20.yaml`
-- Java runtime tests, suite wiring, OpenSpec/traceability/epic/status/changelog/test-results/Generator handoff reconciliation.
 - `ops/metrics.md` turn-log updates.

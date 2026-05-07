@@ -42,7 +42,7 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
 - Current sprint status: Sprint ets-20 Part 2 API Common Generator implemented, Raze-reviewed, committed, and pushed.
-- Latest pushed commit: `53f542d Implement Sprint 20 Part 2 API Common`.
+- Latest pushed implementation commit: `53f542d Implement Sprint 20 Part 2 API Common`; a follow-up status/metrics reconciliation commit was pushed after it.
 - Push status: remote switched to SSH and `git push origin main` succeeded on 2026-05-07T17:54Z and 2026-05-07T17:55Z.
 
 ## Sprint ets-20 Generator Evidence

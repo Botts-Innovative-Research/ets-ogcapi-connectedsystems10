@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T19:52Z
+Last updated: 2026-05-07T19:54Z
 
 ## Fresh-Session Entry Point
 
@@ -41,7 +41,7 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
-- Current sprint status: Sprint ets-21 Part 2 Datastreams & Observations Generator complete locally with formatter, Maven, GeoRobotix smoke, and Raze gap-fix review passing; ready to commit and push.
+- Current sprint status: Sprint ets-21 Part 2 Datastreams & Observations Generator complete, committed as `b1df419`, and pushed over SSH.
 - Latest pushed implementation commit: `53f542d Implement Sprint 20 Part 2 API Common`; a follow-up status/metrics reconciliation commit was pushed after it.
 - Push status: remote switched to SSH and `git push origin main` succeeded on 2026-05-07T17:54Z and 2026-05-07T17:55Z.
 
@@ -99,7 +99,7 @@ Part 2 Datastreams & Observations read-only subset:
 - No-mutation proof: GeoRobotix smoke recognized 82 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries.
 - Runtime outcome: GeoRobotix declares `/conf/datastream` but not `/conf/api-common`, so scoped endpoint checks run while full `/conf/datastream` closure remains prerequisite-incomplete. Empty nested observations SKIP `/req/datastream/obs-ref-from-datastream` rather than producing PASS.
 - Raze implementation review `.harness/evaluations/sprint-ets-21-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.90 for reconciliation/evidence gaps only; gap-fix `.harness/evaluations/sprint-ets-21-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.96 after docs were corrected and Maven/smoke artifacts were archived under `ops/test-results/`.
-- Next action: commit/push Sprint 21 Generator, then plan Sprint 22 for the next Part 2 item.
+- Next action: plan Sprint 22 for the next Part 2 item.
 
 ## Sprint ets-19 Generator Evidence
 

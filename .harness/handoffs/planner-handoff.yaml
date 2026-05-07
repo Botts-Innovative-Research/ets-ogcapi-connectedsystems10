@@ -1,6 +1,6 @@
 agent: generator
-status: generator_complete_raze_approved_ready_to_commit
-timestamp: "2026-05-07T19:52:10Z"
+status: generator_complete_committed_pushed
+timestamp: "2026-05-07T19:54:02Z"
 sprint_number: "ets-21"
 sprint_name: "part2-datastream-generator"
 contract_path: ".harness/contracts/sprint-ets-21.yaml"
@@ -116,7 +116,7 @@ raze_review:
 
 next_agent_after_review: "committer"
 next_agent_after_review_rationale: |
-  Commit and push Sprint 21 Generator over SSH, then plan Sprint 22.
+  Plan Sprint 22 for the next Part 2 item.
 
 generator_result:
   implementation_status: "PARTIAL_IMPLEMENTED"
@@ -133,7 +133,9 @@ generator_result:
   full_closure_note: "GeoRobotix lacks /conf/api-common, so full /conf/datastream closure remains prerequisite-incomplete."
   raze_implementation_review: ".harness/evaluations/sprint-ets-21-adversarial-implementation.yaml returned GAPS_FOUND 0.90 for reconciliation/evidence only; fixes applied."
   raze_gapfix_review: ".harness/evaluations/sprint-ets-21-adversarial-gapfix.yaml returned APPROVE 0.96 with no required fixes."
-  next_work: "After commit/push, plan Sprint 22 for the next Part 2 item, likely /conf/controlstream."
+  commit: "b1df419 Implement Sprint 21 Part 2 Datastream"
+  push: "e6c10fc..b1df419 main -> main over SSH"
+  next_work: "Plan Sprint 22 for the next Part 2 item, likely /conf/controlstream."
 
 generator_brief:
   must_do:

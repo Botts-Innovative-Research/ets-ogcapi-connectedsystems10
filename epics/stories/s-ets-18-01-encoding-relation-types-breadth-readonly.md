@@ -1,7 +1,7 @@
 # Story S-ETS-18-01: Encoding Relation-Types Breadth Read-Only Checks
 
 > Sprint: ets-18
-> Status: PLANNED - RAZE-APPROVED
+> Status: GENERATOR COMPLETE - RAZE-APPROVED
 > Priority: P0
 > Complexity: S
 > Epic: epic-ets-02-part1-classes
@@ -44,6 +44,18 @@ The sprint remains PARTIAL for both `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`.
 - GeoRobotix SensorML system, deployment, and procedure bodies observed on 2026-05-07 have no top-level `links` member, so those breadth checks should SKIP honestly on the default IUT until such links exist.
 - Raze planning review `.harness/evaluations/sprint-ets-18-plan-adversarial.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
 
+## Generator Implementation Evidence
+
+- `GeoJsonTests` now keeps the selected System relation-types assertion and adds independent Deployment, Procedure, and Sampling Feature relation-types assertions.
+- `SensorMlTests` now keeps the selected System relation-types assertion and adds independent Deployment and Procedure relation-types assertions.
+- `VerifyEncodingRelationTypes` now covers Sprint 18 breadth regressions: one System PASS cannot mask a Deployment SKIP, property-level `@link` objects do not create links-member evidence, and SensorML Deployment resource-specific rels can PASS when present.
+- Formatter: Docker Maven `spring-javaformat:apply` BUILD SUCCESS.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `136 tests / 0 failures / 0 errors / 3 skipped`; log `ops/test-results/sprint-ets-18-maven-2026-05-07.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s18-generator bash scripts/smoke-test.sh`, `87 total / 55 passed / 0 failed / 32 skipped`.
+- Smoke no-mutation oracle: 69 recognized IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries.
+- Runtime outcomes: GeoJSON System relation-types PASSed; GeoJSON Deployment, Procedure, and Sampling Feature relation-types SKIPped independently; SensorML System, Deployment, and Procedure relation-types SKIPped independently.
+- Raze implementation review `.harness/evaluations/sprint-ets-18-adversarial-implementation.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
+
 ## Planned Test Surface
 
 1. Reuse or extend `EncodingRelationTypes`; keep encoding/resource-specific allowlists.
@@ -63,6 +75,12 @@ The sprint remains PARTIAL for both `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`.
 - [x] Planning keeps both REQ-ETS-PART1-012 and REQ-ETS-PART1-013 PARTIAL.
 - [x] Planning requires resource-specific relation-types checks per resource class, not a single aggregate assertion that can hide SKIPs.
 - [x] Planning excludes mediatype-write, mutation, full schema validation, and Part 2.
+- [x] Generator adds independent GeoJSON Deployment, Procedure, and Sampling Feature relation-types assertions.
+- [x] Generator adds independent SensorML Deployment and Procedure relation-types assertions.
+- [x] Helper regression tests pin aggregate false-PASS, property-level `@link`, and positive SensorML Deployment relation behavior.
+- [x] Formatter and Docker Maven gates completed.
+- [x] TeamEngine smoke completed with zero failures and zero IUT-bound mutation requests.
+- [x] Raze reviews Sprint 18 Generator implementation changes.
 
 ## Out Of Scope
 

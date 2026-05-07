@@ -10,12 +10,14 @@ import org.junit.Test;
 import org.testng.SkipException;
 
 /**
- * Regression coverage for S-ETS-17-01 relation-types helper behavior.
+ * Regression coverage for S-ETS-17-01 and S-ETS-18-01 relation-types helper behavior.
  *
  * <p>
  * Traceability: REQ-ETS-PART1-012, REQ-ETS-PART1-013,
  * SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001,
- * SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001, and
+ * SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001,
+ * SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001,
+ * SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-BREADTH-001, and
  * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
  * </p>
  */
@@ -79,6 +81,44 @@ public class VerifyEncodingRelationTypes {
 
 		assertTrue(error.getMessage().contains("parentSystem"));
 		assertTrue(error.getMessage().contains(EncodingRelationTypes.ENCODING_SENSORML));
+	}
+
+	@Test
+	public void systemPassDoesNotMaskDeploymentGenericOnlySkip() {
+		Map<String, Object> system = Map.of("links",
+				List.of(Map.of("rel", "samplingFeatures", "href", "/systems/1/samplingFeatures")));
+		Map<String, Object> deployment = Map.of("links", List.of(Map.of("rel", "canonical", "href", "/deployments/1"),
+				Map.of("rel", "alternate", "href", "/deployments/1?f=html")));
+
+		EncodingRelationTypes.assertLinksMemberAssociationRels(system, EncodingRelationTypes.ENCODING_GEOJSON,
+				EncodingRelationTypes.RESOURCE_SYSTEM, REQ);
+		SkipException error = assertThrows(SkipException.class,
+				() -> EncodingRelationTypes.assertLinksMemberAssociationRels(deployment,
+						EncodingRelationTypes.ENCODING_GEOJSON, EncodingRelationTypes.RESOURCE_DEPLOYMENT, REQ));
+
+		assertTrue(error.getMessage().contains(EncodingRelationTypes.RESOURCE_DEPLOYMENT));
+		assertTrue(error.getMessage().contains("no links-member association links"));
+	}
+
+	@Test
+	public void propertyLevelLinkDoesNotCreateLinksMemberEvidence() {
+		Map<String, Object> representation = Map.of("properties",
+				Map.of("deployedSystems@link", List.of(Map.of("href", "/systems/1"))));
+
+		SkipException error = assertThrows(SkipException.class,
+				() -> EncodingRelationTypes.assertLinksMemberAssociationRels(representation,
+						EncodingRelationTypes.ENCODING_GEOJSON, EncodingRelationTypes.RESOURCE_DEPLOYMENT, REQ));
+
+		assertTrue(error.getMessage().contains("no JSON links member"));
+	}
+
+	@Test
+	public void sensorMlDeploymentAssociationRelPassesWhenResourceSpecific() {
+		Map<String, Object> representation = Map.of("links",
+				List.of(Map.of("rel", "parentDeployment", "href", "/deployments/parent")));
+
+		EncodingRelationTypes.assertLinksMemberAssociationRels(representation, EncodingRelationTypes.ENCODING_SENSORML,
+				EncodingRelationTypes.RESOURCE_DEPLOYMENT, REQ);
 	}
 
 }

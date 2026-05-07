@@ -309,14 +309,59 @@ public class GeoJsonTests {
 
 	/**
 	 * SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001 and
+	 * SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001 and
 	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
-			+ ": links-member association rels use resource-specific association names, excluding canonical/alternate/property-level links (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			+ ": system links-member association rels use resource-specific association names, excluding canonical/alternate/property-level links (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-001, SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
 			groups = "geojson")
 	public void geoJsonLinksMemberAssociationRelsUseResourceSpecificNames() {
 		EncodingRelationTypes.assertLinksMemberAssociationRels(this.selectedSystemJsonBody,
 				EncodingRelationTypes.ENCODING_GEOJSON, EncodingRelationTypes.RESOURCE_SYSTEM, REQ_RELATION_TYPES);
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001 and
+	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
+			+ ": deployment links-member association rels use deployment-specific names and generic/property-level links do not create PASS (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			groups = "geojson")
+	public void geoJsonDeploymentLinksMemberAssociationRelsUseResourceSpecificNames() {
+		skipIfConformanceMissing(CONF_DEPLOYMENT, REQ_RELATION_TYPES, "/deployments");
+		Map<String, Object> deploymentBody = fetchFirstItemBody(this.deploymentsUri, "deployments", REQ_RELATION_TYPES);
+		EncodingRelationTypes.assertLinksMemberAssociationRels(deploymentBody, EncodingRelationTypes.ENCODING_GEOJSON,
+				EncodingRelationTypes.RESOURCE_DEPLOYMENT, REQ_RELATION_TYPES);
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001 and
+	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
+			+ ": procedure links-member association rels use procedure-specific names and generic links do not create PASS (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			groups = "geojson")
+	public void geoJsonProcedureLinksMemberAssociationRelsUseResourceSpecificNames() {
+		skipIfConformanceMissing(CONF_PROCEDURE, REQ_RELATION_TYPES, "/procedures");
+		Map<String, Object> procedureBody = fetchFirstItemBody(this.proceduresUri, "procedures", REQ_RELATION_TYPES);
+		EncodingRelationTypes.assertLinksMemberAssociationRels(procedureBody, EncodingRelationTypes.ENCODING_GEOJSON,
+				EncodingRelationTypes.RESOURCE_PROCEDURE, REQ_RELATION_TYPES);
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001 and
+	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
+			+ ": samplingFeature links-member association rels use samplingFeature-specific names and property-level links do not create PASS (REQ-ETS-PART1-012, SCENARIO-ETS-PART1-012-GEOJSON-RELATION-TYPES-BREADTH-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			groups = "geojson")
+	public void geoJsonSamplingFeatureLinksMemberAssociationRelsUseResourceSpecificNames() {
+		skipIfConformanceMissing(CONF_SF, REQ_RELATION_TYPES, "/samplingFeatures");
+		Map<String, Object> samplingFeatureBody = fetchFirstItemBody(this.samplingFeaturesUri, "samplingFeatures",
+				REQ_RELATION_TYPES);
+		EncodingRelationTypes.assertLinksMemberAssociationRels(samplingFeatureBody,
+				EncodingRelationTypes.ENCODING_GEOJSON, EncodingRelationTypes.RESOURCE_SAMPLING_FEATURE,
+				REQ_RELATION_TYPES);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T00:14Z
+Last updated: 2026-05-07T00:33Z
 
 ## Fresh-Session Entry Point
 
@@ -38,11 +38,28 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes Sprint 17 Generator commit `Implement Sprint 17 encoding relation types`.
+- ETS HEAD includes Sprint 18 planning commit `Plan Sprint 18 relation types breadth`.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-17-01` Generator complete as PARTIAL and Raze-approved.
-- Current sprint status: Sprint ets-18 planning drafted and Raze-approved for read-only GeoJSON/SensorML relation-types breadth checks.
+- Latest implemented story: `S-ETS-18-01` Generator complete as PARTIAL and Raze-approved.
+- Current sprint status: Sprint ets-18 Generator implemented read-only GeoJSON/SensorML relation-types breadth checks.
 - Latest committed Generator: `Implement Sprint 17 encoding relation types`.
+
+## Sprint ets-18 Generator Evidence
+
+Encoding relation-types breadth read-only checks:
+
+- Story: `epics/stories/s-ets-18-01-encoding-relation-types-breadth-readonly.md`
+- Contract: `.harness/contracts/sprint-ets-18.yaml`
+- OpenSpec: extends `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`; both remain PARTIAL.
+- Scope implemented: independent relation-types assertions for selected GeoJSON System/Deployment/Procedure/SamplingFeature and SensorML System/Deployment/Procedure resources.
+- Out of scope: GeoJSON/SensorML `mediatype-write`, mutation behavior, full schema validation, Part 2, property GeoJSON mapping, and property-level `@link` relation-types PASS evidence.
+- Implementation: `GeoJsonTests` adds Deployment, Procedure, and Sampling Feature relation-types checks; `SensorMlTests` adds Deployment and Procedure relation-types checks; `VerifyEncodingRelationTypes` adds 3 Sprint 18 breadth regressions.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `136 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-18-maven-2026-05-07.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s18-generator bash scripts/smoke-test.sh`, result `87 total / 55 passed / 0 failed / 32 skipped`.
+- Smoke no-mutation oracle: recognized 69 IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries for GeoRobotix.
+- Runtime outcome: GeoJSON System relation-types PASSed; GeoJSON Deployment, Procedure, and Sampling Feature SKIPped independently; SensorML System, Deployment, and Procedure SKIPped independently.
+- Raze implementation review `.harness/evaluations/sprint-ets-18-adversarial-implementation.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
+- Next action: commit Sprint 18 Generator.
 
 ## Sprint ets-17 Generator Evidence
 
@@ -88,7 +105,7 @@ Encoding relation-types breadth read-only checks:
 - GeoRobotix planning probe: observed SensorML system/deployment/procedure bodies expose no top-level `links` member.
 - Planned verdict policy: each encoding/resource pair must PASS, FAIL, or SKIP independently; the existing GeoJSON System PASS cannot hide non-system or SensorML SKIPs.
 - Raze planning review `.harness/evaluations/sprint-ets-18-plan-adversarial.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
-- Next action: commit Sprint 18 planning, then start Generator.
+- Historical note: Sprint 18 planning was committed as `41bf9e9`.
 
 ## Sprint ets-16 Generator Evidence
 
@@ -333,8 +350,8 @@ Gate Results:
 
 ## Next Action
 
-1. Commit Sprint 18 planning.
-2. Start Generator for `S-ETS-18-01`.
+1. Commit Sprint 18 Generator.
+2. Plan the next remaining Part 1 gap.
 
 ## Dirty Worktree Notes
 

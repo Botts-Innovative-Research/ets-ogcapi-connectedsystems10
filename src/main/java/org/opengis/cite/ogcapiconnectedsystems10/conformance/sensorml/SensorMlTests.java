@@ -353,14 +353,45 @@ public class SensorMlTests {
 
 	/**
 	 * SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001 and
+	 * SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-BREADTH-001 and
 	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
-			+ ": SensorML links-member association rels use resource-specific association names, excluding generic representation links and non-links-member associations (REQ-ETS-PART1-013, SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			+ ": SensorML system links-member association rels use resource-specific association names, excluding generic representation links and non-links-member associations (REQ-ETS-PART1-013, SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-001, SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-BREADTH-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
 			dependsOnMethods = "sensorMlMediaTypeRead", groups = "sensorml")
 	public void sensorMlLinksMemberAssociationRelsUseResourceSpecificNames() {
 		EncodingRelationTypes.assertLinksMemberAssociationRels(this.sensorMlRepresentationBody,
 				EncodingRelationTypes.ENCODING_SENSORML, EncodingRelationTypes.RESOURCE_SYSTEM, REQ_RELATION_TYPES);
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-BREADTH-001 and
+	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
+			+ ": SensorML deployment links-member association rels use deployment-specific names and absent links SKIP honestly (REQ-ETS-PART1-013, SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-BREADTH-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			groups = "sensorml")
+	public void sensorMlDeploymentLinksMemberAssociationRelsUseResourceSpecificNames() {
+		skipIfConformanceMissing(CONF_DEPLOYMENT, REQ_RELATION_TYPES, "/deployments");
+		SensorMlResourceEvidence evidence = fetchSensorMlResource("deployments", REQ_RELATION_TYPES);
+		assertExplicitSensorMlRepresentation(evidence, REQ_RELATION_TYPES);
+		EncodingRelationTypes.assertLinksMemberAssociationRels(evidence.sensorMlBody,
+				EncodingRelationTypes.ENCODING_SENSORML, EncodingRelationTypes.RESOURCE_DEPLOYMENT, REQ_RELATION_TYPES);
+	}
+
+	/**
+	 * SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-BREADTH-001 and
+	 * SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_RELATION_TYPES
+			+ ": SensorML procedure links-member association rels use procedure-specific names and absent links SKIP honestly (REQ-ETS-PART1-013, SCENARIO-ETS-PART1-013-SENSORML-RELATION-TYPES-BREADTH-001, SCENARIO-ETS-PART1-012-013-RELATION-TYPES-FALLBACK-HONESTY-001)",
+			groups = "sensorml")
+	public void sensorMlProcedureLinksMemberAssociationRelsUseResourceSpecificNames() {
+		skipIfConformanceMissing(CONF_PROCEDURE, REQ_RELATION_TYPES, "/procedures");
+		SensorMlResourceEvidence evidence = fetchSensorMlResource("procedures", REQ_RELATION_TYPES);
+		assertExplicitSensorMlRepresentation(evidence, REQ_RELATION_TYPES);
+		EncodingRelationTypes.assertLinksMemberAssociationRels(evidence.sensorMlBody,
+				EncodingRelationTypes.ENCODING_SENSORML, EncodingRelationTypes.RESOURCE_PROCEDURE, REQ_RELATION_TYPES);
 	}
 
 	/**

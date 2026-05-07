@@ -1,8 +1,37 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T00:14Z
+Last updated: 2026-05-07T00:33Z
 
 ## Current Sprint Evidence
+
+Sprint ets-18 encoding relation-types breadth Generator:
+
+- Generator implementation:
+  - `GeoJsonTests` adds independent Deployment, Procedure, and Sampling Feature relation-types checks while retaining the System check.
+  - `SensorMlTests` adds independent Deployment and Procedure relation-types checks while retaining the System check.
+  - `VerifyEncodingRelationTypes` adds breadth regressions for aggregate false-PASS prevention, property-level `@link` exclusion, and positive SensorML Deployment relation evidence.
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `136 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-18-maven-2026-05-07.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s18-generator bash scripts/smoke-test.sh`
+  - Result: `87 total / 55 passed / 0 failed / 32 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s18-generator/s-ets-01-03-teamengine-smoke-2026-05-07.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s18-generator/s-ets-01-03-teamengine-container-2026-05-07.log`
+  - No-mutation oracle: recognized 69 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Runtime outcomes:
+  - `geoJsonLinksMemberAssociationRelsUseResourceSpecificNames`: PASS on selected System links.
+  - `geoJsonDeploymentLinksMemberAssociationRelsUseResourceSpecificNames`: SKIP on generic-only deployment links.
+  - `geoJsonProcedureLinksMemberAssociationRelsUseResourceSpecificNames`: SKIP on generic-only procedure links.
+  - `geoJsonSamplingFeatureLinksMemberAssociationRelsUseResourceSpecificNames`: SKIP on absent top-level `links`.
+  - `sensorMlLinksMemberAssociationRelsUseResourceSpecificNames`: SKIP on absent top-level `links`.
+  - `sensorMlDeploymentLinksMemberAssociationRelsUseResourceSpecificNames`: SKIP on absent top-level `links`.
+  - `sensorMlProcedureLinksMemberAssociationRelsUseResourceSpecificNames`: SKIP on absent top-level `links`.
+- Raze implementation review:
+  - `.harness/evaluations/sprint-ets-18-adversarial-implementation.yaml`: `APPROVE` confidence 0.92.
+  - Required fixes: none.
 
 Sprint ets-18 encoding relation-types breadth read-only planning:
 

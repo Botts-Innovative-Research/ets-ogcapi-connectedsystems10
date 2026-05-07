@@ -2,6 +2,21 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T00:33Z — Sprint 18 encoding relation-types breadth Generator
+
+**Triggered by user instruction**: "Continue."
+
+- Implemented `S-ETS-18-01` as a PARTIAL read-only breadth expansion of `REQ-ETS-PART1-012` and `REQ-ETS-PART1-013`.
+- Added independent GeoJSON Deployment, Procedure, and Sampling Feature relation-types assertions, retaining the selected System assertion.
+- Added independent SensorML Deployment and Procedure relation-types assertions, retaining the selected System assertion.
+- Added 3 helper regressions covering aggregate false-PASS prevention, property-level `@link` exclusion, and positive SensorML Deployment relation evidence.
+- Verified formatter BUILD SUCCESS, Maven `136 tests / 0 failures / 0 errors / 3 skipped`, and TeamEngine smoke `87 total / 55 passed / 0 failed / 32 skipped`.
+- Smoke no-mutation oracle recognized 69 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries.
+- Runtime outcomes: GeoJSON System relation-types PASSed; GeoJSON Deployment/Procedure/SamplingFeature and SensorML System/Deployment/Procedure relation-types SKIPped independently.
+- Raze implementation review `.harness/evaluations/sprint-ets-18-adversarial-implementation.yaml` returned `APPROVE` confidence 0.92 with no required fixes.
+
+---
+
 ## 2026-05-07T00:14Z — Sprint 18 encoding relation-types breadth planning
 
 **Triggered by user instruction**: "Do Spring 18 planning." Interpreted as Sprint 18 planning.

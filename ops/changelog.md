@@ -2,6 +2,21 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T18:22Z — Sprint 20 Part 2 API Common Generator
+
+**Triggered by user instruction**: "Start Generator."
+
+- Implemented `S-ETS-20-01` as a read-only, declaration-gated Part 2 API Common subset.
+- Added `Part2ApiCommonTests` for exact `/conf/api-common` gating, resource terminology/discovery, advertised Part 2 collection shape checks, and dependency tracing.
+- Wired TestNG group `part2apicommon` with Core/Common prerequisites and added structural lint for dependency/co-location drift.
+- Added helper regressions preventing stale `dynamic-*` identifiers and synthesized `/commands` assumptions.
+- Fixed the initial smoke failure where TestNG treated `depends-on="core,common"` as a nonexistent single group by switching to `depends-on="core common"`.
+- Ran formatter, Maven, and TeamEngine smoke. Maven post-Raze rerun: `152 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke rerun: `93 total / 55 passed / 0 failed / 38 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 71 recognized request-log entries.
+- Raze implementation review returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes after the dependency lint was tightened to reject comma syntax and tokenize `depends-on` on whitespace.
+- Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, and Generator handoff for the Generator outcome.
+
+---
+
 ## 2026-05-07T18:05Z — Sprint 20 Part 2 API Common planning
 
 **Triggered by user instruction**: "Continue."

@@ -150,11 +150,12 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART2-001: Part 2 API Common Conformance Suite
 - **Priority**: MUST
-- **Status**: PLANNED (Sprint 20 planning 2026-05-07; story S-ETS-20-01)
-- **Description**: The ETS SHALL provide a TestNG suite class for OGC 23-002 Requirements Class "Common" using official identifiers `/req/api-common`, `/conf/api-common`, `/req/api-common/resources`, and `/req/api-common/resource-collection`. The suite SHALL be read-only in its first Generator increment, SHALL depend on Part 1 API Common/Core availability, and SHALL SKIP with a precise reason when an IUT does not declare `/conf/api-common`.
+- **Status**: PARTIAL_IMPLEMENTED (Sprint 20 Generator 2026-05-07; story S-ETS-20-01)
+- **Description**: The ETS SHALL provide a TestNG suite class for OGC 23-002 Requirements Class "Common" using official identifiers `/req/api-common`, `/conf/api-common`, `/req/api-common/resources`, and `/req/api-common/resource-collection`. The implemented Sprint 20 subset is read-only, depends on Part 1 API Common/Core availability via TestNG group `part2apicommon`, and SKIPs with a precise reason when an IUT does not declare `/conf/api-common`.
 - **OGC source verified**: OGC 23-002 official published HTML at `https://docs.ogc.org/is/23-002/23-002.html`, Clause 8 "Requirements Class Common", checked 2026-05-07. The requirements class identifier is `/req/api-common`; conformance class is `/conf/api-common`; prerequisite is `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common`; normative statements are `/req/api-common/resources` and `/req/api-common/resource-collection`.
 - **Planning correction**: Frozen web-app artifacts that mention `dynamic-common` or `dynamic-json` are historical and MUST NOT be used for Java ETS `@Test` descriptions. Sprint 20 adopts OGC 23-002 identifiers.
 - **GeoRobotix planning probe**: `/conformance` declares several Part 2 classes (`/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/create-replace-delete`, `/conf/system-event`, `/conf/system-history`, and SWE Common encodings) but does not currently declare `/conf/api-common`. Landing page exposes `datastreams` and `observations` links. `GET /datastreams?limit=1`, `GET /observations?limit=1`, and `GET /controlstreams?limit=1` returned HTTP 200 JSON with `items` and `links`; `GET /commands?limit=1` returned HTTP 400 in current IUT state.
+- **Implementation evidence**: `Part2ApiCommonTests` checks exact `/conf/api-common` declaration, discovers only advertised Part 2 collection links, probes those links read-only with `limit=1`, and requires JSON collection objects with `items` and `links`. `VerifyPart2ApiCommonTests` prevents stale `dynamic-*` identifier drift and synthesized `/commands` assumptions. Maven post-Raze rerun reported `152 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke on 2026-05-07 reported `93 total / 55 passed / 0 failed / 38 skipped`; the Part 2 API Common subset SKIPPED because `/conf/api-common` is not declared.
 - **Maps to**: PRD FR-ETS-30.
 
 ##### Acceptance Scenarios for Sprint 20
@@ -191,7 +192,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 #### REQ-ETS-PART2-002..014: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
 - **Status**: PLACEHOLDER (Part 2 work scheduled post-Part-1 per user gate 2026-04-27)
-- **Description**: For each of the 14 OGC 23-002 conformance classes (`api-common`, `datastream`, `controlstream`, `feasibility`, `system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Description**: For each of the remaining 13 OGC 23-002 conformance classes (`datastream`, `controlstream`, `feasibility`, `system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
 - **Maps to**: PRD FR-ETS-31..43.
 
@@ -1819,7 +1820,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 ### Deferred
 - REQ-ETS-TEAMENGINE-002..005 (Dockerfile, docker-compose, smoke-test.sh, container-load verification) → S-ETS-01-03 (final Sprint 1 story).
 - REQ-ETS-PART1-001..013 (per-class detail beyond Core) — drafted as placeholders; per-assertion FRs and SCENARIOs to be expanded in sprints 2..N.
-- REQ-ETS-PART2-002..014 (remaining Part 2 classes) — deferred after Sprint 20 starts API Common planning.
+- REQ-ETS-PART2-002..014 (remaining Part 2 classes) — deferred after Sprint 20 API Common first subset.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

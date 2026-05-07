@@ -1,0 +1,157 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.94
+reviewer: "Raze"
+role: "Red Team / Adversarial Reviewer"
+reviewed_at: "2026-05-07T18:32:00Z"
+scope:
+  story: "S-ETS-20-01"
+  sprint: "ets-20"
+  title: "Part 2 API Common implementation"
+  workspace: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  review_type: "implementation"
+  changed_code:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  changed_docs:
+    - ".harness/contracts/sprint-ets-20.yaml"
+    - "epics/stories/s-ets-20-01-part2-api-common-planning.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - ".harness/handoffs/generator-handoff.yaml"
+
+findings:
+  - id: "RAZE-ETS20-IMPL-CONCERN-001"
+    severity: "LOW"
+    status: "RESOLVED"
+    title: "Dependency lint now rejects the original comma syntax regression"
+    details: >
+      Post-Raze gapfix updated VerifyTestNGSuiteDependency.testPart2ApiCommonGroupDependsOnCoreAndCommon
+      to assert that the part2apicommon depends-on value does not contain a comma,
+      then tokenize the dependency string on whitespace before checking for core and
+      common. This closes the specific static false-negative found in the initial
+      implementation review. Maven post-Raze rerun passed with 152 tests, 0 failures,
+      0 errors, and 3 skipped.
+    required_fix: null
+  - id: "RAZE-ETS20-IMPL-CONCERN-002"
+    severity: "LOW"
+    status: "OPEN_FOLLOWUP"
+    title: "Part 2 taxonomy cleanup remains broader than Sprint 20"
+    details: >
+      Sprint 20 docs correctly scope this implementation to API Common and record the
+      remaining Part 2 classes as future placeholders. Older high-level wording about
+      the full Part 2 class count is now captured in known issues as a partial
+      taxonomy cleanup concern. This does not create a false PASS for S-ETS-20-01,
+      but it remains worth normalizing before broader Part 2 planning continues.
+    required_fix: null
+
+checks:
+  official_ogc_identifiers:
+    verdict: "PASS"
+    evidence:
+      - "Runtime constants use http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common and /conf/api-common."
+      - "VerifyPart2ApiCommonTests rejects stale dynamic-data/dynamic identifier drift."
+      - "OpenSpec, story, contract, traceability, epic, status, changelog, test-results, and handoff consistently use API Common names."
+  testng_group_wiring:
+    verdict: "PASS"
+    evidence:
+      - "testng.xml registers group name part2apicommon with depends-on=\"core common\"."
+      - "Part2ApiCommonTests methods are annotated with groups = Part2ApiCommonTests.GROUP."
+      - "Rerun smoke XML reports Part 2 API Common skips with depends-on-groups=\"core, common\", proving the comma-syntax failure was fixed."
+      - "Post-Raze VerifyTestNGSuiteDependency now rejects comma syntax explicitly and tokenizes dependencies on whitespace before checking core and common."
+  false_pass_from_sibling_part2_declarations:
+    verdict: "PASS"
+    evidence:
+      - "part2ApiCommonConformanceDeclared requires the exact /conf/api-common URI."
+      - "If /conf/api-common is absent, the test throws SkipException with wording that undeclared behavior is not conformance PASS evidence."
+      - "GeoRobotix rerun skipped the Part 2 API Common assertions because /conf/api-common is not declared, despite sibling Part 2 behavior existing elsewhere."
+  advertised_link_only_collection_probing:
+    verdict: "PASS"
+    evidence:
+      - "discoverPart2CollectionUris reads landing page links and path tokens only from advertised href values."
+      - "VerifyPart2ApiCommonTests.discoversOnlyAdvertisedPart2CollectionsAndDoesNotSynthesizeCommands locks the no synthesized /commands behavior."
+      - "Collection probing is gated after exact /conf/api-common declaration, so GeoRobotix default smoke did not manufacture Part 2 collection PASS evidence."
+  no_part2_mutation_or_json_overreach:
+    verdict: "PASS"
+    evidence:
+      - "Part2ApiCommonTests performs GET-only landing, conformance, and advertised collection probes."
+      - "No Part 2 JSON creation, mutation lifecycle, resource-specific payload mapping, or /commands availability assumption is implemented."
+      - "Smoke no-mutation oracle reported zero IUT-bound POST/PUT/DELETE/PATCH across 71 recognized GeoRobotix request logs."
+  docs_reconciliation:
+    verdict: "PASS"
+    evidence:
+      - "OpenSpec, story, traceability, epic, contract, ops status, changelog, test-results, known issues, and generator handoff record Sprint 20 as partial API Common implementation."
+      - "Docs record Maven rerun 152/0/0/3 and GeoRobotix smoke rerun 93/55/0/38."
+      - "Docs record the initial smoke failure from depends-on=\"core,common\" and the successful rerun after changing to depends-on=\"core common\"."
+
+verification_evidence:
+  docker_gates_rerun_by_generator:
+    note: "Reviewed archived evidence only; this adversarial review did not rerun expensive Docker gates because no concrete blocker required it."
+  maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    log: "ops/test-results/sprint-ets-20-maven-2026-05-07-rerun.log"
+    result: "BUILD SUCCESS"
+    totals:
+      tests: 152
+      failures: 0
+      errors: 0
+      skipped: 3
+    spot_checks:
+      - "VerifyPart2ApiCommonTests: 5 tests / 0 failures / 0 errors / 0 skipped"
+      - "VerifyTestNGSuiteDependency: 40 tests / 0 failures / 0 errors / 0 skipped"
+  maven_post_raze:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    log: "ops/test-results/sprint-ets-20-maven-2026-05-07-post-raze.log"
+    result: "BUILD SUCCESS"
+    totals:
+      tests: 152
+      failures: 0
+      errors: 0
+      skipped: 3
+    spot_checks:
+      - "VerifyTestNGSuiteDependency: 40 tests / 0 failures / 0 errors / 0 skipped"
+  smoke_initial:
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator bash scripts/smoke-test.sh"
+    log: "ops/test-results/sprint-ets-20-smoke-2026-05-07.log"
+    result: "FAILED"
+    cause: "TestNG dependency group used comma syntax: depends on nonexistent group \"core,common\"."
+  smoke_rerun:
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun bash scripts/smoke-test.sh"
+    log: "ops/test-results/sprint-ets-20-smoke-2026-05-07-rerun.log"
+    xml: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-smoke-2026-05-07.xml"
+    container_log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-container-2026-05-07.log"
+    result: "SMOKE PASS"
+    totals:
+      total: 93
+      passed: 55
+      failed: 0
+      skipped: 38
+    part2_api_common_runtime:
+      configuration_method: "PASS"
+      part2ApiCommonConformanceDeclared: "SKIP because GeoRobotix does not declare /conf/api-common"
+      remaining_part2_api_common_assertions: "SKIP because /conf/api-common is undeclared"
+    no_mutation_oracle:
+      recognized_iut_request_logs: 71
+      iut_bound_post_put_delete_patch: 0
+
+required_fixes: []
+full_smoke_needed: false
+full_smoke_rationale: >
+  No new TeamEngine smoke is required for this focused gapfix. The change is a
+  JUnit structural lint hardening in VerifyTestNGSuiteDependency and does not alter
+  runtime TestNG XML, Part2ApiCommonTests, request flow, IUT probing, or mutation
+  behavior. Maven post-Raze rerun exercises the changed lint and passed cleanly.
+approval_rationale: >
+  No blocking correctness or false-confidence gap was found. The implementation uses
+  the official API Common identifiers, rejects stale dynamic-* naming, wires the
+  TestNG group with the fixed whitespace dependency syntax, skips instead of passing
+  when GeoRobotix lacks /conf/api-common, probes only advertised Part 2 collection
+  links, and stays read-only without Part 2 JSON or mutation overreach. The archived
+  Maven, post-Raze Maven, and rerun smoke evidence support amend/commit. The remaining
+  open item is a broader taxonomy cleanup concern, not a required fix.

@@ -1,18 +1,18 @@
-# Sprint 20 contract - Part 2 API Common activation planning
+# Sprint 20 contract - Part 2 API Common read-only Generator
 # Created 2026-05-07 after Sprint 19 Generator push.
 
 sprint: "ets-20"
-sprint_name: "part2-api-common-planning"
-type: "planning"
+sprint_name: "part2-api-common"
+type: "feature-expansion"
 created: "2026-05-07T17:58:41Z"
 description: |
-  Sprint 20 activates OGC 23-002 Part 2 planning with the API Common
-  requirements class. This sprint plans the first Part 2 Generator increment
-  only; it does not implement Java code or mutation-side Part 2 behavior.
+  Sprint 20 activates OGC 23-002 Part 2 with a read-only, declaration-gated
+  API Common Generator increment. It does not implement Part 2 JSON,
+  resource-specific classes, or mutation-side Part 2 behavior.
 
 stories:
   - id: "S-ETS-20-01"
-    title: "Part 2 API Common planning"
+    title: "Part 2 API Common read-only declaration-gated subset"
     file: "epics/stories/s-ets-20-01-part2-api-common-planning.md"
     epic: "epic-ets-03-part2-classes"
     priority: "P0"
@@ -24,7 +24,7 @@ stories:
 
 requirements:
   modified_reqs:
-    - "REQ-ETS-PART2-001 (/req/api-common - planned)"
+    - "REQ-ETS-PART2-001 (/req/api-common - partial implemented)"
   new_reqs: []
 
 scenarios:
@@ -44,9 +44,11 @@ success_criteria:
   ops_updated: true
   official_ogc_identifiers_used: true
   stale_dynamic_identifiers_rejected: true
-  no_code_changes: true
+  no_code_changes: false
   no_part2_mutation: true
   no_json_encoding_implementation: true
+  maven_verified: true
+  teamengine_smoke_verified: true
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
@@ -103,3 +105,15 @@ evaluation_focus:
     - "Check that Part 2 mutation and JSON encoding stay out of Sprint 20."
 
 confidence: 0.80
+
+generator_evidence:
+  implementation:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  verification:
+    formatter: "BUILD SUCCESS"
+    maven: "152 tests / 0 failures / 0 errors / 3 skipped (post-Raze lint hardening rerun)"
+    smoke: "93 total / 55 passed / 0 failed / 38 skipped"
+    smoke_no_mutation: "recognized_iut_request_logs=71; zero IUT-bound POST/PUT/DELETE/PATCH"

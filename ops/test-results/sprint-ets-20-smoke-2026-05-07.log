@@ -1,0 +1,16 @@
+[smoke-test 18:18:21] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 18:18:21] step 2/8 — docker build ets-ogcapi-connectedsystems10:smoke (BuildKit 1)
+[smoke-test 18:19:14] step 3/8 — docker run on host port 8082
+[smoke-test 18:19:15] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 18:19:24]   healthcheck PASS at 18:19:24
+[smoke-test 18:19:24] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 18:19:24]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'ogcapi-connectedsystems10')
+[smoke-test 18:19:24] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=https://api.georobotix.io/ogc/t18/api
+--- TestNG response body (HTTP 500) ---
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML Basic 1.1//EN' 'http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
+<head><title>Status Code 500</title></head>
+<body><p>Error executing test suite (ogcapi-connectedsystems10): Error message: 
+DependencyMap::Method "Part2ApiCommonTests.part2ApiCommonConformanceDeclared()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests@103250db]" depends on nonexistent group "core,common"</p></body>
+</html>

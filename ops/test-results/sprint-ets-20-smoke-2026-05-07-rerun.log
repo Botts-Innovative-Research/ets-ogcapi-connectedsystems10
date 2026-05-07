@@ -1,0 +1,16 @@
+[smoke-test 18:20:31] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 18:20:31] step 2/8 — docker build ets-ogcapi-connectedsystems10:smoke (BuildKit 1)
+[smoke-test 18:21:23] step 3/8 — docker run on host port 8082
+[smoke-test 18:21:25] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 18:21:33]   healthcheck PASS at 18:21:33
+[smoke-test 18:21:33] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 18:21:33]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'ogcapi-connectedsystems10')
+[smoke-test 18:21:33] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=https://api.georobotix.io/ogc/t18/api
+[smoke-test 18:21:50] step 7/8 — validating TestNG report → /tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-smoke-2026-05-07.xml
+[smoke-test 18:21:50]   TestNG: total=93 passed=55 failed=0 skipped=38
+[smoke-test 18:21:50]   zero IUT-bound POST/PUT/DELETE/PATCH request-log entries for https://api.georobotix.io/ogc/t18/api (recognized_iut_request_logs=71)
+[smoke-test 18:21:50] step 8/8 — scanning container startup log for ERROR/SEVERE
+[smoke-test 18:21:50]   zero startup ERROR/SEVERE
+[smoke-test 18:21:50] SMOKE PASS: total=93 passed=55 failed=0 skipped=38 on https://api.georobotix.io/ogc/t18/api via TeamEngine
+[smoke-test 18:21:50]   report: /tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-smoke-2026-05-07.xml
+[smoke-test 18:21:50]   log:    /tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-container-2026-05-07.log

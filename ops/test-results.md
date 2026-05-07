@@ -1,30 +1,34 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T18:05Z
+Last updated: 2026-05-07T18:22Z
 
 ## Current Sprint Evidence
 
-Sprint ets-20 Part 2 API Common planning:
+Sprint ets-20 Part 2 API Common Generator:
 
-- Planning only; no code gates required yet.
-- OGC source verification:
-  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 8 "Requirements Class Common".
-  - Requirement class: `/req/api-common`.
-  - Conformance class: `/conf/api-common`.
-  - Normative statements: `/req/api-common/resources` and `/req/api-common/resource-collection`.
-  - Prerequisite: `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common`.
-- GeoRobotix probes:
-  - `/conformance`: declares sibling Part 2 classes (`/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/create-replace-delete`, `/conf/system-event`, `/conf/system-history`, SWE Common encodings) but not `/conf/api-common`.
-  - Landing page links: `datastreams` and `observations`.
-  - `GET /datastreams?limit=1`: HTTP 200, `application/json`, top-level `items` and `links`.
-  - `GET /observations?limit=1`: HTTP 200, `application/json`, top-level `items` and `links`.
-  - `GET /controlstreams?limit=1`: HTTP 200, `application/json`, top-level `items` and `links`.
-  - `GET /commands?limit=1`: HTTP 400, `text/html;charset=iso-8859-1`.
-- Planning interpretation: first Generator increment must be read-only, declaration-gated, and must not infer `/conf/api-common` from sibling Part 2 declarations.
-- Raze planning review:
-  - `.harness/evaluations/sprint-ets-20-plan-adversarial.yaml`: `APPROVE_WITH_CONCERNS` confidence 0.92.
+- Generator implementation:
+  - `Part2ApiCommonTests` adds exact `/conf/api-common` declaration gating, advertised-link-only Part 2 collection discovery, read-only collection shape checks, and dependency runtime tracing.
+  - `VerifyPart2ApiCommonTests` adds 5 helper regressions for exact conformance URI matching, missing declaration handling, no synthesized `/commands`, `items`/`links` shape, and stale `dynamic-*` identifier rejection.
+  - `VerifyTestNGSuiteDependency` adds 3 structural checks for the `part2apicommon` group and Core/Common co-location.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `152 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-20-maven-2026-05-07-post-raze.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun bash scripts/smoke-test.sh`
+  - Result: `93 total / 55 passed / 0 failed / 38 skipped`
+  - Report: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-smoke-2026-05-07.xml`
+  - Log: `/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-container-2026-05-07.log`
+  - No-mutation oracle: recognized 71 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries for `https://api.georobotix.io/ogc/t18/api`.
+- Runtime outcome: GeoRobotix does not currently declare `/conf/api-common`, so the Part 2 API Common runtime tests SKIP with declaration-honest reasons instead of producing PASS evidence from sibling Part 2 declarations.
+- Raze implementation review:
+  - `.harness/evaluations/sprint-ets-20-adversarial-implementation.yaml`: `APPROVE_WITH_CONCERNS` confidence 0.94.
   - Required fixes: none.
-  - Non-blocking concern: broader Part 2 placeholder taxonomy still says 14 classes and duplicates API Common under remaining placeholders.
+  - Follow-up: dependency lint now rejects comma syntax and tokenizes `depends-on` on whitespace; Raze said no additional full smoke was needed after this structural JUnit-only hardening.
 
 Sprint ets-19 encoding mediatype-write safety-gated Generator:
 

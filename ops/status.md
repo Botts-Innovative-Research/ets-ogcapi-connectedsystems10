@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T18:05Z
+Last updated: 2026-05-07T18:22Z
 
 ## Fresh-Session Entry Point
 
@@ -41,27 +41,32 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
-- Current sprint status: Sprint ets-20 Part 2 API Common planning in progress.
-- Latest pushed commits: `4bdc930 Implement Sprint 19 mediatype write checks` and `ff9efa2 Record SSH push status`.
+- Current sprint status: Sprint ets-20 Part 2 API Common Generator implemented locally and Raze-reviewed; commit/push are next.
+- Latest pushed commit: `86d1afc Plan Sprint 20 Part 2 API Common`.
 - Push status: remote switched to SSH and `git push origin main` succeeded on 2026-05-07T17:54Z and 2026-05-07T17:55Z.
 
-## Sprint ets-20 Planning Evidence
+## Sprint ets-20 Generator Evidence
 
-Part 2 API Common planning:
+Part 2 API Common read-only declaration-gated subset:
 
 - Story: `epics/stories/s-ets-20-01-part2-api-common-planning.md`
 - Contract: `.harness/contracts/sprint-ets-20.yaml`
 - OpenSpec: activates `REQ-ETS-PART2-001`; remaining Part 2 classes remain deferred placeholders.
-- Scope planned: OGC 23-002 Requirements Class "Common" using official `/req/api-common`, `/conf/api-common`, `/req/api-common/resources`, and `/req/api-common/resource-collection` identifiers.
+- Scope implemented: OGC 23-002 Requirements Class "Common" first read-only subset using official `/req/api-common`, `/conf/api-common`, `/req/api-common/resources`, and `/req/api-common/resource-collection` identifiers.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-07 and not stale.
 - OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 8 "Requirements Class Common"; prerequisite is Part 1 API Common.
 - Correction: frozen web-app Part 2 `dynamic-common` / `dynamic-json` names are historical and must not be used in Java ETS `@Test` descriptions.
 - GeoRobotix planning probe: `/conformance` declares Part 2 `/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/create-replace-delete`, `/conf/system-event`, `/conf/system-history`, and SWE Common encoding classes, but not `/conf/api-common`.
 - GeoRobotix read-only probes: landing page exposes `datastreams` and `observations`; `GET /datastreams?limit=1`, `/observations?limit=1`, and `/controlstreams?limit=1` return HTTP 200 JSON with `items` and `links`; `GET /commands?limit=1` returns HTTP 400.
-- Planned verdict policy: absence of `/conf/api-common` is SKIP-with-reason for Part 2 API Common declaration/resource-judgment tests; sibling Part 2 class declarations do not imply API Common PASS.
+- Verdict policy implemented: absence of `/conf/api-common` is SKIP-with-reason for Part 2 API Common declaration/resource-judgment tests; sibling Part 2 class declarations do not imply API Common PASS.
+- Implementation: `Part2ApiCommonTests` adds exact declaration gating, advertised-link-only Part 2 collection discovery, read-only `items`/`links` collection shape checks, and a Core/Common dependency runtime tracer.
+- Structural lint: `VerifyTestNGSuiteDependency` checks `part2apicommon` group dependency and co-location; `VerifyPart2ApiCommonTests` prevents stale `dynamic-*` identifiers and synthesized `/commands` assumptions.
+- Verification: formatter BUILD SUCCESS; Maven post-Raze rerun `152 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix TeamEngine smoke `93 total / 55 passed / 0 failed / 38 skipped`.
+- No-mutation proof: GeoRobotix smoke recognized 71 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries.
 - Raze planning review `.harness/evaluations/sprint-ets-20-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes. Non-blocking concern: broader Part 2 placeholder taxonomy still says 14 classes and duplicates API Common in the remaining placeholder block.
+- Raze implementation review `.harness/evaluations/sprint-ets-20-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes after dependency lint hardening.
 - Out of scope: Part 2 JSON, Datastream/Observation closure, ControlStream/Command closure, SWE Common encodings, Part 2 CRD/Update mutation, and full schema validation.
-- Next action: commit and push Sprint 20 planning, then start Generator for `S-ETS-20-01`.
+- Next action: commit and push Sprint 20 Generator.
 
 ## Sprint ets-19 Generator Evidence
 
@@ -390,14 +395,14 @@ Gate Results:
 
 ## Next Action
 
-1. Commit and push Sprint 20 planning.
-2. Start Generator for `S-ETS-20-01`.
+1. Commit and push Sprint 20 Generator.
+2. Plan the next Part 2 sprint item.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree is expected Sprint ets-20 planning work plus metrics:
+Current dirty worktree is expected Sprint ets-20 Generator work plus metrics:
 
 - `epics/stories/s-ets-20-01-part2-api-common-planning.md`
 - `.harness/contracts/sprint-ets-20.yaml`
-- OpenSpec/traceability/epic/status/changelog/test-results/planner handoff planning reconciliation.
+- Java runtime tests, suite wiring, OpenSpec/traceability/epic/status/changelog/test-results/Generator handoff reconciliation.
 - `ops/metrics.md` turn-log updates.

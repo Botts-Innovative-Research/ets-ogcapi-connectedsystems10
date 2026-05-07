@@ -1,53 +1,54 @@
 agent: generator
 agent_role: dana
-status: complete_raze_followup_reconciled
-sprint_number: "ets-19"
+status: complete_raze_approved_with_concerns
+sprint_number: "ets-20"
 sprint_run: "1 of 1"
-sprint_run_scope: ["S-ETS-19-01"]
-supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 18 close 2026-05-07T00:33:00Z)"
-started_at: "2026-05-07T17:10:05Z"
-finished_at: "2026-05-07T17:45:00Z"
+sprint_run_scope: ["S-ETS-20-01"]
+supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 19 close 2026-05-07T17:45:00Z)"
+started_at: "2026-05-07T18:14:38Z"
+finished_at: "2026-05-07T18:31:00Z"
 sprint_complete_after_run: true
 
 run_summary:
-  status: "complete_raze_followup_reconciled"
+  status: "complete_raze_approved_with_concerns"
   story:
-    id: "S-ETS-19-01"
-    title: "Encoding mediatype-write safety-gated checks"
+    id: "S-ETS-20-01"
+    title: "Part 2 API Common read-only declaration-gated subset"
     status: "PARTIAL_IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS"
     scope_closed:
-      - "GeoJSON mediatype-write runtime assertion added"
-      - "SensorML mediatype-write runtime assertion added"
-      - "exact Content-Type application/geo+json and application/sml+json used for positive runtime paths"
-      - "existing Sprint 12 mutation opt-in parameters reused"
-      - "public GeoRobotix IUT hard-denied"
-      - "default smoke SKIPs before mutation"
-      - "status-only write response rejected as PASS evidence"
-      - "follow-up dereference must preserve submitted uid/uniqueId"
+      - "Part 2 API Common runtime class added"
+      - "official OGC 23-002 /req/api-common and /conf/api-common identifiers used"
+      - "stale dynamic-* identifiers rejected by helper regression"
+      - "TestNG group part2apicommon added"
+      - "Core/Common dependency wiring added with TestNG space-separated depends-on syntax"
+      - "exact /conf/api-common declaration gate implemented"
+      - "advertised-link-only Part 2 collection discovery implemented"
+      - "read-only collection shape checks require items[] and links[]"
+      - "default GeoRobotix smoke SKIPs honestly because /conf/api-common is undeclared"
       - "zero default public-IUT POST/PUT/DELETE/PATCH evidence"
-      - "positive local OSH mutable-IUT system-resource mediatype-write PASS evidence"
     scope_open:
-      - "broader positive relation-types evidence where IUT resources expose association links"
-      - "property GeoJSON mapping"
-      - "full GeoJSON and SensorML JSON Schema validation"
-      - "non-system mutation-side encoding behavior"
-      - "Part 2 encoding coverage"
+      - "Part 2 JSON conformance"
+      - "Datastream and Observation conformance closure"
+      - "ControlStream and Command conformance closure"
+      - "System events/history"
+      - "Part 2 Create/Replace/Delete and Update mutation"
+      - "SWE Common JSON/Text/Binary encoding"
+      - "full schema validation"
     files_changed:
-      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/EncodingMediatypeWrite.java"
-      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/geojson/GeoJsonTests.java"
-      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/sensorml/SensorMlTests.java"
-      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/VerifyEncodingMediatypeWrite.java"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
       - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-      - "epics/stories/s-ets-19-01-encoding-mediatype-write-safety-gated.md"
+      - "epics/stories/s-ets-20-01-part2-api-common-planning.md"
       - "_bmad/traceability.md"
-      - "epics/epic-ets-02-part1-classes.md"
+      - "epics/epic-ets-03-part2-classes.md"
+      - ".harness/contracts/sprint-ets-20.yaml"
       - "ops/status.md"
       - "ops/test-results.md"
       - "ops/changelog.md"
-      - "ops/known-issues.md"
-      - "ops/test-results/sprint-ets-19-maven-r3-2026-05-07.log"
-      - "ops/test-results/sprint-ets-19-smoke-r3-2026-05-07.log"
-      - "ops/test-results/sprint-ets-19-local-osh-mutable-auth-smoke-r3-2026-05-07.log"
+      - "ops/test-results/sprint-ets-20-maven-2026-05-07-rerun.log"
+      - "ops/test-results/sprint-ets-20-smoke-2026-05-07-rerun.log"
 
 verification:
   formatter:
@@ -56,56 +57,34 @@ verification:
   mvn_via_docker:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "Tests run: 144, Failures: 0, Errors: 0, Skipped: 3"
-    log: "ops/test-results/sprint-ets-19-maven-r3-2026-05-07.log"
+    surefire: "Tests run: 152, Failures: 0, Errors: 0, Skipped: 3"
+    log: "ops/test-results/sprint-ets-20-maven-2026-05-07-post-raze.log"
   teamengine_smoke:
-    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s19-generator-r3 bash scripts/smoke-test.sh"
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun bash scripts/smoke-test.sh"
     result: "PASS"
-    testng: "total=89 passed=55 failed=0 skipped=34"
-    report: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s19-generator-r3/s-ets-01-03-teamengine-smoke-2026-05-07.xml"
-    log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s19-generator-r3/s-ets-01-03-teamengine-container-2026-05-07.log"
-    no_mutation_oracle: "recognized_iut_request_logs=69; zero IUT-bound POST/PUT/DELETE/PATCH"
-  local_osh_mutable_smoke:
-    command: "SMOKE_CONTAINER_NAME=ets-csapi-osh-s19-mediatype-auth-r3 SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_AUTH_CREDENTIAL=... SMOKE_MUTATION_TESTS_ENABLED=true SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut SMOKE_OUTPUT_DIR=/tmp/ets-csapi-osh-s19-mediatype-auth-r3 bash scripts/smoke-test.sh"
-    result: "FAIL_OUTSIDE_STORY"
-    testng: "total=89 passed=52 failed=4 skipped=33"
-    sprint19_positive_evidence: "geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled PASS; sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled PASS; exact application/geo+json and application/sml+json; follow-up GET and cleanup DELETE request-log evidence"
-    remaining_failures: "SensorML deployment/procedure schema/mapping and relation-types checks received HTTP 500 from local OSH non-system resources."
+    testng: "total=93 passed=55 failed=0 skipped=38"
+    report: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-smoke-2026-05-07.xml"
+    log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-container-2026-05-07.log"
+    no_mutation_oracle: "recognized_iut_request_logs=71; zero IUT-bound POST/PUT/DELETE/PATCH"
 
 iut_state:
-  georobotix_mediatype_write_runtime: "Both GeoJSON and SensorML mediatype-write lifecycle tests SKIP before mutation in default smoke."
-  georobotix_geojson_mutation: "No default public-IUT mutation issued; positive system-resource PASS evidence came from authenticated local OSH mutable-IUT smoke."
-  georobotix_sensorml_mutation: "No default public-IUT mutation issued; positive system-resource PASS evidence came from authenticated local OSH mutable-IUT smoke."
-  smoke_total_delta: "Sprint 18 baseline 87 -> Sprint 19 Generator 89 (2 new mutation-gated mediatype-write @Tests)"
+  georobotix_part2_api_common: "GeoRobotix declares sibling Part 2 classes but not /conf/api-common; Sprint 20 tests SKIP honestly."
+  smoke_total_delta: "Sprint 19 baseline 89 -> Sprint 20 Generator 93 (4 new Part 2 API Common @Tests)"
+  initial_smoke_issue: "First smoke failed because depends-on=\"core,common\" was parsed as a nonexistent single group; fixed with depends-on=\"core common\" and reran Maven/smoke."
 
 next_agent: "adversarial-reviewer"
 raze_review:
-  artifact: ".harness/evaluations/sprint-ets-19-adversarial-implementation.yaml"
+  artifact: ".harness/evaluations/sprint-ets-20-adversarial-implementation.yaml"
   verdict: "APPROVE_WITH_CONCERNS"
-  confidence: 0.90
-  required_fixes_status: "none; low follow-up concern for positive mutable-IUT evidence addressed by local OSH r3 for system-resource mediatype-write; cleanup DELETE remains best-effort request-log evidence"
-raze_followup_review:
-  artifact: ".harness/evaluations/sprint-ets-19-adversarial-followup.yaml"
-  verdict: "GAPS_FOUND"
-  confidence: 0.91
-  required_fixes_status: "documentation reconciliation gaps addressed after review"
-raze_followup_gapfix_review:
-  artifact: ".harness/evaluations/sprint-ets-19-adversarial-followup-gapfix.yaml"
-  verdict: "APPROVE"
   confidence: 0.94
-  required_fixes_status: "none; suitable for amend/commit"
+  required_fixes_status: "none; concrete dependency-lint concern resolved with comma rejection and whitespace tokenization; broader taxonomy wording remains cleanup-grade"
 
 commit:
-  sha: "see git log -1 after commit"
-  message: "Implement Sprint 19 mediatype write checks"
+  sha: "pending"
+  message: "Implement Sprint 20 Part 2 API Common"
 
 push:
-  attempted_before_generator: true
-  attempted_after_amend: true
-  switched_remote_to_ssh: true
-  result: "succeeded"
+  result: "pending"
   remote: "git@github.com:Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git"
-  pushed_commit: "4bdc930"
-  prior_https_error: "fatal: could not read Username for 'https://github.com': No such device or address"
 
-next_action: "Continue with next sprint item from pushed commit 4bdc930."
+next_action: "Commit and push Sprint 20 Generator."

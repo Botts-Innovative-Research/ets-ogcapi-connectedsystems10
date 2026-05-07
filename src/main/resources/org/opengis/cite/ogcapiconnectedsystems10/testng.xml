@@ -108,7 +108,13 @@
        mutation-tests-enabled=true plus mutation-iut-policy=dedicated-mutable-iut
        controls; the known public GeoRobotix IUT is hard-denied even if both parameters
        are set. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 19-072 /conf/common)">
+  <!-- Sprint 20 S-ETS-20-01 (REQ-ETS-PART2-001): Part 2 API Common group added as a
+       read-only declaration-gated subset. It depends-on "core common" because Part 2
+       API Common builds on the CS API Part 1 API Common requirements class and OGC API
+       Common behavior already exercised by the Core/Common roots. GeoRobotix does not
+       currently declare /conf/api-common, so this group SKIPs honestly on the default
+       smoke IUT instead of treating undeclared Part 2 behavior as PASS evidence. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -123,6 +129,7 @@
         <group name="advancedfiltering" depends-on="systemfeatures"/>
         <group name="createreplacedelete" depends-on="systemfeatures"/>
         <group name="update" depends-on="createreplacedelete"/>
+        <group name="part2apicommon" depends-on="core common"/>
       </dependencies>
     </groups>
     <classes>
@@ -143,6 +150,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

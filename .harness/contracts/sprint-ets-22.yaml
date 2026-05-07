@@ -1,0 +1,137 @@
+# Sprint 22 contract - Part 2 Control Streams & Commands read-only planning
+
+sprint: "ets-22"
+sprint_name: "part2-controlstream"
+type: "feature-expansion"
+created: "2026-05-07T21:55:46Z"
+description: |
+  Sprint 22 plans the first read-only, declaration-gated OGC 23-002
+  Control Streams & Commands Generator increment. It does not implement
+  mutation, command creation, command feasibility, Part 2 JSON, SWE Common,
+  or full command-body schema validation.
+
+stories:
+  - id: "S-ETS-22-01"
+    title: "Part 2 Control Streams & Commands read-only subset"
+    file: "epics/stories/s-ets-22-01-part2-controlstream-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-21-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-003 (/req/controlstream - planned)"
+    - "REQ-ETS-PART2-004..014 (remaining placeholders renumbered after ControlStream split)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-003-CONTROLSTREAM-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-003-CONTROLSTREAM-COLLECTION-READONLY-001"
+    - "SCENARIO-ETS-PART2-003-CONTROLSTREAM-ITEM-READONLY-001"
+    - "SCENARIO-ETS-PART2-003-CONTROLSTREAM-SCHEMA-ENDPOINT-001"
+    - "SCENARIO-ETS-PART2-003-COMMAND-ENDPOINTS-READONLY-001"
+    - "SCENARIO-ETS-PART2-003-COMMAND-REFERENCE-EVIDENCE-001"
+    - "SCENARIO-ETS-PART2-003-CANONICAL-URL-ALIAS-HONESTY-001"
+    - "SCENARIO-ETS-PART2-003-DEPENDENCY-SKIP-001"
+  normal:
+    - "SCENARIO-ETS-PART2-003-SYSTEM-REFERENCE-READONLY-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  no_code_changes_in_planning: true
+  no_part2_mutation: true
+  no_command_creation_or_feasibility_implementation: true
+  maven_verified: false
+  teamengine_smoke_verified: false
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-07T21:55:46Z"
+  requirement_class: "Clause 10, Requirements Class Control Streams & Commands"
+  requirement_class_identifier: "/req/controlstream"
+  conformance_class_identifier: "/conf/controlstream"
+  prerequisite: "/req/api-common"
+  selected_normative_statements:
+    - "/req/controlstream/resources-endpoint"
+    - "/req/controlstream/canonical-endpoint"
+    - "/req/controlstream/ref-from-system"
+    - "/req/controlstream/schema-op"
+    - "/req/controlstream/cmd-resources-endpoint"
+    - "/req/controlstream/cmd-ref-from-controlstream"
+    - "/req/controlstream/canonical-url"
+    - "/req/controlstream/cmd-canonical-endpoint"
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares /conf/controlstream but not /conf/api-common."
+    controlstreams: "GET /controlstreams?limit=2 returned HTTP 200 JSON with top-level items and links."
+    controlstream_item: "GET /controlstreams/0m4qpft9sdag returned HTTP 200 JSON with id, system@id, inputName, controlledProperties, and formats."
+    controlstream_schema: "GET /controlstreams/0m4qpft9sdag/schema returned HTTP 200 JSON with commandFormat and parametersSchema."
+    controlstream_commands: "GET /controlstreams/0m4qpft9sdag/commands?limit=2 returned HTTP 200 JSON with empty items."
+    system_controlstreams: "GET /systems/0m5ojudgr570/controlstreams?limit=2 returned HTTP 200 JSON with ControlStream items."
+    commands_global: "GET /commands?limit=2 returned HTTP 400 HTML."
+    controls_alias: "GET /controls/0m4qpft9sdag returned HTTP 400 HTML while /controlstreams/0m4qpft9sdag returned HTTP 200."
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/controlstream is not declared, ControlStream conformance judgment SKIPs with a precise reason."
+    - "Do not infer /conf/api-common or API Common PASS from /conf/controlstream or ControlStream endpoint success."
+  prerequisite:
+    - "Keep /req/api-common prerequisite handling visible and honest."
+    - "When /conf/controlstream is declared but /conf/api-common is absent, scoped endpoint checks may run but the ETS must not report full /conf/controlstream class closure."
+    - "Prerequisite-dependent assertions SKIP rather than failing noisily when the prerequisite cannot be established."
+  read_only_probe:
+    - "Only HTTP GET requests are allowed in Sprint 22 Generator."
+    - "Empty ControlStream-scoped Command collections are acceptable endpoint availability evidence when HTTP 200 JSON with items is returned."
+    - "Empty ControlStream-scoped Command collections must not PASS /req/controlstream/cmd-ref-from-controlstream; require actual Command/reference evidence or SKIP."
+    - "Do not PASS /req/controlstream/canonical-url from /controlstreams/{id} alias evidence when /controls/{id} returns non-200."
+    - "Do not PASS /req/controlstream/cmd-canonical-endpoint when /commands returns non-200."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/controlstream and /conf/controlstream."
+  - "Add Part 2 ControlStream TestNG group and dependency/prerequisite handling."
+  - "Implement declaration-gated SKIP honesty when /conf/controlstream is absent."
+  - "Implement read-only ControlStream, schema, nested Command, and selected System-scoped endpoint checks."
+  - "Require actual nested Command/reference evidence for cmd-ref-from-controlstream or SKIP on empty IUT state."
+  - "Run scripts/mvn-test-via-docker.sh and default GeoRobotix TeamEngine smoke."
+  - "Update spec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not use stale dynamic-* identifiers."
+  - "Do not implement Command creation, feasibility, Part 2 JSON, SWE Common, CRD, or Update behavior."
+  - "Do not mutate GeoRobotix or local OSH."
+  - "Do not claim /conf/api-common PASS from ControlStream evidence."
+  - "Do not report full /conf/controlstream closure while /req/api-common is absent."
+  - "Do not require non-empty nested Command collections."
+  - "Do not PASS cmd-ref-from-controlstream on empty nested Command collections."
+  - "Do not PASS canonical-url from the /controlstreams/{id} alias while /controls/{id} is non-200."
+  - "Do not PASS global Command endpoint assertions while /commands is non-200."
+
+evaluation_focus:
+  raze:
+    - "Attack false PASS from generic JSON objects masquerading as ControlStreams."
+    - "Attack false API Common PASS when GeoRobotix lacks /conf/api-common."
+    - "Attack false canonical-url PASS from /controlstreams/{id} alias evidence."
+    - "Attack false global Command endpoint PASS when /commands returns HTTP 400."
+    - "Attack overreach into Command creation, feasibility, mutation, SWE Common, or schema-binding closure."
+    - "Check empty nested Command collection handling."
+
+confidence: 0.76
+
+raze_review:
+  plan_artifact: ".harness/evaluations/sprint-ets-22-plan-adversarial.yaml"
+  plan_verdict: "APPROVE"
+  plan_confidence: 0.93
+  required_fixes: []

@@ -1,0 +1,95 @@
+verdict: APPROVE
+confidence: 0.93
+reviewer: "Raze"
+role: "Red Team / Adversarial Reviewer"
+reviewed_at: "2026-05-07T22:02:00Z"
+scope:
+  sprint: "ets-22"
+  story: "S-ETS-22-01"
+  title: "Part 2 Control Streams & Commands read-only planning"
+  workspace: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  review_type: "planning-only"
+  expensive_gates_rerun: false
+  reason_no_docker_maven_teamengine: "Planning/docs review only per user instruction."
+  reviewed_files:
+    - ".harness/contracts/sprint-ets-22.yaml"
+    - "epics/stories/s-ets-22-01-part2-controlstream-planning.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+
+findings: []
+
+checks:
+  official_ogc_identifier_fidelity:
+    verdict: "PASS"
+    evidence:
+      - "OGC 23-002 Clause 10 identifies Requirements Class Control Streams & Commands as /req/controlstream with conformance class /conf/controlstream."
+      - "Contract, story, OpenSpec, traceability, epic, status, test-results, known issues, changelog, and handoff consistently use /req/controlstream and /conf/controlstream."
+      - "Planning explicitly rejects stale dynamic-* identifiers."
+  prerequisite_honesty:
+    verdict: "PASS"
+    evidence:
+      - "Planning records GeoRobotix declares /conf/controlstream but not /conf/api-common."
+      - "Contract, story, OpenSpec, traceability, status, known issues, and handoff state scoped ControlStream endpoint checks may run but full /conf/controlstream closure is blocked while /req/api-common is absent."
+      - "Planning forbids inferring API Common PASS from ControlStream endpoint success."
+  georobotix_400_false_pass_risks:
+    verdict: "PASS"
+    evidence:
+      - "Planning records GET /commands?limit=2 returns HTTP 400 HTML and forbids global Command endpoint PASS from nested endpoint evidence."
+      - "Planning records GET /controls/0m4qpft9sdag returns HTTP 400 while /controlstreams/0m4qpft9sdag returns HTTP 200."
+      - "Contract, story, OpenSpec, status, test-results, known issues, and handoff forbid PASSing /req/controlstream/canonical-url from /controlstreams/{id} alias evidence when /controls/{id} is non-200."
+      - "OpenSpec includes SCENARIO-ETS-PART2-003-CANONICAL-URL-ALIAS-HONESTY-001."
+  empty_nested_command_handling:
+    verdict: "PASS"
+    evidence:
+      - "Planning records /controlstreams/{id}/commands?limit=2 returns HTTP 200 JSON with empty items."
+      - "Docs treat empty nested Command collections as endpoint availability evidence only."
+      - "Docs require actual nested Command/reference evidence for /req/controlstream/cmd-ref-from-controlstream PASS, otherwise SKIP with empty-IUT-state reason."
+  scope_exclusions:
+    verdict: "PASS"
+    evidence:
+      - "Contract/story/OpenSpec/status/test-results/handoff exclude mutation, Command creation, feasibility, command status/result closure, Part 2 JSON, SWE Common, CRD, Update, and full command-body schema validation."
+      - "Sprint 22 is planning-only; no Java/TestNG implementation files are in the current diff."
+  docs_reconciliation:
+    verdict: "PASS"
+    evidence:
+      - "OpenSpec defines REQ-ETS-PART2-003 and Sprint 22 scenarios."
+      - "Story, contract, traceability, epic, status, test-results, known issues, changelog, and planner handoff all describe the same scope, evidence, guardrails, and next-agent state."
+      - "Remaining Part 2 placeholders are renumbered to REQ-ETS-PART2-004..014 consistently."
+
+verification_evidence:
+  gates:
+    maven: "Not run; planning-only review."
+    teamengine_smoke: "Not run; planning-only review."
+  upstream_source:
+    source: "https://docs.ogc.org/is/23-002/23-002.html"
+    checked_for:
+      - "/req/controlstream"
+      - "/conf/controlstream"
+      - "/req/api-common prerequisite"
+      - "/req/controlstream/canonical-url with /controls/{id} canonical URL"
+      - "/req/controlstream/cmd-canonical-endpoint with /commands endpoint"
+
+required_fixes: []
+approval_rationale: >
+  Sprint 22 planning is specific enough for Generator handoff. It uses the official
+  OGC 23-002 Clause 10 identifiers, keeps the missing /req/api-common prerequisite
+  visible, blocks false PASS from GeoRobotix /commands and /controls/{id} HTTP 400
+  behavior, treats empty nested commands as endpoint-only evidence, and excludes
+  mutation, Command creation, feasibility, SWE Common, CRD, Update, and schema-body
+  closure.
+
+sources:
+  - name: "OGC API - Connected Systems - Part 2: Dynamic Data, Clause 10"
+    url: "https://docs.ogc.org/is/23-002/23-002.html"
+    used_for:
+      - "/req/controlstream and /conf/controlstream identifier fidelity"
+      - "/req/api-common prerequisite"
+      - "/controls/{id} canonical ControlStream URL requirement"
+      - "/commands canonical Command endpoint requirement"

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T19:54Z
+Last updated: 2026-05-07T22:03Z
 
 ## Fresh-Session Entry Point
 
@@ -41,9 +41,9 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
-- Current sprint status: Sprint ets-21 Part 2 Datastreams & Observations Generator complete, committed as `b1df419`, and pushed over SSH.
-- Latest pushed implementation commit: `53f542d Implement Sprint 20 Part 2 API Common`; a follow-up status/metrics reconciliation commit was pushed after it.
-- Push status: remote switched to SSH and `git push origin main` succeeded on 2026-05-07T17:54Z and 2026-05-07T17:55Z.
+- Current sprint status: Sprint ets-22 Part 2 Control Streams & Commands planning complete and Raze-approved; ready for Generator.
+- Latest pushed implementation commit: `b1df419 Implement Sprint 21 Part 2 Datastream`; follow-up reconciliation commits `948060c` and `5c4bcf0` were pushed after it.
+- Push status: remote switched to SSH and latest `git push origin main` succeeded on 2026-05-07T19:54Z.
 
 ## Sprint ets-20 Generator Evidence
 
@@ -100,6 +100,25 @@ Part 2 Datastreams & Observations read-only subset:
 - Runtime outcome: GeoRobotix declares `/conf/datastream` but not `/conf/api-common`, so scoped endpoint checks run while full `/conf/datastream` closure remains prerequisite-incomplete. Empty nested observations SKIP `/req/datastream/obs-ref-from-datastream` rather than producing PASS.
 - Raze implementation review `.harness/evaluations/sprint-ets-21-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.90 for reconciliation/evidence gaps only; gap-fix `.harness/evaluations/sprint-ets-21-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.96 after docs were corrected and Maven/smoke artifacts were archived under `ops/test-results/`.
 - Next action: plan Sprint 22 for the next Part 2 item.
+
+## Sprint ets-22 Planning Evidence
+
+Part 2 Control Streams & Commands read-only subset:
+
+- Story: `epics/stories/s-ets-22-01-part2-controlstream-planning.md`
+- Contract: `.harness/contracts/sprint-ets-22.yaml`
+- OpenSpec: defines `REQ-ETS-PART2-003` for OGC 23-002 Clause 10 and renumbers remaining Part 2 placeholders to `REQ-ETS-PART2-004..014`.
+- Scope planned: first read-only, declaration-gated Control Streams & Commands subset using official `/req/controlstream` and `/conf/controlstream` identifiers.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-07 and not stale.
+- OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 10 "Requirements Class Control Streams & Commands"; prerequisite is `/req/api-common`.
+- GeoRobotix planning probe: `/conformance` declares `/conf/controlstream` but not `/conf/api-common`.
+- GeoRobotix read-only probes: `GET /controlstreams?limit=2`, `/controlstreams/0m4qpft9sdag`, `/controlstreams/0m4qpft9sdag/schema`, `/controlstreams/0m4qpft9sdag/commands?limit=2`, and `/systems/0m5ojudgr570/controlstreams?limit=2` returned HTTP 200 JSON.
+- Important IUT state: selected nested ControlStream commands collection is empty and has `items` only. Generator may use this as endpoint availability evidence only; `/req/controlstream/cmd-ref-from-controlstream` needs actual nested Command/reference evidence or SKIPs with an empty-IUT-state reason.
+- Important IUT gaps: `GET /commands?limit=2` and `GET /controls/0m4qpft9sdag` returned HTTP 400, so Generator must not PASS global Command endpoint or `/req/controlstream/canonical-url` from nested or alias evidence alone.
+- Verdict policy planned: gate scoped ControlStream endpoint PASS evidence on `/conf/controlstream`; keep missing `/conf/api-common` prerequisite honesty separate; do not infer API Common PASS or full `/conf/controlstream` closure from ControlStream endpoint success.
+- Raze planning review `.harness/evaluations/sprint-ets-22-plan-adversarial.yaml` returned `APPROVE` confidence 0.93 with no required fixes.
+- Out of scope: mutation, command creation, command feasibility, Command status/result closure, Part 2 JSON, SWE Common encodings, Create/Replace/Delete, Update, and command result validation against ControlStream schema.
+- Next action: start Generator for `S-ETS-22-01`.
 
 ## Sprint ets-19 Generator Evidence
 

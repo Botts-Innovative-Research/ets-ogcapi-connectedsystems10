@@ -1,164 +1,162 @@
-agent: generator
-status: generator_complete_committed_pushed
-timestamp: "2026-05-07T19:54:02Z"
-sprint_number: "ets-21"
-sprint_name: "part2-datastream-generator"
-contract_path: ".harness/contracts/sprint-ets-21.yaml"
+agent: planner
+status: complete_raze_approved
+timestamp: "2026-05-07T22:03:35Z"
+sprint_number: "ets-22"
+sprint_name: "part2-controlstream-planning"
+contract_path: ".harness/contracts/sprint-ets-22.yaml"
 triggered_by: |
-  User instructed "do it." Interpreted as starting Sprint 21 planning for
-  the next Part 2 item after Sprint 20 was committed and pushed.
-supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 20 handoff 2026-05-07T18:05:00Z)"
+  User instructed "Do Sprint 22 planning." Interpreted as planning the next
+  Part 2 item after Sprint 21 Datastreams & Observations was committed and pushed.
+supersedes: ".harness/handoffs/planner-handoff.yaml (Sprint 21 handoff 2026-05-07T19:54:02Z)"
 
 architecture_freshness_check:
   required: true
   architecture_last_reconciled: "2026-04-28"
-  checked_at: "2026-05-07T19:12:03Z"
+  checked_at: "2026-05-07T21:55:46Z"
   stale_over_30_days: false
-  disposition: "OK to start Sprint 21 planning."
+  disposition: "OK to start Sprint 22 planning."
 
 strategic_decisions:
   q1_next_work:
-    question: "After Sprint 19, what is the next item?"
-    decision: "Plan S-ETS-21-01 Part 2 Datastreams & Observations."
+    question: "After Sprint 21, what is the next item?"
+    decision: "Plan S-ETS-22-01 Part 2 Control Streams & Commands."
     rationale: |
-      Part 1 now has all 14 conformance-class skeletons landed, though some
-      remain intentionally PARTIAL. The next project-scope deliverable is Part 2.
-      Sprint 20 established API Common. The next Part 2 class in scope is
-      Datastreams & Observations, which GeoRobotix currently declares.
+      Sprint 20 established Part 2 API Common and Sprint 21 implemented the
+      first Datastreams & Observations subset. The next OGC 23-002 class in
+      sequence is Control Streams & Commands, which GeoRobotix currently declares.
 
   q2_identifier_source:
-    question: "Which identifiers anchor Sprint 21?"
-    decision: "Use official OGC 23-002 `/req/datastream` and `/conf/datastream`."
+    question: "Which identifiers anchor Sprint 22?"
+    decision: "Use official OGC 23-002 `/req/controlstream` and `/conf/controlstream`."
     rationale: |
-      The official OGC 23-002 published HTML defines Clause 9 as
-      Requirements Class "Datastreams & Observations" with identifier
-      /req/datastream and conformance /conf/datastream.
+      The official OGC 23-002 published HTML defines Clause 10 as Requirements
+      Class "Control Streams & Commands" with identifier /req/controlstream
+      and conformance /conf/controlstream.
 
   q3_georobotix_verdict:
-    question: "How should GeoRobotix be treated when it declares /conf/datastream but not /conf/api-common?"
-    decision: "Evaluate Datastream-specific declared behavior, but never infer API Common PASS."
+    question: "How should GeoRobotix be treated when it declares /conf/controlstream but not /conf/api-common?"
+    decision: "Evaluate ControlStream-specific declared behavior, but never infer API Common PASS."
     rationale: |
-      Clause 9 lists /req/api-common as a prerequisite. Current GeoRobotix
-      can still provide scoped Datastream endpoint evidence because it declares
-      /conf/datastream, but the ETS must keep the missing API Common
+      Clause 10 lists /req/api-common as a prerequisite. Current GeoRobotix can
+      still provide scoped ControlStream endpoint evidence because it declares
+      /conf/controlstream, but the ETS must keep the missing API Common
       declaration visible as a separate prerequisite-incomplete issue and must
-      not report full /conf/datastream closure.
+      not report full /conf/controlstream closure.
+
+  q4_alias_and_commands:
+    question: "How should /controls/{id} and /commands behave in Sprint 22 planning?"
+    decision: "Treat them as explicit false-PASS risks, not positive evidence."
+    rationale: |
+      GeoRobotix serves /controlstreams/{id} but returns HTTP 400 for
+      /controls/{id}; it also returns HTTP 400 for /commands while nested
+      /controlstreams/{id}/commands returns HTTP 200 empty items. Generator must
+      not pass canonical-url or global Command endpoint assertions from alias or
+      nested endpoint evidence.
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems Part 2: Dynamic Data"
   source_url: "https://docs.ogc.org/is/23-002/23-002.html"
-  checked_at: "2026-05-07T19:12:03Z"
-  requirement_class: "Clause 9, Requirements Class Datastreams & Observations"
-  requirement_class_identifier: "/req/datastream"
-  conformance_class_identifier: "/conf/datastream"
+  checked_at: "2026-05-07T21:55:46Z"
+  requirement_class: "Clause 10, Requirements Class Control Streams & Commands"
+  requirement_class_identifier: "/req/controlstream"
+  conformance_class_identifier: "/conf/controlstream"
   prerequisite: "/req/api-common"
   normative_statements:
-    - "/req/datastream/canonical-url"
-    - "/req/datastream/resources-endpoint"
-    - "/req/datastream/canonical-endpoint"
-    - "/req/datastream/ref-from-system"
-    - "/req/datastream/schema-op"
-    - "/req/datastream/obs-canonical-url"
-    - "/req/datastream/obs-resources-endpoint"
-    - "/req/datastream/obs-canonical-endpoint"
-    - "/req/datastream/obs-ref-from-datastream"
+    - "/req/controlstream/sf-ref-from-controlstream"
+    - "/req/controlstream/foi-ref-from-controlstream"
+    - "/req/controlstream/canonical-url"
+    - "/req/controlstream/resources-endpoint"
+    - "/req/controlstream/canonical-endpoint"
+    - "/req/controlstream/ref-from-system"
+    - "/req/controlstream/ref-from-deployment"
+    - "/req/controlstream/collections"
+    - "/req/controlstream/schema-op"
+    - "/req/controlstream/cmd-canonical-url"
+    - "/req/controlstream/cmd-resources-endpoint"
+    - "/req/controlstream/cmd-canonical-endpoint"
+    - "/req/controlstream/cmd-ref-from-controlstream"
+    - "/req/controlstream/cmd-collections"
+    - "/req/controlstream/status-resources-endpoint"
+    - "/req/controlstream/command-status-endpoint"
+    - "/req/controlstream/result-resources-endpoint"
+    - "/req/controlstream/command-result-endpoint"
 
 planning_probes:
   georobotix:
     iut_url: "https://api.georobotix.io/ogc/t18/api"
-    conformance: "Declares /conf/datastream but not /conf/api-common."
-    datastreams: "GET /datastreams?limit=2 returned HTTP 200 JSON with top-level items and links."
-    observations: "GET /observations?limit=2 returned HTTP 200 JSON with top-level items and links."
-    datastream_item: "GET /datastreams/0mirhn7lo1kg returned HTTP 200 JSON with id, system@id, outputName, observedProperties, resultType, formats, and observations link."
-    datastream_schema: "GET /datastreams/0mirhn7lo1kg/schema returned HTTP 200 JSON with obsFormat and resultSchema."
-    datastream_observations: "GET /datastreams/0mirhn7lo1kg/observations?limit=2 returned HTTP 200 JSON with empty items and no top-level links."
-    system_datastreams: "GET /systems/0nar3cl0tk3g/datastreams?limit=1 returned HTTP 200 JSON with a Datastream item."
-    planning_interpretation: "Generator must be declaration-gated, read-only, and explicit that scoped Datastream endpoint success is not API Common PASS or full /conf/datastream closure. Empty nested observations are endpoint evidence only, not obs-ref PASS evidence."
+    conformance: "Declares /conf/controlstream but not /conf/api-common."
+    controlstreams: "GET /controlstreams?limit=2 returned HTTP 200 JSON with top-level items and links."
+    controlstream_item: "GET /controlstreams/0m4qpft9sdag returned HTTP 200 JSON with id, system@id, inputName, controlledProperties, and formats."
+    controlstream_schema: "GET /controlstreams/0m4qpft9sdag/schema returned HTTP 200 JSON with commandFormat and parametersSchema."
+    controlstream_commands: "GET /controlstreams/0m4qpft9sdag/commands?limit=2 returned HTTP 200 JSON with empty items."
+    system_controlstreams: "GET /systems/0m5ojudgr570/controlstreams?limit=2 returned HTTP 200 JSON with ControlStream items."
+    commands_global: "GET /commands?limit=2 returned HTTP 400 HTML."
+    controls_alias: "GET /controls/0m4qpft9sdag returned HTTP 400 HTML while /controlstreams/0m4qpft9sdag returned HTTP 200."
+    planning_interpretation: "Generator must be declaration-gated, read-only, and explicit that scoped ControlStream endpoint success is not API Common PASS or full /conf/controlstream closure. Empty nested commands are endpoint evidence only, not cmd-ref PASS evidence. /commands and /controls/{id} failures must not be hidden by alias/nested PASS evidence."
 
 stories:
-  - id: "S-ETS-21-01"
-    title: "Part 2 Datastreams & Observations planning"
-    file: "epics/stories/s-ets-21-01-part2-datastream-planning.md"
+  - id: "S-ETS-22-01"
+    title: "Part 2 Control Streams & Commands planning"
+    file: "epics/stories/s-ets-22-01-part2-controlstream-planning.md"
     priority: P0
     complexity: M
     estimated_generator_wall_clock: "2h"
-    sequencing: "ONLY story in Sprint 21"
+    sequencing: "ONLY story in Sprint 22"
 
 new_requirements: []
 modified_requirements:
-  - "REQ-ETS-PART2-002"
-  - "REQ-ETS-PART2-003..014"
+  - "REQ-ETS-PART2-003"
+  - "REQ-ETS-PART2-004..014"
 
 critical_scenarios:
-  - "SCENARIO-ETS-PART2-002-DATASTREAM-CONFORMANCE-DECLARED-001"
-  - "SCENARIO-ETS-PART2-002-DATASTREAM-COLLECTION-READONLY-001"
-  - "SCENARIO-ETS-PART2-002-DATASTREAM-ITEM-READONLY-001"
-  - "SCENARIO-ETS-PART2-002-DATASTREAM-SCHEMA-ENDPOINT-001"
-  - "SCENARIO-ETS-PART2-002-OBSERVATION-ENDPOINTS-READONLY-001"
-  - "SCENARIO-ETS-PART2-002-OBSERVATION-REFERENCE-EVIDENCE-001"
-  - "SCENARIO-ETS-PART2-002-DEPENDENCY-SKIP-001"
-
-next_agent: "adversarial-reviewer"
-next_agent_rationale: |
-  Generator implementation is complete and gates pass. Raze implementation
-  review found reconciliation/evidence gaps only, and gap-fix review approved
-  the archived evidence plus handoff/status cleanup.
+  - "SCENARIO-ETS-PART2-003-CONTROLSTREAM-CONFORMANCE-DECLARED-001"
+  - "SCENARIO-ETS-PART2-003-CONTROLSTREAM-COLLECTION-READONLY-001"
+  - "SCENARIO-ETS-PART2-003-CONTROLSTREAM-ITEM-READONLY-001"
+  - "SCENARIO-ETS-PART2-003-CONTROLSTREAM-SCHEMA-ENDPOINT-001"
+  - "SCENARIO-ETS-PART2-003-COMMAND-ENDPOINTS-READONLY-001"
+  - "SCENARIO-ETS-PART2-003-COMMAND-REFERENCE-EVIDENCE-001"
+  - "SCENARIO-ETS-PART2-003-CANONICAL-URL-ALIAS-HONESTY-001"
+  - "SCENARIO-ETS-PART2-003-DEPENDENCY-SKIP-001"
 
 raze_review:
-  plan_artifact: ".harness/evaluations/sprint-ets-21-plan-adversarial.yaml"
-  plan_verdict: "GAPS_FOUND"
-  plan_confidence: 0.88
-  required_fixes_status: "resolved"
-  concern_summary: "Initial review found two false-PASS risks: empty nested observations could PASS obs-ref-from-datastream, and missing /req/api-common did not clearly block full /conf/datastream closure."
-  gapfix_artifact: ".harness/evaluations/sprint-ets-21-plan-gapfix.yaml"
-  gapfix_verdict: "APPROVE"
-  gapfix_confidence: 0.95
+  plan_artifact: ".harness/evaluations/sprint-ets-22-plan-adversarial.yaml"
+  plan_verdict: "APPROVE"
+  plan_confidence: 0.93
+  required_fixes: []
 
-next_agent_after_review: "committer"
+next_agent: "generator"
+next_agent_rationale: |
+  Raze approved planning with no required fixes, so Generator can start from the
+  Sprint 22 contract.
+
+next_agent_after_review: "generator"
 next_agent_after_review_rationale: |
-  Plan Sprint 22 for the next Part 2 item.
-
-generator_result:
-  implementation_status: "PARTIAL_IMPLEMENTED"
-  implemented_files:
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java"
-    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/VerifyPart2DatastreamTests.java"
-    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
-    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
-  formatter: "Docker Maven spring-javaformat:apply BUILD SUCCESS"
-  maven: "160 tests / 0 failures / 0 errors / 3 skipped; archived at ops/test-results/sprint-ets-21-maven-2026-05-07.log"
-  smoke: "104 total / 64 passed / 0 failed / 40 skipped; archived at ops/test-results/sprint-ets-21-teamengine-smoke-2026-05-07.xml"
-  smoke_output_dir: "ops/test-results/"
-  no_mutation: "zero IUT-bound POST/PUT/DELETE/PATCH across 82 recognized IUT request logs"
-  full_closure_note: "GeoRobotix lacks /conf/api-common, so full /conf/datastream closure remains prerequisite-incomplete."
-  raze_implementation_review: ".harness/evaluations/sprint-ets-21-adversarial-implementation.yaml returned GAPS_FOUND 0.90 for reconciliation/evidence only; fixes applied."
-  raze_gapfix_review: ".harness/evaluations/sprint-ets-21-adversarial-gapfix.yaml returned APPROVE 0.96 with no required fixes."
-  commit: "b1df419 Implement Sprint 21 Part 2 Datastream"
-  push: "e6c10fc..b1df419 main -> main over SSH"
-  next_work: "Plan Sprint 22 for the next Part 2 item, likely /conf/controlstream."
+  Generator can start from `.harness/contracts/sprint-ets-22.yaml`.
 
 generator_brief:
   must_do:
     - "Record exact HEAD before editing."
-    - "Use official OGC 23-002 identifiers: /req/datastream and /conf/datastream."
-    - "Add Part 2 Datastream TestNG group and prerequisite handling."
-    - "Implement declaration-gated SKIP honesty when /conf/datastream is absent."
-    - "Implement read-only Datastream, schema, Observation, and selected System-scoped endpoint checks."
-    - "Require actual nested Observation/reference evidence for obs-ref-from-datastream or SKIP on empty IUT state."
+    - "Use official OGC 23-002 identifiers: /req/controlstream and /conf/controlstream."
+    - "Add Part 2 ControlStream TestNG group and prerequisite handling."
+    - "Implement declaration-gated SKIP honesty when /conf/controlstream is absent."
+    - "Implement read-only ControlStream, schema, nested Command, and selected System-scoped endpoint checks."
+    - "Require actual nested Command/reference evidence for cmd-ref-from-controlstream or SKIP on empty IUT state."
     - "Run scripts/mvn-test-via-docker.sh and default GeoRobotix TeamEngine smoke."
     - "Update spec/story/traceability/status/changelog/test-results."
   must_not_do:
     - "Do not use stale dynamic-* identifiers."
-    - "Do not implement Part 2 ControlStream, Command, JSON, SWE Common, CRD, or Update behavior."
+    - "Do not implement Command creation, feasibility, Part 2 JSON, SWE Common, CRD, or Update behavior."
     - "Do not mutate GeoRobotix or local OSH."
-    - "Do not claim /conf/api-common PASS from Datastream evidence."
-    - "Do not report full /conf/datastream closure while /req/api-common is absent."
-    - "Do not require non-empty nested Observation collections."
-    - "Do not PASS obs-ref-from-datastream on empty nested Observation collections."
+    - "Do not claim /conf/api-common PASS from ControlStream evidence."
+    - "Do not report full /conf/controlstream closure while /req/api-common is absent."
+    - "Do not require non-empty nested Command collections."
+    - "Do not PASS cmd-ref-from-controlstream on empty nested Command collections."
+    - "Do not PASS canonical-url from /controlstreams/{id} alias evidence while /controls/{id} is non-200."
+    - "Do not PASS global Command endpoint assertions while /commands is non-200."
 
 gate_expectations:
   raze:
-    primary: "Attack false Datastream PASS and false API Common prerequisite PASS."
-    adversarial_focus: "No generic JSON false PASS, no API Common inference, no mutation, no ControlStream/Command scope creep, and correct handling of empty nested Observation collections."
+    primary: "Attack false ControlStream PASS, false canonical-url PASS, and false global Command endpoint PASS."
+    adversarial_focus: "No generic JSON false PASS, no API Common inference, no mutation, no Command creation/feasibility scope creep, and correct handling of empty nested Command collections."
 
-confidence: 0.83
+confidence: 0.76

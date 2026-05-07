@@ -249,10 +249,76 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **AND** it must not report full `/conf/datastream` class closure
 **AND** any prerequisite-dependent assertion SKIPs with a precise reason rather than failing downstream noisily.
 
-#### REQ-ETS-PART2-003..014: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-003: Part 2 Control Streams & Commands Conformance Suite
+- **Priority**: MUST
+- **Status**: PLANNED (Sprint 22 planning 2026-05-07; story S-ETS-22-01)
+- **Description**: The ETS SHALL provide a TestNG suite class for OGC 23-002 Requirements Class "Control Streams & Commands" using official identifiers `/req/controlstream` and `/conf/controlstream`. Sprint 22 plans the first read-only, declaration-gated subset and SHALL cover ControlStream endpoint availability, ControlStream resource shape, ControlStream schema sub-resources, selected System-scoped ControlStream sub-resource access, and ControlStream-scoped Command endpoint availability without mutating the IUT.
+- **OGC source verified**: OGC 23-002 official published HTML at `https://docs.ogc.org/is/23-002/23-002.html`, Clause 10 "Requirements Class Control Streams & Commands", checked 2026-05-07. The requirements class identifier is `/req/controlstream`; conformance class is `/conf/controlstream`; prerequisite is Requirements Class 1 `/req/api-common`. Normative statements include `/req/controlstream/sf-ref-from-controlstream`, `/req/controlstream/foi-ref-from-controlstream`, `/req/controlstream/canonical-url`, `/req/controlstream/resources-endpoint`, `/req/controlstream/canonical-endpoint`, `/req/controlstream/ref-from-system`, `/req/controlstream/ref-from-deployment`, `/req/controlstream/collections`, `/req/controlstream/schema-op`, `/req/controlstream/cmd-canonical-url`, `/req/controlstream/cmd-resources-endpoint`, `/req/controlstream/cmd-canonical-endpoint`, `/req/controlstream/cmd-ref-from-controlstream`, `/req/controlstream/cmd-collections`, `/req/controlstream/status-resources-endpoint`, `/req/controlstream/command-status-endpoint`, `/req/controlstream/result-resources-endpoint`, and `/req/controlstream/command-result-endpoint`.
+- **Dependency policy**: Sprint 22 SHALL keep `/req/api-common` prerequisite visibility explicit. Because GeoRobotix declares `/conf/controlstream` but not `/conf/api-common`, Generator MAY evaluate clearly scoped ControlStream endpoint assertions when `/conf/controlstream` is declared, but SHALL NOT report full `/conf/controlstream` class closure while the `/req/api-common` prerequisite is absent or cannot be established. The missing prerequisite must remain a visible SKIP/prerequisite-incomplete outcome, and ControlStream evidence SHALL NOT imply API Common PASS.
+- **GeoRobotix planning probe**: `/conformance` declares `/conf/controlstream` but not `/conf/api-common`. `GET /controlstreams?limit=2`, `GET /controlstreams/{id}`, `GET /controlstreams/{id}/schema`, `GET /controlstreams/{id}/commands?limit=2`, and `GET /systems/{systemId}/controlstreams?limit=2` returned HTTP 200 JSON for selected read-only probes. The selected ControlStream exposes `system@id`, `inputName`, `controlledProperties`, and `formats`; its schema exposes `commandFormat` and `parametersSchema`. The nested commands response for that ControlStream was empty with `items` only. `GET /commands?limit=2` and `GET /controls/{id}` returned HTTP 400 on the current GeoRobotix IUT, so Sprint 22 Generator must not PASS global Command endpoint or `/controls/{id}` canonical URL assertions from `/controlstreams/{id}` alias evidence.
+- **Scope guard**: Sprint 22 is a partial read-only subset. It SHALL NOT implement Command creation, feasibility POST, command status/result dereferencing, SWE Common encoding validation, Part 2 Create/Replace/Delete, Part 2 Update, or full command-body validation against the ControlStream schema. Empty ControlStream-scoped Command collections are endpoint evidence only, not `/req/controlstream/cmd-ref-from-controlstream` PASS evidence.
+- **Maps to**: PRD FR-ETS-32.
+
+##### Acceptance Scenarios for Sprint 22
+
+#### SCENARIO-ETS-PART2-003-CONTROLSTREAM-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the ETS is evaluating OGC 23-002 Control Streams & Commands
+**WHEN** it reads `/conformance`
+**THEN** `/conf/controlstream` is required before producing ControlStream conformance PASS evidence
+**AND** `/conf/api-common` remains a separate prerequisite judgment, not something inferred from ControlStream behavior.
+
+#### SCENARIO-ETS-PART2-003-CONTROLSTREAM-COLLECTION-READONLY-001 (CRITICAL)
+**GIVEN** `/req/controlstream/resources-endpoint` and `/req/controlstream/canonical-endpoint`
+**WHEN** the ETS issues `GET {api_root}/controlstreams`
+**THEN** the response is HTTP 200 JSON with an `items` array
+**AND** the test records the canonical requirement URI in its `@Test` description.
+
+#### SCENARIO-ETS-PART2-003-CONTROLSTREAM-ITEM-READONLY-001 (CRITICAL)
+**GIVEN** a ControlStream identifier selected from the collection
+**WHEN** the ETS reads an available ControlStream resource
+**THEN** the response is HTTP 200 JSON for the same ControlStream resource
+**AND** the resource exposes enough ControlStream-specific shape to avoid passing on a generic JSON object.
+
+#### SCENARIO-ETS-PART2-003-CONTROLSTREAM-SCHEMA-ENDPOINT-001 (CRITICAL)
+**GIVEN** `/req/controlstream/schema-op`
+**WHEN** the ETS issues `GET {api_root}/controlstreams/{id}/schema`
+**THEN** the response is HTTP 200 JSON with ControlStream command schema evidence such as `commandFormat` and `parametersSchema`.
+
+#### SCENARIO-ETS-PART2-003-COMMAND-ENDPOINTS-READONLY-001 (CRITICAL)
+**GIVEN** `/req/controlstream/cmd-resources-endpoint` and `/req/controlstream/cmd-ref-from-controlstream`
+**WHEN** the ETS reads Command endpoints in the first Sprint 22 subset
+**THEN** the ControlStream-scoped Command collection response is HTTP 200 JSON with an `items` array
+**AND** an empty ControlStream-scoped Command collection is not treated as endpoint-availability failure by itself
+**AND** `/commands` returning non-200 is not converted into PASS evidence.
+
+#### SCENARIO-ETS-PART2-003-COMMAND-REFERENCE-EVIDENCE-001 (CRITICAL)
+**GIVEN** `/req/controlstream/cmd-ref-from-controlstream`
+**WHEN** the ETS evaluates ControlStream-to-Command reference behavior
+**THEN** PASS requires at least one nested Command item or link with evidence that the Command is associated to the selected ControlStream
+**AND** an empty ControlStream-scoped Command collection SKIPs the reference assertion with a precise empty-IUT-state reason.
+
+#### SCENARIO-ETS-PART2-003-SYSTEM-REFERENCE-READONLY-001 (NORMAL)
+**GIVEN** `/req/controlstream/ref-from-system` and a ControlStream resource with `system@id`
+**WHEN** the ETS issues `GET {api_root}/systems/{systemId}/controlstreams`
+**THEN** the response is HTTP 200 JSON with an `items` array
+**AND** the selected ControlStream is found when the IUT returns it in the current page, otherwise the check remains bounded and non-mutating.
+
+#### SCENARIO-ETS-PART2-003-CANONICAL-URL-ALIAS-HONESTY-001 (CRITICAL)
+**GIVEN** OGC 23-002 `/req/controlstream/canonical-url` cites canonical ControlStream URL form `{api_root}/controls/{id}`
+**WHEN** the IUT serves `/controlstreams/{id}` but `GET /controls/{id}` returns non-200
+**THEN** the ETS must not PASS `/req/controlstream/canonical-url` from `/controlstreams/{id}` alias evidence alone.
+
+#### SCENARIO-ETS-PART2-003-DEPENDENCY-SKIP-001 (CRITICAL)
+**GIVEN** ControlStream has prerequisite `/req/api-common`
+**WHEN** the prerequisite class cannot be established for the IUT
+**THEN** the ETS must not convert ControlStream endpoint success into API Common PASS evidence
+**AND** it must not report full `/conf/controlstream` class closure
+**AND** any prerequisite-dependent assertion SKIPs with a precise reason rather than failing downstream noisily.
+
+#### REQ-ETS-PART2-004..014: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprints 20 and 21 planning)
-- **Description**: For each of the remaining 12 OGC 23-002 conformance classes or cross-class closures (`controlstream`, `feasibility`, `system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprints 20, 21, and 22 planning)
+- **Description**: For each of the remaining 11 OGC 23-002 conformance classes or cross-class closures (`feasibility`, `system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
 - **Maps to**: PRD FR-ETS-32..43.
 
@@ -1881,7 +1947,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-TEAMENGINE-002..005 (Dockerfile, docker-compose, smoke-test.sh, container-load verification) → S-ETS-01-03 (final Sprint 1 story).
 - REQ-ETS-PART1-001..013 (per-class detail beyond Core) — drafted as placeholders; per-assertion FRs and SCENARIOs to be expanded in sprints 2..N.
 - REQ-ETS-PART2-002 (Datastreams & Observations) — partially implemented in Sprint 21 read-only subset.
-- REQ-ETS-PART2-003..014 (remaining Part 2 classes) — deferred after Sprint 21 Datastream planning.
+- REQ-ETS-PART2-003 (Control Streams & Commands) — planned for Sprint 22 read-only subset.
+- REQ-ETS-PART2-004..014 (remaining Part 2 classes) — deferred after Sprint 22 ControlStream planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

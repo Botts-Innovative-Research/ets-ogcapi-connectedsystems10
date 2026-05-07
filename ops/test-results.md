@@ -1,8 +1,31 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T19:52Z
+Last updated: 2026-05-07T22:03Z
 
 ## Current Sprint Evidence
+
+Sprint ets-22 Part 2 Control Streams & Commands planning:
+
+- Planning-only change set; no Java code changed and no Maven/TeamEngine gates are required before Generator.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 10 "Requirements Class Control Streams & Commands".
+  - Requirements class identifier: `/req/controlstream`.
+  - Conformance class identifier: `/conf/controlstream`.
+  - Prerequisite: `/req/api-common`.
+  - Selected Sprint 22 requirements: `/req/controlstream/resources-endpoint`, `/req/controlstream/canonical-endpoint`, `/req/controlstream/ref-from-system`, `/req/controlstream/schema-op`, `/req/controlstream/cmd-resources-endpoint`, `/req/controlstream/cmd-ref-from-controlstream`, with explicit guardrails around `/req/controlstream/canonical-url` and `/req/controlstream/cmd-canonical-endpoint`.
+- GeoRobotix planning probes:
+  - `/conformance`: declares `/conf/controlstream` but not `/conf/api-common`.
+  - `GET /controlstreams?limit=2`: HTTP 200 JSON with `items` and `links`.
+  - `GET /controlstreams/0m4qpft9sdag`: HTTP 200 JSON with ControlStream-specific fields.
+  - `GET /controlstreams/0m4qpft9sdag/schema`: HTTP 200 JSON with `commandFormat` and `parametersSchema`.
+  - `GET /controlstreams/0m4qpft9sdag/commands?limit=2`: HTTP 200 JSON with empty `items`; endpoint availability evidence only, not `/req/controlstream/cmd-ref-from-controlstream` PASS evidence.
+  - `GET /systems/0m5ojudgr570/controlstreams?limit=2`: HTTP 200 JSON with ControlStream items.
+  - `GET /commands?limit=2`: HTTP 400 HTML; no global Command endpoint PASS evidence.
+  - `GET /controls/0m4qpft9sdag`: HTTP 400 HTML; no `/req/controlstream/canonical-url` PASS from `/controlstreams/{id}` alias evidence.
+- Planned gate expectation: Generator must run formatter, Maven via Docker, GeoRobotix TeamEngine smoke, and Raze implementation review after code changes; full `/conf/controlstream` closure remains blocked when `/req/api-common` is absent.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-22-plan-adversarial.yaml`: `APPROVE` confidence 0.93.
+  - Required fixes: none.
 
 Sprint ets-21 Part 2 Datastreams & Observations Generator:
 

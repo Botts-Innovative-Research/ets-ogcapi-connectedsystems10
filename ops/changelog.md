@@ -2,6 +2,24 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-07T21:55Z — Sprint 22 Part 2 ControlStream planning
+
+**Triggered by user instruction**: "Do Sprint 22 planning."
+
+- Started Sprint 22 planning for `S-ETS-22-01`, the next Part 2 item after Sprint 21.
+- Verified architecture freshness: `_bmad/architecture.md` last reconciled 2026-04-28, so it is not stale.
+- Verified official OGC 23-002 Clause 10 identifiers from the published HTML: Control Streams & Commands is `/req/controlstream` with conformance `/conf/controlstream` and prerequisite `/req/api-common`.
+- Added `.harness/contracts/sprint-ets-22.yaml` and `epics/stories/s-ets-22-01-part2-controlstream-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for ControlStream planning.
+- Split `REQ-ETS-PART2-003` out for Control Streams & Commands and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-004..014`.
+- Probed GeoRobotix ControlStream state: `/conformance` declares `/conf/controlstream` but not `/conf/api-common`; `/controlstreams`, `/controlstreams/{id}`, `/controlstreams/{id}/schema`, `/controlstreams/{id}/commands`, and `/systems/{systemId}/controlstreams` returned HTTP 200 JSON for selected read-only probes.
+- Planned verdict policy: scoped ControlStream endpoint PASS evidence is gated on `/conf/controlstream`; API Common remains separate prerequisite honesty; full `/conf/controlstream` closure is blocked while `/req/api-common` is absent.
+- Captured two false-PASS guardrails: `/commands` returns HTTP 400 and must not PASS from nested Command endpoint evidence; `/controls/{id}` returns HTTP 400 and must not PASS from `/controlstreams/{id}` alias evidence.
+- Raze planning review `.harness/evaluations/sprint-ets-22-plan-adversarial.yaml` returned `APPROVE` confidence 0.93 with no required fixes.
+- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+
+---
+
 ## 2026-05-07T19:35Z — Sprint 21 Part 2 Datastream Generator
 
 **Triggered by user instruction**: "Kick off Generator."

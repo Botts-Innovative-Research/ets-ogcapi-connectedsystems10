@@ -41,9 +41,9 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
-- Current sprint status: Sprint ets-22 Part 2 Control Streams & Commands planning complete and Raze-approved; ready for Generator.
+- Current sprint status: Sprint ets-22 Part 2 Control Streams & Commands planning complete, Raze-approved, committed as `2ffed0c`, and pushed over SSH.
 - Latest pushed implementation commit: `b1df419 Implement Sprint 21 Part 2 Datastream`; follow-up reconciliation commits `948060c` and `5c4bcf0` were pushed after it.
-- Push status: remote switched to SSH and latest `git push origin main` succeeded on 2026-05-07T19:54Z.
+- Push status: remote switched to SSH and latest `git push origin main` succeeded on 2026-05-07T22:04Z.
 
 ## Sprint ets-20 Generator Evidence
 
@@ -117,6 +117,7 @@ Part 2 Control Streams & Commands read-only subset:
 - Important IUT gaps: `GET /commands?limit=2` and `GET /controls/0m4qpft9sdag` returned HTTP 400, so Generator must not PASS global Command endpoint or `/req/controlstream/canonical-url` from nested or alias evidence alone.
 - Verdict policy planned: gate scoped ControlStream endpoint PASS evidence on `/conf/controlstream`; keep missing `/conf/api-common` prerequisite honesty separate; do not infer API Common PASS or full `/conf/controlstream` closure from ControlStream endpoint success.
 - Raze planning review `.harness/evaluations/sprint-ets-22-plan-adversarial.yaml` returned `APPROVE` confidence 0.93 with no required fixes.
+- Commit/push: `2ffed0c Plan Sprint 22 ControlStream` pushed over SSH on 2026-05-07 (`5c4bcf0..2ffed0c main -> main`).
 - Out of scope: mutation, command creation, command feasibility, Command status/result closure, Part 2 JSON, SWE Common encodings, Create/Replace/Delete, Update, and command result validation against ControlStream schema.
 - Next action: start Generator for `S-ETS-22-01`.
 

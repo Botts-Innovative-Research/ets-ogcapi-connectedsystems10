@@ -16,6 +16,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Planned verdict policy: scoped ControlStream endpoint PASS evidence is gated on `/conf/controlstream`; API Common remains separate prerequisite honesty; full `/conf/controlstream` closure is blocked while `/req/api-common` is absent.
 - Captured two false-PASS guardrails: `/commands` returns HTTP 400 and must not PASS from nested Command endpoint evidence; `/controls/{id}` returns HTTP 400 and must not PASS from `/controlstreams/{id}` alias evidence.
 - Raze planning review `.harness/evaluations/sprint-ets-22-plan-adversarial.yaml` returned `APPROVE` confidence 0.93 with no required fixes.
+- Committed and pushed Sprint 22 planning over SSH: `2ffed0c Plan Sprint 22 ControlStream` (`5c4bcf0..2ffed0c main -> main`).
 - Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
 
 ---

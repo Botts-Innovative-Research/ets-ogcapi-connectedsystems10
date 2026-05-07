@@ -1,6 +1,6 @@
 agent: planner
 status: complete_raze_approved
-timestamp: "2026-05-07T22:03:35Z"
+timestamp: "2026-05-07T22:04:46Z"
 sprint_number: "ets-22"
 sprint_name: "part2-controlstream-planning"
 contract_path: ".harness/contracts/sprint-ets-22.yaml"
@@ -160,3 +160,8 @@ gate_expectations:
     adversarial_focus: "No generic JSON false PASS, no API Common inference, no mutation, no Command creation/feasibility scope creep, and correct handling of empty nested Command collections."
 
 confidence: 0.76
+
+commit:
+  hash: "2ffed0c"
+  message: "Plan Sprint 22 ControlStream"
+  push: "5c4bcf0..2ffed0c main -> main over SSH"

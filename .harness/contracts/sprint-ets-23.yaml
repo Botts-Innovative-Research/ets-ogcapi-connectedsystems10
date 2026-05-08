@@ -2,10 +2,11 @@
 
 sprint: "ets-23"
 sprint_name: "part2-feasibility"
-type: "feature-expansion-planning"
+type: "feature-expansion"
 created: "2026-05-08T19:33:58Z"
+implemented: "2026-05-08T20:04:32Z"
 description: |
-  Sprint 23 plans the OGC 23-002 Command Feasibility Generator increment.
+  Sprint 23 implements the first OGC 23-002 Command Feasibility Generator increment.
   Feasibility requests are initiated by creating a Command resource on a
   feasibility channel, so default public smoke must declaration-skip before
   any IUT-bound POST. Positive feasibility creation evidence requires explicit
@@ -24,7 +25,7 @@ stories:
 
 requirements:
   modified_reqs:
-    - "REQ-ETS-PART2-004 (/req/feasibility - planned)"
+    - "REQ-ETS-PART2-004 (/req/feasibility - partial implemented)"
     - "REQ-ETS-PART2-005..014 (remaining placeholders renumbered after Feasibility split)"
   new_reqs: []
 
@@ -45,9 +46,10 @@ success_criteria:
   ops_updated: true
   official_ogc_identifiers_used: true
   no_code_changes_in_planning: true
-  maven_verified: false
-  teamengine_smoke_verified: false
-  generator_required_before_runtime_gates: true
+  generator_code_changes_scoped: true
+  maven_verified: true
+  teamengine_smoke_verified: true
+  generator_required_before_runtime_gates: false
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
@@ -138,3 +140,34 @@ commit:
   sha: "61004e5"
   message: "Plan Sprint 23 Feasibility"
   push: "b83f29c..61004e5 main -> main over SSH"
+
+generator_evidence:
+  status: "partial_implemented"
+  files_added:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/VerifyPart2FeasibilityTests.java"
+  files_updated:
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  runtime_scope:
+    - "7 Feasibility runtime tests, all declaration-gated on /conf/feasibility."
+    - "No POST/PUT/DELETE/PATCH code path in the Feasibility implementation."
+    - "Normative singular /controlstream/{csId}/feasibility path is used; plural alias is not PASS evidence."
+  gates:
+    formatter: "BUILD SUCCESS"
+    maven: "175 tests / 0 failures / 0 errors / 3 skipped"
+    maven_log: "ops/test-results/sprint-ets-23-maven-2026-05-08.log"
+    smoke: "122 total / 71 passed / 0 failed / 51 skipped"
+    smoke_report: "ops/test-results/sprint-ets-23-smoke-2026-05-08.xml"
+    smoke_log: "ops/test-results/sprint-ets-23-smoke-container-2026-05-08.log"
+    no_mutation: "recognized_iut_request_logs=93; zero IUT-bound POST/PUT/DELETE/PATCH"
+  raze_implementation_review:
+    artifact: ".harness/evaluations/sprint-ets-23-adversarial-implementation.yaml"
+    verdict: "GAPS_FOUND"
+    confidence: 0.90
+    required_fix: "Removed collection-shape-only canonical PASS evidence; canonical/status/result checks now require an actual Feasibility-shaped resource."
+  raze_gapfix_review:
+    artifact: ".harness/evaluations/sprint-ets-23-adversarial-gapfix.yaml"
+    verdict: "APPROVE"
+    confidence: 0.97
+    required_fixes: []

@@ -41,7 +41,7 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 22 Generator commit `38cb3c0 Implement Sprint 22 Part 2 ControlStream` plus Sprint 23 planning work in progress.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-22-01` Generator complete as PARTIAL for the Part 2 Control Streams & Commands read-only subset.
-- Current sprint status: Sprint ets-23 Part 2 Command Feasibility planning is Raze-approved, committed as `61004e5`, and pushed over SSH; Generator kickoff for `S-ETS-23-01` is next.
+- Current sprint status: Sprint ets-23 Part 2 Command Feasibility Generator is partial implemented; Raze implementation review pending.
 - Latest pushed implementation commit: `38cb3c0 Implement Sprint 22 Part 2 ControlStream`.
 - Sprint 23 planning commit: `61004e5 Plan Sprint 23 Feasibility`, followed by reconciliation commits on `main`.
 - Push status: remote uses SSH; Sprint 23 planning and reconciliation were pushed successfully on 2026-05-08.
@@ -155,7 +155,25 @@ Part 2 Command Feasibility safety-gated subset:
 - Raze gap-fix review `.harness/evaluations/sprint-ets-23-plan-gapfix.yaml` returned `APPROVE` confidence 0.96 after the normative singular endpoint guard and metadata refresh were added.
 - Commit/push: `61004e5 Plan Sprint 23 Feasibility` pushed over SSH on 2026-05-08 (`b83f29c..61004e5 main -> main`).
 - Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
-- Next action: kick off Generator for `S-ETS-23-01`.
+- Next action completed by Sprint ets-23 Generator; continue from Sprint ets-23 Generator status below.
+
+## Sprint ets-23 Generator Evidence
+
+Part 2 Command Feasibility safety-gated subset:
+
+- Story: `epics/stories/s-ets-23-01-part2-feasibility-planning.md`
+- Contract: `.harness/contracts/sprint-ets-23.yaml`
+- Scope implemented: declaration-gated `/conf/feasibility`, `/req/controlstream` prerequisite visibility, normative singular `/controlstream/{csId}/feasibility` GET check, optional `/feasibility` collection/resource evidence, optional `/feasibility/{id}/status`, optional `/feasibility/{id}/result`, and optional `itemType=Feasibility` collection checks.
+- Implementation: `Part2FeasibilityTests` adds 7 read-only/default-safe Feasibility tests; `VerifyPart2FeasibilityTests` adds helper regressions for official identifiers, singular endpoint path, Feasibility resource evidence, collection itemType, and collection shape; `VerifyTestNGSuiteDependency` adds `part2feasibility` group dependency and co-location regressions.
+- Runtime safety: no Feasibility POST/PUT/DELETE/PATCH path is implemented. The default public GeoRobotix smoke SKIPs before any feasibility write because `/conf/feasibility` is absent.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` BUILD SUCCESS.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `175 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-23-maven-2026-05-08.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s23-gapfix bash scripts/smoke-test.sh` reported `122 total / 71 passed / 0 failed / 51 skipped`; report archived at `ops/test-results/sprint-ets-23-smoke-2026-05-08.xml`, container log at `ops/test-results/sprint-ets-23-smoke-container-2026-05-08.log`.
+- No-mutation proof: GeoRobotix smoke recognized 93 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH.
+- Runtime outcome: all 7 Feasibility runtime tests SKIP honestly because GeoRobotix does not declare `/conf/feasibility`; no Feasibility PASS is inferred from `/conf/controlstream`.
+- Raze implementation review `.harness/evaluations/sprint-ets-23-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.90 for a collection-shape-only canonical false-PASS risk; fixed by requiring Feasibility-shaped resource evidence before canonical/status/result PASS.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-23-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.97 with no required fixes.
+- Next action: commit/push Sprint 23 Generator, then plan the next Part 2 sprint item.
 
 ## Sprint ets-19 Generator Evidence
 

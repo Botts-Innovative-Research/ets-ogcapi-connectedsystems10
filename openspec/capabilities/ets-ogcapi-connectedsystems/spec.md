@@ -318,7 +318,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART2-004: Part 2 Command Feasibility Conformance Suite
 - **Priority**: MUST.
-- **Status**: PLANNED (Sprint 23)
+- **Status**: PARTIAL_IMPLEMENTED (Sprint 23 Generator)
 - **Description**: The ETS SHALL provide a TestNG suite for OGC 23-002 Clause 11 Requirements Class "Command Feasibility" using official identifiers `/req/feasibility` and `/conf/feasibility`, with prerequisite `/req/controlstream`. Sprint 23 targets a safety-gated Generator increment: exact conformance declaration detection, prerequisite honesty, feasibility endpoint/resource discovery, canonical URL/status/result/collection checks where evidence exists, and explicit non-mutating behavior against the default public smoke IUT.
 - **Scope guard**: Feasibility requests are initiated by creating a Command resource on the feasibility channel. Therefore, any IUT-bound feasibility POST is outside default public-smoke behavior and SHALL require an explicit safe/mutable-IUT opt-in before execution. When `/conf/feasibility` is absent, the suite SHALL SKIP before any feasibility POST. The suite SHALL NOT create regular Commands, exercise unrelated mutation classes, or infer feasibility conformance from `/conf/controlstream` alone.
 - **Maps to**: PRD FR-ETS-33.
@@ -1987,7 +1987,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART1-001..013 (per-class detail beyond Core) — drafted as placeholders; per-assertion FRs and SCENARIOs to be expanded in sprints 2..N.
 - REQ-ETS-PART2-002 (Datastreams & Observations) — partially implemented in Sprint 21 read-only subset.
 - REQ-ETS-PART2-003 (Control Streams & Commands) — partially implemented in Sprint 22 read-only subset.
-- REQ-ETS-PART2-004 (Command Feasibility) — planned by Sprint 23; Generator pending.
+- REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
 - REQ-ETS-PART2-005..014 (remaining Part 2 classes) — deferred after Sprint 23 Feasibility planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.

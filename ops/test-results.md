@@ -4,6 +4,33 @@ Last updated: 2026-05-08T19:33Z
 
 ## Current Sprint Evidence
 
+Sprint ets-23 Part 2 Command Feasibility Generator:
+
+- Generator implementation:
+  - `Part2FeasibilityTests` adds 7 declaration-gated, read-only/default-safe checks for `/conf/feasibility`, `/req/controlstream` prerequisite visibility, normative singular `/controlstream/{csId}/feasibility`, optional `/feasibility` resource/canonical evidence, optional `/feasibility/{id}/status`, optional `/feasibility/{id}/result`, and optional Feasibility collections.
+  - `VerifyPart2FeasibilityTests` adds 5 helper regressions for official identifiers, singular endpoint path, Feasibility resource evidence, `itemType=Feasibility`, and collection shape.
+  - `VerifyTestNGSuiteDependency` adds structural coverage for `part2feasibility` group dependency and Core/Common co-location.
+  - No Feasibility POST/PUT/DELETE/PATCH path is implemented.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `175 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-23-maven-2026-05-08.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s23-gapfix bash scripts/smoke-test.sh`
+  - Result: `122 total / 71 passed / 0 failed / 51 skipped`
+  - Report: `ops/test-results/sprint-ets-23-smoke-2026-05-08.xml`
+  - Container log: `ops/test-results/sprint-ets-23-smoke-container-2026-05-08.log`
+  - No-mutation oracle: `recognized_iut_request_logs=93`, zero IUT-bound POST/PUT/DELETE/PATCH.
+- Feasibility runtime outcome on GeoRobotix:
+  - SKIP: all 7 Feasibility tests because GeoRobotix does not declare `/conf/feasibility`.
+  - PASS: no Feasibility tests; the ETS does not infer Feasibility PASS from `/conf/controlstream` or endpoint probes.
+- Raze implementation review `.harness/evaluations/sprint-ets-23-adversarial-implementation.yaml`: `GAPS_FOUND` confidence 0.90 for a collection-shape-only canonical false-PASS risk; fixed by requiring actual Feasibility-shaped resource evidence for canonical/status/result checks.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-23-adversarial-gapfix.yaml`: `APPROVE` confidence 0.97 with no required fixes.
+
 Sprint ets-23 Part 2 Command Feasibility planning:
 
 - Planning only:

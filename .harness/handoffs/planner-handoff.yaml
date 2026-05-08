@@ -1,5 +1,5 @@
 agent: planner
-status: planned_raze_approved
+status: superseded_by_generator
 timestamp: "2026-05-08T19:33:58Z"
 sprint_number: "ets-23"
 sprint_name: "part2-feasibility"
@@ -54,4 +54,5 @@ commit:
   push: "b83f29c..61004e5 main -> main over SSH"
 
 next_agent: "generator"
-next_action: "Kick off Generator for S-ETS-23-01."
+superseded_by: ".harness/handoffs/generator-handoff.yaml"
+next_action: "Use generator-handoff.yaml, not this superseded planner handoff. Sprint 23 Generator is pending Raze implementation review."

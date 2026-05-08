@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-08T19:56Z — Sprint 23 Part 2 Feasibility Generator
+
+**Triggered by user instruction**: "Kick off Generator."
+
+- Implemented `S-ETS-23-01` as a safety-gated, declaration-gated Part 2 Command Feasibility subset.
+- Added `Part2FeasibilityTests` with 7 read-only/default-safe checks for `/conf/feasibility`, `/req/controlstream` prerequisite visibility, normative singular `/controlstream/{csId}/feasibility`, optional `/feasibility` resources, optional status/result endpoints, and optional `itemType=Feasibility` collections.
+- Preserved public-IUT safety: no Feasibility POST/PUT/DELETE/PATCH path is implemented, and GeoRobotix SKIPs before feasibility writes because `/conf/feasibility` is absent.
+- Added helper and TestNG structural regressions for official identifiers, singular endpoint path, Feasibility resource evidence, Feasibility collection detection, and `part2feasibility` group wiring.
+- Ran formatter, Maven, and TeamEngine smoke. Maven: `175 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke: `122 total / 71 passed / 0 failed / 51 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 93 recognized request-log entries.
+- Runtime outcome: all 7 Feasibility tests SKIP honestly on GeoRobotix because `/conf/feasibility` is not declared; no Feasibility PASS is inferred from `/conf/controlstream`.
+- Archived Maven/smoke artifacts under `ops/test-results/sprint-ets-23-maven-2026-05-08.log`, `ops/test-results/sprint-ets-23-smoke-2026-05-08.xml`, and `ops/test-results/sprint-ets-23-smoke-container-2026-05-08.log`.
+- Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, known issues, and handoffs for the Generator outcome.
+- Raze implementation review `.harness/evaluations/sprint-ets-23-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.90 for collection-shape-only canonical false PASS; fixed by requiring Feasibility-shaped resource evidence for canonical/status/result checks before PASS.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-23-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.97 with no required fixes.
+
+---
+
 ## 2026-05-08T19:33Z — Sprint 23 Part 2 Feasibility planning
 
 **Triggered by user instruction**: "Do it."

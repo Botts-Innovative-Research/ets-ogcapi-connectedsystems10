@@ -1,0 +1,118 @@
+artifact_type: adversarial_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+sprint: ets-23
+story: S-ETS-23-01
+subject: Sprint 23 Generator implementation - Part 2 Command Feasibility
+created_utc: "2026-05-08T20:08:05Z"
+verdict: GAPS_FOUND
+confidence: 0.90
+
+reviewed_scope:
+  implementation:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/VerifyPart2FeasibilityTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  reconciliation:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - ".harness/contracts/sprint-ets-23.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+  evidence_artifacts:
+    - "ops/test-results/sprint-ets-23-maven-2026-05-08.log"
+    - "ops/test-results/sprint-ets-23-smoke-2026-05-08.xml"
+    - "ops/test-results/sprint-ets-23-smoke-container-2026-05-08.log"
+  gates_not_rerun_by_reviewer:
+    - Maven
+    - TeamEngine smoke
+    - Docker formatter
+
+findings:
+  - id: RAZE-ETS23-IMPL-GAP-001
+    severity: high
+    category: false-pass-risk
+    status: open
+    summary: "`globalFeasibilityCollectionReadableWhenAvailable` can PASS `/req/feasibility/canonical-url` without actual Feasibility resource evidence."
+    details: >
+      Sprint 23 planning and OpenSpec require actual Feasibility resource evidence
+      before canonical/status/result PASS, and require SKIP when no Feasibility
+      resources are exposed. The runtime method
+      `globalFeasibilityCollectionReadableWhenAvailable` is described under
+      `REQ_CANONICAL_URL`, but after `/conf/feasibility` declaration it passes
+      whenever `GET /feasibility` returns HTTP 200 with an `items` array, including
+      an empty array. That creates a future false PASS on a declaring IUT that
+      exposes an empty `/feasibility` collection, or a generic collection shell,
+      without any actual Feasibility resource that can prove canonical URL behavior.
+    evidence:
+      - "OpenSpec scenario `SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001`: require actual Feasibility resource evidence before PASS and SKIP when no resources exist."
+      - "`Part2FeasibilityTests.globalFeasibilityCollectionReadableWhenAvailable` cites `REQ_CANONICAL_URL` and only checks HTTP 200 plus `items[]` shape."
+      - "`hasItemsOnlyCollectionShape` intentionally allows empty `items`, so an empty Feasibility collection can PASS this canonical-url-labeled assertion."
+      - "`VerifyPart2FeasibilityTests.itemsOnlyCollectionShapeAllowsEmptyFeasibilityCollections` locks in that empty collection shape as true."
+    required_fix: >
+      Change `globalFeasibilityCollectionReadableWhenAvailable` so it cannot PASS
+      `/req/feasibility/canonical-url` on collection shape alone. Acceptable fixes
+      include: SKIP when `/feasibility` has an empty `items` array, require at
+      least one item with Feasibility resource-specific evidence before PASS, or
+      remove/re-scope the method so only `feasibilityCanonicalResourceReadableWhenAvailable`
+      can PASS canonical resource evidence. Add/update helper regression coverage
+      to prevent empty `/feasibility` collections from satisfying canonical-url
+      resource evidence.
+
+checks:
+  official_identifier_correctness:
+    result: pass
+    evidence:
+      - "Implementation uses official OGC 23-002 `/req/feasibility` and `/conf/feasibility` constants."
+      - "Unit regression rejects `commandfeasibility` and `dynamic` identifier drift."
+  controlstream_false_pass:
+    result: pass
+    evidence:
+      - "All runtime assertions call `skipIfFeasibilityUndeclared()` before endpoint/resource checks."
+      - "Smoke shows all Feasibility tests SKIP because GeoRobotix does not declare `/conf/feasibility`; no PASS is inferred from `/conf/controlstream`."
+  public_iut_mutation_safety:
+    result: pass
+    evidence:
+      - "Static review found no Feasibility POST/PUT/PATCH/DELETE implementation path."
+      - "Archived no-mutation oracle reports `recognized_iut_request_logs=93` and zero IUT-bound POST/PUT/DELETE/PATCH."
+  normative_singular_endpoint:
+    result: pass
+    evidence:
+      - "`normativeControlStreamFeasibilityPath` returns `controlstream/{id}/feasibility`."
+      - "Unit regression asserts the plural `/controlstreams/{id}/feasibility` path is not used as normative PASS evidence."
+  canonical_status_result_resource_evidence:
+    result: gap
+    evidence:
+      - "Status and result endpoint tests require `selectedFeasibilityResource()` and therefore actual `/feasibility` resource evidence."
+      - "Canonical resource dereference test also requires `selectedFeasibilityResource()`."
+      - "However, `globalFeasibilityCollectionReadableWhenAvailable` can PASS under `REQ_CANONICAL_URL` without a resource; see RAZE-ETS23-IMPL-GAP-001."
+  testng_wiring:
+    result: pass
+    evidence:
+      - "testng.xml declares `<group name=\"part2feasibility\" depends-on=\"core common\"/>` and includes `Part2FeasibilityTests`."
+      - "`VerifyTestNGSuiteDependency` adds dependency-token, comma-rejection, group membership, and co-location regressions for `part2feasibility`."
+      - "Maven log shows `VerifyTestNGSuiteDependency` 49 tests, 0 failures, 0 errors."
+  gate_evidence:
+    result: pass
+    evidence:
+      - "Maven log reports `Tests run: 175, Failures: 0, Errors: 0, Skipped: 3` and `BUILD SUCCESS`."
+      - "Smoke XML reports `123 total / 71 passed / 0 failed / 52 skipped`."
+      - "Smoke Feasibility outcomes are 8 SKIP by missing `/conf/feasibility`, 0 Feasibility PASS."
+  docs_reconciliation:
+    result: pass
+    evidence:
+      - "OpenSpec, story, traceability, epic, contract, ops status, test-results, changelog, known issues, and handoffs reflect Sprint 23 partial implementation and gate evidence."
+      - "Planner handoff is superseded by Generator handoff; Generator handoff records Raze implementation review pending."
+
+required_fixes:
+  - "Prevent `globalFeasibilityCollectionReadableWhenAvailable` from PASSing `/req/feasibility/canonical-url` on an empty or generic `/feasibility` collection; require actual Feasibility resource evidence or SKIP/re-scope the assertion."
+
+reviewer_edits:
+  - ".harness/evaluations/sprint-ets-23-adversarial-implementation.yaml"

@@ -1,105 +1,77 @@
 agent: generator
-agent_role: dana
-status: complete_pending_raze_final
-sprint_number: "ets-22"
-sprint_run: "1 of 1"
-sprint_run_scope: ["S-ETS-22-01"]
-supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 20 close 2026-05-07T18:31:00Z)"
-started_at: "2026-05-08T12:50:55Z"
-finished_at: "2026-05-08T12:59:49Z"
-sprint_complete_after_run: true
+status: partial_implemented_ready_to_commit
+timestamp: "2026-05-08T20:04:32Z"
+sprint_number: "ets-23"
+sprint_name: "part2-feasibility"
+story:
+  id: "S-ETS-23-01"
+  title: "Part 2 Command Feasibility safety-gated subset"
+  file: "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
+contract_path: ".harness/contracts/sprint-ets-23.yaml"
+base_commit:
+  sha: "ab15704"
+  message: "Clarify Sprint 23 push status"
 
-run_summary:
-  status: "partial_implemented"
-  story:
-    id: "S-ETS-22-01"
-    title: "Part 2 Control Streams & Commands read-only subset"
-    status: "PARTIAL_IMPLEMENTED"
-    scope_closed:
-      - "official OGC 23-002 /req/controlstream and /conf/controlstream identifiers used"
-      - "TestNG group part2controlstream added"
-      - "Core/Common dependency wiring added without part2apicommon cascade"
-      - "exact /conf/controlstream declaration gate implemented"
-      - "explicit /conf/api-common prerequisite SKIP for full /conf/controlstream closure"
-      - "/controlstreams collection and selected ControlStream shape checks implemented"
-      - "/controlstreams/{id} observed resource read implemented without using it as canonical-url PASS evidence"
-      - "/controls/{id} canonical URL check SKIPs when the canonical path is not readable"
-      - "/controlstreams/{id}/schema command schema evidence implemented"
-      - "/controlstreams/{id}/commands endpoint availability implemented"
-      - "/commands canonical endpoint check SKIPs when global endpoint is not readable"
-      - "nested Command reference evidence requires populated Command/reference evidence"
-      - "bounded /systems/{systemId}/controlstreams read implemented"
-      - "zero default public-IUT POST/PUT/DELETE/PATCH evidence"
-    scope_open:
-      - "full /conf/controlstream closure until /conf/api-common prerequisite is declared or separately established"
-      - "global /commands endpoint positive evidence"
-      - "/controls/{id} canonical URL positive evidence"
-      - "populated Command resources and command-reference evidence"
-      - "Command creation, feasibility, status/result closure"
-      - "Part 2 JSON and SWE Common encodings"
-      - "Part 2 Create/Replace/Delete and Update mutation"
-      - "full command-body schema validation"
-    files_changed:
-      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamTests.java"
-      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/VerifyPart2ControlStreamTests.java"
-      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
-      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
-      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-      - "epics/stories/s-ets-22-01-part2-controlstream-planning.md"
-      - "_bmad/traceability.md"
-      - "epics/epic-ets-03-part2-classes.md"
-      - ".harness/contracts/sprint-ets-22.yaml"
-      - "ops/status.md"
-      - "ops/test-results.md"
-      - "ops/changelog.md"
-      - "ops/known-issues.md"
-      - "ops/test-results/sprint-ets-22-smoke-2026-05-08.xml"
-      - "ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log"
-      - "ops/test-results/sprint-ets-22-maven-2026-05-08.log"
+implementation_summary: |
+  Sprint 23 Generator implemented the safety-gated, declaration-gated Command
+  Feasibility subset. The implementation uses official OGC 23-002 identifiers
+  `/req/feasibility` and `/conf/feasibility`, keeps `/req/controlstream`
+  prerequisite honesty visible, uses the normative singular
+  `/controlstream/{csId}/feasibility` path, and implements no Feasibility
+  POST/PUT/DELETE/PATCH path for default public smoke.
 
-verification:
+files_added:
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/VerifyPart2FeasibilityTests.java"
+
+files_updated:
+  - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
+  - "epics/epic-ets-03-part2-classes.md"
+  - "_bmad/traceability.md"
+  - ".harness/contracts/sprint-ets-23.yaml"
+  - "ops/status.md"
+  - "ops/test-results.md"
+  - "ops/changelog.md"
+  - "ops/known-issues.md"
+
+gates:
   formatter:
     command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
     result: "BUILD SUCCESS"
-  mvn_via_docker:
+  maven:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "Tests run: 167, Failures: 0, Errors: 0, Skipped: 3"
-    log: "ops/test-results/sprint-ets-22-maven-2026-05-08.log"
+    surefire: "175 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-23-maven-2026-05-08.log"
   teamengine_smoke:
-    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s22 bash scripts/smoke-test.sh"
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s23-gapfix bash scripts/smoke-test.sh"
     result: "SMOKE PASS"
-    testng: "total=115 passed=71 failed=0 skipped=44"
-    report: "ops/test-results/sprint-ets-22-smoke-2026-05-08.xml"
-    log: "ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log"
-    no_mutation_oracle: "recognized_iut_request_logs=91; zero IUT-bound POST/PUT/DELETE/PATCH"
+    testng: "122 total / 71 passed / 0 failed / 51 skipped"
+    report: "ops/test-results/sprint-ets-23-smoke-2026-05-08.xml"
+    log: "ops/test-results/sprint-ets-23-smoke-container-2026-05-08.log"
+    no_mutation_oracle: "recognized_iut_request_logs=93; zero IUT-bound POST/PUT/DELETE/PATCH"
 
 iut_state:
-  georobotix_controlstream: "GeoRobotix declares /conf/controlstream but not /conf/api-common; Sprint 22 scoped checks run while full /conf/controlstream closure SKIPs honestly."
-  controlstream_runtime_delta: "Sprint 21 smoke 104 -> Sprint 22 smoke 115 (11 new ControlStream @Tests; 7 PASS, 4 SKIP on GeoRobotix)."
+  georobotix_feasibility: "GeoRobotix does not declare /conf/feasibility; all 7 Feasibility runtime tests SKIP with no feasibility POST."
+  runtime_delta: "Sprint 22 smoke 115 -> Sprint 23 smoke 122 (7 new Feasibility @Tests; 0 PASS, 7 SKIP on GeoRobotix)."
   honest_skips:
-    - "missing /conf/api-common prerequisite"
-    - "/controls/{id} returned HTTP 400, so canonical-url is not passed from /controlstreams/{id}"
-    - "/commands returned HTTP 400, so cmd-canonical-endpoint is not passed"
-    - "nested commands collection empty, so cmd-ref-from-controlstream is not passed"
+    - "missing /conf/feasibility declaration"
+    - "no Feasibility POST issued before declaration gate"
+    - "no /conf/feasibility PASS inferred from /conf/controlstream"
 
 next_agent: "adversarial-reviewer"
-raze_review:
-  artifact: ".harness/evaluations/sprint-ets-22-adversarial-implementation.yaml"
+raze_implementation_review:
+  artifact: ".harness/evaluations/sprint-ets-23-adversarial-implementation.yaml"
   verdict: "GAPS_FOUND"
-  confidence: 0.91
-  required_fixes_status: "docs/handoff and Maven evidence archive gaps addressed after review"
-  gapfix_artifact: ".harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml"
-  gapfix_verdict: "APPROVE"
-  gapfix_confidence: 0.95
+  confidence: 0.90
+  required_fix: "Removed collection-shape-only canonical PASS evidence; canonical/status/result checks now require an actual Feasibility-shaped resource."
+raze_gapfix_review:
+  artifact: ".harness/evaluations/sprint-ets-23-adversarial-gapfix.yaml"
+  verdict: "APPROVE"
+  confidence: 0.97
+  required_fixes: []
 
-commit:
-  sha: "38cb3c0"
-  message: "Implement Sprint 22 Part 2 ControlStream"
-
-push:
-  result: "succeeded"
-  remote: "git@github.com:Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git"
-  pushed_commit: "38cb3c0"
-
-next_action: "Use .harness/handoffs/planner-handoff.yaml for Sprint 23 Feasibility; planning is Raze-approved and Generator kickoff is pending."
+next_action: "Commit/push Sprint 23 Generator, then plan the next Part 2 sprint item."

@@ -153,6 +153,13 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String PART2_CONTROLSTREAM_GROUP = "part2controlstream";
 
+	/**
+	 * Sprint 23 S-ETS-23-01 — Part 2 Feasibility safety-gated subset group (depends on
+	 * Core and Common; runtime checks keep /req/controlstream prerequisite honesty
+	 * visible and default smoke performs no feasibility POST).
+	 */
+	private static final String PART2_FEASIBILITY_GROUP = "part2feasibility";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -223,6 +230,9 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final List<Class<?>> PART2_CONTROLSTREAM_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests.class);
+
+	private static final List<Class<?>> PART2_FEASIBILITY_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -1811,6 +1821,115 @@ public class VerifyTestNGSuiteDependency {
 						+ part2ControlStreamClassNames
 						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
 						+ "(Part2ControlStream → Core + Common) resolves within scope. See Sprint 22 S-ETS-22-01.",
+				coAlloc);
+	}
+
+	// ===== Sprint 23 S-ETS-23-01 — Part 2 Feasibility group =====
+	// Feasibility depends on Core and Common, not Part2ControlStream, so the class can
+	// declaration-SKIP before public-IUT POST behavior is even reachable. Runtime checks
+	// still make /req/controlstream prerequisite closure explicit.
+
+	/**
+	 * Sprint 23 S-ETS-23-01 (REQ-ETS-PART2-004): the canonical testng.xml SHALL declare
+	 * {@code <group name="part2feasibility" depends-on="core common"/>}.
+	 */
+	@org.junit.Test
+	public void testPart2FeasibilityGroupDependsOnCoreAndCommon() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(PART2_FEASIBILITY_GROUP)) {
+				String dependsOn = deps.get(PART2_FEASIBILITY_GROUP);
+				assertNotNull("group '" + PART2_FEASIBILITY_GROUP + "' has null depends-on attribute", dependsOn);
+				assertFalse(
+						"group '" + PART2_FEASIBILITY_GROUP + "' depends-on '" + dependsOn
+								+ "' uses comma syntax, which TestNG treats as a nonexistent single group at runtime",
+						dependsOn.contains(","));
+				Set<String> dependencyTokens = dependencyTokens(dependsOn);
+				assertTrue("group '" + PART2_FEASIBILITY_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ CORE_GROUP + "'", dependencyTokens.contains(CORE_GROUP));
+				assertTrue("group '" + PART2_FEASIBILITY_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ COMMON_GROUP + "'", dependencyTokens.contains(COMMON_GROUP));
+				assertFalse("group '" + PART2_FEASIBILITY_GROUP
+						+ "' must not depend on part2controlstream; otherwise an undeclared /conf/feasibility class can cascade-SKIP before its own declaration/no-POST guard reports the reason",
+						dependencyTokens.contains(PART2_CONTROLSTREAM_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue("testng.xml does not declare <group name=\"" + PART2_FEASIBILITY_GROUP
+				+ "\" depends-on=\"core common\"/> — see Sprint 23 S-ETS-23-01.", foundDependency);
+	}
+
+	/**
+	 * Sprint 23 S-ETS-23-01: every Part 2 Feasibility @Test method SHALL carry
+	 * {@code groups = "part2feasibility"}.
+	 */
+	@org.junit.Test
+	public void testEveryPart2FeasibilityTestMethodCarriesPart2FeasibilityGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalPart2Feasibility = 0;
+		for (Class<?> c : PART2_FEASIBILITY_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalPart2Feasibility++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(PART2_FEASIBILITY_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Part 2 Feasibility conformance classes; found 0",
+				totalPart2Feasibility > 0);
+		assertTrue("Part 2 Feasibility @Test methods missing groups=\"" + PART2_FEASIBILITY_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 23 S-ETS-23-01: Part 2 Feasibility classes MUST be co-located in the SAME
+	 * {@code <test>} block as Core and Common.
+	 */
+	@org.junit.Test
+	public void testPart2FeasibilityCoLocatedWithCoreAndCommon() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> coreClassNames = new HashSet<>();
+		for (Class<?> c : CORE_CLASSES) {
+			coreClassNames.add(c.getName());
+		}
+		Set<String> commonClassNames = new HashSet<>();
+		for (Class<?> c : COMMON_CLASSES) {
+			commonClassNames.add(c.getName());
+		}
+		Set<String> part2FeasibilityClassNames = new HashSet<>();
+		for (Class<?> c : PART2_FEASIBILITY_CLASSES) {
+			part2FeasibilityClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllCore = xtClasses.containsAll(coreClassNames);
+			boolean hasAllCommon = xtClasses.containsAll(commonClassNames);
+			boolean hasAnyPart2Feasibility = !java.util.Collections.disjoint(xtClasses, part2FeasibilityClassNames);
+			if (hasAllCore && hasAllCommon && hasAnyPart2Feasibility) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue(
+				"Core (" + coreClassNames + "), Common (" + commonClassNames + "), and Part 2 Feasibility ("
+						+ part2FeasibilityClassNames
+						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
+						+ "(Part2Feasibility → Core + Common) resolves within scope. See Sprint 23 S-ETS-23-01.",
 				coAlloc);
 	}
 

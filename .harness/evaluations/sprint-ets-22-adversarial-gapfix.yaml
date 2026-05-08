@@ -1,0 +1,54 @@
+artifact_type: adversarial_gapfix_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+sprint: ets-22
+story: S-ETS-22-01
+subject: Sprint 22 Generator implementation gap-fix review
+created_utc: "2026-05-08T13:06:05Z"
+verdict: APPROVE
+confidence: 0.95
+
+scope:
+  requested_focus:
+    - "Verify closure of RAZE-ETS22-IMPL-GAP-001: docs/handoff reconciliation after Generator implementation."
+    - "Verify closure of RAZE-ETS22-IMPL-GAP-002: durable Maven evidence archive and references."
+  not_rerun:
+    - Docker
+    - Maven
+    - TeamEngine
+
+gap_closure:
+  RAZE-ETS22-IMPL-GAP-001:
+    status: closed
+    evidence:
+      - "ops/status.md now has a Sprint ets-22 Generator Evidence section with implemented scope, exact Maven/smoke totals, no-mutation proof, missing `/conf/api-common` prerequisite honesty, `/controls/{id}` and `/commands` HTTP 400 SKIPs, and empty nested Commands SKIP."
+      - "ops/status.md keeps the Planning Evidence section as history but explicitly says the next action was completed by Sprint ets-22 Generator and points to the Generator status below."
+      - "ops/test-results.md now records Sprint 22 Generator implementation evidence, not planning-only/no-code status."
+      - ".harness/handoffs/planner-handoff.yaml now has `status: superseded_by_generator` and points to `.harness/handoffs/generator-handoff.yaml`."
+      - ".harness/handoffs/generator-handoff.yaml records `partial_implemented`, exact gate evidence, honest SKIPs, zero-mutation oracle evidence, and pending commit/push next action."
+      - "OpenSpec/story/traceability/epic/contract/known-issues/changelog references inspected for Sprint 22 now reflect partial implementation, official `/req/controlstream` and `/conf/controlstream`, `/conf/api-common` prerequisite limits, and false-PASS guardrails."
+  RAZE-ETS22-IMPL-GAP-002:
+    status: closed
+    evidence:
+      - "Durable Maven log exists: `ops/test-results/sprint-ets-22-maven-2026-05-08.log`."
+      - "Log contains `Tests run: 167, Failures: 0, Errors: 0, Skipped: 3` and `BUILD SUCCESS`."
+      - "ops/test-results.md, ops/status.md, .harness/contracts/sprint-ets-22.yaml, and .harness/handoffs/generator-handoff.yaml reference the Maven log."
+
+verified_evidence:
+  maven:
+    artifact: "ops/test-results/sprint-ets-22-maven-2026-05-08.log"
+    summary: "167 tests / 0 failures / 0 errors / 3 skipped"
+    build: "BUILD SUCCESS"
+  smoke:
+    artifact: "ops/test-results/sprint-ets-22-smoke-2026-05-08.xml"
+    summary: "115 total / 71 passed / 0 failed / 44 skipped"
+  smoke_container_log: "ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log"
+  no_mutation: "Previously verified from archived smoke container log: recognized_iut_request_logs=91; zero IUT-bound POST/PUT/DELETE/PATCH."
+
+residual_notes:
+  - "No implementation code changes were reviewed beyond the focused gap closure."
+  - "No additional Docker/Maven/TeamEngine rerun is needed for this gap-fix review because the archived Maven and smoke artifacts are present and internally consistent."
+
+required_fixes: []
+reviewer_edits:
+  - ".harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml"

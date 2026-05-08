@@ -1,0 +1,132 @@
+artifact_type: adversarial_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+sprint: ets-22
+story: S-ETS-22-01
+subject: Sprint 22 Generator implementation - Part 2 Control Streams & Commands
+created_utc: "2026-05-08T13:02:19Z"
+verdict: GAPS_FOUND
+confidence: 0.91
+
+reviewed_scope:
+  implementation:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/VerifyPart2ControlStreamTests.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+  reconciliation_sample:
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - epics/stories/s-ets-22-01-part2-controlstream-planning.md
+    - epics/epic-ets-03-part2-classes.md
+    - _bmad/traceability.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - .harness/contracts/sprint-ets-22.yaml
+    - .harness/handoffs/planner-handoff.yaml
+    - .harness/handoffs/generator-handoff.yaml
+  evidence_artifacts:
+    - ops/test-results/sprint-ets-22-smoke-2026-05-08.xml
+    - ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log
+
+findings:
+  - id: RAZE-ETS22-IMPL-GAP-001
+    severity: high
+    category: spec-doc-reconciliation
+    status: open
+    summary: Sprint 22 implementation is not reconciled consistently across ops and handoff docs.
+    details: >
+      The code is now a Generator implementation, but key operational handoff
+      records still describe Sprint ets-22 as planning complete with the next
+      action to start Generator. `ops/status.md` still has a "Sprint ets-22
+      Planning Evidence" section and says "Next action: start Generator for
+      S-ETS-22-01". `ops/test-results.md` still records Sprint 22 as a
+      planning-only change set with no Java code changed and no Maven/TeamEngine
+      gates required. `.harness/handoffs/planner-handoff.yaml` remains the active
+      planner handoff with "Generator can start" language. These stale records
+      create audit drift after the Generator code and smoke artifacts exist.
+    required_fix: >
+      Reconcile the Sprint 22 implementation state across OpenSpec/story,
+      traceability, epic, contract if retained as sprint contract, ops/status,
+      ops/test-results, ops/changelog, known issues if applicable, and the
+      generator handoff. Record the exact Maven and smoke evidence, scoped
+      ControlStream PASS/SKIP behavior, missing `/conf/api-common` prerequisite
+      honesty, and that `/commands` and `/controls/{id}` remain non-200 false-PASS
+      guardrails.
+
+  - id: RAZE-ETS22-IMPL-GAP-002
+    severity: medium
+    category: evidence-durability
+    status: open
+    summary: Maven success is claimed but no durable Sprint 22 Maven log is archived under ops/test-results.
+    details: >
+      User-supplied evidence says Maven via Docker passed with 167 run, 0
+      failures, 0 errors, 3 skipped. I found smoke XML and container logs under
+      `ops/test-results`, and local `target/surefire-reports` is consistent with
+      the new structural tests, but no `ops/test-results/*sprint-ets-22*maven*`
+      artifact exists. `target/` is not a durable review artifact.
+    required_fix: >
+      Archive or add a durable Sprint 22 Maven log, for example
+      `ops/test-results/sprint-ets-22-maven-2026-05-08.log`, and reference it
+      from `ops/test-results.md` and the generator handoff.
+
+checks:
+  official_ogc_identifiers:
+    result: pass
+    evidence:
+      - "Part2ControlStreamTests uses official `http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream` and `/conf/controlstream` constants."
+      - "VerifyPart2ControlStreamTests rejects `dynamic` drift in the joined constants."
+  testng_group_wiring:
+    result: pass
+    evidence:
+      - "testng.xml declares `<group name=\"part2controlstream\" depends-on=\"core common\"/>`."
+      - "VerifyTestNGSuiteDependency tokenizes dependencies, rejects comma syntax, requires `core` and `common`, and asserts the group does not depend on `part2apicommon`."
+      - "Smoke XML shows Part2ControlStreamTests methods in group `part2controlstream` with depends-on-groups `core, common`."
+  api_common_prerequisite_honesty:
+    result: pass
+    evidence:
+      - "Runtime method `controlStreamApiCommonPrerequisiteVisibleForFullClosure` SKIPs when `/conf/api-common` is absent, while allowing scoped endpoint checks."
+      - "Smoke SKIP message explicitly says full `/conf/controlstream` closure is prerequisite-incomplete."
+  canonical_url_alias_false_pass:
+    result: pass
+    evidence:
+      - "`controlStreamCanonicalUrlReadableWhenControlsPathAvailable` probes `/controls/{id}` and SKIPs on non-200."
+      - "Smoke SKIP: `/controls/0m4qpft9sdag returned HTTP 400; /controlstreams/{id} alias evidence is not used to PASS the canonical URL requirement.`"
+  commands_endpoint_false_pass:
+    result: pass
+    evidence:
+      - "`globalCommandsEndpointReadableWhenAvailable` probes `/commands?limit=2` and SKIPs on non-200."
+      - "Smoke SKIP: `/commands returned HTTP 400; cannot PASS the global Commands canonical endpoint requirement.`"
+  empty_nested_commands_false_pass:
+    result: pass
+    evidence:
+      - "`commandsReferenceSelectedControlStreamWhenNestedCollectionPopulated` SKIPs empty nested Command collections."
+      - "Smoke SKIP: endpoint availability is not Command reference PASS evidence."
+  no_mutation:
+    result: pass
+    evidence:
+      - "Implementation review found ControlStream runtime probes using GET."
+      - "`python3 scripts/no-mutation-oracle.py ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log https://api.georobotix.io/ogc/t18/api` reported `recognized_iut_request_logs=91` and no IUT-bound mutating requests."
+  scope_control:
+    result: pass
+    evidence:
+      - "No Part 2 mutation, command creation, feasibility, SWE Common, CRD, or Update assertions were added in the ControlStream implementation."
+  smoke_evidence:
+    result: pass
+    evidence:
+      - "Archived smoke XML reports total=115, passed=71, failed=0, skipped=44."
+      - "Part2ControlStreamTests smoke outcomes include scoped endpoint PASS evidence plus honest SKIPs for `/conf/api-common`, `/controls/{id}`, `/commands`, and empty nested Commands."
+  maven_evidence:
+    result: concern
+    evidence:
+      - "User supplied Maven via Docker result: 167 run, 0 failures, 0 errors, 3 skipped."
+      - "No durable Sprint 22 Maven log was found under `ops/test-results`."
+
+required_fixes:
+  - "Reconcile stale Sprint 22 planning-only / start-Generator language across docs and handoffs with the implemented Generator state and exact gate evidence."
+  - "Archive the Maven 167/0/0/3 log under `ops/test-results` and reference it from ops/test-results and the generator handoff."
+
+required_code_fixes: []
+reviewer_edits:
+  - .harness/evaluations/sprint-ets-22-adversarial-implementation.yaml
+docker_or_maven_rerun_by_reviewer: false

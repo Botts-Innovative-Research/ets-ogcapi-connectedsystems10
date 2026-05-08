@@ -1,6 +1,6 @@
 # Story S-ETS-22-01: Part 2 Control Streams & Commands Read-Only Subset
 
-> Status: Planned | Epic: epic-ets-03-part2-classes | Sprint: ets-22 | Last updated: 2026-05-07
+> Status: Partial Implemented | Epic: epic-ets-03-part2-classes | Sprint: ets-22 | Last updated: 2026-05-08
 
 ## Context
 
@@ -8,7 +8,7 @@ Sprint 22 continues Part 2 after Sprint 21 Datastreams & Observations. The targe
 
 ## Scope
 
-Plan the first read-only `REQ-ETS-PART2-003` Generator increment:
+Implement the first read-only `REQ-ETS-PART2-003` Generator increment:
 
 1. `/conf/controlstream` declaration gate.
 2. `GET /controlstreams` ControlStream collection availability.
@@ -60,8 +60,17 @@ Plan the first read-only `REQ-ETS-PART2-003` Generator increment:
 - [x] Traceability maps `FR-ETS-32` to `S-ETS-22-01`.
 - [x] Ops status, changelog, test-results, known issues, and planner handoff record Sprint 22 planning evidence.
 - [x] Raze reviews Sprint 22 planning changes (`APPROVE` 0.93; no required fixes).
-- [ ] Generator implements the planned read-only ControlStream subset.
-- [ ] Formatter, Maven, and GeoRobotix TeamEngine smoke are run after Generator code changes.
+- [x] Generator implements the planned read-only ControlStream subset.
+- [x] Formatter, Maven, and GeoRobotix TeamEngine smoke are run after Generator code changes.
+
+## Generator Evidence
+
+- Implementation: `Part2ControlStreamTests` adds declaration-gated checks for `/conf/controlstream`, `/controlstreams`, `/controlstreams/{id}`, `/controlstreams/{id}/schema`, `/controlstreams/{id}/commands`, `/commands` when available, `/controls/{id}` when available, populated nested Command reference evidence, and bounded `/systems/{systemId}/controlstreams`.
+- Structural regressions: `VerifyPart2ControlStreamTests` prevents generic JSON and empty nested Command collections from becoming false PASS evidence; `VerifyTestNGSuiteDependency` keeps `part2controlstream` co-located with Core/Common and independent of `part2apicommon` cascade.
+- Maven: `bash scripts/mvn-test-via-docker.sh` reported `167 tests / 0 failures / 0 errors / 3 skipped`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s22 bash scripts/smoke-test.sh` reported `115 total / 71 passed / 0 failed / 44 skipped`.
+- GeoRobotix runtime outcome: seven ControlStream tests PASS; four SKIP honestly for missing `/conf/api-common`, `/controls/{id}` HTTP 400, `/commands` HTTP 400, and empty nested Command reference evidence.
+- Smoke artifacts: `ops/test-results/sprint-ets-22-smoke-2026-05-08.xml` and `ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log`.
 
 ## Out Of Scope
 
@@ -78,3 +87,8 @@ Plan the first read-only `REQ-ETS-PART2-003` Generator increment:
 - Verdict: `APPROVE`
 - Confidence: 0.93
 - Required fixes: none
+- Implementation artifact: `.harness/evaluations/sprint-ets-22-adversarial-implementation.yaml`
+- Implementation verdict: `GAPS_FOUND` confidence 0.91 for docs/evidence gaps only
+- Implementation gap status: planner handoff superseded and Maven evidence archived at `ops/test-results/sprint-ets-22-maven-2026-05-08.log`
+- Gap-fix artifact: `.harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml`
+- Gap-fix verdict: `APPROVE` confidence 0.95 with no required fixes

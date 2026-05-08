@@ -146,6 +146,13 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String PART2_DATASTREAM_GROUP = "part2datastream";
 
+	/**
+	 * Sprint 22 S-ETS-22-01 — Part 2 ControlStream read-only subset group (depends on
+	 * Core and Common for scoped endpoint checks; full /conf/controlstream closure
+	 * remains blocked when /conf/api-common is absent).
+	 */
+	private static final String PART2_CONTROLSTREAM_GROUP = "part2controlstream";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -210,6 +217,12 @@ public class VerifyTestNGSuiteDependency {
 	/** Sprint 21 S-ETS-21-01 — Part 2 Datastream class set for structural assertions. */
 	private static final List<Class<?>> PART2_DATASTREAM_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests.class);
+
+	/**
+	 * Sprint 22 S-ETS-22-01 — Part 2 ControlStream class set for structural assertions.
+	 */
+	private static final List<Class<?>> PART2_CONTROLSTREAM_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -1687,6 +1700,117 @@ public class VerifyTestNGSuiteDependency {
 						+ part2DatastreamClassNames
 						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
 						+ "(Part2Datastream → Core + Common) resolves within scope. See Sprint 21 S-ETS-21-01.",
+				coAlloc);
+	}
+
+	// ===== Sprint 22 S-ETS-22-01 — Part 2 ControlStream group =====
+	// ControlStream depends on Core and Common, not Part2ApiCommon, so scoped endpoint
+	// evidence can run when /conf/controlstream is declared but /conf/api-common is
+	// absent. Runtime checks still make full /conf/controlstream closure
+	// prerequisite-incomplete.
+
+	/**
+	 * Sprint 22 S-ETS-22-01 (REQ-ETS-PART2-003): the canonical testng.xml SHALL declare
+	 * {@code <group name="part2controlstream" depends-on="core common"/>}.
+	 */
+	@org.junit.Test
+	public void testPart2ControlStreamGroupDependsOnCoreAndCommon() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(PART2_CONTROLSTREAM_GROUP)) {
+				String dependsOn = deps.get(PART2_CONTROLSTREAM_GROUP);
+				assertNotNull("group '" + PART2_CONTROLSTREAM_GROUP + "' has null depends-on attribute", dependsOn);
+				assertFalse(
+						"group '" + PART2_CONTROLSTREAM_GROUP + "' depends-on '" + dependsOn
+								+ "' uses comma syntax, which TestNG treats as a nonexistent single group at runtime",
+						dependsOn.contains(","));
+				Set<String> dependencyTokens = dependencyTokens(dependsOn);
+				assertTrue("group '" + PART2_CONTROLSTREAM_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ CORE_GROUP + "'", dependencyTokens.contains(CORE_GROUP));
+				assertTrue("group '" + PART2_CONTROLSTREAM_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ COMMON_GROUP + "'", dependencyTokens.contains(COMMON_GROUP));
+				assertFalse("group '" + PART2_CONTROLSTREAM_GROUP
+						+ "' must not depend on part2apicommon; otherwise GeoRobotix /conf/controlstream endpoint checks cascade-SKIP before scoped evidence can run",
+						dependencyTokens.contains(PART2_API_COMMON_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue("testng.xml does not declare <group name=\"" + PART2_CONTROLSTREAM_GROUP
+				+ "\" depends-on=\"core common\"/> — see Sprint 22 S-ETS-22-01.", foundDependency);
+	}
+
+	/**
+	 * Sprint 22 S-ETS-22-01: every Part 2 ControlStream @Test method SHALL carry
+	 * {@code groups = "part2controlstream"}.
+	 */
+	@org.junit.Test
+	public void testEveryPart2ControlStreamTestMethodCarriesPart2ControlStreamGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalPart2ControlStream = 0;
+		for (Class<?> c : PART2_CONTROLSTREAM_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalPart2ControlStream++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(PART2_CONTROLSTREAM_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Part 2 ControlStream conformance classes; found 0",
+				totalPart2ControlStream > 0);
+		assertTrue(
+				"Part 2 ControlStream @Test methods missing groups=\"" + PART2_CONTROLSTREAM_GROUP + "\": " + offenders,
+				offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 22 S-ETS-22-01: Part 2 ControlStream classes MUST be co-located in the SAME
+	 * {@code <test>} block as Core and Common.
+	 */
+	@org.junit.Test
+	public void testPart2ControlStreamCoLocatedWithCoreAndCommon() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> coreClassNames = new HashSet<>();
+		for (Class<?> c : CORE_CLASSES) {
+			coreClassNames.add(c.getName());
+		}
+		Set<String> commonClassNames = new HashSet<>();
+		for (Class<?> c : COMMON_CLASSES) {
+			commonClassNames.add(c.getName());
+		}
+		Set<String> part2ControlStreamClassNames = new HashSet<>();
+		for (Class<?> c : PART2_CONTROLSTREAM_CLASSES) {
+			part2ControlStreamClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasAllCore = xtClasses.containsAll(coreClassNames);
+			boolean hasAllCommon = xtClasses.containsAll(commonClassNames);
+			boolean hasAnyPart2ControlStream = !java.util.Collections.disjoint(xtClasses, part2ControlStreamClassNames);
+			if (hasAllCore && hasAllCommon && hasAnyPart2ControlStream) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue(
+				"Core (" + coreClassNames + "), Common (" + commonClassNames + "), and Part 2 ControlStream ("
+						+ part2ControlStreamClassNames
+						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
+						+ "(Part2ControlStream → Core + Common) resolves within scope. See Sprint 22 S-ETS-22-01.",
 				coAlloc);
 	}
 

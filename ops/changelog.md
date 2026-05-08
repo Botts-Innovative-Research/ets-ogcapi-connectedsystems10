@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-08T12:50Z — Sprint 22 Part 2 ControlStream Generator
+
+**Triggered by user instruction**: "Kick off Generator for S-ETS-22-01."
+
+- Implemented `S-ETS-22-01` as a read-only, declaration-gated Part 2 Control Streams & Commands subset.
+- Added `Part2ControlStreamTests` for `/conf/controlstream`, `/controlstreams`, `/controlstreams/{id}`, `/controlstreams/{id}/schema`, `/controlstreams/{id}/commands`, `/commands` when available, `/controls/{id}` when available, populated nested Command reference evidence, and bounded `/systems/{systemId}/controlstreams`.
+- Preserved prerequisite honesty: scoped checks run when `/conf/controlstream` is declared, while full `/conf/controlstream` closure SKIPs when `/conf/api-common` is absent.
+- Added helper and TestNG structural regressions so generic JSON cannot masquerade as ControlStream/Command evidence and `part2controlstream` remains co-located with Core/Common.
+- Ran formatter, Maven, and TeamEngine smoke. Maven: `167 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke: `115 total / 71 passed / 0 failed / 44 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 91 recognized request-log entries.
+- Runtime outcome: seven ControlStream tests PASS; four SKIP honestly for missing `/conf/api-common`, `/controls/{id}` HTTP 400, `/commands` HTTP 400, and empty nested Command reference evidence.
+- Archived smoke artifacts under `ops/test-results/sprint-ets-22-smoke-2026-05-08.xml` and `ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log`.
+- Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, known issues, and Generator handoff for the Generator outcome.
+- Raze implementation review `.harness/evaluations/sprint-ets-22-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.91 for docs/evidence gaps only; superseded the planner handoff and archived `ops/test-results/sprint-ets-22-maven-2026-05-08.log`.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.95 with no required fixes.
+
+---
+
 ## 2026-05-07T21:55Z — Sprint 22 Part 2 ControlStream planning
 
 **Triggered by user instruction**: "Do Sprint 22 planning."

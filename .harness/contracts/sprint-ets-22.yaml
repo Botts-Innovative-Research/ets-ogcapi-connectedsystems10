@@ -1,11 +1,12 @@
-# Sprint 22 contract - Part 2 Control Streams & Commands read-only planning
+# Sprint 22 contract - Part 2 Control Streams & Commands read-only subset
 
 sprint: "ets-22"
 sprint_name: "part2-controlstream"
 type: "feature-expansion"
 created: "2026-05-07T21:55:46Z"
+implemented: "2026-05-08T12:59:49Z"
 description: |
-  Sprint 22 plans the first read-only, declaration-gated OGC 23-002
+  Sprint 22 implements the first read-only, declaration-gated OGC 23-002
   Control Streams & Commands Generator increment. It does not implement
   mutation, command creation, command feasibility, Part 2 JSON, SWE Common,
   or full command-body schema validation.
@@ -23,7 +24,7 @@ stories:
 
 requirements:
   modified_reqs:
-    - "REQ-ETS-PART2-003 (/req/controlstream - planned)"
+    - "REQ-ETS-PART2-003 (/req/controlstream - partial implemented)"
     - "REQ-ETS-PART2-004..014 (remaining placeholders renumbered after ControlStream split)"
   new_reqs: []
 
@@ -50,8 +51,8 @@ success_criteria:
   no_code_changes_in_planning: true
   no_part2_mutation: true
   no_command_creation_or_feasibility_implementation: true
-  maven_verified: false
-  teamengine_smoke_verified: false
+  maven_verified: true
+  teamengine_smoke_verified: true
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
@@ -135,3 +136,52 @@ raze_review:
   plan_verdict: "APPROVE"
   plan_confidence: 0.93
   required_fixes: []
+  implementation_artifact: ".harness/evaluations/sprint-ets-22-adversarial-implementation.yaml"
+  implementation_verdict: "GAPS_FOUND"
+  implementation_confidence: 0.91
+  implementation_required_fixes_status: "docs/handoff and Maven evidence archive gaps addressed after review"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml"
+  gapfix_verdict: "APPROVE"
+  gapfix_confidence: 0.95
+  gapfix_required_fixes: []
+
+generator_evidence:
+  files_added:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/VerifyPart2ControlStreamTests.java"
+  files_updated:
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  runtime_scope:
+    - "/conf/controlstream declaration gate"
+    - "/conf/api-common prerequisite SKIP for full closure"
+    - "/controlstreams collection and selected item shape"
+    - "/controlstreams/{id}/schema"
+    - "/controlstreams/{id}/commands endpoint availability"
+    - "/commands canonical endpoint only when readable"
+    - "/controls/{id} canonical URL only when readable"
+    - "nested Command reference evidence only when populated"
+    - "/systems/{systemId}/controlstreams bounded read"
+  formatter:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+    result: "BUILD SUCCESS"
+  maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    result: "BUILD SUCCESS"
+    surefire: "167 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-22-maven-2026-05-08.log"
+  teamengine_smoke:
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s22 bash scripts/smoke-test.sh"
+    result: "SMOKE PASS"
+    testng: "115 total / 71 passed / 0 failed / 44 skipped"
+    report: "ops/test-results/sprint-ets-22-smoke-2026-05-08.xml"
+    log: "ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log"
+    no_mutation_oracle: "recognized_iut_request_logs=91; zero IUT-bound POST/PUT/DELETE/PATCH"
+  georobotix_outcome:
+    controlstream_passes: 7
+    controlstream_skips: 4
+    skip_reasons:
+      - "missing /conf/api-common prerequisite"
+      - "/controls/{id} returned HTTP 400"
+      - "/commands returned HTTP 400"
+      - "nested Command collection was empty"

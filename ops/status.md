@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T22:03Z
+Last updated: 2026-05-08T12:59Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-21.yaml`
+- `.harness/contracts/sprint-ets-22.yaml`
 
 ## Current State
 
@@ -41,9 +41,9 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
-- Current sprint status: Sprint ets-22 Part 2 Control Streams & Commands planning complete, Raze-approved, committed as `2ffed0c`, and pushed over SSH.
-- Latest pushed implementation commit: `b1df419 Implement Sprint 21 Part 2 Datastream`; follow-up reconciliation commits `948060c` and `5c4bcf0` were pushed after it.
-- Push status: remote switched to SSH and latest `git push origin main` succeeded on 2026-05-07T22:04Z.
+- Current sprint status: Sprint ets-22 Part 2 Control Streams & Commands Generator implemented locally as a partial read-only subset; implementation gates passed and Raze implementation review is in progress.
+- Latest pushed implementation commit: `b1df419 Implement Sprint 21 Part 2 Datastream`; follow-up reconciliation commits `948060c` and `5c4bcf0` were pushed after it. Sprint 22 planning commit `2ffed0c` is pushed.
+- Push status: remote switched to SSH and latest `git push origin main` succeeded on 2026-05-07T22:04Z. Sprint 22 Generator implementation is not committed yet.
 
 ## Sprint ets-20 Generator Evidence
 
@@ -119,7 +119,21 @@ Part 2 Control Streams & Commands read-only subset:
 - Raze planning review `.harness/evaluations/sprint-ets-22-plan-adversarial.yaml` returned `APPROVE` confidence 0.93 with no required fixes.
 - Commit/push: `2ffed0c Plan Sprint 22 ControlStream` pushed over SSH on 2026-05-07 (`5c4bcf0..2ffed0c main -> main`).
 - Out of scope: mutation, command creation, command feasibility, Command status/result closure, Part 2 JSON, SWE Common encodings, Create/Replace/Delete, Update, and command result validation against ControlStream schema.
-- Next action: start Generator for `S-ETS-22-01`.
+- Next action completed by Sprint ets-22 Generator; continue from Sprint ets-22 Generator status below.
+
+## Sprint ets-22 Generator Evidence
+
+Part 2 Control Streams & Commands read-only subset:
+
+- Story: `epics/stories/s-ets-22-01-part2-controlstream-planning.md`
+- Contract: `.harness/contracts/sprint-ets-22.yaml`
+- Scope implemented: declaration-gated `/conf/controlstream`, `/controlstreams`, selected `/controlstreams/{id}`, `/controlstreams/{id}/schema`, `/controlstreams/{id}/commands`, bounded `/systems/{systemId}/controlstreams`, `/commands` only when readable, `/controls/{id}` only when readable, and populated nested Command reference evidence only when present.
+- Implementation: `Part2ControlStreamTests` adds the runtime checks and full-closure `/conf/api-common` prerequisite SKIP; `VerifyPart2ControlStreamTests` and `VerifyTestNGSuiteDependency` add helper and TestNG structural regressions.
+- Verification: formatter BUILD SUCCESS; Maven `167 tests / 0 failures / 0 errors / 3 skipped` archived at `ops/test-results/sprint-ets-22-maven-2026-05-08.log`; GeoRobotix TeamEngine smoke `115 total / 71 passed / 0 failed / 44 skipped` archived at `ops/test-results/sprint-ets-22-smoke-2026-05-08.xml`.
+- No-mutation proof: GeoRobotix smoke recognized 91 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries.
+- Runtime outcome: GeoRobotix declares `/conf/controlstream` but not `/conf/api-common`, so scoped endpoint checks run while full `/conf/controlstream` closure remains prerequisite-incomplete. `/controls/{id}` and `/commands` return HTTP 400, so canonical URL and global Command endpoint checks SKIP. Empty nested Commands SKIP `/req/controlstream/cmd-ref-from-controlstream`.
+- Raze implementation review `.harness/evaluations/sprint-ets-22-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.91 for reconciliation/evidence gaps only; gap-fix review `.harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.95 after planner handoff was superseded and Maven evidence was archived.
+- Next action: commit Sprint 22 Generator, push over SSH, then plan Sprint 23 for `REQ-ETS-PART2-004` `/conf/feasibility` unless reprioritized.
 
 ## Sprint ets-19 Generator Evidence
 

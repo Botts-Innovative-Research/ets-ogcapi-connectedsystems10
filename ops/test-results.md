@@ -1,12 +1,15 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-07T22:03Z
+Last updated: 2026-05-08T12:59Z
 
 ## Current Sprint Evidence
 
-Sprint ets-22 Part 2 Control Streams & Commands planning:
+Sprint ets-22 Part 2 Control Streams & Commands Generator:
 
-- Planning-only change set; no Java code changed and no Maven/TeamEngine gates are required before Generator.
+- Generator implementation:
+  - `Part2ControlStreamTests` adds declaration-gated read-only checks for `/conf/controlstream`, `/controlstreams`, `/controlstreams/{id}`, `/controlstreams/{id}/schema`, `/controlstreams/{id}/commands`, `/commands` when available, `/controls/{id}` when available, populated nested Command reference evidence, and bounded `/systems/{systemId}/controlstreams`.
+  - `VerifyPart2ControlStreamTests` adds 4 helper regressions for ControlStream shape, Command reference evidence, empty collection shape, and official identifier drift.
+  - `VerifyTestNGSuiteDependency` adds structural coverage for `part2controlstream` group dependency and Core/Common co-location.
 - Official OGC source verification:
   - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 10 "Requirements Class Control Streams & Commands".
   - Requirements class identifier: `/req/controlstream`.
@@ -22,10 +25,29 @@ Sprint ets-22 Part 2 Control Streams & Commands planning:
   - `GET /systems/0m5ojudgr570/controlstreams?limit=2`: HTTP 200 JSON with ControlStream items.
   - `GET /commands?limit=2`: HTTP 400 HTML; no global Command endpoint PASS evidence.
   - `GET /controls/0m4qpft9sdag`: HTTP 400 HTML; no `/req/controlstream/canonical-url` PASS from `/controlstreams/{id}` alias evidence.
-- Planned gate expectation: Generator must run formatter, Maven via Docker, GeoRobotix TeamEngine smoke, and Raze implementation review after code changes; full `/conf/controlstream` closure remains blocked when `/req/api-common` is absent.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `167 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-22-maven-2026-05-08.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s22 bash scripts/smoke-test.sh`
+  - Result: `115 total / 71 passed / 0 failed / 44 skipped`
+  - Report: `ops/test-results/sprint-ets-22-smoke-2026-05-08.xml`
+  - Container log: `ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log`
+  - No-mutation oracle: `recognized_iut_request_logs=91`, zero IUT-bound POST/PUT/DELETE/PATCH.
+- ControlStream runtime outcome on GeoRobotix:
+  - PASS: declaration, collection, collection item shape, observed `/controlstreams/{id}` read, schema, scoped commands endpoint, and system-scoped ControlStreams endpoint.
+  - SKIP: full `/conf/controlstream` closure due missing `/conf/api-common`; `/req/controlstream/canonical-url` because `/controls/{id}` returned HTTP 400; `/req/controlstream/cmd-canonical-endpoint` because `/commands` returned HTTP 400; `/req/controlstream/cmd-ref-from-controlstream` because nested Commands were empty.
+- Full `/conf/controlstream` closure remains blocked when `/req/api-common` is absent.
 - Raze planning review:
   - `.harness/evaluations/sprint-ets-22-plan-adversarial.yaml`: `APPROVE` confidence 0.93.
-  - Required fixes: none.
+- Raze implementation reviews:
+  - `.harness/evaluations/sprint-ets-22-adversarial-implementation.yaml`: `GAPS_FOUND` confidence 0.91 for reconciliation/evidence gaps only.
+  - `.harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml`: `APPROVE` confidence 0.95 with no required fixes.
 
 Sprint ets-21 Part 2 Datastreams & Observations Generator:
 

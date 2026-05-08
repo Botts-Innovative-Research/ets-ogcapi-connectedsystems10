@@ -1,54 +1,61 @@
 agent: generator
 agent_role: dana
-status: complete_raze_approved_with_concerns
-sprint_number: "ets-20"
+status: complete_pending_raze_final
+sprint_number: "ets-22"
 sprint_run: "1 of 1"
-sprint_run_scope: ["S-ETS-20-01"]
-supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 19 close 2026-05-07T17:45:00Z)"
-started_at: "2026-05-07T18:14:38Z"
-finished_at: "2026-05-07T18:31:00Z"
+sprint_run_scope: ["S-ETS-22-01"]
+supersedes: ".harness/handoffs/generator-handoff.yaml (Sprint 20 close 2026-05-07T18:31:00Z)"
+started_at: "2026-05-08T12:50:55Z"
+finished_at: "2026-05-08T12:59:49Z"
 sprint_complete_after_run: true
 
 run_summary:
-  status: "complete_raze_approved_with_concerns"
+  status: "partial_implemented"
   story:
-    id: "S-ETS-20-01"
-    title: "Part 2 API Common read-only declaration-gated subset"
-    status: "PARTIAL_IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS"
+    id: "S-ETS-22-01"
+    title: "Part 2 Control Streams & Commands read-only subset"
+    status: "PARTIAL_IMPLEMENTED"
     scope_closed:
-      - "Part 2 API Common runtime class added"
-      - "official OGC 23-002 /req/api-common and /conf/api-common identifiers used"
-      - "stale dynamic-* identifiers rejected by helper regression"
-      - "TestNG group part2apicommon added"
-      - "Core/Common dependency wiring added with TestNG space-separated depends-on syntax"
-      - "exact /conf/api-common declaration gate implemented"
-      - "advertised-link-only Part 2 collection discovery implemented"
-      - "read-only collection shape checks require items[] and links[]"
-      - "default GeoRobotix smoke SKIPs honestly because /conf/api-common is undeclared"
+      - "official OGC 23-002 /req/controlstream and /conf/controlstream identifiers used"
+      - "TestNG group part2controlstream added"
+      - "Core/Common dependency wiring added without part2apicommon cascade"
+      - "exact /conf/controlstream declaration gate implemented"
+      - "explicit /conf/api-common prerequisite SKIP for full /conf/controlstream closure"
+      - "/controlstreams collection and selected ControlStream shape checks implemented"
+      - "/controlstreams/{id} observed resource read implemented without using it as canonical-url PASS evidence"
+      - "/controls/{id} canonical URL check SKIPs when the canonical path is not readable"
+      - "/controlstreams/{id}/schema command schema evidence implemented"
+      - "/controlstreams/{id}/commands endpoint availability implemented"
+      - "/commands canonical endpoint check SKIPs when global endpoint is not readable"
+      - "nested Command reference evidence requires populated Command/reference evidence"
+      - "bounded /systems/{systemId}/controlstreams read implemented"
       - "zero default public-IUT POST/PUT/DELETE/PATCH evidence"
     scope_open:
-      - "Part 2 JSON conformance"
-      - "Datastream and Observation conformance closure"
-      - "ControlStream and Command conformance closure"
-      - "System events/history"
+      - "full /conf/controlstream closure until /conf/api-common prerequisite is declared or separately established"
+      - "global /commands endpoint positive evidence"
+      - "/controls/{id} canonical URL positive evidence"
+      - "populated Command resources and command-reference evidence"
+      - "Command creation, feasibility, status/result closure"
+      - "Part 2 JSON and SWE Common encodings"
       - "Part 2 Create/Replace/Delete and Update mutation"
-      - "SWE Common JSON/Text/Binary encoding"
-      - "full schema validation"
+      - "full command-body schema validation"
     files_changed:
-      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
-      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
-      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamTests.java"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/VerifyPart2ControlStreamTests.java"
       - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
       - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-      - "epics/stories/s-ets-20-01-part2-api-common-planning.md"
+      - "epics/stories/s-ets-22-01-part2-controlstream-planning.md"
       - "_bmad/traceability.md"
       - "epics/epic-ets-03-part2-classes.md"
-      - ".harness/contracts/sprint-ets-20.yaml"
+      - ".harness/contracts/sprint-ets-22.yaml"
       - "ops/status.md"
       - "ops/test-results.md"
       - "ops/changelog.md"
-      - "ops/test-results/sprint-ets-20-maven-2026-05-07-rerun.log"
-      - "ops/test-results/sprint-ets-20-smoke-2026-05-07-rerun.log"
+      - "ops/known-issues.md"
+      - "ops/test-results/sprint-ets-22-smoke-2026-05-08.xml"
+      - "ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log"
+      - "ops/test-results/sprint-ets-22-maven-2026-05-08.log"
 
 verification:
   formatter:
@@ -57,35 +64,42 @@ verification:
   mvn_via_docker:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "Tests run: 152, Failures: 0, Errors: 0, Skipped: 3"
-    log: "ops/test-results/sprint-ets-20-maven-2026-05-07-post-raze.log"
+    surefire: "Tests run: 167, Failures: 0, Errors: 0, Skipped: 3"
+    log: "ops/test-results/sprint-ets-22-maven-2026-05-08.log"
   teamengine_smoke:
-    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun bash scripts/smoke-test.sh"
-    result: "PASS"
-    testng: "total=93 passed=55 failed=0 skipped=38"
-    report: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-smoke-2026-05-07.xml"
-    log: "/tmp/ets-ogcapi-connectedsystems10-smoke-results-s20-generator-rerun/s-ets-01-03-teamengine-container-2026-05-07.log"
-    no_mutation_oracle: "recognized_iut_request_logs=71; zero IUT-bound POST/PUT/DELETE/PATCH"
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s22 bash scripts/smoke-test.sh"
+    result: "SMOKE PASS"
+    testng: "total=115 passed=71 failed=0 skipped=44"
+    report: "ops/test-results/sprint-ets-22-smoke-2026-05-08.xml"
+    log: "ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log"
+    no_mutation_oracle: "recognized_iut_request_logs=91; zero IUT-bound POST/PUT/DELETE/PATCH"
 
 iut_state:
-  georobotix_part2_api_common: "GeoRobotix declares sibling Part 2 classes but not /conf/api-common; Sprint 20 tests SKIP honestly."
-  smoke_total_delta: "Sprint 19 baseline 89 -> Sprint 20 Generator 93 (4 new Part 2 API Common @Tests)"
-  initial_smoke_issue: "First smoke failed because depends-on=\"core,common\" was parsed as a nonexistent single group; fixed with depends-on=\"core common\" and reran Maven/smoke."
+  georobotix_controlstream: "GeoRobotix declares /conf/controlstream but not /conf/api-common; Sprint 22 scoped checks run while full /conf/controlstream closure SKIPs honestly."
+  controlstream_runtime_delta: "Sprint 21 smoke 104 -> Sprint 22 smoke 115 (11 new ControlStream @Tests; 7 PASS, 4 SKIP on GeoRobotix)."
+  honest_skips:
+    - "missing /conf/api-common prerequisite"
+    - "/controls/{id} returned HTTP 400, so canonical-url is not passed from /controlstreams/{id}"
+    - "/commands returned HTTP 400, so cmd-canonical-endpoint is not passed"
+    - "nested commands collection empty, so cmd-ref-from-controlstream is not passed"
 
 next_agent: "adversarial-reviewer"
 raze_review:
-  artifact: ".harness/evaluations/sprint-ets-20-adversarial-implementation.yaml"
-  verdict: "APPROVE_WITH_CONCERNS"
-  confidence: 0.94
-  required_fixes_status: "none; concrete dependency-lint concern resolved with comma rejection and whitespace tokenization; broader taxonomy wording remains cleanup-grade"
+  artifact: ".harness/evaluations/sprint-ets-22-adversarial-implementation.yaml"
+  verdict: "GAPS_FOUND"
+  confidence: 0.91
+  required_fixes_status: "docs/handoff and Maven evidence archive gaps addressed after review"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml"
+  gapfix_verdict: "APPROVE"
+  gapfix_confidence: 0.95
 
 commit:
-  sha: "53f542d"
-  message: "Implement Sprint 20 Part 2 API Common"
+  sha: null
+  message: "Implement Sprint 22 Part 2 ControlStream"
 
 push:
-  result: "succeeded"
+  result: "pending"
   remote: "git@github.com:Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git"
-  pushed_commit: "53f542d"
+  pushed_commit: null
 
-next_action: "Plan Sprint 21 for the next Part 2 item, likely REQ-ETS-PART2-002 /conf/datastream unless reprioritized."
+next_action: "Commit and push Sprint 22 Generator, then plan Sprint 23 for REQ-ETS-PART2-004 /conf/feasibility unless reprioritized."

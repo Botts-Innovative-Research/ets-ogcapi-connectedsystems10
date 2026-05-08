@@ -16,6 +16,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Planned safety policy: default public GeoRobotix smoke must SKIP before any feasibility POST; positive feasibility creation checks require explicit safe/mutable-IUT opt-in because OGC states feasibility requests are initiated by creating a Command resource on the feasibility channel.
 - Raze planning review `.harness/evaluations/sprint-ets-23-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.89 for a plural feasibility alias false-PASS risk and stale status metadata.
 - Raze gap-fix review `.harness/evaluations/sprint-ets-23-plan-gapfix.yaml` returned `APPROVE` confidence 0.96 after adding the normative singular endpoint guard and refreshing current-state metadata.
+- Committed and pushed Sprint 23 planning over SSH: `61004e5 Plan Sprint 23 Feasibility` (`b83f29c..61004e5 main -> main`).
 - Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
 
 ---

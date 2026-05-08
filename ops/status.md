@@ -41,9 +41,10 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes Sprint 22 Generator commit `38cb3c0 Implement Sprint 22 Part 2 ControlStream` plus Sprint 23 planning work in progress.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-22-01` Generator complete as PARTIAL for the Part 2 Control Streams & Commands read-only subset.
-- Current sprint status: Sprint ets-23 Part 2 Command Feasibility planning is Raze-approved for `S-ETS-23-01`; commit/push and Generator kickoff pending.
+- Current sprint status: Sprint ets-23 Part 2 Command Feasibility planning is Raze-approved, committed as `61004e5`, and pushed over SSH; Generator kickoff for `S-ETS-23-01` is next.
 - Latest pushed implementation commit: `38cb3c0 Implement Sprint 22 Part 2 ControlStream`.
-- Push status: remote uses SSH and latest implementation push succeeded on 2026-05-08T13:08Z (`a130c93..38cb3c0 main -> main`).
+- Latest pushed planning commit: `61004e5 Plan Sprint 23 Feasibility`.
+- Push status: remote uses SSH and latest `git push origin main` succeeded on 2026-05-08T19:47Z (`b83f29c..61004e5 main -> main`).
 
 ## Sprint ets-20 Generator Evidence
 
@@ -152,8 +153,9 @@ Part 2 Command Feasibility safety-gated subset:
 - Verdict policy planned: gate all Feasibility assertions on exact `/conf/feasibility`; preserve `/req/controlstream` prerequisite honesty; require actual Feasibility resource evidence for canonical/status/result PASS; treat Feasibility collections as optional unless advertised.
 - Raze planning review `.harness/evaluations/sprint-ets-23-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.89 for endpoint-alias false-PASS risk and stale status metadata.
 - Raze gap-fix review `.harness/evaluations/sprint-ets-23-plan-gapfix.yaml` returned `APPROVE` confidence 0.96 after the normative singular endpoint guard and metadata refresh were added.
+- Commit/push: `61004e5 Plan Sprint 23 Feasibility` pushed over SSH on 2026-05-08 (`b83f29c..61004e5 main -> main`).
 - Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
-- Next action: commit/push Sprint 23 planning and kick off Generator for `S-ETS-23-01`.
+- Next action: kick off Generator for `S-ETS-23-01`.
 
 ## Sprint ets-19 Generator Evidence
 

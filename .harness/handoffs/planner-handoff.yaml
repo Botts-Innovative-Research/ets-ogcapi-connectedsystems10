@@ -48,5 +48,10 @@ raze_review:
   gapfix_confidence: 0.96
   required_before_generator: false
 
+commit:
+  sha: "61004e5"
+  message: "Plan Sprint 23 Feasibility"
+  push: "b83f29c..61004e5 main -> main over SSH"
+
 next_agent: "generator"
-next_action: "Commit and push Sprint 23 planning, then kick off Generator for S-ETS-23-01."
+next_action: "Kick off Generator for S-ETS-23-01."

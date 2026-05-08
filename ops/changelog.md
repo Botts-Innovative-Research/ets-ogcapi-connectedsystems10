@@ -16,6 +16,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, known issues, and Generator handoff for the Generator outcome.
 - Raze implementation review `.harness/evaluations/sprint-ets-22-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.91 for docs/evidence gaps only; superseded the planner handoff and archived `ops/test-results/sprint-ets-22-maven-2026-05-08.log`.
 - Raze gap-fix review `.harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.95 with no required fixes.
+- Committed and pushed Sprint 22 Generator over SSH: `38cb3c0 Implement Sprint 22 Part 2 ControlStream` (`a130c93..38cb3c0 main -> main`).
 
 ---
 

@@ -131,6 +131,11 @@ evaluation_focus:
 
 confidence: 0.76
 
+commit:
+  sha: "38cb3c0"
+  message: "Implement Sprint 22 Part 2 ControlStream"
+  push: "a130c93..38cb3c0 main -> main over SSH"
+
 raze_review:
   plan_artifact: ".harness/evaluations/sprint-ets-22-plan-adversarial.yaml"
   plan_verdict: "APPROVE"

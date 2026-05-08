@@ -55,4 +55,4 @@ generator_result:
     gapfix_verdict: "APPROVE"
     gapfix_confidence: 0.95
 
-next_action: "Use generator-handoff.yaml, not this superseded planner handoff. Commit and push Sprint 22 Generator."
+next_action: "Use generator-handoff.yaml, not this superseded planner handoff. Sprint 22 Generator was committed and pushed as `38cb3c0`."

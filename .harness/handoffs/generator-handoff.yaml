@@ -102,4 +102,4 @@ push:
   remote: "git@github.com:Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git"
   pushed_commit: "38cb3c0"
 
-next_action: "Plan Sprint 23 for REQ-ETS-PART2-004 /conf/feasibility unless reprioritized."
+next_action: "Use .harness/handoffs/planner-handoff.yaml for Sprint 23 Feasibility; planning is Raze-approved and Generator kickoff is pending."

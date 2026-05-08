@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-05-06
+> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-05-08
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -316,12 +316,50 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **AND** it must not report full `/conf/controlstream` class closure
 **AND** any prerequisite-dependent assertion SKIPs with a precise reason rather than failing downstream noisily.
 
-#### REQ-ETS-PART2-004..014: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-004: Part 2 Command Feasibility Conformance Suite
+- **Priority**: MUST.
+- **Status**: PLANNED (Sprint 23)
+- **Description**: The ETS SHALL provide a TestNG suite for OGC 23-002 Clause 11 Requirements Class "Command Feasibility" using official identifiers `/req/feasibility` and `/conf/feasibility`, with prerequisite `/req/controlstream`. Sprint 23 targets a safety-gated Generator increment: exact conformance declaration detection, prerequisite honesty, feasibility endpoint/resource discovery, canonical URL/status/result/collection checks where evidence exists, and explicit non-mutating behavior against the default public smoke IUT.
+- **Scope guard**: Feasibility requests are initiated by creating a Command resource on the feasibility channel. Therefore, any IUT-bound feasibility POST is outside default public-smoke behavior and SHALL require an explicit safe/mutable-IUT opt-in before execution. When `/conf/feasibility` is absent, the suite SHALL SKIP before any feasibility POST. The suite SHALL NOT create regular Commands, exercise unrelated mutation classes, or infer feasibility conformance from `/conf/controlstream` alone.
+- **Maps to**: PRD FR-ETS-33.
+
+#### SCENARIO-ETS-PART2-004-FEASIBILITY-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** OGC 23-002 `/req/feasibility` maps to conformance class `/conf/feasibility`
+**WHEN** the IUT conformance document does not declare `/conf/feasibility`
+**THEN** the ETS SHALL SKIP Command Feasibility conformance assertions with a precise reason
+**AND** it SHALL NOT issue IUT-bound feasibility POST requests.
+
+#### SCENARIO-ETS-PART2-004-DEPENDENCY-SKIP-001 (CRITICAL)
+**GIVEN** Command Feasibility has prerequisite `/req/controlstream`
+**WHEN** the prerequisite class cannot be established for the IUT
+**THEN** the ETS SHALL NOT convert ControlStream endpoint success into full `/conf/feasibility` closure
+**AND** prerequisite-dependent assertions SHALL SKIP with a precise reason.
+
+#### SCENARIO-ETS-PART2-004-FEASIBILITY-ENDPOINT-SAFETY-001 (CRITICAL)
+**GIVEN** OGC 23-002 `/req/feasibility/ref-from-controlstream` identifies `{api_root}/controlstream/{csId}/feasibility`
+**WHEN** Generator implements endpoint checks
+**THEN** read-only GET probes MAY verify endpoint availability only after `/conf/feasibility` is declared
+**AND** the plural `/controlstreams/{csId}/feasibility` form SHALL be treated as diagnostic alias evidence only, not sufficient PASS evidence for the normative singular path
+**AND** IUT-bound feasibility creation POSTs SHALL require an explicit safe/mutable-IUT opt-in.
+
+#### SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001 (NORMAL)
+**GIVEN** a real Feasibility resource is available through declared `/conf/feasibility` evidence
+**WHEN** the ETS evaluates `/req/feasibility/canonical-url`, `/req/feasibility/status-endpoint`, and `/req/feasibility/result-endpoint`
+**THEN** it SHALL require actual Feasibility resource evidence before PASS
+**AND** it SHALL SKIP when the IUT exposes no Feasibility resources.
+
+#### SCENARIO-ETS-PART2-004-FEASIBILITY-COLLECTIONS-001 (NORMAL)
+**GIVEN** `/req/feasibility/collections` is optional unless the server exposes Feasibility collections
+**WHEN** a collection has `itemType` equal to `Feasibility`
+**THEN** the ETS SHALL verify that `/collections/{collectionId}/items` behaves as a Command resources endpoint
+**AND** it SHALL NOT fail an IUT solely because no Feasibility collection is advertised.
+
+#### REQ-ETS-PART2-005..014: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprints 20, 21, and 22 Generator)
-- **Description**: For each of the remaining 11 OGC 23-002 conformance classes or cross-class closures (`feasibility`, `system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprints 20, 21, 22 Generator and Sprint 23 planning)
+- **Description**: For each of the remaining 10 OGC 23-002 conformance classes or cross-class closures (`system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
-- **Maps to**: PRD FR-ETS-32..43.
+- **Maps to**: PRD FR-ETS-34..43.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -1948,8 +1986,9 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-TEAMENGINE-002..005 (Dockerfile, docker-compose, smoke-test.sh, container-load verification) → S-ETS-01-03 (final Sprint 1 story).
 - REQ-ETS-PART1-001..013 (per-class detail beyond Core) — drafted as placeholders; per-assertion FRs and SCENARIOs to be expanded in sprints 2..N.
 - REQ-ETS-PART2-002 (Datastreams & Observations) — partially implemented in Sprint 21 read-only subset.
-- REQ-ETS-PART2-003 (Control Streams & Commands) — planned for Sprint 22 read-only subset.
-- REQ-ETS-PART2-004..014 (remaining Part 2 classes) — deferred after Sprint 22 ControlStream planning.
+- REQ-ETS-PART2-003 (Control Streams & Commands) — partially implemented in Sprint 22 read-only subset.
+- REQ-ETS-PART2-004 (Command Feasibility) — planned by Sprint 23; Generator pending.
+- REQ-ETS-PART2-005..014 (remaining Part 2 classes) — deferred after Sprint 23 Feasibility planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

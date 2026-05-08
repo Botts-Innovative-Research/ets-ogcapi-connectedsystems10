@@ -1,58 +1,52 @@
 agent: planner
-status: superseded_by_generator
-timestamp: "2026-05-08T13:05:04Z"
-sprint_number: "ets-22"
-sprint_name: "part2-controlstream"
-contract_path: ".harness/contracts/sprint-ets-22.yaml"
+status: planned_raze_approved
+timestamp: "2026-05-08T19:33:58Z"
+sprint_number: "ets-23"
+sprint_name: "part2-feasibility"
+contract_path: ".harness/contracts/sprint-ets-23.yaml"
 triggered_by: |
-  User first instructed "Do Sprint 22 planning." That planning was approved,
-  committed, and pushed as `2ffed0c`. The later instruction "Kick off Generator
-  for S-ETS-22-01" superseded this planner handoff with Sprint 22 Generator work.
-superseded_by: ".harness/handoffs/generator-handoff.yaml"
+  User said "Do it" after the Sprint 22 Generator handoff identified
+  REQ-ETS-PART2-004 /conf/feasibility as the next sprint item.
 
 planning_result:
   story:
-    id: "S-ETS-22-01"
-    title: "Part 2 Control Streams & Commands read-only subset"
-    file: "epics/stories/s-ets-22-01-part2-controlstream-planning.md"
+    id: "S-ETS-23-01"
+    title: "Part 2 Command Feasibility safety-gated subset"
+    file: "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
   official_identifiers:
-    requirement_class_identifier: "/req/controlstream"
-    conformance_class_identifier: "/conf/controlstream"
-    prerequisite: "/req/api-common"
-  raze_review:
-    plan_artifact: ".harness/evaluations/sprint-ets-22-plan-adversarial.yaml"
-    plan_verdict: "APPROVE"
-    plan_confidence: 0.93
-    required_fixes: []
-  commit:
-    hash: "2ffed0c"
-    message: "Plan Sprint 22 ControlStream"
-    push: "5c4bcf0..2ffed0c main -> main over SSH"
+    source: "https://docs.ogc.org/is/23-002/23-002.html"
+    clause: "Clause 11, Requirements Class Command Feasibility"
+    requirement_class_identifier: "/req/feasibility"
+    conformance_class_identifier: "/conf/feasibility"
+    prerequisite: "/req/controlstream"
+    normative_statements:
+      - "/req/feasibility/canonical-url"
+      - "/req/feasibility/ref-from-controlstream"
+      - "/req/feasibility/status-endpoint"
+      - "/req/feasibility/result-endpoint"
+      - "/req/feasibility/collections"
+  georobotix_probe_summary:
+    conformance: "No /conf/feasibility declaration."
+    seed_controlstream: "0m4qpft9sdag with system@id 0m5ojudgr570."
+    feasibility_global: "GET /feasibility?limit=2 -> HTTP 400 Invalid resource name: 'feasibility'."
+    feasibility_nested_plural: "GET /controlstreams/0m4qpft9sdag/feasibility?limit=2 -> HTTP 400 Invalid resource name: 'feasibility'."
+    feasibility_nested_singular: "GET /controlstream/0m4qpft9sdag/feasibility?limit=2 -> HTTP 400 Invalid resource name: 'controlstream'."
+    feasibility_collections: "No itemType=Feasibility collection observed."
+  safety_policy:
+    default_public_smoke: "Must SKIP before any feasibility POST."
+    positive_post_checks: "Require explicit safe/mutable-IUT opt-in."
+    no_substitution: "Do not use regular Command creation as Feasibility evidence."
+    endpoint_alias_honesty: "The plural /controlstreams/{id}/feasibility probe is diagnostic only; /req/feasibility/ref-from-controlstream PASS requires normative singular {api_root}/controlstream/{csId}/feasibility or documented standards-backed rationale."
 
-generator_result:
-  status: "partial_implemented"
-  handoff: ".harness/handoffs/generator-handoff.yaml"
-  implementation_summary: |
-    Sprint 22 Generator implemented the read-only, declaration-gated Control
-    Streams & Commands subset. Scoped ControlStream endpoint checks run when
-    `/conf/controlstream` is declared. Full `/conf/controlstream` closure SKIPs
-    when `/conf/api-common` is absent. `/controls/{id}`, `/commands`, and empty
-    nested Command reference cases SKIP rather than producing false PASS.
-  gates:
-    formatter: "BUILD SUCCESS"
-    maven: "167 tests / 0 failures / 0 errors / 3 skipped"
-    maven_log: "ops/test-results/sprint-ets-22-maven-2026-05-08.log"
-    smoke: "115 total / 71 passed / 0 failed / 44 skipped"
-    smoke_report: "ops/test-results/sprint-ets-22-smoke-2026-05-08.xml"
-    smoke_log: "ops/test-results/sprint-ets-22-smoke-container-2026-05-08.log"
-    no_mutation: "recognized_iut_request_logs=91; zero IUT-bound POST/PUT/DELETE/PATCH"
-  raze_review:
-    implementation_artifact: ".harness/evaluations/sprint-ets-22-adversarial-implementation.yaml"
-    first_verdict: "GAPS_FOUND"
-    first_confidence: 0.91
-    gap_status: "docs/handoff and Maven archive gaps addressed after review"
-    gapfix_artifact: ".harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml"
-    gapfix_verdict: "APPROVE"
-    gapfix_confidence: 0.95
+raze_review:
+  plan_artifact: ".harness/evaluations/sprint-ets-23-plan-adversarial.yaml"
+  plan_verdict: "GAPS_FOUND"
+  plan_confidence: 0.89
+  required_fixes_status: "closed"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-23-plan-gapfix.yaml"
+  gapfix_verdict: "APPROVE"
+  gapfix_confidence: 0.96
+  required_before_generator: false
 
-next_action: "Use generator-handoff.yaml, not this superseded planner handoff. Sprint 22 Generator was committed and pushed as `38cb3c0`."
+next_agent: "generator"
+next_action: "Commit and push Sprint 23 planning, then kick off Generator for S-ETS-23-01."

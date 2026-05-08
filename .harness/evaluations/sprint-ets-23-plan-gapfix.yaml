@@ -1,0 +1,42 @@
+artifact_type: adversarial_gapfix_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+sprint: ets-23
+story: S-ETS-23-01
+subject: Sprint 23 planning gap-fix review
+created_utc: "2026-05-08T19:44:32Z"
+verdict: APPROVE
+confidence: 0.96
+
+scope:
+  requested_focus:
+    - "Verify closure of RAZE-ETS23-PLAN-GAP-001: normative-singular feasibility endpoint alias guard."
+    - "Verify closure of RAZE-ETS23-PLAN-GAP-002: stale top-level ops/traceability metadata."
+  not_run:
+    - Maven
+    - TeamEngine smoke
+    - Docker gates
+
+gap_closure:
+  RAZE-ETS23-PLAN-GAP-001:
+    status: closed
+    evidence:
+      - "OpenSpec now states `/req/feasibility/ref-from-controlstream` identifies `{api_root}/controlstream/{csId}/feasibility` and that plural `/controlstreams/{csId}/feasibility` is diagnostic alias evidence only, not sufficient PASS evidence."
+      - "Story now includes a normative endpoint guard: plural `/controlstreams/{id}/feasibility` is diagnostic only and must not produce PASS by itself."
+      - "Contract now requires `/req/feasibility/ref-from-controlstream` PASS to use the normative singular endpoint or documented standards-backed rationale, and explicitly forbids PASS from plural alias evidence alone."
+      - "ops/status.md and ops/test-results.md now record the endpoint alias guard."
+      - "planner-handoff now includes `endpoint_alias_honesty` with the same singular-path PASS rule."
+  RAZE-ETS23-PLAN-GAP-002:
+    status: closed
+    evidence:
+      - "_bmad/traceability.md header now says `Last updated: 2026-05-08 (Sprint 23 Command Feasibility planning)`."
+      - "ops/status.md Current Code State now says latest implemented story is `S-ETS-22-01` Generator complete as PARTIAL for the Part 2 Control Streams & Commands read-only subset."
+
+required_fixes: []
+
+reviewer_notes:
+  - "This was a focused planning-only recheck. Implementation code was not reviewed."
+  - "No Maven, Docker, or TeamEngine gate was run."
+
+reviewer_edits:
+  - ".harness/evaluations/sprint-ets-23-plan-gapfix.yaml"

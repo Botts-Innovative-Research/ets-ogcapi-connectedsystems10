@@ -1,8 +1,37 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-08T12:59Z
+Last updated: 2026-05-08T19:33Z
 
 ## Current Sprint Evidence
+
+Sprint ets-23 Part 2 Command Feasibility planning:
+
+- Planning only:
+  - Story: `epics/stories/s-ets-23-01-part2-feasibility-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-23.yaml`
+  - No Java code changed yet; Maven and TeamEngine smoke are Generator gates.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 11 "Requirements Class Command Feasibility".
+  - Requirements class identifier: `/req/feasibility`.
+  - Conformance class identifier: `/conf/feasibility`.
+  - Prerequisite: `/req/controlstream`.
+  - Selected Sprint 23 requirements: `/req/feasibility/canonical-url`, `/req/feasibility/ref-from-controlstream`, `/req/feasibility/status-endpoint`, `/req/feasibility/result-endpoint`, and `/req/feasibility/collections`.
+- GeoRobotix planning probes:
+  - `/conformance`: declares `/conf/controlstream` but not `/conf/feasibility` or `/conf/api-common`.
+  - `GET /controlstreams?limit=1`: returned ControlStream id `0m4qpft9sdag` with `system@id` `0m5ojudgr570`.
+  - `GET /controlstreams/0m4qpft9sdag`: HTTP 200 JSON with ControlStream-specific fields.
+  - `GET /feasibility?limit=2`: HTTP 400 JSON, `Invalid resource name: 'feasibility'`.
+  - `GET /controlstreams/0m4qpft9sdag/feasibility?limit=2`: HTTP 400 JSON, `Invalid resource name: 'feasibility'`.
+  - `GET /controlstream/0m4qpft9sdag/feasibility?limit=2`: HTTP 400 JSON, `Invalid resource name: 'controlstream'`.
+  - `GET /collections?limit=100`: no collection with `itemType` equal to `Feasibility` was observed.
+  - Endpoint alias guard: the plural `/controlstreams/{id}/feasibility` probe is diagnostic only; `/req/feasibility/ref-from-controlstream` PASS requires the normative singular `{api_root}/controlstream/{csId}/feasibility` endpoint or a documented standards-backed rationale.
+- Generator gate expectations:
+  - Default GeoRobotix smoke must SKIP Feasibility because `/conf/feasibility` is absent.
+  - Default GeoRobotix smoke must report zero IUT-bound POST/PUT/DELETE/PATCH.
+  - Any positive feasibility creation path must be guarded behind explicit safe/mutable-IUT opt-in.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-23-plan-adversarial.yaml`: `GAPS_FOUND` confidence 0.89 for endpoint-alias false-PASS risk and stale status metadata.
+  - `.harness/evaluations/sprint-ets-23-plan-gapfix.yaml`: `APPROVE` confidence 0.96 with no required fixes.
 
 Sprint ets-22 Part 2 Control Streams & Commands Generator:
 

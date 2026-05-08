@@ -1,0 +1,135 @@
+# Sprint 23 contract - Part 2 Command Feasibility safety-gated subset
+
+sprint: "ets-23"
+sprint_name: "part2-feasibility"
+type: "feature-expansion-planning"
+created: "2026-05-08T19:33:58Z"
+description: |
+  Sprint 23 plans the OGC 23-002 Command Feasibility Generator increment.
+  Feasibility requests are initiated by creating a Command resource on a
+  feasibility channel, so default public smoke must declaration-skip before
+  any IUT-bound POST. Positive feasibility creation evidence requires explicit
+  safe/mutable-IUT opt-in during implementation.
+
+stories:
+  - id: "S-ETS-23-01"
+    title: "Part 2 Command Feasibility safety-gated subset"
+    file: "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-22-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-004 (/req/feasibility - planned)"
+    - "REQ-ETS-PART2-005..014 (remaining placeholders renumbered after Feasibility split)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-004-FEASIBILITY-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-004-DEPENDENCY-SKIP-001"
+    - "SCENARIO-ETS-PART2-004-FEASIBILITY-ENDPOINT-SAFETY-001"
+  normal:
+    - "SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001"
+    - "SCENARIO-ETS-PART2-004-FEASIBILITY-COLLECTIONS-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  no_code_changes_in_planning: true
+  maven_verified: false
+  teamengine_smoke_verified: false
+  generator_required_before_runtime_gates: true
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-08T19:33:58Z"
+  requirement_class: "Clause 11, Requirements Class Command Feasibility"
+  requirement_class_identifier: "/req/feasibility"
+  conformance_class_identifier: "/conf/feasibility"
+  prerequisite: "/req/controlstream"
+  selected_normative_statements:
+    - "/req/feasibility/canonical-url"
+    - "/req/feasibility/ref-from-controlstream"
+    - "/req/feasibility/status-endpoint"
+    - "/req/feasibility/result-endpoint"
+    - "/req/feasibility/collections"
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares /conf/controlstream but not /conf/feasibility or /conf/api-common."
+    controlstream_seed: "GET /controlstreams?limit=1 returned ControlStream id 0m4qpft9sdag with system@id 0m5ojudgr570."
+    controlstream_item: "GET /controlstreams/0m4qpft9sdag returned HTTP 200 JSON with id, system@id, inputName, controlledProperties, formats, links, name, and validTime."
+    feasibility_global: "GET /feasibility?limit=2 returned HTTP 400 JSON: Invalid resource name: 'feasibility'."
+    feasibility_nested_plural: "GET /controlstreams/0m4qpft9sdag/feasibility?limit=2 returned HTTP 400 JSON: Invalid resource name: 'feasibility'."
+    feasibility_nested_singular: "GET /controlstream/0m4qpft9sdag/feasibility?limit=2 returned HTTP 400 JSON: Invalid resource name: 'controlstream'."
+    feasibility_collections: "GET /collections?limit=100 did not expose itemType Feasibility."
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/feasibility is not declared, all Feasibility conformance assertions SKIP with a precise reason."
+    - "Do not infer /conf/feasibility PASS from /conf/controlstream or from ControlStream endpoint success."
+    - "Do not treat GeoRobotix HTTP 400 Invalid resource name responses as Feasibility endpoint evidence."
+  prerequisite:
+    - "Keep /req/controlstream prerequisite handling visible and honest."
+    - "Do not report full /conf/feasibility closure when /req/controlstream cannot be established."
+  public_iut_safety:
+    - "Default GeoRobotix smoke must not issue IUT-bound feasibility POST requests."
+    - "Positive feasibility creation checks require explicit safe/mutable-IUT opt-in."
+    - "Feasibility POSTs, if later enabled, must remain separate from regular Command creation checks."
+  resource_evidence:
+    - "Canonical URL, status endpoint, and result endpoint PASS outcomes require actual Feasibility resource evidence."
+    - "Empty or absent Feasibility resources produce SKIP, not PASS."
+    - "Feasibility collections are optional unless itemType Feasibility is advertised."
+  endpoint_alias_honesty:
+    - "/req/feasibility/ref-from-controlstream PASS requires the normative singular {api_root}/controlstream/{csId}/feasibility endpoint, or a documented standards-backed rationale."
+    - "The plural /controlstreams/{id}/feasibility probe is diagnostic only and cannot satisfy /req/feasibility/ref-from-controlstream by itself."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/feasibility and /conf/feasibility."
+  - "Add Part 2 Feasibility TestNG group and dependency/prerequisite handling."
+  - "Implement declaration-gated SKIP honesty when /conf/feasibility is absent."
+  - "Ensure default public smoke cannot issue feasibility POSTs."
+  - "Add tests/comments referencing REQ-ETS-PART2-004 and SCENARIO-ETS-PART2-004-* IDs."
+  - "Run scripts/mvn-test-via-docker.sh and default GeoRobotix TeamEngine smoke after implementation."
+  - "Update spec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not use stale /req/commandfeasibility, /req/systemevents, or dynamic-* identifiers."
+  - "Do not PASS /conf/feasibility from /conf/controlstream alone."
+  - "Do not POST to GeoRobotix or any public IUT during default smoke."
+  - "Do not create regular Commands as a Feasibility substitute."
+  - "Do not treat /commands or /controlstreams/{id}/commands as Feasibility endpoint evidence."
+  - "Do not PASS /req/feasibility/ref-from-controlstream from plural /controlstreams/{id}/feasibility alias evidence alone."
+  - "Do not fail an IUT solely because Feasibility collections are absent."
+
+evaluation_focus:
+  raze:
+    - "Attack false PASS from ControlStream evidence masquerading as Feasibility support."
+    - "Attack any default public-IUT feasibility POST path."
+    - "Attack stale identifier drift from older web-app commandfeasibility naming."
+    - "Attack PASS outcomes for canonical/status/result assertions without actual Feasibility resource evidence."
+    - "Check that GeoRobotix HTTP 400 probes lead to SKIP, not PASS or noisy FAIL."
+
+confidence: 0.74
+
+raze_review:
+  plan_artifact: ".harness/evaluations/sprint-ets-23-plan-adversarial.yaml"
+  plan_verdict: "GAPS_FOUND"
+  plan_confidence: 0.89
+  required_fixes_status: "closed by endpoint-alias guard and metadata refresh"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-23-plan-gapfix.yaml"
+  gapfix_verdict: "APPROVE"
+  gapfix_confidence: 0.96
+  gapfix_required_fixes: []

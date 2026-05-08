@@ -2,6 +2,24 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-08T19:33Z — Sprint 23 Part 2 Feasibility planning
+
+**Triggered by user instruction**: "Do it."
+
+- Started Sprint 23 planning for `S-ETS-23-01`, the next Part 2 item after Sprint 22.
+- Verified architecture freshness: `_bmad/architecture.md` last reconciled 2026-04-28, so it is not stale.
+- Verified official OGC 23-002 Clause 11 identifiers from the published HTML: Command Feasibility is `/req/feasibility` with conformance `/conf/feasibility` and prerequisite `/req/controlstream`; normative requirements are 35-39.
+- Added `.harness/contracts/sprint-ets-23.yaml` and `epics/stories/s-ets-23-01-part2-feasibility-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for Feasibility planning.
+- Split `REQ-ETS-PART2-004` out for Command Feasibility and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-005..014`.
+- Probed GeoRobotix Feasibility state: `/conformance` does not declare `/conf/feasibility`; feasibility URLs returned HTTP 400 `Invalid resource name`; `/collections` did not expose `itemType=Feasibility`.
+- Planned safety policy: default public GeoRobotix smoke must SKIP before any feasibility POST; positive feasibility creation checks require explicit safe/mutable-IUT opt-in because OGC states feasibility requests are initiated by creating a Command resource on the feasibility channel.
+- Raze planning review `.harness/evaluations/sprint-ets-23-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.89 for a plural feasibility alias false-PASS risk and stale status metadata.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-23-plan-gapfix.yaml` returned `APPROVE` confidence 0.96 after adding the normative singular endpoint guard and refreshing current-state metadata.
+- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+
+---
+
 ## 2026-05-08T12:50Z — Sprint 22 Part 2 ControlStream Generator
 
 **Triggered by user instruction**: "Kick off Generator for S-ETS-22-01."

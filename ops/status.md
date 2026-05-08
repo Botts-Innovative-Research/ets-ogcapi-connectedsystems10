@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-08T12:59Z
+Last updated: 2026-05-08T19:33Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-22.yaml`
+- `.harness/contracts/sprint-ets-23.yaml`
 
 ## Current State
 
@@ -38,12 +38,12 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes Sprint 19 planning commit `d4554aa Plan Sprint 19 mediatype write checks`; Sprint 19 Generator committed as `Implement Sprint 19 mediatype write checks`.
+- ETS HEAD includes Sprint 22 Generator commit `38cb3c0 Implement Sprint 22 Part 2 ControlStream` plus Sprint 23 planning work in progress.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-19-01` Generator complete as PARTIAL; local OSH follow-up produced positive system-resource mediatype-write evidence and Raze follow-up gapfix approved reconciliation.
-- Current sprint status: Sprint ets-22 Part 2 Control Streams & Commands Generator is partial implemented, Raze gap-fix approved, committed as `38cb3c0`, and pushed over SSH.
+- Latest implemented story: `S-ETS-22-01` Generator complete as PARTIAL for the Part 2 Control Streams & Commands read-only subset.
+- Current sprint status: Sprint ets-23 Part 2 Command Feasibility planning is Raze-approved for `S-ETS-23-01`; commit/push and Generator kickoff pending.
 - Latest pushed implementation commit: `38cb3c0 Implement Sprint 22 Part 2 ControlStream`.
-- Push status: remote uses SSH and latest `git push origin main` succeeded on 2026-05-08T13:08Z (`a130c93..38cb3c0 main -> main`).
+- Push status: remote uses SSH and latest implementation push succeeded on 2026-05-08T13:08Z (`a130c93..38cb3c0 main -> main`).
 
 ## Sprint ets-20 Generator Evidence
 
@@ -134,6 +134,26 @@ Part 2 Control Streams & Commands read-only subset:
 - Runtime outcome: GeoRobotix declares `/conf/controlstream` but not `/conf/api-common`, so scoped endpoint checks run while full `/conf/controlstream` closure remains prerequisite-incomplete. `/controls/{id}` and `/commands` return HTTP 400, so canonical URL and global Command endpoint checks SKIP. Empty nested Commands SKIP `/req/controlstream/cmd-ref-from-controlstream`.
 - Raze implementation review `.harness/evaluations/sprint-ets-22-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.91 for reconciliation/evidence gaps only; gap-fix review `.harness/evaluations/sprint-ets-22-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.95 after planner handoff was superseded and Maven evidence was archived.
 - Next action: plan Sprint 23 for `REQ-ETS-PART2-004` `/conf/feasibility` unless reprioritized.
+
+## Sprint ets-23 Planning Evidence
+
+Part 2 Command Feasibility safety-gated subset:
+
+- Story: `epics/stories/s-ets-23-01-part2-feasibility-planning.md`
+- Contract: `.harness/contracts/sprint-ets-23.yaml`
+- OpenSpec: defines `REQ-ETS-PART2-004` for OGC 23-002 Clause 11 and renumbers remaining Part 2 placeholders to `REQ-ETS-PART2-005..014`.
+- Scope planned: safety-gated Command Feasibility subset using official `/req/feasibility` and `/conf/feasibility` identifiers.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-08 and not stale.
+- OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 11 "Requirements Class Command Feasibility"; prerequisite is `/req/controlstream`; normative statements are `/req/feasibility/canonical-url`, `/req/feasibility/ref-from-controlstream`, `/req/feasibility/status-endpoint`, `/req/feasibility/result-endpoint`, and `/req/feasibility/collections`.
+- GeoRobotix planning probe: `/conformance` declares `/conf/controlstream` but not `/conf/feasibility` or `/conf/api-common`.
+- GeoRobotix feasibility probes: `GET /feasibility?limit=2`, `GET /controlstreams/0m4qpft9sdag/feasibility?limit=2`, and `GET /controlstream/0m4qpft9sdag/feasibility?limit=2` returned HTTP 400 JSON `Invalid resource name` variants; `GET /collections?limit=100` did not expose `itemType=Feasibility`.
+- Important safety policy: OGC states a feasibility request is initiated by creating a `Command` resource on the feasibility channel, so default public smoke must not issue feasibility POSTs. Positive feasibility creation checks require explicit safe/mutable-IUT opt-in.
+- Important endpoint policy: `/req/feasibility/ref-from-controlstream` cites normative singular path `{api_root}/controlstream/{csId}/feasibility`. The plural `/controlstreams/{id}/feasibility` probe is diagnostic only and must not satisfy the requirement by itself.
+- Verdict policy planned: gate all Feasibility assertions on exact `/conf/feasibility`; preserve `/req/controlstream` prerequisite honesty; require actual Feasibility resource evidence for canonical/status/result PASS; treat Feasibility collections as optional unless advertised.
+- Raze planning review `.harness/evaluations/sprint-ets-23-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.89 for endpoint-alias false-PASS risk and stale status metadata.
+- Raze gap-fix review `.harness/evaluations/sprint-ets-23-plan-gapfix.yaml` returned `APPROVE` confidence 0.96 after the normative singular endpoint guard and metadata refresh were added.
+- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+- Next action: commit/push Sprint 23 planning and kick off Generator for `S-ETS-23-01`.
 
 ## Sprint ets-19 Generator Evidence
 

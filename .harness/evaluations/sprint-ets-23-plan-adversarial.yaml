@@ -1,0 +1,124 @@
+artifact_type: adversarial_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+sprint: ets-23
+story: S-ETS-23-01
+subject: Sprint 23 planning - Part 2 Command Feasibility
+created_utc: "2026-05-08T19:41:07Z"
+verdict: GAPS_FOUND
+confidence: 0.89
+
+reviewed_scope:
+  planning_artifacts:
+    - ".harness/contracts/sprint-ets-23.yaml"
+    - "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+  implementation_files: []
+  gates_not_run_by_reviewer:
+    - Maven
+    - TeamEngine smoke
+    - Docker gates
+
+official_source_check:
+  source: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_by_reviewer: true
+  evidence:
+    - "Clause 11 Requirements class 4 identifies `/req/feasibility`, conformance class `/conf/feasibility`, prerequisite `/req/controlstream`, and normative statements `/req/feasibility/canonical-url`, `/req/feasibility/ref-from-controlstream`, `/req/feasibility/status-endpoint`, `/req/feasibility/result-endpoint`, and `/req/feasibility/collections`."
+    - "Clause 11 states a feasibility request is initiated by creating a `Command` resource on the feasibility channel."
+    - "Requirement 36 states the nested feasibility endpoint path as `{api_root}/controlstream/{csId}/feasibility`."
+
+findings:
+  - id: RAZE-ETS23-PLAN-GAP-001
+    severity: high
+    category: false-pass-risk
+    status: open
+    summary: Planning does not explicitly prevent `/req/feasibility/ref-from-controlstream` PASS from the plural `/controlstreams/{id}/feasibility` alias.
+    details: >
+      OpenSpec correctly cites the normative Clause 11 path
+      `{api_root}/controlstream/{csId}/feasibility`, and the planning probes
+      record both `/controlstreams/{id}/feasibility` and
+      `/controlstream/{id}/feasibility` returning HTTP 400 on GeoRobotix. The
+      contract and ops docs, however, do not state that the plural probe is
+      diagnostic only and cannot satisfy `/req/feasibility/ref-from-controlstream`.
+      This leaves a future Generator false-PASS path: an IUT could expose a
+      plural convenience endpoint while the normative singular endpoint is absent.
+    evidence:
+      - "OGC 23-002 Clause 11 Requirement 36: `/req/feasibility/ref-from-controlstream` uses `{api_root}/controlstream/{csId}/feasibility`."
+      - ".harness/contracts/sprint-ets-23.yaml records `feasibility_nested_plural` and `feasibility_nested_singular`, but does not classify the plural URL as non-normative/diagnostic-only evidence."
+      - "ops/status.md and ops/test-results.md list both feasibility probes without an explicit no-PASS-from-plural-alias guard."
+    required_fix: >
+      Add an explicit verdict rule across contract/story/OpenSpec/ops/handoff:
+      `/req/feasibility/ref-from-controlstream` PASS requires the normative
+      singular `{api_root}/controlstream/{csId}/feasibility` endpoint, or a
+      documented standards-backed rationale for accepting another path. The
+      plural `/controlstreams/{id}/feasibility` probe may be retained as IUT
+      diagnostics but must not be enough for PASS by itself.
+
+  - id: RAZE-ETS23-PLAN-GAP-002
+    severity: medium
+    category: doc-consistency
+    status: open
+    summary: Ops and traceability metadata still contain stale current-state markers after Sprint 23 planning.
+    details: >
+      The detailed Sprint 23 planning sections are mostly reconciled, but top-level
+      status metadata still says the latest implemented story is Sprint 19 even
+      though Sprint 22 was implemented and pushed. `_bmad/traceability.md` also
+      retains a header saying it was last updated for Sprint 19, despite the new
+      Sprint 23 row and renumbering. These stale markers reduce handoff reliability.
+    evidence:
+      - "ops/status.md Current Code State: `Latest implemented story: S-ETS-19-01` while the same section records latest pushed implementation commit `38cb3c0 Implement Sprint 22 Part 2 ControlStream`."
+      - "_bmad/traceability.md header still says `Last updated: 2026-05-07 (Sprint 19 encoding mediatype-write Generator complete)`."
+    required_fix: >
+      Update top-level current-state metadata so it does not contradict Sprint 22
+      implementation and Sprint 23 planning. At minimum, set latest implemented
+      story to Sprint 22 and refresh the traceability header to the Sprint 23
+      planning update.
+
+checks:
+  official_identifier_correctness:
+    result: pass
+    evidence:
+      - "Planning uses `/req/feasibility` and `/conf/feasibility`, not stale `/req/commandfeasibility` or `dynamic-*` identifiers."
+      - "Prerequisite is consistently documented as `/req/controlstream` / `/conf/controlstream`."
+  feasibility_post_safety:
+    result: pass_with_gap
+    evidence:
+      - "Story, OpenSpec, contract, status, and test-results all say default public GeoRobotix smoke must SKIP before feasibility POST."
+      - "Positive feasibility creation is consistently gated on explicit safe/mutable-IUT opt-in."
+      - "Regular Command creation is excluded as a Feasibility substitute."
+    residual_gap: "Endpoint alias PASS guard needs explicit wording for `/req/feasibility/ref-from-controlstream`."
+  georobotix_declaration_honesty:
+    result: pass
+    evidence:
+      - "Docs record GeoRobotix does not declare `/conf/feasibility`."
+      - "Docs require declaration-gated SKIP, not PASS from `/conf/controlstream` or endpoint probes."
+  resource_evidence_false_pass:
+    result: pass
+    evidence:
+      - "Canonical URL, status endpoint, and result endpoint PASS are planned to require actual Feasibility resource evidence."
+      - "Absent Feasibility resources and absent Feasibility collections are planned as SKIP/not-applicable behavior, not PASS."
+  placeholder_numbering:
+    result: pass_with_note
+    evidence:
+      - "OpenSpec, traceability, epic, contract, status, test-results, known issues, and planner handoff split Feasibility as `REQ-ETS-PART2-004` and move remaining placeholders to `REQ-ETS-PART2-005..014`."
+    note: "Top-level traceability header remains stale; covered by RAZE-ETS23-PLAN-GAP-002."
+  planning_only_scope:
+    result: pass
+    evidence:
+      - "No Java implementation files are dirty for Sprint 23."
+      - "Planning docs say Maven and TeamEngine are Generator gates and were not run for this planning-only change."
+
+required_fixes:
+  - "Add a no-false-PASS rule for `/req/feasibility/ref-from-controlstream`: plural `/controlstreams/{id}/feasibility` diagnostics cannot satisfy the normative singular `{api_root}/controlstream/{csId}/feasibility` requirement by themselves."
+  - "Fix stale current-state metadata in `ops/status.md` and `_bmad/traceability.md` so Sprint 22 remains the latest implemented story and Sprint 23 planning is the latest planning update."
+
+reviewer_edits:
+  - ".harness/evaluations/sprint-ets-23-plan-adversarial.yaml"

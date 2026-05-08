@@ -43,8 +43,8 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - Latest implemented story: `S-ETS-22-01` Generator complete as PARTIAL for the Part 2 Control Streams & Commands read-only subset.
 - Current sprint status: Sprint ets-23 Part 2 Command Feasibility planning is Raze-approved, committed as `61004e5`, and pushed over SSH; Generator kickoff for `S-ETS-23-01` is next.
 - Latest pushed implementation commit: `38cb3c0 Implement Sprint 22 Part 2 ControlStream`.
-- Latest pushed planning commit: `61004e5 Plan Sprint 23 Feasibility`.
-- Push status: remote uses SSH and latest `git push origin main` succeeded on 2026-05-08T19:47Z (`b83f29c..61004e5 main -> main`).
+- Sprint 23 planning commit: `61004e5 Plan Sprint 23 Feasibility`, followed by reconciliation commits on `main`.
+- Push status: remote uses SSH; Sprint 23 planning and reconciliation were pushed successfully on 2026-05-08.
 
 ## Sprint ets-20 Generator Evidence
 

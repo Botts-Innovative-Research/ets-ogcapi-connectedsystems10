@@ -354,12 +354,55 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** the ETS SHALL verify that `/collections/{collectionId}/items` behaves as a Command resources endpoint
 **AND** it SHALL NOT fail an IUT solely because no Feasibility collection is advertised.
 
-#### REQ-ETS-PART2-005..014: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-005: Part 2 System Events Conformance Suite
+- **Priority**: MUST.
+- **Status**: PLANNED (Sprint 24).
+- **Description**: The ETS SHALL provide a TestNG suite for OGC 23-002 Clause 12 Requirements Class "System Events" using official identifiers `/req/system-event` and `/conf/system-event`, with prerequisites `/req/api-common` and Part 1 `/req/system`. Sprint 24 targets a read-only Generator increment: exact conformance declaration detection, prerequisite honesty, canonical `/systemEvents` endpoint checks, system-scoped `/systems/{sysId}/events` endpoint checks, optional SystemEvent resource/canonical evidence, and optional `itemType=SystemEvent` collection checks.
+- **Scope guard**: The first System Events increment SHALL NOT implement streaming/SSE event consumption, System History, Advanced Filtering event-by-type, Part 2 JSON schema closure, or mutation classes. It SHALL NOT infer System Events conformance from sibling Part 2 declarations, and SHALL NOT treat Annex A.43's conflicting `/systems/{sysId}/systemEvents` endpoint string as Requirement 43 PASS evidence without a standards-backed rationale.
+- **Maps to**: PRD FR-ETS-34.
+
+#### SCENARIO-ETS-PART2-005-SYSTEM-EVENT-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** OGC 23-002 `/req/system-event` maps to conformance class `/conf/system-event`
+**WHEN** the IUT conformance document does not declare `/conf/system-event`
+**THEN** the ETS SHALL SKIP System Events conformance assertions with a precise reason
+**AND** it SHALL NOT infer System Events support from sibling Part 2 declarations.
+
+#### SCENARIO-ETS-PART2-005-DEPENDENCY-SKIP-001 (CRITICAL)
+**GIVEN** System Events has prerequisites `/req/api-common` and Part 1 `/req/system`
+**WHEN** the prerequisite classes cannot be established for the IUT
+**THEN** the ETS SHALL keep scoped endpoint evidence separate from full `/conf/system-event` closure
+**AND** prerequisite-dependent assertions SHALL SKIP with a precise reason.
+
+#### SCENARIO-ETS-PART2-005-CANONICAL-ENDPOINT-001 (CRITICAL)
+**GIVEN** OGC 23-002 `/req/system-event/canonical-endpoint` identifies `{api_root}/systemEvents`
+**WHEN** the IUT declares `/conf/system-event`
+**THEN** the ETS SHALL verify the canonical SystemEvent resources endpoint using read-only GET
+**AND** HTTP 400 or non-resource streaming-only responses SHALL NOT produce PASS.
+
+#### SCENARIO-ETS-PART2-005-SYSTEM-REF-ENDPOINT-001 (CRITICAL)
+**GIVEN** OGC 23-002 Requirement 43 identifies `{api_root}/systems/{sysId}/events`
+**WHEN** the ETS checks System-scoped SystemEvent resources
+**THEN** it SHALL use `/systems/{sysId}/events` as the normative endpoint
+**AND** `/systems/{sysId}/systemEvents` SHALL be diagnostic alias evidence only unless a standards-backed correction is documented.
+
+#### SCENARIO-ETS-PART2-005-SYSTEM-EVENT-RESOURCE-CLOSURE-001 (NORMAL)
+**GIVEN** a real SystemEvent resource is available through declared `/conf/system-event` evidence
+**WHEN** the ETS evaluates `/req/system-event/canonical-url`
+**THEN** it SHALL require actual SystemEvent resource evidence before PASS
+**AND** it SHALL SKIP when the IUT exposes no SystemEvent resources.
+
+#### SCENARIO-ETS-PART2-005-SYSTEM-EVENT-COLLECTIONS-001 (NORMAL)
+**GIVEN** `/req/system-event/collections` applies when the server exposes SystemEvent collections
+**WHEN** a collection has `itemType` equal to `SystemEvent`
+**THEN** the ETS SHALL verify that `/collections/{collectionId}/items` behaves as a System Event resources endpoint
+**AND** it SHALL NOT fail an IUT solely because no SystemEvent collection is advertised.
+
+#### REQ-ETS-PART2-006..014: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprints 20, 21, 22 Generator and Sprint 23 planning)
-- **Description**: For each of the remaining 10 OGC 23-002 conformance classes or cross-class closures (`system-event`, `system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 24 System Events planning)
+- **Description**: For each of the remaining 9 OGC 23-002 conformance classes or cross-class closures (`system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
-- **Maps to**: PRD FR-ETS-34..43.
+- **Maps to**: PRD FR-ETS-35..43.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -1988,7 +2031,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-002 (Datastreams & Observations) — partially implemented in Sprint 21 read-only subset.
 - REQ-ETS-PART2-003 (Control Streams & Commands) — partially implemented in Sprint 22 read-only subset.
 - REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
-- REQ-ETS-PART2-005..014 (remaining Part 2 classes) — deferred after Sprint 23 Feasibility planning.
+- REQ-ETS-PART2-005: planned by Sprint 24 for System Events; Generator pending.
+- REQ-ETS-PART2-006..014 (remaining Part 2 classes) — deferred after Sprint 24 System Events planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

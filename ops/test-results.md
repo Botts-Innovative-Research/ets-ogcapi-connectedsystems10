@@ -1,8 +1,35 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-08T19:33Z
+Last updated: 2026-05-08T21:36Z
 
 ## Current Sprint Evidence
+
+Sprint ets-24 Part 2 System Events planning:
+
+- Planning only:
+  - Story: `epics/stories/s-ets-24-01-part2-system-event-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-24.yaml`
+  - No Java code changed yet; Maven and TeamEngine smoke are Generator gates.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 12 "Requirements Class System Events" and Annex A.5.
+  - Requirements class identifier: `/req/system-event`.
+  - Conformance class identifier: `/conf/system-event`.
+  - Prerequisites: `/req/api-common` and Part 1 `/req/system`.
+  - Selected Sprint 24 requirements: `/req/system-event/canonical-url`, `/req/system-event/resources-endpoint`, `/req/system-event/canonical-endpoint`, `/req/system-event/ref-from-system`, and `/req/system-event/collections`.
+- GeoRobotix planning probes:
+  - `/conformance`: declares `/conf/system-event`, but not `/conf/api-common`.
+  - `GET /systems?limit=1`: returned System id `0mqcvdnfoca0`.
+  - `GET /systemEvents?limit=2`: HTTP 400, `Invalid resource name: 'systemEvents'`.
+  - `GET /systems/0mqcvdnfoca0/events?limit=2`: HTTP 400 JSON, `Only streaming requests supported on this resource`.
+  - `GET /systems/0mqcvdnfoca0/systemEvents?limit=2`: HTTP 400, `Invalid resource name: 'systemEvents'`.
+  - `GET /collections?limit=100`: no collection with `itemType` equal to `SystemEvent` was observed.
+- Generator gate expectations:
+  - Default GeoRobotix smoke must not PASS System Events from declaration alone.
+  - Requirement 42 uses `/systemEvents`; Requirement 43 uses `/systems/{sysId}/events`.
+  - Annex A.43's `/systems/{sysId}/systemEvents` string is diagnostic-only unless a standards-backed correction is documented.
+  - Streaming/SSE event consumption is outside this first read-only Generator increment.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-24-plan-adversarial.yaml`: `APPROVE` confidence 0.93 with no required fixes.
 
 Sprint ets-23 Part 2 Command Feasibility Generator:
 

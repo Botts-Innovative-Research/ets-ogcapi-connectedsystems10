@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-08T19:33Z
+Last updated: 2026-05-08T21:36Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-23.yaml`
+- `.harness/contracts/sprint-ets-24.yaml`
 
 ## Current State
 
@@ -38,13 +38,31 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes Sprint 22 Generator commit `38cb3c0 Implement Sprint 22 Part 2 ControlStream` plus Sprint 23 planning work in progress.
+- ETS HEAD includes Sprint 23 Generator reconciliation commit `5098e35 Reconcile Sprint 23 Feasibility push` plus Sprint 24 planning work in progress.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-22-01` Generator complete as PARTIAL for the Part 2 Control Streams & Commands read-only subset.
-- Current sprint status: Sprint ets-23 Part 2 Command Feasibility Generator is partial implemented; Raze implementation review pending.
-- Latest pushed implementation commit: `38cb3c0 Implement Sprint 22 Part 2 ControlStream`.
-- Sprint 23 planning commit: `61004e5 Plan Sprint 23 Feasibility`, followed by reconciliation commits on `main`.
-- Push status: remote uses SSH; Sprint 23 planning and reconciliation were pushed successfully on 2026-05-08.
+- Latest implemented story: `S-ETS-23-01` Generator complete as PARTIAL for the Part 2 Command Feasibility safety-gated subset.
+- Current sprint status: Sprint ets-24 Part 2 System Events planning is Raze-approved and ready to commit/push.
+- Latest pushed implementation commit: `abba276 Implement Sprint 23 Feasibility`, followed by reconciliation commit `5098e35`.
+- Push status: remote uses SSH; Sprint 23 Generator and reconciliation were pushed successfully on 2026-05-08.
+
+## Sprint ets-24 Planning Evidence
+
+Part 2 System Events read-only declaration-gated subset:
+
+- Story: `epics/stories/s-ets-24-01-part2-system-event-planning.md`
+- Contract: `.harness/contracts/sprint-ets-24.yaml`
+- OpenSpec: defines `REQ-ETS-PART2-005` for OGC 23-002 Clause 12 and renumbers remaining Part 2 placeholders to `REQ-ETS-PART2-006..014`.
+- Scope planned: first read-only, declaration-gated System Events subset using official `/req/system-event` and `/conf/system-event` identifiers.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-08 and not stale.
+- OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 12 "Requirements Class System Events"; prerequisites are `/req/api-common` and Part 1 `/req/system`.
+- Normative endpoint guard: Requirement 42 uses `{api_root}/systemEvents`; Requirement 43 uses `{api_root}/systems/{sysId}/events`. Annex A.43's `/systems/{sysId}/systemEvents` text conflicts with Requirement 43 and is diagnostic-only unless a standards-backed correction is documented.
+- GeoRobotix planning probe: `/conformance` declares `/conf/system-event` but not `/conf/api-common`.
+- GeoRobotix read-only probes: `GET /systemEvents?limit=2` returned HTTP 400 `Invalid resource name: 'systemEvents'`; `GET /systems/0mqcvdnfoca0/events?limit=2` returned HTTP 400 JSON `Only streaming requests supported on this resource`; `GET /systems/0mqcvdnfoca0/systemEvents?limit=2` returned HTTP 400 `Invalid resource name: 'systemEvents'`; `/collections` did not expose `itemType=SystemEvent`.
+- Verdict policy planned: gate System Events assertions on exact `/conf/system-event`; keep missing `/conf/api-common` prerequisite honesty separate; do not PASS from declaration alone, sibling Part 2 declarations, streaming-only HTTP 400 responses, or empty/generic collection shape.
+- Out of scope: streaming/SSE event consumption, System History, Advanced Filtering event-by-type, Part 2 JSON schema closure, and mutation classes.
+- Raze planning review `.harness/evaluations/sprint-ets-24-plan-adversarial.yaml` returned `APPROVE` confidence 0.93 with no required fixes.
+- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+- Next action: commit/push Sprint 24 planning, then start Generator.
 
 ## Sprint ets-20 Generator Evidence
 

@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-08T21:36Z — Sprint 24 Part 2 System Events planning
+
+**Triggered by user instruction**: "Continue."
+
+- Started Sprint 24 planning for `S-ETS-24-01`, the next Part 2 item after Sprint 23.
+- Verified architecture freshness: `_bmad/architecture.md` last reconciled 2026-04-28, so it is not stale.
+- Verified official OGC 23-002 Clause 12 identifiers from the published HTML: System Events is `/req/system-event` with conformance `/conf/system-event`, prerequisites `/req/api-common` and Part 1 `/req/system`, and normative requirements 40-44.
+- Added `.harness/contracts/sprint-ets-24.yaml` and `epics/stories/s-ets-24-01-part2-system-event-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for System Events planning.
+- Split `REQ-ETS-PART2-005` out for System Events and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-006..014`.
+- Probed GeoRobotix System Events state: `/conformance` declares `/conf/system-event`, but `/systemEvents` returns HTTP 400 `Invalid resource name`, `/systems/{id}/events` returns HTTP 400 `Only streaming requests supported on this resource`, and `/collections` did not expose `itemType=SystemEvent`.
+- Planned endpoint policy: Requirement 42 uses `/systemEvents`; Requirement 43 uses `/systems/{sysId}/events`; Annex A.43's `/systems/{sysId}/systemEvents` string is diagnostic-only unless a standards-backed correction is documented.
+- Raze planning review `.harness/evaluations/sprint-ets-24-plan-adversarial.yaml` returned `APPROVE` confidence 0.93 with no required fixes.
+- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+
+---
+
 ## 2026-05-08T19:56Z — Sprint 23 Part 2 Feasibility Generator
 
 **Triggered by user instruction**: "Kick off Generator."

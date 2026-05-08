@@ -1,6 +1,6 @@
 # Epic ETS-03: CS API Part 2 Conformance Classes
 
-> Status: Active — Sprint 23 partially implements the Part 2 Command Feasibility safety-gated subset after Sprint 22 Control Streams & Commands. | Last updated: 2026-05-08
+> Status: Active — Sprint 24 plans the Part 2 System Events read-only declaration-gated subset after Sprint 23 Command Feasibility. | Last updated: 2026-05-08
 
 ## Goal
 Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynamic Data: datastreams, observations, control streams, commands, system events, system history, SWE Common formats, plus Part 2 Common/JSON/CRUD/Update/advanced-filtering). Owns sub-deliverable 3 of the new ETS capability.
@@ -21,7 +21,8 @@ Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynami
 | S-ETS-03-03 | (placeholder) Implement `/conf/controlstream` suite | Superseded by S-ETS-22-01 planning | REQ-ETS-PART2-003 |
 | S-ETS-23-01 | Implement `/conf/feasibility` (Part 2 Command Feasibility) safety-gated declaration subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-004 |
 | S-ETS-03-04 | (placeholder) Implement `/conf/feasibility` suite | Superseded by S-ETS-23-01 planning | REQ-ETS-PART2-004 |
-| S-ETS-03-05 | (placeholder) Implement `/conf/system-event` suite | Deferred | REQ-ETS-PART2-005 |
+| S-ETS-24-01 | Implement `/conf/system-event` (Part 2 System Events) read-only declaration-gated subset using official OGC 23-002 identifiers | Planned | REQ-ETS-PART2-005 |
+| S-ETS-03-05 | (placeholder) Implement `/conf/system-event` suite | Superseded by S-ETS-24-01 planning | REQ-ETS-PART2-005 |
 | S-ETS-03-06 | (placeholder) Implement `/conf/system-history` suite | Deferred | REQ-ETS-PART2-006 |
 | S-ETS-03-07 | (placeholder) Implement `/conf/advanced-filtering` (Part 2) suite | Deferred | REQ-ETS-PART2-007 |
 | S-ETS-03-08 | (placeholder) Implement `/conf/create-replace-delete` (Part 2) suite | Deferred | REQ-ETS-PART2-008 |
@@ -45,4 +46,5 @@ Implement TestNG suite classes for all 14 OGC 23-002 conformance classes (Dynami
 - Sprint 21 partially implements the first read-only Datastreams & Observations subset. OGC 23-002 Clause 9 names the class `/req/datastream` with conformance `/conf/datastream` and prerequisite `/req/api-common`; full closure remains prerequisite-incomplete on GeoRobotix because `/conf/api-common` is absent.
 - Sprint 22 partially implements the first read-only Control Streams & Commands subset. OGC 23-002 Clause 10 names the class `/req/controlstream` with conformance `/conf/controlstream` and prerequisite `/req/api-common`; GeoRobotix currently serves scoped `/controlstreams` endpoints but returns HTTP 400 for `/commands` and `/controls/{id}`, so the runtime tests SKIP those global/canonical assertions instead of producing false PASS.
 - Sprint 23 partially implements Command Feasibility. OGC 23-002 Clause 11 names the class `/req/feasibility` with conformance `/conf/feasibility` and prerequisite `/req/controlstream`; GeoRobotix currently does not declare `/conf/feasibility`, so the 7 Feasibility runtime tests SKIP before any feasibility POST and the smoke no-mutation oracle reports zero IUT-bound POST/PUT/DELETE/PATCH.
+- Sprint 24 plans System Events. OGC 23-002 Clause 12 names the class `/req/system-event` with conformance `/conf/system-event`, prerequisites `/req/api-common` and Part 1 `/req/system`, canonical endpoint `/systemEvents`, and system-scoped endpoint `/systems/{sysId}/events`. GeoRobotix declares `/conf/system-event` but currently returns HTTP 400 for normal JSON event endpoint probes, so Generator must avoid false PASS from declaration alone or streaming-only responses.
 - Historical web-app Part 2 story IDs and `dynamic-*` names are not authoritative for the Java ETS; use official OGC 23-002 identifiers.

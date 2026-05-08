@@ -1,58 +1,51 @@
 agent: planner
-status: superseded_by_generator
-timestamp: "2026-05-08T19:33:58Z"
-sprint_number: "ets-23"
-sprint_name: "part2-feasibility"
-contract_path: ".harness/contracts/sprint-ets-23.yaml"
+status: planned_pending_raze
+timestamp: "2026-05-08T21:36:19Z"
+sprint_number: "ets-24"
+sprint_name: "part2-system-event"
+contract_path: ".harness/contracts/sprint-ets-24.yaml"
 triggered_by: |
-  User said "Do it" after the Sprint 22 Generator handoff identified
-  REQ-ETS-PART2-004 /conf/feasibility as the next sprint item.
+  User said "Continue" after Sprint 23 Generator was implemented and pushed.
 
 planning_result:
   story:
-    id: "S-ETS-23-01"
-    title: "Part 2 Command Feasibility safety-gated subset"
-    file: "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
+    id: "S-ETS-24-01"
+    title: "Part 2 System Events read-only declaration-gated subset"
+    file: "epics/stories/s-ets-24-01-part2-system-event-planning.md"
   official_identifiers:
     source: "https://docs.ogc.org/is/23-002/23-002.html"
-    clause: "Clause 11, Requirements Class Command Feasibility"
-    requirement_class_identifier: "/req/feasibility"
-    conformance_class_identifier: "/conf/feasibility"
-    prerequisite: "/req/controlstream"
+    clause: "Clause 12, Requirements Class System Events"
+    requirement_class_identifier: "/req/system-event"
+    conformance_class_identifier: "/conf/system-event"
+    prerequisites:
+      - "/req/api-common"
+      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system"
     normative_statements:
-      - "/req/feasibility/canonical-url"
-      - "/req/feasibility/ref-from-controlstream"
-      - "/req/feasibility/status-endpoint"
-      - "/req/feasibility/result-endpoint"
-      - "/req/feasibility/collections"
+      - "/req/system-event/canonical-url"
+      - "/req/system-event/resources-endpoint"
+      - "/req/system-event/canonical-endpoint"
+      - "/req/system-event/ref-from-system"
+      - "/req/system-event/collections"
   georobotix_probe_summary:
-    conformance: "No /conf/feasibility declaration."
-    seed_controlstream: "0m4qpft9sdag with system@id 0m5ojudgr570."
-    feasibility_global: "GET /feasibility?limit=2 -> HTTP 400 Invalid resource name: 'feasibility'."
-    feasibility_nested_plural: "GET /controlstreams/0m4qpft9sdag/feasibility?limit=2 -> HTTP 400 Invalid resource name: 'feasibility'."
-    feasibility_nested_singular: "GET /controlstream/0m4qpft9sdag/feasibility?limit=2 -> HTTP 400 Invalid resource name: 'controlstream'."
-    feasibility_collections: "No itemType=Feasibility collection observed."
+    conformance: "Declares /conf/system-event but not /conf/api-common."
+    seed_system: "GET /systems?limit=1 returned System id 0mqcvdnfoca0."
+    canonical_endpoint: "GET /systemEvents?limit=2 -> HTTP 400 Invalid resource name: 'systemEvents'."
+    system_scoped_normative: "GET /systems/0mqcvdnfoca0/events?limit=2 -> HTTP 400 Only streaming requests supported on this resource."
+    system_scoped_annex_alias: "GET /systems/0mqcvdnfoca0/systemEvents?limit=2 -> HTTP 400 Invalid resource name: 'systemEvents'."
+    collections: "No itemType=SystemEvent collection observed."
   safety_policy:
-    default_public_smoke: "Must SKIP before any feasibility POST."
-    positive_post_checks: "Require explicit safe/mutable-IUT opt-in."
-    no_substitution: "Do not use regular Command creation as Feasibility evidence."
-    endpoint_alias_honesty: "The plural /controlstreams/{id}/feasibility probe is diagnostic only; /req/feasibility/ref-from-controlstream PASS requires normative singular {api_root}/controlstream/{csId}/feasibility or documented standards-backed rationale."
+    default_public_smoke: "Read-only; no mutation or long-lived streaming consumer in this first increment."
+    declaration_honesty: "Do not PASS System Events from /conf/system-event declaration alone."
+    prerequisite_honesty: "Scoped endpoint evidence is separate from full /conf/system-event closure while /conf/api-common is absent."
+    endpoint_alias_honesty: "Requirement 43 uses /systems/{sysId}/events; Annex A.43 /systems/{sysId}/systemEvents is diagnostic only unless standards-backed."
+    resource_evidence: "Canonical URL PASS requires actual SystemEvent resource evidence; empty/generic collections SKIP."
 
 raze_review:
-  plan_artifact: ".harness/evaluations/sprint-ets-23-plan-adversarial.yaml"
-  plan_verdict: "GAPS_FOUND"
-  plan_confidence: 0.89
-  required_fixes_status: "closed"
-  gapfix_artifact: ".harness/evaluations/sprint-ets-23-plan-gapfix.yaml"
-  gapfix_verdict: "APPROVE"
-  gapfix_confidence: 0.96
-  required_before_generator: false
-
-commit:
-  sha: "61004e5"
-  message: "Plan Sprint 23 Feasibility"
-  push: "b83f29c..61004e5 main -> main over SSH"
+  plan_artifact: ".harness/evaluations/sprint-ets-24-plan-adversarial.yaml"
+  plan_verdict: "APPROVE"
+  plan_confidence: 0.93
+  required_fixes: []
+  required_before_generator: true
 
 next_agent: "generator"
-superseded_by: ".harness/handoffs/generator-handoff.yaml"
-next_action: "Use generator-handoff.yaml, not this superseded planner handoff. Sprint 23 Generator is pending Raze implementation review."
+next_action: "Commit/push Sprint 24 planning before Generator, then start Generator for S-ETS-24-01."

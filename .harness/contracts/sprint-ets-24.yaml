@@ -1,0 +1,127 @@
+# Sprint 24 contract - Part 2 System Events read-only declaration-gated subset
+
+sprint: "ets-24"
+sprint_name: "part2-system-event"
+type: "feature-expansion"
+created: "2026-05-08T21:36:19Z"
+description: |
+  Sprint 24 plans the first OGC 23-002 System Events Generator increment.
+  The implementation must be read-only by default, declaration-gated on
+  /conf/system-event, and honest about GeoRobotix declaring /conf/system-event
+  while not exposing the normal JSON SystemEvent resources endpoints.
+
+stories:
+  - id: "S-ETS-24-01"
+    title: "Part 2 System Events read-only declaration-gated subset"
+    file: "epics/stories/s-ets-24-01-part2-system-event-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-23-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-005 (/req/system-event planned)"
+    - "REQ-ETS-PART2-006..014 (remaining placeholders renumbered after System Events split)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-005-SYSTEM-EVENT-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-005-DEPENDENCY-SKIP-001"
+    - "SCENARIO-ETS-PART2-005-CANONICAL-ENDPOINT-001"
+    - "SCENARIO-ETS-PART2-005-SYSTEM-REF-ENDPOINT-001"
+  normal:
+    - "SCENARIO-ETS-PART2-005-SYSTEM-EVENT-RESOURCE-CLOSURE-001"
+    - "SCENARIO-ETS-PART2-005-SYSTEM-EVENT-COLLECTIONS-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  no_code_changes_in_planning: true
+  generator_required_before_runtime_gates: true
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-08T21:36:19Z"
+  requirement_class: "Clause 12, Requirements Class System Events"
+  requirement_class_identifier: "/req/system-event"
+  conformance_class_identifier: "/conf/system-event"
+  prerequisites:
+    - "/req/api-common"
+    - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system"
+  selected_normative_statements:
+    - "/req/system-event/canonical-url"
+    - "/req/system-event/resources-endpoint"
+    - "/req/system-event/canonical-endpoint"
+    - "/req/system-event/ref-from-system"
+    - "/req/system-event/collections"
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares /conf/system-event and /conf/system-history, but not /conf/api-common."
+    system_seed: "GET /systems?limit=1 returned System id 0mqcvdnfoca0."
+    canonical_endpoint: "GET /systemEvents?limit=2 returned HTTP 400 Invalid resource name: 'systemEvents'."
+    system_scoped_normative: "GET /systems/0mqcvdnfoca0/events?limit=2 returned HTTP 400 JSON: Only streaming requests supported on this resource."
+    system_scoped_annex_alias: "GET /systems/0mqcvdnfoca0/systemEvents?limit=2 returned HTTP 400 Invalid resource name: 'systemEvents'."
+    collections: "GET /collections?limit=100 did not expose itemType SystemEvent."
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/system-event is not declared, all System Events conformance assertions SKIP with a precise reason."
+    - "Do not infer /conf/system-event PASS from sibling /conf/system-history, /conf/datastream, /conf/controlstream, or /conf/json declarations."
+  prerequisite:
+    - "Keep /req/api-common and Part 1 /req/system prerequisite handling visible and honest."
+    - "Do not report full /conf/system-event closure when /conf/api-common cannot be established."
+  endpoint_honesty:
+    - "Requirement 42 canonical endpoint PASS requires /systemEvents evidence."
+    - "Requirement 43 system-reference endpoint PASS uses normative /systems/{sysId}/events."
+    - "Annex A.43 /systems/{sysId}/systemEvents is diagnostic only unless a standards-backed correction is documented."
+    - "GeoRobotix HTTP 400 streaming-only responses are not JSON resources-endpoint PASS evidence."
+  resource_evidence:
+    - "Canonical URL PASS requires actual SystemEvent resource evidence."
+    - "Empty or absent SystemEvent resources produce SKIP, not PASS."
+    - "SystemEvent collections are optional unless itemType SystemEvent is advertised."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/system-event and /conf/system-event."
+  - "Add Part 2 System Events TestNG group and dependency/prerequisite handling."
+  - "Implement declaration-gated behavior when /conf/system-event is absent."
+  - "Preserve GeoRobotix prerequisite honesty when /conf/system-event is present but /conf/api-common is absent."
+  - "Use /systemEvents and /systems/{sysId}/events as the normative endpoints."
+  - "Add tests/comments referencing REQ-ETS-PART2-005 and SCENARIO-ETS-PART2-005-* IDs."
+  - "Run formatter, scripts/mvn-test-via-docker.sh, and GeoRobotix TeamEngine smoke after implementation."
+  - "Update spec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not use stale /req/systemevents, /conf/systemevents, or dynamic-* identifiers."
+  - "Do not PASS /conf/system-event from /conf/system-history or /conf/json alone."
+  - "Do not PASS canonical/resource assertions from empty collection shape alone."
+  - "Do not treat /systems/{sysId}/systemEvents alias evidence as satisfying Requirement 43."
+  - "Do not implement streaming/SSE consumption in the first read-only subset."
+  - "Do not fail an IUT solely because no SystemEvent collection is advertised."
+
+evaluation_focus:
+  raze:
+    - "Attack false PASS from sibling Part 2 declarations."
+    - "Attack endpoint alias drift between Requirement 43 and Annex A.43."
+    - "Attack PASS outcomes for canonical URL without actual SystemEvent resource evidence."
+    - "Attack treating GeoRobotix streaming-only HTTP 400 as resources-endpoint PASS."
+    - "Check stale web-app /req/systemevents naming does not leak into Java ETS."
+
+confidence: 0.76
+
+raze_review:
+  plan_artifact: ".harness/evaluations/sprint-ets-24-plan-adversarial.yaml"
+  plan_verdict: "APPROVE"
+  plan_confidence: 0.93
+  required_fixes: []

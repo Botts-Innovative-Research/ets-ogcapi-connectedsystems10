@@ -1,0 +1,88 @@
+artifact_type: adversarial_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+sprint: ets-24
+story: S-ETS-24-01
+subject: Sprint 24 planning - Part 2 System Events
+created_utc: "2026-05-08T21:41:21Z"
+verdict: APPROVE
+confidence: 0.93
+
+reviewed_scope:
+  planning_artifacts:
+    - ".harness/contracts/sprint-ets-24.yaml"
+    - "epics/stories/s-ets-24-01-part2-system-event-planning.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+  implementation_files: []
+  gates_not_run:
+    - Maven
+    - TeamEngine smoke
+    - Docker gates
+
+official_source_check:
+  source: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_by_reviewer: true
+  evidence:
+    - "Clause 12 Requirements class 5 identifies `/req/system-event`, conformance class `/conf/system-event`, prerequisites `/req/api-common` and Part 1 `/req/system`, and normative statements `/req/system-event/canonical-url`, `/resources-endpoint`, `/canonical-endpoint`, `/ref-from-system`, and `/collections`."
+    - "Requirement 42 identifies canonical endpoint `{api_root}/systemEvents`."
+    - "Requirement 43 identifies system-scoped endpoint `{api_root}/systems/{sysId}/events`."
+    - "Annex A.43 uses `{api_root}/systems/{sysId}/systemEvents`, creating the conflict the plan explicitly treats as diagnostic-only unless standards-backed."
+
+findings: []
+
+checks:
+  official_identifier_correctness:
+    result: pass
+    evidence:
+      - "Planning consistently uses `/req/system-event` and `/conf/system-event`."
+      - "Search surfaced no stale `/req/systemevents`, `/conf/systemevents`, or `dynamic-*` identifier use as authoritative Sprint 24 identifiers."
+  declaration_false_pass:
+    result: pass
+    evidence:
+      - "Contract/story/status/test-results state `/conf/system-event` declaration alone must not create endpoint/canonical PASS."
+      - "Sibling declarations such as `/conf/system-history`, `/conf/datastream`, `/conf/controlstream`, and `/conf/json` are explicitly excluded as System Events PASS evidence."
+  prerequisite_honesty:
+    result: pass
+    evidence:
+      - "Planning records GeoRobotix declares `/conf/system-event` but not `/conf/api-common`."
+      - "OpenSpec, contract, status, and handoff require full `/conf/system-event` closure to remain prerequisite-incomplete when `/conf/api-common` cannot be established."
+  endpoint_conflict_honesty:
+    result: pass
+    evidence:
+      - "Requirement 42 `/systemEvents` and Requirement 43 `/systems/{sysId}/events` are identified as normative."
+      - "Annex A.43 `/systems/{sysId}/systemEvents` is explicitly diagnostic-only unless a standards-backed correction is documented."
+  georobotix_streaming_only_behavior:
+    result: pass
+    evidence:
+      - "Planning records `GET /systems/0mqcvdnfoca0/events?limit=2` as HTTP 400 `Only streaming requests supported on this resource`."
+      - "Contract and OpenSpec say HTTP 400 / streaming-only responses are not JSON resources-endpoint PASS evidence and streaming/SSE is out of scope for the first increment."
+  empty_or_generic_collection_shape:
+    result: pass
+    evidence:
+      - "Canonical URL PASS requires actual SystemEvent resource evidence."
+      - "Empty or absent SystemEvent resources produce SKIP, not PASS."
+      - "SystemEvent collections are optional unless `itemType=SystemEvent` is advertised; no collection with that itemType is currently observed."
+  placeholder_numbering:
+    result: pass
+    evidence:
+      - "REQ-ETS-PART2-005 is split out for System Events; remaining placeholders are renumbered to `REQ-ETS-PART2-006..014` across spec, traceability, epic, status, known issues, contract, and handoff."
+  planning_only_scope:
+    result: pass
+    evidence:
+      - "No Sprint 24 Java implementation files are dirty."
+      - "Docs state this is planning-only and Maven/TeamEngine are Generator gates."
+
+required_fixes: []
+
+reviewer_notes:
+  - "The plan is suitable to commit/amend before Generator. Generator should preserve the exact endpoint-conflict guard in runtime tests and structural regressions."
+
+reviewer_edits:
+  - ".harness/evaluations/sprint-ets-24-plan-adversarial.yaml"

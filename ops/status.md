@@ -38,12 +38,12 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering` and reconciliation commit `5a8eef4 Reconcile Sprint 25 planning push`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-24-01` Generator is PARTIAL for the Part 2 System Events read-only declaration-gated subset.
 - Latest pushed implementation commit: `6fa00c4 Implement Sprint 24 System Events`, followed by reconciliation commit `5dccb36`.
 - Current sprint status: Sprint ets-25 Part 2 Advanced Filtering planning is committed and pushed; Generator is next.
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation push (`2f4a6de..5a8eef4 main -> main`).
 
 ## Sprint ets-25 Planning Evidence
 

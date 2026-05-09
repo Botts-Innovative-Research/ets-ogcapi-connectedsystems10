@@ -17,6 +17,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
 - Raze planning review `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml` initially returned `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference; fixed it to `REQ-ETS-PART2-013`; recheck returned `APPROVE` confidence 0.96.
 - Committed and pushed Sprint 25 planning over SSH: `2f4a6de Plan Sprint 25 Advanced Filtering` (`5dccb36..2f4a6de main -> main`).
+- Pushed follow-up reconciliation commit `5a8eef4 Reconcile Sprint 25 planning push` (`2f4a6de..5a8eef4 main -> main`).
 
 ---
 

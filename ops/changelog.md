@@ -16,6 +16,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Planned verdict policy: exact declaration gate; no Advanced Filtering PASS from undeclared HTTP 200 query behavior, empty collections alone, endpoint availability alone, sibling declarations, or `/conf/system-history`.
 - Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
 - Raze planning review `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml` initially returned `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference; fixed it to `REQ-ETS-PART2-013`; recheck returned `APPROVE` confidence 0.96.
+- Committed and pushed Sprint 25 planning over SSH: `2f4a6de Plan Sprint 25 Advanced Filtering` (`5dccb36..2f4a6de main -> main`).
 
 ---
 

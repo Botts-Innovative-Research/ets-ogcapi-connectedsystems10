@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-09T14:06Z
+Last updated: 2026-05-09T14:08Z
 
 ## Fresh-Session Entry Point
 
@@ -38,12 +38,12 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 24 reconciliation commit `5dccb36 Reconcile Sprint 24 System Events push` plus Sprint 25 planning ready to commit.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-24-01` Generator is PARTIAL for the Part 2 System Events read-only declaration-gated subset.
 - Latest pushed implementation commit: `6fa00c4 Implement Sprint 24 System Events`, followed by reconciliation commit `5dccb36`.
-- Current sprint status: Sprint ets-25 Part 2 Advanced Filtering planning is Raze-approved and ready to commit/push.
-- Push status: remote uses SSH; Sprint 24 Generator and reconciliation were pushed successfully on 2026-05-09.
+- Current sprint status: Sprint ets-25 Part 2 Advanced Filtering planning is committed and pushed; Generator is next.
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
 
 ## Sprint ets-25 Planning Evidence
 
@@ -63,7 +63,8 @@ Part 2 Advanced Filtering read-only declaration-gated subset:
 - Out of scope: mutation, seed-resource creation, full FOI recursive graph traversal, streaming/SSE event filter consumption, and full closure for Command filters while `/commands` is unavailable.
 - Raze planning review `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml`: initial `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference; fixed to `REQ-ETS-PART2-013`; recheck `APPROVE` confidence 0.96.
 - Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
-- Next action: commit/push Sprint 25 planning, then start Generator for `S-ETS-25-01`.
+- Commit/push: `2f4a6de Plan Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
+- Next action: start Generator for `S-ETS-25-01`.
 
 ## Sprint ets-24 Generator Evidence
 

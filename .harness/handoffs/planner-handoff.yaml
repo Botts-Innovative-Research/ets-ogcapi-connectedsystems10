@@ -1,6 +1,6 @@
 agent: planner
 status: planned_commit_ready
-timestamp: "2026-05-09T14:06:32Z"
+timestamp: "2026-05-09T14:08:16Z"
 sprint_number: "ets-25"
 sprint_name: "part2-advanced-filtering"
 contract_path: ".harness/contracts/sprint-ets-25.yaml"
@@ -65,5 +65,10 @@ raze_review:
       summary: "Epic ETS-03 acceptance criterion now uses REQ-ETS-PART2-013 instead of stale REQ-ETS-PART2-014."
   required_before_generator: true
 
+commit:
+  sha: "2f4a6de"
+  message: "Plan Sprint 25 Advanced Filtering"
+  push: "5dccb36..2f4a6de main -> main over SSH"
+
 next_agent: "generator"
-next_action: "Commit and push Sprint 25 planning, then start Generator for S-ETS-25-01."
+next_action: "Start Generator for S-ETS-25-01."

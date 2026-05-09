@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-09T14:06Z
+Last updated: 2026-05-09T14:08Z
 
 ## Current Sprint Evidence
 
@@ -37,6 +37,7 @@ Sprint ets-25 Part 2 Advanced Filtering planning:
   - `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml`: initial `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference.
   - Required fix applied: epic ETS-03 now references corrected `REQ-ETS-PART2-013`.
   - Recheck verdict: `APPROVE`, confidence 0.96.
+- Commit/push: `2f4a6de Plan Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
 
 Sprint ets-24 Part 2 System Events Generator:
 

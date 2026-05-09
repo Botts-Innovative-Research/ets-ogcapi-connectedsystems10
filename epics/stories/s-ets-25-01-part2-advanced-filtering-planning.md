@@ -1,7 +1,7 @@
 # S-ETS-25-01: Part 2 Advanced Filtering read-only declaration-gated subset
 
 ## Status
-Planned; Raze-approved for commit.
+Planned; Raze-approved; committed and pushed.
 
 ## User Instruction
 Triggered by: "continue" after Sprint 24 Generator was implemented, reconciled, and pushed.
@@ -55,7 +55,7 @@ The previous Part 2 placeholder backlog included `/conf/system-history` as `REQ-
 - Generator contract blocks false PASS from undeclared filter behavior, empty collections, endpoint availability alone, and sibling Part 2 declarations.
 - Raze reviews planning before Generator starts.
 - Raze planning review `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml` returned `APPROVE` confidence 0.96 after closing the stale `REQ-ETS-PART2-014` acceptance-reference gap.
-- Planning-only change is committed and pushed before Generator implementation.
+- Planning-only change is committed and pushed before Generator implementation: `2f4a6de Plan Sprint 25 Advanced Filtering`.
 
 ## Out of Scope
 - Full FOI recursive graph traversal.

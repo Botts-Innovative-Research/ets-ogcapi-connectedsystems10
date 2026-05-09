@@ -161,3 +161,8 @@ raze_review:
     - id: "RAZE-ETS25-PLAN-GAP-001"
       status: "CLOSED"
       summary: "Updated epic ETS-03 acceptance criteria from stale REQ-ETS-PART2-014 to corrected REQ-ETS-PART2-013."
+
+planning_commit:
+  sha: "2f4a6de"
+  message: "Plan Sprint 25 Advanced Filtering"
+  push: "5dccb36..2f4a6de main -> main over SSH"

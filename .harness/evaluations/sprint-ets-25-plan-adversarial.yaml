@@ -1,0 +1,97 @@
+artifact_type: adversarial_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+created_utc: "2026-05-09T14:02:06Z"
+sprint: ets-25
+story: S-ETS-25-01
+subject: "Sprint 25 planning - Part 2 Advanced Filtering"
+verdict: APPROVE
+confidence: 0.96
+
+scope:
+  mode: "planning/docs review only"
+  gates_rerun_by_reviewer: false
+  rerun_rationale: "User explicitly requested no Maven or TeamEngine; this is a planning-only review."
+  official_source_checked:
+    url: "https://docs.ogc.org/is/23-002/23-002.html"
+    evidence:
+      - "Annex A.6 defines conformance class /conf/advanced-filtering and requirements class /req/advanced-filtering."
+      - "Annex A.6 lists prerequisite /conf/api-common."
+      - "Clause 13/Annex A.6 define Advanced Filtering tests; no /conf/system-history or /req/system-history conformance class is defined in Annex A."
+  reviewed_paths:
+    - .harness/contracts/sprint-ets-25.yaml
+    - epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - _bmad/traceability.md
+    - _bmad/prd.md
+    - _bmad/product-brief.md
+    - _bmad/project-brief.md
+    - _bmad/architecture.md
+    - epics/epic-ets-03-part2-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/known-issues.md
+    - ops/changelog.md
+    - .harness/handoffs/planner-handoff.yaml
+    - .harness/handoffs/generator-handoff.yaml
+
+findings: []
+
+closed_findings:
+  - id: RAZE-ETS25-PLAN-GAP-001
+    severity: MEDIUM
+    title: "Active Part 2 epic still references stale REQ-ETS-PART2-014 after Sprint 25 renumbering"
+    status: CLOSED
+    path: epics/epic-ets-03-part2-classes.md
+    evidence:
+      - "Acceptance criteria now says Cross-class dynamic schema coupling (REQ-ETS-PART2-013) is enforced."
+      - "Adjacent epic table maps observation-binding cross-class closure to REQ-ETS-PART2-013."
+      - "Focused recheck found no current-authoritative Sprint 25 taxonomy references to REQ-ETS-PART2-014."
+
+checks:
+  official_ogc_identifier_fidelity:
+    status: PASS
+    evidence:
+      - "Current Sprint 25 contract, story, OpenSpec, traceability, ops docs, and planner handoff use /req/advanced-filtering and /conf/advanced-filtering."
+      - "No current Sprint 25 planning artifact treats dynamic-* names as authoritative."
+  system_history_taxonomy_correction:
+    status: PASS
+    evidence:
+      - "Current Sprint 25 docs retire /conf/system-history and /req/system-history as non-standard/vendor extension evidence only."
+      - "Focused recheck found the prior active-doc blocker closed."
+    non_blocking_note: "Older historical web-app artifacts still mention System History and dynamic names; they appear outside the current ETS Sprint 25 authoritative planning set and were not treated as blockers."
+  placeholder_renumbering:
+    status: PASS
+    evidence:
+      - "Most current files consistently use REQ-ETS-PART2-006 for Part 2 Advanced Filtering and REQ-ETS-PART2-007..013 for remaining placeholders."
+      - "epics/epic-ets-03-part2-classes.md line 39 now uses REQ-ETS-PART2-013 for cross-class dynamic schema coupling."
+  georobotix_declaration_honesty:
+    status: PASS
+    evidence:
+      - "Planning records that GeoRobotix does not declare /conf/advanced-filtering despite selected Datastream and ControlStream filter probes returning HTTP 200."
+      - "Contract/story/status/test-results require declaration-gated SKIP behavior, not PASS, while /conf/advanced-filtering is absent."
+  false_pass_risks:
+    status: PASS
+    evidence:
+      - "Docs prohibit PASS from undeclared HTTP 200 query behavior, empty collections, endpoint availability alone, sibling declarations, and non-standard /conf/system-history."
+      - "Command filters and /systemEvents eventType probes are documented as HTTP 400 and not PASS evidence."
+      - "Streaming-only /systems/{id}/events?eventType behavior is documented as not JSON SystemEvent filter PASS evidence."
+  prerequisite_honesty:
+    status: PASS
+    evidence:
+      - "Planning identifies prerequisites as /req/api-common and Part 1 /req/advanced-filtering."
+      - "Contract requires visible prerequisite handling and forbids full /conf/advanced-filtering closure when prerequisites cannot be established."
+  planning_only_gate_honesty:
+    status: PASS
+    evidence:
+      - "ops/status.md and ops/test-results.md state no Java code changed yet and Maven/TeamEngine are Generator gates."
+
+required_fixes: []
+
+commit_readiness:
+  can_commit_or_amend: true
+  rationale: "The prior taxonomy blocker is closed; focused recheck found no remaining Sprint 25 planning blocker."
+
+reviewer_edits:
+  - .harness/evaluations/sprint-ets-25-plan-adversarial.yaml

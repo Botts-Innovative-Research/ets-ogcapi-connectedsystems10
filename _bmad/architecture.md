@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.1 | Status: Living Document | Last reconciled: 2026-04-28 (Sprint 2 ratifications appended at §14)
+> Version: 2.0.4 | Status: Living Document | Last reconciled: 2026-05-09 (Sprint 25 Part 2 taxonomy correction appended at §18)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -13,7 +13,7 @@
 
 ## 1. Overview
 
-The deliverable is **`ets-ogcapi-connectedsystems10`** — a Java 17 / Maven 3.9 / TestNG / REST Assured Executable Test Suite that registers with OGC TeamEngine 5.6.x (and forward-compatibly with 6.0.0) via the `com.occamlab.te.spi.jaxrs.TestSuiteController` SPI. An OGC API – Connected Systems server implementer points TeamEngine at their landing page; TeamEngine invokes our suite, our suite issues HTTP requests against the IUT via REST Assured, validates responses against the bundled OGC JSON Schemas, and produces a TestNG XML report TeamEngine renders for the user. Coverage targets: OGC 23-001 Part 1 (14 conformance classes, Sprint 1 lands Core; sprints 2-N land the other 13) and OGC 23-002 Part 2 (14 conformance classes, deferred per user gate).
+The deliverable is **`ets-ogcapi-connectedsystems10`** — a Java 17 / Maven 3.9 / TestNG / REST Assured Executable Test Suite that registers with OGC TeamEngine 5.6.x (and forward-compatibly with 6.0.0) via the `com.occamlab.te.spi.jaxrs.TestSuiteController` SPI. An OGC API – Connected Systems server implementer points TeamEngine at their landing page; TeamEngine invokes our suite, our suite issues HTTP requests against the IUT via REST Assured, validates responses against the bundled OGC JSON Schemas, and produces a TestNG XML report TeamEngine renders for the user. Coverage targets: OGC 23-001 Part 1 (14 conformance classes, Sprint 1 lands Core; sprints 2-N land the other 13) and OGC 23-002 Part 2 conformance classes plus any explicitly scoped project cross-class closures.
 
 This is **not a web application**. It has no browser UI, no REST endpoints we author, no session storage we own. TeamEngine owns the user-facing surface; we provide a jar that TeamEngine loads.
 
@@ -403,3 +403,11 @@ Cross-references **§14.6 SystemFeatures conformance class scope** (Sprint 2). A
 ## 17. Last reconciled
 
 **2026-04-29** — Sprint 4 ratifications appended (§16). Sprint 3 §15 unchanged. Sprint 2 §14 unchanged. v2.0 sections 1-13 unchanged. Re-reconcile required if >30 days stale per CLAUDE.md.
+
+## 18. Architecture v2.0.4 — Sprint 25 Part 2 taxonomy correction (2026-05-09)
+
+Sprint 25 planning corrected the Part 2 scope model after re-checking OGC 23-002 Annex A. The standard defines the Part 2 Advanced Filtering conformance class as `/conf/advanced-filtering` with requirements class `/req/advanced-filtering`; it does not define `/conf/system-history` or `/req/system-history`.
+
+Architectural consequence: the ETS shall not add an OGC 23-002 System History TestNG group. GeoRobotix's `/conf/system-history` declaration is treated as non-standard/vendor extension evidence only. The active Part 2 backlog now tracks the OGC 23-002 conformance classes plus explicitly scoped project cross-class closures, not the stale v1.0 web-app count.
+
+**2026-05-09** — Sprint 25 taxonomy correction appended (§18). v2.0 sections 1-13 unchanged except the overview sentence now avoids the stale "14 Part 2 conformance classes" count. Re-reconcile required if >30 days stale per AGENTS.md.

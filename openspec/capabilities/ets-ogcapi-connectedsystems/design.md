@@ -101,7 +101,7 @@ The capability extends mechanically across sprints 2..N: each remaining Part 1 c
 | `GeoJsonTests` | `conformance.geojson` | REQ-ETS-PART1-012 |
 | `SensorMlTests` | `conformance.sensorml` | REQ-ETS-PART1-013 |
 
-(Part 2 classes — REQ-ETS-PART2-001..014 — explicitly not in scope per user gate; structurally analogous when their sprint cluster runs.)
+(Part 2 classes — REQ-ETS-PART2-001..013 after the Sprint 25 taxonomy correction — are structurally analogous when their sprint cluster runs.)
 
 ## Per-suite-class responsibilities (Sprint 1)
 

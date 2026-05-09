@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-09T13:52Z — Sprint 25 Part 2 Advanced Filtering planning
+
+**Triggered by user instruction**: "continue."
+
+- Started Sprint 25 planning for `S-ETS-25-01`, the next Part 2 item after Sprint 24.
+- Verified architecture freshness and updated `_bmad/architecture.md`: last reconciled 2026-05-09 after the Sprint 25 Part 2 taxonomy correction.
+- Verified official OGC 23-002 Clause 13 identifiers from the published HTML: Advanced Filtering is `/req/advanced-filtering` with conformance `/conf/advanced-filtering`, prerequisites `/req/api-common` and Part 1 `/req/advanced-filtering`, and normative requirements 45-62.
+- Corrected the stale System History placeholder: OGC 23-002 Annex A does not define `/conf/system-history` or `/req/system-history`; GeoRobotix's `/conf/system-history` declaration is now documented as non-standard/vendor extension evidence only.
+- Added `.harness/contracts/sprint-ets-25.yaml` and `epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md`.
+- Updated OpenSpec, traceability, PRD, architecture, project/product briefs, epic ETS-03, ops status, test-results, known issues, and handoffs for Advanced Filtering planning.
+- Probed GeoRobotix Advanced Filtering state: `/conformance` does not declare `/conf/advanced-filtering`; selected Datastream and ControlStream filters returned HTTP 200 JSON with `items`; selected Observation filters returned HTTP 200 JSON with empty `items`; `/commands` filters and `/systemEvents?eventType=...` returned HTTP 400; `/systems/{id}/events?eventType=...` returned HTTP 400 streaming-only.
+- Planned verdict policy: exact declaration gate; no Advanced Filtering PASS from undeclared HTTP 200 query behavior, empty collections alone, endpoint availability alone, sibling declarations, or `/conf/system-history`.
+- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+- Raze planning review `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml` initially returned `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference; fixed it to `REQ-ETS-PART2-013`; recheck returned `APPROVE` confidence 0.96.
+
+---
+
 ## 2026-05-09T02:04Z — Sprint 24 Part 2 System Events Generator
 
 **Triggered by user instruction**: "Ignore my last message - it was a mistake intended for a different agent in a different project. Proceed with what your next task was before that message."

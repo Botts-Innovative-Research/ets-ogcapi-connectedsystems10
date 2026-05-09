@@ -1,0 +1,163 @@
+# Sprint 25 contract - Part 2 Advanced Filtering read-only declaration-gated subset
+
+sprint: "ets-25"
+sprint_name: "part2-advanced-filtering"
+type: "feature-expansion"
+created: "2026-05-09T13:52:11Z"
+description: |
+  Sprint 25 plans the first OGC 23-002 Advanced Filtering Generator increment.
+  The implementation must be read-only by default, declaration-gated on
+  /conf/advanced-filtering, and honest about GeoRobotix supporting some filter
+  parameters while not declaring the conformance class. The planning also
+  corrects the stale System History placeholder: OGC 23-002 Annex A does not
+  define /conf/system-history or /req/system-history.
+
+stories:
+  - id: "S-ETS-25-01"
+    title: "Part 2 Advanced Filtering read-only declaration-gated subset"
+    file: "epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-24-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-006 (/req/advanced-filtering planned; former System History placeholder retired)"
+    - "REQ-ETS-PART2-007..013 (remaining placeholders renumbered after Advanced Filtering split)"
+  new_reqs: []
+  retired_placeholders:
+    - "Former REQ-ETS-PART2-006 /conf/system-history: not defined by OGC 23-002 Annex A; GeoRobotix declaration is treated as non-standard/vendor extension evidence only."
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-006-ADVFILTER-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-006-DEPENDENCY-SKIP-001"
+    - "SCENARIO-ETS-PART2-006-UNDECLARED-FILTER-HONESTY-001"
+  normal:
+    - "SCENARIO-ETS-PART2-006-DATASTREAM-FILTERS-READONLY-001"
+    - "SCENARIO-ETS-PART2-006-OBSERVATION-FILTERS-READONLY-001"
+    - "SCENARIO-ETS-PART2-006-CONTROLSTREAM-FILTERS-READONLY-001"
+    - "SCENARIO-ETS-PART2-006-COMMAND-FILTERS-READONLY-001"
+    - "SCENARIO-ETS-PART2-006-SYSTEM-EVENT-FILTER-READONLY-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  system_history_placeholder_retired: true
+  no_code_changes_in_planning: true
+  generator_required_before_runtime_gates: true
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-09T13:52:11Z"
+  requirement_class: "Clause 13, Requirements Class Advanced Filtering"
+  requirement_class_identifier: "/req/advanced-filtering"
+  conformance_class_identifier: "/conf/advanced-filtering"
+  prerequisites:
+    - "/req/api-common"
+    - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering"
+  normative_statements:
+    - "/req/advanced-filtering/datastream-by-phenomenontime"
+    - "/req/advanced-filtering/datastream-by-resulttime"
+    - "/req/advanced-filtering/datastream-by-obsprop"
+    - "/req/advanced-filtering/datastream-by-foi"
+    - "/req/advanced-filtering/obs-by-phenomenontime"
+    - "/req/advanced-filtering/obs-by-resulttime"
+    - "/req/advanced-filtering/obs-by-foi"
+    - "/req/advanced-filtering/controlstream-by-issuetime"
+    - "/req/advanced-filtering/controlstream-by-exectime"
+    - "/req/advanced-filtering/controlstream-by-controlprop"
+    - "/req/advanced-filtering/controlstream-by-foi"
+    - "/req/advanced-filtering/cmd-by-issuetime"
+    - "/req/advanced-filtering/cmd-by-exectime"
+    - "/req/advanced-filtering/cmd-by-status"
+    - "/req/advanced-filtering/cmd-by-sender"
+    - "/req/advanced-filtering/cmd-by-foi"
+    - "/req/advanced-filtering/status-by-statuscode"
+    - "/req/advanced-filtering/event-by-type"
+  correction:
+    - "OGC 23-002 Annex A contains no /conf/system-history conformance class and no /req/system-history requirements class."
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Does not declare /conf/advanced-filtering; does declare non-standard /conf/system-history and several sibling Part 2 classes."
+    datastream_filters:
+      phenomenonTime: "GET /datastreams?phenomenonTime=2026-04-20T00:00:00Z&limit=2 returned HTTP 200 JSON with items."
+      resultTime: "GET /datastreams?resultTime=2026-04-20T00:00:00Z&limit=2 returned HTTP 200 JSON with items."
+      observedProperty: "GET /datastreams?observedProperty=http%3A%2F%2Fsensorml.com%2Font%2Fisa%2Fproperty%2FLink_Loss&limit=2 returned HTTP 200 JSON with items."
+    observation_filters:
+      phenomenonTime: "GET /observations?phenomenonTime=2026-04-20T00:00:00Z&limit=2 returned HTTP 200 JSON with empty items."
+      resultTime: "GET /observations?resultTime=2026-04-20T00:00:00Z&limit=2 returned HTTP 200 JSON with empty items."
+    controlstream_filters:
+      issueTime: "GET /controlstreams?issueTime=2026-04-20T00:00:00Z&limit=2 returned HTTP 200 JSON with items."
+      executionTime: "GET /controlstreams?executionTime=2026-04-20T00:00:00Z&limit=2 returned HTTP 200 JSON with items."
+    command_filters:
+      issueTime: "GET /commands?issueTime=2026-04-20T00:00:00Z&limit=2 returned HTTP 400 Invalid resource name: commands."
+      statusCode: "GET /commands?statusCode=COMPLETED&limit=2 returned HTTP 400 Invalid resource name: commands."
+      sender: "GET /commands?sender=test&limit=2 returned HTTP 400 Invalid resource name: commands."
+    system_event_filters:
+      canonical: "GET /systemEvents?eventType=Calibration&limit=2 returned HTTP 400 Invalid resource name: systemEvents."
+      system_scoped: "GET /systems/0mqcvdnfoca0/events?eventType=Calibration&limit=2 returned HTTP 400 Only streaming requests supported on this resource."
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/advanced-filtering is not declared, all Advanced Filtering conformance assertions SKIP with a precise reason."
+    - "Do not infer /conf/advanced-filtering PASS from successful undeclared query behavior or sibling Part 2 declarations."
+  prerequisite:
+    - "Keep /req/api-common and Part 1 /req/advanced-filtering prerequisite handling visible and honest."
+    - "Do not report full /conf/advanced-filtering closure when prerequisites cannot be established."
+  filter_predicate_honesty:
+    - "A filtered non-empty collection PASS requires verifying returned resources satisfy the requested predicate."
+    - "An empty filtered collection is not predicate evidence by itself; SKIP unless a narrow endpoint-support assertion is explicitly intended."
+    - "HTTP 400 command and systemEvents responses are not PASS evidence."
+    - "Streaming-only /systems/{sysId}/events responses are not JSON eventType filter PASS evidence."
+  taxonomy_correction:
+    - "Do not add a System History TestNG group for OGC 23-002."
+    - "Do not treat GeoRobotix /conf/system-history as an OGC conformance class."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/advanced-filtering and /conf/advanced-filtering."
+  - "Add Part 2 Advanced Filtering TestNG group and dependency/prerequisite handling."
+  - "Implement declaration-gated behavior when /conf/advanced-filtering is absent."
+  - "Preserve GeoRobotix honesty: some filter URLs return HTTP 200 but /conf/advanced-filtering is absent."
+  - "Add tests/comments referencing REQ-ETS-PART2-006 and SCENARIO-ETS-PART2-006-* IDs."
+  - "Run formatter, scripts/mvn-test-via-docker.sh, and GeoRobotix TeamEngine smoke after implementation."
+  - "Update spec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not implement or wire a System History group for OGC 23-002."
+  - "Do not use stale /req/systemhistory, /req/system-history, /conf/system-history, dynamic-* authoritative naming, or lower-case /systemevents endpoint spelling as PASS evidence."
+  - "Do not PASS Advanced Filtering from endpoint HTTP 200 alone."
+  - "Do not PASS filter predicates from empty result collections alone."
+  - "Do not POST seed resources or mutate public GeoRobotix."
+  - "Do not implement streaming/SSE event filter consumption in the first subset."
+
+evaluation_focus:
+  raze:
+    - "Attack stale System History taxonomy and renumbering drift."
+    - "Attack false PASS from undeclared but HTTP-200 filter behavior."
+    - "Attack empty collection predicate PASS outcomes."
+    - "Attack sibling Part 2 declarations as Advanced Filtering evidence."
+    - "Attack command/systemEvents HTTP 400 or streaming-only responses treated as PASS."
+    - "Check stale /req/systemhistory, /req/system-history, /conf/system-history, dynamic-* naming does not leak into Java ETS."
+
+confidence: 0.74
+
+raze_review:
+  plan_artifact: ".harness/evaluations/sprint-ets-25-plan-adversarial.yaml"
+  plan_verdict: "APPROVE"
+  plan_confidence: 0.96
+  required_fixes:
+    - id: "RAZE-ETS25-PLAN-GAP-001"
+      status: "CLOSED"
+      summary: "Updated epic ETS-03 acceptance criteria from stale REQ-ETS-PART2-014 to corrected REQ-ETS-PART2-013."

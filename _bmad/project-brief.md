@@ -47,7 +47,7 @@ Full criteria in `_bmad/prd.md` v2.0.
 
 - **Build artifact**: a Maven jar published as `org.opengis.cite:ets-ogcapi-connectedsystems10:<version>` to OSSRH/Maven Central at the beta milestone.
 - **Runtime host**: TeamEngine 5.6.x (currently 5.6.1) Docker image (`ogccite/teamengine-production:5.6.1`) with the ETS jar mounted into `WEB-INF/lib/`.
-- **Test framework**: TestNG suites, one class per conformance class (28 total: 14 Part 1 + 14 Part 2).
+- **Test framework**: TestNG suites, one class per conformance class. Sprint 25 corrected the Part 2 count: OGC 23-002 Annex A does not define `/conf/system-history`, so current scope is the Part 1 classes, OGC Part 2 classes, and explicitly scoped project cross-class closures.
 - **Spec traceability**: every `@Test` has a `description` attribute carrying the OGC requirement URI (e.g. `OGC-23-001 /req/system/canonical-url`).
 - **Schema validation**: Kaizen `openapi-parser` against the OGC OpenAPI YAML pinned to a specific commit SHA in `pom.xml`. JSON Schemas at `src/main/resources/schemas/` (ported verbatim from `csapi_compliance/schemas/`).
 - **Spec-trap fixtures**: TestNG `@DataProvider`-supplied corpus ported from `csapi_compliance/tests/fixtures/spec-traps/` (~30-50 cases).

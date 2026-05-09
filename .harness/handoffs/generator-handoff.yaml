@@ -75,4 +75,4 @@ commit:
   message: "Implement Sprint 24 System Events"
   push: "1f5a916..6fa00c4 main -> main over SSH"
 
-next_action: "Plan the next Part 2 sprint item."
+next_action: "Superseded by Sprint 25 planning; use .harness/handoffs/planner-handoff.yaml."

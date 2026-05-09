@@ -398,12 +398,34 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** the ETS SHALL verify that `/collections/{collectionId}/items` behaves as a System Event resources endpoint
 **AND** it SHALL NOT fail an IUT solely because no SystemEvent collection is advertised.
 
-#### REQ-ETS-PART2-006..014: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-006: Part 2 Advanced Filtering Conformance Suite
+- **Priority**: MUST
+- **Status**: PLANNED (Sprint 25; story S-ETS-25-01)
+- **Description**: The ETS SHALL implement a read-only, declaration-gated subset of OGC 23-002 Clause 13 Requirements Class "Advanced Filtering" using official identifiers `/req/advanced-filtering` and `/conf/advanced-filtering`. The first Generator increment SHALL preserve prerequisite honesty for `/req/api-common` and Part 1 `/req/advanced-filtering`, SHALL NOT infer conformance from successful undeclared query behavior, and SHALL avoid mutation.
+- **Rationale**: Advanced Filtering extends previously implemented Part 2 resource classes with query parameters across DataStream, Observation, ControlStream, Command, CommandStatus, and SystemEvent endpoints.
+- **Maps to**: PRD FR-ETS-36.
+- **Requirements class**: `/req/advanced-filtering`.
+- **Conformance class**: `/conf/advanced-filtering`.
+- **Prerequisites**: `/req/api-common` and `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering`.
+- **In-scope normative statements for Sprint 25 planning**: `/req/advanced-filtering/datastream-by-phenomenontime`, `/req/advanced-filtering/datastream-by-resulttime`, `/req/advanced-filtering/datastream-by-obsprop`, `/req/advanced-filtering/datastream-by-foi`, `/req/advanced-filtering/obs-by-phenomenontime`, `/req/advanced-filtering/obs-by-resulttime`, `/req/advanced-filtering/obs-by-foi`, `/req/advanced-filtering/controlstream-by-issuetime`, `/req/advanced-filtering/controlstream-by-exectime`, `/req/advanced-filtering/controlstream-by-controlprop`, `/req/advanced-filtering/controlstream-by-foi`, `/req/advanced-filtering/cmd-by-issuetime`, `/req/advanced-filtering/cmd-by-exectime`, `/req/advanced-filtering/cmd-by-status`, `/req/advanced-filtering/cmd-by-sender`, `/req/advanced-filtering/cmd-by-foi`, `/req/advanced-filtering/status-by-statuscode`, and `/req/advanced-filtering/event-by-type`.
+- **Planning correction**: OGC 23-002 Annex A does not define `/conf/system-history` or `/req/system-history`; GeoRobotix advertises `/conf/system-history` as a non-standard/vendor extension. The former `REQ-ETS-PART2-006` System History placeholder is retired from the OGC conformance-class backlog.
+- **Scenario IDs planned for Generator**:
+  - `SCENARIO-ETS-PART2-006-ADVFILTER-CONFORMANCE-DECLARED-001`
+  - `SCENARIO-ETS-PART2-006-DEPENDENCY-SKIP-001`
+  - `SCENARIO-ETS-PART2-006-DATASTREAM-FILTERS-READONLY-001`
+  - `SCENARIO-ETS-PART2-006-OBSERVATION-FILTERS-READONLY-001`
+  - `SCENARIO-ETS-PART2-006-CONTROLSTREAM-FILTERS-READONLY-001`
+  - `SCENARIO-ETS-PART2-006-COMMAND-FILTERS-READONLY-001`
+  - `SCENARIO-ETS-PART2-006-SYSTEM-EVENT-FILTER-READONLY-001`
+  - `SCENARIO-ETS-PART2-006-UNDECLARED-FILTER-HONESTY-001`
+- **GeoRobotix planning probe**: `/conformance` does not declare `/conf/advanced-filtering`, even though selected read-only filter requests currently return mixed behavior: `GET /datastreams?phenomenonTime=...`, `/datastreams?resultTime=...`, `/datastreams?observedProperty=...`, `/controlstreams?issueTime=...`, and `/controlstreams?executionTime=...` returned HTTP 200; `GET /observations?phenomenonTime=...` and `/observations?resultTime=...` returned HTTP 200 with empty `items`; `GET /commands?...` and `/systemEvents?eventType=...` returned HTTP 400; `GET /systems/{id}/events?eventType=...` returned HTTP 400 streaming-only. These probe results are readiness diagnostics only and must not produce Advanced Filtering PASS while `/conf/advanced-filtering` is absent.
+
+#### REQ-ETS-PART2-007..013: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 24 System Events planning)
-- **Description**: For each of the remaining 9 OGC 23-002 conformance classes or cross-class closures (`system-history`, `advanced-filtering`, `create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 25 Advanced Filtering planning)
+- **Description**: For each of the remaining 7 OGC 23-002 conformance classes or cross-class closures (`create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
-- **Maps to**: PRD FR-ETS-35..43.
+- **Maps to**: PRD FR-ETS-37..43, except retired non-standard FR-ETS-35 System History.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -2033,7 +2055,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-003 (Control Streams & Commands) — partially implemented in Sprint 22 read-only subset.
 - REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
 - REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.
-- REQ-ETS-PART2-006..014 (remaining Part 2 classes) — deferred after Sprint 24 System Events planning.
+- REQ-ETS-PART2-006: planned by Sprint 25 Advanced Filtering.
+- REQ-ETS-PART2-007..013 (remaining Part 2 classes/cross-class closures) — deferred after Sprint 25 Advanced Filtering planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

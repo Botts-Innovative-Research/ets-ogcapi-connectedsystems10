@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-09T02:04Z
+Last updated: 2026-05-09T14:06Z
 
 ## Fresh-Session Entry Point
 
@@ -16,8 +16,8 @@ Read these first:
 - `ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md`
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
-- `.harness/handoffs/generator-handoff.yaml`
-- `.harness/contracts/sprint-ets-24.yaml`
+- `.harness/handoffs/planner-handoff.yaml`
+- `.harness/contracts/sprint-ets-25.yaml`
 
 ## Current State
 
@@ -38,11 +38,32 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 24 Generator commit `6fa00c4 Implement Sprint 24 System Events`.
+- ETS HEAD includes pushed Sprint 24 reconciliation commit `5dccb36 Reconcile Sprint 24 System Events push` plus Sprint 25 planning ready to commit.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-24-01` Generator is PARTIAL for the Part 2 System Events read-only declaration-gated subset.
-- Latest pushed implementation commit: `abba276 Implement Sprint 23 Feasibility`, followed by reconciliation commit `5098e35`.
-- Push status: remote uses SSH; Sprint 24 Generator was pushed successfully on 2026-05-09 (`1f5a916..6fa00c4 main -> main`).
+- Latest pushed implementation commit: `6fa00c4 Implement Sprint 24 System Events`, followed by reconciliation commit `5dccb36`.
+- Current sprint status: Sprint ets-25 Part 2 Advanced Filtering planning is Raze-approved and ready to commit/push.
+- Push status: remote uses SSH; Sprint 24 Generator and reconciliation were pushed successfully on 2026-05-09.
+
+## Sprint ets-25 Planning Evidence
+
+Part 2 Advanced Filtering read-only declaration-gated subset:
+
+- Story: `epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md`
+- Contract: `.harness/contracts/sprint-ets-25.yaml`
+- OpenSpec: defines `REQ-ETS-PART2-006` for OGC 23-002 Clause 13 and renumbers remaining Part 2 placeholders to `REQ-ETS-PART2-007..013`.
+- Scope planned: first read-only, declaration-gated Advanced Filtering subset using official `/req/advanced-filtering` and `/conf/advanced-filtering` identifiers.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-05-09 after the Sprint 25 taxonomy correction; not stale.
+- OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 13 "Requirements Class Advanced Filtering"; prerequisites are `/req/api-common` and Part 1 `/req/advanced-filtering`.
+- Normative requirement set: Requirements 45-62 cover DataStream, Observation, ControlStream, Command, CommandStatus, and SystemEvent filter query parameters.
+- Taxonomy correction: OGC 23-002 Annex A does not define `/conf/system-history` or `/req/system-history`; GeoRobotix's `/conf/system-history` declaration is treated as non-standard/vendor extension evidence only.
+- GeoRobotix planning probe: `/conformance` does not declare `/conf/advanced-filtering`.
+- GeoRobotix read-only filter probes: selected `/datastreams` and `/controlstreams` filter requests returned HTTP 200 JSON with `items`; selected `/observations` time filters returned HTTP 200 JSON with empty `items`; `/commands` filter requests returned HTTP 400; `/systemEvents?eventType=...` returned HTTP 400; `/systems/{id}/events?eventType=...` returned HTTP 400 streaming-only.
+- Verdict policy planned: exact declaration gate; no Advanced Filtering PASS from undeclared HTTP 200 query behavior, empty result collections, endpoint availability alone, sibling Part 2 declarations, or the non-standard `/conf/system-history` declaration.
+- Out of scope: mutation, seed-resource creation, full FOI recursive graph traversal, streaming/SSE event filter consumption, and full closure for Command filters while `/commands` is unavailable.
+- Raze planning review `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml`: initial `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference; fixed to `REQ-ETS-PART2-013`; recheck `APPROVE` confidence 0.96.
+- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+- Next action: commit/push Sprint 25 planning, then start Generator for `S-ETS-25-01`.
 
 ## Sprint ets-24 Generator Evidence
 
@@ -69,7 +90,7 @@ Part 2 System Events read-only declaration-gated subset:
 
 - Story: `epics/stories/s-ets-24-01-part2-system-event-planning.md`
 - Contract: `.harness/contracts/sprint-ets-24.yaml`
-- OpenSpec: defines `REQ-ETS-PART2-005` for OGC 23-002 Clause 12 and renumbers remaining Part 2 placeholders to `REQ-ETS-PART2-006..014`.
+- OpenSpec: defines `REQ-ETS-PART2-005` for OGC 23-002 Clause 12. At Sprint 24 close the remaining placeholders were `REQ-ETS-PART2-006..014`; Sprint 25 later corrected that stale taxonomy by retiring `/conf/system-history`.
 - Scope planned: first read-only, declaration-gated System Events subset using official `/req/system-event` and `/conf/system-event` identifiers.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-04-28; checked 2026-05-08 and not stale.
 - OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 12 "Requirements Class System Events"; prerequisites are `/req/api-common` and Part 1 `/req/system`.

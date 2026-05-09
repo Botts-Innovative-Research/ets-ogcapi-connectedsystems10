@@ -116,7 +116,7 @@ OGC tooling is JVM-centric: TeamEngine is Java, the SPI is Java, all 10 active `
 
 **What gets built**:
 1. ETS skeleton via Maven archetype, JDK 17, TestNG, REST Assured, Kaizen openapi-parser.
-2. One TestNG suite class per CS API conformance class (28 total: 14 from Part 1 + 14 from Part 2). Each test method maps 1:1 to an ATS assertion via the canonical OGC requirement URI.
+2. One TestNG suite class per CS API conformance class. Each test method maps 1:1 to an ATS assertion via the canonical OGC requirement URI. Sprint 25 corrected the former 28-class shorthand because OGC 23-002 Annex A does not define `/conf/system-history`.
 3. Reuse the 126 JSON Schemas verbatim from `csapi_compliance/schemas/`.
 4. Port the spec-knowledge from the 27 TS registry modules into Java assertions — preserving the URI mapping, dependency DAG, and spec-trap data providers.
 5. CTL wrapper (`src/main/scripts/ctl/`) to register the ETS with TeamEngine.
@@ -157,7 +157,7 @@ High-level requirements that the Planner should decompose into REQ-* / SCENARIO-
 1. **R-PIVOT-01** — Generate an OGC-compliant ETS project from `ets-archetype-testng:2.7` named `ets-ogcapi-connectedsystems10` covering OGC 23-001 (Part 1).
 2. **R-PIVOT-02** — Mirror the structure of `ets-ogcapi-features10` (TestNG suite definition at `src/main/resources/.../testng.xml`, CTL wrapper at `src/main/scripts/ctl/`, TeamEngine SPI integration).
 3. **R-PIVOT-03** — Implement TestNG test classes for all 14 Part 1 conformance classes, with each `@Test` method 1:1 mapped to an OGC 23-001 ATS assertion via canonical requirement URI.
-4. **R-PIVOT-04** — Implement TestNG test classes for all 14 Part 2 conformance classes per OGC 23-002.
+4. **R-PIVOT-04** — Implement TestNG test classes for the OGC 23-002 Part 2 conformance classes plus explicitly scoped project cross-class closures. Sprint 25 corrected the earlier "14 Part 2 classes" wording because OGC 23-002 Annex A does not define `/conf/system-history`.
 5. **R-PIVOT-05** — Reuse the 126 JSON Schemas from `csapi_compliance/schemas/` as the validation source. Pin the OGC OpenAPI YAML to a specific commit SHA in the ETS pom.xml.
 6. **R-PIVOT-06** — Port the spec-trap fixture corpus (asymmetric featureType/itemType cases, half-conformant collections, missing OGC 23-001 markers) as TestNG `@DataProvider` inputs.
 7. **R-PIVOT-07** — Provide a `Dockerfile` + docker-compose snippet that runs TeamEngine 5.6.x (currently 5.6.1) with this ETS pre-loaded, accessible at `http://localhost:8081/teamengine`.

@@ -43,7 +43,7 @@ shift-left developer pre-flight tool.
 |----|-----------|---------|
 | SC-1 | Maven archetype scaffold builds green | `mvn clean install` exits 0 on a fresh JDK 17 / Maven 3.9 environment |
 | SC-2 | All 14 OGC 23-001 (Part 1) conformance classes have at least one TestNG test method per ATS assertion | TestNG report shows ≥1 `@Test` per `/conf/<class>/<assertion>` URI from Annex A |
-| SC-3 | All 14 OGC 23-002 (Part 2) conformance classes have at least one TestNG test method per ATS assertion | Same, against Part 2 Annex A |
+| SC-3 | All OGC 23-002 (Part 2) conformance classes have at least one TestNG test method per ATS assertion | Same, against Part 2 Annex A. Sprint 25 correction: Annex A does not define `/conf/system-history`; that former placeholder is retired. |
 | SC-4 | ETS loads in TeamEngine 5.6.x (currently 5.6.1) Docker image without registration error | `docker run ogccite/teamengine-production:5.6.1` plus the ETS jar shows the suite in the suites list |
 | SC-5 | Full Part 1 + Part 2 suite passes against GeoRobotix demo server | All `@Test` methods that target conformance classes the IUT declares pass; conformance classes the IUT does not declare are SKIPPED, not FAILED |
 | SC-6 | Three independent passing implementations identified | GeoRobotix + OpenSensorHub + `connected-systems-go` participate in beta testing, each producing a TeamEngine pass record |
@@ -114,26 +114,26 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 > **Sprint 1 EXCLUDES Part 2.** REQ-ETS-PART2-* are placeholders allowing the spec to enumerate
 > the certification surface. Per-class FRs and SCENARIOs will be drafted in a later sprint cluster.
 
-| Conformance class URI (per OGC 23-002 Annex A — names follow v1.0 PRD FR-46..59) | FR | OpenSpec REQ |
+| Conformance class URI (per OGC 23-002 Annex A — names follow v1.0 PRD FR-46..59 where still valid) | FR | OpenSpec REQ |
 |---|---|---|
 | `/conf/api-common` (Part 2 Common) | FR-ETS-30 | REQ-ETS-PART2-001 |
 | `/conf/datastream` (Datastreams & Observations) | FR-ETS-31 | REQ-ETS-PART2-002 |
 | `/conf/controlstream` (Control Streams & Commands) | FR-ETS-32 | REQ-ETS-PART2-003 |
 | `/conf/feasibility` (Command Feasibility) | FR-ETS-33 | REQ-ETS-PART2-004 |
 | `/conf/system-event` (System Events) | FR-ETS-34 | REQ-ETS-PART2-005 |
-| `/conf/system-history` (System History) | FR-ETS-35 | REQ-ETS-PART2-006 |
-| `/conf/advanced-filtering` (Part 2) | FR-ETS-36 | REQ-ETS-PART2-007 |
-| `/conf/create-replace-delete` (Part 2) | FR-ETS-37 | REQ-ETS-PART2-008 |
-| `/conf/update` (Part 2) | FR-ETS-38 | REQ-ETS-PART2-009 |
-| `/conf/json` (Part 2 JSON encoding) | FR-ETS-39 | REQ-ETS-PART2-010 |
-| `/conf/swecommon-json` | FR-ETS-40 | REQ-ETS-PART2-011 |
-| `/conf/swecommon-text` | FR-ETS-41 | REQ-ETS-PART2-012 |
-| `/conf/swecommon-binary` | FR-ETS-42 | REQ-ETS-PART2-013 |
-| `/conf/observation-binding` (cross-class — Observation body schema derives from Datastream schema, per v1.0 GH#7) | FR-ETS-43 | REQ-ETS-PART2-014 |
+| `/conf/system-history` (System History) | FR-ETS-35 | Retired Sprint 25 — not defined by OGC 23-002 Annex A |
+| `/conf/advanced-filtering` (Part 2) | FR-ETS-36 | REQ-ETS-PART2-006 |
+| `/conf/create-replace-delete` (Part 2) | FR-ETS-37 | REQ-ETS-PART2-007 |
+| `/conf/update` (Part 2) | FR-ETS-38 | REQ-ETS-PART2-008 |
+| `/conf/json` (Part 2 JSON encoding) | FR-ETS-39 | REQ-ETS-PART2-009 |
+| `/conf/swecommon-json` | FR-ETS-40 | REQ-ETS-PART2-010 |
+| `/conf/swecommon-text` | FR-ETS-41 | REQ-ETS-PART2-011 |
+| `/conf/swecommon-binary` | FR-ETS-42 | REQ-ETS-PART2-012 |
+| `/conf/observation-binding` (cross-class — Observation body schema derives from Datastream schema, per v1.0 GH#7) | FR-ETS-43 | REQ-ETS-PART2-013 |
 
 | ID | Requirement |
 |----|-------------|
-| FR-ETS-30..43 | Same shape as FR-ETS-10..23 (TestNG suite class per conformance class, `description` attribute carries the OGC requirement URI, dependency-aware skip semantics, captured HTTP traces, schema validation via Kaizen). Detailed per-assertion FRs to be drafted in a future sprint cluster. |
+| FR-ETS-30..43 | Same shape as FR-ETS-10..23 where the FR maps to an OGC Part 2 conformance class or project cross-class closure. Sprint 25 retires FR-ETS-35 from the OGC 23-002 Annex A backlog because `/conf/system-history` is not defined there. Detailed per-assertion FRs are drafted in sprint planning. |
 
 ### Sub-deliverable 4: TeamEngine Integration (R-PIVOT-07)
 
@@ -214,7 +214,7 @@ The new capability is `ets-ogcapi-connectedsystems` at `openspec/capabilities/et
 | Scaffold | REQ-ETS-SCAFFOLD-001..007 |
 | Part 1 Core | REQ-ETS-CORE-001..004 |
 | Part 1 (other 13 classes) | REQ-ETS-PART1-001..013 |
-| Part 2 (14 classes — placeholders) | REQ-ETS-PART2-001..014 |
+| Part 2 (OGC 23-002 classes plus project cross-class closures) | REQ-ETS-PART2-001..013 |
 | TeamEngine integration | REQ-ETS-TEAMENGINE-001..005 |
 | Spec-trap fixture port | REQ-ETS-FIXTURES-001..003 |
 | CITE submission | REQ-ETS-CITE-001..003 |
@@ -240,7 +240,7 @@ The new capability is `ets-ogcapi-connectedsystems` at `openspec/capabilities/et
 |---|---|---|
 | `epic-ets-01-scaffold` | Generate archetype, modernize to JDK 17, build green | REQ-ETS-SCAFFOLD-001..007, NFR-ETS-01,02,06 |
 | `epic-ets-02-part1-classes` | Implement all 14 Part 1 conformance classes | REQ-ETS-CORE-001..004, REQ-ETS-PART1-001..013 |
-| `epic-ets-03-part2-classes` | Implement all 14 Part 2 conformance classes | REQ-ETS-PART2-001..014 |
+| `epic-ets-03-part2-classes` | Implement all OGC 23-002 Part 2 conformance classes plus project cross-class closures | REQ-ETS-PART2-001..013 |
 | `epic-ets-04-teamengine-integration` | SPI + CTL + Docker | REQ-ETS-TEAMENGINE-001..005 |
 | `epic-ets-05-cite-submission` | Beta submission, three-impl outreach | REQ-ETS-CITE-001..003 |
 | `epic-ets-06-fixture-port` | Port spec-trap corpus to `@DataProvider` | REQ-ETS-FIXTURES-001..003 |

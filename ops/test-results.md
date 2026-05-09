@@ -1,8 +1,42 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-09T02:04Z
+Last updated: 2026-05-09T14:06Z
 
 ## Current Sprint Evidence
+
+Sprint ets-25 Part 2 Advanced Filtering planning:
+
+- Planning only:
+  - Story: `epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-25.yaml`
+  - No Java code changed yet; Maven and TeamEngine smoke are Generator gates.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 13 "Requirements Class Advanced Filtering" and Annex A.6.
+  - Requirements class identifier: `/req/advanced-filtering`.
+  - Conformance class identifier: `/conf/advanced-filtering`.
+  - Prerequisites: `/req/api-common` and Part 1 `/req/advanced-filtering`.
+  - Selected Sprint 25 requirements: `/req/advanced-filtering/datastream-by-phenomenontime`, `/datastream-by-resulttime`, `/datastream-by-obsprop`, `/datastream-by-foi`, `/obs-by-phenomenontime`, `/obs-by-resulttime`, `/obs-by-foi`, `/controlstream-by-issuetime`, `/controlstream-by-exectime`, `/controlstream-by-controlprop`, `/controlstream-by-foi`, `/cmd-by-issuetime`, `/cmd-by-exectime`, `/cmd-by-status`, `/cmd-by-sender`, `/cmd-by-foi`, `/status-by-statuscode`, and `/event-by-type`.
+- Taxonomy correction:
+  - OGC 23-002 Annex A does not define `/conf/system-history` or `/req/system-history`.
+  - GeoRobotix advertises `/conf/system-history`; planning treats it as non-standard/vendor extension evidence only.
+- GeoRobotix planning probes:
+  - `/conformance`: does not declare `/conf/advanced-filtering`.
+  - `GET /datastreams?phenomenonTime=2026-04-20T00:00:00Z&limit=2`: HTTP 200 JSON with `items`.
+  - `GET /datastreams?resultTime=2026-04-20T00:00:00Z&limit=2`: HTTP 200 JSON with `items`.
+  - `GET /datastreams?observedProperty=http%3A%2F%2Fsensorml.com%2Font%2Fisa%2Fproperty%2FLink_Loss&limit=2`: HTTP 200 JSON with `items`.
+  - `GET /observations?phenomenonTime=2026-04-20T00:00:00Z&limit=2` and `GET /observations?resultTime=2026-04-20T00:00:00Z&limit=2`: HTTP 200 JSON with empty `items`.
+  - `GET /controlstreams?issueTime=2026-04-20T00:00:00Z&limit=2` and `GET /controlstreams?executionTime=2026-04-20T00:00:00Z&limit=2`: HTTP 200 JSON with `items`.
+  - `GET /commands?issueTime=...`, `GET /commands?statusCode=...`, and `GET /commands?sender=...`: HTTP 400 `Invalid resource name`.
+  - `GET /systemEvents?eventType=...`: HTTP 400 `Invalid resource name`.
+  - `GET /systems/0mqcvdnfoca0/events?eventType=...`: HTTP 400 `Only streaming requests supported on this resource`.
+- Generator gate expectations:
+  - Default GeoRobotix smoke must SKIP Advanced Filtering because `/conf/advanced-filtering` is absent.
+  - Generator must not PASS from undeclared HTTP 200 query behavior, endpoint availability alone, empty collections alone, sibling declarations, or `/conf/system-history`.
+  - Runtime filter predicate PASS requires checking returned resources satisfy the requested filter.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml`: initial `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference.
+  - Required fix applied: epic ETS-03 now references corrected `REQ-ETS-PART2-013`.
+  - Recheck verdict: `APPROVE`, confidence 0.96.
 
 Sprint ets-24 Part 2 System Events Generator:
 

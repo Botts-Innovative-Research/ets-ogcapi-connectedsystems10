@@ -1,0 +1,111 @@
+artifact_type: adversarial_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+created_utc: "2026-05-09T02:09:51Z"
+sprint: ets-24
+story: S-ETS-24-01
+subject: "Sprint 24 Generator implementation - Part 2 System Events"
+verdict: APPROVE
+confidence: 0.94
+
+scope:
+  mode: "code/docs/evidence review only"
+  gates_rerun_by_reviewer: false
+  rerun_rationale: "User requested no Maven or TeamEngine rerun; archived evidence and static/runtime artifacts were sufficient."
+  reviewed_files:
+    implementation:
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/VerifyPart2SystemEventTests.java
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    docs_and_handoffs:
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      - epics/stories/s-ets-24-01-part2-system-event-planning.md
+      - epics/epic-ets-03-part2-classes.md
+      - _bmad/traceability.md
+      - .harness/contracts/sprint-ets-24.yaml
+      - .harness/handoffs/generator-handoff.yaml
+      - .harness/handoffs/planner-handoff.yaml
+      - ops/status.md
+      - ops/test-results.md
+      - ops/changelog.md
+      - ops/known-issues.md
+    evidence_artifacts:
+      - ops/test-results/sprint-ets-24-maven-2026-05-09.log
+      - ops/test-results/sprint-ets-24-smoke-2026-05-09.xml
+      - ops/test-results/sprint-ets-24-smoke-container-2026-05-09.log
+
+findings: []
+
+checks:
+  official_identifier_fidelity:
+    status: PASS
+    evidence:
+      - "Part2SystemEventTests uses official OGC 23-002 identifiers /req/system-event and /conf/system-event."
+      - "VerifyPart2SystemEventTests rejects stale /req/systemevents, /conf/systemevents, and dynamic-* drift."
+      - "OpenSpec, story, contract, traceability, epic, ops docs, and generator handoff consistently use /req/system-event and /conf/system-event."
+  declaration_alone_false_pass:
+    status: PASS
+    evidence:
+      - "systemEventConformanceDeclared is scoped to exact declaration evidence only."
+      - "Endpoint/resource/collection checks require live HTTP/JSON/SystemEvent evidence or SKIP; sibling Part 2 declarations are not used."
+      - "Docs report GeoRobotix System Events outcome as 1 declaration PASS and 5 honest SKIPs, not full /conf/system-event closure."
+  api_common_prerequisite_honesty:
+    status: PASS
+    evidence:
+      - "systemEventPrerequisitesVisibleForFullClosure SKIPs when /conf/api-common is absent while allowing scoped endpoint checks to run."
+      - "TestNG wiring intentionally depends on core, common, and systemfeatures rather than part2apicommon, preserving explicit runtime prerequisite reporting."
+      - "Smoke XML records the /conf/api-common prerequisite SKIP for full closure."
+  systemevents_http_400_skip_vs_pass:
+    status: PASS
+    evidence:
+      - "systemEventsCanonicalEndpointReadableWhenAvailable SKIPs non-200 /systemEvents responses."
+      - "GeoRobotix smoke records /systemEvents HTTP 400 as SKIP, not PASS."
+  requirement_43_normative_path_vs_annex_alias:
+    status: PASS
+    evidence:
+      - "Runtime code probes /systems/{sysId}/events for /req/system-event/ref-from-system."
+      - "Helper regression asserts the normative path is not /systems/{sysId}/systemEvents."
+      - "Docs consistently mark Annex A.43 /systems/{sysId}/systemEvents as diagnostic-only alias text."
+  systemevent_resource_evidence:
+    status: PASS
+    evidence:
+      - "Canonical resource PASS requires selected SystemEvent resource evidence and shape beyond generic id/items collection shape."
+      - "GeoRobotix /systemEvents HTTP 400 leaves canonical resource test SKIPPED with no resource-evidence PASS."
+  no_mutation_no_sse_overreach:
+    status: PASS
+    evidence:
+      - "Static review found only read-only GET probes in Part2SystemEventTests."
+      - "No long-lived SSE/streaming consumer is implemented; streaming-only HTTP 400 is documented as future scope."
+      - "No-mutation oracle against the archived container log reported zero IUT-bound POST/PUT/DELETE/PATCH across 99 recognized request logs."
+  testng_group_wiring:
+    status: PASS
+    evidence:
+      - "testng.xml declares group part2systemevent with depends-on=\"core common systemfeatures\"."
+      - "VerifyTestNGSuiteDependency rejects comma dependency syntax and verifies core/common/systemfeatures tokens."
+      - "Structural lint verifies Part2SystemEventTests is co-located with the expected groups and that test methods carry part2systemevent."
+  archived_maven_evidence:
+    status: PASS
+    evidence:
+      - "ops/test-results/sprint-ets-24-maven-2026-05-09.log reports BUILD SUCCESS."
+      - "Surefire summary: 183 tests / 0 failures / 0 errors / 3 skipped."
+      - "VerifyPart2SystemEventTests: 5 tests / 0 failures / 0 errors / 0 skipped."
+      - "VerifyTestNGSuiteDependency: 52 tests / 0 failures / 0 errors / 0 skipped."
+  archived_smoke_evidence:
+    status: PASS
+    evidence:
+      - "ops/test-results/sprint-ets-24-smoke-2026-05-09.xml reports 128 total / 72 passed / 0 failed / 56 skipped."
+      - "System Events runtime methods: fetchPart2SystemEventInputs PASS, systemEventConformanceDeclared PASS, and five scoped System Event checks SKIP."
+      - "Skip messages distinguish missing /conf/api-common, /systemEvents HTTP 400, normative /systems/{id}/events HTTP 400 streaming-only behavior, missing resource evidence, and no itemType=SystemEvent collection."
+  docs_handoff_reconciliation:
+    status: PASS
+    evidence:
+      - "OpenSpec, story, traceability, epic, contract, ops status, test-results, changelog, known issues, and generator handoff reflect Sprint 24 Generator implementation state and archived evidence."
+      - "Planner handoff is superseded by generator handoff; current next action remains Raze review then commit/push."
+
+required_fixes: []
+commit_readiness:
+  can_commit_or_amend: true
+  rationale: "No correctness, false-PASS, identifier, TestNG wiring, mutation, SSE, evidence, or reconciliation blockers were found."
+reviewer_edits:
+  - .harness/evaluations/sprint-ets-24-adversarial-implementation.yaml

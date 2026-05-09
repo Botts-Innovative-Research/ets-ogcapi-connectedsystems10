@@ -4,6 +4,7 @@ sprint: "ets-24"
 sprint_name: "part2-system-event"
 type: "feature-expansion"
 created: "2026-05-08T21:36:19Z"
+implemented: "2026-05-09T02:04:28Z"
 description: |
   Sprint 24 plans the first OGC 23-002 System Events Generator increment.
   The implementation must be read-only by default, declaration-gated on
@@ -46,6 +47,12 @@ success_criteria:
   official_ogc_identifiers_used: true
   no_code_changes_in_planning: true
   generator_required_before_runtime_gates: true
+  generator_code_implemented: true
+  formatter_passed: true
+  maven_passed: true
+  teamengine_smoke_passed: true
+  no_mutation_verified: true
+  implementation_raze_review_required: true
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
@@ -110,6 +117,33 @@ generator_must_not_do:
   - "Do not implement streaming/SSE consumption in the first read-only subset."
   - "Do not fail an IUT solely because no SystemEvent collection is advertised."
 
+generator_evidence:
+  files_added:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/VerifyPart2SystemEventTests.java"
+  files_updated:
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  runtime_tests: 6
+  helper_regressions: 5
+  maven:
+    result: "BUILD SUCCESS"
+    surefire: "183 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-24-maven-2026-05-09.log"
+  teamengine_smoke:
+    result: "SMOKE PASS"
+    testng: "128 total / 72 passed / 0 failed / 56 skipped"
+    report: "ops/test-results/sprint-ets-24-smoke-2026-05-09.xml"
+    log: "ops/test-results/sprint-ets-24-smoke-container-2026-05-09.log"
+    no_mutation_oracle: "recognized_iut_request_logs=99; zero IUT-bound POST/PUT/DELETE/PATCH"
+  georobotix_runtime_outcome:
+    pass: 1
+    skipped: 5
+    notes:
+      - "PASS only for exact /conf/system-event declaration."
+      - "SKIPs cover missing /conf/api-common, HTTP 400 /systemEvents, HTTP 400 streaming-only /systems/{id}/events, no SystemEvent resource evidence, and no advertised itemType=SystemEvent collection."
+      - "Streaming/SSE event consumption remains out of scope for this first read-only subset."
+
 evaluation_focus:
   raze:
     - "Attack false PASS from sibling Part 2 declarations."
@@ -125,3 +159,7 @@ raze_review:
   plan_verdict: "APPROVE"
   plan_confidence: 0.93
   required_fixes: []
+  implementation_artifact: ".harness/evaluations/sprint-ets-24-adversarial-implementation.yaml"
+  implementation_verdict: "APPROVE"
+  implementation_confidence: 0.94
+  implementation_required_fixes: []

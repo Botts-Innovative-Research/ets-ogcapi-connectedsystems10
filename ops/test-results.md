@@ -1,8 +1,34 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-08T21:36Z
+Last updated: 2026-05-09T02:04Z
 
 ## Current Sprint Evidence
+
+Sprint ets-24 Part 2 System Events Generator:
+
+- Generator implementation:
+  - `Part2SystemEventTests` adds 6 declaration-gated checks for `/conf/system-event`, prerequisite visibility, `/systemEvents`, normative `/systems/{sysId}/events`, optional `/systemEvents/{id}` canonical resource reads, and optional `itemType=SystemEvent` collections.
+  - `VerifyPart2SystemEventTests` adds 5 helper regressions for official identifiers, normative path selection, resource-specific SystemEvent evidence, exact collection `itemType`, and collection shape.
+  - `VerifyTestNGSuiteDependency` adds structural coverage for `part2systemevent` group dependency and Core/Common/SystemFeatures co-location.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `183 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-24-maven-2026-05-09.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s24 bash scripts/smoke-test.sh`
+  - Result: `128 total / 72 passed / 0 failed / 56 skipped`
+  - Report: `ops/test-results/sprint-ets-24-smoke-2026-05-09.xml`
+  - Container log: `ops/test-results/sprint-ets-24-smoke-container-2026-05-09.log`
+  - No-mutation oracle: `recognized_iut_request_logs=99`, zero IUT-bound POST/PUT/DELETE/PATCH.
+- System Events runtime outcome on GeoRobotix:
+  - PASS: `systemEventConformanceDeclared`.
+  - SKIP: `systemEventPrerequisitesVisibleForFullClosure`, `systemEventsCanonicalEndpointReadableWhenAvailable`, `systemScopedEventsEndpointUsesNormativePath`, `systemEventCanonicalResourceReadableWhenAvailable`, and `systemEventCollectionsCheckedWhenAdvertised`.
+  - The SKIPs are expected for current GeoRobotix state: missing `/conf/api-common`, HTTP 400 `/systemEvents`, HTTP 400 streaming-only `/systems/{id}/events`, no JSON SystemEvent resource evidence, and no advertised `itemType=SystemEvent` collection.
+- Raze implementation review `.harness/evaluations/sprint-ets-24-adversarial-implementation.yaml`: `APPROVE` confidence 0.94 with no required fixes.
 
 Sprint ets-24 Part 2 System Events planning:
 

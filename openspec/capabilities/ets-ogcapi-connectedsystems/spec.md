@@ -356,9 +356,10 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART2-005: Part 2 System Events Conformance Suite
 - **Priority**: MUST.
-- **Status**: PLANNED (Sprint 24).
+- **Status**: PARTIAL_IMPLEMENTED (Sprint 24 Generator).
 - **Description**: The ETS SHALL provide a TestNG suite for OGC 23-002 Clause 12 Requirements Class "System Events" using official identifiers `/req/system-event` and `/conf/system-event`, with prerequisites `/req/api-common` and Part 1 `/req/system`. Sprint 24 targets a read-only Generator increment: exact conformance declaration detection, prerequisite honesty, canonical `/systemEvents` endpoint checks, system-scoped `/systems/{sysId}/events` endpoint checks, optional SystemEvent resource/canonical evidence, and optional `itemType=SystemEvent` collection checks.
 - **Scope guard**: The first System Events increment SHALL NOT implement streaming/SSE event consumption, System History, Advanced Filtering event-by-type, Part 2 JSON schema closure, or mutation classes. It SHALL NOT infer System Events conformance from sibling Part 2 declarations, and SHALL NOT treat Annex A.43's conflicting `/systems/{sysId}/systemEvents` endpoint string as Requirement 43 PASS evidence without a standards-backed rationale.
+- **Implementation evidence**: `Part2SystemEventTests` adds six read-only/default-safe checks for exact `/conf/system-event` declaration, prerequisite visibility, canonical `/systemEvents` endpoint evidence, normative `/systems/{sysId}/events` evidence, actual SystemEvent resource/canonical evidence, and optional `itemType=SystemEvent` collections. `VerifyPart2SystemEventTests` prevents stale `/req/systemevents`/`dynamic-*` identifier drift and Annex A.43 alias drift. Maven reported `183 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke reported `128 total / 72 passed / 0 failed / 56 skipped`; System Events had 1 PASS for declaration and 5 SKIPs for missing `/conf/api-common`, `/systemEvents` HTTP 400, `/systems/{id}/events` streaming-only HTTP 400, no resource evidence, and no advertised `itemType=SystemEvent`.
 - **Maps to**: PRD FR-ETS-34.
 
 #### SCENARIO-ETS-PART2-005-SYSTEM-EVENT-CONFORMANCE-DECLARED-001 (CRITICAL)
@@ -2031,7 +2032,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-002 (Datastreams & Observations) — partially implemented in Sprint 21 read-only subset.
 - REQ-ETS-PART2-003 (Control Streams & Commands) — partially implemented in Sprint 22 read-only subset.
 - REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
-- REQ-ETS-PART2-005: planned by Sprint 24 for System Events; Generator pending.
+- REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.
 - REQ-ETS-PART2-006..014 (remaining Part 2 classes) — deferred after Sprint 24 System Events planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.

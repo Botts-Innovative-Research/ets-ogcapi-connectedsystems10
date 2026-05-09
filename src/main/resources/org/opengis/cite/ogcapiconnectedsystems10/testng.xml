@@ -129,7 +129,11 @@
        structural consistency; runtime checks keep /req/controlstream prerequisite
        honesty visible without depending on the part2controlstream group, so an
        undeclared /conf/feasibility class SKIPs before any IUT-bound feasibility POST. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility; OGC 19-072 /conf/common)">
+  <!-- Sprint 24 S-ETS-24-01 (REQ-ETS-PART2-005): Part 2 System Events group added as
+       a read-only declaration-gated subset. It depends on "core common systemfeatures"
+       so Part 1 System availability is structurally present; runtime checks still keep
+       /req/api-common prerequisite honesty separate from scoped endpoint evidence. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility + Part2SystemEvent (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility, /conf/system-event; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -148,6 +152,7 @@
         <group name="part2datastream" depends-on="core common"/>
         <group name="part2controlstream" depends-on="core common"/>
         <group name="part2feasibility" depends-on="core common"/>
+        <group name="part2systemevent" depends-on="core common systemfeatures"/>
       </dependencies>
     </groups>
     <classes>
@@ -172,6 +177,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

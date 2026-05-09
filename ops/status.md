@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-08T21:36Z
+Last updated: 2026-05-09T02:04Z
 
 ## Fresh-Session Entry Point
 
@@ -16,7 +16,7 @@ Read these first:
 - `ops/SESSION-HANDOFF-2026-05-05-ETS-REPO-MIGRATION.md`
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
-- `.harness/handoffs/planner-handoff.yaml`
+- `.harness/handoffs/generator-handoff.yaml`
 - `.harness/contracts/sprint-ets-24.yaml`
 
 ## Current State
@@ -38,12 +38,29 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes Sprint 23 Generator reconciliation commit `5098e35 Reconcile Sprint 23 Feasibility push` plus Sprint 24 planning work in progress.
+- ETS HEAD includes pushed Sprint 24 planning commit `1f5a916 Plan Sprint 24 System Events` plus Sprint 24 Generator work in progress.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-23-01` Generator complete as PARTIAL for the Part 2 Command Feasibility safety-gated subset.
-- Current sprint status: Sprint ets-24 Part 2 System Events planning is Raze-approved and ready to commit/push.
+- Latest implemented story: `S-ETS-24-01` Generator is PARTIAL for the Part 2 System Events read-only declaration-gated subset, Raze-approved and pending commit/push.
 - Latest pushed implementation commit: `abba276 Implement Sprint 23 Feasibility`, followed by reconciliation commit `5098e35`.
-- Push status: remote uses SSH; Sprint 23 Generator and reconciliation were pushed successfully on 2026-05-08.
+- Push status: remote uses SSH; Sprint 24 planning was pushed successfully on 2026-05-08.
+
+## Sprint ets-24 Generator Evidence
+
+Part 2 System Events read-only declaration-gated subset:
+
+- Story: `epics/stories/s-ets-24-01-part2-system-event-planning.md`
+- Contract: `.harness/contracts/sprint-ets-24.yaml`
+- Scope implemented: first read-only System Events subset using official OGC 23-002 `/req/system-event` and `/conf/system-event` identifiers.
+- Implementation: `Part2SystemEventTests` adds 6 runtime checks for exact declaration, visible prerequisites, `/systemEvents`, normative `/systems/{sysId}/events`, optional canonical `/systemEvents/{id}` resource reads, and optional `itemType=SystemEvent` collections.
+- Structural coverage: `VerifyPart2SystemEventTests` adds 5 helper regressions for official identifiers, normative path selection, SystemEvent resource evidence, collection item type, and collection shape; `VerifyTestNGSuiteDependency` adds `part2systemevent` group and co-location checks.
+- Endpoint honesty: Requirement 42 uses `/systemEvents`; Requirement 43 uses `/systems/{sysId}/events`; Annex A.43's `/systems/{sysId}/systemEvents` string remains diagnostic only unless a standards-backed correction is documented.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` BUILD SUCCESS.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `183 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-24-maven-2026-05-09.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s24 bash scripts/smoke-test.sh` reported `128 total / 72 passed / 0 failed / 56 skipped`; report archived at `ops/test-results/sprint-ets-24-smoke-2026-05-09.xml`, container log at `ops/test-results/sprint-ets-24-smoke-container-2026-05-09.log`.
+- No-mutation proof: GeoRobotix smoke recognized 99 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH.
+- Runtime outcome: GeoRobotix declares `/conf/system-event` but not `/conf/api-common`; 1 System Event test PASSed for exact declaration and 5 SKIP honestly for missing prerequisite, HTTP 400 `/systemEvents`, streaming-only HTTP 400 `/systems/{id}/events`, no SystemEvent resource evidence, and no advertised `itemType=SystemEvent` collection.
+- Raze implementation review `.harness/evaluations/sprint-ets-24-adversarial-implementation.yaml` returned `APPROVE` confidence 0.94 with no required fixes.
+- Next action: commit/push Sprint 24 Generator, then plan the next Part 2 sprint item.
 
 ## Sprint ets-24 Planning Evidence
 

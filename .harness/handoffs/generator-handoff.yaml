@@ -1,37 +1,36 @@
 agent: generator
-status: partial_implemented_pushed
-timestamp: "2026-05-08T20:04:32Z"
-sprint_number: "ets-23"
-sprint_name: "part2-feasibility"
+status: partial_implemented_raze_approved
+timestamp: "2026-05-09T02:04:28Z"
+sprint_number: "ets-24"
+sprint_name: "part2-system-event"
 story:
-  id: "S-ETS-23-01"
-  title: "Part 2 Command Feasibility safety-gated subset"
-  file: "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
-contract_path: ".harness/contracts/sprint-ets-23.yaml"
+  id: "S-ETS-24-01"
+  title: "Part 2 System Events read-only declaration-gated subset"
+  file: "epics/stories/s-ets-24-01-part2-system-event-planning.md"
+contract_path: ".harness/contracts/sprint-ets-24.yaml"
 base_commit:
-  sha: "ab15704"
-  message: "Clarify Sprint 23 push status"
+  sha: "1f5a916"
+  message: "Plan Sprint 24 System Events"
 
 implementation_summary: |
-  Sprint 23 Generator implemented the safety-gated, declaration-gated Command
-  Feasibility subset. The implementation uses official OGC 23-002 identifiers
-  `/req/feasibility` and `/conf/feasibility`, keeps `/req/controlstream`
-  prerequisite honesty visible, uses the normative singular
-  `/controlstream/{csId}/feasibility` path, and implements no Feasibility
-  POST/PUT/DELETE/PATCH path for default public smoke.
+  Sprint 24 Generator implemented the first read-only System Events subset.
+  It uses official OGC 23-002 `/req/system-event` and `/conf/system-event`
+  identifiers, keeps `/req/api-common` and Part 1 System prerequisite honesty
+  visible, uses `/systemEvents` and `/systems/{sysId}/events` as the normative
+  endpoints, and does not implement streaming/SSE event consumption.
 
 files_added:
-  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java"
-  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/VerifyPart2FeasibilityTests.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/VerifyPart2SystemEventTests.java"
 
 files_updated:
   - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
   - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
   - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-  - "epics/stories/s-ets-23-01-part2-feasibility-planning.md"
+  - "epics/stories/s-ets-24-01-part2-system-event-planning.md"
   - "epics/epic-ets-03-part2-classes.md"
   - "_bmad/traceability.md"
-  - ".harness/contracts/sprint-ets-23.yaml"
+  - ".harness/contracts/sprint-ets-24.yaml"
   - "ops/status.md"
   - "ops/test-results.md"
   - "ops/changelog.md"
@@ -44,39 +43,31 @@ gates:
   maven:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "175 tests / 0 failures / 0 errors / 3 skipped"
-    log: "ops/test-results/sprint-ets-23-maven-2026-05-08.log"
+    surefire: "183 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-24-maven-2026-05-09.log"
   teamengine_smoke:
-    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s23-gapfix bash scripts/smoke-test.sh"
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s24 bash scripts/smoke-test.sh"
     result: "SMOKE PASS"
-    testng: "122 total / 71 passed / 0 failed / 51 skipped"
-    report: "ops/test-results/sprint-ets-23-smoke-2026-05-08.xml"
-    log: "ops/test-results/sprint-ets-23-smoke-container-2026-05-08.log"
-    no_mutation_oracle: "recognized_iut_request_logs=93; zero IUT-bound POST/PUT/DELETE/PATCH"
+    testng: "128 total / 72 passed / 0 failed / 56 skipped"
+    report: "ops/test-results/sprint-ets-24-smoke-2026-05-09.xml"
+    log: "ops/test-results/sprint-ets-24-smoke-container-2026-05-09.log"
+    no_mutation_oracle: "recognized_iut_request_logs=99; zero IUT-bound POST/PUT/DELETE/PATCH"
 
 iut_state:
-  georobotix_feasibility: "GeoRobotix does not declare /conf/feasibility; all 7 Feasibility runtime tests SKIP with no feasibility POST."
-  runtime_delta: "Sprint 22 smoke 115 -> Sprint 23 smoke 122 (7 new Feasibility @Tests; 0 PASS, 7 SKIP on GeoRobotix)."
+  georobotix_system_event: "GeoRobotix declares /conf/system-event but not /conf/api-common."
+  runtime_delta: "Sprint 23 smoke 122 -> Sprint 24 smoke 128 (6 new System Event @Tests; 1 PASS, 5 SKIP on GeoRobotix)."
   honest_skips:
-    - "missing /conf/feasibility declaration"
-    - "no Feasibility POST issued before declaration gate"
-    - "no /conf/feasibility PASS inferred from /conf/controlstream"
+    - "missing /conf/api-common prerequisite for full closure"
+    - "/systemEvents returned HTTP 400"
+    - "/systems/{id}/events returned HTTP 400 streaming-only"
+    - "no JSON SystemEvent resource evidence for canonical resource checks"
+    - "no advertised collection with itemType SystemEvent"
 
 next_agent: "adversarial-reviewer"
 raze_implementation_review:
-  artifact: ".harness/evaluations/sprint-ets-23-adversarial-implementation.yaml"
-  verdict: "GAPS_FOUND"
-  confidence: 0.90
-  required_fix: "Removed collection-shape-only canonical PASS evidence; canonical/status/result checks now require an actual Feasibility-shaped resource."
-raze_gapfix_review:
-  artifact: ".harness/evaluations/sprint-ets-23-adversarial-gapfix.yaml"
+  artifact: ".harness/evaluations/sprint-ets-24-adversarial-implementation.yaml"
   verdict: "APPROVE"
-  confidence: 0.97
+  confidence: 0.94
   required_fixes: []
 
-commit:
-  sha: "abba276"
-  message: "Implement Sprint 23 Feasibility"
-  push: "ab15704..abba276 main -> main over SSH"
-
-next_action: "Plan the next Part 2 sprint item."
+next_action: "Commit/push Sprint 24 Generator, then plan the next Part 2 sprint item."

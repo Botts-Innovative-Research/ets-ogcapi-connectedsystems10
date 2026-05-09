@@ -15,6 +15,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Archived Maven/smoke artifacts under `ops/test-results/sprint-ets-24-maven-2026-05-09.log`, `ops/test-results/sprint-ets-24-smoke-2026-05-09.xml`, and `ops/test-results/sprint-ets-24-smoke-container-2026-05-09.log`.
 - Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, known issues, and handoffs for the Generator outcome.
 - Raze implementation review `.harness/evaluations/sprint-ets-24-adversarial-implementation.yaml` returned `APPROVE` confidence 0.94 with no required fixes.
+- Committed and pushed Sprint 24 Generator over SSH: `6fa00c4 Implement Sprint 24 System Events` (`1f5a916..6fa00c4 main -> main`).
 
 ---
 

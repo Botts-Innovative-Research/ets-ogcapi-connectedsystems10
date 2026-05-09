@@ -38,11 +38,11 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 24 planning commit `1f5a916 Plan Sprint 24 System Events` plus Sprint 24 Generator work in progress.
+- ETS HEAD includes pushed Sprint 24 Generator commit `6fa00c4 Implement Sprint 24 System Events`.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-24-01` Generator is PARTIAL for the Part 2 System Events read-only declaration-gated subset, Raze-approved and pending commit/push.
+- Latest implemented story: `S-ETS-24-01` Generator is PARTIAL for the Part 2 System Events read-only declaration-gated subset.
 - Latest pushed implementation commit: `abba276 Implement Sprint 23 Feasibility`, followed by reconciliation commit `5098e35`.
-- Push status: remote uses SSH; Sprint 24 planning was pushed successfully on 2026-05-08.
+- Push status: remote uses SSH; Sprint 24 Generator was pushed successfully on 2026-05-09 (`1f5a916..6fa00c4 main -> main`).
 
 ## Sprint ets-24 Generator Evidence
 
@@ -60,7 +60,8 @@ Part 2 System Events read-only declaration-gated subset:
 - No-mutation proof: GeoRobotix smoke recognized 99 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH.
 - Runtime outcome: GeoRobotix declares `/conf/system-event` but not `/conf/api-common`; 1 System Event test PASSed for exact declaration and 5 SKIP honestly for missing prerequisite, HTTP 400 `/systemEvents`, streaming-only HTTP 400 `/systems/{id}/events`, no SystemEvent resource evidence, and no advertised `itemType=SystemEvent` collection.
 - Raze implementation review `.harness/evaluations/sprint-ets-24-adversarial-implementation.yaml` returned `APPROVE` confidence 0.94 with no required fixes.
-- Next action: commit/push Sprint 24 Generator, then plan the next Part 2 sprint item.
+- Commit/push: `6fa00c4 Implement Sprint 24 System Events` pushed over SSH on 2026-05-09 (`1f5a916..6fa00c4 main -> main`).
+- Next action: plan the next Part 2 sprint item.
 
 ## Sprint ets-24 Planning Evidence
 

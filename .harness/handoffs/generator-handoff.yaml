@@ -1,5 +1,5 @@
 agent: generator
-status: partial_implemented_raze_approved
+status: partial_implemented_pushed
 timestamp: "2026-05-09T02:04:28Z"
 sprint_number: "ets-24"
 sprint_name: "part2-system-event"
@@ -70,4 +70,9 @@ raze_implementation_review:
   confidence: 0.94
   required_fixes: []
 
-next_action: "Commit/push Sprint 24 Generator, then plan the next Part 2 sprint item."
+commit:
+  sha: "6fa00c4"
+  message: "Implement Sprint 24 System Events"
+  push: "1f5a916..6fa00c4 main -> main over SSH"
+
+next_action: "Plan the next Part 2 sprint item."

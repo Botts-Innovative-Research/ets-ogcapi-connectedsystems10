@@ -1,8 +1,44 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-13T08:55Z
+Last updated: 2026-05-13T10:46Z
 
 ## Current Sprint Evidence
+
+Sprint ets-26 Part 2 Create/Replace/Delete planning:
+
+- Planning only:
+  - Story: `epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-26.yaml`
+  - No Java code changed yet; Maven and full implementation gates are Generator work.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 14 "Requirements Class Create/Replace/Delete" and Annex A.7.
+  - Requirements class identifier: `/req/create-replace-delete`.
+  - Conformance class identifier: `/conf/create-replace-delete`.
+  - Prerequisite: OGC API Features Part 4 Create/Replace/Delete.
+  - Selected planning requirement set: Requirements 63-78, `/req/create-replace-delete/datastream`, `/req/create-replace-delete/datastream-update-schema`, `/req/create-replace-delete/datastream-delete-cascade`, `/req/create-replace-delete/observation`, `/req/create-replace-delete/observation-schema`, `/req/create-replace-delete/controlstream`, `/req/create-replace-delete/controlstream-update-schema`, `/req/create-replace-delete/controlstream-delete-cascade`, `/req/create-replace-delete/command`, `/req/create-replace-delete/command-schema`, `/req/create-replace-delete/command-status`, `/req/create-replace-delete/command-result`, `/req/create-replace-delete/feasibility`, `/req/create-replace-delete/feasibility-status`, `/req/create-replace-delete/feasibility-result`, and `/req/create-replace-delete/system-event`.
+- GeoRobotix planning probes:
+  - `/conformance`: declares `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/create-replace-delete`.
+  - `/conformance`: does not declare Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
+  - OPTIONS probes for `/datastreams`, `/datastreams/{id}`, `/observations`, `/controlstreams`, `/commands`, `/controlstreams/{id}/commands`, `/systems/{id}/events`, `/systemEvents`, and `/feasibility`: HTTP 200 with broad `Allow` including POST, PUT, and DELETE.
+  - `GET /commands?limit=1`: HTTP 400 `Invalid resource name`.
+  - `GET /systemEvents?limit=1`: HTTP 400 `Invalid resource name`.
+  - `GET /systems/{id}/events?limit=1`: HTTP 400 `Only streaming requests supported on this resource`.
+  - `GET /feasibility?limit=1`: HTTP 400 `Invalid resource name`.
+- Generator gate expectations:
+  - Default GeoRobotix smoke must remain read-only with zero IUT-bound POST/PUT/DELETE/PATCH.
+  - OPTIONS readiness cannot PASS lifecycle behavior.
+  - Positive lifecycle checks require a dedicated mutable IUT and explicit mutation opt-in.
+  - HTTP 400 or streaming-only endpoints SKIP honestly rather than PASS.
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s26-plan bash scripts/smoke-test.sh`
+  - Result: `137 total / 72 passed / 0 failed / 65 skipped`
+  - Report: `ops/test-results/sprint-ets-26-plan-smoke-2026-05-13.xml`
+  - Container log: `ops/test-results/sprint-ets-26-plan-smoke-container-2026-05-13.log`
+  - No-mutation oracle: `recognized_iut_request_logs=100`, zero IUT-bound POST/PUT/DELETE/PATCH.
+- Raze planning review:
+  - `.harness/evaluations/sprint-ets-26-plan-adversarial.yaml`: initial `GAPS_FOUND` confidence 0.94 for missing Sprint 26 changelog entry.
+  - Required fix applied: `ops/changelog.md` now records the Sprint 26 planning instruction, story, `REQ-ETS-PART2-007`, Clause 14 identifiers, GeoRobotix probes, smoke totals, and zero-mutation evidence.
+  - Focused recheck verdict: `APPROVE`, confidence 0.96, no remaining required fixes.
 
 Sprint ets-25 Part 2 Advanced Filtering Generator:
 

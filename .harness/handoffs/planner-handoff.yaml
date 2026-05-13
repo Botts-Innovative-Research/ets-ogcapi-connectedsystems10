@@ -1,74 +1,69 @@
 agent: planner
 status: planned_commit_ready
-timestamp: "2026-05-09T14:08:16Z"
-sprint_number: "ets-25"
-sprint_name: "part2-advanced-filtering"
-contract_path: ".harness/contracts/sprint-ets-25.yaml"
+timestamp: "2026-05-13T10:46:11Z"
+sprint_number: "ets-26"
+sprint_name: "part2-create-replace-delete"
+contract_path: ".harness/contracts/sprint-ets-26.yaml"
 triggered_by: |
-  User said "continue" after Sprint 24 Generator was implemented, reconciled, and pushed.
+  User said "Continue" after Sprint 25 Advanced Filtering was implemented,
+  reconciled, and pushed.
 
 planning_result:
   story:
-    id: "S-ETS-25-01"
-    title: "Part 2 Advanced Filtering read-only declaration-gated subset"
-    file: "epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md"
+    id: "S-ETS-26-01"
+    title: "Part 2 Create/Replace/Delete safety-gated planning"
+    file: "epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md"
   official_identifiers:
     source: "https://docs.ogc.org/is/23-002/23-002.html"
-    clause: "Clause 13, Requirements Class Advanced Filtering"
-    requirement_class_identifier: "/req/advanced-filtering"
-    conformance_class_identifier: "/conf/advanced-filtering"
+    clause: "Clause 14, Requirements Class Create/Replace/Delete"
+    requirement_class_identifier: "/req/create-replace-delete"
+    conformance_class_identifier: "/conf/create-replace-delete"
     prerequisites:
-      - "/req/api-common"
-      - "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering"
+      - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/create-replace-delete"
+    conformance_prerequisites:
+      - "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
     normative_statements:
-      - "/req/advanced-filtering/datastream-by-phenomenontime"
-      - "/req/advanced-filtering/datastream-by-resulttime"
-      - "/req/advanced-filtering/datastream-by-obsprop"
-      - "/req/advanced-filtering/datastream-by-foi"
-      - "/req/advanced-filtering/obs-by-phenomenontime"
-      - "/req/advanced-filtering/obs-by-resulttime"
-      - "/req/advanced-filtering/obs-by-foi"
-      - "/req/advanced-filtering/controlstream-by-issuetime"
-      - "/req/advanced-filtering/controlstream-by-exectime"
-      - "/req/advanced-filtering/controlstream-by-controlprop"
-      - "/req/advanced-filtering/controlstream-by-foi"
-      - "/req/advanced-filtering/cmd-by-issuetime"
-      - "/req/advanced-filtering/cmd-by-exectime"
-      - "/req/advanced-filtering/cmd-by-status"
-      - "/req/advanced-filtering/cmd-by-sender"
-      - "/req/advanced-filtering/cmd-by-foi"
-      - "/req/advanced-filtering/status-by-statuscode"
-      - "/req/advanced-filtering/event-by-type"
-  taxonomy_correction:
-    retired_placeholder: "Former REQ-ETS-PART2-006 /conf/system-history"
-    rationale: "OGC 23-002 Annex A does not define /conf/system-history or /req/system-history; GeoRobotix's declaration is treated as non-standard/vendor extension evidence only."
+      - "/req/create-replace-delete/datastream"
+      - "/req/create-replace-delete/datastream-update-schema"
+      - "/req/create-replace-delete/datastream-delete-cascade"
+      - "/req/create-replace-delete/observation"
+      - "/req/create-replace-delete/observation-schema"
+      - "/req/create-replace-delete/controlstream"
+      - "/req/create-replace-delete/controlstream-update-schema"
+      - "/req/create-replace-delete/controlstream-delete-cascade"
+      - "/req/create-replace-delete/command"
+      - "/req/create-replace-delete/command-schema"
+      - "/req/create-replace-delete/command-status"
+      - "/req/create-replace-delete/command-result"
+      - "/req/create-replace-delete/feasibility"
+      - "/req/create-replace-delete/feasibility-status"
+      - "/req/create-replace-delete/feasibility-result"
+      - "/req/create-replace-delete/system-event"
   georobotix_probe_summary:
-    conformance: "Does not declare /conf/advanced-filtering; does declare non-standard /conf/system-history and several sibling Part 2 classes."
-    datastream_filters: "phenomenonTime, resultTime, and observedProperty probes returned HTTP 200 JSON with items."
-    observation_filters: "phenomenonTime and resultTime probes returned HTTP 200 JSON with empty items."
-    controlstream_filters: "issueTime and executionTime probes returned HTTP 200 JSON with items."
-    command_filters: "issueTime, statusCode, and sender probes against /commands returned HTTP 400 Invalid resource name."
-    system_event_filters: "/systemEvents?eventType returned HTTP 400 Invalid resource name; /systems/{id}/events?eventType returned HTTP 400 streaming-only."
+    conformance: "Declares /conf/create-replace-delete and OGC API Features Part 4 /conf/create-replace-delete; does not declare Part 2 /conf/api-common, /conf/update, or /conf/advanced-filtering."
+    options: "OPTIONS probes for datastreams, observations, controlstreams, commands, nested commands, feasibility, systemEvents, and system-scoped events returned broad Allow headers including POST/PUT/DELETE."
+    unavailable_gets: "/commands, /feasibility, and /systemEvents GET probes returned HTTP 400 Invalid resource name; /systems/{id}/events GET returned HTTP 400 streaming-only."
   safety_policy:
-    default_public_smoke: "Read-only; no mutation or seed-resource creation."
-    declaration_honesty: "Do not PASS Advanced Filtering from query behavior while /conf/advanced-filtering is absent."
-    predicate_honesty: "For non-empty results, verify returned resources satisfy the requested predicate before PASS; empty results are not predicate evidence by themselves."
-    dependency_honesty: "Keep /req/api-common and Part 1 /req/advanced-filtering prerequisite handling visible and honest."
+    default_public_smoke: "Read-only; zero IUT-bound POST/PUT/DELETE/PATCH."
+    declaration_honesty: "Do not PASS CRD lifecycle behavior from declaration alone."
+    prerequisite_honesty: "Keep OGC API Features Part 4 CRD prerequisite visible before full closure."
+    options_honesty: "OPTIONS method discovery is readiness evidence only, not lifecycle PASS."
+    mutation_opt_in: "Positive lifecycle checks require mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut; public GeoRobotix is hard-denied before dispatch."
 
 raze_review:
-  plan_artifact: ".harness/evaluations/sprint-ets-25-plan-adversarial.yaml"
+  plan_artifact: ".harness/evaluations/sprint-ets-26-plan-adversarial.yaml"
   plan_verdict: "APPROVE"
   plan_confidence: 0.96
   required_fixes:
-    - id: "RAZE-ETS25-PLAN-GAP-001"
+    - id: "RAZE-ETS26-PLAN-GAP-001"
       status: "CLOSED"
-      summary: "Epic ETS-03 acceptance criterion now uses REQ-ETS-PART2-013 instead of stale REQ-ETS-PART2-014."
+      summary: "Added missing Sprint 26 planning entry to ops/changelog.md."
   required_before_generator: true
 
 commit:
-  sha: "2f4a6de"
-  message: "Plan Sprint 25 Advanced Filtering"
-  push: "5dccb36..2f4a6de main -> main over SSH"
+  sha: null
+  message: null
+  push: null
 
 next_agent: "generator"
-next_action: "Start Generator for S-ETS-25-01."
+next_action: "Commit and push Sprint 26 planning, then start Generator for S-ETS-26-01."

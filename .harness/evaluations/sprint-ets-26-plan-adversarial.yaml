@@ -1,0 +1,111 @@
+artifact_type: adversarial_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+created_utc: "2026-05-13T09:39:05Z"
+updated_utc: "2026-05-13T10:46:11Z"
+sprint: ets-26
+story: S-ETS-26-01
+subject: "Sprint 26 planning - Part 2 Create/Replace/Delete"
+verdict: APPROVE
+confidence: 0.96
+
+scope:
+  mode: "planning/docs review only"
+  gates_rerun_by_reviewer: false
+  rerun_rationale: "Planning-only review; inspected archived TeamEngine smoke artifacts instead of rerunning Docker."
+  implementation_files_changed: []
+  official_source_checked:
+    url: "https://docs.ogc.org/is/23-002/23-002.html"
+    evidence:
+      - "Clause 14 Requirements class 7 identifies /req/create-replace-delete."
+      - "The linked conformance class is Annex A.7 /conf/create-replace-delete."
+      - "The prerequisite is OGC API Features Part 4 create/replace/delete: http://www.opengis.net/spec/ogcapi-features-4/1.0/req/create-replace-delete."
+      - "The normative statement set is Requirements 63-78."
+  reviewed_paths:
+    - .harness/contracts/sprint-ets-26.yaml
+    - epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - epics/epic-ets-03-part2-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/known-issues.md
+    - ops/changelog.md
+    - .harness/handoffs/planner-handoff.yaml
+    - ops/test-results/sprint-ets-26-plan-smoke-2026-05-13.xml
+    - ops/test-results/sprint-ets-26-plan-smoke-container-2026-05-13.log
+
+findings: []
+
+closed_findings:
+  - id: RAZE-ETS26-PLAN-GAP-001
+    severity: MEDIUM
+    title: "Sprint 26 planning is not recorded in ops/changelog.md"
+    path: ops/changelog.md
+    status: CLOSED
+    evidence:
+      - "ops/changelog.md now has a top entry: 2026-05-13T09:15Z - Sprint 26 Part 2 Create/Replace/Delete planning."
+      - "The entry is triggered by the user's Continue instruction and references S-ETS-26-01."
+      - "The entry records REQ-ETS-PART2-007, official OGC 23-002 Clause 14 identifiers /req/create-replace-delete and /conf/create-replace-delete, and Requirements 63-78."
+      - "The entry records GeoRobotix declaration/prerequisite state, missing Part 2 api-common/update/advanced-filtering, HTTP 400/streaming endpoint realities, planning smoke totals 137 total / 72 passed / 0 failed / 65 skipped, and zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized request-log entries."
+      - "The entry says this changelog update closed RAZE-ETS26-PLAN-GAP-001 and the focused recheck returned APPROVE confidence 0.96."
+
+checks:
+  official_ogc_identifier_fidelity:
+    status: PASS
+    evidence:
+      - "Spec/story/contract/handoff use /req/create-replace-delete and /conf/create-replace-delete."
+      - "Requirements 63-78 are listed with the expected identifiers: datastream, datastream-update-schema, datastream-delete-cascade, observation, observation-schema, controlstream, controlstream-update-schema, controlstream-delete-cascade, command, command-schema, command-status, command-result, feasibility, feasibility-status, feasibility-result, and system-event."
+      - "Features Part 4 create/replace/delete is recorded as the prerequisite and kept separate from Connected Systems declaration evidence."
+  false_pass_risks:
+    status: PASS
+    evidence:
+      - "Planning forbids lifecycle PASS from declaration alone, sibling Part 2 declarations, broad OPTIONS headers, or HTTP 400 responses."
+      - "OPTIONS probes are explicitly readiness diagnostics only."
+      - "Unavailable /commands, /feasibility, /systemEvents, and streaming-only /systems/{id}/events are specified as SKIP conditions."
+  public_iut_mutation_safety:
+    status: PASS
+    evidence:
+      - "Default public GeoRobotix smoke is specified as read-only and must issue zero IUT-bound POST/PUT/DELETE/PATCH."
+      - "Positive lifecycle tests require mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut."
+      - "Planning requires hard-denial before dispatch against public GeoRobotix."
+  georobotix_reality_capture:
+    status: PASS
+    evidence:
+      - "Docs record that GeoRobotix declares Part 2 /conf/create-replace-delete and Features Part 4 /conf/create-replace-delete."
+      - "Docs record that GeoRobotix lacks Part 2 /conf/api-common, /conf/update, and /conf/advanced-filtering."
+      - "Docs record HTTP 400 for GET /commands, /feasibility, and /systemEvents, plus streaming-only HTTP 400 for system-scoped events."
+  placeholder_drift:
+    status: PASS
+    evidence:
+      - "REQ-ETS-PART2-007 is split out as Create/Replace/Delete."
+      - "Remaining current placeholders are REQ-ETS-PART2-008..013 in OpenSpec, traceability, epic, status, known issues, contract, and handoff."
+  e2e_evidence_consistency:
+    status: PASS
+    evidence:
+      - "Archived XML starts with testng-results total=137 passed=72 failed=0 skipped=65."
+      - "Archived request log has 100 recognized GeoRobotix IUT request entries."
+      - "Search for IUT-bound POST/PUT/DELETE/PATCH in the archived container log returned no matches."
+      - "Artifacts are archived under ops/test-results/sprint-ets-26-plan-*."
+  docs_reconciliation:
+    status: PASS
+    evidence:
+      - "OpenSpec, story, traceability, epic, status, test-results, known issues, contract, and handoff are reconciled."
+      - "Focused recheck verified ops/changelog.md is now reconciled for Sprint 26 planning."
+
+focused_recheck:
+  performed_utc: "2026-05-13T10:46:11Z"
+  scope: "RAZE-ETS26-PLAN-GAP-001 closure only"
+  maven_rerun: false
+  teamengine_rerun: false
+  result: "closed"
+
+required_fixes: []
+
+commit_readiness:
+  can_commit_or_amend: true
+  rationale: "Mandatory changelog reconciliation gap is closed; no remaining required fixes found in the focused recheck."
+
+reviewer_edits:
+  - .harness/evaluations/sprint-ets-26-plan-adversarial.yaml
+  - ops/metrics.md

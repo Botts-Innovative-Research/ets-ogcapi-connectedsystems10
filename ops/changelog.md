@@ -2,6 +2,26 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-13T09:15Z — Sprint 26 Part 2 Create/Replace/Delete planning
+
+**Triggered by user instruction**: "Continue."
+
+- Started Sprint 26 planning for `S-ETS-26-01`, the next Part 2 item after Sprint 25 Advanced Filtering.
+- Verified architecture freshness: `_bmad/architecture.md` last reconciled 2026-05-09, so it is not stale on 2026-05-13.
+- Verified official OGC 23-002 Clause 14 identifiers from the published HTML: Create/Replace/Delete is `/req/create-replace-delete` with conformance `/conf/create-replace-delete`, prerequisite OGC API Features Part 4 Create/Replace/Delete, and normative Requirements 63-78.
+- Added `.harness/contracts/sprint-ets-26.yaml` and `epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for Create/Replace/Delete planning.
+- Split `REQ-ETS-PART2-007` out for Part 2 Create/Replace/Delete and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-008..013`.
+- Probed GeoRobotix state: `/conformance` declares Part 2 `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/create-replace-delete`, but not Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
+- Captured read-only readiness evidence: OPTIONS probes for `/datastreams`, `/datastreams/{id}`, `/observations`, `/controlstreams`, `/commands`, `/controlstreams/{id}/commands`, `/systems/{id}/events`, `/systemEvents`, and `/feasibility` returned HTTP 200 with broad `Allow` headers including write methods.
+- Captured endpoint-honesty evidence: `GET /commands?limit=1`, `GET /systemEvents?limit=1`, and `GET /feasibility?limit=1` returned HTTP 400 `Invalid resource name`; `GET /systems/{id}/events?limit=1` returned HTTP 400 `Only streaming requests supported on this resource`.
+- Planned safety policy: default GeoRobotix smoke remains read-only; OPTIONS readiness cannot PASS lifecycle behavior; positive POST/PUT/DELETE lifecycle checks require `mutation-tests-enabled=true`, `mutation-iut-policy=dedicated-mutable-iut`, and public-IUT hard denial before dispatch.
+- Ran planning TeamEngine smoke against the real GeoRobotix stack: `137 total / 72 passed / 0 failed / 65 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized request-log entries.
+- Archived smoke artifacts under `ops/test-results/sprint-ets-26-plan-smoke-2026-05-13.xml` and `ops/test-results/sprint-ets-26-plan-smoke-container-2026-05-13.log`.
+- Raze planning review `.harness/evaluations/sprint-ets-26-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.94 for this missing changelog entry; this entry closed `RAZE-ETS26-PLAN-GAP-001`, and focused recheck returned `APPROVE` confidence 0.96 with no remaining required fixes.
+
+---
+
 ## 2026-05-13T08:46Z — Sprint 25 Part 2 Advanced Filtering Generator
 
 **Triggered by user instruction**: "Let's continue from where you last left off."

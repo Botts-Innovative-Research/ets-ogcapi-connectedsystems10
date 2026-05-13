@@ -471,12 +471,73 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** those responses do not produce Advanced Filtering PASS
 **AND** sibling Part 2 declarations or the non-standard `/conf/system-history` declaration do not imply Advanced Filtering conformance.
 
-#### REQ-ETS-PART2-007..013: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-007: Part 2 Create/Replace/Delete Conformance Suite
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 25 Advanced Filtering Generator)
-- **Description**: For each of the remaining 7 OGC 23-002 conformance classes or cross-class closures (`create-replace-delete`, `update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: SPECIFIED (Sprint 26 planning; Generator pending)
+- **Description**: The ETS SHALL provide a declaration-gated, mutation-safe TestNG suite for OGC 23-002 Clause 14 Requirements Class "Create/Replace/Delete" using official identifiers `/req/create-replace-delete` and `/conf/create-replace-delete`. The suite SHALL keep the OGC API - Features - Part 4 Create/Replace/Delete prerequisite visible, SHALL treat OPTIONS method discovery as readiness evidence only, SHALL never mutate a public/default IUT, and SHALL require explicit dedicated mutable-IUT opt-in before POST, PUT, or DELETE lifecycle checks can run.
+- **Normative statement set for planning**: Requirements 63-78: `/req/create-replace-delete/datastream`, `/req/create-replace-delete/datastream-update-schema`, `/req/create-replace-delete/datastream-delete-cascade`, `/req/create-replace-delete/observation`, `/req/create-replace-delete/observation-schema`, `/req/create-replace-delete/controlstream`, `/req/create-replace-delete/controlstream-update-schema`, `/req/create-replace-delete/controlstream-delete-cascade`, `/req/create-replace-delete/command`, `/req/create-replace-delete/command-schema`, `/req/create-replace-delete/command-status`, `/req/create-replace-delete/command-result`, `/req/create-replace-delete/feasibility`, `/req/create-replace-delete/feasibility-status`, `/req/create-replace-delete/feasibility-result`, and `/req/create-replace-delete/system-event`.
+- **Rationale**: Clause 14 is destructive by nature and delegates lifecycle semantics to OGC API Features Part 4 Create/Replace/Delete at Connected Systems resource endpoints. The ETS must make progress on declaration/prerequisite/readiness checks without producing false PASS from broad OPTIONS headers or mutating GeoRobotix.
+- **Maps to**: PRD FR-ETS-37.
+
+#### SCENARIO-ETS-PART2-007-CRD-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the IUT exposes `/conformance`
+**WHEN** the Part 2 Create/Replace/Delete group runs
+**THEN** the ETS detects exact declaration `http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete`
+**AND** SKIPs the group with a precise reason when the declaration is absent.
+
+#### SCENARIO-ETS-PART2-007-FEATURES4-PREREQUISITE-001 (CRITICAL)
+**GIVEN** `/req/create-replace-delete` applies
+**WHEN** the ETS evaluates full class closure
+**THEN** it records whether `http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete` is declared
+**AND** does not report full `/conf/create-replace-delete` closure when the prerequisite is missing.
+
+#### SCENARIO-ETS-PART2-007-MUTATION-SAFETY-GATE-001 (CRITICAL)
+**GIVEN** the default smoke target is the public GeoRobotix IUT
+**WHEN** Create/Replace/Delete tests execute
+**THEN** POST, PUT, DELETE, and PATCH requests are blocked before dispatch
+**AND** positive lifecycle checks require `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
+
+#### SCENARIO-ETS-PART2-007-OPTIONS-READINESS-READONLY-001 (NORMAL)
+**GIVEN** the IUT declares `/conf/create-replace-delete`
+**WHEN** the ETS probes resource endpoints with read-only OPTIONS requests
+**THEN** it may record advertised create, replace, and delete methods as readiness diagnostics
+**AND** OPTIONS evidence alone SHALL NOT PASS a lifecycle assertion.
+
+#### SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001 (NORMAL)
+**GIVEN** a dedicated mutable IUT is explicitly enabled
+**WHEN** the ETS exercises DataStream and Observation Create/Replace/Delete checks
+**THEN** it validates lifecycle behavior using OGC API Features Part 4 semantics at the Connected Systems endpoints
+**AND** cleans up created resources before test completion.
+
+#### SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001 (NORMAL)
+**GIVEN** a dedicated mutable IUT is explicitly enabled
+**WHEN** the ETS exercises ControlStream, Command, CommandStatus, and CommandResult Create/Replace/Delete checks
+**THEN** it validates accepted resource shapes, schema-rejection behavior where applicable, and cleanup
+**AND** SKIPs honestly when command endpoints are unavailable.
+
+#### SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001 (NORMAL)
+**GIVEN** a dedicated mutable IUT is explicitly enabled
+**WHEN** the ETS exercises Feasibility, Feasibility status/result, and SystemEvent Create/Replace/Delete checks
+**THEN** it validates lifecycle behavior only against JSON resources that are available for the IUT
+**AND** SKIPs rather than PASSes when endpoints are absent, invalid resources, or streaming-only.
+
+#### SCENARIO-ETS-PART2-007-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
+**GIVEN** the IUT advertises `/conf/create-replace-delete`
+**WHEN** `/commands`, `/feasibility`, `/systemEvents`, or `/systems/{sysId}/events` are not readable JSON resource endpoints
+**THEN** the ETS does not infer lifecycle PASS from sibling declarations, broad OPTIONS headers, or HTTP 400 responses.
+
+#### SCENARIO-ETS-PART2-007-SMOKE-NO-PUBLIC-MUTATION-001 (CRITICAL)
+**GIVEN** TeamEngine smoke runs against GeoRobotix
+**WHEN** the smoke run completes
+**THEN** request logs contain zero IUT-bound POST, PUT, DELETE, or PATCH requests
+**AND** any Create/Replace/Delete assertions that need mutation SKIP before dispatch.
+
+#### REQ-ETS-PART2-008..013: Remaining Part 2 Conformance Suites
+- **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 26 Create/Replace/Delete planning)
+- **Description**: For each of the remaining 6 OGC 23-002 conformance classes or cross-class closures (`update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
-- **Maps to**: PRD FR-ETS-37..43, except retired non-standard FR-ETS-35 System History.
+- **Maps to**: PRD FR-ETS-38..43, except retired non-standard FR-ETS-35 System History.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -2107,7 +2168,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
 - REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.
 - REQ-ETS-PART2-006: partially implemented by Sprint 25 Advanced Filtering Generator.
-- REQ-ETS-PART2-007..013 (remaining Part 2 classes/cross-class closures) — deferred after Sprint 25 Advanced Filtering Generator.
+- REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - specified by Sprint 26 planning; Generator pending.
+- REQ-ETS-PART2-008..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 26 Create/Replace/Delete planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

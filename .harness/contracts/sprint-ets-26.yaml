@@ -1,0 +1,166 @@
+# Sprint 26 contract - Part 2 Create/Replace/Delete safety-gated planning
+
+sprint: "ets-26"
+sprint_name: "part2-create-replace-delete"
+type: "feature-expansion-planning"
+created: "2026-05-13T09:15:42Z"
+description: |
+  Sprint 26 plans the first OGC 23-002 Part 2 Create/Replace/Delete increment.
+  Because this class is destructive by design, the Generator must make safe
+  declaration/prerequisite/readiness progress without mutating the default
+  public GeoRobotix IUT or producing lifecycle PASS from OPTIONS alone.
+
+stories:
+  - id: "S-ETS-26-01"
+    title: "Part 2 Create/Replace/Delete safety-gated planning"
+    file: "epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "L"
+    depends_on:
+      - "S-ETS-25-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-007 (/req/create-replace-delete specified; Generator pending)"
+    - "REQ-ETS-PART2-008..013 (remaining placeholders after CRD split)"
+  new_reqs: []
+  retired_placeholders: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-007-CRD-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-007-FEATURES4-PREREQUISITE-001"
+    - "SCENARIO-ETS-PART2-007-MUTATION-SAFETY-GATE-001"
+    - "SCENARIO-ETS-PART2-007-UNAVAILABLE-ENDPOINT-HONESTY-001"
+    - "SCENARIO-ETS-PART2-007-SMOKE-NO-PUBLIC-MUTATION-001"
+  normal:
+    - "SCENARIO-ETS-PART2-007-OPTIONS-READINESS-READONLY-001"
+    - "SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001"
+    - "SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001"
+    - "SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  features_part4_prerequisite_visible: true
+  public_iut_mutation_forbidden: true
+  options_readiness_not_lifecycle_pass: true
+  no_code_changes_in_planning: true
+  planning_teamengine_smoke_passed: true
+  planning_no_mutation_verified: true
+  generator_required_before_runtime_gates: true
+  raze_planning_review_completed: true
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-13T09:15:42Z"
+  requirement_class: "Clause 14, Requirements Class Create/Replace/Delete"
+  requirement_class_identifier: "/req/create-replace-delete"
+  conformance_class_identifier: "/conf/create-replace-delete"
+  prerequisites:
+    - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/create-replace-delete"
+  conformance_prerequisites:
+    - "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+  normative_statements:
+    - "/req/create-replace-delete/datastream"
+    - "/req/create-replace-delete/datastream-update-schema"
+    - "/req/create-replace-delete/datastream-delete-cascade"
+    - "/req/create-replace-delete/observation"
+    - "/req/create-replace-delete/observation-schema"
+    - "/req/create-replace-delete/controlstream"
+    - "/req/create-replace-delete/controlstream-update-schema"
+    - "/req/create-replace-delete/controlstream-delete-cascade"
+    - "/req/create-replace-delete/command"
+    - "/req/create-replace-delete/command-schema"
+    - "/req/create-replace-delete/command-status"
+    - "/req/create-replace-delete/command-result"
+    - "/req/create-replace-delete/feasibility"
+    - "/req/create-replace-delete/feasibility-status"
+    - "/req/create-replace-delete/feasibility-result"
+    - "/req/create-replace-delete/system-event"
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares /conf/create-replace-delete and OGC API Features Part 4 /conf/create-replace-delete; does not declare Part 2 /conf/api-common, /conf/update, or /conf/advanced-filtering."
+    options:
+      datastreams: "OPTIONS /datastreams returned HTTP 200 with broad Allow including POST, PUT, DELETE."
+      datastream_item: "OPTIONS /datastreams/0mirhn7lo1kg returned HTTP 200 with broad Allow including POST, PUT, DELETE."
+      observations: "OPTIONS /observations returned HTTP 200 with broad Allow including POST, PUT, DELETE."
+      controlstreams: "OPTIONS /controlstreams returned HTTP 200 with broad Allow including POST, PUT, DELETE."
+      commands: "OPTIONS /commands returned HTTP 200 with broad Allow including POST, PUT, DELETE, but GET /commands?limit=1 returned HTTP 400."
+      nested_commands: "OPTIONS /controlstreams/{id}/commands returned HTTP 200 with broad Allow including POST, PUT, DELETE."
+      system_events: "OPTIONS /systems/{id}/events and /systemEvents returned HTTP 200 with broad Allow including POST, PUT, DELETE, but GET returned HTTP 400 or streaming-only."
+      feasibility: "OPTIONS /feasibility returned HTTP 200 with broad Allow including POST, PUT, DELETE, but GET /feasibility?limit=1 returned HTTP 400."
+    unavailable_gets:
+      commands: "GET /commands?limit=1 returned HTTP 400 Invalid resource name: commands."
+      system_events: "GET /systemEvents?limit=1 returned HTTP 400 Invalid resource name: systemEvents."
+      system_scoped_events: "GET /systems/{id}/events?limit=1 returned HTTP 400 Only streaming requests supported on this resource."
+      feasibility: "GET /feasibility?limit=1 returned HTTP 400 Invalid resource name: feasibility."
+
+planning_e2e_evidence:
+  teamengine_smoke:
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s26-plan bash scripts/smoke-test.sh"
+    result: "SMOKE PASS"
+    totals: "137 total / 72 passed / 0 failed / 65 skipped"
+    recognized_iut_request_logs: 100
+    iut_bound_mutation_requests: 0
+    report: "ops/test-results/sprint-ets-26-plan-smoke-2026-05-13.xml"
+    container_log: "ops/test-results/sprint-ets-26-plan-smoke-container-2026-05-13.log"
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/create-replace-delete is not declared, CRD assertions SKIP with a precise reason."
+  prerequisite:
+    - "Keep OGC API Features Part 4 /conf/create-replace-delete visible before reporting full class closure."
+  mutation_safety:
+    - "Default public GeoRobotix smoke must issue zero IUT-bound POST, PUT, DELETE, or PATCH."
+    - "Positive lifecycle checks require mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut."
+    - "Hard-deny public GeoRobotix mutation before dispatch."
+  options_honesty:
+    - "OPTIONS method evidence is readiness only and cannot PASS lifecycle behavior."
+    - "HTTP 400 GET endpoints and streaming-only event endpoints cannot be lifecycle PASS evidence."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/create-replace-delete and /conf/create-replace-delete."
+  - "Use OGC API Features Part 4 Create/Replace/Delete as the prerequisite authority for lifecycle semantics."
+  - "Reuse existing mutation safety parameters and public-IUT hard-denial policy from Part 1 CRD."
+  - "Add tests/comments referencing REQ-ETS-PART2-007 and SCENARIO-ETS-PART2-007-* IDs."
+  - "Run formatter, scripts/mvn-test-via-docker.sh, and GeoRobotix TeamEngine smoke after implementation."
+  - "Verify smoke logs contain zero IUT-bound POST/PUT/DELETE/PATCH by default."
+  - "Update spec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not mutate public GeoRobotix."
+  - "Do not PASS lifecycle assertions from OPTIONS alone."
+  - "Do not infer CRD resource support from sibling declarations or broad Allow headers."
+  - "Do not PASS /commands, /feasibility, /systemEvents, or /systems/{id}/events lifecycle checks when GET evidence is HTTP 400 or streaming-only."
+  - "Do not implement Part 2 Update, JSON, SWE Common, or observation-binding closure in this sprint."
+
+evaluation_focus:
+  raze:
+    - "Attack false PASS from broad OPTIONS headers."
+    - "Attack any path that can mutate public GeoRobotix."
+    - "Attack missing Features Part 4 prerequisite handling."
+    - "Attack unavailable /commands, /feasibility, /systemEvents, and streaming-only events being treated as lifecycle evidence."
+    - "Check stale placeholder drift: remaining Part 2 placeholders must be REQ-ETS-PART2-008..013."
+
+raze_review:
+  artifact: ".harness/evaluations/sprint-ets-26-plan-adversarial.yaml"
+  initial_verdict: "GAPS_FOUND"
+  initial_confidence: 0.94
+  required_fixes:
+    - id: "RAZE-ETS26-PLAN-GAP-001"
+      status: "CLOSED"
+      summary: "Added missing Sprint 26 planning entry to ops/changelog.md."
+  final_verdict: "APPROVE"
+  final_confidence: 0.96
+  focused_recheck: "2026-05-13T10:46:11Z"

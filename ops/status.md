@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-13T08:59Z
+Last updated: 2026-05-13T10:46Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-25.yaml`
+- `.harness/contracts/sprint-ets-26.yaml`
 
 ## Current State
 
@@ -38,12 +38,34 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, and pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, and metrics commit `7d57d9f Update Sprint 25 final metrics`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-25-01` Generator is PARTIAL for the Part 2 Advanced Filtering read-only declaration-gated subset.
-- Latest pushed implementation commit: `6fa00c4 Implement Sprint 24 System Events`, followed by reconciliation commit `5dccb36`.
-- Current sprint status: Sprint ets-25 Part 2 Advanced Filtering Generator is implemented and verified by formatter, Maven, TeamEngine smoke, and focused Raze gapfix review.
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`).
+- Latest planned story: `S-ETS-26-01` Part 2 Create/Replace/Delete safety-gated planning.
+- Latest pushed implementation commit: `d9df3ad Implement Sprint 25 Advanced Filtering`, followed by reconciliation commit `af53188` and metrics commit `7d57d9f`.
+- Current sprint status: Sprint ets-26 Part 2 Create/Replace/Delete planning is Raze-approved and ready to commit; Generator has not started.
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`.
+
+## Sprint ets-26 Planning Evidence
+
+Part 2 Create/Replace/Delete safety-gated subset:
+
+- Story: `epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md`
+- Contract: `.harness/contracts/sprint-ets-26.yaml`
+- OpenSpec: splits `REQ-ETS-PART2-007` out for OGC 23-002 Clause 14 and keeps remaining placeholders at `REQ-ETS-PART2-008..013`.
+- Scope planned: first safety-gated Create/Replace/Delete subset using official `/req/create-replace-delete` and `/conf/create-replace-delete` identifiers.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-05-09; checked 2026-05-13 and not stale.
+- OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 14 "Requirements Class Create/Replace/Delete"; prerequisite is OGC API Features Part 4 Create/Replace/Delete.
+- Normative requirement set: Requirements 63-78 cover DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, Feasibility, Feasibility status/result, and SystemEvent lifecycle behavior.
+- GeoRobotix planning probe: `/conformance` declares `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/create-replace-delete`, but does not declare Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
+- GeoRobotix readiness probes: read-only OPTIONS requests for `/datastreams`, `/datastreams/{id}`, `/observations`, `/controlstreams`, `/commands`, `/controlstreams/{id}/commands`, `/systems/{id}/events`, `/systemEvents`, and `/feasibility` returned HTTP 200 with broad `Allow` headers including write methods.
+- Endpoint honesty probes: `GET /commands?limit=1`, `GET /systemEvents?limit=1`, and `GET /feasibility?limit=1` returned HTTP 400 `Invalid resource name`; `GET /systems/{id}/events?limit=1` returned HTTP 400 `Only streaming requests supported on this resource`.
+- Verdict policy planned: exact declaration gate; keep Features Part 4 prerequisite visibility separate; default public GeoRobotix smoke must issue zero IUT-bound POST/PUT/DELETE/PATCH; OPTIONS evidence is readiness only and cannot PASS lifecycle behavior; positive lifecycle checks require `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
+- Out of scope for planning: Java implementation, public-IUT mutation, full positive lifecycle coverage, Part 2 Update, JSON, SWE Common, and observation-binding closure.
+- Raze planning review `.harness/evaluations/sprint-ets-26-plan-adversarial.yaml`: initial `GAPS_FOUND` confidence 0.94 for missing `ops/changelog.md` entry; fixed; focused recheck `APPROVE` confidence 0.96 with no remaining required fixes.
+- Planning E2E smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s26-plan bash scripts/smoke-test.sh` reported `137 total / 72 passed / 0 failed / 65 skipped` on GeoRobotix; report archived at `ops/test-results/sprint-ets-26-plan-smoke-2026-05-13.xml`, container log at `ops/test-results/sprint-ets-26-plan-smoke-container-2026-05-13.log`.
+- No-mutation proof: GeoRobotix smoke recognized 100 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH.
+- Next action: commit/push Sprint 26 planning, then start Generator.
 
 ## Sprint ets-25 Generator Evidence
 
@@ -51,7 +73,7 @@ Part 2 Advanced Filtering read-only declaration-gated subset:
 
 - Story: `epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md`
 - Contract: `.harness/contracts/sprint-ets-25.yaml`
-- OpenSpec: marks `REQ-ETS-PART2-006` PARTIAL_IMPLEMENTED for OGC 23-002 Clause 13 and keeps remaining Part 2 placeholders at `REQ-ETS-PART2-007..013`.
+- OpenSpec: marks `REQ-ETS-PART2-006` PARTIAL_IMPLEMENTED for OGC 23-002 Clause 13. Sprint 26 later split `REQ-ETS-PART2-007` out for Create/Replace/Delete and keeps remaining placeholders at `REQ-ETS-PART2-008..013`.
 - Scope implemented: first read-only, declaration-gated Advanced Filtering subset using official `/req/advanced-filtering` and `/conf/advanced-filtering` identifiers.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-05-09 after the Sprint 25 taxonomy correction; not stale.
 - OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 13 "Requirements Class Advanced Filtering"; prerequisites are `/req/api-common` and Part 1 `/req/advanced-filtering`.

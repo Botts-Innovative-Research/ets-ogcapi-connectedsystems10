@@ -45,7 +45,7 @@ public class Part2ApiCommonTests {
 	static final String REQ_RESOURCE_COLLECTION = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common/resource-collection";
 
 	private static final Set<String> PART2_COLLECTION_TOKENS = Set.of("datastreams", "observations", "controlstreams",
-			"commands", "systemevents", "systemhistory");
+			"commands", "systemevents");
 
 	private URI iutUri;
 

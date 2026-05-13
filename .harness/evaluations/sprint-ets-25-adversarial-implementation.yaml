@@ -1,0 +1,94 @@
+verdict: "GAPS_FOUND"
+confidence: 0.91
+reviewed_at: "2026-05-13T08:29:44Z"
+reviewer: "Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+scope:
+  story: "S-ETS-25-01"
+  sprint: "ets-25"
+  implementation: "current uncommitted Sprint 25 Generator implementation"
+  files_reviewed:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "_bmad/traceability.md"
+    - ".harness/contracts/sprint-ets-25.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - "ops/test-results/sprint-ets-25-maven-2026-05-13.log"
+    - "ops/test-results/sprint-ets-25-smoke-2026-05-13.xml"
+    - "ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log"
+findings:
+  - id: "RAZE-ETS25-IMPL-GAP-001"
+    severity: "HIGH"
+    status: "open"
+    title: "Observation phenomenonTime filter can PASS using resultTime-only evidence"
+    evidence:
+      - "Part2AdvancedFilteringTests.assertObservationPhenomenonTimeFilterFromSeed queries /observations?phenomenonTime=<requestedTime>."
+      - "firstObservationPhenomenonTime calls observationPhenomenonTime, and observationPhenomenonTime falls back to resultTime when phenomenonTime is absent."
+      - "The returned-item check uses the same fallback, so an Observation with no phenomenonTime can satisfy /req/advanced-filtering/obs-by-phenomenontime through resultTime alone."
+      - "Story and OpenSpec separate Observation phenomenonTime and resultTime filter predicates; resultTime-only evidence is not valid phenomenonTime predicate evidence."
+    risk: "A declaring IUT that omits phenomenonTime, ignores the phenomenonTime filter, or returns resultTime-matching observations could get a false PASS for obs-by-phenomenontime."
+    required_fix:
+      - "For /req/advanced-filtering/obs-by-phenomenontime, seed and validate only the observation phenomenonTime member."
+      - "If no phenomenonTime seed exists, SKIP that assertion with a precise reason instead of falling back to resultTime."
+      - "Add a helper regression proving an Observation with only resultTime cannot satisfy phenomenonTime predicate evidence."
+  - id: "RAZE-ETS25-IMPL-CONCERN-001"
+    severity: "LOW"
+    status: "open"
+    title: "timeIntersects has a permissive substring shortcut before parsing"
+    evidence:
+      - "timeIntersects returns true when candidate contains requested or requested contains candidate before parsing either side as an Instant or interval."
+    risk: "A malformed time string embedding the requested value could satisfy a time predicate without valid temporal evidence."
+    required_fix: []
+    recommendation:
+      - "Prefer exact equality or parsed instant/interval intersection; avoid substring acceptance except for a narrowly justified, tested representation case."
+non_findings:
+  - id: "RAZE-ETS25-OK-001"
+    topic: "Declaration gate"
+    evidence:
+      - "Part2AdvancedFilteringTests uses exact http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering before runtime filter probes."
+      - "Smoke XML shows all 9 Part 2 Advanced Filtering tests SKIP on GeoRobotix because /conf/advanced-filtering is not declared."
+  - id: "RAZE-ETS25-OK-002"
+    topic: "Empty filtered collections"
+    evidence:
+      - "nonEmptyFilteredItems throws SkipException for empty seed-derived filtered items[]; empty collections are not PASS evidence."
+  - id: "RAZE-ETS25-OK-003"
+    topic: "Stale taxonomy and endpoint casing"
+    evidence:
+      - "Advanced Filtering Java constants use /req/advanced-filtering and /conf/advanced-filtering."
+      - "No runtime Part 2 Advanced Filtering Java assertion uses /conf/system-history, /req/system-history, dynamic-* identifiers, or lower-case /systemevents as PASS evidence."
+      - "Part2ApiCommonTests removed the stale systemhistory collection token and VerifyPart2ApiCommonTests covers the vendor-extension case."
+  - id: "RAZE-ETS25-OK-004"
+    topic: "TestNG wiring"
+    evidence:
+      - "testng.xml declares part2advancedfiltering depends-on=\"core common systemfeatures\"."
+      - "VerifyTestNGSuiteDependency checks comma syntax, required dependencies, forbidden hidden dependencies, method groups, and co-location."
+  - id: "RAZE-ETS25-OK-005"
+    topic: "Verification artifacts"
+    evidence:
+      - "Maven log reports 193 tests / 0 failures / 0 errors / 3 skipped and BUILD SUCCESS."
+      - "Smoke XML root reports total=137 passed=72 failed=0 skipped=65."
+      - "Container log has 101 request log entries, including one non-IUT OGC OpenAPI fetch; the 100 IUT-bound entries contain zero POST/PUT/DELETE/PATCH requests."
+  - id: "RAZE-ETS25-OK-006"
+    topic: "Reconciliation"
+    evidence:
+      - "OpenSpec, story, epic, traceability, contract, handoff, status, test-results, known-issues, and changelog agree that Sprint 25 is PARTIAL_IMPLEMENTED with Raze implementation review pending."
+      - "raze_* pending fields are pre-review placeholders and are expected."
+required_fixes:
+  - "Fix RAZE-ETS25-IMPL-GAP-001 before recording Sprint 25 Generator as complete or committing/pushing the implementation."
+suggested_followups:
+  - "Consider tightening timeIntersects per RAZE-ETS25-IMPL-CONCERN-001 in the same gap-fix if low-risk."
+rerun_recommendation:
+  after_fix:
+    - "Run Docker Maven wrapper."
+    - "Run GeoRobotix TeamEngine smoke or justify if the code-only helper change is proven by Maven plus unchanged declaration-gated smoke behavior."

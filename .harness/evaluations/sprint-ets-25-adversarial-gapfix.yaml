@@ -1,0 +1,82 @@
+verdict: "APPROVE"
+confidence: 0.96
+reviewed_at: "2026-05-13T08:55:40Z"
+reviewer: "Raze"
+role_definition: "_bmad/agents/adversarial-reviewer.md"
+scope:
+  story: "S-ETS-25-01"
+  sprint: "ets-25"
+  review_type: "focused adversarial gapfix review"
+  prior_artifact: ".harness/evaluations/sprint-ets-25-adversarial-implementation.yaml"
+  prior_verdict: "GAPS_FOUND"
+  files_reviewed:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md"
+    - "_bmad/traceability.md"
+    - ".harness/contracts/sprint-ets-25.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/test-results/sprint-ets-25-maven-2026-05-13.log"
+    - "ops/test-results/sprint-ets-25-maven-advancedfiltering-2026-05-13.txt"
+    - "ops/test-results/sprint-ets-25-smoke-2026-05-13.xml"
+    - "ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log"
+  commands_run:
+    - "python3 scripts/no-mutation-oracle.py ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log https://api.georobotix.io/ogc/t18/api"
+findings: []
+non_findings:
+  - id: "RAZE-ETS25-GAPFIX-OK-001"
+    topic: "RAZE-ETS25-IMPL-GAP-001 closed"
+    evidence:
+      - "`observationTimeFiltersVerifyReturnedPredicates` still exercises both Observation time filters, but `/req/advanced-filtering/obs-by-phenomenontime` now goes through `assertObservationPhenomenonTimeFilterFromSeed`."
+      - "`firstObservationPhenomenonTime` and `observationPhenomenonTime` read only the `phenomenonTime` member; no `resultTime` fallback remains in the phenomenonTime seed or returned-item validation path."
+      - "`VerifyPart2AdvancedFilteringTests.observationPhenomenonTimeDoesNotFallbackToResultTime` proves resultTime-only Observation evidence cannot satisfy the phenomenonTime helper."
+    conclusion: "The prior false PASS path for `/req/advanced-filtering/obs-by-phenomenontime` is closed."
+  - id: "RAZE-ETS25-GAPFIX-OK-002"
+    topic: "RAZE-ETS25-IMPL-CONCERN-001 addressed"
+    evidence:
+      - "`timeIntersects` now parses both candidate and requested values into `TimeRange` objects before comparing intervals."
+      - "Malformed values return false through `TimeRange.parse`; the substring shortcut is gone."
+      - "`timeIntersectionRejectsMalformedSubstringEvidence` covers the exact embedded-instant false evidence case, and `timeIntersectionHandlesInstantsAndPeriods` covers instant/interval intersections."
+    conclusion: "Malformed substring evidence no longer satisfies time predicates."
+  - id: "RAZE-ETS25-GAPFIX-OK-003"
+    topic: "No undeclared Advanced Filtering PASS path"
+    evidence:
+      - "`part2AdvancedFilteringConformanceDeclared` requires exact `http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering` before Part 2 Advanced Filtering PASS evidence."
+      - "Every runtime filter test calls `skipIfAdvancedFilteringUndeclared` before probing filter endpoints."
+      - "Smoke XML shows all 9 Part 2 Advanced Filtering runtime tests SKIP on GeoRobotix because `/conf/advanced-filtering` is not declared."
+  - id: "RAZE-ETS25-GAPFIX-OK-004"
+    topic: "No empty-collection predicate PASS"
+    evidence:
+      - "`nonEmptyFilteredItems` throws `SkipException` when a seed-derived filtered `items[]` response is empty."
+      - "`itemsOnlyCollectionShapeAllowsEmptyCollectionsButNotPredicatePass` keeps collection-shape acceptance separate from predicate PASS evidence."
+  - id: "RAZE-ETS25-GAPFIX-OK-005"
+    topic: "Unavailable Command and SystemEvent endpoints remain SKIP, not PASS"
+    evidence:
+      - "`commandFiltersVerifyReturnedPredicatesWhenEndpointAvailable` skips when `/commands` is non-200, empty, or lacks usable issue/execution/status/sender seed evidence."
+      - "`systemEventTypeFilterVerifiesReturnedPredicatesWhenEndpointAvailable` skips when `/systemEvents` is non-200 or lacks event type evidence."
+      - "`systemEventsCanonicalPath` returns `systemEvents`, and the unit test rejects lower-case `/systemevents` as PASS evidence."
+  - id: "RAZE-ETS25-GAPFIX-OK-006"
+    topic: "No sibling declaration or stale System History false PASS path"
+    evidence:
+      - "`VerifyTestNGSuiteDependency` requires `part2advancedfiltering` to depend on `core common systemfeatures` and explicitly forbids hiding it behind `part2apicommon`, Part 1 `advancedfiltering`, `part2datastream`, `part2controlstream`, or `part2systemevent` dependencies."
+      - "Part 2 API Common collection discovery no longer includes `systemhistory`; `systemHistoryVendorExtensionIsNotDiscoveredAsOgcPart2Collection` covers the vendor-extension case."
+      - "Advanced Filtering constants and docs use official `/req/advanced-filtering` and `/conf/advanced-filtering`, not `/conf/system-history`."
+  - id: "RAZE-ETS25-GAPFIX-OK-007"
+    topic: "Gate and documentation coherence"
+    evidence:
+      - "Docs and story record formatter BUILD SUCCESS, Maven `195 tests / 0 failures / 0 errors / 3 skipped`, TeamEngine smoke `137 total / 72 passed / 0 failed / 65 skipped`, and zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized request-log entries."
+      - "Archived Maven log reports `Tests run: 195, Failures: 0, Errors: 0, Skipped: 3` and `BUILD SUCCESS`; the Advanced Filtering helper report records `8/0/0/0`."
+      - "Archived smoke XML root reports `total=137`, `passed=72`, `failed=0`, `skipped=65`."
+      - "The no-mutation oracle returned `recognized_iut_request_logs=100` with exit code 0 against the archived Sprint 25 container log."
+required_fixes: []
+residual_risks:
+  - "This review reused archived formatter/Maven/TeamEngine evidence instead of rerunning Docker gates. The artifacts are internally coherent and post-gapfix."
+  - "Positive Advanced Filtering behavior remains unproven against a declaring IUT because GeoRobotix does not declare `/conf/advanced-filtering`; current approval is for the declaration-gated partial subset."

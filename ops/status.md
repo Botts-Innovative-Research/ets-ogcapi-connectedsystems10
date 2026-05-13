@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-09T14:08Z
+Last updated: 2026-05-13T08:55Z
 
 ## Fresh-Session Entry Point
 
@@ -38,33 +38,41 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering` and reconciliation commit `5a8eef4 Reconcile Sprint 25 planning push`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering` and reconciliation commit `5a8eef4 Reconcile Sprint 25 planning push`; Sprint 25 Generator changes are implemented and uncommitted pending commit/push.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-24-01` Generator is PARTIAL for the Part 2 System Events read-only declaration-gated subset.
+- Latest implemented story: `S-ETS-25-01` Generator is PARTIAL for the Part 2 Advanced Filtering read-only declaration-gated subset.
 - Latest pushed implementation commit: `6fa00c4 Implement Sprint 24 System Events`, followed by reconciliation commit `5dccb36`.
-- Current sprint status: Sprint ets-25 Part 2 Advanced Filtering planning is committed and pushed; Generator is next.
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation push (`2f4a6de..5a8eef4 main -> main`).
+- Current sprint status: Sprint ets-25 Part 2 Advanced Filtering Generator is implemented and verified by formatter, Maven, TeamEngine smoke, and focused Raze gapfix review.
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation push (`2f4a6de..5a8eef4 main -> main`). Generator push is pending.
 
-## Sprint ets-25 Planning Evidence
+## Sprint ets-25 Generator Evidence
 
 Part 2 Advanced Filtering read-only declaration-gated subset:
 
 - Story: `epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md`
 - Contract: `.harness/contracts/sprint-ets-25.yaml`
-- OpenSpec: defines `REQ-ETS-PART2-006` for OGC 23-002 Clause 13 and renumbers remaining Part 2 placeholders to `REQ-ETS-PART2-007..013`.
-- Scope planned: first read-only, declaration-gated Advanced Filtering subset using official `/req/advanced-filtering` and `/conf/advanced-filtering` identifiers.
+- OpenSpec: marks `REQ-ETS-PART2-006` PARTIAL_IMPLEMENTED for OGC 23-002 Clause 13 and keeps remaining Part 2 placeholders at `REQ-ETS-PART2-007..013`.
+- Scope implemented: first read-only, declaration-gated Advanced Filtering subset using official `/req/advanced-filtering` and `/conf/advanced-filtering` identifiers.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-05-09 after the Sprint 25 taxonomy correction; not stale.
 - OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 13 "Requirements Class Advanced Filtering"; prerequisites are `/req/api-common` and Part 1 `/req/advanced-filtering`.
 - Normative requirement set: Requirements 45-62 cover DataStream, Observation, ControlStream, Command, CommandStatus, and SystemEvent filter query parameters.
 - Taxonomy correction: OGC 23-002 Annex A does not define `/conf/system-history` or `/req/system-history`; GeoRobotix's `/conf/system-history` declaration is treated as non-standard/vendor extension evidence only.
+- Implementation: `Part2AdvancedFilteringTests` adds 9 read-only runtime checks for exact `/conf/advanced-filtering` declaration, prerequisite visibility, DataStream time filters, DataStream `observedProperty`, Observation time filters, ControlStream time filters, ControlStream `controlledProperty`, Command filters when `/commands` is available, and SystemEvent `eventType` when `/systemEvents` is available.
+- Structural coverage: `VerifyPart2AdvancedFilteringTests` adds 8 helper regressions, including strict Observation `phenomenonTime` evidence and malformed time-substring rejection; `VerifyTestNGSuiteDependency` adds `part2advancedfiltering` group/dependency/co-location checks; and `Part2ApiCommonTests` no longer treats `systemhistory` as an OGC Part 2 collection token.
 - GeoRobotix planning probe: `/conformance` does not declare `/conf/advanced-filtering`.
 - GeoRobotix read-only filter probes: selected `/datastreams` and `/controlstreams` filter requests returned HTTP 200 JSON with `items`; selected `/observations` time filters returned HTTP 200 JSON with empty `items`; `/commands` filter requests returned HTTP 400; `/systemEvents?eventType=...` returned HTTP 400; `/systems/{id}/events?eventType=...` returned HTTP 400 streaming-only.
-- Verdict policy planned: exact declaration gate; no Advanced Filtering PASS from undeclared HTTP 200 query behavior, empty result collections, endpoint availability alone, sibling Part 2 declarations, or the non-standard `/conf/system-history` declaration.
+- Verdict policy implemented: exact declaration gate; no Advanced Filtering PASS from undeclared HTTP 200 query behavior, empty result collections, endpoint availability alone, sibling Part 2 declarations, or the non-standard `/conf/system-history` declaration. Empty seed-derived filtered responses SKIP with reason and do not PASS.
 - Out of scope: mutation, seed-resource creation, full FOI recursive graph traversal, streaming/SSE event filter consumption, and full closure for Command filters while `/commands` is unavailable.
 - Raze planning review `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml`: initial `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference; fixed to `REQ-ETS-PART2-013`; recheck `APPROVE` confidence 0.96.
-- Planning-only docs change; no Java code, Maven, or TeamEngine smoke run yet.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` BUILD SUCCESS.
+- Raze gapfix: `obs-by-phenomenontime` now seeds and validates only `phenomenonTime`, with no `resultTime` fallback; `timeIntersects` now parses instants/intervals and rejects malformed substring evidence.
+- Maven: `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `195 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-25-maven-2026-05-13.log`.
+- TeamEngine smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s25-final bash scripts/smoke-test.sh` reported `137 total / 72 passed / 0 failed / 65 skipped`; report archived at `ops/test-results/sprint-ets-25-smoke-2026-05-13.xml`, container log at `ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log`.
+- No-mutation proof: GeoRobotix smoke recognized 100 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH.
+- Runtime outcome: all 9 Part 2 Advanced Filtering runtime tests SKIP on GeoRobotix because `/conf/advanced-filtering` is not declared.
+- Raze implementation review `.harness/evaluations/sprint-ets-25-adversarial-implementation.yaml`: `GAPS_FOUND` confidence 0.91. Required gap and low concern are fixed and verified. Focused gapfix review `.harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml`: `APPROVE` confidence 0.96 with no required fixes.
 - Commit/push: `2f4a6de Plan Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
-- Next action: start Generator for `S-ETS-25-01`.
+- Next action: commit/push Sprint 25 Generator and update this handoff with commit metadata.
 
 ## Sprint ets-24 Generator Evidence
 

@@ -1,40 +1,54 @@
 agent: generator
-status: partial_implemented_pushed
-timestamp: "2026-05-09T02:04:28Z"
-sprint_number: "ets-24"
-sprint_name: "part2-system-event"
+status: partial_implemented_raze_approved_pending_commit
+timestamp: "2026-05-13T08:55:40Z"
+sprint_number: "ets-25"
+sprint_name: "part2-advanced-filtering"
 story:
-  id: "S-ETS-24-01"
-  title: "Part 2 System Events read-only declaration-gated subset"
-  file: "epics/stories/s-ets-24-01-part2-system-event-planning.md"
-contract_path: ".harness/contracts/sprint-ets-24.yaml"
+  id: "S-ETS-25-01"
+  title: "Part 2 Advanced Filtering read-only declaration-gated subset"
+  file: "epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md"
+contract_path: ".harness/contracts/sprint-ets-25.yaml"
 base_commit:
-  sha: "1f5a916"
-  message: "Plan Sprint 24 System Events"
+  sha: "f2512411b93ad34b37a56dc57b6bb6eeaaaf0656"
+  message: "Reconcile Sprint 25 planning push"
 
 implementation_summary: |
-  Sprint 24 Generator implemented the first read-only System Events subset.
-  It uses official OGC 23-002 `/req/system-event` and `/conf/system-event`
-  identifiers, keeps `/req/api-common` and Part 1 System prerequisite honesty
-  visible, uses `/systemEvents` and `/systems/{sysId}/events` as the normative
-  endpoints, and does not implement streaming/SSE event consumption.
+  Sprint 25 Generator implemented the first read-only Part 2 Advanced Filtering
+  subset. It uses official OGC 23-002 /req/advanced-filtering and
+  /conf/advanced-filtering identifiers, requires exact declaration before
+  runtime PASS evidence, keeps /req/api-common and Part 1 /req/advanced-filtering
+  prerequisite honesty visible, and avoids mutation. It also removes stale
+  systemhistory vendor-extension discovery from Part 2 API Common.
 
 files_added:
-  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java"
-  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/VerifyPart2SystemEventTests.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java"
 
 files_updated:
   - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
   - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
   - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-  - "epics/stories/s-ets-24-01-part2-system-event-planning.md"
+  - "epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md"
   - "epics/epic-ets-03-part2-classes.md"
   - "_bmad/traceability.md"
-  - ".harness/contracts/sprint-ets-24.yaml"
+  - ".harness/contracts/sprint-ets-25.yaml"
   - "ops/status.md"
   - "ops/test-results.md"
   - "ops/changelog.md"
   - "ops/known-issues.md"
+
+runtime_tests:
+  total: 9
+  coverage:
+    - "Exact /conf/advanced-filtering declaration and undeclared-filter honesty."
+    - "Prerequisite visibility for /req/api-common and Part 1 /req/advanced-filtering."
+    - "DataStream phenomenonTime/resultTime and observedProperty filters."
+    - "Observation phenomenonTime/resultTime filters."
+    - "ControlStream issueTime/executionTime and controlledProperty filters."
+    - "Command issueTime/executionTime/statusCode/sender filters when /commands is available."
+    - "SystemEvent eventType filter when /systemEvents is available."
 
 gates:
   formatter:
@@ -43,36 +57,44 @@ gates:
   maven:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "183 tests / 0 failures / 0 errors / 3 skipped"
-    log: "ops/test-results/sprint-ets-24-maven-2026-05-09.log"
+    surefire: "195 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-25-maven-2026-05-13.log"
   teamengine_smoke:
-    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s24 bash scripts/smoke-test.sh"
+    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s25-final bash scripts/smoke-test.sh"
     result: "SMOKE PASS"
-    testng: "128 total / 72 passed / 0 failed / 56 skipped"
-    report: "ops/test-results/sprint-ets-24-smoke-2026-05-09.xml"
-    log: "ops/test-results/sprint-ets-24-smoke-container-2026-05-09.log"
-    no_mutation_oracle: "recognized_iut_request_logs=99; zero IUT-bound POST/PUT/DELETE/PATCH"
+    testng: "137 total / 72 passed / 0 failed / 65 skipped"
+    report: "ops/test-results/sprint-ets-25-smoke-2026-05-13.xml"
+    log: "ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log"
+    no_mutation_oracle: "recognized_iut_request_logs=100; zero IUT-bound POST/PUT/DELETE/PATCH"
 
 iut_state:
-  georobotix_system_event: "GeoRobotix declares /conf/system-event but not /conf/api-common."
-  runtime_delta: "Sprint 23 smoke 122 -> Sprint 24 smoke 128 (6 new System Event @Tests; 1 PASS, 5 SKIP on GeoRobotix)."
+  georobotix_advanced_filtering: "GeoRobotix does not declare /conf/advanced-filtering."
+  runtime_delta: "Sprint 24 smoke 128 -> Sprint 25 smoke 137 (9 new Part 2 Advanced Filtering @Tests; all 9 SKIP on GeoRobotix)."
   honest_skips:
-    - "missing /conf/api-common prerequisite for full closure"
-    - "/systemEvents returned HTTP 400"
-    - "/systems/{id}/events returned HTTP 400 streaming-only"
-    - "no JSON SystemEvent resource evidence for canonical resource checks"
-    - "no advertised collection with itemType SystemEvent"
+    - "missing /conf/advanced-filtering declaration"
+    - "successful undeclared filter probes remain readiness diagnostics only"
+    - "empty seed-derived filter results are not predicate PASS evidence"
+    - "unavailable /commands and /systemEvents endpoints SKIP rather than PASS"
 
 next_agent: "adversarial-reviewer"
 raze_implementation_review:
-  artifact: ".harness/evaluations/sprint-ets-24-adversarial-implementation.yaml"
-  verdict: "APPROVE"
-  confidence: 0.94
-  required_fixes: []
+  artifact: ".harness/evaluations/sprint-ets-25-adversarial-implementation.yaml"
+  status: "GAPS_FOUND"
+  confidence: 0.91
+  required_gapfixes:
+    - "RAZE-ETS25-IMPL-GAP-001 fixed: obs-by-phenomenontime seeds and validates only phenomenonTime."
+    - "RAZE-ETS25-IMPL-CONCERN-001 fixed: timeIntersects parses instants/intervals and rejects malformed substrings."
+  gapfix_verification:
+    formatter: "BUILD SUCCESS"
+    maven: "195 tests / 0 failures / 0 errors / 3 skipped"
+    teamengine_smoke: "137 total / 72 passed / 0 failed / 65 skipped; zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized logs"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml"
+  gapfix_status: "APPROVE"
+  gapfix_confidence: 0.96
+  gapfix_reviewed_at: "2026-05-13T08:55:40Z"
 
 commit:
-  sha: "6fa00c4"
-  message: "Implement Sprint 24 System Events"
-  push: "1f5a916..6fa00c4 main -> main over SSH"
+  status: "pending"
+  message: "Implement Sprint 25 Advanced Filtering"
 
-next_action: "Superseded by Sprint 25 planning; use .harness/handoffs/planner-handoff.yaml."
+next_action: "Commit and push Sprint 25 Generator, then update commit metadata in ops handoff records."

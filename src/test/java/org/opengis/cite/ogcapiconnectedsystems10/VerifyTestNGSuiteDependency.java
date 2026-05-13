@@ -167,6 +167,13 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String PART2_SYSTEM_EVENT_GROUP = "part2systemevent";
 
+	/**
+	 * Sprint 25 S-ETS-25-01 — Part 2 Advanced Filtering read-only subset group (depends
+	 * on Core, Common, and SystemFeatures; runtime checks keep /req/api-common and Part 1
+	 * /req/advanced-filtering prerequisite honesty visible).
+	 */
+	private static final String PART2_ADVANCED_FILTERING_GROUP = "part2advancedfiltering";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -243,6 +250,9 @@ public class VerifyTestNGSuiteDependency {
 
 	private static final List<Class<?>> PART2_SYSTEM_EVENT_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests.class);
+
+	private static final List<Class<?>> PART2_ADVANCED_FILTERING_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -2055,6 +2065,158 @@ public class VerifyTestNGSuiteDependency {
 				+ systemFeaturesClassNames + "), and Part 2 System Events (" + part2SystemEventClassNames
 				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
 				+ "(Part2SystemEvent → Core + Common + SystemFeatures) resolves within scope. See Sprint 24 S-ETS-24-01.",
+				coAlloc);
+	}
+
+	// ===== Sprint 25 S-ETS-25-01 — Part 2 Advanced Filtering group =====
+
+	/**
+	 * Sprint 25 S-ETS-25-01 (REQ-ETS-PART2-006): the canonical testng.xml SHALL declare
+	 * {@code <group name="part2advancedfiltering" depends-on=
+	 * "core common systemfeatures"/>}.
+	 */
+	@org.junit.Test
+	public void testPart2AdvancedFilteringGroupDependsOnCoreCommonAndSystemFeatures() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(PART2_ADVANCED_FILTERING_GROUP)) {
+				String dependsOn = deps.get(PART2_ADVANCED_FILTERING_GROUP);
+				assertNotNull("group '" + PART2_ADVANCED_FILTERING_GROUP + "' has null depends-on attribute",
+						dependsOn);
+				assertFalse(
+						"group '" + PART2_ADVANCED_FILTERING_GROUP + "' depends-on '" + dependsOn
+								+ "' uses comma syntax, which TestNG treats as a nonexistent single group at runtime",
+						dependsOn.contains(","));
+				Set<String> dependencyTokens = dependencyTokens(dependsOn);
+				assertTrue("group '" + PART2_ADVANCED_FILTERING_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ CORE_GROUP + "'", dependencyTokens.contains(CORE_GROUP));
+				assertTrue("group '" + PART2_ADVANCED_FILTERING_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ COMMON_GROUP + "'", dependencyTokens.contains(COMMON_GROUP));
+				assertTrue("group '" + PART2_ADVANCED_FILTERING_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ SYSTEMFEATURES_GROUP + "'", dependencyTokens.contains(SYSTEMFEATURES_GROUP));
+				assertFalse("group '" + PART2_ADVANCED_FILTERING_GROUP
+						+ "' must not depend on part2apicommon; otherwise GeoRobotix would cascade-SKIP before exact /conf/advanced-filtering declaration honesty can run",
+						dependencyTokens.contains(PART2_API_COMMON_GROUP));
+				assertFalse("group '" + PART2_ADVANCED_FILTERING_GROUP
+						+ "' must not depend on Part 1 advancedfiltering; otherwise default IUTs missing that prerequisite hide Part 2 declaration-honesty SKIPs",
+						dependencyTokens.contains(ADVANCEDFILTERING_GROUP));
+				assertFalse("group '" + PART2_ADVANCED_FILTERING_GROUP
+						+ "' must not depend on part2datastream; filter-specific skip reasons should remain runtime-visible",
+						dependencyTokens.contains(PART2_DATASTREAM_GROUP));
+				assertFalse("group '" + PART2_ADVANCED_FILTERING_GROUP
+						+ "' must not depend on part2controlstream; filter-specific skip reasons should remain runtime-visible",
+						dependencyTokens.contains(PART2_CONTROLSTREAM_GROUP));
+				assertFalse("group '" + PART2_ADVANCED_FILTERING_GROUP
+						+ "' must not depend on part2systemevent; filter-specific skip reasons should remain runtime-visible",
+						dependencyTokens.contains(PART2_SYSTEM_EVENT_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue(
+				"testng.xml does not declare <group name=\"" + PART2_ADVANCED_FILTERING_GROUP
+						+ "\" depends-on=\"core common systemfeatures\"/> — see Sprint 25 S-ETS-25-01.",
+				foundDependency);
+	}
+
+	/**
+	 * Sprint 25 S-ETS-25-01: every Part 2 Advanced Filtering @Test method SHALL carry
+	 * {@code groups = "part2advancedfiltering"}.
+	 */
+	@org.junit.Test
+	public void testEveryPart2AdvancedFilteringTestMethodCarriesPart2AdvancedFilteringGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalPart2AdvancedFiltering = 0;
+		for (Class<?> c : PART2_ADVANCED_FILTERING_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalPart2AdvancedFiltering++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(PART2_ADVANCED_FILTERING_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Part 2 Advanced Filtering conformance classes; found 0",
+				totalPart2AdvancedFiltering > 0);
+		assertTrue("Part 2 Advanced Filtering @Test methods missing groups=\"" + PART2_ADVANCED_FILTERING_GROUP + "\": "
+				+ offenders, offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 25 S-ETS-25-01: Part 2 Advanced Filtering classes MUST be co-located in the
+	 * SAME {@code <test>} block as Core, Common, SystemFeatures, Part 1
+	 * AdvancedFiltering, and the Part 2 resource classes it filters.
+	 */
+	@org.junit.Test
+	public void testPart2AdvancedFilteringCoLocatedWithPrerequisiteAndFilteredClasses() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> coreClassNames = new HashSet<>();
+		for (Class<?> c : CORE_CLASSES) {
+			coreClassNames.add(c.getName());
+		}
+		Set<String> commonClassNames = new HashSet<>();
+		for (Class<?> c : COMMON_CLASSES) {
+			commonClassNames.add(c.getName());
+		}
+		Set<String> systemFeaturesClassNames = new HashSet<>();
+		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
+			systemFeaturesClassNames.add(c.getName());
+		}
+		Set<String> advancedFilteringClassNames = new HashSet<>();
+		for (Class<?> c : ADVANCEDFILTERING_CLASSES) {
+			advancedFilteringClassNames.add(c.getName());
+		}
+		Set<String> part2DatastreamClassNames = new HashSet<>();
+		for (Class<?> c : PART2_DATASTREAM_CLASSES) {
+			part2DatastreamClassNames.add(c.getName());
+		}
+		Set<String> part2ControlStreamClassNames = new HashSet<>();
+		for (Class<?> c : PART2_CONTROLSTREAM_CLASSES) {
+			part2ControlStreamClassNames.add(c.getName());
+		}
+		Set<String> part2SystemEventClassNames = new HashSet<>();
+		for (Class<?> c : PART2_SYSTEM_EVENT_CLASSES) {
+			part2SystemEventClassNames.add(c.getName());
+		}
+		Set<String> part2AdvancedFilteringClassNames = new HashSet<>();
+		for (Class<?> c : PART2_ADVANCED_FILTERING_CLASSES) {
+			part2AdvancedFilteringClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasFoundationalClasses = xtClasses.containsAll(coreClassNames)
+					&& xtClasses.containsAll(commonClassNames) && xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAdvancedFiltering = xtClasses.containsAll(advancedFilteringClassNames);
+			boolean hasFilteredResourceClasses = xtClasses.containsAll(part2DatastreamClassNames)
+					&& xtClasses.containsAll(part2ControlStreamClassNames)
+					&& xtClasses.containsAll(part2SystemEventClassNames);
+			boolean hasAnyPart2AdvancedFiltering = !java.util.Collections.disjoint(xtClasses,
+					part2AdvancedFilteringClassNames);
+			if (hasFoundationalClasses && hasAdvancedFiltering && hasFilteredResourceClasses
+					&& hasAnyPart2AdvancedFiltering) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue("Core (" + coreClassNames + "), Common (" + commonClassNames + "), SystemFeatures ("
+				+ systemFeaturesClassNames + "), Part 1 AdvancedFiltering (" + advancedFilteringClassNames
+				+ "), Part 2 Datastream (" + part2DatastreamClassNames + "), Part 2 ControlStream ("
+				+ part2ControlStreamClassNames + "), Part 2 System Events (" + part2SystemEventClassNames
+				+ "), and Part 2 Advanced Filtering (" + part2AdvancedFilteringClassNames
+				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency and filter-specific runtime checks resolve within scope. See Sprint 25 S-ETS-25-01.",
 				coAlloc);
 	}
 

@@ -1,21 +1,22 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-09T14:08Z
+Last updated: 2026-05-13T08:55Z
 
 ## Current Sprint Evidence
 
-Sprint ets-25 Part 2 Advanced Filtering planning:
+Sprint ets-25 Part 2 Advanced Filtering Generator:
 
-- Planning only:
-  - Story: `epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md`
-  - Contract: `.harness/contracts/sprint-ets-25.yaml`
-  - No Java code changed yet; Maven and TeamEngine smoke are Generator gates.
+- Generator implementation:
+  - `Part2AdvancedFilteringTests` adds 9 read-only runtime checks for exact `/conf/advanced-filtering`, prerequisite visibility, DataStream time filters, DataStream `observedProperty`, Observation time filters, ControlStream time filters, ControlStream `controlledProperty`, Command filters when `/commands` is available, and SystemEvent `eventType` when `/systemEvents` is available.
+  - `VerifyPart2AdvancedFilteringTests` adds 8 helper regressions for official identifiers, canonical `systemEvents` casing, parsed time interval intersection, malformed substring rejection, strict Observation `phenomenonTime` evidence, property definition matching, command/event predicate extraction, and collection shape.
+  - `VerifyTestNGSuiteDependency` adds structural coverage for `part2advancedfiltering` group dependency, method tagging, and suite co-location.
+  - `Part2ApiCommonTests` no longer treats `systemhistory` as an OGC Part 2 collection token; `VerifyPart2ApiCommonTests` has a regression for GeoRobotix's vendor extension.
 - Official OGC source verification:
   - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 13 "Requirements Class Advanced Filtering" and Annex A.6.
   - Requirements class identifier: `/req/advanced-filtering`.
   - Conformance class identifier: `/conf/advanced-filtering`.
   - Prerequisites: `/req/api-common` and Part 1 `/req/advanced-filtering`.
-  - Selected Sprint 25 requirements: `/req/advanced-filtering/datastream-by-phenomenontime`, `/datastream-by-resulttime`, `/datastream-by-obsprop`, `/datastream-by-foi`, `/obs-by-phenomenontime`, `/obs-by-resulttime`, `/obs-by-foi`, `/controlstream-by-issuetime`, `/controlstream-by-exectime`, `/controlstream-by-controlprop`, `/controlstream-by-foi`, `/cmd-by-issuetime`, `/cmd-by-exectime`, `/cmd-by-status`, `/cmd-by-sender`, `/cmd-by-foi`, `/status-by-statuscode`, and `/event-by-type`.
+  - First implemented subset: `/req/advanced-filtering/datastream-by-phenomenontime`, `/datastream-by-resulttime`, `/datastream-by-obsprop`, `/obs-by-phenomenontime`, `/obs-by-resulttime`, `/controlstream-by-issuetime`, `/controlstream-by-exectime`, `/controlstream-by-controlprop`, `/cmd-by-issuetime`, `/cmd-by-exectime`, `/cmd-by-status`, `/cmd-by-sender`, and `/event-by-type`.
 - Taxonomy correction:
   - OGC 23-002 Annex A does not define `/conf/system-history` or `/req/system-history`.
   - GeoRobotix advertises `/conf/system-history`; planning treats it as non-standard/vendor extension evidence only.
@@ -29,15 +30,36 @@ Sprint ets-25 Part 2 Advanced Filtering planning:
   - `GET /commands?issueTime=...`, `GET /commands?statusCode=...`, and `GET /commands?sender=...`: HTTP 400 `Invalid resource name`.
   - `GET /systemEvents?eventType=...`: HTTP 400 `Invalid resource name`.
   - `GET /systems/0mqcvdnfoca0/events?eventType=...`: HTTP 400 `Only streaming requests supported on this resource`.
-- Generator gate expectations:
-  - Default GeoRobotix smoke must SKIP Advanced Filtering because `/conf/advanced-filtering` is absent.
-  - Generator must not PASS from undeclared HTTP 200 query behavior, endpoint availability alone, empty collections alone, sibling declarations, or `/conf/system-history`.
-  - Runtime filter predicate PASS requires checking returned resources satisfy the requested filter.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `195 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-25-maven-2026-05-13.log`
+- TeamEngine E2E smoke:
+  - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s25-final bash scripts/smoke-test.sh`
+  - Result: `137 total / 72 passed / 0 failed / 65 skipped`
+  - Report: `ops/test-results/sprint-ets-25-smoke-2026-05-13.xml`
+  - Container log: `ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log`
+  - No-mutation oracle: `recognized_iut_request_logs=100`, zero IUT-bound POST/PUT/DELETE/PATCH.
+- Part 2 Advanced Filtering runtime outcome on GeoRobotix:
+  - PASS: none, because `/conf/advanced-filtering` is not declared.
+  - SKIP: all 9 Part 2 Advanced Filtering runtime tests.
+  - The SKIPs are expected for current GeoRobotix state and confirm no PASS is inferred from undeclared HTTP 200 filter behavior, endpoint availability alone, empty collections, sibling declarations, or `/conf/system-history`.
 - Raze planning review:
   - `.harness/evaluations/sprint-ets-25-plan-adversarial.yaml`: initial `GAPS_FOUND` for one stale `REQ-ETS-PART2-014` epic acceptance reference.
   - Required fix applied: epic ETS-03 now references corrected `REQ-ETS-PART2-013`.
   - Recheck verdict: `APPROVE`, confidence 0.96.
-- Commit/push: `2f4a6de Plan Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
+- Raze implementation review:
+  - `.harness/evaluations/sprint-ets-25-adversarial-implementation.yaml`: `GAPS_FOUND`, confidence 0.91.
+  - Required fix verified: Observation `phenomenonTime` filters no longer seed or validate via `resultTime` fallback.
+  - Related concern fixed: malformed time strings that merely contain a requested instant are rejected because `timeIntersects` now parses both values.
+  - `.harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml`: `APPROVE`, confidence 0.96, no required fixes.
+- Commit/push:
+  - Planning commit `2f4a6de Plan Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
+  - Generator commit pending.
 
 Sprint ets-24 Part 2 System Events Generator:
 

@@ -133,7 +133,13 @@
        a read-only declaration-gated subset. It depends on "core common systemfeatures"
        so Part 1 System availability is structurally present; runtime checks still keep
        /req/api-common prerequisite honesty separate from scoped endpoint evidence. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility + Part2SystemEvent (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility, /conf/system-event; OGC 19-072 /conf/common)">
+  <!-- Sprint 25 S-ETS-25-01 (REQ-ETS-PART2-006): Part 2 Advanced Filtering group
+       added as a read-only declaration-gated subset. It depends on
+       "core common systemfeatures" rather than Part2ApiCommon, Part 1 AdvancedFiltering,
+       or Part 2 resource-class groups so exact /conf/advanced-filtering declaration
+       and prerequisite-honesty SKIPs remain visible instead of being hidden by
+       upstream cascade-SKIPs on the default GeoRobotix IUT. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility + Part2SystemEvent + Part2AdvancedFiltering (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility, /conf/system-event, /conf/advanced-filtering; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -153,6 +159,7 @@
         <group name="part2controlstream" depends-on="core common"/>
         <group name="part2feasibility" depends-on="core common"/>
         <group name="part2systemevent" depends-on="core common systemfeatures"/>
+        <group name="part2advancedfiltering" depends-on="core common systemfeatures"/>
       </dependencies>
     </groups>
     <classes>
@@ -178,6 +185,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

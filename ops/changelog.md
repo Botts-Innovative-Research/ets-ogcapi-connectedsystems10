@@ -2,6 +2,24 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-13T08:46Z — Sprint 25 Part 2 Advanced Filtering Generator
+
+**Triggered by user instruction**: "Let's continue from where you last left off."
+
+- Implemented `S-ETS-25-01` as the first read-only, declaration-gated Part 2 Advanced Filtering subset.
+- Added `Part2AdvancedFilteringTests` with 9 checks for exact `/conf/advanced-filtering`, prerequisite visibility, DataStream time filters, DataStream `observedProperty`, Observation time filters, ControlStream time filters, ControlStream `controlledProperty`, Command filters when `/commands` is available, and SystemEvent `eventType` when `/systemEvents` is available.
+- Added helper and TestNG structural regressions for official OGC 23-002 identifiers, canonical `systemEvents` path casing, time interval predicate checks, property predicate checks, command/event predicate extraction, collection shape, and `part2advancedfiltering` group wiring.
+- Removed stale `systemhistory` vendor-extension discovery from Part 2 API Common and added a regression proving GeoRobotix's `/conf/system-history` does not become an OGC collection token.
+- Preserved verdict honesty: no Advanced Filtering PASS from undeclared HTTP 200 query behavior, endpoint availability alone, empty filtered collections, sibling Part 2 declarations, or `/conf/system-history`.
+- Initial Raze implementation review returned `GAPS_FOUND` confidence 0.91 for `obs-by-phenomenontime` using `resultTime` fallback evidence, plus a low concern about permissive time substring matching. Both were fixed: Observation `phenomenonTime` now uses only `phenomenonTime`, and `timeIntersects` parses instants/intervals before comparison.
+- Ran formatter, Maven, and TeamEngine smoke after the gapfix. Maven: `195 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke: `137 total / 72 passed / 0 failed / 65 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized request-log entries.
+- Runtime outcome: all 9 Part 2 Advanced Filtering tests SKIP honestly on GeoRobotix because `/conf/advanced-filtering` is not declared.
+- Archived Maven/smoke artifacts under `ops/test-results/sprint-ets-25-maven-2026-05-13.log`, `ops/test-results/sprint-ets-25-smoke-2026-05-13.xml`, and `ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log`.
+- Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, known issues, and handoff for the Generator outcome.
+- Focused Raze gapfix review `.harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.96 with no required fixes.
+
+---
+
 ## 2026-05-09T13:52Z — Sprint 25 Part 2 Advanced Filtering planning
 
 **Triggered by user instruction**: "continue."

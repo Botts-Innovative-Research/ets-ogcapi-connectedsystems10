@@ -5,8 +5,8 @@ sprint_name: "part2-advanced-filtering"
 type: "feature-expansion"
 created: "2026-05-09T13:52:11Z"
 description: |
-  Sprint 25 plans the first OGC 23-002 Advanced Filtering Generator increment.
-  The implementation must be read-only by default, declaration-gated on
+  Sprint 25 plans and implements the first OGC 23-002 Advanced Filtering Generator increment.
+  The implementation is read-only by default, declaration-gated on
   /conf/advanced-filtering, and honest about GeoRobotix supporting some filter
   parameters while not declaring the conformance class. The planning also
   corrects the stale System History placeholder: OGC 23-002 Annex A does not
@@ -25,7 +25,7 @@ stories:
 
 requirements:
   modified_reqs:
-    - "REQ-ETS-PART2-006 (/req/advanced-filtering planned; former System History placeholder retired)"
+    - "REQ-ETS-PART2-006 (/req/advanced-filtering partial implemented; former System History placeholder retired)"
     - "REQ-ETS-PART2-007..013 (remaining placeholders renumbered after Advanced Filtering split)"
   new_reqs: []
   retired_placeholders:
@@ -52,7 +52,14 @@ success_criteria:
   official_ogc_identifiers_used: true
   system_history_placeholder_retired: true
   no_code_changes_in_planning: true
-  generator_required_before_runtime_gates: true
+  generator_required_before_runtime_gates: completed
+  generator_code_implemented: true
+  formatter_passed: true
+  maven_passed: true
+  teamengine_smoke_passed: true
+  no_mutation_verified: true
+  raze_implementation_review_completed: true
+  raze_required_gapfix_verified: true
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
@@ -151,7 +158,52 @@ evaluation_focus:
     - "Attack command/systemEvents HTTP 400 or streaming-only responses treated as PASS."
     - "Check stale /req/systemhistory, /req/system-history, /conf/system-history, dynamic-* naming does not leak into Java ETS."
 
-confidence: 0.74
+generator_evidence:
+  implemented_at: "2026-05-13T08:11:13Z"
+  base_commit:
+    sha: "f2512411b93ad34b37a56dc57b6bb6eeaaaf0656"
+    message: "Reconcile Sprint 25 planning push"
+  files_added:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java"
+  files_updated:
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
+  runtime_tests: 9
+  helper_regressions:
+    part2_advanced_filtering: 8
+    part2_api_common_vendor_systemhistory: 1
+  behavior:
+    - "Exact declaration gate on http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering."
+    - "Prerequisite visibility checks for /req/api-common and Part 1 /req/advanced-filtering."
+    - "Read-only DataStream, Observation, ControlStream, Command, and SystemEvent filter checks."
+    - "Non-empty filter results must satisfy requested predicates before PASS."
+    - "Empty seed-derived filtered collections SKIP with reason and do not PASS."
+    - "Observation phenomenonTime filters seed and validate only phenomenonTime, with no resultTime fallback."
+    - "Time intersection validation parses instants/intervals instead of accepting substrings."
+    - "GeoRobotix /conf/system-history is not OGC conformance evidence and systemhistory is no longer treated as an OGC Part 2 collection token."
+  gates:
+    formatter:
+      command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+      result: "BUILD SUCCESS"
+    maven:
+      command: "bash scripts/mvn-test-via-docker.sh"
+      result: "BUILD SUCCESS"
+      surefire: "195 tests / 0 failures / 0 errors / 3 skipped"
+      log: "ops/test-results/sprint-ets-25-maven-2026-05-13.log"
+    teamengine_smoke:
+      command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s25-final bash scripts/smoke-test.sh"
+      result: "SMOKE PASS"
+      testng: "137 total / 72 passed / 0 failed / 65 skipped"
+      report: "ops/test-results/sprint-ets-25-smoke-2026-05-13.xml"
+      log: "ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log"
+      no_mutation_oracle: "recognized_iut_request_logs=100; zero IUT-bound POST/PUT/DELETE/PATCH"
+  georobotix_runtime_outcome:
+    part2_advanced_filtering: "0 passed / 0 failed / 9 skipped because /conf/advanced-filtering is not declared."
+
+confidence: 0.86
 
 raze_review:
   plan_artifact: ".harness/evaluations/sprint-ets-25-plan-adversarial.yaml"
@@ -166,3 +218,28 @@ planning_commit:
   sha: "2f4a6de"
   message: "Plan Sprint 25 Advanced Filtering"
   push: "5dccb36..2f4a6de main -> main over SSH"
+
+implementation_review:
+  status: "approved"
+  required_before_completion: true
+  expected_artifact: ".harness/evaluations/sprint-ets-25-adversarial-implementation.yaml"
+  initial_artifact: ".harness/evaluations/sprint-ets-25-adversarial-implementation.yaml"
+  initial_verdict: "GAPS_FOUND"
+  initial_confidence: 0.91
+  gapfixes:
+    - id: "RAZE-ETS25-IMPL-GAP-001"
+      status: "FIXED_VERIFIED"
+      summary: "Observation phenomenonTime filter no longer falls back to resultTime; regression added."
+    - id: "RAZE-ETS25-IMPL-CONCERN-001"
+      status: "FIXED_VERIFIED"
+      summary: "timeIntersects now parses instants/intervals and rejects malformed substring evidence."
+  gapfix_verification:
+    formatter: "BUILD SUCCESS"
+    maven: "195 tests / 0 failures / 0 errors / 3 skipped"
+    teamengine_smoke: "137 total / 72 passed / 0 failed / 65 skipped; zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized logs"
+  expected_gapfix_artifact: ".harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml"
+  gapfix_verdict: "APPROVE"
+  gapfix_confidence: 0.96
+  gapfix_reviewed_at: "2026-05-13T08:55:40Z"
+  required_fixes_remaining: []

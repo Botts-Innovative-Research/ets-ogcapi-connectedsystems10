@@ -47,6 +47,19 @@ public class VerifyPart2ApiCommonTests {
 	}
 
 	@org.junit.Test
+	public void systemHistoryVendorExtensionIsNotDiscoveredAsOgcPart2Collection() {
+		Map<String, Object> landing = Map.of("links", List.of(Map.of("rel", "systemhistory", "href", "systemHistory"),
+				Map.of("rel", "system-history", "href", "system-history")));
+
+		List<URI> uris = Part2ApiCommonTests.discoverPart2CollectionUris(landing,
+				URI.create("https://example.test/api/"));
+
+		assertTrue(
+				"OGC 23-002 Annex A does not define /conf/system-history; vendor extension links must not become Part 2 API Common PASS evidence.",
+				uris.isEmpty());
+	}
+
+	@org.junit.Test
 	public void resourceCollectionShapeRequiresItemsAndLinksArrays() {
 		assertTrue(Part2ApiCommonTests.hasResourceCollectionShape(Map.of("items", List.of(), "links", List.of())));
 		assertFalse(Part2ApiCommonTests.hasResourceCollectionShape(Map.of("items", List.of())));

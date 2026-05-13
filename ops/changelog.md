@@ -17,6 +17,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Archived Maven/smoke artifacts under `ops/test-results/sprint-ets-25-maven-2026-05-13.log`, `ops/test-results/sprint-ets-25-smoke-2026-05-13.xml`, and `ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log`.
 - Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, known issues, and handoff for the Generator outcome.
 - Focused Raze gapfix review `.harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.96 with no required fixes.
+- Committed and pushed Sprint 25 Generator over SSH: `d9df3ad Implement Sprint 25 Advanced Filtering` (`f251241..d9df3ad main -> main`).
 
 ---
 

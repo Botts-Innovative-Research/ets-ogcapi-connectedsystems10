@@ -1,6 +1,6 @@
 agent: generator
-status: partial_implemented_raze_approved_pending_commit
-timestamp: "2026-05-13T08:55:40Z"
+status: partial_implemented_pushed
+timestamp: "2026-05-13T08:59:00Z"
 sprint_number: "ets-25"
 sprint_name: "part2-advanced-filtering"
 story:
@@ -94,7 +94,9 @@ raze_implementation_review:
   gapfix_reviewed_at: "2026-05-13T08:55:40Z"
 
 commit:
-  status: "pending"
+  status: "pushed"
+  sha: "d9df3ad"
   message: "Implement Sprint 25 Advanced Filtering"
+  push: "f251241..d9df3ad main -> main over SSH"
 
-next_action: "Commit and push Sprint 25 Generator, then update commit metadata in ops handoff records."
+next_action: "Plan the next Part 2 sprint item or continue deferred Advanced Filtering coverage against a declaring IUT."

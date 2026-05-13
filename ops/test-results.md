@@ -59,7 +59,7 @@ Sprint ets-25 Part 2 Advanced Filtering Generator:
   - `.harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml`: `APPROVE`, confidence 0.96, no required fixes.
 - Commit/push:
   - Planning commit `2f4a6de Plan Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
-  - Generator commit pending.
+  - Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-13 (`f251241..d9df3ad main -> main`).
 
 Sprint ets-24 Part 2 System Events Generator:
 

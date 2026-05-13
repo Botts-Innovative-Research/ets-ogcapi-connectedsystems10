@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-13T08:55Z
+Last updated: 2026-05-13T08:59Z
 
 ## Fresh-Session Entry Point
 
@@ -38,12 +38,12 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering` and reconciliation commit `5a8eef4 Reconcile Sprint 25 planning push`; Sprint 25 Generator changes are implemented and uncommitted pending commit/push.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, and pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-25-01` Generator is PARTIAL for the Part 2 Advanced Filtering read-only declaration-gated subset.
 - Latest pushed implementation commit: `6fa00c4 Implement Sprint 24 System Events`, followed by reconciliation commit `5dccb36`.
 - Current sprint status: Sprint ets-25 Part 2 Advanced Filtering Generator is implemented and verified by formatter, Maven, TeamEngine smoke, and focused Raze gapfix review.
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation push (`2f4a6de..5a8eef4 main -> main`). Generator push is pending.
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`).
 
 ## Sprint ets-25 Generator Evidence
 
@@ -72,7 +72,8 @@ Part 2 Advanced Filtering read-only declaration-gated subset:
 - Runtime outcome: all 9 Part 2 Advanced Filtering runtime tests SKIP on GeoRobotix because `/conf/advanced-filtering` is not declared.
 - Raze implementation review `.harness/evaluations/sprint-ets-25-adversarial-implementation.yaml`: `GAPS_FOUND` confidence 0.91. Required gap and low concern are fixed and verified. Focused gapfix review `.harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml`: `APPROVE` confidence 0.96 with no required fixes.
 - Commit/push: `2f4a6de Plan Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-09 (`5dccb36..2f4a6de main -> main`).
-- Next action: commit/push Sprint 25 Generator and update this handoff with commit metadata.
+- Commit/push: `d9df3ad Implement Sprint 25 Advanced Filtering` pushed over SSH on 2026-05-13 (`f251241..d9df3ad main -> main`).
+- Next action: plan the next Part 2 sprint item or continue deferred Advanced Filtering coverage against a declaring IUT.
 
 ## Sprint ets-24 Generator Evidence
 

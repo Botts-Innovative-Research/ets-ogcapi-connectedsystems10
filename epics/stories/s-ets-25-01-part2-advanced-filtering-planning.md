@@ -85,7 +85,7 @@ The previous Part 2 placeholder backlog included `/conf/system-history` as `REQ-
 - [x] Initial Raze implementation review completed: `.harness/evaluations/sprint-ets-25-adversarial-implementation.yaml` returned `GAPS_FOUND` confidence 0.91.
 - [x] Raze-required gapfix implemented and verified by formatter, Maven, and TeamEngine smoke.
 - [x] Final Raze gapfix review completed: `.harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml` returned `APPROVE` confidence 0.96 with no required fixes.
-- [ ] Generator commit pushed.
+- [x] Generator commit pushed: `d9df3ad Implement Sprint 25 Advanced Filtering` (`f251241..d9df3ad main -> main`).
 
 ## Out of Scope
 - Full FOI recursive graph traversal.

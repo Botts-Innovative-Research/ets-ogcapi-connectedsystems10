@@ -71,7 +71,7 @@ Plan the first Generator increment for OGC 23-002 Clause 14 Requirements Class "
 - [x] Planning explicitly blocks false PASS from OPTIONS evidence, sibling declarations, public-IUT mutation, and unavailable endpoints.
 - [x] Planning E2E smoke ran against the real TeamEngine/GeoRobotix stack and verified zero IUT-bound mutation requests.
 - [x] Raze reviews planning before Generator starts: `.harness/evaluations/sprint-ets-26-plan-adversarial.yaml` final verdict `APPROVE` confidence 0.96 after closing `RAZE-ETS26-PLAN-GAP-001`.
-- [ ] Planning-only change is committed and pushed before Generator implementation.
+- [x] Planning-only change is committed and pushed before Generator implementation: `146c4c6 Plan Sprint 26 Part 2 CRD` (`7d57d9f..146c4c6 main -> main`).
 
 ## Out of Scope
 - Implementing Java CRD tests in this planning sprint.

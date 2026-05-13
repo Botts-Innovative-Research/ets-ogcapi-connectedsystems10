@@ -39,6 +39,8 @@ Sprint ets-26 Part 2 Create/Replace/Delete planning:
   - `.harness/evaluations/sprint-ets-26-plan-adversarial.yaml`: initial `GAPS_FOUND` confidence 0.94 for missing Sprint 26 changelog entry.
   - Required fix applied: `ops/changelog.md` now records the Sprint 26 planning instruction, story, `REQ-ETS-PART2-007`, Clause 14 identifiers, GeoRobotix probes, smoke totals, and zero-mutation evidence.
   - Focused recheck verdict: `APPROVE`, confidence 0.96, no remaining required fixes.
+- Commit/push:
+  - Planning commit `146c4c6 Plan Sprint 26 Part 2 CRD` pushed over SSH on 2026-05-13 (`7d57d9f..146c4c6 main -> main`).
 
 Sprint ets-25 Part 2 Advanced Filtering Generator:
 

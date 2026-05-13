@@ -61,9 +61,9 @@ raze_review:
   required_before_generator: true
 
 commit:
-  sha: null
-  message: null
-  push: null
+  sha: "146c4c6"
+  message: "Plan Sprint 26 Part 2 CRD"
+  push: "7d57d9f..146c4c6 main -> main over SSH"
 
 next_agent: "generator"
-next_action: "Commit and push Sprint 26 planning, then start Generator for S-ETS-26-01."
+next_action: "Start Generator for S-ETS-26-01."

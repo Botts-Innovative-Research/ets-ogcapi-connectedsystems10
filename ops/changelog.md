@@ -19,6 +19,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Ran planning TeamEngine smoke against the real GeoRobotix stack: `137 total / 72 passed / 0 failed / 65 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized request-log entries.
 - Archived smoke artifacts under `ops/test-results/sprint-ets-26-plan-smoke-2026-05-13.xml` and `ops/test-results/sprint-ets-26-plan-smoke-container-2026-05-13.log`.
 - Raze planning review `.harness/evaluations/sprint-ets-26-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.94 for this missing changelog entry; this entry closed `RAZE-ETS26-PLAN-GAP-001`, and focused recheck returned `APPROVE` confidence 0.96 with no remaining required fixes.
+- Committed and pushed Sprint 26 planning over SSH: `146c4c6 Plan Sprint 26 Part 2 CRD` (`7d57d9f..146c4c6 main -> main`).
 
 ---
 

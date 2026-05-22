@@ -20,6 +20,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Interpreted the failed smoke as advisory public-IUT evidence: failures are the existing GeoRobotix HTTP 500 read-path condition, no Part 2 Update runtime tests exist yet, and the archived log has no matched GeoRobotix PATCH/POST/PUT/DELETE request lines.
 - Raze planning review returned `GAPS_FOUND` confidence 0.91 for missing Clause 15 per-requirement condition gates. Gapfix added explicit gates: R79-R82 require `/conf/datastream`, R83-R88 require `/conf/controlstream`, R89-R91 require `/conf/feasibility`, and R92 requires `/conf/system-event`; missing condition classes SKIP prerequisite-incomplete rather than PASS.
 - Focused Raze recheck closed `RAZE-ETS27-PLAN-GAP-001`; final planning verdict is `APPROVE_WITH_CONCERNS` confidence 0.95 with no required fixes.
+- Committed and pushed Sprint 27 planning over SSH as `eab12a8 Plan Sprint 27 Part 2 Update` (`bf10caa..eab12a8 main -> main`).
 
 ---
 

@@ -1,17 +1,17 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-22T19:55Z
+Last updated: 2026-05-22T20:49Z
 
 ## Current Sprint Evidence
 
-Sprint ets-27 Part 2 Update planning:
+Sprint ets-27 Part 2 Update Generator:
 
 - Status:
   - Story: `epics/stories/s-ets-27-01-part2-update-planning.md`
   - Contract: `.harness/contracts/sprint-ets-27.yaml`
-  - Planning-only; no Generator code has been added.
-  - TeamEngine planning E2E against GeoRobotix is captured as a failed advisory public check because the public IUT still returns HTTP 500 on existing read paths.
-  - Local OSH cannot be accepted for Sprint 27 planning from this shell because no `SMOKE_AUTH_CREDENTIAL` is available.
+  - Generator code is implemented as a PARTIAL safety-gated subset.
+  - TeamEngine Generator E2E against GeoRobotix is captured as a failed public check because the public IUT still returns HTTP 500 on existing read paths.
+  - Authenticated local OSH TeamEngine E2E is the accepted Sprint 27 Generator gate: `160 total / 62 passed / 0 failed / 98 skipped`.
 - Official OGC source verification:
   - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 15 "Requirements Class Update" and Annex A.8.
   - Requirements class identifier: `/req/update`.
@@ -26,9 +26,15 @@ Sprint ets-27 Part 2 Update planning:
   - Sampled OPTIONS probes for DataStream, Observation, ControlStream, Command, Feasibility, SystemEvent, and system-scoped event endpoints: HTTP 200 with broad `Allow` headers, but PATCH absent.
   - Current read-health probes: `GET /systems/0mqcvdnfoca0`, `GET /datastreams?limit=1`, and `GET /observations?limit=1` returned HTTP 500; `GET /controlstreams?limit=1` returned HTTP 200 JSON.
 - Local OSH planning probes:
-  - `field-hub-osh-1` is running, but this shell has no `SMOKE_AUTH_CREDENTIAL`.
+  - `field-hub-osh-1` is running and requires Basic auth.
   - Unauthenticated `GET /sensorhub/api/conformance`: HTTP 401.
-  - Unauthenticated `OPTIONS /sensorhub/api/systems/040g`: HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH absent.
+  - Authenticated `GET /sensorhub/api/conformance`: HTTP 200 and no Part 2 `/conf/update` declaration.
+  - Authenticated `OPTIONS /sensorhub/api/systems/040g`: HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH absent.
+- Generator implementation:
+  - `Part2UpdateTests`: 14 runtime checks plus shared read-only setup for exact `/conf/update` declaration, prerequisite visibility, Clause 15 condition-gate visibility, public-IUT mutation safety, DataStream/Observation PATCH readiness and deferred lifecycle checks, ControlStream/Command PATCH readiness and deferred lifecycle checks, separate Feasibility and SystemEvent PATCH readiness and deferred lifecycle checks, unavailable-endpoint honesty, and schema-rejection honesty.
+  - `VerifyPart2UpdateTests`: 9 helper regressions for official identifiers, missing condition-class reporting, exact declaration matching, public GeoRobotix hard denial, mutation parameters, `Allow: PATCH` parsing, collection shape, condition messages, and group naming.
+  - `testng.xml`: adds `part2update` with `core common systemfeatures` dependencies.
+  - `VerifyTestNGSuiteDependency`: adds dependency, method-group, and co-location structural checks.
 - Generator gate expectations:
   - Default GeoRobotix smoke must remain read-only with zero IUT-bound PATCH/POST/PUT/DELETE.
   - OPTIONS readiness cannot PASS lifecycle behavior.
@@ -36,6 +42,14 @@ Sprint ets-27 Part 2 Update planning:
   - Requirements 79-92 must be gated by their Clause 15 resource-class conditions before any PASS.
   - Positive PATCH checks require a dedicated mutable IUT, explicit mutation opt-in, and changed-field GET proof.
   - HTTP 400, HTTP 500, streaming-only, or no-candidate endpoints SKIP honestly rather than PASS.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Maven:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `219 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-27-maven-2026-05-22.log`
 - Planning TeamEngine E2E smoke:
   - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s27-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-27-plan-georobotix-results bash scripts/smoke-test.sh`
   - Result: `146 total / 27 passed / 5 failed / 114 skipped`
@@ -44,6 +58,26 @@ Sprint ets-27 Part 2 Update planning:
   - Failure cause: public GeoRobotix HTTP 500 responses on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths; no Part 2 Update runtime tests exist yet.
   - Public-IUT safety check: no matched GeoRobotix PATCH/POST/PUT/DELETE request lines in the archived container log.
   - Disposition: advisory public interoperability evidence, not an accepted Sprint 27 E2E gate.
+- Generator TeamEngine E2E smoke:
+  - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s27-generator-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-27-generator-georobotix-results bash scripts/smoke-test.sh`
+  - Result: `160 total / 27 passed / 5 failed / 128 skipped`
+  - Report: `ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml`
+  - Container log: `ops/test-results/sprint-ets-27-generator-georobotix-smoke-container-failed-2026-05-22.log`
+  - Failure cause: public GeoRobotix HTTP 500 responses on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths.
+  - Part 2 Update runtime outcome: all 14 runtime tests SKIP because `systemfeatures` did not finish successfully on the public IUT.
+  - Public-IUT safety check: `scripts/no-mutation-oracle.py` recognized 61 GeoRobotix IUT request logs and found zero IUT-bound PATCH/POST/PUT/DELETE; explicit grep found no matched write-method lines.
+  - Disposition: mandatory public smoke run, failed external/public-IUT evidence, not an accepted zero-failure E2E gate.
+- Accepted local OSH TeamEngine E2E smoke:
+  - Command: authenticated `scripts/smoke-test.sh` with `SMOKE_CONTAINER_NAME=ets-csapi-s27-generator-local-osh`, `SMOKE_DOCKER_NETWORK=field-hub_default`, `SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api`, `SMOKE_MUTATION_TESTS_ENABLED=true`, and `SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut`.
+  - Result: `160 total / 62 passed / 0 failed / 98 skipped`
+  - Report: `ops/test-results/sprint-ets-27-generator-local-osh-smoke-2026-05-22.xml`
+  - Container log: `ops/test-results/sprint-ets-27-generator-local-osh-smoke-container-2026-05-22.log`
+  - Part 2 Update runtime outcome: all 14 runtime tests SKIP because local OSH does not declare Part 2 `/conf/update`.
+  - PATCH safety check: no PATCH request lines in the local OSH smoke container log.
+  - Disposition: accepted Sprint 27 full-stack E2E gate; existing Part 1 system CRD POST/PUT/DELETE requests occurred under explicit dedicated mutable-IUT opt-in.
+- Raze local OSH E2E acceptance review:
+  - `.harness/evaluations/sprint-ets-27-local-osh-e2e-acceptance-raze.yaml`: `APPROVE_WITH_CONCERNS`, confidence 0.94, no required fixes.
+  - Verified the accepted XML totals, all 14 Part 2 Update runtime methods as SKIP, no local OSH PATCH request lines, and GeoRobotix kept as failed advisory public-IUT evidence.
 
 ## Previous Sprint Evidence
 

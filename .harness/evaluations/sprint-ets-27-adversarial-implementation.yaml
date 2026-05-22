@@ -1,0 +1,134 @@
+agent: "raze"
+role: "adversarial-reviewer"
+sprint: "ets-27"
+story: "S-ETS-27-01"
+scope: "Part 2 Update Generator implementation"
+reviewed_at: "2026-05-22T20:38:51Z"
+verdict: "GAPS_FOUND"
+confidence: 0.90
+
+reviewed_scope:
+  implementation:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/update/Part2UpdateTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/update/VerifyPart2UpdateTests.java"
+  wiring:
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  docs:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-27-01-part2-update-planning.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - ".harness/contracts/sprint-ets-27.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+  evidence_artifacts:
+    - "ops/test-results/sprint-ets-27-maven-2026-05-22.log"
+    - "ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml"
+    - "ops/test-results/sprint-ets-27-generator-georobotix-smoke-container-failed-2026-05-22.log"
+
+summary:
+  implementation_assessment: "Code and TestNG wiring are acceptable for the first safety-gated Part 2 Update subset."
+  blocker_assessment: "One bounded documentation reconciliation gap remains before reporting Sprint 27 Generator completion."
+  e2e_assessment: "Evidence is honest: Maven passed, but GeoRobotix TeamEngine smoke failed and local OSH is blocked by missing credentials."
+  no_reruns_performed: true
+
+findings:
+  - id: "RAZE-ETS27-IMPL-GAP-001"
+    severity: "MEDIUM"
+    category: "docs-consistency"
+    title: "Story and traceability still contain stale pre-generator wording"
+    status: "open"
+    evidence:
+      - "epics/stories/s-ets-27-01-part2-update-planning.md:3 states Partial Implemented and line 73 begins Generator Implementation."
+      - "epics/stories/s-ets-27-01-part2-update-planning.md:106-108 still lists 'Generator implementation' under Out of Scope, which now contradicts the implemented Generator sections."
+      - "_bmad/traceability.md:3 still says 'Last updated: 2026-05-22 (Sprint 26 Create/Replace/Delete Generator; local OSH E2E accepted)' even though the FR-ETS-38 row below documents Sprint 27 Part 2 Update."
+    impact: "Future handoff readers can incorrectly conclude the Generator implementation is outside this story or that traceability was last reconciled only through Sprint 26."
+    required_fix:
+      - "Remove or replace the stale 'Generator implementation' Out-of-Scope bullet with the actual deferred scope: public GeoRobotix PATCH, positive PATCH lifecycle, Part 2 JSON/SWE Common/observation-binding closure."
+      - "Refresh the traceability header to name Sprint 27 Part 2 Update Generator or use a neutral date-only last-updated string."
+    bounded: true
+
+concerns:
+  - id: "RAZE-ETS27-IMPL-CONCERN-001"
+    severity: "LOW"
+    category: "e2e-evidence"
+    title: "No accepted zero-failure Sprint 27 E2E gate is available in this shell"
+    evidence:
+      - "ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml:1 reports total=160, passed=27, failed=5, skipped=128."
+      - "ops/test-results.md:60-68 records the Generator smoke as failed external/public-IUT evidence, not an accepted zero-failure E2E gate."
+      - ".harness/handoffs/generator-handoff.yaml:74-76 records local OSH as BLOCKED_MISSING_CREDENTIAL with unauthenticated /conformance HTTP 401."
+    assessment: "Docs do not falsely claim all tests pass. This remains a completion blocker only if the project requires a passing E2E gate before committing Sprint 27."
+    required_fix: []
+  - id: "RAZE-ETS27-IMPL-CONCERN-002"
+    severity: "LOW"
+    category: "runtime-coverage"
+    title: "Current public smoke exercises Part2Update only as dependency SKIP"
+    evidence:
+      - "ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml:1160-1277 shows all 14 Part2Update test methods with status=SKIP."
+      - "ops/test-results.md:66 documents that all 14 Part 2 Update runtime tests SKIP because systemfeatures did not finish successfully."
+    assessment: "This is not a false PASS, and Maven/helper tests cover safety gates. A credentialed local OSH or healthy declaring IUT is still needed to observe /conf/update declaration and condition-gate behavior end-to-end."
+    required_fix: []
+  - id: "RAZE-ETS27-IMPL-CONCERN-003"
+    severity: "LOW"
+    category: "diagnostic-granularity"
+    title: "Aggregate unavailable-endpoint test skips all probes when any one condition class is absent"
+    evidence:
+      - "Part2UpdateTests.java:287-294 gates unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence on /conf/controlstream, /conf/feasibility, and /conf/system-event before probing any endpoint."
+      - "Part2UpdateTests.java:323-328 now gates schema rejection on /conf/datastream and /conf/controlstream before mutation/safe-evidence handling."
+    assessment: "The user-provided patch is present and prevents false PASS. The tradeoff is reduced diagnostics for partially declaring IUTs, not incorrect conformance PASS."
+    required_fix: []
+
+positive_findings:
+  - id: "RAZE-ETS27-IMPL-PASS-001"
+    area: "false-pass-risk"
+    evidence:
+      - "Part2UpdateTests.java:132-142 requires exact Part 2 /conf/update and SKIPs undeclared behavior."
+      - "Part2UpdateTests.java:151-164 keeps Part 2 CRD and OGC API Features Part 4 Update prerequisites visible."
+      - "Part2UpdateTests.java:175-183 and 439-456 report missing Clause 15 condition classes for R79-R92."
+      - "VerifyPart2UpdateTests.java:45-66 regression-tests missing condition-class reporting."
+  - id: "RAZE-ETS27-IMPL-PASS-002"
+    area: "mutation-safety"
+    evidence:
+      - "Part2UpdateTests.java:410-423 hard-denies public GeoRobotix before mutation opt-in can permit lifecycle checks."
+      - "Part2UpdateTests.java:480-492 uses OPTIONS as readiness only and FAILs successful OPTIONS that omits PATCH."
+      - "Part2UpdateTests.java:340-393 keeps positive lifecycle tests as SKIP-before-PATCH deferred checks."
+      - "scripts/no-mutation-oracle.py on the archived container log returned recognized_iut_request_logs=61 and exit 0."
+      - "Direct write-method grep returned no GeoRobotix POST/PUT/DELETE/PATCH request lines."
+  - id: "RAZE-ETS27-IMPL-PASS-003"
+    area: "ogc-uri-fidelity"
+    evidence:
+      - "Part2UpdateTests.java:41-83 uses OGC 23-002 Part 2 /conf/update and /req/update identifiers plus R79-R92 child requirement URIs."
+      - "VerifyPart2UpdateTests.java:31-43 regression-tests Part 2 identifiers and rejects Part 1 /conf/update drift."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:536-545 records Clause 15 Update identifiers, prerequisites, condition gates, and implementation evidence."
+  - id: "RAZE-ETS27-IMPL-PASS-004"
+    area: "testng-wiring"
+    evidence:
+      - "testng.xml:147-176 wires part2update with core common systemfeatures and no Part 1 Update, Part2ApiCommon, Part2CreateReplaceDelete, or resource-class dependency."
+      - "VerifyTestNGSuiteDependency.java:2403-2456 pins dependency tokens and negative dependencies."
+      - "VerifyTestNGSuiteDependency.java:2463-2558 pins method group tagging and co-location with prerequisite/condition-gate classes."
+  - id: "RAZE-ETS27-IMPL-PASS-005"
+    area: "evidence-honesty"
+    evidence:
+      - "ops/test-results/sprint-ets-27-maven-2026-05-22.log:1592-1595 reports 219 tests / 0 failures / 0 errors / 3 skipped and BUILD SUCCESS."
+      - "ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml:1 reports 160 total / 27 passed / 5 failed / 128 skipped."
+      - "ops/status.md and ops/test-results.md describe the GeoRobotix run as failed public-IUT evidence, not all passing."
+
+required_fixes:
+  - id: "RAZE-ETS27-IMPL-GAP-001"
+    owner: "generator"
+    files:
+      - "epics/stories/s-ets-27-01-part2-update-planning.md"
+      - "_bmad/traceability.md"
+    expected_verification: "Docs-only focused recheck; Maven/TeamEngine rerun not required unless code changes."
+
+worktree_hygiene:
+  status: "dirty_expected_for_uncommitted_generator"
+  unrelated_changes_observed: false
+  evidence:
+    - "git status shows only Sprint 27 implementation/docs/artifacts plus ops/metrics.md and this review artifact after review writes."
+

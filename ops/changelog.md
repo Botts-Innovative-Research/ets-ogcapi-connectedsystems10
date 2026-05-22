@@ -2,6 +2,29 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-22T20:34Z — Sprint 27 Part 2 Update Generator
+
+**Triggered by user instruction**: "Continue."
+
+- Implemented `S-ETS-27-01` as the first safety-gated Part 2 Update subset using official OGC 23-002 `/req/update` and `/conf/update` identifiers.
+- Added `Part2UpdateTests` with 14 runtime checks plus shared read-only setup for exact declaration, Part 2 CRD and Features Part 4 Update prerequisite visibility, Clause 15 condition-gate visibility, public-IUT mutation safety, DataStream/Observation PATCH readiness and deferred lifecycle checks, ControlStream/Command PATCH readiness and deferred lifecycle checks, separate Feasibility and SystemEvent PATCH readiness and deferred lifecycle checks, unavailable-endpoint honesty, and schema-rejection honesty.
+- Added `VerifyPart2UpdateTests` with 9 helper regressions for official identifiers, missing condition-class reporting, exact declaration matching, public GeoRobotix hard denial, explicit mutation parameters, `Allow: PATCH` parsing, collection shape, condition messages, and stable `part2update` group naming.
+- Updated `testng.xml` and `VerifyTestNGSuiteDependency` for `part2update` dependency wiring, method tagging, and co-location. The group depends on `core common systemfeatures`, not Part 1 Update, Part 2 API Common, Part 2 Create/Replace/Delete, or resource-class groups.
+- Ran formatter: Docker Maven `spring-javaformat:apply` returned BUILD SUCCESS.
+- Ran Maven: `bash scripts/mvn-test-via-docker.sh` returned BUILD SUCCESS with `219 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-27-maven-2026-05-22.log`.
+- Ran mandatory GeoRobotix TeamEngine smoke. Result: `160 total / 27 passed / 5 failed / 128 skipped`; artifacts archived as `ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml` and `ops/test-results/sprint-ets-27-generator-georobotix-smoke-container-failed-2026-05-22.log`.
+- Interpreted the failed smoke honestly: the public IUT still returns HTTP 500 on existing read paths; all 14 Part 2 Update runtime tests SKIP because `systemfeatures` did not finish successfully. This is not a passing E2E gate.
+- Verified public-IUT safety: no-mutation oracle recognized 61 GeoRobotix IUT request logs and found zero IUT-bound PATCH/POST/PUT/DELETE; explicit container-log grep found no matched GeoRobotix write-method lines.
+- Checked local OSH availability: `SMOKE_AUTH_CREDENTIAL` length is 0 and unauthenticated `GET /sensorhub/api/conformance` returns HTTP 401, so local OSH E2E is blocked in this shell.
+- Recovered local OSH E2E by deriving the Basic auth header from the local OSH stack config without recording the credential value in sprint docs.
+- Ran authenticated local OSH TeamEngine smoke with explicit dedicated mutable-IUT opt-in. Result: `160 total / 62 passed / 0 failed / 98 skipped`; artifacts archived as `ops/test-results/sprint-ets-27-generator-local-osh-smoke-2026-05-22.xml` and `ops/test-results/sprint-ets-27-generator-local-osh-smoke-container-2026-05-22.log`.
+- Interpreted the accepted local OSH gate honestly: all 14 Part 2 Update runtime tests SKIP because local OSH does not declare `/conf/update`; no PATCH request lines appear in the local OSH smoke log. Existing Part 1 system CRD POST/PUT/DELETE requests occurred under explicit dedicated mutable-IUT opt-in.
+- Raze implementation review found docs-only gap `RAZE-ETS27-IMPL-GAP-001`; after patching stale story and traceability wording, focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes.
+- Raze local OSH E2E acceptance review returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes; low concern only that the accepted gate is partial for Update semantics because local OSH does not declare `/conf/update`.
+- Reconciled OpenSpec, story, traceability, epic, contract, ops status, test-results, known issues, and generator handoff for partial implementation status.
+
+---
+
 ## 2026-05-22T19:55Z — Sprint 27 Part 2 Update planning
 
 **Triggered by user instruction**: "Continue."

@@ -1,11 +1,12 @@
-# Sprint 27 contract - Part 2 Update safety-gated planning
+# Sprint 27 contract - Part 2 Update safety-gated subset
 
 sprint: "ets-27"
 sprint_name: "part2-update"
-type: "feature-expansion-planning"
+type: "feature-expansion-implementation"
 created: "2026-05-22T19:50:11Z"
+updated: "2026-05-22T20:49:00Z"
 description: |
-  Sprint 27 plans the first OGC 23-002 Part 2 Update increment.
+  Sprint 27 implements the first OGC 23-002 Part 2 Update increment.
   Because this class is PATCH/destructive by design, the Generator must make
   safe declaration/prerequisite/readiness progress without mutating the default
   public GeoRobotix IUT or producing lifecycle PASS from OPTIONS alone.
@@ -23,7 +24,7 @@ stories:
 
 requirements:
   modified_reqs:
-    - "REQ-ETS-PART2-008 (/req/update specified for Sprint 27 planning; Generator not started)"
+    - "REQ-ETS-PART2-008 (/req/update partially implemented by Sprint 27 Generator; positive PATCH lifecycle remains deferred)"
     - "REQ-ETS-PART2-009..013 (remaining placeholders after Update split)"
   new_reqs: []
   retired_placeholders: []
@@ -55,11 +56,18 @@ success_criteria:
   features_part4_update_prerequisite_visible: true
   public_iut_patch_forbidden: true
   options_readiness_not_lifecycle_pass: true
-  no_code_changes_in_planning: true
+  no_code_changes_in_planning: false
+  code_implemented: true
+  helper_regressions_added: true
+  testng_wiring_added: true
   planning_teamengine_e2e_captured_or_blocked: true
   planning_no_mutation_verified: true
-  generator_required_before_runtime_gates: true
+  generator_required_before_runtime_gates: false
+  generator_completed: true
   raze_planning_review_completed: true
+  raze_implementation_review_required: true
+  raze_implementation_review_completed: true
+  accepted_local_osh_e2e_gate: true
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
@@ -120,9 +128,9 @@ planning_probes:
       controlstreams: "GET /controlstreams?limit=1 returned HTTP 200 application/json."
   local_osh:
     iut_url: "http://field-hub-osh-1:8081/sensorhub/api"
-    credential_state: "Current shell has no SMOKE_AUTH_CREDENTIAL."
-    conformance: "Unauthenticated GET /sensorhub/api/conformance returned HTTP 401."
-    options: "Unauthenticated OPTIONS /sensorhub/api/systems/040g returned HTTP 200 with Allow GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+    credential_state: "Basic auth available from the local OSH stack config; credential value is not recorded in sprint docs."
+    conformance: "Unauthenticated GET /sensorhub/api/conformance returned HTTP 401; authenticated GET returned HTTP 200 and did not declare Part 2 /conf/update."
+    options: "Authenticated OPTIONS /sensorhub/api/systems/040g returned HTTP 200 with Allow GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
 
 planning_e2e_evidence:
   status: "FAILED_EXTERNAL_IUT_HTTP_500"
@@ -136,8 +144,64 @@ planning_e2e_evidence:
     public_iut_mutation: "No matched GeoRobotix PATCH/POST/PUT/DELETE request lines in the archived container log."
     disposition: "Advisory public interoperability check; not an accepted Sprint 27 E2E gate."
   local_osh:
-    status: "BLOCKED_MISSING_CREDENTIAL"
-    reason: "Current shell has no SMOKE_AUTH_CREDENTIAL; unauthenticated /conformance returns HTTP 401."
+    status: "INITIALLY_UNAUTHENTICATED_PLANNING_PROBE"
+    reason: "Planning probe without credentials returned /conformance HTTP 401; implementation later derived Basic auth from local OSH config and accepted the local OSH E2E gate."
+
+implementation_evidence:
+  status: "PARTIAL_IMPLEMENTED"
+  files_added:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/update/Part2UpdateTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/update/VerifyPart2UpdateTests.java"
+  files_updated:
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  runtime_tests: 14
+  helper_regressions: 9
+  scope:
+    - "Exact Part 2 /conf/update declaration gate."
+    - "Part 2 Create/Replace/Delete and OGC API Features Part 4 Update prerequisite visibility."
+    - "Clause 15 condition gates for /conf/datastream, /conf/controlstream, /conf/feasibility, and /conf/system-event."
+    - "Public-IUT PATCH hard-denial and explicit dedicated mutable-IUT opt-in gate."
+    - "Read-only OPTIONS PATCH readiness diagnostics that cannot PASS lifecycle behavior."
+    - "Unavailable-endpoint and schema-rejection honesty."
+    - "Deferred positive PATCH lifecycle checks with no PATCH dispatch in default smoke."
+  formatter:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+    result: "BUILD SUCCESS"
+  maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    result: "BUILD SUCCESS"
+    surefire: "219 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-27-maven-2026-05-22.log"
+  georobotix_teamengine_smoke:
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s27-generator-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-27-generator-georobotix-results bash scripts/smoke-test.sh"
+    result: "FAILED_EXTERNAL_IUT_HTTP_500"
+    testng: "160 total / 27 passed / 5 failed / 128 skipped"
+    report: "ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-27-generator-georobotix-smoke-container-failed-2026-05-22.log"
+    part2_update_outcome: "14 runtime tests SKIP because systemfeatures did not finish successfully on the public IUT."
+    no_public_mutation: "scripts/no-mutation-oracle.py recognized 61 IUT request logs and found zero GeoRobotix PATCH/POST/PUT/DELETE."
+    disposition: "Mandatory public smoke run; failed external/public-IUT evidence, not a passing E2E gate."
+  local_osh:
+    status: "PASSED_ACCEPTED_E2E_GATE"
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s27-generator-local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_MUTATION_TESTS_ENABLED=true SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut SMOKE_OUTPUT_DIR=/tmp/sprint-ets-27-generator-local-osh-results bash scripts/smoke-test.sh"
+    testng: "160 total / 62 passed / 0 failed / 98 skipped"
+    report: "ops/test-results/sprint-ets-27-generator-local-osh-smoke-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-27-generator-local-osh-smoke-container-2026-05-22.log"
+    part2_update_outcome: "14 runtime tests SKIP because local OSH does not declare Part 2 /conf/update."
+    patch_requests: "No PATCH request lines in the local OSH smoke container log."
+    note: "Existing Part 1 CRD system POST/PUT/DELETE requests occurred under explicit dedicated mutable-IUT opt-in."
+
+raze_implementation_review:
+  initial_artifact: ".harness/evaluations/sprint-ets-27-adversarial-implementation.yaml"
+  initial_verdict: "GAPS_FOUND"
+  gapfix_artifact: ".harness/evaluations/sprint-ets-27-adversarial-implementation-recheck.yaml"
+  final_verdict: "APPROVE_WITH_CONCERNS"
+  confidence: 0.94
+  required_fixes_remaining: []
+  local_osh_e2e_acceptance_artifact: ".harness/evaluations/sprint-ets-27-local-osh-e2e-acceptance-raze.yaml"
+  local_osh_e2e_acceptance_verdict: "APPROVE_WITH_CONCERNS"
+  local_osh_e2e_acceptance_confidence: 0.94
 
 verdict_policy:
   declaration_gate:

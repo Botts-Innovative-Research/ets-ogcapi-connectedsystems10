@@ -1,5 +1,5 @@
 agent: planner
-status: active_planning_pending_e2e_and_raze
+status: superseded_by_generator_partial_implementation
 timestamp: "2026-05-22T19:55:00Z"
 sprint_number: "ets-27"
 sprint_name: "part2-update"
@@ -90,4 +90,4 @@ commit:
   push: "bf10caa..eab12a8 main -> main over SSH"
 
 next_agent: "generator"
-next_action: "Start Generator for S-ETS-27-01 after confirming no newer user instruction changed priority."
+next_action: "Generator started and produced partial implementation; see .harness/handoffs/generator-handoff.yaml for current Sprint 27 state."

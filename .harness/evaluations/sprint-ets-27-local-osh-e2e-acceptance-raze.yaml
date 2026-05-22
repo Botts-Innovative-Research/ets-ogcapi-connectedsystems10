@@ -1,0 +1,143 @@
+agent: raze
+role: adversarial-reviewer
+created_at: "2026-05-22T20:55:13Z"
+updated_at: "2026-05-22T20:55:13Z"
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.94
+
+reviewed_scope:
+  sprint: "ets-27"
+  story: "S-ETS-27-01"
+  change: "Accept authenticated local OSH as the Sprint 27 Generator E2E gate for the partial Part 2 Update increment while preserving GeoRobotix as failed advisory public-IUT evidence."
+  included_files:
+    - "AGENTS.md"
+    - "_bmad/agents/adversarial-reviewer.md"
+    - "_bmad/traceability.md"
+    - ".harness/contracts/sprint-ets-27.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "epics/stories/s-ets-27-01-part2-update-planning.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - "ops/test-results/sprint-ets-27-generator-local-osh-smoke-2026-05-22.xml"
+    - "ops/test-results/sprint-ets-27-generator-local-osh-smoke-container-2026-05-22.log"
+    - "ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml"
+    - "ops/test-results/sprint-ets-27-generator-georobotix-smoke-container-failed-2026-05-22.log"
+  excluded_by_instruction:
+    - "No Maven rerun."
+    - "No TeamEngine rerun."
+
+findings:
+  - id: "RAZE-ETS27-LOCAL-OSH-GATE-INFO-001"
+    severity: INFO
+    status: ACCEPTED
+    title: "Authenticated local OSH TeamEngine evidence exists and matches the reconciled totals."
+    evidence:
+      - "Accepted local OSH XML reports 160 total / 62 passed / 0 failed / 98 skipped."
+      - "The XML artifact is archived at ops/test-results/sprint-ets-27-generator-local-osh-smoke-2026-05-22.xml."
+      - "The container log artifact is archived at ops/test-results/sprint-ets-27-generator-local-osh-smoke-container-2026-05-22.log."
+      - "ops/test-results.md, ops/status.md, the story, OpenSpec, traceability, contract, handoff, known issues, and changelog all record the same accepted local OSH totals."
+    assessment: "No false all-green claim found; skips remain explicit in the accepted E2E disposition."
+
+  - id: "RAZE-ETS27-LOCAL-OSH-GATE-INFO-002"
+    severity: INFO
+    status: ACCEPTED
+    title: "Part 2 Update runtime coverage is represented as SKIP, not PASS, for the accepted local OSH gate."
+    evidence:
+      - "All 14 Part2UpdateTests runtime methods in the accepted local OSH XML are SKIP."
+      - "Docs state the SKIP reason: authenticated local OSH /conformance does not declare Part 2 /conf/update."
+      - "Docs also record that authenticated OPTIONS on the selected local OSH system resource does not advertise PATCH."
+    assessment: "This avoids the key false PASS risk: the accepted gate proves the deployed TeamEngine stack runs cleanly against local OSH, but it does not prove positive Part 2 Update PATCH behavior."
+
+  - id: "RAZE-ETS27-LOCAL-OSH-GATE-INFO-003"
+    severity: INFO
+    status: ACCEPTED
+    title: "Local OSH PATCH safety claim is scoped correctly."
+    evidence:
+      - "Targeted review found no PATCH request lines for the local OSH API in the accepted container log."
+      - "The accepted local OSH log does contain Part 1 CRD POST/PUT/DELETE requests, and docs tie those writes to SMOKE_MUTATION_TESTS_ENABLED=true with SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut."
+      - "The local OSH docs do not generalize the run as no-mutation evidence; they claim zero Part 2 Update PATCH evidence."
+    assessment: "The mutation posture is honest: Sprint 27 Update did not PATCH local OSH, while unrelated Part 1 CRD writes occurred under explicit mutable-IUT opt-in."
+
+  - id: "RAZE-ETS27-LOCAL-OSH-GATE-INFO-004"
+    severity: INFO
+    status: ACCEPTED
+    title: "GeoRobotix remains failed advisory evidence rather than the accepted gate."
+    evidence:
+      - "GeoRobotix Generator smoke remains documented as 160 total / 27 passed / 5 failed / 128 skipped."
+      - "Reconciled docs keep the GeoRobotix public-IUT HTTP 500 state visible."
+      - "No reviewed doc claims GeoRobotix passed or uses it as the accepted Sprint 27 E2E gate."
+    assessment: "The accepted local OSH gate does not erase the public-IUT failure."
+
+  - id: "RAZE-ETS27-LOCAL-OSH-GATE-CONCERN-001"
+    severity: LOW
+    status: ACCEPTED
+    title: "Accepted E2E gate is partial for Part 2 Update semantics."
+    evidence:
+      - "The local OSH accepted smoke has zero failures, but all Part 2 Update runtime methods skip due the IUT not declaring /conf/update."
+      - "Positive PATCH lifecycle closure remains deferred until a dedicated mutable Part 2 Update IUT advertises /conf/update and safe PATCH capability."
+    assessment: "This is acceptable for the documented partial Generator increment, but commit/release language must not imply full Part 2 Update conformance closure."
+
+  - id: "RAZE-ETS27-LOCAL-OSH-GATE-CONCERN-002"
+    severity: LOW
+    status: ACCEPTED
+    title: "Credential value is not documented, but masked Authorization lines remain in the archived container log."
+    evidence:
+      - "Reviewed sprint docs describe that the Basic-auth credential was obtained from the local OSH stack config without recording the credential value."
+      - "The accepted container log shows masked Authorization header values rather than a raw credential."
+    assessment: "No required fix found, assuming the existing smoke-log masking policy is acceptable for archived evidence."
+
+required_fixes: []
+
+evidence_summary:
+  accepted_local_osh_gate:
+    verdict: "PASS_WITH_SKIPS"
+    testng: "160 total / 62 passed / 0 failed / 98 skipped"
+    report: "ops/test-results/sprint-ets-27-generator-local-osh-smoke-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-27-generator-local-osh-smoke-container-2026-05-22.log"
+    part2_update_outcome:
+      - "14 Part2UpdateTests runtime methods SKIP."
+      - "Skip reason is local OSH missing Part 2 /conf/update."
+      - "No local OSH PATCH request lines found in the accepted container log."
+    mutation_scope:
+      - "Run used SMOKE_MUTATION_TESTS_ENABLED=true."
+      - "Run used SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut."
+      - "Existing Part 1 CRD POST/PUT/DELETE requests appear in the log under that explicit mutable-IUT opt-in."
+  georobotix_advisory:
+    verdict: "FAILED_EXTERNAL_IUT_HTTP_500"
+    testng: "160 total / 27 passed / 5 failed / 128 skipped"
+    report: "ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml"
+    disposition: "Advisory public interoperability evidence; not the accepted Sprint 27 E2E gate."
+  maven_evidence:
+    testng: "219 tests / 0 failures / 0 errors / 3 skipped"
+    report: "ops/test-results/sprint-ets-27-maven-2026-05-22.log"
+    disposition: "Previously archived Generator verification evidence; not rerun for this focused recheck."
+
+checks_performed:
+  - command: "Read _bmad/agents/adversarial-reviewer.md."
+    result: "Applied Raze checklist with artifact/docs inspection and no expensive reruns."
+  - command: "Inspected accepted local OSH TeamEngine XML header."
+    result: "Confirmed total=160, passed=62, failed=0, skipped=98."
+  - command: "Inspected Part2UpdateTests entries in accepted local OSH XML."
+    result: "Confirmed all 14 runtime methods are SKIP, consistent with missing /conf/update."
+  - command: "Searched accepted local OSH container log for PATCH requests to the local OSH API."
+    result: "No PATCH request lines found."
+  - command: "Searched accepted local OSH container log for POST/PUT/DELETE requests to the local OSH API."
+    result: "Found Part 1 CRD writes only; docs correctly place them under explicit mutable-IUT opt-in."
+  - command: "Reviewed reconciled OpenSpec, story, traceability, epic, contract, handoff, ops/status, ops/test-results, ops/known-issues, and ops/changelog."
+    result: "Docs consistently record local OSH accepted E2E, GeoRobotix failed advisory evidence, zero local OSH PATCH, and partial Part 2 Update closure."
+  - command: "Checked focused credential wording in sprint docs and local OSH artifact handling."
+    result: "No raw credential value found in reviewed sprint docs; archived container log retains masked Authorization header values."
+
+overall_assessment: |
+  Accepting authenticated local OSH as the Sprint 27 E2E gate is defensible for
+  the documented partial Generator increment. The evidence demonstrates a real
+  TeamEngine stack run with zero local OSH failures, exact archived totals, and
+  no Part 2 Update PATCH traffic. The docs remain honest that GeoRobotix failed
+  and that local OSH did not exercise positive Part 2 Update lifecycle behavior
+  because it does not advertise /conf/update. No required fixes remain before
+  commit, provided final wording continues to avoid claiming full Part 2 Update
+  conformance closure.

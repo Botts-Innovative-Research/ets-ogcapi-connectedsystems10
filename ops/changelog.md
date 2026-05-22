@@ -2,6 +2,27 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-22T19:55Z — Sprint 27 Part 2 Update planning
+
+**Triggered by user instruction**: "Continue."
+
+- Started Sprint 27 planning for `S-ETS-27-01`, the next Part 2 item after Sprint 26 Create/Replace/Delete.
+- Verified official OGC 23-002 Clause 15 identifiers from the published HTML: Update is `/req/update` with conformance `/conf/update`, prerequisites Part 2 `/req/create-replace-delete` and OGC API Features Part 4 `/req/update`, and normative Requirements 79-92.
+- Added `.harness/contracts/sprint-ets-27.yaml` and `epics/stories/s-ets-27-01-part2-update-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for Update planning.
+- Split `REQ-ETS-PART2-008` out for Part 2 Update and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-009..013`.
+- Probed GeoRobotix state: `/conformance` declares Part 2 `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/create-replace-delete`, but not Part 2 `/conf/update`.
+- Captured read-only planning evidence: sampled OPTIONS probes for DataStream, Observation, ControlStream, Command, Feasibility, SystemEvent, and system-scoped event endpoints returned HTTP 200 with broad `Allow` headers, but PATCH was absent.
+- Captured current public-IUT health evidence: GeoRobotix still returns HTTP 500 for `GET /systems/0mqcvdnfoca0`, `GET /datastreams?limit=1`, and `GET /observations?limit=1`; `GET /controlstreams?limit=1` returns HTTP 200 JSON.
+- Captured local OSH readiness limits: current shell has no `SMOKE_AUTH_CREDENTIAL`; unauthenticated `/conformance` returns HTTP 401, and unauthenticated `OPTIONS /systems/040g` omits PATCH.
+- Planned safety policy: default GeoRobotix smoke remains read-only; OPTIONS readiness cannot PASS lifecycle behavior; declared `/conf/update` plus successful OPTIONS omitting PATCH fails readiness while lifecycle skips before PATCH; positive PATCH lifecycle checks require a dedicated mutable IUT, explicit mutation opt-in, and changed-field GET proof.
+- Ran GeoRobotix TeamEngine planning smoke. Result: `146 total / 27 passed / 5 failed / 114 skipped`; artifacts archived as `ops/test-results/sprint-ets-27-plan-georobotix-smoke-failed-2026-05-22.xml` and `ops/test-results/sprint-ets-27-plan-georobotix-smoke-container-failed-2026-05-22.log`.
+- Interpreted the failed smoke as advisory public-IUT evidence: failures are the existing GeoRobotix HTTP 500 read-path condition, no Part 2 Update runtime tests exist yet, and the archived log has no matched GeoRobotix PATCH/POST/PUT/DELETE request lines.
+- Raze planning review returned `GAPS_FOUND` confidence 0.91 for missing Clause 15 per-requirement condition gates. Gapfix added explicit gates: R79-R82 require `/conf/datastream`, R83-R88 require `/conf/controlstream`, R89-R91 require `/conf/feasibility`, and R92 requires `/conf/system-event`; missing condition classes SKIP prerequisite-incomplete rather than PASS.
+- Focused Raze recheck closed `RAZE-ETS27-PLAN-GAP-001`; final planning verdict is `APPROVE_WITH_CONCERNS` confidence 0.95 with no required fixes.
+
+---
+
 ## 2026-05-22T19:34Z — Accept local OSH as Sprint 26 E2E gate
 
 **Triggered by user instruction**: "Good - continue."

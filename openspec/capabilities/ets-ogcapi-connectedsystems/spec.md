@@ -533,12 +533,91 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** request logs contain zero IUT-bound POST, PUT, DELETE, or PATCH requests
 **AND** any Create/Replace/Delete assertions that need mutation SKIP before dispatch.
 
-#### REQ-ETS-PART2-008..013: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-008: Part 2 Update Conformance Suite
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 26 Create/Replace/Delete planning)
-- **Description**: For each of the remaining 6 OGC 23-002 conformance classes or cross-class closures (`update`, `json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: SPECIFIED (Sprint 27 planning; Generator not started)
+- **Description**: The ETS SHALL provide a declaration-gated, mutation-safe TestNG suite for OGC 23-002 Clause 15 Requirements Class "Update" using official identifiers `/req/update` and `/conf/update`. Sprint 27 plans the first safe Generator increment: exact Part 2 Update declaration, visible Part 2 Create/Replace/Delete and OGC API - Features - Part 4 Update prerequisites, read-only OPTIONS readiness diagnostics, unavailable-endpoint honesty, public GeoRobotix PATCH hard-denial, and explicit dedicated mutable-IUT opt-in gates before PATCH lifecycle checks can run. Positive PATCH lifecycle mutation and schema-rejection checks remain Generator scope.
+- **Normative statement set for planning**: Requirements 79-92: `/req/update/datastream`, `/req/update/datastream-update-schema`, `/req/update/observation`, `/req/update/observation-schema`, `/req/update/controlstream`, `/req/update/controlstream-update-schema`, `/req/update/command`, `/req/update/command-schema`, `/req/update/command-status`, `/req/update/command-result`, `/req/update/feasibility`, `/req/update/feasibility-status`, `/req/update/feasibility-result`, and `/req/update/system-event`.
+- **Prerequisites**: Part 2 `/req/create-replace-delete` and `http://www.opengis.net/spec/ogcapi-features-4/1.0/req/update`; the corresponding conformance prerequisites are Part 2 `/conf/create-replace-delete` and `http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update`.
+- **Condition gates**: OGC 23-002 Clause 15 conditions individual Update requirements on the underlying resource classes. Requirements 79-82 SHALL run only when Datastreams & Observations (`/conf/datastream`) applies; Requirements 83-88 SHALL run only when Control Streams & Commands (`/conf/controlstream`) applies; Requirements 89-91 SHALL run only when Command Feasibility (`/conf/feasibility`) applies; Requirement 92 SHALL run only when System Events (`/conf/system-event`) applies. Missing condition classes SHALL produce prerequisite-incomplete SKIP behavior, not PASS from `/conf/update`, endpoint availability, sibling declarations, or OPTIONS.
+- **Rationale**: Clause 15 is destructive by nature and delegates PATCH semantics to OGC API Features Part 4 Update at Connected Systems resource endpoints. The ETS must make declaration/prerequisite/readiness progress without producing false PASS from broad OPTIONS headers or mutating GeoRobotix.
+- **Planning evidence**: Official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 15 and Annex A.8, identifies `/req/update`, `/conf/update`, Requirements 79-92, and Abstract tests A.79-A.92. GeoRobotix `/conformance` declares Part 2 `/conf/create-replace-delete` and Features Part 4 `/conf/create-replace-delete`, but does not declare Part 2 `/conf/update`. GeoRobotix sampled OPTIONS probes for DataStream, Observation, ControlStream, Command, Feasibility, SystemEvent, and system-scoped event endpoints returned HTTP 200 with broad `Allow` headers but no PATCH. Current GeoRobotix read-health probes still return HTTP 500 for `GET /systems/0mqcvdnfoca0`, `GET /datastreams?limit=1`, and `GET /observations?limit=1`; `GET /controlstreams?limit=1` returns HTTP 200 JSON. Local OSH is running, but the current shell has no `SMOKE_AUTH_CREDENTIAL`; unauthenticated `/conformance` returns HTTP 401 and unauthenticated `OPTIONS /systems/040g` omits PATCH.
+- **Maps to**: PRD FR-ETS-38.
+
+#### SCENARIO-ETS-PART2-008-UPDATE-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the IUT exposes `/conformance`
+**WHEN** the Part 2 Update group runs
+**THEN** the ETS detects exact declaration `http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update`
+**AND** SKIPs the group with a precise reason when the declaration is absent.
+
+#### SCENARIO-ETS-PART2-008-CRD-FEATURES4-PREREQUISITES-001 (CRITICAL)
+**GIVEN** `/req/update` applies
+**WHEN** the ETS evaluates full class closure
+**THEN** it records whether Part 2 `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/update` are declared
+**AND** it does not report full `/conf/update` closure when either prerequisite is missing.
+
+#### SCENARIO-ETS-PART2-008-RESOURCE-CONDITION-GATES-001 (CRITICAL)
+**GIVEN** OGC 23-002 Clause 15 conditions Update requirements on underlying Part 2 resource classes
+**WHEN** the ETS evaluates Requirements 79-92
+**THEN** DataStream and Observation update assertions require `/conf/datastream`
+**AND** ControlStream, Command, CommandStatus, and CommandResult update assertions require `/conf/controlstream`
+**AND** Feasibility, Feasibility status, and Feasibility result update assertions require `/conf/feasibility`
+**AND** SystemEvent update assertions require `/conf/system-event`
+**AND** missing condition classes produce prerequisite-incomplete SKIP behavior rather than PASS.
+
+#### SCENARIO-ETS-PART2-008-PATCH-MUTATION-SAFETY-GATE-001 (CRITICAL)
+**GIVEN** the default smoke target is the public GeoRobotix IUT
+**WHEN** Update tests execute
+**THEN** PATCH, POST, PUT, and DELETE requests are blocked before dispatch
+**AND** positive lifecycle checks require `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
+
+#### SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001 (NORMAL)
+**GIVEN** the IUT declares `/conf/update` and a candidate resource endpoint is available
+**WHEN** the ETS probes the endpoint with read-only OPTIONS
+**THEN** it records whether PATCH is advertised as readiness evidence
+**AND** declared `/conf/update` plus successful OPTIONS omitting PATCH FAILs the readiness assertion while lifecycle PATCH SKIPs before dispatch.
+
+#### SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001 (NORMAL)
+**GIVEN** a dedicated mutable IUT is explicitly enabled
+**WHEN** the ETS exercises DataStream and Observation Update checks
+**THEN** it validates PATCH behavior using OGC API Features Part 4 semantics at the Connected Systems endpoints
+**AND** verifies the changed field by GET after PATCH before PASS.
+
+#### SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001 (NORMAL)
+**GIVEN** a dedicated mutable IUT is explicitly enabled
+**WHEN** the ETS exercises ControlStream, Command, CommandStatus, and CommandResult Update checks
+**THEN** it validates PATCH behavior only for available JSON resource endpoints
+**AND** SKIPs honestly when command endpoints or candidate resources are unavailable.
+
+#### SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001 (NORMAL)
+**GIVEN** a dedicated mutable IUT is explicitly enabled
+**WHEN** the ETS exercises Feasibility, Feasibility status/result, and SystemEvent Update checks
+**THEN** it validates PATCH behavior only against available resources
+**AND** SKIPs rather than PASSes when endpoints are absent, invalid resources, or streaming-only.
+
+#### SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001 (NORMAL)
+**GIVEN** OGC 23-002 defines schema-rejection requirements for DataStream, Observation, ControlStream, and Command PATCH
+**WHEN** the ETS lacks safe mutation opt-in or concrete parent schema evidence
+**THEN** it SHALL NOT claim schema-rejection PASS
+**AND** it SHALL SKIP with a precise no-safe-evidence reason.
+
+#### SCENARIO-ETS-PART2-008-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
+**GIVEN** the IUT advertises `/conf/update`
+**WHEN** `/commands`, `/feasibility`, `/systemEvents`, or `/systems/{sysId}/events` are not readable JSON resource endpoints
+**THEN** the ETS does not infer Update lifecycle PASS from sibling declarations, broad OPTIONS headers, HTTP 400, HTTP 500, or streaming-only responses.
+
+#### SCENARIO-ETS-PART2-008-SMOKE-NO-PUBLIC-PATCH-001 (CRITICAL)
+**GIVEN** TeamEngine smoke runs against GeoRobotix
+**WHEN** the smoke run completes
+**THEN** request logs contain zero IUT-bound PATCH, POST, PUT, or DELETE requests
+**AND** any Update assertions that need mutation SKIP before dispatch.
+
+#### REQ-ETS-PART2-009..013: Remaining Part 2 Conformance Suites
+- **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 27 Update planning)
+- **Description**: For each of the remaining 5 OGC 23-002 conformance classes or cross-class closures (`json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
-- **Maps to**: PRD FR-ETS-38..43, except retired non-standard FR-ETS-35 System History.
+- **Maps to**: PRD FR-ETS-39..43, except retired non-standard FR-ETS-35 System History.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -2170,7 +2249,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.
 - REQ-ETS-PART2-006: partially implemented by Sprint 25 Advanced Filtering Generator.
 - REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - partially implemented by Sprint 26 Generator; seeded local OSH E2E is accepted after fixture repair, while GeoRobotix public smoke remains advisory and currently fails with public-IUT HTTP 500 responses outside the new Part 2 CRD tests.
-- REQ-ETS-PART2-008..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 26 Create/Replace/Delete planning.
+- REQ-ETS-PART2-008 (Part 2 Update) - specified by Sprint 27 planning; Generator not started.
+- REQ-ETS-PART2-009..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 27 Update planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

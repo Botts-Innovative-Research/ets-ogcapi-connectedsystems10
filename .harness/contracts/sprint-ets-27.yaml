@@ -1,0 +1,200 @@
+# Sprint 27 contract - Part 2 Update safety-gated planning
+
+sprint: "ets-27"
+sprint_name: "part2-update"
+type: "feature-expansion-planning"
+created: "2026-05-22T19:50:11Z"
+description: |
+  Sprint 27 plans the first OGC 23-002 Part 2 Update increment.
+  Because this class is PATCH/destructive by design, the Generator must make
+  safe declaration/prerequisite/readiness progress without mutating the default
+  public GeoRobotix IUT or producing lifecycle PASS from OPTIONS alone.
+
+stories:
+  - id: "S-ETS-27-01"
+    title: "Part 2 Update safety-gated subset"
+    file: "epics/stories/s-ets-27-01-part2-update-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "L"
+    depends_on:
+      - "S-ETS-26-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-008 (/req/update specified for Sprint 27 planning; Generator not started)"
+    - "REQ-ETS-PART2-009..013 (remaining placeholders after Update split)"
+  new_reqs: []
+  retired_placeholders: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-008-UPDATE-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-008-CRD-FEATURES4-PREREQUISITES-001"
+    - "SCENARIO-ETS-PART2-008-RESOURCE-CONDITION-GATES-001"
+    - "SCENARIO-ETS-PART2-008-PATCH-MUTATION-SAFETY-GATE-001"
+    - "SCENARIO-ETS-PART2-008-UNAVAILABLE-ENDPOINT-HONESTY-001"
+    - "SCENARIO-ETS-PART2-008-SMOKE-NO-PUBLIC-PATCH-001"
+  normal:
+    - "SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001"
+    - "SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001"
+    - "SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001"
+    - "SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001"
+    - "SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  clause15_condition_gates_explicit: true
+  part2_crd_prerequisite_visible: true
+  features_part4_update_prerequisite_visible: true
+  public_iut_patch_forbidden: true
+  options_readiness_not_lifecycle_pass: true
+  no_code_changes_in_planning: true
+  planning_teamengine_e2e_captured_or_blocked: true
+  planning_no_mutation_verified: true
+  generator_required_before_runtime_gates: true
+  raze_planning_review_completed: true
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-22T19:50:11Z"
+  requirement_class: "Clause 15, Requirements Class Update"
+  requirement_class_identifier: "/req/update"
+  conformance_class_identifier: "/conf/update"
+  prerequisites:
+    - "/req/create-replace-delete"
+    - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/update"
+  conformance_prerequisites:
+    - "/conf/create-replace-delete"
+    - "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+  normative_statements:
+    - "/req/update/datastream"
+    - "/req/update/datastream-update-schema"
+    - "/req/update/observation"
+    - "/req/update/observation-schema"
+    - "/req/update/controlstream"
+    - "/req/update/controlstream-update-schema"
+    - "/req/update/command"
+    - "/req/update/command-schema"
+    - "/req/update/command-status"
+    - "/req/update/command-result"
+    - "/req/update/feasibility"
+    - "/req/update/feasibility-status"
+    - "/req/update/feasibility-result"
+    - "/req/update/system-event"
+  condition_gates:
+    datastream_observation:
+      requirements: ["/req/update/datastream", "/req/update/datastream-update-schema", "/req/update/observation", "/req/update/observation-schema"]
+      required_conformance: "/conf/datastream"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/update, endpoint availability, sibling declarations, or OPTIONS."
+    controlstream_command:
+      requirements: ["/req/update/controlstream", "/req/update/controlstream-update-schema", "/req/update/command", "/req/update/command-schema", "/req/update/command-status", "/req/update/command-result"]
+      required_conformance: "/conf/controlstream"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/update, endpoint availability, sibling declarations, or OPTIONS."
+    feasibility:
+      requirements: ["/req/update/feasibility", "/req/update/feasibility-status", "/req/update/feasibility-result"]
+      required_conformance: "/conf/feasibility"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/update, endpoint availability, sibling declarations, or OPTIONS."
+    system_event:
+      requirements: ["/req/update/system-event"]
+      required_conformance: "/conf/system-event"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/update, endpoint availability, sibling declarations, or OPTIONS."
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares /conf/create-replace-delete and OGC API Features Part 4 /conf/create-replace-delete; does not declare Part 2 /conf/api-common, /conf/update, or /conf/advanced-filtering."
+    options:
+      sampled_update_targets: "OPTIONS probes for sampled DataStream, Observation, ControlStream, Command, Feasibility, SystemEvent, and system-scoped events endpoints returned HTTP 200 with broad Allow headers, but PATCH was absent."
+    read_health:
+      systems_item: "GET /systems/0mqcvdnfoca0 returned HTTP 500."
+      datastreams: "GET /datastreams?limit=1 returned HTTP 500."
+      observations: "GET /observations?limit=1 returned HTTP 500."
+      controlstreams: "GET /controlstreams?limit=1 returned HTTP 200 application/json."
+  local_osh:
+    iut_url: "http://field-hub-osh-1:8081/sensorhub/api"
+    credential_state: "Current shell has no SMOKE_AUTH_CREDENTIAL."
+    conformance: "Unauthenticated GET /sensorhub/api/conformance returned HTTP 401."
+    options: "Unauthenticated OPTIONS /sensorhub/api/systems/040g returned HTTP 200 with Allow GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS; PATCH absent."
+
+planning_e2e_evidence:
+  status: "FAILED_EXTERNAL_IUT_HTTP_500"
+  georobotix_smoke:
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s27-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-27-plan-georobotix-results bash scripts/smoke-test.sh"
+    result: "FAILED_EXTERNAL_IUT_HTTP_500"
+    testng: "146 total / 27 passed / 5 failed / 114 skipped"
+    report: "ops/test-results/sprint-ets-27-plan-georobotix-smoke-failed-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-27-plan-georobotix-smoke-container-failed-2026-05-22.log"
+    failure_cause: "Known public-IUT HTTP 500 responses on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths; no Part 2 Update runtime tests exist yet."
+    public_iut_mutation: "No matched GeoRobotix PATCH/POST/PUT/DELETE request lines in the archived container log."
+    disposition: "Advisory public interoperability check; not an accepted Sprint 27 E2E gate."
+  local_osh:
+    status: "BLOCKED_MISSING_CREDENTIAL"
+    reason: "Current shell has no SMOKE_AUTH_CREDENTIAL; unauthenticated /conformance returns HTTP 401."
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/update is not declared, Update assertions SKIP with a precise reason."
+  prerequisites:
+    - "Keep Part 2 /conf/create-replace-delete and OGC API Features Part 4 /conf/update visible before reporting full class closure."
+  condition_gates:
+    - "Requirements 79-82 require /conf/datastream before PASS."
+    - "Requirements 83-88 require /conf/controlstream before PASS."
+    - "Requirements 89-91 require /conf/feasibility before PASS."
+    - "Requirement 92 requires /conf/system-event before PASS."
+    - "Missing condition classes SKIP prerequisite-incomplete rather than PASS from /conf/update, endpoint availability, sibling declarations, or OPTIONS."
+  mutation_safety:
+    - "Default public GeoRobotix smoke must issue zero IUT-bound PATCH, POST, PUT, or DELETE."
+    - "Positive PATCH lifecycle checks require mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut."
+    - "Hard-deny public GeoRobotix PATCH before dispatch."
+  options_honesty:
+    - "OPTIONS method evidence is readiness only and cannot PASS lifecycle behavior."
+    - "Declared /conf/update plus successful OPTIONS omitting PATCH should FAIL readiness for the selected endpoint while lifecycle skips before PATCH."
+  endpoint_honesty:
+    - "HTTP 400, HTTP 500, streaming-only, or empty/non-resource endpoints cannot produce Update lifecycle PASS evidence."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/update and /conf/update."
+  - "Use OGC API Features Part 4 Update as the prerequisite authority for PATCH semantics."
+  - "Implement Clause 15 condition gates before PASSing any R79-R92 assertion."
+  - "Reuse existing mutation safety parameters and public-IUT hard-denial policy."
+  - "Add tests/comments referencing REQ-ETS-PART2-008 and SCENARIO-ETS-PART2-008-* IDs."
+  - "Run formatter, scripts/mvn-test-via-docker.sh, and TeamEngine smoke after implementation."
+  - "Verify public smoke logs contain zero IUT-bound PATCH/POST/PUT/DELETE by default."
+  - "Update spec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not mutate public GeoRobotix."
+  - "Do not PASS lifecycle assertions from OPTIONS alone."
+  - "Do not infer Update support from sibling declarations or broad Allow headers."
+  - "Do not PASS R79-R92 assertions when their Clause 15 condition class is absent."
+  - "Do not issue PATCH unless /conf/update, mutation opt-in, non-public dedicated mutable IUT policy, and endpoint PATCH readiness are all satisfied."
+  - "Do not implement Part 2 JSON, SWE Common, or observation-binding closure in this sprint."
+
+evaluation_focus:
+  raze:
+    - "Attack false PASS from broad OPTIONS headers that omit PATCH."
+    - "Attack any path that can PATCH public GeoRobotix."
+    - "Attack missing Part 2 CRD or Features Part 4 Update prerequisite handling."
+    - "Attack missing Clause 15 condition gates for /conf/datastream, /conf/controlstream, /conf/feasibility, and /conf/system-event."
+    - "Attack schema-rejection claims without safe mutation opt-in and parent schema evidence."
+    - "Check stale placeholder drift: remaining Part 2 placeholders must be REQ-ETS-PART2-009..013."
+
+raze_review:
+  artifact: ".harness/evaluations/sprint-ets-27-plan-adversarial.yaml"
+  verdict: "APPROVE_WITH_CONCERNS"
+  confidence: 0.95
+  required_fixes: []
+  gapfix:
+    id: "RAZE-ETS27-PLAN-GAP-001"
+    status: "CLOSED"
+    summary: "Clause 15 condition gates are explicit across OpenSpec, story, contract, traceability, epic, ops docs, and planner handoff."
+  required_before_generator: true

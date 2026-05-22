@@ -1,69 +1,93 @@
 agent: planner
-status: superseded_by_generator_handoff
-timestamp: "2026-05-13T10:46:11Z"
-sprint_number: "ets-26"
-sprint_name: "part2-create-replace-delete"
-contract_path: ".harness/contracts/sprint-ets-26.yaml"
+status: active_planning_pending_e2e_and_raze
+timestamp: "2026-05-22T19:55:00Z"
+sprint_number: "ets-27"
+sprint_name: "part2-update"
+contract_path: ".harness/contracts/sprint-ets-27.yaml"
 triggered_by: |
-  User said "Continue" after Sprint 25 Advanced Filtering was implemented,
-  reconciled, and pushed.
+  User said "Continue" after Sprint 26 Part 2 Create/Replace/Delete was
+  implemented, reconciled, and pushed.
 
 planning_result:
   story:
-    id: "S-ETS-26-01"
-    title: "Part 2 Create/Replace/Delete safety-gated planning"
-    file: "epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md"
+    id: "S-ETS-27-01"
+    title: "Part 2 Update safety-gated planning"
+    file: "epics/stories/s-ets-27-01-part2-update-planning.md"
   official_identifiers:
     source: "https://docs.ogc.org/is/23-002/23-002.html"
-    clause: "Clause 14, Requirements Class Create/Replace/Delete"
-    requirement_class_identifier: "/req/create-replace-delete"
-    conformance_class_identifier: "/conf/create-replace-delete"
+    clause: "Clause 15, Requirements Class Update"
+    requirement_class_identifier: "/req/update"
+    conformance_class_identifier: "/conf/update"
     prerequisites:
-      - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/create-replace-delete"
+      - "/req/create-replace-delete"
+      - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/update"
     conformance_prerequisites:
-      - "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+      - "/conf/create-replace-delete"
+      - "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
     normative_statements:
-      - "/req/create-replace-delete/datastream"
-      - "/req/create-replace-delete/datastream-update-schema"
-      - "/req/create-replace-delete/datastream-delete-cascade"
-      - "/req/create-replace-delete/observation"
-      - "/req/create-replace-delete/observation-schema"
-      - "/req/create-replace-delete/controlstream"
-      - "/req/create-replace-delete/controlstream-update-schema"
-      - "/req/create-replace-delete/controlstream-delete-cascade"
-      - "/req/create-replace-delete/command"
-      - "/req/create-replace-delete/command-schema"
-      - "/req/create-replace-delete/command-status"
-      - "/req/create-replace-delete/command-result"
-      - "/req/create-replace-delete/feasibility"
-      - "/req/create-replace-delete/feasibility-status"
-      - "/req/create-replace-delete/feasibility-result"
-      - "/req/create-replace-delete/system-event"
+      - "/req/update/datastream"
+      - "/req/update/datastream-update-schema"
+      - "/req/update/observation"
+      - "/req/update/observation-schema"
+      - "/req/update/controlstream"
+      - "/req/update/controlstream-update-schema"
+      - "/req/update/command"
+      - "/req/update/command-schema"
+      - "/req/update/command-status"
+      - "/req/update/command-result"
+      - "/req/update/feasibility"
+      - "/req/update/feasibility-status"
+      - "/req/update/feasibility-result"
+      - "/req/update/system-event"
+    condition_gates:
+      datastream_observation: "Requirements 79-82 require /conf/datastream before PASS."
+      controlstream_command: "Requirements 83-88 require /conf/controlstream before PASS."
+      feasibility: "Requirements 89-91 require /conf/feasibility before PASS."
+      system_event: "Requirement 92 requires /conf/system-event before PASS."
   georobotix_probe_summary:
     conformance: "Declares /conf/create-replace-delete and OGC API Features Part 4 /conf/create-replace-delete; does not declare Part 2 /conf/api-common, /conf/update, or /conf/advanced-filtering."
-    options: "OPTIONS probes for datastreams, observations, controlstreams, commands, nested commands, feasibility, systemEvents, and system-scoped events returned broad Allow headers including POST/PUT/DELETE."
-    unavailable_gets: "/commands, /feasibility, and /systemEvents GET probes returned HTTP 400 Invalid resource name; /systems/{id}/events GET returned HTTP 400 streaming-only."
+    options: "OPTIONS probes for sampled DataStream, Observation, ControlStream, Command, Feasibility, SystemEvent, and system-scoped events endpoints returned broad Allow headers; PATCH was absent."
+    read_health: "GET /systems/0mqcvdnfoca0, /datastreams?limit=1, and /observations?limit=1 returned HTTP 500; /controlstreams?limit=1 returned HTTP 200 JSON."
+  local_osh_probe_summary:
+    credential_state: "Current shell has no SMOKE_AUTH_CREDENTIAL."
+    conformance: "Unauthenticated /sensorhub/api/conformance returned HTTP 401."
+    options: "Unauthenticated OPTIONS /sensorhub/api/systems/040g returned HTTP 200 with no PATCH in Allow."
   safety_policy:
-    default_public_smoke: "Read-only; zero IUT-bound POST/PUT/DELETE/PATCH."
-    declaration_honesty: "Do not PASS CRD lifecycle behavior from declaration alone."
-    prerequisite_honesty: "Keep OGC API Features Part 4 CRD prerequisite visible before full closure."
+    default_public_smoke: "Read-only; zero IUT-bound PATCH/POST/PUT/DELETE."
+    declaration_honesty: "Do not PASS Update lifecycle behavior from declaration alone."
+    prerequisite_honesty: "Keep Part 2 CRD and OGC API Features Part 4 Update prerequisites visible before full closure."
+    condition_gate_honesty: "Missing Clause 15 condition classes SKIP prerequisite-incomplete; do not PASS from /conf/update, endpoint availability, sibling declarations, or OPTIONS."
     options_honesty: "OPTIONS method discovery is readiness evidence only, not lifecycle PASS."
-    mutation_opt_in: "Positive lifecycle checks require mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut; public GeoRobotix is hard-denied before dispatch."
+    missing_patch_readiness: "Declared /conf/update plus successful OPTIONS omitting PATCH fails readiness while lifecycle skips before PATCH."
+    mutation_opt_in: "Positive PATCH requires mutation-tests-enabled=true, mutation-iut-policy=dedicated-mutable-iut, non-public target, endpoint PATCH readiness, and changed-field GET proof."
 
 raze_review:
-  plan_artifact: ".harness/evaluations/sprint-ets-26-plan-adversarial.yaml"
-  plan_verdict: "APPROVE"
-  plan_confidence: 0.96
+  plan_artifact: ".harness/evaluations/sprint-ets-27-plan-adversarial.yaml"
+  plan_verdict: "APPROVE_WITH_CONCERNS"
+  plan_confidence: 0.95
   required_fixes:
-    - id: "RAZE-ETS26-PLAN-GAP-001"
+    - id: "RAZE-ETS27-PLAN-GAP-001"
       status: "CLOSED"
-      summary: "Added missing Sprint 26 planning entry to ops/changelog.md."
+      summary: "Added explicit Clause 15 condition gates for /conf/datastream, /conf/controlstream, /conf/feasibility, and /conf/system-event."
   required_before_generator: true
 
+planning_e2e:
+  status: "FAILED_EXTERNAL_IUT_HTTP_500"
+  georobotix_smoke:
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s27-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-27-plan-georobotix-results bash scripts/smoke-test.sh"
+    testng: "146 total / 27 passed / 5 failed / 114 skipped"
+    report: "ops/test-results/sprint-ets-27-plan-georobotix-smoke-failed-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-27-plan-georobotix-smoke-container-failed-2026-05-22.log"
+    disposition: "Advisory public interoperability check; failed because the public IUT still returns HTTP 500 on existing read paths."
+    public_iut_mutation: "No matched GeoRobotix PATCH/POST/PUT/DELETE request lines in the archived container log."
+  local_osh:
+    status: "BLOCKED_MISSING_CREDENTIAL"
+    reason: "Current shell has no SMOKE_AUTH_CREDENTIAL; unauthenticated /sensorhub/api/conformance returned HTTP 401."
+
 commit:
-  sha: "146c4c6"
-  message: "Plan Sprint 26 Part 2 CRD"
-  push: "7d57d9f..146c4c6 main -> main over SSH"
+  sha: null
+  message: "Plan Sprint 27 Part 2 Update"
+  push: null
 
 next_agent: "generator"
-next_action: "Generator started and produced .harness/handoffs/generator-handoff.yaml; Sprint 26 is partial implemented with seeded local OSH accepted as the E2E gate."
+next_action: "Commit/push Sprint 27 planning if desired, then start Generator for S-ETS-27-01."

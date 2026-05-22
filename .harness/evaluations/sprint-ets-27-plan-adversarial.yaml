@@ -1,0 +1,164 @@
+artifact_type: adversarial_review
+reviewer: Raze
+role_source: _bmad/agents/adversarial-reviewer.md
+created_utc: "2026-05-22T20:04:46Z"
+updated_utc: "2026-05-22T20:10:55Z"
+sprint: ets-27
+story: S-ETS-27-01
+subject: "Sprint 27 planning - Part 2 Update"
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.95
+
+scope:
+  mode: "planning/docs review only"
+  maven_rerun: false
+  teamengine_rerun: false
+  rerun_rationale: "User explicitly instructed not to run Maven or TeamEngine; review inspected official source, planning docs, and archived smoke artifacts only."
+  implementation_files_changed: []
+  official_source_checked:
+    url: "https://docs.ogc.org/is/23-002/23-002.html"
+    evidence:
+      - "Clause 15 Requirements class 8 identifies /req/update."
+      - "Annex A.8 identifies the conformance class /conf/update."
+      - "Prerequisites are Part 2 /req/create-replace-delete and OGC API Features Part 4 /req/update; conformance prerequisites are /conf/create-replace-delete and Features Part 4 /conf/update."
+      - "Requirements 79-92 map to /req/update/datastream through /req/update/system-event."
+      - "Clause 15 states that resource updates use UPDATE/HTTP PATCH as defined by OGC API Features Part 4."
+      - "Requirements 79-82 are conditioned on Datastreams & Observations, 83-88 on Control Streams & Commands, 89-91 on Command Feasibility, and 92 on System Events."
+  reviewed_paths:
+    - .harness/contracts/sprint-ets-27.yaml
+    - epics/stories/s-ets-27-01-part2-update-planning.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - epics/epic-ets-03-part2-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/known-issues.md
+    - ops/changelog.md
+    - .harness/handoffs/planner-handoff.yaml
+    - ops/test-results/sprint-ets-27-plan-georobotix-smoke-failed-2026-05-22.xml
+    - ops/test-results/sprint-ets-27-plan-georobotix-smoke-container-failed-2026-05-22.log
+
+findings:
+  - id: RAZE-ETS27-PLAN-GAP-001
+    severity: MEDIUM
+    status: CLOSED
+    title: "Clause 15 per-requirement Conditions are now explicit planning gates."
+    evidence:
+      - "Official OGC 23-002 Clause 15 gives Conditions for the individual Update requirements: Datastream/Observation requirements depend on Datastreams & Observations, ControlStream/Command requirements depend on Control Streams & Commands, Feasibility requirements depend on Command Feasibility, and SystemEvent update depends on System Events."
+      - "OpenSpec REQ-ETS-PART2-008 now has a Condition gates paragraph and SCENARIO-ETS-PART2-008-RESOURCE-CONDITION-GATES-001 requiring /conf/datastream for R79-R82, /conf/controlstream for R83-R88, /conf/feasibility for R89-R91, and /conf/system-event for R92."
+      - "The Sprint 27 story now lists the Clause 15 condition gates and requires missing condition classes to produce prerequisite-incomplete SKIP behavior rather than PASS from /conf/update, endpoint availability, sibling declarations, or OPTIONS."
+      - "The Sprint 27 contract now includes condition_gates under upstream_ogc_verification, verdict_policy entries for R79-R92, and generator must/must-not constraints preventing PASS when the condition class is absent."
+      - "Traceability, epic notes, ops status/test-results/known-issues/changelog, and planner handoff now all carry the condition-gate policy."
+    required_fix: null
+
+  - id: RAZE-ETS27-PLAN-CONCERN-001
+    severity: LOW
+    status: ACCEPTED
+    title: "No accepted Sprint 27 E2E gate exists yet, but the docs do not overclaim it."
+    evidence:
+      - "Archived GeoRobotix XML reports 146 total / 27 passed / 5 failed / 114 skipped."
+      - "ops/test-results.md and the story call the GeoRobotix run a failed advisory public check, not an accepted Sprint 27 E2E gate."
+      - "Local OSH is explicitly blocked for Sprint 27 planning because the current shell lacks SMOKE_AUTH_CREDENTIAL and unauthenticated /conformance returns HTTP 401."
+    required_fix: null
+
+  - id: RAZE-ETS27-PLAN-CONCERN-002
+    severity: LOW
+    status: ACCEPTED
+    title: "GeoRobotix Features Part 4 Update prerequisite state is not separately summarized."
+    evidence:
+      - "The spec/story/contract correctly list OGC API Features Part 4 /req/update and /conf/update as the prerequisite authority."
+      - "The current GeoRobotix probe summaries explicitly mention Features Part 4 /conf/create-replace-delete and Part 2 /conf/update absence, but do not separately summarize whether Features Part 4 /conf/update is present or absent."
+      - "The planned prerequisite scenario still requires the Generator to record Features Part 4 /conf/update before full closure, so this is not a blocking planning defect."
+    required_fix: null
+
+checks:
+  official_ogc_identifier_fidelity:
+    status: PASS
+    evidence:
+      - "The top-level /req/update and /conf/update identifiers are correct."
+      - "Requirements 79-92 are listed with the expected identifiers."
+      - "The focused recheck confirms the explicit condition-gate matrix is now recorded across OpenSpec, story, contract, traceability, epic, ops docs, and handoff."
+  false_pass_from_options_without_patch:
+    status: PASS
+    evidence:
+      - "OpenSpec and story say OPTIONS is readiness evidence only."
+      - "Declared /conf/update plus successful OPTIONS omitting PATCH is planned to FAIL readiness while lifecycle PATCH SKIPs before dispatch."
+      - "Positive lifecycle PASS requires an actual PATCH plus GET verification of the changed field."
+  public_iut_mutation_safety:
+    status: PASS
+    evidence:
+      - "Planning hard-denies public GeoRobotix PATCH before dispatch."
+      - "Positive PATCH requires mutation-tests-enabled=true, mutation-iut-policy=dedicated-mutable-iut, non-public target, endpoint PATCH readiness, and changed-field proof."
+      - "Archived GeoRobotix container log request lines are GET-only for the recognized IUT requests; no matched PATCH/POST/PUT/DELETE lines were found."
+  prerequisite_handling:
+    status: PASS
+    evidence:
+      - "Part 2 /conf/create-replace-delete and OGC API Features Part 4 /conf/update are tracked as conformance prerequisites."
+      - "Clause 15 per-resource Conditions are now tracked as separate condition gates before any R79-R92 PASS."
+  georobotix_http_500_disposition:
+    status: PASS
+    evidence:
+      - "Docs consistently report GeoRobotix smoke as FAILED_EXTERNAL_IUT_HTTP_500 / advisory public interoperability evidence."
+      - "The failed methods in the archived XML are existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read-path failures; no Part 2 Update runtime tests exist yet."
+  local_osh_credential_limits:
+    status: PASS
+    evidence:
+      - "Story, contract, status, test-results, changelog, and handoff all state that no SMOKE_AUTH_CREDENTIAL is available in the current shell."
+      - "Docs do not claim local OSH as accepted Sprint 27 E2E evidence."
+  placeholder_ranges:
+    status: PASS
+    evidence:
+      - "REQ-ETS-PART2-008 is split out for Update."
+      - "Remaining placeholders are consistently REQ-ETS-PART2-009..013 across OpenSpec, traceability, epic, known issues, status, contract, and story."
+  docs_reconciliation:
+    status: PASS
+    evidence:
+      - "Story, contract, OpenSpec, traceability, epic, ops status, ops test-results, known issues, changelog, and handoff agree on Sprint 27 being planning-only."
+      - "The same docs now consistently include the Clause 15 condition-gate policy."
+
+required_fixes: []
+
+evidence_summary:
+  official_clause_15:
+    source: "https://docs.ogc.org/is/23-002/23-002.html"
+    top_level_identifiers: "/req/update and /conf/update"
+    requirements: "79-92"
+    patch_semantics: "Delegates UPDATE/HTTP PATCH behavior to OGC API Features Part 4 Update."
+    condition_gates_closed: "R79-R82 require /conf/datastream, R83-R88 require /conf/controlstream, R89-R91 require /conf/feasibility, and R92 requires /conf/system-event before PASS."
+  georobotix_planning_smoke:
+    report: "ops/test-results/sprint-ets-27-plan-georobotix-smoke-failed-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-27-plan-georobotix-smoke-container-failed-2026-05-22.log"
+    result: "FAILED_EXTERNAL_IUT_HTTP_500"
+    totals: "146 total / 27 passed / 5 failed / 114 skipped"
+    disposition: "Advisory public interoperability check; not an accepted Sprint 27 E2E gate."
+    mutation_safety: "Container log request lines are GET-only for recognized GeoRobotix IUT requests."
+  local_osh_planning_state:
+    status: "BLOCKED_MISSING_CREDENTIAL"
+    evidence: "Current shell has no SMOKE_AUTH_CREDENTIAL; unauthenticated /sensorhub/api/conformance returns HTTP 401."
+
+checks_performed:
+  - command: "Read _bmad/agents/adversarial-reviewer.md."
+    result: "Raze checklist applied."
+  - command: "Inspected git status, Sprint 27 story/contract/OpenSpec/traceability/epic/ops/handoff artifacts."
+    result: "Found one missing Clause 15 condition-gating policy."
+  - command: "Fetched official OGC 23-002 HTML and searched Clause 15 / Annex A.8 identifiers and Conditions."
+    result: "Confirmed identifiers, prerequisites, Requirements 79-92, PATCH semantics, and per-requirement Conditions."
+  - command: "Inspected archived Sprint 27 GeoRobotix XML and container log."
+    result: "Confirmed documented totals 146/27/5/114 and GET-only recognized IUT request lines."
+  - command: "Targeted credential scan across Sprint 27 docs and smoke log."
+    result: "No raw credential leak found; only env-var names and historical masked examples appeared."
+  - command: "Focused recheck for RAZE-ETS27-PLAN-GAP-001 across OpenSpec, story, contract, traceability, epic, ops docs, and planner handoff."
+    result: "Condition-gate gap closed; no required fixes remain."
+
+commit_readiness:
+  can_commit_or_amend: true
+  rationale: "RAZE-ETS27-PLAN-GAP-001 is closed. Remaining concerns are accepted planning caveats: GeoRobotix remains an advisory failed public check and local OSH lacks a credential-bearing Sprint 27 planning smoke from this shell."
+
+reviewer_edits:
+  - .harness/contracts/sprint-ets-27.yaml
+  - .harness/evaluations/sprint-ets-27-plan-adversarial.yaml
+  - .harness/handoffs/planner-handoff.yaml
+  - epics/stories/s-ets-27-01-part2-update-planning.md
+  - ops/changelog.md
+  - ops/metrics.md
+  - ops/status.md

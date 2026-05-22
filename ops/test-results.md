@@ -1,8 +1,51 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-22T19:45Z
+Last updated: 2026-05-22T19:55Z
 
 ## Current Sprint Evidence
+
+Sprint ets-27 Part 2 Update planning:
+
+- Status:
+  - Story: `epics/stories/s-ets-27-01-part2-update-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-27.yaml`
+  - Planning-only; no Generator code has been added.
+  - TeamEngine planning E2E against GeoRobotix is captured as a failed advisory public check because the public IUT still returns HTTP 500 on existing read paths.
+  - Local OSH cannot be accepted for Sprint 27 planning from this shell because no `SMOKE_AUTH_CREDENTIAL` is available.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 15 "Requirements Class Update" and Annex A.8.
+  - Requirements class identifier: `/req/update`.
+  - Conformance class identifier: `/conf/update`.
+  - Prerequisites: Part 2 `/req/create-replace-delete` and OGC API Features Part 4 `/req/update`.
+  - Conformance prerequisites: Part 2 `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/update`.
+  - Selected planning requirement set: Requirements 79-92, `/req/update/datastream`, `/req/update/datastream-update-schema`, `/req/update/observation`, `/req/update/observation-schema`, `/req/update/controlstream`, `/req/update/controlstream-update-schema`, `/req/update/command`, `/req/update/command-schema`, `/req/update/command-status`, `/req/update/command-result`, `/req/update/feasibility`, `/req/update/feasibility-status`, `/req/update/feasibility-result`, and `/req/update/system-event`.
+  - Clause 15 condition gates: R79-R82 require `/conf/datastream`, R83-R88 require `/conf/controlstream`, R89-R91 require `/conf/feasibility`, and R92 requires `/conf/system-event`; missing condition classes SKIP prerequisite-incomplete rather than PASS.
+- GeoRobotix planning probes:
+  - `/conformance`: declares Part 2 `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/create-replace-delete`.
+  - `/conformance`: does not declare Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
+  - Sampled OPTIONS probes for DataStream, Observation, ControlStream, Command, Feasibility, SystemEvent, and system-scoped event endpoints: HTTP 200 with broad `Allow` headers, but PATCH absent.
+  - Current read-health probes: `GET /systems/0mqcvdnfoca0`, `GET /datastreams?limit=1`, and `GET /observations?limit=1` returned HTTP 500; `GET /controlstreams?limit=1` returned HTTP 200 JSON.
+- Local OSH planning probes:
+  - `field-hub-osh-1` is running, but this shell has no `SMOKE_AUTH_CREDENTIAL`.
+  - Unauthenticated `GET /sensorhub/api/conformance`: HTTP 401.
+  - Unauthenticated `OPTIONS /sensorhub/api/systems/040g`: HTTP 200 with `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS`; PATCH absent.
+- Generator gate expectations:
+  - Default GeoRobotix smoke must remain read-only with zero IUT-bound PATCH/POST/PUT/DELETE.
+  - OPTIONS readiness cannot PASS lifecycle behavior.
+  - Declared `/conf/update` plus successful OPTIONS omitting PATCH should fail readiness while lifecycle skips before PATCH.
+  - Requirements 79-92 must be gated by their Clause 15 resource-class conditions before any PASS.
+  - Positive PATCH checks require a dedicated mutable IUT, explicit mutation opt-in, and changed-field GET proof.
+  - HTTP 400, HTTP 500, streaming-only, or no-candidate endpoints SKIP honestly rather than PASS.
+- Planning TeamEngine E2E smoke:
+  - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s27-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-27-plan-georobotix-results bash scripts/smoke-test.sh`
+  - Result: `146 total / 27 passed / 5 failed / 114 skipped`
+  - Report: `ops/test-results/sprint-ets-27-plan-georobotix-smoke-failed-2026-05-22.xml`
+  - Container log: `ops/test-results/sprint-ets-27-plan-georobotix-smoke-container-failed-2026-05-22.log`
+  - Failure cause: public GeoRobotix HTTP 500 responses on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths; no Part 2 Update runtime tests exist yet.
+  - Public-IUT safety check: no matched GeoRobotix PATCH/POST/PUT/DELETE request lines in the archived container log.
+  - Disposition: advisory public interoperability evidence, not an accepted Sprint 27 E2E gate.
+
+## Previous Sprint Evidence
 
 Sprint ets-26 Part 2 Create/Replace/Delete Generator:
 

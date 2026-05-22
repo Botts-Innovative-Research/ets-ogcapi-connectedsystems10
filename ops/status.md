@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-13T10:50Z
+Last updated: 2026-05-22T19:43Z
 
 ## Fresh-Session Entry Point
 
@@ -38,35 +38,46 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, and pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, and pushed reconciliation commit `930cb5c`.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-25-01` Generator is PARTIAL for the Part 2 Advanced Filtering read-only declaration-gated subset.
-- Latest planned story: `S-ETS-26-01` Part 2 Create/Replace/Delete safety-gated planning.
-- Latest pushed implementation commit: `d9df3ad Implement Sprint 25 Advanced Filtering`, followed by reconciliation commit `af53188` and metrics commit `7d57d9f`.
-- Current sprint status: Sprint ets-26 Part 2 Create/Replace/Delete planning is committed and pushed; Generator has not started.
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`).
+- Latest implemented story: `S-ETS-26-01` Generator is PARTIAL for the Part 2 Create/Replace/Delete safety-gated subset.
+- Latest planned story: next Part 2 item may proceed after Sprint 26 Generator is committed/pushed or explicitly carried as uncommitted work.
+- Latest pushed implementation commit: `d9df3ad Implement Sprint 25 Advanced Filtering`, followed by reconciliation through `d9caf33`. Sprint 26 Generator changes are uncommitted in the current worktree pending final commit/push.
+- Current sprint status: Sprint ets-26 Part 2 Create/Replace/Delete Generator code is implemented locally, Maven verified, and E2E-verified against the accepted seeded local OSH mutable IUT after fixture repair. GeoRobotix remains the default public interoperability smoke target, but its current HTTP 500 failures are advisory external-target evidence rather than the Sprint 26 E2E gate. Do not report GeoRobotix as passing until it has a zero-failure run.
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`.
 
-## Sprint ets-26 Planning Evidence
+## Sprint ets-26 Generator Evidence
 
 Part 2 Create/Replace/Delete safety-gated subset:
 
 - Story: `epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md`
 - Contract: `.harness/contracts/sprint-ets-26.yaml`
-- OpenSpec: splits `REQ-ETS-PART2-007` out for OGC 23-002 Clause 14 and keeps remaining placeholders at `REQ-ETS-PART2-008..013`.
-- Scope planned: first safety-gated Create/Replace/Delete subset using official `/req/create-replace-delete` and `/conf/create-replace-delete` identifiers.
+- OpenSpec: marks `REQ-ETS-PART2-007` PARTIAL_IMPLEMENTED for OGC 23-002 Clause 14 and keeps remaining placeholders at `REQ-ETS-PART2-008..013`.
+- Scope implemented: first safety-gated Create/Replace/Delete subset using official `/req/create-replace-delete` and `/conf/create-replace-delete` identifiers.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-05-09; checked 2026-05-13 and not stale.
 - OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 14 "Requirements Class Create/Replace/Delete"; prerequisite is OGC API Features Part 4 Create/Replace/Delete.
 - Normative requirement set: Requirements 63-78 cover DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, Feasibility, Feasibility status/result, and SystemEvent lifecycle behavior.
 - GeoRobotix planning probe: `/conformance` declares `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/create-replace-delete`, but does not declare Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
-- GeoRobotix readiness probes: read-only OPTIONS requests for `/datastreams`, `/datastreams/{id}`, `/observations`, `/controlstreams`, `/commands`, `/controlstreams/{id}/commands`, `/systems/{id}/events`, `/systemEvents`, and `/feasibility` returned HTTP 200 with broad `Allow` headers including write methods.
+- GeoRobotix planning readiness probes: read-only OPTIONS requests for `/datastreams`, `/datastreams/{id}`, `/observations`, `/controlstreams`, `/commands`, `/controlstreams/{id}/commands`, `/systems/{id}/events`, `/systemEvents`, and `/feasibility` returned HTTP 200 with broad `Allow` headers including write methods.
+- Raze gapfix: runtime DataStream, Observation, and ControlStream create-readiness probes now use scoped OGC 23-002 Clause 14 templates (`/systems/{sysId}/datastreams`, `/datastreams/{dsId}/observations`, and `/systems/{sysId}/controlstreams`) or SKIP when parent IDs cannot be established.
 - Endpoint honesty probes: `GET /commands?limit=1`, `GET /systemEvents?limit=1`, and `GET /feasibility?limit=1` returned HTTP 400 `Invalid resource name`; `GET /systems/{id}/events?limit=1` returned HTTP 400 `Only streaming requests supported on this resource`.
 - Verdict policy planned: exact declaration gate; keep Features Part 4 prerequisite visibility separate; default public GeoRobotix smoke must issue zero IUT-bound POST/PUT/DELETE/PATCH; OPTIONS evidence is readiness only and cannot PASS lifecycle behavior; positive lifecycle checks require `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
-- Out of scope for planning: Java implementation, public-IUT mutation, full positive lifecycle coverage, Part 2 Update, JSON, SWE Common, and observation-binding closure.
+- Implementation: `Part2CreateReplaceDeleteTests` adds 9 runtime checks for exact declaration, Features Part 4 prerequisite visibility, mutation safety, DataStream/Observation OPTIONS readiness, ControlStream/nested Command OPTIONS readiness, unavailable Command/Feasibility/SystemEvent honesty, and deferred lifecycle opt-in checks for DataStream/Observation, ControlStream/Command, and Feasibility/SystemEvent.
+- Structural coverage: `VerifyPart2CreateReplaceDeleteTests` adds 9 helper regressions, and `VerifyTestNGSuiteDependency` adds group dependency, method tagging, and co-location checks for `part2createreplacedelete`.
+- Out of scope for Generator: public-IUT mutation, full positive lifecycle coverage, cascade validation, Part 2 Update, JSON, SWE Common, and observation-binding closure.
 - Raze planning review `.harness/evaluations/sprint-ets-26-plan-adversarial.yaml`: initial `GAPS_FOUND` confidence 0.94 for missing `ops/changelog.md` entry; fixed; focused recheck `APPROVE` confidence 0.96 with no remaining required fixes.
+- Raze implementation review `.harness/evaluations/sprint-ets-26-adversarial-implementation.yaml`: initial `GAPS_FOUND` confidence 0.88 for non-normative global OPTIONS readiness probes. Focused recheck `.harness/evaluations/sprint-ets-26-adversarial-gapfix.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.94; `RAZE-ETS26-IMPL-GAP-001` is closed. The local OSH E2E blocker was later closed by seed fixture repair; GeoRobotix remains a failing advisory external check.
 - Planning E2E smoke: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s26-plan bash scripts/smoke-test.sh` reported `137 total / 72 passed / 0 failed / 65 skipped` on GeoRobotix; report archived at `ops/test-results/sprint-ets-26-plan-smoke-2026-05-13.xml`, container log at `ops/test-results/sprint-ets-26-plan-smoke-container-2026-05-13.log`.
 - No-mutation proof: GeoRobotix smoke recognized 100 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH.
-- Commit/push: `146c4c6 Plan Sprint 26 Part 2 CRD` pushed over SSH on 2026-05-13 (`7d57d9f..146c4c6 main -> main`).
-- Next action: start Generator for `S-ETS-26-01`.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` returned BUILD SUCCESS.
+- Maven: `bash scripts/mvn-test-via-docker.sh` returned BUILD SUCCESS after the Raze gapfix, `207 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-26-maven-2026-05-22.log`.
+- GeoRobotix advisory public smoke after the Raze gapfix: `146 total / 27 passed / 5 failed / 114 skipped`; failed because the public IUT returned HTTP 500 for existing SystemFeatures/Datastream/Observation reads. The new Part 2 CRD tests dependency-SKIP because `systemfeatures` did not finish successfully. Artifacts: `ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-failed-2026-05-22.xml` and `ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-container-failed-2026-05-22.log`.
+- Direct GeoRobotix probes on 2026-05-22 returned HTTP 500 for `GET /systems/0mqcvdnfoca0`, `GET /datastreams?limit=1`, and `GET /observations?limit=2`.
+- Local OSH fallback E2E smoke after the Raze gapfix with Basic auth and explicit mutable-IUT opt-in: `146 total / 61 passed / 4 failed / 81 skipped`; the 4 failures are existing SensorML deployment/procedure alternate-resource HTTP 500 checks. New Part 2 CRD runtime tests reported 3 PASS and 6 SKIP, with no Part 2 lifecycle mutation issued. Existing Part 1 system CRD checks did issue system POST/PUT/DELETE under the explicit opt-in. Artifacts: `ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-failed-2026-05-22.xml` and `ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-container-failed-2026-05-22.log`.
+- Accepted local OSH E2E gate after adding Procedure/Deployment featureType metadata to the seed fixture and live records: `146 total / 62 passed / 0 failed / 84 skipped`. Direct `?f=sml3` probes for `/procedures/040g` and `/deployments/040g` returned HTTP 200 `application/sml+json`. `procedureSensorMlHasSchemaAndMapping` PASSed; deployment SensorML mapping and non-system relation-type checks SKIP honestly because OSH's generated SensorML has no `deployedSystems`/`links` evidence. New Part 2 CRD runtime tests remained 3 PASS and 6 SKIP with no Part 2 lifecycle mutation. Artifacts: `ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml` and `ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log`.
+- Raze seedfix review `.harness/evaluations/sprint-ets-26-local-osh-seedfix-raze.yaml`: initial `GAPS_FOUND` confidence 0.87 for stale fixture verification metadata; focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 after the fixture split historical vs current verification evidence. No required fixes remain.
+- Raze local OSH E2E acceptance review `.harness/evaluations/sprint-ets-26-local-osh-e2e-acceptance-raze.yaml`: `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes. Low concerns only: make the eventual commit message explicit about the broader policy change, and direct SensorML 200 probes are documented but not archived as raw standalone transcripts.
+- Next action: commit/push Sprint 26 Generator, then optionally rerun the GeoRobotix public interoperability smoke after the public IUT recovers.
 
 ## Sprint ets-25 Generator Evidence
 
@@ -281,7 +292,7 @@ Encoding mediatype-write safety-gated checks:
 - Implementation: `EncodingMediatypeWrite` helper plus GeoJSON and SensorML runtime tests; helper unit coverage prevents public-IUT mutation, status-only PASS, wrong-identity PASS, non-exact media type drift, and OSH-compatible GeoJSON body drift.
 - Verification: formatter BUILD SUCCESS; Maven r3 BUILD SUCCESS with `144 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix TeamEngine smoke r3 `89 total / 55 passed / 0 failed / 34 skipped`.
 - No-mutation proof: GeoRobotix smoke recognized 69 IUT-bound request-log entries and reported zero IUT-bound POST/PUT/DELETE/PATCH entries; both mediatype-write lifecycle tests SKIP before mutation by default.
-- Local mutable-IUT proof: authenticated local OSH smoke r3 reported `89 total / 52 passed / 4 failed / 33 skipped`; both Sprint 19 mediatype-write tests PASSed with exact `Content-Type=application/geo+json` and `Content-Type=application/sml+json`, follow-up GET, and cleanup DELETE request-log evidence. The four local failures are SensorML deployment/procedure HTTP 500 responses outside Sprint 19.
+- Local mutable-IUT proof: authenticated local OSH smoke r3 reported `89 total / 52 passed / 4 failed / 33 skipped`; both Sprint 19 mediatype-write tests PASSed with exact `Content-Type=application/geo+json` and `Content-Type=application/sml+json`, follow-up GET, and cleanup DELETE request-log evidence. The four local SensorML deployment/procedure HTTP 500 failures were outside Sprint 19 and were later fixed during the Sprint 26 seed repair.
 - Raze planning review `.harness/evaluations/sprint-ets-19-plan-adversarial.yaml` returned `GAPS_FOUND` confidence 0.88 for a missing SensorML OpenSpec scenario body.
 - Raze gap-fix review `.harness/evaluations/sprint-ets-19-plan-gapfix.yaml` returned `APPROVE` confidence 0.95 after adding `SCENARIO-ETS-PART1-013-SENSORML-MEDIATYPE-WRITE-SAFETY-GATED-001`.
 - Raze implementation follow-up gapfix `.harness/evaluations/sprint-ets-19-adversarial-followup-gapfix.yaml` returned `APPROVE` confidence 0.94 after r3 reconciliation updates.

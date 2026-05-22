@@ -1,0 +1,123 @@
+review:
+  reviewer: "Raze"
+  role_source: "_bmad/agents/adversarial-reviewer.md"
+  sprint: "ets-26"
+  story: "S-ETS-26-01"
+  subject: "Part 2 Create/Replace/Delete Generator implementation"
+  verdict: "GAPS_FOUND"
+  confidence: 0.88
+  started_at: "2026-05-22T18:01:11Z"
+  report_written_at: "2026-05-22T18:04:24Z"
+  duration: "3m13s"
+  token_metadata:
+    available: false
+    note: "No sub-agent result metadata was returned for this inline Raze review."
+  reruns:
+    docker: false
+    maven: false
+    teamengine: false
+    rationale: "User requested artifact inspection unless a concrete need appeared; existing Maven and smoke artifacts were sufficient."
+
+scope:
+  implementation_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/VerifyPart2CreateReplaceDeleteTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  reconciliation_files:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "_bmad/traceability.md"
+    - ".harness/contracts/sprint-ets-26.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "ops/metrics.md"
+  evidence_artifacts:
+    - "ops/test-results/sprint-ets-26-maven-2026-05-22.log"
+    - "ops/test-results/sprint-ets-26-georobotix-smoke-failed-2026-05-22.xml"
+    - "ops/test-results/sprint-ets-26-georobotix-smoke-container-failed-2026-05-22.log"
+    - "ops/test-results/sprint-ets-26-local-osh-smoke-failed-2026-05-22.xml"
+    - "ops/test-results/sprint-ets-26-local-osh-smoke-container-failed-2026-05-22.log"
+  official_sources:
+    - "https://docs.ogc.org/is/23-002/23-002.html#_requirements_class_createreplacedelete"
+
+findings:
+  - id: "RAZE-ETS26-IMPL-GAP-001"
+    severity: "HIGH"
+    category: "false-pass-risk"
+    title: "OPTIONS readiness probes use non-normative global endpoints for several Clause 14 resources."
+    files:
+      - path: "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java"
+        lines:
+          - 185
+          - 189
+          - 205
+    evidence:
+      implementation:
+        - "`datastreamAndObservationOptionsReadinessIsReadOnly` checks `OPTIONS /datastreams` for POST readiness, then `OPTIONS /observations` for POST readiness."
+        - "`controlStreamAndNestedCommandOptionsReadinessIsReadOnly` checks `OPTIONS /controlstreams` for POST readiness."
+      official_ogc_23_002_clause_14:
+        - "Requirement 63 says DataStream CREATE is at `{api_root}/systems/{sysId}/datastreams`; REPLACE/DELETE are at `{api_root}/systems/{sysId}/datastreams/{id}` and `{api_root}/datastreams/{id}`."
+        - "Requirement 66 says Observation CREATE is at `{api_root}/datastreams/{dsId}/observations`; REPLACE/DELETE are at `{api_root}/datastreams/{dsId}/observations/{id}` and `{api_root}/observations/{id}`."
+        - "Requirement 68 says ControlStream CREATE is at `{api_root}/systems/{sysId}/controlstreams`; REPLACE/DELETE are at `{api_root}/systems/{sysId}/controlstreams/{id}` and `{api_root}/controlstreams/{id}`."
+      why_it_matters: "A server can advertise broad methods on `/datastreams`, `/observations`, or `/controlstreams` while failing the normative system-scoped or datastream-scoped lifecycle endpoints. The current readiness tests can therefore produce a PASS-style diagnostic tied to OGC requirement URIs from the wrong endpoint."
+    required_fix:
+      - "Change readiness probes to use the OGC 23-002 Clause 14 endpoint templates, or SKIP with a precise seed-ID/unavailable-endpoint reason when the normative template cannot be constructed."
+      - "For DataStream/ControlStream CREATE, select a System id and probe `systems/{sysId}/datastreams` and `systems/{sysId}/controlstreams`."
+      - "For Observation CREATE, select a DataStream id and probe `datastreams/{dsId}/observations` rather than `/observations`."
+      - "Keep global resource endpoints only where Clause 14 lists them as REPLACE/DELETE alternatives, and label them as alternatives."
+      - "Add helper regressions or structural assertions proving the readiness paths use the canonical templates."
+      - "Update planning/ops text that currently records only the global OPTIONS probes so the docs do not preserve the bad endpoint model."
+      - "Rerun formatter and Maven after the patch; rerun TeamEngine smoke when the IUT blocker clears."
+
+  - id: "RAZE-ETS26-IMPL-BLOCKER-002"
+    severity: "HIGH"
+    category: "e2e-blocker"
+    title: "Mandatory E2E completion remains unresolved; the docs are honest, but Sprint 26 cannot be closed as complete."
+    evidence:
+      georobotix_smoke: "ops/test-results/sprint-ets-26-georobotix-smoke-failed-2026-05-22.xml reports 146 total / 27 passed / 5 failed / 114 skipped."
+      local_osh_smoke: "ops/test-results/sprint-ets-26-local-osh-smoke-failed-2026-05-22.xml reports 146 total / 61 passed / 4 failed / 81 skipped."
+      docs_honesty: "ops/status.md, ops/test-results.md, story, contract, and traceability all mark the Generator partial/E2E-blocked rather than complete."
+    required_fix:
+      - "Do not report Sprint 26 done or all tests passing."
+      - "After fixing RAZE-ETS26-IMPL-GAP-001, rerun E2E against a healthy default IUT or keep the sprint explicitly blocked with the exact failed totals and blocker evidence."
+
+validated_ok:
+  - id: "RAZE-ETS26-OK-001"
+    area: "OGC identifiers"
+    result: "Canonical Part 2 class, conformance, and Requirement 63-78 identifiers match the published OGC 23-002 Clause 14 identifier set."
+  - id: "RAZE-ETS26-OK-002"
+    area: "public IUT mutation safety"
+    result: "The public GeoRobotix host is hard-denied by `mutationGateSkipReason`, and `VerifyPart2CreateReplaceDeleteTests` covers that denial."
+  - id: "RAZE-ETS26-OK-003"
+    area: "GeoRobotix mutation evidence"
+    result: "The GeoRobotix smoke container log contains no logged IUT-bound POST, PUT, DELETE, or PATCH requests."
+  - id: "RAZE-ETS26-OK-004"
+    area: "TestNG wiring"
+    result: "`testng.xml` registers `part2createreplacedelete` with `core common systemfeatures`; structural tests verify dependency tokens, method group tags, and class co-location."
+  - id: "RAZE-ETS26-OK-005"
+    area: "Maven evidence"
+    result: "Archived Maven log reports BUILD SUCCESS with 205 tests / 0 failures / 0 errors / 3 skipped; no all-pass overclaim was found in reviewed docs."
+  - id: "RAZE-ETS26-OK-006"
+    area: "credential masking"
+    result: "No raw local OSH password or unmasked Basic credential was found in Sprint 26 artifacts. Local OSH logs show masked `Authorization=Basi***MDI2` values."
+  - id: "RAZE-ETS26-OK-007"
+    area: "worktree hygiene"
+    result: "Dirty files are scoped to Sprint 26 implementation, reconciliation, metrics, and archived evidence. No unrelated generated directories or destructive cleanup were observed."
+
+required_fixes:
+  - "Fix RAZE-ETS26-IMPL-GAP-001 before seeking approval."
+  - "Preserve the current E2E-blocked wording unless a zero-failure TeamEngine run is produced."
+  - "After fixes, update this report or add a focused gapfix report with exact Maven/E2E evidence."
+
+overall_assessment: |
+  The implementation has the right safety posture and does not mutate the public
+  IUT, and the documentation is honest about failed E2E. The blocking issue is
+  endpoint fidelity: readiness probes for DataStream, Observation, and
+  ControlStream must use the exact Clause 14 endpoint templates before this can
+  be approved.

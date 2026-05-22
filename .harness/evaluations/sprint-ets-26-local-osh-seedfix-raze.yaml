@@ -1,0 +1,115 @@
+agent: raze
+role: adversarial-reviewer
+created_at: "2026-05-22T18:58:01Z"
+updated_at: "2026-05-22T19:07:19Z"
+scope: "Focused review of Sprint ets-26 local OSH seedfix after user instruction \"Continue\"."
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.94
+initial_review:
+  verdict: GAPS_FOUND
+  confidence: 0.87
+  required_fix: "RAZE-ETS26-SEEDFIX-GAP-001"
+reruns_performed: []
+reruns_omitted:
+  - "Maven was not rerun per user instruction."
+  - "TeamEngine was not rerun per user instruction."
+focused_recheck:
+  at: "2026-05-22T19:07:19Z"
+  scope: "RAZE-ETS26-SEEDFIX-GAP-001 only"
+  verdict: APPROVE_WITH_CONCERNS
+  confidence: 0.94
+  result: "RAZE-ETS26-SEEDFIX-GAP-001 is closed. No required fixes remain from this focused seedfix review."
+  evidence:
+    - "ops/local-osh-seed-fixtures.json validates as JSON."
+    - "The verification block now separates historicalSprint12FullHealth from currentSprint26Seedfix."
+    - "historicalSprint12FullHealth preserves the old /tmp/ets-csapi-osh-full-health-r3 69/50/0/19 evidence as historical."
+    - "currentSprint26Seedfix records the Sprint 26 seedfix XML report, container log, SensorML targets, expected 200 application/sml+json, and totals 146/62/0/84."
+
+reviewed_scope:
+  fixture:
+    - "ops/local-osh-seed-fixtures.json"
+  smoke_artifacts:
+    - "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml"
+    - "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log"
+  reconciled_docs:
+    - "ops/test-results.md"
+    - "ops/status.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - "epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md"
+    - ".harness/contracts/sprint-ets-26.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+
+answers:
+  fixture_repair_valid: "Yes, with evidence. The fixture now carries Procedure and Deployment properties.featureType values, the versioned notes document OSH SensorML conversion dependence on featureType, and the seedfix TeamEngine artifact no longer shows the prior SensorML HTTP 500 failures."
+  seedfix_smoke_honesty: "Yes. The primary ops/story/contract/handoff docs record 146 total / 62 passed / 0 failed / 84 skipped and identify the remaining SensorML and Part 2 CRD SKIPs honestly; the fixture verification block now also separates historical and current smoke evidence."
+  sprint_completion_honesty: "Yes. Docs keep Sprint 26 partial/default-GeoRobotix-blocked and do not claim default GeoRobotix E2E completion."
+  required_fixes_remaining: false
+
+findings:
+  - id: RAZE-ETS26-SEEDFIX-GAP-001
+    severity: MEDIUM
+    status: CLOSED
+    title: "Fixture verification metadata still points at the historical 69-test local OSH run."
+    evidence:
+      - "ops/local-osh-seed-fixtures.json adds the new Procedure and Deployment featureType values and SensorML verification targets."
+      - "Recheck: verification.historicalSprint12FullHealth explicitly preserves /tmp/ets-csapi-osh-full-health-r3 and total=69 passed=50 failed=0 skipped=19 as historical evidence."
+      - "Recheck: verification.currentSprint26Seedfix points to ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml and ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log with total=146 passed=62 failed=0 skipped=84."
+    risk: "Closed. Future operators can distinguish the historical S-ETS-12 local OSH full-health run from the current Sprint 26 seedfix run."
+    required_fix: null
+
+  - id: RAZE-ETS26-SEEDFIX-CONCERN-001
+    severity: LOW
+    status: ACCEPTED_CONCERN
+    title: "Direct 200 application/sml+json probes are documented but not archived as a standalone probe transcript."
+    evidence:
+      - "ops/test-results.md, ops/status.md, the story, contract, and handoff all state that /procedures/040g?f=sml3 and /deployments/040g?f=sml3 returned HTTP 200 application/sml+json after repair."
+      - "The TeamEngine container log shows the suite requested both ?f=sml3 endpoints after repair."
+      - "The TestNG XML has failed=0 and SensorMlTests procedureSensorMlHasSchemaAndMapping PASS; the former deployment/procedure HTTP 500 failures are absent."
+    risk: "Evidence is adequate for this focused review, but a raw curl transcript would make the direct-probe claim independently auditable."
+    required_fix: null
+
+evidence:
+  fixture:
+    feature_type_values:
+      system: "http://www.w3.org/ns/sosa/System"
+      procedure: "http://www.w3.org/ns/sosa/Procedure"
+      deployment: "http://www.w3.org/ns/sosa/Deployment"
+    verification_targets:
+      - "/systems/040g?f=sml3"
+      - "/procedures/040g?f=sml3"
+      - "/deployments/040g?f=sml3"
+  seedfix_smoke:
+    xml_root: "total=146 passed=62 failed=0 skipped=84"
+    sensorml_runtime_outcome:
+      passed:
+        - "procedureSensorMlHasSchemaAndMapping"
+        - "sensorMlConformanceDeclared"
+        - "sensorMlDependencyCascadeRuntime"
+        - "sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled"
+        - "sensorMlRepresentationDiscoveredForSystem"
+        - "sensorMlMediaTypeRead"
+        - "sensorMlSystemHasMinimalShape"
+        - "sensorMlSystemPreservesIdentityMapping"
+      skipped:
+        - "deploymentSensorMlHasSchemaAndMapping: no non-empty deployedSystems mapping"
+        - "propertySensorMlHasSchemaAndMapping: /properties empty"
+        - "sensorMlLinksMemberAssociationRelsUseResourceSpecificNames: no JSON links member"
+        - "sensorMlDeploymentLinksMemberAssociationRelsUseResourceSpecificNames: no JSON links member"
+        - "sensorMlProcedureLinksMemberAssociationRelsUseResourceSpecificNames: no JSON links member"
+    part2_crd_runtime_outcome: "3 PASS and 6 SKIP, excluding configuration method; lifecycle tests state no POST/PUT/DELETE was issued."
+    mutation_scope: "Archived seedfix smoke log shows POST/PUT/DELETE only under /systems from existing Part 1 system CRD checks; no Part 2 datastream, observation, controlstream, command, feasibility, or system-event lifecycle writes were observed."
+    credential_hygiene: "Archived seedfix smoke log masks Authorization as Basi*** and contains no admin password string."
+  geo_robotix_status:
+    status: "Default GeoRobotix E2E remains blocked."
+    evidence:
+      - "ops/status.md says do not report Sprint 26 complete against the default smoke target until GeoRobotix has a zero-failure run or the blockage is explicitly accepted."
+      - "Story DoD leaves default GeoRobotix E2E unchecked."
+      - "Traceability marks REQ-ETS-PART2-007 as PARTIAL_IMPLEMENTED; DEFAULT GEOROBOTIX E2E BLOCKED."
+
+required_fixes: []
+
+non_blocking_concerns:
+  - "RAZE-ETS26-SEEDFIX-CONCERN-001"

@@ -1,0 +1,132 @@
+agent: raze
+role: adversarial-reviewer
+created_at: "2026-05-22T19:40:11Z"
+updated_at: "2026-05-22T19:40:11Z"
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.93
+
+reviewed_scope:
+  sprint: "ets-26"
+  story: "S-ETS-26-01"
+  change: "Accept seeded local OSH as the Sprint 26 E2E gate while treating GeoRobotix as advisory public-smoke evidence."
+  included_files:
+    - "AGENTS.md"
+    - "ops/e2e-test-plan.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "ops/local-osh-seed-fixtures.json"
+    - ".harness/contracts/sprint-ets-26.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml"
+    - "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log"
+    - "ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-failed-2026-05-22.xml"
+    - "ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-container-failed-2026-05-22.log"
+  excluded_by_instruction:
+    - "No Maven rerun."
+    - "No TeamEngine rerun."
+
+findings:
+  - id: "RAZE-ETS26-LOCAL-OSH-GATE-INFO-001"
+    severity: "INFO"
+    status: "ACCEPTED"
+    title: "Local OSH acceptance is explicit and no longer contradicts the updated E2E policy."
+    evidence:
+      - "AGENTS.md preserves GeoRobotix as the default smoke target but allows a documented self-run local OSH sprint E2E IUT."
+      - "ops/e2e-test-plan.md now defines accepted local targets and advisory handling for unhealthy public targets."
+      - "Sprint 26 docs identify seeded local OSH as the accepted gate and GeoRobotix as advisory external evidence."
+    assessment: "No policy contradiction found in the edited disposition."
+
+  - id: "RAZE-ETS26-LOCAL-OSH-GATE-INFO-002"
+    severity: "INFO"
+    status: "ACCEPTED"
+    title: "Evidence totals are internally consistent."
+    evidence:
+      - "Accepted local OSH XML parses as total=146, passed=62, failed=0, skipped=84."
+      - "GeoRobotix advisory XML parses as total=146, passed=27, failed=5, skipped=114."
+      - "Earlier local OSH failed XML parses as total=146, passed=61, failed=4, skipped=81."
+      - "ops/local-osh-seed-fixtures.json currentSprint26Seedfix points at the current seedfix XML/log and records the same totals."
+    assessment: "No false completion claim found; skips remain visible."
+
+  - id: "RAZE-ETS26-LOCAL-OSH-GATE-INFO-003"
+    severity: "INFO"
+    status: "ACCEPTED"
+    title: "Sprint 26 completion language remains partial rather than full class closure."
+    evidence:
+      - "OpenSpec marks REQ-ETS-PART2-007 PARTIAL_IMPLEMENTED."
+      - "Story status is Partial Implemented."
+      - "Traceability marks REQ-ETS-PART2-007 PARTIAL_IMPLEMENTED; LOCAL OSH E2E ACCEPTED."
+      - "Docs continue to state non-system lifecycle mutation, cascade behavior, update, JSON, SWE Common, and observation binding are deferred."
+    assessment: "No overclaim that full Part 2 Create/Replace/Delete conformance is complete."
+
+  - id: "RAZE-ETS26-LOCAL-OSH-GATE-CONCERN-001"
+    severity: "LOW"
+    status: "ACCEPTED"
+    title: "The policy change is broad and should be obvious in the eventual commit."
+    evidence:
+      - "AGENTS.md and ops/e2e-test-plan.md now allow a local OSH sprint gate, not just a one-off Sprint 26 exception."
+      - "ops/changelog.md records the user instruction and rationale."
+    assessment: "Acceptable because the user explicitly requested this disposition and the default GeoRobotix target remains documented. The commit message should make the policy change clear."
+
+  - id: "RAZE-ETS26-LOCAL-OSH-GATE-CONCERN-002"
+    severity: "LOW"
+    status: "ACCEPTED"
+    title: "Direct SensorML 200 probes are documented but not archived as standalone raw transcripts."
+    evidence:
+      - "ops/test-results.md and ops/local-osh-seed-fixtures.json record the direct /procedures/040g?f=sml3 and /deployments/040g?f=sml3 200 application/sml+json probes."
+      - "The accepted TeamEngine XML independently confirms procedure SensorML PASS and zero SensorML HTTP 500 failures after the seedfix."
+    assessment: "Not a required fix for this disposition because TeamEngine XML/log artifacts are archived and the prior seedfix Raze review accepted this as a low concern."
+
+required_fixes: []
+
+evidence_summary:
+  local_osh_seedfix_gate:
+    verdict: "PASS_WITH_SKIPS"
+    testng: "146 total / 62 passed / 0 failed / 84 skipped"
+    report: "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log"
+    sensorml_outcome:
+      - "procedureSensorMlHasSchemaAndMapping PASS"
+      - "deployment SensorML mapping SKIP due missing deployedSystems evidence"
+      - "deployment/procedure SensorML relation-type checks SKIP due missing links member"
+    part2_crd_outcome:
+      - "3 runtime PASS and 6 runtime SKIP, plus config fetch PASS"
+      - "No Part 2 lifecycle mutation evidence claimed"
+  georobotix_advisory:
+    verdict: "FAILED_EXTERNAL_IUT_HTTP_500"
+    testng: "146 total / 27 passed / 5 failed / 114 skipped"
+    report: "ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-failed-2026-05-22.xml"
+    disposition: "Advisory public interoperability check; not the accepted Sprint 26 E2E gate."
+
+checks_performed:
+  - command: "Read _bmad/agents/adversarial-reviewer.md."
+    result: "Raze checklist applied; no expensive reruns."
+  - command: "git diff -- AGENTS.md ops/e2e-test-plan.md ops/status.md ops/test-results.md ops/known-issues.md ops/changelog.md .harness/contracts/sprint-ets-26.yaml .harness/handoffs/generator-handoff.yaml epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md openspec/capabilities/ets-ogcapi-connectedsystems/spec.md _bmad/traceability.md"
+    result: "Disposition edits reviewed."
+  - command: "rg targeted stale/false-completion terms across Sprint 26 docs."
+    result: "No hard stale 'GeoRobotix blocked as mandatory gate' wording found in current Sprint 26 disposition; historical and advisory wording is qualified."
+  - command: "python3 XML parse for seedfix local OSH, gapfix GeoRobotix, and pre-seedfix local OSH reports."
+    result: "Parsed totals match documented values: 146/62/0/84, 146/27/5/114, and 146/61/4/81."
+  - command: "python3 YAML/JSON parse for sprint contract, generator/planner handoffs, and local OSH seed fixture."
+    result: "All parsed successfully."
+  - command: "Extract Sprint 26 Part2CreateReplaceDeleteTests and SensorMlTests statuses from accepted local OSH XML."
+    result: "CRD runtime remains 3 PASS / 6 SKIP plus config PASS; SensorML has zero failures and expected SKIPs."
+  - command: "Artifact existence checks for accepted local OSH XML/log and seedfix Raze report."
+    result: "All referenced artifacts exist."
+  - command: "git diff --check."
+    result: "PASS."
+  - command: "Targeted credential/stale-claim scan."
+    result: "No Sprint 26 raw Basic credential assignment found; hits were policy text or older dummy credential examples."
+
+overall_assessment: |
+  The disposition is defensible: it keeps TeamEngine, real HTTP exchanges, Docker
+  networking, documented seed state, archived XML/log artifacts, and exact totals.
+  It does not claim GeoRobotix passes, and it does not claim full Part 2
+  Create/Replace/Delete closure. No required fixes remain before commit/push,
+  assuming the commit message clearly states that local OSH is the accepted
+  Sprint 26 E2E gate and GeoRobotix is advisory public-smoke evidence.

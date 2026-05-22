@@ -1,5 +1,5 @@
 agent: planner
-status: planned_commit_ready
+status: superseded_by_generator_handoff
 timestamp: "2026-05-13T10:46:11Z"
 sprint_number: "ets-26"
 sprint_name: "part2-create-replace-delete"
@@ -66,4 +66,4 @@ commit:
   push: "7d57d9f..146c4c6 main -> main over SSH"
 
 next_agent: "generator"
-next_action: "Start Generator for S-ETS-26-01."
+next_action: "Generator started and produced .harness/handoffs/generator-handoff.yaml; Sprint 26 is partial implemented with seeded local OSH accepted as the E2E gate."

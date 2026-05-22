@@ -2,6 +2,48 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-22T19:34Z — Accept local OSH as Sprint 26 E2E gate
+
+**Triggered by user instruction**: "Good - continue."
+
+- Clarified that GeoRobotix is the project default public smoke target, not a standards-mandated IUT for every sprint.
+- Updated E2E policy docs so a self-run local OSH instance can be accepted as sprint E2E evidence when it is a real deployed IUT, TeamEngine reaches it over Docker networking, seed state is documented, and exact XML/log artifacts are archived.
+- Reconciled Sprint 26 status so the seeded local OSH run `146 total / 62 passed / 0 failed / 84 skipped` is the accepted E2E gate. The failed GeoRobotix run remains advisory external interoperability evidence because the public IUT returned HTTP 500 on existing read endpoints.
+- Raze review `.harness/evaluations/sprint-ets-26-local-osh-e2e-acceptance-raze.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes. Low concern: make the eventual commit message explicit that documented local OSH can be an accepted sprint E2E gate.
+
+---
+
+## 2026-05-22T18:50Z — Local OSH seedfix for Sprint 26 smoke
+
+**Triggered by user instruction**: "Continue."
+
+- Diagnosed the local OSH post-gapfix smoke failures as improper synthetic seed records: OSH's SensorML converter threw `IllegalStateException: Missing feature type` for `/deployments/040g?f=sml3` and `/procedures/040g?f=sml3`.
+- Updated `ops/local-osh-seed-fixtures.json` to add `properties.featureType=http://www.w3.org/ns/sosa/Procedure` and `properties.featureType=http://www.w3.org/ns/sosa/Deployment`, with direct verification targets for all three seeded SensorML resources.
+- Updated the live local OSH `/procedures/040g` and `/deployments/040g` records in place; direct `?f=sml3` probes returned HTTP 200 with `Content-Type: application/sml+json`.
+- Reran authenticated local OSH TeamEngine smoke from a `/tmp` copy with explicit mutable-IUT opt-in. Result: `146 total / 62 passed / 0 failed / 84 skipped`; artifacts archived under `ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.*`.
+- SensorML outcome after repair: `procedureSensorMlHasSchemaAndMapping` PASSed; deployment mapping and deployment/procedure relation-type checks SKIP honestly because generated OSH SensorML lacks `deployedSystems`/`links` evidence. No Part 2 lifecycle mutation was issued; Part 2 CRD runtime tests remained 3 PASS and 6 SKIP.
+- Ran Raze review of the seedfix evidence. Initial `GAPS_FOUND` confidence 0.87 caught stale fixture verification metadata; after splitting historical and current verification evidence, focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes.
+
+---
+
+## 2026-05-22T17:45Z — Sprint 26 Part 2 Create/Replace/Delete Generator resume
+
+**Triggered by user instruction**: "we got disrupted - pick up where you left off."
+
+- Resumed interrupted Sprint 26 Generator work for `S-ETS-26-01`.
+- Added `Part2CreateReplaceDeleteTests` with 9 safety-gated runtime checks using official OGC 23-002 `/req/create-replace-delete` and `/conf/create-replace-delete` identifiers.
+- Added `VerifyPart2CreateReplaceDeleteTests` with 9 helper regressions for official identifiers, scoped readiness path selection, associated-System evidence, exact declaration matching, public GeoRobotix hard denial, explicit mutation parameters, `Allow` parsing, collection shape, and group naming.
+- Updated `testng.xml` and `VerifyTestNGSuiteDependency` for the `part2createreplacedelete` group, dependencies, method tagging, and class co-location.
+- Ran formatter and Maven verification. After the Raze gapfix, Maven returned BUILD SUCCESS with `207 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-26-maven-2026-05-22.log`.
+- Raze implementation review found a high endpoint-fidelity gap in the first draft: DataStream, Observation, and ControlStream OPTIONS readiness used global collection endpoints for create readiness. The gapfix now uses scoped Clause 14 templates or SKIPs when parent IDs cannot be established.
+- Focused Raze gapfix recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 in `.harness/evaluations/sprint-ets-26-adversarial-gapfix.yaml`; the scoped-endpoint gap closed, and later local OSH fixture repair supplied the accepted Sprint 26 E2E gate.
+- Ran default GeoRobotix TeamEngine smoke from a `/tmp` copy after the Raze gapfix. The run reached TestNG but failed `146 total / 27 passed / 5 failed / 114 skipped` because the public IUT returned HTTP 500 for existing SystemFeatures/Datastream/Observation reads; artifacts archived under `ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-failed-2026-05-22.*`.
+- Verified direct GeoRobotix HTTP 500 responses for `/systems/0mqcvdnfoca0`, `/datastreams?limit=1`, and `/observations?limit=2`; no logged GeoRobotix POST/PUT/DELETE/PATCH requests appeared in the archived smoke container log.
+- Ran local OSH TeamEngine fallback after the Raze gapfix with Basic auth and explicit mutable-IUT opt-in. The run reached TestNG but failed `146 total / 61 passed / 4 failed / 81 skipped` on existing SensorML alternate-resource HTTP 500 checks; new Part 2 CRD runtime tests reported 3 PASS and 6 SKIP with no Part 2 lifecycle mutation. Existing Part 1 system CRD checks issued system POST/PUT/DELETE under the explicit opt-in.
+- Reconciled OpenSpec, story, traceability, epic, sprint contract, ops status, test-results, known issues, and handoff state. Later Sprint 26 disposition accepts seeded local OSH as the E2E gate and keeps GeoRobotix as advisory public-smoke evidence.
+
+---
+
 ## 2026-05-13T09:15Z — Sprint 26 Part 2 Create/Replace/Delete planning
 
 **Triggered by user instruction**: "Continue."
@@ -13,7 +55,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for Create/Replace/Delete planning.
 - Split `REQ-ETS-PART2-007` out for Part 2 Create/Replace/Delete and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-008..013`.
 - Probed GeoRobotix state: `/conformance` declares Part 2 `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/create-replace-delete`, but not Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
-- Captured read-only readiness evidence: OPTIONS probes for `/datastreams`, `/datastreams/{id}`, `/observations`, `/controlstreams`, `/commands`, `/controlstreams/{id}/commands`, `/systems/{id}/events`, `/systemEvents`, and `/feasibility` returned HTTP 200 with broad `Allow` headers including write methods.
+- Captured read-only planning evidence: OPTIONS probes for `/datastreams`, `/datastreams/{id}`, `/observations`, `/controlstreams`, `/commands`, `/controlstreams/{id}/commands`, `/systems/{id}/events`, `/systemEvents`, and `/feasibility` returned HTTP 200 with broad `Allow` headers including write methods. Generator implementation later corrected runtime readiness to use scoped Clause 14 templates for create readiness.
 - Captured endpoint-honesty evidence: `GET /commands?limit=1`, `GET /systemEvents?limit=1`, and `GET /feasibility?limit=1` returned HTTP 400 `Invalid resource name`; `GET /systems/{id}/events?limit=1` returned HTTP 400 `Only streaming requests supported on this resource`.
 - Planned safety policy: default GeoRobotix smoke remains read-only; OPTIONS readiness cannot PASS lifecycle behavior; positive POST/PUT/DELETE lifecycle checks require `mutation-tests-enabled=true`, `mutation-iut-policy=dedicated-mutable-iut`, and public-IUT hard denial before dispatch.
 - Ran planning TeamEngine smoke against the real GeoRobotix stack: `137 total / 72 passed / 0 failed / 65 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized request-log entries.
@@ -248,7 +290,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Added 8 helper regressions preventing public-IUT mutation, status-only PASS, wrong-identity PASS, media-type drift, and OSH-compatible GeoJSON system-body drift.
 - Local OSH mutable verification exposed two practical interoperability fixes: RestAssured was appending a default charset to exact media types, and unordered JSON body maps could break OSH SensorML parsing. Fixed both by disabling default charset appending for write checks and using insertion-ordered write bodies.
 - Ran formatter, Maven, and TeamEngine smoke. Maven r3: `144 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke r3: `89 total / 55 passed / 0 failed / 34 skipped`, zero IUT-bound POST/PUT/DELETE/PATCH across 69 recognized GeoRobotix request-log entries.
-- Ran authenticated local OSH mutable smoke against `field-hub-osh-1`: `89 total / 52 passed / 4 failed / 33 skipped`; both Sprint 19 mediatype-write tests passed with exact `application/geo+json` and `application/sml+json`. The four remaining failures are local OSH SensorML deployment/procedure HTTP 500 responses outside the mediatype-write story.
+- Ran authenticated local OSH mutable smoke against `field-hub-osh-1`: `89 total / 52 passed / 4 failed / 33 skipped`; both Sprint 19 mediatype-write tests passed with exact `application/geo+json` and `application/sml+json`. The four remaining failures were local OSH SensorML deployment/procedure HTTP 500 responses outside the mediatype-write story; those seeded-resource failures were later fixed during the Sprint 26 seed repair.
 - Raze implementation review `.harness/evaluations/sprint-ets-19-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.90 with no required fixes.
 - Raze follow-up review first found stale reconciliation docs, then gapfix review `.harness/evaluations/sprint-ets-19-adversarial-followup-gapfix.yaml` returned `APPROVE` confidence 0.94.
 - Reconciled OpenSpec, story, traceability, epic, ops status, test-results, known issues, and Generator handoff for the Generator outcome.

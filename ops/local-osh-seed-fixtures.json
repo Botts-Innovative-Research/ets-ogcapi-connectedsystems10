@@ -8,7 +8,8 @@
   "notes": [
     "Apply these payloads to the local OSH stack at /home/nh/docker/gir/sar-ops/field-hub using credentials supplied through the environment.",
     "The observed resource ids on 2026-05-06 were /systems/040g, /procedures/040g, /deployments/040g, and /samplingFeatures/040g.",
-    "The system featureType value is required for OSH SensorML conversion; unsupported or missing featureType values made /systems/040g?f=sml3 return HTTP 500."
+    "Feature type values are required for OSH SensorML conversion; unsupported or missing featureType values made ?f=sml3 return HTTP 500.",
+    "System uses http://www.w3.org/ns/sosa/System, Procedure uses http://www.w3.org/ns/sosa/Procedure, and Deployment uses http://www.w3.org/ns/sosa/Deployment."
   ],
   "fixtures": [
     {
@@ -41,6 +42,7 @@
         "geometry": null,
         "properties": {
           "uid": "urn:ets:local-osh:procedure:alpha",
+          "featureType": "http://www.w3.org/ns/sosa/Procedure",
           "name": "ETS Local OSH Synthetic Procedure Alpha",
           "description": "Synthetic procedure seed for ETS local OSH full-suite health."
         }
@@ -81,6 +83,7 @@
         },
         "properties": {
           "uid": "urn:ets:local-osh:deployment:alpha",
+          "featureType": "http://www.w3.org/ns/sosa/Deployment",
           "name": "ETS Local OSH Synthetic Deployment Alpha",
           "description": "Synthetic deployment seed for ETS local OSH full-suite health.",
           "deployedSystems@link": [
@@ -117,15 +120,29 @@
     }
   ],
   "verification": {
-    "sensorMlSystemResource": "/systems/040g?f=sml3",
-    "sensorMlExpectedStatus": 200,
-    "sensorMlExpectedContentType": "application/sml+json",
-    "teamEngineSmokeArtifact": "/tmp/ets-csapi-osh-full-health-r3",
-    "teamEngineSmokeTotals": {
-      "total": 69,
-      "passed": 50,
-      "failed": 0,
-      "skipped": 19
+    "historicalSprint12FullHealth": {
+      "teamEngineSmokeArtifact": "/tmp/ets-csapi-osh-full-health-r3",
+      "teamEngineSmokeTotals": {
+        "total": 69,
+        "passed": 50,
+        "failed": 0,
+        "skipped": 19
+      }
+    },
+    "currentSprint26Seedfix": {
+      "sensorMlSystemResource": "/systems/040g?f=sml3",
+      "sensorMlProcedureResource": "/procedures/040g?f=sml3",
+      "sensorMlDeploymentResource": "/deployments/040g?f=sml3",
+      "sensorMlExpectedStatus": 200,
+      "sensorMlExpectedContentType": "application/sml+json",
+      "teamEngineSmokeArtifact": "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml",
+      "teamEngineSmokeLog": "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log",
+      "teamEngineSmokeTotals": {
+        "total": 146,
+        "passed": 62,
+        "failed": 0,
+        "skipped": 84
+      }
     }
   }
 }

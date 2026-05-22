@@ -1,15 +1,18 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-13T10:46Z
+Last updated: 2026-05-22T19:43Z
 
 ## Current Sprint Evidence
 
-Sprint ets-26 Part 2 Create/Replace/Delete planning:
+Sprint ets-26 Part 2 Create/Replace/Delete Generator:
 
-- Planning only:
+- Status:
   - Story: `epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md`
   - Contract: `.harness/contracts/sprint-ets-26.yaml`
-  - No Java code changed yet; Maven and full implementation gates are Generator work.
+  - Generator code is implemented and Maven verified.
+  - Accepted Sprint 26 E2E gate is the seeded local OSH mutable IUT after fixture repair.
+  - GeoRobotix public smoke currently fails on HTTP 500 responses outside the new Part 2 CRD tests and is recorded as advisory external interoperability evidence.
+  - Local OSH E2E is recovered after seed fixture repair and now has a zero-failure full-stack TeamEngine run.
 - Official OGC source verification:
   - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 14 "Requirements Class Create/Replace/Delete" and Annex A.7.
   - Requirements class identifier: `/req/create-replace-delete`.
@@ -20,6 +23,7 @@ Sprint ets-26 Part 2 Create/Replace/Delete planning:
   - `/conformance`: declares `/conf/create-replace-delete` and OGC API Features Part 4 `/conf/create-replace-delete`.
   - `/conformance`: does not declare Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
   - OPTIONS probes for `/datastreams`, `/datastreams/{id}`, `/observations`, `/controlstreams`, `/commands`, `/controlstreams/{id}/commands`, `/systems/{id}/events`, `/systemEvents`, and `/feasibility`: HTTP 200 with broad `Allow` including POST, PUT, and DELETE.
+  - Generator gapfix note: the broad global OPTIONS probes are planning diagnostics only. Runtime create-readiness probes now use scoped OGC 23-002 Clause 14 templates or SKIP when required parent IDs cannot be established.
   - `GET /commands?limit=1`: HTTP 400 `Invalid resource name`.
   - `GET /systemEvents?limit=1`: HTTP 400 `Invalid resource name`.
   - `GET /systems/{id}/events?limit=1`: HTTP 400 `Only streaming requests supported on this resource`.
@@ -29,18 +33,67 @@ Sprint ets-26 Part 2 Create/Replace/Delete planning:
   - OPTIONS readiness cannot PASS lifecycle behavior.
   - Positive lifecycle checks require a dedicated mutable IUT and explicit mutation opt-in.
   - HTTP 400 or streaming-only endpoints SKIP honestly rather than PASS.
-- TeamEngine E2E smoke:
+- Generator implementation:
+  - `Part2CreateReplaceDeleteTests`: 9 safety-gated runtime checks for exact `/conf/create-replace-delete`, Features Part 4 prerequisite visibility, mutation safety, DataStream/Observation OPTIONS readiness, ControlStream/nested Command OPTIONS readiness, unavailable Command/Feasibility/SystemEvent endpoint honesty, and deferred lifecycle opt-in checks.
+  - `VerifyPart2CreateReplaceDeleteTests`: 9 helper regressions for official identifiers, scoped readiness path selection, associated-System evidence, exact declaration matching, public GeoRobotix hard denial, explicit mutation parameters, case-insensitive `Allow` parsing, `items[]` collection shape, and stable group naming.
+  - `testng.xml`: adds `part2createreplacedelete` with `core common systemfeatures` dependencies.
+  - `VerifyTestNGSuiteDependency`: adds dependency, method-group, and co-location structural checks.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Raze implementation review:
+  - `.harness/evaluations/sprint-ets-26-adversarial-implementation.yaml`: `GAPS_FOUND`, confidence 0.88.
+  - Required fix applied: DataStream, Observation, and ControlStream create-readiness now use scoped Clause 14 endpoint templates instead of global collection endpoints.
+  - `.harness/evaluations/sprint-ets-26-adversarial-gapfix.yaml`: `APPROVE_WITH_CONCERNS`, confidence 0.94. `RAZE-ETS26-IMPL-GAP-001` is closed; the remaining E2E concern was resolved for Sprint 26 by accepting the seeded local OSH full-stack run as the gate.
+- Maven verification:
+  - Command: `bash scripts/mvn-test-via-docker.sh`
+  - Result: BUILD SUCCESS
+  - Surefire: `207 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-26-maven-2026-05-22.log`
+- Planning TeamEngine E2E smoke:
   - Command: `SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s26-plan bash scripts/smoke-test.sh`
   - Result: `137 total / 72 passed / 0 failed / 65 skipped`
   - Report: `ops/test-results/sprint-ets-26-plan-smoke-2026-05-13.xml`
   - Container log: `ops/test-results/sprint-ets-26-plan-smoke-container-2026-05-13.log`
   - No-mutation oracle: `recognized_iut_request_logs=100`, zero IUT-bound POST/PUT/DELETE/PATCH.
+- Generator GeoRobotix public advisory smoke:
+  - Command: from `/tmp/sprint-ets-26-generator-smoke`, post-gapfix run with `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-26-generator-gapfix-georobotix-results bash scripts/smoke-test.sh`.
+  - Result: FAILED, `146 total / 27 passed / 5 failed / 114 skipped`.
+  - Report: `ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-failed-2026-05-22.xml`.
+  - Container log: `ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-container-failed-2026-05-22.log`.
+  - Failures: existing SystemFeatures/Datastream/Observation reads expected HTTP 200 but got HTTP 500.
+  - Direct probes: GeoRobotix returned HTTP 500 for `GET /systems/0mqcvdnfoca0`, `GET /datastreams?limit=1`, and `GET /observations?limit=2`.
+  - New Part 2 CRD outcome: methods dependency-SKIP because `systemfeatures` did not finish successfully.
+  - Public-IUT mutation evidence: no logged GeoRobotix POST/PUT/DELETE/PATCH requests in the archived container log.
+- Generator local OSH TeamEngine E2E fallback:
+  - Command: from `/tmp/sprint-ets-26-generator-smoke`, post-gapfix local OSH target on `field-hub_default` with Basic auth plus `SMOKE_MUTATION_TESTS_ENABLED=true` and `SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut`.
+  - Result: FAILED, `146 total / 61 passed / 4 failed / 81 skipped`.
+  - Report: `ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-failed-2026-05-22.xml`.
+  - Container log: `ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-container-failed-2026-05-22.log`.
+  - Failures: four existing SensorML deployment/procedure alternate-resource checks expected HTTP 200 but got HTTP 500.
+  - Direct probe: local OSH returned HTTP 500 for `GET /sensorhub/api/procedures/040g?f=sml3`.
+  - New Part 2 CRD runtime outcome: 3 PASS and 6 SKIP. The lifecycle checks SKIP with precise deferred-fixture/no-mutation messages.
+  - Mutation scope: existing Part 1 system CRD checks issued system POST/PUT/DELETE under the explicit opt-in; no Part 2 datastream, observation, controlstream, command, feasibility, or system-event lifecycle mutation was issued.
+- Accepted local OSH seedfix TeamEngine E2E gate:
+  - Seed repair: added `properties.featureType=http://www.w3.org/ns/sosa/Procedure` and `properties.featureType=http://www.w3.org/ns/sosa/Deployment` to the versioned local OSH fixture and updated the live `/procedures/040g` and `/deployments/040g` records in place.
+  - Direct probes after seed repair: `GET /sensorhub/api/procedures/040g?f=sml3` and `GET /sensorhub/api/deployments/040g?f=sml3` both returned HTTP 200 with `Content-Type: application/sml+json`.
+  - Command: from `/tmp/sprint-ets-26-generator-smoke`, local OSH target on `field-hub_default` with Basic auth plus `SMOKE_MUTATION_TESTS_ENABLED=true` and `SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut`.
+  - Result: `146 total / 62 passed / 0 failed / 84 skipped`.
+  - Report: `ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml`.
+  - Container log: `ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log`.
+  - SensorML outcome: `procedureSensorMlHasSchemaAndMapping` PASS; deployment SensorML mapping SKIP because OSH's generated SensorML Deployment has no non-empty `deployedSystems`; deployment/procedure relation-type checks SKIP because generated SensorML bodies have no JSON `links` member.
+  - New Part 2 CRD runtime outcome: 3 PASS and 6 SKIP. The lifecycle checks SKIP with precise deferred-fixture/no-mutation messages.
+  - Raze seedfix review: `.harness/evaluations/sprint-ets-26-local-osh-seedfix-raze.yaml` initially found stale verification metadata in the fixture, then returned `APPROVE_WITH_CONCERNS` confidence 0.94 after that metadata was split into historical and current Sprint 26 seedfix evidence. No required fixes remain.
+- Raze local OSH E2E acceptance review:
+  - `.harness/evaluations/sprint-ets-26-local-osh-e2e-acceptance-raze.yaml`: `APPROVE_WITH_CONCERNS`, confidence 0.93, no required fixes.
+  - Confirmed no false claim that GeoRobotix passes, no stale mandatory GeoRobotix gate language, local OSH acceptance consistency with `AGENTS.md` and `ops/e2e-test-plan.md`, and matching archived totals for local OSH `146 / 62 / 0 / 84` and GeoRobotix advisory failure `146 / 27 / 5 / 114`.
 - Raze planning review:
   - `.harness/evaluations/sprint-ets-26-plan-adversarial.yaml`: initial `GAPS_FOUND` confidence 0.94 for missing Sprint 26 changelog entry.
   - Required fix applied: `ops/changelog.md` now records the Sprint 26 planning instruction, story, `REQ-ETS-PART2-007`, Clause 14 identifiers, GeoRobotix probes, smoke totals, and zero-mutation evidence.
   - Focused recheck verdict: `APPROVE`, confidence 0.96, no remaining required fixes.
 - Commit/push:
   - Planning commit `146c4c6 Plan Sprint 26 Part 2 CRD` pushed over SSH on 2026-05-13 (`7d57d9f..146c4c6 main -> main`).
+  - Generator changes remain uncommitted pending final commit/push after accepting local OSH as the Sprint 26 E2E gate.
 
 Sprint ets-25 Part 2 Advanced Filtering Generator:
 
@@ -351,7 +404,7 @@ Sprint ets-19 encoding mediatype-write safety-gated Generator:
   - Report: `/tmp/ets-csapi-osh-s19-mediatype-auth-r3/s-ets-01-03-teamengine-smoke-2026-05-07.xml`
   - Log: `/tmp/ets-csapi-osh-s19-mediatype-auth-r3/s-ets-01-03-teamengine-container-2026-05-07.log`
   - Positive Sprint 19 evidence: `geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled` PASS and `sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled` PASS with exact `Content-Type=application/geo+json` and `Content-Type=application/sml+json`, follow-up GET, and cleanup DELETE request-log evidence.
-  - Remaining local OSH failures are outside Sprint 19 mediatype-write: deployment/procedure SensorML schema/mapping and relation-types checks received HTTP 500 from local OSH SensorML non-system resources.
+  - The local OSH failures were outside Sprint 19 mediatype-write: deployment/procedure SensorML schema/mapping and relation-types checks received HTTP 500 from local OSH SensorML non-system resources. These seeded-resource HTTP 500 failures were later fixed during the Sprint 26 seed repair.
 - Runtime outcomes:
   - `geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled`: SKIP before mutation because mutation tests are disabled by default.
   - `sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled`: SKIP before mutation because mutation tests are disabled by default.

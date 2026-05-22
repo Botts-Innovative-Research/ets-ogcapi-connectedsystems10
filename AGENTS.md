@@ -29,7 +29,7 @@ If `_bmad/architecture.md` "Last Reconciled" date is >30 days old, flag to user 
 
 - **TeamEngine execution**: Run the conformance suite through the Dockerized TeamEngine stack.
 - **Real protocol exchanges**: Exercise the suite against a running OGC API Connected Systems instance, not mocked responses.
-- **DNS resolution**: Use proper DNS names when feasible. The default smoke target is the GeoRobotix DNS endpoint.
+- **DNS resolution**: Use proper DNS names when feasible. The default smoke target is the GeoRobotix DNS endpoint, but a self-run local OSH instance may be accepted as the sprint E2E IUT when the sprint/story/ops docs explicitly record the target, seed state, command, artifacts, exact totals, and why the default public target is advisory or unhealthy.
 
 E2E tests must exercise the full deployed stack, not just unit tests against mocked dependencies. The test plan lives at `ops/e2e-test-plan.md` and results are documented at `ops/test-results.md`.
 
@@ -46,6 +46,12 @@ bash scripts/mvn-test-via-docker.sh
 
 # Run E2E TeamEngine smoke against GeoRobotix
 SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/smoke-test.sh
+
+# Run E2E TeamEngine smoke against a documented local OSH IUT
+SMOKE_DOCKER_NETWORK=field-hub_default \
+  SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
+  SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
+  bash scripts/smoke-test.sh
 
 # Build and run TeamEngine container
 docker-compose up -d

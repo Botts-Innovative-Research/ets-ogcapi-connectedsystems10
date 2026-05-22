@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-05-13
+> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-05-22
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -473,10 +473,11 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART2-007: Part 2 Create/Replace/Delete Conformance Suite
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: SPECIFIED (Sprint 26 planning; Generator pending)
-- **Description**: The ETS SHALL provide a declaration-gated, mutation-safe TestNG suite for OGC 23-002 Clause 14 Requirements Class "Create/Replace/Delete" using official identifiers `/req/create-replace-delete` and `/conf/create-replace-delete`. The suite SHALL keep the OGC API - Features - Part 4 Create/Replace/Delete prerequisite visible, SHALL treat OPTIONS method discovery as readiness evidence only, SHALL never mutate a public/default IUT, and SHALL require explicit dedicated mutable-IUT opt-in before POST, PUT, or DELETE lifecycle checks can run.
+- **Status**: PARTIAL_IMPLEMENTED (Sprint 26 Generator; seeded local OSH E2E accepted after fixture repair; GeoRobotix public smoke currently fails as advisory external evidence)
+- **Description**: The ETS SHALL provide a declaration-gated, mutation-safe TestNG suite for OGC 23-002 Clause 14 Requirements Class "Create/Replace/Delete" using official identifiers `/req/create-replace-delete` and `/conf/create-replace-delete`. Sprint 26 implements the first safety-gated subset: exact Part 2 declaration, visible OGC API - Features - Part 4 Create/Replace/Delete prerequisite, read-only OPTIONS readiness diagnostics, unavailable-endpoint honesty, public GeoRobotix mutation hard-denial, and explicit dedicated mutable-IUT opt-in gates before POST, PUT, or DELETE lifecycle checks can run. Positive non-system lifecycle mutation and cascade validation remain deferred.
 - **Normative statement set for planning**: Requirements 63-78: `/req/create-replace-delete/datastream`, `/req/create-replace-delete/datastream-update-schema`, `/req/create-replace-delete/datastream-delete-cascade`, `/req/create-replace-delete/observation`, `/req/create-replace-delete/observation-schema`, `/req/create-replace-delete/controlstream`, `/req/create-replace-delete/controlstream-update-schema`, `/req/create-replace-delete/controlstream-delete-cascade`, `/req/create-replace-delete/command`, `/req/create-replace-delete/command-schema`, `/req/create-replace-delete/command-status`, `/req/create-replace-delete/command-result`, `/req/create-replace-delete/feasibility`, `/req/create-replace-delete/feasibility-status`, `/req/create-replace-delete/feasibility-result`, and `/req/create-replace-delete/system-event`.
 - **Rationale**: Clause 14 is destructive by nature and delegates lifecycle semantics to OGC API Features Part 4 Create/Replace/Delete at Connected Systems resource endpoints. The ETS must make progress on declaration/prerequisite/readiness checks without producing false PASS from broad OPTIONS headers or mutating GeoRobotix.
+- **Implementation evidence**: `Part2CreateReplaceDeleteTests` adds 9 TestNG methods and `VerifyPart2CreateReplaceDeleteTests` adds 9 helper regressions. `testng.xml` declares the `part2createreplacedelete` group with `core common systemfeatures` dependencies, and `VerifyTestNGSuiteDependency` adds structural coverage for dependency, group tagging, and co-location. Raze implementation review found a high endpoint-fidelity gap in the first draft; the gapfix changed DataStream, Observation, and ControlStream OPTIONS readiness probes to OGC 23-002 Clause 14 scoped templates (`/systems/{sysId}/datastreams`, `/datastreams/{dsId}/observations`, and `/systems/{sysId}/controlstreams`) and added path-selection regressions. Focused Raze gapfix recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with the scoped-endpoint gap closed. Formatter and Maven completed successfully on 2026-05-22 (`207 tests / 0 failures / 0 errors / 3 skipped`). GeoRobotix TeamEngine smoke reached TestNG but failed `146 total / 27 passed / 5 failed / 114 skipped` because the public IUT returned HTTP 500 for existing SystemFeatures/Datastream/Observation reads. Local OSH fallback initially failed `146 total / 61 passed / 4 failed / 81 skipped` due existing SensorML alternate-resource HTTP 500 responses; the local OSH seedfix added Procedure/Deployment `featureType` metadata and reran TeamEngine with `146 total / 62 passed / 0 failed / 84 skipped`. The new Part 2 Create/Replace/Delete methods were either dependency-skipped on GeoRobotix or passed/skipped honestly on local OSH without issuing Part 2 lifecycle mutation.
 - **Maps to**: PRD FR-ETS-37.
 
 #### SCENARIO-ETS-PART2-007-CRD-CONFORMANCE-DECLARED-001 (CRITICAL)
@@ -2168,7 +2169,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
 - REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.
 - REQ-ETS-PART2-006: partially implemented by Sprint 25 Advanced Filtering Generator.
-- REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - specified by Sprint 26 planning; Generator pending.
+- REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - partially implemented by Sprint 26 Generator; seeded local OSH E2E is accepted after fixture repair, while GeoRobotix public smoke remains advisory and currently fails with public-IUT HTTP 500 responses outside the new Part 2 CRD tests.
 - REQ-ETS-PART2-008..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 26 Create/Replace/Delete planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.

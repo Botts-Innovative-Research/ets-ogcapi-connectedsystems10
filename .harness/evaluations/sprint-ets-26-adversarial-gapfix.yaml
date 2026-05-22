@@ -1,0 +1,97 @@
+agent: "Raze"
+role: "Red Team / Adversarial Reviewer"
+review_type: "focused implementation gapfix recheck"
+sprint: "ets-26"
+story: "S-ETS-26-01"
+artifact: ".harness/evaluations/sprint-ets-26-adversarial-gapfix.yaml"
+started_at: "2026-05-22T18:18:43Z"
+finished_at: "2026-05-22T18:22:22Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.94
+
+reviewed_scope:
+  - "Closure of RAZE-ETS26-IMPL-GAP-001 only."
+  - "Part2CreateReplaceDeleteTests scoped endpoint gapfix."
+  - "VerifyPart2CreateReplaceDeleteTests and VerifyTestNGSuiteDependency regressions."
+  - "testng.xml Part 2 Create/Replace/Delete wiring."
+  - "Sprint 26 contract, generator handoff, OpenSpec, traceability, story, ops status, and ops test-results evidence."
+  - "Archived Maven and post-gapfix TeamEngine smoke artifacts."
+
+gap_status:
+  RAZE-ETS26-IMPL-GAP-001:
+    status: "CLOSED"
+    reason: "Runtime DataStream, Observation, and ControlStream create-readiness probes no longer use the non-normative global collection OPTIONS endpoints. The implementation selects a concrete resource, derives explicit parent System evidence where required, probes scoped Clause 14 templates for create readiness, and SKIPs instead of inventing parent IDs."
+  RAZE-ETS26-IMPL-BLOCKER-002:
+    status: "OPEN"
+    reason: "Mandatory E2E still has no zero-failure post-implementation TeamEngine run. The documented failures are current-IUT HTTP 500 responses outside the new Part 2 CRD methods."
+
+findings:
+  - id: "RAZE-ETS26-GAPFIX-OK-001"
+    severity: "OK"
+    title: "Scoped Clause 14 create-readiness gap is closed."
+    evidence:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java:185 selects a DataStream resource before probing readiness."
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java:187 derives an associated System id before system-scoped DataStream create readiness."
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java:188 probes systems/{sysId}/datastreams for POST readiness."
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java:194 probes datastreams/{dsId}/observations as the Observation create-readiness context."
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java:212 selects a ControlStream resource before probing readiness."
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java:215 probes systems/{sysId}/controlstreams for POST readiness."
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java:465 SKIPs when no explicit parent System evidence is available."
+    required_fix: null
+
+  - id: "RAZE-ETS26-GAPFIX-OK-002"
+    severity: "OK"
+    title: "Regression tests pin the endpoint-fidelity fix."
+    evidence:
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/VerifyPart2CreateReplaceDeleteTests.java:41 verifies scoped readiness path helpers."
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/VerifyPart2CreateReplaceDeleteTests.java:114 verifies associated System ids come only from explicit parent evidence."
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java:178 defines the stable part2createreplacedelete group."
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:168 wires part2createreplacedelete with core common systemfeatures dependencies."
+    required_fix: null
+
+  - id: "RAZE-ETS26-GAPFIX-OK-003"
+    severity: "OK"
+    title: "Verification evidence is documented with exact non-passing E2E totals."
+    evidence:
+      - "ops/test-results/sprint-ets-26-maven-2026-05-22.log reports BUILD SUCCESS with 207 tests / 0 failures / 0 errors / 3 skipped."
+      - "ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-failed-2026-05-22.xml root attributes report 146 total / 27 passed / 5 failed / 114 skipped."
+      - "ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-failed-2026-05-22.xml root attributes report 146 total / 61 passed / 4 failed / 81 skipped."
+      - "ops/test-results.md records both post-gapfix E2E runs as FAILED and cites the same artifact paths and totals."
+      - "ops/status.md records Sprint 26 as implemented locally, Maven verified, and E2E blocked."
+      - "_bmad/traceability.md records REQ-ETS-PART2-007 as PARTIAL_IMPLEMENTED; E2E BLOCKED."
+    required_fix: null
+
+  - id: "RAZE-ETS26-GAPFIX-CONCERN-001"
+    severity: "CONCERN"
+    title: "Sprint 26 remains blocked by mandatory E2E, not by the scoped endpoint gap."
+    evidence:
+      - "GeoRobotix post-gapfix smoke failed 146 total / 27 passed / 5 failed / 114 skipped because existing SystemFeatures/Datastream/Observation reads returned HTTP 500."
+      - "Local OSH post-gapfix smoke failed 146 total / 61 passed / 4 failed / 81 skipped because existing SensorML alternate-resource checks returned HTTP 500."
+      - "Local OSH Part 2 CRD runtime methods reported 3 PASS and 6 SKIP, with no Part 2 lifecycle mutation issued."
+      - "Archived post-gapfix container logs contain zero logged POST, PUT, DELETE, or PATCH request-method entries for the reviewed Part 2 CRD gapfix evidence."
+    required_fix: "No code fix required for RAZE-ETS26-IMPL-GAP-001. Do not mark Sprint 26 complete until mandatory E2E has a zero-failure run or the E2E blockage is explicitly accepted as blocked."
+
+evidence_summary:
+  maven:
+    artifact: "ops/test-results/sprint-ets-26-maven-2026-05-22.log"
+    result: "BUILD SUCCESS"
+    surefire: "207 tests / 0 failures / 0 errors / 3 skipped"
+  georobotix_post_gapfix_e2e:
+    report: "ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-failed-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-container-failed-2026-05-22.log"
+    result: "FAILED"
+    totals: "146 total / 27 passed / 5 failed / 114 skipped"
+    part2_crd_outcome: "Dependency-SKIP because systemfeatures did not finish successfully."
+  local_osh_post_gapfix_e2e:
+    report: "ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-failed-2026-05-22.xml"
+    container_log: "ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-container-failed-2026-05-22.log"
+    result: "FAILED"
+    totals: "146 total / 61 passed / 4 failed / 81 skipped"
+    part2_crd_outcome: "3 PASS and 6 SKIP; no Part 2 lifecycle mutation issued."
+
+required_fixes: []
+
+remaining_blockers:
+  - id: "RAZE-ETS26-IMPL-BLOCKER-002"
+    status: "OPEN"
+    summary: "Mandatory E2E has no zero-failure post-implementation run because current IUTs fail outside the new Part 2 CRD methods."

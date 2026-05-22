@@ -1,54 +1,58 @@
 agent: generator
-status: partial_implemented_pushed
-timestamp: "2026-05-13T08:59:00Z"
-sprint_number: "ets-25"
-sprint_name: "part2-advanced-filtering"
+status: partial_implemented_local_osh_e2e_accepted
+timestamp: "2026-05-22T19:34:00Z"
+sprint_number: "ets-26"
+sprint_name: "part2-create-replace-delete"
 story:
-  id: "S-ETS-25-01"
-  title: "Part 2 Advanced Filtering read-only declaration-gated subset"
-  file: "epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md"
-contract_path: ".harness/contracts/sprint-ets-25.yaml"
+  id: "S-ETS-26-01"
+  title: "Part 2 Create/Replace/Delete safety-gated subset"
+  file: "epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md"
+contract_path: ".harness/contracts/sprint-ets-26.yaml"
 base_commit:
-  sha: "f2512411b93ad34b37a56dc57b6bb6eeaaaf0656"
-  message: "Reconcile Sprint 25 planning push"
+  sha: "d9caf33"
+  message: "Update Sprint 26 final metrics"
 
 implementation_summary: |
-  Sprint 25 Generator implemented the first read-only Part 2 Advanced Filtering
-  subset. It uses official OGC 23-002 /req/advanced-filtering and
-  /conf/advanced-filtering identifiers, requires exact declaration before
-  runtime PASS evidence, keeps /req/api-common and Part 1 /req/advanced-filtering
-  prerequisite honesty visible, and avoids mutation. It also removes stale
-  systemhistory vendor-extension discovery from Part 2 API Common.
+  Sprint 26 Generator implemented the first safety-gated Part 2
+  Create/Replace/Delete subset. It uses official OGC 23-002
+  /req/create-replace-delete and /conf/create-replace-delete identifiers,
+  keeps the OGC API Features Part 4 prerequisite visible, treats OPTIONS
+  as readiness evidence only, blocks public GeoRobotix mutation before
+  dispatch, and leaves positive non-system lifecycle mutation deferred
+  until dedicated fixtures and cleanup are implemented.
 
 files_added:
-  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringTests.java"
-  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/VerifyPart2CreateReplaceDeleteTests.java"
 
 files_updated:
   - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
   - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
-  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/Part2ApiCommonTests.java"
-  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/apicommon/VerifyPart2ApiCommonTests.java"
   - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-  - "epics/stories/s-ets-25-01-part2-advanced-filtering-planning.md"
+  - "epics/stories/s-ets-26-01-part2-create-replace-delete-planning.md"
   - "epics/epic-ets-03-part2-classes.md"
   - "_bmad/traceability.md"
-  - ".harness/contracts/sprint-ets-25.yaml"
+  - ".harness/contracts/sprint-ets-26.yaml"
+  - "AGENTS.md"
   - "ops/status.md"
   - "ops/test-results.md"
   - "ops/changelog.md"
   - "ops/known-issues.md"
+  - "ops/e2e-test-plan.md"
+  - "ops/local-osh-seed-fixtures.json"
+  - ".harness/evaluations/sprint-ets-26-local-osh-seedfix-raze.yaml"
+  - ".harness/evaluations/sprint-ets-26-local-osh-e2e-acceptance-raze.yaml"
 
 runtime_tests:
   total: 9
   coverage:
-    - "Exact /conf/advanced-filtering declaration and undeclared-filter honesty."
-    - "Prerequisite visibility for /req/api-common and Part 1 /req/advanced-filtering."
-    - "DataStream phenomenonTime/resultTime and observedProperty filters."
-    - "Observation phenomenonTime/resultTime filters."
-    - "ControlStream issueTime/executionTime and controlledProperty filters."
-    - "Command issueTime/executionTime/statusCode/sender filters when /commands is available."
-    - "SystemEvent eventType filter when /systemEvents is available."
+    - "Exact Part 2 /conf/create-replace-delete declaration."
+    - "OGC API Features Part 4 /conf/create-replace-delete prerequisite visibility."
+    - "Mutation safety gate using mutation-tests-enabled and mutation-iut-policy, with public GeoRobotix hard denial."
+    - "Read-only OPTIONS readiness for scoped Clause 14 DataStream/Observation and ControlStream/nested Command endpoints."
+    - "Unavailable /commands, /feasibility, /systemEvents, and /systems/{id}/events remain SKIP evidence, not lifecycle PASS."
+    - "Deferred DataStream/Observation, ControlStream/Command, and Feasibility/SystemEvent lifecycle opt-in checks."
+  helper_regressions: 9
 
 gates:
   formatter:
@@ -57,46 +61,81 @@ gates:
   maven:
     command: "bash scripts/mvn-test-via-docker.sh"
     result: "BUILD SUCCESS"
-    surefire: "195 tests / 0 failures / 0 errors / 3 skipped"
-    log: "ops/test-results/sprint-ets-25-maven-2026-05-13.log"
-  teamengine_smoke:
-    command: "SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results-s25-final bash scripts/smoke-test.sh"
-    result: "SMOKE PASS"
-    testng: "137 total / 72 passed / 0 failed / 65 skipped"
-    report: "ops/test-results/sprint-ets-25-smoke-2026-05-13.xml"
-    log: "ops/test-results/sprint-ets-25-smoke-container-2026-05-13.log"
-    no_mutation_oracle: "recognized_iut_request_logs=100; zero IUT-bound POST/PUT/DELETE/PATCH"
+    surefire: "207 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-26-maven-2026-05-22.log"
+  georobotix_teamengine_smoke:
+    result: "FAILED_EXTERNAL_IUT_HTTP_500"
+    disposition: "Advisory public interoperability check, not the accepted Sprint 26 E2E gate."
+    testng: "146 total / 27 passed / 5 failed / 114 skipped"
+    report: "ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-failed-2026-05-22.xml"
+    log: "ops/test-results/sprint-ets-26-gapfix-georobotix-smoke-container-failed-2026-05-22.log"
+    direct_probe: "GeoRobotix returned HTTP 500 for /systems/0mqcvdnfoca0, /datastreams?limit=1, and /observations?limit=2."
+    part2_crd_outcome: "Dependency-SKIP because systemfeatures did not finish successfully."
+    no_public_mutation: "No logged GeoRobotix POST/PUT/DELETE/PATCH requests in the archived container log."
+  local_osh_teamengine_fallback:
+    result: "FAILED_EXISTING_SENSORML_HTTP_500"
+    testng: "146 total / 61 passed / 4 failed / 81 skipped"
+    report: "ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-failed-2026-05-22.xml"
+    log: "ops/test-results/sprint-ets-26-gapfix-local-osh-smoke-container-failed-2026-05-22.log"
+    direct_probe: "Local OSH returned HTTP 500 for /procedures/040g?f=sml3."
+    part2_crd_outcome: "3 PASS and 6 SKIP for runtime tests; no Part 2 lifecycle mutation issued. Existing Part 1 system CRD checks issued system POST/PUT/DELETE under the explicit opt-in."
+  local_osh_seedfix_teamengine_fallback:
+    result: "PASS"
+    disposition: "Accepted Sprint 26 E2E gate."
+    testng: "146 total / 62 passed / 0 failed / 84 skipped"
+    report: "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml"
+    log: "ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log"
+    direct_probe: "After adding Procedure/Deployment featureType metadata, /procedures/040g?f=sml3 and /deployments/040g?f=sml3 returned HTTP 200 application/sml+json."
+    part2_crd_outcome: "3 PASS and 6 SKIP for runtime tests; no Part 2 lifecycle mutation issued."
+    raze_seedfix_review: "APPROVE_WITH_CONCERNS confidence 0.94 in .harness/evaluations/sprint-ets-26-local-osh-seedfix-raze.yaml; no required fixes remain."
+    raze_e2e_acceptance_review: "APPROVE_WITH_CONCERNS confidence 0.93 in .harness/evaluations/sprint-ets-26-local-osh-e2e-acceptance-raze.yaml; no required fixes remain."
 
-iut_state:
-  georobotix_advanced_filtering: "GeoRobotix does not declare /conf/advanced-filtering."
-  runtime_delta: "Sprint 24 smoke 128 -> Sprint 25 smoke 137 (9 new Part 2 Advanced Filtering @Tests; all 9 SKIP on GeoRobotix)."
-  honest_skips:
-    - "missing /conf/advanced-filtering declaration"
-    - "successful undeclared filter probes remain readiness diagnostics only"
-    - "empty seed-derived filter results are not predicate PASS evidence"
-    - "unavailable /commands and /systemEvents endpoints SKIP rather than PASS"
+blockers:
+  - id: "ETS26-E2E-GEOROBOTIX-HTTP500"
+    status: "advisory_open"
+    summary: "GeoRobotix public smoke fails because public IUT returns HTTP 500 on existing read endpoints; not the accepted Sprint 26 E2E gate."
+  - id: "ETS26-E2E-LOCAL-OSH-SENSORML-HTTP500"
+    status: "closed"
+    summary: "Closed by seed fixture repair adding Procedure/Deployment featureType metadata; local OSH seedfix smoke reports 146 total / 62 passed / 0 failed / 84 skipped."
 
-next_agent: "adversarial-reviewer"
+next_agent: "operator"
 raze_implementation_review:
-  artifact: ".harness/evaluations/sprint-ets-25-adversarial-implementation.yaml"
+  required: true
+  artifact: ".harness/evaluations/sprint-ets-26-adversarial-implementation.yaml"
   status: "GAPS_FOUND"
-  confidence: 0.91
+  confidence: 0.88
   required_gapfixes:
-    - "RAZE-ETS25-IMPL-GAP-001 fixed: obs-by-phenomenontime seeds and validates only phenomenonTime."
-    - "RAZE-ETS25-IMPL-CONCERN-001 fixed: timeIntersects parses instants/intervals and rejects malformed substrings."
-  gapfix_verification:
-    formatter: "BUILD SUCCESS"
-    maven: "195 tests / 0 failures / 0 errors / 3 skipped"
-    teamengine_smoke: "137 total / 72 passed / 0 failed / 65 skipped; zero IUT-bound POST/PUT/DELETE/PATCH across 100 recognized logs"
-  gapfix_artifact: ".harness/evaluations/sprint-ets-25-adversarial-gapfix.yaml"
-  gapfix_status: "APPROVE"
-  gapfix_confidence: 0.96
-  gapfix_reviewed_at: "2026-05-13T08:55:40Z"
+    - "RAZE-ETS26-IMPL-GAP-001 fixed: DataStream, Observation, and ControlStream create-readiness probes now use scoped Clause 14 templates or SKIP when parent IDs cannot be established."
+  remaining_blockers:
+    - "RAZE-ETS26-IMPL-BLOCKER-002 is retired for Sprint 26 by accepting the seeded local OSH zero-failure run as the E2E gate; GeoRobotix remains advisory public-smoke evidence because the public IUT returns HTTP 500 outside the new Part 2 CRD methods."
+  focused_recheck:
+    required: true
+    artifact: ".harness/evaluations/sprint-ets-26-adversarial-gapfix.yaml"
+    status: "APPROVE_WITH_CONCERNS"
+    confidence: 0.94
+    outcome: "RAZE-ETS26-IMPL-GAP-001 closed; no required code fixes remain for the scoped endpoint gap."
+
+raze_seedfix_review:
+  required: true
+  artifact: ".harness/evaluations/sprint-ets-26-local-osh-seedfix-raze.yaml"
+  initial_status: "GAPS_FOUND"
+  initial_confidence: 0.87
+  focused_recheck_status: "APPROVE_WITH_CONCERNS"
+  focused_recheck_confidence: 0.94
+  outcome: "RAZE-ETS26-SEEDFIX-GAP-001 closed by splitting local OSH seed fixture verification into historical full-health and current Sprint 26 seedfix evidence; no required fixes remain."
+
+raze_local_osh_e2e_acceptance_review:
+  required: true
+  artifact: ".harness/evaluations/sprint-ets-26-local-osh-e2e-acceptance-raze.yaml"
+  status: "APPROVE_WITH_CONCERNS"
+  confidence: 0.93
+  outcome: "No required fixes. Confirmed local OSH gate acceptance is explicit, GeoRobotix remains advisory and not falsely passing, archived totals are consistent, and full Part 2 CRD closure is not claimed."
+  low_concerns:
+    - "Commit message should make the local OSH E2E policy change explicit."
+    - "Direct SensorML 200 probes are documented but not archived as raw standalone transcripts."
 
 commit:
-  status: "pushed"
-  sha: "d9df3ad"
-  message: "Implement Sprint 25 Advanced Filtering"
-  push: "f251241..d9df3ad main -> main over SSH"
+  status: "ready_to_commit"
+  reason: "Seeded local OSH E2E passes after fixture repair and is accepted as the Sprint 26 E2E gate; GeoRobotix public smoke remains advisory external evidence."
 
-next_action: "Plan the next Part 2 sprint item or continue deferred Advanced Filtering coverage against a declaring IUT."
+next_action: "Commit/push Sprint 26 Generator, then optionally rerun GeoRobotix public smoke when the public IUT recovers."

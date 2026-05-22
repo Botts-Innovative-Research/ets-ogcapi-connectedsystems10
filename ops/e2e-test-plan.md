@@ -1,6 +1,6 @@
 # E2E Test Plan — OGC API Connected Systems ETS
 
-Last updated: 2026-05-05T16:15Z
+Last updated: 2026-05-22T19:34Z
 
 ## Policy
 
@@ -15,6 +15,21 @@ SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/s
 ```
 
 The smoke script builds the Docker image, starts TeamEngine, verifies suite registration, runs the ETS against GeoRobotix by default, archives XML/log artifacts, and exits non-zero if TestNG reports failures or TeamEngine startup has registration errors.
+
+## Accepted IUT Targets
+
+- **Default public target**: GeoRobotix remains the default interoperability smoke target for `scripts/smoke-test.sh`.
+- **Accepted local target**: A self-run local OSH instance is sufficient E2E evidence for a sprint when it is a real running OGC API Connected Systems server, TeamEngine reaches it over Docker networking, seed state and credentials are documented, XML/log artifacts are archived, and exact totals are recorded.
+- **External-target failures**: If the default public target is unhealthy, document the direct probe evidence and treat that run as an advisory external interoperability check, not as a blocker for a sprint whose accepted E2E IUT is local OSH.
+
+Local OSH command shape:
+
+```bash
+SMOKE_DOCKER_NETWORK=field-hub_default \
+  SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
+  SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
+  bash scripts/smoke-test.sh
+```
 
 ## Required Gates
 

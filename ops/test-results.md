@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-22T19:43Z
+Last updated: 2026-05-22T19:45Z
 
 ## Current Sprint Evidence
 
@@ -93,7 +93,7 @@ Sprint ets-26 Part 2 Create/Replace/Delete Generator:
   - Focused recheck verdict: `APPROVE`, confidence 0.96, no remaining required fixes.
 - Commit/push:
   - Planning commit `146c4c6 Plan Sprint 26 Part 2 CRD` pushed over SSH on 2026-05-13 (`7d57d9f..146c4c6 main -> main`).
-  - Generator changes remain uncommitted pending final commit/push after accepting local OSH as the Sprint 26 E2E gate.
+  - Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate` pushed over SSH on 2026-05-22 (`d9caf33..c2d9d1e main -> main`).
 
 Sprint ets-25 Part 2 Advanced Filtering Generator:
 

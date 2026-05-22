@@ -135,7 +135,10 @@ raze_local_osh_e2e_acceptance_review:
     - "Direct SensorML 200 probes are documented but not archived as raw standalone transcripts."
 
 commit:
-  status: "ready_to_commit"
+  status: "pushed"
+  sha: "c2d9d1e"
+  message: "Implement Sprint 26 Part 2 CRD with local OSH E2E gate"
+  push: "d9caf33..c2d9d1e main -> main over SSH on 2026-05-22"
   reason: "Seeded local OSH E2E passes after fixture repair and is accepted as the Sprint 26 E2E gate; GeoRobotix public smoke remains advisory external evidence."
 
-next_action: "Commit/push Sprint 26 Generator, then optionally rerun GeoRobotix public smoke when the public IUT recovers."
+next_action: "Optionally rerun GeoRobotix public smoke when the public IUT recovers, or plan the next Part 2 increment."

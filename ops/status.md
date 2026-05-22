@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-22T19:43Z
+Last updated: 2026-05-22T19:45Z
 
 ## Fresh-Session Entry Point
 
@@ -38,13 +38,13 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, and pushed reconciliation commit `930cb5c`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, and pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-26-01` Generator is PARTIAL for the Part 2 Create/Replace/Delete safety-gated subset.
 - Latest planned story: next Part 2 item may proceed after Sprint 26 Generator is committed/pushed or explicitly carried as uncommitted work.
-- Latest pushed implementation commit: `d9df3ad Implement Sprint 25 Advanced Filtering`, followed by reconciliation through `d9caf33`. Sprint 26 Generator changes are uncommitted in the current worktree pending final commit/push.
+- Latest pushed implementation commit: `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`.
 - Current sprint status: Sprint ets-26 Part 2 Create/Replace/Delete Generator code is implemented locally, Maven verified, and E2E-verified against the accepted seeded local OSH mutable IUT after fixture repair. GeoRobotix remains the default public interoperability smoke target, but its current HTTP 500 failures are advisory external-target evidence rather than the Sprint 26 E2E gate. Do not report GeoRobotix as passing until it has a zero-failure run.
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`.
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`).
 
 ## Sprint ets-26 Generator Evidence
 

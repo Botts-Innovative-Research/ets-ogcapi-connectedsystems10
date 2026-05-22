@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-22T20:49Z
+Last updated: 2026-05-22T21:02Z
 
 ## Fresh-Session Entry Point
 
@@ -38,13 +38,13 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, and pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, and pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-27-01` Generator is PARTIAL for the Part 2 Update safety-gated subset.
 - Latest planned story: none beyond the current Sprint 27 Generator follow-up.
-- Latest pushed implementation commit: `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`.
+- Latest pushed implementation commit: `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`.
 - Current sprint status: Sprint ets-27 Part 2 Update Generator code is implemented as a PARTIAL safety-gated subset. Maven passes. Mandatory GeoRobotix TeamEngine smoke still fails on existing public-IUT HTTP 500 read-path failures (`160 total / 27 passed / 5 failed / 128 skipped`), but the authenticated local OSH full-stack E2E gate passes (`160 total / 62 passed / 0 failed / 98 skipped`).
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`).
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`).
 
 ## Sprint ets-26 Generator Evidence
 
@@ -77,7 +77,7 @@ Part 2 Create/Replace/Delete safety-gated subset:
 - Accepted local OSH E2E gate after adding Procedure/Deployment featureType metadata to the seed fixture and live records: `146 total / 62 passed / 0 failed / 84 skipped`. Direct `?f=sml3` probes for `/procedures/040g` and `/deployments/040g` returned HTTP 200 `application/sml+json`. `procedureSensorMlHasSchemaAndMapping` PASSed; deployment SensorML mapping and non-system relation-type checks SKIP honestly because OSH's generated SensorML has no `deployedSystems`/`links` evidence. New Part 2 CRD runtime tests remained 3 PASS and 6 SKIP with no Part 2 lifecycle mutation. Artifacts: `ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-2026-05-22.xml` and `ops/test-results/sprint-ets-26-seedfix-local-osh-smoke-container-2026-05-22.log`.
 - Raze seedfix review `.harness/evaluations/sprint-ets-26-local-osh-seedfix-raze.yaml`: initial `GAPS_FOUND` confidence 0.87 for stale fixture verification metadata; focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 after the fixture split historical vs current verification evidence. No required fixes remain.
 - Raze local OSH E2E acceptance review `.harness/evaluations/sprint-ets-26-local-osh-e2e-acceptance-raze.yaml`: `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes. Low concerns only: make the eventual commit message explicit about the broader policy change, and direct SensorML 200 probes are documented but not archived as raw standalone transcripts.
-- Next action: Sprint 27 Generator now has Raze approval with concerns and an accepted local OSH E2E gate; finish reconciliation, then commit/push if the worktree remains scoped to this sprint.
+- Next action: plan the next Part 2 placeholder after Update.
 
 ## Sprint ets-27 Generator Evidence
 
@@ -109,7 +109,7 @@ Part 2 Update safety-gated subset:
 - Raze planning review `.harness/evaluations/sprint-ets-27-plan-adversarial.yaml`: initial `GAPS_FOUND` confidence 0.91 for missing Clause 15 per-requirement condition gates. Focused recheck closed `RAZE-ETS27-PLAN-GAP-001` after the gapfix added those gates across OpenSpec, story, contract, traceability, epic, ops docs, and handoff; final verdict `APPROVE_WITH_CONCERNS` confidence 0.95 with no required fixes.
 - Raze implementation review `.harness/evaluations/sprint-ets-27-adversarial-implementation.yaml`: initial `GAPS_FOUND` confidence 0.90 for stale story/traceability wording. Focused recheck `.harness/evaluations/sprint-ets-27-adversarial-implementation-recheck.yaml` closed `RAZE-ETS27-IMPL-GAP-001` with `APPROVE_WITH_CONCERNS` confidence 0.94 and no required fixes.
 - Raze local OSH E2E acceptance review `.harness/evaluations/sprint-ets-27-local-osh-e2e-acceptance-raze.yaml`: `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes; it confirms the accepted local OSH gate is zero-failure but partial for Update semantics because `/conf/update` is absent.
-- Commit/push: planning commit `eab12a8 Plan Sprint 27 Part 2 Update` pushed over SSH (`bf10caa..eab12a8 main -> main`). Generator implementation is not yet committed at this checkpoint.
+- Commit/push: planning commit `eab12a8 Plan Sprint 27 Part 2 Update` and planning reconciliation `2be355a Reconcile Sprint 27 planning push` were already pushed. Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate` was pushed over SSH (`2be355a..6ae8f1c main -> main`).
 
 ## Sprint ets-25 Generator Evidence
 

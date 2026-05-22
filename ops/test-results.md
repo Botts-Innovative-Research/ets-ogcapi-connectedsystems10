@@ -78,6 +78,8 @@ Sprint ets-27 Part 2 Update Generator:
 - Raze local OSH E2E acceptance review:
   - `.harness/evaluations/sprint-ets-27-local-osh-e2e-acceptance-raze.yaml`: `APPROVE_WITH_CONCERNS`, confidence 0.94, no required fixes.
   - Verified the accepted XML totals, all 14 Part 2 Update runtime methods as SKIP, no local OSH PATCH request lines, and GeoRobotix kept as failed advisory public-IUT evidence.
+- Commit/push:
+  - Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate` pushed over SSH on 2026-05-22 (`2be355a..6ae8f1c main -> main`).
 
 ## Previous Sprint Evidence
 

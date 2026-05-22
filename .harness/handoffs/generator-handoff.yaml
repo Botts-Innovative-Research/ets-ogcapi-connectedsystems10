@@ -101,8 +101,10 @@ raze_implementation_review:
   required_fixes_remaining: []
 
 commit:
-  status: "not_yet_committed"
-  reason: "Generator implementation awaits final local-OSH-evidence reconciliation and commit/push."
+  status: "pushed"
+  sha: "6ae8f1c"
+  message: "Implement Sprint 27 Part 2 Update with local OSH E2E gate"
+  push: "2be355a..6ae8f1c main -> main"
 
 next_agent: "generator"
-next_action: "Finish reconciliation, then commit and push Sprint 27 Generator if the worktree remains scoped to this sprint."
+next_action: "Plan the next Part 2 placeholder after Update."

@@ -22,6 +22,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Raze implementation review found docs-only gap `RAZE-ETS27-IMPL-GAP-001`; after patching stale story and traceability wording, focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes.
 - Raze local OSH E2E acceptance review returned `APPROVE_WITH_CONCERNS` confidence 0.94 with no required fixes; low concern only that the accepted gate is partial for Update semantics because local OSH does not declare `/conf/update`.
 - Reconciled OpenSpec, story, traceability, epic, contract, ops status, test-results, known issues, and generator handoff for partial implementation status.
+- Committed and pushed Sprint 27 Generator as `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate` (`2be355a..6ae8f1c main -> main`).
 
 ---
 

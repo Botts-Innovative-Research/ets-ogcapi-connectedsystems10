@@ -368,6 +368,10 @@
 
 ## Session Summary
 
+### Current Codex Session (2026-05-26 Sprint 28 Generator)
+
+Attempted extraction at 2026-05-26T18:59Z via `python3 scripts/session-metrics.py`, but the script returned: `No session JSONL found in /home/nh/.claude/projects/-docker-gir-ets-ogcapi-connectedsystems10`. Authoritative main-conversation token and cost totals are therefore unavailable in this workspace. Turn-level wall-clock metrics and Raze review windows are recorded in the Turn Log above; subagent token metadata was unavailable from the tool surface.
+
 ### Session `4efc7a70` (2026-04-16 → 2026-04-17, retro-eval APPROVE + user-testing-round-01 + user-testing-followup + spec-anchor back-port + GitHub issue triage)
 
 Extracted 2026-04-17T02:33Z via `python3 scripts/session-metrics.py .../4efc7a70-971e-4e0c-9ffe-ae666f962358.jsonl`.

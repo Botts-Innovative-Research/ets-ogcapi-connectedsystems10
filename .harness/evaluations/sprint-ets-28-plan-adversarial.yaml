@@ -1,0 +1,117 @@
+review:
+  agent: raze
+  role: adversarial_reviewer
+  artifact: ".harness/evaluations/sprint-ets-28-plan-adversarial.yaml"
+  reviewed_at_utc: "2026-05-26T17:26:20Z"
+  sprint: "ets-28"
+  story: "S-ETS-28-01"
+  scope: "Current uncommitted Sprint 28 planning changes for Part 2 JSON Encoding; no Generator code implemented."
+  reruns:
+    maven: false
+    teamengine: false
+    reason: "Planning review used artifact inspection; no concrete blocker required expensive reproduction."
+
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.92
+
+reviewed_inputs:
+  role_and_process:
+    - "_bmad/agents/adversarial-reviewer.md"
+    - "AGENTS.md"
+  planning_artifacts:
+    - ".harness/contracts/sprint-ets-28.yaml"
+    - "epics/stories/s-ets-28-01-part2-json-planning.md"
+    - ".harness/handoffs/planner-handoff.yaml"
+  spec_and_traceability:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+  ops_docs:
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+  smoke_artifacts:
+    - "ops/test-results/sprint-ets-28-plan-georobotix-smoke-failed-2026-05-26.xml"
+    - "ops/test-results/sprint-ets-28-plan-georobotix-smoke-container-failed-2026-05-26.log"
+  official_sources:
+    - "https://docs.ogc.org/is/23-002/23-002.html"
+
+summary:
+  false_pass_risk: "Controlled. The plan repeatedly blocks PASS from /conf/json declaration alone, sibling encoding/resource declarations, empty collections, HTTP 400/500, OPTIONS-only write evidence, and hardcoded examples."
+  official_identifier_correctness: "PASS. The plan matches OGC 23-002 Clause 16.1 and Annex A.9: /req/json, /conf/json, SWE 3.0 JSON record-components prerequisite, and Requirements 93-106."
+  resource_condition_gates: "PASS. The planning contract, story, OpenSpec, traceability, status, and handoff all gate DataStream/Observation on /conf/datastream, ControlStream/Command/CommandStatus/CommandResult on /conf/controlstream, and SystemEvent on /conf/system-event before PASS."
+  schema_validation_honesty: "PASS with low concern. The plan requires bundled schema presence plus real candidate resource/collection evidence before schema PASS and keeps dynamic Observation/Command/CommandResult constraints evidence-gated."
+  public_iut_mutation_safety: "PASS. The archived GeoRobotix smoke log contains only GET request lines for the IUT; the no-mutation oracle recognized 61 IUT requests and reported zero POST/PUT/PATCH/DELETE violations."
+  e2e_honesty: "PASS. The TeamEngine planning smoke is documented as failed external/public-IUT evidence, not as an accepted passing E2E gate."
+  docs_consistency: "PASS. The Sprint 28 planning state is reconciled across contract, story, OpenSpec, traceability, epic, ops status, test-results, known issues, changelog, and planner handoff."
+
+evidence:
+  official_ogc:
+    - "OGC 23-002 Clause 16.1 / Annex A.9 lists conformance class /conf/json, requirements class /req/json, prerequisite http://www.opengis.net/spec/SWE/3.0/conf/json-record-components, and abstract tests A.93-A.106."
+    - "Annex A.9 A.93 requires retrieval with application/json, HTTP 200, application/json Content-Type, and parseable JSON."
+    - "Annex A.9 A.94 checks API-definition advertisement for CREATE or REPLACE operations; it does not require public mutation."
+    - "Annex A.9 A.95-A.106 names the schema files and parent-schema constraint checks reflected in Sprint 28 planning."
+  local_schema_bundle:
+    - "src/main/resources/schemas/connected-systems-2/json/dataStream.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/dataStreamCollection.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/observationSchemaJson.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/observation.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/observationCollection.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/controlStream.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/controlStreamCollection.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/commandSchemaJson.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/command.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/commandCollection.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/commandStatus.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/commandStatusCollection.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/commandResult.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/commandResultCollection.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/systemEvent.json exists."
+    - "src/main/resources/schemas/connected-systems-2/json/systemEventCollection.json exists."
+  smoke_xml:
+    summary: "testng-results total=160 passed=27 failed=5 skipped=128"
+    counted_failures:
+      - "SystemFeaturesTests.systemItemHasIdTypeLinks expected HTTP 200, got 500."
+      - "Part2DatastreamTests.datastreamsCollectionReadable expected HTTP 200, got 500."
+      - "Part2DatastreamTests.observationCanonicalResourceReadableWhenCollectionPopulated expected HTTP 200, got 500."
+      - "Part2DatastreamTests.observationEndpointsReadable expected HTTP 200, got 500."
+      - "Part2DatastreamTests.observationsCanonicalEndpointReadable expected HTTP 200, got 500."
+    config_failures_not_in_failed_total:
+      - "SensorMlTests.fetchSensorMlInputs expected HTTP 200, got 500."
+      - "GeoJsonTests.fetchGeoJsonInputs expected HTTP 200, got 500."
+    json_runtime_scope: "No Part 2 JSON runtime tests exist yet; no Sprint 28 implementation claims were present in the XML."
+  smoke_log:
+    mutation_oracle: "python3 scripts/no-mutation-oracle.py ... https://api.georobotix.io/ogc/t18/api -> recognized_iut_request_logs=61"
+    explicit_write_search: "rg for POST/PUT/PATCH/DELETE in the Sprint 28 GeoRobotix container log returned no matches."
+    request_sample: "Archived log contains GeoRobotix GETs for /conformance, /systems, /systems/{id}, /datastreams, /observations, /controlstreams, /commands, deployments, samplingFeatures, and properties."
+
+findings:
+  - id: "RAZE-ETS28-PLAN-CONCERN-001"
+    severity: LOW
+    category: "evidence_archival"
+    status: "OPEN_NON_BLOCKING"
+    title: "Direct JSON-specific probe bodies are summarized but not archived as raw transcripts."
+    finding: "The planning docs summarize direct probes such as /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/json returning commandFormat=application/json with parametersSchema, but the archived Sprint 28 smoke log only shows the TeamEngine /schema request without cmdFormat and does not include response bodies. This does not create a false PASS because the plan forbids schema PASS without Generator-time candidate and schema evidence, but the positive planning probe is less independently auditable than the smoke totals and mutation oracle."
+    evidence:
+      - "epics/stories/s-ets-28-01-part2-json-planning.md records the JSON schema direct probe result."
+      - "ops/test-results/sprint-ets-28-plan-georobotix-smoke-container-failed-2026-05-26.log includes GET /controlstreams/0m4qpft9sdag/schema but no cmdFormat query or response body."
+      - "No additional sprint-ets-28 direct-probe transcript is archived under ops/test-results/."
+    required_fix: false
+    recommended_follow_up: "During Generator, archive either raw direct-probe transcripts or TestNG reporter evidence for any positive schema/readiness claim used to justify PASS or SKIP behavior."
+
+required_fixes: []
+
+gate_decision:
+  generator_may_start_after_planning_commit: true
+  commit_planning_before_generator: true
+  notes:
+    - "Do not report Sprint 28 as implemented or E2E-passing from the current planning artifacts."
+    - "Generator must still run formatter, Maven, and full TeamEngine smoke after code changes."
+    - "Default public GeoRobotix execution must remain read-only unless a non-public dedicated mutable IUT is explicitly selected and documented."
+    - "If Generator uses the summarized ControlStream command schema evidence as positive evidence, it must reproduce or archive it in the implementation evidence."
+
+subagent_metrics:
+  mode: "inline_raze_review"
+  total_tokens: "unavailable"
+  duration: "tracked by ops/metrics.md turn 256"

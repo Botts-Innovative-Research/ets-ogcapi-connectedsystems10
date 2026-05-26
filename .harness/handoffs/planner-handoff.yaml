@@ -1,93 +1,88 @@
 agent: planner
-status: superseded_by_generator_partial_implementation
-timestamp: "2026-05-22T19:55:00Z"
-sprint_number: "ets-27"
-sprint_name: "part2-update"
-contract_path: ".harness/contracts/sprint-ets-27.yaml"
+status: planned_generator_pending
+timestamp: "2026-05-26T17:15:41Z"
+sprint_number: "ets-28"
+sprint_name: "part2-json"
+contract_path: ".harness/contracts/sprint-ets-28.yaml"
 triggered_by: |
-  User said "Continue" after Sprint 26 Part 2 Create/Replace/Delete was
-  implemented, reconciled, and pushed.
+  User said "Continue'" after Sprint 27 Part 2 Update was implemented,
+  reconciled, pushed, and accepted via local OSH E2E.
 
 planning_result:
   story:
-    id: "S-ETS-27-01"
-    title: "Part 2 Update safety-gated planning"
-    file: "epics/stories/s-ets-27-01-part2-update-planning.md"
+    id: "S-ETS-28-01"
+    title: "Part 2 JSON Encoding planning"
+    file: "epics/stories/s-ets-28-01-part2-json-planning.md"
   official_identifiers:
     source: "https://docs.ogc.org/is/23-002/23-002.html"
-    clause: "Clause 15, Requirements Class Update"
-    requirement_class_identifier: "/req/update"
-    conformance_class_identifier: "/conf/update"
+    clause: "Clause 16.1, Requirements Class JSON Encoding"
+    requirement_class_identifier: "/req/json"
+    conformance_class_identifier: "/conf/json"
     prerequisites:
-      - "/req/create-replace-delete"
-      - "http://www.opengis.net/spec/ogcapi-features-4/1.0/req/update"
+      - "http://www.opengis.net/spec/SWE/3.0/req/json-record-components"
     conformance_prerequisites:
-      - "/conf/create-replace-delete"
-      - "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      - "http://www.opengis.net/spec/SWE/3.0/conf/json-record-components"
     normative_statements:
-      - "/req/update/datastream"
-      - "/req/update/datastream-update-schema"
-      - "/req/update/observation"
-      - "/req/update/observation-schema"
-      - "/req/update/controlstream"
-      - "/req/update/controlstream-update-schema"
-      - "/req/update/command"
-      - "/req/update/command-schema"
-      - "/req/update/command-status"
-      - "/req/update/command-result"
-      - "/req/update/feasibility"
-      - "/req/update/feasibility-status"
-      - "/req/update/feasibility-result"
-      - "/req/update/system-event"
+      - "/req/json/mediatype-read"
+      - "/req/json/mediatype-write"
+      - "/req/json/datastream-schema"
+      - "/req/json/obsschema-schema"
+      - "/req/json/observation-schema"
+      - "/req/json/observation-constraints"
+      - "/req/json/controlstream-schema"
+      - "/req/json/commandschema-schema"
+      - "/req/json/command-schema"
+      - "/req/json/command-constraints"
+      - "/req/json/commandstatus-schema"
+      - "/req/json/commandresult-schema"
+      - "/req/json/commandresult-constraints"
+      - "/req/json/systemevent-schema"
     condition_gates:
-      datastream_observation: "Requirements 79-82 require /conf/datastream before PASS."
-      controlstream_command: "Requirements 83-88 require /conf/controlstream before PASS."
-      feasibility: "Requirements 89-91 require /conf/feasibility before PASS."
-      system_event: "Requirement 92 requires /conf/system-event before PASS."
+      datastream_observation: "DataStream, Observation Schema, Observation, and Observation constraints require /conf/datastream before PASS."
+      controlstream_command: "ControlStream, Command Schema, Command, CommandStatus, CommandResult, and their constraints require /conf/controlstream before PASS."
+      system_event: "SystemEvent JSON assertions require /conf/system-event before PASS."
   georobotix_probe_summary:
-    conformance: "Declares /conf/create-replace-delete and OGC API Features Part 4 /conf/create-replace-delete; does not declare Part 2 /conf/api-common, /conf/update, or /conf/advanced-filtering."
-    options: "OPTIONS probes for sampled DataStream, Observation, ControlStream, Command, Feasibility, SystemEvent, and system-scoped events endpoints returned broad Allow headers; PATCH was absent."
-    read_health: "GET /systems/0mqcvdnfoca0, /datastreams?limit=1, and /observations?limit=1 returned HTTP 500; /controlstreams?limit=1 returned HTTP 200 JSON."
+    conformance: "Declares Part 2 /conf/json, /conf/datastream, /conf/controlstream, /conf/system-event, /conf/create-replace-delete, /conf/swecommon-json, /conf/swecommon-text, and /conf/swecommon-binary; does not declare Part 2 /conf/api-common, /conf/update, /conf/advanced-filtering, or SWE 3.0 /conf/json-record-components."
+    read_health: "GET /datastreams?limit=1 and /observations?limit=1 returned HTTP 500 text/html; /controlstreams?limit=1 returned HTTP 200 application/json; /systemEvents?limit=1 returned HTTP 400; /systems/{id}/events?limit=1 returned HTTP 400 streaming-only."
+    json_schema_evidence: "Selected ControlStream /schema?cmdFormat=application/json returned HTTP 200 with commandFormat=application/json and parametersSchema; nested commands collection had no candidate Command item."
   local_osh_probe_summary:
+    container: "field-hub-osh-1 is running but unhealthy."
     credential_state: "Current shell has no SMOKE_AUTH_CREDENTIAL."
     conformance: "Unauthenticated /sensorhub/api/conformance returned HTTP 401."
-    options: "Unauthenticated OPTIONS /sensorhub/api/systems/040g returned HTTP 200 with no PATCH in Allow."
   safety_policy:
-    default_public_smoke: "Read-only; zero IUT-bound PATCH/POST/PUT/DELETE."
-    declaration_honesty: "Do not PASS Update lifecycle behavior from declaration alone."
-    prerequisite_honesty: "Keep Part 2 CRD and OGC API Features Part 4 Update prerequisites visible before full closure."
-    condition_gate_honesty: "Missing Clause 15 condition classes SKIP prerequisite-incomplete; do not PASS from /conf/update, endpoint availability, sibling declarations, or OPTIONS."
-    options_honesty: "OPTIONS method discovery is readiness evidence only, not lifecycle PASS."
-    missing_patch_readiness: "Declared /conf/update plus successful OPTIONS omitting PATCH fails readiness while lifecycle skips before PATCH."
-    mutation_opt_in: "Positive PATCH requires mutation-tests-enabled=true, mutation-iut-policy=dedicated-mutable-iut, non-public target, endpoint PATCH readiness, and changed-field GET proof."
-
-raze_review:
-  plan_artifact: ".harness/evaluations/sprint-ets-27-plan-adversarial.yaml"
-  plan_verdict: "APPROVE_WITH_CONCERNS"
-  plan_confidence: 0.95
-  required_fixes:
-    - id: "RAZE-ETS27-PLAN-GAP-001"
-      status: "CLOSED"
-      summary: "Added explicit Clause 15 condition gates for /conf/datastream, /conf/controlstream, /conf/feasibility, and /conf/system-event."
-  required_before_generator: true
+    default_public_smoke: "Read-only; zero IUT-bound POST, PUT, PATCH, or DELETE."
+    declaration_honesty: "Do not PASS JSON assertions from Common JSON, GeoJSON, SWE Common, or resource-class declarations alone."
+    prerequisite_honesty: "Keep SWE Common 3.0 JSON record components visible before full /conf/json closure."
+    condition_gate_honesty: "Missing resource classes SKIP prerequisite-incomplete; do not PASS from /conf/json, endpoint availability, sibling declarations, or collection shape."
+    schema_honesty: "Schema PASS requires candidate resource/collection evidence and the corresponding bundled schema."
+    dynamic_schema_honesty: "Observation, Command, and CommandResult constraints require parent schema evidence and candidate child resource evidence."
+    write_safety: "Requirement 94 mediatype-write is API-definition/readiness only in the first increment; OPTIONS alone cannot PASS and public GeoRobotix mutation is forbidden."
 
 planning_e2e:
   status: "FAILED_EXTERNAL_IUT_HTTP_500"
   georobotix_smoke:
-    command: "SMOKE_CONTAINER_NAME=ets-csapi-s27-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-27-plan-georobotix-results bash scripts/smoke-test.sh"
-    testng: "146 total / 27 passed / 5 failed / 114 skipped"
-    report: "ops/test-results/sprint-ets-27-plan-georobotix-smoke-failed-2026-05-22.xml"
-    container_log: "ops/test-results/sprint-ets-27-plan-georobotix-smoke-container-failed-2026-05-22.log"
-    disposition: "Advisory public interoperability check; failed because the public IUT still returns HTTP 500 on existing read paths."
-    public_iut_mutation: "No matched GeoRobotix PATCH/POST/PUT/DELETE request lines in the archived container log."
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s28-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-28-plan-georobotix-results bash scripts/smoke-test.sh"
+    testng: "160 total / 27 passed / 5 failed / 128 skipped"
+    report: "ops/test-results/sprint-ets-28-plan-georobotix-smoke-failed-2026-05-26.xml"
+    container_log: "ops/test-results/sprint-ets-28-plan-georobotix-smoke-container-failed-2026-05-26.log"
+    failure_cause: "Known public-IUT HTTP 500 responses on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths; no Part 2 JSON runtime tests exist yet."
+    public_iut_mutation: "scripts/no-mutation-oracle.py recognized 61 GeoRobotix IUT request logs; explicit container-log search found no matched GeoRobotix POST/PUT/PATCH/DELETE request lines."
+    disposition: "Advisory public interoperability check; not an accepted zero-failure E2E gate."
+    note: "First attempt from git archive failed before TeamEngine because Dockerfile expects .git; rerun from a temporary Git clone."
   local_osh:
-    status: "BLOCKED_MISSING_CREDENTIAL"
-    reason: "Current shell has no SMOKE_AUTH_CREDENTIAL; unauthenticated /sensorhub/api/conformance returned HTTP 401."
+    status: "BLOCKED_MISSING_CREDENTIAL_AND_UNHEALTHY"
+    reason: "Current shell has no SMOKE_AUTH_CREDENTIAL; local OSH container is unhealthy and unauthenticated /conformance returned HTTP 401."
 
-commit:
-  sha: "eab12a8"
-  message: "Plan Sprint 27 Part 2 Update"
-  push: "bf10caa..eab12a8 main -> main over SSH"
+raze_review:
+  artifact: ".harness/evaluations/sprint-ets-28-plan-adversarial.yaml"
+  verdict: "APPROVE_WITH_CONCERNS"
+  confidence: 0.92
+  required_fixes: []
+  concerns:
+    - id: "RAZE-ETS28-PLAN-CONCERN-001"
+      severity: "LOW"
+      status: "OPEN_NON_BLOCKING"
+      summary: "Direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive any positive schema/readiness evidence used for PASS or SKIP behavior."
 
 next_agent: "generator"
-next_action: "Generator started and produced partial implementation; see .harness/handoffs/generator-handoff.yaml for current Sprint 27 state."
+next_action: "Commit and push Sprint 28 planning, then implement the first Part 2 JSON declaration-gated read-only subset."

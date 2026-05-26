@@ -613,12 +613,76 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** request logs contain zero IUT-bound PATCH, POST, PUT, or DELETE requests
 **AND** any Update assertions that need mutation SKIP before dispatch.
 
-#### REQ-ETS-PART2-009..013: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-009: Part 2 JSON Encoding
+- **Priority**: MUST
+- **Status**: SPECIFIED_PLANNED (Sprint 28 planning; Generator pending)
+- **Description**: The ETS SHALL implement the first declaration-gated, read-only OGC 23-002 Clause 16.1 JSON Encoding subset using official `/req/json` and `/conf/json` identifiers. Runtime checks SHALL gate on exact `/conf/json` declaration, keep the SWE Common 3.0 JSON record components prerequisite visible, condition resource-specific assertions on the underlying declared Part 2 resource classes, validate read responses against bundled Part 2 JSON Schemas where candidate resources are available, and treat write-media-type support as API-definition/readiness evidence only unless a safe dedicated mutable IUT is explicitly enabled in a later sprint.
+- **Rationale**: PRD SC-3 requires Part 2 coverage. OGC 23-002 Annex A.9 defines `/conf/json` with Requirements 93-106. Current GeoRobotix declares `/conf/json`, `/conf/datastream`, `/conf/controlstream`, `/conf/system-event`, `/conf/create-replace-delete`, and SWE Common encoding classes, but still returns HTTP 500 for declared Datastream/Observation reads and HTTP 400 for SystemEvent JSON collection reads. The ETS must therefore avoid both false PASS from declaration alone and false completion claims when declared endpoints are unhealthy.
+- **Maps to**: PRD FR-ETS-39.
+
+#### SCENARIO-ETS-PART2-009-JSON-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the IUT exposes `/conformance`
+**WHEN** the Part 2 JSON Encoding tests run
+**THEN** exact `http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json` declaration is required before `/req/json` assertions can PASS
+**AND** sibling declarations such as Common JSON, GeoJSON, SWE Common JSON, or Part 2 resource classes alone cannot satisfy `/conf/json`.
+
+#### SCENARIO-ETS-PART2-009-SWE-PREREQUISITE-VISIBLE-001 (NORMAL)
+**GIVEN** OGC 23-002 Clause 16.1 lists SWE Common 3.0 JSON record components as a prerequisite
+**WHEN** the ETS reports full `/conf/json` closure
+**THEN** the prerequisite `http://www.opengis.net/spec/SWE/3.0/conf/json-record-components` must be visible or explicitly reported as prerequisite-incomplete
+**AND** scoped JSON representation checks may still run when `/conf/json` and the relevant Part 2 resource class are declared.
+
+#### SCENARIO-ETS-PART2-009-RESOURCE-CONDITION-GATES-001 (CRITICAL)
+**GIVEN** Annex A.9 applies JSON representation tests to supported Part 2 resource classes
+**WHEN** the ETS evaluates Requirements 95-106
+**THEN** DataStream, Observation, Observation Schema, and Observation constraint assertions require `/conf/datastream`
+**AND** ControlStream, Command Schema, Command, CommandStatus, CommandResult, and their constraint assertions require `/conf/controlstream`
+**AND** SystemEvent JSON assertions require `/conf/system-event`
+**AND** missing condition classes produce prerequisite-incomplete SKIP behavior rather than PASS from `/conf/json`, endpoint availability, sibling declarations, or collection shape alone.
+
+#### SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/json`
+**WHEN** the ETS requests supported Part 2 resources with `Accept: application/json`
+**THEN** each reachable declared resource endpoint must return HTTP 200, an `application/json` compatible content type, and JSON parseable content before mediatype-read PASS
+**AND** HTTP 400, HTTP 500, HTML/text error bodies, or empty non-resource evidence cannot PASS.
+
+#### SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001 (CRITICAL)
+**GIVEN** bundled Part 2 JSON Schemas exist under `src/main/resources/schemas/connected-systems-2/json/`
+**WHEN** candidate JSON resources or collections are retrieved
+**THEN** the ETS validates them against the corresponding schemas named in OGC 23-002 Annex A.9, including `dataStream.json`, `dataStreamCollection.json`, `observationSchemaJson.json`, `observation.json`, `observationCollection.json`, `controlStream.json`, `controlStreamCollection.json`, `commandSchemaJson.json`, `command.json`, `commandCollection.json`, `commandStatus.json`, `commandStatusCollection.json`, `commandResult.json`, `commandResultCollection.json`, `systemEvent.json`, and `systemEventCollection.json`
+**AND** no schema-validation PASS is reported when the endpoint is unavailable, the collection has no candidate resource, or a schema fixture is missing.
+
+#### SCENARIO-ETS-PART2-009-OBSERVATION-COMMAND-CONSTRAINTS-001 (NORMAL)
+**GIVEN** Requirements 98, 102, and 105 require Observation result/parameters, Command parameters, and CommandResult inline data to follow parent DataStream or ControlStream schemas
+**WHEN** parent schema evidence or candidate child resources are absent
+**THEN** the ETS SKIPs constraint checks with a precise no-safe-evidence reason
+**AND** it SHALL NOT PASS dynamic-schema constraints from collection shape, hardcoded examples, or sibling class declarations.
+
+#### SCENARIO-ETS-PART2-009-MEDIATYPE-WRITE-ADVERTISEMENT-001 (NORMAL)
+**GIVEN** Requirement 94 applies only when Create/Replace/Delete is implemented
+**WHEN** the ETS checks JSON write-media-type support in the first JSON increment
+**THEN** it uses API definition or explicit operation metadata to verify advertised `application/json` support for CREATE or REPLACE operations
+**AND** default public GeoRobotix smoke does not issue POST, PUT, PATCH, or DELETE
+**AND** OPTIONS alone is readiness evidence, not mediatype-write PASS.
+
+#### SCENARIO-ETS-PART2-009-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
+**GIVEN** the current public IUT may declare `/conf/json` while individual resource endpoints are unhealthy or unavailable
+**WHEN** Datastream, Observation, Command, CommandStatus, CommandResult, or SystemEvent endpoints return HTTP 400, HTTP 500, streaming-only responses, or empty candidate sets
+**THEN** the ETS records FAIL for reachable declared requirements that violate HTTP 200/schema expectations, or SKIP when no candidate/evidence exists
+**AND** it never converts those outcomes into PASS from declaration, broad media-type lists, or existing sibling tests.
+
+#### SCENARIO-ETS-PART2-009-SMOKE-NO-PUBLIC-MUTATION-001 (CRITICAL)
+**GIVEN** TeamEngine smoke runs against the public GeoRobotix IUT
+**WHEN** the Part 2 JSON tests execute
+**THEN** request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests
+**AND** any JSON write-media-type or dynamic-schema behavior requiring mutation SKIPs or relies on non-mutating API-definition evidence only.
+
+#### REQ-ETS-PART2-010..013: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 27 Update planning)
-- **Description**: For each of the remaining 5 OGC 23-002 conformance classes or cross-class closures (`json`, `swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 28 JSON planning)
+- **Description**: For each of the remaining 4 OGC 23-002 conformance classes or cross-class closures (`swecommon-json`, `swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
-- **Maps to**: PRD FR-ETS-39..43, except retired non-standard FR-ETS-35 System History.
+- **Maps to**: PRD FR-ETS-40..43, except retired non-standard FR-ETS-35 System History.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -2251,7 +2315,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-006: partially implemented by Sprint 25 Advanced Filtering Generator.
 - REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - partially implemented by Sprint 26 Generator; seeded local OSH E2E is accepted after fixture repair, while GeoRobotix public smoke remains advisory and currently fails with public-IUT HTTP 500 responses outside the new Part 2 CRD tests.
 - REQ-ETS-PART2-008 (Part 2 Update) - partially implemented by Sprint 27 Generator; positive PATCH lifecycle and concrete schema-rejection dispatch remain deferred.
-- REQ-ETS-PART2-009..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 27 Update Generator.
+- REQ-ETS-PART2-009 (Part 2 JSON Encoding) - planned by Sprint 28; Generator pending.
+- REQ-ETS-PART2-010..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 28 JSON planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

@@ -1,0 +1,206 @@
+# Sprint 28 contract - Part 2 JSON Encoding planning
+
+sprint: "ets-28"
+sprint_name: "part2-json"
+type: "feature-expansion-planning"
+created: "2026-05-26T17:15:41Z"
+description: |
+  Sprint 28 plans the first OGC 23-002 Part 2 JSON Encoding increment.
+  The Generator must make declaration-gated, read-only schema-validation progress
+  without mutating the default public GeoRobotix IUT or claiming full /conf/json
+  closure when SWE Common prerequisite or resource-specific evidence is absent.
+
+stories:
+  - id: "S-ETS-28-01"
+    title: "Part 2 JSON Encoding planning"
+    file: "epics/stories/s-ets-28-01-part2-json-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "L"
+    depends_on:
+      - "S-ETS-27-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-009 (/req/json planned; Generator pending)"
+    - "REQ-ETS-PART2-010..013 (remaining placeholders after JSON split)"
+  new_reqs: []
+  retired_placeholders: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-009-JSON-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-009-RESOURCE-CONDITION-GATES-001"
+    - "SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001"
+    - "SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001"
+    - "SCENARIO-ETS-PART2-009-UNAVAILABLE-ENDPOINT-HONESTY-001"
+    - "SCENARIO-ETS-PART2-009-SMOKE-NO-PUBLIC-MUTATION-001"
+  normal:
+    - "SCENARIO-ETS-PART2-009-SWE-PREREQUISITE-VISIBLE-001"
+    - "SCENARIO-ETS-PART2-009-OBSERVATION-COMMAND-CONSTRAINTS-001"
+    - "SCENARIO-ETS-PART2-009-MEDIATYPE-WRITE-ADVERTISEMENT-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  swe_json_record_components_prerequisite_visible: true
+  resource_condition_gates_explicit: true
+  read_only_schema_validation_planned: true
+  dynamic_schema_constraints_guarded: true
+  public_iut_mutation_forbidden: true
+  options_not_write_pass: true
+  no_code_changes_in_planning: true
+  code_implemented: false
+  planning_teamengine_e2e_captured_or_blocked: true
+  planning_no_mutation_verified: true
+  generator_required_before_runtime_gates: true
+  raze_planning_review_completed: true
+
+raze_planning_review:
+  artifact: ".harness/evaluations/sprint-ets-28-plan-adversarial.yaml"
+  verdict: "APPROVE_WITH_CONCERNS"
+  confidence: 0.92
+  required_fixes: []
+  concerns:
+    - id: "RAZE-ETS28-PLAN-CONCERN-001"
+      severity: "LOW"
+      status: "OPEN_NON_BLOCKING"
+      summary: "Direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive any positive schema/readiness evidence used for PASS or SKIP behavior."
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-26T17:18:00Z"
+  requirement_class: "Clause 16.1, Requirements Class JSON Encoding"
+  requirement_class_identifier: "/req/json"
+  conformance_class_identifier: "/conf/json"
+  prerequisites:
+    - "http://www.opengis.net/spec/SWE/3.0/req/json-record-components"
+  conformance_prerequisites:
+    - "http://www.opengis.net/spec/SWE/3.0/conf/json-record-components"
+  normative_statements:
+    - "/req/json/mediatype-read"
+    - "/req/json/mediatype-write"
+    - "/req/json/datastream-schema"
+    - "/req/json/obsschema-schema"
+    - "/req/json/observation-schema"
+    - "/req/json/observation-constraints"
+    - "/req/json/controlstream-schema"
+    - "/req/json/commandschema-schema"
+    - "/req/json/command-schema"
+    - "/req/json/command-constraints"
+    - "/req/json/commandstatus-schema"
+    - "/req/json/commandresult-schema"
+    - "/req/json/commandresult-constraints"
+    - "/req/json/systemevent-schema"
+  condition_gates:
+    datastream_observation:
+      requirements:
+        - "/req/json/datastream-schema"
+        - "/req/json/obsschema-schema"
+        - "/req/json/observation-schema"
+        - "/req/json/observation-constraints"
+      required_conformance: "/conf/datastream"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/json, endpoint availability, sibling declarations, or collection shape."
+    controlstream_command:
+      requirements:
+        - "/req/json/controlstream-schema"
+        - "/req/json/commandschema-schema"
+        - "/req/json/command-schema"
+        - "/req/json/command-constraints"
+        - "/req/json/commandstatus-schema"
+        - "/req/json/commandresult-schema"
+        - "/req/json/commandresult-constraints"
+      required_conformance: "/conf/controlstream"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/json, endpoint availability, sibling declarations, or collection shape."
+    system_event:
+      requirements:
+        - "/req/json/systemevent-schema"
+      required_conformance: "/conf/system-event"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/json, endpoint availability, sibling declarations, or collection shape."
+
+planning_probes:
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares Part 2 /conf/json, /conf/datastream, /conf/controlstream, /conf/system-event, /conf/create-replace-delete, /conf/swecommon-json, /conf/swecommon-text, and /conf/swecommon-binary; does not declare Part 2 /conf/api-common, /conf/update, /conf/advanced-filtering, or SWE 3.0 /conf/json-record-components."
+    read_health:
+      conformance: "GET /conformance returned HTTP 200."
+      systems: "GET /systems?limit=1 returned HTTP 200 application/json with id 0mqcvdnfoca0."
+      datastreams: "GET /datastreams?limit=1 returned HTTP 500 text/html."
+      observations: "GET /observations?limit=1 returned HTTP 500 text/html."
+      controlstreams: "GET /controlstreams?limit=1 returned HTTP 200 application/json with id 0m4qpft9sdag."
+      controlstream_item: "GET /controlstreams/0m4qpft9sdag returned HTTP 200, content type reported as auto."
+      command_schema_json: "GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/json returned HTTP 200 with commandFormat=application/json and parametersSchema."
+      nested_commands: "GET /controlstreams/0m4qpft9sdag/commands?limit=1 returned HTTP 200 application/json with no candidate Command item."
+      system_events: "GET /systemEvents?limit=1 returned HTTP 400 application/json."
+      system_scoped_events: "GET /systems/0mqcvdnfoca0/events?limit=1 returned HTTP 400 application/json, streaming-only."
+    media_formats:
+      selected_controlstream: "formats includes application/json, application/swe+json, application/swe+csv, application/swe+xml, and application/swe+binary."
+  local_osh:
+    iut_url: "http://field-hub-osh-1:8081/sensorhub/api"
+    container: "field-hub-osh-1 is running but unhealthy."
+    credential_state: "Current shell has no SMOKE_AUTH_CREDENTIAL."
+    conformance: "Unauthenticated GET /sensorhub/api/conformance returned HTTP 401."
+
+planning_e2e_evidence:
+  georobotix_smoke:
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s28-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-28-plan-georobotix-results bash scripts/smoke-test.sh"
+    result: "FAILED_EXTERNAL_IUT_HTTP_500"
+    testng: "160 total / 27 passed / 5 failed / 128 skipped"
+    report: "ops/test-results/sprint-ets-28-plan-georobotix-smoke-failed-2026-05-26.xml"
+    container_log: "ops/test-results/sprint-ets-28-plan-georobotix-smoke-container-failed-2026-05-26.log"
+    failure_cause: "Known public-IUT HTTP 500 responses on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths; no Part 2 JSON runtime tests exist yet."
+    public_iut_mutation: "scripts/no-mutation-oracle.py recognized 61 GeoRobotix IUT request logs; explicit container-log search found no matched GeoRobotix POST/PUT/PATCH/DELETE request lines."
+    disposition: "Advisory public interoperability check; not an accepted zero-failure E2E gate."
+    note: "First attempt from git archive failed before TeamEngine because Dockerfile expects .git; rerun from a temporary Git clone."
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/json is not declared exactly, JSON assertions SKIP with a precise reason."
+  prerequisites:
+    - "Keep SWE Common 3.0 /conf/json-record-components visible before reporting full class closure."
+  condition_gates:
+    - "DataStream/Observation JSON assertions require /conf/datastream."
+    - "ControlStream/Command/CommandStatus/CommandResult JSON assertions require /conf/controlstream."
+    - "SystemEvent JSON assertions require /conf/system-event."
+  schema_honesty:
+    - "Schema PASS requires a retrieved candidate resource or collection and the corresponding bundled schema."
+    - "Observation, Command, and CommandResult constraints require parent schema evidence and candidate child resource evidence."
+  endpoint_honesty:
+    - "HTTP 400, HTTP 500, streaming-only, empty candidate collections, and text/html error bodies cannot produce JSON conformance PASS."
+  mutation_safety:
+    - "Default public GeoRobotix smoke must issue zero IUT-bound POST, PUT, PATCH, or DELETE."
+    - "Requirement 94 mediatype-write is API-definition/readiness only in the first increment."
+    - "OPTIONS alone cannot PASS mediatype-write."
+
+generator_must_do:
+  - "Record exact HEAD before editing."
+  - "Use official OGC 23-002 identifiers: /req/json and /conf/json."
+  - "Use OGC 23-002 Annex A.9 schema names and bundled schemas under connected-systems-2/json."
+  - "Gate resource-specific assertions on /conf/datastream, /conf/controlstream, and /conf/system-event."
+  - "Add tests/comments referencing REQ-ETS-PART2-009 and SCENARIO-ETS-PART2-009-* IDs."
+  - "Run formatter, scripts/mvn-test-via-docker.sh, and TeamEngine smoke after implementation."
+  - "Verify public smoke logs contain zero IUT-bound POST/PUT/PATCH/DELETE by default."
+  - "Update spec/story/traceability/status/changelog/test-results after implementation."
+
+generator_must_not_do:
+  - "Do not mutate public GeoRobotix."
+  - "Do not PASS /conf/json from Common JSON, GeoJSON, SWE Common, or resource-class declarations."
+  - "Do not PASS schema validation without an actual resource or collection validated against the named schema."
+  - "Do not PASS Observation/Command/CommandResult dynamic constraints from hardcoded examples."
+  - "Do not implement SWE Common JSON, SWE Common Text, SWE Common Binary, or observation-binding closure in this sprint."
+
+evaluation_focus:
+  raze:
+    - "Attack false PASS from /conf/json declaration alone."
+    - "Attack missing SWE Common JSON record-components prerequisite handling."
+    - "Attack missing resource condition gates for /conf/datastream, /conf/controlstream, and /conf/system-event."
+    - "Attack schema-validation claims without bundled schema and candidate resource evidence."
+    - "Attack dynamic constraint PASS from hardcoded examples rather than parent schemas."
+    - "Attack any path that mutates public GeoRobotix."
+    - "Check stale placeholder drift: remaining Part 2 placeholders must be REQ-ETS-PART2-010..013."

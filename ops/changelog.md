@@ -2,6 +2,29 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-26T17:25Z — Sprint 28 Part 2 JSON Encoding planning
+
+**Triggered by user instruction**: "Continue'"
+
+- Started Sprint 28 planning for `S-ETS-28-01`, the next Part 2 item after Sprint 27 Update.
+- Verified `_bmad/architecture.md` freshness: last reconciled 2026-05-09, so not stale on 2026-05-26.
+- Verified official OGC 23-002 Clause 16.1 identifiers from the published HTML: JSON Encoding is `/req/json` with conformance `/conf/json`, prerequisite SWE Common 3.0 JSON record components, and Requirements 93-106.
+- Added `.harness/contracts/sprint-ets-28.yaml` and `epics/stories/s-ets-28-01-part2-json-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for JSON planning.
+- Split `REQ-ETS-PART2-009` out for Part 2 JSON Encoding and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-010..013`.
+- Planned condition gates: DataStream/Observation JSON assertions require `/conf/datastream`; ControlStream/Command/CommandStatus/CommandResult assertions require `/conf/controlstream`; SystemEvent assertions require `/conf/system-event`.
+- Probed GeoRobotix state: `/conformance` declares Part 2 `/conf/json`, `/conf/datastream`, `/conf/controlstream`, `/conf/system-event`, `/conf/create-replace-delete`, `/conf/swecommon-json`, `/conf/swecommon-text`, and `/conf/swecommon-binary`, but not SWE 3.0 `/conf/json-record-components`, Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
+- Captured read-only planning evidence: `/datastreams?limit=1` and `/observations?limit=1` returned HTTP 500 text/html; `/controlstreams?limit=1` returned HTTP 200 JSON; `/controlstreams/0m4qpft9sdag/schema?cmdFormat=application/json` returned HTTP 200 with `commandFormat=application/json` and `parametersSchema`; `/systemEvents?limit=1` and `/systems/0mqcvdnfoca0/events?limit=1` returned HTTP 400.
+- Captured local OSH readiness limits: `field-hub-osh-1` is running but unhealthy, the shell has no `SMOKE_AUTH_CREDENTIAL`, and unauthenticated `/sensorhub/api/conformance` returns HTTP 401.
+- Planned verdict policy: exact `/conf/json` gate; no full closure without SWE prerequisite visibility; no resource-specific PASS without the underlying resource conformance class; no schema PASS without actual candidate resource/collection evidence; no dynamic Observation/Command/CommandResult constraint PASS from hardcoded examples; no public GeoRobotix mutation.
+- Ran mandatory GeoRobotix TeamEngine planning smoke. First attempt from `git archive` failed before TeamEngine because Dockerfile expects `.git`; rerun from a temporary Git clone reached TeamEngine and failed `160 total / 27 passed / 5 failed / 128 skipped`.
+- Archived planning smoke artifacts as `ops/test-results/sprint-ets-28-plan-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-28-plan-georobotix-smoke-container-failed-2026-05-26.log`.
+- Interpreted the failed smoke as advisory public-IUT evidence: failures are the existing GeoRobotix HTTP 500 read-path condition, no Part 2 JSON runtime tests exist yet, and no matched GeoRobotix POST/PUT/PATCH/DELETE request lines appear in the archived container log.
+- Raze planning review wrote `.harness/evaluations/sprint-ets-28-plan-adversarial.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.92, and no required fixes.
+- Raze low concern: direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive positive schema/readiness evidence used for PASS or SKIP behavior.
+
+---
+
 ## 2026-05-22T20:34Z — Sprint 27 Part 2 Update Generator
 
 **Triggered by user instruction**: "Continue."

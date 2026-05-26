@@ -47,6 +47,8 @@ Sprint ets-29 Part 2 SWE Common JSON Encoding planning:
   - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.93.
   - Required fixes: none.
   - Low concern: direct planning probe transcripts are summarized rather than archived as raw standalone artifacts; Generator should reproduce or archive any probe bodies used for PASS/SKIP behavior.
+- Commit/push:
+  - Planning commit `690dbd3 Plan Sprint 29 Part 2 SWE Common JSON` was pushed over SSH on 2026-05-26 (`be7f1a6..690dbd3 main -> main`).
 
 Sprint ets-28 Part 2 JSON Encoding Generator:
 

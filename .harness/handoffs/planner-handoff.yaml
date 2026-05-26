@@ -92,10 +92,9 @@ raze_review:
       summary: "Pending Raze status fields were flipped after the review report existed."
 
 commit:
-  status: "pending"
-  sha: null
-  message: null
-  push: null
+  sha: "690dbd3"
+  message: "Plan Sprint 29 Part 2 SWE Common JSON"
+  push: "be7f1a6..690dbd3 main -> main over SSH"
 
 next_agent: "generator"
 next_action: "After the planning commit is pushed, implement the first read-only /conf/swecommon-json Generator subset from .harness/contracts/sprint-ets-29.yaml."

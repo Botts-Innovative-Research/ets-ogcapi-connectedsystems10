@@ -49,6 +49,8 @@ Sprint ets-30 Part 2 SWE Common Text Encoding planning:
   - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.93.
   - Required fixes: none.
   - Low concern: review bookkeeping was pending because Raze was explicitly read-only; post-review reconciliation closed it.
+- Commit/push:
+  - Planning commit `3c68858 Plan Sprint 30 Part 2 SWE Common Text` was pushed over SSH on 2026-05-26 (`6ba24db..3c68858 main -> main`).
 
 Sprint ets-29 Part 2 SWE Common JSON Encoding Generator:
 

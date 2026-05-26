@@ -21,6 +21,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Archived planning smoke artifacts as `ops/test-results/sprint-ets-30-plan-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-30-plan-georobotix-smoke-container-failed-2026-05-26.log`.
 - Verified public-IUT safety: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs; explicit log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
 - Raze planning review wrote `.harness/evaluations/sprint-ets-30-plan-adversarial.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.93, and no required fixes. The only concern was bookkeeping pending because Raze was read-only; this reconciliation closes it.
+- Committed and pushed Sprint 30 planning over SSH as `3c68858 Plan Sprint 30 Part 2 SWE Common Text` (`6ba24db..3c68858 main -> main`).
 
 ---
 

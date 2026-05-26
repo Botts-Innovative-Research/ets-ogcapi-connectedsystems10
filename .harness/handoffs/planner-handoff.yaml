@@ -1,5 +1,5 @@
 agent: planner
-status: planned_raze_approved_pending_commit
+status: complete
 timestamp: "2026-05-26T23:20:00Z"
 sprint_number: "ets-30"
 sprint_name: "part2-swecommon-text"
@@ -91,10 +91,10 @@ raze_review:
       summary: "Review bookkeeping needed post-review reconciliation because Raze was explicitly read-only."
 
 commit:
-  status: "pending"
-  sha: ""
+  status: "pushed"
+  sha: "3c68858"
   message: "Plan Sprint 30 Part 2 SWE Common Text"
-  push: "pending"
+  push: "6ba24db..3c68858 main -> main"
 
 next_agent: "generator"
 next_action: "After planning is committed and pushed, implement the first read-only /conf/swecommon-text Generator subset from .harness/contracts/sprint-ets-30.yaml."

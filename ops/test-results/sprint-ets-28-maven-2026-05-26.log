@@ -1,0 +1,115 @@
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO]
+[INFO] -----------< org.opengis.cite:ets-ogcapi-connectedsystems10 >-----------
+[INFO] Building ogcapi-connectedsystems10 Conformance Test Suite 0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Deleting /workspace/target
+[INFO]
+[INFO] --- spring-javaformat:0.0.43:validate (default) @ ets-ogcapi-connectedsystems10 ---
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-versions) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO]
+[INFO] --- buildnumber:3.2.1:create (default) @ ets-ogcapi-connectedsystems10 ---
+[INFO] ShortRevision tag detected. The value is '10'.
+[INFO] Executing: /bin/sh -c cd '/workspace' && 'git' 'log' '-1' '--no-merges' '--format=format:%H %aI %aE %aN'
+[INFO] Working directory: /workspace
+[INFO] Storing buildNumber: ce661393b0 at timestamp: 1779821282925
+[INFO] Executing: /bin/sh -c cd '/workspace' && 'git' 'symbolic-ref' 'HEAD'
+[INFO] Working directory: /workspace
+[INFO] Storing scmBranch: main
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Copying 146 resources from src/main/resources to target/classes
+[INFO] Copying 2 resources from src/main/javadoc to target/classes/doc/ogcapi-connectedsystems10/0.1-SNAPSHOT
+[INFO] The encoding used to copy filtered properties files has not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resources. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 51 source files with javac [debug release 17] to target/classes
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Copying 7 resources from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 26 source files with javac [debug release 17] to target/test-classes
+[INFO] /workspace/src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyETSAssert.java: Some input files use or override a deprecated API.
+[INFO] /workspace/src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyETSAssert.java: Recompile with -Xlint:deprecation for details.
+[INFO]
+[INFO] --- surefire:3.5.1:test (default-test) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junit4.JUnit4Provider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyMaskingRequestLoggingFilter
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.647 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyMaskingRequestLoggingFilter
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyAuthCredentialPropagation
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.337 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyAuthCredentialPropagation
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyWireRestoresOriginalCredential
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.120 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyWireRestoresOriginalCredential
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifySuiteFixtureListener
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifySuiteFixtureListener
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyCredentialMaskingFilter
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyCredentialMaskingFilter
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGController
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.004 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGController
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyETSAssert
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.227 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyETSAssert
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.util.VerifyURIUtils
+[WARNING] Tests run: 5, Failures: 0, Errors: 0, Skipped: 2, Time elapsed: 0.017 s -- in org.opengis.cite.ogcapiconnectedsystems10.util.VerifyURIUtils
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.util.VerifyValidationUtils
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.687 s -- in org.opengis.cite.ogcapiconnectedsystems10.util.VerifyValidationUtils
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.util.VerifyXMLUtils
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in org.opengis.cite.ogcapiconnectedsystems10.util.VerifyXMLUtils
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency
+[INFO] Tests run: 64, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.270 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.VerifyEncodingRelationTypes
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.VerifyEncodingRelationTypes
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.VerifyCreateReplaceDeleteLocationResolution
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.VerifyCreateReplaceDeleteLocationResolution
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.update.VerifyUpdateChangedFieldAssertion
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.update.VerifyUpdateChangedFieldAssertion
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.VerifyPart2ControlStreamTests
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.VerifyPart2ControlStreamTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.VerifyPart2CreateReplaceDeleteTests
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.VerifyPart2CreateReplaceDeleteTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.VerifyPart2UpdateTests
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.VerifyPart2UpdateTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.VerifyPart2SystemEventTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.VerifyPart2SystemEventTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.VerifyPart2AdvancedFilteringTests
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.VerifyPart2AdvancedFilteringTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.VerifyPart2FeasibilityTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.VerifyPart2FeasibilityTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.VerifyPart2DatastreamTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.VerifyPart2DatastreamTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.VerifyPart2ApiCommonTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.VerifyPart2ApiCommonTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.VerifyPart2JsonTests
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.685 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.VerifyPart2JsonTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.VerifySensorMlResourceMappingAssertions
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.VerifySensorMlResourceMappingAssertions
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.VerifyGeoJsonResourceMappingAssertions
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.VerifyGeoJsonResourceMappingAssertions
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.VerifyEncodingMediatypeWrite
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.VerifyEncodingMediatypeWrite
+[INFO]
+[INFO] Results:
+[INFO]
+[WARNING] Tests run: 230, Failures: 0, Errors: 0, Skipped: 3
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.894 s
+[INFO] Finished at: 2026-05-26T18:48:11Z
+[INFO] ------------------------------------------------------------------------

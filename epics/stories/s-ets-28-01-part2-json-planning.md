@@ -1,10 +1,12 @@
-# S-ETS-28-01: Part 2 JSON Encoding planning
+# S-ETS-28-01: Part 2 JSON Encoding
 
 ## Status
-Planned; Generator pending.
+PARTIAL_IMPLEMENTED by Sprint 28 Generator. Public GeoRobotix TeamEngine smoke is a failed external-IUT check, not a passing E2E gate.
 
 ## User Instruction
 Planning triggered by: "Continue'" after Sprint 27 Part 2 Update was implemented, reconciled, and pushed.
+
+Generator triggered by: "Generate!"
 
 ## Scope
 Plan the first declaration-gated, read-only Generator increment for OGC 23-002 Clause 16.1 Requirements Class "JSON Encoding".
@@ -77,6 +79,26 @@ Plan the first declaration-gated, read-only Generator increment for OGC 23-002 C
 - Public-IUT safety check: `scripts/no-mutation-oracle.py` recognized 61 GeoRobotix IUT request logs; explicit container-log search found no matched IUT-bound POST, PUT, PATCH, or DELETE request lines for GeoRobotix.
 - Raze planning review: `.harness/evaluations/sprint-ets-28-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes. Low concern only: direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive any positive schema/readiness evidence used for PASS or SKIP behavior.
 
+## Generator Implementation
+- Added `Part2JsonTests` with a new `part2json` TestNG group using official OGC 23-002 `/req/json` and `/conf/json` identifiers.
+- Runtime coverage includes exact `/conf/json` declaration, SWE Common 3.0 JSON record-components prerequisite visibility, resource condition-gate visibility, read-only JSON mediatype checks, Annex A.9 bundled schema validation, dynamic Observation/Command/CommandResult evidence guards, and non-mutating `mediatype-write` API-definition advertisement checks.
+- Added `com.networknt:json-schema-validator` for draft 2020-12 JSON Schema validation against bundled resources under `src/main/resources/schemas/`.
+- Fixed schema loading to map `https://csapi-compliance.local/schemas/` to `classpath:schemas/`, so TeamEngine runtime resolves bundled Part 2 and shared schemas from the all-in-one ETS artifact.
+- Added `VerifyPart2JsonTests` helper regressions for official identifiers, condition gates, JSON-compatible content types, Annex A.9 schema bundling and classpath loading, non-mutating write advertisement rules, and stable group naming.
+- Updated `testng.xml` and `VerifyTestNGSuiteDependency` so `part2json` depends on `core common`, all runtime methods carry the `part2json` group, and Part 2 JSON classes are co-located.
+
+## Generator Verification
+- Formatter: Docker Maven `spring-javaformat:apply` returned BUILD SUCCESS.
+- Focused Maven: `VerifyPart2JsonTests,VerifyTestNGSuiteDependency` returned `72 tests / 0 failures / 0 errors / 0 skipped`.
+- Full Maven: `ops/test-results/sprint-ets-28-maven-2026-05-26.log` records BUILD SUCCESS with `230 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory GeoRobotix TeamEngine smoke ran from a temporary Git clone with `SMOKE_CONTAINER_NAME=ets-csapi-s28-json-georobotix-rerun` and `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-28-json-georobotix-results-rerun`.
+- GeoRobotix smoke result: `176 total / 29 passed / 16 failed / 131 skipped`; archived as `ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log`.
+- Public smoke failure interpretation: existing GeoRobotix SensorML/GeoJSON/SystemFeatures/Datastream/Observation reads still return HTTP 500; new Part 2 JSON failures are honest failures for `/datastreams` and `/observations` HTTP 500 plus `/controlstreams` JSON schema validation against `controlStreamCollection.json` (`validTime` oneOf ambiguity and missing `issueTime`, `executionTime`, `live`, and `async`).
+- The previous TeamEngine schema-loader failure is closed: the rerun contains no `Failed to load json schema` or `could not be schema-validated` messages.
+- Public-IUT safety: the archived container log contains 75 GeoRobotix `Request: GET ...` lines and no matched GeoRobotix `POST`, `PUT`, `PATCH`, or `DELETE` request lines. `scripts/no-mutation-oracle.py` was inconclusive for this log format, so the explicit grep is the recorded mutation check.
+- Local OSH was not used as an accepted Sprint 28 gate in this shell; `field-hub-osh-1` remains unhealthy and unauthenticated `/sensorhub/api/conformance` returns HTTP 401 without a provided `SMOKE_AUTH_CREDENTIAL`.
+- Raze implementation review: `.harness/evaluations/sprint-ets-28-adversarial-implementation.yaml` first returned `GAPS_FOUND` confidence 0.87 for narrow schema-loader regression coverage and stale story wording. After expanding schema-loader coverage across every Annex A.9 schema and removing the stale story wording, the focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes remaining. The remaining concern is non-blocking URI path escaping hardening.
+
 ## Definition of Done
 - [x] OpenSpec splits `REQ-ETS-PART2-009` out for Part 2 JSON and keeps remaining placeholders at `REQ-ETS-PART2-010..013`.
 - [x] Story, sprint contract, traceability, epic, ops status, test-results, known issues, changelog, and planner handoff are reconciled for planning.
@@ -88,10 +110,18 @@ Plan the first declaration-gated, read-only Generator increment for OGC 23-002 C
 - [x] Planning TeamEngine E2E evidence is captured and documented honestly.
 - [x] Raze reviews planning before Generator starts.
 - [x] Planning-only change is committed and pushed before Generator implementation.
+- [x] Generator adds Part 2 JSON runtime tests and helper regressions with REQ/SCENARIO traceability.
+- [x] TestNG wiring adds `part2json` with structural lint coverage.
+- [x] Formatter and Maven verification are complete and archived.
+- [x] Mandatory GeoRobotix TeamEngine smoke is complete and archived.
+- [x] Failed public E2E outcome is documented honestly and not reported as passing.
+- [x] Public GeoRobotix mutation check records no POST/PUT/PATCH/DELETE request lines.
+- [ ] Full positive `/conf/json` closure remains open pending a healthy declaring IUT with valid JSON resources and SWE prerequisite evidence.
+- [ ] Positive JSON write lifecycle behavior remains out of scope for this read-only increment.
 
 ## Out of Scope
-- Implementing Part 2 JSON runtime tests in this planning step.
 - Public GeoRobotix mutation.
 - Positive JSON write lifecycle behavior.
 - SWE Common JSON/Text/Binary encoding classes.
-- Observation-binding cross-class closure beyond planning constraints for JSON dynamic-schema checks.
+- Semantic Observation/Command/CommandResult validation against parent DataStream or ControlStream schemas; the Generator records prerequisite/candidate evidence but avoids shape-only PASS.
+- Observation-binding cross-class closure beyond the JSON dynamic-schema evidence guards.

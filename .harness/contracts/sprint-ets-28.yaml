@@ -1,8 +1,8 @@
-# Sprint 28 contract - Part 2 JSON Encoding planning
+# Sprint 28 contract - Part 2 JSON Encoding
 
 sprint: "ets-28"
 sprint_name: "part2-json"
-type: "feature-expansion-planning"
+type: "feature-expansion-generator-partial"
 created: "2026-05-26T17:15:41Z"
 description: |
   Sprint 28 plans the first OGC 23-002 Part 2 JSON Encoding increment.
@@ -12,7 +12,7 @@ description: |
 
 stories:
   - id: "S-ETS-28-01"
-    title: "Part 2 JSON Encoding planning"
+    title: "Part 2 JSON Encoding"
     file: "epics/stories/s-ets-28-01-part2-json-planning.md"
     epic: "epic-ets-03-part2-classes"
     priority: "P0"
@@ -23,7 +23,7 @@ stories:
 
 requirements:
   modified_reqs:
-    - "REQ-ETS-PART2-009 (/req/json planned; Generator pending)"
+    - "REQ-ETS-PART2-009 (/req/json partial implementation)"
     - "REQ-ETS-PART2-010..013 (remaining placeholders after JSON split)"
   new_reqs: []
   retired_placeholders: []
@@ -52,14 +52,23 @@ success_criteria:
   resource_condition_gates_explicit: true
   read_only_schema_validation_planned: true
   dynamic_schema_constraints_guarded: true
+  dynamic_schema_shape_only_pass_blocked: true
   public_iut_mutation_forbidden: true
   options_not_write_pass: true
+  mediatype_write_exact_application_json_only: true
   no_code_changes_in_planning: true
-  code_implemented: false
+  code_implemented: true
   planning_teamengine_e2e_captured_or_blocked: true
   planning_no_mutation_verified: true
-  generator_required_before_runtime_gates: true
+  generator_required_before_runtime_gates: false
   raze_planning_review_completed: true
+  formatter_completed: true
+  maven_completed: true
+  teamengine_generator_e2e_completed: true
+  teamengine_generator_e2e_passed: false
+  public_iut_mutation_absent_in_generator_log: true
+  raze_implementation_review_completed: true
+  raze_implementation_required_fixes_closed: true
 
 raze_planning_review:
   artifact: ".harness/evaluations/sprint-ets-28-plan-adversarial.yaml"
@@ -159,6 +168,39 @@ planning_e2e_evidence:
     disposition: "Advisory public interoperability check; not an accepted zero-failure E2E gate."
     note: "First attempt from git archive failed before TeamEngine because Dockerfile expects .git; rerun from a temporary Git clone."
 
+generator_evidence:
+  implementation:
+    runtime_class: "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java"
+    helper_regressions: "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/VerifyPart2JsonTests.java"
+    testng_group: "part2json"
+    group_dependencies: "core common"
+    dependency_added: "com.networknt:json-schema-validator:1.5.9"
+    scope: "First declaration-gated read-only JSON Encoding subset for Requirements 93-106."
+    schema_loader_note: "Schema IRI prefix https://csapi-compliance.local/schemas/ maps to classpath:schemas/ for TeamEngine all-in-one artifact resolution."
+  formatter:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+    result: "BUILD SUCCESS"
+  focused_maven:
+    command: "bash scripts/mvn-test-via-docker.sh -Dtest=VerifyPart2JsonTests,VerifyTestNGSuiteDependency"
+    result: "BUILD SUCCESS"
+    surefire: "72 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -v /tmp/ets-m2repo-s28-user:/m2 -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn clean test -B -Dmaven.repo.local=/m2 -Dmaven.artifact.threads=1"
+    result: "BUILD SUCCESS"
+    surefire: "230 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-28-maven-2026-05-26.log"
+    note: "A first full wrapper run failed before tests on transient Maven plugin dependency resolution; a retry with an external /tmp Maven repository completed successfully."
+  georobotix_smoke:
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s28-json-georobotix-rerun SMOKE_OUTPUT_DIR=/tmp/sprint-ets-28-json-georobotix-results-rerun bash scripts/smoke-test.sh"
+    result: "FAILED_EXTERNAL_IUT_JSON_AND_HTTP500"
+    testng: "176 total / 29 passed / 16 failed / 131 skipped"
+    report: "ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml"
+    container_log: "ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log"
+    failure_cause: "Existing GeoRobotix HTTP 500 read failures plus new honest Part 2 JSON schema failures for /controlstreams against controlStreamCollection.json."
+    schema_loader: "No remaining Failed to load json schema messages after classpath mapper fix."
+    public_iut_mutation: "75 GeoRobotix GET request log lines; no matched GeoRobotix POST/PUT/PATCH/DELETE request lines. no-mutation-oracle.py was inconclusive for this log format."
+    disposition: "Mandatory public smoke run, failed external/public-IUT evidence, not a passing E2E gate."
+
 verdict_policy:
   declaration_gate:
     - "If /conf/json is not declared exactly, JSON assertions SKIP with a precise reason."
@@ -170,13 +212,27 @@ verdict_policy:
     - "SystemEvent JSON assertions require /conf/system-event."
   schema_honesty:
     - "Schema PASS requires a retrieved candidate resource or collection and the corresponding bundled schema."
-    - "Observation, Command, and CommandResult constraints require parent schema evidence and candidate child resource evidence."
+    - "Observation, Command, and CommandResult constraints require parent schema evidence and candidate child resource evidence, then SKIP instead of shape-only PASS until semantic validation is implemented."
   endpoint_honesty:
     - "HTTP 400, HTTP 500, streaming-only, empty candidate collections, and text/html error bodies cannot produce JSON conformance PASS."
   mutation_safety:
     - "Default public GeoRobotix smoke must issue zero IUT-bound POST, PUT, PATCH, or DELETE."
     - "Requirement 94 mediatype-write is API-definition/readiness only in the first increment."
     - "OPTIONS alone cannot PASS mediatype-write."
+    - "OpenAPI requestBody content keys must advertise exact application/json for mediatype-write PASS."
+
+raze_implementation_review:
+  artifact: ".harness/evaluations/sprint-ets-28-adversarial-implementation.yaml"
+  initial_verdict: "GAPS_FOUND"
+  initial_confidence: 0.87
+  focused_recheck_verdict: "APPROVE_WITH_CONCERNS"
+  focused_recheck_confidence: 0.93
+  required_fixes_remaining: []
+  closed_required_fixes:
+    - "Schema-loader regression coverage now iterates every ANNEX_A9_SCHEMA_FILES entry."
+    - "Story Out of Scope no longer says runtime tests are out of scope."
+  concerns:
+    - "URI path escaping for resource IDs remains non-blocking hardening."
 
 generator_must_do:
   - "Record exact HEAD before editing."

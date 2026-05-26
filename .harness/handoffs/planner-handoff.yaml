@@ -1,5 +1,5 @@
 agent: planner
-status: planned_generator_pending
+status: superseded_by_generator_handoff
 timestamp: "2026-05-26T17:15:41Z"
 sprint_number: "ets-28"
 sprint_name: "part2-json"
@@ -11,7 +11,7 @@ triggered_by: |
 planning_result:
   story:
     id: "S-ETS-28-01"
-    title: "Part 2 JSON Encoding planning"
+    title: "Part 2 JSON Encoding"
     file: "epics/stories/s-ets-28-01-part2-json-planning.md"
   official_identifiers:
     source: "https://docs.ogc.org/is/23-002/23-002.html"
@@ -90,4 +90,4 @@ commit:
   push: "13b34f7..5d95d55 main -> main over SSH"
 
 next_agent: "generator"
-next_action: "Implement the first Part 2 JSON declaration-gated read-only subset."
+next_action: "Use .harness/handoffs/generator-handoff.yaml; Sprint 28 Generator is partial implemented and awaits Raze implementation review."

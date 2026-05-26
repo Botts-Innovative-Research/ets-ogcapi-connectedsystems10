@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T17:33Z
+Last updated: 2026-05-26T18:51Z
 
 ## Fresh-Session Entry Point
 
@@ -38,13 +38,33 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, and pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, and pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`. Sprint 28 Generator changes are present in the worktree and not yet committed.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-27-01` Generator is PARTIAL for the Part 2 Update safety-gated subset.
-- Latest planned story: `S-ETS-28-01` Part 2 JSON Encoding planning.
+- Latest implemented story: `S-ETS-28-01` Generator is PARTIAL for the Part 2 JSON Encoding read-only subset.
+- Latest planned story: remaining Part 2 placeholders `REQ-ETS-PART2-010..013`.
 - Latest pushed implementation commit: `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`.
-- Current sprint status: Sprint ets-28 Part 2 JSON Encoding is planned and Raze-reviewed; Generator is pending. Raze planning review returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes. Mandatory GeoRobotix planning smoke still fails on existing public-IUT HTTP 500 read-path failures (`160 total / 27 passed / 5 failed / 128 skipped`), with zero matched GeoRobotix POST/PUT/PATCH/DELETE lines. Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON` is pushed. Sprint ets-27 Part 2 Update remains PARTIAL_IMPLEMENTED with accepted authenticated local OSH E2E (`160 total / 62 passed / 0 failed / 98 skipped`).
+- Current sprint status: Sprint ets-28 Part 2 JSON Encoding Generator is PARTIAL_IMPLEMENTED in the worktree. Formatter and Maven verification succeeded (`230 total / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed `176 total / 29 passed / 16 failed / 131 skipped` because the public IUT still returns HTTP 500 on existing reads and its `/controlstreams` JSON fails `controlStreamCollection.json`; this is not a passing E2E gate. No schema-loader failures remain. Public-IUT write safety is supported by explicit log grep: 75 GeoRobotix GET lines and zero matched POST/PUT/PATCH/DELETE lines; `scripts/no-mutation-oracle.py` was inconclusive for this log format. Raze implementation review is complete: initial `GAPS_FOUND` required fixes are closed, and focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes. Sprint ets-27 Part 2 Update remains PARTIAL_IMPLEMENTED with accepted authenticated local OSH E2E (`160 total / 62 passed / 0 failed / 98 skipped`).
 - Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`).
+
+## Sprint ets-28 Generator Evidence
+
+Part 2 JSON Encoding declaration-gated read-only subset:
+
+- Story: `epics/stories/s-ets-28-01-part2-json-planning.md`
+- Contract: `.harness/contracts/sprint-ets-28.yaml`
+- OpenSpec: `REQ-ETS-PART2-009` is now PARTIAL_IMPLEMENTED for OGC 23-002 Clause 16.1; remaining Part 2 placeholders are `REQ-ETS-PART2-010..013`.
+- Implementation: `Part2JsonTests` adds exact `/conf/json` declaration, SWE Common JSON record-component prerequisite visibility, `/conf/datastream`/`/conf/controlstream`/`/conf/system-event` resource condition gates, read-only JSON media type checks, Annex A.9 bundled schema validation, dynamic Observation/Command/CommandResult evidence guards that avoid shape-only PASS, and non-mutating exact-`application/json` mediatype-write API-definition checks.
+- Structural coverage: `VerifyPart2JsonTests` adds 8 helper regressions, `VerifyTestNGSuiteDependency` adds `part2json` dependency/method/co-location lint, and `testng.xml` wires `part2json` with `core common`.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` returned BUILD SUCCESS.
+- Focused Maven: `bash scripts/mvn-test-via-docker.sh -Dtest=VerifyPart2JsonTests,VerifyTestNGSuiteDependency` returned `72 tests / 0 failures / 0 errors / 0 skipped`.
+- Full Maven: Docker Maven `mvn clean test -Dmaven.repo.local=/m2 -Dmaven.artifact.threads=1` returned BUILD SUCCESS, `230 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-28-maven-2026-05-26.log`.
+- Mandatory GeoRobotix TeamEngine smoke: final rerun `SMOKE_CONTAINER_NAME=ets-csapi-s28-json-georobotix-rerun SMOKE_OUTPUT_DIR=/tmp/sprint-ets-28-json-georobotix-results-rerun bash scripts/smoke-test.sh` failed `176 total / 29 passed / 16 failed / 131 skipped`.
+- E2E artifacts: `ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log`.
+- E2E interpretation: the schema classpath mapper issue is fixed; the remaining failures are public-IUT HTTP 500 read-path failures and real `/controlstreams` JSON validation failures against `controlStreamCollection.json`.
+- Public-IUT safety: explicit log grep found 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines. `scripts/no-mutation-oracle.py` was inconclusive because no IUT-bound request lines were recognized in this log format.
+- Current limitation: no accepted zero-failure Sprint 28 E2E gate exists yet. Full positive JSON closure needs a healthy declaring IUT with valid DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, SystemEvent, SWE record-component, and mediatype-write evidence.
+- Raze implementation review: `.harness/evaluations/sprint-ets-28-adversarial-implementation.yaml` recorded initial `GAPS_FOUND` confidence 0.87 for narrow schema-loader regression coverage and stale story scope wording. Both required fixes were applied. Focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes; the remaining non-blocking concern is URI path escaping hardening for resource IDs.
+- Next action: commit and push Sprint 28 Generator.
 
 ## Sprint ets-28 Planning Evidence
 
@@ -52,7 +72,7 @@ Part 2 JSON Encoding declaration-gated read-only subset:
 
 - Story: `epics/stories/s-ets-28-01-part2-json-planning.md`
 - Contract: `.harness/contracts/sprint-ets-28.yaml`
-- OpenSpec: `REQ-ETS-PART2-009` is now SPECIFIED_PLANNED for OGC 23-002 Clause 16.1; remaining Part 2 placeholders are `REQ-ETS-PART2-010..013`.
+- OpenSpec: `REQ-ETS-PART2-009` was SPECIFIED_PLANNED during planning and is now PARTIAL_IMPLEMENTED by the Generator; remaining Part 2 placeholders are `REQ-ETS-PART2-010..013`.
 - Scope planned: first declaration-gated, read-only Part 2 JSON Encoding subset using official `/req/json` and `/conf/json` identifiers.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-05-09; checked 2026-05-26 and not stale.
 - OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 16.1 "Requirements Class JSON Encoding" and Annex A.9.
@@ -67,7 +87,7 @@ Part 2 JSON Encoding declaration-gated read-only subset:
 - Public-IUT safety: `scripts/no-mutation-oracle.py` recognized 61 GeoRobotix IUT request logs; explicit container-log search found no matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
 - Raze planning review: `.harness/evaluations/sprint-ets-28-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes and one low non-blocking evidence-archival concern.
 - Commit/push: planning commit `5d95d55 Plan Sprint 28 Part 2 JSON` was pushed over SSH (`13b34f7..5d95d55 main -> main`).
-- Next action: start Generator for the first Part 2 JSON declaration-gated read-only subset.
+- Next action: continue from Generator evidence above.
 
 ## Sprint ets-26 Generator Evidence
 

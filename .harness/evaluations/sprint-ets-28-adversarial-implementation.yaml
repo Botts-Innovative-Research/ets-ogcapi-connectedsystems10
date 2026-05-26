@@ -1,0 +1,57 @@
+agent: raze
+role: adversarial-reviewer
+status: completed
+review_type: implementation
+sprint: ets-28
+story: S-ETS-28-01
+capability: ets-ogcapi-connectedsystems
+target: Sprint 28 Part 2 JSON Encoding Generator
+initial_review:
+  verdict: GAPS_FOUND
+  confidence: 0.87
+  started_at: "2026-05-26T18:40:30Z"
+  completed_at: "2026-05-26T18:43:30Z"
+  token_metadata: unavailable_from_tool_surface
+  required_fixes:
+    - id: RAZE-ETS28-IMPL-GAP-001
+      severity: medium
+      status: closed
+      finding: "Schema-loader regression coverage only checked two Annex A.9 schemas while runtime and spec scope all bundled schemas."
+      fix: "`VerifyPart2JsonTests.annexA9SchemasLoadThroughClasspathMapper` now iterates every `ANNEX_A9_SCHEMA_FILES` entry."
+    - id: RAZE-ETS28-IMPL-GAP-002
+      severity: medium
+      status: closed
+      finding: "Story Out of Scope still listed implementing Part 2 JSON runtime tests as out of scope after Generator implementation."
+      fix: "Story Out of Scope now removes that planning-only line and explicitly defers semantic parent-schema validation to avoid shape-only PASS."
+  concerns:
+    - id: RAZE-ETS28-IMPL-CONCERN-001
+      severity: low
+      status: closed
+      finding: "Mediatype-write parsing accepted `application/json; charset=utf-8` OpenAPI content keys despite exact `application/json` policy."
+      fix: "Runtime now requires exact `application/json`; regression rejects parameterized OpenAPI content keys."
+    - id: RAZE-ETS28-IMPL-CONCERN-002
+      severity: low
+      status: open_non_blocking
+      finding: "Resource IDs are concatenated into paths without URI escaping."
+      disposition: "Non-blocking hardening item; consistent with current local patterns and not introduced by this gapfix."
+focused_recheck:
+  verdict: APPROVE_WITH_CONCERNS
+  confidence: 0.93
+  completed_at: "2026-05-26T18:51:04Z"
+  required_fixes_remaining: []
+  results:
+    - "Prior schema-loader coverage gap is closed."
+    - "Prior stale story gap is closed."
+    - "Immediate regression check passed: mediatype-write now requires exact `application/json`."
+    - "Dynamic constraint checks avoid shape-only PASS by SKIPing after prerequisite/candidate evidence when semantic validation remains deferred."
+    - "Evidence remains honest: Maven `230/0/0/3`; TeamEngine GeoRobotix `176/29/16/131`; no schema-loader failures; 75 GeoRobotix GET lines and zero matched write methods."
+verification_evidence:
+  formatter: "Docker Maven spring-javaformat:apply BUILD SUCCESS after the gapfix."
+  focused_maven: "72 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven: "230 tests / 0 failures / 0 errors / 3 skipped"
+  georobotix_teamengine_smoke: "176 total / 29 passed / 16 failed / 131 skipped"
+  public_iut_mutation: "Explicit grep found 75 GeoRobotix GET request lines and zero matched POST/PUT/PATCH/DELETE; no-mutation oracle inconclusive for this log format."
+  artifacts:
+    - "ops/test-results/sprint-ets-28-maven-2026-05-26.log"
+    - "ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml"
+    - "ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log"

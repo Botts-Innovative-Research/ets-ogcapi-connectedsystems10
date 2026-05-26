@@ -1,30 +1,37 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T17:33Z
+Last updated: 2026-05-26T18:51Z
 
 ## Current Sprint Evidence
 
-Sprint ets-28 Part 2 JSON Encoding planning:
+Sprint ets-28 Part 2 JSON Encoding Generator:
 
 - Status:
   - Story: `epics/stories/s-ets-28-01-part2-json-planning.md`
   - Contract: `.harness/contracts/sprint-ets-28.yaml`
-  - Planning is complete and Raze-reviewed; Generator runtime code is not implemented yet.
-  - TeamEngine planning E2E against GeoRobotix is captured as a failed public check because the public IUT still returns HTTP 500 on existing read paths.
+  - Generator code is implemented as a PARTIAL read-only subset.
+  - TeamEngine Generator E2E against GeoRobotix is captured as a failed public check because the public IUT still returns HTTP 500 on existing read paths and now exposes real JSON schema failures for `/controlstreams`.
+  - No accepted zero-failure Sprint 28 E2E gate exists yet.
 - Official OGC source verification:
   - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 16.1 "Requirements Class JSON Encoding" and Annex A.9.
   - Requirements class identifier: `/req/json`.
   - Conformance class identifier: `/conf/json`.
   - Prerequisite: SWE Common 3.0 JSON record components.
-  - Selected planning requirement set: Requirements 93-106, `/req/json/mediatype-read`, `/req/json/mediatype-write`, `/req/json/datastream-schema`, `/req/json/obsschema-schema`, `/req/json/observation-schema`, `/req/json/observation-constraints`, `/req/json/controlstream-schema`, `/req/json/commandschema-schema`, `/req/json/command-schema`, `/req/json/command-constraints`, `/req/json/commandstatus-schema`, `/req/json/commandresult-schema`, `/req/json/commandresult-constraints`, and `/req/json/systemevent-schema`.
+  - Selected requirement set: Requirements 93-106, `/req/json/mediatype-read`, `/req/json/mediatype-write`, `/req/json/datastream-schema`, `/req/json/obsschema-schema`, `/req/json/observation-schema`, `/req/json/observation-constraints`, `/req/json/controlstream-schema`, `/req/json/commandschema-schema`, `/req/json/command-schema`, `/req/json/command-constraints`, `/req/json/commandstatus-schema`, `/req/json/commandresult-schema`, `/req/json/commandresult-constraints`, and `/req/json/systemevent-schema`.
   - Resource condition gates: DataStream/Observation JSON assertions require `/conf/datastream`; ControlStream/Command/CommandStatus/CommandResult assertions require `/conf/controlstream`; SystemEvent JSON assertions require `/conf/system-event`.
-- GeoRobotix planning probes:
+- Generator implementation:
+  - `Part2JsonTests`: runtime checks for exact `/conf/json` declaration, SWE prerequisite visibility, resource condition gates, read-only JSON media type compatibility, Annex A.9 schema validation, dynamic Observation/Command/CommandResult evidence guards that avoid shape-only PASS, non-mutating exact-`application/json` mediatype-write API-definition checks, and unavailable-endpoint honesty.
+  - `VerifyPart2JsonTests`: 8 helper regressions covering official identifiers, condition gates, content type compatibility, bundled schema resources, classpath schema loading, service-desc request body advertisement parsing, OPTIONS/`+json` rejection for write advertisement, and stable group naming.
+  - `testng.xml`: adds `part2json` with `core common` dependencies.
+  - `VerifyTestNGSuiteDependency`: adds `part2json` dependency, method-group, and co-location structural checks.
+  - `pom.xml`: adds `com.networknt:json-schema-validator:1.5.9` for draft 2020-12 schema validation.
+- GeoRobotix planning and Generator probes:
   - `/conformance`: declares Part 2 `/conf/json`, `/conf/datastream`, `/conf/controlstream`, `/conf/system-event`, `/conf/create-replace-delete`, `/conf/swecommon-json`, `/conf/swecommon-text`, and `/conf/swecommon-binary`.
   - `/conformance`: does not declare Part 2 `/conf/api-common`, `/conf/update`, `/conf/advanced-filtering`, or SWE 3.0 `/conf/json-record-components`.
   - Current read-health probes: `GET /datastreams?limit=1` and `GET /observations?limit=1` returned HTTP 500 text/html; `GET /controlstreams?limit=1` returned HTTP 200 application/json; `GET /systemEvents?limit=1` and `GET /systems/0mqcvdnfoca0/events?limit=1` returned HTTP 400 JSON.
   - Selected ControlStream `0m4qpft9sdag` advertises `application/json`; `/controlstreams/0m4qpft9sdag/schema?cmdFormat=application/json` returned HTTP 200 with `commandFormat=application/json` and `parametersSchema`.
   - `/controlstreams/0m4qpft9sdag/commands?limit=1` returned HTTP 200 with no candidate Command item.
-- Local OSH planning probes:
+- Local OSH planning limit:
   - `field-hub-osh-1` is running but unhealthy.
   - Current shell has no `SMOKE_AUTH_CREDENTIAL`.
   - Unauthenticated `GET /sensorhub/api/conformance`: HTTP 401.
@@ -34,9 +41,21 @@ Sprint ets-28 Part 2 JSON Encoding planning:
   - SWE Common 3.0 JSON record components prerequisite must remain visible before full `/conf/json` closure.
   - Resource-specific JSON assertions must be gated by `/conf/datastream`, `/conf/controlstream`, or `/conf/system-event`.
   - Schema-validation PASS requires candidate resource or collection evidence plus the corresponding bundled schema.
-  - Observation, Command, and CommandResult dynamic constraints require parent schema evidence and candidate child resource evidence.
+  - Observation, Command, and CommandResult dynamic constraints require parent schema evidence and candidate child resource evidence, then SKIP rather than PASS until semantic parent-schema validation is implemented.
   - HTTP 400, HTTP 500, streaming-only endpoints, empty candidate collections, or text/html error bodies cannot produce JSON conformance PASS.
   - Requirement 94 `mediatype-write` is API-definition/readiness only in the first increment; OPTIONS alone cannot PASS and public GeoRobotix mutation is forbidden.
+- Formatter:
+  - Command: Docker Maven `mvn -B spring-javaformat:apply`
+  - Result: BUILD SUCCESS
+- Focused Maven:
+  - Command: `bash scripts/mvn-test-via-docker.sh -Dtest=VerifyPart2JsonTests,VerifyTestNGSuiteDependency`
+  - Result: BUILD SUCCESS
+  - Surefire: `72 tests / 0 failures / 0 errors / 0 skipped`
+- Full Maven:
+  - Command: Docker Maven `mvn clean test -Dmaven.repo.local=/m2 -Dmaven.artifact.threads=1`
+  - Result: BUILD SUCCESS
+  - Surefire: `230 tests / 0 failures / 0 errors / 3 skipped`
+  - Log: `ops/test-results/sprint-ets-28-maven-2026-05-26.log`
 - Planning TeamEngine E2E smoke:
   - First attempt: `git archive` temporary copy failed before TeamEngine because Dockerfile `COPY .git ./.git` requires `.git`; rerun used a temporary Git clone.
   - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s28-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-28-plan-georobotix-results bash scripts/smoke-test.sh`.
@@ -46,13 +65,30 @@ Sprint ets-28 Part 2 JSON Encoding planning:
   - Failure cause: public GeoRobotix HTTP 500 responses on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths; no Part 2 JSON runtime tests exist yet.
   - Public-IUT safety check: `scripts/no-mutation-oracle.py` recognized 61 GeoRobotix IUT request logs; explicit container-log search found no matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
   - Disposition: mandatory public smoke run, failed external/public-IUT evidence, not a passing E2E gate.
+- Generator TeamEngine E2E smoke:
+  - Command: final rerun `SMOKE_CONTAINER_NAME=ets-csapi-s28-json-georobotix-rerun SMOKE_OUTPUT_DIR=/tmp/sprint-ets-28-json-georobotix-results-rerun bash scripts/smoke-test.sh`.
+  - Result: FAILED, `176 total / 29 passed / 16 failed / 131 skipped`.
+  - Report: `ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml`.
+  - Container log: `ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log`.
+  - Failure cause: public GeoRobotix still returns HTTP 500 on existing read paths and its `/controlstreams` collection reaches JSON schema validation but fails `controlStreamCollection.json`.
+  - Schema-loader status: the initial failure to load bundled schemas was fixed by mapping `https://csapi-compliance.local/schemas/` to `classpath:schemas/`; the rerun has no schema-loader failures.
+  - Part 2 JSON runtime outcome: exact `/conf/json` and resource condition-gate checks PASS; SWE prerequisite, mediatype-write, and SystemEvent evidence SKIP; DataStream/Observation paths fail from HTTP 500; ControlStream collection schema validation fails on actual IUT JSON.
+  - Public-IUT safety check: explicit container-log grep found 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines. `scripts/no-mutation-oracle.py` was inconclusive because no IUT-bound request lines were recognized in this log format.
+  - Disposition: mandatory public smoke run, failed external/public-IUT evidence, not an accepted zero-failure E2E gate.
 - Raze planning review:
   - Artifact: `.harness/evaluations/sprint-ets-28-plan-adversarial.yaml`.
   - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.92.
   - Required fixes: none.
   - Low concern: direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive positive schema/readiness evidence used for PASS or SKIP behavior.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-28-adversarial-implementation.yaml`.
+  - Initial verdict: `GAPS_FOUND`, confidence 0.87, for narrow schema-loader regression coverage and stale story scope wording.
+  - Fixes applied: schema-load regression now checks every Annex A.9 schema, story scope is reconciled, exact `application/json` OpenAPI content keys are required for mediatype-write, and dynamic constraint methods avoid shape-only PASS.
+  - Focused recheck: `APPROVE_WITH_CONCERNS`, confidence 0.93, no required fixes.
+  - Remaining concern: URI path escaping for resource IDs is a non-blocking hardening item.
 - Commit/push:
   - Planning commit `5d95d55 Plan Sprint 28 Part 2 JSON` pushed over SSH on 2026-05-26 (`13b34f7..5d95d55 main -> main`).
+  - Generator implementation is present in the worktree and not yet committed.
 
 Sprint ets-27 Part 2 Update Generator:
 

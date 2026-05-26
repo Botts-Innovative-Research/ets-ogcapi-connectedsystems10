@@ -1,110 +1,114 @@
 agent: generator
-status: partial_implemented_local_osh_e2e_accepted
-timestamp: "2026-05-22T20:49:00Z"
-sprint_number: "ets-27"
-sprint_name: "part2-update"
+status: partial_implemented_raze_approved_with_concerns_public_georobotix_e2e_failed
+timestamp: "2026-05-26T18:51:00Z"
+sprint_number: "ets-28"
+sprint_name: "part2-json-encoding"
 story:
-  id: "S-ETS-27-01"
-  title: "Part 2 Update safety-gated subset"
-  file: "epics/stories/s-ets-27-01-part2-update-planning.md"
-contract_path: ".harness/contracts/sprint-ets-27.yaml"
+  id: "S-ETS-28-01"
+  title: "Part 2 JSON Encoding declaration-gated read-only subset"
+  file: "epics/stories/s-ets-28-01-part2-json-planning.md"
+contract_path: ".harness/contracts/sprint-ets-28.yaml"
 base_commit:
-  sha: "eab12a8"
-  message: "Plan Sprint 27 Part 2 Update"
+  sha: "5d95d55"
+  message: "Plan Sprint 28 Part 2 JSON"
 
 implementation_summary: |
-  Sprint 27 Generator implemented the first safety-gated Part 2 Update
-  subset using official OGC 23-002 /req/update and /conf/update identifiers.
-  It keeps Part 2 Create/Replace/Delete and OGC API Features Part 4 Update
-  prerequisites visible, applies Clause 15 condition gates before any R79-R92
-  PASS evidence, treats OPTIONS as PATCH readiness only, blocks public
-  GeoRobotix PATCH before dispatch, and leaves positive PATCH lifecycle and
-  schema-rejection dispatch deferred until a non-public dedicated mutable IUT
-  exposes /conf/update, endpoint PATCH readiness, changed-field GET proof,
-  concrete fixture/schema evidence, and cleanup.
+  Sprint 28 Generator implemented the first read-only Part 2 JSON Encoding
+  subset using official OGC 23-002 /req/json and /conf/json identifiers. It
+  exact-gates /conf/json, keeps the SWE Common JSON record-components
+  prerequisite visible, applies /conf/datastream, /conf/controlstream, and
+  /conf/system-event condition gates, validates available read-only resources
+  against bundled Annex A.9 schemas, guards dynamic constraints with real parent
+  schema and child-resource evidence while avoiding shape-only PASS, and treats
+  mediatype-write as a non-mutating exact-application/json API-definition
+  advertisement check only.
 
 files_added:
-  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/update/Part2UpdateTests.java"
-  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/update/VerifyPart2UpdateTests.java"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/VerifyPart2JsonTests.java"
+  - "ops/test-results/sprint-ets-28-maven-2026-05-26.log"
+  - "ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml"
+  - "ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log"
 
 files_updated:
+  - "pom.xml"
   - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
   - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
   - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-  - "epics/stories/s-ets-27-01-part2-update-planning.md"
+  - "epics/stories/s-ets-28-01-part2-json-planning.md"
   - "epics/epic-ets-03-part2-classes.md"
   - "_bmad/traceability.md"
-  - ".harness/contracts/sprint-ets-27.yaml"
+  - ".harness/contracts/sprint-ets-28.yaml"
   - "ops/status.md"
   - "ops/test-results.md"
   - "ops/changelog.md"
   - "ops/known-issues.md"
 
 runtime_tests:
-  total: 14
+  group: "part2json"
   coverage:
-    - "Exact Part 2 /conf/update declaration."
-    - "Part 2 /conf/create-replace-delete and OGC API Features Part 4 /conf/update prerequisite visibility."
-    - "Clause 15 condition gates for /conf/datastream, /conf/controlstream, /conf/feasibility, and /conf/system-event."
-    - "Public-IUT PATCH hard denial and explicit mutation opt-in gate."
-    - "Read-only OPTIONS PATCH readiness for DataStream/Observation, ControlStream/Command, Feasibility, and SystemEvent endpoints."
-    - "Unavailable endpoint honesty for /commands, /feasibility, /systemEvents, and /systems/{id}/events."
-    - "Schema-rejection honesty without safe mutation opt-in and parent schema evidence."
-    - "Deferred lifecycle opt-in checks that SKIP before PATCH unless the dedicated mutable-IUT gate is satisfied."
-  helper_regressions: 9
+    - "Exact Part 2 /conf/json declaration."
+    - "SWE Common 3.0 JSON record-components prerequisite visibility."
+    - "Resource condition gates for /conf/datastream, /conf/controlstream, and /conf/system-event."
+    - "Read-only JSON media type response checks."
+    - "Annex A.9 bundled schema validation for available candidate resources and collections."
+    - "Observation, Command, and CommandResult dynamic constraint evidence guards that SKIP instead of shape-only PASS until semantic validation exists."
+    - "Exact application/json mediatype-write API-definition advertisement checks without public mutation."
+    - "Unavailable-endpoint and no-candidate honesty."
+  helper_regressions: 8
 
 gates:
   formatter:
     command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
     result: "BUILD SUCCESS"
-  maven:
-    command: "bash scripts/mvn-test-via-docker.sh"
+  focused_maven:
+    command: "bash scripts/mvn-test-via-docker.sh -Dtest=VerifyPart2JsonTests,VerifyTestNGSuiteDependency"
     result: "BUILD SUCCESS"
-    surefire: "219 tests / 0 failures / 0 errors / 3 skipped"
-    log: "ops/test-results/sprint-ets-27-maven-2026-05-22.log"
+    surefire: "72 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -v /tmp/ets-m2repo-s28-user:/m2 -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn clean test -B -Dmaven.repo.local=/m2 -Dmaven.artifact.threads=1"
+    result: "BUILD SUCCESS"
+    surefire: "230 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-28-maven-2026-05-26.log"
   georobotix_teamengine_smoke:
-    result: "FAILED_EXTERNAL_IUT_HTTP_500"
+    result: "FAILED_PUBLIC_IUT_HTTP500_AND_JSON_SCHEMA"
     disposition: "Mandatory public smoke run; not a passing E2E gate."
-    testng: "160 total / 27 passed / 5 failed / 128 skipped"
-    report: "ops/test-results/sprint-ets-27-generator-georobotix-smoke-failed-2026-05-22.xml"
-    log: "ops/test-results/sprint-ets-27-generator-georobotix-smoke-container-failed-2026-05-22.log"
-    failure_cause: "GeoRobotix public IUT still returns HTTP 500 on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths."
-    part2_update_outcome: "All 14 Part 2 Update runtime tests SKIP because systemfeatures did not finish successfully."
-    no_public_mutation: "scripts/no-mutation-oracle.py recognized 61 IUT request logs and found zero GeoRobotix PATCH/POST/PUT/DELETE; explicit grep found no matched write-method lines."
-  local_osh_teamengine:
-    result: "PASSED_ACCEPTED_E2E_GATE"
-    testng: "160 total / 62 passed / 0 failed / 98 skipped"
-    report: "ops/test-results/sprint-ets-27-generator-local-osh-smoke-2026-05-22.xml"
-    log: "ops/test-results/sprint-ets-27-generator-local-osh-smoke-container-2026-05-22.log"
-    part2_update_outcome: "All 14 Part 2 Update runtime tests SKIP because local OSH does not declare /conf/update."
-    patch_requests: "No PATCH request lines in the local OSH smoke container log."
-    note: "Existing Part 1 CRD system POST/PUT/DELETE requests occurred under explicit dedicated mutable-IUT opt-in."
+    testng: "176 total / 29 passed / 16 failed / 131 skipped"
+    report: "ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml"
+    log: "ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log"
+    failure_cause: "GeoRobotix public IUT still returns HTTP 500 for existing read paths and its /controlstreams JSON fails controlStreamCollection.json."
+    schema_loader_status: "Fixed; rerun has no Failed to load json schema or could not be schema-validated loader errors."
+    no_public_mutation: "Explicit grep found 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE; no-mutation oracle inconclusive for this log format."
 
 blockers:
-  - id: "ETS27-E2E-GEOROBOTIX-HTTP500"
+  - id: "ETS28-E2E-GEOROBOTIX-HTTP500"
     status: "open_external"
-    summary: "GeoRobotix public smoke fails because the public IUT returns HTTP 500 on existing read endpoints; this blocks a zero-failure default public E2E gate."
-  - id: "ETS27-E2E-LOCAL-OSH-MISSING-CREDENTIAL"
-    status: "closed"
-    summary: "Authenticated local OSH TeamEngine E2E passed 160/62/0/98 and is the accepted Sprint 27 E2E gate."
-  - id: "ETS27-POSITIVE-PATCH-LIFECYCLE"
+    summary: "GeoRobotix public smoke fails because the public IUT returns HTTP 500 on existing DataStream and Observation read endpoints."
+  - id: "ETS28-E2E-GEOROBOTIX-CONTROLSTREAM-SCHEMA"
+    status: "open_external_or_spec_interpretation"
+    summary: "GeoRobotix /controlstreams JSON reaches validation but fails bundled controlStreamCollection.json."
+  - id: "ETS28-FULL-JSON-CLOSURE"
     status: "deferred_scope"
-    summary: "Positive Part 2 Update PATCH lifecycle remains deferred until a non-public dedicated mutable IUT declares /conf/update, advertises PATCH, supports changed-field GET proof, and cleanup."
+    summary: "Full positive JSON closure remains deferred until a healthy declaring IUT exposes valid DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, SystemEvent, SWE record-component, and mediatype-write evidence."
 
 raze_implementation_review:
   required: true
-  artifact: ".harness/evaluations/sprint-ets-27-adversarial-implementation.yaml"
-  recheck_artifact: ".harness/evaluations/sprint-ets-27-adversarial-implementation-recheck.yaml"
-  local_osh_e2e_acceptance_artifact: ".harness/evaluations/sprint-ets-27-local-osh-e2e-acceptance-raze.yaml"
+  artifact: ".harness/evaluations/sprint-ets-28-adversarial-implementation.yaml"
   status: "approved_with_concerns"
-  confidence: 0.94
+  confidence: 0.93
   required_fixes_remaining: []
+  initial_verdict: "GAPS_FOUND"
+  closed_required_fixes:
+    - "Expanded schema-loader regression coverage to every Annex A.9 schema."
+    - "Removed stale planning-only Out of Scope wording from the story."
+  concerns:
+    - "Resource ID URI path escaping remains a non-blocking hardening item."
 
 commit:
-  status: "pushed"
-  sha: "6ae8f1c"
-  message: "Implement Sprint 27 Part 2 Update with local OSH E2E gate"
-  push: "2be355a..6ae8f1c main -> main"
+  status: "pending"
+  sha: null
+  message: null
+  push: null
 
 next_agent: "generator"
-next_action: "Plan the next Part 2 placeholder after Update."
+next_action: "Commit and push Sprint 28 Generator."

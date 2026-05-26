@@ -105,6 +105,13 @@
       <artifactId>openapi-parser</artifactId>
     </dependency>
 
+    <!-- JSON Schema draft 2020-12 validator for bundled Connected Systems schemas. -->
+    <dependency>
+      <groupId>com.networknt</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <version>1.5.9</version>
+    </dependency>
+
     <!-- Geometry types (used in feature/observation body validation) -->
     <dependency>
       <groupId>org.locationtech.jts</groupId>

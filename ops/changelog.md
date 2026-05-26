@@ -2,6 +2,27 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-26T18:51Z — Sprint 28 Part 2 JSON Generator
+
+**Triggered by user instruction**: "Generate!"
+
+- Implemented `S-ETS-28-01` as the first declaration-gated, read-only Part 2 JSON Encoding subset using official OGC 23-002 `/req/json` and `/conf/json` identifiers.
+- Added `Part2JsonTests` with runtime checks for exact declaration, SWE Common JSON record-component prerequisite visibility, `/conf/datastream`/`/conf/controlstream`/`/conf/system-event` condition gates, read-only JSON media type handling, Annex A.9 bundled schema validation, dynamic Observation/Command/CommandResult evidence guards, unavailable-endpoint honesty, and non-mutating mediatype-write API-definition advertisement checks.
+- Added `VerifyPart2JsonTests` with 8 helper regressions covering official identifiers, condition gates, content type compatibility, bundled schema resources, classpath schema loading, service-desc request body advertisement parsing, OPTIONS/`+json` rejection for write advertisement, and stable `part2json` group naming.
+- Updated `testng.xml` and `VerifyTestNGSuiteDependency` for `part2json` dependency wiring, method tagging, and co-location. The group depends on `core common`.
+- Added `com.networknt:json-schema-validator:1.5.9` and fixed the classpath schema mapper from `classpath:` to `classpath:schemas/` after the first TeamEngine run exposed schema-loader failures.
+- Ran formatter: Docker Maven `spring-javaformat:apply` returned BUILD SUCCESS.
+- Ran focused Maven: `bash scripts/mvn-test-via-docker.sh -Dtest=VerifyPart2JsonTests,VerifyTestNGSuiteDependency` returned BUILD SUCCESS with `72 tests / 0 failures / 0 errors / 0 skipped`.
+- Ran full Maven with a Docker-local repository cache: BUILD SUCCESS with `230 tests / 0 failures / 0 errors / 3 skipped`; log archived as `ops/test-results/sprint-ets-28-maven-2026-05-26.log`.
+- Ran mandatory GeoRobotix TeamEngine Generator smoke from a `/tmp` clone. Result: FAILED, `176 total / 29 passed / 16 failed / 131 skipped`.
+- Archived Generator smoke artifacts as `ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log`.
+- Interpreted the failed smoke honestly: public GeoRobotix still returns HTTP 500 on existing DataStream/Observation read paths, and `/controlstreams` now reaches JSON schema validation but fails `controlStreamCollection.json`. No schema-loader failures remain after the mapper fix.
+- Verified public-IUT safety by explicit log grep: 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines. `scripts/no-mutation-oracle.py` was inconclusive for this log format.
+- Raze implementation review returned `GAPS_FOUND` confidence 0.87 for schema-loader regression breadth and stale story planning wording. After fixes, focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes remaining; artifact: `.harness/evaluations/sprint-ets-28-adversarial-implementation.yaml`.
+- Reconciled OpenSpec, story, traceability, epic, contract, ops status, test-results, known issues, and generator handoff for partial implementation status. Full positive `/conf/json` closure remains open because the mandatory public GeoRobotix E2E run failed.
+
+---
+
 ## 2026-05-26T17:25Z — Sprint 28 Part 2 JSON Encoding planning
 
 **Triggered by user instruction**: "Continue'"

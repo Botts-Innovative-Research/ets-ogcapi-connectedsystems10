@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T21:58Z
+Last updated: 2026-05-26T22:07Z
 
 ## Fresh-Session Entry Point
 
@@ -43,9 +43,9 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - Latest implemented story: `S-ETS-29-01` Generator is PARTIAL for the Part 2 SWE Common JSON Encoding read-only subset.
 - Latest planned story: remaining Part 2 placeholder `REQ-ETS-PART2-011` for SWE Common Text or the next explicitly selected backlog item.
 - Latest pushed planning commit: `690dbd3 Plan Sprint 29 Part 2 SWE Common JSON`, reconciled by `e397ef7 Reconcile Sprint 29 planning push`.
-- Latest pushed implementation commit: pending Sprint 29 Generator commit; previous pushed implementation is `5850210 Implement Sprint 28 Part 2 JSON`.
+- Latest pushed implementation commit: `062d4b7 Implement Sprint 29 Part 2 SWE Common JSON`.
 - Current sprint status: Sprint ets-29 Part 2 SWE Common JSON Encoding is PARTIAL_IMPLEMENTED. Mandatory post-gapfix GeoRobotix Generator smoke failed `186 total / 31 passed / 22 failed / 133 skipped`; this is captured public-IUT evidence, not full `/conf/swecommon-json` closure. The new SWE Common JSON group produced 2 PASS, 6 FAIL, and 2 SKIP. `scripts/no-mutation-oracle.py` recognized 83 IUT request logs, and explicit log grep found 83 GeoRobotix GET lines and zero matched POST/PUT/PATCH/DELETE lines. Raze focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with both required false-PASS gaps closed.
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), and Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`).
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), and Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`).
 
 ## Sprint ets-29 Generator Evidence
 
@@ -79,8 +79,8 @@ Part 2 SWE Common JSON Encoding declaration-gated read-only subset:
 - New SWE Common JSON group outcome: 2 PASS (`/conf/swecommon-json` declaration and condition gates), 6 FAIL (Observation-side HTTP 500 and Command-side `/controlstreams` schema validation), and 2 SKIP (missing SWE 3.0 `/conf/json-encoding-rules` prerequisite and no parseable API-definition exact `application/swe+json` write advertisement).
 - Generator public-IUT safety: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs, and explicit container-log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
 - Raze implementation review: initial `GAPS_FOUND` caught noncanonical Time/IssueTime false-PASS evidence and unscoped write-operation evidence. Focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with both required gaps closed and no remaining required fixes.
-- Commit/push: pending after Raze review and final reconciliation.
-- Next action: commit and push Sprint 29 Generator, then plan REQ-ETS-PART2-011 SWE Common Text or provision a healthy declaring IUT for positive `/conf/swecommon-json` closure.
+- Commit/push: Sprint 29 Generator pushed as `062d4b7 Implement Sprint 29 Part 2 SWE Common JSON` (`05c0ee4..062d4b7 main -> main`).
+- Next action: plan REQ-ETS-PART2-011 SWE Common Text or provision a healthy declaring IUT for positive `/conf/swecommon-json` closure.
 
 ## Sprint ets-28 Generator Evidence
 

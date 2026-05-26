@@ -113,10 +113,10 @@ raze_implementation_review:
   required_fixes_remaining: []
 
 commit:
-  status: "pending"
-  sha: null
+  status: "pushed"
+  sha: "062d4b7"
   message: "Implement Sprint 29 Part 2 SWE Common JSON"
-  push: null
+  push: "05c0ee4..062d4b7 main -> main"
 
 next_agent: "planner"
-next_action: "After Raze review and push, plan REQ-ETS-PART2-011 SWE Common Text or provision a healthy declaring IUT for positive /conf/swecommon-json closure."
+next_action: "Plan REQ-ETS-PART2-011 SWE Common Text or provision a healthy declaring IUT for positive /conf/swecommon-json closure."

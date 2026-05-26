@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T21:58Z
+Last updated: 2026-05-26T22:07Z
 
 ## Current Sprint Evidence
 
@@ -73,7 +73,7 @@ Sprint ets-29 Part 2 SWE Common JSON Encoding Generator:
   - Focused recheck: `APPROVE_WITH_CONCERNS`, confidence 0.94; both required gaps closed and no required fixes remain.
 - Commit/push:
   - Planning commit `690dbd3 Plan Sprint 29 Part 2 SWE Common JSON` was pushed over SSH on 2026-05-26 (`be7f1a6..690dbd3 main -> main`).
-  - Generator commit/push: pending after Raze implementation review.
+  - Generator commit `062d4b7 Implement Sprint 29 Part 2 SWE Common JSON` was pushed over SSH on 2026-05-26 (`05c0ee4..062d4b7 main -> main`).
 
 Sprint ets-28 Part 2 JSON Encoding Generator:
 

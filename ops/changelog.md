@@ -20,6 +20,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Verified public-IUT safety: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs, and explicit log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
 - Reconciled OpenSpec, story, traceability, epic, contract, ops status, test-results, known issues, and generator handoff for partial implementation status. Full positive `/conf/swecommon-json` closure remains open because the mandatory public GeoRobotix E2E run failed.
 - Raze implementation review initially returned `GAPS_FOUND` for two false-PASS risks; code now requires canonical Time definition URIs and scopes write-media evidence to Observation/Command resource endpoints. Focused Raze recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with both required gaps closed and no required fixes remaining.
+- Committed and pushed Sprint 29 Generator as `062d4b7 Implement Sprint 29 Part 2 SWE Common JSON` (`05c0ee4..062d4b7 main -> main`).
 
 ---
 

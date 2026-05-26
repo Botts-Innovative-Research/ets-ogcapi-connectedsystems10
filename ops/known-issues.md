@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T21:58Z
+Last updated: 2026-05-26T22:07Z
 
 ## Active Issues
 

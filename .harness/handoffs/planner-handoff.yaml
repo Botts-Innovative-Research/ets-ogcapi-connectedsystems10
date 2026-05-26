@@ -84,5 +84,10 @@ raze_review:
       status: "OPEN_NON_BLOCKING"
       summary: "Direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive any positive schema/readiness evidence used for PASS or SKIP behavior."
 
+commit:
+  sha: "5d95d55"
+  message: "Plan Sprint 28 Part 2 JSON"
+  push: "13b34f7..5d95d55 main -> main over SSH"
+
 next_agent: "generator"
-next_action: "Commit and push Sprint 28 planning, then implement the first Part 2 JSON declaration-gated read-only subset."
+next_action: "Implement the first Part 2 JSON declaration-gated read-only subset."

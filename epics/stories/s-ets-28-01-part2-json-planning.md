@@ -87,7 +87,7 @@ Plan the first declaration-gated, read-only Generator increment for OGC 23-002 C
 - [x] Planning explicitly blocks false PASS from declaration alone, sibling declarations, broad media-type lists, empty candidate sets, unavailable endpoints, OPTIONS-only write evidence, and public-IUT mutation.
 - [x] Planning TeamEngine E2E evidence is captured and documented honestly.
 - [x] Raze reviews planning before Generator starts.
-- [ ] Planning-only change is committed and pushed before Generator implementation.
+- [x] Planning-only change is committed and pushed before Generator implementation.
 
 ## Out of Scope
 - Implementing Part 2 JSON runtime tests in this planning step.

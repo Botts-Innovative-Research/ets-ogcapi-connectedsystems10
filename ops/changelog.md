@@ -22,6 +22,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Interpreted the failed smoke as advisory public-IUT evidence: failures are the existing GeoRobotix HTTP 500 read-path condition, no Part 2 JSON runtime tests exist yet, and no matched GeoRobotix POST/PUT/PATCH/DELETE request lines appear in the archived container log.
 - Raze planning review wrote `.harness/evaluations/sprint-ets-28-plan-adversarial.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.92, and no required fixes.
 - Raze low concern: direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive positive schema/readiness evidence used for PASS or SKIP behavior.
+- Committed and pushed Sprint 28 planning over SSH as `5d95d55 Plan Sprint 28 Part 2 JSON` (`13b34f7..5d95d55 main -> main`).
 
 ---
 

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T17:25Z
+Last updated: 2026-05-26T17:33Z
 
 ## Fresh-Session Entry Point
 
@@ -38,13 +38,13 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, and pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, and pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-27-01` Generator is PARTIAL for the Part 2 Update safety-gated subset.
 - Latest planned story: `S-ETS-28-01` Part 2 JSON Encoding planning.
 - Latest pushed implementation commit: `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`.
-- Current sprint status: Sprint ets-28 Part 2 JSON Encoding is planned and Raze-reviewed; Generator is pending. Raze planning review returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes. Mandatory GeoRobotix planning smoke still fails on existing public-IUT HTTP 500 read-path failures (`160 total / 27 passed / 5 failed / 128 skipped`), with zero matched GeoRobotix POST/PUT/PATCH/DELETE lines. Sprint ets-27 Part 2 Update remains PARTIAL_IMPLEMENTED with accepted authenticated local OSH E2E (`160 total / 62 passed / 0 failed / 98 skipped`).
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning is currently uncommitted.
+- Current sprint status: Sprint ets-28 Part 2 JSON Encoding is planned and Raze-reviewed; Generator is pending. Raze planning review returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes. Mandatory GeoRobotix planning smoke still fails on existing public-IUT HTTP 500 read-path failures (`160 total / 27 passed / 5 failed / 128 skipped`), with zero matched GeoRobotix POST/PUT/PATCH/DELETE lines. Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON` is pushed. Sprint ets-27 Part 2 Update remains PARTIAL_IMPLEMENTED with accepted authenticated local OSH E2E (`160 total / 62 passed / 0 failed / 98 skipped`).
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`).
 
 ## Sprint ets-28 Planning Evidence
 
@@ -66,7 +66,8 @@ Part 2 JSON Encoding declaration-gated read-only subset:
 - Planning E2E smoke: first attempt from `git archive` failed before TeamEngine because the Dockerfile expects `.git`. Rerun from a temporary Git clone reached TeamEngine and failed `160 total / 27 passed / 5 failed / 128 skipped` because the public IUT still returns HTTP 500 on existing read paths. Artifacts are `ops/test-results/sprint-ets-28-plan-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-28-plan-georobotix-smoke-container-failed-2026-05-26.log`.
 - Public-IUT safety: `scripts/no-mutation-oracle.py` recognized 61 GeoRobotix IUT request logs; explicit container-log search found no matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
 - Raze planning review: `.harness/evaluations/sprint-ets-28-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.92 with no required fixes and one low non-blocking evidence-archival concern.
-- Next action: commit/push Sprint 28 planning before Generator.
+- Commit/push: planning commit `5d95d55 Plan Sprint 28 Part 2 JSON` was pushed over SSH (`13b34f7..5d95d55 main -> main`).
+- Next action: start Generator for the first Part 2 JSON declaration-gated read-only subset.
 
 ## Sprint ets-26 Generator Evidence
 

@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T17:25Z
+Last updated: 2026-05-26T17:33Z
 
 ## Current Sprint Evidence
 
@@ -51,6 +51,8 @@ Sprint ets-28 Part 2 JSON Encoding planning:
   - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.92.
   - Required fixes: none.
   - Low concern: direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive positive schema/readiness evidence used for PASS or SKIP behavior.
+- Commit/push:
+  - Planning commit `5d95d55 Plan Sprint 28 Part 2 JSON` pushed over SSH on 2026-05-26 (`13b34f7..5d95d55 main -> main`).
 
 Sprint ets-27 Part 2 Update Generator:
 

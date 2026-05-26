@@ -1,0 +1,193 @@
+# Sprint 30 contract - Part 2 SWE Common Text Encoding
+
+sprint: "ets-30"
+sprint_name: "part2-swecommon-text"
+type: "feature-expansion-planning"
+created: "2026-05-26T23:06:09Z"
+description: |
+  Sprint 30 plans the first OGC 23-002 Part 2 SWE Common Text Encoding
+  increment. The Generator must make declaration-gated, read-only schema and
+  media-type progress without mutating the default public GeoRobotix IUT or
+  claiming full /conf/swecommon-text closure when SWE Common prerequisite,
+  resource-specific evidence, candidate resources, or Text encoding-validator
+  evidence is absent.
+
+stories:
+  - id: "S-ETS-30-01"
+    title: "Part 2 SWE Common Text Encoding"
+    file: "epics/stories/s-ets-30-01-part2-swecommon-text-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "L"
+    depends_on:
+      - "S-ETS-29-01"
+    parallelizable: false
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-011 (/req/swecommon-text specified for Generator)"
+    - "REQ-ETS-PART2-012..013 (remaining placeholders after SWE Common Text split)"
+  new_reqs: []
+  retired_placeholders: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-011-SWETEXT-CONFORMANCE-DECLARED-001"
+    - "SCENARIO-ETS-PART2-011-RESOURCE-CONDITION-GATES-001"
+    - "SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001"
+    - "SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001"
+    - "SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001"
+    - "SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001"
+    - "SCENARIO-ETS-PART2-011-SMOKE-NO-PUBLIC-MUTATION-001"
+  normal:
+    - "SCENARIO-ETS-PART2-011-SWE-TEXT-ENCODING-RULES-PREREQUISITE-001"
+    - "SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001"
+    - "SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001"
+    - "SCENARIO-ETS-PART2-011-MEDIATYPE-WRITE-ADVERTISEMENT-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  ops_updated: true
+  official_ogc_identifiers_used: true
+  swe_text_encoding_rules_prerequisite_visible: true
+  resource_condition_gates_explicit: true
+  read_only_schema_validation_planned: true
+  schema_mapping_reuses_canonical_time_definition_evidence: true
+  text_encoding_shape_only_pass_blocked: true
+  annex_a115_binary_typo_not_pass_evidence: true
+  public_iut_mutation_forbidden: true
+  options_not_write_pass: true
+  mediatype_write_api_definition_observation_command_only: true
+  raw_planning_probe_transcript_archived: true
+  no_code_changes_in_planning: true
+  planning_teamengine_e2e_captured_or_blocked: true
+  planning_no_mutation_verified: true
+  generator_required_before_runtime_gates: true
+  raze_planning_review_completed: false
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-05-26T23:06:09Z"
+  requirement_class: "Clause 16.3, Requirements Class SWE Common Text Encoding"
+  requirement_class_identifier: "/req/swecommon-text"
+  conformance_class_identifier: "/conf/swecommon-text"
+  media_type: "application/swe+text"
+  prerequisites:
+    - "http://www.opengis.net/spec/SWE/3.0/req/text-encoding-rules"
+  conformance_prerequisites:
+    - "http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules"
+  normative_statements:
+    - "/req/swecommon-text/mediatype-read"
+    - "/req/swecommon-text/mediatype-write"
+    - "/req/swecommon-text/obsschema-schema"
+    - "/req/swecommon-text/obsschema-mapping"
+    - "/req/swecommon-text/observation-encoding"
+    - "/req/swecommon-text/cmdschema-schema"
+    - "/req/swecommon-text/cmdschema-mapping"
+    - "/req/swecommon-text/command-encoding"
+  source_inconsistencies:
+    - "Annex A.115 mediatype-read API-definition bullet mentions application/swe+binary while Clause 16.3 and A.115 request/content-type steps use application/swe+text; Generator must not use binary advertisement as SWE Common Text PASS evidence."
+  condition_gates:
+    observation:
+      requirements:
+        - "/req/swecommon-text/obsschema-schema"
+        - "/req/swecommon-text/obsschema-mapping"
+        - "/req/swecommon-text/observation-encoding"
+      required_conformance: "/conf/datastream"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/swecommon-text, endpoint availability, sibling declarations, or media-format list evidence."
+    command:
+      requirements:
+        - "/req/swecommon-text/cmdschema-schema"
+        - "/req/swecommon-text/cmdschema-mapping"
+        - "/req/swecommon-text/command-encoding"
+      required_conformance: "/conf/controlstream"
+      verdict_when_missing: "SKIP prerequisite-incomplete; do not PASS from /conf/swecommon-text, endpoint availability, sibling declarations, or media-format list evidence."
+    write_media:
+      requirements:
+        - "/req/swecommon-text/mediatype-write"
+      required_conformance: "/conf/create-replace-delete"
+      verdict_when_missing: "SKIP prerequisite-incomplete; first increment uses non-mutating API-definition evidence only."
+
+planning_probes:
+  raw_transcript: "ops/test-results/sprint-ets-30-plan-georobotix-swetext-probes-2026-05-26.txt"
+  georobotix:
+    iut_url: "https://api.georobotix.io/ogc/t18/api"
+    conformance: "Declares Part 2 /conf/swecommon-text, /conf/swecommon-json, /conf/swecommon-binary, /conf/datastream, /conf/controlstream, /conf/create-replace-delete, and /conf/json; does not declare SWE 3.0 /conf/text-encoding-rules, /conf/json-encoding-rules, or /conf/binary-encoding-rules, Part 2 /conf/api-common, /conf/update, or /conf/advanced-filtering."
+    read_health:
+      conformance: "GET /conformance returned HTTP 200."
+      datastreams_json: "GET /datastreams?limit=1 with Accept application/json returned HTTP 500 application/json."
+      datastreams_swetext: "GET /datastreams?limit=1 with Accept application/swe+text returned HTTP 500."
+      observations_swetext: "GET /observations?limit=1 with Accept application/swe+text returned HTTP 500."
+      controlstreams: "GET /controlstreams?limit=1 returned HTTP 200 application/json with id 0m4qpft9sdag and formats including application/swe+csv but not application/swe+text."
+      command_schema_swetext: "GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+text returned HTTP 200 but body reported commandFormat=application/json and parametersSchema, not commandFormat=application/swe+text, recordSchema, and TextEncoding."
+      nested_commands_swetext: "GET /controlstreams/0m4qpft9sdag/commands?limit=1 with Accept application/swe+text returned HTTP 200 application/json with empty items."
+      commands_swetext: "GET /commands?limit=1 with Accept application/swe+text returned HTTP 400."
+  local_osh:
+    iut_url: "http://field-hub-osh-1:8081/sensorhub/api"
+    container: "field-hub-osh-1 is running but unhealthy."
+    credential_state: "Current shell has no SMOKE_AUTH_CREDENTIAL."
+    conformance: "Unauthenticated GET http://localhost:8081/sensorhub/api/conformance returned HTTP 401 text/html;charset=iso-8859-1."
+
+bundled_schema_readiness:
+  connected_systems_schemas:
+    - "src/main/resources/schemas/connected-systems-2/json/observationSchemaSwe.json"
+    - "src/main/resources/schemas/connected-systems-2/json/commandSchemaSwe.json"
+  shared_swe_common_json_schemas:
+    - "src/main/resources/schemas/connected-systems-shared/swecommon/schemas/json/*.json"
+
+verdict_policy:
+  declaration_gate:
+    - "If /conf/swecommon-text is not declared exactly, SWE Common Text assertions SKIP with a precise reason."
+  prerequisites:
+    - "Keep SWE Common 3.0 /conf/text-encoding-rules visible before reporting full class closure."
+  condition_gates:
+    - "Observation-side assertions require /conf/datastream."
+    - "Command-side assertions require /conf/controlstream."
+    - "Mediatype-write requires /conf/create-replace-delete and non-mutating API-definition evidence."
+  mediatype_honesty:
+    - "Mediatype-read PASS requires advertised/retrieved Observation or Command evidence, HTTP 200, and exact application/swe+text content type."
+    - "Format-list evidence, application/swe+csv, application/swe+binary, application/swe+json, application/json fallback, auto content type, HTTP errors, and empty candidate collections cannot PASS."
+  schema_honesty:
+    - "Schema PASS requires retrieved Observation Schema or Command Schema metadata and bundled schema validation."
+    - "Schema PASS also requires application/swe+text media member, recordSchema, and TextEncoding evidence."
+  mapping_honesty:
+    - "Observation mapping PASS requires canonical Time definition evidence from retrieved recordSchema, following the SWE Common JSON mapping rules."
+    - "Command mapping PASS requires canonical IssueTime definition evidence from retrieved recordSchema, following the SWE Common JSON mapping rules."
+  encoding_honesty:
+    - "Observation and Command text encoding PASS requires parent schema, child resource candidate, and SWE Common Text encoding-validator evidence; otherwise SKIP."
+  mutation_safety:
+    - "Default public GeoRobotix smoke must issue zero IUT-bound POST, PUT, PATCH, or DELETE."
+    - "Requirement 116 mediatype-write is API-definition/readiness only in the first increment and must be scoped to Observation or Command resource endpoints."
+
+planning_e2e_evidence:
+  georobotix_smoke:
+    status: "FAILED_PUBLIC_IUT"
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s30-swetext-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-30-swetext-plan-georobotix-results bash scripts/smoke-test.sh"
+    testng: "186 total / 31 passed / 22 failed / 133 skipped"
+    report: "ops/test-results/sprint-ets-30-plan-georobotix-smoke-failed-2026-05-26.xml"
+    container_log: "ops/test-results/sprint-ets-30-plan-georobotix-smoke-container-failed-2026-05-26.log"
+    failure_cause: "Known public-IUT read-path and schema-validation failures; no Sprint 30 SWE Common Text runtime tests exist yet."
+    no_mutation: "scripts/no-mutation-oracle.py recognized 83 IUT request logs; explicit container-log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines."
+    disposition: "Captured failed public smoke; not a passing E2E gate."
+  local_osh:
+    status: "BLOCKED_MISSING_CREDENTIAL_AND_UNHEALTHY"
+    reason: "Current shell has no SMOKE_AUTH_CREDENTIAL; local OSH container is unhealthy and unauthenticated /conformance returned HTTP 401."
+
+raze_planning_review:
+  status: "APPROVE_WITH_CONCERNS"
+  artifact: ".harness/evaluations/sprint-ets-30-plan-adversarial.yaml"
+  confidence: 0.93
+  required_fixes: []
+  concerns:
+    - id: "RAZE-ETS30-PLAN-CONCERN-001"
+      severity: "LOW"
+      status: "CLOSED_BY_POST_REVIEW_RECONCILIATION"
+      summary: "Review bookkeeping needed post-review reconciliation because Raze was explicitly read-only."
+
+generator_must_do:
+  - "Run Raze implementation review before reporting Generator done."
+  - "Fix any required Raze gaps."

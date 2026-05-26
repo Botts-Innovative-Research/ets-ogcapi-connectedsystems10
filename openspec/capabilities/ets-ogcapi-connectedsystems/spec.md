@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-05-22
+> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-05-26
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -748,12 +748,89 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests
 **AND** any write-media-type or encoding behavior requiring mutation SKIPs or relies on non-mutating API-definition evidence only.
 
-#### REQ-ETS-PART2-011..013: Remaining Part 2 Conformance Suites
+#### REQ-ETS-PART2-011: Part 2 SWE Common Text Encoding
+- **Priority**: MUST
+- **Status**: SPECIFIED (Sprint 30 planning; Generator pending)
+- **Description**: The ETS SHALL implement the first declaration-gated, read-only OGC 23-002 Clause 16.3 SWE Common Text Encoding subset using official `/req/swecommon-text` and `/conf/swecommon-text` identifiers. Runtime checks SHALL gate on exact `/conf/swecommon-text` declaration, keep the SWE Common 3.0 Text Encoding Rules prerequisite visible, condition Observation assertions on declared `/conf/datastream`, condition Command assertions on declared `/conf/controlstream`, verify `application/swe+text` read support only from advertised/retrieved Observation or Command evidence, validate SWE Common schema metadata against bundled `observationSchemaSwe.json` and `commandSchemaSwe.json` while requiring `TextEncoding`, and treat write-media-type support as API-definition/readiness evidence only unless a safe dedicated mutable IUT is explicitly enabled in a later sprint.
+- **Rationale**: PRD SC-3 requires Part 2 coverage. OGC 23-002 Clause 16.3 and Annex A.11 define `/conf/swecommon-text` with Requirements 115-122. Sprint 30 planning follows Sprint 29's SWE Common JSON guardrails but swaps the media type and schema-encoding assertion to Text Encoding. Current GeoRobotix declares `/conf/swecommon-text`, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete`, but it does not expose SWE 3.0 `/conf/text-encoding-rules`; DataStream/Observation text reads return HTTP 500; the selected ControlStream advertises `application/swe+csv` rather than `application/swe+text`; and `cmdFormat=application/swe+text` returns JSON-format schema evidence with `commandFormat=application/json` and no `TextEncoding`. The ETS must therefore fail or skip honestly rather than passing from declaration, sibling SWE Common classes, API format lists, JSON fallback schemas, or OPTIONS evidence alone.
+- **Maps to**: PRD FR-ETS-41.
+
+#### SCENARIO-ETS-PART2-011-SWETEXT-CONFORMANCE-DECLARED-001 (CRITICAL)
+**GIVEN** the IUT exposes `/conformance`
+**WHEN** the SWE Common Text Encoding tests run
+**THEN** exact `http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text` declaration is required before `/req/swecommon-text` assertions can PASS
+**AND** sibling declarations such as `/conf/json`, `/conf/swecommon-json`, `/conf/swecommon-binary`, or resource-class declarations alone cannot satisfy `/conf/swecommon-text`.
+
+#### SCENARIO-ETS-PART2-011-SWE-TEXT-ENCODING-RULES-PREREQUISITE-001 (NORMAL)
+**GIVEN** OGC 23-002 Clause 16.3 lists SWE Common 3.0 Text Encoding Rules as a prerequisite
+**WHEN** the ETS reports full `/conf/swecommon-text` closure
+**THEN** `http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules` must be visible or explicitly reported as prerequisite-incomplete
+**AND** scoped read-only checks may still run when `/conf/swecommon-text` and the relevant Part 2 resource class are declared.
+
+#### SCENARIO-ETS-PART2-011-RESOURCE-CONDITION-GATES-001 (CRITICAL)
+**GIVEN** Annex A.11 applies SWE Common Text representation tests to Observation and Command resources
+**WHEN** the ETS evaluates Requirements 117-122
+**THEN** Observation schema, Observation schema mapping, and Observation encoding assertions require `/conf/datastream`
+**AND** Command schema, Command schema mapping, and Command encoding assertions require `/conf/controlstream`
+**AND** missing condition classes produce prerequisite-incomplete SKIP behavior rather than PASS from `/conf/swecommon-text`, endpoint availability, sibling declarations, or media-format lists alone.
+
+#### SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/swecommon-text`
+**WHEN** the ETS requests supported Observation or Command endpoints with `Accept: application/swe+text`
+**THEN** at least one supported endpoint must advertise and return HTTP 200 with `Content-Type: application/swe+text` before mediatype-read PASS
+**AND** `application/json`, `application/swe+csv`, `application/vnd.ogc.swe+text`, `auto`, `text/html`, HTTP 400, HTTP 500, empty collections, or format-list-only evidence cannot PASS mediatype-read.
+
+#### SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001 (CRITICAL)
+**GIVEN** bundled schemas `observationSchemaSwe.json`, `commandSchemaSwe.json`, and shared SWE Common JSON component schemas exist under `src/main/resources/schemas/`
+**WHEN** candidate Observation Schema or Command Schema resources are retrieved with `obsFormat=application/swe+text` or `cmdFormat=application/swe+text`
+**THEN** the ETS validates the JSON schema metadata against the corresponding bundled schema
+**AND** validates that the media-format member is `application/swe+text` and the `encoding` member is a `TextEncoding` object
+**AND** no schema-validation PASS is reported when the endpoint is unavailable, returns a JSON-format or CSV-format schema instead of SWE Common Text schema metadata, or a schema fixture is missing.
+
+#### SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001 (NORMAL)
+**GIVEN** Requirements 118 and 121 defer mandatory field mapping to the SWE Common JSON mapping requirements
+**WHEN** Observation Schema or Command Schema resources are retrieved
+**THEN** Observation schema mapping PASS requires the same canonical `Time` component definition evidence required by `/req/swecommon-json/obsschema-mapping`
+**AND** Command schema mapping PASS requires the same canonical IssueTime definition evidence required by `/req/swecommon-json/cmdschema-mapping`
+**AND** mapping PASS must come from retrieved `recordSchema` evidence, not hardcoded examples, sibling JSON schema shape, or field labels alone.
+
+#### SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001 (NORMAL)
+**GIVEN** Requirements 119 and 122 require Observation and Command resources to follow parent DataStream or ControlStream schemas using SWE Common Text encoding rules
+**WHEN** parent schema evidence, candidate child resources, or a SWE Common Text encoding validator are absent
+**THEN** the ETS SKIPs with a precise no-safe-evidence reason
+**AND** it SHALL NOT PASS Observation or Command text encoding from collection shape, empty candidate sets, `application/json` fallback bodies, CSV media bodies, or hardcoded examples.
+
+#### SCENARIO-ETS-PART2-011-MEDIATYPE-WRITE-ADVERTISEMENT-001 (NORMAL)
+**GIVEN** Requirement 116 applies only when Create/Replace/Delete is implemented
+**WHEN** the ETS checks SWE Common Text write-media-type support in the first increment
+**THEN** it uses API definition or explicit operation metadata to verify advertised `application/swe+text` support for CREATE or REPLACE operations on Observation or Command resource endpoints only
+**AND** default public GeoRobotix smoke does not issue POST, PUT, PATCH, or DELETE
+**AND** OPTIONS, unrelated POST/PUT paths, `application/swe+csv`, vendor media types, and subresource paths such as Command status alone are readiness evidence, not mediatype-write PASS.
+
+#### SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001 (CRITICAL)
+**GIVEN** OGC 23-002 Clause 16.3 states the SWE Common Text media type as `application/swe+text`
+**WHEN** the ETS evaluates Annex A.11 mediatype-read evidence
+**THEN** the ETS uses `application/swe+text` as the normative PASS media type
+**AND** the apparent Annex A.115 API-definition line that mentions `application/swe+binary` is treated as a source inconsistency to document, not as SWE Common Text PASS evidence.
+
+#### SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
+**GIVEN** the current public IUT may declare `/conf/swecommon-text` while individual resource endpoints are unhealthy or inconsistent
+**WHEN** DataStream, Observation, Command, or ControlStream schema endpoints return HTTP 400, HTTP 500, empty candidate sets, `application/json` fallback schemas, wrong media members, or `application/swe+csv` format evidence
+**THEN** the ETS records FAIL for reachable declared requirements that violate HTTP 200/schema/media expectations, or SKIP when no candidate/evidence exists
+**AND** it never converts those outcomes into PASS from declaration, broad media-format lists, or existing sibling tests.
+
+#### SCENARIO-ETS-PART2-011-SMOKE-NO-PUBLIC-MUTATION-001 (CRITICAL)
+**GIVEN** TeamEngine smoke runs against the public GeoRobotix IUT
+**WHEN** the SWE Common Text tests execute
+**THEN** request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests
+**AND** any write-media-type or encoding behavior requiring mutation SKIPs or relies on non-mutating API-definition evidence only.
+
+#### REQ-ETS-PART2-012..013: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 29 SWE Common JSON Generator)
-- **Description**: For each of the remaining 3 OGC 23-002 conformance classes or cross-class closures (`swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 30 SWE Common Text planning)
+- **Description**: For each of the remaining 2 OGC 23-002 conformance classes or cross-class closures (`swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
-- **Maps to**: PRD FR-ETS-41..43, except retired non-standard FR-ETS-35 System History.
+- **Maps to**: PRD FR-ETS-42..43, except retired non-standard FR-ETS-35 System History.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -2388,7 +2465,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-008 (Part 2 Update) - partially implemented by Sprint 27 Generator; positive PATCH lifecycle and concrete schema-rejection dispatch remain deferred.
 - REQ-ETS-PART2-009 (Part 2 JSON Encoding) - partially implemented by Sprint 28 Generator; full positive schema closure remains dependent on a healthy declaring IUT with valid DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, SystemEvent, SWE Common record-component, and mediatype-write evidence.
 - REQ-ETS-PART2-010 (Part 2 SWE Common JSON Encoding) - partially implemented by Sprint 29 Generator; full positive closure remains dependent on a healthy declaring IUT with SWE 3.0 JSON Encoding Rules visibility, valid DataStream/Observation SWE JSON reads, valid ControlStream/Command SWE Common JSON schema evidence, candidate Observation/Command resources, and non-mutating mediatype-write evidence. Mandatory GeoRobotix Generator smoke failed (`186 total / 31 passed / 22 failed / 133 skipped`) with zero matched public-IUT write requests.
-- REQ-ETS-PART2-011..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 29 SWE Common JSON Generator.
+- REQ-ETS-PART2-011 (Part 2 SWE Common Text Encoding) - specified by Sprint 30 planning; Generator pending. Planning verified OGC 23-002 Clause 16.3 identifiers, the SWE Common 3.0 Text Encoding Rules prerequisite, exact `application/swe+text` media type, Requirements 115-122, resource condition gates, `TextEncoding` schema evidence requirements, non-mutating mediatype-write evidence, and false-PASS guards for CSV/binary/JSON fallback evidence. Mandatory GeoRobotix planning smoke failed (`186 total / 31 passed / 22 failed / 133 skipped`) with zero matched public-IUT write requests.
+- REQ-ETS-PART2-012..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 30 SWE Common Text planning.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

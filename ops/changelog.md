@@ -2,6 +2,28 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-26T23:20Z — Sprint 30 Part 2 SWE Common Text Encoding planning
+
+**Triggered by user instruction**: "Start the spec-first planning"
+
+- Started Sprint 30 planning for `S-ETS-30-01`, the next Part 2 item after Sprint 29 SWE Common JSON Encoding.
+- Verified `_bmad/architecture.md` freshness: last reconciled 2026-05-09, so not stale on 2026-05-26.
+- Verified official OGC 23-002 Clause 16.3 identifiers from the published HTML: SWE Common Text Encoding is `/req/swecommon-text` with conformance `/conf/swecommon-text`, prerequisite SWE Common 3.0 Text Encoding Rules, exact media type `application/swe+text`, and Requirements 115-122.
+- Recorded the apparent Annex A.115 source inconsistency: one mediatype-read API-definition bullet mentions `application/swe+binary`, while Clause 16.3 and A.115 retrieval/content-type steps use `application/swe+text`. Planning blocks PASS from binary advertisement for SWE Common Text.
+- Added `.harness/contracts/sprint-ets-30.yaml` and `epics/stories/s-ets-30-01-part2-swecommon-text-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for SWE Common Text planning.
+- Split `REQ-ETS-PART2-011` out for Part 2 SWE Common Text Encoding and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-012..013`.
+- Planned condition gates: Observation-side assertions require `/conf/datastream`; Command-side assertions require `/conf/controlstream`; mediatype-write requires `/conf/create-replace-delete` and non-mutating API-definition evidence.
+- Probed GeoRobotix state and archived the raw transcript as `ops/test-results/sprint-ets-30-plan-georobotix-swetext-probes-2026-05-26.txt`.
+- Captured read-only planning evidence: `/conformance` declares `/conf/swecommon-text` but not SWE 3.0 `/conf/text-encoding-rules`; SWE Text DataStream and Observation reads returned HTTP 500; selected ControlStream `0m4qpft9sdag` advertises `application/swe+csv` but not `application/swe+text`; `cmdFormat=application/swe+text` returned `commandFormat=application/json` and `parametersSchema`, not `application/swe+text`, `recordSchema`, and `TextEncoding`; nested Commands were empty.
+- Captured local OSH readiness limits: `field-hub-osh-1` is running but unhealthy, the shell has no `SMOKE_AUTH_CREDENTIAL`, and unauthenticated `/sensorhub/api/conformance` returns HTTP 401.
+- Ran mandatory GeoRobotix TeamEngine planning smoke from a `/tmp` clone. Result: FAILED, `186 total / 31 passed / 22 failed / 133 skipped`.
+- Archived planning smoke artifacts as `ops/test-results/sprint-ets-30-plan-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-30-plan-georobotix-smoke-container-failed-2026-05-26.log`.
+- Verified public-IUT safety: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs; explicit log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
+- Raze planning review wrote `.harness/evaluations/sprint-ets-30-plan-adversarial.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.93, and no required fixes. The only concern was bookkeeping pending because Raze was read-only; this reconciliation closes it.
+
+---
+
 ## 2026-05-26T21:58Z — Sprint 29 Part 2 SWE Common JSON Generator
 
 **Triggered by user instruction**: "Do generator"

@@ -1,0 +1,319 @@
+# Sprint 30 SWE Common Text GeoRobotix planning probes
+Captured: 2026-05-26T23:07Z
+IUT: https://api.georobotix.io/ogc/t18/api
+
+
+===== commands-swetext.body =====
+
+===== commands-swetext.headers =====
+HTTP/2 400 
+cache-control: must-revalidate,no-cache,no-store
+content-length: 0
+date: Tue, 26 May 2026 23:07:17 GMT
+via: 1.1 google
+alt-svc: h3=":443"; ma=2592000
+
+
+===== conformance.headers =====
+HTTP/2 200 
+date: Tue, 26 May 2026 23:07:16 GMT
+content-type: auto
+via: 1.1 google
+alt-svc: h3=":443"; ma=2592000
+
+
+===== conformance.json =====
+{
+  "conformsTo": [
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core",
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/html",
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/json",
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/oas30",
+    "http://www.opengis.net/spec/ogcapi-common-2/0.0/conf/collections",
+    "http://www.opengis.net/spec/ogcapi-common-2/0.0/conf/html",
+    "http://www.opengis.net/spec/ogcapi-common-2/0.0/conf/json",
+    "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core",
+    "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/geojson",
+    "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/html",
+    "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-3/1.0/conf/websocket",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-3/1.0/conf/mqtt"
+  ]
+}
+===== controlstream-commands-swetext.body =====
+{
+  "items": []
+}
+===== controlstream-commands-swetext.headers =====
+HTTP/2 200 
+date: Tue, 26 May 2026 23:07:17 GMT
+content-type: application/json
+via: 1.1 google
+alt-svc: h3=":443"; ma=2592000
+
+
+===== controlstream-id.txt =====
+0m4qpft9sdag
+
+===== controlstream-schema-swetext.body =====
+{
+  "commandFormat": "application/json",
+  "parametersSchema": {
+    "type": "DataRecord",
+    "name": "mission_planning",
+    "label": "Mission Definition",
+    "fields": [
+      {
+        "type": "Text",
+        "name": "id",
+        "definition": "http://sensorml.com/ont/swe/property/Identifier"
+      },
+      {
+        "type": "Count",
+        "name": "numItems",
+        "definition": "http://sensorml.com/ont/swe/property/ArraySize",
+        "id": "NUM_ITEMS"
+      },
+      {
+        "type": "DataArray",
+        "name": "missionItems",
+        "elementCount": {
+          "href": "#NUM_ITEMS"
+        },
+        "elementType": {
+          "type": "DataChoice",
+          "name": "item",
+          "label": "Vehicle Commands",
+          "items": [
+            {
+              "type": "DataRecord",
+              "name": "AUTO_TAKEOFF",
+              "definition": "urn:x-ogc:uxs:messages:AutoTakeOffCommand",
+              "label": "Auto TakeOff",
+              "description": "This command indicates that the operator has requested the UAV to perform auto take-off as defined by the vehicle manufacturer.",
+              "fields": [
+                {
+                  "type": "Quantity",
+                  "name": "height",
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+                  "label": "TakeOff Height",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "DataRecord",
+              "name": "WAYPOINT",
+              "definition": "urn:x-ogc:uxs:messages:WaypointCommand",
+              "label": "Go To Waypoint",
+              "description": "The waypoint command requests the vehicle to go to a specified waypoint with a desired travel velocity",
+              "fields": [
+                {
+                  "type": "Vector",
+                  "name": "position",
+                  "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+                  "label": "Waypoint location",
+                  "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+                  "coordinates": [
+                    {
+                      "type": "Quantity",
+                      "name": "lat",
+                      "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                      "label": "Geodetic Latitude",
+                      "axisID": "Lat",
+                      "uom": {
+                        "code": "deg"
+                      }
+                    },
+                    {
+                      "type": "Quantity",
+                      "name": "lon",
+                      "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                      "label": "Longitude",
+                      "axisID": "Lon",
+                      "uom": {
+                        "code": "deg"
+                      }
+                    },
+                    {
+                      "type": "Quantity",
+                      "name": "alt",
+                      "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                      "label": "Ellipsoidal Height",
+                      "description": "Altitude above WGS84 ellipsoid",
+                      "axisID": "h",
+                      "uom": {
+                        "code": "m"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Quantity",
+                  "name": "velocity",
+                  "definition": "http://sensorml.com/ont/swe/property/SpeedOverGround",
+                  "label": "Travel Velocity",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "DataRecord",
+              "name": "LOITER",
+              "definition": "urn:x-ogc:uxs:messages:LoiterCommand",
+              "label": "Loiter",
+              "description": "The loiter command tasks the vehicle to loiter in place for a specific time.",
+              "fields": [
+                {
+                  "type": "Quantity",
+                  "name": "time",
+                  "definition": "http://sensorml.com/ont/swe/property/Duration",
+                  "label": "Loiter Duration",
+                  "uom": {
+                    "code": "s"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+===== controlstream-schema-swetext.headers =====
+HTTP/2 200 
+date: Tue, 26 May 2026 23:07:17 GMT
+content-type: auto
+via: 1.1 google
+alt-svc: h3=":443"; ma=2592000
+
+
+===== controlstreams-json.body =====
+{
+  "items": [
+    {
+      "id": "0m4qpft9sdag",
+      "name": "Simulated UAV - Mission Definition",
+      "system@id": "0m5ojudgr570",
+      "system@link": {
+        "href": "https://api.georobotix.io/ogc/t18/api/systems/0m5ojudgr570?f=json",
+        "uid": "urn:osh:system:simuav:0123456879",
+        "type": "application/geo+json"
+      },
+      "inputName": "mission_planning",
+      "validTime": [
+        "2022-01-16T20:44:00Z",
+        "now"
+      ],
+      "controlledProperties": [
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Identifier"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/ArraySize"
+        },
+        {
+          "label": "Vehicle Commands"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+          "label": "TakeOff Height"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Waypoint location"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/SpeedOverGround",
+          "label": "Travel Velocity"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Duration",
+          "label": "Loiter Duration"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "next",
+      "href": "https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1&offset=1",
+      "type": "auto"
+    }
+  ]
+}
+===== controlstreams-json.headers =====
+HTTP/2 200 
+date: Tue, 26 May 2026 23:07:16 GMT
+content-type: application/json
+via: 1.1 google
+alt-svc: h3=":443"; ma=2592000
+
+
+===== datastreams-json.body =====
+{
+  "status": 500,
+  "message": "Internal server error"
+}
+===== datastreams-json.headers =====
+HTTP/2 500 
+date: Tue, 26 May 2026 23:07:16 GMT
+content-type: application/json
+content-length: 57
+via: 1.1 google
+alt-svc: h3=":443"; ma=2592000
+
+
+===== datastreams-swetext.body =====
+
+===== datastreams-swetext.headers =====
+HTTP/2 500 
+cache-control: must-revalidate,no-cache,no-store
+content-length: 0
+date: Tue, 26 May 2026 23:07:16 GMT
+via: 1.1 google
+alt-svc: h3=":443"; ma=2592000
+
+
+===== observations-swetext.body =====
+
+===== observations-swetext.headers =====
+HTTP/2 500 
+cache-control: must-revalidate,no-cache,no-store
+content-length: 0
+date: Tue, 26 May 2026 23:07:16 GMT
+via: 1.1 google
+alt-svc: h3=":443"; ma=2592000
+

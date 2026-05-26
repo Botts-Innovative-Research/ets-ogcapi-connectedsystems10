@@ -1,8 +1,54 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T22:07Z
+Last updated: 2026-05-26T23:20Z
 
 ## Current Sprint Evidence
+
+Sprint ets-30 Part 2 SWE Common Text Encoding planning:
+
+- Status:
+  - Story: `epics/stories/s-ets-30-01-part2-swecommon-text-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-30.yaml`
+  - Generator code is not implemented yet.
+  - TeamEngine planning E2E against GeoRobotix is captured as a failed public check: `186 total / 31 passed / 22 failed / 133 skipped`.
+  - No accepted zero-failure Sprint 30 E2E gate exists yet.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 16.3 "Requirements Class SWE Common Text Encoding" and Annex A.11.
+  - Requirements class identifier: `/req/swecommon-text`.
+  - Conformance class identifier: `/conf/swecommon-text`.
+  - Prerequisite: SWE Common 3.0 Text Encoding Rules.
+  - Media type: exact `application/swe+text`.
+  - Selected requirement set: Requirements 115-122, `/req/swecommon-text/mediatype-read`, `/req/swecommon-text/mediatype-write`, `/req/swecommon-text/obsschema-schema`, `/req/swecommon-text/obsschema-mapping`, `/req/swecommon-text/observation-encoding`, `/req/swecommon-text/cmdschema-schema`, `/req/swecommon-text/cmdschema-mapping`, and `/req/swecommon-text/command-encoding`.
+  - Resource condition gates: Observation-side assertions require `/conf/datastream`; Command-side assertions require `/conf/controlstream`; mediatype-write requires `/conf/create-replace-delete` and non-mutating API-definition evidence.
+  - Source inconsistency: Annex A.115's API-definition bullet mentions `application/swe+binary`, but Clause 16.3 and the retrieval/content-type steps use `application/swe+text`; Generator must not use binary advertisement as SWE Common Text PASS evidence.
+- GeoRobotix planning probes:
+  - Raw transcript: `ops/test-results/sprint-ets-30-plan-georobotix-swetext-probes-2026-05-26.txt`.
+  - `/conformance`: declares Part 2 `/conf/swecommon-text`, `/conf/swecommon-json`, `/conf/swecommon-binary`, `/conf/datastream`, `/conf/controlstream`, `/conf/create-replace-delete`, and `/conf/json`.
+  - `/conformance`: does not declare SWE 3.0 `/conf/text-encoding-rules`, `/conf/json-encoding-rules`, or `/conf/binary-encoding-rules`, Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
+  - `GET /datastreams?limit=1` with `Accept: application/json`: HTTP 500 `application/json`.
+  - `GET /datastreams?limit=1` with `Accept: application/swe+text`: HTTP 500.
+  - `GET /observations?limit=1` with `Accept: application/swe+text`: HTTP 500.
+  - `GET /controlstreams?limit=1`: HTTP 200 `application/json`, first ID `0m4qpft9sdag`, with formats including `application/swe+csv` but not `application/swe+text`.
+  - `GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+text`: HTTP 200, but the body reported `commandFormat=application/json` and `parametersSchema`, not `commandFormat=application/swe+text`, `recordSchema`, and `TextEncoding`.
+  - `GET /controlstreams/0m4qpft9sdag/commands?limit=1` with `Accept: application/swe+text`: HTTP 200 `application/json` with empty `items`.
+  - `GET /commands?limit=1` with `Accept: application/swe+text`: HTTP 400.
+- Local OSH planning limit:
+  - `field-hub-osh-1` is running but unhealthy.
+  - Current shell has no `SMOKE_AUTH_CREDENTIAL`.
+  - Unauthenticated `GET /sensorhub/api/conformance`: HTTP 401.
+- Planning TeamEngine E2E smoke:
+  - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s30-swetext-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-30-swetext-plan-georobotix-results bash scripts/smoke-test.sh`.
+  - Result: FAILED, `186 total / 31 passed / 22 failed / 133 skipped`.
+  - Report: `ops/test-results/sprint-ets-30-plan-georobotix-smoke-failed-2026-05-26.xml`.
+  - Container log: `ops/test-results/sprint-ets-30-plan-georobotix-smoke-container-failed-2026-05-26.log`.
+  - Failure cause: known public-IUT read-path and schema-validation failures; no Sprint 30 SWE Common Text runtime tests exist yet.
+  - Public-IUT safety check: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs; explicit container-log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
+  - Disposition: mandatory public smoke run, failed external/public-IUT evidence, not an accepted zero-failure E2E gate.
+- Raze planning review:
+  - Artifact: `.harness/evaluations/sprint-ets-30-plan-adversarial.yaml`.
+  - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.93.
+  - Required fixes: none.
+  - Low concern: review bookkeeping was pending because Raze was explicitly read-only; post-review reconciliation closed it.
 
 Sprint ets-29 Part 2 SWE Common JSON Encoding Generator:
 

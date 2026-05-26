@@ -22,6 +22,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Raze planning review wrote `.harness/evaluations/sprint-ets-29-plan-adversarial.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.93, and no required fixes.
 - Raze low concern: direct planning probe transcripts are summarized rather than archived as raw standalone artifacts; Generator should reproduce or archive any probe bodies used for PASS/SKIP behavior.
 - Committed and pushed Sprint 29 planning over SSH as `690dbd3 Plan Sprint 29 Part 2 SWE Common JSON` (`be7f1a6..690dbd3 main -> main`).
+- Pushed follow-up reconciliation commit `e397ef7 Reconcile Sprint 29 planning push` (`690dbd3..e397ef7 main -> main`).
 
 ---
 

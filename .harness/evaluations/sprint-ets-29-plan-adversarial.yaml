@@ -1,0 +1,129 @@
+agent: "Raze"
+role: "Red Team / Adversarial Reviewer"
+review_type: "planning-only"
+timestamp: "2026-05-26T19:23:52Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.93
+
+reviewed_scope:
+  sprint: "ets-29"
+  story: "S-ETS-29-01"
+  requirement: "REQ-ETS-PART2-010"
+  capability: "OGC 23-002 Part 2 SWE Common JSON Encoding"
+  runtime_implementation_expected: false
+  files_reviewed:
+    - "AGENTS.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-29-01-part2-swecommon-json-planning.md"
+    - ".harness/contracts/sprint-ets-29.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - "ops/test-results/sprint-ets-29-plan-georobotix-smoke-failed-2026-05-26.xml"
+    - "ops/test-results/sprint-ets-29-plan-georobotix-smoke-container-failed-2026-05-26.log"
+  commands_run:
+    - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+    - "git status --short"
+    - "rg/sed artifact and documentation inspection commands"
+    - "head -c 160 ops/test-results/sprint-ets-29-plan-georobotix-smoke-failed-2026-05-26.xml"
+    - "rg -c \"Request: GET https://api\\.georobotix\\.io/ogc/t18/api\" ops/test-results/sprint-ets-29-plan-georobotix-smoke-container-failed-2026-05-26.log"
+    - "rg -n \"Request: (POST|PUT|PATCH|DELETE) https://api\\.georobotix\\.io/ogc/t18/api\" ops/test-results/sprint-ets-29-plan-georobotix-smoke-container-failed-2026-05-26.log"
+    - "rg -n \"Request: (POST|PUT|PATCH|DELETE)\" ops/test-results/sprint-ets-29-plan-georobotix-smoke-container-failed-2026-05-26.log"
+    - "git diff --check"
+    - "python3 PyYAML parse of sprint-ets-29 contract and planner handoff"
+  commands_not_run:
+    - "Maven tests were not rerun because this was a planning-only review."
+    - "TeamEngine smoke was not rerun because archived artifacts were present and internally consistent."
+
+evidence:
+  official_ogc_identifier_fidelity:
+    source: "https://docs.ogc.org/is/23-002/23-002.html"
+    verified: true
+    requirement_class_identifier: "/req/swecommon-json"
+    conformance_class_identifier: "/conf/swecommon-json"
+    prerequisite_requirement: "http://www.opengis.net/spec/SWE/3.0/req/json-encoding-rules"
+    prerequisite_conformance: "http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules"
+    media_type: "application/swe+json"
+    normative_requirements:
+      - "/req/swecommon-json/mediatype-read"
+      - "/req/swecommon-json/mediatype-write"
+      - "/req/swecommon-json/obsschema-schema"
+      - "/req/swecommon-json/obsschema-mapping"
+      - "/req/swecommon-json/observation-encoding"
+      - "/req/swecommon-json/cmdschema-schema"
+      - "/req/swecommon-json/cmdschema-mapping"
+      - "/req/swecommon-json/command-encoding"
+    assessment: "Identifiers, prerequisite, exact media type, and A.107-A.114 mapping match the official standard."
+  false_pass_controls:
+    declaration_gate: "Exact /conf/swecommon-json declaration is required; sibling /conf/json, /conf/swecommon-text, and /conf/swecommon-binary declarations are explicitly non-substitutable."
+    prerequisite_honesty: "Full closure is blocked when SWE Common 3.0 /conf/json-encoding-rules is absent."
+    resource_gates: "Observation-side checks are gated on /conf/datastream; Command-side checks are gated on /conf/controlstream; mediatype-write is gated on /conf/create-replace-delete plus non-mutating API-definition evidence."
+    media_type_honesty: "application/json fallback, application/vnd.ogc.swe+json note text, auto content type, HTTP errors, format-list-only evidence, and empty candidate sets cannot PASS."
+    schema_honesty: "Schema PASS requires bundled observationSchemaSwe.json or commandSchemaSwe.json validation plus retrieved application/swe+json, recordSchema, and JSONEncoding evidence."
+    mapping_honesty: "Time-component mapping evidence must come from retrieved recordSchema, not hardcoded examples."
+    encoding_honesty: "Observation/Command encoding PASS requires parent schema, candidate child resources, and SWE Common JSON encoding-validator evidence."
+  mandatory_e2e_honesty:
+    smoke_report: "ops/test-results/sprint-ets-29-plan-georobotix-smoke-failed-2026-05-26.xml"
+    container_log: "ops/test-results/sprint-ets-29-plan-georobotix-smoke-container-failed-2026-05-26.log"
+    testng_totals: "176 total / 29 passed / 16 failed / 131 skipped"
+    disposition: "Captured failed public-IUT planning smoke, not a passing E2E gate."
+    current_docs_match_artifacts: true
+  no_public_iut_mutation:
+    georobotix_get_lines: 75
+    georobotix_write_lines: 0
+    any_write_method_lines_in_log: 0
+    assessment: "Archived smoke log contains no Request lines for POST, PUT, PATCH, or DELETE."
+  docs_reconciliation:
+    openspec: "REQ-ETS-PART2-010 is split out as SPECIFIED_PLANNED; REQ-ETS-PART2-011..013 remain deferred placeholders."
+    story: "S-ETS-29-01 records planning-only status, official IDs, live-IUT limits, failed smoke evidence, no-mutation evidence, and pending Raze/commit steps."
+    contract: "Sprint 29 contract records false-PASS guardrails, failed smoke evidence, and no runtime implementation."
+    traceability: "FR-ETS-40 maps to REQ-ETS-PART2-010 and S-ETS-29-01 with SPECIFIED_PLANNED / public smoke failed status."
+    epic: "Epic ETS-03 adds S-ETS-29-01 and supersedes the old SWE Common JSON placeholder."
+    ops: "status, test-results, known-issues, and changelog all describe Sprint 29 as planning-only with failed public-IUT evidence."
+    handoff: "Planner handoff points the next agent to Raze review and post-review reconciliation."
+  worktree_hygiene:
+    diff_check: "clean"
+    yaml_parse:
+      - ".harness/contracts/sprint-ets-29.yaml"
+      - ".harness/handoffs/planner-handoff.yaml"
+    dirty_files_assessment: "Dirty files are scoped to Sprint 29 planning docs, expected smoke artifacts, and this review report."
+
+findings:
+  - id: "RAZE-ETS29-PLAN-CONCERN-001"
+    severity: "LOW"
+    title: "Direct planning probe transcripts are summarized, not archived as raw standalone artifacts"
+    status: "NON_BLOCKING"
+    evidence:
+      - "Story, contract, status, test-results, and known-issues consistently summarize GeoRobotix and local OSH direct probes."
+      - "The durable artifacts provided for this review are the TeamEngine smoke XML/log, not raw curl transcript files for every direct probe."
+    impact: "Low audit friction if a later reviewer wants to replay the exact direct probe bodies independently of the smoke artifacts."
+    required_fix: null
+    recommendation: "During Generator implementation, reproduce or archive any direct SWE Common JSON probe bodies used to justify PASS/SKIP behavior."
+  - id: "RAZE-ETS29-PLAN-CONCERN-002"
+    severity: "LOW"
+    title: "Post-review reconciliation still needs to flip pending Raze status fields"
+    status: "EXPECTED_POST_REVIEW_STEP"
+    evidence:
+      - ".harness/contracts/sprint-ets-29.yaml still has raze_planning_review_completed: false at review time."
+      - ".harness/handoffs/planner-handoff.yaml and ops docs still say Raze planning review is pending at review time."
+    impact: "Not a planning-content defect; these fields necessarily remain pending until this report exists."
+    required_fix: null
+    recommendation: "Before reporting Sprint 29 planning complete, update story/contract/handoff/status/test-results/changelog/metrics to reference this report."
+
+required_fixes: []
+
+approval_rationale:
+  - "No Java runtime implementation was expected, and no Java/runtime files are dirty."
+  - "The OpenSpec/story/contract/traceability/epic/ops/handoff set is internally consistent for planning-only status."
+  - "The OGC requirement and conformance identifiers match the official OGC 23-002 Clause 16.2 and Annex A.10 text."
+  - "The planning explicitly blocks known false PASS paths: declaration-only, sibling encoding declarations, missing SWE prerequisite, HTTP errors, JSON fallback, auto content type, empty candidates, format lists, OPTIONS-only write evidence, and public mutation."
+  - "Mandatory TeamEngine evidence is reported as failed public-IUT evidence with exact totals, not as a passing E2E gate."
+  - "No public GeoRobotix POST/PUT/PATCH/DELETE request lines are present in the archived smoke log."
+
+required_follow_up_before_completion:
+  - "Reconcile Sprint 29 planning docs to record this Raze review result."
+  - "Commit and push the planning docs, smoke artifacts, this review report, and metrics."

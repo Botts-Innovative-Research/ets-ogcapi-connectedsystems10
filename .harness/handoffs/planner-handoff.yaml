@@ -1,93 +1,101 @@
 agent: planner
-status: superseded_by_generator_handoff
-timestamp: "2026-05-26T17:15:41Z"
-sprint_number: "ets-28"
-sprint_name: "part2-json"
-contract_path: ".harness/contracts/sprint-ets-28.yaml"
+status: planned_pending_e2e_and_raze
+timestamp: "2026-05-26T19:11:41Z"
+sprint_number: "ets-29"
+sprint_name: "part2-swecommon-json"
+contract_path: ".harness/contracts/sprint-ets-29.yaml"
 triggered_by: |
-  User said "Continue'" after Sprint 27 Part 2 Update was implemented,
-  reconciled, pushed, and accepted via local OSH E2E.
+  User said "Do 1" after the assistant recommended the next backlog path:
+  plan REQ-ETS-PART2-010, the Part 2 /conf/swecommon-json suite.
 
 planning_result:
   story:
-    id: "S-ETS-28-01"
-    title: "Part 2 JSON Encoding"
-    file: "epics/stories/s-ets-28-01-part2-json-planning.md"
+    id: "S-ETS-29-01"
+    title: "Part 2 SWE Common JSON Encoding"
+    file: "epics/stories/s-ets-29-01-part2-swecommon-json-planning.md"
+  architecture_freshness:
+    checked_at: "2026-05-26T19:11:41Z"
+    architecture_last_reconciled: "2026-05-09"
+    stale: false
   official_identifiers:
     source: "https://docs.ogc.org/is/23-002/23-002.html"
-    clause: "Clause 16.1, Requirements Class JSON Encoding"
-    requirement_class_identifier: "/req/json"
-    conformance_class_identifier: "/conf/json"
+    clause: "Clause 16.2, Requirements Class SWE Common JSON Encoding"
+    requirement_class_identifier: "/req/swecommon-json"
+    conformance_class_identifier: "/conf/swecommon-json"
+    media_type: "application/swe+json"
     prerequisites:
-      - "http://www.opengis.net/spec/SWE/3.0/req/json-record-components"
+      - "http://www.opengis.net/spec/SWE/3.0/req/json-encoding-rules"
     conformance_prerequisites:
-      - "http://www.opengis.net/spec/SWE/3.0/conf/json-record-components"
+      - "http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules"
     normative_statements:
-      - "/req/json/mediatype-read"
-      - "/req/json/mediatype-write"
-      - "/req/json/datastream-schema"
-      - "/req/json/obsschema-schema"
-      - "/req/json/observation-schema"
-      - "/req/json/observation-constraints"
-      - "/req/json/controlstream-schema"
-      - "/req/json/commandschema-schema"
-      - "/req/json/command-schema"
-      - "/req/json/command-constraints"
-      - "/req/json/commandstatus-schema"
-      - "/req/json/commandresult-schema"
-      - "/req/json/commandresult-constraints"
-      - "/req/json/systemevent-schema"
+      - "/req/swecommon-json/mediatype-read"
+      - "/req/swecommon-json/mediatype-write"
+      - "/req/swecommon-json/obsschema-schema"
+      - "/req/swecommon-json/obsschema-mapping"
+      - "/req/swecommon-json/observation-encoding"
+      - "/req/swecommon-json/cmdschema-schema"
+      - "/req/swecommon-json/cmdschema-mapping"
+      - "/req/swecommon-json/command-encoding"
     condition_gates:
-      datastream_observation: "DataStream, Observation Schema, Observation, and Observation constraints require /conf/datastream before PASS."
-      controlstream_command: "ControlStream, Command Schema, Command, CommandStatus, CommandResult, and their constraints require /conf/controlstream before PASS."
-      system_event: "SystemEvent JSON assertions require /conf/system-event before PASS."
+      observation: "Observation Schema, Observation Schema mapping, and Observation encoding require /conf/datastream before PASS."
+      command: "Command Schema, Command Schema mapping, and Command encoding require /conf/controlstream before PASS."
+      write_media: "Mediatype-write requires /conf/create-replace-delete and non-mutating API-definition evidence before PASS."
   georobotix_probe_summary:
-    conformance: "Declares Part 2 /conf/json, /conf/datastream, /conf/controlstream, /conf/system-event, /conf/create-replace-delete, /conf/swecommon-json, /conf/swecommon-text, and /conf/swecommon-binary; does not declare Part 2 /conf/api-common, /conf/update, /conf/advanced-filtering, or SWE 3.0 /conf/json-record-components."
-    read_health: "GET /datastreams?limit=1 and /observations?limit=1 returned HTTP 500 text/html; /controlstreams?limit=1 returned HTTP 200 application/json; /systemEvents?limit=1 returned HTTP 400; /systems/{id}/events?limit=1 returned HTTP 400 streaming-only."
-    json_schema_evidence: "Selected ControlStream /schema?cmdFormat=application/json returned HTTP 200 with commandFormat=application/json and parametersSchema; nested commands collection had no candidate Command item."
+    conformance: "Declares Part 2 /conf/swecommon-json, /conf/swecommon-text, /conf/swecommon-binary, /conf/datastream, /conf/controlstream, /conf/create-replace-delete, and /conf/json; does not declare SWE 3.0 /conf/json-encoding-rules, Part 2 /conf/api-common, /conf/update, or /conf/advanced-filtering."
+    read_health: "GET /datastreams?limit=1 and /observations?limit=1 with Accept application/swe+json returned HTTP 500 application/json; /controlstreams?limit=1 returned HTTP 200 application/json; /commands?limit=1 returned HTTP 400; /systemEvents?limit=1 returned HTTP 400."
+    swejson_schema_evidence: "Selected ControlStream 0m4qpft9sdag advertises application/swe+json, but /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+json returned commandFormat=application/json and parametersSchema instead of commandFormat=application/swe+json, recordSchema, and JSONEncoding."
+    candidate_command_evidence: "Nested commands with Accept application/swe+json returned HTTP 200 JSON but empty items; no candidate Command body evidence."
   local_osh_probe_summary:
     container: "field-hub-osh-1 is running but unhealthy."
     credential_state: "Current shell has no SMOKE_AUTH_CREDENTIAL."
-    conformance: "Unauthenticated /sensorhub/api/conformance returned HTTP 401."
+    conformance: "Unauthenticated http://localhost:8081/sensorhub/api/conformance returned HTTP 401."
+  bundled_schema_readiness:
+    - "src/main/resources/schemas/connected-systems-2/json/observationSchemaSwe.json"
+    - "src/main/resources/schemas/connected-systems-2/json/commandSchemaSwe.json"
+    - "src/main/resources/schemas/connected-systems-shared/swecommon/schemas/json/*.json"
   safety_policy:
     default_public_smoke: "Read-only; zero IUT-bound POST, PUT, PATCH, or DELETE."
-    declaration_honesty: "Do not PASS JSON assertions from Common JSON, GeoJSON, SWE Common, or resource-class declarations alone."
-    prerequisite_honesty: "Keep SWE Common 3.0 JSON record components visible before full /conf/json closure."
-    condition_gate_honesty: "Missing resource classes SKIP prerequisite-incomplete; do not PASS from /conf/json, endpoint availability, sibling declarations, or collection shape."
-    schema_honesty: "Schema PASS requires candidate resource/collection evidence and the corresponding bundled schema."
-    dynamic_schema_honesty: "Observation, Command, and CommandResult constraints require parent schema evidence and candidate child resource evidence."
-    write_safety: "Requirement 94 mediatype-write is API-definition/readiness only in the first increment; OPTIONS alone cannot PASS and public GeoRobotix mutation is forbidden."
+    declaration_honesty: "Do not PASS from /conf/json, /conf/swecommon-text, /conf/swecommon-binary, or resource-class declarations alone."
+    prerequisite_honesty: "Keep SWE Common 3.0 JSON Encoding Rules prerequisite visible before full /conf/swecommon-json closure."
+    condition_gate_honesty: "Missing /conf/datastream or /conf/controlstream SKIPs scoped Observation/Command assertions before PASS."
+    schema_honesty: "SWE schema PASS requires retrieved application/swe+json schema evidence, JSONEncoding, and bundled schema validation."
+    encoding_honesty: "Observation/Command body PASS requires parent schema, candidate child body, and SWE Common JSON encoding-validator evidence; otherwise SKIP."
+    write_safety: "Requirement 108 mediatype-write is API-definition/readiness only in the first increment; OPTIONS alone cannot PASS and public GeoRobotix mutation is forbidden."
 
 planning_e2e:
-  status: "FAILED_EXTERNAL_IUT_HTTP_500"
+  status: "FAILED_PUBLIC_IUT"
   georobotix_smoke:
-    command: "SMOKE_CONTAINER_NAME=ets-csapi-s28-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-28-plan-georobotix-results bash scripts/smoke-test.sh"
-    testng: "160 total / 27 passed / 5 failed / 128 skipped"
-    report: "ops/test-results/sprint-ets-28-plan-georobotix-smoke-failed-2026-05-26.xml"
-    container_log: "ops/test-results/sprint-ets-28-plan-georobotix-smoke-container-failed-2026-05-26.log"
-    failure_cause: "Known public-IUT HTTP 500 responses on existing SystemFeatures/GeoJSON/SensorML/Datastream/Observation read paths; no Part 2 JSON runtime tests exist yet."
-    public_iut_mutation: "scripts/no-mutation-oracle.py recognized 61 GeoRobotix IUT request logs; explicit container-log search found no matched GeoRobotix POST/PUT/PATCH/DELETE request lines."
-    disposition: "Advisory public interoperability check; not an accepted zero-failure E2E gate."
-    note: "First attempt from git archive failed before TeamEngine because Dockerfile expects .git; rerun from a temporary Git clone."
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s29-swejson-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-29-swejson-plan-georobotix-results bash scripts/smoke-test.sh"
+    testng: "176 total / 29 passed / 16 failed / 131 skipped"
+    report: "ops/test-results/sprint-ets-29-plan-georobotix-smoke-failed-2026-05-26.xml"
+    container_log: "ops/test-results/sprint-ets-29-plan-georobotix-smoke-container-failed-2026-05-26.log"
+    failure_cause: "Known public-IUT read-path and schema-validation failures; no Sprint 29 SWE Common JSON runtime tests exist yet."
+    public_iut_mutation: "scripts/no-mutation-oracle.py was inconclusive for this log format, but explicit container-log search found 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines."
+    disposition: "Captured failed public smoke; not a passing E2E gate."
   local_osh:
     status: "BLOCKED_MISSING_CREDENTIAL_AND_UNHEALTHY"
     reason: "Current shell has no SMOKE_AUTH_CREDENTIAL; local OSH container is unhealthy and unauthenticated /conformance returned HTTP 401."
 
 raze_review:
-  artifact: ".harness/evaluations/sprint-ets-28-plan-adversarial.yaml"
+  artifact: ".harness/evaluations/sprint-ets-29-plan-adversarial.yaml"
   verdict: "APPROVE_WITH_CONCERNS"
-  confidence: 0.92
+  confidence: 0.93
   required_fixes: []
   concerns:
-    - id: "RAZE-ETS28-PLAN-CONCERN-001"
+    - id: "RAZE-ETS29-PLAN-CONCERN-001"
       severity: "LOW"
       status: "OPEN_NON_BLOCKING"
-      summary: "Direct JSON-specific probe bodies are summarized but not archived as raw transcripts; Generator must reproduce or archive any positive schema/readiness evidence used for PASS or SKIP behavior."
+      summary: "Direct planning probe transcripts are summarized rather than archived as raw standalone artifacts."
+    - id: "RAZE-ETS29-PLAN-CONCERN-002"
+      severity: "LOW"
+      status: "CLOSED_BY_POST_REVIEW_RECONCILIATION"
+      summary: "Pending Raze status fields were flipped after the review report existed."
 
 commit:
-  sha: "5d95d55"
-  message: "Plan Sprint 28 Part 2 JSON"
-  push: "13b34f7..5d95d55 main -> main over SSH"
+  status: "pending"
+  sha: null
+  message: null
+  push: null
 
 next_agent: "generator"
-next_action: "Use .harness/handoffs/generator-handoff.yaml; Sprint 28 Generator is partial implemented and awaits Raze implementation review."
+next_action: "After the planning commit is pushed, implement the first read-only /conf/swecommon-json Generator subset from .harness/contracts/sprint-ets-29.yaml."

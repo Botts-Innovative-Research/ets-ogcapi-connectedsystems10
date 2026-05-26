@@ -2,6 +2,28 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-26T19:20Z — Sprint 29 Part 2 SWE Common JSON Encoding planning
+
+**Triggered by user instruction**: "Do 1"
+
+- Started Sprint 29 planning for `S-ETS-29-01`, the next Part 2 item after Sprint 28 JSON Encoding.
+- Verified `_bmad/architecture.md` freshness: last reconciled 2026-05-09, so not stale on 2026-05-26.
+- Verified official OGC 23-002 Clause 16.2 identifiers from the published HTML: SWE Common JSON Encoding is `/req/swecommon-json` with conformance `/conf/swecommon-json`, prerequisite SWE Common 3.0 JSON Encoding Rules, exact media type `application/swe+json`, and Requirements 107-114.
+- Added `.harness/contracts/sprint-ets-29.yaml` and `epics/stories/s-ets-29-01-part2-swecommon-json-planning.md`.
+- Updated OpenSpec, traceability, epic ETS-03, ops status, test-results, known issues, and planner handoff for SWE Common JSON planning.
+- Split `REQ-ETS-PART2-010` out for Part 2 SWE Common JSON Encoding and renumbered remaining Part 2 placeholders to `REQ-ETS-PART2-011..013`.
+- Planned condition gates: Observation-side assertions require `/conf/datastream`; Command-side assertions require `/conf/controlstream`; mediatype-write requires `/conf/create-replace-delete` and non-mutating API-definition evidence.
+- Probed GeoRobotix state: `/conformance` declares Part 2 `/conf/swecommon-json`, `/conf/swecommon-text`, `/conf/swecommon-binary`, `/conf/datastream`, `/conf/controlstream`, `/conf/create-replace-delete`, and `/conf/json`, but not SWE 3.0 `/conf/json-encoding-rules`, Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
+- Captured read-only planning evidence: SWE JSON DataStream and Observation reads returned HTTP 500; selected ControlStream `0m4qpft9sdag` advertises `application/swe+json`, but `/controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+json` returned `commandFormat=application/json` and `parametersSchema` instead of `application/swe+json`, `recordSchema`, and `JSONEncoding`; nested Commands were empty.
+- Captured local OSH readiness limits: `field-hub-osh-1` is running but unhealthy, the shell has no `SMOKE_AUTH_CREDENTIAL`, and unauthenticated `/sensorhub/api/conformance` returns HTTP 401.
+- Ran mandatory GeoRobotix TeamEngine planning smoke from a `/tmp` clone. Result: FAILED, `176 total / 29 passed / 16 failed / 131 skipped`.
+- Archived planning smoke artifacts as `ops/test-results/sprint-ets-29-plan-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-29-plan-georobotix-smoke-container-failed-2026-05-26.log`.
+- Verified public-IUT safety by explicit log grep: 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines. `scripts/no-mutation-oracle.py` was inconclusive for this log format.
+- Raze planning review wrote `.harness/evaluations/sprint-ets-29-plan-adversarial.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.93, and no required fixes.
+- Raze low concern: direct planning probe transcripts are summarized rather than archived as raw standalone artifacts; Generator should reproduce or archive any probe bodies used for PASS/SKIP behavior.
+
+---
+
 ## 2026-05-26T18:51Z — Sprint 28 Part 2 JSON Generator
 
 **Triggered by user instruction**: "Generate!"

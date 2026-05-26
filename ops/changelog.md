@@ -2,6 +2,27 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-26T21:58Z — Sprint 29 Part 2 SWE Common JSON Generator
+
+**Triggered by user instruction**: "Do generator"
+
+- Implemented `S-ETS-29-01` as the first declaration-gated, read-only Part 2 SWE Common JSON Encoding subset using official OGC 23-002 `/req/swecommon-json` and `/conf/swecommon-json` identifiers.
+- Added `Part2SweCommonJsonTests` with runtime checks for exact declaration, SWE 3.0 `/conf/json-encoding-rules` prerequisite visibility, `/conf/datastream`/`/conf/controlstream`/`/conf/create-replace-delete` condition gates, read-only `application/swe+json` content-type handling, Annex A.10 bundled schema validation, canonical Time/IssueTime definition evidence guards, Observation/Command encoding evidence guards, unavailable-endpoint honesty, and non-mutating mediatype-write API-definition advertisement checks scoped to Observation/Command resource endpoints.
+- Added `VerifyPart2SweCommonJsonTests` with 11 helper regressions covering official identifiers, condition gates, content-type rules, bundled schema resources, schema mapper loading, `JSONEncoding`, canonical Time/IssueTime evidence, service-desc request body advertisement parsing, unrelated/subresource path rejection, OPTIONS/JSON/vendor-media rejection for write advertisement, and stable `part2swecommonjson` group naming.
+- Updated `testng.xml` and `VerifyTestNGSuiteDependency` for `part2swecommonjson` dependency wiring, method tagging, and co-location. The group depends on `core common`.
+- Ran formatter: Docker Maven `spring-javaformat:apply` returned BUILD SUCCESS.
+- Ran focused Maven after the Raze gapfix with Docker Maven and a persistent `/tmp` Maven cache: BUILD SUCCESS with `78 tests / 0 failures / 0 errors / 0 skipped`; final log archived as `ops/test-results/sprint-ets-29-focused-postraze-2026-05-26.log`.
+- Ran full Maven after the Raze gapfix with Docker Maven and a persistent `/tmp` Maven cache: BUILD SUCCESS with `244 tests / 0 failures / 0 errors / 3 skipped`; final log archived as `ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log`.
+- Preserved earlier full-Maven network artifacts as `ops/test-results/sprint-ets-29-maven-network-failed-2026-05-26.log` and `ops/test-results/sprint-ets-29-maven-central-stalled-2026-05-26.log`; those were Maven Central transfer/reset behavior, not project-test failures.
+- Ran mandatory post-gapfix GeoRobotix TeamEngine Generator smoke from a `/tmp` clone. Result: FAILED, `186 total / 31 passed / 22 failed / 133 skipped`.
+- Archived Generator smoke artifacts as `ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml`, `ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log`, and `ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-console-failed-2026-05-26.log`.
+- Interpreted the failed smoke honestly: the new SWE Common JSON group produced 2 PASS, 6 FAIL, and 2 SKIP because GeoRobotix lacks SWE 3.0 `/conf/json-encoding-rules`, returns HTTP 500 for Observation-side SWE JSON reads, and fails existing `/controlstreams` schema validation before Command SWE JSON PASS evidence.
+- Verified public-IUT safety: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs, and explicit log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
+- Reconciled OpenSpec, story, traceability, epic, contract, ops status, test-results, known issues, and generator handoff for partial implementation status. Full positive `/conf/swecommon-json` closure remains open because the mandatory public GeoRobotix E2E run failed.
+- Raze implementation review initially returned `GAPS_FOUND` for two false-PASS risks; code now requires canonical Time definition URIs and scopes write-media evidence to Observation/Command resource endpoints. Focused Raze recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with both required gaps closed and no required fixes remaining.
+
+---
+
 ## 2026-05-26T19:20Z — Sprint 29 Part 2 SWE Common JSON Encoding planning
 
 **Triggered by user instruction**: "Do 1"

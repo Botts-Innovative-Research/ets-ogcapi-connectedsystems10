@@ -1,114 +1,122 @@
 agent: generator
-status: partial_implemented_raze_approved_with_concerns_public_georobotix_e2e_failed
-timestamp: "2026-05-26T18:58:00Z"
-sprint_number: "ets-28"
-sprint_name: "part2-json-encoding"
+status: partial_implemented_public_georobotix_e2e_failed_raze_approved_with_concerns
+timestamp: "2026-05-26T21:58:00Z"
+sprint_number: "ets-29"
+sprint_name: "part2-swecommon-json"
 story:
-  id: "S-ETS-28-01"
-  title: "Part 2 JSON Encoding declaration-gated read-only subset"
-  file: "epics/stories/s-ets-28-01-part2-json-planning.md"
-contract_path: ".harness/contracts/sprint-ets-28.yaml"
+  id: "S-ETS-29-01"
+  title: "Part 2 SWE Common JSON Encoding declaration-gated read-only subset"
+  file: "epics/stories/s-ets-29-01-part2-swecommon-json-planning.md"
+contract_path: ".harness/contracts/sprint-ets-29.yaml"
 base_commit:
-  sha: "5d95d55"
-  message: "Plan Sprint 28 Part 2 JSON"
+  sha: "e397ef7"
+  message: "Reconcile Sprint 29 planning push"
 
 implementation_summary: |
-  Sprint 28 Generator implemented the first read-only Part 2 JSON Encoding
-  subset using official OGC 23-002 /req/json and /conf/json identifiers. It
-  exact-gates /conf/json, keeps the SWE Common JSON record-components
-  prerequisite visible, applies /conf/datastream, /conf/controlstream, and
-  /conf/system-event condition gates, validates available read-only resources
-  against bundled Annex A.9 schemas, guards dynamic constraints with real parent
-  schema and child-resource evidence while avoiding shape-only PASS, and treats
-  mediatype-write as a non-mutating exact-application/json API-definition
-  advertisement check only.
+  Sprint 29 Generator implemented the first read-only Part 2 SWE Common JSON
+  Encoding subset using official OGC 23-002 /req/swecommon-json and
+  /conf/swecommon-json identifiers. It exact-gates /conf/swecommon-json, keeps
+  the SWE Common 3.0 /conf/json-encoding-rules prerequisite visible, applies
+  /conf/datastream, /conf/controlstream, and /conf/create-replace-delete
+  condition gates, validates available SWE Common schema metadata against
+  bundled Annex A.10 schemas, requires Time/IssueTime mapping evidence from
+  retrieved recordSchema data using canonical definition URIs, guards Observation/Command encoding PASS until
+  parent schema, candidate resource, and validator evidence exist, and treats
+  mediatype-write as a non-mutating exact-application/swe+json API-definition
+  advertisement check scoped to Observation and Command resource endpoints only.
 
 files_added:
-  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java"
-  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/VerifyPart2JsonTests.java"
-  - "ops/test-results/sprint-ets-28-maven-2026-05-26.log"
-  - "ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml"
-  - "ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/VerifyPart2SweCommonJsonTests.java"
+  - "ops/test-results/sprint-ets-29-maven-2026-05-26.log"
+  - "ops/test-results/sprint-ets-29-maven-network-failed-2026-05-26.log"
+  - "ops/test-results/sprint-ets-29-maven-central-stalled-2026-05-26.log"
+  - "ops/test-results/sprint-ets-29-generator-georobotix-smoke-failed-2026-05-26.xml"
+  - "ops/test-results/sprint-ets-29-generator-georobotix-smoke-container-failed-2026-05-26.log"
+  - "ops/test-results/sprint-ets-29-focused-postraze-2026-05-26.log"
+  - "ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log"
+  - "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml"
+  - "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log"
+  - "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-console-failed-2026-05-26.log"
+  - ".harness/evaluations/sprint-ets-29-adversarial-implementation.yaml"
 
 files_updated:
-  - "pom.xml"
   - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
   - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
   - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-  - "epics/stories/s-ets-28-01-part2-json-planning.md"
+  - "epics/stories/s-ets-29-01-part2-swecommon-json-planning.md"
   - "epics/epic-ets-03-part2-classes.md"
   - "_bmad/traceability.md"
-  - ".harness/contracts/sprint-ets-28.yaml"
+  - ".harness/contracts/sprint-ets-29.yaml"
+  - ".harness/handoffs/generator-handoff.yaml"
   - "ops/status.md"
   - "ops/test-results.md"
   - "ops/changelog.md"
   - "ops/known-issues.md"
 
 runtime_tests:
-  group: "part2json"
+  group: "part2swecommonjson"
   coverage:
-    - "Exact Part 2 /conf/json declaration."
-    - "SWE Common 3.0 JSON record-components prerequisite visibility."
-    - "Resource condition gates for /conf/datastream, /conf/controlstream, and /conf/system-event."
-    - "Read-only JSON media type response checks."
-    - "Annex A.9 bundled schema validation for available candidate resources and collections."
-    - "Observation, Command, and CommandResult dynamic constraint evidence guards that SKIP instead of shape-only PASS until semantic validation exists."
-    - "Exact application/json mediatype-write API-definition advertisement checks without public mutation."
-    - "Unavailable-endpoint and no-candidate honesty."
-  helper_regressions: 8
+    - "Exact Part 2 /conf/swecommon-json declaration."
+    - "SWE Common 3.0 JSON Encoding Rules prerequisite visibility."
+    - "Resource condition gates for /conf/datastream, /conf/controlstream, and /conf/create-replace-delete."
+    - "Read-only application/swe+json content-type checks."
+    - "Annex A.10 bundled Observation Schema and Command Schema validation."
+    - "Canonical Time and IssueTime definition evidence from retrieved recordSchema."
+    - "Observation and Command encoding guards that SKIP instead of shape-only PASS until validator evidence exists."
+    - "Exact application/swe+json mediatype-write API-definition advertisement checks on Observation and Command resource endpoints without public mutation."
+  helper_regressions: 11
 
 gates:
   formatter:
     command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
     result: "BUILD SUCCESS"
   focused_maven:
-    command: "bash scripts/mvn-test-via-docker.sh -Dtest=VerifyPart2JsonTests,VerifyTestNGSuiteDependency"
+    command: "Docker Maven spring-javaformat:apply clean test -Dtest=VerifyPart2SweCommonJsonTests,VerifyTestNGSuiteDependency with /tmp Maven cache"
     result: "BUILD SUCCESS"
-    surefire: "72 tests / 0 failures / 0 errors / 0 skipped"
+    surefire: "78 tests / 0 failures / 0 errors / 0 skipped"
   full_maven:
-    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -v /tmp/ets-m2repo-s28-user:/m2 -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn clean test -B -Dmaven.repo.local=/m2 -Dmaven.artifact.threads=1"
+    command: "Docker Maven mvn -B clean test with /tmp Maven cache"
     result: "BUILD SUCCESS"
-    surefire: "230 tests / 0 failures / 0 errors / 3 skipped"
-    log: "ops/test-results/sprint-ets-28-maven-2026-05-26.log"
+    surefire: "244 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log"
+    caveat: "Two earlier full-Maven attempts were archived as Maven Central network/reset artifacts, not project-test failures."
   georobotix_teamengine_smoke:
-    result: "FAILED_PUBLIC_IUT_HTTP500_AND_JSON_SCHEMA"
-    disposition: "Mandatory public smoke run; not a passing E2E gate."
-    testng: "176 total / 29 passed / 16 failed / 131 skipped"
-    report: "ops/test-results/sprint-ets-28-generator-georobotix-smoke-failed-2026-05-26.xml"
-    log: "ops/test-results/sprint-ets-28-generator-georobotix-smoke-container-failed-2026-05-26.log"
-    failure_cause: "GeoRobotix public IUT still returns HTTP 500 for existing read paths and its /controlstreams JSON fails controlStreamCollection.json."
-    schema_loader_status: "Fixed; rerun has no Failed to load json schema or could not be schema-validated loader errors."
-    no_public_mutation: "Explicit grep found 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE; no-mutation oracle inconclusive for this log format."
+    result: "FAILED_PUBLIC_IUT_SWEJSON_READ_AND_SCHEMA"
+    disposition: "Mandatory public smoke run; not a passing full /conf/swecommon-json closure gate."
+    testng: "186 total / 31 passed / 22 failed / 133 skipped"
+    new_group: "2 PASS / 6 FAIL / 2 SKIP"
+    report: "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml"
+    log: "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log"
+    failure_cause: "GeoRobotix lacks SWE 3.0 /conf/json-encoding-rules, returns HTTP 500 for Observation-side SWE JSON reads, and fails /controlstreams schema validation before Command SWE JSON PASS evidence."
+    no_public_mutation: "no-mutation oracle recognized 83 IUT request logs; explicit grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE."
 
 blockers:
-  - id: "ETS28-E2E-GEOROBOTIX-HTTP500"
+  - id: "ETS29-E2E-GEOROBOTIX-SWE-PREREQUISITE"
     status: "open_external"
-    summary: "GeoRobotix public smoke fails because the public IUT returns HTTP 500 on existing DataStream and Observation read endpoints."
-  - id: "ETS28-E2E-GEOROBOTIX-CONTROLSTREAM-SCHEMA"
+    summary: "GeoRobotix declares /conf/swecommon-json without exposing SWE 3.0 /conf/json-encoding-rules."
+  - id: "ETS29-E2E-GEOROBOTIX-OBS-HTTP500"
+    status: "open_external"
+    summary: "GeoRobotix Observation-side SWE JSON reads return HTTP 500."
+  - id: "ETS29-E2E-GEOROBOTIX-CONTROLSTREAM-SCHEMA"
     status: "open_external_or_spec_interpretation"
-    summary: "GeoRobotix /controlstreams JSON reaches validation but fails bundled controlStreamCollection.json."
-  - id: "ETS28-FULL-JSON-CLOSURE"
+    summary: "Command-side checks fail existing /controlstreams collection schema validation before SWE Common Command Schema PASS evidence."
+  - id: "ETS29-FULL-SWEJSON-CLOSURE"
     status: "deferred_scope"
-    summary: "Full positive JSON closure remains deferred until a healthy declaring IUT exposes valid DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, SystemEvent, SWE record-component, and mediatype-write evidence."
+    summary: "Full positive SWE Common JSON closure remains deferred until a healthy declaring IUT exposes valid Observation Schema, Observation, Command Schema, Command, SWE prerequisite, validator, and mediatype-write evidence."
 
 raze_implementation_review:
   required: true
-  artifact: ".harness/evaluations/sprint-ets-28-adversarial-implementation.yaml"
-  status: "approved_with_concerns"
-  confidence: 0.93
+  artifact: ".harness/evaluations/sprint-ets-29-adversarial-implementation.yaml"
+  status: "APPROVE_WITH_CONCERNS"
+  confidence: 0.94
   required_fixes_remaining: []
-  initial_verdict: "GAPS_FOUND"
-  closed_required_fixes:
-    - "Expanded schema-loader regression coverage to every Annex A.9 schema."
-    - "Removed stale planning-only Out of Scope wording from the story."
-  concerns:
-    - "Resource ID URI path escaping remains a non-blocking hardening item."
 
 commit:
-  status: "pushed"
-  sha: "5850210"
-  message: "Implement Sprint 28 Part 2 JSON"
-  push: "ce66139..5850210 main -> main"
+  status: "pending"
+  sha: null
+  message: "Implement Sprint 29 Part 2 SWE Common JSON"
+  push: null
 
 next_agent: "planner"
-next_action: "Plan the next Part 2 placeholder REQ-ETS-PART2-010 or provision a healthy declaring IUT for positive /conf/json closure."
+next_action: "After Raze review and push, plan REQ-ETS-PART2-011 SWE Common Text or provision a healthy declaring IUT for positive /conf/swecommon-json closure."

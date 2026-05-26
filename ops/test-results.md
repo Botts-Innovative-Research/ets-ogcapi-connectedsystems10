@@ -1,16 +1,16 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T19:20Z
+Last updated: 2026-05-26T21:58Z
 
 ## Current Sprint Evidence
 
-Sprint ets-29 Part 2 SWE Common JSON Encoding planning:
+Sprint ets-29 Part 2 SWE Common JSON Encoding Generator:
 
 - Status:
   - Story: `epics/stories/s-ets-29-01-part2-swecommon-json-planning.md`
   - Contract: `.harness/contracts/sprint-ets-29.yaml`
-  - Generator code has not started; this is a planning-only change.
-  - TeamEngine planning E2E against GeoRobotix is captured as a failed public check: `176 total / 29 passed / 16 failed / 131 skipped`.
+  - Generator code is implemented as a PARTIAL read-only subset.
+  - TeamEngine Generator E2E against GeoRobotix is captured as a failed public check: `186 total / 31 passed / 22 failed / 133 skipped`.
   - No accepted zero-failure Sprint 29 E2E gate exists yet.
 - Official OGC source verification:
   - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 16.2 "Requirements Class SWE Common JSON Encoding" and Annex A.10.
@@ -30,10 +30,20 @@ Sprint ets-29 Part 2 SWE Common JSON Encoding planning:
   - `GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+json`: HTTP 200, but the body reported `commandFormat=application/json` and `parametersSchema`, not `commandFormat=application/swe+json`, `recordSchema`, and `JSONEncoding`.
   - `GET /controlstreams/0m4qpft9sdag/commands?limit=1` with `Accept: application/swe+json`: HTTP 200 JSON with empty `items`.
   - `GET /commands?limit=1` and `GET /systemEvents?limit=1` with `Accept: application/swe+json`: HTTP 400 JSON.
+- Generator implementation:
+  - `Part2SweCommonJsonTests`: exact `/conf/swecommon-json` declaration, SWE 3.0 `/conf/json-encoding-rules` prerequisite visibility, `/conf/datastream`/`/conf/controlstream`/`/conf/create-replace-delete` condition gates, read-only `application/swe+json` content-type checks, bundled `observationSchemaSwe.json` and `commandSchemaSwe.json` validation, canonical Time/IssueTime definition evidence, Observation/Command encoding guards, and non-mutating mediatype-write API-definition checks scoped to Observation/Command resource endpoints.
+  - `VerifyPart2SweCommonJsonTests`: 11 helper regressions covering official identifiers, condition gates, content-type rules, bundled Annex A.10 schema loading, `JSONEncoding`, canonical Time/IssueTime evidence, API-definition request-body parsing, unrelated/subresource path rejection, OPTIONS/vendor-media rejection, and stable group naming.
+  - `testng.xml`: adds `part2swecommonjson` with `core common` dependencies.
+  - `VerifyTestNGSuiteDependency`: adds `part2swecommonjson` dependency, method-group, and co-location structural checks.
 - Local OSH planning limit:
   - `field-hub-osh-1` is running but unhealthy.
   - Current shell has no `SMOKE_AUTH_CREDENTIAL`.
   - Unauthenticated `GET /sensorhub/api/conformance`: HTTP 401.
+- Maven and formatting:
+  - Formatter: Docker Maven `mvn -B spring-javaformat:apply` returned BUILD SUCCESS.
+  - Focused Maven after Raze gapfix: Docker Maven with `maven:3.9-eclipse-temurin-17` and a persistent `/tmp` Maven cache returned BUILD SUCCESS with `78 tests / 0 failures / 0 errors / 0 skipped`; final log archived as `ops/test-results/sprint-ets-29-focused-postraze-2026-05-26.log`.
+  - Full Maven after Raze gapfix: Docker Maven `mvn -B clean test` with the same image and persistent `/tmp` Maven cache returned BUILD SUCCESS with `244 tests / 0 failures / 0 errors / 3 skipped`; final log archived as `ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log`.
+  - Network caveat: earlier full-Maven attempts were archived as `ops/test-results/sprint-ets-29-maven-network-failed-2026-05-26.log` and `ops/test-results/sprint-ets-29-maven-central-stalled-2026-05-26.log`; those failures were Maven Central transfer/reset behavior, not project test failures.
 - Planning TeamEngine E2E smoke:
   - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s29-swejson-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-29-swejson-plan-georobotix-results bash scripts/smoke-test.sh`.
   - Result: FAILED, `176 total / 29 passed / 16 failed / 131 skipped`.
@@ -42,13 +52,28 @@ Sprint ets-29 Part 2 SWE Common JSON Encoding planning:
   - Failure cause: known public-IUT read-path and schema-validation failures; no Sprint 29 SWE Common JSON runtime tests exist yet.
   - Public-IUT safety check: explicit container-log grep found 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines. `scripts/no-mutation-oracle.py` was inconclusive because no IUT-bound request lines were recognized in this log format.
   - Disposition: mandatory public smoke run, failed external/public-IUT evidence, not an accepted zero-failure E2E gate.
+- Generator TeamEngine E2E smoke:
+  - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s29-swejson-generator-postraze SMOKE_OUTPUT_DIR=/tmp/sprint-ets-29-swejson-generator-postraze-georobotix-results bash scripts/smoke-test.sh`.
+  - Result: FAILED, `186 total / 31 passed / 22 failed / 133 skipped`.
+  - Report: `ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml`.
+  - Container log: `ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log`.
+  - New SWE Common JSON group: 2 PASS, 6 FAIL, 2 SKIP.
+  - Failure cause: public GeoRobotix declares `/conf/swecommon-json` but lacks SWE 3.0 `/conf/json-encoding-rules`, returns HTTP 500 for Observation-side SWE JSON reads, and fails reachable `/controlstreams` schema validation before Command SWE JSON schema PASS evidence.
+  - Public-IUT safety check: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs; explicit container-log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
+  - Disposition: mandatory public smoke run, failed external/public-IUT evidence, not an accepted zero-failure E2E gate.
 - Raze planning review:
   - Artifact: `.harness/evaluations/sprint-ets-29-plan-adversarial.yaml`.
   - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.93.
   - Required fixes: none.
   - Low concern: direct planning probe transcripts are summarized rather than archived as raw standalone artifacts; Generator should reproduce or archive any probe bodies used for PASS/SKIP behavior.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-29-adversarial-implementation.yaml`.
+  - Initial verdict: `GAPS_FOUND`, confidence 0.90, for noncanonical Time/IssueTime false-PASS evidence and unscoped write-operation evidence.
+  - Fixes applied: mapping evidence now requires canonical definition URIs, and mediatype-write API-definition evidence is scoped to Observation/Command resource endpoints.
+  - Focused recheck: `APPROVE_WITH_CONCERNS`, confidence 0.94; both required gaps closed and no required fixes remain.
 - Commit/push:
   - Planning commit `690dbd3 Plan Sprint 29 Part 2 SWE Common JSON` was pushed over SSH on 2026-05-26 (`be7f1a6..690dbd3 main -> main`).
+  - Generator commit/push: pending after Raze implementation review.
 
 Sprint ets-28 Part 2 JSON Encoding Generator:
 

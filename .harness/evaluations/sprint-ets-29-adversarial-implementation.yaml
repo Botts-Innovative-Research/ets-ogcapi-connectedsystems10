@@ -1,0 +1,173 @@
+agent: "Raze"
+role: "Red Team / Adversarial Reviewer"
+review_type: "implementation"
+timestamp: "2026-05-26T21:29:05Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.94
+
+reviewed_scope:
+  sprint: "ets-29"
+  story: "S-ETS-29-01"
+  requirement: "REQ-ETS-PART2-010"
+  capability: "OGC 23-002 Part 2 SWE Common JSON Encoding"
+  files_reviewed:
+    - "AGENTS.md"
+    - "_bmad/agents/adversarial-reviewer.md"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/VerifyPart2SweCommonJsonTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-29-01-part2-swecommon-json-planning.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - ".harness/contracts/sprint-ets-29.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - "ops/test-results/sprint-ets-29-maven-2026-05-26.log"
+    - "ops/test-results/sprint-ets-29-generator-georobotix-smoke-failed-2026-05-26.xml"
+    - "ops/test-results/sprint-ets-29-generator-georobotix-smoke-container-failed-2026-05-26.log"
+  commands_run:
+    - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+    - "git status --short"
+    - "git diff --stat"
+    - "git diff --check"
+    - "sed/rg/nl inspection of implementation, tests, docs, and archived artifacts"
+    - "grep -c 'Request: GET https://api.georobotix.io/ogc/t18/api' ops/test-results/sprint-ets-29-generator-georobotix-smoke-container-failed-2026-05-26.log"
+    - "rg -n 'Request: (POST|PUT|PATCH|DELETE) https://api\\.georobotix\\.io/ogc/t18/api' ops/test-results/sprint-ets-29-generator-georobotix-smoke-container-failed-2026-05-26.log"
+  commands_not_run:
+    - "Formatter/Maven/TeamEngine were not rerun; archived evidence was present and internally consistent, and no reproduction blocker was found."
+
+evidence:
+  official_ogc_identifier_fidelity:
+    source: "https://docs.ogc.org/is/23-002/23-002.html"
+    verified: true
+    requirement_class_identifier: "/req/swecommon-json"
+    conformance_class_identifier: "/conf/swecommon-json"
+    prerequisite_requirement: "http://www.opengis.net/spec/SWE/3.0/req/json-encoding-rules"
+    prerequisite_conformance: "http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules"
+    media_type: "application/swe+json"
+    normative_requirements:
+      - "/req/swecommon-json/mediatype-read"
+      - "/req/swecommon-json/mediatype-write"
+      - "/req/swecommon-json/obsschema-schema"
+      - "/req/swecommon-json/obsschema-mapping"
+      - "/req/swecommon-json/observation-encoding"
+      - "/req/swecommon-json/cmdschema-schema"
+      - "/req/swecommon-json/cmdschema-mapping"
+      - "/req/swecommon-json/command-encoding"
+    assessment: "Part 2 /req and /conf identifiers, exact media type, and A.107-A.114 set match the official standard. Runtime prerequisite visibility reasonably checks the SWE conformance URI because /conformance advertises conformance classes."
+  verification_claims:
+    formatter: "Docker Maven spring-javaformat:apply BUILD SUCCESS, per provided evidence."
+    focused_maven: "78 tests / 0 failures / 0 errors / 0 skipped, per provided evidence."
+    full_maven: "244 tests / 0 failures / 0 errors / 3 skipped; archived log confirms BUILD SUCCESS."
+    georobotix_teamengine_smoke: "186 total / 31 passed / 22 failed / 133 skipped; archived XML confirms totals."
+    new_group_outcome: "2 PASS, 6 FAIL, 2 SKIP for part2swecommonjson; archived XML confirms method statuses."
+    public_iut_mutation: "Explicit grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE lines; no-mutation oracle inconclusive for this log format."
+  testng_wiring:
+    group: "part2swecommonjson"
+    dependencies: "core common"
+    assessment: "testng.xml and VerifyTestNGSuiteDependency agree; the group is co-located with Core, Common, Part 2 Datastream, Part 2 ControlStream, and Part 2 CRD."
+  docs_reconciliation:
+    assessment: "OpenSpec, story, traceability, epic, contract, handoff, and ops docs consistently record PARTIAL_IMPLEMENTED with failed public GeoRobotix E2E evidence and no accepted zero-failure gate."
+  worktree_hygiene:
+    diff_check: "clean"
+    dirty_files_assessment: "Dirty files are scoped to Sprint 29 implementation, reconciliation docs, archived artifacts, and this Raze report."
+
+findings:
+  - id: "RAZE-ETS29-IMPL-GAP-001"
+    severity: "HIGH"
+    title: "SWE Common Time mapping can PASS from substring labels or non-canonical example definitions"
+    status: "CLOSED"
+    evidence:
+      - "Part2SweCommonJsonTests.java:217-223 passes Observation mapping when containsTimeComponentWithAnyTerm finds any term matching phenomenon/result/sampling."
+      - "Part2SweCommonJsonTests.java:269-275 SKIPs or reports command mapping based on containsIssueTimeComponent."
+      - "Part2SweCommonJsonTests.java:738-746 builds a searchable string from context/name/id/label/definition and accepts substring matches."
+      - "VerifyPart2SweCommonJsonTests.java:109-130 codifies this by accepting http://example.test/phenomenonTime and http://example.test/IssueTime as positive evidence."
+      - "OpenSpec spec.md:719-724 says Observation mapping PASS requires a Time component with a definition for phenomenon/result/sampling time."
+    impact: "A retrieved recordSchema could PASS Requirements 110 or 113 when the Time component merely has a convenient name, label, id, or bogus example definition. This is the exact false-PASS class the sprint guardrails intended to block."
+    required_fix: "Require canonical SWE mapping definitions, not substring terms. Observation mapping should accept only the normative definition URIs for phenomenonTime, SamplingTime, or resultTime; Command mapping should accept only the normative IssueTime URI. Add regressions that reject Time components named phenomenonTime/issueTime when the definition is missing or non-canonical, and update any story/spec wording if it remains looser than the code."
+    closure:
+      status: "closed"
+      reviewed_at: "2026-05-26T21:59:06Z"
+      evidence:
+        - "Part2SweCommonJsonTests.java now defines OBSERVATION_TIME_DEFINITIONS as exact canonical URIs: http://www.w3.org/ns/sosa/phenomenonTime, http://www.opengis.net/def/property/OGC/0/SamplingTime, and http://www.w3.org/ns/sosa/resultTime."
+        - "Part2SweCommonJsonTests.java now defines COMMAND_ISSUE_TIME_DEFINITION as exact http://www.opengis.net/def/property/OGC/0/IssueTime."
+        - "Runtime mapping checks now call containsTimeComponentWithDefinition and containsIssueTimeComponentWithCanonicalDefinition instead of substring matching helper names/labels/context."
+        - "VerifyPart2SweCommonJsonTests.java covers positive phenomenonTime, SamplingTime, resultTime, and IssueTime cases and rejects example/noncanonical definitions plus missing definitions."
+      assessment: "The original false-PASS risk from substring labels, missing definitions, and example definitions is closed for the reviewed gap."
+  - id: "RAZE-ETS29-IMPL-GAP-002"
+    severity: "HIGH"
+    title: "Mediatype-write advertisement can PASS from any POST/PUT path, not only Observation or Command endpoints"
+    status: "CLOSED"
+    evidence:
+      - "Part2SweCommonJsonTests.java:306-317 reports mediatype-write evidence from apiDefinitionAdvertisesSweJsonWrite."
+      - "Part2SweCommonJsonTests.java:676-704 iterates every OpenAPI path item and accepts any POST or PUT requestBody content key equal to application/swe+json."
+      - "VerifyPart2SweCommonJsonTests.java:134-152 checks method/media filtering but does not reject unrelated paths."
+      - "OGC 23-002 A.108 scopes the mediatype-write check to Observation and/or Command resources endpoints for CREATE or REPLACE operations."
+    impact: "An API definition advertising application/swe+json on an unrelated or administrative POST/PUT endpoint would incorrectly PASS /req/swecommon-json/mediatype-write without proving support on Observation or Command transactional endpoints."
+    required_fix: "Filter candidate OpenAPI operations to Observation and Command resource paths before accepting application/swe+json requestBody evidence. Add regressions showing unrelated POST/PUT paths do not pass, while /observations, /datastreams/{id}/observations, /commands, or /controlstreams/{id}/commands style CREATE/REPLACE paths can pass when they advertise exact application/swe+json."
+    closure:
+      status: "closed"
+      reviewed_at: "2026-05-26T21:59:06Z"
+      evidence:
+        - "Part2SweCommonJsonTests.java writeOperations now filters OpenAPI path entries through isObservationOrCommandResourcePath before inspecting POST or PUT requestBody content."
+        - "isObservationOrCommandResourcePath accepts collection or item paths for observations and commands, covering /observations, /observations/{id}, /datastreams/{id}/observations, /commands, /commands/{id}, and /controlstreams/{id}/commands style paths."
+        - "The helper rejects subresources by requiring no remaining segment after the collection name, or exactly one template item segment; /commands/{id}/status is therefore rejected."
+        - "VerifyPart2SweCommonJsonTests.java adds positive endpoint evidence and rejects OPTIONS, application/json, vendor media type, unrelated /systems/{id}/datastreams, and /commands/{id}/status."
+      assessment: "The original false-PASS risk from arbitrary POST/PUT OpenAPI operations is closed for the reviewed gap."
+
+concerns:
+  - id: "RAZE-ETS29-IMPL-CONCERN-001"
+    severity: "LOW"
+    status: "OPEN_NON_BLOCKING"
+    title: "Mediatype-read API-definition advertisement is not yet enforced as a positive PASS condition"
+    evidence:
+      - "OGC 23-002 A.107 includes API-definition retrieval advertisement plus returned HTTP 200, exact Content-Type, and JSON encoding."
+      - "The current positive resource-encoding methods intentionally SKIP after parent schema and candidate resource evidence because a semantic SWE Common JSON validator is deferred."
+    impact: "No immediate false PASS was observed because Observation/Command encoding methods do not pass without the validator. Future promotion beyond this partial subset should add retrieval advertisement checks before reporting mediatype-read closure."
+    recommendation: "Track this as a next increment unless the team chooses to strengthen the current partial subset now."
+  - id: "RAZE-ETS29-IMPL-CONCERN-002"
+    severity: "LOW"
+    status: "OPEN_NON_BLOCKING"
+    title: "Resource ids are concatenated into request paths without URI path escaping"
+    evidence:
+      - "Part2SweCommonJsonTests.java builds datastream/controlstream child paths with raw ids, matching an existing local pattern."
+    impact: "Low interoperability risk for ids containing reserved path characters; not a Sprint 29-specific false PASS."
+    recommendation: "Consider central URI-template/path-segment escaping as a cross-cutting hardening task."
+
+required_fixes: []
+
+focused_recheck:
+  requested_at: "2026-05-26T21:57:39Z"
+  completed_at: "2026-05-26T21:59:06Z"
+  verdict: "APPROVE_WITH_CONCERNS"
+  confidence: 0.94
+  scope: "Focused recheck only for RAZE-ETS29-IMPL-GAP-001 and RAZE-ETS29-IMPL-GAP-002 after reported gap fixes."
+  reviewed_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/VerifyPart2SweCommonJsonTests.java"
+    - "ops/test-results/sprint-ets-29-focused-postraze-2026-05-26.log"
+    - "ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log"
+    - "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml"
+    - "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log"
+  evidence:
+    gap_001: "Closed. Time/IssueTime mapping now requires exact canonical definition URIs and regressions reject noncanonical/example or missing definitions."
+    gap_002: "Closed. OpenAPI mediatype-write evidence is now limited to Observation/Command collection or item resource paths and regressions reject unrelated/subresource paths."
+    focused_maven: "ops/test-results/sprint-ets-29-focused-postraze-2026-05-26.log confirms 78 tests / 0 failures / 0 errors / 0 skipped and BUILD SUCCESS."
+    full_maven: "ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log confirms 244 tests / 0 failures / 0 errors / 3 skipped and BUILD SUCCESS."
+    georobotix_teamengine_smoke: "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml confirms 186 total / 31 passed / 22 failed / 133 skipped; this remains failed public-IUT evidence, not full conformance closure."
+    public_iut_mutation: "Explicit scan of the post-Raze container log found 83 GeoRobotix GET request lines and zero GeoRobotix POST/PUT/PATCH/DELETE request lines. The smoke-console POST is TeamEngine control-plane traffic, not an IUT-bound GeoRobotix mutation."
+  closed_required_fixes:
+    - "RAZE-ETS29-IMPL-GAP-001"
+    - "RAZE-ETS29-IMPL-GAP-002"
+  remaining_required_fixes: []
+  remaining_blockers: []
+
+approval_rationale:
+  - "The focused recheck closes both required false-PASS gaps."
+  - "Formatter, Maven, TeamEngine smoke, no-mutation evidence, TestNG wiring, and docs reconciliation are credible and honestly reported."
+  - "The mandatory public GeoRobotix E2E failure is correctly treated as failed external/public-IUT evidence, not as a passing conformance closure gate."

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-26T19:20Z
+Last updated: 2026-05-26T21:58Z
 
 ## Fresh-Session Entry Point
 
@@ -40,27 +40,28 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 - ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`, and pushed Sprint 28 Generator commit `5850210 Implement Sprint 28 Part 2 JSON`.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-28-01` Generator is PARTIAL for the Part 2 JSON Encoding read-only subset.
-- Latest planned story: `S-ETS-29-01` for `REQ-ETS-PART2-010` Part 2 SWE Common JSON Encoding.
+- Latest implemented story: `S-ETS-29-01` Generator is PARTIAL for the Part 2 SWE Common JSON Encoding read-only subset.
+- Latest planned story: remaining Part 2 placeholder `REQ-ETS-PART2-011` for SWE Common Text or the next explicitly selected backlog item.
 - Latest pushed planning commit: `690dbd3 Plan Sprint 29 Part 2 SWE Common JSON`, reconciled by `e397ef7 Reconcile Sprint 29 planning push`.
-- Latest pushed implementation commit: `5850210 Implement Sprint 28 Part 2 JSON`.
-- Current sprint status: Sprint ets-29 Part 2 SWE Common JSON Encoding is SPECIFIED_PLANNED. No runtime implementation has started. Mandatory GeoRobotix planning smoke failed `176 total / 29 passed / 16 failed / 131 skipped`; this is captured public-IUT evidence, not a passing E2E gate. Explicit log grep found 75 GeoRobotix GET lines and zero matched POST/PUT/PATCH/DELETE lines, while `scripts/no-mutation-oracle.py` was inconclusive for this log format. Raze planning review returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes.
+- Latest pushed implementation commit: pending Sprint 29 Generator commit; previous pushed implementation is `5850210 Implement Sprint 28 Part 2 JSON`.
+- Current sprint status: Sprint ets-29 Part 2 SWE Common JSON Encoding is PARTIAL_IMPLEMENTED. Mandatory post-gapfix GeoRobotix Generator smoke failed `186 total / 31 passed / 22 failed / 133 skipped`; this is captured public-IUT evidence, not full `/conf/swecommon-json` closure. The new SWE Common JSON group produced 2 PASS, 6 FAIL, and 2 SKIP. `scripts/no-mutation-oracle.py` recognized 83 IUT request logs, and explicit log grep found 83 GeoRobotix GET lines and zero matched POST/PUT/PATCH/DELETE lines. Raze focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with both required false-PASS gaps closed.
 - Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), and Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`).
 
-## Sprint ets-29 Planning Evidence
+## Sprint ets-29 Generator Evidence
 
 Part 2 SWE Common JSON Encoding declaration-gated read-only subset:
 
 - Story: `epics/stories/s-ets-29-01-part2-swecommon-json-planning.md`
 - Contract: `.harness/contracts/sprint-ets-29.yaml`
-- OpenSpec: `REQ-ETS-PART2-010` is SPECIFIED_PLANNED for OGC 23-002 Clause 16.2; remaining Part 2 placeholders are `REQ-ETS-PART2-011..013`.
-- Scope planned: first declaration-gated, read-only Part 2 SWE Common JSON Encoding subset using official `/req/swecommon-json` and `/conf/swecommon-json` identifiers.
+- OpenSpec: `REQ-ETS-PART2-010` is PARTIAL_IMPLEMENTED for OGC 23-002 Clause 16.2; remaining Part 2 placeholders are `REQ-ETS-PART2-011..013`.
+- Scope implemented: first declaration-gated, read-only Part 2 SWE Common JSON Encoding subset using official `/req/swecommon-json` and `/conf/swecommon-json` identifiers.
 - Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-05-09; checked 2026-05-26 and not stale.
 - OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html`, Clause 16.2 "Requirements Class SWE Common JSON Encoding" and Annex A.10.
 - Normative requirement set: Requirements 107-114 cover SWE Common JSON mediatype-read, mediatype-write, Observation Schema schema/mapping, Observation encoding, Command Schema schema/mapping, and Command encoding.
 - Prerequisite: SWE Common 3.0 JSON Encoding Rules (`/req/json-encoding-rules`; conformance prerequisite `/conf/json-encoding-rules`).
 - Media type: exact `application/swe+json`; the preliminary `application/vnd.ogc.swe+json` note is not used as PASS evidence.
-- Resource condition gates planned: Observation-side assertions require `/conf/datastream`; Command-side assertions require `/conf/controlstream`; mediatype-write requires `/conf/create-replace-delete` and non-mutating API-definition evidence.
+- Implementation: `Part2SweCommonJsonTests` adds exact `/conf/swecommon-json` declaration, SWE 3.0 `/conf/json-encoding-rules` prerequisite visibility, `/conf/datastream`/`/conf/controlstream`/`/conf/create-replace-delete` resource condition gates, read-only `application/swe+json` media checks, bundled `observationSchemaSwe.json` and `commandSchemaSwe.json` validation, canonical Time/IssueTime definition evidence guards, Observation/Command encoding evidence guards, and non-mutating mediatype-write API-definition checks scoped to Observation/Command resource endpoints.
+- Structural coverage: `VerifyPart2SweCommonJsonTests` adds 11 helper regressions, including rejection of noncanonical/missing Time definitions and unrelated/subresource write paths; `VerifyTestNGSuiteDependency` adds `part2swecommonjson` dependency/method/co-location lint, and `testng.xml` wires `part2swecommonjson` with `core common`.
 - GeoRobotix planning probe: `/conformance` declares Part 2 `/conf/swecommon-json`, `/conf/swecommon-text`, `/conf/swecommon-binary`, `/conf/datastream`, `/conf/controlstream`, `/conf/create-replace-delete`, and `/conf/json`, but not SWE 3.0 `/conf/json-encoding-rules`, Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
 - GeoRobotix read-health probes on 2026-05-26: `GET /datastreams?limit=1` with `Accept: application/json`, `GET /datastreams?limit=1` with `Accept: application/swe+json`, and `GET /observations?limit=1` with `Accept: application/swe+json` returned HTTP 500 `application/json`.
 - GeoRobotix command-side evidence: `GET /controlstreams?limit=1` returned HTTP 200 `application/json`, first ID `0m4qpft9sdag`, with formats including `application/swe+json`; `GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+json` returned HTTP 200 but reported `commandFormat=application/json` and `parametersSchema`, not `application/swe+json`, `recordSchema`, and `JSONEncoding`.
@@ -70,8 +71,16 @@ Part 2 SWE Common JSON Encoding declaration-gated read-only subset:
 - E2E artifacts: `ops/test-results/sprint-ets-29-plan-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-29-plan-georobotix-smoke-container-failed-2026-05-26.log`.
 - Public-IUT safety: explicit container-log grep found 75 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines. `scripts/no-mutation-oracle.py` was inconclusive because no IUT-bound request lines were recognized in this log format.
 - Raze planning review: `.harness/evaluations/sprint-ets-29-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes. Low non-blocking concern: direct planning probe transcripts are summarized rather than archived as raw standalone artifacts.
-- Commit/push: planning commit `690dbd3 Plan Sprint 29 Part 2 SWE Common JSON` was pushed over SSH (`be7f1a6..690dbd3 main -> main`).
-- Next action: implement the first read-only `/conf/swecommon-json` Generator subset.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` returned BUILD SUCCESS.
+- Focused Maven after the Raze gapfix: Docker Maven with the same `maven:3.9-eclipse-temurin-17` image and a persistent `/tmp` Maven cache returned `78 tests / 0 failures / 0 errors / 0 skipped`; final log archived at `ops/test-results/sprint-ets-29-focused-postraze-2026-05-26.log`.
+- Full Maven after the Raze gapfix: Docker Maven `mvn -B clean test` with the same image and persistent `/tmp` Maven cache returned BUILD SUCCESS, `244 tests / 0 failures / 0 errors / 3 skipped`; final log archived at `ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log`. Earlier full-Maven attempts were archived as Maven Central network/reset artifacts, not project-test failures.
+- Mandatory GeoRobotix TeamEngine smoke after the Raze gapfix: `SMOKE_CONTAINER_NAME=ets-csapi-s29-swejson-generator-postraze SMOKE_OUTPUT_DIR=/tmp/sprint-ets-29-swejson-generator-postraze-georobotix-results bash scripts/smoke-test.sh` failed `186 total / 31 passed / 22 failed / 133 skipped`.
+- Generator E2E artifacts: `ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml`, `ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log`, and `ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-console-failed-2026-05-26.log`.
+- New SWE Common JSON group outcome: 2 PASS (`/conf/swecommon-json` declaration and condition gates), 6 FAIL (Observation-side HTTP 500 and Command-side `/controlstreams` schema validation), and 2 SKIP (missing SWE 3.0 `/conf/json-encoding-rules` prerequisite and no parseable API-definition exact `application/swe+json` write advertisement).
+- Generator public-IUT safety: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs, and explicit container-log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
+- Raze implementation review: initial `GAPS_FOUND` caught noncanonical Time/IssueTime false-PASS evidence and unscoped write-operation evidence. Focused recheck returned `APPROVE_WITH_CONCERNS` confidence 0.94 with both required gaps closed and no remaining required fixes.
+- Commit/push: pending after Raze review and final reconciliation.
+- Next action: commit and push Sprint 29 Generator, then plan REQ-ETS-PART2-011 SWE Common Text or provision a healthy declaring IUT for positive `/conf/swecommon-json` closure.
 
 ## Sprint ets-28 Generator Evidence
 

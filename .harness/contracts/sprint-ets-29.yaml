@@ -2,11 +2,11 @@
 
 sprint: "ets-29"
 sprint_name: "part2-swecommon-json"
-type: "feature-expansion-planning"
+type: "feature-expansion-generator"
 created: "2026-05-26T19:11:41Z"
 description: |
-  Sprint 29 plans the first OGC 23-002 Part 2 SWE Common JSON Encoding
-  increment. The Generator must make declaration-gated, read-only schema and
+  Sprint 29 implements the first OGC 23-002 Part 2 SWE Common JSON Encoding
+  increment. The Generator makes declaration-gated, read-only schema and
   media-type progress without mutating the default public GeoRobotix IUT or
   claiming full /conf/swecommon-json closure when SWE Common prerequisite,
   resource-specific evidence, candidate resources, or encoding-validator
@@ -25,7 +25,7 @@ stories:
 
 requirements:
   modified_reqs:
-    - "REQ-ETS-PART2-010 (/req/swecommon-json planned)"
+    - "REQ-ETS-PART2-010 (/req/swecommon-json partial implemented)"
     - "REQ-ETS-PART2-011..013 (remaining placeholders after SWE Common JSON split)"
   new_reqs: []
   retired_placeholders: []
@@ -54,17 +54,21 @@ success_criteria:
   swe_json_encoding_rules_prerequisite_visible: true
   resource_condition_gates_explicit: true
   read_only_schema_validation_planned: true
-  schema_mapping_requires_time_component_evidence: true
+  schema_mapping_requires_canonical_time_definition_evidence: true
   observation_command_encoding_shape_only_pass_blocked: true
   public_iut_mutation_forbidden: true
   options_not_write_pass: true
-  mediatype_write_api_definition_only: true
+  mediatype_write_api_definition_observation_command_only: true
   no_code_changes_in_planning: true
-  code_implemented: false
+  code_implemented: true
   planning_teamengine_e2e_captured_or_blocked: true
   planning_no_mutation_verified: true
-  generator_required_before_runtime_gates: true
+  generator_required_before_runtime_gates: false
+  generator_teamengine_e2e_captured_or_blocked: true
+  generator_no_mutation_verified: true
+  generator_runtime_gates_added: true
   raze_planning_review_completed: true
+  raze_implementation_review_completed: true
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
@@ -151,12 +155,13 @@ verdict_policy:
     - "Schema PASS requires retrieved Observation Schema or Command Schema evidence and bundled schema validation."
     - "Schema PASS also requires application/swe+json media member, recordSchema, and JSONEncoding evidence."
   mapping_honesty:
-    - "Observation and Command mapping PASS requires Time component evidence from retrieved recordSchema, not hardcoded examples."
+    - "Observation mapping PASS requires a Time component with canonical phenomenonTime, SamplingTime, or resultTime definition evidence from retrieved recordSchema."
+    - "Command mapping PASS requires a Time component with canonical IssueTime definition evidence from retrieved recordSchema."
   encoding_honesty:
     - "Observation and Command encoding PASS requires parent schema, child resource candidate, and SWE Common JSON encoding-validator evidence; otherwise SKIP."
   mutation_safety:
     - "Default public GeoRobotix smoke must issue zero IUT-bound POST, PUT, PATCH, or DELETE."
-    - "Requirement 108 mediatype-write is API-definition/readiness only in the first increment."
+    - "Requirement 108 mediatype-write is API-definition/readiness only in the first increment and must be scoped to Observation or Command resource endpoints."
 
 planning_e2e_evidence:
   georobotix_smoke:
@@ -171,6 +176,49 @@ planning_e2e_evidence:
   local_osh:
     status: "BLOCKED_MISSING_CREDENTIAL_AND_UNHEALTHY"
     reason: "Current shell has no SMOKE_AUTH_CREDENTIAL; local OSH container is unhealthy and unauthenticated /conformance returned HTTP 401."
+
+generator_implementation:
+  runtime_class: "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java"
+  helper_regressions: "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/VerifyPart2SweCommonJsonTests.java"
+  testng_group: "part2swecommonjson"
+  testng_dependencies: "core common"
+  runtime_tests: 10
+  helper_regression_tests: 11
+  implemented_checks:
+    - "Exact /conf/swecommon-json declaration."
+    - "Visible SWE 3.0 /conf/json-encoding-rules prerequisite."
+    - "Resource condition gates for /conf/datastream, /conf/controlstream, and /conf/create-replace-delete."
+    - "Observation Schema and Command Schema SWE JSON validation against bundled Annex A.10 schemas."
+    - "Canonical Time and IssueTime definition evidence from retrieved recordSchema."
+    - "Observation and Command encoding guards requiring parent schema, candidate resource, and validator evidence before PASS."
+    - "Non-mutating exact application/swe+json mediatype-write API-definition checks scoped to Observation and Command resource endpoints."
+
+generator_verification:
+  formatter:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+    result: "BUILD SUCCESS"
+  focused_maven:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -v /tmp/ets-ogcapi-m2:/tmp/.m2 -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply clean test -Dtest=VerifyPart2SweCommonJsonTests,VerifyTestNGSuiteDependency"
+    result: "BUILD SUCCESS"
+    surefire: "78 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven:
+    command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -v /tmp/ets-ogcapi-m2:/tmp/.m2 -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B clean test"
+    result: "BUILD SUCCESS"
+    surefire: "244 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log"
+    network_artifacts:
+      - "ops/test-results/sprint-ets-29-maven-network-failed-2026-05-26.log"
+      - "ops/test-results/sprint-ets-29-maven-central-stalled-2026-05-26.log"
+  georobotix_teamengine_smoke:
+    status: "FAILED_PUBLIC_IUT"
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s29-swejson-generator-postraze SMOKE_OUTPUT_DIR=/tmp/sprint-ets-29-swejson-generator-postraze-georobotix-results bash scripts/smoke-test.sh"
+    testng: "186 total / 31 passed / 22 failed / 133 skipped"
+    report: "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml"
+    container_log: "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log"
+    new_group_outcome: "2 PASS / 6 FAIL / 2 SKIP"
+    failure_cause: "GeoRobotix public IUT lacks SWE 3.0 /conf/json-encoding-rules, returns HTTP 500 for Observation-side SWE JSON reads, and fails reachable /controlstreams schema validation before Command SWE JSON PASS evidence."
+    no_mutation: "scripts/no-mutation-oracle.py recognized 83 IUT request logs; explicit container-log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines."
+    disposition: "Captured failed public smoke; not a passing full /conf/swecommon-json closure gate."
 
 raze_planning_review:
   status: "APPROVE_WITH_CONCERNS"
@@ -188,8 +236,6 @@ raze_planning_review:
       summary: "Pending Raze status fields needed to be flipped after this report existed."
 
 generator_must_do:
-  - "Implement runtime tests only after this planning contract is Raze-reviewed."
-  - "Use official OGC 23-002 identifiers exactly."
-  - "Add TestNG wiring and structural dependency lint for a new group, likely part2swecommonjson."
-  - "Run formatter, Maven, and mandatory TeamEngine E2E before reporting Generator done."
-  - "Do not mutate public GeoRobotix."
+  - "Run Raze implementation review before reporting Generator done."
+  - "Fix any required Raze gaps."
+  - "Commit and push after final reconciliation."

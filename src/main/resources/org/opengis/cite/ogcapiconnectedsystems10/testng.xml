@@ -156,7 +156,13 @@
        rather than Part2ApiCommon, resource-class groups, or SystemFeatures so exact
        /conf/json declaration, SWE prerequisite visibility, resource condition gates, and
        public-IUT no-mutation behavior remain runtime-visible. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility + Part2SystemEvent + Part2AdvancedFiltering + Part2CreateReplaceDelete + Part2Update + Part2Json (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility, /conf/system-event, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update, /conf/json; OGC 19-072 /conf/common)">
+  <!-- Sprint 29 S-ETS-29-01 (REQ-ETS-PART2-010): Part 2 SWE Common JSON group
+       added as a declaration-gated, read-only schema/media-validation subset. It
+       depends on "core common" rather than Part2ApiCommon, resource-class groups, or
+       SystemFeatures so exact /conf/swecommon-json declaration, SWE Encoding Rules
+       prerequisite visibility, resource condition gates, and public-IUT no-mutation
+       behavior remain runtime-visible. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility + Part2SystemEvent + Part2AdvancedFiltering + Part2CreateReplaceDelete + Part2Update + Part2Json + Part2SweCommonJson (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility, /conf/system-event, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update, /conf/json, /conf/swecommon-json; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -180,6 +186,7 @@
         <group name="part2createreplacedelete" depends-on="core common systemfeatures"/>
         <group name="part2update" depends-on="core common systemfeatures"/>
         <group name="part2json" depends-on="core common"/>
+        <group name="part2swecommonjson" depends-on="core common"/>
       </dependencies>
     </groups>
     <classes>
@@ -209,6 +216,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

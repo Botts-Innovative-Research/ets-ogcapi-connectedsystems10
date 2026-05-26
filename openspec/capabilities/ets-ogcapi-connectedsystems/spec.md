@@ -679,9 +679,9 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART2-010: Part 2 SWE Common JSON Encoding
 - **Priority**: MUST
-- **Status**: SPECIFIED_PLANNED (Sprint 29 planning)
+- **Status**: PARTIAL_IMPLEMENTED (Sprint 29 Generator; public GeoRobotix E2E failed)
 - **Description**: The ETS SHALL implement the first declaration-gated, read-only OGC 23-002 Clause 16.2 SWE Common JSON Encoding subset using official `/req/swecommon-json` and `/conf/swecommon-json` identifiers. Runtime checks SHALL gate on exact `/conf/swecommon-json` declaration, keep the SWE Common 3.0 JSON Encoding Rules prerequisite visible, condition Observation assertions on declared `/conf/datastream`, condition Command assertions on declared `/conf/controlstream`, verify `application/swe+json` read support only from advertised/retrieved Observation or Command evidence, validate SWE Common schema resources against bundled `observationSchemaSwe.json` and `commandSchemaSwe.json`, and treat write-media-type support as API-definition/readiness evidence only unless a safe dedicated mutable IUT is explicitly enabled in a later sprint.
-- **Rationale**: PRD SC-3 requires Part 2 coverage. OGC 23-002 Annex A.10 defines `/conf/swecommon-json` with Requirements 107-114. Sprint 29 plans the first read-only SWE Common JSON subset after Sprint 28 JSON Encoding. Current GeoRobotix declares `/conf/swecommon-json`, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete`, but still returns HTTP 500 for DataStream/Observation read paths. Its selected ControlStream advertises `application/swe+json`, yet `GET /controlstreams/{id}/schema?cmdFormat=application/swe+json` currently returns `commandFormat=application/json` and `parametersSchema` rather than a SWE Common command schema with `JSONEncoding`. The ETS therefore must fail or skip honestly rather than passing from declaration or format-list evidence alone.
+- **Rationale**: PRD SC-3 requires Part 2 coverage. OGC 23-002 Annex A.10 defines `/conf/swecommon-json` with Requirements 107-114. Sprint 29 implements the first read-only SWE Common JSON subset after Sprint 28 JSON Encoding through `Part2SweCommonJsonTests`, TestNG `part2swecommonjson` wiring, helper regressions, exact `application/swe+json` media checks, bundled SWE schema validation, and non-mutating API-definition write-media checks. Current GeoRobotix declares `/conf/swecommon-json`, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete`, but still returns HTTP 500 for DataStream/Observation read paths and fails reachable ControlStream schema preconditions before SWE Common Command Schema PASS evidence. The ETS therefore fails or skips honestly rather than passing from declaration, sibling classes, API format lists, or OPTIONS evidence alone.
 - **Maps to**: PRD FR-ETS-40.
 
 #### SCENARIO-ETS-PART2-010-SWEJSON-CONFORMANCE-DECLARED-001 (CRITICAL)
@@ -719,8 +719,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 #### SCENARIO-ETS-PART2-010-SCHEMA-MAPPING-TIME-001 (NORMAL)
 **GIVEN** Requirements 110 and 113 define mandatory SWE Common Time mapping evidence
 **WHEN** Observation Schema or Command Schema resources are retrieved
-**THEN** Observation schema mapping PASS requires at least one `Time` component with a definition for phenomenon/result/sampling time
-**AND** Command schema mapping PASS requires an `IssueTime` `Time` component when issue-time mapping is present
+**THEN** Observation schema mapping PASS requires at least one `Time` component whose `definition` is exactly one of `http://www.w3.org/ns/sosa/phenomenonTime`, `http://www.opengis.net/def/property/OGC/0/SamplingTime`, or `http://www.w3.org/ns/sosa/resultTime`
+**AND** Command schema mapping PASS requires a `Time` component whose `definition` is exactly `http://www.opengis.net/def/property/OGC/0/IssueTime` when issue-time mapping is present
 **AND** mapping PASS must come from retrieved `recordSchema` evidence, not hardcoded examples or sibling JSON schema shape.
 
 #### SCENARIO-ETS-PART2-010-OBSERVATION-COMMAND-ENCODING-GUARDS-001 (NORMAL)
@@ -732,9 +732,9 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 #### SCENARIO-ETS-PART2-010-MEDIATYPE-WRITE-ADVERTISEMENT-001 (NORMAL)
 **GIVEN** Requirement 108 applies only when Create/Replace/Delete is implemented
 **WHEN** the ETS checks SWE Common JSON write-media-type support in the first increment
-**THEN** it uses API definition or explicit operation metadata to verify advertised `application/swe+json` support for CREATE or REPLACE operations
+**THEN** it uses API definition or explicit operation metadata to verify advertised `application/swe+json` support for CREATE or REPLACE operations on Observation or Command resource endpoints only
 **AND** default public GeoRobotix smoke does not issue POST, PUT, PATCH, or DELETE
-**AND** OPTIONS alone is readiness evidence, not mediatype-write PASS.
+**AND** OPTIONS, unrelated POST/PUT paths, and subresource paths such as Command status alone are readiness evidence, not mediatype-write PASS.
 
 #### SCENARIO-ETS-PART2-010-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
 **GIVEN** the current public IUT may declare `/conf/swecommon-json` while individual resource endpoints are unhealthy or inconsistent
@@ -750,7 +750,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART2-011..013: Remaining Part 2 Conformance Suites
 - **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 29 SWE Common JSON planning)
+- **Status**: PLACEHOLDER (remaining Part 2 work after Sprint 29 SWE Common JSON Generator)
 - **Description**: For each of the remaining 3 OGC 23-002 conformance classes or cross-class closures (`swecommon-text`, `swecommon-binary`, `observation-binding`), the ETS SHALL provide a TestNG suite class structurally equivalent to Part 1 classes. Per-assertion REQ-* IDs deferred to future sprint planning.
 - **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
 - **Maps to**: PRD FR-ETS-41..43, except retired non-standard FR-ETS-35 System History.
@@ -2387,8 +2387,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - partially implemented by Sprint 26 Generator; seeded local OSH E2E is accepted after fixture repair, while GeoRobotix public smoke remains advisory and currently fails with public-IUT HTTP 500 responses outside the new Part 2 CRD tests.
 - REQ-ETS-PART2-008 (Part 2 Update) - partially implemented by Sprint 27 Generator; positive PATCH lifecycle and concrete schema-rejection dispatch remain deferred.
 - REQ-ETS-PART2-009 (Part 2 JSON Encoding) - partially implemented by Sprint 28 Generator; full positive schema closure remains dependent on a healthy declaring IUT with valid DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, SystemEvent, SWE Common record-component, and mediatype-write evidence.
-- REQ-ETS-PART2-010 (Part 2 SWE Common JSON Encoding) - specified/planned by Sprint 29; Generator implementation is pending. Mandatory planning smoke against GeoRobotix is captured as a failed public-IUT check (`176 total / 29 passed / 16 failed / 131 skipped`) with zero matched public-IUT write requests.
-- REQ-ETS-PART2-011..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 29 SWE Common JSON planning.
+- REQ-ETS-PART2-010 (Part 2 SWE Common JSON Encoding) - partially implemented by Sprint 29 Generator; full positive closure remains dependent on a healthy declaring IUT with SWE 3.0 JSON Encoding Rules visibility, valid DataStream/Observation SWE JSON reads, valid ControlStream/Command SWE Common JSON schema evidence, candidate Observation/Command resources, and non-mutating mediatype-write evidence. Mandatory GeoRobotix Generator smoke failed (`186 total / 31 passed / 22 failed / 133 skipped`) with zero matched public-IUT write requests.
+- REQ-ETS-PART2-011..013 (remaining Part 2 classes/cross-class closures) - deferred after Sprint 29 SWE Common JSON Generator.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

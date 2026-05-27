@@ -22,6 +22,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Raze planning review wrote `.harness/evaluations/sprint-ets-31-plan-adversarial.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.93, and one required low bookkeeping fix for Raze-pending docs.
 - Closed `RAZE-ETS31-PLAN-CONCERN-001` by reconciling the contract, story DoD, planner handoff, ops status, ops test-results, changelog, and epic/status wording before reporting planning completion.
 - Committed and pushed Sprint 31 planning over SSH as `20a8e18 Plan Sprint 31 Part 2 SWE Common Binary` (`45717a3..20a8e18 main -> main`).
+- Pushed follow-up reconciliation commit `ad41891 Reconcile Sprint 31 planning push` (`20a8e18..ad41891 main -> main`).
 
 ---
 

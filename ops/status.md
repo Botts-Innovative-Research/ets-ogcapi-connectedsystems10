@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-27T01:28Z
+Last updated: 2026-05-27T19:25Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-30.yaml`
+- `.harness/contracts/sprint-ets-31.yaml`
 
 ## Current State
 
@@ -40,11 +40,11 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 - ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`, pushed Sprint 28 Generator commit `5850210 Implement Sprint 28 Part 2 JSON`, pushed Sprint 29 planning/Generator/reconciliation commits, pushed Sprint 30 planning/Generator/reconciliation commits, and pushed Sprint 31 planning commit `20a8e18 Plan Sprint 31 Part 2 SWE Common Binary`.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-30-01` Generator is PARTIAL for the Part 2 SWE Common Text Encoding read-only subset.
-- Latest planned story: `S-ETS-31-01` plans `REQ-ETS-PART2-012` for Part 2 SWE Common Binary Encoding. Generator is pending.
+- Latest implemented story: `S-ETS-31-01` Generator is PARTIAL for the Part 2 SWE Common Binary Encoding read-only subset.
+- Latest planned story: no newer story after Sprint 31 Generator.
 - Latest pushed planning commit: `20a8e18 Plan Sprint 31 Part 2 SWE Common Binary`.
-- Latest pushed implementation commit: `b2aad06 Implement Sprint 30 Part 2 SWE Common Text`.
-- Current sprint status: Sprint ets-31 Part 2 SWE Common Binary Encoding is PLANNED and pushed. Mandatory GeoRobotix planning smoke failed `196 total / 33 passed / 28 failed / 135 skipped`; no-mutation evidence records `GET=91` and `POST/PUT/PATCH/DELETE=0`; Raze planning review returned `APPROVE_WITH_CONCERNS` confidence 0.93 with the required bookkeeping fix closed. Direct planning probes show GeoRobotix declares `/conf/swecommon-binary` but not SWE 3.0 `/conf/binary-encoding-rules`; Observation-side binary reads return HTTP 500; selected ControlStream binary schema evidence falls back to `commandFormat=application/json` and `parametersSchema`, not `application/swe+binary`, `recordSchema`, and `BinaryEncoding`.
+- Latest pushed implementation commit: `b2aad06 Implement Sprint 30 Part 2 SWE Common Text`; Sprint 31 Generator is verified but not yet committed/pushed.
+- Current sprint status: Sprint ets-31 Part 2 SWE Common Binary Encoding is PARTIAL_IMPLEMENTED in the worktree. Formatter succeeded; focused Maven succeeded `84 tests / 0 failures / 0 errors / 0 skipped`; full Docker Maven succeeded `272 tests / 0 failures / 0 errors / 3 skipped`. Mandatory GeoRobotix Generator smoke failed `206 total / 35 passed / 34 failed / 137 skipped`; the new SWE Common Binary group produced 3 PASS, 6 FAIL, and 2 SKIP. Public-IUT no-mutation evidence records `GET=99` and `POST/PUT/PATCH/DELETE=0`. Raze implementation review returned `APPROVE_WITH_CONCERNS` confidence 0.91 with no code-level required fixes; the bookkeeping gap was closed by post-review reconciliation. GeoRobotix declares `/conf/swecommon-binary` but not SWE 3.0 `/conf/binary-encoding-rules`; Observation-side binary reads return HTTP 500; Command-side checks fail existing `/controlstreams` schema validation before SWE Common Command Schema PASS evidence.
 - Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`), Sprint 29 reconciliation pushed as `6ba24db`, Sprint 30 planning pushed as `3c68858` (`6ba24db..3c68858 main -> main`), Sprint 30 Generator pushed as `b2aad06` (`560945c..b2aad06 main -> main`), Sprint 31 planning pushed as `20a8e18` (`45717a3..20a8e18 main -> main`), and Sprint 31 reconciliation pushed as `ad41891` (`20a8e18..ad41891 main -> main`).
 
 ## Sprint ets-30 Generator Evidence
@@ -108,7 +108,27 @@ Part 2 SWE Common Binary Encoding declaration-gated read-only subset:
 - Public-IUT safety: `scripts/no-mutation-oracle.py` recognized 91 IUT request logs; explicit counts archived at `ops/test-results/sprint-ets-31-plan-georobotix-no-mutation-2026-05-27.txt` show `GET=91`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
 - Raze planning review: `.harness/evaluations/sprint-ets-31-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.93. Required low bookkeeping fix `RAZE-ETS31-PLAN-CONCERN-001` was closed by post-review reconciliation.
 - Commit/push: Sprint 31 planning pushed as `20a8e18 Plan Sprint 31 Part 2 SWE Common Binary` (`45717a3..20a8e18 main -> main`).
-- Next action: start the Sprint 31 Generator implementation from `.harness/contracts/sprint-ets-31.yaml`.
+- Next action completed: Sprint 31 Generator implementation has been verified in the worktree; commit/push and Raze implementation review remain before final closure.
+
+## Sprint ets-31 Generator Evidence
+
+Part 2 SWE Common Binary Encoding declaration-gated read-only subset:
+
+- Story: `epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md`
+- Contract: `.harness/contracts/sprint-ets-31.yaml`
+- OpenSpec: `REQ-ETS-PART2-012` is PARTIAL_IMPLEMENTED for OGC 23-002 Clause 16.4; remaining Part 2 observation-binding placeholder is `REQ-ETS-PART2-013`.
+- Scope implemented: first declaration-gated, read-only Part 2 SWE Common Binary Encoding subset using official `/req/swecommon-binary` and `/conf/swecommon-binary` identifiers.
+- Implementation: `Part2SweCommonBinaryTests` adds exact `/conf/swecommon-binary` declaration, SWE 3.0 `/conf/binary-encoding-rules` prerequisite visibility, `/conf/datastream`/`/conf/controlstream`/`/conf/create-replace-delete` resource condition gates, read-only `application/swe+binary` media checks, bundled `observationSchemaSwe.json` and `commandSchemaSwe.json` metadata validation, canonical Time/IssueTime definition guards, Observation/Command encoding guards, and non-mutating mediatype-write API-definition checks scoped to Observation/Command resource endpoints.
+- Structural coverage: `VerifyPart2SweCommonBinaryTests` adds 11 helper regressions; `VerifyTestNGSuiteDependency` adds `part2swecommonbinary` dependency/method/co-location lint; `testng.xml` wires `part2swecommonbinary` with `core common`.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` returned BUILD SUCCESS.
+- Focused Maven: Docker Maven `mvn -B test -Dtest=VerifyPart2SweCommonBinaryTests,VerifyTestNGSuiteDependency` returned `84 tests / 0 failures / 0 errors / 0 skipped`; log archived at `ops/test-results/sprint-ets-31-focused-maven-2026-05-27.log`.
+- Full Maven: `bash scripts/mvn-test-via-docker.sh` returned BUILD SUCCESS, `272 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-31-full-maven-2026-05-27.log`.
+- Mandatory GeoRobotix TeamEngine Generator smoke: `SMOKE_CONTAINER_NAME=ets-csapi-s31-swebinary-generator-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-31-swebinary-generator-georobotix-results bash scripts/smoke-test.sh` failed `206 total / 35 passed / 34 failed / 137 skipped`.
+- Generator E2E artifacts: `ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml`, `ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log`, `ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log`, and `ops/test-results/sprint-ets-31-generator-georobotix-no-mutation-2026-05-27.txt`.
+- New SWE Common Binary group outcome: 3 PASS, 6 FAIL, and 2 SKIP. Failures match GeoRobotix's missing SWE Binary prerequisite, Observation-side HTTP 500 state, and reachable ControlStream schema validation failure before Command SWE Binary evidence.
+- Generator public-IUT safety: `scripts/no-mutation-oracle.py` recognized 99 IUT request logs, and explicit counts found 99 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
+- Raze implementation review: `.harness/evaluations/sprint-ets-31-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.91. Required bookkeeping fix `RAZE-ETS31-IMPL-CONCERN-001` was closed by post-review reconciliation; no code-level required fixes were found.
+- Commit/push: pending.
 
 ## Sprint ets-29 Generator Evidence
 

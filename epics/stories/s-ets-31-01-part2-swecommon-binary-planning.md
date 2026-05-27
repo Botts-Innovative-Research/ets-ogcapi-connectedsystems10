@@ -1,13 +1,15 @@
 # S-ETS-31-01: Part 2 SWE Common Binary Encoding
 
 ## Status
-PLANNED by Sprint 31 planning. Generator implementation is pending.
+PARTIAL_IMPLEMENTED by Sprint 31 Generator. Mandatory public GeoRobotix Generator E2E failed; full positive `/conf/swecommon-binary` closure remains open.
 
 ## User Instruction
 Planning triggered by: "Do next logical work item".
 
+Generator verification triggered by: "Continue with verify the SWE Binary implementation".
+
 ## Scope
-Plan the first declaration-gated, read-only Generator increment for OGC 23-002 Clause 16.4 Requirements Class "SWE Common Binary Encoding".
+Implement the first declaration-gated, read-only Generator increment for OGC 23-002 Clause 16.4 Requirements Class "SWE Common Binary Encoding".
 
 - Requirements class: `/req/swecommon-binary`
 - Conformance class: `/conf/swecommon-binary`
@@ -57,20 +59,21 @@ Plan the first declaration-gated, read-only Generator increment for OGC 23-002 C
   - `GET /controlstreams/0m4qpft9sdag/commands?limit=1` with `Accept: application/swe+binary`: HTTP 200 `application/json` with empty `items`.
   - `GET /commands?limit=1` with `Accept: application/swe+binary`: HTTP 400.
 
-## Generator Requirements
-- Add a Part 2 SWE Common Binary TestNG group with official OGC 23-002 identifiers only.
-- Gate all assertions on exact Part 2 `/conf/swecommon-binary` declaration.
-- Keep SWE Common 3.0 `/conf/binary-encoding-rules` prerequisite visible; do not claim full `/conf/swecommon-binary` closure when the prerequisite is absent.
-- Condition Observation-side assertions on `/conf/datastream` and Command-side assertions on `/conf/controlstream`.
-- Implement read-only mediatype-read checks using `Accept: application/swe+binary`; require API-definition or operation evidence plus HTTP 200 and exact `application/swe+binary` content type before PASS.
-- Do not use `application/vnd.ogc.swe+binary`, `application/swe+text`, `application/swe+csv`, `application/swe+json`, `application/json`, empty binary bodies, or format-list-only evidence as SWE Common Binary PASS evidence.
-- Validate retrieved Observation Schema and Command Schema metadata against bundled `observationSchemaSwe.json` and `commandSchemaSwe.json`.
-- Require retrieved schema evidence to show `obsFormat` or `commandFormat` equal to `application/swe+binary`, `recordSchema`, and `encoding` as `BinaryEncoding` before PASS.
-- For mapping checks, reuse the canonical Time and IssueTime definition evidence guards from the SWE Common JSON implementation because Annex A.12 delegates mapping checks to the SWE Common JSON mapping tests.
-- For Observation and Command encoding checks, require parent schema evidence, candidate child resources, exact binary media type, non-empty body, and an actual SWE Common Binary encoding validator before PASS. If the validator or candidates are absent, SKIP with a precise reason.
-- Check `mediatype-write` only through non-mutating API-definition or operation metadata on Observation or Command resource endpoints in this first increment. Do not issue public GeoRobotix POST, PUT, PATCH, or DELETE.
-- OPTIONS evidence alone must not PASS `mediatype-write`.
-- Add tests/comments referencing `REQ-ETS-PART2-012` and `SCENARIO-ETS-PART2-012-*` IDs.
+## Generator Implementation
+- Added `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java`.
+- Runtime group: `part2swecommonbinary`.
+- Runtime checks cover:
+  - Exact Part 2 `/conf/swecommon-binary` declaration.
+  - SWE Common 3.0 `/conf/binary-encoding-rules` prerequisite visibility as a prerequisite-incomplete SKIP, not PASS.
+  - `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates.
+  - Observation Schema retrieval with `obsFormat=application/swe+binary`, bundled `observationSchemaSwe.json` validation, `obsFormat=application/swe+binary`, `recordSchema`, and `encoding.type=BinaryEncoding`.
+  - Command Schema retrieval with `cmdFormat=application/swe+binary`, bundled `commandSchemaSwe.json` validation, `commandFormat=application/swe+binary`, `recordSchema`, and `encoding.type=BinaryEncoding`.
+  - Canonical Time and IssueTime mapping evidence reused from SWE Common JSON mapping guards.
+  - Observation/Command `Accept: application/swe+binary` resource guards without JSON/Text/CSV fallback parsing and without semantic PASS until a SWE Binary validator and candidate evidence exist.
+  - Non-mutating `mediatype-write` API-definition advertisement evidence scoped to Observation and Command collection/item request bodies only.
+- Added `VerifyPart2SweCommonBinaryTests` with 11 helper regressions for official identifiers, condition gates, exact content type handling, bundled schemas, `BinaryEncoding`, canonical Time/IssueTime mapping, write-advertisement scoping, negative media/path cases, and group naming.
+- Updated `testng.xml` to wire `Part2SweCommonBinaryTests` with group dependency `part2swecommonbinary` -> `core common`.
+- Updated `VerifyTestNGSuiteDependency` with `part2swecommonbinary` dependency, method group, and co-location structural lint.
 
 ## Verification
 - Direct source verification used official OGC 23-002 HTML for Clause 16.4 and Annex A.12.
@@ -84,6 +87,21 @@ Plan the first declaration-gated, read-only Generator increment for OGC 23-002 C
   - `ops/test-results/sprint-ets-31-plan-georobotix-smoke-console-failed-2026-05-27.log`
 - Public-IUT mutation check: `scripts/no-mutation-oracle.py` recognized 91 IUT request logs; explicit counts are archived in `ops/test-results/sprint-ets-31-plan-georobotix-no-mutation-2026-05-27.txt` as `GET=91`, `POST=0`, `PUT=0`, `PATCH=0`, `DELETE=0`.
 - Raze planning review: `.harness/evaluations/sprint-ets-31-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.93. The required low bookkeeping fix `RAZE-ETS31-PLAN-CONCERN-001` was closed by post-review reconciliation.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` returned BUILD SUCCESS.
+- Focused Maven: Docker Maven `mvn -B test -Dtest=VerifyPart2SweCommonBinaryTests,VerifyTestNGSuiteDependency` returned BUILD SUCCESS with `84 tests / 0 failures / 0 errors / 0 skipped`.
+- Full Maven: `bash scripts/mvn-test-via-docker.sh` returned BUILD SUCCESS with `272 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-31-full-maven-2026-05-27.log`.
+- Mandatory TeamEngine Generator E2E against GeoRobotix: `SMOKE_CONTAINER_NAME=ets-csapi-s31-swebinary-generator-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-31-swebinary-generator-georobotix-results bash scripts/smoke-test.sh`.
+- Generator TeamEngine E2E result: FAILED, `206 total / 35 passed / 34 failed / 137 skipped`.
+- Generator TeamEngine artifacts:
+  - `ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml`
+  - `ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log`
+  - `ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log`
+- New SWE Common Binary group outcome: 3 PASS, 6 FAIL, and 2 SKIP.
+  - PASS: setup, exact `/conf/swecommon-binary` declaration, and resource condition-gate visibility.
+  - SKIP: missing SWE Common 3.0 `/conf/binary-encoding-rules` prerequisite and no parseable exact API-definition `application/swe+binary` write advertisement.
+  - FAIL: Observation-side HTTP 500 responses and Command-side `/controlstreams` schema validation failure before SWE Common Binary command evidence.
+- Public-IUT mutation check: `scripts/no-mutation-oracle.py` recognized 99 IUT request logs; explicit counts were `GET 99`, `POST 0`, `PUT 0`, `PATCH 0`, `DELETE 0`.
+- Raze implementation review: `.harness/evaluations/sprint-ets-31-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.91. The required bookkeeping fix `RAZE-ETS31-IMPL-CONCERN-001` was closed by post-review reconciliation; no code-level required fixes were found.
 
 ## Definition of Done
 - [x] OpenSpec splits `REQ-ETS-PART2-012` out for Part 2 SWE Common Binary and keeps remaining observation-binding placeholder at `REQ-ETS-PART2-013`.
@@ -95,6 +113,13 @@ Plan the first declaration-gated, read-only Generator increment for OGC 23-002 C
 - [x] Public GeoRobotix mutation check records no POST/PUT/PATCH/DELETE request lines.
 - [x] Raze reviews planning before Generator starts.
 - [x] Planning-only change is committed and pushed before Generator implementation.
+- [x] Runtime tests reference `REQ-ETS-PART2-012` and `SCENARIO-ETS-PART2-012-*` in comments.
+- [x] Runtime suite implements exact declaration gating, condition gates, SWE Binary media checks, bundled schema metadata validation, mapping guards, encoding guards, and non-mutating write advertisement checks.
+- [x] Helper regressions and TestNG structural lint cover the new group.
+- [x] Formatter and Maven verification completed successfully.
+- [x] Mandatory public GeoRobotix TeamEngine E2E executed and failed honestly as public-IUT evidence.
+- [x] Raze reviews Generator implementation before completion is reported.
+- [ ] Generator change is committed and pushed.
 
 ## Out of Scope
 - Public GeoRobotix mutation.

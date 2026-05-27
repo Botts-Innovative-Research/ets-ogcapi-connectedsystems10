@@ -2,15 +2,15 @@
 
 sprint: "ets-31"
 sprint_name: "part2-swecommon-binary"
-type: "feature-expansion-planning"
+type: "feature-expansion-generator"
 created: "2026-05-27T01:08:40Z"
+updated: "2026-05-27T19:25:15Z"
 description: |
-  Sprint 31 plans the first OGC 23-002 Part 2 SWE Common Binary Encoding
-  increment. The Generator must make declaration-gated, read-only schema and
-  media-type progress without mutating the default public GeoRobotix IUT or
-  claiming full /conf/swecommon-binary closure when the SWE Common prerequisite,
-  resource-specific evidence, candidate resources, or Binary encoding-validator
-  evidence is absent.
+  Sprint 31 implements the first OGC 23-002 Part 2 SWE Common Binary Encoding
+  increment. The runtime suite is declaration-gated, read-only, and non-mutating
+  for the default public GeoRobotix IUT. Full /conf/swecommon-binary closure
+  remains open because the public IUT lacks SWE Common 3.0 Binary Encoding Rules
+  visibility and valid positive SWE Binary resource evidence.
 
 stories:
   - id: "S-ETS-31-01"
@@ -22,10 +22,11 @@ stories:
     depends_on:
       - "S-ETS-30-01"
     parallelizable: false
+    status: "PARTIAL_IMPLEMENTED_PUBLIC_GEOROBOTIX_E2E_FAILED"
 
 requirements:
   modified_reqs:
-    - "REQ-ETS-PART2-012 (/req/swecommon-binary specified for Generator)"
+    - "REQ-ETS-PART2-012 (/req/swecommon-binary partially implemented by Generator)"
     - "REQ-ETS-PART2-013 (remaining observation-binding placeholder after SWE Common Binary split)"
   new_reqs: []
   retired_placeholders: []
@@ -55,6 +56,14 @@ success_criteria:
   swe_binary_encoding_rules_prerequisite_visible: true
   resource_condition_gates_explicit: true
   read_only_schema_validation_planned: true
+  generator_runtime_tests_added: true
+  generator_helper_regressions_added: true
+  generator_testng_wired: true
+  generator_maven_verified: true
+  generator_teamengine_e2e_captured: true
+  generator_no_mutation_verified: true
+  generator_public_iut_failure_honest: true
+  read_only_schema_validation_implemented: true
   schema_mapping_reuses_canonical_time_definition_evidence: true
   binary_encoding_shape_only_pass_blocked: true
   source_text_rule_typos_not_pass_evidence: true
@@ -68,6 +77,7 @@ success_criteria:
   planning_no_mutation_verified: true
   generator_required_before_runtime_gates: true
   raze_planning_review_completed: true
+  raze_implementation_review_completed: true
 
 upstream_ogc_verification:
   standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
@@ -136,6 +146,81 @@ bundled_schema_readiness:
   shared_swe_common_json_schemas:
     - "src/main/resources/schemas/connected-systems-shared/swecommon/schemas/json/*.json"
 
+generator_implementation:
+  runtime_group: "part2swecommonbinary"
+  files_added:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/VerifyPart2SweCommonBinaryTests.java"
+    - "ops/test-results/sprint-ets-31-focused-maven-2026-05-27.log"
+    - "ops/test-results/sprint-ets-31-full-maven-2026-05-27.log"
+    - "ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml"
+    - "ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log"
+    - "ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log"
+    - "ops/test-results/sprint-ets-31-generator-georobotix-no-mutation-2026-05-27.txt"
+  files_updated:
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "_bmad/traceability.md"
+    - ".harness/contracts/sprint-ets-31.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+  coverage:
+    - "Exact /conf/swecommon-binary declaration gate."
+    - "SWE Common 3.0 /conf/binary-encoding-rules prerequisite visibility."
+    - "/conf/datastream, /conf/controlstream, and /conf/create-replace-delete condition gates."
+    - "Exact application/swe+binary mediatype-read evidence."
+    - "Bundled Observation Schema and Command Schema metadata validation requiring BinaryEncoding."
+    - "Canonical Time and IssueTime mapping evidence."
+    - "Observation/Command binary encoding guards that do not PASS without validator and candidate evidence."
+    - "Non-mutating application/swe+binary mediatype-write API-definition advertisement scoped to Observation/Command endpoints."
+  helper_regressions: 11
+
+generator_verification:
+  formatter:
+    command: "Docker Maven mvn -B spring-javaformat:apply"
+    result: "BUILD SUCCESS"
+  focused_maven:
+    command: "Docker Maven mvn -B test -Dtest=VerifyPart2SweCommonBinaryTests,VerifyTestNGSuiteDependency"
+    result: "BUILD SUCCESS"
+    surefire: "84 tests / 0 failures / 0 errors / 0 skipped"
+    log: "ops/test-results/sprint-ets-31-focused-maven-2026-05-27.log"
+  full_maven:
+    command: "bash scripts/mvn-test-via-docker.sh"
+    result: "BUILD SUCCESS"
+    surefire: "272 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-31-full-maven-2026-05-27.log"
+  georobotix_teamengine_smoke:
+    result: "FAILED_PUBLIC_IUT_SWEBINARY_READ_AND_SCHEMA"
+    disposition: "Mandatory public smoke run; not a passing full /conf/swecommon-binary closure gate."
+    command: "SMOKE_CONTAINER_NAME=ets-csapi-s31-swebinary-generator-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-31-swebinary-generator-georobotix-results bash scripts/smoke-test.sh"
+    testng: "206 total / 35 passed / 34 failed / 137 skipped"
+    new_group: "3 PASS / 6 FAIL / 2 SKIP"
+    report: "ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml"
+    container_log: "ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log"
+    console_log: "ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log"
+    failure_cause: "GeoRobotix lacks SWE 3.0 /conf/binary-encoding-rules, returns HTTP 500 for Observation-side SWE Binary reads, and fails /controlstreams schema validation before Command SWE Binary PASS evidence."
+    no_public_mutation: "no-mutation oracle recognized 99 IUT request logs; explicit counts found GET 99 and POST/PUT/PATCH/DELETE 0."
+
+generator_blockers:
+  - id: "ETS31-E2E-GEOROBOTIX-SWE-PREREQUISITE"
+    status: "open_external"
+    summary: "GeoRobotix declares /conf/swecommon-binary without exposing SWE 3.0 /conf/binary-encoding-rules."
+  - id: "ETS31-E2E-GEOROBOTIX-OBS-HTTP500"
+    status: "open_external"
+    summary: "GeoRobotix Observation-side SWE Binary reads return HTTP 500."
+  - id: "ETS31-E2E-GEOROBOTIX-CONTROLSTREAM-SCHEMA"
+    status: "open_external_or_spec_interpretation"
+    summary: "Command-side checks fail existing /controlstreams collection schema validation before SWE Common Command Schema PASS evidence."
+  - id: "ETS31-FULL-SWEBINARY-CLOSURE"
+    status: "deferred_scope"
+    summary: "Full positive SWE Common Binary closure remains deferred until a healthy declaring IUT exposes valid Observation Schema, Observation, Command Schema, Command, SWE prerequisite, validator, and mediatype-write evidence."
+
 verdict_policy:
   declaration_gate:
     - "If /conf/swecommon-binary is not declared exactly, SWE Common Binary assertions SKIP with a precise reason."
@@ -186,8 +271,16 @@ raze_planning_review:
       summary: "Reconciled Raze-pending contract, story, handoff, ops status, test-results, changelog, and epic/status wording after the review artifact was written."
   remaining_concerns:
     - "Public GeoRobotix smoke is failed evidence only; do not convert it to a PASS claim."
-    - "Generator still requires runtime tests and a separate implementation Raze review before SWE Common Binary implementation status is claimed."
+
+raze_implementation_review:
+  status: "APPROVE_WITH_CONCERNS"
+  artifact: ".harness/evaluations/sprint-ets-31-adversarial-implementation.yaml"
+  confidence: 0.91
+  required_fixes_remaining: []
+  required_gap_closed:
+    - "RAZE-ETS31-IMPL-CONCERN-001"
+  concerns:
+    - "Post-review bookkeeping and stale fresh-session pointers needed reconciliation; closed after the artifact was written."
 
 generator_must_do:
-  - "Run Raze implementation review before reporting Generator done."
-  - "Fix any required Raze gaps."
+  - "Commit/push Generator after user approval or a commit/push instruction."

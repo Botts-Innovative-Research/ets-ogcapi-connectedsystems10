@@ -1,0 +1,9 @@
+command=SMOKE_CONTAINER_NAME=ets-csapi-s31-swebinary-generator-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-31-swebinary-generator-georobotix-results bash scripts/smoke-test.sh
+testng=206 total / 35 passed / 34 failed / 137 skipped
+part2swecommonbinary=3 PASS / 6 FAIL / 2 SKIP
+recognized_iut_request_logs=99
+GET=99
+POST=0
+PUT=0
+PATCH=0
+DELETE=0

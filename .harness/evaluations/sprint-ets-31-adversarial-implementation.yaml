@@ -1,0 +1,111 @@
+agent: raze
+role: adversarial_reviewer
+sprint: ets-31
+story: S-ETS-31-01
+requirement: REQ-ETS-PART2-012
+topic: Part 2 SWE Common Binary Encoding
+reviewed_at: "2026-05-27T19:30:57Z"
+review_mode: current_worktree_artifact_inspection
+docker_teamengine_rerun: false
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+
+reviewed_scope:
+  instructions:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+  planning_and_handoff:
+    - .harness/contracts/sprint-ets-31.yaml
+    - .harness/handoffs/generator-handoff.yaml
+    - epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - epics/epic-ets-03-part2-classes.md
+  ops:
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/known-issues.md
+  implementation:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/VerifyPart2SweCommonBinaryTests.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+  verification_artifacts:
+    - ops/test-results/sprint-ets-31-focused-maven-2026-05-27.log
+    - ops/test-results/sprint-ets-31-full-maven-2026-05-27.log
+    - ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml
+    - ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log
+    - ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log
+    - ops/test-results/sprint-ets-31-generator-georobotix-no-mutation-2026-05-27.txt
+
+summary:
+  implementation_scope: "Partial, declaration-gated, read-only /conf/swecommon-binary subset."
+  code_verdict: "No implementation-level false PASS, URI mapping, TestNG dependency, or mutation-safety blocker found."
+  evidence_verdict: "Maven artifacts show BUILD SUCCESS; TeamEngine evidence is explicitly failed public-IUT evidence, not a passing closure claim."
+
+ordered_findings:
+  - id: RAZE-ETS31-IMPL-CONCERN-001
+    severity: LOW
+    category: docs_handoff_reconciliation
+    verdict_impact: APPROVE_WITH_CONCERNS
+    title: "Post-review bookkeeping and stale fresh-session pointers remain before completion."
+    finding: >
+      The implementation and verification evidence are aligned, but the worktree still needs
+      post-review reconciliation before reporting Sprint 31 Generator complete. This is partly
+      expected because this Raze artifact did not exist before the review, but stale pointers
+      would confuse the next handoff if left unchanged.
+    evidence:
+      - "_bmad/traceability.md:3 still labels the document update as Sprint 31 planning, while row 74 records Sprint 31 Generator implementation evidence."
+      - "ops/status.md:13 still lists .harness/contracts/sprint-ets-30.yaml in the fresh-session read-first set even though Sprint 31 is active."
+      - ".harness/contracts/sprint-ets-31.yaml:80 has raze_implementation_review_completed: false."
+      - ".harness/handoffs/generator-handoff.yaml:105-108 records Sprint 31 Raze implementation review as pending."
+      - "epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md DoD still has Raze review and commit/push unchecked."
+    required_fix: >
+      After this review, reconcile the Raze implementation-review artifact into the contract,
+      story, handoff, traceability/header, ops status, ops test-results, changelog, and commit/push
+      status before reporting Generator completion.
+
+non_findings:
+  - area: false_pass_risk
+    result: "No blocker found."
+    evidence:
+      - "Part2SweCommonBinaryTests.java:177-183 SKIPs missing SWE 3.0 /conf/binary-encoding-rules instead of passing full closure."
+      - "Part2SweCommonBinaryTests.java:248-259 and 304-315 always SKIP Observation/Command binary encoding after candidate evidence until a dedicated SWE Binary validator exists."
+      - "TeamEngine XML lines 1035-1048 show mediatype-write and SWE prerequisite as SKIP, not PASS."
+  - area: ogc_uri_mapping
+    result: "No blocker found."
+    evidence:
+      - "Part2SweCommonBinaryTests.java:55-83 uses /conf/swecommon-binary, /req/swecommon-binary, /conf/binary-encoding-rules, and application/swe+binary."
+      - "OpenSpec, story, contract, ops test-results, and known issues use the same Clause 16.4 identifiers and Requirements 123-130 mapping."
+  - area: testng_group_dependency
+    result: "No blocker found."
+    evidence:
+      - "testng.xml:204 declares <group name=\"part2swecommonbinary\" depends-on=\"core common\"/>."
+      - "VerifyTestNGSuiteDependency.java:3024-3064 asserts exact group dependency and blocks part2apicommon/systemfeatures/resource-class dependencies."
+      - "VerifyTestNGSuiteDependency.java:3071-3145 asserts every SWE Binary @Test method carries the group and the class is co-located with condition-gate classes."
+  - area: maven_artifacts
+    result: "No blocker found."
+    evidence:
+      - "Focused Maven log: 84 tests / 0 failures / 0 errors / 0 skipped; BUILD SUCCESS."
+      - "Full Maven log: 272 tests / 0 failures / 0 errors / 3 skipped; BUILD SUCCESS."
+  - area: teamengine_e2e_honesty
+    result: "No blocker found."
+    evidence:
+      - "Generator XML root reports 206 total / 35 passed / 34 failed / 137 skipped."
+      - "New part2swecommonbinary group reports 3 PASS / 6 FAIL / 2 SKIP in the no-mutation summary."
+      - "Story, contract, ops status, test-results, changelog, and known-issues all describe the GeoRobotix smoke as failed public-IUT evidence, not an accepted zero-failure gate."
+  - area: public_iut_mutation
+    result: "No blocker found."
+    evidence:
+      - "No-mutation artifact records recognized_iut_request_logs=99, GET=99, POST=0, PUT=0, PATCH=0, DELETE=0."
+      - "Container log request lines inspected were IUT-bound GETs; the console POST was TeamEngine suite submission, not an IUT mutation."
+
+required_fixes:
+  - id: RAZE-ETS31-IMPL-CONCERN-001
+    required_before: "reporting Sprint 31 Generator completion or committing final reconciliation"
+    fix: "Reconcile the newly written Raze implementation-review artifact and stale handoff pointers across BMAD/OpenSpec/ops docs."
+
+review_notes:
+  - "No Docker, Maven, or TeamEngine rerun was performed; existing artifacts were sufficient for this adversarial review."
+  - "No user or parent changes were reverted or overwritten."

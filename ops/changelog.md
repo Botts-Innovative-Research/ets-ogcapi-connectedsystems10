@@ -2,6 +2,25 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-27T19:25Z — Sprint 31 Part 2 SWE Common Binary Encoding Generator verification
+
+**Triggered by user instruction**: "Continue with verify the SWE Binary implementation"
+
+- Verified the uncommitted Sprint 31 Generator implementation for `S-ETS-31-01` / `REQ-ETS-PART2-012`.
+- Ran formatter: Docker Maven `spring-javaformat:apply` returned BUILD SUCCESS.
+- Ran focused Maven: Docker Maven `mvn -B test -Dtest=VerifyPart2SweCommonBinaryTests,VerifyTestNGSuiteDependency` returned `84 tests / 0 failures / 0 errors / 0 skipped`; log archived as `ops/test-results/sprint-ets-31-focused-maven-2026-05-27.log`.
+- Ran full Maven via `bash scripts/mvn-test-via-docker.sh`: BUILD SUCCESS with `272 tests / 0 failures / 0 errors / 3 skipped`; log archived as `ops/test-results/sprint-ets-31-full-maven-2026-05-27.log`.
+- Ran mandatory GeoRobotix TeamEngine Generator smoke from a `/tmp` worktree copy. Result: FAILED, `206 total / 35 passed / 34 failed / 137 skipped`.
+- Archived Generator smoke artifacts as `ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml`, `ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log`, and `ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log`.
+- New SWE Common Binary group outcome: 3 PASS, 6 FAIL, and 2 SKIP. Failures match GeoRobotix's missing SWE 3.0 Binary Encoding Rules prerequisite, Observation-side HTTP 500 responses, and existing `/controlstreams` schema validation failure before Command SWE Binary PASS evidence.
+- Verified public-IUT safety: `scripts/no-mutation-oracle.py` recognized 99 IUT request logs; explicit counts found 99 GeoRobotix GET request lines and zero POST/PUT/PATCH/DELETE request lines. Counts archived as `ops/test-results/sprint-ets-31-generator-georobotix-no-mutation-2026-05-27.txt`.
+- Reconciled OpenSpec, story, contract, traceability, epic ETS-03, ops status, test-results, known issues, and generator handoff for the verified Generator evidence.
+- Raze implementation review wrote `.harness/evaluations/sprint-ets-31-adversarial-implementation.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.91, no code-level required fixes, and one required bookkeeping fix.
+- Closed `RAZE-ETS31-IMPL-CONCERN-001` by reconciling the Raze artifact into the contract, story, handoff, traceability header, ops status, test-results, changelog, and fresh-session pointers.
+- Commit/push remains pending.
+
+---
+
 ## 2026-05-27T01:28Z — Sprint 31 Part 2 SWE Common Binary Encoding planning
 
 **Triggered by user instruction**: "Do next logical work item"

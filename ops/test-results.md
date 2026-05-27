@@ -1,16 +1,16 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-27T01:28Z
+Last updated: 2026-05-27T19:25Z
 
 ## Current Sprint Evidence
 
-Sprint ets-31 Part 2 SWE Common Binary Encoding Planning:
+Sprint ets-31 Part 2 SWE Common Binary Encoding Generator:
 
 - Status:
   - Story: `epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md`
   - Contract: `.harness/contracts/sprint-ets-31.yaml`
-  - Generator code is pending; no runtime suite was added in planning.
-  - TeamEngine planning E2E against GeoRobotix is captured as a failed public check: `196 total / 33 passed / 28 failed / 135 skipped`.
+  - Generator code is implemented as a PARTIAL read-only subset.
+  - TeamEngine Generator E2E against GeoRobotix is captured as a failed public check: `206 total / 35 passed / 34 failed / 137 skipped`.
   - No accepted zero-failure Sprint 31 E2E gate exists yet.
 - Official OGC source verification:
   - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 16.4 "Requirements Class SWE Common Binary Encoding" and Annex A.12.
@@ -32,6 +32,10 @@ Sprint ets-31 Part 2 SWE Common Binary Encoding Planning:
   - `GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+binary`: HTTP 200, but the body reported `commandFormat=application/json` and `parametersSchema`, not `commandFormat=application/swe+binary`, `recordSchema`, and `BinaryEncoding`.
   - `GET /controlstreams/0m4qpft9sdag/commands?limit=1` with `Accept: application/swe+binary`: HTTP 200 `application/json` with empty `items`.
   - `GET /commands?limit=1` with `Accept: application/swe+binary`: HTTP 400.
+- Implementation:
+  - `Part2SweCommonBinaryTests` adds exact `/conf/swecommon-binary` declaration, SWE 3.0 `/conf/binary-encoding-rules` prerequisite visibility, `/conf/datastream`/`/conf/controlstream`/`/conf/create-replace-delete` resource condition gates, read-only `application/swe+binary` media checks, bundled `observationSchemaSwe.json` and `commandSchemaSwe.json` metadata validation, canonical Time/IssueTime definition guards, Observation/Command encoding guards, and non-mutating mediatype-write API-definition checks scoped to Observation/Command resource endpoints.
+  - `VerifyPart2SweCommonBinaryTests` adds 11 helper regressions.
+  - `testng.xml` and `VerifyTestNGSuiteDependency` wire and lint `part2swecommonbinary` with `core common`.
 - Planning TeamEngine E2E smoke:
   - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s31-swebinary-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-31-swebinary-plan-georobotix-results bash scripts/smoke-test.sh`.
   - Result: FAILED, `196 total / 33 passed / 28 failed / 135 skipped`.
@@ -41,11 +45,28 @@ Sprint ets-31 Part 2 SWE Common Binary Encoding Planning:
   - Failure cause: known public-IUT read-path and schema-validation failures; no Sprint 31 SWE Common Binary runtime tests exist yet.
   - Public-IUT safety check: `scripts/no-mutation-oracle.py` recognized 91 IUT request logs; explicit counts are archived at `ops/test-results/sprint-ets-31-plan-georobotix-no-mutation-2026-05-27.txt` as `GET=91`, `POST=0`, `PUT=0`, `PATCH=0`, `DELETE=0`.
   - Disposition: mandatory public smoke run, failed external/public-IUT evidence, not an accepted zero-failure E2E gate.
+- Generator verification:
+  - Formatter: Docker Maven `mvn -B spring-javaformat:apply` returned BUILD SUCCESS.
+  - Focused Maven: Docker Maven `mvn -B test -Dtest=VerifyPart2SweCommonBinaryTests,VerifyTestNGSuiteDependency` returned BUILD SUCCESS with `84 tests / 0 failures / 0 errors / 0 skipped`; log archived at `ops/test-results/sprint-ets-31-focused-maven-2026-05-27.log`.
+  - Full Maven: `bash scripts/mvn-test-via-docker.sh` returned BUILD SUCCESS with `272 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-31-full-maven-2026-05-27.log`.
+  - Mandatory GeoRobotix TeamEngine Generator smoke command: `SMOKE_CONTAINER_NAME=ets-csapi-s31-swebinary-generator-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-31-swebinary-generator-georobotix-results bash scripts/smoke-test.sh`.
+  - Mandatory GeoRobotix TeamEngine Generator smoke result: FAILED, `206 total / 35 passed / 34 failed / 137 skipped`.
+  - Generator report: `ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml`.
+  - Generator container log: `ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log`.
+  - Generator console log: `ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log`.
+  - New SWE Common Binary group outcome: 3 PASS, 6 FAIL, and 2 SKIP.
+  - Failure cause: GeoRobotix lacks SWE 3.0 `/conf/binary-encoding-rules`, Observation-side SWE Binary reads return HTTP 500, and Command-side checks fail existing `/controlstreams` schema validation before SWE Common Command Schema PASS evidence.
+  - Public-IUT safety check: `scripts/no-mutation-oracle.py` recognized 99 IUT request logs; explicit counts found 99 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines. Counts artifact: `ops/test-results/sprint-ets-31-generator-georobotix-no-mutation-2026-05-27.txt`.
 - Raze planning review:
   - Artifact: `.harness/evaluations/sprint-ets-31-plan-adversarial.yaml`.
   - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.93.
   - Required fix: `RAZE-ETS31-PLAN-CONCERN-001`, a low post-review bookkeeping reconciliation; closed in this turn by updating the contract, story, handoff, ops status, test-results, changelog, and epic/status wording.
-  - Remaining concerns: public GeoRobotix smoke remains failed evidence only, and Generator still requires runtime tests plus a separate implementation Raze review.
+  - Remaining concerns: public GeoRobotix smoke remains failed evidence only.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-31-adversarial-implementation.yaml`.
+  - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.91.
+  - Required fix: `RAZE-ETS31-IMPL-CONCERN-001`, a low post-review bookkeeping and stale fresh-session pointer reconciliation; closed after the review by updating the contract, story, handoff, traceability header, ops status, test-results, and changelog.
+  - Code-level required fixes: none.
 - Commit/push:
   - Planning commit `20a8e18 Plan Sprint 31 Part 2 SWE Common Binary` was pushed over SSH on 2026-05-27 (`45717a3..20a8e18 main -> main`).
 

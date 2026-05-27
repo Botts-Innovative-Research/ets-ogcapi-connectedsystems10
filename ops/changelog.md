@@ -19,7 +19,8 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Raze implementation review initially returned `GAPS_FOUND` confidence 0.88 for missing test-code traceability comments on `SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001` and `SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001`.
 - Added the missing scenario comments to runtime/helper tests, reran formatter, reran focused Maven `81/0/0/0`, and reran full Maven `258/0/0/3`.
 - Focused Raze recheck returned `APPROVE_WITH_CONCERNS` confidence 0.93 with `RAZE-ETS30-IMPL-GAP-001` closed and no required fixes remaining.
-- Reconciled OpenSpec, story, sprint contract, traceability, epic ETS-03, ops status, test-results, known issues, and generator handoff for the Generator evidence. Commit/push remains pending at this entry.
+- Reconciled OpenSpec, story, sprint contract, traceability, epic ETS-03, ops status, test-results, known issues, and generator handoff for the Generator evidence.
+- Committed and pushed Sprint 30 Generator over SSH as `b2aad06 Implement Sprint 30 Part 2 SWE Common Text` (`560945c..b2aad06 main -> main`).
 
 ---
 

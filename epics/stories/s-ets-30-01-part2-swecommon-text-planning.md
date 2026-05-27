@@ -71,7 +71,7 @@ Implement the first declaration-gated, read-only Generator increment for OGC 23-
 - [x] Mandatory public GeoRobotix TeamEngine E2E executed and failed honestly as public-IUT evidence.
 - [x] Public GeoRobotix mutation check records no POST/PUT/PATCH/DELETE request lines.
 - [x] Raze reviews Generator implementation before completion is reported.
-- [ ] Generator change is committed and pushed.
+- [x] Generator change is committed and pushed (`b2aad06 Implement Sprint 30 Part 2 SWE Common Text`, `560945c..b2aad06 main -> main`).
 
 ## Out of Scope
 - Public GeoRobotix mutation.

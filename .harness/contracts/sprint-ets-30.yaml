@@ -4,7 +4,7 @@ sprint: "ets-30"
 sprint_name: "part2-swecommon-text"
 type: "feature-expansion-generator"
 created: "2026-05-26T23:06:09Z"
-updated: "2026-05-27T00:45:00Z"
+updated: "2026-05-27T01:05:00Z"
 description: |
   Sprint 30 implements the first OGC 23-002 Part 2 SWE Common Text
   Encoding increment. The runtime suite is declaration-gated, read-only, and
@@ -198,4 +198,10 @@ raze_implementation_review:
     - "No standalone no-mutation oracle stdout artifact was archived; container log independently supports zero public-IUT writes."
 
 generator_must_do:
-  - "Commit and push Generator change after review reconciliation."
+  - "Future work: plan REQ-ETS-PART2-012 SWE Common Binary or provision a healthy declaring IUT for positive SWE Common Text closure."
+
+commit:
+  status: "pushed"
+  sha: "b2aad06"
+  message: "Implement Sprint 30 Part 2 SWE Common Text"
+  push: "560945c..b2aad06 main -> main"

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-27T00:45Z
+Last updated: 2026-05-27T01:05Z
 
 ## Fresh-Session Entry Point
 
@@ -43,9 +43,9 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - Latest implemented story: `S-ETS-30-01` Generator is PARTIAL for the Part 2 SWE Common Text Encoding read-only subset.
 - Latest planned story: next Part 2 work is `REQ-ETS-PART2-012` SWE Common Binary or a healthy declaring IUT for positive SWE Common closure.
 - Latest pushed planning commit: `3c68858 Plan Sprint 30 Part 2 SWE Common Text`.
-- Latest pushed implementation commit: `062d4b7 Implement Sprint 29 Part 2 SWE Common JSON`.
-- Current sprint status: Sprint ets-30 Part 2 SWE Common Text Encoding is PARTIAL_IMPLEMENTED locally. Mandatory GeoRobotix Generator smoke failed `196 total / 33 passed / 28 failed / 135 skipped`; this is captured public-IUT evidence, not full `/conf/swecommon-text` closure. The new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP. `scripts/no-mutation-oracle.py` recognized 91 IUT request logs, and explicit counts found 91 GeoRobotix GET lines and zero matched POST/PUT/PATCH/DELETE lines. Raze implementation review returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes remaining.
-- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`), Sprint 29 reconciliation pushed as `6ba24db`, and Sprint 30 planning pushed as `3c68858` (`6ba24db..3c68858 main -> main`).
+- Latest pushed implementation commit: `b2aad06 Implement Sprint 30 Part 2 SWE Common Text`.
+- Current sprint status: Sprint ets-30 Part 2 SWE Common Text Encoding is PARTIAL_IMPLEMENTED and pushed. Mandatory GeoRobotix Generator smoke failed `196 total / 33 passed / 28 failed / 135 skipped`; this is captured public-IUT evidence, not full `/conf/swecommon-text` closure. The new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP. `scripts/no-mutation-oracle.py` recognized 91 IUT request logs, and explicit counts found 91 GeoRobotix GET lines and zero matched POST/PUT/PATCH/DELETE lines. Raze implementation review returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes remaining.
+- Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`), Sprint 29 reconciliation pushed as `6ba24db`, Sprint 30 planning pushed as `3c68858` (`6ba24db..3c68858 main -> main`), and Sprint 30 Generator pushed as `b2aad06` (`560945c..b2aad06 main -> main`).
 
 ## Sprint ets-30 Generator Evidence
 
@@ -81,8 +81,8 @@ Part 2 SWE Common Text Encoding declaration-gated read-only subset:
 - New SWE Common Text group outcome: 2 PASS (`/conf/swecommon-text` declaration and condition gates), 6 FAIL (Observation-side HTTP 500 and Command-side `/controlstreams` schema validation), and 2 SKIP (missing SWE 3.0 `/conf/text-encoding-rules` prerequisite and no parseable API-definition exact `application/swe+text` write advertisement).
 - Generator public-IUT safety: `scripts/no-mutation-oracle.py` recognized 91 IUT request logs, and explicit counts found 91 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
 - Raze implementation review: initial `GAPS_FOUND` confidence 0.88 for missing test-code traceability comments on two critical scenarios. Gapfix added explicit comments for `SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001` and `SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001`, reran formatter, focused Maven `81/0/0/0`, and full Maven `258/0/0/3`. Focused Raze recheck returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes.
-- Commit/push: Sprint 30 planning pushed as `3c68858 Plan Sprint 30 Part 2 SWE Common Text`; Generator commit pending push.
-- Next action: commit and push the Sprint 30 Generator change, then record the pushed commit.
+- Commit/push: Sprint 30 planning pushed as `3c68858 Plan Sprint 30 Part 2 SWE Common Text`; Sprint 30 Generator pushed as `b2aad06 Implement Sprint 30 Part 2 SWE Common Text` (`560945c..b2aad06 main -> main`).
+- Next action: plan `REQ-ETS-PART2-012` SWE Common Binary or provision a healthy declaring IUT for positive SWE Common Text closure.
 
 ## Sprint ets-29 Generator Evidence
 

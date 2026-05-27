@@ -1,0 +1,155 @@
+agent: "Raze"
+role: "Red Team / Adversarial Reviewer"
+review_type: "implementation"
+timestamp: "2026-05-27T01:01:03Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.93
+
+reviewed_scope:
+  sprint: "ets-30"
+  story: "S-ETS-30-01"
+  requirement: "REQ-ETS-PART2-011"
+  capability: "OGC 23-002 Part 2 SWE Common Text Encoding"
+  files_reviewed:
+    - "AGENTS.md"
+    - "_bmad/agents/adversarial-reviewer.md"
+    - ".harness/contracts/sprint-ets-30.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-30-01-part2-swecommon-text-planning.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/changelog.md"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/VerifyPart2SweCommonTextTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "ops/test-results/sprint-ets-30-maven-2026-05-27.log"
+    - "ops/test-results/sprint-ets-30-generator-georobotix-smoke-failed-2026-05-27.xml"
+    - "ops/test-results/sprint-ets-30-generator-georobotix-smoke-container-failed-2026-05-27.log"
+    - "ops/test-results/sprint-ets-30-generator-georobotix-smoke-console-failed-2026-05-27.log"
+  commands_run:
+    - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+    - "git status --short"
+    - "git diff --stat"
+    - "git diff --check"
+    - "sed/rg/nl inspection of implementation, tests, docs, and archived artifacts"
+    - "tail -n 80 ops/test-results/sprint-ets-30-maven-2026-05-27.log"
+    - "rg inspection of TestNG smoke XML for SWE Common Text method statuses"
+    - "rg -c 'Request: GET https://api\\.georobotix\\.io' ops/test-results/sprint-ets-30-generator-georobotix-smoke-container-failed-2026-05-27.log"
+    - "awk count of IUT-bound POST/PUT/PATCH/DELETE request lines in the Sprint 30 Generator container log"
+  commands_not_run:
+    - "Formatter, Maven, and TeamEngine were not rerun; archived evidence was present, internally consistent, and sufficient for this review."
+
+evidence:
+  official_ogc_identifier_fidelity:
+    source: "https://docs.ogc.org/is/23-002/23-002.html"
+    verified_from_local_planning_artifacts: true
+    requirement_class_identifier: "/req/swecommon-text"
+    conformance_class_identifier: "/conf/swecommon-text"
+    prerequisite_requirement: "http://www.opengis.net/spec/SWE/3.0/req/text-encoding-rules"
+    prerequisite_conformance: "http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules"
+    media_type: "application/swe+text"
+    normative_requirements:
+      - "/req/swecommon-text/mediatype-read"
+      - "/req/swecommon-text/mediatype-write"
+      - "/req/swecommon-text/obsschema-schema"
+      - "/req/swecommon-text/obsschema-mapping"
+      - "/req/swecommon-text/observation-encoding"
+      - "/req/swecommon-text/cmdschema-schema"
+      - "/req/swecommon-text/cmdschema-mapping"
+      - "/req/swecommon-text/command-encoding"
+    assessment: "Runtime constants use the expected Part 2 SWE Common Text /req and /conf identifiers, exact application/swe+text media type, and SWE 3.0 text-encoding-rules conformance prerequisite."
+  verification_claims:
+    formatter: "Documented as Docker Maven spring-javaformat:apply BUILD SUCCESS; not rerun by Raze."
+    focused_maven: "Documented as 81 tests / 0 failures / 0 errors / 0 skipped; not rerun by Raze."
+    full_maven: "Archived log confirms BUILD SUCCESS with 258 tests / 0 failures / 0 errors / 3 skipped."
+    georobotix_teamengine_smoke: "Archived XML confirms failed public smoke: 196 total / 33 passed / 28 failed / 135 skipped."
+    new_group_outcome: "Archived XML confirms 2 PASS, 6 FAIL, and 2 SKIP for part2swecommontext."
+    public_iut_mutation: "Container log scan found 91 GeoRobotix GET request lines and zero IUT-bound POST/PUT/PATCH/DELETE request lines."
+  testng_wiring:
+    group: "part2swecommontext"
+    dependencies: "core common"
+    assessment: "testng.xml and VerifyTestNGSuiteDependency agree. The group is co-located with Core, Common, Part 2 Datastream, Part 2 ControlStream, and Part 2 Create/Replace/Delete classes."
+  docs_reconciliation:
+    assessment: "OpenSpec, story, traceability, epic, contract, handoff, and ops docs consistently record PARTIAL_IMPLEMENTED with failed public GeoRobotix E2E evidence and Raze implementation review pending before completion."
+  worktree_hygiene:
+    diff_check: "clean"
+    dirty_files_assessment: "Dirty files are scoped to Sprint 30 implementation, reconciliation docs, archived verification artifacts, and this Raze report."
+
+findings:
+  - id: "RAZE-ETS30-IMPL-GAP-001"
+    severity: "HIGH"
+    status: "CLOSED"
+    title: "Two critical Sprint 30 scenarios are specified but not traceable from the test code"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:810-820 defines SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001 and SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001 as critical."
+      - ".harness/contracts/sprint-ets-30.yaml lists both scenarios under critical success scope."
+      - "Part2SweCommonTextTests.java:145-309 references the other Sprint 30 scenario IDs in method comments/descriptions, but contains no reference to SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001 or SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001."
+      - "VerifyPart2SweCommonTextTests.java:16-25 lists nine scenario IDs, but omits the Annex media-honesty and unavailable-endpoint-honesty scenario IDs."
+      - "AGENTS.md requires tests to reference REQ-* and SCENARIO-* in comments. The story DoD also claims runtime tests reference SCENARIO-ETS-PART2-011-* comments."
+    impact: "The implementation may behave mostly correctly, but the spec-to-test trace is incomplete for two critical scenarios. This creates false audit confidence: a reviewer can see the scenarios in OpenSpec and the contract, yet no test artifact names them as covered."
+    required_fix: "Add explicit test-code traceability for SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001 and SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001. Prefer tying ANNEX-MEDIATYPE-HONESTY to exact-media and binary/vendor rejection helper coverage, and tying UNAVAILABLE-ENDPOINT-HONESTY to runtime schema/HTTP failure behavior or helper regressions. If either scenario is intentionally out of scope, downgrade or remove it from spec/contract/story instead of leaving a critical-but-untraced scenario. Rerun focused Maven and full Maven after the fix."
+    closure:
+      status: "closed"
+      reviewed_at: "2026-05-27T01:01:03Z"
+      evidence:
+        - "Part2SweCommonTextTests.java class-level traceability now names SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001 and SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001."
+        - "Part2SweCommonTextTests.java now attaches both scenario IDs to the schema and encoding runtime methods that enforce exact application/swe+text evidence and no PASS from unavailable or wrong-media evidence."
+        - "VerifyPart2SweCommonTextTests.java class-level traceability now lists both scenario IDs."
+        - "VerifyPart2SweCommonTextTests.java now includes inline REQ/SCENARIO comments tying binary/vendor/CSV/JSON rejection and unavailable/wrong-media behavior to those two scenarios."
+        - "ops/test-results/sprint-ets-30-maven-2026-05-27.log confirms full Maven BUILD SUCCESS with 258 tests / 0 failures / 0 errors / 3 skipped after the traceability fix."
+      assessment: "The required spec-to-test traceability gap is closed. The fix is comment/traceability-only and does not alter runtime behavior."
+
+concerns:
+  - id: "RAZE-ETS30-IMPL-CONCERN-001"
+    severity: "LOW"
+    status: "OPEN_NON_BLOCKING"
+    title: "Optional SWE Text candidate fetches demote all non-200 responses to no-candidate SKIP"
+    evidence:
+      - "Part2SweCommonTextTests.java:468-475 returns null from firstOptionalSweTextCandidate for any non-200 status."
+      - "The encoding methods currently never PASS because they SKIP until a SWE Text validator exists, and current GeoRobotix fails earlier schema/collection preconditions."
+    impact: "No false PASS is present in this increment. Before promoting Observation/Command text encoding beyond guarded partial coverage, decide whether reachable HTTP 400/500 candidate resource responses should FAIL rather than be treated as absent evidence."
+    recommendation: "When fixing the unavailable-endpoint traceability gap, add a focused helper or runtime comment documenting which non-200 candidate states are SKIP versus FAIL."
+  - id: "RAZE-ETS30-IMPL-CONCERN-002"
+    severity: "LOW"
+    status: "OPEN_NON_BLOCKING"
+    title: "No standalone no-mutation oracle stdout artifact was found for the 91 recognized request count"
+    evidence:
+      - "Docs record that scripts/no-mutation-oracle.py recognized 91 IUT request logs."
+      - "The archived container log independently supports the important safety claim: 91 GeoRobotix GET lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE lines."
+    impact: "The mutation-safety conclusion is still credible, but the exact oracle recognition count is not backed by a separate raw stdout artifact in the reviewed scope."
+    recommendation: "For future sprints, tee no-mutation oracle stdout into ops/test-results/ alongside the smoke XML and container log."
+
+required_fixes: []
+
+focused_recheck:
+  requested_at: "2026-05-27T01:01:03Z"
+  completed_at: "2026-05-27T01:01:03Z"
+  verdict: "APPROVE_WITH_CONCERNS"
+  confidence: 0.93
+  scope: "Focused recheck only for RAZE-ETS30-IMPL-GAP-001 after reported traceability fix."
+  reviewed_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/VerifyPart2SweCommonTextTests.java"
+    - "ops/test-results/sprint-ets-30-maven-2026-05-27.log"
+  evidence:
+    gap_001: "Closed. Both previously missing critical scenario IDs are now explicitly present in runtime and helper test-code comments."
+    focused_maven: "User-reported focused Maven rerun: 81 tests / 0 failures / 0 errors / 0 skipped. No separate focused log was provided in the reviewed scope."
+    full_maven: "Archived log confirms 258 tests / 0 failures / 0 errors / 3 skipped and BUILD SUCCESS, finished at 2026-05-27T01:00:34Z."
+    teamengine_smoke: "Not rerun for this comment/traceability-only fix; prior mandatory public GeoRobotix smoke remains failed evidence at 196 total / 33 passed / 28 failed / 135 skipped."
+  closed_required_fixes:
+    - "RAZE-ETS30-IMPL-GAP-001"
+  remaining_required_fixes: []
+  remaining_blockers: []
+
+approval_rationale:
+  - "No incorrect SWE Common Text /req or /conf URI mapping was found."
+  - "No false PASS from JSON, CSV, binary, vendor media, OPTIONS-only write evidence, sibling classes, or broad format lists was found."
+  - "TestNG wiring is consistent and structurally linted."
+  - "Maven verification is archived and successful, but mandatory GeoRobotix TeamEngine E2E is failed and documented as failed."
+  - "Public-IUT mutation safety is supported by archived request logs."
+  - "The required traceability gap is now closed; remaining items are non-blocking concerns, and the mandatory public GeoRobotix E2E result remains a failed public-IUT evidence run rather than full conformance closure."

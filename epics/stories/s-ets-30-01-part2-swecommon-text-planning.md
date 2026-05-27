@@ -1,105 +1,81 @@
 # S-ETS-30-01: Part 2 SWE Common Text Encoding
 
 ## Status
-PLANNED by Sprint 30 planning. Generator implementation is pending.
+PARTIAL_IMPLEMENTED by Sprint 30 Generator. Mandatory public GeoRobotix Generator E2E failed; full positive `/conf/swecommon-text` closure remains open.
 
 ## User Instruction
 Planning triggered by: "Start the spec-first planning".
 
+Generator triggered by: "Do it".
+
 ## Scope
-Plan the first declaration-gated, read-only Generator increment for OGC 23-002 Clause 16.3 Requirements Class "SWE Common Text Encoding".
+Implement the first declaration-gated, read-only Generator increment for OGC 23-002 Clause 16.3 Requirements Class "SWE Common Text Encoding".
 
 - Requirements class: `/req/swecommon-text`
 - Conformance class: `/conf/swecommon-text`
 - Requirement prerequisite: `http://www.opengis.net/spec/SWE/3.0/req/text-encoding-rules`
 - Conformance prerequisite: `http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules`
 - Media type: `application/swe+text`
-- Normative statements in scope for planning: Requirements 115-122, covering mediatype-read, mediatype-write, Observation Schema schema/mapping, Observation text encoding, Command Schema schema/mapping, and Command text encoding.
+- Normative statements in scope: Requirements 115-122, covering mediatype-read, mediatype-write, Observation Schema schema/mapping, Observation text encoding, Command Schema schema/mapping, and Command text encoding.
 
 ## Planning Evidence
 - Official source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 16.3 "Requirements Class SWE Common Text Encoding" and Annex A.11.
 - OGC 23-002 names the requirements class `/req/swecommon-text` and conformance class `/conf/swecommon-text`.
 - OGC 23-002 lists SWE Common 3.0 Text Encoding Rules as the prerequisite.
-- The normative requirements are:
-  - `/req/swecommon-text/mediatype-read`
-  - `/req/swecommon-text/mediatype-write`
-  - `/req/swecommon-text/obsschema-schema`
-  - `/req/swecommon-text/obsschema-mapping`
-  - `/req/swecommon-text/observation-encoding`
-  - `/req/swecommon-text/cmdschema-schema`
-  - `/req/swecommon-text/cmdschema-mapping`
-  - `/req/swecommon-text/command-encoding`
 - Resource condition gates:
   - Observation Schema, Observation Schema mapping, and Observation encoding require `/conf/datastream`.
   - Command Schema, Command Schema mapping, and Command encoding require `/conf/controlstream`.
-  - `mediatype-write` also requires `/conf/create-replace-delete`, but the first increment is non-mutating API-definition evidence only.
-- Annex A.115 note: the mediatype-read API-definition bullet currently mentions `application/swe+binary`, while Clause 16.3 and the remaining A.115 steps use `application/swe+text`. Generator must document this as source inconsistency and must not use binary advertisement as SWE Common Text PASS evidence.
-- Bundled schema readiness:
-  - `src/main/resources/schemas/connected-systems-2/json/observationSchemaSwe.json`
-  - `src/main/resources/schemas/connected-systems-2/json/commandSchemaSwe.json`
-  - `src/main/resources/schemas/connected-systems-shared/swecommon/schemas/json/*.json`
+  - `mediatype-write` also requires `/conf/create-replace-delete`, but this increment is non-mutating API-definition evidence only.
+- Annex A.115 note: one mediatype-read API-definition bullet mentions `application/swe+binary`, while Clause 16.3 and the remaining A.115 steps use `application/swe+text`. Generator treats this as a source inconsistency and does not use binary advertisement as SWE Common Text PASS evidence.
 
-## GeoRobotix Evidence
-- Raw planning probe transcript: `ops/test-results/sprint-ets-30-plan-georobotix-swetext-probes-2026-05-26.txt`.
-- `/conformance` currently declares Part 2 `/conf/swecommon-text`, `/conf/swecommon-json`, `/conf/swecommon-binary`, `/conf/datastream`, `/conf/controlstream`, `/conf/create-replace-delete`, and `/conf/json`.
-- `/conformance` does not expose SWE 3.0 `http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules`, `http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules`, or `http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules`.
-- `/conformance` does not expose Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
-- Direct read-only probes on 2026-05-26:
-  - `GET /conformance`: HTTP 200.
-  - `GET /datastreams?limit=1` with `Accept: application/json`: HTTP 500 `application/json`.
-  - `GET /datastreams?limit=1` with `Accept: application/swe+text`: HTTP 500.
-  - `GET /observations?limit=1` with `Accept: application/swe+text`: HTTP 500.
-  - `GET /controlstreams?limit=1`: HTTP 200 `application/json`, first ID `0m4qpft9sdag`.
-  - Selected ControlStream formats include `application/json`, `application/swe+json`, `application/swe+csv`, `application/swe+xml`, and `application/swe+binary`; it did not list `application/swe+text`.
-  - `GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+text`: HTTP 200, but the body reports `commandFormat=application/json` and `parametersSchema`; it does not expose expected `commandFormat=application/swe+text`, `recordSchema`, and `TextEncoding` evidence.
-  - `GET /controlstreams/0m4qpft9sdag/commands?limit=1` with `Accept: application/swe+text`: HTTP 200 `application/json` with empty `items`.
-  - `GET /commands?limit=1` with `Accept: application/swe+text`: HTTP 400.
-
-## Local OSH Evidence
-- `field-hub-osh-1` is running but unhealthy.
-- The current shell has no `SMOKE_AUTH_CREDENTIAL`.
-- Unauthenticated `GET http://localhost:8081/sensorhub/api/conformance`: HTTP 401 `text/html;charset=iso-8859-1`.
-
-## Generator Requirements
-- Add a Part 2 SWE Common Text TestNG group with official OGC 23-002 identifiers only.
-- Gate all assertions on exact Part 2 `/conf/swecommon-text` declaration.
-- Keep SWE Common 3.0 `/conf/text-encoding-rules` prerequisite visible; do not claim full `/conf/swecommon-text` closure when the prerequisite is absent.
-- Condition Observation-side assertions on `/conf/datastream` and Command-side assertions on `/conf/controlstream`.
-- Implement read-only mediatype-read checks using `Accept: application/swe+text`; require API-definition or operation evidence plus HTTP 200 and exact `application/swe+text` content type before PASS.
-- Do not use `application/swe+csv`, `application/swe+binary`, `application/swe+json`, `application/json`, or preliminary vendor media type evidence as SWE Common Text PASS evidence.
-- Validate retrieved Observation Schema and Command Schema metadata against bundled `observationSchemaSwe.json` and `commandSchemaSwe.json`.
-- Require retrieved schema evidence to show `obsFormat` or `commandFormat` equal to `application/swe+text`, `recordSchema`, and `encoding` as `TextEncoding` before PASS.
-- For mapping checks, reuse the canonical Time and IssueTime definition evidence guards from the SWE Common JSON implementation because Annex A.11 delegates mapping checks to the SWE Common JSON mapping tests.
-- For Observation and Command encoding checks, require parent schema evidence, candidate child resources, and an actual SWE Common Text encoding validator before PASS. If the validator or candidates are absent, SKIP with a precise reason.
-- Check `mediatype-write` only through non-mutating API-definition or operation metadata on Observation or Command resource endpoints in this first increment. Do not issue public GeoRobotix POST, PUT, PATCH, or DELETE.
-- OPTIONS evidence alone must not PASS `mediatype-write`.
-- Add tests/comments referencing `REQ-ETS-PART2-011` and `SCENARIO-ETS-PART2-011-*` IDs.
+## Generator Implementation
+- Added `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java`.
+- Runtime group: `part2swecommontext`.
+- Runtime checks cover:
+  - Exact Part 2 `/conf/swecommon-text` declaration.
+  - SWE Common 3.0 `/conf/text-encoding-rules` prerequisite visibility as a prerequisite-incomplete SKIP, not PASS.
+  - `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates.
+  - Observation Schema retrieval with `obsFormat=application/swe+text`, bundled `observationSchemaSwe.json` validation, `obsFormat=application/swe+text`, `recordSchema`, and `encoding.type=TextEncoding`.
+  - Command Schema retrieval with `cmdFormat=application/swe+text`, bundled `commandSchemaSwe.json` validation, `commandFormat=application/swe+text`, `recordSchema`, and `encoding.type=TextEncoding`.
+  - Canonical Time and IssueTime mapping evidence reused from SWE Common JSON mapping guards.
+  - Observation/Command `Accept: application/swe+text` resource guards without JSON fallback parsing and without semantic PASS until a SWE Text validator and candidate evidence exist.
+  - Non-mutating `mediatype-write` API-definition advertisement evidence scoped to Observation and Command collection/item request bodies only.
+- Added `VerifyPart2SweCommonTextTests` with 11 helper regressions for official identifiers, condition gates, exact content type handling, bundled schemas, `TextEncoding`, canonical Time/IssueTime mapping, write-advertisement scoping, negative media/path cases, and group naming.
+- Updated `testng.xml` to wire `Part2SweCommonTextTests` with group dependency `part2swecommontext` -> `core common`.
+- Updated `VerifyTestNGSuiteDependency` with `part2swecommontext` dependency, method group, and co-location structural lint.
 
 ## Verification
-- Direct source verification used official OGC 23-002 HTML for Clause 16.3 and Annex A.11.
-- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-05-09; checked 2026-05-26 and not stale.
-- Live IUT probes were non-mutating: `/conformance`, bounded GETs, and schema/media read checks only.
-- Mandatory TeamEngine planning E2E ran from a `/tmp` clone with `SMOKE_CONTAINER_NAME=ets-csapi-s30-swetext-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-30-swetext-plan-georobotix-results bash scripts/smoke-test.sh`.
-- Planning TeamEngine E2E result: FAILED, `186 total / 31 passed / 22 failed / 133 skipped`.
-- Planning TeamEngine artifacts: `ops/test-results/sprint-ets-30-plan-georobotix-smoke-failed-2026-05-26.xml` and `ops/test-results/sprint-ets-30-plan-georobotix-smoke-container-failed-2026-05-26.log`.
-- Planning E2E interpretation: this is a captured failed public-IUT check, not a passing E2E gate. Failures are inherited from current public GeoRobotix read-path and schema-validation state; no Sprint 30 SWE Common Text runtime tests exist yet.
-- Public-IUT mutation check: `scripts/no-mutation-oracle.py` recognized 83 IUT request logs; explicit container-log grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
+- Formatter: Docker Maven `mvn -B spring-javaformat:apply` returned BUILD SUCCESS.
+- Focused Maven: Docker Maven `mvn -B test -Dtest=VerifyPart2SweCommonTextTests,VerifyTestNGSuiteDependency` returned BUILD SUCCESS with `81 tests / 0 failures / 0 errors / 0 skipped`.
+- Full Maven: Docker Maven `mvn -B clean test` returned BUILD SUCCESS with `258 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-30-maven-2026-05-27.log`.
+- Mandatory TeamEngine Generator E2E against GeoRobotix: `SMOKE_CONTAINER_NAME=ets-csapi-s30-swetext-generator-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-30-swetext-generator-georobotix-results bash scripts/smoke-test.sh`.
+- Generator TeamEngine E2E result: FAILED, `196 total / 33 passed / 28 failed / 135 skipped`.
+- Generator TeamEngine artifacts:
+  - `ops/test-results/sprint-ets-30-generator-georobotix-smoke-failed-2026-05-27.xml`
+  - `ops/test-results/sprint-ets-30-generator-georobotix-smoke-container-failed-2026-05-27.log`
+  - `ops/test-results/sprint-ets-30-generator-georobotix-smoke-console-failed-2026-05-27.log`
+- New SWE Common Text group outcome: 2 PASS, 6 FAIL, and 2 SKIP.
+  - PASS: exact `/conf/swecommon-text` declaration and resource condition-gate visibility.
+  - SKIP: missing SWE Common 3.0 `/conf/text-encoding-rules` prerequisite and no parseable exact API-definition `application/swe+text` write advertisement.
+  - FAIL: Observation-side HTTP 500 responses and Command-side `/controlstreams` schema validation failure before SWE Common Text command evidence.
+- Public-IUT mutation check: `scripts/no-mutation-oracle.py` recognized 91 IUT request logs; explicit counts were `GET 91`, `POST 0`, `PUT 0`, `PATCH 0`, `DELETE 0`.
+- Raze implementation review: `.harness/evaluations/sprint-ets-30-adversarial-implementation.yaml` initially returned `GAPS_FOUND` confidence 0.88 for missing test-code traceability comments on the Annex media-honesty and unavailable-endpoint-honesty scenarios. The traceability gap was fixed, formatter/focused Maven/full Maven were rerun, and the focused Raze recheck returned `APPROVE_WITH_CONCERNS` confidence 0.93 with no required fixes remaining.
 
 ## Definition of Done
 - [x] OpenSpec splits `REQ-ETS-PART2-011` out for Part 2 SWE Common Text and keeps remaining placeholders at `REQ-ETS-PART2-012..013`.
 - [x] Story and sprint contract capture official OGC identifiers, prerequisite, media type, and Requirements 115-122.
-- [x] Planning captures resource condition gates for `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete`.
-- [x] Planning captures current GeoRobotix declaration and SWE Common Text read-health state with raw probe transcript artifact.
-- [x] Planning captures current local OSH unauthenticated readiness limits.
-- [x] Planning explicitly blocks false PASS from declaration alone, sibling declarations, `application/swe+csv` format lists, binary/media typo evidence, empty candidate sets, unavailable endpoints, JSON fallback schemas, OPTIONS-only write evidence, and public-IUT mutation.
-- [x] Planning TeamEngine E2E evidence is captured and documented honestly.
+- [x] Runtime tests reference `REQ-ETS-PART2-011` and `SCENARIO-ETS-PART2-011-*` in comments.
+- [x] Runtime suite implements exact declaration gating, condition gates, SWE Text media checks, bundled schema metadata validation, mapping guards, encoding guards, and non-mutating write advertisement checks.
+- [x] Helper regressions and TestNG structural lint cover the new group.
+- [x] Formatter and Maven verification completed successfully.
+- [x] Mandatory public GeoRobotix TeamEngine E2E executed and failed honestly as public-IUT evidence.
 - [x] Public GeoRobotix mutation check records no POST/PUT/PATCH/DELETE request lines.
-- [x] Raze reviews planning before Generator starts.
-- [x] Planning-only change is committed and pushed before Generator implementation (`3c68858 Plan Sprint 30 Part 2 SWE Common Text`, `6ba24db..3c68858 main -> main`).
+- [x] Raze reviews Generator implementation before completion is reported.
+- [ ] Generator change is committed and pushed.
 
 ## Out of Scope
 - Public GeoRobotix mutation.
 - Positive SWE Common Text write lifecycle behavior.
 - SWE Common Binary encoding class.
 - Observation-binding cross-class closure beyond the SWE Common Text schema/mapping evidence guards.
-- Full Observation/Command payload semantic validation unless a Generator increment supplies a proven SWE Common Text encoding validator and candidate resource evidence.
+- Full Observation/Command payload semantic validation until a proven SWE Common Text encoding validator and candidate resource evidence are available.

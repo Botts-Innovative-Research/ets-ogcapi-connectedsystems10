@@ -2,6 +2,27 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-27T00:45Z — Sprint 30 Part 2 SWE Common Text Generator
+
+**Triggered by user instruction**: "Do it"
+
+- Implemented `S-ETS-30-01` as the first declaration-gated, read-only Part 2 SWE Common Text Encoding subset using official OGC 23-002 `/req/swecommon-text` and `/conf/swecommon-text` identifiers.
+- Added `Part2SweCommonTextTests` with exact declaration gating, SWE Common 3.0 `/conf/text-encoding-rules` prerequisite visibility, `/conf/datastream`/`/conf/controlstream`/`/conf/create-replace-delete` condition gates, read-only `application/swe+text` checks, bundled Observation Schema and Command Schema metadata validation requiring `TextEncoding`, canonical Time/IssueTime mapping guards, Observation/Command encoding guards, and non-mutating mediatype-write API-definition advertisement scoped to Observation/Command resource endpoints.
+- Added `VerifyPart2SweCommonTextTests` with 11 helper regressions and updated `testng.xml` plus `VerifyTestNGSuiteDependency` for the `part2swecommontext` group.
+- Ran formatter: Docker Maven `spring-javaformat:apply` returned BUILD SUCCESS.
+- Ran focused Maven: Docker Maven `mvn -B test -Dtest=VerifyPart2SweCommonTextTests,VerifyTestNGSuiteDependency` returned `81 tests / 0 failures / 0 errors / 0 skipped`.
+- Ran full Maven: Docker Maven `mvn -B clean test` returned BUILD SUCCESS with `258 tests / 0 failures / 0 errors / 3 skipped`; log archived as `ops/test-results/sprint-ets-30-maven-2026-05-27.log`.
+- Ran mandatory GeoRobotix TeamEngine Generator smoke from a `/tmp` copy. Result: FAILED, `196 total / 33 passed / 28 failed / 135 skipped`; this is public-IUT failure evidence, not a passing `/conf/swecommon-text` closure gate.
+- Archived Generator smoke artifacts as `ops/test-results/sprint-ets-30-generator-georobotix-smoke-failed-2026-05-27.xml`, `ops/test-results/sprint-ets-30-generator-georobotix-smoke-container-failed-2026-05-27.log`, and `ops/test-results/sprint-ets-30-generator-georobotix-smoke-console-failed-2026-05-27.log`.
+- New SWE Common Text group outcome: 2 PASS, 6 FAIL, and 2 SKIP. Failures match GeoRobotix's missing SWE Text prerequisite, Observation-side HTTP 500 state, and reachable ControlStream schema validation failure before Command SWE Text evidence.
+- Verified public-IUT safety: `scripts/no-mutation-oracle.py` recognized 91 IUT request logs; explicit counts found 91 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
+- Raze implementation review initially returned `GAPS_FOUND` confidence 0.88 for missing test-code traceability comments on `SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001` and `SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001`.
+- Added the missing scenario comments to runtime/helper tests, reran formatter, reran focused Maven `81/0/0/0`, and reran full Maven `258/0/0/3`.
+- Focused Raze recheck returned `APPROVE_WITH_CONCERNS` confidence 0.93 with `RAZE-ETS30-IMPL-GAP-001` closed and no required fixes remaining.
+- Reconciled OpenSpec, story, sprint contract, traceability, epic ETS-03, ops status, test-results, known issues, and generator handoff for the Generator evidence. Commit/push remains pending at this entry.
+
+---
+
 ## 2026-05-26T23:20Z — Sprint 30 Part 2 SWE Common Text Encoding planning
 
 **Triggered by user instruction**: "Start the spec-first planning"

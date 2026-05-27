@@ -204,6 +204,14 @@ public class VerifyTestNGSuiteDependency {
 	 */
 	private static final String PART2_SWE_COMMON_JSON_GROUP = "part2swecommonjson";
 
+	/**
+	 * Sprint 30 S-ETS-30-01 — Part 2 SWE Common Text Encoding read-only subset group
+	 * (depends on Core and Common; runtime checks keep /conf/swecommon-text declaration,
+	 * SWE Text Encoding Rules prerequisite, resource condition gates, schema evidence,
+	 * exact application/swe+text evidence, and no-public-mutation behavior visible).
+	 */
+	private static final String PART2_SWE_COMMON_TEXT_GROUP = "part2swecommontext";
+
 	private static final List<Class<?>> CORE_CLASSES = List.of(
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests.class,
 			org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests.class,
@@ -295,6 +303,9 @@ public class VerifyTestNGSuiteDependency {
 
 	private static final List<Class<?>> PART2_SWE_COMMON_JSON_CLASSES = List
 		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests.class);
+
+	private static final List<Class<?>> PART2_SWE_COMMON_TEXT_CLASSES = List
+		.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests.class);
 
 	private XmlSuite parseShippedSuite() throws Exception {
 		try (InputStream in = VerifyTestNGSuiteDependency.class.getResourceAsStream(TESTNG_XML_RESOURCE)) {
@@ -2854,6 +2865,141 @@ public class VerifyTestNGSuiteDependency {
 				+ "), Part 2 Create/Replace/Delete (" + part2CreateReplaceDeleteClassNames
 				+ "), and Part 2 SWE Common JSON (" + part2SweCommonJsonClassNames
 				+ ") must be declared in the SAME <test> block of testng.xml so declaration-gated runtime checks resolve within scope. See Sprint 29 S-ETS-29-01.",
+				coAlloc);
+	}
+
+	// ===== Sprint 30 S-ETS-30-01 — Part 2 SWE Common Text group =====
+
+	/**
+	 * Sprint 30 S-ETS-30-01 (REQ-ETS-PART2-011): the canonical testng.xml SHALL declare
+	 * {@code <group name="part2swecommontext" depends-on="core common"/>}.
+	 */
+	@org.junit.Test
+	public void testPart2SweCommonTextGroupDependsOnCoreAndCommon() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
+
+		boolean foundDependency = false;
+		for (XmlTest xt : suite.getTests()) {
+			java.util.Map<String, String> deps = xt.getXmlDependencyGroups();
+			if (deps != null && deps.containsKey(PART2_SWE_COMMON_TEXT_GROUP)) {
+				String dependsOn = deps.get(PART2_SWE_COMMON_TEXT_GROUP);
+				assertNotNull("group '" + PART2_SWE_COMMON_TEXT_GROUP + "' has null depends-on attribute", dependsOn);
+				assertFalse(
+						"group '" + PART2_SWE_COMMON_TEXT_GROUP + "' depends-on '" + dependsOn
+								+ "' uses comma syntax, which TestNG treats as a nonexistent single group at runtime",
+						dependsOn.contains(","));
+				Set<String> dependencyTokens = dependencyTokens(dependsOn);
+				assertTrue("group '" + PART2_SWE_COMMON_TEXT_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ CORE_GROUP + "'", dependencyTokens.contains(CORE_GROUP));
+				assertTrue("group '" + PART2_SWE_COMMON_TEXT_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ COMMON_GROUP + "'", dependencyTokens.contains(COMMON_GROUP));
+				assertFalse("group '" + PART2_SWE_COMMON_TEXT_GROUP
+						+ "' must not depend on part2apicommon; missing Part 2 API Common must remain runtime-visible as prerequisite honesty",
+						dependencyTokens.contains(PART2_API_COMMON_GROUP));
+				assertFalse("group '" + PART2_SWE_COMMON_TEXT_GROUP
+						+ "' must not depend on systemfeatures; default public-IUT SystemFeatures failures must not hide /conf/swecommon-text declaration and SWE-prerequisite honesty",
+						dependencyTokens.contains(SYSTEMFEATURES_GROUP));
+				assertFalse("group '" + PART2_SWE_COMMON_TEXT_GROUP
+						+ "' must not depend on part2datastream; Datastream condition gates must remain runtime-visible",
+						dependencyTokens.contains(PART2_DATASTREAM_GROUP));
+				assertFalse("group '" + PART2_SWE_COMMON_TEXT_GROUP
+						+ "' must not depend on part2controlstream; ControlStream condition gates must remain runtime-visible",
+						dependencyTokens.contains(PART2_CONTROLSTREAM_GROUP));
+				assertFalse("group '" + PART2_SWE_COMMON_TEXT_GROUP
+						+ "' must not depend on part2createreplacedelete; mediatype-write advertisement/no-mutation checks must remain runtime-visible",
+						dependencyTokens.contains(PART2_CREATE_REPLACE_DELETE_GROUP));
+				foundDependency = true;
+				break;
+			}
+		}
+		assertTrue("testng.xml does not declare <group name=\"" + PART2_SWE_COMMON_TEXT_GROUP
+				+ "\" depends-on=\"core common\"/> — see Sprint 30 S-ETS-30-01.", foundDependency);
+	}
+
+	/**
+	 * Sprint 30 S-ETS-30-01: every Part 2 SWE Common Text @Test method SHALL carry
+	 * {@code groups = "part2swecommontext"}.
+	 */
+	@org.junit.Test
+	public void testEveryPart2SweCommonTextTestMethodCarriesPart2SweCommonTextGroup() {
+		List<String> offenders = new ArrayList<>();
+		int totalPart2SweCommonText = 0;
+		for (Class<?> c : PART2_SWE_COMMON_TEXT_CLASSES) {
+			for (Method m : c.getDeclaredMethods()) {
+				Test ann = m.getAnnotation(Test.class);
+				if (ann == null) {
+					continue;
+				}
+				totalPart2SweCommonText++;
+				List<String> groups = java.util.Arrays.asList(ann.groups());
+				if (!groups.contains(PART2_SWE_COMMON_TEXT_GROUP)) {
+					offenders.add(c.getSimpleName() + "#" + m.getName() + " (groups=" + groups + ")");
+				}
+			}
+		}
+		assertTrue("Expected at least one @Test method in Part 2 SWE Common Text conformance classes; found 0",
+				totalPart2SweCommonText > 0);
+		assertTrue("Part 2 SWE Common Text @Test methods missing groups=\"" + PART2_SWE_COMMON_TEXT_GROUP + "\": "
+				+ offenders, offenders.isEmpty());
+	}
+
+	/**
+	 * Sprint 30 S-ETS-30-01: Part 2 SWE Common Text classes MUST be co-located in the
+	 * SAME {@code <test>} block as Core, Common, and the resource classes whose
+	 * declarations are checked at runtime.
+	 */
+	@org.junit.Test
+	public void testPart2SweCommonTextCoLocatedWithConditionGateAndAdvertisementClasses() throws Exception {
+		XmlSuite suite = parseShippedSuite();
+		Set<String> coreClassNames = new HashSet<>();
+		for (Class<?> c : CORE_CLASSES) {
+			coreClassNames.add(c.getName());
+		}
+		Set<String> commonClassNames = new HashSet<>();
+		for (Class<?> c : COMMON_CLASSES) {
+			commonClassNames.add(c.getName());
+		}
+		Set<String> part2DatastreamClassNames = new HashSet<>();
+		for (Class<?> c : PART2_DATASTREAM_CLASSES) {
+			part2DatastreamClassNames.add(c.getName());
+		}
+		Set<String> part2ControlStreamClassNames = new HashSet<>();
+		for (Class<?> c : PART2_CONTROLSTREAM_CLASSES) {
+			part2ControlStreamClassNames.add(c.getName());
+		}
+		Set<String> part2CreateReplaceDeleteClassNames = new HashSet<>();
+		for (Class<?> c : PART2_CREATE_REPLACE_DELETE_CLASSES) {
+			part2CreateReplaceDeleteClassNames.add(c.getName());
+		}
+		Set<String> part2SweCommonTextClassNames = new HashSet<>();
+		for (Class<?> c : PART2_SWE_COMMON_TEXT_CLASSES) {
+			part2SweCommonTextClassNames.add(c.getName());
+		}
+
+		boolean coAlloc = false;
+		for (XmlTest xt : suite.getTests()) {
+			Set<String> xtClasses = new HashSet<>();
+			for (XmlClass xc : xt.getXmlClasses()) {
+				xtClasses.add(xc.getName());
+			}
+			boolean hasFoundationalClasses = xtClasses.containsAll(coreClassNames)
+					&& xtClasses.containsAll(commonClassNames);
+			boolean hasConditionGateClasses = xtClasses.containsAll(part2DatastreamClassNames)
+					&& xtClasses.containsAll(part2ControlStreamClassNames);
+			boolean hasAdvertisementClass = xtClasses.containsAll(part2CreateReplaceDeleteClassNames);
+			boolean hasAnyPart2SweCommonText = !java.util.Collections.disjoint(xtClasses, part2SweCommonTextClassNames);
+			if (hasFoundationalClasses && hasConditionGateClasses && hasAdvertisementClass
+					&& hasAnyPart2SweCommonText) {
+				coAlloc = true;
+				break;
+			}
+		}
+		assertTrue("Core (" + coreClassNames + "), Common (" + commonClassNames + "), Part 2 Datastream ("
+				+ part2DatastreamClassNames + "), Part 2 ControlStream (" + part2ControlStreamClassNames
+				+ "), Part 2 Create/Replace/Delete (" + part2CreateReplaceDeleteClassNames
+				+ "), and Part 2 SWE Common Text (" + part2SweCommonTextClassNames
+				+ ") must be declared in the SAME <test> block of testng.xml so declaration-gated runtime checks resolve within scope. See Sprint 30 S-ETS-30-01.",
 				coAlloc);
 	}
 

@@ -1,53 +1,47 @@
 agent: generator
 status: partial_implemented_public_georobotix_e2e_failed_raze_approved_with_concerns
-timestamp: "2026-05-26T21:58:00Z"
-sprint_number: "ets-29"
-sprint_name: "part2-swecommon-json"
+timestamp: "2026-05-27T01:03:00Z"
+sprint_number: "ets-30"
+sprint_name: "part2-swecommon-text"
 story:
-  id: "S-ETS-29-01"
-  title: "Part 2 SWE Common JSON Encoding declaration-gated read-only subset"
-  file: "epics/stories/s-ets-29-01-part2-swecommon-json-planning.md"
-contract_path: ".harness/contracts/sprint-ets-29.yaml"
+  id: "S-ETS-30-01"
+  title: "Part 2 SWE Common Text Encoding declaration-gated read-only subset"
+  file: "epics/stories/s-ets-30-01-part2-swecommon-text-planning.md"
+contract_path: ".harness/contracts/sprint-ets-30.yaml"
 base_commit:
-  sha: "e397ef7"
-  message: "Reconcile Sprint 29 planning push"
+  sha: "3c68858"
+  message: "Plan Sprint 30 Part 2 SWE Common Text"
 
 implementation_summary: |
-  Sprint 29 Generator implemented the first read-only Part 2 SWE Common JSON
-  Encoding subset using official OGC 23-002 /req/swecommon-json and
-  /conf/swecommon-json identifiers. It exact-gates /conf/swecommon-json, keeps
-  the SWE Common 3.0 /conf/json-encoding-rules prerequisite visible, applies
+  Sprint 30 Generator implemented the first read-only Part 2 SWE Common Text
+  Encoding subset using official OGC 23-002 /req/swecommon-text and
+  /conf/swecommon-text identifiers. It exact-gates /conf/swecommon-text, keeps
+  the SWE Common 3.0 /conf/text-encoding-rules prerequisite visible, applies
   /conf/datastream, /conf/controlstream, and /conf/create-replace-delete
   condition gates, validates available SWE Common schema metadata against
-  bundled Annex A.10 schemas, requires Time/IssueTime mapping evidence from
-  retrieved recordSchema data using canonical definition URIs, guards Observation/Command encoding PASS until
-  parent schema, candidate resource, and validator evidence exist, and treats
-  mediatype-write as a non-mutating exact-application/swe+json API-definition
-  advertisement check scoped to Observation and Command resource endpoints only.
+  bundled Annex A.11 schemas, requires TextEncoding, requires canonical
+  Time/IssueTime mapping evidence from retrieved recordSchema data, guards
+  Observation/Command text encoding PASS until parent schema, candidate
+  resource, and validator evidence exist, and treats mediatype-write as a
+  non-mutating exact-application/swe+text API-definition advertisement check
+  scoped to Observation and Command resource endpoints only.
 
 files_added:
-  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java"
-  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/VerifyPart2SweCommonJsonTests.java"
-  - "ops/test-results/sprint-ets-29-maven-2026-05-26.log"
-  - "ops/test-results/sprint-ets-29-maven-network-failed-2026-05-26.log"
-  - "ops/test-results/sprint-ets-29-maven-central-stalled-2026-05-26.log"
-  - "ops/test-results/sprint-ets-29-generator-georobotix-smoke-failed-2026-05-26.xml"
-  - "ops/test-results/sprint-ets-29-generator-georobotix-smoke-container-failed-2026-05-26.log"
-  - "ops/test-results/sprint-ets-29-focused-postraze-2026-05-26.log"
-  - "ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log"
-  - "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml"
-  - "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log"
-  - "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-console-failed-2026-05-26.log"
-  - ".harness/evaluations/sprint-ets-29-adversarial-implementation.yaml"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/VerifyPart2SweCommonTextTests.java"
+  - "ops/test-results/sprint-ets-30-maven-2026-05-27.log"
+  - "ops/test-results/sprint-ets-30-generator-georobotix-smoke-failed-2026-05-27.xml"
+  - "ops/test-results/sprint-ets-30-generator-georobotix-smoke-container-failed-2026-05-27.log"
+  - "ops/test-results/sprint-ets-30-generator-georobotix-smoke-console-failed-2026-05-27.log"
 
 files_updated:
   - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
   - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
   - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-  - "epics/stories/s-ets-29-01-part2-swecommon-json-planning.md"
+  - "epics/stories/s-ets-30-01-part2-swecommon-text-planning.md"
   - "epics/epic-ets-03-part2-classes.md"
   - "_bmad/traceability.md"
-  - ".harness/contracts/sprint-ets-29.yaml"
+  - ".harness/contracts/sprint-ets-30.yaml"
   - ".harness/handoffs/generator-handoff.yaml"
   - "ops/status.md"
   - "ops/test-results.md"
@@ -55,16 +49,16 @@ files_updated:
   - "ops/known-issues.md"
 
 runtime_tests:
-  group: "part2swecommonjson"
+  group: "part2swecommontext"
   coverage:
-    - "Exact Part 2 /conf/swecommon-json declaration."
-    - "SWE Common 3.0 JSON Encoding Rules prerequisite visibility."
+    - "Exact Part 2 /conf/swecommon-text declaration."
+    - "SWE Common 3.0 Text Encoding Rules prerequisite visibility."
     - "Resource condition gates for /conf/datastream, /conf/controlstream, and /conf/create-replace-delete."
-    - "Read-only application/swe+json content-type checks."
-    - "Annex A.10 bundled Observation Schema and Command Schema validation."
+    - "Read-only application/swe+text content-type checks."
+    - "Annex A.11 bundled Observation Schema and Command Schema metadata validation requiring TextEncoding."
     - "Canonical Time and IssueTime definition evidence from retrieved recordSchema."
     - "Observation and Command encoding guards that SKIP instead of shape-only PASS until validator evidence exists."
-    - "Exact application/swe+json mediatype-write API-definition advertisement checks on Observation and Command resource endpoints without public mutation."
+    - "Exact application/swe+text mediatype-write API-definition advertisement checks on Observation and Command resource endpoints without public mutation."
   helper_regressions: 11
 
 gates:
@@ -72,51 +66,53 @@ gates:
     command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
     result: "BUILD SUCCESS"
   focused_maven:
-    command: "Docker Maven spring-javaformat:apply clean test -Dtest=VerifyPart2SweCommonJsonTests,VerifyTestNGSuiteDependency with /tmp Maven cache"
+    command: "Docker Maven mvn -B test -Dtest=VerifyPart2SweCommonTextTests,VerifyTestNGSuiteDependency with /tmp Maven cache"
     result: "BUILD SUCCESS"
-    surefire: "78 tests / 0 failures / 0 errors / 0 skipped"
+    surefire: "81 tests / 0 failures / 0 errors / 0 skipped"
   full_maven:
     command: "Docker Maven mvn -B clean test with /tmp Maven cache"
     result: "BUILD SUCCESS"
-    surefire: "244 tests / 0 failures / 0 errors / 3 skipped"
-    log: "ops/test-results/sprint-ets-29-maven-postraze-2026-05-26.log"
-    caveat: "Two earlier full-Maven attempts were archived as Maven Central network/reset artifacts, not project-test failures."
+    surefire: "258 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-30-maven-2026-05-27.log"
   georobotix_teamengine_smoke:
-    result: "FAILED_PUBLIC_IUT_SWEJSON_READ_AND_SCHEMA"
-    disposition: "Mandatory public smoke run; not a passing full /conf/swecommon-json closure gate."
-    testng: "186 total / 31 passed / 22 failed / 133 skipped"
+    result: "FAILED_PUBLIC_IUT_SWETEXT_READ_AND_SCHEMA"
+    disposition: "Mandatory public smoke run; not a passing full /conf/swecommon-text closure gate."
+    testng: "196 total / 33 passed / 28 failed / 135 skipped"
     new_group: "2 PASS / 6 FAIL / 2 SKIP"
-    report: "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-failed-2026-05-26.xml"
-    log: "ops/test-results/sprint-ets-29-generator-postraze-georobotix-smoke-container-failed-2026-05-26.log"
-    failure_cause: "GeoRobotix lacks SWE 3.0 /conf/json-encoding-rules, returns HTTP 500 for Observation-side SWE JSON reads, and fails /controlstreams schema validation before Command SWE JSON PASS evidence."
-    no_public_mutation: "no-mutation oracle recognized 83 IUT request logs; explicit grep found 83 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE."
+    report: "ops/test-results/sprint-ets-30-generator-georobotix-smoke-failed-2026-05-27.xml"
+    log: "ops/test-results/sprint-ets-30-generator-georobotix-smoke-container-failed-2026-05-27.log"
+    console: "ops/test-results/sprint-ets-30-generator-georobotix-smoke-console-failed-2026-05-27.log"
+    failure_cause: "GeoRobotix lacks SWE 3.0 /conf/text-encoding-rules, returns HTTP 500 for Observation-side SWE Text reads, and fails /controlstreams schema validation before Command SWE Text PASS evidence."
+    no_public_mutation: "no-mutation oracle recognized 91 IUT request logs; explicit counts found 91 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE."
 
 blockers:
-  - id: "ETS29-E2E-GEOROBOTIX-SWE-PREREQUISITE"
+  - id: "ETS30-E2E-GEOROBOTIX-SWE-PREREQUISITE"
     status: "open_external"
-    summary: "GeoRobotix declares /conf/swecommon-json without exposing SWE 3.0 /conf/json-encoding-rules."
-  - id: "ETS29-E2E-GEOROBOTIX-OBS-HTTP500"
+    summary: "GeoRobotix declares /conf/swecommon-text without exposing SWE 3.0 /conf/text-encoding-rules."
+  - id: "ETS30-E2E-GEOROBOTIX-OBS-HTTP500"
     status: "open_external"
-    summary: "GeoRobotix Observation-side SWE JSON reads return HTTP 500."
-  - id: "ETS29-E2E-GEOROBOTIX-CONTROLSTREAM-SCHEMA"
+    summary: "GeoRobotix Observation-side SWE Text reads return HTTP 500."
+  - id: "ETS30-E2E-GEOROBOTIX-CONTROLSTREAM-SCHEMA"
     status: "open_external_or_spec_interpretation"
     summary: "Command-side checks fail existing /controlstreams collection schema validation before SWE Common Command Schema PASS evidence."
-  - id: "ETS29-FULL-SWEJSON-CLOSURE"
+  - id: "ETS30-FULL-SWETEXT-CLOSURE"
     status: "deferred_scope"
-    summary: "Full positive SWE Common JSON closure remains deferred until a healthy declaring IUT exposes valid Observation Schema, Observation, Command Schema, Command, SWE prerequisite, validator, and mediatype-write evidence."
+    summary: "Full positive SWE Common Text closure remains deferred until a healthy declaring IUT exposes valid Observation Schema, Observation, Command Schema, Command, SWE prerequisite, validator, and mediatype-write evidence."
 
 raze_implementation_review:
   required: true
-  artifact: ".harness/evaluations/sprint-ets-29-adversarial-implementation.yaml"
+  artifact: ".harness/evaluations/sprint-ets-30-adversarial-implementation.yaml"
   status: "APPROVE_WITH_CONCERNS"
-  confidence: 0.94
+  confidence: 0.93
   required_fixes_remaining: []
+  closed_required_gap:
+    - "RAZE-ETS30-IMPL-GAP-001"
 
 commit:
-  status: "pushed"
-  sha: "062d4b7"
-  message: "Implement Sprint 29 Part 2 SWE Common JSON"
-  push: "05c0ee4..062d4b7 main -> main"
+  status: "pending_push"
+  sha: null
+  message: "Implement Sprint 30 Part 2 SWE Common Text"
+  push: null
 
-next_agent: "planner"
-next_action: "Plan REQ-ETS-PART2-011 SWE Common Text or provision a healthy declaring IUT for positive /conf/swecommon-json closure."
+next_agent: "generator"
+next_action: "Commit and push the Sprint 30 Generator change, then update ops with the pushed commit."

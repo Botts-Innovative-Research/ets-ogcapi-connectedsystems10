@@ -90,8 +90,10 @@ raze_review:
     - "Generator still requires runtime tests and a separate implementation Raze review."
 
 commit:
-  status: "pending"
+  status: "pushed"
+  sha: "20a8e18"
   message: "Plan Sprint 31 Part 2 SWE Common Binary"
+  push: "45717a3..20a8e18 main -> main"
 
 next_agent: "generator"
-next_action: "After planning is Raze-reviewed, committed, and pushed, implement the first read-only /conf/swecommon-binary Generator subset from .harness/contracts/sprint-ets-31.yaml."
+next_action: "Implement the first read-only /conf/swecommon-binary Generator subset from .harness/contracts/sprint-ets-31.yaml."

@@ -94,7 +94,7 @@ Plan the first declaration-gated, read-only Generator increment for OGC 23-002 C
 - [x] Planning TeamEngine E2E evidence is captured and documented honestly.
 - [x] Public GeoRobotix mutation check records no POST/PUT/PATCH/DELETE request lines.
 - [x] Raze reviews planning before Generator starts.
-- [ ] Planning-only change is committed and pushed before Generator implementation.
+- [x] Planning-only change is committed and pushed before Generator implementation.
 
 ## Out of Scope
 - Public GeoRobotix mutation.

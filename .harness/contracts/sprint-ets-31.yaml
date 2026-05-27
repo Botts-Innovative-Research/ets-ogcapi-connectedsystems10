@@ -282,5 +282,7 @@ raze_implementation_review:
   concerns:
     - "Post-review bookkeeping and stale fresh-session pointers needed reconciliation; closed after the artifact was written."
 
-generator_must_do:
-  - "Commit/push Generator after user approval or a commit/push instruction."
+generator_completion:
+  commit: "b520b65 Implement Sprint 31 Part 2 SWE Common Binary"
+  push: "75eac75..b520b65 main -> main"
+  next: "Choose the next Part 2 item or a positive IUT path for SWE Binary closure."

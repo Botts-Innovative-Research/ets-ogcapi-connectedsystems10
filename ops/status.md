@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-27T19:25Z
+Last updated: 2026-05-27T19:44Z
 
 ## Fresh-Session Entry Point
 
@@ -108,7 +108,7 @@ Part 2 SWE Common Binary Encoding declaration-gated read-only subset:
 - Public-IUT safety: `scripts/no-mutation-oracle.py` recognized 91 IUT request logs; explicit counts archived at `ops/test-results/sprint-ets-31-plan-georobotix-no-mutation-2026-05-27.txt` show `GET=91`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
 - Raze planning review: `.harness/evaluations/sprint-ets-31-plan-adversarial.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.93. Required low bookkeeping fix `RAZE-ETS31-PLAN-CONCERN-001` was closed by post-review reconciliation.
 - Commit/push: Sprint 31 planning pushed as `20a8e18 Plan Sprint 31 Part 2 SWE Common Binary` (`45717a3..20a8e18 main -> main`).
-- Next action completed: Sprint 31 Generator implementation has been verified in the worktree; commit/push and Raze implementation review remain before final closure.
+- Next action completed: Sprint 31 Generator implementation, mandatory verification, Raze implementation review, and push are complete.
 
 ## Sprint ets-31 Generator Evidence
 
@@ -128,7 +128,7 @@ Part 2 SWE Common Binary Encoding declaration-gated read-only subset:
 - New SWE Common Binary group outcome: 3 PASS, 6 FAIL, and 2 SKIP. Failures match GeoRobotix's missing SWE Binary prerequisite, Observation-side HTTP 500 state, and reachable ControlStream schema validation failure before Command SWE Binary evidence.
 - Generator public-IUT safety: `scripts/no-mutation-oracle.py` recognized 99 IUT request logs, and explicit counts found 99 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE request lines.
 - Raze implementation review: `.harness/evaluations/sprint-ets-31-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS` confidence 0.91. Required bookkeeping fix `RAZE-ETS31-IMPL-CONCERN-001` was closed by post-review reconciliation; no code-level required fixes were found.
-- Commit/push: pending.
+- Commit/push: Sprint 31 Generator pushed as `b520b65 Implement Sprint 31 Part 2 SWE Common Binary` (`75eac75..b520b65 main -> main`).
 
 ## Sprint ets-29 Generator Evidence
 

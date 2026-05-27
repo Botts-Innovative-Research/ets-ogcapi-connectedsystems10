@@ -114,10 +114,10 @@ raze_implementation_review:
     - "Post-review bookkeeping and stale fresh-session pointers required reconciliation; closed after the artifact was written."
 
 commit:
-  status: "pending"
-  sha: null
-  message: null
-  push: null
+  status: "pushed"
+  sha: "b520b65"
+  message: "Implement Sprint 31 Part 2 SWE Common Binary"
+  push: "75eac75..b520b65 main -> main"
 
-next_agent: "generator"
-next_action: "Commit/push Sprint 31 Generator if requested; otherwise continue from verified uncommitted worktree."
+next_agent: "planner"
+next_action: "Sprint 31 Generator is pushed; choose the next Part 2 item or a positive IUT path for SWE Binary closure."

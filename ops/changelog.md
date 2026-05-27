@@ -17,7 +17,8 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Reconciled OpenSpec, story, contract, traceability, epic ETS-03, ops status, test-results, known issues, and generator handoff for the verified Generator evidence.
 - Raze implementation review wrote `.harness/evaluations/sprint-ets-31-adversarial-implementation.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence 0.91, no code-level required fixes, and one required bookkeeping fix.
 - Closed `RAZE-ETS31-IMPL-CONCERN-001` by reconciling the Raze artifact into the contract, story, handoff, traceability header, ops status, test-results, changelog, and fresh-session pointers.
-- Commit/push remains pending.
+- Pushed Sprint 31 Generator commit `b520b65 Implement Sprint 31 Part 2 SWE Common Binary` to `origin/main` (`75eac75..b520b65 main -> main`).
+- Reconciled post-push handoff and ops bookkeeping so Sprint 31 Generator status no longer points future sessions at an already-completed commit/push step.
 
 ---
 

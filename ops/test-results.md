@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-27T19:25Z
+Last updated: 2026-05-27T19:44Z
 
 ## Current Sprint Evidence
 
@@ -69,6 +69,7 @@ Sprint ets-31 Part 2 SWE Common Binary Encoding Generator:
   - Code-level required fixes: none.
 - Commit/push:
   - Planning commit `20a8e18 Plan Sprint 31 Part 2 SWE Common Binary` was pushed over SSH on 2026-05-27 (`45717a3..20a8e18 main -> main`).
+  - Generator commit `b520b65 Implement Sprint 31 Part 2 SWE Common Binary` was pushed over SSH on 2026-05-27 (`75eac75..b520b65 main -> main`).
 
 Sprint ets-30 Part 2 SWE Common Text Encoding Generator:
 

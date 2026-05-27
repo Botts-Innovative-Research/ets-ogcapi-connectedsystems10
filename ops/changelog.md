@@ -2,6 +2,15 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-05-27T19:50Z — Sprint 31 next-step triage and status correction
+
+**Triggered by user instruction**: "What's next?"
+
+- Corrected stale top-level `ops/status.md` Sprint 31 push state after detailed Sprint 31 evidence had already been reconciled.
+- Next recommended work item is spec-first planning for `REQ-ETS-PART2-013` / `S-ETS-03-14`, the Observation Binding cross-class closure, unless the priority shifts to provisioning a healthier positive IUT for existing JSON/SWE encoding closure.
+
+---
+
 ## 2026-05-27T19:25Z — Sprint 31 Part 2 SWE Common Binary Encoding Generator verification
 
 **Triggered by user instruction**: "Continue with verify the SWE Binary implementation"

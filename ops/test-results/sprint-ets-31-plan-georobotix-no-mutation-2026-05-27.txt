@@ -1,0 +1,7 @@
+recognized_iut_request_logs=91
+explicit_method_counts:
+GET=91
+POST=0
+PUT=0
+PATCH=0
+DELETE=0

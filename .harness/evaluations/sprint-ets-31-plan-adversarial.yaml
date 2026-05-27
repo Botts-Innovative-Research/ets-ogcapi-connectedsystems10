@@ -1,0 +1,105 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.93
+reviewer: "Raze / Red Team"
+reviewed_at: "2026-05-27T01:22:28Z"
+scope:
+  story: "S-ETS-31-01"
+  requirement: "REQ-ETS-PART2-012"
+  capability: "Part 2 SWE Common Binary Encoding"
+  review_type: "planning-docs-and-artifacts"
+  docker_teamengine_rerun: false
+  note: "Artifact inspection only; no Docker or TeamEngine rerun was needed."
+reviewed_files:
+  - "AGENTS.md"
+  - "_bmad/agents/adversarial-reviewer.md"
+  - ".harness/contracts/sprint-ets-31.yaml"
+  - ".harness/handoffs/planner-handoff.yaml"
+  - "epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "epics/epic-ets-03-part2-classes.md"
+  - "ops/status.md"
+  - "ops/test-results.md"
+  - "ops/known-issues.md"
+  - "ops/changelog.md"
+  - "ops/test-results/sprint-ets-31-plan-georobotix-swebinary-probes-2026-05-27.txt"
+  - "ops/test-results/sprint-ets-31-plan-georobotix-smoke-failed-2026-05-27.xml"
+  - "ops/test-results/sprint-ets-31-plan-georobotix-smoke-container-failed-2026-05-27.log"
+  - "ops/test-results/sprint-ets-31-plan-georobotix-smoke-console-failed-2026-05-27.log"
+  - "ops/test-results/sprint-ets-31-plan-georobotix-no-mutation-2026-05-27.txt"
+summary:
+  substantive_result: "No false PASS, OGC identifier, E2E-evidence, mutation-safety, or spec/story/traceability disagreement blocker found in the Sprint 31 planning content."
+  blocking_result: "Do not report planning complete until the post-review bookkeeping fields that intentionally say Raze is pending are reconciled with this report."
+findings:
+  - id: "RAZE-ETS31-PLAN-CONCERN-001"
+    severity: "LOW"
+    status: "OPEN"
+    title: "Post-review bookkeeping still says Raze is pending."
+    evidence:
+      - ".harness/contracts/sprint-ets-31.yaml:70 has raze_planning_review_completed: false."
+      - ".harness/contracts/sprint-ets-31.yaml:179-181 records raze_planning_review.status as PENDING."
+      - ".harness/handoffs/planner-handoff.yaml:80-82 records the review artifact but verdict PENDING."
+      - "epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md:86 and :96 leave the Raze review pending checkbox open."
+      - "ops/status.md:47 and :109 plus ops/test-results.md:44-46 report Raze pending."
+      - "ops/changelog.md:22 says Raze planning review is pending."
+    impact: "If committed as-is after this report, Sprint 31 planning docs would disagree with the existence and verdict of this review."
+    required_fix: "After this YAML is written, reconcile the contract, story DoD, handoff, ops status, ops test-results, changelog, and any related epic/status wording to record this APPROVE_WITH_CONCERNS verdict before claiming planning completion or starting Generator work."
+evidence:
+  ogc_23_002_clause_16_4_mapping:
+    verdict: "APPROVE"
+    source_checked: "https://docs.ogc.org/is/23-002/23-002.html"
+    source_evidence:
+      - "OGC HTML lines 3650-3657 identify /req/swecommon-binary, /conf/swecommon-binary, the SWE 3.0 binary-encoding-rules prerequisite, and Requirements 123-126."
+      - "OGC HTML lines 3674-3683 show the approved-media inconsistency note and normative application/swe+binary read requirement."
+      - "OGC HTML lines 3712-3715 and 3743-3746 require observationSchemaSwe.json/commandSchemaSwe.json with BinaryEncoding."
+      - "OGC HTML lines 6067-6073 identify /conf/swecommon-binary and the conformance prerequisite /conf/binary-encoding-rules."
+    local_evidence:
+      - ".harness/contracts/sprint-ets-31.yaml:76-95 records the correct requirement/conformance identifiers, media type, prerequisite, Requirements 123-130, and source inconsistency treatment."
+      - "epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md:12-38 records the same mapping and explicitly blocks TextEncoding/text-validator false PASS evidence."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:831-891 specifies exact /conf/swecommon-binary gating, application/swe+binary media handling, BinaryEncoding schema evidence, and source typo honesty."
+  false_pass_controls:
+    verdict: "APPROVE"
+    evidence:
+      - ".harness/contracts/sprint-ets-31.yaml:139-161 blocks PASS from declaration alone, sibling classes, vendor preliminary media, JSON/Text/CSV fallback, format lists, empty bodies, missing candidates, OPTIONS-only evidence, and public mutation."
+      - "epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md:60-73 gives Generator requirements for exact declaration, prerequisite visibility, resource gates, exact content type, BinaryEncoding, candidate-resource evidence, and non-mutating write checks."
+      - "ops/test-results.md:13-14 and :35-43 document the TeamEngine run as failed public evidence, not an accepted zero-failure E2E gate."
+      - "_bmad/traceability.md:74 records the Sprint 31 row as PLANNED; PUBLIC GEOROBOTIX E2E FAILED, not implemented or passing."
+  georobotix_probe_evidence:
+    verdict: "APPROVE"
+    evidence:
+      - "ops/test-results/sprint-ets-31-plan-georobotix-swebinary-probes-2026-05-27.txt:2-40 shows /conformance declares /conf/swecommon-binary and related classes."
+      - "ops/test-results/sprint-ets-31-plan-georobotix-swebinary-probes-2026-05-27.txt:53-62 shows DataStream and Observation binary reads return HTTP 500 with no body."
+      - "ops/test-results/sprint-ets-31-plan-georobotix-swebinary-probes-2026-05-27.txt:68-121 shows the selected ControlStream advertises application/swe+binary in formats."
+      - "ops/test-results/sprint-ets-31-plan-georobotix-swebinary-probes-2026-05-27.txt:133-139 shows cmdFormat=application/swe+binary returns commandFormat=application/json and parametersSchema, not BinaryEncoding evidence."
+  teamengine_artifacts:
+    verdict: "APPROVE"
+    evidence:
+      - "ops/test-results/sprint-ets-31-plan-georobotix-smoke-failed-2026-05-27.xml:1 reports total=196, passed=33, failed=28, skipped=135."
+      - "ops/test-results/sprint-ets-31-plan-georobotix-smoke-failed-2026-05-27.xml:189-200 includes only the existing part2swecommontext group; no Sprint 31 binary runtime group is present."
+      - "ops/test-results/sprint-ets-31-plan-georobotix-smoke-failed-2026-05-27.xml:262 identifies the suite as ending at Part2SweCommonText, matching the planning-only status."
+      - "ops/test-results.md:12-14 and :41-43 correctly state that Generator code is pending, no runtime suite was added, the public smoke failed, and no accepted zero-failure Sprint 31 E2E gate exists yet."
+  mutation_safety:
+    verdict: "APPROVE"
+    evidence:
+      - "ops/test-results/sprint-ets-31-plan-georobotix-no-mutation-2026-05-27.txt:1-7 records recognized_iut_request_logs=91, GET=91, POST=0, PUT=0, PATCH=0, DELETE=0."
+      - "ops/test-results.md:42 and epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md:85 quote the same no-mutation totals."
+  spec_story_traceability_ops_alignment:
+    verdict: "APPROVE_WITH_BOOKKEEPING_CONCERN"
+    evidence:
+      - "OpenSpec implementation status keeps REQ-ETS-PART2-012 specified/planned with Generator pending and failed public smoke evidence."
+      - "_bmad/traceability.md:74 maps FR-ETS-42 to REQ-ETS-PART2-012, S-ETS-31-01, ets-31, PLANNED; PUBLIC GEOROBOTIX E2E FAILED."
+      - "epics/epic-ets-03-part2-classes.md:39 and :63 identify S-ETS-31-01 as planned with failed planning E2E and no-mutation evidence."
+      - "ops/known-issues.md:24 says Sprint 31 is PLANNED only and must not be read as full /conf/swecommon-binary closure."
+      - "The only disagreement is expected post-review bookkeeping captured in RAZE-ETS31-PLAN-CONCERN-001."
+worktree:
+  verdict: "APPROVE_WITH_CONCERN"
+  status_summary: "Dirty worktree contains Sprint 31 planning docs/artifacts and this review artifact only; no Java/runtime implementation files are modified."
+  evidence:
+    - "git status before this report listed modified planning/ops docs plus new sprint-ets-31 contract, story, smoke/probe/no-mutation artifacts."
+    - "git diff --stat over tracked files showed planning/ops docs only; no src/main, src/test, pom.xml, testng.xml, scripts, or Docker files changed."
+required_fixes:
+  - id: "RAZE-ETS31-PLAN-CONCERN-001"
+    description: "Reconcile all Raze-pending fields and close the story/contract/ops bookkeeping before reporting planning complete or beginning Generator work."
+concerns:
+  - "The public GeoRobotix smoke remains failed, by documentation design. Do not convert this to a PASS claim; it is only mandatory failed-public-IUT evidence for the planning change."
+  - "The Generator must still supply runtime tests and a separate implementation Raze review before any SWE Common Binary implementation status is claimed."

@@ -1,0 +1,10 @@
+[smoke-test 01:16:53] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 01:16:53] step 2/8 — docker build ets-ogcapi-connectedsystems10:smoke (BuildKit 1)
+[smoke-test 01:17:25] step 3/8 — docker run on host port 8082
+[smoke-test 01:17:26] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 01:17:31]   healthcheck PASS at 01:17:31
+[smoke-test 01:17:31] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 01:17:31]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'ogcapi-connectedsystems10')
+[smoke-test 01:17:31] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=https://api.georobotix.io/ogc/t18/api
+[smoke-test 01:17:42] step 7/8 — validating TestNG report → /tmp/sprint-ets-31-swebinary-plan-georobotix-results/s-ets-01-03-teamengine-smoke-2026-05-27.xml
+[smoke-test 01:17:42]   TestNG: total=196 passed=33 failed=28 skipped=135

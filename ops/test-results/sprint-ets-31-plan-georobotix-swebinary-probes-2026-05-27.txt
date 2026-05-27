@@ -1,0 +1,260 @@
+
+## GET /conformance
+status=200
+content-type=auto
+bytes=2565
+{
+  "conformsTo": [
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core",
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/html",
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/json",
+    "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/oas30",
+    "http://www.opengis.net/spec/ogcapi-common-2/0.0/conf/collections",
+    "http://www.opengis.net/spec/ogcapi-common-2/0.0/conf/html",
+    "http://www.opengis.net/spec/ogcapi-common-2/0.0/conf/json",
+    "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core",
+    "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/geojson",
+    "http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/html",
+    "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-3/1.0/conf/websocket",
+    "http://www.opengis.net/spec/ogcapi-connectedsystems-3/1.0/conf/mqtt"
+  ]
+}
+
+## GET /datastreams?limit=1 Accept application/json
+status=500
+content-type=application/json
+bytes=57
+{
+  "status": 500,
+  "message": "Internal server error"
+}
+
+## GET /datastreams?limit=1 Accept application/swe+binary
+status=500
+content-type=<none>
+bytes=0
+
+
+## GET /observations?limit=1 Accept application/swe+binary
+status=500
+content-type=<none>
+bytes=0
+
+
+## selected_controlstream_id
+0m4qpft9sdag
+
+## GET /controlstreams?limit=1 Accept application/json
+status=200
+content-type=application/json
+bytes=1645
+{
+  "items": [
+    {
+      "id": "0m4qpft9sdag",
+      "name": "Simulated UAV - Mission Definition",
+      "system@id": "0m5ojudgr570",
+      "system@link": {
+        "href": "https://api.georobotix.io/ogc/t18/api/systems/0m5ojudgr570?f=json",
+        "uid": "urn:osh:system:simuav:0123456879",
+        "type": "application/geo+json"
+      },
+      "inputName": "mission_planning",
+      "validTime": [
+        "2022-01-16T20:44:00Z",
+        "now"
+      ],
+      "controlledProperties": [
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Identifier"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/ArraySize"
+        },
+        {
+          "label": "Vehicle Commands"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+          "label": "TakeOff Height"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Waypoint location"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/SpeedOverGround",
+          "label": "Travel Velocity"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Duration",
+          "label": "Loiter Duration"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "next",
+      "href": "https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1&offset=1",
+      "type": "auto"
+    }
+  ]
+}
+
+## GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+binary
+status=200
+content-type=auto
+bytes=4557
+{
+  "commandFormat": "application/json",
+  "parametersSchema": {
+    "type": "DataRecord",
+    "name": "mission_planning",
+    "label": "Mission Definition",
+    "fields": [
+      {
+        "type": "Text",
+        "name": "id",
+        "definition": "http://sensorml.com/ont/swe/property/Identifier"
+      },
+      {
+        "type": "Count",
+        "name": "numItems",
+        "definition": "http://sensorml.com/ont/swe/property/ArraySize",
+        "id": "NUM_ITEMS"
+      },
+      {
+        "type": "DataArray",
+        "name": "missionItems",
+        "elementCount": {
+          "href": "#NUM_ITEMS"
+        },
+        "elementType": {
+          "type": "DataChoice",
+          "name": "item",
+          "label": "Vehicle Commands",
+          "items": [
+            {
+              "type": "DataRecord",
+              "name": "AUTO_TAKEOFF",
+              "definition": "urn:x-ogc:uxs:messages:AutoTakeOffCommand",
+              "label": "Auto TakeOff",
+              "description": "This command indicates that the operator has requested the UAV to perform auto take-off as defined by the vehicle manufacturer.",
+              "fields": [
+                {
+                  "type": "Quantity",
+                  "name": "height",
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+                  "label": "TakeOff Height",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "DataRecord",
+              "name": "WAYPOINT",
+              "definition": "urn:x-ogc:uxs:messages:WaypointCommand",
+              "label": "Go To Waypoint",
+              "description": "The waypoint command requests the vehicle to go to a specified waypoint with a desired travel velocity",
+              "fields": [
+                {
+                  "type": "Vector",
+                  "name": "position",
+                  "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+                  "label": "Waypoint location",
+                  "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+                  "coordinates": [
+                    {
+                      "type": "Quantity",
+                      "name": "lat",
+                      "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                      "label": "Geodetic Latitude",
+                      "axisID": "Lat",
+                      "uom": {
+                        "code": "deg"
+                      }
+                    },
+                    {
+                      "type": "Quantity",
+                      "name": "lon",
+                      "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                      "label": "Longitude",
+                      "axisID": "Lon",
+                      "uom": {
+                        "code": "deg"
+                      }
+                    },
+                    {
+                      "type": "Quantity",
+                      "name": "alt",
+                      "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                      "label": "Ellipsoidal Height",
+                      "description": "Altitude above WGS84 ellipsoid",
+                      "axisID": "h",
+                      "uom": {
+                        "code": "m"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Quantity",
+                  "name": "velocity",
+                  "definition": "http://sensorml.com/ont/swe/property/SpeedOverGround",
+                  "label": "Travel Velocity",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "DataRecord",
+              "name": "LOITER",
+              "definition": "urn:x-ogc:uxs:messages:LoiterComman
+[truncated after 4000 bytes]
+
+## GET /controlstreams/0m4qpft9sdag/commands?limit=1 Accept application/swe+binary
+status=200
+content-type=application/json
+bytes=17
+{
+  "items": []
+}
+
+## GET /commands?limit=1 Accept application/swe+binary
+status=400
+content-type=<none>
+bytes=0
+

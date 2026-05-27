@@ -1,8 +1,51 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-27T01:05Z
+Last updated: 2026-05-27T01:17Z
 
 ## Current Sprint Evidence
+
+Sprint ets-31 Part 2 SWE Common Binary Encoding Planning:
+
+- Status:
+  - Story: `epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-31.yaml`
+  - Generator code is pending; no runtime suite was added in planning.
+  - TeamEngine planning E2E against GeoRobotix is captured as a failed public check: `196 total / 33 passed / 28 failed / 135 skipped`.
+  - No accepted zero-failure Sprint 31 E2E gate exists yet.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, Clause 16.4 "Requirements Class SWE Common Binary Encoding" and Annex A.12.
+  - Requirements class identifier: `/req/swecommon-binary`.
+  - Conformance class identifier: `/conf/swecommon-binary`.
+  - Prerequisite: SWE Common 3.0 Binary Encoding Rules.
+  - Media type: exact `application/swe+binary`.
+  - Selected requirement set: Requirements 123-130, `/req/swecommon-binary/mediatype-read`, `/req/swecommon-binary/mediatype-write`, `/req/swecommon-binary/obsschema-schema`, `/req/swecommon-binary/obsschema-mapping`, `/req/swecommon-binary/observation-encoding`, `/req/swecommon-binary/cmdschema-schema`, `/req/swecommon-binary/cmdschema-mapping`, and `/req/swecommon-binary/command-encoding`.
+  - Resource condition gates: Observation-side assertions require `/conf/datastream`; Command-side assertions require `/conf/controlstream`; mediatype-write requires `/conf/create-replace-delete` and non-mutating API-definition evidence.
+  - Source inconsistencies: Clause 16.4's media-type note says "SWE Common Text encoding" while discussing binary media, and Annex A.127/A.130 mention Text encoding rules for binary Observation/Command validation. Generator must not use `TextEncoding`, text validators, or `application/swe+text` as SWE Common Binary PASS evidence.
+- GeoRobotix planning probes:
+  - Raw transcript: `ops/test-results/sprint-ets-31-plan-georobotix-swebinary-probes-2026-05-27.txt`.
+  - `/conformance`: declares Part 2 `/conf/swecommon-binary`, `/conf/swecommon-text`, `/conf/swecommon-json`, `/conf/datastream`, `/conf/controlstream`, `/conf/create-replace-delete`, and `/conf/json`.
+  - `/conformance`: does not declare SWE 3.0 `/conf/binary-encoding-rules`, `/conf/text-encoding-rules`, or `/conf/json-encoding-rules`, Part 2 `/conf/api-common`, `/conf/update`, or `/conf/advanced-filtering`.
+  - `GET /datastreams?limit=1` with `Accept: application/json`: HTTP 500 `application/json`.
+  - `GET /datastreams?limit=1` with `Accept: application/swe+binary`: HTTP 500 with no body.
+  - `GET /observations?limit=1` with `Accept: application/swe+binary`: HTTP 500 with no body.
+  - `GET /controlstreams?limit=1`: HTTP 200 `application/json`, first ID `0m4qpft9sdag`, with formats including `application/swe+binary`.
+  - `GET /controlstreams/0m4qpft9sdag/schema?cmdFormat=application/swe+binary`: HTTP 200, but the body reported `commandFormat=application/json` and `parametersSchema`, not `commandFormat=application/swe+binary`, `recordSchema`, and `BinaryEncoding`.
+  - `GET /controlstreams/0m4qpft9sdag/commands?limit=1` with `Accept: application/swe+binary`: HTTP 200 `application/json` with empty `items`.
+  - `GET /commands?limit=1` with `Accept: application/swe+binary`: HTTP 400.
+- Planning TeamEngine E2E smoke:
+  - Command: `SMOKE_CONTAINER_NAME=ets-csapi-s31-swebinary-plan-georobotix SMOKE_OUTPUT_DIR=/tmp/sprint-ets-31-swebinary-plan-georobotix-results bash scripts/smoke-test.sh`.
+  - Result: FAILED, `196 total / 33 passed / 28 failed / 135 skipped`.
+  - Report: `ops/test-results/sprint-ets-31-plan-georobotix-smoke-failed-2026-05-27.xml`.
+  - Container log: `ops/test-results/sprint-ets-31-plan-georobotix-smoke-container-failed-2026-05-27.log`.
+  - Console log: `ops/test-results/sprint-ets-31-plan-georobotix-smoke-console-failed-2026-05-27.log`.
+  - Failure cause: known public-IUT read-path and schema-validation failures; no Sprint 31 SWE Common Binary runtime tests exist yet.
+  - Public-IUT safety check: `scripts/no-mutation-oracle.py` recognized 91 IUT request logs; explicit counts are archived at `ops/test-results/sprint-ets-31-plan-georobotix-no-mutation-2026-05-27.txt` as `GET=91`, `POST=0`, `PUT=0`, `PATCH=0`, `DELETE=0`.
+  - Disposition: mandatory public smoke run, failed external/public-IUT evidence, not an accepted zero-failure E2E gate.
+- Raze planning review:
+  - Artifact: `.harness/evaluations/sprint-ets-31-plan-adversarial.yaml`.
+  - Verdict: `APPROVE_WITH_CONCERNS`, confidence 0.93.
+  - Required fix: `RAZE-ETS31-PLAN-CONCERN-001`, a low post-review bookkeeping reconciliation; closed in this turn by updating the contract, story, handoff, ops status, test-results, changelog, and epic/status wording.
+  - Remaining concerns: public GeoRobotix smoke remains failed evidence only, and Generator still requires runtime tests plus a separate implementation Raze review.
 
 Sprint ets-30 Part 2 SWE Common Text Encoding Generator:
 

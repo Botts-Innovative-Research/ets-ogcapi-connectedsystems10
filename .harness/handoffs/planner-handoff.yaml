@@ -1,6 +1,7 @@
 agent: planner
 status: specified_planned_raze_approved
 timestamp: "2026-06-01T23:31:12Z"
+pushed_planning_commit: "f2d2ab8 Plan Sprint 32 local OSH primary E2E"
 sprint_number: "ets-32"
 sprint_name: "part2-observation-command-binding-local-osh"
 contract_path: ".harness/contracts/sprint-ets-32.yaml"

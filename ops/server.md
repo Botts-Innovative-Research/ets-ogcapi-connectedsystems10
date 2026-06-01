@@ -1,6 +1,6 @@
 # server.md — operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-05-06 — Local OpenSensorHub mutable-IUT full-health fixture.
+> Last updated: 2026-06-01 — Sprint 32 local OSH primary development E2E target.
 
 ## Schema provenance
 
@@ -60,8 +60,10 @@ Pin recorded in `pom.xml` `<docker.teamengine.version>` property.
 
 The repo-root `Dockerfile` + `docker-compose.yml` + `scripts/smoke-test.sh`
 build a TeamEngine 5.6.1 container with this ETS preinstalled and run the
-Core suite against the GeoRobotix demo IUT
-(`https://api.georobotix.io/ogc/t18/api`).
+suite against the configured IUT. As of Sprint 32, the development default is
+the self-provisioned local OSH target on Docker network `field-hub_default`.
+GeoRobotix (`https://api.georobotix.io/ogc/t18/api`) is available only as an
+explicit advisory interoperability probe with `SMOKE_TARGET=georobotix`.
 
 ### Spec drift documented
 
@@ -143,6 +145,9 @@ docker compose up --build
 ### How to invoke the smoke test
 
 ```
+SMOKE_DOCKER_NETWORK=field-hub_default \
+SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
+SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
 bash scripts/smoke-test.sh
 ```
 
@@ -150,6 +155,14 @@ The script tries host port 8081 first, falls back to 8082 if 8081 is
 busy. Override with `SMOKE_PORT=8083 bash scripts/smoke-test.sh`. Reports
 land at `ops/test-results/s-ets-01-03-teamengine-smoke-<DATE>.xml` and
 `s-ets-01-03-teamengine-container-<DATE>.log`.
+
+For an advisory public interoperability probe only:
+
+```
+SMOKE_TARGET=georobotix \
+SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-georobotix-advisory-results \
+bash scripts/smoke-test.sh
+```
 
 ### Dev-environment caveat: port 8081 collision
 

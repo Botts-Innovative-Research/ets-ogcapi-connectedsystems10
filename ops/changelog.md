@@ -2,6 +2,27 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-01T23:16Z — Sprint 32 local OSH primary E2E and Observation/Command binding planning
+
+**Triggered by user instruction**: "continue sprint 32 spec-first planning"
+
+- Continued the interrupted Sprint 32 planning turn that began from the user's instruction to abandon GeoRobotix's public instance as the default development test target and use local OSH as the primary development IUT.
+- Added `.harness/contracts/sprint-ets-32.yaml` and `epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md`.
+- Specified `REQ-ETS-PART2-013` as an internal Observation/Command binding cross-class closure, not an OGC `/conf/observation-binding` conformance class.
+- Added `REQ-ETS-TEAMENGINE-006` for local OSH as the primary development E2E target and reconciled PRD, OpenSpec, traceability, epic ETS-03, architecture, `AGENTS.md`, and `ops/e2e-test-plan.md`.
+- Updated `scripts/smoke-test.sh` so `SMOKE_TARGET=local-osh` is the default and GeoRobotix is explicit advisory-only via `SMOKE_TARGET=georobotix`.
+- Verified official OGC 23-002 HTML: Part 2 defines DataStream/Observation and ControlStream/Command relationships but no standalone `/conf/observation-binding` class.
+- Captured authenticated local OSH planning probes in `ops/test-results/sprint-ets-32-plan-local-osh-probes-2026-06-01.txt`; local OSH declares relevant Part 2 classes but `/datastreams`, `/observations`, and `/controlstreams` are empty.
+- Ran mandatory local OSH TeamEngine planning smoke: PASS, `206 total / 65 passed / 0 failed / 141 skipped`.
+- Archived local OSH planning smoke artifacts as `ops/test-results/sprint-ets-32-plan-local-osh-smoke-2026-06-01.xml`, `ops/test-results/sprint-ets-32-plan-local-osh-container-2026-06-01.log`, and `ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt`.
+- Verified read-only local OSH no-mutation evidence: `recognized_iut_request_logs=132`, `GET=130`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, `DELETE=0`.
+- Raze planning review wrote `.harness/evaluations/sprint-ets-32-plan-adversarial.yaml` with initial `GAPS_FOUND`, confidence 0.90, for two documentation/evidence hygiene gaps.
+- Closed `RAZE-ETS32-PLAN-GAP-001` by adding non-secret `SMOKE_AUTH_CREDENTIAL="$SMOKE_AUTH_CREDENTIAL"` placeholders to primary local OSH E2E command snippets in `AGENTS.md` and `ops/e2e-test-plan.md`.
+- Closed `RAZE-ETS32-PLAN-GAP-002` by removing superseded untracked 2026-05-27 Sprint 32 duplicate artifacts, leaving only canonical 2026-06-01 local OSH evidence.
+- Focused Raze recheck updated the final verdict to `APPROVE`, confidence 0.94, with no required fixes remaining.
+
+---
+
 ## 2026-05-27T19:50Z — Sprint 31 next-step triage and status correction
 
 **Triggered by user instruction**: "What's next?"

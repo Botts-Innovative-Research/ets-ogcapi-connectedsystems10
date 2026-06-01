@@ -3,7 +3,7 @@
 #
 # REQ-ETS-TEAMENGINE-005, SCENARIO-ETS-CORE-SMOKE-001:
 #   Build the Docker image, launch the container, wait for healthcheck, run
-#   the CS API Core suite against the GeoRobotix demo IUT, archive the TestNG
+#   the CS API suite against the configured IUT, archive the TestNG
 #   XML report + container log to ops/test-results/, and exit 0 only when:
 #     - the TestNG report is non-empty (total > 0)
 #     - the report has zero failed/error tests (every @Test PASS or SKIP)
@@ -15,6 +15,11 @@
 # Idempotent: every invocation tears down its own container before starting
 # (container name `ets-csapi-smoke`), and stages a fresh report. Re-running
 # back-to-back leaves clean state.
+#
+# Target handling: local self-provisioned OpenSensorHub is the primary
+# development target as of Sprint 32. GeoRobotix remains available only as an
+# explicit advisory interoperability target via SMOKE_TARGET=georobotix or a
+# direct SMOKE_IUT_URL override.
 #
 # Port handling: prefers host port 8081 (canonical, per REQ-ETS-TEAMENGINE-004
 # + docker-compose.yml). If 8081 is busy (the WSL2 dev box ships a
@@ -39,7 +44,28 @@ cd "$REPO_ROOT"
 
 CONTAINER_NAME="${SMOKE_CONTAINER_NAME:-ets-csapi-smoke}"
 IMAGE_TAG="${SMOKE_IMAGE_TAG:-ets-ogcapi-connectedsystems10:smoke}"
-IUT_URL="${SMOKE_IUT_URL:-https://api.georobotix.io/ogc/t18/api}"
+SMOKE_TARGET="${SMOKE_TARGET:-local-osh}"
+case "$SMOKE_TARGET" in
+  local-osh)
+    DEFAULT_IUT_URL="http://field-hub-osh-1:8081/sensorhub/api"
+    SMOKE_DOCKER_NETWORK="${SMOKE_DOCKER_NETWORK:-field-hub_default}"
+    ;;
+  georobotix)
+    DEFAULT_IUT_URL="https://api.georobotix.io/ogc/t18/api"
+    ;;
+  custom)
+    DEFAULT_IUT_URL=""
+    ;;
+  *)
+    echo "[smoke-test FATAL] unknown SMOKE_TARGET='${SMOKE_TARGET}' (expected local-osh, georobotix, or custom)" >&2
+    exit 1
+    ;;
+esac
+IUT_URL="${SMOKE_IUT_URL:-$DEFAULT_IUT_URL}"
+if [[ -z "$IUT_URL" ]]; then
+  echo "[smoke-test FATAL] SMOKE_IUT_URL is required when SMOKE_TARGET=custom" >&2
+  exit 1
+fi
 ETS_CODE="ogcapi-connectedsystems10"
 TE_USER="${SMOKE_TE_USER:-ogctest}"
 TE_PASS="${SMOKE_TE_PASS:-ogctest}"
@@ -233,9 +259,9 @@ docker logs "$CONTAINER_NAME" > "$LOG_FILE" 2>&1 || true
 (( total > 0 )) || die "TestNG report total=0 (no @Test methods ran)"
 (( failed == 0 )) || die "TestNG report has failed=$failed (>0); see $REPORT_XML"
 
-# Sprint 12/13: default smoke against GeoRobotix must never issue IUT-bound mutation
-# requests. Explicit dedicated-mutable-IUT runs are the opposite: they are expected to
-# exercise write methods and therefore bypass this no-mutation oracle.
+# Default read-only smoke and advisory public probes must never issue IUT-bound
+# mutation requests. Explicit dedicated-mutable-IUT runs are the opposite: they
+# are expected to exercise write methods and therefore bypass this no-mutation oracle.
 if [[ "${SMOKE_MUTATION_TESTS_ENABLED:-}" == "true" && "${SMOKE_MUTATION_IUT_POLICY:-}" == "dedicated-mutable-iut" ]]; then
   log "  mutation smoke explicitly enabled for dedicated mutable IUT — skipping default no-mutation oracle"
 else

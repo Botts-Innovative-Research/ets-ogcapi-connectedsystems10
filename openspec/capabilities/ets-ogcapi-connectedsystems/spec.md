@@ -493,7 +493,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **AND** does not report full `/conf/create-replace-delete` closure when the prerequisite is missing.
 
 #### SCENARIO-ETS-PART2-007-MUTATION-SAFETY-GATE-001 (CRITICAL)
-**GIVEN** the default smoke target is the public GeoRobotix IUT
+**GIVEN** an advisory public GeoRobotix probe is explicitly selected
 **WHEN** Create/Replace/Delete tests execute
 **THEN** POST, PUT, DELETE, and PATCH requests are blocked before dispatch
 **AND** positive lifecycle checks require `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
@@ -528,7 +528,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** the ETS does not infer lifecycle PASS from sibling declarations, broad OPTIONS headers, or HTTP 400 responses.
 
 #### SCENARIO-ETS-PART2-007-SMOKE-NO-PUBLIC-MUTATION-001 (CRITICAL)
-**GIVEN** TeamEngine smoke runs against GeoRobotix
+**GIVEN** TeamEngine smoke runs an advisory public GeoRobotix probe
 **WHEN** the smoke run completes
 **THEN** request logs contain zero IUT-bound POST, PUT, DELETE, or PATCH requests
 **AND** any Create/Replace/Delete assertions that need mutation SKIP before dispatch.
@@ -567,7 +567,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **AND** missing condition classes produce prerequisite-incomplete SKIP behavior rather than PASS.
 
 #### SCENARIO-ETS-PART2-008-PATCH-MUTATION-SAFETY-GATE-001 (CRITICAL)
-**GIVEN** the default smoke target is the public GeoRobotix IUT
+**GIVEN** an advisory public GeoRobotix probe is explicitly selected
 **WHEN** Update tests execute
 **THEN** PATCH, POST, PUT, and DELETE requests are blocked before dispatch
 **AND** positive lifecycle checks require `mutation-tests-enabled=true` and `mutation-iut-policy=dedicated-mutable-iut`.
@@ -608,7 +608,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** the ETS does not infer Update lifecycle PASS from sibling declarations, broad OPTIONS headers, HTTP 400, HTTP 500, or streaming-only responses.
 
 #### SCENARIO-ETS-PART2-008-SMOKE-NO-PUBLIC-PATCH-001 (CRITICAL)
-**GIVEN** TeamEngine smoke runs against GeoRobotix
+**GIVEN** TeamEngine smoke runs an advisory public GeoRobotix probe
 **WHEN** the smoke run completes
 **THEN** request logs contain zero IUT-bound PATCH, POST, PUT, or DELETE requests
 **AND** any Update assertions that need mutation SKIP before dispatch.
@@ -662,7 +662,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **GIVEN** Requirement 94 applies only when Create/Replace/Delete is implemented
 **WHEN** the ETS checks JSON write-media-type support in the first JSON increment
 **THEN** it uses API definition or explicit operation metadata to verify advertised `application/json` support for CREATE or REPLACE operations
-**AND** default public GeoRobotix smoke does not issue POST, PUT, PATCH, or DELETE
+**AND** advisory public GeoRobotix probes do not issue POST, PUT, PATCH, or DELETE
 **AND** OPTIONS alone is readiness evidence, not mediatype-write PASS.
 
 #### SCENARIO-ETS-PART2-009-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
@@ -733,7 +733,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **GIVEN** Requirement 108 applies only when Create/Replace/Delete is implemented
 **WHEN** the ETS checks SWE Common JSON write-media-type support in the first increment
 **THEN** it uses API definition or explicit operation metadata to verify advertised `application/swe+json` support for CREATE or REPLACE operations on Observation or Command resource endpoints only
-**AND** default public GeoRobotix smoke does not issue POST, PUT, PATCH, or DELETE
+**AND** advisory public GeoRobotix probes do not issue POST, PUT, PATCH, or DELETE
 **AND** OPTIONS, unrelated POST/PUT paths, and subresource paths such as Command status alone are readiness evidence, not mediatype-write PASS.
 
 #### SCENARIO-ETS-PART2-010-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
@@ -804,7 +804,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **GIVEN** Requirement 116 applies only when Create/Replace/Delete is implemented
 **WHEN** the ETS checks SWE Common Text write-media-type support in the first increment
 **THEN** it uses API definition or explicit operation metadata to verify advertised `application/swe+text` support for CREATE or REPLACE operations on Observation or Command resource endpoints only
-**AND** default public GeoRobotix smoke does not issue POST, PUT, PATCH, or DELETE
+**AND** advisory public GeoRobotix probes do not issue POST, PUT, PATCH, or DELETE
 **AND** OPTIONS, unrelated POST/PUT paths, `application/swe+csv`, vendor media types, and subresource paths such as Command status alone are readiness evidence, not mediatype-write PASS.
 
 #### SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001 (CRITICAL)
@@ -881,7 +881,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **GIVEN** Requirement 124 applies only when Create/Replace/Delete is implemented
 **WHEN** the ETS checks SWE Common Binary write-media-type support in the first increment
 **THEN** it uses API definition or explicit operation metadata to verify advertised `application/swe+binary` support for CREATE or REPLACE operations on Observation or Command resource endpoints only
-**AND** default public GeoRobotix smoke does not issue POST, PUT, PATCH, or DELETE
+**AND** advisory public GeoRobotix probes do not issue POST, PUT, PATCH, or DELETE
 **AND** OPTIONS, unrelated POST/PUT paths, `application/vnd.ogc.swe+binary`, JSON/Text/CSV media types, and subresource paths such as Command status alone are readiness evidence, not mediatype-write PASS.
 
 #### SCENARIO-ETS-PART2-012-SOURCE-TYPO-HONESTY-001 (CRITICAL)
@@ -902,12 +902,56 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests
 **AND** any write-media-type or encoding behavior requiring mutation SKIPs or relies on non-mutating API-definition evidence only.
 
-#### REQ-ETS-PART2-013: Observation Binding Cross-Class Closure
-- **Priority**: MUST (eventually); SHALL NOT be scoped into Sprint 1.
-- **Status**: PLACEHOLDER (remaining Part 2 cross-class closure after Sprint 31 SWE Common Binary planning)
-- **Description**: The ETS SHALL verify that Observation and Command bodies derive from their parent DataStream or ControlStream schemas across supported encodings. Per-assertion REQ-* IDs deferred to future sprint planning.
-- **Rationale**: PRD SC-3 requires Part 2 coverage. User gate locks Sprint 1 to Part 1 only.
+#### REQ-ETS-PART2-013: Observation/Command Binding Cross-Class Closure
+- **Priority**: MUST.
+- **Status**: SPECIFIED (Sprint 32 planning, 2026-06-01; local OSH primary E2E target).
+- **Description**: The ETS SHALL verify the project cross-class dynamic-schema closure that Observation bodies derive from their parent DataStream schema and Command-side bodies derive from their parent ControlStream schema across supported encodings. This is an internal closure requirement derived from OGC 23-002 Part 2 resource/schema requirements and v1.0 GH#7; OGC 23-002 does not define a standalone `/conf/observation-binding` conformance class, so the ETS SHALL NOT advertise or require `/conf/observation-binding` unless a future OGC standard defines it.
+- **Scope for first Generator increment**: implement a declaration-gated, local-OSH-backed closure suite that reuses existing Part 2 DataStream, ControlStream, JSON, and SWE Common schema evidence. Positive PASS requires a candidate parent resource, its schema subresource, a candidate child Observation or Command-side resource, and a concrete field/type mapping assertion. Empty collections, missing schema members, unsupported encodings, missing validators, or unavailable endpoints SKIP with precise reasons rather than PASS.
+- **Local OSH seed prerequisite**: because the authenticated local OSH planning probe on 2026-06-01 declared `/conf/datastream`, `/conf/controlstream`, `/conf/json`, and SWE Common encoding classes but returned empty `/datastreams`, `/observations`, and `/controlstreams` collections, Sprint 32 Generator MUST either seed documented dynamic-data fixtures in local OSH or keep all positive binding checks SKIP with exact empty-IUT-state reasons. Seed fixtures must record target, credentials handling without secret values, resource IDs, payload families, cleanup plan, and TeamEngine artifact totals.
+- **Rationale**: PRD SC-3 requires Part 2 coverage and the historical v1.0 GH#7 risk was a schema coupling bug where Observation body generation could drift from the parent DataStream schema. Sprint 32 also follows the user instruction to abandon GeoRobotix's public instance as a development test target and use a self-provisioned local OSH as the primary E2E IUT.
 - **Maps to**: PRD FR-ETS-43, except retired non-standard FR-ETS-35 System History.
+
+#### SCENARIO-ETS-PART2-013-LOCAL-OSH-PRIMARY-IUT-001 (CRITICAL)
+**GIVEN** a user-directed ETS change in Sprint 32 or later
+**WHEN** the change needs TeamEngine E2E verification
+**THEN** the primary development target is the self-provisioned local OSH instance reachable to the TeamEngine container as `http://field-hub-osh-1:8081/sensorhub/api`
+**AND** the sprint evidence records Docker network, credential handling without secret values, seed state, artifacts, exact totals, and whether mutation was enabled.
+
+#### SCENARIO-ETS-PART2-013-GEOROBOTIX-NOT-DEFAULT-001 (CRITICAL)
+**GIVEN** GeoRobotix's public instance has repeated external/public-IUT failures and the user has abandoned it as a development target
+**WHEN** planning, Generator, or gate agents choose an E2E IUT
+**THEN** they SHALL NOT use GeoRobotix as the default or required target
+**AND** any GeoRobotix run is explicitly advisory interoperability evidence only.
+
+#### SCENARIO-ETS-PART2-013-DYNAMIC-SEED-STATE-001 (CRITICAL)
+**GIVEN** local OSH currently declares Part 2 dynamic-data conformance classes but has empty DataStream, Observation, and ControlStream collections
+**WHEN** Generator implements positive Observation/Command binding checks
+**THEN** it SHALL first create or verify documented local dynamic-data seed fixtures, or SKIP positive closure with exact empty-IUT-state reasons
+**AND** it SHALL NOT count declarations or empty collections as binding PASS evidence.
+
+#### SCENARIO-ETS-PART2-013-OBSERVATION-PARENT-SCHEMA-001 (CRITICAL)
+**GIVEN** a candidate DataStream, its schema subresource, and at least one Observation associated with that DataStream
+**WHEN** the ETS evaluates Observation binding
+**THEN** it verifies the Observation result/parameters body against the parent DataStream schema member semantics available for the negotiated encoding
+**AND** it fails mismatched field names, missing required result members, or incompatible primitive types.
+
+#### SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001 (CRITICAL)
+**GIVEN** a candidate ControlStream, its schema subresource, and at least one Command-side resource associated with that ControlStream
+**WHEN** the ETS evaluates Command binding
+**THEN** it verifies Command parameters and any available CommandStatus or CommandResult inline data against the parent ControlStream schema member semantics available for the negotiated encoding
+**AND** it fails mismatched field names, missing required members, or incompatible primitive types.
+
+#### SCENARIO-ETS-PART2-013-ENCODING-HONESTY-001 (NORMAL)
+**GIVEN** JSON, SWE Common JSON, SWE Common Text, or SWE Common Binary evidence is unavailable or lacks a proven validator
+**WHEN** the ETS evaluates cross-class binding for that encoding
+**THEN** it SKIPs that encoding-specific binding check with a precise reason
+**AND** it does not PASS from broad format lists, non-empty payloads, sibling encoding evidence, declaration alone, or hardcoded examples.
+
+#### SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001 (CRITICAL)
+**GIVEN** local OSH is a dedicated mutable development IUT but may be used in read-only or mutation-enabled modes
+**WHEN** planning or Generator seeds dynamic data or runs lifecycle checks
+**THEN** mutation requires explicit dedicated-mutable-IUT opt-in and cleanup documentation
+**AND** read-only planning smoke records zero IUT-bound POST, PUT, PATCH, or DELETE request lines.
 
 ### Sub-deliverable 5 — TeamEngine Integration
 
@@ -940,8 +984,15 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 #### REQ-ETS-TEAMENGINE-005: Smoke Test
 - **Priority**: MUST
 - **Status**: SPECIFIED
-- **Description**: A repository smoke-test script (`scripts/smoke-test.sh`) SHALL: (a) build the Docker image, (b) launch the container, (c) wait for healthcheck, (d) execute the Core suite against `https://api.georobotix.io/ogc/t18/api`, (e) assert the TestNG report is non-empty and contains zero suite-registration errors. Used as Sprint 1's E2E acceptance criterion.
+- **Description**: A repository smoke-test script (`scripts/smoke-test.sh`) SHALL: (a) build the Docker image, (b) launch the container, (c) wait for healthcheck, (d) execute the suite against the configured IUT, (e) assert the TestNG report is non-empty and contains zero suite-registration errors, and (f) enforce the no-mutation oracle unless the run explicitly opts into a dedicated mutable IUT. Sprint 32 changes the primary development target from GeoRobotix to local OSH; GeoRobotix is advisory only.
 - **Maps to**: PRD FR-ETS-54, SC-4.
+
+#### REQ-ETS-TEAMENGINE-006: Local OSH Primary Development Target
+- **Priority**: MUST.
+- **Status**: SPECIFIED (Sprint 32 planning).
+- **Description**: Development and sprint E2E gates SHALL use a self-provisioned local OpenSensorHub IUT as the primary target. The canonical Docker-network URL is `http://field-hub-osh-1:8081/sensorhub/api` on `field-hub_default`. Credentials SHALL be supplied through the environment and never recorded in repository docs, logs, or artifacts. GeoRobotix SHALL NOT be used as the default development target; it may be run only as an explicit advisory public interoperability probe.
+- **Planning evidence**: On 2026-06-01, authenticated local OSH TeamEngine smoke passed `206 total / 65 passed / 0 failed / 141 skipped` with `recognized_iut_request_logs=132` and zero IUT-bound POST/PUT/PATCH/DELETE in read-only mode (`GET=130`, `OPTIONS=2`). Local OSH declared Part 2 `/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/swecommon-json`, `/conf/swecommon-text`, `/conf/swecommon-binary`, `/conf/create-replace-delete`, and `/conf/system-event`, but returned empty DataStream, Observation, and ControlStream collections. Dynamic-data positive closure therefore requires seed fixtures.
+- **Maps to**: PRD FR-ETS-54, SC-4, NFR-ETS-11.
 
 ### Sub-deliverable 6 — Spec-Trap Fixture Port
 
@@ -1208,7 +1259,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-PART1-009-ADVFILTER-SMOKE-NO-REGRESSION-001 (CRITICAL)
 **GIVEN** Sprint 11 adds 6 AdvancedFiltering @Tests
-**WHEN** `scripts/smoke-test.sh` runs from a `/tmp` clone against the default GeoRobotix target
+**WHEN** `scripts/smoke-test.sh` runs from a `/tmp` clone against an explicitly selected advisory GeoRobotix target
 **THEN** failed=0
 **AND** total PASS+SKIP is at least 63 (Sprint 10 baseline 57 plus 6 AdvancedFiltering @Tests)
 **AND** AdvancedFiltering results SKIP-with-reason if `/conf/advanced-filtering` remains absent.
@@ -1380,7 +1431,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-PART1-010-CRD-SMOKE-NO-MUTATION-001 (CRITICAL)
 **GIVEN** Sprint 12 adds the Create/Replace/Delete safety-gated systems subset
-**WHEN** `scripts/smoke-test.sh` runs from a `/tmp` clone against the default GeoRobotix target
+**WHEN** `scripts/smoke-test.sh` runs from a `/tmp` clone against an explicitly selected advisory GeoRobotix target
 **THEN** failed=0
 **AND** total PASS+SKIP increases by the number of new Create/Replace/Delete @Tests
 **AND** default smoke logs contain zero IUT-bound POST, PUT, or DELETE request-log entries from the Create/Replace/Delete suite, using recognized REST Assured `Request: METHOD URI` or adjacent `Request method:` / `Request URI:` entries filtered to the IUT base URL.
@@ -1534,7 +1585,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-PART1-012-GEOJSON-SMOKE-NO-MUTATION-001 (CRITICAL)
 **GIVEN** Sprint 15 adds GeoJSON non-system read-only checks
-**WHEN** `scripts/smoke-test.sh` runs against the default GeoRobotix target
+**WHEN** `scripts/smoke-test.sh` runs against an explicitly selected advisory GeoRobotix target
 **THEN** failed=0
 **AND** the smoke log contains zero IUT-bound POST, PUT, DELETE, or PATCH request-log entries.
 *Maps to*: REQ-ETS-PART1-012.
@@ -1663,7 +1714,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-PART1-013-SENSORML-SMOKE-NO-MUTATION-001 (CRITICAL)
 **GIVEN** Sprint 16 is read-only encoding expansion work
-**WHEN** `scripts/smoke-test.sh` runs against the default GeoRobotix target
+**WHEN** `scripts/smoke-test.sh` runs against an explicitly selected advisory GeoRobotix target
 **THEN** the TeamEngine smoke result has `failed=0`
 **AND** the no-mutation oracle reports zero IUT-bound POST, PUT, DELETE, or PATCH requests.
 *Maps to*: REQ-ETS-PART1-013.
@@ -1683,7 +1734,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-PART1-012-013-RELATION-TYPES-SMOKE-NO-MUTATION-001 (CRITICAL)
 **GIVEN** Sprint 17 is read-only relation-types work
-**WHEN** `scripts/smoke-test.sh` runs against the default GeoRobotix target
+**WHEN** `scripts/smoke-test.sh` runs against an explicitly selected advisory GeoRobotix target
 **THEN** the TeamEngine smoke result has `failed=0`
 **AND** the no-mutation oracle reports zero IUT-bound POST, PUT, DELETE, or PATCH requests.
 *Maps to*: REQ-ETS-PART1-012, REQ-ETS-PART1-013.
@@ -1706,7 +1757,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-PART1-012-013-RELATION-TYPES-BREADTH-NO-MUTATION-001 (CRITICAL)
 **GIVEN** Sprint 18 is read-only relation-types breadth work
-**WHEN** `scripts/smoke-test.sh` runs against the default GeoRobotix target
+**WHEN** `scripts/smoke-test.sh` runs against an explicitly selected advisory GeoRobotix target
 **THEN** the TeamEngine smoke result has `failed=0`
 **AND** the no-mutation oracle reports zero IUT-bound POST, PUT, DELETE, or PATCH requests.
 *Maps to*: REQ-ETS-PART1-012, REQ-ETS-PART1-013.
@@ -2544,7 +2595,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-010 (Part 2 SWE Common JSON Encoding) - partially implemented by Sprint 29 Generator; full positive closure remains dependent on a healthy declaring IUT with SWE 3.0 JSON Encoding Rules visibility, valid DataStream/Observation SWE JSON reads, valid ControlStream/Command SWE Common JSON schema evidence, candidate Observation/Command resources, and non-mutating mediatype-write evidence. Mandatory GeoRobotix Generator smoke failed (`186 total / 31 passed / 22 failed / 133 skipped`) with zero matched public-IUT write requests.
 - REQ-ETS-PART2-011 (Part 2 SWE Common Text Encoding) - partially implemented by Sprint 30 Generator. `Part2SweCommonTextTests` implements exact `/conf/swecommon-text` declaration gating, SWE Common 3.0 `/conf/text-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+text` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `TextEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`258 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`196 total / 33 passed / 28 failed / 135 skipped`); the new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 91`, `POST/PUT/PATCH/DELETE 0`).
 - REQ-ETS-PART2-012 (Part 2 SWE Common Binary Encoding) - partially implemented by Sprint 31 Generator. `Part2SweCommonBinaryTests` implements exact `/conf/swecommon-binary` declaration gating, SWE Common 3.0 `/conf/binary-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+binary` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `BinaryEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`272 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`206 total / 35 passed / 34 failed / 137 skipped`); the new SWE Common Binary group produced 3 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 99`, `POST/PUT/PATCH/DELETE 0`).
-- REQ-ETS-PART2-013 (remaining Part 2 observation-binding cross-class closure) - deferred after Sprint 31 SWE Common Binary planning.
+- REQ-ETS-PART2-013 (Observation/Command binding cross-class closure) - specified by Sprint 32 planning as an internal project closure item, not a standalone OGC `/conf/observation-binding` class. Positive closure uses local OSH as the primary development IUT and requires documented dynamic-data seed fixtures because the authenticated 2026-06-01 local OSH probe declared relevant Part 2 classes but returned empty `/datastreams`, `/observations`, and `/controlstreams` collections. Planning TeamEngine local OSH smoke passed `206 tests / 65 passed / 0 failed / 141 skipped` with no read-only smoke mutation (`GET=130`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`).
+- REQ-ETS-TEAMENGINE-006 (Local OSH Primary Development Target) - specified by Sprint 32 planning. Development E2E uses the self-provisioned local OSH IUT on `field-hub_default`; GeoRobotix is advisory-only and no longer the default development target.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
 - REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.

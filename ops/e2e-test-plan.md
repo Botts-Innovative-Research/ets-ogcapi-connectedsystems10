@@ -1,6 +1,6 @@
 # E2E Test Plan — OGC API Connected Systems ETS
 
-Last updated: 2026-05-22T19:34Z
+Last updated: 2026-06-01T23:16Z
 
 ## Policy
 
@@ -8,25 +8,32 @@ Every user-directed ETS change must be verified end-to-end before reporting done
 
 ## Primary E2E Command
 
-Run from a fresh `/tmp` clone when feasible:
+Run from a fresh `/tmp` clone when feasible. The primary development IUT is the
+self-provisioned local OSH instance on the `field-hub_default` Docker network:
 
 ```bash
-SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/smoke-test.sh
+SMOKE_DOCKER_NETWORK=field-hub_default \
+  SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
+  SMOKE_AUTH_CREDENTIAL="$SMOKE_AUTH_CREDENTIAL" \
+  SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
+  bash scripts/smoke-test.sh
 ```
 
-The smoke script builds the Docker image, starts TeamEngine, verifies suite registration, runs the ETS against GeoRobotix by default, archives XML/log artifacts, and exits non-zero if TestNG reports failures or TeamEngine startup has registration errors.
+The smoke script builds the Docker image, starts TeamEngine, verifies suite registration, runs the ETS against the configured IUT, archives XML/log artifacts, and exits non-zero if TestNG reports failures or TeamEngine startup has registration errors.
 
 ## Accepted IUT Targets
 
-- **Default public target**: GeoRobotix remains the default interoperability smoke target for `scripts/smoke-test.sh`.
-- **Accepted local target**: A self-run local OSH instance is sufficient E2E evidence for a sprint when it is a real running OGC API Connected Systems server, TeamEngine reaches it over Docker networking, seed state and credentials are documented, XML/log artifacts are archived, and exact totals are recorded.
-- **External-target failures**: If the default public target is unhealthy, document the direct probe evidence and treat that run as an advisory external interoperability check, not as a blocker for a sprint whose accepted E2E IUT is local OSH.
+- **Primary development target**: A self-run local OSH instance is the default sprint E2E IUT when it is a real running OGC API Connected Systems server, TeamEngine reaches it over Docker networking, seed state and credentials handling are documented, XML/log artifacts are archived, and exact totals are recorded.
+- **GeoRobotix public instance**: GeoRobotix is no longer a default or required development target. It may be run only as an explicit advisory interoperability probe when useful, and failures must not block local-OSH-backed development work.
+- **Credential handling**: Do not record credential values. Supply local OSH credentials through the environment, typically `SMOKE_AUTH_CREDENTIAL="Basic <base64>"`, derived from the local stack config or a secret store.
+- **Seed-state requirement**: For Part 2 dynamic-data work, record whether local OSH has candidate DataStreams, Observations, ControlStreams, Commands, CommandStatus, CommandResult, and SystemEvents. Empty collections are acceptable planning evidence but cannot be counted as positive conformance closure.
 
 Local OSH command shape:
 
 ```bash
 SMOKE_DOCKER_NETWORK=field-hub_default \
   SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
+  SMOKE_AUTH_CREDENTIAL="$SMOKE_AUTH_CREDENTIAL" \
   SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
   bash scripts/smoke-test.sh
 ```

@@ -45,7 +45,7 @@ shift-left developer pre-flight tool.
 | SC-2 | All 14 OGC 23-001 (Part 1) conformance classes have at least one TestNG test method per ATS assertion | TestNG report shows ≥1 `@Test` per `/conf/<class>/<assertion>` URI from Annex A |
 | SC-3 | All OGC 23-002 (Part 2) conformance classes have at least one TestNG test method per ATS assertion | Same, against Part 2 Annex A. Sprint 25 correction: Annex A does not define `/conf/system-history`; that former placeholder is retired. |
 | SC-4 | ETS loads in TeamEngine 5.6.x (currently 5.6.1) Docker image without registration error | `docker run ogccite/teamengine-production:5.6.1` plus the ETS jar shows the suite in the suites list |
-| SC-5 | Full Part 1 + Part 2 suite passes against GeoRobotix demo server | All `@Test` methods that target conformance classes the IUT declares pass; conformance classes the IUT does not declare are SKIPPED, not FAILED |
+| SC-5 | Full Part 1 + Part 2 suite passes against the primary development IUT | Local OSH is the default development IUT. All `@Test` methods that target conformance classes the IUT declares pass; conformance classes the IUT does not declare are SKIPPED, not FAILED. GeoRobotix public runs are advisory interoperability probes only. |
 | SC-6 | Three independent passing implementations identified | GeoRobotix + OpenSensorHub + `connected-systems-go` participate in beta testing, each producing a TeamEngine pass record |
 | SC-7 | ETS submitted to OGC CITE SC for beta status | CITE SC ticket open; ETS jar published to OSSRH/Maven Central |
 | SC-8 | URI-mapping fidelity preserved from TS web app | Every canonical OGC requirement URI in `csapi_compliance/src/engine/registry/*.ts` has a Java `@Test` method whose `description` attribute or `requirement-uri` annotation contains the same URI |
@@ -129,7 +129,7 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 | `/conf/swecommon-json` | FR-ETS-40 | REQ-ETS-PART2-010 |
 | `/conf/swecommon-text` | FR-ETS-41 | REQ-ETS-PART2-011 |
 | `/conf/swecommon-binary` | FR-ETS-42 | REQ-ETS-PART2-012 |
-| `/conf/observation-binding` (cross-class — Observation body schema derives from Datastream schema, per v1.0 GH#7) | FR-ETS-43 | REQ-ETS-PART2-013 |
+| Observation/Command binding cross-class closure (internal project closure — no standalone OGC `/conf/observation-binding` class in OGC 23-002) | FR-ETS-43 | REQ-ETS-PART2-013 |
 
 | ID | Requirement |
 |----|-------------|
@@ -143,7 +143,7 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 | FR-ETS-51 | A CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` SHALL expose the suite to TeamEngine's CTL UI, accepting `iut-url` (CS API landing page) and optional `auth` parameters. | REQ-ETS-TEAMENGINE-002 |
 | FR-ETS-52 | A `Dockerfile` SHALL produce an image based on `ogccite/teamengine-production:5.6.1` with the ETS jar pre-installed at `/opt/teamengine/webapps/teamengine/WEB-INF/lib/`. | REQ-ETS-TEAMENGINE-003 |
 | FR-ETS-53 | A `docker-compose.yml` snippet SHALL bring up TeamEngine + this ETS at `http://localhost:8081/teamengine/` with no additional host dependencies. | REQ-ETS-TEAMENGINE-004 |
-| FR-ETS-54 | The TeamEngine integration SHALL be verifiable via a smoke test: a single-command Docker invocation against GeoRobotix that produces a non-empty TestNG report and zero suite-registration errors. | REQ-ETS-TEAMENGINE-005 |
+| FR-ETS-54 | The TeamEngine integration SHALL be verifiable via a smoke test: a single-command Docker invocation against the configured IUT that produces a non-empty TestNG report, zero suite-registration errors, and no IUT-bound mutation unless an explicit dedicated-mutable-IUT opt-in is supplied. Local OSH is the primary development target; GeoRobotix is advisory only. | REQ-ETS-TEAMENGINE-005 |
 
 ### Sub-deliverable 5: Spec-Trap Fixture Port (R-PIVOT-06)
 
@@ -179,7 +179,7 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 |----|-------------|--------|
 | NFR-ETS-01 | Build reproducibility | `mvn clean install` produces byte-identical jars from the same commit, ignoring `META-INF/` timestamps. Verified by a CI job that builds twice and diffs. |
 | NFR-ETS-02 | JDK 17 compatibility | Source compiles cleanly with JDK 17; no JDK 11 / JDK 8 fallback. |
-| NFR-ETS-03 | Test pass rate against GeoRobotix | ≥95% of `@Test` methods targeting GeoRobotix-declared conformance classes pass; the residual ≤5% have documented IUT-side issues filed against GeoRobotix. |
+| NFR-ETS-03 | Development E2E pass rate against local OSH | ≥95% of `@Test` methods targeting local-OSH-declared conformance classes pass or SKIP for documented empty-IUT/missing-prerequisite reasons. Advisory GeoRobotix failures are tracked separately and do not block local-OSH-backed development work. |
 | NFR-ETS-04 | TeamEngine load time | The ETS jar registers with TeamEngine 5.6.x (currently 5.6.1) and is selectable in the suite list within 30 seconds of container start. |
 | NFR-ETS-05 | Test execution throughput | The full Part 1 suite completes within 10 minutes against a responsive IUT (parity with v1.0 NFR-03 measured baseline of ~0.1 min). |
 | NFR-ETS-06 | Reproducible across environments | `mvn clean install` succeeds on Linux (Ubuntu 22.04 / Debian 12), macOS (latest), and Windows (via WSL2). CI runs all three. |
@@ -203,7 +203,7 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 | ETS ↔ JSON Schemas | File-system (classpath) | Schemas bundled at `src/main/resources/schemas/` are loaded by Kaizen `openapi-parser` and used for response-body validation. |
 | ETS ↔ OpenAPI YAML | Git submodule OR Maven dependency on a YAML-only artifact | Pinned to a specific OGC `ogcapi-connected-systems` commit SHA. Pin recorded in `pom.xml` and `ops/server.md`. |
 | Build pipeline ↔ Maven Central | OSSRH staging via `mvn deploy` | At beta milestone only; requires GPG signing key and OSSRH credentials in CI secrets. |
-| CI ↔ TeamEngine 5.6.x (currently 5.6.1) Docker | Docker `ogccite/teamengine-production:5.6.1` | Smoke-test job pulls the image, mounts the ETS jar, runs the suite against GeoRobotix, archives the report. |
+| CI ↔ TeamEngine 5.6.x (currently 5.6.1) Docker | Docker `ogccite/teamengine-production:5.6.1` | Smoke-test job pulls the image, mounts the ETS jar, runs the suite against the configured primary IUT, archives the report. Development default is local OSH; GeoRobotix is advisory only. |
 
 ## OpenSpec Capability Mapping
 

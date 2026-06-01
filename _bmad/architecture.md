@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.4 | Status: Living Document | Last reconciled: 2026-05-09 (Sprint 25 Part 2 taxonomy correction appended at §18)
+> Version: 2.0.5 | Status: Living Document | Last reconciled: 2026-06-01 (Sprint 32 local OSH primary E2E target and Observation/Command Binding planning)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -29,7 +29,7 @@ The same jar runs in three contexts:
 |  mvn -P run-test (TestNG    |   |  - reproducible-build double-    |   |    teamengine/                  |
 |    direct against IUT)      |   |    diff job                      |   |  Runs ets-common parent's       |
 |  docker compose up          |   |  - smoke-test.sh inside Docker   |   |    teamengine-production:5.6.1  |
-|    (spins TeamEngine + jar) |   |    against api.georobotix.io     |   |  Loads ETS via Maven Central     |
+|    (spins TeamEngine + jar) |   |    against local OSH             |   |  Loads ETS via Maven Central     |
 |                             |   |  - artifact: TestNG report XML   |   |    artifact (post-beta)         |
 +-----------------------------+   +--------------------------------+   +---------------------------------+
        |                                  |                                       |
@@ -45,7 +45,7 @@ The same jar runs in three contexts:
 **Our CI (GitHub Actions)**:
 - Build job: `mvn -B clean verify` on JDK 17. Matrix: ubuntu-latest, macos-latest, windows-latest (NFR-ETS-06).
 - Reproducible-build job: builds the same commit twice, diffs `target/*.jar` excluding META-INF timestamps. Empty diff is the pass condition (NFR-ETS-01, SCENARIO-ETS-SCAFFOLD-REPRODUCIBLE-001).
-- Smoke-test job: `scripts/smoke-test.sh` builds the Docker image, launches TeamEngine + ETS, runs the Core suite against `https://api.georobotix.io/ogc/t18/api`, archives the TestNG XML report (SCENARIO-ETS-CORE-SMOKE-001).
+- Smoke-test job: `scripts/smoke-test.sh` builds the Docker image, launches TeamEngine + ETS, runs the suite against the configured IUT, and archives the TestNG XML report. Sprint 32 changes the development default to a self-provisioned local OSH IUT on Docker network `field-hub_default`; GeoRobotix is advisory-only.
 - Jenkinsfile is checked in but not wired to a live Jenkins (planner-handoff resolved-question CI-CD-TOPOLOGY).
 
 **OGC validator (production)** — post-beta milestone only:

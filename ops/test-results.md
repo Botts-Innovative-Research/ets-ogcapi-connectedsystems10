@@ -1,8 +1,53 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-05-27T19:44Z
+Last updated: 2026-06-01T23:31Z
 
 ## Current Sprint Evidence
+
+Sprint ets-32 local OSH primary E2E and Observation/Command binding planning:
+
+- Status:
+  - Story: `epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-32.yaml`
+  - Planning is SPECIFIED_PLANNED and Raze-approved.
+  - GeoRobotix public instance is no longer a default or required development target; it is advisory-only.
+  - Local OSH is the primary development IUT for sprint E2E.
+- Official OGC source verification:
+  - Source: `https://docs.ogc.org/is/23-002/23-002.html`, verified 2026-06-01.
+  - OGC 23-002 lists the Part 2 conformance classes but does not define `/conf/observation-binding`.
+  - `REQ-ETS-PART2-013` is therefore an internal project closure tying Observation bodies to parent DataStream schema evidence and Command-side bodies to parent ControlStream schema evidence.
+- Local OSH target:
+  - Host URL: `http://localhost:8081/sensorhub/api`.
+  - TeamEngine Docker-network URL: `http://field-hub-osh-1:8081/sensorhub/api`.
+  - Docker network: `field-hub_default`.
+  - Credential handling: Basic auth derived from local OSH config or environment; credential values are not recorded.
+- Local OSH planning probes:
+  - Artifact: `ops/test-results/sprint-ets-32-plan-local-osh-probes-2026-06-01.txt`.
+  - `/conformance`: HTTP 200.
+  - Declared relevant Part 2 classes: `/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/swecommon-json`, `/conf/swecommon-text`, `/conf/swecommon-binary`, `/conf/create-replace-delete`, and `/conf/system-event`.
+  - Non-standard vendor class observed: `/conf/system-history`; not OGC Part 2 PASS evidence.
+  - `/datastreams?limit=1`: HTTP 200 `application/json`, empty `items`.
+  - `/observations?limit=1`: HTTP 200 `application/json`, empty `items`.
+  - `/controlstreams?limit=1`: HTTP 200 `application/json`, empty `items`.
+  - `/commands?limit=1`: HTTP 400 `application/json`.
+  - `/systemEvents?limit=1`: HTTP 400 `application/json`.
+- Planning TeamEngine E2E:
+  - Command: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s32-plan-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-32-local-osh-plan-2026-06-01-results bash scripts/smoke-test.sh`.
+  - Result: PASS, `206 total / 65 passed / 0 failed / 141 skipped`.
+  - Report: `ops/test-results/sprint-ets-32-plan-local-osh-smoke-2026-06-01.xml`.
+  - Container log: `ops/test-results/sprint-ets-32-plan-local-osh-container-2026-06-01.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt`.
+  - No-mutation evidence: `recognized_iut_request_logs=132`, `GET=130`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
+  - Disposition: accepted Sprint 32 planning E2E gate for local-OSH-backed development policy and planning-only docs.
+- Generator evidence requirement:
+  - Positive binding closure requires documented seed fixtures or existing candidate DataStreams, Observations, ControlStreams, and Command-side resources.
+  - Empty local OSH collections cannot PASS; Generator must SKIP positive binding checks with exact empty-IUT-state reasons until seed fixtures exist.
+  - Runtime implementation, Maven verification, Generator E2E, and implementation Raze review remain future work.
+- Raze planning review:
+  - Artifact: `.harness/evaluations/sprint-ets-32-plan-adversarial.yaml`.
+  - Final verdict: `APPROVE`, confidence 0.94.
+  - Initial required fixes: `RAZE-ETS32-PLAN-GAP-001` for missing non-secret `SMOKE_AUTH_CREDENTIAL` placeholders in primary local OSH command snippets, and `RAZE-ETS32-PLAN-GAP-002` for superseded 2026-05-27 duplicate artifacts.
+  - Closure: `AGENTS.md` and `ops/e2e-test-plan.md` now include `SMOKE_AUTH_CREDENTIAL="$SMOKE_AUTH_CREDENTIAL"` in primary local OSH E2E commands; superseded 2026-05-27 Sprint 32 duplicate artifacts were removed, leaving the canonical 2026-06-01 evidence only.
 
 Sprint ets-31 Part 2 SWE Common Binary Encoding Generator:
 

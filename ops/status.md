@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-05-27T19:50Z
+Last updated: 2026-06-01T23:31Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-31.yaml`
+- `.harness/contracts/sprint-ets-32.yaml`
 
 ## Current State
 
@@ -38,14 +38,34 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 ## Current Code State
 
-- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`, pushed Sprint 28 Generator commit `5850210 Implement Sprint 28 Part 2 JSON`, pushed Sprint 29 planning/Generator/reconciliation commits, pushed Sprint 30 planning/Generator/reconciliation commits, and pushed Sprint 31 planning/Generator/reconciliation commits through `7bbbc51 Update Sprint 31 final metrics`.
+- ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`, pushed Sprint 28 Generator commit `5850210 Implement Sprint 28 Part 2 JSON`, pushed Sprint 29 planning/Generator/reconciliation commits, pushed Sprint 30 planning/Generator/reconciliation commits, pushed Sprint 31 planning/Generator/reconciliation commits through `7bbbc51 Update Sprint 31 final metrics`, and pushed triage commit `eb9fb3a Clarify Sprint 31 next step`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-31-01` Generator is PARTIAL for the Part 2 SWE Common Binary Encoding read-only subset.
-- Latest planned story: no newer story after Sprint 31 Generator.
+- Latest planned story: `S-ETS-32-01` is SPECIFIED_PLANNED for local OSH primary development E2E and internal Observation/Command binding closure.
 - Latest pushed planning commit: `20a8e18 Plan Sprint 31 Part 2 SWE Common Binary`.
-- Latest pushed implementation commit: `b520b65 Implement Sprint 31 Part 2 SWE Common Binary`; latest pushed repo HEAD is `7bbbc51 Update Sprint 31 final metrics`.
-- Current sprint status: Sprint ets-31 Part 2 SWE Common Binary Encoding is PARTIAL_IMPLEMENTED and pushed. Formatter succeeded; focused Maven succeeded `84 tests / 0 failures / 0 errors / 0 skipped`; full Docker Maven succeeded `272 tests / 0 failures / 0 errors / 3 skipped`. Mandatory GeoRobotix Generator smoke failed `206 total / 35 passed / 34 failed / 137 skipped`; the new SWE Common Binary group produced 3 PASS, 6 FAIL, and 2 SKIP. Public-IUT no-mutation evidence records `GET=99` and `POST/PUT/PATCH/DELETE=0`. Raze implementation review returned `APPROVE_WITH_CONCERNS` confidence 0.91 with no code-level required fixes; the bookkeeping gap was closed by post-review reconciliation. GeoRobotix declares `/conf/swecommon-binary` but not SWE 3.0 `/conf/binary-encoding-rules`; Observation-side binary reads return HTTP 500; Command-side checks fail existing `/controlstreams` schema validation before SWE Common Command Schema PASS evidence.
+- Latest pushed implementation commit: `b520b65 Implement Sprint 31 Part 2 SWE Common Binary`; latest pushed repo HEAD is `eb9fb3a Clarify Sprint 31 next step`.
+- Current sprint status: Sprint ets-32 planning is SPECIFIED_PLANNED and Raze-approved. It specifies local OSH as the primary development E2E IUT, makes GeoRobotix advisory-only, and scopes `REQ-ETS-PART2-013` as an internal Observation/Command binding closure rather than an OGC `/conf/observation-binding` class. Fresh local OSH TeamEngine planning smoke passed `206 total / 65 passed / 0 failed / 141 skipped`; no-mutation evidence records `GET=130`, `OPTIONS=2`, and `POST/PUT/PATCH/DELETE=0`. Local OSH declares relevant Part 2 dynamic-data and encoding classes but currently returns empty `/datastreams`, `/observations`, and `/controlstreams`, so Generator must seed documented dynamic-data fixtures or SKIP positive binding closure with exact empty-IUT-state reasons. Raze planning review initially found two docs/evidence hygiene gaps; both were fixed, and focused recheck returned `APPROVE` confidence 0.94.
 - Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`), Sprint 29 reconciliation pushed as `6ba24db`, Sprint 30 planning pushed as `3c68858` (`6ba24db..3c68858 main -> main`), Sprint 30 Generator pushed as `b2aad06` (`560945c..b2aad06 main -> main`), Sprint 31 planning pushed as `20a8e18` (`45717a3..20a8e18 main -> main`), Sprint 31 Generator pushed as `b520b65` (`75eac75..b520b65 main -> main`), Sprint 31 push reconciliation pushed as `6d9f671` (`b520b65..6d9f671 main -> main`), and final metrics pushed as `7bbbc51` (`6d9f671..7bbbc51 main -> main`).
+
+## Sprint ets-32 Planning Evidence
+
+Local OSH primary E2E and Observation/Command binding closure:
+
+- Story: `epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md`
+- Contract: `.harness/contracts/sprint-ets-32.yaml`
+- OpenSpec: `REQ-ETS-PART2-013` is SPECIFIED_PLANNED as an internal Observation/Command binding cross-class closure; `REQ-ETS-TEAMENGINE-006` is SPECIFIED_PLANNED for local OSH as the primary development E2E target.
+- Scope planned: local OSH is the default sprint development IUT on Docker network `field-hub_default`; GeoRobotix public runs are advisory interoperability probes only.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-06-01 during Sprint 32 planning; not stale.
+- OGC source verification: official OGC 23-002 HTML `https://docs.ogc.org/is/23-002/23-002.html` lists Part 2 classes but does not define `/conf/observation-binding`. Observation/Command binding remains an internal project closure derived from DataStream/Observation and ControlStream/Command schema requirements.
+- Local OSH probe artifact: `ops/test-results/sprint-ets-32-plan-local-osh-probes-2026-06-01.txt`.
+- Local OSH probe: `/conformance` returned HTTP 200 and declares `/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/swecommon-json`, `/conf/swecommon-text`, `/conf/swecommon-binary`, `/conf/create-replace-delete`, and `/conf/system-event`. It also declares non-standard `/conf/system-history`, which remains vendor evidence only.
+- Local OSH seed state: `/datastreams?limit=1`, `/observations?limit=1`, and `/controlstreams?limit=1` returned HTTP 200 JSON with empty `items`; `/commands?limit=1` and `/systemEvents?limit=1` returned HTTP 400 JSON.
+- Planning TeamEngine E2E: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s32-plan-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-32-local-osh-plan-2026-06-01-results bash scripts/smoke-test.sh` passed `206 total / 65 passed / 0 failed / 141 skipped`.
+- Planning E2E artifacts: `ops/test-results/sprint-ets-32-plan-local-osh-smoke-2026-06-01.xml`, `ops/test-results/sprint-ets-32-plan-local-osh-container-2026-06-01.log`, and `ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt`.
+- No-mutation evidence: `recognized_iut_request_logs=132`, `GET=130`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
+- Generator guardrail: positive binding PASS requires parent schema evidence plus associated child Observation/Command-side resource evidence with concrete field/type mapping. Empty local OSH collections, declarations alone, sibling encodings, hardcoded examples, broad format lists, OPTIONS-only evidence, or any fabricated `/conf/observation-binding` class must not PASS.
+- Raze planning review: `.harness/evaluations/sprint-ets-32-plan-adversarial.yaml` final verdict `APPROVE`, confidence 0.94. Required fixes `RAZE-ETS32-PLAN-GAP-001` and `RAZE-ETS32-PLAN-GAP-002` are closed.
+- Next action: commit/push Sprint 32 planning, then start Generator from `.harness/contracts/sprint-ets-32.yaml`.
 
 ## Sprint ets-30 Generator Evidence
 

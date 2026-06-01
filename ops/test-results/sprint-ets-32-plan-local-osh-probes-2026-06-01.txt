@@ -1,0 +1,24 @@
+Sprint 32 local OSH planning probes - 2026-06-01
+IUT host URL: http://localhost:8081/sensorhub/api
+TeamEngine Docker-network URL: http://field-hub-osh-1:8081/sensorhub/api
+Credential handling: Basic auth derived from local OSH config; credential value not recorded.
+GET /conformance: HTTP 200 auto
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event
+  conformsTo: http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history
+GET /datastreams?limit=1: HTTP 200 application/json
+  items_count: 0
+GET /observations?limit=1: HTTP 200 application/json
+  items_count: 0
+GET /controlstreams?limit=1: HTTP 200 application/json
+  items_count: 0
+GET /commands?limit=1: HTTP 400 application/json
+  items: not an array
+GET /systemEvents?limit=1: HTTP 400 application/json
+  items: not an array

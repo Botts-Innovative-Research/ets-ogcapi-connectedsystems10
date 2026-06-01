@@ -1,0 +1,138 @@
+verdict: APPROVE
+confidence: 0.94
+reviewed_at_utc: "2026-06-01T23:24:49Z"
+focused_recheck_at_utc: "2026-06-01T23:31:12Z"
+reviewer: "Raze"
+role: "Red Team / Adversarial Reviewer"
+scope: "Sprint 32 planning changes for local OSH primary development E2E target and REQ-ETS-PART2-013 Observation/Command binding closure"
+docker_teamengine_rerun: false
+rerun_rationale: "User instructed not to rerun Docker/TeamEngine unless a concrete blocker needed reproduction. Archived artifacts were sufficient to verify the claims and identify documentation gaps."
+
+reviewed_files:
+  - "AGENTS.md"
+  - "_bmad/agents/adversarial-reviewer.md"
+  - ".harness/contracts/sprint-ets-32.yaml"
+  - "epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "_bmad/traceability.md"
+  - "epics/epic-ets-03-part2-classes.md"
+  - "ops/e2e-test-plan.md"
+  - "ops/status.md"
+  - "ops/test-results.md"
+  - "ops/changelog.md"
+  - "ops/known-issues.md"
+  - "ops/server.md"
+  - ".harness/handoffs/planner-handoff.yaml"
+  - "scripts/smoke-test.sh"
+  - "ops/test-results/sprint-ets-32-plan-local-osh-container-2026-05-27.log"
+  - "ops/test-results/sprint-ets-32-plan-local-osh-container-2026-06-01.log"
+  - "ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-05-27.txt"
+  - "ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt"
+  - "ops/test-results/sprint-ets-32-plan-local-osh-probes-2026-06-01.txt"
+  - "ops/test-results/sprint-ets-32-plan-local-osh-smoke-2026-05-27.xml"
+  - "ops/test-results/sprint-ets-32-plan-local-osh-smoke-2026-06-01.xml"
+
+summary:
+  approved_claims:
+    - "OGC 23-002 does not define a standalone /conf/observation-binding conformance class. Sprint 32 correctly treats REQ-ETS-PART2-013 as an internal cross-class closure."
+    - "Local OSH is now the default development E2E target in the planning docs and smoke script; GeoRobotix is explicitly advisory-only."
+    - "The canonical 2026-06-01 local OSH planning smoke artifact reports 206 total / 65 passed / 0 failed / 141 skipped."
+    - "The canonical 2026-06-01 no-mutation artifact reports recognized_iut_request_logs=132, GET=130, OPTIONS=2, POST=0, PUT=0, PATCH=0, DELETE=0."
+    - "The local OSH dynamic-data seed state is documented as empty for /datastreams, /observations, and /controlstreams, with /commands and /systemEvents returning HTTP 400."
+    - "False-PASS guardrails block declaration-only, empty-collection, broad-format-list, sibling-encoding, hardcoded-example, OPTIONS-only, and fabricated /conf/observation-binding PASS evidence."
+  blocking_risk: "None after focused recheck. The two original documentation/evidence hygiene gaps are closed."
+
+findings:
+  - id: "RAZE-ETS32-PLAN-GAP-001"
+    severity: "MEDIUM"
+    title: "Primary local OSH E2E command snippets omit the credential variable required by the authenticated evidence path."
+    status: "CLOSED"
+    affected_files:
+      - "AGENTS.md"
+      - "ops/e2e-test-plan.md"
+    evidence:
+      - "The Sprint 32 contract, story, planner handoff, status, and test-results entries correctly show the planning smoke command with SMOKE_AUTH_CREDENTIAL=<derived, not logged>."
+      - "AGENTS.md and the first Primary E2E Command block in ops/e2e-test-plan.md show local OSH smoke commands without SMOKE_AUTH_CREDENTIAL."
+      - "The archived planning probe labels the local OSH evidence as authenticated and records credential handling as Basic auth derived from local OSH config, with the credential value intentionally omitted."
+      - "Earlier project docs recorded unauthenticated local OSH /sensorhub/api/conformance as HTTP 401, so future agents following the short command may fail the new default gate or silently use a different IUT auth state."
+    impact: "This weakens reproducibility of the new local OSH primary policy and can lead to false blockers or inconsistent evidence capture."
+    required_fix: "Add an explicit non-secret SMOKE_AUTH_CREDENTIAL placeholder or prerequisite note to every primary local OSH E2E command snippet, especially AGENTS.md and the first command block in ops/e2e-test-plan.md. Keep actual credential values out of repo artifacts."
+    closure_evidence:
+      - "Focused recheck confirmed AGENTS.md primary local OSH smoke command now includes SMOKE_AUTH_CREDENTIAL=\"$SMOKE_AUTH_CREDENTIAL\"."
+      - "Focused recheck confirmed the first Primary E2E Command in ops/e2e-test-plan.md now includes SMOKE_AUTH_CREDENTIAL=\"$SMOKE_AUTH_CREDENTIAL\"."
+      - "Focused recheck confirmed the Local OSH command shape in ops/e2e-test-plan.md also includes SMOKE_AUTH_CREDENTIAL=\"$SMOKE_AUTH_CREDENTIAL\"."
+      - "The snippets still avoid recording credential values."
+
+  - id: "RAZE-ETS32-PLAN-GAP-002"
+    severity: "LOW"
+    title: "Older unreferenced Sprint 32 local OSH no-mutation artifact conflicts with the canonical 2026-06-01 method split."
+    status: "CLOSED"
+    affected_files:
+      - "ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-05-27.txt"
+      - "ops/test-results/sprint-ets-32-plan-local-osh-container-2026-05-27.log"
+      - "ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt"
+      - "ops/test-results/sprint-ets-32-plan-local-osh-container-2026-06-01.log"
+    evidence:
+      - "The docs consistently cite the 2026-06-01 no-mutation artifact: recognized_iut_request_logs=132, GET=130, OPTIONS=2, POST=0, PUT=0, PATCH=0, DELETE=0."
+      - "The 2026-06-01 artifact matches the 2026-06-01 container log, which includes two IUT-bound OPTIONS lines and zero POST/PUT/PATCH/DELETE lines."
+      - "The older unreferenced 2026-05-27 artifact reports recognized_iut_request_logs=132 and GET=132, POST=0, PUT=0, PATCH=0, DELETE=0, with no OPTIONS bucket."
+      - "The paired 2026-05-27 container log also contains two OPTIONS request lines, so the older count format is superseded or incomplete."
+    impact: "The canonical claim is correct, but the duplicate artifact can confuse future Raze/Quinn reviews and looks like gate-run evidence pollution unless marked superseded."
+    required_fix: "Before committing Sprint 32 planning, either remove the unreferenced 2026-05-27 duplicate artifacts, or document them as superseded/incomplete and keep the 2026-06-01 artifact as the canonical evidence."
+    closure_evidence:
+      - "Focused recheck confirmed the superseded untracked 2026-05-27 Sprint 32 local OSH duplicate artifacts are no longer present under ops/test-results/."
+      - "Focused recheck confirmed only the canonical 2026-06-01 Sprint 32 local OSH artifacts remain: container log, no-mutation txt, probe transcript, and smoke XML."
+      - "The canonical 2026-06-01 no-mutation artifact remains the only Sprint 32 local OSH no-mutation count in the worktree and records GET=130, OPTIONS=2, POST=0, PUT=0, PATCH=0, DELETE=0."
+
+evidence:
+  ogc_23_002:
+    source: "https://docs.ogc.org/is/23-002/23-002.html"
+    verified:
+      - "Official requirements-class list includes Common, Datastreams & Observations, Control Streams & Commands, Command Feasibility, System Events, Advanced Filtering, Create/Replace/Delete, Update, JSON Encoding, SWE Common JSON Encoding, SWE Common Text Encoding, and SWE Common Binary Encoding."
+      - "Annex A exposes conformance identifiers such as /conf/datastream, /conf/controlstream, /conf/json, /conf/swecommon-json, /conf/swecommon-text, and /conf/swecommon-binary."
+      - "Searches for observation-binding and /conf/observation-binding in the official HTML found no standalone conformance class."
+    conclusion: "REQ-ETS-PART2-013 must remain an internal closure requirement and must not advertise or require /conf/observation-binding."
+  local_osh_policy:
+    verified:
+      - "scripts/smoke-test.sh defaults SMOKE_TARGET to local-osh, sets default IUT URL to http://field-hub-osh-1:8081/sensorhub/api, and defaults SMOKE_DOCKER_NETWORK to field-hub_default."
+      - "scripts/smoke-test.sh requires explicit SMOKE_TARGET=georobotix for the public advisory target."
+      - "AGENTS.md, architecture, PRD, OpenSpec, traceability, story, contract, ops/e2e-test-plan.md, ops/status.md, ops/test-results.md, ops/known-issues.md, ops/server.md, and planner handoff all state local OSH is primary and GeoRobotix is advisory-only."
+  local_osh_e2e:
+    report: "ops/test-results/sprint-ets-32-plan-local-osh-smoke-2026-06-01.xml"
+    report_totals: "206 total / 65 passed / 0 failed / 141 skipped"
+    container_log: "ops/test-results/sprint-ets-32-plan-local-osh-container-2026-06-01.log"
+    no_mutation_artifact: "ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt"
+    no_mutation_counts: "recognized_iut_request_logs=132; GET=130; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
+    interpretation: "Accepted as planning E2E evidence for policy and documentation changes only; skipped tests are correctly not reported as all tests passing."
+  local_osh_seed_state:
+    probe_artifact: "ops/test-results/sprint-ets-32-plan-local-osh-probes-2026-06-01.txt"
+    verified:
+      - "/conformance returned HTTP 200 and declared relevant Part 2 classes."
+      - "/datastreams?limit=1 returned HTTP 200 application/json with items_count 0."
+      - "/observations?limit=1 returned HTTP 200 application/json with items_count 0."
+      - "/controlstreams?limit=1 returned HTTP 200 application/json with items_count 0."
+      - "/commands?limit=1 returned HTTP 400 application/json."
+      - "/systemEvents?limit=1 returned HTTP 400 application/json."
+    conclusion: "Generator must seed documented dynamic-data fixtures for positive PASS evidence, or SKIP with exact empty-IUT-state reasons."
+  reconciliation:
+    verified:
+      - "OpenSpec defines REQ-ETS-PART2-013 and REQ-ETS-TEAMENGINE-006 with Sprint 32 planning status."
+      - "Story and contract are populated and mark Raze review pending."
+      - "_bmad/traceability.md and epic ETS-03 map S-ETS-32-01 to REQ-ETS-PART2-013 and REQ-ETS-TEAMENGINE-006."
+      - "ops/status.md, ops/test-results.md, ops/changelog.md, ops/known-issues.md, ops/server.md, and planner handoff are updated for Sprint 32 planning evidence."
+
+focused_recheck:
+  scope:
+    - "RAZE-ETS32-PLAN-GAP-001"
+    - "RAZE-ETS32-PLAN-GAP-002"
+  inspected:
+    - "git diff -- AGENTS.md ops/e2e-test-plan.md"
+    - "ops/test-results/sprint-ets-32-plan-local-osh-* artifact listing"
+  result: "Both required fixes are closed. No Docker/TeamEngine rerun was performed or needed."
+
+required_fixes: []
+
+non_blocking_notes:
+  - "No Java/TestNG runtime implementation was added in this planning scope, so Maven/unit verification was not required for new runtime tests."
+  - "No Docker/TeamEngine rerun was needed for this review; artifact inspection was sufficient."
+  - "No credential values were observed in the reviewed Sprint 32 planning docs or artifacts."

@@ -1,0 +1,150 @@
+# Sprint 32 contract - Local OSH primary E2E and Observation/Command binding planning
+
+sprint: "ets-32"
+sprint_name: "part2-observation-command-binding-local-osh"
+type: "feature-expansion-planning"
+created: "2026-05-27T19:54:20Z"
+updated: "2026-06-01T23:16:25Z"
+description: |
+  Sprint 32 plans two related changes. First, development E2E gates now use a
+  self-provisioned local OpenSensorHub instance as the primary IUT; GeoRobotix's
+  public instance is advisory-only and is no longer a default or required
+  development target. Second, Sprint 32 specifies REQ-ETS-PART2-013 as an
+  internal Observation/Command binding cross-class closure. OGC 23-002 does not
+  define a standalone /conf/observation-binding class, so the ETS must not
+  require or advertise one.
+
+stories:
+  - id: "S-ETS-32-01"
+    title: "Observation/Command binding closure with local OSH primary E2E"
+    file: "epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "L"
+    depends_on:
+      - "S-ETS-31-01"
+    parallelizable: false
+    status: "SPECIFIED_PLANNED"
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-013 (Observation/Command binding cross-class closure specified)"
+    - "REQ-ETS-TEAMENGINE-005 (smoke test target handling reconciled to configured IUT with no-mutation oracle)"
+  new_reqs:
+    - "REQ-ETS-TEAMENGINE-006 (local OSH primary development target)"
+  retired_placeholders:
+    - "S-ETS-03-14 placeholder superseded by S-ETS-32-01 planning"
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-013-LOCAL-OSH-PRIMARY-IUT-001"
+    - "SCENARIO-ETS-PART2-013-GEOROBOTIX-NOT-DEFAULT-001"
+    - "SCENARIO-ETS-PART2-013-DYNAMIC-SEED-STATE-001"
+    - "SCENARIO-ETS-PART2-013-OBSERVATION-PARENT-SCHEMA-001"
+    - "SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001"
+    - "SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001"
+  normal:
+    - "SCENARIO-ETS-PART2-013-ENCODING-HONESTY-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  prd_updated: true
+  architecture_updated: true
+  agent_instructions_updated: true
+  e2e_plan_updated: true
+  smoke_script_default_local_osh: true
+  geo_robotix_advisory_only: true
+  no_standalone_observation_binding_conformance_class: true
+  local_osh_planning_probe_archived: true
+  local_osh_teamengine_e2e_passed: true
+  local_osh_no_mutation_verified: true
+  dynamic_seed_gap_documented: true
+  generator_required_before_runtime_tests: true
+  raze_planning_review_completed: true
+  no_code_runtime_tests_added_in_planning: true
+
+upstream_ogc_verification:
+  standard: "OGC API - Connected Systems - Part 2: Dynamic Data"
+  source_url: "https://docs.ogc.org/is/23-002/23-002.html"
+  checked_at: "2026-06-01T23:14:00Z"
+  verified_facts:
+    - "OGC 23-002 conformance classes are Common, Datastreams & Observations, Control Streams & Commands, Command Feasibility, System Events, Advanced Filtering, Create/Replace/Delete, Update, JSON Encoding, SWE Common JSON Encoding, SWE Common Text Encoding, and SWE Common Binary Encoding."
+    - "The standard describes Observations as grouped into DataStreams and carrying results structured according to a well defined schema."
+    - "The standard describes ControlStreams as containers for Commands and Commands as carrying parameters structured according to a well defined schema."
+    - "No standalone OGC 23-002 /conf/observation-binding conformance class was found."
+  planning_conclusion: |
+    REQ-ETS-PART2-013 is an internal project closure tying existing Part 2
+    DataStream/Observation and ControlStream/Command schema requirements
+    together. It must use existing OGC class declarations and resource evidence,
+    not a fabricated conformance class identifier.
+
+local_osh_primary_iut:
+  target_name: "local-osh"
+  host_url: "http://localhost:8081/sensorhub/api"
+  teamengine_url: "http://field-hub-osh-1:8081/sensorhub/api"
+  docker_network: "field-hub_default"
+  container: "field-hub-osh-1"
+  credential_handling: "Basic auth derived from local OSH config or environment; credential values are never recorded in repository docs, logs, or artifacts."
+  planning_probe:
+    artifact: "ops/test-results/sprint-ets-32-plan-local-osh-probes-2026-06-01.txt"
+    result: |
+      Authenticated local OSH declares Part 2 /conf/datastream,
+      /conf/controlstream, /conf/json, /conf/swecommon-json,
+      /conf/swecommon-text, /conf/swecommon-binary, /conf/create-replace-delete,
+      and /conf/system-event, plus non-standard /conf/system-history. It returns
+      HTTP 200 application/json with empty items for /datastreams, /observations,
+      and /controlstreams. /commands and /systemEvents return HTTP 400.
+  planning_teamengine_smoke:
+    command: "SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s32-plan-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-32-local-osh-plan-2026-06-01-results bash scripts/smoke-test.sh"
+    result: "PASS"
+    testng: "206 total / 65 passed / 0 failed / 141 skipped"
+    report: "ops/test-results/sprint-ets-32-plan-local-osh-smoke-2026-06-01.xml"
+    container_log: "ops/test-results/sprint-ets-32-plan-local-osh-container-2026-06-01.log"
+    no_mutation_artifact: "ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt"
+    no_mutation: "recognized_iut_request_logs=132; GET=130; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
+    disposition: "Accepted Sprint 32 planning E2E gate for local-OSH-backed development policy and planning-only docs."
+
+generator_scope_next:
+  runtime_group_candidate: "part2binding"
+  expected_files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java"
+  requirements:
+    - "Do not require or advertise /conf/observation-binding."
+    - "Gate Observation-side checks on /conf/datastream and available DataStream schema plus Observation candidate evidence."
+    - "Gate Command-side checks on /conf/controlstream and available ControlStream schema plus Command-side candidate evidence."
+    - "Positive PASS requires concrete parent schema members and child body members with matching names/types for the negotiated encoding."
+    - "Empty collections SKIP with exact empty-IUT-state reasons; declarations and format lists alone cannot PASS."
+    - "If positive local OSH closure is required, seed documented dynamic-data fixtures first and record resource IDs, payload family, cleanup plan, mutation opt-in, and TeamEngine totals."
+    - "Read-only default runs must keep POST/PUT/PATCH/DELETE at zero."
+
+verdict_policy:
+  false_pass_blocks:
+    - "No PASS from /conf/datastream, /conf/controlstream, /conf/json, or SWE Common declarations alone."
+    - "No PASS from empty /datastreams, /observations, /controlstreams, /commands, or /systemEvents collections."
+    - "No PASS from broad media-format lists without retrieved candidate payload/schema evidence."
+    - "No PASS from sibling encoding evidence, hardcoded examples, OPTIONS-only evidence, or local fixture expectations not proven in the live IUT."
+    - "No public GeoRobotix mutation; GeoRobotix runs are advisory-only."
+  skip_conditions:
+    - "Local OSH dynamic-data collections empty."
+    - "Parent schema subresource missing or unavailable."
+    - "Child Observation/Command-side candidate missing."
+    - "Encoding validator unavailable for the negotiated encoding."
+    - "Mutation fixture seed not explicitly enabled for a dedicated mutable IUT."
+
+raze_planning_review:
+  required: true
+  status: "APPROVE"
+  artifact: ".harness/evaluations/sprint-ets-32-plan-adversarial.yaml"
+  confidence: 0.94
+  required_fixes: []
+  closed_gaps:
+    - "RAZE-ETS32-PLAN-GAP-001"
+    - "RAZE-ETS32-PLAN-GAP-002"
+
+commit:
+  status: "pending"
+  message: "Plan Sprint 32 local OSH binding closure"

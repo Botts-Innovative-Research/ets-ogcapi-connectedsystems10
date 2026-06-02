@@ -2,6 +2,30 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-02T22:36Z — Sprint 36 Raze review and OpenSpec gapfix
+
+**Triggered by user instruction**: "Continue"
+
+- Ran required Red Team / Raze implementation review for uncommitted Sprint 36 request-shaping changes.
+- Initial Raze verdict was `GAPS_FOUND`, confidence `0.89`, for one stale OpenSpec implementation-status paragraph that still described the pre-Sprint-36 `Content-Type: auto` schema blocker as current.
+- Reconciled OpenSpec `REQ-ETS-PART2-013` body and deferred implementation-status text so Sprint 36 `f=json` request shaping is recorded honestly, while stream metadata and unexercised populated live `?f=json` fixture evidence remain open.
+- Focused Raze recheck returned `APPROVE_WITH_CONCERNS`, confidence `0.93`, with no required fixes; artifact `.harness/evaluations/sprint-ets-36-adversarial-implementation.yaml`.
+- Updated story, contract, traceability, epic, status, test-results, known issues, handoff, and metrics toward commit/push readiness.
+
+---
+
+## 2026-06-02T21:17Z — Sprint 36 binding schema request-shaping handoff
+
+**Triggered by user instruction**: "prepare for session handoff"
+
+- Prepared the handoff for uncommitted Sprint 36 Generator work rather than reporting it complete.
+- Documented that `Part2ObservationCommandBindingTests` now appends `f=json` to binding parent schema subresource GETs unless `f` or `format` already exists, with strict JSON media-type validation unchanged.
+- Recorded verification evidence: formatter passed after bounded cached rerun; focused Maven passed `14/0/0/0`; required wrapper failed before tests due Maven Central `Connection reset`; persistent-cache Docker Maven passed `289/0/0/3`; clean local OSH smoke passed `211/68/0/143` with no writes.
+- Updated `ops/status.md`, `ops/test-results.md`, `_bmad/traceability.md`, `epics/epic-ets-03-part2-classes.md`, and `.harness/handoffs/planner-handoff.yaml` to show next required action as Sprint 36 Raze review, then any fixes, final reconciliation, commit, and push.
+- Left full populated `part2binding` PASS open because local OSH stream collection metadata remains schema-invalid.
+
+---
+
 ## 2026-06-02T19:45Z — Sprint 35 local OSH SimUAV tasking fixture
 
 **Triggered by user instruction**: "Do it"

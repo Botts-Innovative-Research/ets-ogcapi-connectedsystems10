@@ -1,8 +1,45 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T19:45Z
+Last updated: 2026-06-02T22:36Z
 
 ## Current Sprint Evidence
+
+Sprint ets-36 binding parent schema JSON request shaping:
+
+- Status:
+  - Story: `epics/stories/s-ets-36-01-binding-schema-json-request-shaping.md`
+  - Contract: `.harness/contracts/sprint-ets-36.yaml`
+  - Generator verification and required Raze review are complete; commit and push remain pending.
+  - Full populated-IUT `part2binding` PASS is not claimed because local OSH stream collection metadata still fails current Part 2 schema checks.
+- Source probe:
+  - Artifact: `ops/test-results/sprint-ets-36-local-osh-schema-request-shaping-source-probe-2026-06-02.txt`.
+  - Result: local OSH ConSys schema handlers accept `f=json`/`format=json` and set response content type from parsed format, so the ETS can request explicit JSON instead of accepting `Content-Type: auto`.
+- Formatter:
+  - Result: PASS after bounded cached Docker Maven rerun.
+  - Note: an earlier unbounded cold-cache formatter attempt was stopped as stalled; this is not accepted as a test result.
+- Focused Maven:
+  - Artifact: `ops/test-results/sprint-ets-36-focused-maven-2026-06-02.log`.
+  - Result: PASS, `14 tests / 0 failures / 0 errors / 0 skipped`.
+- Required wrapper attempt:
+  - Artifact: `ops/test-results/sprint-ets-36-maven-clean-test-2026-06-02.log`.
+  - Result: FAILED before tests because Maven Central reset while resolving `org.apache.maven.plugins:maven-plugins:pom:43`.
+- Full Docker Maven fallback:
+  - Artifact: `ops/test-results/sprint-ets-36-maven-clean-test-persistent-cache-2026-06-02.log`.
+  - Result: PASS, `289 tests / 0 failures / 0 errors / 3 skipped`.
+- Clean primary local OSH TeamEngine smoke:
+  - Command: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s36-clean-local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-36-clean-local-osh-2026-06-02-results bash scripts/smoke-test.sh`.
+  - Result: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Report: `ops/test-results/sprint-ets-36-clean-local-osh-smoke-2026-06-02.xml`.
+  - Container log: `ops/test-results/sprint-ets-36-clean-local-osh-container-2026-06-02.log`.
+  - Console log: `ops/test-results/sprint-ets-36-clean-local-osh-smoke-console-2026-06-02.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-36-clean-local-osh-no-mutation-2026-06-02.txt`.
+  - No-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, writes `0`.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-36-adversarial-implementation.yaml`.
+  - Initial verdict: `GAPS_FOUND`, confidence `0.89`, for stale OpenSpec implementation-status wording that still framed the Sprint 35 schema media-type blocker as current.
+  - Gapfix: OpenSpec now records Sprint 36 `f=json` request shaping and leaves stream metadata plus unexercised populated live `?f=json` fixture evidence as the remaining blockers.
+  - Final verdict: `APPROVE_WITH_CONCERNS`, confidence `0.93`, no required fixes.
+  - Remaining concern: clean local OSH smoke passed with empty `/datastreams` and `/controlstreams`, so it did not exercise populated parent schema `?f=json` requests; no full populated `part2binding` PASS is claimed.
 
 Sprint ets-35 local OSH SimUAV tasking fixture:
 

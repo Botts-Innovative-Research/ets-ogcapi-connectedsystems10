@@ -42,6 +42,22 @@ public class VerifyPart2ObservationCommandBindingTests {
 				Part2ObservationCommandBindingTests.NON_STANDARD_CONF_OBSERVATION_BINDING));
 	}
 
+	/**
+	 * REQ-ETS-PART2-013. SCENARIO-ETS-PART2-013-SCHEMA-JSON-REQUEST-SHAPING-001.
+	 */
+	@Test
+	public void parentSchemaRequestsAddJsonFormatWithoutLooseningMediaTypeGate() {
+		assertEquals("datastreams/abc/schema?f=json",
+				Part2ObservationCommandBindingTests.schemaJsonRequestPath("datastreams/abc/schema"));
+		assertEquals("controlstreams/abc/schema?commandFormat=application/json&f=json",
+				Part2ObservationCommandBindingTests
+					.schemaJsonRequestPath("controlstreams/abc/schema?commandFormat=application/json"));
+		assertEquals("datastreams/abc/schema?f=json",
+				Part2ObservationCommandBindingTests.schemaJsonRequestPath("datastreams/abc/schema?f=json"));
+		assertEquals("datastreams/abc/schema?format=json",
+				Part2ObservationCommandBindingTests.schemaJsonRequestPath("datastreams/abc/schema?format=json"));
+	}
+
 	@Test
 	public void jsonSchemaRequiredFieldsMatchChildBody() {
 		Map<String, Object> schema = Map.of("resultSchema", Map.of("type", "object", "required", List.of("temperature"),

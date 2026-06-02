@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T19:45Z
+Last updated: 2026-06-02T22:36Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-35.yaml`
+- `.harness/contracts/sprint-ets-36.yaml`
 
 ## Current State
 
@@ -40,14 +40,46 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 
 - ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`, pushed Sprint 28 Generator commit `5850210 Implement Sprint 28 Part 2 JSON`, pushed Sprint 29 planning/Generator/reconciliation commits, pushed Sprint 30 planning/Generator/reconciliation commits, pushed Sprint 31 planning/Generator/reconciliation commits through `7bbbc51 Update Sprint 31 final metrics`, pushed triage commit `eb9fb3a Clarify Sprint 31 next step`, pushed Sprint 32 planning commit `f2d2ab8 Plan Sprint 32 local OSH primary E2E`, pushed Sprint 32 planning reconciliation `1d84ab0 Reconcile Sprint 32 planning push`, pushed Sprint 32 Generator commit `37a2a43 Implement Sprint 32 Observation Command binding`, pushed Sprint 32 final metrics commit `1cd6884`, and pushed Sprint 33 planning commit `efb59e6 Plan Sprint 33 local OSH dynamic data seeding`.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest implemented story: `S-ETS-32-01` Generator is PARTIAL for the internal Part 2 Observation/Command binding closure; initial Raze implementation review gaps are fixed and focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes.
-- Latest planned/probed story: `S-ETS-35-01` verifies the `osh-addons` SimUAV driver as an isolated local OSH tasking fixture with terminal CommandStatus plus inline CommandResult evidence.
-- Latest Generator work: Sprint 35 built and configured SimUAV as a tasking-capable local OSH fixture. SimUAV completed a waypoint feasibility CS API Command with terminal `COMPLETED` status and inline result data, proving CommandResult evidence is available through a real driver fixture.
-- Current planning story: `S-ETS-35-01` is verified with a schema blocker. SimUAV is suitable for isolated Command/CommandResult fixture evidence but not for persistent primary smoke state because local OSH stream collection resources omit schema-required metadata and schema endpoints return JSON bodies with `Content-Type: auto`.
+- Latest implemented story: `S-ETS-36-01` is Raze-approved pending commit and push. It shapes binding parent schema requests with `f=json` while preserving strict JSON media-type evidence.
+- Latest Generator work: Sprint 36 updated `Part2ObservationCommandBindingTests` so parent DataStream/ControlStream schema subresource GETs append `f=json` unless `f` or `format` already exists. Helper regression coverage verifies no-query, existing `commandFormat`, existing `f`, and existing `format` cases. `isJsonCompatibleContentType` remains strict; `Content-Type: auto` is not accepted as PASS evidence.
+- Current handoff story: `S-ETS-36-01` is Raze-approved and pending commit/push. Verification is archived: formatter passed after a bounded cached rerun, focused Maven passed `14/0/0/0`, the required wrapper failed before tests due a Maven Central `Connection reset`, persistent-cache Docker Maven passed `289/0/0/3`, and clean local OSH smoke passed `211/68/0/143` with no writes. Raze initially found one stale OpenSpec paragraph; after reconciliation, focused recheck returned `APPROVE_WITH_CONCERNS` confidence `0.93` with no required fixes. Full populated `part2binding` PASS is still not claimed because local OSH stream collection metadata remains schema-invalid and populated live `?f=json` schema requests were not exercised by the clean empty-IUT smoke.
 - Latest pushed tasking-fixture evidence commit: `493bf1b Record Sprint 35 SimUAV fixture evidence`.
 - Latest pushed Java implementation commit: `107c2a7 Implement Sprint 33 seed discovery`.
-- Current sprint status: Sprint ets-35 SimUAV evidence is archived. SimUAV command E2E passed with system `02kargmsuc2g`, ControlStream `02481pm3g53g`, Command `02481pm3g53g1m6uvj80cc85rppg`, terminal `COMPLETED` status, and inline result data. SimUAV-populated TeamEngine smoke failed honestly (`211/84/28/99`) on stream metadata/schema media-type validation. Primary local OSH was restored by disabling Sapient and SimUAV autostart, resetting only `field-hub_osh-data`, reseeding static `040g` fixtures, and rerunning clean TeamEngine smoke successfully (`211/68/0/143`, `GET=133`, `OPTIONS=2`, writes `0`). No full positive populated-IUT `part2binding` PASS is claimed yet.
+- Current sprint status: Sprint ets-36 implementation, verification, Raze review, and reconciliation are complete enough for commit/push. No full positive populated-IUT `part2binding` PASS is claimed yet.
 - Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`), Sprint 29 reconciliation pushed as `6ba24db`, Sprint 30 planning pushed as `3c68858` (`6ba24db..3c68858 main -> main`), Sprint 30 Generator pushed as `b2aad06` (`560945c..b2aad06 main -> main`), Sprint 31 planning pushed as `20a8e18` (`45717a3..20a8e18 main -> main`), Sprint 31 Generator pushed as `b520b65` (`75eac75..b520b65 main -> main`), Sprint 31 push reconciliation pushed as `6d9f671` (`b520b65..6d9f671 main -> main`), final metrics pushed as `7bbbc51` (`6d9f671..7bbbc51 main -> main`), Sprint 31 triage pushed as `eb9fb3a`, Sprint 32 planning pushed as `f2d2ab8` (`eb9fb3a..f2d2ab8 main -> main`), Sprint 32 planning reconciliation pushed as `1d84ab0` (`f2d2ab8..1d84ab0 main -> main`), Sprint 32 Generator pushed as `37a2a43` (`1d84ab0..37a2a43 main -> main`), Sprint 32 final metrics pushed as `1cd6884`, Sprint 33 planning pushed as `efb59e6` (`1cd6884..efb59e6 main -> main`), Sprint 33 Generator pushed as `107c2a7` (`7aa4a9a..107c2a7 main -> main`), and Sprint 34/35 tasking fixture evidence pushed as `493bf1b` (`c02a7bd..493bf1b main -> main`).
+
+## Session Handoff — Sprint ets-36 Pending Commit/Push
+
+Resume from the current uncommitted worktree. Do not restart from Sprint 35.
+
+- Story: `epics/stories/s-ets-36-01-binding-schema-json-request-shaping.md`.
+- Contract: `.harness/contracts/sprint-ets-36.yaml`.
+- Handoff: `.harness/handoffs/planner-handoff.yaml`.
+- Code changed: `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java`.
+- Regression changed: `src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java`.
+- Source probe: `ops/test-results/sprint-ets-36-local-osh-schema-request-shaping-source-probe-2026-06-02.txt`.
+- Maven evidence: `ops/test-results/sprint-ets-36-focused-maven-2026-06-02.log`, `ops/test-results/sprint-ets-36-maven-clean-test-2026-06-02.log`, and `ops/test-results/sprint-ets-36-maven-clean-test-persistent-cache-2026-06-02.log`.
+- E2E evidence: `ops/test-results/sprint-ets-36-clean-local-osh-smoke-2026-06-02.xml`, `ops/test-results/sprint-ets-36-clean-local-osh-container-2026-06-02.log`, and `ops/test-results/sprint-ets-36-clean-local-osh-no-mutation-2026-06-02.txt`.
+- Raze review: `.harness/evaluations/sprint-ets-36-adversarial-implementation.yaml` final verdict `APPROVE_WITH_CONCERNS`, confidence `0.93`, no required fixes after OpenSpec reconciliation.
+- Next required action: run final validation, commit, and push Sprint 36. After push, update metrics/status with commit metadata.
+
+## Sprint ets-36 Binding Schema Request Shaping
+
+Narrow ETS-side schema media-type request shaping for `REQ-ETS-PART2-013`:
+
+- Story: `epics/stories/s-ets-36-01-binding-schema-json-request-shaping.md`.
+- Contract: `.harness/contracts/sprint-ets-36.yaml`.
+- Status: `IMPLEMENTED_RAZE_APPROVED_PENDING_PUSH`.
+- OpenSpec: `REQ-ETS-PART2-013` remains PARTIAL_IMPLEMENTED with `SPRINT_36_SCHEMA_JSON_REQUEST_SHAPING_IMPLEMENTED_WITH_STREAM_METADATA_BLOCKER`.
+- Behavior: binding parent schema requests append `f=json` unless `f` or `format` already exists.
+- Guardrail: strict `application/json` or `+json` content-type validation remains unchanged; `Content-Type: auto` is not PASS evidence.
+- Formatter: PASS after bounded cached rerun; earlier unbounded cold-cache formatter run was stopped as stalled.
+- Focused Maven: PASS, `14 tests / 0 failures / 0 errors / 0 skipped`.
+- Required wrapper attempt: FAILED before tests due Maven Central `Connection reset` resolving `org.apache.maven.plugins:maven-plugins:pom:43`.
+- Full Docker Maven fallback: PASS, `289 tests / 0 failures / 0 errors / 3 skipped`.
+- Clean primary TeamEngine smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation `GET=133`, `OPTIONS=2`, writes `0`.
+- Raze review: initial `GAPS_FOUND` for stale OpenSpec deferred-status wording; focused recheck `APPROVE_WITH_CONCERNS`, confidence `0.93`, no required fixes.
+- Remaining blocker: local OSH stream collection resources still omit schema-required metadata such as `live`, `async`, and some time ranges, and the clean empty-IUT smoke did not exercise populated live `?f=json` schema requests, so full populated `part2binding` PASS remains open.
 
 ## Sprint ets-35 SimUAV Tasking Fixture Evidence
 

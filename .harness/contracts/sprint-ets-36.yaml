@@ -1,0 +1,50 @@
+sprint: ets-36
+story: S-ETS-36-01
+title: Binding parent schema JSON request shaping
+status: IMPLEMENTED_RAZE_APPROVED_PENDING_PUSH
+triggered_by: 'User instruction: "Continue" after Sprint 35 SimUAV schema blocker evidence.'
+requirements:
+  - REQ-ETS-PART2-013
+scenarios:
+  - SCENARIO-ETS-PART2-013-SCHEMA-JSON-REQUEST-SHAPING-001
+  - SCENARIO-ETS-PART2-013-OBSERVATION-PARENT-SCHEMA-001
+  - SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001
+  - SCENARIO-ETS-PART2-013-ENCODING-HONESTY-001
+  - SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001
+scope:
+  include:
+    - Append f=json when fetching DataStream parent schema subresources for binding closure.
+    - Append f=json when fetching ControlStream parent schema subresources for binding closure.
+    - Keep strict JSON-compatible Content-Type validation before PASS evidence.
+    - Add focused helper regression coverage.
+  exclude:
+    - Accepting Content-Type auto as schema PASS evidence.
+    - Full positive populated-IUT part2binding PASS.
+    - Local OSH server patching or fixture autostart changes.
+success_criteria:
+  - Runtime binding schema GET paths are deterministically shaped with f=json.
+  - Existing f or format query parameters are not duplicated.
+  - Focused Maven test for Part2ObservationCommandBindingTests passes.
+  - Full or accepted Maven verification is recorded.
+  - Clean primary local OSH TeamEngine smoke is rerun with zero writes.
+evidence:
+  source_probe: ops/test-results/sprint-ets-36-local-osh-schema-request-shaping-source-probe-2026-06-02.txt
+  focused_maven: ops/test-results/sprint-ets-36-focused-maven-2026-06-02.log
+  wrapper_maven_attempt: ops/test-results/sprint-ets-36-maven-clean-test-2026-06-02.log
+  full_maven_fallback: ops/test-results/sprint-ets-36-maven-clean-test-persistent-cache-2026-06-02.log
+  local_osh_smoke: ops/test-results/sprint-ets-36-clean-local-osh-smoke-2026-06-02.xml
+  local_osh_container_log: ops/test-results/sprint-ets-36-clean-local-osh-container-2026-06-02.log
+  no_mutation: ops/test-results/sprint-ets-36-clean-local-osh-no-mutation-2026-06-02.txt
+verification:
+  formatter: "PASS after bounded cached rerun; prior unbounded cold-cache formatter run was stopped as stalled."
+  focused_maven: "PASS, 14 tests / 0 failures / 0 errors / 0 skipped."
+  wrapper_maven_attempt: "FAILED before tests due Maven Central Connection reset resolving org.apache.maven.plugins:maven-plugins:pom:43."
+  full_maven_fallback: "PASS, 289 tests / 0 failures / 0 errors / 3 skipped."
+  local_osh_smoke: "PASS, 211 total / 68 passed / 0 failed / 143 skipped."
+  no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0."
+  raze_review: "APPROVE_WITH_CONCERNS, confidence 0.93, no required fixes after OpenSpec reconciliation gapfix."
+guardrails:
+  - Do not loosen isJsonCompatibleContentType.
+  - Do not count body-valid Content-Type auto as binding PASS evidence.
+  - Do not claim closure of local OSH stream metadata blockers.
+  - Keep primary local OSH with Sapient and SimUAV disabled unless an isolated fixture run is explicitly documented.

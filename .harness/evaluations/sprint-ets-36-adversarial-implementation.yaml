@@ -1,0 +1,165 @@
+reviewer: "Raze"
+role: "Adversarial Reviewer"
+review_type: "implementation"
+review_started_at: "2026-06-02T22:28:55Z"
+review_completed_at: "2026-06-02T22:35:36Z"
+duration: "6m41s total; focused recheck 0m28s"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.93
+reruns_performed: []
+subagent_metadata:
+  duration: "inline review; no delegated subagent metadata available"
+  tokens: "unavailable"
+
+reviewed_scope:
+  user_instruction: >
+    Act as Red Team / Raze for current uncommitted Sprint 36 changes. Review
+    strict media-type honesty, Content-Type auto evidence, no full
+    part2binding overclaim, Maven wrapper failure wording, clean local OSH E2E
+    totals/no-mutation, scenario/test traceability, and stale doc disagreements.
+  files:
+    - ".harness/contracts/sprint-ets-36.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "epics/stories/s-ets-36-01-binding-schema-json-request-shaping.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+    - "ops/known-issues.md"
+    - "ops/metrics.md"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java"
+  artifacts:
+    - "ops/test-results/sprint-ets-36-local-osh-schema-request-shaping-source-probe-2026-06-02.txt"
+    - "ops/test-results/sprint-ets-36-focused-maven-2026-06-02.log"
+    - "ops/test-results/sprint-ets-36-maven-clean-test-2026-06-02.log"
+    - "ops/test-results/sprint-ets-36-maven-clean-test-persistent-cache-2026-06-02.log"
+    - "ops/test-results/sprint-ets-36-clean-local-osh-smoke-2026-06-02.xml"
+    - "ops/test-results/sprint-ets-36-clean-local-osh-container-2026-06-02.log"
+    - "ops/test-results/sprint-ets-36-clean-local-osh-smoke-console-2026-06-02.log"
+    - "ops/test-results/sprint-ets-36-clean-local-osh-no-mutation-2026-06-02.txt"
+  external_source_inspected:
+    - "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/BaseHandler.java"
+    - "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/resource/BaseResourceHandler.java"
+    - "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/resource/ResourceFormat.java"
+    - "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/DataStreamSchemaHandler.java"
+    - "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandStreamSchemaHandler.java"
+
+verdict_summary: >
+  The implementation is narrow and media-type honest: the code appends f=json
+  to parent schema GET paths and still rejects Content-Type auto as PASS
+  evidence. Maven and clean local OSH evidence are accounted for accurately.
+  Focused recheck after OpenSpec reconciliation closes the prior
+  implementation-status/deferred paragraph gap. No required fixes remain.
+
+focused_rechecks:
+  - id: "RAZE-ETS36-GAP-001"
+    reviewed_at: "2026-06-02T22:35:36Z"
+    result: "CLOSED"
+    reruns_performed: []
+    notes:
+      - "REQ-ETS-PART2-013 status records Sprint 36 f=json request shaping and stream metadata as the remaining blocker."
+      - "Local OSH seed prerequisite now says Sprint 36 removes the ETS-side default schema media-type blocker while populated live ?f=json schema requests remain unexercised by the clean empty-IUT smoke."
+      - "Deferred implementation-status paragraph now includes Sprint 36 and no longer says schema endpoints returning Content-Type auto are the current full-closure blocker."
+
+findings:
+  - id: "RAZE-ETS36-GAP-001"
+    severity: "MEDIUM"
+    status: "CLOSED"
+    title: "OpenSpec implementation-status paragraph still records the pre-Sprint-36 schema media-type blocker."
+    impact: >
+      Closed by OpenSpec reconciliation. The top-level REQ-ETS-PART2-013
+      status, local OSH seed prerequisite, and deferred implementation-status
+      paragraph now agree that Sprint 36 implemented f=json request shaping
+      without accepting Content-Type auto as PASS evidence, while full
+      populated closure remains open for stream metadata and unexercised
+      populated fixture evidence.
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:907 records SPRINT_36_SCHEMA_JSON_REQUEST_SHAPING_IMPLEMENTED_WITH_STREAM_METADATA_BLOCKER."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:910 records that Sprint 36 removes the ETS-side default schema media-type blocker while preserving strict JSON-compatible Content-Type validation."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:2643 records Sprint 36 f=json request shaping and leaves only stream metadata, unexercised populated fixture requests, and fixture isolation/reset as blockers."
+    required_fix: false
+    recommendation: >
+      No further required fix for this gap. Keep the non-blocking live
+      populated-schema evidence limitation visible until a populated fixture
+      run exercises ?f=json schema requests.
+  - id: "RAZE-ETS36-CONCERN-001"
+    severity: "LOW"
+    status: "NON_BLOCKING"
+    title: "Clean local OSH smoke did not exercise populated parent schema f=json requests."
+    impact: >
+      The clean primary IUT has empty datastream/controlstream collections, so
+      TeamEngine SKIPs before the changed parent-schema request path is reached.
+      This is honestly documented and does not create a false PASS, but live
+      f=json schema-header confirmation remains deferred to the next isolated
+      populated fixture run.
+    evidence:
+      - "ops/test-results/sprint-ets-36-clean-local-osh-smoke-2026-06-02.xml:2228 records command binding SKIP on empty /controlstreams."
+      - "ops/test-results/sprint-ets-36-clean-local-osh-smoke-2026-06-02.xml:2237 records observation binding SKIP on empty /datastreams."
+      - "ops/test-results/sprint-ets-36-local-osh-schema-request-shaping-source-probe-2026-06-02.txt documents that live schema-header confirmation is deferred."
+    required_fix: false
+    recommendation: >
+      Keep this limitation visible until an isolated populated fixture run
+      captures actual /datastreams/{id}/schema?f=json and
+      /controlstreams/{id}/schema?f=json response media types.
+
+evidence:
+  media_type_honesty:
+    result: "PASS"
+    notes:
+      - "Part2ObservationCommandBindingTests.requiredJsonObject now calls schemaJsonRequestPath before GET."
+      - "schemaJsonRequestPath appends f=json unless f or format already exists."
+      - "isJsonCompatibleContentType still accepts only application/json or +json; Content-Type auto is still rejected."
+  content_type_auto_not_pass:
+    result: "PASS"
+    notes:
+      - "Contract excludes accepting Content-Type auto as schema PASS evidence."
+      - "Story acceptance criteria mark strict media-type validation unchanged."
+      - "OpenSpec scenario SCENARIO-ETS-PART2-013-SCHEMA-JSON-REQUEST-SHAPING-001 forbids treating body-valid Content-Type auto as binding PASS evidence."
+  no_full_part2binding_overclaim:
+    result: "PASS_WITH_OPEN_BLOCKER"
+    notes:
+      - "Story and ops docs do not claim full populated-IUT part2binding PASS."
+      - "Traceability keeps REQ-ETS-PART2-013 PARTIAL_IMPLEMENTED and names stream metadata as the remaining blocker."
+      - "Smoke part2binding positive methods SKIP on empty local OSH collections."
+  maven:
+    focused:
+      result: "PASS"
+      totals: "14 tests / 0 failures / 0 errors / 0 skipped"
+      artifact: "ops/test-results/sprint-ets-36-focused-maven-2026-06-02.log"
+    required_wrapper_attempt:
+      result: "FAILED_BEFORE_TESTS_RECORDED_HONESTLY"
+      cause: "Maven Central Connection reset resolving org.apache.maven.plugins:maven-plugins:pom:43"
+      artifact: "ops/test-results/sprint-ets-36-maven-clean-test-2026-06-02.log"
+    persistent_cache_fallback:
+      result: "PASS"
+      totals: "289 tests / 0 failures / 0 errors / 3 skipped"
+      artifact: "ops/test-results/sprint-ets-36-maven-clean-test-persistent-cache-2026-06-02.log"
+  clean_local_osh_e2e:
+    result: "PASS_WITH_SKIPS_RECORDED"
+    totals: "211 total / 68 passed / 0 failed / 143 skipped"
+    artifact: "ops/test-results/sprint-ets-36-clean-local-osh-smoke-2026-06-02.xml"
+    part2binding_runtime_outcome: "3 PASS / 2 SKIP / 0 FAIL"
+    no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
+  source_probe:
+    result: "PASS"
+    notes:
+      - "BaseHandler.parseFormat reads f and format."
+      - "ResourceFormat.JSON maps json to application/json."
+      - "BaseResourceHandler.getByKey sets response Content-Type from parsed responseFormat."
+      - "DataStreamSchemaHandler and CommandStreamSchemaHandler allow ResourceFormat.JSON."
+  scenario_test_traceability:
+    result: "PASS"
+    notes:
+      - "Story, contract, OpenSpec, traceability, and epic reference SCENARIO-ETS-PART2-013-SCHEMA-JSON-REQUEST-SHAPING-001."
+      - "VerifyPart2ObservationCommandBindingTests includes a comment referencing REQ-ETS-PART2-013 and the new scenario."
+  credential_leak_and_worktree:
+    result: "PASS"
+    notes:
+      - "Sprint 36 smoke log masks Authorization as Basi***MDI2."
+      - "No product-code changes were made during this review."
+      - "git diff --check returned clean."
+
+required_fixes: []

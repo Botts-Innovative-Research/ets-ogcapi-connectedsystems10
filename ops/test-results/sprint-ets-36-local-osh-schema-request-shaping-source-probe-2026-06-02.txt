@@ -1,0 +1,25 @@
+Sprint ets-36 local OSH schema request-shaping source probe
+Timestamp: 2026-06-02
+Purpose: Identify whether the ETS can request inspectable JSON media types from local OSH parent schema subresources without weakening binding checks.
+
+Local OSH ConSys source inspected under:
+- /home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/BaseHandler.java
+- /home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/resource/BaseResourceHandler.java
+- /home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/DataStreamSchemaHandler.java
+- /home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandStreamSchemaHandler.java
+- /home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/resource/ResourceFormat.java
+
+Findings:
+- BaseHandler.parseFormat(queryParams) defaults to ResourceFormat.AUTO but reads f or format when provided.
+- ResourceFormat.JSON maps to application/json and short name json.
+- BaseResourceHandler.getByKey parses responseFormat, sets ctx format options, obtains the binding, then sets response Content-Type from responseFormat.getMimeType().
+- DataStreamSchemaHandler accepts ResourceFormat.AUTO and ResourceFormat.JSON, then picks the schema binding from obsFormat.
+- CommandStreamSchemaHandler accepts ResourceFormat.AUTO and ResourceFormat.JSON, then picks the schema binding from commandFormat.
+- DataStreamBindingJson serializes resultTime only if dsInfo.getResultTimeRange() is not null.
+- CommandStreamBindingJson serializes issueTime and executionTime only if the corresponding ranges are not null.
+
+Conclusion:
+- The ETS should request parent schema subresources with f=json to avoid the local OSH default Content-Type: auto path while keeping the strict JSON-compatible media-type gate.
+- This only addresses binding parent schema retrieval. It does not fix Annex A.9 stream collection schema failures caused by missing live/async/resultTime/issueTime/executionTime metadata.
+- Current clean primary local OSH has no datastream candidate, so live schema-header confirmation is deferred to the next isolated populated fixture run.
+

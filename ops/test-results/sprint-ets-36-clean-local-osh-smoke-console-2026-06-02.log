@@ -1,0 +1,17 @@
+[smoke-test 21:06:33] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 21:06:33] step 2/8 — docker build ets-ogcapi-connectedsystems10:smoke (BuildKit 1)
+[smoke-test 21:07:08] step 3/8 — docker run on host port 8082
+[smoke-test 21:07:09] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 21:07:14]   healthcheck PASS at 21:07:14
+[smoke-test 21:07:14] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 21:07:14]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'ogcapi-connectedsystems10')
+[smoke-test 21:07:14]   SMOKE_AUTH_CREDENTIAL set (length=30) — propagating as auth-credential suite parameter (REQ-ETS-CLEANUP-013)
+[smoke-test 21:07:14] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=http://field-hub-osh-1:8081/sensorhub/api
+[smoke-test 21:07:20] step 7/8 — validating TestNG report → /tmp/sprint-ets-36-clean-local-osh-2026-06-02-results/s-ets-01-03-teamengine-smoke-2026-06-02.xml
+[smoke-test 21:07:20]   TestNG: total=211 passed=68 failed=0 skipped=143
+[smoke-test 21:07:20]   zero IUT-bound POST/PUT/DELETE/PATCH request-log entries for http://field-hub-osh-1:8081/sensorhub/api (recognized_iut_request_logs=135)
+[smoke-test 21:07:20] step 8/8 — scanning container startup log for ERROR/SEVERE
+[smoke-test 21:07:20]   zero startup ERROR/SEVERE
+[smoke-test 21:07:20] SMOKE PASS: total=211 passed=68 failed=0 skipped=143 on http://field-hub-osh-1:8081/sensorhub/api via TeamEngine
+[smoke-test 21:07:20]   report: /tmp/sprint-ets-36-clean-local-osh-2026-06-02-results/s-ets-01-03-teamengine-smoke-2026-06-02.xml
+[smoke-test 21:07:20]   log:    /tmp/sprint-ets-36-clean-local-osh-2026-06-02-results/s-ets-01-03-teamengine-container-2026-06-02.log

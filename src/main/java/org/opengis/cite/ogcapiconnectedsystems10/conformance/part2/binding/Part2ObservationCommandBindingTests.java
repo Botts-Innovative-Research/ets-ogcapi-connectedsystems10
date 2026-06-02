@@ -326,8 +326,35 @@ public class Part2ObservationCommandBindingTests {
 	}
 
 	private Map<String, Object> requiredJsonObject(String path, String reqUri, String source) {
-		Response response = given().accept("application/json").when().get(this.baseUri.resolve(path)).andReturn();
+		Response response = given().accept("application/json")
+			.when()
+			.get(this.baseUri.resolve(schemaJsonRequestPath(path)))
+			.andReturn();
 		return skipUnlessInspectableJsonResponse(response, reqUri, source);
+	}
+
+	static String schemaJsonRequestPath(String path) {
+		String requiredPath = Objects.requireNonNull(path, "path");
+		if (hasQueryParameter(requiredPath, "f") || hasQueryParameter(requiredPath, "format")) {
+			return requiredPath;
+		}
+		return requiredPath + (requiredPath.contains("?") ? "&" : "?") + "f=json";
+	}
+
+	private static boolean hasQueryParameter(String path, String name) {
+		int queryIndex = path.indexOf('?');
+		if (queryIndex < 0) {
+			return false;
+		}
+		String query = path.substring(queryIndex + 1).toLowerCase(Locale.ROOT);
+		for (String parameter : query.split("&")) {
+			int valueIndex = parameter.indexOf('=');
+			String key = valueIndex >= 0 ? parameter.substring(0, valueIndex) : parameter;
+			if (name.equals(key)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private Map<String, Object> skipUnlessInspectableJsonResponse(Response response, String reqUri, String source) {

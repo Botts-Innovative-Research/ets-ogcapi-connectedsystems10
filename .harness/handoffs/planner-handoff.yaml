@@ -1,46 +1,35 @@
 agent: planner
 status: specified_planned_raze_approved
-timestamp: "2026-06-01T23:31:12Z"
-pushed_planning_commit: "f2d2ab8 Plan Sprint 32 local OSH primary E2E"
-sprint_number: "ets-32"
-sprint_name: "part2-observation-command-binding-local-osh"
-contract_path: ".harness/contracts/sprint-ets-32.yaml"
+timestamp: "2026-06-02T01:20:41Z"
+pushed_planning_commit: "TBD"
+sprint_number: "ets-33"
+sprint_name: "part2-local-osh-dynamic-data-seed-fixtures"
+contract_path: ".harness/contracts/sprint-ets-33.yaml"
 triggered_by: |
-  User instructed the project to abandon GeoRobotix's public instance as the
-  default development test target, use a self-provisioned local OSH as the
-  primary development IUT, and continue Sprint 32 spec-first planning.
+  User instructed "Continue" after Sprint 32 was completed and pushed. The
+  documented next action in ops/status.md was local OSH dynamic-data seed
+  fixtures plus inline CommandStatus/CommandResult helper regressions, unless
+  priority shifted.
 
 planning_result:
   story:
-    id: "S-ETS-32-01"
-    title: "Observation/Command binding closure with local OSH primary E2E"
-    file: "epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md"
+    id: "S-ETS-33-01"
+    title: "Local OSH dynamic-data seed fixtures for Observation/Command binding"
+    file: "epics/stories/s-ets-33-01-local-osh-dynamic-data-seed-fixtures-planning.md"
   architecture_freshness:
-    checked_at: "2026-06-01T23:14:04Z"
+    checked_at: "2026-06-02T01:07:13Z"
     architecture_last_reconciled: "2026-06-01"
     stale: false
-  official_ogc_verification:
-    source: "https://docs.ogc.org/is/23-002/23-002.html"
-    checked_at: "2026-06-01T23:14:00Z"
-    findings:
-      - "OGC 23-002 lists Part 2 classes but does not define /conf/observation-binding."
-      - "Observations are grouped into DataStreams and carry results structured according to a schema."
-      - "ControlStreams are containers for Commands and Commands carry parameters structured according to a schema."
-    conclusion: "REQ-ETS-PART2-013 is an internal project closure, not an OGC conformance class."
   requirements:
     modified:
       - "REQ-ETS-PART2-013"
-      - "REQ-ETS-TEAMENGINE-005"
-    added:
       - "REQ-ETS-TEAMENGINE-006"
+    added: []
   scenarios:
-    - "SCENARIO-ETS-PART2-013-LOCAL-OSH-PRIMARY-IUT-001"
-    - "SCENARIO-ETS-PART2-013-GEOROBOTIX-NOT-DEFAULT-001"
-    - "SCENARIO-ETS-PART2-013-DYNAMIC-SEED-STATE-001"
-    - "SCENARIO-ETS-PART2-013-OBSERVATION-PARENT-SCHEMA-001"
-    - "SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001"
-    - "SCENARIO-ETS-PART2-013-ENCODING-HONESTY-001"
-    - "SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001"
+    - "SCENARIO-ETS-PART2-013-DYNAMIC-SEED-FIXTURES-001"
+    - "SCENARIO-ETS-PART2-013-SEED-MUTATION-SAFETY-001"
+    - "SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001"
+    - "SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001"
 
 local_osh_evidence:
   target:
@@ -48,50 +37,64 @@ local_osh_evidence:
     teamengine_url: "http://field-hub-osh-1:8081/sensorhub/api"
     docker_network: "field-hub_default"
     container: "field-hub-osh-1"
-    credential_handling: "Basic auth derived from local OSH config or SMOKE_AUTH_CREDENTIAL; value not recorded."
-  probe_artifact: "ops/test-results/sprint-ets-32-plan-local-osh-probes-2026-06-01.txt"
-  declared_relevant_classes:
-    - "/conf/datastream"
-    - "/conf/controlstream"
-    - "/conf/json"
-    - "/conf/swecommon-json"
-    - "/conf/swecommon-text"
-    - "/conf/swecommon-binary"
-    - "/conf/create-replace-delete"
-    - "/conf/system-event"
-  empty_collections:
-    - "/datastreams?limit=1"
-    - "/observations?limit=1"
-    - "/controlstreams?limit=1"
-  unavailable_or_unpopulated:
-    - "/commands?limit=1 returned HTTP 400"
-    - "/systemEvents?limit=1 returned HTTP 400"
+    credential_handling: "Basic auth derived from local OSH config or environment; value not recorded."
+  probe_artifact: "ops/test-results/sprint-ets-33-plan-local-osh-dynamic-data-probes-2026-06-02.txt"
+  current_dynamic_state:
+    - "/datastreams?limit=5 returned HTTP 200 with empty items"
+    - "/observations?limit=5 returned HTTP 200 with empty items"
+    - "/controlstreams?limit=5 returned HTTP 200 with empty items"
+    - "/systems/040g/datastreams?limit=5 returned HTTP 200 with empty items"
+    - "/systems/040g/controlstreams?limit=5 returned HTTP 200 with empty items"
+    - "/commands?limit=5 returned HTTP 400"
+  options_readiness: "Dynamic collection paths advertise broad write methods, but planning did not mutate local OSH."
+
+openapi_probe:
+  source: "https://opengeospatial.github.io/ogcapi-connected-systems/api/part2/openapi/openapi-connectedsystems-2.yaml"
+  relevant_post_paths:
+    - "/systems/{systemId}/datastreams"
+    - "/datastreams/{dataStreamId}/observations"
+    - "/systems/{systemId}/controlstreams"
+    - "/controlstreams/{controlStreamId}/commands"
+    - "/commands/{cmdId}/status"
+    - "/commands/{cmdId}/result"
+  caveat: "Some referenced JSON schemas mark readOnly fields as required; Generator must discover actual OSH write acceptance."
+
+seed_manifest:
+  path: "ops/local-osh-dynamic-data-seed-fixtures.json"
+  status: "planned_not_applied"
+  safety: "Requires explicit dedicated mutable-IUT opt-in; read-only default must keep write counts at zero."
 
 planning_e2e:
   status: "PASS"
-  command: "SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s32-plan-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-32-local-osh-plan-2026-06-01-results bash scripts/smoke-test.sh"
-  testng: "206 total / 65 passed / 0 failed / 141 skipped"
-  report: "ops/test-results/sprint-ets-32-plan-local-osh-smoke-2026-06-01.xml"
-  container_log: "ops/test-results/sprint-ets-32-plan-local-osh-container-2026-06-01.log"
-  no_mutation_artifact: "ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt"
-  no_mutation: "recognized_iut_request_logs=132; GET=130; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
-
-generator_guardrails:
-  - "Do not add or require /conf/observation-binding."
-  - "Do not PASS from declarations, empty collections, broad format lists, hardcoded examples, OPTIONS-only evidence, or sibling encodings."
-  - "Observation-side PASS requires parent DataStream schema evidence and associated Observation body evidence."
-  - "Command-side PASS requires parent ControlStream schema evidence and associated Command-side body evidence."
-  - "If local OSH remains empty, SKIP with exact empty-IUT-state reasons."
-  - "If positive closure is required, seed documented dynamic-data fixtures under explicit dedicated-mutable-IUT opt-in and cleanup."
+  command: "SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s33-plan-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-33-plan-local-osh-2026-06-02-results bash scripts/smoke-test.sh"
+  testng: "211 total / 68 passed / 0 failed / 143 skipped"
+  report: "ops/test-results/sprint-ets-33-plan-local-osh-smoke-2026-06-02.xml"
+  container_log: "ops/test-results/sprint-ets-33-plan-local-osh-container-2026-06-02.log"
+  no_mutation_artifact: "ops/test-results/sprint-ets-33-plan-local-osh-no-mutation-2026-06-02.txt"
+  no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
 
 raze_review:
   required: true
   status: "APPROVE"
-  artifact: ".harness/evaluations/sprint-ets-32-plan-adversarial.yaml"
-  confidence: 0.94
+  artifact: ".harness/evaluations/sprint-ets-33-plan-adversarial.yaml"
+  initial_verdict: "GAPS_FOUND"
+  initial_confidence: 0.88
+  final_confidence: 0.94
+  subagent: "019e85e6-c8d6-7942-91b1-9bab1a38bdba"
   closed_gaps:
-    - "RAZE-ETS32-PLAN-GAP-001"
-    - "RAZE-ETS32-PLAN-GAP-002"
+    - "RAZE-ETS33-PLAN-GAP-001"
+    - "RAZE-ETS33-PLAN-GAP-002"
+  closed_concerns:
+    - "RAZE-ETS33-PLAN-CONCERN-001"
+    - "RAZE-ETS33-PLAN-CONCERN-002"
+
+generator_guardrails:
+  - "Do not mutate unless explicit dedicated mutable-IUT opt-in is present."
+  - "Do not mutate GeoRobotix or any public shared IUT."
+  - "Do not report positive binding closure from fixture intent, declarations, empty collections, broad format lists, or OPTIONS-only evidence."
+  - "Positive closure requires live parent schema and child body evidence with concrete field/type matching."
+  - "Record created ids, accepted payload family, cleanup outcome, TeamEngine totals, and read-only no-mutation comparison evidence."
+  - "Add helper regressions for inline CommandStatus/CommandResult skip and mismatch behavior before populated-IUT closure."
 
 next_agent: "generator"
-next_action: "Implement Sprint 32 runtime binding closure from .harness/contracts/sprint-ets-32.yaml, starting with seed-state handling and SKIP honesty for empty local OSH dynamic-data collections."
+next_action: "Implement Sprint 33 from .harness/contracts/sprint-ets-33.yaml after planning E2E and Raze approval are reconciled."

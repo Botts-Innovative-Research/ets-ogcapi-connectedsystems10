@@ -1,0 +1,63 @@
+Sprint 33 planning probe: local OSH dynamic-data seed fixture readiness
+Timestamp: 2026-06-02T01:07:13Z
+Story: S-ETS-33-01
+Requirement: REQ-ETS-PART2-013
+
+Credential handling:
+- Authenticated local OSH requests used Basic auth derived from local OSH config.
+- No credential values are recorded in this artifact.
+
+Architecture freshness:
+- _bmad/architecture.md Last reconciled: 2026-06-01.
+- Freshness check for 2026-06-02: not stale.
+
+Target:
+- Host URL: http://localhost:8081/sensorhub/api
+- TeamEngine URL: http://field-hub-osh-1:8081/sensorhub/api
+- Docker network: field-hub_default
+- Existing parent System id observed: 040g
+
+Authenticated GET probes:
+- GET /conformance: HTTP 200, content-type auto.
+- GET /systems?limit=5: HTTP 200 application/json; includes id 040g with uid urn:ets:local-osh:system:alpha.
+- GET /datastreams?limit=5: HTTP 200 application/json; body has empty items.
+- GET /observations?limit=5: HTTP 200 application/json; body has empty items.
+- GET /controlstreams?limit=5: HTTP 200 application/json; body has empty items.
+- GET /commands?limit=5: HTTP 400 application/json; message "Invalid resource name: 'commands'".
+- GET /systems/040g/datastreams?limit=5: HTTP 200 application/json; body has empty items.
+- GET /systems/040g/controlstreams?limit=5: HTTP 200 application/json; body has empty items.
+
+OPTIONS readiness probes:
+- OPTIONS /systems/040g/datastreams: HTTP 200; Allow includes GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS.
+- OPTIONS /systems/040g/controlstreams: HTTP 200; Allow includes GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS.
+- OPTIONS /datastreams: HTTP 200; Allow includes GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS.
+- OPTIONS /observations: HTTP 200; Allow includes GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS.
+- OPTIONS /controlstreams: HTTP 200; Allow includes GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS.
+- OPTIONS /commands: HTTP 200; Allow includes GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS.
+
+Landing page service-description observations:
+- Title: SAR-Ops Connected Systems API.
+- Advertises Part 1 OpenAPI:
+  https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+- Advertises Part 2 OpenAPI:
+  https://opengeospatial.github.io/ogcapi-connected-systems/api/part2/openapi/openapi-connectedsystems-2.yaml
+- Landing links include systems, deployments, procedures, samplingFeatures, datastreams, and observations.
+- Direct controlstreams endpoints are reachable even if not visible in the first landing response excerpt.
+
+Official Part 2 OpenAPI probe:
+- Source: https://opengeospatial.github.io/ogcapi-connected-systems/api/part2/openapi/openapi-connectedsystems-2.yaml
+- Relevant POST paths:
+  - /systems/{systemId}/datastreams: application/json, schema ../schemas/json/dataStream.json.
+  - /datastreams/{dataStreamId}/observations: application/json, application/swe+json, application/swe+csv, JSON schema ../schemas/json/observation.json.
+  - /systems/{systemId}/controlstreams: application/json, schema ../schemas/json/controlStream.json.
+  - /controlstreams/{controlStreamId}/commands: application/json, application/swe+csv, JSON schema ../schemas/json/command.json.
+  - /commands/{cmdId}/status: application/json, schema ../schemas/json/commandStatus.json.
+  - /commands/{cmdId}/result: application/json, schema ../schemas/json/commandResult.json.
+- Schema caveat: some request-body schemas require fields that are described as readOnly. Generator must probe actual OSH acceptance before recording exact fixture payloads.
+
+Planning conclusion:
+- Current local OSH dynamic-data collections are empty, so Sprint 32's read-only part2binding positive closure will continue to SKIP unless fixtures are created or pre-existing dynamic data appears.
+- Sprint 33 planning did not issue POST, PUT, PATCH, or DELETE.
+- Generator must require explicit mutable-IUT opt-in before seed attempts.
+- Positive binding closure requires live-created or pre-existing DataStream, Observation, ControlStream, Command, and optional CommandStatus/CommandResult evidence, plus parent schema and child body field/type matching.
+- Read-only smoke remains the default and must retain zero IUT-bound write requests.

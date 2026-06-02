@@ -1,0 +1,55 @@
+agent: "Raze"
+role: "Red Team / adversarial reviewer"
+sprint: "ets-33"
+story: "S-ETS-33-01"
+artifact_type: "planning_adversarial_review"
+mode: "read-only"
+initial_review:
+  verdict: "GAPS_FOUND"
+  confidence: 0.88
+  start_utc: "2026-06-02T01:16:04Z"
+  end_utc: "2026-06-02T01:18:24Z"
+  duration_seconds: 140
+  token_metadata: "not available from this harness"
+  required_fixes:
+    - id: "RAZE-ETS33-PLAN-GAP-001"
+      summary: "REQ-ETS-TEAMENGINE-006 traceability still mapped only Sprint 32 despite Sprint 33 scope."
+      disposition: "fixed"
+      fixed_by:
+        - "_bmad/traceability.md"
+    - id: "RAZE-ETS33-PLAN-GAP-002"
+      summary: "Story and epic lacked explicit Sprint 33 scenario IDs."
+      disposition: "fixed"
+      fixed_by:
+        - "epics/stories/s-ets-33-01-local-osh-dynamic-data-seed-fixtures-planning.md"
+        - "epics/epic-ets-03-part2-classes.md"
+  concerns:
+    - id: "RAZE-ETS33-PLAN-CONCERN-001"
+      summary: "Manifest forbade only exact GeoRobotix URL, not broader public/shared IUT classes."
+      disposition: "fixed"
+      fixed_by:
+        - "ops/local-osh-dynamic-data-seed-fixtures.json"
+    - id: "RAZE-ETS33-PLAN-CONCERN-002"
+      summary: "Pending/Raze/TBD markers must be reconciled after review result is recorded."
+      disposition: "fixed"
+focused_recheck:
+  verdict: "APPROVE"
+  confidence: 0.94
+  start_utc: "2026-06-02T01:19:57Z"
+  end_utc: "2026-06-02T01:20:27Z"
+  duration_seconds: 30
+  token_metadata: "not available from this harness"
+  required_fixes: []
+  concerns:
+    - "No blocking concerns. Remaining pending markers were expected until this focused recheck was recorded and reconciled."
+evidence_checked:
+  - "_bmad/traceability.md maps REQ-ETS-TEAMENGINE-006 to S-ETS-33-01, ets-33, Sprint 33 scenarios, E2E totals, and no-mutation evidence."
+  - "Story includes Scenario Traceability for the four Sprint 33 scenario IDs."
+  - "Epic table and note include explicit Sprint 33 scenario IDs."
+  - "Manifest includes forbiddenTargetClasses and broader dedicated non-public mutable-IUT target policy."
+  - "E2E totals are consistent: 211 total / 68 passed / 0 failed / 143 skipped."
+  - "No-mutation counts are consistent: recognized=135, GET=133, OPTIONS=2, writes all zero."
+  - "Credential values were not found unmasked in reviewed artifacts."
+final_verdict: "APPROVE"
+final_confidence: 0.94
+files_modified_by_reviewer: []

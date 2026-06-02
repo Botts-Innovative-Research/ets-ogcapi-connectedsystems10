@@ -2,6 +2,25 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-02T01:13Z — Sprint 33 dynamic-data seed fixture planning start
+
+**Triggered by user instruction**: "Continue"
+
+- Started Sprint 33 spec-first planning from the clean pushed Sprint 32 baseline.
+- Added `.harness/contracts/sprint-ets-33.yaml` and `epics/stories/s-ets-33-01-local-osh-dynamic-data-seed-fixtures-planning.md`.
+- Added planned local OSH dynamic-data seed fixture manifest `ops/local-osh-dynamic-data-seed-fixtures.json`; it is marked `PLANNED_NOT_APPLIED` and requires explicit dedicated mutable-IUT opt-in before mutation.
+- Captured local OSH dynamic-data readiness probes in `ops/test-results/sprint-ets-33-plan-local-osh-dynamic-data-probes-2026-06-02.txt`.
+- Added Sprint 33 OpenSpec scenarios for dynamic seed fixtures, seed mutation safety, inline CommandStatus/CommandResult helper regressions, and positive local OSH closure.
+- Reconciled planner handoff, traceability, epic ETS-03, status, test-results, known issues, and server references to the Sprint 33 planning state.
+- Ran mandatory authenticated local OSH TeamEngine planning smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+- Archived E2E artifacts as `ops/test-results/sprint-ets-33-plan-local-osh-smoke-2026-06-02.xml`, `ops/test-results/sprint-ets-33-plan-local-osh-container-2026-06-02.log`, and `ops/test-results/sprint-ets-33-plan-local-osh-no-mutation-2026-06-02.txt`.
+- Verified read-only no-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, `DELETE=0`.
+- Raze planning review initially returned `GAPS_FOUND` confidence 0.88 for `REQ-ETS-TEAMENGINE-006` Sprint 33 traceability and missing scenario-level story/epic traceability, plus a manifest concern about public/shared-IUT bans.
+- Fixed the Raze gaps by updating traceability, adding scenario traceability to the story/epic, and adding `forbiddenTargetClasses` plus a broader target policy to the manifest.
+- Focused Raze recheck returned `APPROVE` confidence 0.94 with no required fixes; evaluation recorded at `.harness/evaluations/sprint-ets-33-plan-adversarial.yaml`.
+
+---
+
 ## 2026-06-02T00:50Z — Sprint 32 Generator push
 
 **Triggered by user instruction**: "Continu3"

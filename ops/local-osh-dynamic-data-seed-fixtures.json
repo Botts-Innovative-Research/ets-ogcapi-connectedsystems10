@@ -1,0 +1,242 @@
+{
+  "description": "Planned dynamic-data seed fixture contract for local OSH populated Observation/Command binding closure.",
+  "status": "PLANNED_NOT_APPLIED",
+  "createdFor": "S-ETS-33-01 local OSH dynamic-data seed fixture planning",
+  "createdAt": "2026-06-02T01:07:13Z",
+  "iutBaseUrlHost": "http://localhost:8081/sensorhub/api",
+  "iutBaseUrlDocker": "http://field-hub-osh-1:8081/sensorhub/api",
+  "dockerNetwork": "field-hub_default",
+  "parentSystemId": "040g",
+  "notes": [
+    "This manifest is a planning contract, not proof that these payload shapes have been accepted by OSH.",
+    "Generator must only apply dynamic-data fixtures under explicit dedicated mutable-IUT opt-in.",
+    "The official Part 2 OpenAPI schemas mark some readOnly fields as required, so Generator must discover accepted OSH write shape before recording exact payloads.",
+    "Credential values must never be stored in this manifest, repository docs, or archived logs."
+  ],
+  "mutationSafety": {
+    "requiresExplicitOptIn": true,
+    "requiredEnvironment": {
+      "SMOKE_MUTATION_TESTS_ENABLED": "true",
+      "SMOKE_MUTATION_IUT_POLICY": "dedicated-mutable-iut"
+    },
+    "forbiddenTargets": [
+      "https://api.georobotix.io/ogc/t18/api"
+    ],
+    "forbiddenTargetClasses": [
+      "GeoRobotix",
+      "public IUT",
+      "shared IUT"
+    ],
+    "targetPolicy": "Only a dedicated non-public mutable local OSH or equivalent dedicated mutable IUT may receive dynamic-data seed mutations.",
+    "defaultPlanningMode": "read-only",
+    "defaultPlanningMustKeepWriteCountsZero": true
+  },
+  "currentPlanningProbe": {
+    "artifact": "ops/test-results/sprint-ets-33-plan-local-osh-dynamic-data-probes-2026-06-02.txt",
+    "dynamicCollections": {
+      "/datastreams?limit=5": "HTTP 200 application/json with empty items",
+      "/observations?limit=5": "HTTP 200 application/json with empty items",
+      "/controlstreams?limit=5": "HTTP 200 application/json with empty items",
+      "/systems/040g/datastreams?limit=5": "HTTP 200 application/json with empty items",
+      "/systems/040g/controlstreams?limit=5": "HTTP 200 application/json with empty items",
+      "/commands?limit=5": "HTTP 400 application/json with invalid resource name"
+    },
+    "optionsObservation": "Dynamic collection paths advertise broad write methods, but planning did not issue mutating requests."
+  },
+  "openApiDerivedRequestBodies": [
+    {
+      "resourceFamily": "DataStream",
+      "createEndpointTemplate": "/systems/{systemId}/datastreams",
+      "jsonSchemaRef": "../schemas/json/dataStream.json",
+      "mediaTypes": [
+        "application/json"
+      ],
+      "schemaRequiredFields": [
+        "name",
+        "system@link",
+        "observedProperties",
+        "phenomenonTime",
+        "resultTime",
+        "resultType",
+        "live"
+      ],
+      "writeOnlySchemaMember": "schema"
+    },
+    {
+      "resourceFamily": "Observation",
+      "createEndpointTemplate": "/datastreams/{dataStreamId}/observations",
+      "jsonSchemaRef": "../schemas/json/observation.json",
+      "mediaTypes": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv"
+      ],
+      "schemaRequiredFields": [
+        "id",
+        "datastream@id",
+        "resultTime"
+      ],
+      "bodyEvidenceMembers": [
+        "result",
+        "result@link"
+      ]
+    },
+    {
+      "resourceFamily": "ControlStream",
+      "createEndpointTemplate": "/systems/{systemId}/controlstreams",
+      "jsonSchemaRef": "../schemas/json/controlStream.json",
+      "mediaTypes": [
+        "application/json"
+      ],
+      "schemaRequiredFields": [
+        "name",
+        "system@link",
+        "controlledProperties",
+        "issueTime",
+        "executionTime",
+        "live",
+        "async"
+      ],
+      "writeOnlySchemaMember": "schema"
+    },
+    {
+      "resourceFamily": "Command",
+      "createEndpointTemplate": "/controlstreams/{controlStreamId}/commands",
+      "jsonSchemaRef": "../schemas/json/command.json",
+      "mediaTypes": [
+        "application/json",
+        "application/swe+csv"
+      ],
+      "schemaRequiredFields": [
+        "id",
+        "controlstream@id",
+        "issueTime",
+        "parameters"
+      ],
+      "bodyEvidenceMembers": [
+        "parameters",
+        "status",
+        "commandStatus",
+        "result",
+        "commandResult"
+      ]
+    },
+    {
+      "resourceFamily": "CommandStatus",
+      "createEndpointTemplate": "/commands/{cmdId}/status",
+      "jsonSchemaRef": "../schemas/json/commandStatus.json",
+      "mediaTypes": [
+        "application/json"
+      ],
+      "schemaRequiredFields": [
+        "id",
+        "command@id",
+        "reportTime",
+        "statusCode"
+      ]
+    },
+    {
+      "resourceFamily": "CommandResult",
+      "createEndpointTemplate": "/commands/{cmdId}/result",
+      "jsonSchemaRef": "../schemas/json/commandResult.json",
+      "mediaTypes": [
+        "application/json"
+      ],
+      "schemaRequiredFields": [
+        "id",
+        "command@id"
+      ]
+    }
+  ],
+  "plannedSeedSequence": [
+    {
+      "step": 1,
+      "resourceFamily": "DataStream",
+      "endpointTemplate": "/systems/040g/datastreams",
+      "purpose": "Parent schema evidence for Observation binding.",
+      "generatorMustRecord": [
+        "accepted request body family",
+        "HTTP response status",
+        "created or selected DataStream id",
+        "schema retrieval result"
+      ]
+    },
+    {
+      "step": 2,
+      "resourceFamily": "Observation",
+      "endpointTemplate": "/datastreams/{dataStreamId}/observations",
+      "purpose": "Child body evidence for Observation binding.",
+      "generatorMustRecord": [
+        "accepted request body family",
+        "HTTP response status",
+        "created or selected Observation id",
+        "result body members"
+      ]
+    },
+    {
+      "step": 3,
+      "resourceFamily": "ControlStream",
+      "endpointTemplate": "/systems/040g/controlstreams",
+      "purpose": "Parent schema evidence for Command binding.",
+      "generatorMustRecord": [
+        "accepted request body family",
+        "HTTP response status",
+        "created or selected ControlStream id",
+        "schema retrieval result"
+      ]
+    },
+    {
+      "step": 4,
+      "resourceFamily": "Command",
+      "endpointTemplate": "/controlstreams/{controlStreamId}/commands",
+      "purpose": "Child parameter evidence for Command binding.",
+      "generatorMustRecord": [
+        "accepted request body family",
+        "HTTP response status",
+        "created or selected Command id",
+        "parameter body members"
+      ]
+    },
+    {
+      "step": 5,
+      "resourceFamily": "CommandStatus",
+      "endpointTemplate": "/commands/{cmdId}/status",
+      "purpose": "Optional inline or linked status evidence for Command binding.",
+      "generatorMustRecord": [
+        "whether endpoint is available",
+        "accepted request body family",
+        "HTTP response status",
+        "created or selected status id",
+        "status body members"
+      ]
+    },
+    {
+      "step": 6,
+      "resourceFamily": "CommandResult",
+      "endpointTemplate": "/commands/{cmdId}/result",
+      "purpose": "Optional inline or linked result evidence for Command binding.",
+      "generatorMustRecord": [
+        "whether endpoint is available",
+        "accepted request body family",
+        "HTTP response status",
+        "created or selected result id",
+        "result body members"
+      ]
+    }
+  ],
+  "cleanupOrder": [
+    "CommandResult",
+    "CommandStatus",
+    "Command",
+    "ControlStream",
+    "Observation",
+    "DataStream"
+  ],
+  "positiveClosureRequires": [
+    "Live parent schema evidence from local OSH or documented pre-existing local OSH resources.",
+    "Live child body evidence associated with that parent.",
+    "Concrete field/name/type overlap between parent schema and child body.",
+    "Inline CommandStatus/CommandResult helper regressions covering skip and mismatch behavior.",
+    "TeamEngine E2E artifacts and no-mutation comparison evidence."
+  ]
+}

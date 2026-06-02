@@ -1,0 +1,184 @@
+# Sprint 33 contract - Local OSH dynamic-data seed fixture planning
+
+sprint: "ets-33"
+sprint_name: "part2-local-osh-dynamic-data-seed-fixtures"
+type: "feature-expansion-planning"
+created: "2026-06-02T01:07:13Z"
+updated: "2026-06-02T01:20:41Z"
+description: |
+  Sprint 33 plans the populated-IUT follow-up to Sprint 32's read-only
+  Observation/Command binding closure. The planning target is a documented,
+  mutation-gated local OSH dynamic-data seed fixture path that can create
+  DataStream, Observation, ControlStream, Command, and optional CommandStatus
+  and CommandResult evidence under explicit dedicated mutable-IUT opt-in. It
+  also carries forward Sprint 32 Raze's non-blocking concern: add focused helper
+  regressions for inline CommandStatus/CommandResult skip/fail behavior before
+  positive populated-IUT closure is reported.
+
+stories:
+  - id: "S-ETS-33-01"
+    title: "Local OSH dynamic-data seed fixtures for Observation/Command binding"
+    file: "epics/stories/s-ets-33-01-local-osh-dynamic-data-seed-fixtures-planning.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "L"
+    depends_on:
+      - "S-ETS-32-01"
+    parallelizable: false
+    status: "PLANNING_RAZE_APPROVED"
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-013 (populated local OSH dynamic-data seed fixtures and inline status/result helper regressions planned)"
+    - "REQ-ETS-TEAMENGINE-006 (local OSH primary development target remains the E2E gate)"
+  new_reqs: []
+  carried_forward_concerns:
+    - "Sprint 32 Raze concern: add dedicated helper regressions for inline CommandStatus/CommandResult skip/fail matrix when extending populated-IUT closure."
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-013-DYNAMIC-SEED-FIXTURES-001"
+    - "SCENARIO-ETS-PART2-013-SEED-MUTATION-SAFETY-001"
+    - "SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001"
+    - "SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001"
+    - "SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001"
+  supporting:
+    - "SCENARIO-ETS-PART2-013-DYNAMIC-SEED-STATE-001"
+    - "SCENARIO-ETS-PART2-013-OBSERVATION-PARENT-SCHEMA-001"
+    - "SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001"
+    - "SCENARIO-ETS-PART2-013-ENCODING-HONESTY-001"
+
+success_criteria:
+  spec_updated: true
+  story_updated: true
+  traceability_updated: true
+  epic_updated: true
+  seed_fixture_manifest_created: true
+  openapi_endpoint_contract_recorded: true
+  local_osh_probe_artifact_archived: true
+  no_fixture_application_in_planning: true
+  mutation_opt_in_required_for_generator: true
+  helper_regression_scope_recorded: true
+  local_osh_teamengine_e2e_passed: true
+  local_osh_no_mutation_verified: true
+  raze_planning_review_completed: true
+  no_code_runtime_tests_added_in_planning: true
+
+local_osh_primary_iut:
+  target_name: "local-osh"
+  host_url: "http://localhost:8081/sensorhub/api"
+  teamengine_url: "http://field-hub-osh-1:8081/sensorhub/api"
+  docker_network: "field-hub_default"
+  container: "field-hub-osh-1"
+  credential_handling: "Basic auth derived from local OSH config or environment; credential values are never recorded."
+  planning_probe:
+    artifact: "ops/test-results/sprint-ets-33-plan-local-osh-dynamic-data-probes-2026-06-02.txt"
+    result: |
+      Authenticated local OSH still has empty dynamic-data collections:
+      /datastreams, /observations, /controlstreams, and
+      /systems/040g/{datastreams,controlstreams} all return HTTP 200 JSON with
+      empty items. /commands returns HTTP 400 for GET. OPTIONS advertises write
+      methods on dynamic-data collection paths, but Sprint 33 planning did not
+      issue POST, PUT, PATCH, or DELETE.
+
+official_api_contract_probe:
+  source_url: "https://opengeospatial.github.io/ogcapi-connected-systems/api/part2/openapi/openapi-connectedsystems-2.yaml"
+  checked_at: "2026-06-02T01:07:13Z"
+  relevant_post_paths:
+    - path: "/systems/{systemId}/datastreams"
+      request_body_ref: "../schemas/json/dataStream.json"
+      media_types:
+        - "application/json"
+    - path: "/datastreams/{dataStreamId}/observations"
+      request_body_ref: "../schemas/json/observation.json"
+      media_types:
+        - "application/json"
+        - "application/swe+json"
+        - "application/swe+csv"
+    - path: "/systems/{systemId}/controlstreams"
+      request_body_ref: "../schemas/json/controlStream.json"
+      media_types:
+        - "application/json"
+    - path: "/controlstreams/{controlStreamId}/commands"
+      request_body_ref: "../schemas/json/command.json"
+      media_types:
+        - "application/json"
+        - "application/swe+csv"
+    - path: "/commands/{cmdId}/status"
+      request_body_ref: "../schemas/json/commandStatus.json"
+      media_types:
+        - "application/json"
+    - path: "/commands/{cmdId}/result"
+      request_body_ref: "../schemas/json/commandResult.json"
+      media_types:
+        - "application/json"
+  caveat: |
+    The bundled write schemas mark some readOnly fields as required. Generator
+    must discover actual OSH POST acceptance before committing exact fixture
+    payloads and must record any accepted deviation rather than treating the
+    OpenAPI schema alone as proof.
+
+seed_manifest:
+  path: "ops/local-osh-dynamic-data-seed-fixtures.json"
+  status: "planned_not_applied"
+  expected_resource_sequence:
+    - "Create or verify DataStream under /systems/040g/datastreams."
+    - "Create or verify Observation under /datastreams/{dataStreamId}/observations."
+    - "Create or verify ControlStream under /systems/040g/controlstreams."
+    - "Create or verify Command under /controlstreams/{controlStreamId}/commands."
+    - "Create or verify optional CommandStatus under /commands/{cmdId}/status."
+    - "Create or verify optional CommandResult under /commands/{cmdId}/result."
+  cleanup_order:
+    - "CommandResult"
+    - "CommandStatus"
+    - "Command"
+    - "ControlStream"
+    - "Observation"
+    - "DataStream"
+
+generator_scope_next:
+  runtime_group: "part2binding"
+  expected_files:
+    - "ops/local-osh-dynamic-data-seed-fixtures.json"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java"
+  requirements:
+    - "Do not seed fixtures unless SMOKE_MUTATION_TESTS_ENABLED=true and SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut or equivalent TestNG parameters are explicitly present."
+    - "Do not mutate GeoRobotix or any shared public IUT."
+    - "Before fixture application, record current local OSH seed state and selected parent System id."
+    - "After fixture application, record created resource ids, request body family, response status, cleanup result, and TeamEngine totals."
+    - "Positive binding PASS requires live-created or pre-existing parent schema plus child body evidence, not fixture intent."
+    - "Read-only default smoke must keep POST, PUT, PATCH, and DELETE at zero."
+    - "Add helper regressions for inline CommandStatus/CommandResult skip and mismatch behavior before reporting populated-IUT closure."
+
+planning_e2e:
+  status: "PASS"
+  command: "SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s33-plan-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-33-plan-local-osh-2026-06-02-results bash scripts/smoke-test.sh"
+  testng: "211 total / 68 passed / 0 failed / 143 skipped"
+  report: "ops/test-results/sprint-ets-33-plan-local-osh-smoke-2026-06-02.xml"
+  container_log: "ops/test-results/sprint-ets-33-plan-local-osh-container-2026-06-02.log"
+  no_mutation_artifact: "ops/test-results/sprint-ets-33-plan-local-osh-no-mutation-2026-06-02.txt"
+  no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
+  disposition: "Accepted Sprint 33 planning E2E gate for read-only seed-fixture planning."
+
+raze_planning_review:
+  required: true
+  status: "APPROVE"
+  artifact: ".harness/evaluations/sprint-ets-33-plan-adversarial.yaml"
+  initial_verdict: "GAPS_FOUND"
+  initial_confidence: 0.88
+  final_confidence: 0.94
+  subagent: "019e85e6-c8d6-7942-91b1-9bab1a38bdba"
+  closed_gaps:
+    - "RAZE-ETS33-PLAN-GAP-001"
+    - "RAZE-ETS33-PLAN-GAP-002"
+  closed_concerns:
+    - "RAZE-ETS33-PLAN-CONCERN-001"
+    - "RAZE-ETS33-PLAN-CONCERN-002"
+  required_fixes_remaining: []
+
+commit:
+  planning:
+    status: "pending"
+    sha: "TBD"
+    message: "Plan Sprint 33 local OSH dynamic data seeding"

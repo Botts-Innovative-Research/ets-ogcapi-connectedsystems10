@@ -1,6 +1,6 @@
 # server.md — operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-06-01 — Sprint 32 local OSH primary development E2E target.
+> Last updated: 2026-06-02 - Sprint 33 local OSH dynamic-data seed fixture planning.
 
 ## Schema provenance
 
@@ -64,6 +64,18 @@ suite against the configured IUT. As of Sprint 32, the development default is
 the self-provisioned local OSH target on Docker network `field-hub_default`.
 GeoRobotix (`https://api.georobotix.io/ogc/t18/api`) is available only as an
 explicit advisory interoperability probe with `SMOKE_TARGET=georobotix`.
+
+### Local OSH seed fixture manifests
+
+- `ops/local-osh-seed-fixtures.json` documents the existing static local OSH
+  feature seeds used by prior local-health runs: System, Procedure,
+  Deployment, and SamplingFeature, currently observed at id `040g`.
+- `ops/local-osh-dynamic-data-seed-fixtures.json` is the Sprint 33
+  planned/not-applied dynamic-data fixture contract for DataStream,
+  Observation, ControlStream, Command, CommandStatus, and CommandResult
+  evidence. It must not be applied unless mutation tests are explicitly enabled
+  against a dedicated mutable IUT, and it is not proof of accepted OSH payload
+  shape until Generator records actual request/response evidence.
 
 ### Spec drift documented
 

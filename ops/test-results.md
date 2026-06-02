@@ -1,8 +1,54 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T00:47Z
+Last updated: 2026-06-02T01:20Z
 
 ## Current Sprint Evidence
+
+Sprint ets-33 local OSH dynamic-data seed fixture planning:
+
+- Status:
+  - Story: `epics/stories/s-ets-33-01-local-osh-dynamic-data-seed-fixtures-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-33.yaml`
+  - Planning has drafted the OpenSpec scenarios, traceability mapping, planned seed manifest, and local OSH dynamic-data probe artifact.
+  - Planning E2E passed; Raze planning recheck approved.
+- Local OSH target:
+  - Host URL: `http://localhost:8081/sensorhub/api`.
+  - TeamEngine Docker-network URL: `http://field-hub-osh-1:8081/sensorhub/api`.
+  - Docker network: `field-hub_default`.
+  - Credential handling: Basic auth derived from local OSH config or environment; credential values are not recorded.
+- Architecture freshness:
+  - `_bmad/architecture.md` last reconciled 2026-06-01; checked 2026-06-02 and not stale.
+- Local OSH dynamic-data probes:
+  - Artifact: `ops/test-results/sprint-ets-33-plan-local-osh-dynamic-data-probes-2026-06-02.txt`.
+  - Existing System: `/systems/040g`.
+  - `/datastreams?limit=5`: HTTP 200 `application/json`, empty `items`.
+  - `/observations?limit=5`: HTTP 200 `application/json`, empty `items`.
+  - `/controlstreams?limit=5`: HTTP 200 `application/json`, empty `items`.
+  - `/systems/040g/datastreams?limit=5`: HTTP 200 `application/json`, empty `items`.
+  - `/systems/040g/controlstreams?limit=5`: HTTP 200 `application/json`, empty `items`.
+  - `/commands?limit=5`: HTTP 400 `application/json`, invalid resource name.
+  - `OPTIONS` on dynamic-data collection paths returned HTTP 200 and advertised broad write methods.
+- Official API contract probe:
+  - Source: `https://opengeospatial.github.io/ogcapi-connected-systems/api/part2/openapi/openapi-connectedsystems-2.yaml`.
+  - Relevant POST paths: `/systems/{systemId}/datastreams`, `/datastreams/{dataStreamId}/observations`, `/systems/{systemId}/controlstreams`, `/controlstreams/{controlStreamId}/commands`, `/commands/{cmdId}/status`, and `/commands/{cmdId}/result`.
+  - Caveat: referenced JSON schemas include required fields that may be readOnly; Generator must discover accepted local OSH payload shape before recording exact fixtures.
+- Planned seed manifest:
+  - Artifact: `ops/local-osh-dynamic-data-seed-fixtures.json`.
+  - Status: `PLANNED_NOT_APPLIED`.
+  - No local OSH dynamic-data mutation was performed during planning.
+- Planning TeamEngine E2E:
+  - Command: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s33-plan-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-33-plan-local-osh-2026-06-02-results bash scripts/smoke-test.sh`.
+  - Result: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Report: `ops/test-results/sprint-ets-33-plan-local-osh-smoke-2026-06-02.xml`.
+  - Container log: `ops/test-results/sprint-ets-33-plan-local-osh-container-2026-06-02.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-33-plan-local-osh-no-mutation-2026-06-02.txt`.
+  - No-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
+  - Disposition: accepted Sprint 33 planning E2E gate for read-only seed-fixture planning.
+- Raze planning review:
+  - Artifact: `.harness/evaluations/sprint-ets-33-plan-adversarial.yaml`.
+  - Initial verdict: `GAPS_FOUND`, confidence 0.88, subagent `019e85e6-c8d6-7942-91b1-9bab1a38bdba`.
+  - Required fixes applied: `REQ-ETS-TEAMENGINE-006` traceability now maps Sprint 33; story and epic include explicit Sprint 33 scenario IDs; manifest now forbids GeoRobotix/public/shared IUT mutation classes.
+  - Focused recheck verdict: `APPROVE`, confidence 0.94, no required fixes.
 
 Sprint ets-32 local OSH primary E2E and Observation/Command binding Generator:
 

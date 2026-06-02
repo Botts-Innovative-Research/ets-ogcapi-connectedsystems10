@@ -1,0 +1,21 @@
+Sprint 33 planning local OSH no-mutation evidence
+Timestamp: 2026-06-02T01:13:46Z
+Story: S-ETS-33-01
+Requirement: REQ-ETS-PART2-013
+
+Command:
+python3 scripts/no-mutation-oracle.py /tmp/sprint-ets-33-plan-local-osh-2026-06-02-results/s-ets-01-03-teamengine-container-2026-06-02.log http://field-hub-osh-1:8081/sensorhub/api
+
+No-mutation oracle:
+recognized_iut_request_logs=135
+
+Explicit method counts for recognized IUT request log lines:
+GET=133
+OPTIONS=2
+POST=0
+PUT=0
+PATCH=0
+DELETE=0
+
+Disposition:
+PASS. Sprint 33 planning smoke remained read-only and did not issue IUT-bound write requests.

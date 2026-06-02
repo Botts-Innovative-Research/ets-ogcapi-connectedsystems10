@@ -1,8 +1,9 @@
 {
   "description": "Planned dynamic-data seed fixture contract for local OSH populated Observation/Command binding closure.",
-  "status": "PLANNED_NOT_APPLIED",
+  "status": "GENERATOR_PARTIAL_DISCOVERED_COMMAND_ACK_BLOCKED",
   "createdFor": "S-ETS-33-01 local OSH dynamic-data seed fixture planning",
   "createdAt": "2026-06-02T01:07:13Z",
+  "updatedAt": "2026-06-02T03:00:00Z",
   "iutBaseUrlHost": "http://localhost:8081/sensorhub/api",
   "iutBaseUrlDocker": "http://field-hub-osh-1:8081/sensorhub/api",
   "dockerNetwork": "field-hub_default",
@@ -42,6 +43,92 @@
       "/commands?limit=5": "HTTP 400 application/json with invalid resource name"
     },
     "optionsObservation": "Dynamic collection paths advertise broad write methods, but planning did not issue mutating requests."
+  },
+  "generatorDiscovery": {
+    "status": "PARTIAL",
+    "artifacts": [
+      "ops/test-results/sprint-ets-33-generator-local-osh-observation-seed-probe-2026-06-02.json",
+      "ops/test-results/sprint-ets-33-generator-local-osh-command-timeout-probe-2026-06-02.json",
+      "ops/test-results/sprint-ets-33-generator-local-osh-seed-shape-probe-2026-06-02.json",
+      "ops/test-results/sprint-ets-33-generator-local-osh-datastream-schema-variants-2026-06-02.json"
+    ],
+    "mutationGateUsed": {
+      "SMOKE_MUTATION_TESTS_ENABLED": "true",
+      "SMOKE_MUTATION_IUT_POLICY": "dedicated-mutable-iut",
+      "target": "local OSH only"
+    },
+    "acceptedObservationSeedShape": {
+      "dataStreamEndpoint": "/systems/040g/datastreams",
+      "dataStreamContentType": "application/json",
+      "dataStreamSchema": {
+        "obsFormat": "application/om+json",
+        "resultSchema": {
+          "type": "DataRecord",
+          "fields": [
+            {
+              "type": "Quantity",
+              "name": "temperature",
+              "definition": "urn:ets:s33:temperature",
+              "label": "temperature",
+              "uom": {
+                "code": "Cel"
+              }
+            }
+          ]
+        }
+      },
+      "observationEndpoint": "/datastreams/{dataStreamId}/observations",
+      "observationContentType": "application/om+json",
+      "observationBody": {
+        "phenomenonTime": "<generated ISO instant>",
+        "resultTime": "<generated ISO instant>",
+        "result": {
+          "temperature": 23.5
+        }
+      },
+      "result": "Accepted with HTTP 201 for DataStream and Observation; cleanup returned HTTP 204 for both resources."
+    },
+    "acceptedControlStreamSeedShape": {
+      "controlStreamEndpoint": "/systems/040g/controlstreams",
+      "controlStreamContentType": "application/json",
+      "controlStreamSchema": {
+        "commandFormat": "application/json",
+        "parametersSchema": {
+          "type": "DataRecord",
+          "fields": [
+            {
+              "type": "Quantity",
+              "name": "setpoint",
+              "definition": "urn:ets:s33:setpoint",
+              "label": "setpoint",
+              "uom": {
+                "code": "Cel"
+              }
+            }
+          ]
+        }
+      },
+      "result": "Accepted with HTTP 201 and returned inspectable /controlstreams/{id}/schema evidence; cleanup returned HTTP 204."
+    },
+    "blockedCommandSeedShape": {
+      "commandEndpoint": "/controlstreams/{controlStreamId}/commands",
+      "attemptedContentType": "application/json",
+      "attemptedBodies": [
+        {
+          "parameters": {
+            "setpoint": 22.0
+          }
+        },
+        {
+          "issueTime": "<generated ISO instant>",
+          "parameters": {
+            "setpoint": 22.0
+          }
+        }
+      ],
+      "result": "Both attempts timed out waiting for OSH command acknowledgement; /controlstreams/{id}/commands remained empty, so no Command, CommandStatus, or CommandResult fixture evidence can be claimed."
+    },
+    "positiveClosureDisposition": "Observation-side seed shape is discovered, but full REQ-ETS-PART2-013 populated-IUT closure remains blocked until local OSH exposes an acknowledged Command resource or a no-ack Command creation path."
   },
   "openApiDerivedRequestBodies": [
     {

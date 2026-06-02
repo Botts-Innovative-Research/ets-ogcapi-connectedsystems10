@@ -1,7 +1,7 @@
 # S-ETS-33-01: Local OSH Dynamic-Data Seed Fixtures for Observation/Command Binding
 
 ## Status
-PLANNING_RAZE_APPROVED. This story plans the populated-IUT follow-up to Sprint 32's read-only `part2binding` implementation. No local OSH dynamic-data fixtures have been applied by this planning story. Mandatory local OSH TeamEngine planning smoke passed on 2026-06-02 with zero IUT-bound write requests. Raze planning review initially found two traceability gaps; both are fixed and focused recheck returned `APPROVE` confidence 0.94.
+GENERATOR_PARTIAL_DISCOVERY. Planning is Raze-approved and pushed. Generator added dedicated inline CommandStatus/CommandResult helper regressions and performed mutation-gated local OSH fixture discovery. Raze implementation review initially returned `APPROVE_WITH_CONCERNS` with no required fixes; concerns were reconciled with direct `result` alias mismatch coverage and current full-Maven evidence in OpenSpec, and focused recheck returned `PASS`. Observation-side seeding is now known: a DataStream with `obsFormat=application/om+json` and a SWE `resultSchema` DataRecord plus an `application/om+json` Observation was accepted and cleaned up. ControlStream schema creation is also accepted. Command creation remains blocked because local OSH accepts the POST but waits for command acknowledgement; the request times out and `/controlstreams/{id}/commands` remains empty. Full populated-IUT binding closure is therefore not claimed.
 
 ## User Instruction
 Triggered by: "Continue".
@@ -73,6 +73,27 @@ Sprint 33 Generator should add focused unit regressions around the existing comm
 
 Implementation style is intentionally not fixed by planning. Generator may expose a package-private helper or extract a small static helper if needed to test this behavior without broad refactoring.
 
+## Generator Findings
+
+Implemented helper regressions:
+
+- `VerifyPart2ObservationCommandBindingTests` now covers missing inline status/result members, non-object inline member SKIP, no parent-schema overlap, missing required parent-schema fields, primitive type mismatches, and direct `result` alias mismatch behavior.
+- Runtime helper access was limited to package-private visibility for `assertAvailableCommandInlineDataMatchesParentSchema`; no production behavior was relaxed.
+
+Mutation-gated local OSH discovery:
+
+- Gate used: `SMOKE_MUTATION_TESTS_ENABLED=true`, `SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut`, local OSH only.
+- Archived artifacts:
+  - `ops/test-results/sprint-ets-33-generator-local-osh-observation-seed-probe-2026-06-02.json`
+  - `ops/test-results/sprint-ets-33-generator-local-osh-command-timeout-probe-2026-06-02.json`
+  - `ops/test-results/sprint-ets-33-generator-local-osh-seed-shape-probe-2026-06-02.json`
+  - `ops/test-results/sprint-ets-33-generator-local-osh-datastream-schema-variants-2026-06-02.json`
+- Accepted Observation seed shape: `POST /systems/040g/datastreams` with `schema.obsFormat=application/om+json` and a SWE DataRecord `resultSchema`; then `POST /datastreams/{id}/observations` with `Content-Type: application/om+json` and `result.temperature`.
+- Accepted ControlStream seed shape: `POST /systems/040g/controlstreams` with `commandFormat=application/json` and a SWE DataRecord `parametersSchema`.
+- Blocker: `POST /controlstreams/{id}/commands` timed out waiting for a receiving-system acknowledgement, both with and without `issueTime`; no Command item was visible afterward. OSH logs classify this as `REQUEST_ACCEPTED_TIMEOUT`.
+
+Disposition: full `SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001` remains open. Positive closure must wait for an acknowledged local OSH Command resource or a documented no-ack command creation path.
+
 ## Mutation Safety
 Generator must not seed fixtures unless all of these are true:
 
@@ -103,4 +124,8 @@ Default planning and smoke runs remain read-only and must keep IUT-bound `POST`,
 - [x] Planning no-mutation evidence is archived: `GET=133`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`.
 - [x] Raze planning review is complete: `.harness/evaluations/sprint-ets-33-plan-adversarial.yaml`, final `APPROVE` confidence 0.94.
 - [x] Post-Raze reconciliation is complete.
-- [ ] Planning changes are committed and pushed.
+- [x] Planning changes are committed and pushed.
+- [x] Dedicated inline CommandStatus/CommandResult helper regressions are implemented.
+- [x] Mutation-gated Generator discovery is archived for Observation, ControlStream, and Command timeout behavior.
+- [x] Raze implementation review is complete: `.harness/evaluations/sprint-ets-33-adversarial-implementation.yaml`, final focused recheck `PASS`, no required fixes.
+- [ ] Full populated-IUT Observation/Command positive closure is achieved.

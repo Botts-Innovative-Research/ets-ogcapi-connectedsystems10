@@ -1,0 +1,62 @@
+{
+  "steps": [
+    {
+      "name": "POST om-resultschema-datarecord",
+      "status": 201,
+      "location": "/datastreams/040g",
+      "body": null
+    },
+    {
+      "name": "GET schema om-resultschema-datarecord",
+      "status": 200,
+      "location": null,
+      "body": {
+        "obsFormat": "application/om+json",
+        "resultSchema": {
+          "type": "DataRecord",
+          "fields": [
+            {
+              "type": "Quantity",
+              "name": "temperature",
+              "definition": "urn:ets:s33:temperature",
+              "label": "temperature",
+              "uom": {
+                "code": "Cel"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST om-recordschema-datarecord",
+      "status": 500,
+      "location": null,
+      "body": {
+        "message": "Internal server error"
+      }
+    },
+    {
+      "name": "POST jsonschema-properties",
+      "status": 400,
+      "location": null,
+      "body": {
+        "message": "Invalid JSON: Invalid component type: object @ $.schema.resultSchema.type"
+      }
+    },
+    {
+      "name": "POST swejson-resultschema-datarecord",
+      "status": 500,
+      "location": null,
+      "body": {
+        "message": "Internal server error"
+      }
+    },
+    {
+      "name": "cleanup http://localhost:8081/sensorhub/api/datastreams/040g",
+      "status": 204,
+      "location": null,
+      "body": null
+    }
+  ]
+}

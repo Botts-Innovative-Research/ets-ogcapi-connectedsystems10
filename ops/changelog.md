@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-02T03:20Z — Sprint 33 Generator partial discovery
+
+**Triggered by user instruction**: "Continue"
+
+- Implemented dedicated inline CommandStatus/CommandResult helper regressions for `SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001`, including direct `result` alias mismatch coverage.
+- Made `Part2ObservationCommandBindingTests.assertAvailableCommandInlineDataMatchesParentSchema` package-visible so focused regressions can assert missing-member, non-object SKIP, no-overlap, missing-required, primitive-type mismatch, and direct alias behavior without changing runtime logic.
+- Ran mutation-gated local OSH discovery with explicit dedicated mutable-IUT opt-in. Accepted Observation-side seed shape: DataStream `schema.obsFormat=application/om+json` with SWE DataRecord `resultSchema`, plus `application/om+json` Observation result body. Accepted ControlStream schema shape: `commandFormat=application/json` with SWE DataRecord `parametersSchema`.
+- Identified the populated-IUT blocker: `POST /controlstreams/{id}/commands` times out waiting for OSH command acknowledgement and nested Commands remain empty. Full positive Observation/Command binding closure is not claimed.
+- Archived discovery artifacts as `ops/test-results/sprint-ets-33-generator-local-osh-observation-seed-probe-2026-06-02.json`, `ops/test-results/sprint-ets-33-generator-local-osh-command-timeout-probe-2026-06-02.json`, `ops/test-results/sprint-ets-33-generator-local-osh-seed-shape-probe-2026-06-02.json`, and `ops/test-results/sprint-ets-33-generator-local-osh-datastream-schema-variants-2026-06-02.json`.
+- Reconciled `ops/local-osh-dynamic-data-seed-fixtures.json`, story, contract, OpenSpec, traceability, epic, status, and test-results to `GENERATOR_PARTIAL_DISCOVERY`.
+- Verification: focused Maven passed `13 tests / 0 failures / 0 errors / 0 skipped`; full Maven passed `288 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke was rerun after Raze concern reconciliation and passed `211 total / 68 passed / 0 failed / 143 skipped`; archived `ops/test-results/sprint-ets-33-generator-local-osh-smoke-2026-06-02.xml`, `ops/test-results/sprint-ets-33-generator-local-osh-container-2026-06-02.log`, `ops/test-results/sprint-ets-33-generator-local-osh-smoke-console-2026-06-02.log`, and no-mutation artifact.
+- Verified read-only no-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, `DELETE=0`.
+- Ran Raze implementation review: initial `APPROVE_WITH_CONCERNS`, no required fixes; reconciled concerns in helper coverage and OpenSpec evidence wording; focused recheck returned `PASS`.
+
+---
+
 ## 2026-06-02T01:13Z — Sprint 33 dynamic-data seed fixture planning start
 
 **Triggered by user instruction**: "Continue"

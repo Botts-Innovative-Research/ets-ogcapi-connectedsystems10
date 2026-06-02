@@ -1,0 +1,101 @@
+agent: raze
+role: adversarial_reviewer
+sprint: ets-33
+story: S-ETS-33-01
+requirement: REQ-ETS-PART2-013
+topic: Local OSH Dynamic-Data Seed Fixtures and Inline CommandStatus/CommandResult Regressions
+reviewed_at: "2026-06-02T03:12:00Z"
+review_mode: implementation_review
+verdict: APPROVE_WITH_CONCERNS
+subagent: "019e864e-b687-7903-97d0-a1df038e383f"
+file_modifications_by_reviewer: false
+token_metadata: "not available from this harness"
+
+reviewed_scope:
+  implementation:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java
+  specs_and_docs:
+    - .harness/contracts/sprint-ets-33.yaml
+    - epics/stories/s-ets-33-01-local-osh-dynamic-data-seed-fixtures-planning.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - epics/epic-ets-03-part2-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/known-issues.md
+    - ops/local-osh-dynamic-data-seed-fixtures.json
+  verification_artifacts:
+    - ops/test-results/sprint-ets-33-generator-maven-2026-06-02.log
+    - ops/test-results/sprint-ets-33-generator-local-osh-smoke-2026-06-02.xml
+    - ops/test-results/sprint-ets-33-generator-local-osh-container-2026-06-02.log
+    - ops/test-results/sprint-ets-33-generator-local-osh-smoke-console-2026-06-02.log
+    - ops/test-results/sprint-ets-33-generator-local-osh-no-mutation-2026-06-02.txt
+    - ops/test-results/sprint-ets-33-generator-local-osh-observation-seed-probe-2026-06-02.json
+    - ops/test-results/sprint-ets-33-generator-local-osh-command-timeout-probe-2026-06-02.json
+    - ops/test-results/sprint-ets-33-generator-local-osh-seed-shape-probe-2026-06-02.json
+    - ops/test-results/sprint-ets-33-generator-local-osh-datastream-schema-variants-2026-06-02.json
+
+summary:
+  verdict_basis: >
+    The Sprint 33 Generator changes do not claim full positive Command binding
+    closure. Helper regressions cover the inline status/result matrix, local OSH
+    Observation-side and ControlStream schema seed shapes are documented under
+    explicit mutable-IUT opt-in, and Command creation remains honestly blocked by
+    OSH acknowledgement timeout.
+  required_fixes_remaining: []
+  blocking_risk: "None."
+
+verification_checked:
+  secret_scan: "No matches for the Sprint 33 sensitive-pattern set in Generator artifacts or fixture manifest."
+  focused_maven_after_concern_reconciliation: "13 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven_after_concern_reconciliation: "288 tests / 0 failures / 0 errors / 3 skipped"
+  local_osh_teamengine_smoke: "211 total / 68 passed / 0 failed / 143 skipped"
+  no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
+
+required_fixes: []
+
+concerns:
+  - id: RAZE-ETS33-IMPL-CONCERN-001
+    severity: LOW
+    category: regression_depth
+    title: "Helper regression matrix was not initially alias-symmetric for direct result evidence."
+    finding: "The matrix directly covered status, commandStatus, and commandResult, while direct result evidence lacked a present-and-mismatched case."
+    disposition: "reconciled"
+    fixed_by:
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java"
+  - id: RAZE-ETS33-IMPL-CONCERN-002
+    severity: LOW
+    category: evidence_wording
+    title: "Command timeout artifact is separate from schema-bearing ControlStream evidence."
+    finding: "Do not describe the timeout as occurring against the schema-bearing ControlStream unless rerun."
+    disposition: "accepted"
+    note: "Project docs describe accepted ControlStream schema evidence and Command timeout evidence as separate probes."
+  - id: RAZE-ETS33-IMPL-CONCERN-003
+    severity: LOW
+    category: evidence_visibility
+    title: "OpenSpec emphasized prior full-Maven totals more than current Sprint 33 totals."
+    finding: "Ops docs had current 287-test evidence, but OpenSpec could be clearer."
+    disposition: "reconciled"
+    fixed_by:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+
+notes:
+  - "No files were modified by the reviewer."
+  - "Parent reconciled low concerns after review, then reran formatter, focused Maven, and full Maven."
+
+focused_recheck:
+  reviewed_at: "2026-06-02T03:20:00Z"
+  verdict: PASS
+  required_fixes_remaining: []
+  findings:
+    - "Direct `result` alias mismatch coverage is present."
+    - "Current Maven evidence matches artifacts: focused 13/0/0/0 and full 288/0/0/3."
+    - "Local OSH smoke evidence matches 211/68/0/143."
+    - "No-mutation evidence matches recognized=135, GET=133, OPTIONS=2, writes all 0."
+    - "Sensitive-pattern scan is clean across requested Sprint 33 artifacts, fixture manifest, and evaluation artifact."
+    - "Command timeout wording keeps accepted ControlStream schema and Command timeout as separate evidence."
+  file_modifications_by_reviewer: false
+
+final_verdict: PASS

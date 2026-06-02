@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T01:20Z
+Last updated: 2026-06-02T03:20Z
 
 ## Fresh-Session Entry Point
 
@@ -42,10 +42,11 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-32-01` Generator is PARTIAL for the internal Part 2 Observation/Command binding closure; initial Raze implementation review gaps are fixed and focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes.
 - Latest planned story: `S-ETS-33-01` is pushed for local OSH dynamic-data seed fixtures and inline CommandStatus/CommandResult helper regressions.
+- Latest Generator work: Sprint 33 partial discovery implemented inline CommandStatus/CommandResult helper regressions and archived mutation-gated local OSH seed probes. Observation-side DataStream/Observation seeding and ControlStream schema creation are accepted and cleaned up; Command creation remains blocked by local OSH command acknowledgement timeout.
 - Current planning story: `S-ETS-33-01` has drafted the contract, story, planned seed manifest, OpenSpec scenarios, traceability, and local OSH dynamic-data probe artifact. Mandatory local OSH planning E2E passed and Raze planning recheck approved.
 - Latest pushed planning commit: `efb59e6 Plan Sprint 33 local OSH dynamic data seeding`.
 - Latest pushed implementation commit: `37a2a43 Implement Sprint 32 Observation Command binding`.
-- Current sprint status: Sprint ets-33 planning is E2E-verified, Raze-approved, committed, and pushed. It targets the populated-IUT follow-up to Sprint 32: documented local OSH dynamic-data seed fixtures, explicit mutable-IUT safety, cleanup evidence, and dedicated helper regressions for inline CommandStatus/CommandResult skip/fail behavior. Planning probes confirm local OSH still has empty dynamic-data collections, so no positive Observation/Command binding PASS can be claimed until Generator applies or verifies seed evidence under explicit mutable-IUT opt-in. The read-only local OSH TeamEngine planning smoke passed `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation evidence recorded `GET=133`, `OPTIONS=2`, and `POST/PUT/PATCH/DELETE=0`. Raze initial planning review found two traceability gaps and one public-IUT manifest concern; all were fixed, and focused recheck returned `APPROVE` confidence 0.94.
+- Current sprint status: Sprint ets-33 planning is E2E-verified, Raze-approved, committed, and pushed. Generator partial discovery is implemented and verified: helper regressions are in place, local OSH Observation-side seed shapes are accepted, ControlStream schema creation is accepted, and Command creation remains blocked by OSH waiting for command acknowledgement. No positive populated-IUT Observation/Command binding PASS is claimed yet. Full Maven passed `288 total / 0 failures / 0 errors / 3 skipped`; local OSH TeamEngine smoke passed `211 total / 68 passed / 0 failed / 143 skipped` with no read-only smoke mutation (`GET=133`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`).
 - Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`), Sprint 29 reconciliation pushed as `6ba24db`, Sprint 30 planning pushed as `3c68858` (`6ba24db..3c68858 main -> main`), Sprint 30 Generator pushed as `b2aad06` (`560945c..b2aad06 main -> main`), Sprint 31 planning pushed as `20a8e18` (`45717a3..20a8e18 main -> main`), Sprint 31 Generator pushed as `b520b65` (`75eac75..b520b65 main -> main`), Sprint 31 push reconciliation pushed as `6d9f671` (`b520b65..6d9f671 main -> main`), final metrics pushed as `7bbbc51` (`6d9f671..7bbbc51 main -> main`), Sprint 31 triage pushed as `eb9fb3a`, Sprint 32 planning pushed as `f2d2ab8` (`eb9fb3a..f2d2ab8 main -> main`), Sprint 32 planning reconciliation pushed as `1d84ab0` (`f2d2ab8..1d84ab0 main -> main`), Sprint 32 Generator pushed as `37a2a43` (`1d84ab0..37a2a43 main -> main`), Sprint 32 final metrics pushed as `1cd6884`, and Sprint 33 planning pushed as `efb59e6` (`1cd6884..efb59e6 main -> main`).
 
 ## Sprint ets-33 Planning Evidence
@@ -67,6 +68,28 @@ Local OSH dynamic-data seed fixtures and inline status/result helper regressions
 - No-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
 - Raze planning review: `.harness/evaluations/sprint-ets-33-plan-adversarial.yaml` final verdict `APPROVE`, confidence 0.94. Required fixes `RAZE-ETS33-PLAN-GAP-001` and `RAZE-ETS33-PLAN-GAP-002` are closed; manifest concern `RAZE-ETS33-PLAN-CONCERN-001` is closed.
 - Next action: start Generator from `.harness/contracts/sprint-ets-33.yaml`.
+
+## Sprint ets-33 Generator Partial Discovery
+
+Local OSH dynamic-data seed fixtures and inline status/result helper regressions:
+
+- Code: `Part2ObservationCommandBindingTests.assertAvailableCommandInlineDataMatchesParentSchema` is package-visible for regression tests; runtime behavior is unchanged.
+- Tests: `VerifyPart2ObservationCommandBindingTests` now covers missing inline status/result members, non-object SKIP, no-overlap failure, missing required field failure, primitive type mismatch failure, and direct `result` alias mismatch behavior for Command inline status/result evidence.
+- Focused Maven: Docker Maven `mvn -B test -Dtest=VerifyPart2ObservationCommandBindingTests` passed `13 total / 0 failures / 0 errors / 0 skipped`.
+- Full Maven: Docker Maven `mvn -B test` passed `288 total / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-33-generator-maven-2026-06-02.log`.
+- Mutation-gated discovery artifacts:
+  - `ops/test-results/sprint-ets-33-generator-local-osh-observation-seed-probe-2026-06-02.json`
+  - `ops/test-results/sprint-ets-33-generator-local-osh-command-timeout-probe-2026-06-02.json`
+  - `ops/test-results/sprint-ets-33-generator-local-osh-seed-shape-probe-2026-06-02.json`
+  - `ops/test-results/sprint-ets-33-generator-local-osh-datastream-schema-variants-2026-06-02.json`
+- Accepted Observation seed shape: `POST /systems/040g/datastreams` with `schema.obsFormat=application/om+json` and SWE DataRecord `resultSchema`, followed by `POST /datastreams/{id}/observations` with `Content-Type: application/om+json` and `result.temperature`; both created with HTTP 201 and cleaned up with HTTP 204.
+- Accepted ControlStream seed shape: `POST /systems/040g/controlstreams` with `commandFormat=application/json` and SWE DataRecord `parametersSchema`; created with HTTP 201, schema was retrievable, and cleanup returned HTTP 204.
+- Blocker: `POST /controlstreams/{id}/commands` timed out waiting for OSH command acknowledgement; nested Commands remained empty. CommandStatus/CommandResult fixture evidence cannot be claimed.
+- Mandatory local OSH TeamEngine Generator smoke: authenticated `SMOKE_TARGET=local-osh` on `field-hub_default` rerun after Raze concern reconciliation passed `211 total / 68 passed / 0 failed / 143 skipped`.
+- E2E artifacts: `ops/test-results/sprint-ets-33-generator-local-osh-smoke-2026-06-02.xml`, `ops/test-results/sprint-ets-33-generator-local-osh-container-2026-06-02.log`, `ops/test-results/sprint-ets-33-generator-local-osh-smoke-console-2026-06-02.log`, and `ops/test-results/sprint-ets-33-generator-local-osh-no-mutation-2026-06-02.txt`.
+- No-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
+- Raze implementation review: initial `APPROVE_WITH_CONCERNS`, no required fixes. Concerns were reconciled by adding direct `result` alias mismatch coverage and surfacing the current full-Maven evidence in OpenSpec; focused recheck returned `PASS`.
+- Next action: continue `REQ-ETS-PART2-013` only if local OSH exposes an acknowledged Command resource or a documented no-ack Command creation path; otherwise keep full populated-IUT binding closure open.
 
 ## Sprint ets-32 Planning Evidence
 

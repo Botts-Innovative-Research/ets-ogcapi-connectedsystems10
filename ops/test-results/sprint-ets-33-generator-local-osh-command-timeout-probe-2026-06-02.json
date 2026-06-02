@@ -1,0 +1,42 @@
+{
+  "steps": [
+    {
+      "name": "POST controlstream async true",
+      "status": 201,
+      "location": "/controlstreams/040g",
+      "body": null
+    },
+    {
+      "name": "GET controlstream schema",
+      "status": 200,
+      "location": null,
+      "body": {}
+    },
+    {
+      "name": "POST command parameters",
+      "status": "TIMEOUT",
+      "location": null,
+      "body": "timed out"
+    },
+    {
+      "name": "POST command issueTime,parameters",
+      "status": "TIMEOUT",
+      "location": null,
+      "body": "timed out"
+    },
+    {
+      "name": "GET nested commands after attempts",
+      "status": 200,
+      "location": null,
+      "body": {
+        "items": []
+      }
+    },
+    {
+      "name": "cleanup DELETE http://localhost:8081/sensorhub/api/controlstreams/040g",
+      "status": 204,
+      "location": null,
+      "body": null
+    }
+  ]
+}

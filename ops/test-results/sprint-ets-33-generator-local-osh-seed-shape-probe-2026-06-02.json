@@ -1,0 +1,97 @@
+{
+  "steps": [
+    {
+      "name": "POST datastream SWE JSON schema",
+      "status": 201,
+      "location": "/datastreams/040g",
+      "url": "/systems/040g/datastreams",
+      "body": null
+    },
+    {
+      "name": "GET datastream schema",
+      "status": 200,
+      "location": null,
+      "url": "/datastreams/040g/schema",
+      "body": {
+        "obsFormat": "application/om+json"
+      }
+    },
+    {
+      "name": "POST raw SWE JSON observation",
+      "status": 201,
+      "location": "/observations/040sn2vpq03323fro0",
+      "url": "/datastreams/040g/observations",
+      "body": null
+    },
+    {
+      "name": "GET nested observations after raw post",
+      "status": 200,
+      "location": null,
+      "url": "/datastreams/040g/observations?limit=5",
+      "body": {
+        "items": [
+          {
+            "id": "040sn2vpq03323fro0",
+            "datastream@id": "040g",
+            "phenomenonTime": "2026-06-02T02:54:03.823Z",
+            "resultTime": "2026-06-02T02:54:03.823Z",
+            "result": {
+              "temperature": 21.5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "POST controlstream JSON DataRecord schema",
+      "status": 201,
+      "location": "/controlstreams/040g",
+      "url": "/systems/040g/controlstreams",
+      "body": null
+    },
+    {
+      "name": "GET controlstream schema",
+      "status": 200,
+      "location": null,
+      "url": "/controlstreams/040g/schema",
+      "body": {
+        "commandFormat": "application/json",
+        "parametersSchema": {
+          "type": "DataRecord",
+          "fields": [
+            {
+              "type": "Quantity",
+              "name": "setpoint",
+              "definition": "urn:ets:s33:setpoint",
+              "label": "setpoint",
+              "uom": {
+                "code": "Cel"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "cleanup DELETE /controlstreams/040g",
+      "status": 204,
+      "location": null,
+      "url": "/controlstreams/040g",
+      "body": null
+    },
+    {
+      "name": "cleanup DELETE /observations/040sn2vpq03323fro0",
+      "status": 204,
+      "location": null,
+      "url": "/observations/040sn2vpq03323fro0",
+      "body": null
+    },
+    {
+      "name": "cleanup DELETE /datastreams/040g",
+      "status": 204,
+      "location": null,
+      "url": "/datastreams/040g",
+      "body": null
+    }
+  ]
+}

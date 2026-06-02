@@ -366,7 +366,7 @@ public class Part2ObservationCommandBindingTests {
 		}
 	}
 
-	private static void assertAvailableCommandInlineDataMatchesParentSchema(Map<String, Object> command,
+	static void assertAvailableCommandInlineDataMatchesParentSchema(Map<String, Object> command,
 			Map<String, Object> parentSchema, String reqUri) {
 		assertOptionalInlineCommandDataMatchesParentSchema(command, parentSchema, "status",
 				List.of("statusSchema", "commandStatusSchema"), reqUri);

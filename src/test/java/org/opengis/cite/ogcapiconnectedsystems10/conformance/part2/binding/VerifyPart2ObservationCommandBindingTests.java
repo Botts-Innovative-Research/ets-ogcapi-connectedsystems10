@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.testng.SkipException;
 
 /**
  * Regression coverage for S-ETS-32-01 Part 2 Observation/Command binding closure.
@@ -17,10 +18,13 @@ import org.junit.Test;
  * SCENARIO-ETS-PART2-013-OBSERVATION-PARENT-SCHEMA-001,
  * SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001,
  * SCENARIO-ETS-PART2-013-ENCODING-HONESTY-001, and
- * SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001.
+ * SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001, and
+ * SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001.
  * </p>
  */
 public class VerifyPart2ObservationCommandBindingTests {
+
+	private static final String REQ_URI = Part2ObservationCommandBindingTests.REQ_ETS_PART2_013;
 
 	@Test
 	public void internalBindingIdentifiersDoNotAdvertiseStandaloneOgcConformanceClass() {
@@ -113,6 +117,115 @@ public class VerifyPart2ObservationCommandBindingTests {
 		assertFalse(Part2ObservationCommandBindingTests.isPrimitiveTypeCompatible("integer", 12.25d));
 		assertTrue(Part2ObservationCommandBindingTests.isPrimitiveTypeCompatible("Time", "2026-06-01T00:00:00Z"));
 		assertFalse(Part2ObservationCommandBindingTests.isPrimitiveTypeCompatible("boolean", "true"));
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001.
+	 */
+	@Test
+	public void missingInlineCommandStatusAndResultMembersDoNotBlockParametersBinding() {
+		Map<String, Object> schema = Map.of("statusSchema",
+				Map.of("type", "object", "properties", Map.of("state", Map.of("type", "string"))), "resultSchema",
+				Map.of("type", "object", "properties", Map.of("accepted", Map.of("type", "boolean"))));
+		Map<String, Object> command = Map.of("parameters", Map.of("mode", "auto"));
+
+		Part2ObservationCommandBindingTests.assertAvailableCommandInlineDataMatchesParentSchema(command, schema,
+				REQ_URI);
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001.
+	 */
+	@Test
+	public void nonObjectInlineCommandStatusSkipsInsteadOfPassing() {
+		Map<String, Object> schema = Map.of("statusSchema",
+				Map.of("type", "object", "properties", Map.of("state", Map.of("type", "string"))));
+		Map<String, Object> command = Map.of("status", "accepted");
+
+		SkipException skip = expectSkipException(() -> Part2ObservationCommandBindingTests
+			.assertAvailableCommandInlineDataMatchesParentSchema(command, schema, REQ_URI));
+
+		assertTrue(skip.getMessage().contains("is not an inspectable JSON object"));
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001.
+	 */
+	@Test
+	public void inlineCommandStatusWithoutParentSchemaOverlapDoesNotPass() {
+		Map<String, Object> schema = Map.of("statusSchema",
+				Map.of("type", "object", "properties", Map.of("state", Map.of("type", "string"))));
+		Map<String, Object> command = Map.of("status", Map.of("unexpected", "accepted"));
+
+		AssertionError error = expectAssertionError(() -> Part2ObservationCommandBindingTests
+			.assertAvailableCommandInlineDataMatchesParentSchema(command, schema, REQ_URI));
+
+		assertTrue(error.getMessage().contains("does not contain any field named by the parent schema"));
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001.
+	 */
+	@Test
+	public void inlineCommandStatusMissingRequiredParentFieldDoesNotPass() {
+		Map<String, Object> schema = Map.of("statusSchema", Map.of("type", "object", "required", List.of("state"),
+				"properties", Map.of("state", Map.of("type", "string"), "message", Map.of("type", "string"))));
+		Map<String, Object> command = Map.of("commandStatus", Map.of("message", "queued"));
+
+		AssertionError error = expectAssertionError(() -> Part2ObservationCommandBindingTests
+			.assertAvailableCommandInlineDataMatchesParentSchema(command, schema, REQ_URI));
+
+		assertTrue(error.getMessage().contains("missing required parent-schema field 'state'"));
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001.
+	 */
+	@Test
+	public void inlineCommandResultPrimitiveTypeMismatchDoesNotPass() {
+		Map<String, Object> schema = Map.of("resultSchema",
+				Map.of("type", "object", "properties", Map.of("accepted", Map.of("type", "boolean"))));
+		Map<String, Object> command = Map.of("commandResult", Map.of("accepted", "true"));
+
+		AssertionError error = expectAssertionError(() -> Part2ObservationCommandBindingTests
+			.assertAvailableCommandInlineDataMatchesParentSchema(command, schema, REQ_URI));
+
+		assertTrue(error.getMessage().contains("incompatible with parent-schema type 'boolean'"));
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-013-INLINE-STATUS-RESULT-REGRESSIONS-001.
+	 */
+	@Test
+	public void inlineResultAliasPrimitiveTypeMismatchDoesNotPass() {
+		Map<String, Object> schema = Map.of("resultSchema",
+				Map.of("type", "object", "properties", Map.of("accepted", Map.of("type", "boolean"))));
+		Map<String, Object> command = Map.of("result", Map.of("accepted", "true"));
+
+		AssertionError error = expectAssertionError(() -> Part2ObservationCommandBindingTests
+			.assertAvailableCommandInlineDataMatchesParentSchema(command, schema, REQ_URI));
+
+		assertTrue(error.getMessage().contains("incompatible with parent-schema type 'boolean'"));
+	}
+
+	private static AssertionError expectAssertionError(Runnable action) {
+		try {
+			action.run();
+		}
+		catch (AssertionError error) {
+			return error;
+		}
+		throw new AssertionError("Expected AssertionError.");
+	}
+
+	private static SkipException expectSkipException(Runnable action) {
+		try {
+			action.run();
+		}
+		catch (SkipException skip) {
+			return skip;
+		}
+		throw new AssertionError("Expected SkipException.");
 	}
 
 }

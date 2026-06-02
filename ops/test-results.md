@@ -1,8 +1,45 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T01:20Z
+Last updated: 2026-06-02T03:20Z
 
 ## Current Sprint Evidence
+
+Sprint ets-33 Generator partial discovery:
+
+- Status:
+  - Story: `epics/stories/s-ets-33-01-local-osh-dynamic-data-seed-fixtures-planning.md`
+  - Contract: `.harness/contracts/sprint-ets-33.yaml`
+  - Helper regressions are implemented.
+  - Observation-side seed shape and ControlStream schema seed shape are discovered under mutation gate.
+  - Command fixture evidence remains blocked by OSH acknowledgement timeout; full positive local OSH closure is not claimed.
+- Focused Maven:
+  - Command: Docker Maven `mvn -B test -Dtest=VerifyPart2ObservationCommandBindingTests`.
+  - Result: PASS, `13 tests / 0 failures / 0 errors / 0 skipped`.
+- Full Maven:
+  - Artifact: `ops/test-results/sprint-ets-33-generator-maven-2026-06-02.log`.
+  - Result: PASS, `288 tests / 0 failures / 0 errors / 3 skipped`.
+- Mutation-gated local OSH seed discovery:
+  - Gate: `SMOKE_MUTATION_TESTS_ENABLED=true`, `SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut`, local OSH only.
+  - Observation artifact: `ops/test-results/sprint-ets-33-generator-local-osh-observation-seed-probe-2026-06-02.json`.
+  - Command timeout artifact: `ops/test-results/sprint-ets-33-generator-local-osh-command-timeout-probe-2026-06-02.json`.
+  - Seed shape artifact: `ops/test-results/sprint-ets-33-generator-local-osh-seed-shape-probe-2026-06-02.json`.
+  - DataStream schema variants artifact: `ops/test-results/sprint-ets-33-generator-local-osh-datastream-schema-variants-2026-06-02.json`.
+  - Accepted Observation seed shape: DataStream `application/om+json` plus SWE DataRecord `resultSchema`; Observation `application/om+json` with `result.temperature`; both HTTP 201 and cleanup HTTP 204.
+  - Accepted ControlStream seed shape: `application/json` ControlStream schema with SWE DataRecord `parametersSchema`; HTTP 201 and cleanup HTTP 204.
+  - Blocker: Command POST timed out waiting for local OSH command acknowledgement; nested Commands remained empty.
+- Mandatory local OSH TeamEngine Generator smoke:
+  - Command: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s33-generator-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-33-generator-local-osh-2026-06-02-results bash scripts/smoke-test.sh`.
+  - Result: PASS, `211 total / 68 passed / 0 failed / 143 skipped`; rerun after Raze concern reconciliation.
+  - Report: `ops/test-results/sprint-ets-33-generator-local-osh-smoke-2026-06-02.xml`.
+  - Container log: `ops/test-results/sprint-ets-33-generator-local-osh-container-2026-06-02.log`.
+  - Console log: `ops/test-results/sprint-ets-33-generator-local-osh-smoke-console-2026-06-02.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-33-generator-local-osh-no-mutation-2026-06-02.txt`.
+  - No-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-33-adversarial-implementation.yaml`.
+  - Initial verdict: `APPROVE_WITH_CONCERNS`, no required fixes.
+  - Focused recheck: `PASS`, no required fixes.
+  - Reconciled concerns: added direct `result` alias mismatch regression and surfaced current full-Maven evidence in OpenSpec.
 
 Sprint ets-33 local OSH dynamic-data seed fixture planning:
 

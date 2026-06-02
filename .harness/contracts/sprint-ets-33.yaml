@@ -4,7 +4,7 @@ sprint: "ets-33"
 sprint_name: "part2-local-osh-dynamic-data-seed-fixtures"
 type: "feature-expansion-planning"
 created: "2026-06-02T01:07:13Z"
-updated: "2026-06-02T01:20:41Z"
+updated: "2026-06-02T03:15:00Z"
 description: |
   Sprint 33 plans the populated-IUT follow-up to Sprint 32's read-only
   Observation/Command binding closure. The planning target is a documented,
@@ -25,7 +25,7 @@ stories:
     depends_on:
       - "S-ETS-32-01"
     parallelizable: false
-    status: "PLANNING_RAZE_APPROVED"
+    status: "GENERATOR_PARTIAL_DISCOVERY"
 
 requirements:
   modified_reqs:
@@ -150,6 +150,31 @@ generator_scope_next:
     - "Positive binding PASS requires live-created or pre-existing parent schema plus child body evidence, not fixture intent."
     - "Read-only default smoke must keep POST, PUT, PATCH, and DELETE at zero."
     - "Add helper regressions for inline CommandStatus/CommandResult skip and mismatch behavior before reporting populated-IUT closure."
+
+generator_discovery:
+  status: "PARTIAL"
+  helper_regressions:
+    implemented: true
+    focused_maven: "VerifyPart2ObservationCommandBindingTests: 13 tests / 0 failures / 0 errors / 0 skipped"
+  artifacts:
+    observation_seed_probe: "ops/test-results/sprint-ets-33-generator-local-osh-observation-seed-probe-2026-06-02.json"
+    command_timeout_probe: "ops/test-results/sprint-ets-33-generator-local-osh-command-timeout-probe-2026-06-02.json"
+    seed_shape_probe: "ops/test-results/sprint-ets-33-generator-local-osh-seed-shape-probe-2026-06-02.json"
+    datastream_schema_variants: "ops/test-results/sprint-ets-33-generator-local-osh-datastream-schema-variants-2026-06-02.json"
+  accepted_shapes:
+    observation: "DataStream schema obsFormat=application/om+json with SWE DataRecord resultSchema; Observation Content-Type application/om+json with result.temperature; both accepted HTTP 201 and cleaned up HTTP 204."
+    controlstream: "ControlStream commandFormat=application/json with SWE DataRecord parametersSchema; accepted HTTP 201, schema retrievable, cleanup HTTP 204."
+  blocked_shapes:
+    command: "POST /controlstreams/{controlStreamId}/commands timed out waiting for OSH command acknowledgement; nested commands remained empty, so CommandStatus and CommandResult fixture evidence cannot be claimed."
+  positive_closure: "NOT_CLAIMED"
+  adversarial_review:
+    artifact: ".harness/evaluations/sprint-ets-33-adversarial-implementation.yaml"
+    initial_verdict: "APPROVE_WITH_CONCERNS"
+    focused_recheck_verdict: "PASS"
+    required_fixes: []
+    concerns_reconciled:
+      - "Added direct `result` alias primitive mismatch helper coverage."
+      - "Surfaced current Sprint 33 full-Maven evidence in OpenSpec."
 
 planning_e2e:
   status: "PASS"

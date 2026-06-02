@@ -1,0 +1,68 @@
+{
+  "steps": [
+    {
+      "name": "POST ds om+json resultSchema",
+      "status": 201,
+      "location": "/datastreams/040g",
+      "body": null
+    },
+    {
+      "name": "GET ds schema",
+      "status": 200,
+      "location": null,
+      "body": {
+        "obsFormat": "application/om+json",
+        "resultSchema": {
+          "type": "DataRecord",
+          "fields": [
+            {
+              "type": "Quantity",
+              "name": "temperature",
+              "definition": "urn:ets:s33:temperature",
+              "label": "temperature",
+              "uom": {
+                "code": "Cel"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST obs om+json wrapper",
+      "status": 201,
+      "location": "/observations/040pn3npq030rl20m0",
+      "body": null
+    },
+    {
+      "name": "GET nested observations",
+      "status": 200,
+      "location": null,
+      "body": {
+        "items": [
+          {
+            "id": "040pn3npq030rl20m0",
+            "datastream@id": "040g",
+            "phenomenonTime": "2026-06-02T02:59:39.232014Z",
+            "resultTime": "2026-06-02T02:59:39.232014Z",
+            "result": {
+              "temperature": 23.5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cleanup http://localhost:8081/sensorhub/api/observations/040pn3npq030rl20m0",
+      "status": 204,
+      "location": null,
+      "body": null
+    },
+    {
+      "name": "cleanup http://localhost:8081/sensorhub/api/datastreams/040g",
+      "status": 204,
+      "location": null,
+      "body": null
+    }
+  ]
+}

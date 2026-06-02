@@ -1,7 +1,7 @@
 sprint: ets-36
 story: S-ETS-36-01
 title: Binding parent schema JSON request shaping
-status: IMPLEMENTED_RAZE_APPROVED_PENDING_PUSH
+status: IMPLEMENTED_RAZE_APPROVED_PUSHED
 triggered_by: 'User instruction: "Continue" after Sprint 35 SimUAV schema blocker evidence.'
 requirements:
   - REQ-ETS-PART2-013
@@ -43,6 +43,7 @@ verification:
   local_osh_smoke: "PASS, 211 total / 68 passed / 0 failed / 143 skipped."
   no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0."
   raze_review: "APPROVE_WITH_CONCERNS, confidence 0.93, no required fixes after OpenSpec reconciliation gapfix."
+  commit: "50024c4 Implement Sprint 36 schema request shaping; pushed to origin/main."
 guardrails:
   - Do not loosen isJsonCompatibleContentType.
   - Do not count body-valid Content-Type auto as binding PASS evidence.

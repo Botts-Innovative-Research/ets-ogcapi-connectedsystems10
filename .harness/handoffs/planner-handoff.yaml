@@ -1,6 +1,6 @@
 agent: generator
-status: sprint_36_raze_approved_pending_push
-timestamp: "2026-06-02T22:36:00Z"
+status: sprint_36_pushed
+timestamp: "2026-06-02T22:42:13Z"
 sprint_number: "ets-36"
 sprint_name: "binding-schema-json-request-shaping"
 contract_path: ".harness/contracts/sprint-ets-36.yaml"
@@ -13,7 +13,7 @@ handoff_result:
     id: "S-ETS-36-01"
     title: "Binding parent schema JSON request shaping"
     file: "epics/stories/s-ets-36-01-binding-schema-json-request-shaping.md"
-    status: "IMPLEMENTED_RAZE_APPROVED_PENDING_PUSH"
+    status: "IMPLEMENTED_RAZE_APPROVED_PUSHED"
   architecture_freshness:
     checked_at: "2026-06-02T20:55:09Z"
     architecture_last_reconciled: "2026-06-01"
@@ -68,19 +68,18 @@ verification:
   required_wrapper: "FAILED before tests due Maven Central Connection reset resolving org.apache.maven.plugins:maven-plugins:pom:43."
   full_maven_fallback: "PASS, 289 tests / 0 failures / 0 errors / 3 skipped."
   raze_review: "APPROVE_WITH_CONCERNS, confidence 0.93, no required fixes after OpenSpec reconciliation gapfix."
+  commit: "50024c4 Implement Sprint 36 schema request shaping; pushed 21e76de..50024c4 main -> main."
   artifacts:
     - "ops/test-results/sprint-ets-36-focused-maven-2026-06-02.log"
     - "ops/test-results/sprint-ets-36-maven-clean-test-2026-06-02.log"
     - "ops/test-results/sprint-ets-36-maven-clean-test-persistent-cache-2026-06-02.log"
 
 pending:
-  - "Run final validation."
-  - "Commit and push Sprint 36 implementation/reconciliation."
-  - "Update metrics/status with pushed commit metadata."
+  - "Continue REQ-ETS-PART2-013 only by addressing schema-valid stream collection metadata and live populated ?f=json parent schema evidence, or specify an isolated fixture mode without weakening Annex A.9 validation."
 
 next_agent: "generator_or_orchestrator"
 next_action: |
-  Commit and push the Raze-approved Sprint 36 request-shaping implementation.
-  Do not claim full populated `part2binding` PASS; local OSH stream collection
-  metadata and unexercised populated live `?f=json` schema requests remain the
-  known blockers after the schema media-type request path is fixed.
+  Sprint 36 is pushed. Do not claim full populated `part2binding` PASS; local
+  OSH stream collection metadata and unexercised populated live `?f=json`
+  schema requests remain the known blockers after the schema media-type request
+  path is fixed.

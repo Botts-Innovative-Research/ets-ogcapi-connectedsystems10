@@ -2,7 +2,7 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
-## 2026-06-02T22:36Z — Sprint 36 Raze review and OpenSpec gapfix
+## 2026-06-02T22:36Z — Sprint 36 Raze review, OpenSpec gapfix, and push
 
 **Triggered by user instruction**: "Continue"
 
@@ -11,6 +11,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Reconciled OpenSpec `REQ-ETS-PART2-013` body and deferred implementation-status text so Sprint 36 `f=json` request shaping is recorded honestly, while stream metadata and unexercised populated live `?f=json` fixture evidence remain open.
 - Focused Raze recheck returned `APPROVE_WITH_CONCERNS`, confidence `0.93`, with no required fixes; artifact `.harness/evaluations/sprint-ets-36-adversarial-implementation.yaml`.
 - Updated story, contract, traceability, epic, status, test-results, known issues, handoff, and metrics toward commit/push readiness.
+- Committed and pushed Sprint 36 implementation/reconciliation as `50024c4 Implement Sprint 36 schema request shaping` (`21e76de..50024c4 main -> main`).
 
 ---
 

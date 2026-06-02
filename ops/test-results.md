@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T22:36Z
+Last updated: 2026-06-02T22:42Z
 
 ## Current Sprint Evidence
 
@@ -9,7 +9,7 @@ Sprint ets-36 binding parent schema JSON request shaping:
 - Status:
   - Story: `epics/stories/s-ets-36-01-binding-schema-json-request-shaping.md`
   - Contract: `.harness/contracts/sprint-ets-36.yaml`
-  - Generator verification and required Raze review are complete; commit and push remain pending.
+  - Generator verification and required Raze review are complete; implementation pushed as `50024c4`.
   - Full populated-IUT `part2binding` PASS is not claimed because local OSH stream collection metadata still fails current Part 2 schema checks.
 - Source probe:
   - Artifact: `ops/test-results/sprint-ets-36-local-osh-schema-request-shaping-source-probe-2026-06-02.txt`.

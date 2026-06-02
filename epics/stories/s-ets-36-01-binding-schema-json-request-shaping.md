@@ -1,7 +1,7 @@
 # S-ETS-36-01: Binding Parent Schema JSON Request Shaping
 
 ## Status
-IMPLEMENTED_RAZE_APPROVED_PENDING_PUSH
+IMPLEMENTED_RAZE_APPROVED_PUSHED
 
 ## User Instruction
 Triggered by: "Continue" after Sprint 35 SimUAV evidence identified local OSH stream/schema representation as the remaining `REQ-ETS-PART2-013` blocker.
@@ -47,6 +47,7 @@ Findings:
 - Clean local OSH no-mutation: `ops/test-results/sprint-ets-36-clean-local-osh-no-mutation-2026-06-02.txt`, `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, writes `0`.
 - Raze implementation review: `.harness/evaluations/sprint-ets-36-adversarial-implementation.yaml`, initial `GAPS_FOUND` for stale OpenSpec implementation-status wording; focused recheck returned `APPROVE_WITH_CONCERNS`, confidence `0.93`, with no required fixes.
 - Raze concern: clean local OSH smoke did not exercise populated live `?f=json` schema requests because `/datastreams` and `/controlstreams` were empty. This remains documented and is not claimed as full populated `part2binding` PASS.
+- Commit: `50024c4 Implement Sprint 36 schema request shaping`, pushed to `origin/main` on 2026-06-02.
 
 ## Non-Goals
 

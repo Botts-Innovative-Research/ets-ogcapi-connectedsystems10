@@ -1,0 +1,16 @@
+Sprint 32 Generator local OSH no-mutation evidence
+Timestamp: 2026-06-02T00:40:34Z
+IUT: http://field-hub-osh-1:8081/sensorhub/api
+Report: ops/test-results/sprint-ets-32-generator-local-osh-smoke-postraze-2026-06-02.xml
+Container log: ops/test-results/sprint-ets-32-generator-local-osh-container-postraze-2026-06-02.log
+
+scripts/no-mutation-oracle.py:
+recognized_iut_request_logs=135
+
+Explicit IUT-bound method split:
+GET=133
+OPTIONS=2
+POST=0
+PUT=0
+PATCH=0
+DELETE=0

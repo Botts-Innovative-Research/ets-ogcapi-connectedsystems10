@@ -175,7 +175,14 @@
        Rules prerequisite visibility, resource condition gates, exact
        application/swe+binary evidence, and public-IUT no-mutation behavior remain
        runtime-visible. -->
-  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility + Part2SystemEvent + Part2AdvancedFiltering + Part2CreateReplaceDelete + Part2Update + Part2Json + Part2SweCommonJson + Part2SweCommonText + Part2SweCommonBinary (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility, /conf/system-event, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update, /conf/json, /conf/swecommon-json, /conf/swecommon-text, /conf/swecommon-binary; OGC 19-072 /conf/common)">
+  <!-- Sprint 32 S-ETS-32-01 (REQ-ETS-PART2-013): Part 2 Binding group added as an
+       internal cross-class closure over OGC 23-002 Datastream/Observation and
+       ControlStream/Command schema requirements. It deliberately does not advertise,
+       depend on, or require a standalone /conf/observation-binding class because OGC
+       23-002 defines no such conformance class. It depends on "core common" only so
+       DataStream/ControlStream declarations, empty local OSH seed state, and encoding
+       honesty remain runtime-visible. -->
+  <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility + Part2SystemEvent + Part2AdvancedFiltering + Part2CreateReplaceDelete + Part2Update + Part2Json + Part2SweCommonJson + Part2SweCommonText + Part2SweCommonBinary + Part2Binding (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility, /conf/system-event, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update, /conf/json, /conf/swecommon-json, /conf/swecommon-text, /conf/swecommon-binary; internal REQ-ETS-PART2-013 binding closure; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
         <group name="systemfeatures" depends-on="core"/>
@@ -202,6 +209,7 @@
         <group name="part2swecommonjson" depends-on="core common"/>
         <group name="part2swecommontext" depends-on="core common"/>
         <group name="part2swecommonbinary" depends-on="core common"/>
+        <group name="part2binding" depends-on="core common"/>
       </dependencies>
     </groups>
     <classes>
@@ -234,6 +242,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests" />
     </classes>
   </test>
   <!-- Add per-class <test> blocks for other conformance classes in Sprint 4+ as

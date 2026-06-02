@@ -1,0 +1,88 @@
+agent: raze
+role: adversarial_reviewer
+sprint: ets-32
+story: S-ETS-32-01
+requirement: REQ-ETS-PART2-013
+topic: Observation/Command Binding Cross-Class Closure
+reviewed_at: "2026-06-02T00:47:39Z"
+review_mode: focused_gapfix_recheck
+docker_teamengine_rerun: false
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+subagent: "019e85bc-46d2-7423-971b-e7b93a978bcd"
+file_modifications_by_reviewer: false
+
+reviewed_scope:
+  implementation:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+  docs:
+    - .harness/contracts/sprint-ets-32.yaml
+    - .harness/handoffs/generator-handoff.yaml
+    - epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - epics/epic-ets-03-part2-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/known-issues.md
+  verification_artifacts:
+    - ops/test-results/sprint-ets-32-focused-maven-postraze-2026-06-02.log
+    - ops/test-results/sprint-ets-32-maven-postraze-2026-06-02.log
+    - ops/test-results/sprint-ets-32-generator-local-osh-smoke-postraze-2026-06-02.xml
+    - ops/test-results/sprint-ets-32-generator-local-osh-container-postraze-2026-06-02.log
+    - ops/test-results/sprint-ets-32-generator-local-osh-no-mutation-postraze-2026-06-02.txt
+
+summary:
+  verdict_basis: >
+    Prior required gaps are closed. Command-side closure now checks available
+    inline status/result objects against parent ControlStream schema evidence.
+    Non-200, non-JSON, unparseable, unavailable, and uninspectable evidence
+    now SKIPs when no concrete mismatch can be proven. Story wording no longer
+    claims the verified increment is still in progress.
+  required_fixes_remaining: []
+  blocking_risk: "None."
+
+closed_required_gaps:
+  - id: RAZE-ETS32-IMPL-GAP-001
+    title: "Command-side positive closure could false PASS without CommandStatus/CommandResult inline-data checks."
+    closure: "Closed by validating available status/status-result inline objects against parent ControlStream schema evidence."
+    evidence:
+      - "Part2ObservationCommandBindingTests.java:159"
+      - "Part2ObservationCommandBindingTests.java:369"
+  - id: RAZE-ETS32-IMPL-GAP-002
+    title: "Unavailable or uninspectable schema/resource evidence could FAIL instead of SKIP."
+    closure: "Closed by SKIP paths for non-200, non-JSON, unparseable, unavailable, and empty/uninspectable parent-schema evidence."
+    evidence:
+      - "Part2ObservationCommandBindingTests.java:333"
+      - "Part2ObservationCommandBindingTests.java:357"
+  - id: RAZE-ETS32-IMPL-GAP-003
+    title: "Story wording still said the read-only Generator increment was in progress."
+    closure: "Closed; story scope now says the first read-only Generator increment is verified."
+    evidence:
+      - "epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md:19"
+
+verification:
+  focused_maven: "83 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven: "282 tests / 0 failures / 0 errors / 3 skipped"
+  local_osh_teamengine_smoke: "211 total / 68 passed / 0 failed / 143 skipped"
+  no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
+
+concerns:
+  - id: RAZE-ETS32-IMPL-CONCERN-001
+    severity: LOW
+    category: regression_depth
+    title: "No dedicated helper regression for the new inline status/result skip/fail matrix."
+    finding: >
+      The new inline status/result logic is verified by code inspection and the
+      full/focused Maven suites, but there is no targeted helper regression for
+      the inline CommandStatus/CommandResult skip/fail matrix.
+    impact: "Non-blocking for this first read-only increment; add focused helper regressions when extending positive populated-IUT coverage."
+    required_fix: null
+
+notes:
+  - "No Docker, Maven, or TeamEngine rerun was performed by Raze; parent post-gapfix artifacts were inspected."
+  - "No files were modified by the reviewer."

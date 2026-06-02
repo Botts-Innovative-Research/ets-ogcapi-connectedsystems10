@@ -2,6 +2,58 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-02T00:47Z — Sprint 32 Raze recheck
+
+**Triggered by user instruction**: "Continu3"
+
+- Focused Raze recheck returned `APPROVE_WITH_CONCERNS`, confidence 0.91, with no required fixes and no reviewer file modifications.
+- Created `.harness/evaluations/sprint-ets-32-adversarial-implementation.yaml`.
+- Raze verified the three prior required gaps closed: Command-side inline `status`/`commandStatus`/`result`/`commandResult` evidence is checked against parent schema evidence; unavailable/uninspectable evidence SKIPs; stale story wording is fixed.
+- Raze verified post-gapfix evidence: focused Maven `83/0/0/0`, full Maven `282/0/0/3`, local OSH smoke `211/68/0/143`, and no-mutation `GET=133`, `OPTIONS=2`, writes all zero.
+- Non-blocking concern: add dedicated helper regressions for the new inline CommandStatus/CommandResult skip/fail matrix when extending populated-IUT positive closure coverage.
+- Reconciled status, test-results, known issues, story, contract, handoff, OpenSpec, traceability, and epic to the final Raze status.
+
+---
+
+## 2026-06-02T00:40Z — Sprint 32 Raze gapfix verification
+
+**Triggered by user instruction**: "Continu3"
+
+- Raze initial implementation review returned `GAPS_FOUND` confidence 0.86 for three issues: Command-side positive closure could pass without available CommandStatus/CommandResult inline-data checks, unavailable/uninspectable schema evidence could fail instead of SKIP, and the Sprint 32 story had stale implementation wording.
+- Applied gapfixes in `Part2ObservationCommandBindingTests`: Command-side closure now validates available `status`, `commandStatus`, `result`, and `commandResult` inline objects against parent ControlStream status/result schema evidence; non-200, non-JSON, unparseable, missing, or uninspectable schema/resource evidence now SKIPs when no concrete mismatch can be proven.
+- Re-ran formatter and Maven after the gapfixes. Focused Maven passed `83 tests / 0 failures / 0 errors / 0 skipped`; full Maven passed `282 tests / 0 failures / 0 errors / 3 skipped`.
+- Re-ran mandatory authenticated local OSH TeamEngine smoke after the gapfixes: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+- Archived post-gapfix evidence as `ops/test-results/sprint-ets-32-focused-maven-postraze-2026-06-02.log`, `ops/test-results/sprint-ets-32-maven-postraze-2026-06-02.log`, `ops/test-results/sprint-ets-32-generator-local-osh-smoke-postraze-2026-06-02.xml`, `ops/test-results/sprint-ets-32-generator-local-osh-container-postraze-2026-06-02.log`, and `ops/test-results/sprint-ets-32-generator-local-osh-no-mutation-postraze-2026-06-02.txt`.
+- Reconciled story, OpenSpec, traceability, epic, contract, generator handoff, status, test-results, and known issues to the post-gapfix state pending focused Raze recheck.
+
+---
+
+## 2026-06-02T00:23Z — Sprint 32 Generator verification
+
+**Triggered by user instruction**: "Continu3"
+
+- Completed Sprint 32 Generator verification after working around Docker bridge Maven Central stalls with Docker host networking and a persistent `/tmp` Maven cache.
+- Focused Maven passed `83 tests / 0 failures / 0 errors / 0 skipped`; full Maven passed `282 tests / 0 failures / 0 errors / 3 skipped`.
+- Ran mandatory authenticated local OSH TeamEngine Generator smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+- Archived Generator evidence as `ops/test-results/sprint-ets-32-maven-2026-06-02.log`, `ops/test-results/sprint-ets-32-generator-local-osh-smoke-2026-06-02.xml`, `ops/test-results/sprint-ets-32-generator-local-osh-container-2026-06-02.log`, and `ops/test-results/sprint-ets-32-generator-local-osh-no-mutation-2026-06-02.txt`.
+- Verified no-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
+- Reconciled story, OpenSpec, traceability, epic, contract, generator handoff, status, test-results, and known issues from blocked/in-progress to verified pending Raze implementation review.
+
+---
+
+## 2026-06-01T23:48Z — Sprint 32 Generator start
+
+**Triggered by user instruction**: "Continu3"
+
+- Started Sprint 32 Generator from pushed planning baseline `f2d2ab8`.
+- Added drafted runtime suite `Part2ObservationCommandBindingTests` for internal `REQ-ETS-PART2-013` binding closure under TestNG group `part2binding`.
+- Added helper regressions `VerifyPart2ObservationCommandBindingTests` for field/type binding evidence, missing required fields, primitive type mismatches, SWE record field extraction, and non-standard `/conf/observation-binding` handling.
+- Wired `part2binding` into `testng.xml` and `VerifyTestNGSuiteDependency`; the group depends on `core common` only and does not depend on resource or encoding groups whose runtime prerequisite honesty must remain visible.
+- Formatter succeeded using Docker Maven `spring-javaformat:apply`.
+- Verification is not complete: `bash scripts/mvn-test-via-docker.sh` and a follow-up cached Docker Maven run both stalled during Maven Central dependency resolution before tests completed; no Maven test result or Generator E2E result is accepted yet.
+
+---
+
 ## 2026-06-01T23:41Z — Sprint 32 planning push
 
 **Triggered by user instruction**: "Continu3"

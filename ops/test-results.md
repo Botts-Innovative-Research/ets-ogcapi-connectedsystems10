@@ -1,15 +1,15 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-01T23:31Z
+Last updated: 2026-06-02T00:47Z
 
 ## Current Sprint Evidence
 
-Sprint ets-32 local OSH primary E2E and Observation/Command binding planning:
+Sprint ets-32 local OSH primary E2E and Observation/Command binding Generator:
 
 - Status:
   - Story: `epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md`
   - Contract: `.harness/contracts/sprint-ets-32.yaml`
-  - Planning is SPECIFIED_PLANNED and Raze-approved.
+  - Planning is Raze-approved; Generator initial Raze review found gaps, the gapfixes are implemented, post-Raze Maven plus local OSH TeamEngine verification is complete, and focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes.
   - GeoRobotix public instance is no longer a default or required development target; it is advisory-only.
   - Local OSH is the primary development IUT for sprint E2E.
 - Official OGC source verification:
@@ -39,10 +39,31 @@ Sprint ets-32 local OSH primary E2E and Observation/Command binding planning:
   - No-mutation artifact: `ops/test-results/sprint-ets-32-plan-local-osh-no-mutation-2026-06-01.txt`.
   - No-mutation evidence: `recognized_iut_request_logs=132`, `GET=130`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
   - Disposition: accepted Sprint 32 planning E2E gate for local-OSH-backed development policy and planning-only docs.
-- Generator evidence requirement:
+- Generator implementation:
+  - Runtime class: `src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java`.
+  - Helper regressions: `src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java`.
+  - TestNG wiring: group `part2binding` in `src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml`, with structural lint in `VerifyTestNGSuiteDependency`.
   - Positive binding closure requires documented seed fixtures or existing candidate DataStreams, Observations, ControlStreams, and Command-side resources.
-  - Empty local OSH collections cannot PASS; Generator must SKIP positive binding checks with exact empty-IUT-state reasons until seed fixtures exist.
-  - Runtime implementation, Maven verification, Generator E2E, and implementation Raze review remain future work.
+  - Empty local OSH collections cannot PASS; the runtime checks SKIP positive binding checks with exact empty-IUT-state reasons until seed fixtures exist.
+- Generator verification:
+  - Formatter: PASS via Docker Maven `spring-javaformat:apply`.
+  - Initial focused Maven: PASS, `83 tests / 0 failures / 0 errors / 0 skipped`.
+  - Initial full Maven: PASS, `282 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-32-maven-2026-06-02.log`.
+  - Post-Raze gapfix focused Maven: PASS, `83 tests / 0 failures / 0 errors / 0 skipped`; log archived at `ops/test-results/sprint-ets-32-focused-maven-postraze-2026-06-02.log`.
+  - Post-Raze gapfix full Maven: PASS, `282 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-32-maven-postraze-2026-06-02.log`.
+  - Docker bridge note: initial wrapper/cache attempts stalled during Maven Central dependency resolution; the accepted Maven runs used Docker host networking and a persistent `/tmp` Maven cache.
+  - Initial TeamEngine Generator E2E: PASS, authenticated local OSH smoke `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Initial Generator E2E artifacts: `ops/test-results/sprint-ets-32-generator-local-osh-smoke-2026-06-02.xml`, `ops/test-results/sprint-ets-32-generator-local-osh-container-2026-06-02.log`, and `ops/test-results/sprint-ets-32-generator-local-osh-no-mutation-2026-06-02.txt`.
+  - Post-Raze gapfix TeamEngine Generator E2E: PASS, authenticated local OSH smoke `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Post-Raze Generator E2E artifacts: `ops/test-results/sprint-ets-32-generator-local-osh-smoke-postraze-2026-06-02.xml`, `ops/test-results/sprint-ets-32-generator-local-osh-container-postraze-2026-06-02.log`, and `ops/test-results/sprint-ets-32-generator-local-osh-no-mutation-postraze-2026-06-02.txt`.
+  - Generator no-mutation oracle after gapfix: PASS, `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, `POST=0`, `PUT=0`, `PATCH=0`, and `DELETE=0`.
+  - New `part2binding` runtime outcome on current local OSH: 3 PASS methods and 2 SKIP positive-closure methods because local OSH has no candidate dynamic-data Observation/Command evidence.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-32-adversarial-implementation.yaml`.
+  - Initial verdict: `GAPS_FOUND`, confidence 0.86, subagent `019e85bc-46d2-7423-971b-e7b93a978bcd`.
+  - Required fixes applied: Command-side closure now checks available CommandStatus/CommandResult inline data against parent ControlStream status/result schemas; unavailable schema/resource endpoints and uninspectable parent schemas now SKIP instead of failing when no concrete evidence exists; stale story wording was corrected.
+  - Focused recheck verdict: `APPROVE_WITH_CONCERNS`, confidence 0.91, no required fixes, no files modified by reviewer.
+  - Concern: add dedicated helper regressions for the new inline CommandStatus/CommandResult skip/fail matrix when extending populated-IUT positive closure coverage.
 - Raze planning review:
   - Artifact: `.harness/evaluations/sprint-ets-32-plan-adversarial.yaml`.
   - Final verdict: `APPROVE`, confidence 0.94.

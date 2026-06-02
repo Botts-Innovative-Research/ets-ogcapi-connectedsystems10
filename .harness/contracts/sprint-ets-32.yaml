@@ -4,7 +4,7 @@ sprint: "ets-32"
 sprint_name: "part2-observation-command-binding-local-osh"
 type: "feature-expansion-planning"
 created: "2026-05-27T19:54:20Z"
-updated: "2026-06-01T23:16:25Z"
+updated: "2026-06-02T00:47:39Z"
 description: |
   Sprint 32 plans two related changes. First, development E2E gates now use a
   self-provisioned local OpenSensorHub instance as the primary IUT; GeoRobotix's
@@ -24,7 +24,7 @@ stories:
     depends_on:
       - "S-ETS-31-01"
     parallelizable: false
-    status: "SPECIFIED_PLANNED"
+    status: "GENERATOR_RAZE_APPROVED_WITH_CONCERNS"
 
 requirements:
   modified_reqs:
@@ -121,6 +121,41 @@ generator_scope_next:
     - "If positive local OSH closure is required, seed documented dynamic-data fixtures first and record resource IDs, payload family, cleanup plan, mutation opt-in, and TeamEngine totals."
     - "Read-only default runs must keep POST/PUT/PATCH/DELETE at zero."
 
+generator_progress:
+  status: "implementation_raze_approved_with_concerns"
+  started_at: "2026-06-01T23:48:00Z"
+  files:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  verification:
+    formatter: "PASS"
+    focused_maven: "PASS: 83 tests / 0 failures / 0 errors / 0 skipped"
+    full_maven: "PASS: initial 282 tests / 0 failures / 0 errors / 3 skipped at ops/test-results/sprint-ets-32-maven-2026-06-02.log; post-Raze gapfix 282 tests / 0 failures / 0 errors / 3 skipped at ops/test-results/sprint-ets-32-maven-postraze-2026-06-02.log"
+    local_osh_teamengine: "PASS: post-Raze gapfix 211 total / 68 passed / 0 failed / 143 skipped"
+    local_osh_report: "ops/test-results/sprint-ets-32-generator-local-osh-smoke-postraze-2026-06-02.xml"
+    local_osh_container_log: "ops/test-results/sprint-ets-32-generator-local-osh-container-postraze-2026-06-02.log"
+    no_mutation: "PASS: recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
+    no_mutation_artifact: "ops/test-results/sprint-ets-32-generator-local-osh-no-mutation-postraze-2026-06-02.txt"
+    raze_implementation_review: "APPROVE_WITH_CONCERNS 0.91; no required fixes; helper-regression-depth concern for inline status/result matrix"
+
+raze_implementation_review:
+  required: true
+  status: "APPROVE_WITH_CONCERNS"
+  artifact: ".harness/evaluations/sprint-ets-32-adversarial-implementation.yaml"
+  initial_verdict: "GAPS_FOUND"
+  initial_confidence: 0.86
+  final_confidence: 0.91
+  subagent: "019e85bc-46d2-7423-971b-e7b93a978bcd"
+  required_fixes_applied:
+    - "Validate available CommandStatus and CommandResult inline data against parent ControlStream status/result schema evidence."
+    - "SKIP unavailable, non-JSON, unparseable, or uninspectable schema/resource evidence when no concrete mismatch can be proven."
+    - "Correct stale story wording."
+  required_fixes_remaining: []
+  concerns:
+    - "Add dedicated helper regressions for the new inline CommandStatus/CommandResult skip/fail matrix when extending populated-IUT positive closure coverage."
+
 verdict_policy:
   false_pass_blocks:
     - "No PASS from /conf/datastream, /conf/controlstream, /conf/json, or SWE Common declarations alone."
@@ -146,5 +181,6 @@ raze_planning_review:
     - "RAZE-ETS32-PLAN-GAP-002"
 
 commit:
-  status: "pending"
-  message: "Plan Sprint 32 local OSH binding closure"
+  status: "planning_pushed"
+  sha: "f2d2ab8"
+  message: "Plan Sprint 32 local OSH primary E2E"

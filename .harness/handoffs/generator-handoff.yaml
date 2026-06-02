@@ -1,123 +1,100 @@
 agent: generator
-status: verified_partial_implemented_public_georobotix_e2e_failed_raze_approved_with_concerns
-timestamp: "2026-05-27T19:25:15Z"
-sprint_number: "ets-31"
-sprint_name: "part2-swecommon-binary"
+status: implementation_raze_approved_with_concerns
+timestamp: "2026-06-02T00:47:39Z"
+sprint_number: "ets-32"
+sprint_name: "part2-observation-command-binding-local-osh"
 story:
-  id: "S-ETS-31-01"
-  title: "Part 2 SWE Common Binary Encoding declaration-gated read-only subset"
-  file: "epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md"
-contract_path: ".harness/contracts/sprint-ets-31.yaml"
+  id: "S-ETS-32-01"
+  title: "Observation/Command binding closure with local OSH primary E2E"
+  file: "epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md"
+contract_path: ".harness/contracts/sprint-ets-32.yaml"
 base_commit:
-  sha: "20a8e18"
-  message: "Plan Sprint 31 Part 2 SWE Common Binary"
+  sha: "f2d2ab8"
+  message: "Plan Sprint 32 local OSH primary E2E"
 
 implementation_summary: |
-  Sprint 31 Generator implements the first read-only Part 2 SWE Common Binary
-  Encoding subset using official OGC 23-002 /req/swecommon-binary and
-  /conf/swecommon-binary identifiers. It exact-gates /conf/swecommon-binary,
-  keeps the SWE Common 3.0 /conf/binary-encoding-rules prerequisite visible,
-  applies /conf/datastream, /conf/controlstream, and /conf/create-replace-delete
-  condition gates, validates available SWE Common schema metadata against
-  bundled Annex A.12 schemas, requires BinaryEncoding, requires canonical
-  Time/IssueTime mapping evidence from retrieved recordSchema data, guards
-  Observation/Command binary encoding PASS until parent schema, candidate
-  resource, and validator evidence exist, and treats mediatype-write as a
-  non-mutating exact-application/swe+binary API-definition advertisement check
-  scoped to Observation and Command resource endpoints only.
+  Sprint 32 Generator has implemented and verified the first read-only internal
+  REQ-ETS-PART2-013 Observation/Command binding closure increment. The new
+  `part2binding` group does not require or advertise a standalone
+  /conf/observation-binding class. It uses existing OGC 23-002 Datastream,
+  Observation, ControlStream, Command, and JSON evidence. Positive PASS requires
+  a parent resource, parent schema, associated child body, and concrete
+  field/type mapping evidence, including available CommandStatus/CommandResult
+  inline data against parent ControlStream status/result schema evidence. Empty
+  local OSH dynamic-data collections and unavailable or uninspectable evidence SKIP
+  with exact empty-IUT-state reasons. No fixture seeding or write-side lifecycle
+  behavior is implemented in this increment. Initial Raze gaps are fixed and
+  post-gapfix Maven plus local OSH TeamEngine verification is archived. Focused
+  Raze recheck returned APPROVE_WITH_CONCERNS with no required fixes; the only
+  concern is adding helper regressions for the new inline status/result matrix
+  when extending populated-IUT coverage.
 
 files_added:
-  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java"
-  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/VerifyPart2SweCommonBinaryTests.java"
-  - "ops/test-results/sprint-ets-31-focused-maven-2026-05-27.log"
-  - "ops/test-results/sprint-ets-31-full-maven-2026-05-27.log"
-  - "ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml"
-  - "ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log"
-  - "ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log"
-  - "ops/test-results/sprint-ets-31-generator-georobotix-no-mutation-2026-05-27.txt"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java"
 
 files_updated:
   - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
   - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
   - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
-  - "epics/stories/s-ets-31-01-part2-swecommon-binary-planning.md"
+  - "epics/stories/s-ets-32-01-part2-observation-binding-local-osh-planning.md"
   - "epics/epic-ets-03-part2-classes.md"
   - "_bmad/traceability.md"
-  - ".harness/contracts/sprint-ets-31.yaml"
   - ".harness/handoffs/generator-handoff.yaml"
   - "ops/status.md"
-  - "ops/test-results.md"
   - "ops/changelog.md"
-  - "ops/known-issues.md"
 
 runtime_tests:
-  group: "part2swecommonbinary"
+  group: "part2binding"
   coverage:
-    - "Exact Part 2 /conf/swecommon-binary declaration."
-    - "SWE Common 3.0 Binary Encoding Rules prerequisite visibility."
-    - "Resource condition gates for /conf/datastream, /conf/controlstream, and /conf/create-replace-delete."
-    - "Read-only application/swe+binary content-type checks."
-    - "Annex A.12 bundled Observation Schema and Command Schema metadata validation requiring BinaryEncoding."
-    - "Canonical Time and IssueTime definition evidence from retrieved recordSchema."
-    - "Observation and Command encoding guards that SKIP instead of shape-only PASS until validator evidence exists."
-    - "Exact application/swe+binary mediatype-write API-definition advertisement checks on Observation and Command resource endpoints without public mutation."
-  helper_regressions: 11
+    - "Ignore any non-standard /conf/observation-binding declaration as vendor evidence."
+    - "Observation binding requires /conf/datastream, a candidate DataStream, parent schema, associated Observation, and field/type mapping."
+    - "Command binding requires /conf/controlstream, a candidate ControlStream, parent schema, associated Command parameters, and field/type mapping."
+    - "First increment requires inspectable JSON object evidence and SKIPs unsupported encodings rather than passing from declarations."
+    - "Read-only behavior: no fixture seeding and no POST/PUT/PATCH/DELETE in this runtime class."
+  helper_regressions: 7
 
 gates:
   formatter:
     command: "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS=\"-Duser.home=/tmp\" maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
     result: "BUILD SUCCESS"
-  focused_maven:
-    command: "Docker Maven mvn -B test -Dtest=VerifyPart2SweCommonBinaryTests,VerifyTestNGSuiteDependency"
-    result: "BUILD SUCCESS"
-    surefire: "84 tests / 0 failures / 0 errors / 0 skipped"
-    log: "ops/test-results/sprint-ets-31-focused-maven-2026-05-27.log"
-  full_maven:
-    command: "bash scripts/mvn-test-via-docker.sh"
-    result: "BUILD SUCCESS"
-    surefire: "272 tests / 0 failures / 0 errors / 3 skipped"
-    log: "ops/test-results/sprint-ets-31-full-maven-2026-05-27.log"
-  georobotix_teamengine_smoke:
-    result: "FAILED_PUBLIC_IUT_SWEBINARY_READ_AND_SCHEMA"
-    disposition: "Mandatory public smoke run; not a passing full /conf/swecommon-binary closure gate."
-    testng: "206 total / 35 passed / 34 failed / 137 skipped"
-    new_group: "3 PASS / 6 FAIL / 2 SKIP"
-    report: "ops/test-results/sprint-ets-31-generator-georobotix-smoke-failed-2026-05-27.xml"
-    log: "ops/test-results/sprint-ets-31-generator-georobotix-smoke-container-failed-2026-05-27.log"
-    console: "ops/test-results/sprint-ets-31-generator-georobotix-smoke-console-failed-2026-05-27.log"
-    failure_cause: "GeoRobotix lacks SWE 3.0 /conf/binary-encoding-rules, returns HTTP 500 for Observation-side SWE Binary reads, and fails /controlstreams schema validation before Command SWE Binary PASS evidence."
-    no_public_mutation: "no-mutation oracle recognized 99 IUT request logs; explicit counts found 99 GeoRobotix GET request lines and zero matched GeoRobotix POST/PUT/PATCH/DELETE."
+  maven:
+    command_attempts:
+      - "bash scripts/mvn-test-via-docker.sh (stalled during Maven Central dependency resolution; stopped)"
+      - "timeout 12m docker run ... mvn clean test -B (stalled during Maven Central dependency resolution; timeout 124)"
+      - "docker run --network host ... mvn -B -Dtest=VerifyPart2ObservationCommandBindingTests,VerifyTestNGSuiteDependency test"
+      - "docker run --network host ... mvn clean test -B"
+    result: "PASS"
+    focused: "83 tests / 0 failures / 0 errors / 0 skipped"
+    full: "282 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-32-maven-postraze-2026-06-02.log"
+    detail: "Docker bridge Maven Central reads stalled, but Docker host networking with a persistent /tmp Maven cache completed focused and full Maven verification."
+  local_osh_teamengine_smoke:
+    result: "PASS"
+    command: "SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s32-generator-local-osh-postraze SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-32-generator-local-osh-postraze-2026-06-02-results bash scripts/smoke-test.sh"
+    testng: "211 total / 68 passed / 0 failed / 143 skipped"
+    report: "ops/test-results/sprint-ets-32-generator-local-osh-smoke-postraze-2026-06-02.xml"
+    container_log: "ops/test-results/sprint-ets-32-generator-local-osh-container-postraze-2026-06-02.log"
+  no_mutation:
+    result: "PASS"
+    evidence: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
+    artifact: "ops/test-results/sprint-ets-32-generator-local-osh-no-mutation-postraze-2026-06-02.txt"
 
-blockers:
-  - id: "ETS31-E2E-GEOROBOTIX-SWE-PREREQUISITE"
-    status: "open_external"
-    summary: "GeoRobotix declares /conf/swecommon-binary without exposing SWE 3.0 /conf/binary-encoding-rules."
-  - id: "ETS31-E2E-GEOROBOTIX-OBS-HTTP500"
-    status: "open_external"
-    summary: "GeoRobotix Observation-side SWE Binary reads return HTTP 500."
-  - id: "ETS31-E2E-GEOROBOTIX-CONTROLSTREAM-SCHEMA"
-    status: "open_external_or_spec_interpretation"
-    summary: "Command-side checks fail existing /controlstreams collection schema validation before SWE Common Command Schema PASS evidence."
-  - id: "ETS31-FULL-SWEBINARY-CLOSURE"
-    status: "deferred_scope"
-    summary: "Full positive SWE Common Binary closure remains deferred until a healthy declaring IUT exposes valid Observation Schema, Observation, Command Schema, Command, SWE prerequisite, validator, and mediatype-write evidence."
+blockers: []
 
 raze_implementation_review:
   required: true
   status: "APPROVE_WITH_CONCERNS"
-  artifact: ".harness/evaluations/sprint-ets-31-adversarial-implementation.yaml"
-  confidence: 0.91
+  artifact: ".harness/evaluations/sprint-ets-32-adversarial-implementation.yaml"
+  initial_verdict: "GAPS_FOUND"
+  initial_confidence: 0.86
+  final_confidence: 0.91
+  subagent: "019e85bc-46d2-7423-971b-e7b93a978bcd"
   required_fixes_remaining: []
-  closed_required_gap:
-    - "RAZE-ETS31-IMPL-CONCERN-001"
-  concerns:
-    - "Post-review bookkeeping and stale fresh-session pointers required reconciliation; closed after the artifact was written."
+  concern: "Add dedicated helper regressions for inline CommandStatus/CommandResult skip/fail matrix in a future populated-IUT increment."
 
 commit:
-  status: "pushed"
-  sha: "b520b65"
-  message: "Implement Sprint 31 Part 2 SWE Common Binary"
-  push: "75eac75..b520b65 main -> main"
+  status: "not_committed"
 
-next_agent: "planner"
-next_action: "Sprint 31 Generator is pushed; choose the next Part 2 item or a positive IUT path for SWE Binary closure."
+next_agent: "generator"
+next_action: "Commit and push Sprint 32 Generator work, then reconcile push status."

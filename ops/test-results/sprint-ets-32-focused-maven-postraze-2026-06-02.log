@@ -1,0 +1,64 @@
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO]
+[INFO] -----------< org.opengis.cite:ets-ogcapi-connectedsystems10 >-----------
+[INFO] Building ogcapi-connectedsystems10 Conformance Test Suite 0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- spring-javaformat:0.0.43:validate (default) @ ets-ogcapi-connectedsystems10 ---
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-versions) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO]
+[INFO] --- buildnumber:3.2.1:create (default) @ ets-ogcapi-connectedsystems10 ---
+[INFO] ShortRevision tag detected. The value is '10'.
+[INFO] Executing: /bin/sh -c cd '/workspace' && 'git' 'log' '-1' '--no-merges' '--format=format:%H %aI %aE %aN'
+[INFO] Working directory: /workspace
+[INFO] Storing buildNumber: 1d84ab0642 at timestamp: 1780360642332
+[INFO] Executing: /bin/sh -c cd '/workspace' && 'git' 'symbolic-ref' 'HEAD'
+[INFO] Working directory: /workspace
+[INFO] Storing scmBranch: main
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Copying 146 resources from src/main/resources to target/classes
+[INFO] Copying 2 resources from src/main/javadoc to target/classes/doc/ogcapi-connectedsystems10/0.1-SNAPSHOT
+[INFO] The encoding used to copy filtered properties files has not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resources. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 55 source files with javac [debug release 17] to target/classes
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Copying 7 resources from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 30 source files with javac [debug release 17] to target/test-classes
+[INFO] /workspace/src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyETSAssert.java: Some input files use or override a deprecated API.
+[INFO] /workspace/src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyETSAssert.java: Recompile with -Xlint:deprecation for details.
+[INFO]
+[INFO] --- surefire:3.5.1:test (default-test) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junit4.JUnit4Provider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency
+[INFO] Tests run: 76, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.VerifyPart2ObservationCommandBindingTests
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.VerifyPart2ObservationCommandBindingTests
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 83, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.355 s
+[INFO] Finished at: 2026-06-02T00:37:25Z
+[INFO] ------------------------------------------------------------------------

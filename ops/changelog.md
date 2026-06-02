@@ -15,6 +15,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Restored primary local OSH by setting Sapient and SimUAV `autoStart=false`, resetting only `field-hub_osh-data`, and reseeding static `040g` fixtures.
 - Reran mandatory clean local OSH TeamEngine smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation evidence `GET=133`, `OPTIONS=2`, writes `0`.
 - Ran required Raze review: `APPROVE_WITH_CONCERNS`, confidence `0.90`, no required fixes; artifact `.harness/evaluations/sprint-ets-35-adversarial-implementation.yaml`.
+- Committed and pushed Sprint 34/35 tasking fixture evidence as `493bf1b Record Sprint 35 SimUAV fixture evidence` (`c02a7bd..493bf1b main -> main`).
 
 ---
 

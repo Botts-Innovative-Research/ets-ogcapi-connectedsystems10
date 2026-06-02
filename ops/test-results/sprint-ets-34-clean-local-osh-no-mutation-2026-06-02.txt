@@ -1,0 +1,4 @@
+recognized_iut_request_logs=135
+GET=133
+OPTIONS=2
+write_methods=0

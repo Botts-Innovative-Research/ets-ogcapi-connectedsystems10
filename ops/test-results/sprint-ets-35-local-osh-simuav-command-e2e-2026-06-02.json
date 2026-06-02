@@ -1,0 +1,652 @@
+{
+  "scenario": "SCENARIO-ETS-PART2-013-SIMUAV-TASKING-FIXTURE-001",
+  "authCredentialRecorded": false,
+  "driver": "org.sensorhub.impl.sensor.simuav.SimUavDriver",
+  "driverModuleId": "simuav-driver",
+  "sourceRepository": "https://github.com/opensensorhub/osh-addons",
+  "localBuild": {
+    "repository": "/tmp/osh-addons-scan",
+    "gradleTask": ":sensorhub-driver-simuav:osgi",
+    "jar": "sensorhub-driver-simuav-1.0.0-bundle.jar",
+    "dependencyJar": "sensorhub-datamodel-uxs-1.0.0.jar"
+  },
+  "fieldHubConfig": {
+    "path": "/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json",
+    "autoStartAfterCleanup": false
+  },
+  "csApi": "http://localhost:8081/sensorhub/api",
+  "systemId": "02kargmsuc2g",
+  "datastreams": [
+    {
+      "id": "03la3nu3m47g",
+      "name": "ETS Simulated UAV Tasking Fixture - Platform Location",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001",
+        "type": "application/geo+json"
+      },
+      "outputName": "platform_pos",
+      "validTime": [
+        "2026-06-02T19:28:24.444Z",
+        "now"
+      ],
+      "phenomenonTime": [
+        "2026-06-02T19:29:07.165Z",
+        "2026-06-02T19:29:07.165Z"
+      ],
+      "observedProperties": [
+        {
+          "definition": "http://www.opengis.net/def/property/OGC/0/PlatformLocation"
+        }
+      ],
+      "resultType": "vector",
+      "formats": [
+        "application/om+json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "026a5nuan1s0",
+      "name": "ETS Simulated UAV Tasking Fixture - Platform State",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001",
+        "type": "application/geo+json"
+      },
+      "outputName": "platform_state",
+      "validTime": [
+        "2026-06-02T19:28:24.444Z",
+        "now"
+      ],
+      "phenomenonTime": [
+        "2026-06-02T19:29:07.165Z",
+        "2026-06-02T19:29:07.165Z"
+      ],
+      "observedProperties": [
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Platform Position"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/EulerAngles",
+          "label": "Platform Orientation",
+          "description": "Euler angles with order of rotation heading/pitch/roll in rotating frame"
+        },
+        {
+          "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+          "label": "Ground Velocity"
+        }
+      ],
+      "resultType": "record",
+      "formats": [
+        "application/om+json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    }
+  ],
+  "controlstreams": [
+    {
+      "id": "03jtrf5qmkng",
+      "name": "ETS Simulated UAV Tasking Fixture - Mission Definition",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001",
+        "type": "application/geo+json"
+      },
+      "inputName": "mission_planning",
+      "validTime": [
+        "2026-06-02T19:28:24.444Z",
+        "now"
+      ],
+      "controlledProperties": [
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Identifier"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/ArraySize"
+        },
+        {
+          "label": "Vehicle Commands"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+          "label": "TakeOff Height"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Waypoint location"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+          "label": "Travel Velocity"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Duration",
+          "label": "Loiter Duration"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "03lbn3mgpspg",
+      "name": "ETS Simulated UAV Tasking Fixture - Vehicle Commands",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001",
+        "type": "application/geo+json"
+      },
+      "inputName": "vehicle_control",
+      "validTime": [
+        "2026-06-02T19:28:24.444Z",
+        "now"
+      ],
+      "controlledProperties": [
+        {
+          "label": "Vehicle Commands"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+          "label": "TakeOff Height"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Waypoint location"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+          "label": "Travel Velocity"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Duration",
+          "label": "Loiter Duration"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "02481pm3g53g",
+      "name": "ETS Simulated UAV Tasking Fixture - Waypoint Task Feasibility",
+      "description": "To check the feasibility of the WAYPOINT command",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001",
+        "type": "application/geo+json"
+      },
+      "inputName": "waypoint_feasibility",
+      "validTime": [
+        "2026-06-02T19:28:24.444Z",
+        "now"
+      ],
+      "controlledProperties": [
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Waypoint location"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+          "label": "Travel Velocity"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    }
+  ],
+  "schemaEndpoints": {
+    "platformState": {
+      "httpStatus": 200,
+      "contentType": "auto",
+      "body": {
+        "obsFormat": "application/om+json",
+        "resultSchema": {
+          "type": "DataRecord",
+          "label": "Platform State",
+          "fields": [
+            {
+              "type": "Vector",
+              "name": "position",
+              "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+              "label": "Platform Position",
+              "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+              "coordinates": [
+                {
+                  "type": "Quantity",
+                  "name": "lat",
+                  "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                  "label": "Geodetic Latitude",
+                  "axisID": "Lat",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "lon",
+                  "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                  "label": "Longitude",
+                  "axisID": "Lon",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "alt",
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                  "label": "Ellipsoidal Height",
+                  "description": "Altitude above WGS84 ellipsoid",
+                  "axisID": "h",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Vector",
+              "name": "orientation",
+              "definition": "http://sensorml.com/ont/swe/property/EulerAngles",
+              "label": "Platform Orientation",
+              "description": "Euler angles with order of rotation heading/pitch/roll in rotating frame",
+              "referenceFrame": "http://www.opengis.net/def/cs/OGC/0/NED",
+              "coordinates": [
+                {
+                  "type": "Quantity",
+                  "name": "heading",
+                  "definition": "http://sensorml.com/ont/swe/property/TrueHeading",
+                  "label": "Heading Angle",
+                  "description": "Heading angle from true north, measured clockwise",
+                  "axisID": "Z",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "pitch",
+                  "definition": "http://sensorml.com/ont/swe/property/PitchAngle",
+                  "label": "Pitch Angle",
+                  "description": "Rotation around the lateral axis, up/down from the local horizontal plane (positive when pointing up)",
+                  "axisID": "Y",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "roll",
+                  "definition": "http://sensorml.com/ont/swe/property/RollAngle",
+                  "label": "Roll Angle",
+                  "description": "Rotation around the longitudinal axis",
+                  "axisID": "X",
+                  "uom": {
+                    "code": "deg"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Vector",
+              "name": "velocity",
+              "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+              "label": "Ground Velocity",
+              "referenceFrame": "http://www.opengis.net/def/cs/OGC/0/NED",
+              "coordinates": [
+                {
+                  "type": "Quantity",
+                  "name": "vx",
+                  "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+                  "label": "X Velocity",
+                  "axisID": "X",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "vy",
+                  "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+                  "label": "Y Velocity",
+                  "axisID": "Y",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "vz",
+                  "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+                  "label": "Z Velocity",
+                  "axisID": "Z",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "platformPosition": {
+      "httpStatus": 200,
+      "contentType": "auto",
+      "body": {
+        "obsFormat": "application/om+json",
+        "resultSchema": {
+          "type": "DataRecord",
+          "label": "Platform Location",
+          "fields": [
+            {
+              "type": "Vector",
+              "name": "pos",
+              "definition": "http://www.opengis.net/def/property/OGC/0/PlatformLocation",
+              "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+              "coordinates": [
+                {
+                  "type": "Quantity",
+                  "name": "lat",
+                  "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                  "label": "Geodetic Latitude",
+                  "axisID": "Lat",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "lon",
+                  "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                  "label": "Longitude",
+                  "axisID": "Lon",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "alt",
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                  "label": "Ellipsoidal Height",
+                  "description": "Altitude above WGS84 ellipsoid",
+                  "axisID": "h",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "waypointFeasibility": {
+      "httpStatus": 200,
+      "contentType": "auto",
+      "body": {
+        "commandFormat": "application/json",
+        "parametersSchema": {
+          "type": "DataRecord",
+          "definition": "urn:x-ogc:uxs:messages:WaypointCommand",
+          "label": "Waypoint Task Feasibility",
+          "description": "To check the feasibility of the WAYPOINT command",
+          "fields": [
+            {
+              "type": "Vector",
+              "name": "position",
+              "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+              "label": "Waypoint location",
+              "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+              "coordinates": [
+                {
+                  "type": "Quantity",
+                  "name": "lat",
+                  "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                  "label": "Geodetic Latitude",
+                  "axisID": "Lat",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "lon",
+                  "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                  "label": "Longitude",
+                  "axisID": "Lon",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "type": "Quantity",
+                  "name": "alt",
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                  "label": "Ellipsoidal Height",
+                  "description": "Altitude above WGS84 ellipsoid",
+                  "axisID": "h",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Quantity",
+              "name": "velocity",
+              "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+              "label": "Travel Velocity",
+              "uom": {
+                "code": "m/s"
+              }
+            }
+          ]
+        },
+        "resultSchema": {
+          "type": "DataRecord",
+          "fields": [
+            {
+              "type": "Boolean",
+              "name": "reachable",
+              "label": "Reachability Flag",
+              "description": "True if the waypoint can be reached, false otherwise"
+            },
+            {
+              "type": "Quantity",
+              "name": "time_to_waypoint",
+              "label": "Time to Waypoint",
+              "description": "Estimated travel time to reach waypoint",
+              "uom": {
+                "code": "s"
+              }
+            },
+            {
+              "type": "Quantity",
+              "name": "battery_remaining",
+              "label": "Battery Remaining",
+              "description": "Estimated battery remaining at waypoint",
+              "uom": {
+                "code": "%"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "observations": {
+    "platformState": [
+      {
+        "id": "026a5nuan1s01vuuvj80c37uda00",
+        "datastream@id": "026a5nuan1s0",
+        "phenomenonTime": "2026-06-02T19:31:11.218Z",
+        "resultTime": "2026-06-02T19:31:11.218Z",
+        "result": {
+          "position": {
+            "lat": 34.8038,
+            "lon": -86.7228,
+            "alt": 0.0
+          },
+          "orientation": {
+            "heading": 0.0,
+            "pitch": 0.0,
+            "roll": 0.0
+          },
+          "velocity": {
+            "vx": 0.0,
+            "vy": 0.0,
+            "vz": 0.0
+          }
+        }
+      }
+    ],
+    "platformPosition": [
+      {
+        "id": "03la3nu3m47g1vuuvj80c37uda00",
+        "datastream@id": "03la3nu3m47g",
+        "phenomenonTime": "2026-06-02T19:31:11.218Z",
+        "resultTime": "2026-06-02T19:31:11.218Z",
+        "result": {
+          "pos": {
+            "lat": 34.8038,
+            "lon": -86.7228,
+            "alt": 0.0
+          }
+        }
+      }
+    ]
+  },
+  "commandPost": {
+    "httpStatus": 200,
+    "request": {
+      "parameters": {
+        "position": {
+          "lat": 34.804,
+          "lon": -86.723,
+          "alt": 120.0
+        },
+        "velocity": 12.0
+      }
+    },
+    "response": {
+      "command@id": "02481pm3g53g1m6uvj80cc85rppg",
+      "reportTime": "2026-06-02T19:30:32.828602548Z",
+      "statusCode": "COMPLETED",
+      "executionTime": [
+        "2026-06-02T19:30:32.827200213Z",
+        "2026-06-02T19:30:32.827200213Z"
+      ],
+      "results": [
+        {
+          "id": "1",
+          "data": {
+            "reachable": true,
+            "time_to_waypoint": 493292.0,
+            "battery_remaining": 59.0
+          }
+        }
+      ]
+    }
+  },
+  "nestedCommandsAfterPost": {
+    "items": [
+      {
+        "id": "02481pm3g53g1m6uvj80cc85rppg",
+        "controlstream@id": "02481pm3g53g",
+        "issueTime": "2026-06-02T19:30:32.822468211Z",
+        "sender": "admin",
+        "currentStatus": "COMPLETED",
+        "parameters": {
+          "position": {
+            "lat": 34.804,
+            "lon": -86.723,
+            "alt": 120.0
+          },
+          "velocity": 12.0
+        }
+      }
+    ]
+  },
+  "statusHistory": {
+    "items": [
+      {
+        "id": "0088h076oe0ke06orrud01hh0nf76qgv5tc32oromg000000",
+        "command@id": "02481pm3g53g1m6uvj80cc85rppg",
+        "reportTime": "2026-06-02T19:30:32.828602548Z",
+        "statusCode": "COMPLETED",
+        "executionTime": [
+          "2026-06-02T19:30:32.827200213Z",
+          "2026-06-02T19:30:32.827200213Z"
+        ],
+        "results": [
+          {
+            "id": "1",
+            "data": {
+              "reachable": true,
+              "time_to_waypoint": 493292.0,
+              "battery_remaining": 59.0
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "terminalStatusObserved": "COMPLETED",
+  "resultObserved": {
+    "reachable": true,
+    "time_to_waypoint": 493292.0,
+    "battery_remaining": 59.0
+  },
+  "teamEnginePopulatedSmoke": {
+    "status": "FAILED",
+    "totals": {
+      "total": 211,
+      "passed": 84,
+      "failed": 28,
+      "skipped": 99
+    },
+    "report": "ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-2026-06-02.xml",
+    "log": "ops/test-results/sprint-ets-35-simuav-local-osh-container-failed-2026-06-02.log",
+    "noMutation": "ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-no-mutation-2026-06-02.txt",
+    "rootCause": "Local OSH exposes live SimUAV streams and accepts tasking commands, but its Part 2 stream collection resources omit schema-required metadata such as dataStream live/resultTime and controlStream live/async. Schema subresources return JSON bodies with Content-Type auto, which the current part2binding checks do not accept as inspectable JSON."
+  },
+  "cleanPrimarySmokeAfterCleanup": {
+    "status": "PASSED",
+    "totals": {
+      "total": 211,
+      "passed": 68,
+      "failed": 0,
+      "skipped": 143
+    },
+    "report": "ops/test-results/sprint-ets-35-clean-local-osh-smoke-2026-06-02.xml",
+    "log": "ops/test-results/sprint-ets-35-clean-local-osh-container-2026-06-02.log",
+    "noMutation": "ops/test-results/sprint-ets-35-clean-local-osh-no-mutation-2026-06-02.txt"
+  }
+}

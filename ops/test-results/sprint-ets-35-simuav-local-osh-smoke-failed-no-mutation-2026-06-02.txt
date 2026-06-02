@@ -1,0 +1,12 @@
+recognized_iut_request_logs=164
+GET=150
+OPTIONS=14
+POST=0
+PUT=0
+PATCH=0
+DELETE=0
+
+Scope: TeamEngine smoke against SimUAV-populated local OSH, using
+SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api.
+
+Conclusion: the failed smoke was read-only against the IUT.

@@ -1,0 +1,121 @@
+reviewer: "Raze"
+role: "Adversarial Reviewer"
+review_type: "implementation"
+reviewed_at: "2026-06-02T15:33:20Z"
+verdict: "APPROVE_WITH_CONCERNS"
+confidence: 0.90
+reruns_performed: []
+reviewed_scope:
+  user_instruction: >
+    Find and configure an OSH driver that accepts tasks in order to complete
+    the Command fixture test.
+  files:
+    - "AGENTS.md"
+    - "_bmad/agents/adversarial-reviewer.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "epics/stories/s-ets-34-01-local-osh-tasking-driver-fixture.md"
+    - ".harness/contracts/sprint-ets-34.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+    - "ops/e2e-test-plan.md"
+    - "ops/server.md"
+    - "ops/known-issues.md"
+    - "ops/local-osh-dynamic-data-seed-fixtures.json"
+    - "ops/metrics.md"
+  artifacts:
+    - "ops/test-results/sprint-ets-34-local-osh-sapient-command-e2e-2026-06-02.json"
+    - "ops/test-results/sprint-ets-34-local-osh-smoke-failed-2026-06-02.xml"
+    - "ops/test-results/sprint-ets-34-local-osh-container-failed-2026-06-02.log"
+    - "ops/test-results/sprint-ets-34-local-osh-smoke-failed-no-mutation-2026-06-02.txt"
+    - "ops/test-results/sprint-ets-34-clean-local-osh-smoke-2026-06-02.xml"
+    - "ops/test-results/sprint-ets-34-clean-local-osh-container-2026-06-02.log"
+    - "ops/test-results/sprint-ets-34-clean-local-osh-no-mutation-2026-06-02.txt"
+    - "ops/test-results/sprint-ets-34-maven-clean-test-2026-06-02.log"
+  external_state_inspected:
+    - "/home/nh/docker/gir/sar-ops/field-hub/docker-compose.yml"
+    - "/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json"
+    - "/home/nh/docker/gir/sar-ops/field-hub/osh/lib/sensorhub-driver-sapient-0.1.0.jar"
+    - "/home/nh/docker/gir/sar-ops/field-hub/osh/lib-disabled/protobuf-conflicts/"
+findings:
+  - id: "RAZE-ETS34-CONCERN-001"
+    severity: "LOW"
+    status: "NON_BLOCKING"
+    title: "The Sapient command E2E is archived as evidence, not as a reusable scripted gate."
+    impact: >
+      The current evidence proves the task-ack receiver prerequisite, but a
+      future operator may need to reconstruct the exact local SAPIENT peer
+      invocation from the story and artifact rather than running a single
+      checked-in fixture script.
+    evidence:
+      - "ops/test-results/sprint-ets-34-local-osh-sapient-command-e2e-2026-06-02.json records the node, ControlStream, Command, protocol task id, and terminal COMPLETED status."
+      - "epics/stories/s-ets-34-01-local-osh-tasking-driver-fixture.md documents the planned configuration and verification steps."
+    required_fix: false
+    recommendation: >
+      If Sapient becomes a repeated regression fixture, add a small scripted
+      runner that emits the same JSON evidence and leaves Sapient disabled
+      after cleanup.
+  - id: "RAZE-ETS34-CONCERN-002"
+    severity: "LOW"
+    status: "CLOSED_POST_REVIEW"
+    title: "The Sprint 34 Maven section repeats clean-smoke no-mutation counts."
+    impact: >
+      This does not create a false PASS because the clean TeamEngine smoke
+      section already owns the no-mutation evidence, but the duplicate line
+      under Maven verification could confuse a later reader about which gate
+      produced those method counts.
+    evidence:
+      - "ops/test-results.md records clean primary smoke no-mutation evidence under the TeamEngine section."
+      - "ops/test-results.md repeats the same no-mutation counts under Maven verification."
+    required_fix: false
+    recommendation: >
+      On the next docs touch, keep no-mutation counts only under the relevant
+      TeamEngine smoke gate.
+    post_review_action: >
+      Removed the duplicate no-mutation evidence line from the Maven
+      verification section in ops/test-results.md so method counts remain owned
+      by the TeamEngine smoke evidence.
+evidence:
+  false_pass_review:
+    result: "PASS"
+    notes:
+      - "Docs consistently say Sapient proves the command-ack receiver prerequisite only."
+      - "Full populated-IUT part2binding PASS is explicitly not claimed."
+      - "Sapient-populated TeamEngine failure is recorded as FAIL, not PASS."
+  command_receiver_fixture:
+    result: "PASS"
+    artifact: "ops/test-results/sprint-ets-34-local-osh-sapient-command-e2e-2026-06-02.json"
+    controlstream_id: "02nc9lm4r9p0"
+    command_id: "02nc9lm4r9p01sv2vf80cdtdkmf0"
+    protocol_task_id: "f3ee6568d2fe4fc79ab57efc8b"
+    terminal_status: "COMPLETED"
+    credential_leak_check: "authCredentialRecorded=false; no unmasked Basic credential found in Sprint 34 artifacts."
+  teamengine_sapient_populated:
+    result: "FAIL_RECORDED_HONESTLY"
+    totals: "211 total / 82 passed / 28 failed / 101 skipped"
+    cause: "Sapient dynamic DataStream/ControlStream resources fail Part 2 JSON/SWE schema validation."
+    no_mutation: "recognized_iut_request_logs=163; GET=149; OPTIONS=14; write_methods=0"
+  teamengine_clean_primary:
+    result: "PASS_WITH_SKIPS_RECORDED"
+    totals: "211 total / 68 passed / 0 failed / 143 skipped"
+    no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; write_methods=0"
+  maven:
+    result: "PASS_WITH_SKIPS_RECORDED"
+    totals: "288 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-34-maven-clean-test-2026-06-02.log"
+  docs_reconciliation:
+    result: "PASS"
+    notes:
+      - "OpenSpec, story, contract, traceability, epic, status, changelog, test-results, known-issues, server, e2e-test-plan, and fixture manifest agree on VERIFIED_WITH_CONSTRAINTS."
+      - "REQ-ETS-PART2-013 remains PARTIAL_IMPLEMENTED."
+      - "REQ-ETS-TEAMENGINE-006 documents local OSH as primary E2E with Sprint 34 evidence."
+  external_field_hub_state:
+    result: "PASS_WITH_DIRTY_WORKTREE_CONTEXT"
+    notes:
+      - "Expected Sprint 34 external changes are docker-compose TCP port 12000, Sapient module config with autoStart=false, Sapient jar in OSH lib, and protobuf conflicts moved out of active lib."
+      - "The sibling field-hub repo has many unrelated dirty files; review did not require or perform reverts."
+      - "Zone.Identifier files in the sibling repo predate Sprint 34 and are unrelated to this work."
+required_fixes: []

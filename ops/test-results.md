@@ -1,8 +1,79 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T03:20Z
+Last updated: 2026-06-02T19:45Z
 
 ## Current Sprint Evidence
+
+Sprint ets-35 local OSH SimUAV tasking fixture:
+
+- Status:
+  - Story: `epics/stories/s-ets-35-01-local-osh-simuav-tasking-fixture.md`
+  - Contract: `.harness/contracts/sprint-ets-35.yaml`
+  - SimUAV is verified as an isolated tasking fixture for terminal CommandStatus plus inline CommandResult evidence.
+  - Full populated-IUT `part2binding` PASS is not claimed because local OSH stream collection metadata and schema endpoint media types fail current Part 2 schema/binding checks.
+- Isolated SimUAV command E2E:
+  - Artifact: `ops/test-results/sprint-ets-35-local-osh-simuav-command-e2e-2026-06-02.json`.
+  - Result: PASS for task acknowledgement and inline result evidence.
+  - System: `02kargmsuc2g`.
+  - DataStreams: `03la3nu3m47g` and `026a5nuan1s0`.
+  - ControlStreams: `03jtrf5qmkng`, `03lbn3mgpspg`, and `02481pm3g53g`.
+  - Command: `02481pm3g53g1m6uvj80cc85rppg`.
+  - Terminal status: `COMPLETED`.
+  - Inline result fields: `reachable`, `time_to_waypoint`, and `battery_remaining`.
+- SimUAV-populated TeamEngine smoke:
+  - Command: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s35-simuav-local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-35-simuav-local-osh-2026-06-02-results bash scripts/smoke-test.sh`.
+  - Result: FAIL, `211 total / 84 passed / 28 failed / 99 skipped`.
+  - Cause: local OSH omits schema-required stream collection metadata (`live`, `async`, and some time ranges) and serves schema resources with `Content-Type: auto`.
+  - Report: `ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-2026-06-02.xml`.
+  - Container log: `ops/test-results/sprint-ets-35-simuav-local-osh-container-failed-2026-06-02.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-no-mutation-2026-06-02.txt`.
+  - No-mutation evidence: `recognized_iut_request_logs=164`, `GET=150`, `OPTIONS=14`, writes `0`.
+- Clean primary local OSH TeamEngine smoke:
+  - Command: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s35-clean-local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-35-clean-local-osh-2026-06-02-results bash scripts/smoke-test.sh`.
+  - Result: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Report: `ops/test-results/sprint-ets-35-clean-local-osh-smoke-2026-06-02.xml`.
+  - Container log: `ops/test-results/sprint-ets-35-clean-local-osh-container-2026-06-02.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-35-clean-local-osh-no-mutation-2026-06-02.txt`.
+  - No-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, writes `0`.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-35-adversarial-implementation.yaml`.
+  - Verdict: `APPROVE_WITH_CONCERNS`, confidence `0.90`, no required fixes.
+
+Sprint ets-34 local OSH tasking driver fixture:
+
+- Status:
+  - Story: `epics/stories/s-ets-34-01-local-osh-tasking-driver-fixture.md`
+  - Contract: `.harness/contracts/sprint-ets-34.yaml`
+  - Sapient is verified as an isolated tasking driver fixture for terminal CommandStatus evidence.
+  - Full populated-IUT `part2binding` PASS is not claimed because Sapient dynamic streams fail broader Part 2 schema validation.
+- Isolated Sapient command E2E:
+  - Artifact: `ops/test-results/sprint-ets-34-local-osh-sapient-command-e2e-2026-06-02.json`.
+  - Result: PASS for task acknowledgement evidence.
+  - Node: `eeee3401-0000-0000-0000-000000000034`.
+  - ControlStream: `02nc9lm4r9p0`.
+  - Command: `02nc9lm4r9p01sv2vf80cdtdkmf0`.
+  - Protocol Task: `f3ee6568d2fe4fc79ab57efc8b`.
+  - Terminal status: `COMPLETED`.
+- Sapient-populated TeamEngine smoke:
+  - Command: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s34-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-34-local-osh-2026-06-02-results bash scripts/smoke-test.sh`.
+  - Result: FAIL, `211 total / 82 passed / 28 failed / 101 skipped`.
+  - Cause: newly visible Sapient DataStream/ControlStream resources fail existing Part 2 JSON/SWE schema validation; this is not the prior Command timeout.
+  - Report: `ops/test-results/sprint-ets-34-local-osh-smoke-failed-2026-06-02.xml`.
+  - Container log: `ops/test-results/sprint-ets-34-local-osh-container-failed-2026-06-02.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-34-local-osh-smoke-failed-no-mutation-2026-06-02.txt`.
+  - No-mutation evidence: `recognized_iut_request_logs=163`, `GET=149`, `OPTIONS=14`, writes `0`.
+- Clean primary local OSH TeamEngine smoke:
+  - Command: `SMOKE_AUTH_CREDENTIAL=<derived, not logged> SMOKE_CONTAINER_NAME=ets-csapi-s34-clean-local-osh SMOKE_TARGET=local-osh SMOKE_DOCKER_NETWORK=field-hub_default SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api SMOKE_OUTPUT_DIR=/tmp/sprint-ets-34-local-osh-clean-2026-06-02-results bash scripts/smoke-test.sh`.
+  - Result: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Report: `ops/test-results/sprint-ets-34-clean-local-osh-smoke-2026-06-02.xml`.
+  - Container log: `ops/test-results/sprint-ets-34-clean-local-osh-container-2026-06-02.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-34-clean-local-osh-no-mutation-2026-06-02.txt`.
+  - No-mutation evidence: `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, writes `0`.
+- Maven verification:
+  - Command: bounded rerun of `bash scripts/mvn-test-via-docker.sh` with Maven transfer timeouts.
+  - Result: PASS, `288 tests / 0 failures / 0 errors / 3 skipped`.
+  - Log: `ops/test-results/sprint-ets-34-maven-clean-test-2026-06-02.log`.
+  - Note: an earlier unbounded wrapper attempt was stopped after the Maven JVM blocked in an HTTPS dependency download before `clean`; this was dependency-transfer behavior, not an ETS test failure.
 
 Sprint ets-33 Generator partial discovery:
 

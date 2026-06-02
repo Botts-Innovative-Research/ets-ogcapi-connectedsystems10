@@ -1,0 +1,13 @@
+recognized_iut_request_logs=135
+GET=133
+OPTIONS=2
+POST=0
+PUT=0
+PATCH=0
+DELETE=0
+
+Scope: Clean primary local OSH TeamEngine smoke after disabling SimUAV and
+Sapient autostart, resetting only field-hub_osh-data, and reseeding static
+040g fixtures.
+
+Conclusion: the clean primary smoke was read-only against the IUT.

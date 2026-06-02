@@ -1,0 +1,61 @@
+sprint: ets-35
+name: local-osh-simuav-tasking-fixture
+status: verified_with_schema_blocker
+trigger: >
+  User said "Do it" after the osh-addons driver scan, meaning configure and
+  probe the most likely tasking fixture candidate.
+
+story:
+  id: S-ETS-35-01
+  file: epics/stories/s-ets-35-01-local-osh-simuav-tasking-fixture.md
+
+requirements:
+  - REQ-ETS-PART2-013
+  - REQ-ETS-TEAMENGINE-006
+
+scenarios:
+  - SCENARIO-ETS-PART2-013-SIMUAV-TASKING-FIXTURE-001
+  - SCENARIO-ETS-PART2-013-TASKING-DRIVER-FIXTURE-001
+  - SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001
+  - SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001
+
+fixture:
+  driver: org.sensorhub.impl.sensor.simuav.SimUavDriver
+  source_repo: https://github.com/opensensorhub/osh-addons
+  local_repo: /tmp/osh-addons-scan
+  build_task: ":sensorhub-driver-simuav:osgi"
+  field_hub_compose_dir: /home/nh/docker/gir/sar-ops/field-hub
+  module_id: simuav-driver
+  default_auto_start: false
+
+evidence:
+  command_e2e: ops/test-results/sprint-ets-35-local-osh-simuav-command-e2e-2026-06-02.json
+  populated_smoke:
+    status: FAIL
+    totals: "211 total / 84 passed / 28 failed / 99 skipped"
+    report: ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-2026-06-02.xml
+    log: ops/test-results/sprint-ets-35-simuav-local-osh-container-failed-2026-06-02.log
+    no_mutation: ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-no-mutation-2026-06-02.txt
+  clean_primary_smoke:
+    status: PASS
+    totals: "211 total / 68 passed / 0 failed / 143 skipped"
+    report: ops/test-results/sprint-ets-35-clean-local-osh-smoke-2026-06-02.xml
+    log: ops/test-results/sprint-ets-35-clean-local-osh-container-2026-06-02.log
+    no_mutation: ops/test-results/sprint-ets-35-clean-local-osh-no-mutation-2026-06-02.txt
+  raze_review:
+    status: APPROVE_WITH_CONCERNS
+    confidence: 0.90
+    required_fixes: []
+    artifact: .harness/evaluations/sprint-ets-35-adversarial-implementation.yaml
+
+verdict: >
+  SimUAV accepts local OSH CS API tasking and returns terminal CommandStatus
+  plus inline CommandResult evidence. It does not satisfy full schema-valid
+  populated-IUT closure because local OSH omits required stream collection
+  metadata and serves schema resources with Content-Type auto.
+
+next_action: >
+  Do not claim full populated part2binding PASS from SimUAV. Either fix local
+  OSH stream/schema representation metadata or specify an isolated fixture mode
+  that preserves strict Annex A.9 validation while accepting body-valid schema
+  evidence from local OSH.

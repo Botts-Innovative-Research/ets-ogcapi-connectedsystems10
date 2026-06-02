@@ -1,6 +1,6 @@
 # server.md — operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-06-02 - Sprint 33 local OSH dynamic-data seed fixture planning.
+> Last updated: 2026-06-02 - Sprint 35 local OSH Sapient and SimUAV tasking fixtures.
 
 ## Schema provenance
 
@@ -76,6 +76,33 @@ explicit advisory interoperability probe with `SMOKE_TARGET=georobotix`.
   evidence. It must not be applied unless mutation tests are explicitly enabled
   against a dedicated mutable IUT, and it is not proof of accepted OSH payload
   shape until Generator records actual request/response evidence.
+
+### Local OSH tasking fixture
+
+Sprint 34 configured the field-hub OSH image with the sibling Sapient tasking
+driver as an isolated Command-ack fixture:
+
+- Driver jar: `sensorhub-driver-sapient-0.1.0.jar` in the field-hub OSH lib.
+- TCP port: `12000` is mapped by `/home/nh/docker/gir/sar-ops/field-hub/docker-compose.yml`.
+- Config: `/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json` includes module `sapient-driver`, currently `autoStart=false`.
+- Runtime dependency caveat: Sapient's generated protobuf code requires protobuf runtime `4.31.1`; older protobuf jars were moved out of the active field-hub OSH lib.
+
+Sprint 35 also configured the field-hub OSH image with the `osh-addons` SimUAV
+tasking driver as an isolated CommandResult fixture:
+
+- Driver jar: `sensorhub-driver-simuav-1.0.0-bundle.jar` in the field-hub OSH lib.
+- Required datamodel jar: `sensorhub-datamodel-uxs-1.0.0.jar` in the field-hub OSH lib.
+- Source: built from `/tmp/osh-addons-scan` / `https://github.com/opensensorhub/osh-addons` with Gradle task `:sensorhub-driver-simuav:osgi`.
+- Config: `/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json` includes module `simuav-driver`, currently `autoStart=false`.
+
+Keep Sapient and SimUAV disabled for the primary read-only smoke. When
+temporarily enabled, Sapient can accept a real CS API Command through a local
+SAPIENT TCP peer, and SimUAV can accept a waypoint feasibility Command without
+an external peer and return inline result data. Their generated dynamic
+DataStreams/ControlStreams still fail current Part 2 schema checks, and OSH
+does not delete module-owned resources through CS API. After a fixture run,
+reset only `field-hub_osh-data`, restart OSH, and reseed
+`ops/local-osh-seed-fixtures.json` before running the primary TeamEngine smoke.
 
 ### Spec drift documented
 

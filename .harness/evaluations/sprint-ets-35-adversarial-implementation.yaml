@@ -1,0 +1,80 @@
+agent: raze
+role: adversarial-reviewer
+sprint: ets-35
+story: S-ETS-35-01
+status: approve_with_concerns
+confidence: 0.90
+review_started_at: "2026-06-02T19:56:48Z"
+review_completed_at: "2026-06-02T19:58:44Z"
+duration: "1m56s"
+subagent_id: "019e89e8-c6ec-7910-abec-67a325fdf07d"
+token_metadata: unavailable
+
+scope:
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "epics/stories/s-ets-35-01-local-osh-simuav-tasking-fixture.md"
+  - ".harness/contracts/sprint-ets-35.yaml"
+  - "epics/epic-ets-03-part2-classes.md"
+  - "_bmad/traceability.md"
+  - "ops/status.md"
+  - "ops/test-results.md"
+  - "ops/changelog.md"
+  - "ops/known-issues.md"
+  - "ops/server.md"
+  - "ops/e2e-test-plan.md"
+  - "ops/local-osh-dynamic-data-seed-fixtures.json"
+  - ".harness/handoffs/planner-handoff.yaml"
+  - "ops/test-results/sprint-ets-35-local-osh-simuav-command-e2e-2026-06-02.json"
+  - "ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-2026-06-02.xml"
+  - "ops/test-results/sprint-ets-35-clean-local-osh-smoke-2026-06-02.xml"
+
+verdict_summary: >
+  Sprint 35 fulfills the user instruction to configure/probe an OSH
+  tasking-capable driver and records the remaining schema blocker honestly.
+  No full populated part2binding PASS is overstated.
+
+required_fixes: []
+
+evidence_verified:
+  command_result_evidence:
+    status: pass
+    artifact: "ops/test-results/sprint-ets-35-local-osh-simuav-command-e2e-2026-06-02.json"
+    story_line: "epics/stories/s-ets-35-01-local-osh-simuav-tasking-fixture.md:35"
+  populated_teamengine_smoke:
+    status: failed_recorded_honestly
+    totals: "211 total / 84 passed / 28 failed / 99 skipped"
+    artifact: "ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-2026-06-02.xml"
+  failure_cause:
+    status: matches_artifacts
+    details:
+      - "missing live/async/resultTime/issueTime/executionTime stream metadata"
+      - "schema endpoints return Content-Type auto"
+    artifacts:
+      - "ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-2026-06-02.xml:931"
+      - "ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-2026-06-02.xml:2156"
+  clean_primary_smoke:
+    status: pass_with_skips_recorded
+    totals: "211 total / 68 passed / 0 failed / 143 skipped"
+    artifact: "ops/test-results/sprint-ets-35-clean-local-osh-smoke-2026-06-02.xml"
+  open_part2binding_closure:
+    status: honestly_open
+    references:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:907"
+      - "epics/epic-ets-03-part2-classes.md:71"
+      - "_bmad/traceability.md:75"
+      - ".harness/handoffs/planner-handoff.yaml:70"
+
+concerns:
+  - id: RAZE-ETS35-CONCERN-001
+    severity: low
+    status: open
+    summary: >
+      Sprint 34/35 evidence files and contracts are still untracked. They look
+      intentional, but should be staged/committed before relying on this state
+      as a durable handoff.
+  - id: RAZE-ETS35-CONCERN-002
+    severity: low
+    status: closed_by_reconciliation
+    summary: >
+      Raze did not write an evaluation YAML because the delegated review was
+      read-only. This artifact records the returned verdict and evidence.

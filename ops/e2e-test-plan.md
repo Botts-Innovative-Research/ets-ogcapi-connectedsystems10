@@ -1,6 +1,6 @@
 # E2E Test Plan — OGC API Connected Systems ETS
 
-Last updated: 2026-06-01T23:16Z
+Last updated: 2026-06-02T19:45Z
 
 ## Policy
 
@@ -27,6 +27,7 @@ The smoke script builds the Docker image, starts TeamEngine, verifies suite regi
 - **GeoRobotix public instance**: GeoRobotix is no longer a default or required development target. It may be run only as an explicit advisory interoperability probe when useful, and failures must not block local-OSH-backed development work.
 - **Credential handling**: Do not record credential values. Supply local OSH credentials through the environment, typically `SMOKE_AUTH_CREDENTIAL="Basic <base64>"`, derived from the local stack config or a secret store.
 - **Seed-state requirement**: For Part 2 dynamic-data work, record whether local OSH has candidate DataStreams, Observations, ControlStreams, Commands, CommandStatus, CommandResult, and SystemEvents. Empty collections are acceptable planning evidence but cannot be counted as positive conformance closure.
+- **Tasking-fixture isolation**: Sapient and SimUAV are configured as local tasking-capable fixtures but remain disabled by default for primary smoke. If a sprint enables either fixture to prove Command acknowledgement/result evidence, record the fixture ids, submitted Command body, terminal CommandStatus evidence, and any inline CommandResult data, then reset the OSH datastore and reseed the static fixtures before the primary read-only TeamEngine smoke.
 
 Local OSH command shape:
 
@@ -42,6 +43,7 @@ SMOKE_DOCKER_NETWORK=field-hub_default \
 
 - Maven unit/lint verification: `bash scripts/mvn-test-via-docker.sh`
 - TeamEngine smoke: `scripts/smoke-test.sh` with `SMOKE_OUTPUT_DIR` outside the worktree for gate runs
+- For Sapient or SimUAV tasking fixture runs: isolated local fixture E2E evidence plus a subsequent clean primary local OSH TeamEngine smoke. Do not accept fixture-populated smoke as the primary gate while dynamic stream resources fail the schema suites.
 - Targeted sabotage/credential scripts when the changed surface touches dependency cascade or auth/logging:
   - `scripts/sabotage-test.sh`
   - `scripts/credential-leak-e2e-test.sh`

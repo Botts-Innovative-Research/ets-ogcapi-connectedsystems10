@@ -2,6 +2,39 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-02T19:45Z — Sprint 35 local OSH SimUAV tasking fixture
+
+**Triggered by user instruction**: "Do it"
+
+- Built OpenSensorHub `osh-addons` SimUAV with Gradle task `:sensorhub-driver-simuav:osgi`, using local `osh-core`.
+- Installed `sensorhub-driver-simuav-1.0.0-bundle.jar` and `sensorhub-datamodel-uxs-1.0.0.jar` into the field-hub OSH lib and configured module `simuav-driver`.
+- Verified isolated SimUAV command E2E: system `02kargmsuc2g`, ControlStream `02481pm3g53g`, Command `02481pm3g53g1m6uvj80cc85rppg`, terminal `COMPLETED` status, and inline result fields `reachable`, `time_to_waypoint`, and `battery_remaining`.
+- Archived SimUAV command evidence as `ops/test-results/sprint-ets-35-local-osh-simuav-command-e2e-2026-06-02.json`.
+- Ran TeamEngine against the SimUAV-populated OSH and recorded the honest failure: `211 total / 84 passed / 28 failed / 99 skipped`; the smoke was read-only (`GET=150`, `OPTIONS=14`, writes `0`).
+- Root cause: local OSH stream collection resources omit schema-required metadata such as `live`, `async`, and some time ranges, and schema endpoints return JSON bodies with `Content-Type: auto`.
+- Restored primary local OSH by setting Sapient and SimUAV `autoStart=false`, resetting only `field-hub_osh-data`, and reseeding static `040g` fixtures.
+- Reran mandatory clean local OSH TeamEngine smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation evidence `GET=133`, `OPTIONS=2`, writes `0`.
+- Ran required Raze review: `APPROVE_WITH_CONCERNS`, confidence `0.90`, no required fixes; artifact `.harness/evaluations/sprint-ets-35-adversarial-implementation.yaml`.
+
+---
+
+## 2026-06-02T15:14Z — Sprint 34 local OSH tasking driver fixture
+
+**Triggered by user instruction**: "OK, so you will need to find and configure an OSH driver that accepts tasks in order to complete the test."
+
+- Confirmed the user's diagnosis: manual ControlStream creation is insufficient because OSH waits for an owning tasking receiver to acknowledge Commands.
+- Added Sprint 34 spec/story/contract coverage for `SCENARIO-ETS-PART2-013-TASKING-DRIVER-FIXTURE-001`.
+- Selected Sapient over UniversalController and Kirby/Sceptre candidates because it has a local OSH driver, local TCP peer, LOOK_AT tasking ControlStreams, and TaskAck-to-CommandStatus behavior without external hardware.
+- Configured field-hub OSH with `sensorhub-driver-sapient-0.1.0.jar`, TCP port `12000`, and protobuf runtime `4.31.1` only; Sapient is now configured but disabled by default to keep primary smoke clean.
+- Verified isolated tasking E2E: local SAPIENT node `eeee3401-0000-0000-0000-000000000034` registered, ControlStream `02nc9lm4r9p0` accepted Command `02nc9lm4r9p01sv2vf80cdtdkmf0`, protocol Task `f3ee6568d2fe4fc79ab57efc8b` was acknowledged, and terminal status was `COMPLETED`.
+- Archived Sapient command evidence as `ops/test-results/sprint-ets-34-local-osh-sapient-command-e2e-2026-06-02.json`.
+- Ran TeamEngine against the Sapient-populated OSH and recorded the honest failure: `211 total / 82 passed / 28 failed / 101 skipped`; failures were Part 2 schema validations on Sapient DataStream/ControlStream resources, not command timeout. The smoke was read-only (`GET=149`, `OPTIONS=14`, writes `0`).
+- Cleaned the primary local OSH state by resetting only `field-hub_osh-data`, reseeding static `040g` fixtures, and keeping Sapient `autoStart=false`.
+- Reran mandatory clean local OSH TeamEngine smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation evidence `GET=133`, `OPTIONS=2`, writes `0`.
+- Ran Docker Maven `clean test` after bounding Maven transfer timeouts: PASS, `288 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-34-maven-clean-test-2026-06-02.log`. An earlier unbounded wrapper attempt was stopped after the JVM blocked in an HTTPS dependency download before `clean`.
+
+---
+
 ## 2026-06-02T03:20Z — Sprint 33 Generator partial discovery
 
 **Triggered by user instruction**: "Continue"

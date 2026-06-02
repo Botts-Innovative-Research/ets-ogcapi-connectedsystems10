@@ -1,0 +1,64 @@
+{
+  "authCredentialRecorded": false,
+  "authUserId": "admin",
+  "cleanup": {
+    "residualNodeState": "registered local Sapient fixture node may remain in local OSH DB",
+    "tcpSocketClosed": true
+  },
+  "commandId": "02nc9lm4r9p01sv2vf80cdtdkmf0",
+  "commandPost": {
+    "body": {
+      "command@id": "02nc9lm4r9p01sv2vf80cdtdkmf0",
+      "executionTime": [
+        "2026-06-02T15:06:28.050935522Z",
+        "2026-06-02T15:06:28.050935522Z"
+      ],
+      "reportTime": "2026-06-02T15:06:28.050946844Z",
+      "statusCode": "COMPLETED"
+    },
+    "contentType": "application/json",
+    "httpStatus": 200
+  },
+  "controlStream": {
+    "id": "02nc9lm4r9p0",
+    "inputName": "task-eeee3401-look_at",
+    "name": "SAPIENT Gateway - COMMAND_TYPE_LOOK_AT - eeee3401"
+  },
+  "csApi": "http://localhost:8081/sensorhub/api",
+  "driver": "com.georobotix.impl.sensor.sapient.Sapient",
+  "driverModuleId": "sapient-driver",
+  "nodeId": "eeee3401-0000-0000-0000-000000000034",
+  "protocolTasksCaptured": [
+    {
+      "regions": 0,
+      "taskId": "f3ee6568d2fe4fc79ab57efc8b",
+      "taskName": "COMMAND_TYPE_LOOK_AT"
+    }
+  ],
+  "scenario": "SCENARIO-ETS-PART2-013-TASKING-DRIVER-FIXTURE-001",
+  "statusHistory": {
+    "body": {
+      "items": [
+        {
+          "command@id": "02nc9lm4r9p01sv2vf80cdtdkmf0",
+          "executionTime": [
+            "2026-06-02T15:06:28.050935522Z",
+            "2026-06-02T15:06:28.050935522Z"
+          ],
+          "id": "008ath6mojd7407jsbtt01hnlmipsqguu5q062b33g000000",
+          "reportTime": "2026-06-02T15:06:28.050946844Z",
+          "statusCode": "COMPLETED"
+        }
+      ]
+    },
+    "contentType": "application/json",
+    "httpStatus": 200
+  },
+  "steps": [
+    {
+      "registerSapientNode": "sent"
+    }
+  ],
+  "tcpPort": 12000,
+  "terminalStatusObserved": "COMPLETED"
+}

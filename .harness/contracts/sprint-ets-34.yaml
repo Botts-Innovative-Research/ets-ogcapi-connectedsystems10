@@ -1,0 +1,115 @@
+# Sprint 34 contract - Local OSH tasking driver fixture
+
+sprint: "ets-34"
+sprint_name: "local-osh-tasking-driver-fixture"
+type: "fixture-configuration"
+created: "2026-06-02T14:55:09Z"
+updated: "2026-06-02T15:31:00Z"
+description: |
+  Sprint 34 configures a local OSH tasking-capable driver fixture to unblock
+  REQ-ETS-PART2-013 populated Command binding closure. Sprint 33 showed that a
+  manually created ControlStream is insufficient because OSH waits for a
+  receiving module acknowledgement. The selected path is the sibling Sapient OSH
+  driver plus a local SAPIENT TCP peer that can register LOOK_AT tasking support
+  and reply with TaskAck terminal status.
+
+stories:
+  - id: "S-ETS-34-01"
+    title: "Local OSH tasking driver fixture for Command binding"
+    file: "epics/stories/s-ets-34-01-local-osh-tasking-driver-fixture.md"
+    epic: "epic-ets-03-part2-classes"
+    priority: "P0"
+    complexity: "M"
+    depends_on:
+      - "S-ETS-33-01"
+    parallelizable: false
+    status: "VERIFIED_WITH_CONSTRAINTS"
+
+requirements:
+  modified_reqs:
+    - "REQ-ETS-PART2-013 (tasking driver fixture prerequisite for populated Command binding)"
+  new_reqs: []
+
+scenarios:
+  critical:
+    - "SCENARIO-ETS-PART2-013-TASKING-DRIVER-FIXTURE-001"
+    - "SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001"
+    - "SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001"
+    - "SCENARIO-ETS-PART2-013-SEED-MUTATION-SAFETY-001"
+  supporting:
+    - "SCENARIO-ETS-PART2-013-DYNAMIC-SEED-FIXTURES-001"
+    - "SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001"
+
+selected_fixture:
+  driver: "sensorhub-driver-sapient-0.1.0.jar"
+  source_repo: "/home/nh/docker/gir/sapient"
+  rationale: |
+    Sapient has a local OSH driver, a local TCP protocol peer/test harness,
+    LOOK_AT ControlStream creation, and TaskAck-to-CommandStatus E2E evidence.
+    UniversalController is an input source rather than a Command receiver, and
+    Kirby/Lattice candidates imply external hardware or credentials.
+  local_osh:
+    compose_dir: "/home/nh/docker/gir/sar-ops/field-hub"
+    service: "osh"
+    cs_api_url_host: "http://localhost:8081/sensorhub/api"
+    cs_api_url_teamengine: "http://field-hub-osh-1:8081/sensorhub/api"
+    docker_network: "field-hub_default"
+    sapient_tcp_port: 12000
+    credential_handling: "Credentials derived from local config/environment; values are never recorded."
+  disposition: |
+    Sapient is suitable as a real task-accepting Command fixture: a local SAPIENT
+    peer registered a LOOK_AT-capable node and completed a CS API Command with
+    terminal COMPLETED status. It is not suitable as a persistent primary smoke
+    fixture because its module-owned dynamic DataStreams/ControlStreams trigger
+    broader Part 2 schema-validation failures and cannot be deleted through the
+    CS API. Keep Sapient configured but disabled by default; activate it only for
+    isolated tasking-fixture runs, then reset the OSH datastore and reseed the
+    static local fixtures before primary TeamEngine smoke.
+
+success_criteria:
+  spec_updated: true
+  story_created: true
+  contract_created: true
+  field_hub_driver_jar_present: true
+  field_hub_configured: true
+  local_tasking_peer_registered: true
+  command_post_terminal_status_observed: true
+  evidence_archived: true
+  sapient_populated_smoke_rerun_failed_schema: true
+  clean_primary_smoke_rerun_passed: true
+  reconciliation_complete: true
+
+verification_plan:
+  - "Rebuild/restart field-hub OSH after adding the Sapient driver module."
+  - "Run a local SAPIENT TCP peer against port 12000 and register LOOK_AT tasking support."
+  - "Fetch driver-owned ControlStreams through CS API with authentication."
+  - "POST a LOOK_AT Command and have the peer reply TASK_STATUS_COMPLETED."
+  - "Fetch command status history and archive the terminal status evidence."
+  - "Run the mandatory local OSH TeamEngine smoke and archive report/log/no-mutation evidence."
+  - "Run Docker Maven clean test and archive the verification log."
+
+verification_results:
+  sapient_command_e2e:
+    artifact: "ops/test-results/sprint-ets-34-local-osh-sapient-command-e2e-2026-06-02.json"
+    controlstream_id: "02nc9lm4r9p0"
+    command_id: "02nc9lm4r9p01sv2vf80cdtdkmf0"
+    protocol_task_id: "f3ee6568d2fe4fc79ab57efc8b"
+    terminal_status: "COMPLETED"
+  sapient_populated_teamengine_smoke:
+    result: "FAILED"
+    totals: "211 total / 82 passed / 28 failed / 101 skipped"
+    reason: "Sapient dynamic DataStream/ControlStream resources failed Part 2 JSON/SWE schema validations."
+    report: "ops/test-results/sprint-ets-34-local-osh-smoke-failed-2026-06-02.xml"
+    log: "ops/test-results/sprint-ets-34-local-osh-container-failed-2026-06-02.log"
+    no_mutation: "ops/test-results/sprint-ets-34-local-osh-smoke-failed-no-mutation-2026-06-02.txt"
+  clean_primary_teamengine_smoke:
+    result: "PASSED"
+    totals: "211 total / 68 passed / 0 failed / 143 skipped"
+    report: "ops/test-results/sprint-ets-34-clean-local-osh-smoke-2026-06-02.xml"
+    log: "ops/test-results/sprint-ets-34-clean-local-osh-container-2026-06-02.log"
+    no_mutation: "ops/test-results/sprint-ets-34-clean-local-osh-no-mutation-2026-06-02.txt"
+  maven_clean_test:
+    result: "PASSED"
+    totals: "288 tests / 0 failures / 0 errors / 3 skipped"
+    log: "ops/test-results/sprint-ets-34-maven-clean-test-2026-06-02.log"
+    note: "Earlier unbounded wrapper attempt was stopped after Maven blocked in an HTTPS dependency download before clean; bounded rerun completed successfully."

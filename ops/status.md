@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T03:20Z
+Last updated: 2026-06-02T19:45Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-33.yaml`
+- `.harness/contracts/sprint-ets-35.yaml`
 
 ## Current State
 
@@ -41,13 +41,52 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`, pushed Sprint 28 Generator commit `5850210 Implement Sprint 28 Part 2 JSON`, pushed Sprint 29 planning/Generator/reconciliation commits, pushed Sprint 30 planning/Generator/reconciliation commits, pushed Sprint 31 planning/Generator/reconciliation commits through `7bbbc51 Update Sprint 31 final metrics`, pushed triage commit `eb9fb3a Clarify Sprint 31 next step`, pushed Sprint 32 planning commit `f2d2ab8 Plan Sprint 32 local OSH primary E2E`, pushed Sprint 32 planning reconciliation `1d84ab0 Reconcile Sprint 32 planning push`, pushed Sprint 32 Generator commit `37a2a43 Implement Sprint 32 Observation Command binding`, pushed Sprint 32 final metrics commit `1cd6884`, and pushed Sprint 33 planning commit `efb59e6 Plan Sprint 33 local OSH dynamic data seeding`.
 - Latest csapi docs handoff commit before migration: `1568f36`
 - Latest implemented story: `S-ETS-32-01` Generator is PARTIAL for the internal Part 2 Observation/Command binding closure; initial Raze implementation review gaps are fixed and focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes.
-- Latest planned story: `S-ETS-33-01` is pushed for local OSH dynamic-data seed fixtures and inline CommandStatus/CommandResult helper regressions.
-- Latest Generator work: Sprint 33 partial discovery implemented inline CommandStatus/CommandResult helper regressions and archived mutation-gated local OSH seed probes. Observation-side DataStream/Observation seeding and ControlStream schema creation are accepted and cleaned up; Command creation remains blocked by local OSH command acknowledgement timeout.
-- Current planning story: `S-ETS-33-01` has drafted the contract, story, planned seed manifest, OpenSpec scenarios, traceability, and local OSH dynamic-data probe artifact. Mandatory local OSH planning E2E passed and Raze planning recheck approved.
+- Latest planned/probed story: `S-ETS-35-01` verifies the `osh-addons` SimUAV driver as an isolated local OSH tasking fixture with terminal CommandStatus plus inline CommandResult evidence.
+- Latest Generator work: Sprint 35 built and configured SimUAV as a tasking-capable local OSH fixture. SimUAV completed a waypoint feasibility CS API Command with terminal `COMPLETED` status and inline result data, proving CommandResult evidence is available through a real driver fixture.
+- Current planning story: `S-ETS-35-01` is verified with a schema blocker. SimUAV is suitable for isolated Command/CommandResult fixture evidence but not for persistent primary smoke state because local OSH stream collection resources omit schema-required metadata and schema endpoints return JSON bodies with `Content-Type: auto`.
 - Latest pushed planning commit: `efb59e6 Plan Sprint 33 local OSH dynamic data seeding`.
 - Latest pushed implementation commit: `107c2a7 Implement Sprint 33 seed discovery`.
-- Current sprint status: Sprint ets-33 planning is E2E-verified, Raze-approved, committed, and pushed. Generator partial discovery is implemented, verified, committed, and pushed as `107c2a7`: helper regressions are in place, local OSH Observation-side seed shapes are accepted, ControlStream schema creation is accepted, and Command creation remains blocked by OSH waiting for command acknowledgement. No positive populated-IUT Observation/Command binding PASS is claimed yet. Full Maven passed `288 total / 0 failures / 0 errors / 3 skipped`; local OSH TeamEngine smoke passed `211 total / 68 passed / 0 failed / 143 skipped` with no read-only smoke mutation (`GET=133`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`).
+- Current sprint status: Sprint ets-35 SimUAV evidence is archived. SimUAV command E2E passed with system `02kargmsuc2g`, ControlStream `02481pm3g53g`, Command `02481pm3g53g1m6uvj80cc85rppg`, terminal `COMPLETED` status, and inline result data. SimUAV-populated TeamEngine smoke failed honestly (`211/84/28/99`) on stream metadata/schema media-type validation. Primary local OSH was restored by disabling Sapient and SimUAV autostart, resetting only `field-hub_osh-data`, reseeding static `040g` fixtures, and rerunning clean TeamEngine smoke successfully (`211/68/0/143`, `GET=133`, `OPTIONS=2`, writes `0`). No full positive populated-IUT `part2binding` PASS is claimed yet.
 - Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`), Sprint 29 reconciliation pushed as `6ba24db`, Sprint 30 planning pushed as `3c68858` (`6ba24db..3c68858 main -> main`), Sprint 30 Generator pushed as `b2aad06` (`560945c..b2aad06 main -> main`), Sprint 31 planning pushed as `20a8e18` (`45717a3..20a8e18 main -> main`), Sprint 31 Generator pushed as `b520b65` (`75eac75..b520b65 main -> main`), Sprint 31 push reconciliation pushed as `6d9f671` (`b520b65..6d9f671 main -> main`), final metrics pushed as `7bbbc51` (`6d9f671..7bbbc51 main -> main`), Sprint 31 triage pushed as `eb9fb3a`, Sprint 32 planning pushed as `f2d2ab8` (`eb9fb3a..f2d2ab8 main -> main`), Sprint 32 planning reconciliation pushed as `1d84ab0` (`f2d2ab8..1d84ab0 main -> main`), Sprint 32 Generator pushed as `37a2a43` (`1d84ab0..37a2a43 main -> main`), Sprint 32 final metrics pushed as `1cd6884`, Sprint 33 planning pushed as `efb59e6` (`1cd6884..efb59e6 main -> main`), and Sprint 33 Generator pushed as `107c2a7` (`7aa4a9a..107c2a7 main -> main`).
+
+## Sprint ets-35 SimUAV Tasking Fixture Evidence
+
+Local OSH `osh-addons` SimUAV tasking fixture for CommandResult evidence:
+
+- Story: `epics/stories/s-ets-35-01-local-osh-simuav-tasking-fixture.md`
+- Contract: `.harness/contracts/sprint-ets-35.yaml`
+- OpenSpec: `REQ-ETS-PART2-013` remains PARTIAL_IMPLEMENTED with `SPRINT_35_SIMUAV_TASKING_FIXTURE_VERIFIED_WITH_SCHEMA_BLOCKER`.
+- Driver selected: SimUAV (`org.sensorhub.impl.sensor.simuav.SimUavDriver`) because it needs no external peer, creates local dynamic streams, exposes tasking ControlStreams, accepts a waypoint feasibility Command, and returns inline result data.
+- Field-hub runtime note: SimUAV is configured in `/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json`, and `sensorhub-driver-simuav-1.0.0-bundle.jar` plus `sensorhub-datamodel-uxs-1.0.0.jar` are present in the field-hub OSH lib. SimUAV `autoStart=false` in the current primary smoke state.
+- Isolated command E2E: SimUAV system `02kargmsuc2g` exposed DataStreams `03la3nu3m47g` and `026a5nuan1s0`, ControlStreams `03jtrf5qmkng`, `03lbn3mgpspg`, and `02481pm3g53g`; ControlStream `02481pm3g53g` accepted Command `02481pm3g53g1m6uvj80cc85rppg`; terminal CommandStatus was `COMPLETED` with inline result fields `reachable`, `time_to_waypoint`, and `battery_remaining`.
+- Command E2E artifact: `ops/test-results/sprint-ets-35-local-osh-simuav-command-e2e-2026-06-02.json`.
+- SimUAV-populated TeamEngine smoke: FAILED, `211 total / 84 passed / 28 failed / 99 skipped`; failures were Part 2 JSON/SWE schema validations against stream collection metadata plus schema endpoint `Content-Type: auto`. No-mutation evidence: `GET=150`, `OPTIONS=14`, writes `0`.
+- SimUAV-populated smoke artifacts: `ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-2026-06-02.xml`, `ops/test-results/sprint-ets-35-simuav-local-osh-container-failed-2026-06-02.log`, and `ops/test-results/sprint-ets-35-simuav-local-osh-smoke-failed-no-mutation-2026-06-02.txt`.
+- Cleanup: SimUAV and Sapient are configured but disabled by default. Cleanup reset only `field-hub_osh-data`, then reseeded static `/systems/040g`, `/procedures/040g`, `/deployments/040g`, and `/samplingFeatures/040g` from `ops/local-osh-seed-fixtures.json`.
+- Clean primary TeamEngine smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation evidence `GET=133`, `OPTIONS=2`, writes `0`.
+- Clean smoke artifacts: `ops/test-results/sprint-ets-35-clean-local-osh-smoke-2026-06-02.xml`, `ops/test-results/sprint-ets-35-clean-local-osh-container-2026-06-02.log`, and `ops/test-results/sprint-ets-35-clean-local-osh-no-mutation-2026-06-02.txt`.
+- Raze review: `.harness/evaluations/sprint-ets-35-adversarial-implementation.yaml` records `APPROVE_WITH_CONCERNS`, confidence `0.90`, and no required fixes.
+- Next action: do not claim full positive `part2binding` PASS until local OSH emits schema-valid stream collection metadata and JSON schema media types, or the ETS specifies an isolated fixture mode that preserves Annex A.9 validation while accepting body-valid schema evidence.
+
+## Sprint ets-34 Tasking Fixture Evidence
+
+Local OSH tasking driver fixture for acknowledged Command evidence:
+
+- Story: `epics/stories/s-ets-34-01-local-osh-tasking-driver-fixture.md`
+- Contract: `.harness/contracts/sprint-ets-34.yaml`
+- OpenSpec: `REQ-ETS-PART2-013` remains PARTIAL_IMPLEMENTED with `SPRINT_34_TASKING_DRIVER_FIXTURE_VERIFIED_WITH_CONSTRAINTS`.
+- Architecture freshness check: `_bmad/architecture.md` last reconciled 2026-06-01 during Sprint 32 planning; checked 2026-06-02 and not stale.
+- Driver selected: Sapient (`sensorhub-driver-sapient-0.1.0.jar`) because it has a local OSH module, local SAPIENT TCP peer, LOOK_AT tasking support, and TaskAck-to-CommandStatus behavior.
+- Field-hub runtime note: Sapient is configured in `/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json`, the jar is present in the field-hub OSH lib, TCP `12000` is mapped, and protobuf conflicts were moved aside so runtime protobuf `4.31.1` is active. Sapient `autoStart=false` in the current primary smoke state.
+- Isolated command E2E: local SAPIENT node `eeee3401-0000-0000-0000-000000000034` registered; ControlStream `02nc9lm4r9p0` accepted Command `02nc9lm4r9p01sv2vf80cdtdkmf0`; protocol Task `f3ee6568d2fe4fc79ab57efc8b` was acknowledged; terminal CommandStatus was `COMPLETED`.
+- Command E2E artifact: `ops/test-results/sprint-ets-34-local-osh-sapient-command-e2e-2026-06-02.json`.
+- Sapient-populated TeamEngine smoke: FAILED, `211 total / 82 passed / 28 failed / 101 skipped`; failures were Part 2 JSON/SWE schema validations against Sapient DataStream/ControlStream resources. No-mutation evidence: `GET=149`, `OPTIONS=14`, writes `0`.
+- Sapient-populated smoke artifacts: `ops/test-results/sprint-ets-34-local-osh-smoke-failed-2026-06-02.xml`, `ops/test-results/sprint-ets-34-local-osh-container-failed-2026-06-02.log`, and `ops/test-results/sprint-ets-34-local-osh-smoke-failed-no-mutation-2026-06-02.txt`.
+- Cleanup: OSH did not delete module-owned Sapient streams/commands through CS API; cleanup reset only `field-hub_osh-data`, then reseeded static `/systems/040g`, `/procedures/040g`, `/deployments/040g`, and `/samplingFeatures/040g` from `ops/local-osh-seed-fixtures.json`.
+- Clean primary TeamEngine smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation evidence `GET=133`, `OPTIONS=2`, writes `0`.
+- Clean smoke artifacts: `ops/test-results/sprint-ets-34-clean-local-osh-smoke-2026-06-02.xml`, `ops/test-results/sprint-ets-34-clean-local-osh-container-2026-06-02.log`, and `ops/test-results/sprint-ets-34-clean-local-osh-no-mutation-2026-06-02.txt`.
+- Maven verification: Docker Maven `clean test` passed `288 tests / 0 failures / 0 errors / 3 skipped`; log archived at `ops/test-results/sprint-ets-34-maven-clean-test-2026-06-02.log`. An earlier unbounded wrapper attempt was stopped after the JVM blocked in an HTTPS dependency download before `clean`; the archived bounded rerun completed successfully.
+- Next action: do not claim full positive `part2binding` PASS until the tasking fixture also yields schema-valid dynamic stream resources and inspectable JSON parent schema endpoints, or the ETS gains a documented isolated fixture mode that avoids contaminating the primary read-only schema suites.
 
 ## Sprint ets-33 Planning Evidence
 

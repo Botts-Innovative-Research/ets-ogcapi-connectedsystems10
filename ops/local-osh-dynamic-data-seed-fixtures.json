@@ -1,9 +1,9 @@
 {
   "description": "Planned dynamic-data seed fixture contract for local OSH populated Observation/Command binding closure.",
-  "status": "GENERATOR_PARTIAL_DISCOVERED_COMMAND_ACK_BLOCKED",
+  "status": "GENERATOR_PARTIAL_DISCOVERED_COMMAND_ACK_AND_RESULT_FIXTURES_VERIFIED_SCHEMA_VALID_CLOSURE_OPEN",
   "createdFor": "S-ETS-33-01 local OSH dynamic-data seed fixture planning",
   "createdAt": "2026-06-02T01:07:13Z",
-  "updatedAt": "2026-06-02T03:00:00Z",
+  "updatedAt": "2026-06-02T19:45:00Z",
   "iutBaseUrlHost": "http://localhost:8081/sensorhub/api",
   "iutBaseUrlDocker": "http://field-hub-osh-1:8081/sensorhub/api",
   "dockerNetwork": "field-hub_default",
@@ -12,7 +12,9 @@
     "This manifest is a planning contract, not proof that these payload shapes have been accepted by OSH.",
     "Generator must only apply dynamic-data fixtures under explicit dedicated mutable-IUT opt-in.",
     "The official Part 2 OpenAPI schemas mark some readOnly fields as required, so Generator must discover accepted OSH write shape before recording exact payloads.",
-    "Credential values must never be stored in this manifest, repository docs, or archived logs."
+    "Credential values must never be stored in this manifest, repository docs, or archived logs.",
+    "Sprint 34 verifies Sapient as an isolated local command-ack fixture, but Sapient-generated streams are not accepted as persistent seed state because they fail broader Part 2 schema validation.",
+    "Sprint 35 verifies SimUAV as an isolated local command/result fixture, but SimUAV-generated streams are not accepted as persistent seed state because local OSH omits schema-required stream metadata and serves schema bodies with Content-Type auto."
   ],
   "mutationSafety": {
     "requiresExplicitOptIn": true,
@@ -128,7 +130,37 @@
       ],
       "result": "Both attempts timed out waiting for OSH command acknowledgement; /controlstreams/{id}/commands remained empty, so no Command, CommandStatus, or CommandResult fixture evidence can be claimed."
     },
-    "positiveClosureDisposition": "Observation-side seed shape is discovered, but full REQ-ETS-PART2-013 populated-IUT closure remains blocked until local OSH exposes an acknowledged Command resource or a no-ack Command creation path."
+    "positiveClosureDisposition": "Observation-side seed shape is discovered, Sprint 34 proves acknowledged Command evidence through an isolated Sapient driver fixture, and Sprint 35 proves acknowledged Command plus inline result evidence through an isolated SimUAV driver fixture. Full REQ-ETS-PART2-013 populated-IUT closure remains open until acknowledged Command evidence can coexist with schema-valid DataStream/ControlStream representations and inspectable JSON parent schema resources."
+  },
+  "taskingDriverFixture": {
+    "status": "VERIFIED_WITH_CONSTRAINTS",
+    "story": "S-ETS-34-01",
+    "driver": "sensorhub-driver-sapient-0.1.0.jar",
+    "sourceRepo": "/home/nh/docker/gir/sapient",
+    "artifact": "ops/test-results/sprint-ets-34-local-osh-sapient-command-e2e-2026-06-02.json",
+    "controlStreamId": "02nc9lm4r9p0",
+    "commandId": "02nc9lm4r9p01sv2vf80cdtdkmf0",
+    "protocolTaskId": "f3ee6568d2fe4fc79ab57efc8b",
+    "terminalStatus": "COMPLETED",
+    "disposition": "Use Sapient only as an isolated tasking fixture. Disable Sapient autostart, reset the OSH datastore, and reseed static 040g fixtures before primary TeamEngine smoke."
+  },
+  "simUavTaskingDriverFixture": {
+    "status": "VERIFIED_WITH_SCHEMA_BLOCKER",
+    "story": "S-ETS-35-01",
+    "driver": "sensorhub-driver-simuav-1.0.0-bundle.jar",
+    "sourceRepo": "https://github.com/opensensorhub/osh-addons",
+    "localRepo": "/tmp/osh-addons-scan",
+    "artifact": "ops/test-results/sprint-ets-35-local-osh-simuav-command-e2e-2026-06-02.json",
+    "systemId": "02kargmsuc2g",
+    "controlStreamId": "02481pm3g53g",
+    "commandId": "02481pm3g53g1m6uvj80cc85rppg",
+    "terminalStatus": "COMPLETED",
+    "inlineResultFields": [
+      "reachable",
+      "time_to_waypoint",
+      "battery_remaining"
+    ],
+    "disposition": "Use SimUAV only as an isolated tasking/result fixture. Disable SimUAV autostart, reset the OSH datastore, and reseed static 040g fixtures before primary TeamEngine smoke."
   },
   "openApiDerivedRequestBodies": [
     {

@@ -179,6 +179,7 @@ raze_planning_review:
 
 commit:
   planning:
-    status: "pending"
-    sha: "TBD"
+    status: "pushed"
+    sha: "efb59e6"
     message: "Plan Sprint 33 local OSH dynamic data seeding"
+    push_range: "1cd6884..efb59e6 main -> main"

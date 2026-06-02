@@ -1,7 +1,7 @@
 agent: planner
 status: specified_planned_raze_approved
 timestamp: "2026-06-02T01:20:41Z"
-pushed_planning_commit: "TBD"
+pushed_planning_commit: "efb59e6 Plan Sprint 33 local OSH dynamic data seeding"
 sprint_number: "ets-33"
 sprint_name: "part2-local-osh-dynamic-data-seed-fixtures"
 contract_path: ".harness/contracts/sprint-ets-33.yaml"

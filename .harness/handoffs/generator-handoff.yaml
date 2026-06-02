@@ -94,7 +94,10 @@ raze_implementation_review:
   concern: "Add dedicated helper regressions for inline CommandStatus/CommandResult skip/fail matrix in a future populated-IUT increment."
 
 commit:
-  status: "not_committed"
+  status: "generator_pushed"
+  sha: "37a2a43"
+  message: "Implement Sprint 32 Observation Command binding"
+  push_range: "1d84ab0..37a2a43 main -> main"
 
 next_agent: "generator"
-next_action: "Commit and push Sprint 32 Generator work, then reconcile push status."
+next_action: "Choose the next spec-first item: local OSH dynamic-data seed fixtures plus inline status/result helper regressions, or the next unimplemented Part 2 coverage item."

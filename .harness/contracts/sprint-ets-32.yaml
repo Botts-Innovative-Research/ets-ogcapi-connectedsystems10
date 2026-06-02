@@ -181,6 +181,12 @@ raze_planning_review:
     - "RAZE-ETS32-PLAN-GAP-002"
 
 commit:
-  status: "planning_pushed"
-  sha: "f2d2ab8"
-  message: "Plan Sprint 32 local OSH primary E2E"
+  planning:
+    status: "pushed"
+    sha: "f2d2ab8"
+    message: "Plan Sprint 32 local OSH primary E2E"
+  generator:
+    status: "pushed"
+    sha: "37a2a43"
+    message: "Implement Sprint 32 Observation Command binding"
+    push_range: "1d84ab0..37a2a43 main -> main"

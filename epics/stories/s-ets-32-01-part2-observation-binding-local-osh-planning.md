@@ -1,7 +1,7 @@
 # S-ETS-32-01: Observation/Command Binding Closure with Local OSH Primary E2E
 
 ## Status
-GENERATOR_RAZE_APPROVED_WITH_CONCERNS. Planning is pushed at `f2d2ab8` and Raze-approved. Runtime `part2binding` implementation, Maven verification, and local OSH TeamEngine E2E are complete. Initial Raze implementation review returned `GAPS_FOUND`; required fixes are applied, post-gapfix verification is complete, and focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes.
+GENERATOR_PUSHED. Planning is pushed at `f2d2ab8` and Raze-approved. Runtime `part2binding` implementation, Maven verification, local OSH TeamEngine E2E, Raze recheck, commit, and push are complete. Initial Raze implementation review returned `GAPS_FOUND`; required fixes are applied, post-gapfix verification is complete, and focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes.
 
 ## User Instruction
 Planning triggered by: "Let's abandon GeoRobotix's public instance as a test target. Let's use a local, self-provisioned OSH as the primary test target for development. Continue with the spec-first planning."
@@ -130,6 +130,7 @@ No-mutation evidence:
 - [x] Initial Generator Raze review is complete.
 - [x] Required Raze gapfixes are implemented and verified.
 - [x] Generator Raze recheck is complete.
+- [x] Generator changes are committed and pushed as `37a2a43 Implement Sprint 32 Observation Command binding` (`1d84ab0..37a2a43 main -> main`).
 
 ## Runtime Implementation Progress
 Generator work started on 2026-06-01 from pushed planning baseline `f2d2ab8`.

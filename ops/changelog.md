@@ -16,6 +16,7 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Restored the tracked field-hub config with SimUAV/Sapient disabled, reset/reseeded static `040g` fixtures, and reran clean TeamEngine smoke successfully with the required full Authorization header: `211 total / 61 passed / 0 failed / 150 skipped`, with zero IUT-bound writes.
 - Ran required Raze review before completion; initial review found field-hub config hygiene, broad `Throwable` masking, and story-checklist gaps. Those fixes are applied.
 - Focused Raze recheck wrote `.harness/evaluations/sprint-ets-40-adversarial-recheck.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence `0.91`, and no required fixes. Residual concerns are low: low-entropy credential scan noise and unrelated field-hub dirt outside the targeted OSH config/backups paths.
+- Committed and pushed ETS Sprint 40 evidence as `44c6a80 Record Sprint 40 OSH blocker closure` (`8e8f679..44c6a80 main -> main`). The sibling OSH commit `79f89fb` remains local only.
 
 ---
 

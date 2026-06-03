@@ -1,0 +1,82 @@
+verdict: GAPS_FOUND
+confidence: 0.89
+reviewer: "Red Team / Raze"
+generated_at: "2026-06-03T17:04:03Z"
+scope:
+  ets_repository: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  osh_repository: "/home/nh/docker/gir/osh-core"
+  field_hub_repository: "/home/nh/docker/gir/sar-ops/field-hub"
+  reviewed:
+    - "Sprint 40 OpenSpec, story, contract, epic, traceability, ops/status, ops/changelog, ops/test-results, ops/known-issues, ops/server, and planner handoff reconciliation."
+    - "Sibling OSH ConSys source and focused test diffs for schema media type, exact SWE Text, cmdFormat aliasing, and Observation/Command child body behavior."
+    - "Archived Sprint 40 Maven, OSH Gradle XML, SimUAV direct probes, clean local OSH smoke, populated SimUAV smoke, and artifact hygiene evidence."
+    - "Field-hub deployed-state notes, active ConSys jar/backups, and final Sapient/SimUAV autoStart state."
+  not_rerun:
+    - "Maven"
+    - "Gradle"
+    - "TeamEngine"
+  rationale_for_no_rerun: "User requested artifact/source inspection and no expensive reruns unless a concrete reproduction blocker appeared."
+expected_honest_claim:
+  supported: true
+  claim: "Prior schema response media-type, exact application/swe+text, cmdFormat, and JSON child-body blockers are cleared; full populated-IUT closure is not claimed because final SimUAV-populated smoke failed 211/86/17/108 on schema shape/mapping and absent positive child item evidence."
+summary:
+  false_completion_claims: "No false full-closure claim found in the primary Sprint 40 docs inspected."
+  schema_media_type_assertion_weakening: "No ETS-side weakening found; docs continue to distinguish exact application/swe+text from legacy application/swe+csv."
+  e2e_honesty: "Honest. Clean primary local OSH smoke is PASS 211/68/0/143; populated SimUAV smoke is explicitly FAIL 211/86/17/108."
+  blockers: "Approval is blocked by credential/worktree hygiene in field-hub and by OSH exception-to-empty-response masking that can hide real datastore failures."
+findings:
+  - id: "RAZE-ETS40-GAP-001"
+    severity: HIGH
+    title: "Field-hub tracked config diff contains live credential changes and remains dirty"
+    finding: "The deployed field-hub state is not clean: the tracked field-hub OSH config has a dirty diff that includes BasicRealm password value changes, plus deployment-specific proxy and fixture-module changes. Sprint 40 ETS artifacts did not contain those password values, but reporting Sprint 40 as ready while the sibling runtime repo contains live credentials in a tracked dirty file is credential-leak and worktree-pollution risk."
+    evidence:
+      - "field-hub `git status --short osh/config/config.json osh/lib/sensorhub-service-consys-2.0-beta2.jar osh/lib-backups/sprint40` reports `M osh/config/config.json` and untracked `osh/lib-backups/sprint40/`."
+      - "field-hub `git diff -- osh/config/config.json` shows changed BasicRealm `password` fields; values intentionally omitted from this report."
+      - "Non-printing scan of current field-hub password values across `ops/test-results/sprint-ets-40*` found `sprint40_artifact_secret_hits=0`."
+      - "`ops/server.md` warns not to record local OSH credential values in ETS artifacts, but the sibling field-hub tracked file still holds the rotated values."
+    required_fix: "Before completion, either restore the tracked field-hub config to non-secret baseline and move live credentials to ignored/local runtime configuration, or explicitly isolate the dirty config outside source control and rotate credentials if this diff was exposed. Keep ETS artifacts value-free and update field-hub state notes after cleanup."
+  - id: "RAZE-ETS40-GAP-002"
+    severity: HIGH
+    title: "OSH child collection fixes reintroduce broad Throwable-to-empty-response masking"
+    finding: "Sprint 40 OSH `ObsHandler` and `CommandHandler` catch `Throwable` around filter construction, count queries, readability queries, and collection queries, then return `200 application/json` with empty collection/count bodies. This can mask real datastore/schema/filter defects as empty evidence, which is the same failure class Sprint 37 had to remove after Raze review. It makes the child-body blocker closure weaker than the docs imply."
+    evidence:
+      - "`/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/ObsHandler.java` catches `Throwable` in five fallback paths and returns empty JSON/zero count."
+      - "`/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandHandler.java` catches `Throwable` in four fallback paths and returns empty JSON/zero count."
+      - "Focused OSH tests cover empty and filtered-empty success cases, but do not prove unexpected datastore/filter exceptions remain visible."
+      - "`ops/changelog.md` still records the Sprint 37 correction: broad RuntimeException-to-empty-response masking was removed so real datastore failures remain visible."
+    required_fix: "Narrow the fallback to the concrete empty-store or known OSH live-store failure condition being addressed, do not catch `Throwable`, and add a focused regression that an unexpected query/filter failure is not converted into a successful empty JSON response. If a bounded fallback must remain, reconcile docs to state the exact exception and evidence limit."
+  - id: "RAZE-ETS40-GAP-003"
+    severity: MEDIUM
+    title: "Story acceptance criteria remain unchecked despite verified/partial status"
+    finding: "The Sprint 40 story status is `PARTIAL_IMPLEMENTED_VERIFIED_PENDING_RAZE`, but all acceptance criteria are still unchecked. This is reconciliation debt: future readers cannot tell which criteria are satisfied, partial, blocked, or pending Raze/fixes."
+    evidence:
+      - "`epics/stories/s-ets-40-01-osh-consys-populated-binding-blockers.md` lists every acceptance criterion as `[ ]`."
+      - "The same story already includes verification evidence and residual blockers, so the checklist is stale rather than unknown."
+    required_fix: "Reconcile the story checklist with checked, partial, or blocked status for each criterion after the required fixes. Update contract/handoff `raze_review` fields from pending to this verdict or the eventual recheck verdict."
+concerns:
+  - id: "RAZE-ETS40-CONCERN-001"
+    severity: LOW
+    title: "Untracked field-hub backup jars should stay out of completion scope"
+    concern: "The field-hub backup directory is untracked and useful operationally, but should not be presented as source-controlled Sprint 40 deliverable evidence."
+    evidence:
+      - "`osh/lib-backups/sprint40/` contains two ConSys backup jars and is untracked."
+      - "The active field-hub lib has one ConSys jar, but it is not tracked by field-hub git."
+    recommendation: "Document it as runtime deployment hygiene only, or move backups to an ignored operational path."
+positive_evidence:
+  - "ETS Maven artifact `ops/test-results/sprint-ets-40-maven-test-via-docker-2026-06-03.txt` shows BUILD SUCCESS and `294 tests / 0 failures / 0 errors / 3 skipped`."
+  - "OSH focused XML artifacts show `TestDataStreams` 10/0/0/0, `TestControlStreams` 4/0/0/0, and `TestObservations` 7/0/0/0."
+  - "Direct SimUAV final probes show schema requests for JSON, SWE JSON, SWE Text, SWE Binary, and legacy SWE CSV return HTTP 200 with `application/json` response content type; `cmdFormat` and `commandFormat` both work for SWE Text; child Observation/Command JSON reads return 12-byte parseable empty bodies."
+  - "Clean primary local OSH TeamEngine smoke XML reports `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation artifact reports zero IUT-bound POST/PUT/DELETE/PATCH entries."
+  - "Populated SimUAV TeamEngine smoke XML reports `211 total / 86 passed / 17 failed / 108 skipped`; failure lines are schema shape/mapping and missing positive child evidence, not prior media-type/body blockers."
+  - "Artifact hygiene JSON reports zero credential leaks for both clean and populated Sprint 40 smoke artifacts."
+required_fixes:
+  - "RAZE-ETS40-GAP-001"
+  - "RAZE-ETS40-GAP-002"
+  - "RAZE-ETS40-GAP-003"
+post_fix_recheck:
+  required: true
+  suggested_scope:
+    - "field-hub config/credential cleanup and secret scan"
+    - "OSH exception fallback narrowing and focused regressions"
+    - "story/contract/handoff Raze-status reconciliation"
+    - "existing Sprint 40 evidence consistency; no expensive TeamEngine rerun unless OSH behavior changes materially"

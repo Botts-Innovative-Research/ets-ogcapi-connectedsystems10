@@ -1,0 +1,72 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+reviewer: "Red Team / Raze"
+generated_at: "2026-06-03T18:00:50Z"
+scope:
+  sprint: "ets-40"
+  story: "S-ETS-40-01"
+  ets_repository: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  osh_repository: "/home/nh/docker/gir/osh-core"
+  field_hub_repository: "/home/nh/docker/gir/sar-ops/field-hub"
+  review_type: "focused Gate 4 recheck after initial Sprint 40 Raze gaps"
+  not_rerun:
+    - "Maven"
+    - "Gradle"
+    - "TeamEngine"
+  rationale_for_no_rerun: "Focused recheck inspected source, tracked runtime state, and archived post-fix evidence; no concrete reproduction blocker required expensive reruns."
+initial_gaps_rechecked:
+  RAZE-ETS40-GAP-001:
+    status: CLOSED
+    summary: "Targeted field-hub tracked config and Sprint 40 backup paths are clean; no Sprint 40 auth credential fields record values."
+  RAZE-ETS40-GAP-002:
+    status: CLOSED
+    summary: "Broad catch(Throwable) masking was removed from the sibling OSH Observation and Command handlers, and invalid-filter regressions now assert errors are not converted into successful empty JSON."
+  RAZE-ETS40-GAP-003:
+    status: CLOSED
+    summary: "Sprint 40 story acceptance criteria are reconciled to checked evidence while still marking the story partial and pending this focused recheck."
+findings: []
+required_fixes: []
+evidence_checked:
+  field_hub_hygiene:
+    status: ACCEPTABLE
+    checked:
+      - "Targeted `git status --short osh/config/config.json osh/lib/sensorhub-service-consys-2.0-beta2.jar osh/lib-backups/sprint40` in `/home/nh/docker/gir/sar-ops/field-hub` returned no entries."
+      - "Redacted `git diff -- osh/config/config.json` returned no output."
+      - "Targeted status for `osh/config/config.json`, `osh/lib`, `osh/lib-disabled`, and `osh/lib-backups/sprint40` showed only pre-existing untracked `osh/lib-disabled/`, not Sprint 40 tracked config/backups drift."
+      - "Sprint 40 SimUAV preseed JSON files contain `authCredentialRecorded=false` and `authCredentialSupplied=true`; no auth credential value is recorded in those fields."
+      - "Current field-hub password-value scan of Sprint 40 preseed artifacts only matched low-entropy prose inside command descriptions, not credential fields."
+  osh_exception_masking:
+    status: ACCEPTABLE
+    checked:
+      - "No `catch(Throwable)` remains in `sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/ObsHandler.java` or `.../task/CommandHandler.java`."
+      - "Remaining `Throwable` references in those handlers are callback `onError(Throwable e)` signatures, not empty-success masking catches."
+      - "`TestObservations.testInvalidObservationFilterDoesNotReturnEmptySuccess` asserts invalid Observation filters return HTTP >= 400."
+      - "`TestControlStreams.testInvalidCommandFilterDoesNotReturnEmptySuccess` asserts invalid Command filters return HTTP >= 400."
+  story_and_claim_honesty:
+    status: ACCEPTABLE
+    checked:
+      - "`epics/stories/s-ets-40-01-osh-consys-populated-binding-blockers.md` remains `PARTIAL_IMPLEMENTED_VERIFIED_PENDING_RAZE_RECHECK`, not complete."
+      - "Story acceptance checklist is no longer entirely unchecked and explicitly preserves the no-full-populated-closure non-goal."
+      - "`ops/status.md`, `ops/test-results.md`, `.harness/contracts/sprint-ets-40.yaml`, `.harness/handoffs/planner-handoff.yaml`, and OpenSpec text distinguish prior-blocker closure from residual populated-IUT blockers."
+  verification_totals:
+    status: ACCEPTABLE
+    checked:
+      - "Focused OSH r4 XML totals are `10/0/0/0`, `5/0/0/0`, and `8/0/0/0`, totaling `23/0/0/0`."
+      - "ETS Maven artifact reports BUILD SUCCESS with `294 tests / 0 failures / 0 errors / 3 skipped`."
+      - "Direct SimUAV r4 parsed probes report nested Observation `items=1` and nested Command `count=0`."
+      - "Clean local OSH TeamEngine r2 XML reports `211 total / 61 passed / 0 failed / 150 skipped`."
+      - "Populated SimUAV TeamEngine final XML reports `211 total / 86 passed / 17 failed / 108 skipped`."
+      - "Populated SimUAV failure messages remain schema shape/mapping and absent positive Command child evidence, including missing `commandFormat`, `recordSchema`, `encoding`, `encoding.type`, and no candidate Command child item evidence."
+residual_concerns:
+  - id: "RAZE-ETS40-RECHECK-CONCERN-001"
+    severity: LOW
+    concern: "One current field-hub password value is low-entropy enough to collide with ordinary command-description prose, which makes whole-repository literal secret scans noisy and weakens confidence in future leak detection."
+    recommendation: "Rotate local field-hub credentials to high-entropy values and keep using explicit-secret scans that report counts and paths without printing values."
+  - id: "RAZE-ETS40-RECHECK-CONCERN-002"
+    severity: LOW
+    concern: "After this recheck artifact is written, story/contract/handoff status strings that say `PENDING_RAZE_RECHECK` become stale until the main agent performs normal post-review reconciliation."
+    recommendation: "Update Sprint 40 status fields to reference this `APPROVE_WITH_CONCERNS` recheck before any final completion or commit."
+  - id: "RAZE-ETS40-RECHECK-CONCERN-003"
+    severity: LOW
+    concern: "Field-hub still has broad unrelated dirty worktree state outside the targeted OSH config/backups paths, plus pre-existing untracked `osh/lib-disabled/`; this review did not audit or normalize those unrelated files."
+    recommendation: "Keep Sprint 40 completion scoped to the clean targeted OSH config/backups state, and do not present unrelated field-hub dirt as Sprint 40 evidence."

@@ -1,0 +1,16 @@
+probe	status	contentType	bodyBytes	bodyPrefix
+datastream_schema_obsFormat_application_2Fjson	200	application/json	4071	{   "obsFormat": "application/om+json",   "resultSchema": {     "type": "DataRecord",     "label": "Platform State",    
+datastream_schema_obsFormat_application_2Fswe_2Bjson	200	application/json	4421	{   "obsFormat": "application/swe+json",   "recordSchema": {     "type": "DataRecord",     "label": "Platform State",   
+datastream_schema_obsFormat_application_2Fswe_2Btext	200	application/json	4592	{   "obsFormat": "application/swe+text",   "recordSchema": {     "type": "DataRecord",     "label": "Platform State",   
+datastream_schema_obsFormat_application_2Fswe_2Bbinary	200	application/json	6060	{   "obsFormat": "application/swe+binary",   "recordSchema": {     "type": "DataRecord",     "label": "Platform State", 
+datastream_schema_obsFormat_application_2Fswe_2Bcsv	200	application/json	4591	{   "obsFormat": "application/swe+csv",   "recordSchema": {     "type": "DataRecord",     "label": "Platform State",    
+controlstream_schema_cmdFormat_application_2Fjson	200	application/json	3341	{   "commandFormat": "application/json",   "parametersSchema": {     "type": "DataChoice",     "label": "Vehicle Command
+controlstream_schema_cmdFormat_application_2Fswe_2Bjson	200	application/json	3298	{   "paramsSchema": {     "type": "DataChoice",     "label": "Vehicle Commands",     "items": [       {         "type": 
+controlstream_schema_cmdFormat_application_2Fswe_2Btext	200	application/json	3469	{   "paramsSchema": {     "type": "DataChoice",     "label": "Vehicle Commands",     "items": [       {         "type": 
+controlstream_schema_cmdFormat_application_2Fswe_2Bbinary	200	application/json	4366	{   "paramsSchema": {     "type": "DataChoice",     "label": "Vehicle Commands",     "items": [       {         "type": 
+controlstream_schema_cmdFormat_application_2Fswe_2Bcsv	200	application/json	3469	{   "paramsSchema": {     "type": "DataChoice",     "label": "Vehicle Commands",     "items": [       {         "type": 
+controlstream_schema_commandFormat_application_2Fswe_2Btext	200	application/json	3469	{   "paramsSchema": {     "type": "DataChoice",     "label": "Vehicle Commands",     "items": [       {         "type": 
+datastream_observations_accept_json	200	application/json	0	
+datastream_observations_count_accept_json	200	application/json	0	
+controlstream_commands_accept_json	200	application/json	0	
+controlstream_commands_count_accept_json	200	application/json	0	

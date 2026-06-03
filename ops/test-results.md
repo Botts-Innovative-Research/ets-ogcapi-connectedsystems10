@@ -1,8 +1,45 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-03T15:14Z
+Last updated: 2026-06-03T18:02Z
 
 ## Current Sprint Evidence
+
+Sprint ets-40 OSH ConSys populated binding blocker closure:
+
+- Status:
+  - Story: `epics/stories/s-ets-40-01-osh-consys-populated-binding-blockers.md`.
+  - Contract: `.harness/contracts/sprint-ets-40.yaml`.
+  - Scope result: partial closure. The prior schema response media-type, exact SWE Text request, `cmdFormat`, and JSON child-body blockers are cleared; full populated-IUT closure remains open.
+  - Raze review: `.harness/evaluations/sprint-ets-40-adversarial-recheck.yaml` returned `APPROVE_WITH_CONCERNS`, confidence `0.91`, with no required fixes.
+- OSH ConSys focused Gradle regressions:
+  - Artifacts: `ops/test-results/sprint-ets-40-gapfix-r4-osh-TestDataStreams-2026-06-03.xml`, `ops/test-results/sprint-ets-40-gapfix-r4-osh-TestControlStreams-2026-06-03.xml`, and `ops/test-results/sprint-ets-40-gapfix-r4-osh-TestObservations-2026-06-03.xml`.
+  - Result: PASS, `23 tests / 0 failures / 0 errors / 0 skipped` (`TestDataStreams 10`, `TestControlStreams 5`, `TestObservations 8`).
+  - Coverage: exact `application/swe+text`, legacy CSV compatibility, JSON-compatible schema response content types, `cmdFormat` aliasing, parseable empty/filtered Observation/Command collection/count JSON bodies, invalid filter non-masking, and field-hub runtime compatibility for temporal sort handling.
+- ETS Maven:
+  - Artifact: `ops/test-results/sprint-ets-40-maven-test-via-docker-2026-06-03.txt`.
+  - Result: PASS, `294 tests / 0 failures / 0 errors / 3 skipped`.
+- Direct SimUAV blocker probes:
+  - Artifacts: `ops/test-results/sprint-ets-40-gapfix-r4-local-osh-simuav-format-probes-2026-06-03.tsv` and `ops/test-results/sprint-ets-40-gapfix-r4-local-osh-simuav-format-probes-parsed-2026-06-03.tsv`.
+  - Result: DataStream and ControlStream schema requests for JSON/SWE formats returned HTTP 200 with JSON-compatible schema response media types; exact SWE Text bodies expose `TextEncoding`; `cmdFormat` and `commandFormat` both work for Command schema requests; nested Observation reads returned parseable JSON with `items=1`; nested Command reads returned parseable empty JSON bodies and count `0`.
+- SimUAV preseed evidence:
+  - Artifact: `ops/test-results/sprint-ets-40-local-osh-simuav-preseed-r2-2026-06-03.json`.
+  - Result: `PARTIAL_MISSING_OBSERVATION_OR_COMMAND_CHILD_EVIDENCE`.
+  - Summary: 2 DataStreams, 3 ControlStreams, `GET=104`, `POST=1`, waypoint feasibility Command POST HTTP 200 with `statusCode=COMPLETED`; nested Command body parsed as JSON, but the preseed artifact itself had no positive Observation or nested Command item evidence. Later r4 direct probes supplied nested Observation `items=1`; nested Command stayed `count=0`.
+- SimUAV-populated local OSH TeamEngine smoke:
+  - Report: `ops/test-results/sprint-ets-40-simuav-local-osh-smoke-final-2026-06-03.xml`.
+  - Container log: `ops/test-results/sprint-ets-40-simuav-local-osh-container-final-2026-06-03.log`.
+  - Hygiene summary: `ops/test-results/sprint-ets-40-artifact-hygiene-simuav-populated-final-2026-06-03.json`.
+  - Result: FAIL, `211 total / 86 passed / 17 failed / 108 skipped`.
+  - Hygiene evidence: IUT methods `GET=240`, `OPTIONS=14`, writes `0`, credential leaks `0`.
+  - Remaining failures: Part 2 JSON/SWE schema shape and mapping checks. Examples include missing `commandFormat`, missing SWE `recordSchema`, missing/incorrect `encoding.type`, Observation schema `recordSchema` validation failures, and JSON schema `obsFormat`/result schema mismatches. Binding tests now SKIP missing positive child evidence instead of failing on unparsable bodies.
+- Clean primary local OSH restore:
+  - Reseed artifact: `ops/test-results/sprint-ets-40-gapfix-clean-local-osh-reseed-2026-06-03.json`.
+  - TeamEngine report: `ops/test-results/sprint-ets-40-gapfix-clean-local-osh-smoke-r2-2026-06-03.xml`.
+  - Container log: `ops/test-results/sprint-ets-40-gapfix-clean-local-osh-container-r2-2026-06-03.log`.
+  - No-mutation artifact: `ops/test-results/sprint-ets-40-gapfix-clean-local-osh-no-mutation-r2-2026-06-03.txt`.
+  - Hygiene summary: `ops/test-results/sprint-ets-40-gapfix-artifact-hygiene-clean-local-osh-r2-2026-06-03.json`.
+  - Result: PASS, `211 total / 61 passed / 0 failed / 150 skipped`; no-mutation evidence reports zero IUT-bound POST/PUT/DELETE/PATCH entries.
+  - Hygiene evidence: IUT methods `GET=115`, `OPTIONS=2`, writes `0`, credential leaks `0`.
 
 Sprint ets-39 artifact hygiene and URI/schema drift harness:
 

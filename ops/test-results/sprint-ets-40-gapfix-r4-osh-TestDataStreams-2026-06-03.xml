@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.sensorhub.impl.service.consys.TestDataStreams" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-06-03T17:43:37" hostname="d4abebef1489" time="3.211">
+  <properties/>
+  <testcase name="testAddSystemAndSubsystemsAndDatastreams" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.531"/>
+  <testcase name="testUpdateDatastreamChangeStructWithObs" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.314"/>
+  <testcase name="testAddDatastreamAndDeleteById" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.287"/>
+  <testcase name="testAddSystemAndDatastreams" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.36"/>
+  <testcase name="testSchemaRequestsUseJsonContentTypeAndExactSweText" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.26"/>
+  <testcase name="testAddDatastreamAndGetByObsProperty" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.305"/>
+  <testcase name="testUpdateDatastreamBadOutputName" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.254"/>
+  <testcase name="testAddDatastreamWithValidTimes" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.301"/>
+  <testcase name="testUpdateDatastreamAndGetById" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.287"/>
+  <testcase name="testAddDatastreamAndGetByKeywords" classname="org.sensorhub.impl.service.consys.TestDataStreams" time="0.311"/>
+  <system-out><![CDATA[2026-06-03 17:43:37.453 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:37.454 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:37.454 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:37.454 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:37.454 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:37.454 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:37.454 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:37.454 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:37.455 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:37.455 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:37.455 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:37.455 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:37.455 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:37.460 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:37.460 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:37.460 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:37.461 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:37.471 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:37.471 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:37.471 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [91b8d147-6e35-4a25-b2c4-4ec11e071871]
+2026-06-03 17:43:37.475 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [91b8d147-6e35-4a25-b2c4-4ec11e071871] initialized
+2026-06-03 17:43:37.475 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [91b8d147-6e35-4a25-b2c4-4ec11e071871]
+2026-06-03 17:43:37.478 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:37.478 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [91b8d147-6e35-4a25-b2c4-4ec11e071871] started
+2026-06-03 17:43:37.479 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [d72d5bac-866f-4b5a-acdf-619c2e47812b]
+2026-06-03 17:43:37.482 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [d72d5bac-866f-4b5a-acdf-619c2e47812b] initialized
+2026-06-03 17:43:37.482 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [d72d5bac-866f-4b5a-acdf-619c2e47812b]
+2026-06-03 17:43:37.484 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [d72d5bac-866f-4b5a-acdf-619c2e47812b] started
+2026-06-03 17:43:37.485 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:37.489 [qtp1926910391-339] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.495 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/subsystems
+2026-06-03 17:43:37.500 [qtp1926910391-318] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/080g/subsystems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.504 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/0810
+2026-06-03 17:43:37.507 [qtp1926910391-319] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.523 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/0810/subsystems
+2026-06-03 17:43:37.525 [qtp1926910391-320] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/0810/subsystems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.528 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/081g
+2026-06-03 17:43:37.531 [qtp1926910391-321] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.535 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/0810/subsystems
+2026-06-03 17:43:37.537 [qtp1926910391-322] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/0810/subsystems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.541 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/0820
+2026-06-03 17:43:37.543 [qtp1926910391-323] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/0820 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.547 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/subsystems
+2026-06-03 17:43:37.550 [qtp1926910391-325] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/080g/subsystems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.553 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/082g
+2026-06-03 17:43:37.555 [qtp1926910391-326] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/082g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.560 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/082g/subsystems
+2026-06-03 17:43:37.562 [qtp1926910391-327] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/082g/subsystems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.566 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/0830
+2026-06-03 17:43:37.569 [qtp1926910391-328] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/0830 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.574 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/082g/subsystems
+2026-06-03 17:43:37.576 [qtp1926910391-316] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/082g/subsystems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.580 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/083g
+2026-06-03 17:43:37.583 [qtp1926910391-317] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/083g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.590 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/0810/datastreams
+2026-06-03 17:43:37.593 [qtp1926910391-336] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/0810/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.605 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:37.608 [qtp1926910391-339] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.614 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/081g/datastreams
+2026-06-03 17:43:37.617 [qtp1926910391-318] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/081g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.621 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:37.625 [qtp1926910391-319] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.628 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/081g/datastreams
+2026-06-03 17:43:37.631 [qtp1926910391-320] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/081g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.634 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/081g
+2026-06-03 17:43:37.637 [qtp1926910391-321] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.640 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/0820/datastreams
+2026-06-03 17:43:37.643 [qtp1926910391-322] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/0820/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.647 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0820
+2026-06-03 17:43:37.649 [qtp1926910391-323] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/0820 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.654 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/0820/datastreams
+2026-06-03 17:43:37.657 [qtp1926910391-325] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/0820/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.662 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/082g
+2026-06-03 17:43:37.668 [qtp1926910391-326] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/082g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.673 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/082g/datastreams
+2026-06-03 17:43:37.676 [qtp1926910391-327] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/082g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.680 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0830
+2026-06-03 17:43:37.684 [qtp1926910391-328] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/0830 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.687 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/0830/datastreams
+2026-06-03 17:43:37.690 [qtp1926910391-316] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/0830/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.694 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/083g
+2026-06-03 17:43:37.697 [qtp1926910391-336] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/083g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.702 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/0830/datastreams
+2026-06-03 17:43:37.705 [qtp1926910391-339] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/0830/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.710 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0840
+2026-06-03 17:43:37.712 [qtp1926910391-318] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/0840 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.716 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/083g/datastreams
+2026-06-03 17:43:37.720 [qtp1926910391-319] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/083g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.724 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/084g
+2026-06-03 17:43:37.726 [qtp1926910391-320] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/084g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.731 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/083g/datastreams
+2026-06-03 17:43:37.733 [qtp1926910391-321] INFO  ConSysApiService:650e67c0 - POST /sensorhub/api/systems/083g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.737 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0850
+2026-06-03 17:43:37.740 [qtp1926910391-322] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams/0850 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.744 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams
+2026-06-03 17:43:37.747 [qtp1926910391-323] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.758 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:37.761 [qtp1926910391-325] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.766 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/0810/datastreams
+2026-06-03 17:43:37.768 [qtp1926910391-326] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/0810/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.773 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/082g/datastreams
+2026-06-03 17:43:37.777 [qtp1926910391-327] INFO  ConSysApiService:650e67c0 - GET /sensorhub/api/systems/082g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:37.782 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:37.782 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:37.782 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:37.783 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [d72d5bac-866f-4b5a-acdf-619c2e47812b]
+2026-06-03 17:43:37.787 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [d72d5bac-866f-4b5a-acdf-619c2e47812b] stopped
+2026-06-03 17:43:37.795 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:37.884 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [91b8d147-6e35-4a25-b2c4-4ec11e071871]
+2026-06-03 17:43:37.902 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [91b8d147-6e35-4a25-b2c4-4ec11e071871] stopped
+2026-06-03 17:43:37.984 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:37.985 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:37.985 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:37.985 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:37.985 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:37.985 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:37.986 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:37.986 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:37.986 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:37.987 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:37.987 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:37.987 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:37.987 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:37.988 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:37.991 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:37.991 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:37.992 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:37.992 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:38.001 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:38.001 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:38.001 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [b29743ac-94af-4be8-8ae1-8b0f575f1454]
+2026-06-03 17:43:38.005 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [b29743ac-94af-4be8-8ae1-8b0f575f1454] initialized
+2026-06-03 17:43:38.005 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [b29743ac-94af-4be8-8ae1-8b0f575f1454]
+2026-06-03 17:43:38.009 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:38.009 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [b29743ac-94af-4be8-8ae1-8b0f575f1454] started
+2026-06-03 17:43:38.010 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [10177bb6-f366-4690-80a4-14e27016f3e6]
+2026-06-03 17:43:38.012 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [10177bb6-f366-4690-80a4-14e27016f3e6] initialized
+2026-06-03 17:43:38.013 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [10177bb6-f366-4690-80a4-14e27016f3e6]
+2026-06-03 17:43:38.014 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [10177bb6-f366-4690-80a4-14e27016f3e6] started
+2026-06-03 17:43:38.015 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:38.018 [qtp284257323-500] INFO  ConSysApiService:38126f11 - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.024 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.026 [qtp284257323-479] INFO  ConSysApiService:38126f11 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.032 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:38.034 [qtp284257323-480] INFO  ConSysApiService:38126f11 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.037 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/datastreams/080g/observations
+2026-06-03 17:43:38.039 [qtp284257323-481] INFO  ConSysApiService:38126f11 - POST /sensorhub/api/datastreams/080g/observations (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.051 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/observations/080snjs1q4304bi1as
+2026-06-03 17:43:38.053 [qtp284257323-482] INFO  ConSysApiService:38126f11 - GET /sensorhub/api/observations/080snjs1q4304bi1as (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.058 [Test worker] INFO  AbstractTestApiBase - PUT http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:38.061 [qtp284257323-483] INFO  ConSysApiService:38126f11 - PUT /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.067 [Test worker] INFO  AbstractTestApiBase - PUT http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:38.069 [qtp284257323-484] INFO  ConSysApiService:38126f11 - PUT /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.089 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:38.093 [qtp284257323-486] INFO  ConSysApiService:38126f11 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.097 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:38.097 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:38.097 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.097 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [10177bb6-f366-4690-80a4-14e27016f3e6]
+2026-06-03 17:43:38.098 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [10177bb6-f366-4690-80a4-14e27016f3e6] stopped
+2026-06-03 17:43:38.104 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:38.198 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [b29743ac-94af-4be8-8ae1-8b0f575f1454]
+2026-06-03 17:43:38.208 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [b29743ac-94af-4be8-8ae1-8b0f575f1454] stopped
+2026-06-03 17:43:38.299 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:38.300 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:38.300 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:38.300 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:38.300 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:38.300 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:38.300 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:38.300 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:38.300 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:38.301 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:38.301 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:38.301 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:38.301 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:38.302 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.306 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:38.306 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.307 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:38.307 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:38.314 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:38.314 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:38.315 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [8a8df739-e61d-4346-8647-1b02b2a867de]
+2026-06-03 17:43:38.318 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [8a8df739-e61d-4346-8647-1b02b2a867de] initialized
+2026-06-03 17:43:38.318 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [8a8df739-e61d-4346-8647-1b02b2a867de]
+2026-06-03 17:43:38.322 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:38.322 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [8a8df739-e61d-4346-8647-1b02b2a867de] started
+2026-06-03 17:43:38.322 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [08fe8c2e-7e51-4e2b-9dd8-4dfde83a4041]
+2026-06-03 17:43:38.325 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [08fe8c2e-7e51-4e2b-9dd8-4dfde83a4041] initialized
+2026-06-03 17:43:38.325 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [08fe8c2e-7e51-4e2b-9dd8-4dfde83a4041]
+2026-06-03 17:43:38.327 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [08fe8c2e-7e51-4e2b-9dd8-4dfde83a4041] started
+2026-06-03 17:43:38.328 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:38.331 [qtp1537892320-555] INFO  ConSysApiService:d7e66ec5 - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.336 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.338 [qtp1537892320-534] INFO  ConSysApiService:d7e66ec5 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.343 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:38.345 [qtp1537892320-535] INFO  ConSysApiService:d7e66ec5 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.348 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.350 [qtp1537892320-536] INFO  ConSysApiService:d7e66ec5 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.352 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:38.354 [qtp1537892320-537] INFO  ConSysApiService:d7e66ec5 - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.357 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams
+2026-06-03 17:43:38.359 [qtp1537892320-538] INFO  ConSysApiService:d7e66ec5 - GET /sensorhub/api/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.362 [Test worker] INFO  AbstractTestApiBase - DELETE http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:38.364 [qtp1537892320-539] INFO  ConSysApiService:d7e66ec5 - DELETE /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.365 [CSApi-Pool-4] INFO  ConSysApiService:d7e66ec5 - Deleted resource 080g, key=DataStreamKey { internalID: BigId {scope=2, id='04'} }
+2026-06-03 17:43:38.367 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams
+2026-06-03 17:43:38.370 [qtp1537892320-541] INFO  ConSysApiService:d7e66ec5 - GET /sensorhub/api/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.372 [Test worker] INFO  AbstractTestApiBase - DELETE http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:38.374 [qtp1537892320-542] INFO  ConSysApiService:d7e66ec5 - DELETE /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.375 [CSApi-Pool-5] INFO  ConSysApiService:d7e66ec5 - Deleted resource 0810, key=DataStreamKey { internalID: BigId {scope=2, id='08'} }
+2026-06-03 17:43:38.376 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams
+2026-06-03 17:43:38.378 [qtp1537892320-543] INFO  ConSysApiService:d7e66ec5 - GET /sensorhub/api/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.380 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:38.380 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:38.380 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.380 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [08fe8c2e-7e51-4e2b-9dd8-4dfde83a4041]
+2026-06-03 17:43:38.381 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [08fe8c2e-7e51-4e2b-9dd8-4dfde83a4041] stopped
+2026-06-03 17:43:38.387 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:38.483 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [8a8df739-e61d-4346-8647-1b02b2a867de]
+2026-06-03 17:43:38.489 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [8a8df739-e61d-4346-8647-1b02b2a867de] stopped
+2026-06-03 17:43:38.586 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:38.587 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:38.587 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:38.587 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:38.587 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:38.588 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:38.588 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:38.588 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:38.588 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:38.588 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:38.588 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:38.588 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:38.588 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:38.589 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.592 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:38.592 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.593 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:38.593 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:38.600 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:38.600 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:38.601 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [aa938522-21fd-4dce-8d55-2bb4ed30bb8f]
+2026-06-03 17:43:38.604 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [aa938522-21fd-4dce-8d55-2bb4ed30bb8f] initialized
+2026-06-03 17:43:38.604 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [aa938522-21fd-4dce-8d55-2bb4ed30bb8f]
+2026-06-03 17:43:38.607 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:38.607 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [aa938522-21fd-4dce-8d55-2bb4ed30bb8f] started
+2026-06-03 17:43:38.607 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [49399b0f-0382-4b1f-bd6c-8ad73ab00eef]
+2026-06-03 17:43:38.610 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [49399b0f-0382-4b1f-bd6c-8ad73ab00eef] initialized
+2026-06-03 17:43:38.610 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [49399b0f-0382-4b1f-bd6c-8ad73ab00eef]
+2026-06-03 17:43:38.612 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [49399b0f-0382-4b1f-bd6c-8ad73ab00eef] started
+2026-06-03 17:43:38.613 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:38.615 [qtp1987100108-619] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.619 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.622 [qtp1987100108-598] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.628 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:38.630 [qtp1987100108-599] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.633 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.636 [qtp1987100108-600] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.639 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:38.641 [qtp1987100108-601] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.645 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.647 [qtp1987100108-602] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.651 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/081g
+2026-06-03 17:43:38.653 [qtp1987100108-603] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.657 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.660 [qtp1987100108-605] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.664 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0820
+2026-06-03 17:43:38.667 [qtp1987100108-606] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/0820 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.672 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.675 [qtp1987100108-607] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.679 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/082g
+2026-06-03 17:43:38.681 [qtp1987100108-608] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/082g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.684 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.686 [qtp1987100108-596] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.689 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0830
+2026-06-03 17:43:38.691 [qtp1987100108-597] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/0830 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.694 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.696 [qtp1987100108-616] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.700 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/083g
+2026-06-03 17:43:38.702 [qtp1987100108-619] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/083g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.706 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.708 [qtp1987100108-598] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.711 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0840
+2026-06-03 17:43:38.713 [qtp1987100108-599] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/0840 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.716 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.717 [qtp1987100108-600] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.720 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/084g
+2026-06-03 17:43:38.723 [qtp1987100108-601] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/084g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.725 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.727 [qtp1987100108-602] INFO  ConSysApiService:3aa2ae2f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.730 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0850
+2026-06-03 17:43:38.732 [qtp1987100108-603] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/datastreams/0850 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.734 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.736 [qtp1987100108-605] INFO  ConSysApiService:3aa2ae2f - GET /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.741 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:38.741 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:38.741 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.742 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [49399b0f-0382-4b1f-bd6c-8ad73ab00eef]
+2026-06-03 17:43:38.743 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [49399b0f-0382-4b1f-bd6c-8ad73ab00eef] stopped
+2026-06-03 17:43:38.751 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:38.843 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [aa938522-21fd-4dce-8d55-2bb4ed30bb8f]
+2026-06-03 17:43:38.862 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [aa938522-21fd-4dce-8d55-2bb4ed30bb8f] stopped
+2026-06-03 17:43:38.946 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:38.948 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:38.948 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:38.948 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:38.948 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:38.948 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:38.948 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:38.948 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:38.948 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:38.949 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:38.949 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:38.949 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:38.949 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:38.950 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.953 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:38.953 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:38.954 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:38.954 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:38.962 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:38.962 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:38.962 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [5b788fff-961c-4713-89d9-fb461252a365]
+2026-06-03 17:43:38.966 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [5b788fff-961c-4713-89d9-fb461252a365] initialized
+2026-06-03 17:43:38.966 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [5b788fff-961c-4713-89d9-fb461252a365]
+2026-06-03 17:43:38.968 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:38.968 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [5b788fff-961c-4713-89d9-fb461252a365] started
+2026-06-03 17:43:38.969 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [8b8f5585-e60a-46a7-9970-78b146268b86]
+2026-06-03 17:43:38.971 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [8b8f5585-e60a-46a7-9970-78b146268b86] initialized
+2026-06-03 17:43:38.971 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [8b8f5585-e60a-46a7-9970-78b146268b86]
+2026-06-03 17:43:38.973 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [8b8f5585-e60a-46a7-9970-78b146268b86] started
+2026-06-03 17:43:38.974 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:38.977 [qtp462149352-731] INFO  ConSysApiService:294d49d0 - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.980 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:38.982 [qtp462149352-710] INFO  ConSysApiService:294d49d0 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.987 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:38.989 [qtp462149352-711] INFO  ConSysApiService:294d49d0 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.991 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g/schema?obsFormat=application/swe%2Btext
+2026-06-03 17:43:38.994 [qtp462149352-712] INFO  ConSysApiService:294d49d0 - GET /sensorhub/api/datastreams/080g/schema?obsFormat=application/swe%2Btext (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:38.996 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g/schema?obsFormat=application/swe%2Bjson
+2026-06-03 17:43:38.999 [qtp462149352-713] INFO  ConSysApiService:294d49d0 - GET /sensorhub/api/datastreams/080g/schema?obsFormat=application/swe%2Bjson (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.001 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g/schema?obsFormat=application/swe%2Bbinary
+2026-06-03 17:43:39.003 [qtp462149352-714] INFO  ConSysApiService:294d49d0 - GET /sensorhub/api/datastreams/080g/schema?obsFormat=application/swe%2Bbinary (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.004 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:39.004 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:39.004 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.005 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [8b8f5585-e60a-46a7-9970-78b146268b86]
+2026-06-03 17:43:39.005 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [8b8f5585-e60a-46a7-9970-78b146268b86] stopped
+2026-06-03 17:43:39.010 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:39.105 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [5b788fff-961c-4713-89d9-fb461252a365]
+2026-06-03 17:43:39.123 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [5b788fff-961c-4713-89d9-fb461252a365] stopped
+2026-06-03 17:43:39.206 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:39.207 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:39.207 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:39.207 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:39.208 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:39.208 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:39.208 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:39.208 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:39.208 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:39.208 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:39.208 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:39.208 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:39.209 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:39.209 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.212 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:39.212 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.213 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:39.213 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:39.222 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:39.223 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:39.223 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [0e714a62-3ff1-4d4d-af17-e866d9b81174]
+2026-06-03 17:43:39.227 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [0e714a62-3ff1-4d4d-af17-e866d9b81174] initialized
+2026-06-03 17:43:39.227 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [0e714a62-3ff1-4d4d-af17-e866d9b81174]
+2026-06-03 17:43:39.229 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:39.229 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [0e714a62-3ff1-4d4d-af17-e866d9b81174] started
+2026-06-03 17:43:39.230 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [abb15cd8-152f-492c-a70f-a4ff0cc8858a]
+2026-06-03 17:43:39.233 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [abb15cd8-152f-492c-a70f-a4ff0cc8858a] initialized
+2026-06-03 17:43:39.233 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [abb15cd8-152f-492c-a70f-a4ff0cc8858a]
+2026-06-03 17:43:39.235 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [abb15cd8-152f-492c-a70f-a4ff0cc8858a] started
+2026-06-03 17:43:39.236 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:39.238 [qtp1603519539-779] INFO  ConSysApiService:dd9f14c5 - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.242 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:39.244 [qtp1603519539-758] INFO  ConSysApiService:dd9f14c5 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.251 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:39.253 [qtp1603519539-759] INFO  ConSysApiService:dd9f14c5 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.258 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:39.265 [qtp1603519539-760] INFO  ConSysApiService:dd9f14c5 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.271 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:39.274 [qtp1603519539-761] INFO  ConSysApiService:dd9f14c5 - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.277 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:39.280 [qtp1603519539-762] INFO  ConSysApiService:dd9f14c5 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.283 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/081g
+2026-06-03 17:43:39.285 [qtp1603519539-763] INFO  ConSysApiService:dd9f14c5 - GET /sensorhub/api/datastreams/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.288 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?observedProperty=http://mmisw.org/ont/cf/parameter/Temperature
+2026-06-03 17:43:39.291 [qtp1603519539-765] INFO  ConSysApiService:dd9f14c5 - GET /sensorhub/api/datastreams?observedProperty=http://mmisw.org/ont/cf/parameter/Temperature (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.294 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?observedProperty=http://dbpedia.org/resource/Motion_detection
+2026-06-03 17:43:39.297 [qtp1603519539-766] INFO  ConSysApiService:dd9f14c5 - GET /sensorhub/api/datastreams?observedProperty=http://dbpedia.org/resource/Motion_detection (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.299 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?observedProperty=http://dbpedia.org/resource/Vehicle_registration_plate
+2026-06-03 17:43:39.301 [qtp1603519539-767] INFO  ConSysApiService:dd9f14c5 - GET /sensorhub/api/datastreams?observedProperty=http://dbpedia.org/resource/Vehicle_registration_plate (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.305 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?observedProperty=http://blabla/nothing
+2026-06-03 17:43:39.307 [qtp1603519539-768] INFO  ConSysApiService:dd9f14c5 - GET /sensorhub/api/datastreams?observedProperty=http://blabla/nothing (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.309 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:39.309 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:39.309 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.310 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [abb15cd8-152f-492c-a70f-a4ff0cc8858a]
+2026-06-03 17:43:39.310 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [abb15cd8-152f-492c-a70f-a4ff0cc8858a] stopped
+2026-06-03 17:43:39.316 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:39.410 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [0e714a62-3ff1-4d4d-af17-e866d9b81174]
+2026-06-03 17:43:39.429 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [0e714a62-3ff1-4d4d-af17-e866d9b81174] stopped
+2026-06-03 17:43:39.511 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:39.512 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:39.512 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:39.513 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:39.513 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:39.513 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:39.513 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:39.513 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:39.513 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:39.513 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:39.513 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:39.514 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:39.514 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:39.514 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.517 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:39.517 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.517 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:39.517 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:39.524 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:39.524 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:39.524 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [795a22a1-01b1-458f-8f27-7d6ab3097277]
+2026-06-03 17:43:39.527 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [795a22a1-01b1-458f-8f27-7d6ab3097277] initialized
+2026-06-03 17:43:39.527 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [795a22a1-01b1-458f-8f27-7d6ab3097277]
+2026-06-03 17:43:39.530 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:39.531 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [795a22a1-01b1-458f-8f27-7d6ab3097277] started
+2026-06-03 17:43:39.531 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [9edc3d7f-4db9-433f-a075-cb0cd519fb3b]
+2026-06-03 17:43:39.535 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [9edc3d7f-4db9-433f-a075-cb0cd519fb3b] initialized
+2026-06-03 17:43:39.536 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [9edc3d7f-4db9-433f-a075-cb0cd519fb3b]
+2026-06-03 17:43:39.538 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [9edc3d7f-4db9-433f-a075-cb0cd519fb3b] started
+2026-06-03 17:43:39.539 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:39.542 [qtp874579692-846] INFO  ConSysApiService:abd0457f - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.546 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:39.548 [qtp874579692-825] INFO  ConSysApiService:abd0457f - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.554 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:39.556 [qtp874579692-826] INFO  ConSysApiService:abd0457f - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.559 [Test worker] INFO  AbstractTestApiBase - PUT http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:39.560 [qtp874579692-827] INFO  ConSysApiService:abd0457f - PUT /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.562 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:39.562 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:39.562 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.563 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [9edc3d7f-4db9-433f-a075-cb0cd519fb3b]
+2026-06-03 17:43:39.563 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [9edc3d7f-4db9-433f-a075-cb0cd519fb3b] stopped
+2026-06-03 17:43:39.568 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:39.665 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [795a22a1-01b1-458f-8f27-7d6ab3097277]
+2026-06-03 17:43:39.671 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [795a22a1-01b1-458f-8f27-7d6ab3097277] stopped
+2026-06-03 17:43:39.766 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:39.767 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:39.767 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:39.767 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:39.767 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:39.767 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:39.767 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:39.767 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:39.767 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:39.768 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:39.768 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:39.768 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:39.768 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:39.768 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.771 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:39.771 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.772 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:39.772 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:39.780 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:39.780 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:39.780 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [188fbef0-28c2-4620-969c-36dcb40c7429]
+2026-06-03 17:43:39.784 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [188fbef0-28c2-4620-969c-36dcb40c7429] initialized
+2026-06-03 17:43:39.784 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [188fbef0-28c2-4620-969c-36dcb40c7429]
+2026-06-03 17:43:39.786 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:39.786 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [188fbef0-28c2-4620-969c-36dcb40c7429] started
+2026-06-03 17:43:39.787 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [698a0380-ebd9-48de-a8b0-452075403fa1]
+2026-06-03 17:43:39.789 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [698a0380-ebd9-48de-a8b0-452075403fa1] initialized
+2026-06-03 17:43:39.789 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [698a0380-ebd9-48de-a8b0-452075403fa1]
+2026-06-03 17:43:39.791 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [698a0380-ebd9-48de-a8b0-452075403fa1] started
+2026-06-03 17:43:39.792 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:39.795 [qtp361151927-885] INFO  ConSysApiService:e00705f1 - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.799 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:39.801 [qtp361151927-864] INFO  ConSysApiService:e00705f1 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.806 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:39.808 [qtp361151927-865] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.811 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:39.813 [qtp361151927-866] INFO  ConSysApiService:e00705f1 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.816 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:39.818 [qtp361151927-867] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.822 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:39.824 [qtp361151927-868] INFO  ConSysApiService:e00705f1 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.826 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/081g
+2026-06-03 17:43:39.829 [qtp361151927-869] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/datastreams/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.831 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:39.833 [qtp361151927-871] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.836 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams
+2026-06-03 17:43:39.838 [qtp361151927-872] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.840 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?validTime=2021-12-30T23:59:59.999Z
+2026-06-03 17:43:39.842 [qtp361151927-873] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/datastreams?validTime=2021-12-30T23:59:59.999Z (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.846 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?validTime=2022-01-01Z
+2026-06-03 17:43:39.848 [qtp361151927-874] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/datastreams?validTime=2022-01-01Z (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.853 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?validTime=2023-07-01Z
+2026-06-03 17:43:39.855 [qtp361151927-862] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/datastreams?validTime=2023-07-01Z (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.859 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?validTime=2022-07-01Z/2023-03-15Z
+2026-06-03 17:43:39.861 [qtp361151927-863] INFO  ConSysApiService:e00705f1 - GET /sensorhub/api/datastreams?validTime=2022-07-01Z/2023-03-15Z (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:39.864 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:39.864 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:39.864 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:39.864 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [698a0380-ebd9-48de-a8b0-452075403fa1]
+2026-06-03 17:43:39.866 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [698a0380-ebd9-48de-a8b0-452075403fa1] stopped
+2026-06-03 17:43:39.871 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:39.966 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [188fbef0-28c2-4620-969c-36dcb40c7429]
+2026-06-03 17:43:39.972 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [188fbef0-28c2-4620-969c-36dcb40c7429] stopped
+2026-06-03 17:43:40.067 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:40.067 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:40.067 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:40.068 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:40.068 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:40.068 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:40.068 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:40.068 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:40.068 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:40.068 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:40.068 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:40.068 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:40.068 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:40.069 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:40.071 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:40.071 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:40.072 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:40.072 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:40.078 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:40.078 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:40.078 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [643bfe38-1998-4fd8-8ff0-526e0e580a05]
+2026-06-03 17:43:40.081 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [643bfe38-1998-4fd8-8ff0-526e0e580a05] initialized
+2026-06-03 17:43:40.081 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [643bfe38-1998-4fd8-8ff0-526e0e580a05]
+2026-06-03 17:43:40.083 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:40.083 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [643bfe38-1998-4fd8-8ff0-526e0e580a05] started
+2026-06-03 17:43:40.084 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [d2e887b9-0a0b-41a4-bf17-147db8cdc0e0]
+2026-06-03 17:43:40.087 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [d2e887b9-0a0b-41a4-bf17-147db8cdc0e0] initialized
+2026-06-03 17:43:40.087 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [d2e887b9-0a0b-41a4-bf17-147db8cdc0e0]
+2026-06-03 17:43:40.088 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [d2e887b9-0a0b-41a4-bf17-147db8cdc0e0] started
+2026-06-03 17:43:40.089 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:40.092 [qtp575085556-960] INFO  ConSysApiService:54dbef99 - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.095 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:40.097 [qtp575085556-939] INFO  ConSysApiService:54dbef99 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.101 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:40.103 [qtp575085556-940] INFO  ConSysApiService:54dbef99 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.106 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:40.108 [qtp575085556-941] INFO  ConSysApiService:54dbef99 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.110 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:40.112 [qtp575085556-942] INFO  ConSysApiService:54dbef99 - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.115 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:40.116 [qtp575085556-943] INFO  ConSysApiService:54dbef99 - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.119 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/081g
+2026-06-03 17:43:40.121 [qtp575085556-944] INFO  ConSysApiService:54dbef99 - GET /sensorhub/api/datastreams/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.124 [Test worker] INFO  AbstractTestApiBase - PUT http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:40.125 [qtp575085556-946] INFO  ConSysApiService:54dbef99 - PUT /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.127 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:40.130 [qtp575085556-947] INFO  ConSysApiService:54dbef99 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.133 [Test worker] INFO  AbstractTestApiBase - PUT http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:40.134 [qtp575085556-948] INFO  ConSysApiService:54dbef99 - PUT /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.136 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:40.138 [qtp575085556-949] INFO  ConSysApiService:54dbef99 - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.141 [Test worker] INFO  AbstractTestApiBase - PUT http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:40.142 [qtp575085556-937] INFO  ConSysApiService:54dbef99 - PUT /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.144 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:40.146 [qtp575085556-938] INFO  ConSysApiService:54dbef99 - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.148 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams
+2026-06-03 17:43:40.150 [qtp575085556-957] INFO  ConSysApiService:54dbef99 - GET /sensorhub/api/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.152 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:40.152 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:40.152 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:40.153 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [d2e887b9-0a0b-41a4-bf17-147db8cdc0e0]
+2026-06-03 17:43:40.155 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [d2e887b9-0a0b-41a4-bf17-147db8cdc0e0] stopped
+2026-06-03 17:43:40.160 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:40.253 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [643bfe38-1998-4fd8-8ff0-526e0e580a05]
+2026-06-03 17:43:40.272 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [643bfe38-1998-4fd8-8ff0-526e0e580a05] stopped
+2026-06-03 17:43:40.353 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 17:43:40.354 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 17:43:40.354 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 17:43:40.354 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 17:43:40.354 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 17:43:40.355 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.13+11, Eclipse Adoptium
+2026-06-03 17:43:40.355 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 17:43:40.355 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 17:43:40.355 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 17:43:40.355 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 17:43:40.356 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 17:43:40.356 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 17:43:40.356 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 17:43:40.356 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:40.359 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 17:43:40.359 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:40.360 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 17:43:40.360 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 17:43:40.368 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 17:43:40.368 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 17:43:40.369 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [64e8c006-1275-4af1-8c5a-f7dd409e7e6b]
+2026-06-03 17:43:40.371 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [64e8c006-1275-4af1-8c5a-f7dd409e7e6b] initialized
+2026-06-03 17:43:40.371 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [64e8c006-1275-4af1-8c5a-f7dd409e7e6b]
+2026-06-03 17:43:40.374 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 17:43:40.374 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [64e8c006-1275-4af1-8c5a-f7dd409e7e6b] started
+2026-06-03 17:43:40.374 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [17db0f4c-edb7-4f93-9914-7c9ff03ce3d0]
+2026-06-03 17:43:40.376 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [17db0f4c-edb7-4f93-9914-7c9ff03ce3d0] initialized
+2026-06-03 17:43:40.376 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [17db0f4c-edb7-4f93-9914-7c9ff03ce3d0]
+2026-06-03 17:43:40.378 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [17db0f4c-edb7-4f93-9914-7c9ff03ce3d0] started
+2026-06-03 17:43:40.379 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 17:43:40.381 [qtp1983114555-1039] INFO  ConSysApiService:d57900eb - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.385 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:40.388 [qtp1983114555-1018] INFO  ConSysApiService:d57900eb - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.393 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:40.395 [qtp1983114555-1019] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.398 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:40.400 [qtp1983114555-1020] INFO  ConSysApiService:d57900eb - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.402 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:40.405 [qtp1983114555-1021] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.408 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/datastreams
+2026-06-03 17:43:40.409 [qtp1983114555-1022] INFO  ConSysApiService:d57900eb - POST /sensorhub/api/systems/080g/datastreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.412 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/081g
+2026-06-03 17:43:40.414 [qtp1983114555-1023] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.417 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?q=atmos
+2026-06-03 17:43:40.419 [qtp1983114555-1025] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams?q=atmos (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.423 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/080g
+2026-06-03 17:43:40.425 [qtp1983114555-1026] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.429 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?q=water
+2026-06-03 17:43:40.431 [qtp1983114555-1027] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams?q=water (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.434 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/0810
+2026-06-03 17:43:40.436 [qtp1983114555-1028] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.438 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?q=traffic
+2026-06-03 17:43:40.440 [qtp1983114555-1016] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams?q=traffic (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.444 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams/081g
+2026-06-03 17:43:40.446 [qtp1983114555-1017] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.449 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?q=data
+2026-06-03 17:43:40.451 [qtp1983114555-1036] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams?q=data (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.454 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?q=water,traffic
+2026-06-03 17:43:40.456 [qtp1983114555-1039] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams?q=water,traffic (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.459 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/datastreams?q=nothing
+2026-06-03 17:43:40.461 [qtp1983114555-1018] INFO  ConSysApiService:d57900eb - GET /sensorhub/api/datastreams?q=nothing (from ip=127.0.0.1, user=anonymous)
+2026-06-03 17:43:40.463 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 17:43:40.463 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 17:43:40.463 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 17:43:40.464 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [17db0f4c-edb7-4f93-9914-7c9ff03ce3d0]
+2026-06-03 17:43:40.467 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [17db0f4c-edb7-4f93-9914-7c9ff03ce3d0] stopped
+2026-06-03 17:43:40.472 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 17:43:40.564 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [64e8c006-1275-4af1-8c5a-f7dd409e7e6b]
+2026-06-03 17:43:40.581 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [64e8c006-1275-4af1-8c5a-f7dd409e7e6b] stopped
+2026-06-03 17:43:40.664 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+]]></system-out>
+  <system-err><![CDATA[Added /systems/0810
+Added /systems/081g
+Added /systems/0820
+Added /systems/082g
+Added /systems/0830
+Added /systems/083g
+Added /datastreams/080g
+Added /datastreams/0810
+Added /datastreams/081g
+Added /datastreams/0820
+Added /datastreams/082g
+Added /datastreams/0830
+Added /datastreams/083g
+Added /datastreams/0840
+Added /datastreams/084g
+Added /datastreams/0850
+]]></system-err>
+</testsuite>

@@ -1,0 +1,53 @@
+{
+  "fixturePath": "ops/local-osh-seed-fixtures.json",
+  "results": [
+    {
+      "collection": "/systems",
+      "status": 201,
+      "location": "/systems/040g",
+      "bytes": 0
+    },
+    {
+      "collection": "/procedures",
+      "status": 201,
+      "location": "/procedures/040g",
+      "bytes": 0
+    },
+    {
+      "collection": "/deployments",
+      "status": 201,
+      "location": "/deployments/040g",
+      "bytes": 0
+    },
+    {
+      "collection": "/samplingFeatures",
+      "status": 201,
+      "location": "/samplingFeatures/040g",
+      "bytes": 0
+    },
+    {
+      "verify": "/systems/040g",
+      "status": 200,
+      "contentType": "application/json",
+      "bytes": 919
+    },
+    {
+      "verify": "/procedures/040g",
+      "status": 200,
+      "contentType": "application/json",
+      "bytes": 886
+    },
+    {
+      "verify": "/deployments/040g",
+      "status": 200,
+      "contentType": "application/json",
+      "bytes": 1035
+    },
+    {
+      "verify": "/samplingFeatures/040g",
+      "status": 200,
+      "contentType": "application/json",
+      "bytes": 444
+    }
+  ]
+}

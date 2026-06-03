@@ -1,0 +1,98 @@
+{
+  "authCredentialRecorded": false,
+  "authCredentialSupplied": true,
+  "finishedAt": "2026-06-03T16:48:54Z",
+  "probes": [
+    {
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "location": null,
+      "method": "GET",
+      "status": 200,
+      "url": "/systems?limit=5"
+    },
+    {
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "location": null,
+      "method": "GET",
+      "status": 200,
+      "url": "/procedures?limit=5"
+    },
+    {
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "location": null,
+      "method": "GET",
+      "status": 200,
+      "url": "/deployments?limit=5"
+    },
+    {
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "location": null,
+      "method": "GET",
+      "status": 200,
+      "url": "/samplingFeatures?limit=5"
+    },
+    {
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "location": null,
+      "method": "GET",
+      "status": 200,
+      "url": "/datastreams?limit=5"
+    },
+    {
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "location": null,
+      "method": "GET",
+      "status": 200,
+      "url": "/controlstreams?limit=5"
+    },
+    {
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "location": null,
+      "method": "GET",
+      "status": 200,
+      "url": "/observations?limit=1"
+    }
+  ],
+  "seedResults": [
+    {
+      "bodyParsedAsJson": false,
+      "contentType": "application/json",
+      "location": "/systems/040g",
+      "method": "POST",
+      "status": 201,
+      "url": "/systems"
+    },
+    {
+      "bodyParsedAsJson": false,
+      "contentType": "application/json",
+      "location": "/procedures/040g",
+      "method": "POST",
+      "status": 201,
+      "url": "/procedures"
+    },
+    {
+      "bodyParsedAsJson": false,
+      "contentType": "application/json",
+      "location": "/deployments/040g",
+      "method": "POST",
+      "status": 201,
+      "url": "/deployments"
+    },
+    {
+      "bodyParsedAsJson": false,
+      "contentType": "application/json",
+      "location": "/samplingFeatures/040g",
+      "method": "POST",
+      "status": 201,
+      "url": "/samplingFeatures"
+    }
+  ],
+  "startedAt": "2026-06-03T16:48:54Z"
+}

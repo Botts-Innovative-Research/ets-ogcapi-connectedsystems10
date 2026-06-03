@@ -1,0 +1,13 @@
+label	path	status	content_type	bytes	json_ok	summary	error
+datastreams	/datastreams?f=json	200	application/json	2406	True	items=2;keys=items	
+controlstreams	/controlstreams?f=json	200	application/json	4166	True	items=3;keys=items	
+datastream_schema_auto_json	/datastreams/03d85mk1g060/schema?f=json	200	application/json	4071	True	keys=obsFormat,resultSchema	
+datastream_schema_obsformat_swe_text	/datastreams/03d85mk1g060/schema?obsFormat=application%2Fswe%2Btext	200	application/json	4592	True	keys=obsFormat,recordEncoding,recordSchema	
+datastream_schema_obsformat_swe_csv_legacy	/datastreams/03d85mk1g060/schema?obsFormat=application%2Fswe%2Bcsv	200	application/json	4591	True	keys=obsFormat,recordEncoding,recordSchema	
+datastream_observations_accept_json	/datastreams/03d85mk1g060/observations?f=json	200	application/json	0	False	EMPTY	
+datastream_observations_count	/datastreams/03d85mk1g060/observations/count?f=json	200	application/json	0	False	EMPTY	
+controlstream_schema_auto_json	/controlstreams/02p8j7k8scd0/schema?f=json	200	application/json	3341	True	keys=commandFormat,parametersSchema	
+controlstream_schema_cmdformat_swe_text	/controlstreams/02p8j7k8scd0/schema?cmdFormat=application%2Fswe%2Btext	200	application/json	3469	True	keys=paramsEncoding,paramsSchema	
+controlstream_schema_commandformat_swe_text_legacy	/controlstreams/02p8j7k8scd0/schema?commandFormat=application%2Fswe%2Btext	200	application/json	3469	True	keys=paramsEncoding,paramsSchema	
+controlstream_commands_accept_json	/controlstreams/02p8j7k8scd0/commands?f=json	200	application/json	0	False	EMPTY	
+controlstream_commands_count	/controlstreams/02p8j7k8scd0/commands/count?f=json	200	application/json	0	False	EMPTY	

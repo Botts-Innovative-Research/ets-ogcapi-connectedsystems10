@@ -1,6 +1,6 @@
 # server.md — operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-06-03 - Sprint 38 SimUAV preseeded fixture and post-Raze clean local OSH restore.
+> Last updated: 2026-06-03 - Sprint 40 OSH ConSys blocker closure and clean local OSH restore.
 
 ## Schema provenance
 
@@ -77,8 +77,8 @@ explicit advisory interoperability probe with `SMOKE_TARGET=georobotix`.
   against a dedicated mutable IUT, and it is not proof of accepted OSH payload
   shape until Generator records actual request/response evidence. Sprint 38
   adds SimUAV preseed evidence to this manifest, but the fixture remains
-  partial because Observation/Command child collections still return empty
-  bodies and full populated binding closure is not claimed.
+  partial because Sprint 40 still lacks positive Command child item evidence and
+  full populated binding closure is not claimed.
 
 ### Local OSH tasking fixture
 
@@ -101,14 +101,18 @@ tasking driver as an isolated CommandResult fixture:
 Keep Sapient and SimUAV disabled for the primary read-only smoke. When
 temporarily enabled, Sapient can accept a real CS API Command through a local
 SAPIENT TCP peer, and SimUAV can accept a waypoint feasibility Command without
-an external peer and return inline result data. Their generated dynamic
-DataStreams/ControlStreams still fail current Part 2 schema/body checks: some
-schema endpoints report `Content-Type: auto`, SWE text schema requests can
-return HTTP 400, and nested Observation/Command collections can return HTTP
-200 with empty bodies. OSH does not delete module-owned resources through CS
-API. After a fixture run, reset only `field-hub_osh-data`, restart OSH, and
-reseed `ops/local-osh-seed-fixtures.json` before running the primary TeamEngine
-smoke.
+an external peer and return inline result data. Sprint 40 patches the active
+  ConSys jar so direct SimUAV probes no longer show the prior schema
+  `Content-Type: auto`, exact `application/swe+text` HTTP 400, `cmdFormat`, empty
+  JSON child-body, or old field-hub temporal-sort linkage blockers. Final direct
+  probes returned nested Observation `items=1` and nested Command `count=0`, so
+  positive Command child item evidence is still missing. Their generated dynamic
+DataStreams/ControlStreams still fail current Part 2 populated TeamEngine
+  schema checks because Observation/Command schema documents do not yet match the
+  Annex A.9/SWE schema shape. OSH does not delete module-owned
+resources through CS API. After a fixture run, reset only `field-hub_osh-data`,
+restart OSH, and reseed `ops/local-osh-seed-fixtures.json` before running the
+primary TeamEngine smoke.
 
 The field-hub OSH container bakes `osh/lib/` into the image. After replacing a
 ConSys jar in `/home/nh/docker/gir/sar-ops/field-hub/osh/lib`, rebuild the

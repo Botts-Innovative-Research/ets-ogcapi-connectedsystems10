@@ -1,0 +1,82 @@
+sprint: ets-40
+story: S-ETS-40-01
+title: OSH ConSys populated binding blocker closure
+status: PARTIAL_IMPLEMENTED_VERIFIED_RAZE_APPROVED_WITH_CONCERNS
+triggered_by: 'User instruction: "Do 1"'
+requirements:
+  - REQ-ETS-PART2-013
+  - REQ-ETS-TEAMENGINE-006
+scenarios:
+  - SCENARIO-ETS-PART2-013-OSH-SCHEMA-MEDIATYPE-001
+  - SCENARIO-ETS-PART2-013-OSH-SWE-TEXT-MEDIATYPE-001
+  - SCENARIO-ETS-PART2-013-OSH-COMMAND-SCHEMA-FORMAT-ALIAS-001
+  - SCENARIO-ETS-PART2-013-POPULATED-CHILD-BODY-JSON-001
+  - SCENARIO-ETS-PART2-013-SIMUAV-PRESEEDED-POPULATED-IUT-001
+  - SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001
+scope:
+  include:
+    - Patch OSH ConSys schema subresources so non-browser schema responses default to JSON media type rather than auto.
+    - Patch OSH ConSys exact SWE Common Text media type handling for schemas and advertised formats.
+    - Patch OSH ConSys ControlStream schema request parsing to accept cmdFormat and commandFormat.
+    - Patch OSH ConSys Observation/Command child collection and count response handling for JSON Accept requests.
+    - Verify with focused OSH regressions and local TeamEngine E2E.
+  exclude:
+    - Weakening ETS strict schema media-type, SWE Text, Annex A.9, or binding assertions.
+    - Counting application/swe+csv as exact SWE Text conformance evidence.
+    - Claiming full populated closure without TeamEngine evidence.
+success_criteria:
+  - OpenSpec/story/contract/traceability/epic artifacts define Sprint 40 before OSH implementation edits.
+  - Focused OSH tests cover the exact media type, schema content type, command alias, and child JSON body behavior.
+  - OSH focused tests pass or blockers are documented with exact output.
+  - Local OSH is rebuilt and exercised by TeamEngine through the documented Dockerized stack.
+  - SimUAV populated TeamEngine evidence is archived and residual blockers, if any, are reconciled.
+  - Raze returns no required fixes or all required fixes are closed.
+guardrails:
+  - Keep ETS assertions strict; fixes belong in OSH unless evidence proves an ETS defect.
+  - Do not record local OSH credential values in artifacts.
+  - Preserve clean primary local OSH read-only smoke restoration after any populated fixture run.
+evidence:
+  osh_focused_tests:
+    result: PASS
+    totals: "23 tests / 0 failures / 0 errors / 0 skipped"
+    artifacts:
+      - ops/test-results/sprint-ets-40-gapfix-r4-osh-TestDataStreams-2026-06-03.xml
+      - ops/test-results/sprint-ets-40-gapfix-r4-osh-TestControlStreams-2026-06-03.xml
+      - ops/test-results/sprint-ets-40-gapfix-r4-osh-TestObservations-2026-06-03.xml
+  ets_maven:
+    result: PASS
+    totals: "294 tests / 0 failures / 0 errors / 3 skipped"
+    artifact: ops/test-results/sprint-ets-40-maven-test-via-docker-2026-06-03.txt
+  direct_simuav_blocker_probes:
+    result: PASS_FOR_PRIOR_BLOCKERS
+    artifacts:
+      - ops/test-results/sprint-ets-40-gapfix-r4-local-osh-simuav-format-probes-2026-06-03.tsv
+      - ops/test-results/sprint-ets-40-gapfix-r4-local-osh-simuav-format-probes-parsed-2026-06-03.tsv
+    observations: "Nested Observation endpoint returned parseable JSON with items=1; nested Command endpoint returned parseable JSON with count=0."
+  clean_local_osh_e2e:
+    result: PASS
+    totals: "211 total / 61 passed / 0 failed / 150 skipped"
+    no_mutation: "zero IUT-bound POST/PUT/DELETE/PATCH"
+    artifacts:
+      - ops/test-results/sprint-ets-40-gapfix-clean-local-osh-smoke-r2-2026-06-03.xml
+      - ops/test-results/sprint-ets-40-gapfix-clean-local-osh-container-r2-2026-06-03.log
+      - ops/test-results/sprint-ets-40-gapfix-clean-local-osh-no-mutation-r2-2026-06-03.txt
+      - ops/test-results/sprint-ets-40-gapfix-artifact-hygiene-clean-local-osh-r2-2026-06-03.json
+  simuav_populated_e2e:
+    result: FAIL_RESIDUAL_SCHEMA_SHAPE_MAPPING
+    totals: "211 total / 86 passed / 17 failed / 108 skipped"
+    artifacts:
+      - ops/test-results/sprint-ets-40-simuav-local-osh-smoke-final-2026-06-03.xml
+      - ops/test-results/sprint-ets-40-simuav-local-osh-container-final-2026-06-03.log
+      - ops/test-results/sprint-ets-40-artifact-hygiene-simuav-populated-final-2026-06-03.json
+    residual_blockers:
+      - Observation/Command schema documents do not validate against Annex A.9/SWE schema shape.
+      - Command SWE schema mappings still lack required recordSchema/encoding evidence.
+      - No inspected parent resource exposes positive associated Command child item evidence.
+  raze_review:
+    initial_result: GAPS_FOUND
+    initial_artifact: .harness/evaluations/sprint-ets-40-adversarial-implementation.yaml
+    recheck_result: APPROVE_WITH_CONCERNS
+    recheck_confidence: 0.91
+    recheck_artifact: .harness/evaluations/sprint-ets-40-adversarial-recheck.yaml
+    required_fixes: []

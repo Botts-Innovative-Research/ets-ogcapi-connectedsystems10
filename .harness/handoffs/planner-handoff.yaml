@@ -1,20 +1,20 @@
 agent: generator
-status: sprint_38_partial_raze_approved_clean_e2e_restored_populated_blocked
-timestamp: "2026-06-03T14:36:00Z"
-sprint_number: "ets-38"
-sprint_name: "simuav-preseeded-populated-iut-fixture"
-contract_path: ".harness/contracts/sprint-ets-38.yaml"
+status: sprint_40_partial_verified_raze_approved_with_concerns_clean_e2e_restored_populated_schema_blocked
+timestamp: "2026-06-03T18:02:00Z"
+sprint_number: "ets-40"
+sprint_name: "osh-consys-populated-binding-blocker-closure"
+contract_path: ".harness/contracts/sprint-ets-40.yaml"
 triggered_by: |
-  User said "Proceed with the SimUAV preseeded populated-IUT fixture sprint".
+  User said "Do 1".
 
 handoff_result:
   story:
-    id: "S-ETS-38-01"
-    title: "SimUAV Preseeded Populated-IUT Fixture"
-    file: "epics/stories/s-ets-38-01-simuav-preseeded-populated-iut-fixture.md"
-    status: "PARTIAL_IMPLEMENTED_E2E_BLOCKED_BY_OSH_LIMITATIONS"
+    id: "S-ETS-40-01"
+    title: "OSH ConSys Populated Binding Blocker Closure"
+    file: "epics/stories/s-ets-40-01-osh-consys-populated-binding-blockers.md"
+    status: "PARTIAL_IMPLEMENTED_VERIFIED_RAZE_APPROVED_WITH_CONCERNS"
   architecture_freshness:
-    checked_at: "2026-06-03T13:12:01Z"
+    checked_at: "2026-06-03T15:57:45Z"
     architecture_last_reconciled: "2026-06-01"
     stale: false
   requirements:
@@ -22,43 +22,59 @@ handoff_result:
       - "REQ-ETS-PART2-013"
     added: []
   scenarios:
-    - "SCENARIO-ETS-PART2-013-SIMUAV-PRESEEDED-POPULATED-IUT-001"
-    - "SCENARIO-ETS-PART2-013-POPULATED-CANDIDATE-SELECTION-001"
-    - "SCENARIO-ETS-PART2-013-SIMUAV-TASKING-FIXTURE-001"
-    - "SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001"
+      - "SCENARIO-ETS-PART2-013-OSH-SCHEMA-MEDIATYPE-001"
+      - "SCENARIO-ETS-PART2-013-OSH-SWE-TEXT-MEDIATYPE-001"
+      - "SCENARIO-ETS-PART2-013-OSH-COMMAND-SCHEMA-FORMAT-ALIAS-001"
+      - "SCENARIO-ETS-PART2-013-POPULATED-CHILD-BODY-JSON-001"
+      - "SCENARIO-ETS-PART2-013-SIMUAV-PRESEEDED-POPULATED-IUT-001"
+      - "SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001"
 
 implementation_target:
-  ets_code:
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/Part2CandidateSelection.java"
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java"
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamTests.java"
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java"
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java"
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java"
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java"
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java"
-    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java"
-    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/VerifyPart2CandidateSelection.java"
-    - "scripts/local-osh-simuav-preseed.py"
+  ets_code: []
+  osh_code:
+    repository: "/home/nh/docker/gir/osh-core"
+    local_commit: "79f89fb Patch ConSys populated binding blockers"
+    files:
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/resource/ResourceFormat.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/BaseHandler.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/SWECommonUtils.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/DataStreamSchemaHandler.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/ObsBindingSweCommon.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/ObsHandler.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandStreamSchemaHandler.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandStreamSchemaBindingSweCommon.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandBindingSweCommon.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandHandler.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandStatusHandler.java"
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/client/ConSysApiClient.java"
+      - "sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestDataStreams.java"
+      - "sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestControlStreams.java"
+      - "sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestObservations.java"
   external_runtime_config:
     repository: "/home/nh/docker/gir/sar-ops/field-hub"
     file: "osh/config/config.json"
-    final_state: "Sapient autoStart=false; SimUAV autoStart=false; local OSH BasicRealm credentials rotated earlier in the session and not recorded in ETS artifacts."
+    final_state: "Sapient autoStart=false; SimUAV autoStart=false; active ConSys jar rebuilt from Sprint 40 OSH code; local OSH BasicRealm credentials are not recorded in ETS artifacts."
   implemented: true
 
 verification:
-  python_preseed_compile:
+  osh_focused_gradle:
     status: "PASS"
-    command: "python3 -m py_compile scripts/local-osh-simuav-preseed.py"
-  java_format:
-    status: "PASS"
-    command: "docker run --rm --user ... maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+    result: "23 tests / 0 failures / 0 errors / 0 skipped"
+    artifacts:
+      - "ops/test-results/sprint-ets-40-gapfix-r4-osh-TestDataStreams-2026-06-03.xml"
+      - "ops/test-results/sprint-ets-40-gapfix-r4-osh-TestControlStreams-2026-06-03.xml"
+      - "ops/test-results/sprint-ets-40-gapfix-r4-osh-TestObservations-2026-06-03.xml"
   ets_maven:
-    status: "PASS_WITH_WRAPPER_LIMITATION"
-    required_wrapper: "scripts/mvn-test-via-docker.sh failed twice before tests on Maven Central connection resets and a later wrapper retry was stopped after a silent stall."
-    equivalent_cached_docker_result: "294 tests / 0 failures / 0 errors / 3 skipped"
-    artifact: "ops/test-results/sprint-ets-38-maven-clean-test-cached-2026-06-03.log"
-  raze_review: "APPROVE_WITH_CONCERNS confidence 0.92; .harness/evaluations/sprint-ets-38-adversarial-recheck.yaml closes RAZE-ETS38-GAP-001 and RAZE-ETS38-GAP-002 with required_fixes: []."
+    status: "PASS"
+    result: "294 tests / 0 failures / 0 errors / 3 skipped"
+    artifact: "ops/test-results/sprint-ets-40-maven-test-via-docker-2026-06-03.txt"
+  direct_blocker_probes:
+    status: "PASS_FOR_PRIOR_BLOCKERS"
+    artifacts:
+      - "ops/test-results/sprint-ets-40-gapfix-r4-local-osh-simuav-format-probes-2026-06-03.tsv"
+      - "ops/test-results/sprint-ets-40-gapfix-r4-local-osh-simuav-format-probes-parsed-2026-06-03.tsv"
+    summary: "Schema media type, exact SWE Text, cmdFormat/commandFormat, child JSON bodies, nested Observation items=1, and runtime temporal-sort compatibility verified."
+  raze_review: "APPROVE_WITH_CONCERNS; confidence 0.91; no required fixes; artifact .harness/evaluations/sprint-ets-40-adversarial-recheck.yaml"
 
 e2e:
   local_osh_state:
@@ -67,29 +83,30 @@ e2e:
     sapient_autostart: false
     simuav_autostart: false
     reset_reseed_artifacts:
-      - "ops/test-results/sprint-ets-38-post-raze-field-hub-osh-rebuild-reset-2026-06-03.log"
-      - "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-reseed-2026-06-03.json"
-      - "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-observations-probe-2026-06-03.txt"
+      - "ops/test-results/sprint-ets-40-clean-local-osh-reseed-2026-06-03.json"
   populated_simuav:
-    status: "FAIL_OSH_LIMITATIONS_VISIBLE"
-    result: "211 total / 83 passed / 29 failed / 99 skipped"
-    preseed_artifact: "ops/test-results/sprint-ets-38-local-osh-simuav-preseed-r3-2026-06-03.json"
-    report: "ops/test-results/sprint-ets-38-simuav-preseed-teamengine-smoke-r3-2026-06-03.xml"
-    log: "ops/test-results/sprint-ets-38-simuav-preseed-teamengine-container-r3-2026-06-03.log"
-    preseed_summary: "2 DataStreams, 3 ControlStreams, schema probes, GET=102, POST=1, waypoint Command POST HTTP 200 COMPLETED; zero parseable Observation child items; nested Command collection HTTP 200 empty body."
+    status: "FAIL_RESIDUAL_SCHEMA_SHAPE_MAPPING"
+    result: "211 total / 86 passed / 17 failed / 108 skipped"
+    preseed_artifact: "ops/test-results/sprint-ets-40-local-osh-simuav-preseed-r2-2026-06-03.json"
+    report: "ops/test-results/sprint-ets-40-simuav-local-osh-smoke-final-2026-06-03.xml"
+    log: "ops/test-results/sprint-ets-40-simuav-local-osh-container-final-2026-06-03.log"
+    preseed_summary: "2 DataStreams, 3 ControlStreams, GET=104, POST=1, waypoint Command POST HTTP 200 COMPLETED; nested Command body parseable JSON; final direct probes later found nested Observation items=1 but nested Command count=0."
+    residual_blockers: "Observation/Command schema shape/mapping and missing positive Command child item evidence."
   clean_primary:
     status: "PASS"
-    result: "211 total / 68 passed / 0 failed / 143 skipped"
-    report: "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-2026-06-03.xml"
-    log: "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-container-2026-06-03.log"
-    no_mutation: "zero IUT-bound POST/PUT/DELETE/PATCH in smoke stdout"
+    result: "211 total / 61 passed / 0 failed / 150 skipped"
+    report: "ops/test-results/sprint-ets-40-gapfix-clean-local-osh-smoke-r2-2026-06-03.xml"
+    log: "ops/test-results/sprint-ets-40-gapfix-clean-local-osh-container-r2-2026-06-03.log"
+    no_mutation: "zero IUT-bound POST/PUT/DELETE/PATCH"
 
 pending:
-  - "Do not claim full populated `part2binding` closure until OSH exposes parseable Observation child bodies, nested Command collection bodies, dereferenceable CommandStatus/CommandResult resources, and strict schema media-type/SWE evidence."
-  - "If continuing implementation, target OSH ConSys child collection/body behavior or document it as an upstream/local OSH limitation."
+  - "Do not claim full populated `part2binding` closure until OSH emits Annex A.9-compatible Observation/Command schema documents and positive associated Command child item evidence."
+  - "If continuing implementation, target OSH ConSys schema serialization for JSON/SWE Observation and Command schema documents."
 
-next_agent: "adversarial_reviewer"
+next_agent: "planner_or_generator"
 next_action: |
-  Run Raze for Sprint 38. Clean primary local OSH is restored and passing,
-  while populated SimUAV E2E remains blocked by OSH child-body/media-type/SWE
-  evidence limits.
+  Choose whether to continue OSH ConSys schema serialization fixes or move to
+  the next partial Part 2 class. Clean primary local OSH is restored and passing.
+  The prior media-type/body blockers are cleared, while populated SimUAV E2E
+  remains blocked by schema shape/mapping and missing positive Command child item
+  evidence.

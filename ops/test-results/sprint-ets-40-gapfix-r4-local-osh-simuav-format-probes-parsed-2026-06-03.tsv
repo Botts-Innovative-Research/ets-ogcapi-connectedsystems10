@@ -1,0 +1,13 @@
+label	summary
+datastreams	items=2;keys=items
+controlstreams	items=3;keys=items
+datastream_schema_auto_json	keys=obsFormat,resultSchema
+datastream_schema_obsformat_swe_text	keys=obsFormat,recordEncoding,recordSchema
+datastream_schema_obsformat_swe_csv_legacy	keys=obsFormat,recordEncoding,recordSchema
+datastream_observations_accept_json	items=1;keys=items
+datastream_observations_count	count=1;keys=count
+controlstream_schema_auto_json	keys=commandFormat,parametersSchema
+controlstream_schema_cmdformat_swe_text	keys=paramsEncoding,paramsSchema
+controlstream_schema_commandformat_swe_text_legacy	keys=paramsEncoding,paramsSchema
+controlstream_commands_accept_json	items=0;keys=items
+controlstream_commands_count	count=0;keys=count

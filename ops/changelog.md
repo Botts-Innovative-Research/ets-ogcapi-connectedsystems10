@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-03T18:02Z — Sprint 40 OSH ConSys populated binding blocker closure
+
+**Triggered by user instruction**: "Do 1"
+
+- Added OpenSpec/story/contract/traceability coverage for Sprint 40 OSH-side blocker closure: schema media types, exact SWE Common Text, ControlStream `cmdFormat`, and child Observation/Command JSON bodies.
+- Patched sibling OSH ConSys in `/home/nh/docker/gir/osh-core` so schema subresources default to JSON-compatible response media types, exact `application/swe+text` is wired alongside legacy CSV compatibility, `cmdFormat` works as a command-schema alias, JSON `Accept` child collection/count reads return parseable JSON bodies, and ConSys avoids a runtime `TemporalFilter.descendingOrder(boolean)` linkage failure against the field-hub OSH core jar.
+- Committed the sibling OSH patch locally as `79f89fb Patch ConSys populated binding blockers`.
+- Added focused OSH regressions and archived final XML evidence: `TestDataStreams 10/0/0/0`, `TestControlStreams 5/0/0/0`, and `TestObservations 8/0/0/0`.
+- Rebuilt and redeployed the field-hub OSH ConSys jar, ran final direct SimUAV format/body probes, and verified the prior schema `Content-Type: auto`, SWE text HTTP 400, `cmdFormat`, and empty child-body blockers are cleared; the final probe includes parseable nested Observation evidence with `items=1`.
+- Ran ETS Docker Maven wrapper successfully: `294 tests / 0 failures / 0 errors / 3 skipped`.
+- Ran final SimUAV-populated TeamEngine smoke: FAIL, `211 total / 86 passed / 17 failed / 108 skipped`; residual failures are schema shape/mapping issues and missing positive Command child item evidence, so full populated closure is not claimed.
+- Restored the tracked field-hub config with SimUAV/Sapient disabled, reset/reseeded static `040g` fixtures, and reran clean TeamEngine smoke successfully with the required full Authorization header: `211 total / 61 passed / 0 failed / 150 skipped`, with zero IUT-bound writes.
+- Ran required Raze review before completion; initial review found field-hub config hygiene, broad `Throwable` masking, and story-checklist gaps. Those fixes are applied.
+- Focused Raze recheck wrote `.harness/evaluations/sprint-ets-40-adversarial-recheck.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence `0.91`, and no required fixes. Residual concerns are low: low-entropy credential scan noise and unrelated field-hub dirt outside the targeted OSH config/backups paths.
+
+---
+
 ## 2026-06-03T15:14Z — Sprint 39 artifact hygiene and URI/schema drift harness
 
 **Triggered by user instruction**: "Do them"

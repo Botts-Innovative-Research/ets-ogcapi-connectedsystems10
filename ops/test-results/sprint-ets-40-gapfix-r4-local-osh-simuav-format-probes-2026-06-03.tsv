@@ -1,0 +1,13 @@
+label	path	status	content_type	bytes	json_ok	summary	error
+datastreams	/datastreams?f=json	200	application/json	2406	True	items=2;keys=items	
+controlstreams	/controlstreams?f=json	200	application/json	4164	True	items=3;keys=items	
+datastream_schema_auto_json	/datastreams/02bbvl5gn99g/schema?f=json	200	application/json	4071	True	keys=obsFormat,resultSchema	
+datastream_schema_obsformat_swe_text	/datastreams/02bbvl5gn99g/schema?obsFormat=application%2Fswe%2Btext	200	application/json	4592	True	keys=obsFormat,recordEncoding,recordSchema	
+datastream_schema_obsformat_swe_csv_legacy	/datastreams/02bbvl5gn99g/schema?obsFormat=application%2Fswe%2Bcsv	200	application/json	4591	True	keys=obsFormat,recordEncoding,recordSchema	
+datastream_observations_accept_json	/datastreams/02bbvl5gn99g/observations?f=json	200	application/json	424	True	items=1;keys=items	
+datastream_observations_count	/datastreams/02bbvl5gn99g/observations/count?f=json	200	application/json	11	True	count=1;keys=count	
+controlstream_schema_auto_json	/controlstreams/02psdsvb50/schema?f=json	200	application/json	4521	True	keys=commandFormat,parametersSchema	
+controlstream_schema_cmdformat_swe_text	/controlstreams/02psdsvb50/schema?cmdFormat=application%2Fswe%2Btext	200	application/json	4649	True	keys=paramsEncoding,paramsSchema	
+controlstream_schema_commandformat_swe_text_legacy	/controlstreams/02psdsvb50/schema?commandFormat=application%2Fswe%2Btext	200	application/json	4649	True	keys=paramsEncoding,paramsSchema	
+controlstream_commands_accept_json	/controlstreams/02psdsvb50/commands?f=json	200	application/json	12	True	items=0;keys=items	
+controlstream_commands_count	/controlstreams/02psdsvb50/commands/count?f=json	200	application/json	11	True	count=0;keys=count	

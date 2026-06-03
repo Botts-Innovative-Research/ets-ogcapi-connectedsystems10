@@ -1,0 +1,912 @@
+{
+  "authCredentialRecorded": false,
+  "authCredentialSupplied": true,
+  "commandPost": {
+    "request": {
+      "parameters": {
+        "position": {
+          "alt": 120.0,
+          "lat": 34.804,
+          "lon": -86.723
+        },
+        "velocity": 12.0
+      }
+    },
+    "response": {
+      "body": {
+        "command@id": "03hot35flg3g1elkg78gc6p5mqgg",
+        "executionTime": [
+          "2026-06-03T16:45:46.459091019Z",
+          "2026-06-03T16:45:46.459091019Z"
+        ],
+        "reportTime": "2026-06-03T16:45:46.460049670Z",
+        "results": [
+          {
+            "data": {
+              "battery_remaining": 59.0,
+              "reachable": true,
+              "time_to_waypoint": 493292.0
+            },
+            "id": "1"
+          }
+        ],
+        "statusCode": "COMPLETED"
+      },
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "method": "POST",
+      "path": "controlstreams/03hot35flg3g/commands",
+      "status": 200
+    }
+  },
+  "commandSchemaEndpoints": [
+    {
+      "body": {
+        "commandFormat": "application/json",
+        "parametersSchema": {
+          "definition": "urn:x-ogc:uxs:messages:WaypointCommand",
+          "description": "To check the feasibility of the WAYPOINT command",
+          "fields": [
+            {
+              "coordinates": [
+                {
+                  "axisID": "Lat",
+                  "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                  "label": "Geodetic Latitude",
+                  "name": "lat",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "axisID": "Lon",
+                  "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                  "label": "Longitude",
+                  "name": "lon",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "axisID": "h",
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                  "description": "Altitude above WGS84 ellipsoid",
+                  "label": "Ellipsoidal Height",
+                  "name": "alt",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ],
+              "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+              "label": "Waypoint location",
+              "name": "position",
+              "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+              "type": "Vector"
+            },
+            {
+              "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+              "label": "Travel Velocity",
+              "name": "velocity",
+              "type": "Quantity",
+              "uom": {
+                "code": "m/s"
+              }
+            }
+          ],
+          "label": "Waypoint Task Feasibility",
+          "type": "DataRecord"
+        },
+        "resultSchema": {
+          "fields": [
+            {
+              "description": "True if the waypoint can be reached, false otherwise",
+              "label": "Reachability Flag",
+              "name": "reachable",
+              "type": "Boolean"
+            },
+            {
+              "description": "Estimated travel time to reach waypoint",
+              "label": "Time to Waypoint",
+              "name": "time_to_waypoint",
+              "type": "Quantity",
+              "uom": {
+                "code": "s"
+              }
+            },
+            {
+              "description": "Estimated battery remaining at waypoint",
+              "label": "Battery Remaining",
+              "name": "battery_remaining",
+              "type": "Quantity",
+              "uom": {
+                "code": "%"
+              }
+            }
+          ],
+          "type": "DataRecord"
+        }
+      },
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "method": "GET",
+      "path": "controlstreams/03hot35flg3g/schema?f=json",
+      "status": 200
+    },
+    {
+      "body": {
+        "commandFormat": "application/json",
+        "parametersSchema": {
+          "items": [
+            {
+              "definition": "urn:x-ogc:uxs:messages:AutoTakeOffCommand",
+              "description": "This command indicates that the operator has requested the UAV to perform auto take-off as defined by the vehicle manufacturer.",
+              "fields": [
+                {
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+                  "label": "TakeOff Height",
+                  "name": "height",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ],
+              "label": "Auto TakeOff",
+              "name": "AUTO_TAKEOFF",
+              "type": "DataRecord"
+            },
+            {
+              "definition": "urn:x-ogc:uxs:messages:WaypointCommand",
+              "description": "The waypoint command requests the vehicle to go to a specified waypoint with a desired travel velocity",
+              "fields": [
+                {
+                  "coordinates": [
+                    {
+                      "axisID": "Lat",
+                      "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                      "label": "Geodetic Latitude",
+                      "name": "lat",
+                      "type": "Quantity",
+                      "uom": {
+                        "code": "deg"
+                      }
+                    },
+                    {
+                      "axisID": "Lon",
+                      "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                      "label": "Longitude",
+                      "name": "lon",
+                      "type": "Quantity",
+                      "uom": {
+                        "code": "deg"
+                      }
+                    },
+                    {
+                      "axisID": "h",
+                      "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                      "description": "Altitude above WGS84 ellipsoid",
+                      "label": "Ellipsoidal Height",
+                      "name": "alt",
+                      "type": "Quantity",
+                      "uom": {
+                        "code": "m"
+                      }
+                    }
+                  ],
+                  "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+                  "label": "Waypoint location",
+                  "name": "position",
+                  "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+                  "type": "Vector"
+                },
+                {
+                  "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+                  "label": "Travel Velocity",
+                  "name": "velocity",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                }
+              ],
+              "label": "Go To Waypoint",
+              "name": "WAYPOINT",
+              "type": "DataRecord"
+            },
+            {
+              "definition": "urn:x-ogc:uxs:messages:LoiterCommand",
+              "description": "The loiter command tasks the vehicle to loiter in place for a specific time.",
+              "fields": [
+                {
+                  "definition": "http://sensorml.com/ont/swe/property/Duration",
+                  "label": "Loiter Duration",
+                  "name": "time",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "s"
+                  }
+                }
+              ],
+              "label": "Loiter",
+              "name": "LOITER",
+              "type": "DataRecord"
+            }
+          ],
+          "label": "Vehicle Commands",
+          "type": "DataChoice"
+        }
+      },
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "method": "GET",
+      "path": "controlstreams/02ubttc7gop0/schema?f=json",
+      "status": 200
+    },
+    {
+      "body": {
+        "commandFormat": "application/json",
+        "parametersSchema": {
+          "fields": [
+            {
+              "definition": "http://sensorml.com/ont/swe/property/Identifier",
+              "name": "id",
+              "type": "Text"
+            },
+            {
+              "definition": "http://sensorml.com/ont/swe/property/ArraySize",
+              "id": "NUM_ITEMS",
+              "name": "numItems",
+              "type": "Count"
+            },
+            {
+              "elementCount": {
+                "href": "#NUM_ITEMS"
+              },
+              "elementType": {
+                "items": [
+                  {
+                    "definition": "urn:x-ogc:uxs:messages:AutoTakeOffCommand",
+                    "description": "This command indicates that the operator has requested the UAV to perform auto take-off as defined by the vehicle manufacturer.",
+                    "fields": [
+                      {
+                        "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+                        "label": "TakeOff Height",
+                        "name": "height",
+                        "type": "Quantity",
+                        "uom": {
+                          "code": "m"
+                        }
+                      }
+                    ],
+                    "label": "Auto TakeOff",
+                    "name": "AUTO_TAKEOFF",
+                    "type": "DataRecord"
+                  },
+                  {
+                    "definition": "urn:x-ogc:uxs:messages:WaypointCommand",
+                    "description": "The waypoint command requests the vehicle to go to a specified waypoint with a desired travel velocity",
+                    "fields": [
+                      {
+                        "coordinates": [
+                          {
+                            "axisID": "Lat",
+                            "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                            "label": "Geodetic Latitude",
+                            "name": "lat",
+                            "type": "Quantity",
+                            "uom": {
+                              "code": "deg"
+                            }
+                          },
+                          {
+                            "axisID": "Lon",
+                            "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                            "label": "Longitude",
+                            "name": "lon",
+                            "type": "Quantity",
+                            "uom": {
+                              "code": "deg"
+                            }
+                          },
+                          {
+                            "axisID": "h",
+                            "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                            "description": "Altitude above WGS84 ellipsoid",
+                            "label": "Ellipsoidal Height",
+                            "name": "alt",
+                            "type": "Quantity",
+                            "uom": {
+                              "code": "m"
+                            }
+                          }
+                        ],
+                        "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+                        "label": "Waypoint location",
+                        "name": "position",
+                        "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+                        "type": "Vector"
+                      },
+                      {
+                        "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+                        "label": "Travel Velocity",
+                        "name": "velocity",
+                        "type": "Quantity",
+                        "uom": {
+                          "code": "m/s"
+                        }
+                      }
+                    ],
+                    "label": "Go To Waypoint",
+                    "name": "WAYPOINT",
+                    "type": "DataRecord"
+                  },
+                  {
+                    "definition": "urn:x-ogc:uxs:messages:LoiterCommand",
+                    "description": "The loiter command tasks the vehicle to loiter in place for a specific time.",
+                    "fields": [
+                      {
+                        "definition": "http://sensorml.com/ont/swe/property/Duration",
+                        "label": "Loiter Duration",
+                        "name": "time",
+                        "type": "Quantity",
+                        "uom": {
+                          "code": "s"
+                        }
+                      }
+                    ],
+                    "label": "Loiter",
+                    "name": "LOITER",
+                    "type": "DataRecord"
+                  }
+                ],
+                "label": "Vehicle Commands",
+                "name": "item",
+                "type": "DataChoice"
+              },
+              "name": "missionItems",
+              "type": "DataArray"
+            }
+          ],
+          "label": "Mission Definition",
+          "type": "DataRecord"
+        }
+      },
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "method": "GET",
+      "path": "controlstreams/039vndc1t97g/schema?f=json",
+      "status": 200
+    }
+  ],
+  "conformance": {
+    "bodyParsedAsJson": true,
+    "contentType": "auto",
+    "method": "GET",
+    "path": "conformance",
+    "status": 200
+  },
+  "controlStreamCollection": {
+    "bodyParsedAsJson": true,
+    "contentType": "application/json",
+    "method": "GET",
+    "path": "controlstreams?limit=25",
+    "status": 200
+  },
+  "controlstreams": [
+    {
+      "async": true,
+      "controlledProperties": [
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Waypoint location"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+          "label": "Travel Velocity"
+        }
+      ],
+      "description": "To check the feasibility of the WAYPOINT command",
+      "executionTime": null,
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+text",
+        "application/swe+xml",
+        "application/swe+binary"
+      ],
+      "id": "03hot35flg3g",
+      "inputName": "waypoint_feasibility",
+      "issueTime": null,
+      "live": null,
+      "name": "ETS Simulated UAV Tasking Fixture - Waypoint Task Feasibility",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "type": "application/geo+json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001"
+      },
+      "validTime": [
+        "2026-06-03T16:43:16.304Z",
+        "now"
+      ]
+    },
+    {
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Vehicle Commands"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+          "label": "TakeOff Height"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Waypoint location"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+          "label": "Travel Velocity"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Duration",
+          "label": "Loiter Duration"
+        }
+      ],
+      "executionTime": null,
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+text",
+        "application/swe+xml",
+        "application/swe+binary"
+      ],
+      "id": "02ubttc7gop0",
+      "inputName": "vehicle_control",
+      "issueTime": null,
+      "live": null,
+      "name": "ETS Simulated UAV Tasking Fixture - Vehicle Commands",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "type": "application/geo+json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001"
+      },
+      "validTime": [
+        "2026-06-03T16:43:16.304Z",
+        "now"
+      ]
+    },
+    {
+      "async": true,
+      "controlledProperties": [
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Identifier"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/ArraySize"
+        },
+        {
+          "label": "Vehicle Commands"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/HeightAboveGround",
+          "label": "TakeOff Height"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Waypoint location"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+          "label": "Travel Velocity"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/Duration",
+          "label": "Loiter Duration"
+        }
+      ],
+      "executionTime": null,
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+text",
+        "application/swe+xml",
+        "application/swe+binary"
+      ],
+      "id": "039vndc1t97g",
+      "inputName": "mission_planning",
+      "issueTime": null,
+      "live": null,
+      "name": "ETS Simulated UAV Tasking Fixture - Mission Definition",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "type": "application/geo+json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001"
+      },
+      "validTime": [
+        "2026-06-03T16:43:16.304Z",
+        "now"
+      ]
+    }
+  ],
+  "datastreamCollection": {
+    "bodyParsedAsJson": true,
+    "contentType": "application/json",
+    "method": "GET",
+    "path": "datastreams?limit=25",
+    "status": 200
+  },
+  "datastreams": [
+    {
+      "formats": [
+        "application/om+json",
+        "application/swe+json",
+        "application/swe+text",
+        "application/swe+xml",
+        "application/swe+binary"
+      ],
+      "id": "035uvnummko0",
+      "live": null,
+      "name": "ETS Simulated UAV Tasking Fixture - Platform Location",
+      "observedProperties": [
+        {
+          "definition": "http://www.opengis.net/def/property/OGC/0/PlatformLocation"
+        }
+      ],
+      "outputName": "platform_pos",
+      "phenomenonTime": [
+        "2026-06-03T16:43:45.049Z",
+        "2026-06-03T16:43:45.049Z"
+      ],
+      "resultTime": null,
+      "resultType": "vector",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "type": "application/geo+json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001"
+      },
+      "validTime": [
+        "2026-06-03T16:43:16.304Z",
+        "now"
+      ]
+    },
+    {
+      "formats": [
+        "application/om+json",
+        "application/swe+json",
+        "application/swe+text",
+        "application/swe+xml",
+        "application/swe+binary"
+      ],
+      "id": "02t9tgteqovg",
+      "live": null,
+      "name": "ETS Simulated UAV Tasking Fixture - Platform State",
+      "observedProperties": [
+        {
+          "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+          "label": "Platform Position"
+        },
+        {
+          "definition": "http://sensorml.com/ont/swe/property/EulerAngles",
+          "description": "Euler angles with order of rotation heading/pitch/roll in rotating frame",
+          "label": "Platform Orientation"
+        },
+        {
+          "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+          "label": "Ground Velocity"
+        }
+      ],
+      "outputName": "platform_state",
+      "phenomenonTime": [
+        "2026-06-03T16:43:45.049Z",
+        "2026-06-03T16:43:45.049Z"
+      ],
+      "resultTime": null,
+      "resultType": "record",
+      "system@id": "02kargmsuc2g",
+      "system@link": {
+        "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+        "type": "application/geo+json",
+        "uid": "urn:osh:system:simuav:ETS-SIMUAV-001"
+      },
+      "validTime": [
+        "2026-06-03T16:43:16.304Z",
+        "now"
+      ]
+    }
+  ],
+  "finishedAt": "2026-06-03T16:46:47.832942Z",
+  "iutUrl": "http://localhost:8081/sensorhub/api",
+  "mutationGate": {
+    "SIMUAV_PRESEED_ENABLED": "true",
+    "SMOKE_MUTATION_IUT_POLICY": "dedicated-mutable-iut",
+    "SMOKE_MUTATION_TESTS_ENABLED": "true"
+  },
+  "nestedCommands": {
+    "body": {
+      "items": []
+    },
+    "bodyParsedAsJson": true,
+    "contentType": "application/json",
+    "method": "GET",
+    "path": "controlstreams/03hot35flg3g/commands?limit=1",
+    "status": 200
+  },
+  "observationProbesWithoutItems": [
+    {
+      "datastreamId": "035uvnummko0",
+      "itemCount": 0,
+      "response": {
+        "body": {
+          "items": []
+        },
+        "bodyParsedAsJson": true,
+        "contentType": "application/json",
+        "method": "GET",
+        "path": "datastreams/035uvnummko0/observations?limit=1",
+        "status": 200
+      }
+    },
+    {
+      "datastreamId": "02t9tgteqovg",
+      "itemCount": 0,
+      "response": {
+        "body": {
+          "items": []
+        },
+        "bodyParsedAsJson": true,
+        "contentType": "application/json",
+        "method": "GET",
+        "path": "datastreams/02t9tgteqovg/observations?limit=1",
+        "status": 200
+      }
+    }
+  ],
+  "observations": [],
+  "requestMethodCounts": {
+    "GET": 104,
+    "POST": 1
+  },
+  "result": "PARTIAL_MISSING_OBSERVATION_OR_COMMAND_CHILD_EVIDENCE",
+  "scenario": "SCENARIO-ETS-PART2-013-SIMUAV-PRESEEDED-POPULATED-IUT-001",
+  "schemaEndpoints": [
+    {
+      "body": {
+        "obsFormat": "application/om+json",
+        "resultSchema": {
+          "fields": [
+            {
+              "coordinates": [
+                {
+                  "axisID": "Lat",
+                  "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                  "label": "Geodetic Latitude",
+                  "name": "lat",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "axisID": "Lon",
+                  "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                  "label": "Longitude",
+                  "name": "lon",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "axisID": "h",
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                  "description": "Altitude above WGS84 ellipsoid",
+                  "label": "Ellipsoidal Height",
+                  "name": "alt",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ],
+              "definition": "http://www.opengis.net/def/property/OGC/0/PlatformLocation",
+              "name": "pos",
+              "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+              "type": "Vector"
+            }
+          ],
+          "label": "Platform Location",
+          "type": "DataRecord"
+        }
+      },
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "method": "GET",
+      "path": "datastreams/035uvnummko0/schema?f=json",
+      "status": 200
+    },
+    {
+      "body": {
+        "obsFormat": "application/om+json",
+        "resultSchema": {
+          "fields": [
+            {
+              "coordinates": [
+                {
+                  "axisID": "Lat",
+                  "definition": "http://sensorml.com/ont/swe/property/GeodeticLatitude",
+                  "label": "Geodetic Latitude",
+                  "name": "lat",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "axisID": "Lon",
+                  "definition": "http://sensorml.com/ont/swe/property/Longitude",
+                  "label": "Longitude",
+                  "name": "lon",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "axisID": "h",
+                  "definition": "http://sensorml.com/ont/swe/property/HeightAboveEllipsoid",
+                  "description": "Altitude above WGS84 ellipsoid",
+                  "label": "Ellipsoidal Height",
+                  "name": "alt",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "m"
+                  }
+                }
+              ],
+              "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+              "label": "Platform Position",
+              "name": "position",
+              "referenceFrame": "http://www.opengis.net/def/crs/EPSG/0/4979",
+              "type": "Vector"
+            },
+            {
+              "coordinates": [
+                {
+                  "axisID": "Z",
+                  "definition": "http://sensorml.com/ont/swe/property/TrueHeading",
+                  "description": "Heading angle from true north, measured clockwise",
+                  "label": "Heading Angle",
+                  "name": "heading",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "axisID": "Y",
+                  "definition": "http://sensorml.com/ont/swe/property/PitchAngle",
+                  "description": "Rotation around the lateral axis, up/down from the local horizontal plane (positive when pointing up)",
+                  "label": "Pitch Angle",
+                  "name": "pitch",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                },
+                {
+                  "axisID": "X",
+                  "definition": "http://sensorml.com/ont/swe/property/RollAngle",
+                  "description": "Rotation around the longitudinal axis",
+                  "label": "Roll Angle",
+                  "name": "roll",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "deg"
+                  }
+                }
+              ],
+              "definition": "http://sensorml.com/ont/swe/property/EulerAngles",
+              "description": "Euler angles with order of rotation heading/pitch/roll in rotating frame",
+              "label": "Platform Orientation",
+              "name": "orientation",
+              "referenceFrame": "http://www.opengis.net/def/cs/OGC/0/NED",
+              "type": "Vector"
+            },
+            {
+              "coordinates": [
+                {
+                  "axisID": "X",
+                  "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+                  "label": "X Velocity",
+                  "name": "vx",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                },
+                {
+                  "axisID": "Y",
+                  "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+                  "label": "Y Velocity",
+                  "name": "vy",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                },
+                {
+                  "axisID": "Z",
+                  "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+                  "label": "Z Velocity",
+                  "name": "vz",
+                  "type": "Quantity",
+                  "uom": {
+                    "code": "m/s"
+                  }
+                }
+              ],
+              "definition": "http://qudt.org/vocab/quantitykind/LinearVelocity",
+              "label": "Ground Velocity",
+              "name": "velocity",
+              "referenceFrame": "http://www.opengis.net/def/cs/OGC/0/NED",
+              "type": "Vector"
+            }
+          ],
+          "label": "Platform State",
+          "type": "DataRecord"
+        }
+      },
+      "bodyParsedAsJson": true,
+      "contentType": "application/json",
+      "method": "GET",
+      "path": "datastreams/02t9tgteqovg/schema?f=json",
+      "status": 200
+    }
+  ],
+  "selectedCommandControlStream": {
+    "async": true,
+    "controlledProperties": [
+      {
+        "definition": "http://sensorml.com/ont/swe/property/LocationVector",
+        "label": "Waypoint location"
+      },
+      {
+        "definition": "http://sensorml.com/ont/swe/property/GroundSpeed",
+        "label": "Travel Velocity"
+      }
+    ],
+    "description": "To check the feasibility of the WAYPOINT command",
+    "executionTime": null,
+    "formats": [
+      "application/json",
+      "application/swe+json",
+      "application/swe+text",
+      "application/swe+xml",
+      "application/swe+binary"
+    ],
+    "id": "03hot35flg3g",
+    "inputName": "waypoint_feasibility",
+    "issueTime": null,
+    "live": null,
+    "name": "ETS Simulated UAV Tasking Fixture - Waypoint Task Feasibility",
+    "system@id": "02kargmsuc2g",
+    "system@link": {
+      "href": "http://field-hub-osh-1:8081/sensorhub/api/systems/02kargmsuc2g?f=json",
+      "type": "application/geo+json",
+      "uid": "urn:osh:system:simuav:ETS-SIMUAV-001"
+    },
+    "validTime": [
+      "2026-06-03T16:43:16.304Z",
+      "now"
+    ]
+  },
+  "startedAt": "2026-06-03T16:43:45.177447Z"
+}

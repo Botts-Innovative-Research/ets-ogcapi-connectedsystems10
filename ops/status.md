@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-06-03T15:25Z
+Last updated: 2026-06-03T18:02Z
 
 ## Fresh-Session Entry Point
 
@@ -17,7 +17,7 @@ Read these first:
 - `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
-- `.harness/contracts/sprint-ets-39.yaml`
+- `.harness/contracts/sprint-ets-40.yaml`
 
 ## Current State
 
@@ -45,8 +45,21 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - Current handoff story: `S-ETS-39-01` is implemented, Raze-approved, committed, and pushed as `192d3ae Implement Sprint 39 artifact hygiene drift harness`. Self-tests and Python compile passed; Docker Maven wrapper passed `294/0/0/3`; clean local OSH TeamEngine smoke passed `211/68/0/143` with hygiene-confirmed `GET=133`, `OPTIONS=2`, writes `0`, credential leaks `0`, and one explicit local OSH secret input scanned without value disclosure. Drift audit is report-only: Java URI count `98`, web-app URI count `215`, missing-in-Java `162`, missing-in-webapp `45`; schema bundle parity is clean at `126/126`; provenance records web-app HEAD `1568f364bef075fcf8419be966e9b08de677b23c`.
 - Latest pushed tasking-fixture/evidence commit: `9f8a82f Record local OSH Sprint 37 and 38 evidence`.
 - Latest pushed Java implementation/evidence commit: `192d3ae Implement Sprint 39 artifact hygiene drift harness`.
-- Current sprint status: Sprint ets-39 tooling is implemented with focused Raze recheck `APPROVE` and no required fixes. Sprint ets-38 clean primary local OSH smoke remains restored, but full populated-IUT `part2binding` PASS is still not claimed because SimUAV/OSH does not expose parseable Observation child bodies, nested Command collection bodies, dereferenceable CommandStatus/CommandResult resources, strict schema media types, or exact SWE text schema responses needed by the ETS.
+- Current uncommitted sprint status: Sprint ets-40 patches the sibling OSH ConSys implementation for populated-IUT blocker closure. Focused OSH ConSys regressions after gapfixes passed `TestDataStreams 10/0/0/0`, `TestControlStreams 5/0/0/0`, and `TestObservations 8/0/0/0`; ETS Docker Maven wrapper passed `294/0/0/3`; final direct SimUAV format/body probes confirm schema `Content-Type` is JSON-compatible, exact `application/swe+text` requests return `TextEncoding`, `cmdFormat` aliases are accepted, nested Observation JSON reads expose `items=1`, and nested Command reads return parseable empty collections/counts. Raze focused recheck returned `APPROVE_WITH_CONCERNS`, confidence `0.91`, with no required fixes. Full populated-IUT closure is still not claimed: the final SimUAV-populated TeamEngine smoke failed `211/86/17/108` on schema shape/mapping issues and absent positive Command child item evidence, not on the prior media-type/body blockers.
 - Push status: remote uses SSH; Sprint 25 planning pushed successfully on 2026-05-09 (`5dccb36..2f4a6de main -> main`), followed by reconciliation pushes through `f251241`. Sprint 25 Generator pushed on 2026-05-13 (`f251241..d9df3ad main -> main`) and reconciled through `7d57d9f`. Sprint 26 planning pushed on 2026-05-13 (`7d57d9f..146c4c6 main -> main`) and reconciled through `d9caf33`. Sprint 26 Generator pushed on 2026-05-22 (`d9caf33..c2d9d1e main -> main`) and reconciled through `bf10caa`. Sprint 27 planning pushed on 2026-05-22 (`bf10caa..eab12a8 main -> main`), reconciled through `2be355a`, and Sprint 27 Generator pushed as `6ae8f1c` (`2be355a..6ae8f1c main -> main`). Sprint 28 planning pushed on 2026-05-26 (`13b34f7..5d95d55 main -> main`), Sprint 28 Generator pushed as `5850210` (`ce66139..5850210 main -> main`), Sprint 29 planning pushed as `690dbd3` (`be7f1a6..690dbd3 main -> main`), Sprint 29 planning reconciliation pushed as `e397ef7` (`690dbd3..e397ef7 main -> main`), Sprint 29 Generator pushed as `062d4b7` (`05c0ee4..062d4b7 main -> main`), Sprint 29 reconciliation pushed as `6ba24db`, Sprint 30 planning pushed as `3c68858` (`6ba24db..3c68858 main -> main`), Sprint 30 Generator pushed as `b2aad06` (`560945c..b2aad06 main -> main`), Sprint 31 planning pushed as `20a8e18` (`45717a3..20a8e18 main -> main`), Sprint 31 Generator pushed as `b520b65` (`75eac75..b520b65 main -> main`), Sprint 31 push reconciliation pushed as `6d9f671` (`b520b65..6d9f671 main -> main`), final metrics pushed as `7bbbc51` (`6d9f671..7bbbc51 main -> main`), Sprint 31 triage pushed as `eb9fb3a`, Sprint 32 planning pushed as `f2d2ab8` (`eb9fb3a..f2d2ab8 main -> main`), Sprint 32 planning reconciliation pushed as `1d84ab0` (`f2d2ab8..1d84ab0 main -> main`), Sprint 32 Generator pushed as `37a2a43` (`1d84ab0..37a2a43 main -> main`), Sprint 32 final metrics pushed as `1cd6884`, Sprint 33 planning pushed as `efb59e6` (`1cd6884..efb59e6 main -> main`), Sprint 33 Generator pushed as `107c2a7` (`7aa4a9a..107c2a7 main -> main`), Sprint 34/35 tasking fixture evidence pushed as `493bf1b` (`c02a7bd..493bf1b main -> main`), Sprint 36 request shaping pushed as `50024c4` (`21e76de..50024c4 main -> main`), Sprint 37/38 local OSH evidence pushed as `9f8a82f` (`c8a15e8..9f8a82f main -> main`), and Sprint 39 artifact hygiene/drift harness pushed as `192d3ae` (`9f8a82f..192d3ae main -> main`).
+
+## Session Handoff — Sprint ets-40 OSH ConSys Blocker Closure
+
+Sprint 40 is verified as a partial closure. Do not restart from Sprint 39.
+
+- Story: `epics/stories/s-ets-40-01-osh-consys-populated-binding-blockers.md`.
+- Contract: `.harness/contracts/sprint-ets-40.yaml`.
+- OSH code changed in sibling repo `/home/nh/docker/gir/osh-core` and committed locally as `79f89fb Patch ConSys populated binding blockers`: ConSys schema format negotiation, exact SWE Text media type handling, `cmdFormat` aliasing, JSON child collection/count bodies, and focused regressions.
+- Runtime state: field-hub OSH is restored to the clean primary state with Sapient and SimUAV `autoStart=false`; `field-hub_osh-data` was reset and static `040g` fixtures were reseeded.
+- Verification: OSH focused Gradle regressions PASS `23/0/0/0`; ETS Docker Maven wrapper PASS `294/0/0/3`; direct SimUAV format/body probes PASS for the Sprint 40 blocker checks; clean local OSH TeamEngine smoke PASS `211/61/0/150` with zero IUT-bound writes after restoring the tracked field-hub config and reseeding static fixtures.
+- Raze review: initial Sprint 40 review returned `GAPS_FOUND`; focused recheck `.harness/evaluations/sprint-ets-40-adversarial-recheck.yaml` returned `APPROVE_WITH_CONCERNS`, confidence `0.91`, with no required fixes.
+- Populated E2E status: final SimUAV-populated TeamEngine smoke FAIL `211/86/17/108`. Prior blockers are cleared, but remaining failures are schema shape/mapping issues in Observation/Command schema documents (`commandFormat`, SWE `recordSchema`, `encoding.type`, and `obsFormat`/schema consistency) plus missing positive Command child item evidence.
+- Current required action: either patch OSH ConSys schema serialization to emit Annex A.9-compatible Observation/Command schema documents for JSON/SWE formats, or keep populated binding closure open and move to the next partial Part 2 class.
 
 ## Session Handoff — Sprint ets-39 Artifact Hygiene / Drift Harness
 
@@ -68,7 +81,7 @@ Resume from the current uncommitted worktree. Do not restart from Sprint 37.
 - ETS code changed: new `Part2CandidateSelection`, Part 2 JSON/SWE/binding/datastream/controlstream/CRD candidate selection updates, `VerifyPart2CandidateSelection`, and `scripts/local-osh-simuav-preseed.py`.
 - Fixture evidence: `ops/test-results/sprint-ets-38-local-osh-simuav-preseed-r3-2026-06-03.json` recorded two SimUAV DataStreams, three ControlStreams, schema endpoints, `GET=102`, `POST=1`, and waypoint feasibility Command POST HTTP 200 `COMPLETED`, without recording credential values. It still reported `PARTIAL_MISSING_OBSERVATION_OR_COMMAND_CHILD_EVIDENCE`.
 - Verification archived: Python preseed compile PASS; Docker formatter PASS; cached Docker Maven equivalent `294/0/0/3`; final populated SimUAV TeamEngine smoke failure `211/83/29/99`; post-Raze clean local OSH reset/reseed smoke PASS `211/68/0/143`.
-- E2E status: clean primary local OSH is restored and passing. Full populated-IUT closure is still blocked by OSH behavior: schema `Content-Type: auto`, SWE text schema HTTP 400, empty `/observations` and nested Observation/Command collection bodies, and POST-returned command ids that do not dereference through `/commands/{id}`.
+- E2E status at Sprint 38 close: clean primary local OSH was restored and passing, while populated closure was blocked by schema media-type, SWE text, child-body, and command dereference behavior. Superseding Sprint 40 evidence above clears the media-type/SWE text/child-body blockers and leaves schema shape/mapping plus missing positive Command child item evidence.
 - Local OSH fixture state: Sapient and SimUAV `autoStart=false`; `field-hub_osh-data` was reset and static `040g` fixtures were reseeded. Local OSH BasicRealm credentials were rotated earlier in the session after session-output exposure; credential values are not recorded.
 - Raze review: initial Sprint 38 review found `RAZE-ETS38-GAP-001` and `RAZE-ETS38-GAP-002`; focused recheck `.harness/evaluations/sprint-ets-38-adversarial-recheck.yaml` returned `APPROVE_WITH_CONCERNS` confidence `0.92` with no required fixes.
 - Next required action: decide whether to address OSH ConSys child collection/body behavior or defer full populated binding closure as an upstream/local OSH limitation.

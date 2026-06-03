@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-06-02
+> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-06-03
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -1126,8 +1126,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-SYNC-001: TS↔Java URI Diff
 - **Priority**: SHOULD
-- **Status**: SPECIFIED
-- **Description**: A diff script (`scripts/sync-uri-coverage.sh`) SHALL extract every canonical OGC requirement URI from `csapi_compliance/src/engine/registry/*.ts` and from Java `@Test` `description` attributes in the new ETS, and SHALL fail if any URI exists in TS but not in Java (or vice versa) without an explicit allowlist entry in `ops/uri-coverage-allowlist.txt`. CI SHALL run this script on every commit affecting either the TS registry or the Java ETS.
+- **Status**: PARTIAL_IMPLEMENTED_REPORT_ONLY (Sprint 39 S-ETS-39-01, 2026-06-03). `scripts/uri-drift-audit.py` self-test passed and current audit is archived at `ops/test-results/sprint-ets-39-uri-schema-drift-audit-2026-06-03.json`: Java URI count `98`, web-app URI count `215`, unallowlisted URI drift detected (`missingInJava=162`, `missingInWebapp=45`), schema bundle parity verified (`126` vs `126`, no missing/extra/hash mismatch), and Java ETS/web-app repository commit plus dirty-count metadata recorded. CI-failing enforcement remains deferred until `ops/uri-coverage-allowlist.txt` is stabilized.
+- **Description**: A diff script (`scripts/sync-uri-coverage.sh` or `scripts/uri-drift-audit.py`) SHALL extract every canonical OGC requirement URI from `csapi_compliance/src/engine/registry/*.ts` and from Java ETS source, and SHALL identify URI entries that exist on one side but not the other without an explicit allowlist entry in `ops/uri-coverage-allowlist.txt`. The same harness SHOULD compare the frozen v1.0 schema bundle against the ETS schema resources by relative path and hash. CI SHALL run this script on every commit affecting either the TS registry, Java ETS, or schema bundle once the allowlist is stabilized.
 - **Rationale**: Prevents silent drift between the v1.0 web app and the ETS as OGC errata land. Both consume the same JSON Schemas; both should cover the same URI set.
 - **Maps to**: PRD FR-ETS-90, R-PIVOT-11.
 
@@ -1267,6 +1267,15 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - **Description**: For `/conf/subdeployment`, the ETS SHALL provide at least one TestNG `@Test` method whose `description` attribute starts with the OGC canonical `.adoc` requirement URI form `/req/subdeployment/<assertion>`. Generator MUST verify canonical URI form via OGC `.adoc` source HTTP-200 fetch before writing assertions. Generator verified the OGC source directory at `raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/subdeployment/`; it contains `requirements_class_subdeployments.adoc`, `req_subcollection.adoc`, `req_recursive_param.adoc`, `req_recursive_search_deployments.adoc`, and `req_recursive_search_subdeployments.adoc`, with Subdeployments inheriting Deployment canonical endpoint and canonical URL discipline from `/req/deployment`. The class lives at `org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests`. Subdeployments DEPENDS ON Deployments via `<group name="subdeployments" depends-on="deployments"/>` — this creates the 3-deep cascade chain Subdeployments→Deployments→SystemFeatures→Core. Coverage scope Sprint 8: Sprint-1-style minimal (4 @Tests per pattern): (a) GET /deployments/{id}/subdeployments HTTP 200 + non-empty items; (b) inherited Deployment canonical endpoint exposure at `/deployments/{id}` plus ETS structural sanity checks on the returned resource; (c) inherited Deployment canonical URL at `/deployments/{id}`; (d) 3-deep cascade runtime tracer. If GeoRobotix does not declare `/conf/subdeployment` in conformance OR returns 404 for `/deployments/{id}/subdeployments`, all @Tests SKIP-with-reason (IUT-state-honest per sprint policy).
 - **Rationale**: Subdeployments completes the deepest dependency chain in Part 1. Deployments (S-ETS-05-06, Sprint 5 IMPLEMENTED) is the parent. Subdeployments→Deployments→SystemFeatures→Core is the same structural depth as the Subsystems→SystemFeatures→Core chain proven at Sprint 4, extended one level. Completing this chain proves the n-level cascade pattern scales to 3 levels.
 - **Maps to**: PRD FR-ETS-15.
+
+> Sprint 39 adds cleanup/sync tooling that can continue while the remaining populated local OSH blockers are outside the ETS safety envelope.
+
+#### REQ-ETS-CLEANUP-020: Artifact Hygiene and Drift Harness (Sprint 39)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_RAZE_APPROVED (Sprint 39 S-ETS-39-01, 2026-06-03). `scripts/artifact-hygiene.py --self-test` and `scripts/uri-drift-audit.py --self-test` passed; Python compile passed; Docker Maven wrapper passed `294/0/0/3`; clean local OSH TeamEngine E2E passed `211/68/0/143` with zero IUT-bound writes. Archived hygiene reports cover Sprint 38 clean smoke, Sprint 38 populated mutable smoke, and Sprint 39 clean smoke. The Sprint 38 populated read-only gate intentionally fails because the mutable lifecycle artifact contains `POST=3`, `PUT=1`, `DELETE=3`; the report-only mutable summary passes and records zero credential leaks. Raze initially returned `APPROVE_WITH_CONCERNS` with no required fixes; a focused recheck returned `APPROVE` after post-review metadata fixes added explicit secret-input counts, archived clean paths, and Java/web-app repository provenance.
+- **Description**: The ETS repository SHALL provide executable report tooling that summarizes TeamEngine TestNG artifacts, request-method counts, IUT-bound write evidence, and credential-scan evidence without weakening conformance assertions. The tooling SHALL also provide a report-first URI/schema drift audit for the frozen v1.0 web app and Java ETS. The artifact-hygiene tool SHALL parse TestNG XML totals, parse smoke container request logs, count IUT-bound HTTP methods by configured IUT prefix, detect IUT-bound POST/PUT/PATCH/DELETE when a read-only smoke is expected, and scan selected artifacts for unmasked Authorization headers or explicitly supplied secret values. The drift tool SHALL extract OGC Connected Systems requirement/conformance URIs from Java ETS source and the v1.0 TypeScript registry, apply an optional allowlist, and compare schema bundle relative paths plus hashes while ignoring non-schema ADS artifacts such as `:Zone.Identifier`.
+- **Rationale**: Sprint 37/38 produced large and useful evidence sets while the remaining blockers are OSH behavior limitations. A small durable harness lets future work classify evidence, credential safety, request-method safety, and URI/schema drift quickly without spending a sprint on new conformance assertions.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-26, FR-ETS-90; REQ-ETS-SYNC-001.
 
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
@@ -2606,6 +2615,27 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** the script exits 0 if every URI is mirrored on both sides OR has an entry in `ops/uri-coverage-allowlist.txt`
 **AND** the script exits non-zero if any URI is unmirrored without an allowlist entry.
 *Maps to*: REQ-ETS-SYNC-001.
+
+#### SCENARIO-ETS-SYNC-URI-SCHEMA-DRIFT-AUDIT-001 (NORMAL -- Sprint 39)
+**GIVEN** the frozen v1.0 web-app registry/schema bundle and the Java ETS source/schema bundle are both available
+**WHEN** the Sprint 39 drift audit runs
+**THEN** it emits machine-readable counts for Java-only, web-app-only, allowlisted, missing-schema, extra-schema, and hash-mismatched schema entries
+**AND** it can be switched from report-only mode to failing mode after the allowlist is stabilized.
+*Maps to*: REQ-ETS-SYNC-001, REQ-ETS-CLEANUP-020.
+
+#### SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001 (NORMAL -- Sprint 39)
+**GIVEN** one or more archived TeamEngine TestNG XML reports and smoke container logs
+**WHEN** the Sprint 39 artifact hygiene report runs
+**THEN** it reports TestNG totals, request-log counts, IUT-bound method counts, write-method counts, and credential-scan counts in JSON
+**AND** it exits non-zero when configured read-only IUT-bound writes or credential leaks are found.
+*Maps to*: REQ-ETS-CLEANUP-020, REQ-ETS-TEAMENGINE-006.
+
+#### SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001 (CRITICAL -- Sprint 39)
+**GIVEN** smoke artifacts include masked Authorization headers and may include configured local OSH credential values
+**WHEN** the Sprint 39 artifact hygiene report scans those files
+**THEN** masked Authorization headers are accepted
+**AND** unmasked Authorization headers or explicitly supplied secret values are counted as leaks without printing the secret value.
+*Maps to*: REQ-ETS-CLEANUP-020, PRD FR-ETS-25.
 
 ## Implementation Status (2026-04-28)
 

@@ -1,0 +1,72 @@
+sprint: ets-39
+story: S-ETS-39-01
+title: Artifact hygiene and URI/schema drift harness
+status: IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS
+triggered_by: 'User instruction: "Do them"'
+requirements:
+  - REQ-ETS-CLEANUP-020
+  - REQ-ETS-SYNC-001
+scenarios:
+  - SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001
+  - SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001
+  - SCENARIO-ETS-SYNC-URI-SCHEMA-DRIFT-AUDIT-001
+scope:
+  include:
+    - Add self-tested report tooling for TeamEngine artifact hygiene.
+    - Add self-tested report tooling for URI and schema bundle drift.
+    - Archive Sprint 38 evidence summaries and current drift audit outputs.
+    - Preserve strict ETS assertions and read-only smoke safety.
+  exclude:
+    - Weakening schema media-type, SWE Common Text, Annex A.9, or populated binding assertions.
+    - Enabling CI-failing URI drift enforcement before the allowlist is stabilized.
+    - Recording current local OSH credential values in artifacts.
+success_criteria:
+  - OpenSpec/story/contract/traceability/epic artifacts define Sprint 39 before code changes.
+  - Artifact hygiene self-test passes and references the Sprint 39 requirement/scenarios.
+  - URI/schema drift self-test passes and references the Sprint 39 requirement/scenarios.
+  - Sprint 38 clean and populated TeamEngine artifact hygiene reports are archived.
+  - Current URI/schema drift audit output is archived without treating report-only drift as a conformance failure.
+  - Docker Maven and mandatory clean local OSH TeamEngine E2E are run, or blockers are documented with exact evidence.
+  - Raze review returns no required fixes or all required fixes are closed.
+guardrails:
+  - Do not print supplied secret values in JSON or text reports.
+  - Treat IUT-bound POST/PUT/PATCH/DELETE as a hygiene failure for read-only smoke summaries.
+  - Keep report-first URI drift behavior separate from future CI-failing enforcement.
+evidence:
+  artifact_hygiene_self_test:
+    result: PASS
+    command: "python3 scripts/artifact-hygiene.py --self-test"
+  drift_audit_self_test:
+    result: PASS
+    command: "python3 scripts/uri-drift-audit.py --self-test"
+  sprint38_artifact_reports:
+    result: PASS_WITH_MUTABLE_WRITE_POLICY_NOTE
+    clean_artifact: ops/test-results/sprint-ets-39-artifact-hygiene-s38-clean-2026-06-03.json
+    populated_readonly_gate_artifact: ops/test-results/sprint-ets-39-artifact-hygiene-s38-populated-2026-06-03.json
+    populated_mutable_report_artifact: ops/test-results/sprint-ets-39-artifact-hygiene-s38-populated-mutable-2026-06-03.json
+    note: "The populated read-only gate intentionally fails because the Sprint 38 mutable lifecycle artifact contains POST/PUT/DELETE; the report-only mutable summary passes and records zero credential leaks."
+  current_drift_audit:
+    result: REPORT_ONLY_DRIFT_DETECTED_SCHEMA_PARITY
+    artifact: ops/test-results/sprint-ets-39-uri-schema-drift-audit-2026-06-03.json
+    uri_counts: "Java=98, webapp=215, missingInJava=162, missingInWebapp=45"
+    schema_counts: "Java=126, webapp=126, missing/extra/mismatch=0"
+  maven:
+    result: PASS
+    artifact: ops/test-results/sprint-ets-39-maven-test-via-docker-2026-06-03.txt
+    totals: "294 tests / 0 failures / 0 errors / 3 skipped"
+  clean_local_osh_e2e:
+    result: PASS
+    report: ops/test-results/sprint-ets-39-clean-local-osh-smoke-2026-06-03.xml
+    log: ops/test-results/sprint-ets-39-clean-local-osh-container-2026-06-03.log
+    hygiene_artifact: ops/test-results/sprint-ets-39-artifact-hygiene-clean-local-osh-2026-06-03.json
+    totals: "211 total / 68 passed / 0 failed / 143 skipped"
+    iut_methods: "GET=133, OPTIONS=2, writes=0"
+  raze_review:
+    result: APPROVE_AFTER_FOCUSED_RECHECK
+    artifact: .harness/evaluations/sprint-ets-39-adversarial-implementation.yaml
+    confidence: "0.90"
+    required_fixes: []
+    post_review_concern_handling: "Regenerated clean hygiene JSON against archived paths; added non-sensitive explicit secret input counts; added Java ETS and web-app repository commit/dirty-count metadata to the drift JSON."
+    focused_recheck_artifact: .harness/evaluations/sprint-ets-39-adversarial-recheck.yaml
+    focused_recheck_result: APPROVE
+    focused_recheck_confidence: "0.94"

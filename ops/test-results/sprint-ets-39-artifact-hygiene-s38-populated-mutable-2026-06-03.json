@@ -1,0 +1,97 @@
+{
+  "containerLogs": [
+    {
+      "iutMethodCounts": {
+        "DELETE": 3,
+        "GET": 248,
+        "OPTIONS": 12,
+        "POST": 3,
+        "PUT": 1
+      },
+      "iutWriteCount": 7,
+      "iutWrites": [
+        {
+          "method": "POST",
+          "url": "http://field-hub-osh-1:8081/sensorhub/api/systems"
+        },
+        {
+          "method": "DELETE",
+          "url": "http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+        },
+        {
+          "method": "POST",
+          "url": "http://field-hub-osh-1:8081/sensorhub/api/systems"
+        },
+        {
+          "method": "DELETE",
+          "url": "http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+        },
+        {
+          "method": "POST",
+          "url": "http://field-hub-osh-1:8081/sensorhub/api/systems"
+        },
+        {
+          "method": "PUT",
+          "url": "http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+        },
+        {
+          "method": "DELETE",
+          "url": "http://field-hub-osh-1:8081/sensorhub/api/systems/0410"
+        }
+      ],
+      "methodCounts": {
+        "DELETE": 3,
+        "GET": 253,
+        "OPTIONS": 12,
+        "POST": 3,
+        "PUT": 1
+      },
+      "path": "ops/test-results/sprint-ets-38-simuav-preseed-teamengine-container-r3-2026-06-03.log",
+      "recognizedIutRequestLogs": 267,
+      "recognizedRequestLogs": 272
+    }
+  ],
+  "credentialScan": {
+    "explicitSecretInputsProvided": 1,
+    "explicitSecretInputsScanned": 1,
+    "explicitSecretValueHits": 0,
+    "filesScanned": 2,
+    "filesWithHits": [],
+    "genericBasicCredentialPatternHits": 0,
+    "shortSecretInputsIgnored": 0,
+    "unmaskedAuthorizationHeaderHits": 0
+  },
+  "failures": [],
+  "generatedAt": "2026-06-03T15:15:37Z",
+  "policy": {
+    "failOnCredentialLeak": true,
+    "iutPrefixes": [
+      "http://field-hub-osh-1:8081/sensorhub/api"
+    ],
+    "requireZeroIutWrites": false
+  },
+  "requirements": [
+    "REQ-ETS-CLEANUP-020"
+  ],
+  "scenarios": [
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001",
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001"
+  ],
+  "testngReports": [
+    {
+      "methodStatusCounts": {
+        "FAIL": 29,
+        "PASS": 109,
+        "SKIP": 103
+      },
+      "path": "ops/test-results/sprint-ets-38-simuav-preseed-teamengine-smoke-r3-2026-06-03.xml",
+      "totals": {
+        "failed": 29,
+        "passed": 83,
+        "skipped": 99,
+        "total": 211
+      }
+    }
+  ],
+  "verdict": "PASS"
+}

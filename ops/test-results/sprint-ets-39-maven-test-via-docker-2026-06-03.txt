@@ -1,0 +1,7 @@
+Command: bash scripts/mvn-test-via-docker.sh
+Started: 2026-06-03T14:59Z
+Finished: 2026-06-03T15:00:09Z
+Result: PASS
+Summary: Maven Docker wrapper completed with BUILD SUCCESS.
+Totals: Tests run: 294, Failures: 0, Errors: 0, Skipped: 3.
+Notes: Wrapper used maven:3.9-eclipse-temurin-17. Cold container cache caused dependency download noise; no test failures were reported.

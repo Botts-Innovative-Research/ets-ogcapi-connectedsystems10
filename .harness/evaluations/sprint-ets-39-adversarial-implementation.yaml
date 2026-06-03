@@ -1,0 +1,106 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.90
+reviewed_scope:
+  sprint: ets-39
+  story: S-ETS-39-01
+  title: Artifact hygiene and URI/schema drift harness
+  files_reviewed:
+    - scripts/artifact-hygiene.py
+    - scripts/uri-drift-audit.py
+    - .harness/contracts/sprint-ets-39.yaml
+    - epics/stories/s-ets-39-01-artifact-hygiene-drift-harness.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/test-results/sprint-ets-39-artifact-hygiene-clean-local-osh-2026-06-03.json
+    - ops/test-results/sprint-ets-39-artifact-hygiene-s38-clean-2026-06-03.json
+    - ops/test-results/sprint-ets-39-artifact-hygiene-s38-populated-2026-06-03.json
+    - ops/test-results/sprint-ets-39-artifact-hygiene-s38-populated-mutable-2026-06-03.json
+    - ops/test-results/sprint-ets-39-uri-schema-drift-audit-2026-06-03.json
+    - ops/test-results/sprint-ets-39-maven-test-via-docker-2026-06-03.txt
+    - ops/test-results/sprint-ets-39-clean-local-osh-smoke-2026-06-03.xml
+    - ops/test-results/sprint-ets-39-clean-local-osh-container-2026-06-03.log
+required_fixes: []
+concerns:
+  - id: RAZE-ETS39-CONCERN-001
+    severity: medium
+    summary: REQ-ETS-SYNC-001 is still only report-first and must not be promoted as CI closure.
+    details: >
+      The current `scripts/uri-drift-audit.py` scans all Java source for Connected Systems URI strings, while
+      FR-ETS-90 in `_bmad/prd.md` still requires comparison against Java `@Test` description attributes for the
+      future CI-failing closure. This is acceptable for Sprint 39 because OpenSpec, traceability, story, contract,
+      ops status, and test-results all label the drift result as report-only with unallowlisted drift still present.
+      Future closure must either narrow extraction to `@Test` descriptions or explicitly revise FR-ETS-90 with rationale.
+  - id: RAZE-ETS39-CONCERN-002
+    severity: low
+    summary: The archived clean-local-OSH hygiene JSON records `/tmp` source paths.
+    details: >
+      `ops/test-results/sprint-ets-39-artifact-hygiene-clean-local-osh-2026-06-03.json` points at the original
+      `/tmp/ets-ogcapi-connectedsystems10-s39-clean-local-osh-results/...` XML/log paths. The archived copies under
+      `ops/test-results/` exist and hash-match the `/tmp` files, so the evidence is durable enough for this review.
+      Regenerating future hygiene JSON against archived paths would make the artifact self-contained.
+  - id: RAZE-ETS39-CONCERN-003
+    severity: low
+    summary: Credential scans do not record whether explicit secret inputs were supplied.
+    details: >
+      The hygiene tool intentionally avoids printing supplied secret values, but the JSON only reports
+      `explicitSecretValueHits`; it does not record a non-sensitive `explicitSecretInputsProvided` count. That makes
+      archived zero-hit evidence less auditable. Reviewer reran a current-local-OSH-secret scan against the Sprint 39
+      clean XML/log without printing the secret and observed zero hits.
+  - id: RAZE-ETS39-CONCERN-004
+    severity: low
+    summary: The drift artifact does not record sibling web-app commit or dirty-state metadata.
+    details: >
+      The audit inputs correctly point at `/home/nh/docker/gir/csapi_compliance/src/engine/registry` and
+      `/home/nh/docker/gir/csapi_compliance/schemas`, and schema counts match `126/126`. Reviewer observed the sibling
+      repo at commit `1568f36` with unrelated dirty files outside the scanned registry/schema targets. Recording commit
+      and dirty-state metadata in the JSON would strengthen reproducibility.
+evidence_checked:
+  static_review:
+    - >
+      No Java/TestNG conformance source files are changed in the Sprint 39 worktree, so no schema/media-type assertions
+      were weakened by code edits.
+    - >
+      OpenSpec/story/contract/traceability/status/test-results keep populated OSH blockers open and do not claim full
+      Part 2 binding, SWE Text, or schema media-type closure.
+    - >
+      REQ-ETS-SYNC-001 is documented as `PARTIAL_IMPLEMENTED_REPORT_ONLY`; the archived drift JSON has
+      `driftDetected: true`, `failures: [uri_drift_detected]`, and `policy.reportOnly: true`.
+    - >
+      Read-only versus mutable-write policy is honest: the clean local OSH hygiene report has writes `0`; the Sprint 38
+      populated read-only hygiene report fails with seven IUT-bound writes; the mutable report-only summary explicitly
+      disables zero-write enforcement.
+  commands_run:
+    - command: python3 scripts/artifact-hygiene.py --self-test
+      result: PASS
+    - command: python3 scripts/uri-drift-audit.py --self-test
+      result: PASS
+    - command: python3 -m py_compile scripts/artifact-hygiene.py scripts/uri-drift-audit.py
+      result: PASS
+    - command: git diff --check
+      result: PASS
+    - command: python3 scripts/no-mutation-oracle.py ops/test-results/sprint-ets-39-clean-local-osh-container-2026-06-03.log http://field-hub-osh-1:8081/sensorhub/api
+      result: PASS
+      observed: recognized_iut_request_logs=135
+    - command: bash scripts/no-mutation-oracle-test.sh
+      result: PASS
+    - command: Python XML parse of ops/test-results/sprint-ets-39-clean-local-osh-smoke-2026-06-03.xml
+      result: PASS
+      observed: total=211 passed=68 failed=0 skipped=143
+    - command: Python JSON parse of all ops/test-results/sprint-ets-39-*.json
+      result: PASS
+    - command: Python YAML parse of .harness/contracts/sprint-ets-39.yaml
+      result: PASS
+    - command: Reviewer current-local-OSH-secret scan against Sprint 39 clean XML/log
+      result: PASS
+      observed: explicitSecretValueHits=0, unmaskedAuthorizationHeaderHits=0, genericBasicCredentialPatternHits=0
+  archived_verification:
+    - Docker Maven wrapper artifact reports BUILD SUCCESS with totals `294 tests / 0 failures / 0 errors / 3 skipped`.
+    - Clean local OSH TeamEngine E2E artifact reports `211 total / 68 passed / 0 failed / 143 skipped`.
+    - Sprint 39 clean hygiene JSON reports `GET=133`, `OPTIONS=2`, `iutWriteCount=0`, and credential leaks `0`.
+    - Sprint 39 drift JSON reports Java URI count `98`, web-app URI count `215`, missing-in-Java `162`, missing-in-webapp `45`, schema count `126/126`, and no schema hash mismatches.
+limitations:
+  - Maven and TeamEngine smoke were not rerun by the reviewer; archived artifacts were inspected instead.
+  - Ruby and `xmllint` were unavailable in this environment; Python YAML/XML parsing was used for equivalent lightweight validation.

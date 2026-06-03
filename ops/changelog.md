@@ -2,6 +2,22 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-03T15:14Z — Sprint 39 artifact hygiene and URI/schema drift harness
+
+**Triggered by user instruction**: "Do them"
+
+- Added OpenSpec/story/contract/traceability coverage for `REQ-ETS-CLEANUP-020` plus Sprint 39 drift/hygiene scenarios.
+- Added `scripts/artifact-hygiene.py` to summarize TestNG totals, smoke request-method counts, IUT-bound writes, credential-scan evidence, and non-sensitive explicit-secret input counts.
+- Added `scripts/uri-drift-audit.py` to compare Java ETS and frozen v1.0 web-app OGC Connected Systems URI sets, schema bundle hashes, and repository commit/dirty-count provenance.
+- Verified self-tests and Python compile for both tools.
+- Archived Sprint 38 hygiene reports: clean smoke passed hygiene; populated mutable smoke shows expected lifecycle writes under read-only policy but zero credential leaks.
+- Archived current drift audit: URI drift remains report-only (`Java=98`, `webapp=215`, `missingInJava=162`, `missingInWebapp=45`); schema bundle parity is clean (`126/126`, no hash mismatch).
+- Ran Docker Maven wrapper successfully: `294 tests / 0 failures / 0 errors / 3 skipped`.
+- Ran mandatory clean local OSH TeamEngine E2E successfully: `211 total / 68 passed / 0 failed / 143 skipped`, with hygiene-confirmed `GET=133`, `OPTIONS=2`, writes `0`, credential leaks `0`.
+- Ran required Sprint 39 Raze review: `.harness/evaluations/sprint-ets-39-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS`, confidence `0.90`, with no required fixes. Post-review concern handling regenerated clean hygiene JSON against archived paths, added explicit secret-input counts, and recorded web-app HEAD `1568f364bef075fcf8419be966e9b08de677b23c` in the drift artifact. Focused recheck `.harness/evaluations/sprint-ets-39-adversarial-recheck.yaml` returned `APPROVE`, confidence `0.94`, with no required fixes.
+
+---
+
 ## 2026-06-03T14:30Z — Sprint 38 SimUAV preseeded populated-IUT fixture
 
 **Triggered by user instruction**: "Proceed with the SimUAV preseeded populated-IUT fixture sprint"

@@ -1,8 +1,40 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-03T14:36Z
+Last updated: 2026-06-03T15:14Z
 
 ## Current Sprint Evidence
+
+Sprint ets-39 artifact hygiene and URI/schema drift harness:
+
+- Status:
+  - Story: `epics/stories/s-ets-39-01-artifact-hygiene-drift-harness.md`.
+  - Contract: `.harness/contracts/sprint-ets-39.yaml`.
+  - Tools implemented: `scripts/artifact-hygiene.py` and `scripts/uri-drift-audit.py`.
+  - Raze review: `.harness/evaluations/sprint-ets-39-adversarial-implementation.yaml` returned `APPROVE_WITH_CONCERNS`, confidence `0.90`, with no required fixes; focused recheck `.harness/evaluations/sprint-ets-39-adversarial-recheck.yaml` returned `APPROVE`, confidence `0.94`, with no required fixes.
+  - CI-failing URI drift enforcement is not enabled; the drift audit is report-only until the allowlist is stabilized.
+- Self-tests:
+  - `python3 scripts/artifact-hygiene.py --self-test`: PASS.
+  - `python3 scripts/uri-drift-audit.py --self-test`: PASS.
+  - `python3 -m py_compile scripts/artifact-hygiene.py scripts/uri-drift-audit.py`: PASS.
+- Sprint 38 artifact hygiene summaries:
+  - Clean report: `ops/test-results/sprint-ets-39-artifact-hygiene-s38-clean-2026-06-03.json`; PASS, TestNG `211/68/0/143`, IUT methods `GET=133`, `OPTIONS=2`, writes `0`, credential leaks `0`, explicit secret inputs scanned `1`.
+  - Populated read-only gate: `ops/test-results/sprint-ets-39-artifact-hygiene-s38-populated-2026-06-03.json`; FAIL by policy because the mutable populated artifact contains `POST=3`, `PUT=1`, `DELETE=3`.
+  - Populated mutable report-only summary: `ops/test-results/sprint-ets-39-artifact-hygiene-s38-populated-mutable-2026-06-03.json`; PASS, TestNG `211/83/29/99`, IUT methods `GET=248`, `OPTIONS=12`, `POST=3`, `PUT=1`, `DELETE=3`, credential leaks `0`, explicit secret inputs scanned `1`.
+- URI/schema drift audit:
+  - Artifact: `ops/test-results/sprint-ets-39-uri-schema-drift-audit-2026-06-03.json`.
+  - Result: PASS in report-only mode with URI drift detected.
+  - URI counts: Java `98`, web app `215`, missing-in-Java `162`, missing-in-webapp `45`.
+  - Schema bundle parity: Java `126`, web app `126`, missing/extra/hash mismatch `0`.
+  - Provenance: Java ETS HEAD `9f8a82fee3822f921400acddc655b07eef2370b5`; frozen web-app HEAD `1568f364bef075fcf8419be966e9b08de677b23c`; both repositories were dirty and the artifact records dirty entry counts without listing file names.
+- Maven:
+  - Artifact: `ops/test-results/sprint-ets-39-maven-test-via-docker-2026-06-03.txt`.
+  - Result: PASS, `294 tests / 0 failures / 0 errors / 3 skipped`.
+- Clean primary local OSH TeamEngine E2E:
+  - Report: `ops/test-results/sprint-ets-39-clean-local-osh-smoke-2026-06-03.xml`.
+  - Container log: `ops/test-results/sprint-ets-39-clean-local-osh-container-2026-06-03.log`.
+  - Hygiene summary: `ops/test-results/sprint-ets-39-artifact-hygiene-clean-local-osh-2026-06-03.json`.
+  - Result: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Hygiene evidence: IUT methods `GET=133`, `OPTIONS=2`, writes `0`, credential leaks `0`, explicit secret inputs scanned `1`; JSON now references archived `ops/test-results/` XML/log paths.
 
 Sprint ets-38 SimUAV preseeded populated-IUT fixture:
 

@@ -32,6 +32,7 @@ Wire the ETS into TeamEngine 5.6.x (currently 5.6.1) via the TestNG SPI, ship a 
 | S-ETS-06-02 | **(Sprint 6 WEDGE)** sabotage-test.sh rsync .git include fix (~1-2 LOC) + log message honest-failure detection; enables three-class cascade live-exec verification | **Active (Sprint 6)** | REQ-ETS-CLEANUP-017, REQ-ETS-CLEANUP-015 (promotes to FULLY-IMPLEMENTED) |
 | S-ETS-06-03 | **(Sprint 6 WEDGE)** Wire-side unit test reclassification: spec.md + story notes amended; VerifyWireRestoresOriginalCredential companion story | **Active (Sprint 6)** | REQ-ETS-CLEANUP-016 (spec-side) |
 | S-ETS-07-01 | **(Sprint 7)** Sprint 6 carryover wedge bundle: sabotage javac fix + sabotage pipefail fix + credential-leak prong-b retarget + REQ-017 status-honesty correction + design.md wrap-pattern doc-lag fix + ADR-010 v3 retroactive validation | **Active (Sprint 7)** | REQ-ETS-CLEANUP-018, REQ-ETS-CLEANUP-017 (live close), REQ-ETS-CLEANUP-016 (automated script PASS) |
+| S-ETS-39-01 | **(Sprint 39)** Artifact hygiene and URI/schema drift report harness while populated OSH blockers remain external | Implemented; Raze approved | REQ-ETS-CLEANUP-020, REQ-ETS-SYNC-001 |
 | S-ETS-07-05 | (placeholder) docker-compose stack with healthchecks (extended beyond Sprint 1 baseline) | Backlog | REQ-ETS-TEAMENGINE-004 |
 | S-ETS-07-06 | (placeholder) CTL wrapper supports auth-type parameters end-to-end | Backlog | REQ-ETS-TEAMENGINE-002 |
 | S-ETS-07-07 | (placeholder) TeamEngine integration regression suite (CI) | Backlog | NFR-ETS-04 |

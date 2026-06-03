@@ -1,0 +1,61 @@
+{
+  "containerLogs": [
+    {
+      "iutMethodCounts": {
+        "GET": 133,
+        "OPTIONS": 2
+      },
+      "iutWriteCount": 0,
+      "iutWrites": [],
+      "methodCounts": {
+        "GET": 138,
+        "OPTIONS": 2
+      },
+      "path": "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-container-2026-06-03.log",
+      "recognizedIutRequestLogs": 135,
+      "recognizedRequestLogs": 140
+    }
+  ],
+  "credentialScan": {
+    "explicitSecretInputsProvided": 1,
+    "explicitSecretInputsScanned": 1,
+    "explicitSecretValueHits": 0,
+    "filesScanned": 2,
+    "filesWithHits": [],
+    "genericBasicCredentialPatternHits": 0,
+    "shortSecretInputsIgnored": 0,
+    "unmaskedAuthorizationHeaderHits": 0
+  },
+  "failures": [],
+  "generatedAt": "2026-06-03T15:15:36Z",
+  "policy": {
+    "failOnCredentialLeak": true,
+    "iutPrefixes": [
+      "http://field-hub-osh-1:8081/sensorhub/api"
+    ],
+    "requireZeroIutWrites": true
+  },
+  "requirements": [
+    "REQ-ETS-CLEANUP-020"
+  ],
+  "scenarios": [
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001",
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001"
+  ],
+  "testngReports": [
+    {
+      "methodStatusCounts": {
+        "PASS": 94,
+        "SKIP": 147
+      },
+      "path": "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-2026-06-03.xml",
+      "totals": {
+        "failed": 0,
+        "passed": 68,
+        "skipped": 143,
+        "total": 211
+      }
+    }
+  ],
+  "verdict": "PASS"
+}

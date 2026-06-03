@@ -1,6 +1,6 @@
 # Traceability Matrix -- CS API Compliance Assessor
 
-> Status: Living Document | Last updated: 2026-06-03 (Sprint 37 clean local OSH restored; populated binding blocked)
+> Status: Living Document | Last updated: 2026-06-03 (Sprint 39 hygiene/drift harness reviewed; populated binding blocked)
 
 ---
 
@@ -84,7 +84,8 @@
 | R-PIVOT-12 | FR-ETS-71 | REQ-ETS-CITE-002 | (calendar-bound) | epic-ets-05 | S-ETS-05-03..05 | beta-milestone | Calendar-bound |
 | R-PIVOT-12 | FR-ETS-72 | REQ-ETS-CITE-003 | (calendar-bound) | epic-ets-05 | S-ETS-05-06 | beta-milestone | Calendar-bound |
 | R-PIVOT-10 | FR-ETS-80 | REQ-ETS-WEBAPP-FREEZE-001 | SCENARIO-ETS-WEBAPP-FREEZE-README-001 | epic-ets-07 | S-ETS-07-01 | quick-win | **Implemented** (commit `44c279e`; tag `v1.0-frozen` at `ab53658`) |
-| R-PIVOT-11 | FR-ETS-90 | REQ-ETS-SYNC-001 | SCENARIO-ETS-SYNC-URI-DIFF-001 | (cross-epic) | TBD | post-Part-1 | Backlog |
+| R-PIVOT-11 | FR-ETS-90 | REQ-ETS-SYNC-001 | SCENARIO-ETS-SYNC-URI-DIFF-001, SCENARIO-ETS-SYNC-URI-SCHEMA-DRIFT-AUDIT-001 | epic-ets-04 | S-ETS-39-01 | ets-39 | **PARTIAL_IMPLEMENTED_REPORT_ONLY** (Sprint 39, 2026-06-03) - `scripts/uri-drift-audit.py` self-test passed and current audit archived at `ops/test-results/sprint-ets-39-uri-schema-drift-audit-2026-06-03.json`; URI drift detected in report-only mode (`Java=98`, `webapp=215`, `missingInJava=162`, `missingInWebapp=45`); schema bundle parity verified (`126/126`, no missing/extra/hash mismatch); CI-failing enforcement remains deferred until the allowlist is stabilized. |
+| R-PIVOT-07 | FR-ETS-25, FR-ETS-26, FR-ETS-90 | REQ-ETS-CLEANUP-020 | SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001, SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001, SCENARIO-ETS-SYNC-URI-SCHEMA-DRIFT-AUDIT-001 | epic-ets-04 | S-ETS-39-01 | ets-39 | **Implemented; Raze approved** (Sprint 39, 2026-06-03) - added `scripts/artifact-hygiene.py` and `scripts/uri-drift-audit.py` with passing self-tests and py_compile; archived Sprint 38 clean/populated hygiene reports, current drift audit, Maven wrapper PASS `294/0/0/3`, and clean local OSH TeamEngine PASS `211/68/0/143` with hygiene-confirmed `GET=133`, `OPTIONS=2`, writes `0`, credential leaks `0`; focused Raze recheck returned `APPROVE` after post-review metadata fixes added explicit secret-input counts, archived clean paths, and Java/web-app repository provenance. |
 
 **Status legend**: Active = in current sprint (ets-01) | Backlog = defined but not yet sprinted | Deferred = explicitly out of scope per user gate | Calendar-bound = waits on milestone, not engineering | Done = implemented and evaluated.
 

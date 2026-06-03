@@ -1,0 +1,87 @@
+verdict: APPROVE
+confidence: 0.94
+required_fixes: []
+evidence_checked:
+  reviewed_scope:
+    - scripts/artifact-hygiene.py
+    - scripts/uri-drift-audit.py
+    - ops/test-results/sprint-ets-39-artifact-hygiene-clean-local-osh-2026-06-03.json
+    - ops/test-results/sprint-ets-39-artifact-hygiene-s38-clean-2026-06-03.json
+    - ops/test-results/sprint-ets-39-artifact-hygiene-s38-populated-2026-06-03.json
+    - ops/test-results/sprint-ets-39-artifact-hygiene-s38-populated-mutable-2026-06-03.json
+    - ops/test-results/sprint-ets-39-uri-schema-drift-audit-2026-06-03.json
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - epics/stories/s-ets-39-01-artifact-hygiene-drift-harness.md
+    - .harness/contracts/sprint-ets-39.yaml
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+  concern_status:
+    RAZE-ETS39-CONCERN-001:
+      status: REMAINS_ACCEPTED_REPORT_ONLY
+      evidence:
+        - >
+          OpenSpec `REQ-ETS-SYNC-001` remains `PARTIAL_IMPLEMENTED_REPORT_ONLY` and states CI-failing enforcement is
+          deferred until `ops/uri-coverage-allowlist.txt` is stabilized.
+        - >
+          The drift JSON has `policy.reportOnly=true`, `policy.failOnDrift=false`, `driftDetected=true`, and
+          `failures=["uri_drift_detected"]`, so report-only drift is not represented as CI closure.
+    RAZE-ETS39-CONCERN-002:
+      status: CLOSED
+      evidence:
+        - >
+          `ops/test-results/sprint-ets-39-artifact-hygiene-clean-local-osh-2026-06-03.json` now references archived
+          `ops/test-results/sprint-ets-39-clean-local-osh-smoke-2026-06-03.xml` and
+          `ops/test-results/sprint-ets-39-clean-local-osh-container-2026-06-03.log` paths.
+        - No `/tmp/` path remains in the clean-local-OSH hygiene JSON report/log path fields.
+    RAZE-ETS39-CONCERN-003:
+      status: CLOSED
+      evidence:
+        - >
+          `scripts/artifact-hygiene.py` records `explicitSecretInputsProvided`, `explicitSecretInputsScanned`, and
+          `shortSecretInputsIgnored` without emitting secret values.
+        - >
+          Regenerated Sprint 39 clean hygiene JSON records `explicitSecretInputsProvided=1`,
+          `explicitSecretInputsScanned=1`, `shortSecretInputsIgnored=0`, and `explicitSecretValueHits=0`.
+        - Current local OSH secret value was not found in any `ops/test-results/sprint-ets-39-*.json` artifact.
+    RAZE-ETS39-CONCERN-004:
+      status: CLOSED
+      evidence:
+        - >
+          `scripts/uri-drift-audit.py` now adds `repositoryMetadata` for both `javaEts` and `webapp`, including root,
+          HEAD, dirty boolean, and dirty status entry count.
+        - >
+          Regenerated drift JSON records Java ETS HEAD `9f8a82fee3822f921400acddc655b07eef2370b5`,
+          dirty `true`, dirty count `21`.
+        - >
+          Regenerated drift JSON records web-app HEAD `1568f364bef075fcf8419be966e9b08de677b23c`,
+          dirty `true`, dirty count `473`.
+  commands_run:
+    - command: python3 scripts/artifact-hygiene.py --self-test
+      result: PASS
+    - command: python3 scripts/uri-drift-audit.py --self-test
+      result: PASS
+    - command: python3 -m py_compile scripts/artifact-hygiene.py scripts/uri-drift-audit.py
+      result: PASS
+    - command: git diff --check
+      result: PASS
+    - command: Python JSON parse of all `ops/test-results/sprint-ets-39-*.json`
+      result: PASS
+    - command: Python assertion that clean hygiene JSON uses archived `ops/test-results/` paths and no `/tmp/` paths
+      result: PASS
+    - command: Python assertion that clean hygiene JSON records non-sensitive explicit secret input counts
+      result: PASS
+    - command: Python assertion that current local OSH secret value is absent from Sprint 39 JSON artifacts
+      result: PASS
+    - command: Python assertion that drift JSON records Java ETS/web-app repository metadata and remains report-only
+      result: PASS
+  docs_checked:
+    - >
+      `openspec/capabilities/ets-ogcapi-connectedsystems/spec.md`, `_bmad/traceability.md`, story, contract,
+      `ops/status.md`, `ops/test-results.md`, and `ops/changelog.md` all continue to keep URI drift as report-only
+      and do not claim CI closure of `REQ-ETS-SYNC-001`.
+limitations:
+  - Maven and TeamEngine smoke were intentionally not rerun per user instruction; this recheck used lightweight Python/YAML/diff checks and archived evidence.
+  - The Java ETS and sibling web-app repository metadata both report dirty worktrees; the artifact records dirty counts but not file names.
+  - Existing `ops/metrics.md` row 319 was already open from the post-review concern-handling turn when this focused recheck started; this review added and closed its own row separately.

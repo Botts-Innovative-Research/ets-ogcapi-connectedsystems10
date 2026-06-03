@@ -1,0 +1,111 @@
+sprint: ets-37
+story: S-ETS-37-01
+title: Local OSH stream metadata unblock
+status: PARTIAL_E2E_CLEAN_RESTORED_POPULATED_BLOCKED
+triggered_by: 'User instruction: "Do it" after local OSH stream metadata blocker explanation.'
+requirements:
+  - REQ-ETS-PART2-013
+scenarios:
+  - SCENARIO-ETS-PART2-013-LOCAL-OSH-STREAM-METADATA-001
+  - SCENARIO-ETS-PART2-013-FORMAT-ASSERTION-NOW-001
+  - SCENARIO-ETS-PART2-013-EMPTY-COLLECTION-BODIES-001
+  - SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001
+scope:
+  include:
+    - Make local OSH ConSys stream resources emit Annex A.9 required nullable/boolean stream metadata.
+    - Make local OSH ConSys empty root Observation collection and count endpoints emit parseable JSON response bodies; keep Command empty collection/count as focused regression evidence until live nested Commands E2E exists.
+    - Enable ETS JSON Schema format assertions for Annex A.9 schema validation.
+    - Add focused ETS and OSH regression coverage.
+    - Rebuild/redeploy local OSH as needed for mandatory TeamEngine smoke.
+  exclude:
+    - Weakening required-field checks in dataStream/controlStream schemas.
+    - Accepting Content-Type auto as parent schema PASS evidence.
+    - Claiming populated binding closure without live parent schema and child resource evidence.
+success_criteria:
+  - OSH stream serializers emit required metadata members with nulls/booleans where the model has no concrete range/state.
+  - Empty root Observation collection and count endpoints return JSON bodies instead of HTTP 200 zero-byte bodies.
+  - Empty Command collection/count behavior is regression-tested without claiming clean-smoke E2E coverage.
+  - ETS validator rejects malformed date-time strings and accepts valid TimePeriod values containing the literal now.
+  - Touched unit tests pass in Docker or project-native build tooling.
+  - Local OSH TeamEngine smoke artifacts and method-count evidence are archived.
+  - Raze review returns no required fixes or all required fixes are closed.
+evidence:
+  ets_maven:
+    artifact: ops/test-results/sprint-ets-37-ets-maven-test-2026-06-03.log
+    result: PASS
+    totals: "291 tests / 0 failures / 0 errors / 3 skipped"
+  osh_gradle:
+    result: PASS
+    artifacts:
+      - ops/test-results/sprint-ets-37-osh-TestDataStreams-2026-06-03.xml
+      - ops/test-results/sprint-ets-37-osh-TestControlStreams-2026-06-03.xml
+      - ops/test-results/sprint-ets-37-osh-consys-focused-gradle-test-2026-06-03.log
+    totals:
+      TestDataStreams: "9 tests / 0 failures / 0 errors / 0 skipped"
+      TestControlStreams: "1 test / 0 failures / 0 errors / 0 skipped"
+  osh_followup_gradle:
+    result: PASS
+    artifacts:
+      - ops/test-results/sprint-ets-37-followup-osh-TestObservations-2026-06-03.xml
+      - ops/test-results/sprint-ets-37-followup-osh-TestControlStreams-2026-06-03.xml
+      - ops/test-results/sprint-ets-37-followup-osh-TestObservations-after-raze-2026-06-03.xml
+      - ops/test-results/sprint-ets-37-followup-osh-TestControlStreams-after-raze-2026-06-03.xml
+    totals:
+      TestObservations: "5 tests / 0 failures / 0 errors / 0 skipped"
+      TestControlStreams: "2 tests / 0 failures / 0 errors / 0 skipped"
+  local_osh_redeploy:
+    jar_replacement: ops/test-results/sprint-ets-37-field-hub-consys-jar-replacement-2026-06-03.txt
+    post_raze_jar_replacement: ops/test-results/sprint-ets-37-followup-field-hub-consys-jar-replacement-after-raze-2026-06-03.txt
+    rebuild_log: ops/test-results/sprint-ets-37-field-hub-osh-rebuild-2026-06-03.log
+  populated_simuav_probe:
+    artifact: ops/test-results/sprint-ets-37-local-osh-simuav-stream-metadata-probe-2026-06-03.json
+    result: STREAM_METADATA_PRESENT
+  populated_simuav_teamengine:
+    result: FAIL
+    totals: "211 total / 78 passed / 35 failed / 98 skipped"
+    report: ops/test-results/sprint-ets-37-simuav-local-osh-smoke-failed-2026-06-03.xml
+    container_log: ops/test-results/sprint-ets-37-simuav-local-osh-container-failed-2026-06-03.log
+    console_log: ops/test-results/sprint-ets-37-simuav-local-osh-smoke-console-2026-06-03.log
+    no_mutation: ops/test-results/sprint-ets-37-simuav-local-osh-smoke-failed-no-mutation-2026-06-03.txt
+    method_counts: "GET=178, OPTIONS=12, writes=0"
+  clean_primary_teamengine:
+    result: FAIL_THEN_FOLLOWUP_PASS_POST_RAZE_PASS
+    totals: "initial 211 total / 67 passed / 4 failed / 140 skipped; follow-up 211 total / 68 passed / 0 failed / 143 skipped; post-Raze 211 total / 68 passed / 0 failed / 143 skipped"
+    report: ops/test-results/sprint-ets-37-clean-local-osh-smoke-failed-2026-06-03.xml
+    container_log: ops/test-results/sprint-ets-37-clean-local-osh-container-failed-2026-06-03.log
+    console_log: ops/test-results/sprint-ets-37-clean-local-osh-smoke-console-2026-06-03.log
+    no_mutation: ops/test-results/sprint-ets-37-clean-local-osh-smoke-failed-no-mutation-2026-06-03.txt
+    method_counts: "GET=133, OPTIONS=2, writes=0"
+    blocker_probe: ops/test-results/sprint-ets-37-clean-local-osh-empty-observations-probe-2026-06-03.txt
+    followup_report: ops/test-results/sprint-ets-37-followup-clean-local-osh-smoke-2026-06-03.xml
+    followup_container_log: ops/test-results/sprint-ets-37-followup-clean-local-osh-container-2026-06-03.log
+    followup_no_mutation: ops/test-results/sprint-ets-37-followup-clean-local-osh-no-mutation-2026-06-03.txt
+    followup_probe: ops/test-results/sprint-ets-37-followup-empty-collection-live-probe-after-reset-reseed-2026-06-03.txt
+    post_raze_report: ops/test-results/sprint-ets-37-followup-after-raze-clean-local-osh-smoke-2026-06-03.xml
+    post_raze_container_log: ops/test-results/sprint-ets-37-followup-after-raze-clean-local-osh-container-2026-06-03.log
+    post_raze_no_mutation: ops/test-results/sprint-ets-37-followup-after-raze-clean-local-osh-no-mutation-2026-06-03.txt
+    post_raze_probe: ops/test-results/sprint-ets-37-followup-empty-collection-live-probe-after-raze-2026-06-03.txt
+  raze_review:
+    result: APPROVE_WITH_CONCERNS
+    confidence: 0.93
+    artifact: .harness/evaluations/sprint-ets-37-adversarial-implementation.yaml
+    required_fixes: []
+  followup_raze_review:
+    result: GAPS_FOUND
+    confidence: 0.88
+    artifact: .harness/evaluations/sprint-ets-37-followup-empty-collection-adversarial.yaml
+    required_fixes_closed:
+      - Removed broad RuntimeException-to-empty-response masking.
+      - Reconciled OpenSpec, traceability, and known issues.
+      - Narrowed Command empty-collection claims to focused regression evidence.
+      - Rotated local OSH BasicRealm credentials without recording new values.
+  followup_raze_recheck:
+    result: APPROVE_WITH_CONCERNS
+    confidence: 0.91
+    artifact: .harness/evaluations/sprint-ets-37-followup-empty-collection-adversarial-recheck.yaml
+    required_fixes: []
+guardrails:
+  - Keep Annex A.9 validation strict.
+  - Preserve Sprint 36 schema request shaping and strict JSON media-type gate.
+  - Isolate local OSH fixture state from primary smoke unless explicitly documented.
+  - Do not claim clean-smoke E2E coverage for nested Command empty collections while the reset/reseed IUT has no ControlStreams or Commands.

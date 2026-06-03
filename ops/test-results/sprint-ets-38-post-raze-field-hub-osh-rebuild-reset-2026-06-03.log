@@ -1,0 +1,75 @@
+2026-06-03T14:28:08Z rebuild-start
+ Image field-hub-osh Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 526B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 627B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/eclipse-temurin:17-jre
+#3 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [1/9] FROM docker.io/library/eclipse-temurin:17-jre@sha256:0d79988c68791ce864fe39d149ab1dc84f680539dca77ee7f6f3b041ad7f2f43
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 1.46MB 0.1s done
+#6 DONE 0.1s
+
+#7 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends     curl libxcb1 libxcb-shm0 libxcb-xfixes0 libxcb-shape0     libasound2t64 libdrm2 libpulse0     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [3/9] WORKDIR /opt/osh
+#8 CACHED
+
+#9 [4/9] COPY lib/ lib/
+#9 DONE 1.5s
+
+#10 [5/9] COPY web/ web/
+#10 DONE 0.4s
+
+#11 [6/9] COPY processes/ processes/
+#11 DONE 0.1s
+
+#12 [7/9] COPY launch.sh load_trusted_certs.sh ./
+#12 DONE 0.1s
+
+#13 [8/9] RUN curl -o lib/postgresql-42.7.2.jar https://jdbc.postgresql.org/download/postgresql-42.7.2.jar
+#13 0.351   % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+#13 0.351                                  Dload  Upload  Total   Spent   Left   Speed
+#13 0.351   0      0   0      0   0      0      0      0                              0 40  1.03M  40 431.9k   0      0 431.0k      0   00:02   00:01   00:01 431.5k100  1.03M 100  1.03M   0      0 629.3k      0   00:01   00:01         431.5k100  1.03M 100  1.03M   0      0 629.2k      0   00:01   00:01         431.5k100  1.03M 100  1.03M   0      0 629.2k      0   00:01   00:01         431.5k
+#13 DONE 2.2s
+
+#14 [9/9] RUN chmod +x launch.sh load_trusted_certs.sh
+#14 DONE 0.4s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 0.9s done
+#15 writing image sha256:d39449267f0effcf014995095d0c7f47ef86f820e5a0bea5fcbf574cd0c05df1 done
+#15 naming to docker.io/library/field-hub-osh done
+#15 DONE 0.9s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image field-hub-osh Built 
+ Container field-hub-osh-1 Stopping 
+ Container field-hub-osh-1 Stopped 
+Going to remove field-hub-osh-1
+ Container field-hub-osh-1 Removing 
+ Container field-hub-osh-1 Removed 
+field-hub_osh-data
+ Volume field-hub_osh-data Creating 
+ Volume field-hub_osh-data Created 
+ Container field-hub-osh-1 Creating 
+ Container field-hub-osh-1 Created 
+ Container field-hub-osh-1 Starting 
+ Container field-hub-osh-1 Started 
+field-hub-osh-1 Up 1 second (health: starting)
+2026-06-03T14:28:28Z rebuild-end

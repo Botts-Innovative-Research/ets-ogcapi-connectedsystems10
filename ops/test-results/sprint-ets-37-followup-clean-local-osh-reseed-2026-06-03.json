@@ -1,0 +1,26 @@
+[
+  {
+    "collection": "/systems",
+    "status": 201,
+    "location": "/systems/040g",
+    "body": ""
+  },
+  {
+    "collection": "/procedures",
+    "status": 201,
+    "location": "/procedures/040g",
+    "body": ""
+  },
+  {
+    "collection": "/deployments",
+    "status": 201,
+    "location": "/deployments/040g",
+    "body": ""
+  },
+  {
+    "collection": "/samplingFeatures",
+    "status": 201,
+    "location": "/samplingFeatures/040g",
+    "body": ""
+  }
+]

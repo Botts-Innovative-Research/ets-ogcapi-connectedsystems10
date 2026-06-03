@@ -1,8 +1,117 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T22:42Z
+Last updated: 2026-06-03T14:36Z
 
 ## Current Sprint Evidence
+
+Sprint ets-38 SimUAV preseeded populated-IUT fixture:
+
+- Status:
+  - Story: `epics/stories/s-ets-38-01-simuav-preseeded-populated-iut-fixture.md`.
+  - Contract: `.harness/contracts/sprint-ets-38.yaml`.
+  - ETS candidate selection and the SimUAV preseed/probe path are implemented. Clean primary local OSH is restored and passing. Full populated-IUT `part2binding` PASS is not claimed.
+- Python preseed script:
+  - Command: `python3 -m py_compile scripts/local-osh-simuav-preseed.py`.
+  - Result: PASS.
+- SimUAV preseed final evidence:
+  - Artifact: `ops/test-results/sprint-ets-38-local-osh-simuav-preseed-r3-2026-06-03.json`.
+  - Result: `PARTIAL_MISSING_OBSERVATION_OR_COMMAND_CHILD_EVIDENCE`.
+  - Summary: 2 DataStreams, 3 ControlStreams, 2 DataStream schema endpoints, 3 command schema endpoints, `GET=102`, `POST=1`.
+  - Command evidence: selected `inputName=waypoint_feasibility`; POST returned HTTP 200 and `statusCode=COMPLETED`.
+  - Missing evidence: zero parseable Observation child items; nested Command collection returned HTTP 200 with an empty body; POST-returned command id was not dereferenceable through `/commands/{id}`.
+  - Credential handling: artifact records `authCredentialSupplied=true` and `authCredentialRecorded=false`; no credential value is stored.
+- ETS Maven/regression verification:
+  - Required wrapper `bash scripts/mvn-test-via-docker.sh -Dmaven.wagon.rto=30000 -Dmaven.wagon.httpconnectionManager.ttlSeconds=30` failed twice before tests on Maven Central `Connection reset`; a later wrapper retry was stopped after a silent stall.
+  - Equivalent Docker Maven run with a reusable host cache passed `294 tests / 0 failures / 0 errors / 3 skipped`.
+  - Artifact: `ops/test-results/sprint-ets-38-maven-clean-test-cached-2026-06-03.log`.
+  - New focused unit coverage includes `VerifyPart2CandidateSelection` with `3 tests / 0 failures / 0 errors / 0 skipped`.
+- SimUAV-populated local OSH TeamEngine smoke after static reseed:
+  - Report: `ops/test-results/sprint-ets-38-simuav-preseed-teamengine-smoke-r3-2026-06-03.xml`.
+  - Container log: `ops/test-results/sprint-ets-38-simuav-preseed-teamengine-container-r3-2026-06-03.log`.
+  - Result: FAIL, `211 total / 83 passed / 29 failed / 99 skipped`.
+  - Remaining failures: schema endpoint `Content-Type: auto`, SWE text schema HTTP 400, empty Observation child bodies, empty nested Command bodies, and missing parseable nested child evidence.
+- Clean primary local OSH restore:
+  - Post-Raze field-hub OSH rebuild/reset artifact: `ops/test-results/sprint-ets-38-post-raze-field-hub-osh-rebuild-reset-2026-06-03.log`.
+  - Post-Raze reseed artifact: `ops/test-results/sprint-ets-38-post-raze-clean-local-osh-reseed-2026-06-03.json`.
+  - Post-Raze root Observation probe: `ops/test-results/sprint-ets-38-post-raze-clean-local-osh-observations-probe-2026-06-03.txt`.
+  - Post-Raze TeamEngine smoke report: `ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-2026-06-03.xml`.
+  - Post-Raze TeamEngine container log: `ops/test-results/sprint-ets-38-post-raze-clean-local-osh-container-2026-06-03.log`.
+  - Post-Raze TeamEngine console log: `ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-console-2026-06-03.log`.
+  - Result: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+  - No-mutation evidence: smoke stdout reported zero IUT-bound POST/PUT/DELETE/PATCH entries for the clean primary run.
+- Fixture state:
+  - SimUAV and Sapient are disabled in `/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json`.
+  - `field-hub_osh-data` was reset and static `/systems/040g`, `/procedures/040g`, `/deployments/040g`, and `/samplingFeatures/040g` fixtures were reseeded.
+- Raze review:
+  - Initial report: `.harness/evaluations/sprint-ets-38-adversarial-implementation.yaml` returned `GAPS_FOUND`.
+  - Focused recheck: `.harness/evaluations/sprint-ets-38-adversarial-recheck.yaml` returned `APPROVE_WITH_CONCERNS`, confidence `0.92`, with both prior gaps closed and no required fixes.
+
+Sprint ets-37 local OSH stream metadata unblock:
+
+- Status:
+  - Story: `epics/stories/s-ets-37-01-local-osh-stream-metadata-unblock.md`
+  - Contract: `.harness/contracts/sprint-ets-37.yaml`
+  - ETS and OSH code changes are implemented and unit/regression verified. Clean primary local OSH smoke is restored after the follow-up empty-body fix, but full populated-IUT closure is still not claimed.
+  - Full populated-IUT `part2binding` PASS is still not claimed.
+- ETS format-assertion regression:
+  - Artifact: `ops/test-results/sprint-ets-37-ets-maven-test-2026-06-03.log`.
+  - Result: PASS, `291 tests / 0 failures / 0 errors / 3 skipped`.
+  - Focused check: `VerifyPart2SchemaValidation` passed `2 tests / 0 failures / 0 errors / 0 skipped`.
+- OSH ConSys regression:
+  - Artifacts: `ops/test-results/sprint-ets-37-osh-TestDataStreams-2026-06-03.xml`, `ops/test-results/sprint-ets-37-osh-TestControlStreams-2026-06-03.xml`, and `ops/test-results/sprint-ets-37-osh-consys-focused-gradle-test-2026-06-03.log`.
+  - Result: `TestDataStreams` passed `9/0/0/0`; `TestControlStreams` passed `1/0/0/0`.
+  - Compile: `:sensorhub-service-consys:compileJava` and `:sensorhub-service-consys:compileTestJava` completed successfully with warnings only.
+- OSH ConSys empty-body follow-up regression:
+  - Artifacts: `ops/test-results/sprint-ets-37-followup-osh-TestObservations-2026-06-03.xml` and `ops/test-results/sprint-ets-37-followup-osh-TestControlStreams-2026-06-03.xml`.
+  - Result: `TestObservations` passed `5/0/0/0`; `TestControlStreams` passed `2/0/0/0`.
+  - Direct reset/reseed probe: `ops/test-results/sprint-ets-37-followup-empty-collection-live-probe-after-reset-reseed-2026-06-03.txt`; `/observations?limit=1`, `/observations?f=json&limit=1`, and `/observations/count?f=json` returned HTTP 200 `application/json` with parseable JSON bodies.
+  - Post-Raze hardening artifacts: `ops/test-results/sprint-ets-37-followup-osh-TestObservations-after-raze-2026-06-03.xml` and `ops/test-results/sprint-ets-37-followup-osh-TestControlStreams-after-raze-2026-06-03.xml`.
+  - Post-Raze result: `TestObservations` passed `5/0/0/0`; `TestControlStreams` passed `2/0/0/0` after removing broad RuntimeException-to-empty masking.
+  - Post-Raze direct probe: `ops/test-results/sprint-ets-37-followup-empty-collection-live-probe-after-raze-2026-06-03.txt`; root Observation collection/count endpoints returned HTTP 200 `application/json` with parseable JSON bodies after credential rotation and local OSH restart.
+- Local OSH redeploy:
+  - Built OSH ConSys jar and replaced the field-hub runtime jar; hash evidence is `ops/test-results/sprint-ets-37-field-hub-consys-jar-replacement-2026-06-03.txt`.
+  - Post-Raze rebuilt OSH ConSys jar replacement hash evidence is `ops/test-results/sprint-ets-37-followup-field-hub-consys-jar-replacement-after-raze-2026-06-03.txt`.
+  - Rebuild log: `ops/test-results/sprint-ets-37-field-hub-osh-rebuild-2026-06-03.log`.
+  - Runtime note: Docker healthcheck remains unhealthy because unauthenticated `/systems` returns 401; authenticated CS API probes returned 200.
+- SimUAV-populated metadata probe:
+  - Artifact: `ops/test-results/sprint-ets-37-local-osh-simuav-stream-metadata-probe-2026-06-03.json`.
+  - Result: dynamic DataStreams include `phenomenonTime`, `resultTime`, and `live`; dynamic ControlStreams include `issueTime`, `executionTime`, `live`, and `async`; schema subresources with `f=json` returned HTTP 200 `application/json`.
+- SimUAV-populated local OSH TeamEngine smoke:
+  - Result: FAIL, `211 total / 78 passed / 35 failed / 98 skipped`.
+  - Report: `ops/test-results/sprint-ets-37-simuav-local-osh-smoke-failed-2026-06-03.xml`.
+  - Container log: `ops/test-results/sprint-ets-37-simuav-local-osh-container-failed-2026-06-03.log`.
+  - Console log: `ops/test-results/sprint-ets-37-simuav-local-osh-smoke-console-2026-06-03.log`.
+  - No-mutation evidence: `ops/test-results/sprint-ets-37-simuav-local-osh-smoke-failed-no-mutation-2026-06-03.txt`, `recognized_iut_request_logs=190`, `GET=178`, `OPTIONS=12`, writes `0`.
+  - Remaining failures: stream metadata failures are cleared, but non-binding schema requests using only `obsFormat`/`cmdFormat` still receive `Content-Type: auto`; some Observation/Command child endpoints return empty bodies under `application/json`; some SWE text schema requests return HTTP 400.
+- Clean primary local OSH TeamEngine smoke after reset/reseed:
+  - Reset/reseed artifacts: `ops/test-results/sprint-ets-37-field-hub-osh-reset-clean-2026-06-03.log` and `ops/test-results/sprint-ets-37-clean-local-osh-reseed-2026-06-03.json`.
+  - Result: FAIL, `211 total / 67 passed / 4 failed / 140 skipped`.
+  - Report: `ops/test-results/sprint-ets-37-clean-local-osh-smoke-failed-2026-06-03.xml`.
+  - Container log: `ops/test-results/sprint-ets-37-clean-local-osh-container-failed-2026-06-03.log`.
+  - Console log: `ops/test-results/sprint-ets-37-clean-local-osh-smoke-console-2026-06-03.log`.
+  - No-mutation evidence: `ops/test-results/sprint-ets-37-clean-local-osh-smoke-failed-no-mutation-2026-06-03.txt`, `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, writes `0`.
+  - Direct blocker probe: `ops/test-results/sprint-ets-37-clean-local-osh-empty-observations-probe-2026-06-03.txt`; `/observations?limit=1` returned HTTP 200 `application/json` with an empty body.
+- Follow-up clean primary local OSH TeamEngine smoke after empty-body fix:
+  - Reset/reseed artifact: `ops/test-results/sprint-ets-37-followup-clean-local-osh-reseed-2026-06-03.json`.
+  - Result: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Report: `ops/test-results/sprint-ets-37-followup-clean-local-osh-smoke-2026-06-03.xml`.
+  - Container log: `ops/test-results/sprint-ets-37-followup-clean-local-osh-container-2026-06-03.log`.
+  - No-mutation evidence: `ops/test-results/sprint-ets-37-followup-clean-local-osh-no-mutation-2026-06-03.txt`, `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, writes `0`.
+  - Post-Raze result after removing broad exception masking and rotating local OSH credentials: PASS, `211 total / 68 passed / 0 failed / 143 skipped`.
+  - Post-Raze report: `ops/test-results/sprint-ets-37-followup-after-raze-clean-local-osh-smoke-2026-06-03.xml`.
+  - Post-Raze container log: `ops/test-results/sprint-ets-37-followup-after-raze-clean-local-osh-container-2026-06-03.log`.
+  - Post-Raze no-mutation evidence: `ops/test-results/sprint-ets-37-followup-after-raze-clean-local-osh-no-mutation-2026-06-03.txt`, `recognized_iut_request_logs=135`, `GET=133`, `OPTIONS=2`, writes `0`.
+- Raze implementation review:
+  - Artifact: `.harness/evaluations/sprint-ets-37-adversarial-implementation.yaml`.
+  - Initial verdict: `GAPS_FOUND`, confidence `0.90`, for three reconciliation gaps: TEAMENGINE-006 traceability omitted Sprint 37 E2E failures, the story scenario list omitted the positive local OSH closure scenario, and `ops/known-issues.md` had a stale timestamp.
+  - Gapfix: updated traceability, story scenario list, known-issues timestamp, and traceability document header.
+  - Final verdict: `APPROVE_WITH_CONCERNS`, confidence `0.93`, no required fixes.
+  - Remaining concern: Sprint 37 remains E2E-blocked and must not be reported complete.
+  - Follow-up Raze artifact: `.harness/evaluations/sprint-ets-37-followup-empty-collection-adversarial.yaml`.
+  - Follow-up verdict: `GAPS_FOUND`, confidence `0.88`.
+  - Follow-up fixes applied: removed broad RuntimeException-to-empty-response masking, reconciled OpenSpec/traceability/known-issues, narrowed Command empty-collection claims to focused OSH regression evidence, and rotated local OSH BasicRealm credentials without recording the new values.
+  - Focused follow-up recheck artifact: `.harness/evaluations/sprint-ets-37-followup-empty-collection-adversarial-recheck.yaml`.
+  - Focused follow-up recheck verdict: `APPROVE_WITH_CONCERNS`, confidence `0.91`, no required fixes; full populated `part2binding` closure remains unapproved.
 
 Sprint ets-36 binding parent schema JSON request shaping:
 

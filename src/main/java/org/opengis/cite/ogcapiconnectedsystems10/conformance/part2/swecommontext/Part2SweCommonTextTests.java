@@ -16,11 +16,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SchemaLocation;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2SchemaValidation;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests;
 import org.testng.ITestContext;
 import org.testng.Reporter;
@@ -391,7 +391,7 @@ public class Part2SweCommonTextTests {
 
 	static boolean schemaLoads(String schemaFile) {
 		try {
-			SCHEMA_FACTORY.getSchema(SchemaLocation.of(schemaIri(schemaFile)));
+			Part2SchemaValidation.getSchema(SCHEMA_FACTORY, schemaIri(schemaFile));
 			return true;
 		}
 		catch (RuntimeException ex) {
@@ -635,7 +635,7 @@ public class Part2SweCommonTextTests {
 	private static void validateJsonNodeAgainstSchema(JsonNode node, String schemaFile, String reqUri, String source) {
 		assertSchemaResourceBundled(schemaFile, reqUri);
 		try {
-			JsonSchema schema = SCHEMA_FACTORY.getSchema(SchemaLocation.of(schemaIri(schemaFile)));
+			JsonSchema schema = Part2SchemaValidation.getSchema(SCHEMA_FACTORY, schemaIri(schemaFile));
 			Set<ValidationMessage> errors = schema.validate(node);
 			if (!errors.isEmpty()) {
 				String joined = errors.stream()

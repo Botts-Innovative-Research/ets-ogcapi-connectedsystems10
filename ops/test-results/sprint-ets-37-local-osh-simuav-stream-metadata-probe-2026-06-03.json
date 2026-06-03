@@ -1,0 +1,159 @@
+{
+  "datastreams": {
+    "status": 200,
+    "contentType": "application/json",
+    "count": 2,
+    "metadata": [
+      {
+        "id": "02er99s5jos0",
+        "phenomenonTime": {
+          "present": true,
+          "value": [
+            "2026-06-03T00:36:05.363Z",
+            "2026-06-03T00:36:05.363Z"
+          ],
+          "type": "list"
+        },
+        "resultTime": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "live": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        }
+      },
+      {
+        "id": "03urpvmqo500",
+        "phenomenonTime": {
+          "present": true,
+          "value": [
+            "2026-06-03T00:36:05.363Z",
+            "2026-06-03T00:36:05.363Z"
+          ],
+          "type": "list"
+        },
+        "resultTime": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "live": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        }
+      }
+    ]
+  },
+  "controlstreams": {
+    "status": 200,
+    "contentType": "application/json",
+    "count": 3,
+    "metadata": [
+      {
+        "id": "03ger47ir90g",
+        "issueTime": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "executionTime": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "live": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "async": {
+          "present": true,
+          "value": true,
+          "type": "bool"
+        }
+      },
+      {
+        "id": "026r5ncgkt1g",
+        "issueTime": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "executionTime": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "live": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "async": {
+          "present": true,
+          "value": true,
+          "type": "bool"
+        }
+      },
+      {
+        "id": "02gvfvtiotjg",
+        "issueTime": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "executionTime": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "live": {
+          "present": true,
+          "value": null,
+          "type": "NoneType"
+        },
+        "async": {
+          "present": true,
+          "value": true,
+          "type": "bool"
+        }
+      }
+    ]
+  },
+  "schemaEndpoints": [
+    {
+      "resource": "/datastreams/02er99s5jos0/schema?f=json",
+      "status": 200,
+      "contentType": "application/json",
+      "bodyType": "dict"
+    },
+    {
+      "resource": "/datastreams/03urpvmqo500/schema?f=json",
+      "status": 200,
+      "contentType": "application/json",
+      "bodyType": "dict"
+    },
+    {
+      "resource": "/controlstreams/03ger47ir90g/schema?f=json",
+      "status": 200,
+      "contentType": "application/json",
+      "bodyType": "dict"
+    },
+    {
+      "resource": "/controlstreams/026r5ncgkt1g/schema?f=json",
+      "status": 200,
+      "contentType": "application/json",
+      "bodyType": "dict"
+    },
+    {
+      "resource": "/controlstreams/02gvfvtiotjg/schema?f=json",
+      "status": 200,
+      "contentType": "application/json",
+      "bodyType": "dict"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+sprint: ets-38
+story: S-ETS-38-01
+title: SimUAV preseeded populated-IUT fixture
+status: PARTIAL_IMPLEMENTED_E2E_BLOCKED_BY_OSH_LIMITATIONS
+triggered_by: 'User instruction: "Proceed with the SimUAV preseeded populated-IUT fixture sprint"'
+requirements:
+  - REQ-ETS-PART2-013
+scenarios:
+  - SCENARIO-ETS-PART2-013-SIMUAV-PRESEEDED-POPULATED-IUT-001
+  - SCENARIO-ETS-PART2-013-POPULATED-CANDIDATE-SELECTION-001
+  - SCENARIO-ETS-PART2-013-SIMUAV-TASKING-FIXTURE-001
+  - SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001
+  - SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001
+scope:
+  include:
+    - Build a reproducible SimUAV preseed/probe path for dedicated local OSH populated E2E.
+    - Archive direct fixture evidence for parent resources, child Observation/Command bodies, terminal CommandStatus, inline or linked CommandResult, schema response status/content type, request method counts, and residual state.
+    - Make ETS read-only candidate selection prefer populated scoped child evidence before using first-page parent resources.
+    - Keep strict schema media-type, SWE text, and Annex A.9 validation behavior unchanged.
+    - Re-run Docker Maven and mandatory local OSH TeamEngine smoke against the populated fixture.
+  exclude:
+    - Weakening JSON-compatible content-type checks.
+    - Treating `Content-Type: auto` or HTTP 400 SWE text schema responses as PASS evidence.
+    - Mutating GeoRobotix or any public/shared IUT.
+    - Claiming clean primary nested Command E2E coverage without live ControlStream/Command evidence.
+success_criteria:
+  - OpenSpec/story/traceability/epic artifacts name the Sprint 38 fixture and candidate-selection scenarios.
+  - Fixture probe/preseed artifact contains no credential values and includes direct SimUAV Observation/Command/Status/Result evidence.
+  - ETS regressions cover populated parent selection and reference `REQ-ETS-PART2-013` plus Sprint 38 scenarios in comments.
+  - Maven verification for touched ETS modules is archived.
+  - SimUAV-preseeded TeamEngine E2E artifacts and request method counts are archived; clean read-only smoke records no IUT-bound writes.
+  - Any remaining failures are classified as OSH limitations, fixture-data gaps, or ETS regressions with exact evidence.
+  - Raze review returns no required fixes or all required fixes are closed.
+guardrails:
+  - Preserve Sprint 36 `f=json` schema request shaping and strict JSON media-type gate.
+  - Preserve Sprint 37 Annex A.9 format assertions and OSH stream metadata expectations.
+  - Keep SimUAV disabled for clean primary state unless a sprint explicitly documents the populated fixture state.
+  - Do not record Basic/Auth credential values in repo artifacts or logs.
+evidence:
+  fixture_preseed:
+    result: PARTIAL_MISSING_OBSERVATION_OR_COMMAND_CHILD_EVIDENCE
+    artifact: ops/test-results/sprint-ets-38-local-osh-simuav-preseed-r3-2026-06-03.json
+    summary: "2 DataStreams, 3 ControlStreams, 2 observation schema endpoints, 3 command schema endpoints, GET=102, POST=1; waypoint command POST returned HTTP 200 COMPLETED, but Observation child collections and nested Command collection returned HTTP 200 with empty bodies."
+  ets_maven:
+    result: PASS_WITH_WRAPPER_LIMITATION
+    command: "docker run --rm --user ... -v /tmp/ets-ogcapi-connectedsystems10-m2:/tmp/.m2 maven:3.9-eclipse-temurin-17 mvn clean test -B -Dmaven.wagon.rto=30000 -Dmaven.wagon.httpconnectionManager.ttlSeconds=30"
+    totals: "294 tests / 0 failures / 0 errors / 3 skipped"
+    artifact: ops/test-results/sprint-ets-38-maven-clean-test-cached-2026-06-03.log
+    note: "The required scripts/mvn-test-via-docker.sh wrapper failed twice before tests on Maven Central connection resets and a later wrapper retry stalled silently; the cached Docker Maven equivalent passed."
+  populated_teamengine:
+    result: FAIL_OSH_LIMITATIONS_VISIBLE
+    report: ops/test-results/sprint-ets-38-simuav-preseed-teamengine-smoke-r3-2026-06-03.xml
+    log: ops/test-results/sprint-ets-38-simuav-preseed-teamengine-container-r3-2026-06-03.log
+    totals: "211 total / 83 passed / 29 failed / 99 skipped"
+    failure_summary: "Remaining failures are schema Content-Type auto, SWE text schema HTTP 400, and empty Observation/Command child collection bodies; no full populated binding PASS is claimed."
+  clean_primary_restore:
+    result: PASS
+    rebuild_reset_artifact: ops/test-results/sprint-ets-38-post-raze-field-hub-osh-rebuild-reset-2026-06-03.log
+    reseed_artifact: ops/test-results/sprint-ets-38-post-raze-clean-local-osh-reseed-2026-06-03.json
+    observation_probe: ops/test-results/sprint-ets-38-post-raze-clean-local-osh-observations-probe-2026-06-03.txt
+    report: ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-2026-06-03.xml
+    log: ops/test-results/sprint-ets-38-post-raze-clean-local-osh-container-2026-06-03.log
+    totals: "211 total / 68 passed / 0 failed / 143 skipped"
+  raze_review:
+    result: APPROVE_WITH_CONCERNS
+    confidence: 0.92
+    artifact: .harness/evaluations/sprint-ets-38-adversarial-recheck.yaml
+    required_fixes: []

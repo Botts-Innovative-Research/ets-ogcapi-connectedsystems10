@@ -1,0 +1,78 @@
+
+PATH observations?limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:33:30 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{"items":[]}
+PATH observations?f=json&limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:33:30 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{"items":[]}
+PATH observations/count?f=json
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:33:30 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{"count":0}
+PATH datastreams?limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:33:30 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{
+  "items": []
+}
+PATH controlstreams?limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:33:31 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{
+  "items": []
+}
+PATH datastreams/count?f=json
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:33:31 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{"count":0}
+PATH controlstreams/count?f=json
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:33:31 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{"count":0}
+PATH systems?limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:33:31 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{
+  "items": [
+    {
+      "type": "Feature",
+      "id": "040g",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-77.0365,38.8977]
+      },
+      "properties": {
+        "uid": "urn:ets:local-osh:system:alpha",
+        "featureType": "http://www.w3.org/ns/sosa/System",
+        "name": "ETS Local OSH Synthetic System Alpha",
+        "description": "Synthetic system seed for ETS local OSH full-suite health."
+      }
+    }
+  ]
+}

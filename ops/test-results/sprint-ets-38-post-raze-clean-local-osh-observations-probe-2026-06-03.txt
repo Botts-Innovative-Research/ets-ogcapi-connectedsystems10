@@ -1,0 +1,4 @@
+{"bytes": 17, "contentType": "application/json", "parse": "json", "path": "/datastreams?limit=1", "status": 200, "summary": ["items"]}
+{"bytes": 12, "contentType": "application/json", "parse": "json", "path": "/observations?limit=1", "status": 200, "summary": ["items"]}
+{"bytes": 12, "contentType": "application/json", "parse": "json", "path": "/observations?f=json&limit=1", "status": 200, "summary": ["items"]}
+{"bytes": 11, "contentType": "application/json", "parse": "json", "path": "/observations/count?f=json", "status": 200, "summary": ["count"]}

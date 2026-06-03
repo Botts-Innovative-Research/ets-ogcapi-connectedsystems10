@@ -16,11 +16,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SchemaLocation;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2CandidateSelection;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2SchemaValidation;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests;
 import org.testng.ITestContext;
 import org.testng.Reporter;
@@ -255,8 +256,8 @@ public class Part2JsonTests {
 		skipIfJsonUndeclared();
 		skipIfConditionClassUndeclared(CONF_DATASTREAM,
 				"Observation schema JSON assertions require the Part 2 Datastream class.");
-		String datastreamId = requireString(firstRequiredCollectionResource("datastreams", REQ_OBSSCHEMA_SCHEMA,
-				DATASTREAM_COLLECTION_SCHEMA, "/datastreams"), "id", REQ_OBSSCHEMA_SCHEMA);
+		String datastreamId = requireString(preferredDatastreamResource(REQ_OBSSCHEMA_SCHEMA), "id",
+				REQ_OBSSCHEMA_SCHEMA);
 		Response response = given().accept("application/json")
 			.queryParam("obsFormat", "application/json")
 			.when()
@@ -295,9 +296,9 @@ public class Part2JsonTests {
 		skipIfJsonUndeclared();
 		skipIfConditionClassUndeclared(CONF_DATASTREAM,
 				"Observation dynamic constraints require the Part 2 Datastream class.");
-		Map<String, Object> datastream = firstRequiredCollectionResource("datastreams", REQ_OBSERVATION_CONSTRAINTS,
-				DATASTREAM_COLLECTION_SCHEMA, "/datastreams");
-		String datastreamId = requireString(datastream, "id", REQ_OBSERVATION_CONSTRAINTS);
+		Part2CandidateSelection.ParentChild evidence = requiredDatastreamObservationEvidence(
+				REQ_OBSERVATION_CONSTRAINTS);
+		String datastreamId = requireString(evidence.parent(), "id", REQ_OBSERVATION_CONSTRAINTS);
 		Map<String, Object> parentSchema = optionalJsonObject(
 				"datastreams/" + datastreamId + "/schema?obsFormat=application/json", REQ_OBSERVATION_CONSTRAINTS,
 				"parent Observation schema");
@@ -305,9 +306,7 @@ public class Part2JsonTests {
 			throw new SkipException(REQ_OBSERVATION_CONSTRAINTS + " - Datastream '" + datastreamId
 					+ "' schema does not expose resultSchema, parametersSchema, or paramsSchema evidence; no hardcoded Observation constraint PASS was reported.");
 		}
-		Map<String, Object> observation = firstOptionalCollectionResource(
-				"datastreams/" + datastreamId + "/observations", REQ_OBSERVATION_CONSTRAINTS,
-				OBSERVATION_COLLECTION_SCHEMA, "/datastreams/" + datastreamId + "/observations");
+		Map<String, Object> observation = evidence.child();
 		validateJsonValueAgainstSchema(observation, OBSERVATION_SCHEMA, REQ_OBSERVATION_CONSTRAINTS,
 				"/datastreams/" + datastreamId + "/observations first item");
 		if (!hasAny(observation, "result", "parameters")) {
@@ -351,8 +350,7 @@ public class Part2JsonTests {
 		skipIfJsonUndeclared();
 		skipIfConditionClassUndeclared(CONF_CONTROLSTREAM,
 				"Command schema JSON assertions require the Part 2 ControlStream class.");
-		String controlStreamId = requireString(firstRequiredCollectionResource("controlstreams",
-				REQ_COMMANDSCHEMA_SCHEMA, CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams"), "id",
+		String controlStreamId = requireString(preferredControlStreamResource(REQ_COMMANDSCHEMA_SCHEMA), "id",
 				REQ_COMMANDSCHEMA_SCHEMA);
 		Response response = given().accept("application/json")
 			.queryParam("cmdFormat", "application/json")
@@ -391,9 +389,8 @@ public class Part2JsonTests {
 		skipIfJsonUndeclared();
 		skipIfConditionClassUndeclared(CONF_CONTROLSTREAM,
 				"Command dynamic constraints require the Part 2 ControlStream class.");
-		String controlStreamId = requireString(firstRequiredCollectionResource("controlstreams",
-				REQ_COMMAND_CONSTRAINTS, CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams"), "id",
-				REQ_COMMAND_CONSTRAINTS);
+		Part2CandidateSelection.ParentChild evidence = requiredControlStreamCommandEvidence(REQ_COMMAND_CONSTRAINTS);
+		String controlStreamId = requireString(evidence.parent(), "id", REQ_COMMAND_CONSTRAINTS);
 		Map<String, Object> parentSchema = optionalJsonObject(
 				"controlstreams/" + controlStreamId + "/schema?cmdFormat=application/json", REQ_COMMAND_CONSTRAINTS,
 				"parent Command schema");
@@ -401,11 +398,12 @@ public class Part2JsonTests {
 			throw new SkipException(REQ_COMMAND_CONSTRAINTS + " - ControlStream '" + controlStreamId
 					+ "' schema does not expose parametersSchema evidence; no hardcoded Command constraint PASS was reported.");
 		}
-		CommandEvidence command = firstCommandEvidence(REQ_COMMAND_CONSTRAINTS);
-		validateJsonValueAgainstSchema(command.command(), COMMAND_SCHEMA, REQ_COMMAND_CONSTRAINTS,
-				command.source() + " first item");
-		if (!command.command().containsKey("parameters")) {
-			throw new SkipException(REQ_COMMAND_CONSTRAINTS + " - candidate Command from " + command.source()
+		Map<String, Object> command = evidence.child();
+		validateJsonValueAgainstSchema(command, COMMAND_SCHEMA, REQ_COMMAND_CONSTRAINTS,
+				"/controlstreams/" + controlStreamId + "/commands first item");
+		if (!command.containsKey("parameters")) {
+			throw new SkipException(REQ_COMMAND_CONSTRAINTS + " - candidate Command from /controlstreams/"
+					+ controlStreamId + "/commands"
 					+ " does not contain parameters; no Command parameters constraint PASS was reported.");
 		}
 		throw new SkipException(REQ_COMMAND_CONSTRAINTS
@@ -458,9 +456,9 @@ public class Part2JsonTests {
 		skipIfJsonUndeclared();
 		skipIfConditionClassUndeclared(CONF_CONTROLSTREAM,
 				"CommandResult dynamic constraints require the Part 2 ControlStream class.");
-		String controlStreamId = requireString(firstRequiredCollectionResource("controlstreams",
-				REQ_COMMANDRESULT_CONSTRAINTS, CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams"), "id",
+		Part2CandidateSelection.ParentChild evidence = requiredControlStreamCommandEvidence(
 				REQ_COMMANDRESULT_CONSTRAINTS);
+		String controlStreamId = requireString(evidence.parent(), "id", REQ_COMMANDRESULT_CONSTRAINTS);
 		Map<String, Object> parentSchema = optionalJsonObject(
 				"controlstreams/" + controlStreamId + "/schema?cmdFormat=application/json",
 				REQ_COMMANDRESULT_CONSTRAINTS, "parent CommandResult schema");
@@ -468,7 +466,8 @@ public class Part2JsonTests {
 			throw new SkipException(REQ_COMMANDRESULT_CONSTRAINTS + " - ControlStream '" + controlStreamId
 					+ "' schema does not expose resultSchema or feasibilityResultSchema evidence; no hardcoded CommandResult constraint PASS was reported.");
 		}
-		CommandEvidence command = firstCommandEvidence(REQ_COMMANDRESULT_CONSTRAINTS);
+		CommandEvidence command = commandEvidence(evidence.child(), REQ_COMMANDRESULT_CONSTRAINTS,
+				"/controlstreams/" + controlStreamId + "/commands");
 		Map<String, Object> result = firstOptionalCollectionResource("commands/" + command.id() + "/result",
 				REQ_COMMANDRESULT_CONSTRAINTS, COMMANDRESULT_COLLECTION_SCHEMA,
 				"/commands/" + command.id() + "/result");
@@ -566,7 +565,7 @@ public class Part2JsonTests {
 
 	static boolean schemaLoads(String schemaFile) {
 		try {
-			SCHEMA_FACTORY.getSchema(SchemaLocation.of(schemaIri(schemaFile)));
+			Part2SchemaValidation.getSchema(SCHEMA_FACTORY, schemaIri(schemaFile));
 			return true;
 		}
 		catch (RuntimeException ex) {
@@ -636,23 +635,76 @@ public class Part2JsonTests {
 
 	private Map<String, Object> firstRequiredCollectionResource(String path, String reqUri, String collectionSchema,
 			String source) {
+		return requiredCollectionResources(path, reqUri, collectionSchema, source).get(0);
+	}
+
+	private Map<String, Object> preferredDatastreamResource(String reqUri) {
+		List<Map<String, Object>> datastreams = requiredCollectionResources("datastreams", reqUri,
+				DATASTREAM_COLLECTION_SCHEMA, "/datastreams");
+		Part2CandidateSelection.ParentChild evidence = firstParentWithChild(datastreams, "datastreams", "observations",
+				reqUri);
+		return evidence == null ? datastreams.get(0) : evidence.parent();
+	}
+
+	private Map<String, Object> preferredControlStreamResource(String reqUri) {
+		List<Map<String, Object>> controlStreams = requiredCollectionResources("controlstreams", reqUri,
+				CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams");
+		Part2CandidateSelection.ParentChild evidence = firstParentWithChild(controlStreams, "controlstreams",
+				"commands", reqUri);
+		return evidence == null ? controlStreams.get(0) : evidence.parent();
+	}
+
+	private Part2CandidateSelection.ParentChild requiredDatastreamObservationEvidence(String reqUri) {
+		List<Map<String, Object>> datastreams = requiredCollectionResources("datastreams", reqUri,
+				DATASTREAM_COLLECTION_SCHEMA, "/datastreams");
+		Part2CandidateSelection.ParentChild evidence = firstParentWithChild(datastreams, "datastreams", "observations",
+				reqUri);
+		if (evidence != null) {
+			return evidence;
+		}
+		throw new SkipException(reqUri
+				+ " - no DataStream candidate on the inspected page exposed parseable scoped Observation evidence; no Observation constraint PASS was reported.");
+	}
+
+	private Part2CandidateSelection.ParentChild requiredControlStreamCommandEvidence(String reqUri) {
+		List<Map<String, Object>> controlStreams = requiredCollectionResources("controlstreams", reqUri,
+				CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams");
+		Part2CandidateSelection.ParentChild evidence = firstParentWithChild(controlStreams, "controlstreams",
+				"commands", reqUri);
+		if (evidence != null) {
+			return evidence;
+		}
+		throw new SkipException(reqUri
+				+ " - no ControlStream candidate on the inspected page exposed parseable scoped Command evidence; no Command constraint PASS was reported.");
+	}
+
+	private Part2CandidateSelection.ParentChild firstParentWithChild(List<Map<String, Object>> parents,
+			String parentPath, String childCollection, String reqUri) {
+		return Part2CandidateSelection.firstParentWithChild(parents, parent -> {
+			String parentId = stringValue(parent.get("id"));
+			if (parentId == null || parentId.isBlank()) {
+				return null;
+			}
+			return firstOptionalCollectionItemOrNull(parentPath + "/" + parentId + "/" + childCollection, reqUri,
+					"/" + parentPath + "/" + parentId + "/" + childCollection);
+		});
+	}
+
+	private List<Map<String, Object>> requiredCollectionResources(String path, String reqUri, String collectionSchema,
+			String source) {
 		Response response = given().accept("application/json")
-			.queryParam("limit", 1)
+			.queryParam("limit", Part2CandidateSelection.CANDIDATE_PAGE_LIMIT)
 			.when()
 			.get(this.baseUri.resolve(path))
 			.andReturn();
 		Map<String, Object> body = assertRequiredJsonResponse(response, reqUri, source);
 		validateResponseAgainstSchema(response, collectionSchema, reqUri, source);
-		List<?> items = items(body);
+		List<Map<String, Object>> items = Part2CandidateSelection.objectItems(body);
 		if (items.isEmpty()) {
 			throw new SkipException(reqUri + " - " + source
 					+ " returned an empty collection; no candidate resource is available for schema-validation PASS.");
 		}
-		Object first = items.get(0);
-		if (!(first instanceof Map)) {
-			ETSAssert.failWithUri(reqUri, source + " first item was not a JSON object: " + first);
-		}
-		return castMap(first);
+		return items;
 	}
 
 	private Map<String, Object> firstOptionalCollectionResource(String path, String reqUri, String collectionSchema,
@@ -681,30 +733,10 @@ public class Part2JsonTests {
 	}
 
 	private CommandEvidence firstCommandEvidence(String reqUri) {
-		Map<String, Object> controlStream = firstRequiredCollectionResource("controlstreams", reqUri,
-				CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams");
-		String controlStreamId = requireString(controlStream, "id", reqUri);
-		Response nested = given().accept("application/json")
-			.queryParam("limit", 1)
-			.when()
-			.get(this.baseUri.resolve("controlstreams/" + controlStreamId + "/commands"))
-			.andReturn();
-		if (nested.getStatusCode() == 200) {
-			Map<String, Object> body = assertRequiredJsonResponse(nested, reqUri,
-					"/controlstreams/" + controlStreamId + "/commands");
-			validateResponseAgainstSchema(nested, COMMAND_COLLECTION_SCHEMA, reqUri,
-					"/controlstreams/" + controlStreamId + "/commands");
-			List<?> nestedItems = items(body);
-			if (!nestedItems.isEmpty()) {
-				Object first = nestedItems.get(0);
-				if (!(first instanceof Map)) {
-					ETSAssert.failWithUri(reqUri, "/controlstreams/" + controlStreamId
-							+ "/commands first item was not a JSON object: " + first);
-				}
-				Map<String, Object> command = castMap(first);
-				return new CommandEvidence(requireString(command, "id", reqUri), command,
-						"/controlstreams/" + controlStreamId + "/commands");
-			}
+		Part2CandidateSelection.ParentChild evidence = firstControlStreamCommandEvidenceOrNull(reqUri);
+		if (evidence != null) {
+			String controlStreamId = requireString(evidence.parent(), "id", reqUri);
+			return commandEvidence(evidence.child(), reqUri, "/controlstreams/" + controlStreamId + "/commands");
 		}
 
 		Response global = given().accept("application/json")
@@ -713,23 +745,48 @@ public class Part2JsonTests {
 			.get(this.baseUri.resolve("commands"))
 			.andReturn();
 		if (global.getStatusCode() != 200) {
-			throw new SkipException(reqUri + " - /controlstreams/" + controlStreamId + "/commands returned HTTP "
-					+ nested.getStatusCode() + " and /commands returned HTTP " + global.getStatusCode()
-					+ "; no Command candidate resource evidence is available.");
+			throw new SkipException(reqUri
+					+ " - scoped /controlstreams/{id}/commands probes found no candidate and /commands returned HTTP "
+					+ global.getStatusCode() + "; no Command candidate resource evidence is available.");
 		}
 		Map<String, Object> body = assertRequiredJsonResponse(global, reqUri, "/commands");
 		validateResponseAgainstSchema(global, COMMAND_COLLECTION_SCHEMA, reqUri, "/commands");
-		List<?> globalItems = items(body);
+		List<Map<String, Object>> globalItems = Part2CandidateSelection.objectItems(body);
 		if (globalItems.isEmpty()) {
-			throw new SkipException(reqUri + " - neither /controlstreams/" + controlStreamId
-					+ "/commands nor /commands exposed a candidate Command resource.");
+			throw new SkipException(reqUri
+					+ " - neither scoped /controlstreams/{id}/commands nor /commands exposed a candidate Command resource.");
 		}
-		Object first = globalItems.get(0);
-		if (!(first instanceof Map)) {
-			ETSAssert.failWithUri(reqUri, "/commands first item was not a JSON object: " + first);
+		return commandEvidence(globalItems.get(0), reqUri, "/commands");
+	}
+
+	private Part2CandidateSelection.ParentChild firstControlStreamCommandEvidenceOrNull(String reqUri) {
+		List<Map<String, Object>> controlStreams = requiredCollectionResources("controlstreams", reqUri,
+				CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams");
+		return firstParentWithChild(controlStreams, "controlstreams", "commands", reqUri);
+	}
+
+	private CommandEvidence commandEvidence(Map<String, Object> command, String reqUri, String source) {
+		return new CommandEvidence(requireString(command, "id", reqUri), command, source);
+	}
+
+	private Map<String, Object> firstOptionalCollectionItemOrNull(String path, String reqUri, String source) {
+		Response response = given().accept("application/json")
+			.queryParam("limit", 1)
+			.when()
+			.get(this.baseUri.resolve(path))
+			.andReturn();
+		if (response.getStatusCode() != 200 || !isJsonCompatibleContentType(response.getContentType())) {
+			return null;
 		}
-		Map<String, Object> command = castMap(first);
-		return new CommandEvidence(requireString(command, "id", reqUri), command, "/commands");
+		Map<String, Object> body = parseBody(response);
+		if (body == null) {
+			return null;
+		}
+		List<Map<String, Object>> childItems = Part2CandidateSelection.objectItems(body);
+		if (childItems.isEmpty()) {
+			return null;
+		}
+		return childItems.get(0);
 	}
 
 	private Map<String, Object> optionalJsonObject(String path, String reqUri, String label) {
@@ -834,7 +891,7 @@ public class Part2JsonTests {
 	private static void validateJsonNodeAgainstSchema(JsonNode node, String schemaFile, String reqUri, String source) {
 		assertSchemaResourceBundled(schemaFile, reqUri);
 		try {
-			JsonSchema schema = SCHEMA_FACTORY.getSchema(SchemaLocation.of(schemaIri(schemaFile)));
+			JsonSchema schema = Part2SchemaValidation.getSchema(SCHEMA_FACTORY, schemaIri(schemaFile));
 			Set<ValidationMessage> errors = schema.validate(node);
 			if (!errors.isEmpty()) {
 				String joined = errors.stream()
@@ -881,6 +938,10 @@ public class Part2JsonTests {
 	private static String requireString(Map<String, Object> body, String key, String reqUri) {
 		ETSAssert.assertJsonObjectHas(body, key, String.class, reqUri);
 		return (String) body.get(key);
+	}
+
+	private static String stringValue(Object value) {
+		return value instanceof String ? (String) value : null;
 	}
 
 	@SuppressWarnings("unchecked")

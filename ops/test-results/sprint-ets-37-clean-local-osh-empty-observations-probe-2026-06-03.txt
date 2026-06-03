@@ -1,0 +1,32 @@
+--- /datastreams
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 00:40:26 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{
+  "items": []
+}--- /observations
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 00:40:26 GMT
+Content-Type: application/json
+Content-Length: 0
+
+--- /controlstreams
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 00:40:26 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{
+  "items": []
+}--- /commands
+HTTP/1.1 400 Bad Request
+Date: Wed, 03 Jun 2026 00:40:26 GMT
+Content-Type: application/json
+Content-Length: 69
+
+{
+  "status": 400,
+  "message": "Invalid resource name: 'commands'"
+}

@@ -1,0 +1,56 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.92
+reviewer: Raze
+role: adversarial_reviewer
+created_at_utc: "2026-06-03T14:35:49Z"
+scope_mode: focused_recheck_only
+
+prior_report: .harness/evaluations/sprint-ets-38-adversarial-implementation.yaml
+prior_required_fixes:
+  - id: RAZE-ETS38-GAP-001
+    status: closed
+    evidence:
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java now probes and asserts root /observations before selecting a Datastream for the nested collection assertion.
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java now calls firstRequiredCollectionResource("observations", ...) directly for Observation Annex A.9 schema coverage, without a prior preferredDatastreamResource gate.
+      - ops/test-results/sprint-ets-38-post-raze-clean-local-osh-observations-probe-2026-06-03.txt shows /observations?limit=1, /observations?f=json&limit=1, and /observations/count?f=json returned HTTP 200 application/json with parseable JSON.
+      - ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-2026-06-03.xml reports observationJsonSchemasValidateAgainstAnnexA9 SKIPs on empty /observations rather than empty /datastreams, observationsCanonicalEndpointReadable PASSes, and observationEndpointsReadable reaches the later Datastream-gated nested assertion.
+  - id: RAZE-ETS38-GAP-002
+    status: closed
+    evidence:
+      - ops/test-results/sprint-ets-38-maven-clean-test-cached-2026-06-03.log is archived and reports BUILD SUCCESS with 294 tests / 0 failures / 0 errors / 3 skipped.
+      - .harness/contracts/sprint-ets-38.yaml and ops/test-results.md now point to the archived Maven artifact while preserving the wrapper limitation wording.
+
+evidence:
+  post_raze_clean_smoke:
+    report: ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-2026-06-03.xml
+    container_log: ops/test-results/sprint-ets-38-post-raze-clean-local-osh-container-2026-06-03.log
+    console_log: ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-console-2026-06-03.log
+    totals: "211 total / 68 passed / 0 failed / 143 skipped"
+    iut_bound_methods_from_container_log:
+      GET: 133
+      OPTIONS: 2
+      POST: 0
+      PUT: 0
+      PATCH: 0
+      DELETE: 0
+    console_no_mutation_line: "zero IUT-bound POST/PUT/DELETE/PATCH request-log entries"
+  direct_observation_probe:
+    artifact: ops/test-results/sprint-ets-38-post-raze-clean-local-osh-observations-probe-2026-06-03.txt
+    result: "HTTP 200 application/json parse=json for root Observation collection variants and Observation count"
+  maven:
+    artifact: ops/test-results/sprint-ets-38-maven-clean-test-cached-2026-06-03.log
+    result: "BUILD SUCCESS; Tests run: 294, Failures: 0, Errors: 0, Skipped: 3"
+  low_concerns:
+    request_method_wording: "closed; contract now says request method counts and separately records clean read-only no-write evidence"
+    authorization_masking: "closed; scoped Sprint 38 TeamEngine logs now normalize request headers to Authorization=<masked> and contain no Basic credential token"
+
+required_fixes: []
+
+residual_concerns:
+  - id: RAZE-ETS38-RECHECK-CONCERN-001
+    severity: low
+    status: noted
+    detail: >
+      The clean observationEndpointsReadable method still SKIPs after the root /observations assertion when /datastreams is empty,
+      because the nested /datastreams/{id}/observations assertion needs a parent Datastream. This is acceptable for the focused
+      gap because root /observations body evidence is no longer skipped before inspection.

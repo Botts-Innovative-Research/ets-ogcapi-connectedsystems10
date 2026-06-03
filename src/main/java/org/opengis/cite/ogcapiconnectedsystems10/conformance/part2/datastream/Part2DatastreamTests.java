@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2CandidateSelection;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests;
 import org.testng.ITestContext;
 import org.testng.Reporter;
@@ -82,7 +83,7 @@ public class Part2DatastreamTests {
 		this.conformanceBody = parseBody(this.conformanceResponse);
 
 		this.datastreamsResponse = given().accept("application/json")
-			.queryParam("limit", 2)
+			.queryParam("limit", Part2CandidateSelection.CANDIDATE_PAGE_LIMIT)
 			.when()
 			.get(this.baseUri.resolve("datastreams"))
 			.andReturn();
@@ -397,18 +398,37 @@ public class Part2DatastreamTests {
 			ETSAssert.failWithUri(REQ_RESOURCES_ENDPOINT, "/datastreams body did not parse as JSON. Content-Type was: "
 					+ this.datastreamsResponse.getContentType());
 		}
-		List<?> datastreams = items(this.datastreamsBody);
+		List<Map<String, Object>> datastreams = Part2CandidateSelection.objectItems(this.datastreamsBody);
 		if (datastreams.isEmpty()) {
 			throw new SkipException(REQ_RESOURCES_ENDPOINT
 					+ " - /datastreams returned an empty collection; no Datastream item is available for canonical read-only checks.");
 		}
-		Object first = datastreams.get(0);
-		if (!(first instanceof Map)) {
-			ETSAssert.failWithUri(REQ_RESOURCES_ENDPOINT, "/datastreams first item was not a JSON object: " + first);
+		Part2CandidateSelection.ParentChild selected = Part2CandidateSelection.firstParentWithChild(datastreams,
+				parent -> {
+					String id = stringValue(parent.get("id"));
+					if (id == null || id.isBlank()) {
+						return null;
+					}
+					return firstObservationItemOrNull(id);
+				});
+		return selected == null ? datastreams.get(0) : selected.parent();
+	}
+
+	private Map<String, Object> firstObservationItemOrNull(String datastreamId) {
+		Response response = given().accept("application/json")
+			.queryParam("limit", 1)
+			.when()
+			.get(this.baseUri.resolve("datastreams/" + datastreamId + "/observations"))
+			.andReturn();
+		if (response.getStatusCode() != 200) {
+			return null;
 		}
-		@SuppressWarnings("unchecked")
-		Map<String, Object> datastream = (Map<String, Object>) first;
-		return datastream;
+		Map<String, Object> body = parseBody(response);
+		if (!hasItemsOnlyCollectionShape(body)) {
+			return null;
+		}
+		List<Map<String, Object>> observations = Part2CandidateSelection.objectItems(body);
+		return observations.isEmpty() ? null : observations.get(0);
 	}
 
 	@SuppressWarnings("unchecked")

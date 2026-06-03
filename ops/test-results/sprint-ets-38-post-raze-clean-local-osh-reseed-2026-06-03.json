@@ -1,0 +1,94 @@
+{
+  "createdAt": "2026-06-03T14:29:12Z",
+  "iut": "http://localhost:8081/sensorhub/api",
+  "authCredentialSupplied": true,
+  "authCredentialRecorded": false,
+  "conformanceReady": true,
+  "waitSeconds": 0.179,
+  "conformanceProbe": {
+    "status": 200,
+    "contentType": "auto",
+    "location": null,
+    "bodyPrefix": "{\n  \"conformsTo\": [\n    \"http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core\",\n    \"http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/html\",\n    \"http:"
+  },
+  "seedResults": [
+    {
+      "collection": "/systems",
+      "method": "POST",
+      "response": {
+        "status": 201,
+        "contentType": "application/json",
+        "location": "/systems/040g",
+        "bodyPrefix": ""
+      }
+    },
+    {
+      "collection": "/procedures",
+      "method": "POST",
+      "response": {
+        "status": 201,
+        "contentType": "application/json",
+        "location": "/procedures/040g",
+        "bodyPrefix": ""
+      }
+    },
+    {
+      "collection": "/deployments",
+      "method": "POST",
+      "response": {
+        "status": 201,
+        "contentType": "application/json",
+        "location": "/deployments/040g",
+        "bodyPrefix": ""
+      }
+    },
+    {
+      "collection": "/samplingFeatures",
+      "method": "POST",
+      "response": {
+        "status": 201,
+        "contentType": "application/json",
+        "location": "/samplingFeatures/040g",
+        "bodyPrefix": ""
+      }
+    }
+  ],
+  "verification": [
+    {
+      "path": "/systems?limit=1",
+      "response": {
+        "status": 200,
+        "contentType": "application/json",
+        "location": null,
+        "bodyPrefix": "{\n  \"items\": [\n    {\n      \"type\": \"Feature\",\n      \"id\": \"040g\",\n      \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [-77.0365,38.8977]\n      }"
+      }
+    },
+    {
+      "path": "/procedures?limit=1",
+      "response": {
+        "status": 200,
+        "contentType": "application/json",
+        "location": null,
+        "bodyPrefix": "{\n  \"items\": [\n    {\n      \"type\": \"Feature\",\n      \"id\": \"040g\",\n      \"geometry\": null,\n      \"properties\": {\n        \"uid\": \"urn:ets:local-osh:procedure:alph"
+      }
+    },
+    {
+      "path": "/deployments?limit=1",
+      "response": {
+        "status": 200,
+        "contentType": "application/json",
+        "location": null,
+        "bodyPrefix": "{\n  \"items\": [\n    {\n      \"type\": \"Feature\",\n      \"id\": \"040g\",\n      \"geometry\": {\n        \"type\": \"Polygon\",\n        \"coordinates\": [\n          [[-77.038,38"
+      }
+    },
+    {
+      "path": "/samplingFeatures?limit=1",
+      "response": {
+        "status": 200,
+        "contentType": "application/json",
+        "location": null,
+        "bodyPrefix": "{\n  \"items\": [\n    {\n      \"type\": \"Feature\",\n      \"id\": \"040g\",\n      \"geometry\": {\n        \"type\": \"Point\",\n        \"coordinates\": [-77.037,38.898]\n      },\n"
+      }
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+recognized_iut_request_logs=190
+method_counts=GET=178,OPTIONS=12
+writes=0

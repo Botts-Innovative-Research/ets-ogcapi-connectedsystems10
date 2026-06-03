@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.sensorhub.impl.service.consys.TestControlStreams" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-06-03T02:34:03" hostname="9e56c7396956" time="1.655">
+  <properties/>
+  <testcase name="testAddSystemAndControls" classname="org.sensorhub.impl.service.consys.TestControlStreams" time="1.358"/>
+  <testcase name="testEmptyCommandCollectionAndCount" classname="org.sensorhub.impl.service.consys.TestControlStreams" time="0.296"/>
+  <system-out><![CDATA[2026-06-03 02:34:03.572 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 02:34:03.574 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 02:34:03.577 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 02:34:03.579 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 02:34:03.579 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.18+8, Eclipse Adoptium
+2026-06-03 02:34:03.579 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 02:34:03.579 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 02:34:03.579 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 02:34:03.630 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 02:34:03.633 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 02:34:03.634 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 02:34:03.634 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 02:34:03.648 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 02:34:03.657 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 02:34:03.657 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 02:34:03.707 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 02:34:03.718 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 02:34:03.767 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 02:34:03.767 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 02:34:03.769 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [183bd470-645b-48bd-ae89-837f6e54138b]
+2026-06-03 02:34:03.779 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [183bd470-645b-48bd-ae89-837f6e54138b] initialized
+2026-06-03 02:34:03.779 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [183bd470-645b-48bd-ae89-837f6e54138b]
+2026-06-03 02:34:03.841 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 02:34:03.842 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [183bd470-645b-48bd-ae89-837f6e54138b] started
+2026-06-03 02:34:03.846 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [e15c8b32-251a-4de1-a180-c0ee598b6187]
+2026-06-03 02:34:03.854 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [e15c8b32-251a-4de1-a180-c0ee598b6187] initialized
+2026-06-03 02:34:03.854 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [e15c8b32-251a-4de1-a180-c0ee598b6187]
+2026-06-03 02:34:03.891 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [e15c8b32-251a-4de1-a180-c0ee598b6187] started
+2026-06-03 02:34:04.040 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 02:34:04.105 [qtp96777829-50] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.180 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.184 [qtp96777829-29] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.219 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/080g
+2026-06-03 02:34:04.223 [qtp96777829-30] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.246 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.250 [qtp96777829-31] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.255 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/0810
+2026-06-03 02:34:04.258 [qtp96777829-32] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/0810 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.266 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.270 [qtp96777829-33] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.274 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/081g
+2026-06-03 02:34:04.278 [qtp96777829-34] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/081g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.283 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.286 [qtp96777829-36] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.291 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/0820
+2026-06-03 02:34:04.294 [qtp96777829-37] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/0820 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.299 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.303 [qtp96777829-38] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.308 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/082g
+2026-06-03 02:34:04.312 [qtp96777829-39] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/082g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.317 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.319 [qtp96777829-27] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.322 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/0830
+2026-06-03 02:34:04.325 [qtp96777829-28] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/0830 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.329 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.332 [qtp96777829-46] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.336 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/083g
+2026-06-03 02:34:04.339 [qtp96777829-50] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/083g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.343 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.347 [qtp96777829-29] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.352 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/0840
+2026-06-03 02:34:04.356 [qtp96777829-30] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/0840 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.360 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.363 [qtp96777829-31] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.367 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/084g
+2026-06-03 02:34:04.370 [qtp96777829-32] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/084g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.375 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.379 [qtp96777829-33] INFO  ConSysApiService:46a1f659 - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.383 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/0850
+2026-06-03 02:34:04.386 [qtp96777829-34] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/controlstreams/0850 (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.390 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.394 [qtp96777829-36] INFO  ConSysApiService:46a1f659 - GET /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+{
+  "items": [
+    {
+      "id": "080g",
+      "name": "Name of control input000",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input000",
+      "validTime": [
+        "2026-06-03T02:34:04.200304571Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "0810",
+      "name": "Name of control input001",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input001",
+      "validTime": [
+        "2026-06-03T02:34:04.25240509Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "081g",
+      "name": "Name of control input002",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input002",
+      "validTime": [
+        "2026-06-03T02:34:04.272089521Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "0820",
+      "name": "Name of control input003",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input003",
+      "validTime": [
+        "2026-06-03T02:34:04.289315937Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "082g",
+      "name": "Name of control input004",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input004",
+      "validTime": [
+        "2026-06-03T02:34:04.305433812Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "0830",
+      "name": "Name of control input005",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input005",
+      "validTime": [
+        "2026-06-03T02:34:04.320704248Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "083g",
+      "name": "Name of control input006",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input006",
+      "validTime": [
+        "2026-06-03T02:34:04.333435036Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "0840",
+      "name": "Name of control input007",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input007",
+      "validTime": [
+        "2026-06-03T02:34:04.349682557Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "084g",
+      "name": "Name of control input008",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input008",
+      "validTime": [
+        "2026-06-03T02:34:04.36500598Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    },
+    {
+      "id": "0850",
+      "name": "Name of control input009",
+      "system@id": "080g",
+      "system@link": {
+        "href": "http://localhost:8888/sensorhub/api/systems/080g?f\u003djson",
+        "uid": "urn:osh:sys:test001",
+        "type": "application/geo+json"
+      },
+      "inputName": "input009",
+      "validTime": [
+        "2026-06-03T02:34:04.381126525Z",
+        "now"
+      ],
+      "async": true,
+      "controlledProperties": [
+        {
+          "label": "Component 1"
+        },
+        {
+          "label": "Component 2"
+        }
+      ],
+      "formats": [
+        "application/json",
+        "application/swe+json",
+        "application/swe+csv",
+        "application/swe+xml",
+        "application/swe+binary"
+      ]
+    }
+  ]
+}
+2026-06-03 02:34:04.418 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 02:34:04.420 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 02:34:04.421 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 02:34:04.422 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [e15c8b32-251a-4de1-a180-c0ee598b6187]
+2026-06-03 02:34:04.425 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [e15c8b32-251a-4de1-a180-c0ee598b6187] stopped
+2026-06-03 02:34:04.461 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 02:34:04.525 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [183bd470-645b-48bd-ae89-837f6e54138b]
+2026-06-03 02:34:04.541 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [183bd470-645b-48bd-ae89-837f6e54138b] stopped
+2026-06-03 02:34:04.632 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+2026-06-03 02:34:04.634 [Test worker] INFO  SensorHub - *****************************************
+2026-06-03 02:34:04.634 [Test worker] INFO  SensorHub - Starting SensorHub...
+2026-06-03 02:34:04.635 [Test worker] INFO  SensorHub - Version: 2.0.1
+2026-06-03 02:34:04.635 [Test worker] INFO  SensorHub - Build number: b7a14b7
+2026-06-03 02:34:04.636 [Test worker] INFO  SensorHub - JDK version: OpenJDK 64-Bit Server VM, 17.0.18+8, Eclipse Adoptium
+2026-06-03 02:34:04.636 [Test worker] INFO  SensorHub - OS type: Linux, amd64
+2026-06-03 02:34:04.636 [Test worker] INFO  SensorHub - CPU cores: 24
+2026-06-03 02:34:04.636 [Test worker] INFO  SensorHub - CommonPool parallelism: 23
+2026-06-03 02:34:04.637 [Test worker] INFO  DefaultDatabaseRegistry - Registering database SystemDriverDatabase with ID 0
+2026-06-03 02:34:04.637 [Test worker] INFO  ModuleRegistry - Loading modules...
+2026-06-03 02:34:04.637 [Test worker] INFO  ModuleRegistry - Starting datastore connectors
+2026-06-03 02:34:04.637 [Test worker] INFO  ModuleRegistry - All datastores ready. Starting all other modules
+2026-06-03 02:34:04.638 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 02:34:04.644 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] initialized
+2026-06-03 02:34:04.644 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 02:34:04.645 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Static resources root is /
+2026-06-03 02:34:04.646 [ModuleRegistry-1] INFO  HttpServer:5360b40b - Servlets root is /sensorhub
+2026-06-03 02:34:04.655 [ModuleRegistry-1] INFO  HttpServer:5360b40b - HTTP server started on port 8888
+2026-06-03 02:34:04.655 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] started
+2026-06-03 02:34:04.655 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'SWE API Database' [dc6a321c-fc77-4f31-bdce-7cc0e9687b11]
+2026-06-03 02:34:04.660 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [dc6a321c-fc77-4f31-bdce-7cc0e9687b11] initialized
+2026-06-03 02:34:04.660 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'SWE API Database' [dc6a321c-fc77-4f31-bdce-7cc0e9687b11]
+2026-06-03 02:34:04.664 [ModuleRegistry-1] INFO  DefaultDatabaseRegistry - Registering database MVObsSystemDatabase with ID 2
+2026-06-03 02:34:04.664 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [dc6a321c-fc77-4f31-bdce-7cc0e9687b11] started
+2026-06-03 02:34:04.665 [ModuleRegistry-1] INFO  ModuleRegistry - Initializing module 'ConSys API Service' [e7c2f93b-0392-410a-a0ad-97a817d75e7e]
+2026-06-03 02:34:04.669 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [e7c2f93b-0392-410a-a0ad-97a817d75e7e] initialized
+2026-06-03 02:34:04.669 [ModuleRegistry-1] INFO  ModuleRegistry - Starting module 'ConSys API Service' [e7c2f93b-0392-410a-a0ad-97a817d75e7e]
+2026-06-03 02:34:04.671 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'ConSys API Service' [e7c2f93b-0392-410a-a0ad-97a817d75e7e] started
+2026-06-03 02:34:04.672 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems
+2026-06-03 02:34:04.675 [qtp1433257306-168] INFO  ConSysApiService:844f67af - POST /sensorhub/api/systems (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.681 [Test worker] INFO  AbstractTestApiBase - POST http://localhost:8888/sensorhub/api/systems/080g/controlstreams
+2026-06-03 02:34:04.685 [qtp1433257306-147] INFO  ConSysApiService:844f67af - POST /sensorhub/api/systems/080g/controlstreams (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.695 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/080g
+2026-06-03 02:34:04.698 [qtp1433257306-148] INFO  ConSysApiService:844f67af - GET /sensorhub/api/controlstreams/080g (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.701 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/080g/commands
+2026-06-03 02:34:04.704 [qtp1433257306-149] INFO  ConSysApiService:844f67af - GET /sensorhub/api/controlstreams/080g/commands (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.711 [Test worker] INFO  AbstractTestApiBase - GET http://localhost:8888/sensorhub/api/controlstreams/080g/commands/count
+2026-06-03 02:34:04.714 [qtp1433257306-150] INFO  ConSysApiService:844f67af - GET /sensorhub/api/controlstreams/080g/commands/count (from ip=127.0.0.1, user=anonymous)
+2026-06-03 02:34:04.716 [Test worker] INFO  ModuleRegistry - Module registry shutdown initiated
+2026-06-03 02:34:04.716 [Test worker] INFO  ModuleRegistry - Stopping all modules (saving config = false, saving state = true)
+2026-06-03 02:34:04.717 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'HTTP Server' [HTTP_SERVER_0]
+2026-06-03 02:34:04.717 [ModuleRegistry-2] INFO  ModuleRegistry - Stopping module 'ConSys API Service' [e7c2f93b-0392-410a-a0ad-97a817d75e7e]
+2026-06-03 02:34:04.718 [ModuleRegistry-2] INFO  ModuleRegistry - Module 'ConSys API Service' [e7c2f93b-0392-410a-a0ad-97a817d75e7e] stopped
+2026-06-03 02:34:04.725 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'HTTP Server' [HTTP_SERVER_0] stopped
+2026-06-03 02:34:04.823 [ModuleRegistry-1] INFO  ModuleRegistry - Stopping module 'SWE API Database' [dc6a321c-fc77-4f31-bdce-7cc0e9687b11]
+2026-06-03 02:34:04.845 [ModuleRegistry-1] INFO  ModuleRegistry - Module 'SWE API Database' [dc6a321c-fc77-4f31-bdce-7cc0e9687b11] stopped
+2026-06-03 02:34:04.930 [Test worker] INFO  SensorHub - SensorHub was cleanly stopped
+]]></system-out>
+  <system-err><![CDATA[SLF4J(I): Connected with provider of type [ch.qos.logback.classic.spi.LogbackServiceProvider]
+]]></system-err>
+</testsuite>

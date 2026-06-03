@@ -1,0 +1,8 @@
+recognized_iut_request_logs=135
+GET=133
+OPTIONS=2
+POST=0
+PUT=0
+PATCH=0
+DELETE=0
+writes=0

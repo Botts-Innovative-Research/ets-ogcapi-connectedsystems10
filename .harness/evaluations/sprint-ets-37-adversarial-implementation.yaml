@@ -1,0 +1,203 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.93
+reviewer: "Red Team / Raze"
+reviewed_at_utc: "2026-06-03T00:53:53Z"
+focused_recheck_at_utc: "2026-06-03T00:59:12Z"
+review_type: implementation
+expensive_reruns:
+  maven: not_rerun
+  gradle: not_rerun
+  teamengine: not_rerun
+  rationale: "Archived Maven, Gradle, TeamEngine XML/log/JSON evidence was internally consistent; no concrete evidence-integrity issue justified rerunning expensive gates."
+token_duration_metadata:
+  duration: unavailable
+  tokens: unavailable
+  note: "No external sub-agent metadata was exposed because this review was performed in-thread as requested."
+reviewed_scope:
+  ets_repo: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  osh_repo: "/home/nh/docker/gir/osh-core"
+  ets_files:
+    - ".harness/contracts/sprint-ets-37.yaml"
+    - ".harness/handoffs/planner-handoff.yaml"
+    - "epics/stories/s-ets-37-01-local-osh-stream-metadata-unblock.md"
+    - "epics/epic-ets-03-part2-classes.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "ops/metrics.md"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/Part2SchemaValidation.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/VerifyPart2SchemaValidation.java"
+    - "ops/test-results/sprint-ets-37-*"
+  osh_files:
+    - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/DataStreamBindingJson.java"
+    - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandStreamBindingJson.java"
+    - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/resource/ResourceBindingJson.java"
+    - "sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestDataStreams.java"
+    - "sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestControlStreams.java"
+findings:
+  - id: RAZE-ETS37-GAP-001
+    severity: MEDIUM
+    category: traceability_reconciliation
+    status: closed
+    summary: "REQ-ETS-TEAMENGINE-006 traceability still stops at Sprint 36 even though Sprint 37 changed and failed the mandatory local OSH E2E state."
+    evidence:
+      - path: "_bmad/traceability.md"
+        detail: "The REQ-ETS-TEAMENGINE-006 row lists stories through S-ETS-36-01 and sprints through ets-36, with status 'SPRINT 36 CLEAN LOCAL OSH E2E VERIFIED AND RAZE REVIEWED'. It omits S-ETS-37-01 and the Sprint 37 clean/local populated E2E failures."
+      - path: "ops/test-results.md"
+        detail: "Current Sprint Evidence records Sprint 37 clean primary smoke as FAIL, 211 total / 67 passed / 4 failed / 140 skipped, and SimUAV-populated smoke as FAIL, 211 total / 78 passed / 35 failed / 98 skipped."
+      - path: ".harness/handoffs/planner-handoff.yaml"
+        detail: "Handoff correctly records sapient_autostart=false, simuav_autostart=false, clean_primary FAIL 211/67/4/140, and populated_simuav FAIL 211/78/35/98."
+    risk: "A reader can wrongly infer that the current local OSH primary E2E gate remains verified through Sprint 36, contradicting the Sprint 37 blocked state."
+    required_fix: "Update the REQ-ETS-TEAMENGINE-006 traceability row to include S-ETS-37-01 / ets-37 and the current blocked E2E evidence: SimUAV-populated FAIL 211/78/35/98, clean reset/reseed FAIL 211/67/4/140, no-mutation counts, and the remaining blocker taxonomy."
+    closure:
+      rechecked_at_utc: "2026-06-03T00:59:12Z"
+      status: closed
+      evidence:
+        - path: "_bmad/traceability.md"
+          detail: "Header now says Last updated: 2026-06-03 (Sprint 37 stream metadata unblock E2E blocked)."
+        - path: "_bmad/traceability.md"
+          detail: "REQ-ETS-TEAMENGINE-006 row now includes S-ETS-37-01 / ets-37, status 'SPECIFIED; SPRINT 37 E2E BLOCKED', SimUAV-populated FAIL 211/78/35/98 with GET=178, OPTIONS=12, writes=0, clean reset/reseed FAIL 211/67/4/140 with GET=133, OPTIONS=2, writes=0, and the current blocker taxonomy."
+  - id: RAZE-ETS37-GAP-002
+    severity: LOW
+    category: scenario_traceability
+    status: closed
+    summary: "The Sprint 37 story omits SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001 from its scenario list while the contract and handoff include it."
+    evidence:
+      - path: "epics/stories/s-ets-37-01-local-osh-stream-metadata-unblock.md"
+        detail: "The Scope section lists LOCAL-OSH-STREAM-METADATA-001 and FORMAT-ASSERTION-NOW-001 only."
+      - path: ".harness/contracts/sprint-ets-37.yaml"
+        detail: "The scenarios list includes LOCAL-OSH-STREAM-METADATA-001, FORMAT-ASSERTION-NOW-001, and POSITIVE-LOCAL-OSH-CLOSURE-001."
+      - path: ".harness/handoffs/planner-handoff.yaml"
+        detail: "The scenarios list also includes POSITIVE-LOCAL-OSH-CLOSURE-001."
+    risk: "Scenario-level traceability is slightly inconsistent for the Sprint 37 completion-blocking E2E closure scenario."
+    required_fix: "Add SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001 to the Sprint 37 story scenario list, or remove it from the Sprint 37 contract and handoff if it is intentionally not in scope."
+    closure:
+      rechecked_at_utc: "2026-06-03T00:59:12Z"
+      status: closed
+      evidence:
+        - path: "epics/stories/s-ets-37-01-local-osh-stream-metadata-unblock.md"
+          detail: "Scope scenario list now includes SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001 alongside LOCAL-OSH-STREAM-METADATA-001 and FORMAT-ASSERTION-NOW-001."
+  - id: RAZE-ETS37-GAP-003
+    severity: LOW
+    category: ops_metadata
+    status: closed
+    summary: "ops/known-issues.md content discusses Sprint 37, but its Last updated timestamp is stale."
+    evidence:
+      - path: "ops/known-issues.md"
+        detail: "The file header says Last updated: 2026-06-02T22:42Z while the active issues body includes Sprint 37 results from 2026-06-03."
+    risk: "This is a small reconciliation hygiene issue, but the project explicitly uses ops documents for handoff freshness."
+    required_fix: "Refresh the ops/known-issues.md Last updated timestamp during final Sprint 37 reconciliation."
+    closure:
+      rechecked_at_utc: "2026-06-03T00:59:12Z"
+      status: closed
+      evidence:
+        - path: "ops/known-issues.md"
+          detail: "Header now says Last updated: 2026-06-03T00:58Z."
+concerns:
+  - id: RAZE-ETS37-CONCERN-001
+    severity: LOW
+    category: post_review_reconciliation
+    summary: "Several docs correctly say Raze is pending at review time; after this report, the parent should update those fields rather than leave stale pending-review language."
+    evidence:
+      - ".harness/contracts/sprint-ets-37.yaml evidence.raze_review.result: PENDING"
+      - "ops/test-results.md Raze implementation review: Pending at this reconciliation point."
+      - ".harness/handoffs/planner-handoff.yaml verification.raze_review: PENDING"
+  - id: RAZE-ETS37-CONCERN-002
+    severity: LOW
+    category: osh_semantics
+    summary: "CommandStreamBindingJson hardcodes async=true. That is schema-valid and verified for the current local OSH fixture, but future OSH work should confirm this matches all ConSys command stream semantics."
+    evidence:
+      - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandStreamBindingJson.java writes async true unconditionally."
+      - "src/main/resources/schemas/connected-systems-2/json/controlStream.json requires async as a boolean."
+evidence:
+  validation_strength:
+    conclusion: "Annex A.9 validation was tightened, not weakened."
+    artifacts:
+      - path: "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/Part2SchemaValidation.java"
+        detail: "Central helper calls SchemaValidatorsConfig.setFormatAssertionsEnabled(true)."
+      - path: "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/VerifyPart2SchemaValidation.java"
+        detail: "Tests reference REQ-ETS-PART2-013 / SCENARIO-ETS-PART2-013-FORMAT-ASSERTION-NOW-001 and verify literal now remains valid while malformed date-time is rejected."
+      - path: "src/main/resources/schemas/connected-systems-2/json/dataStream.json"
+        detail: "Requires phenomenonTime, resultTime, and live; the schema allows null or concrete values for these fields."
+      - path: "src/main/resources/schemas/connected-systems-2/json/controlStream.json"
+        detail: "Requires issueTime, executionTime, live, and async; issueTime/executionTime/live allow null, async requires boolean."
+  content_type_auto_honesty:
+    conclusion: "Content-Type auto is not accepted as PASS evidence."
+    artifacts:
+      - path: "ops/test-results/sprint-ets-37-simuav-local-osh-smoke-failed-2026-06-03.xml"
+        totals: "211 total / 78 passed / 35 failed / 98 skipped"
+        detail: "Multiple failures explicitly reject schema endpoints returning Content-Type 'auto'."
+      - path: "ops/test-results.md"
+        detail: "Documents non-binding obsFormat/cmdFormat schema requests returning Content-Type: auto as remaining failures, not PASS evidence."
+      - path: ".harness/contracts/sprint-ets-37.yaml"
+        detail: "Scope excludes accepting Content-Type auto as parent schema PASS evidence."
+  test_traceability:
+    ets:
+      - path: "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/VerifyPart2SchemaValidation.java"
+        detail: "Class and test comments reference REQ-ETS-PART2-013 and SCENARIO-ETS-PART2-013-FORMAT-ASSERTION-NOW-001."
+    osh:
+      - path: "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestDataStreams.java"
+        detail: "Required metadata assertion comment references REQ-ETS-PART2-013 / SCENARIO-ETS-PART2-013-LOCAL-OSH-STREAM-METADATA-001."
+      - path: "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestControlStreams.java"
+        detail: "Required metadata assertion comment references REQ-ETS-PART2-013 / SCENARIO-ETS-PART2-013-LOCAL-OSH-STREAM-METADATA-001."
+  verification_totals:
+    ets_maven:
+      path: "ops/test-results/sprint-ets-37-ets-maven-test-2026-06-03.log"
+      result: "PASS"
+      totals: "291 tests / 0 failures / 0 errors / 3 skipped"
+      focused: "VerifyPart2SchemaValidation: 2 tests / 0 failures / 0 errors / 0 skipped"
+    osh_gradle:
+      artifacts:
+        - path: "ops/test-results/sprint-ets-37-osh-TestDataStreams-2026-06-03.xml"
+          totals: "9 tests / 0 failures / 0 errors / 0 skipped"
+        - path: "ops/test-results/sprint-ets-37-osh-TestControlStreams-2026-06-03.xml"
+          totals: "1 test / 0 failures / 0 errors / 0 skipped"
+      compile: "ConSys compileJava and compileTestJava completed successfully with warnings only, per ops/test-results.md."
+    populated_simuav_teamengine:
+      result: "FAIL"
+      report: "ops/test-results/sprint-ets-37-simuav-local-osh-smoke-failed-2026-06-03.xml"
+      console_log: "ops/test-results/sprint-ets-37-simuav-local-osh-smoke-console-2026-06-03.log"
+      container_log: "ops/test-results/sprint-ets-37-simuav-local-osh-container-failed-2026-06-03.log"
+      totals: "211 total / 78 passed / 35 failed / 98 skipped"
+      no_mutation: "ops/test-results/sprint-ets-37-simuav-local-osh-smoke-failed-no-mutation-2026-06-03.txt"
+      method_counts: "recognized_iut_request_logs=190; GET=178; OPTIONS=12; writes=0"
+    clean_primary_teamengine:
+      result: "FAIL"
+      report: "ops/test-results/sprint-ets-37-clean-local-osh-smoke-failed-2026-06-03.xml"
+      console_log: "ops/test-results/sprint-ets-37-clean-local-osh-smoke-console-2026-06-03.log"
+      container_log: "ops/test-results/sprint-ets-37-clean-local-osh-container-failed-2026-06-03.log"
+      totals: "211 total / 67 passed / 4 failed / 140 skipped"
+      no_mutation: "ops/test-results/sprint-ets-37-clean-local-osh-smoke-failed-no-mutation-2026-06-03.txt"
+      method_counts: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; writes=0"
+      blocker_probe: "ops/test-results/sprint-ets-37-clean-local-osh-empty-observations-probe-2026-06-03.txt"
+      blocker_detail: "/observations?limit=1 returned HTTP 200 application/json with Content-Length: 0."
+  fixture_state:
+    config_path: "/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json"
+    sapient_autostart: false
+    simuav_autostart: false
+    reset_reseed_artifacts:
+      - "ops/test-results/sprint-ets-37-field-hub-osh-reset-clean-2026-06-03.log"
+      - "ops/test-results/sprint-ets-37-clean-local-osh-reseed-2026-06-03.json"
+  credential_hygiene:
+    conclusion: "No raw Sprint 37 auth credential was found in the checked artifact patterns."
+    evidence:
+      - "Sprint 37 console logs show only SMOKE_AUTH_CREDENTIAL set (length=30)."
+      - "Sprint 37 container logs show masked Authorization=Basi***MDI2 fragments."
+      - "Search for unmasked Authorization=Basic, Authorization: Basic, auth-credential=, and SMOKE_AUTH_CREDENTIAL= values in ops/test-results/sprint-ets-37-* returned no matches."
+  diff_hygiene:
+    ets_git_diff_check: "PASS"
+    osh_git_diff_check: "PASS"
+required_fixes: []
+approval_notes:
+  - "Sprint 37 remains E2E-blocked and must not be reported complete."
+  - "The Sprint 37 implementation should not be reported as complete."
+  - "The parent may report the current state only as blocked after closing the required reconciliation fixes above."
+  - "No evidence supports claiming full populated-IUT part2binding PASS."
+  - "No evidence supports accepting Content-Type auto as PASS evidence."

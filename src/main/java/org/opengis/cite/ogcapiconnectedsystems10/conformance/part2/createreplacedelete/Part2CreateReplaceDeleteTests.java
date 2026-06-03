@@ -12,6 +12,7 @@ import java.util.Map;
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
 import org.opengis.cite.ogcapiconnectedsystems10.TestRunArg;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2CandidateSelection;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests;
 import org.testng.ITestContext;
 import org.testng.Reporter;
@@ -182,7 +183,8 @@ public class Part2CreateReplaceDeleteTests {
 		skipIfCreateReplaceDeleteUndeclared();
 		skipIfClassUndeclared(CONF_DATASTREAM,
 				"DataStream and Observation CRD readiness requires the Part 2 Datastream class.");
-		Map<String, Object> datastream = firstResource("datastreams", REQ_DATASTREAM);
+		Map<String, Object> datastream = preferredResourceWithChildCollection("datastreams", "observations",
+				REQ_DATASTREAM);
 		String datastreamId = resourceId(datastream, REQ_DATASTREAM, "selected DataStream");
 		String systemId = associatedSystemId(datastream, REQ_DATASTREAM, "selected DataStream");
 		assertOptionsAdvertises(systemScopedCollectionPath(systemId, "datastreams"), "POST", REQ_DATASTREAM);
@@ -209,7 +211,8 @@ public class Part2CreateReplaceDeleteTests {
 		skipIfCreateReplaceDeleteUndeclared();
 		skipIfClassUndeclared(CONF_CONTROLSTREAM,
 				"ControlStream and Command CRD readiness requires the Part 2 ControlStream class.");
-		Map<String, Object> controlStream = firstResource("controlstreams", REQ_CONTROLSTREAM);
+		Map<String, Object> controlStream = preferredResourceWithChildCollection("controlstreams", "commands",
+				REQ_CONTROLSTREAM);
 		String controlStreamId = resourceId(controlStream, REQ_CONTROLSTREAM, "selected ControlStream");
 		String systemId = associatedSystemId(controlStream, REQ_CONTROLSTREAM, "selected ControlStream");
 		assertOptionsAdvertises(systemScopedCollectionPath(systemId, "controlstreams"), "POST", REQ_CONTROLSTREAM);
@@ -433,24 +436,56 @@ public class Part2CreateReplaceDeleteTests {
 	}
 
 	private Map<String, Object> firstResource(String collectionPath, String requirementUri) {
+		return resources(collectionPath, requirementUri).get(0);
+	}
+
+	private Map<String, Object> preferredResourceWithChildCollection(String collectionPath, String childCollection,
+			String requirementUri) {
+		List<Map<String, Object>> resources = resources(collectionPath, requirementUri);
+		Part2CandidateSelection.ParentChild selected = Part2CandidateSelection.firstParentWithChild(resources,
+				parent -> {
+					String id = stringValue(parent.get("id"));
+					if (id == null || id.isBlank()) {
+						return null;
+					}
+					return firstChildItemOrNull(collectionPath + "/" + id + "/" + childCollection);
+				});
+		return selected == null ? resources.get(0) : selected.parent();
+	}
+
+	private List<Map<String, Object>> resources(String collectionPath, String requirementUri) {
 		Response response = given().accept("application/json")
-			.queryParam("limit", 1)
+			.queryParam("limit", Part2CandidateSelection.CANDIDATE_PAGE_LIMIT)
 			.when()
 			.get(this.baseUri.resolve(collectionPath))
 			.andReturn();
 		if (response.getStatusCode() != 200) {
-			throw new SkipException(requirementUri + " - /" + collectionPath + "?limit=1 returned HTTP "
+			throw new SkipException(requirementUri + " - /" + collectionPath + " returned HTTP "
 					+ response.getStatusCode() + "; no resource is available for read-only OPTIONS probing.");
 		}
-		Map<String, Object> body = parseBody(response);
-		List<?> items = items(body);
-		if (items.isEmpty() || !(items.get(0) instanceof Map)) {
+		List<Map<String, Object>> resources = Part2CandidateSelection.objectItems(parseBody(response));
+		if (resources.isEmpty()) {
 			throw new SkipException(requirementUri + " - /" + collectionPath
-					+ "?limit=1 did not expose a resource item for read-only OPTIONS probing.");
+					+ " did not expose a resource item for read-only OPTIONS probing.");
 		}
-		@SuppressWarnings("unchecked")
-		Map<String, Object> resource = (Map<String, Object>) items.get(0);
-		return resource;
+		return resources;
+	}
+
+	private Map<String, Object> firstChildItemOrNull(String path) {
+		Response response = given().accept("application/json")
+			.queryParam("limit", 1)
+			.when()
+			.get(this.baseUri.resolve(path))
+			.andReturn();
+		if (response.getStatusCode() != 200) {
+			return null;
+		}
+		Map<String, Object> body = parseBody(response);
+		if (!hasItemsOnlyCollectionShape(body)) {
+			return null;
+		}
+		List<Map<String, Object>> childItems = Part2CandidateSelection.objectItems(body);
+		return childItems.isEmpty() ? null : childItems.get(0);
 	}
 
 	private String resourceId(Map<String, Object> resource, String requirementUri, String label) {

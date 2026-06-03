@@ -1,9 +1,9 @@
 {
   "description": "Planned dynamic-data seed fixture contract for local OSH populated Observation/Command binding closure.",
-  "status": "GENERATOR_PARTIAL_DISCOVERED_COMMAND_ACK_AND_RESULT_FIXTURES_VERIFIED_SCHEMA_VALID_CLOSURE_OPEN",
+  "status": "GENERATOR_PARTIAL_SIMUAV_PRESEED_VERIFIED_CHILD_BODY_AND_SCHEMA_LIMITS_OPEN",
   "createdFor": "S-ETS-33-01 local OSH dynamic-data seed fixture planning",
   "createdAt": "2026-06-02T01:07:13Z",
-  "updatedAt": "2026-06-02T19:45:00Z",
+  "updatedAt": "2026-06-03T14:10:00Z",
   "iutBaseUrlHost": "http://localhost:8081/sensorhub/api",
   "iutBaseUrlDocker": "http://field-hub-osh-1:8081/sensorhub/api",
   "dockerNetwork": "field-hub_default",
@@ -14,7 +14,8 @@
     "The official Part 2 OpenAPI schemas mark some readOnly fields as required, so Generator must discover accepted OSH write shape before recording exact payloads.",
     "Credential values must never be stored in this manifest, repository docs, or archived logs.",
     "Sprint 34 verifies Sapient as an isolated local command-ack fixture, but Sapient-generated streams are not accepted as persistent seed state because they fail broader Part 2 schema validation.",
-    "Sprint 35 verifies SimUAV as an isolated local command/result fixture, but SimUAV-generated streams are not accepted as persistent seed state because local OSH omits schema-required stream metadata and serves schema bodies with Content-Type auto."
+    "Sprint 35 verifies SimUAV as an isolated local command/result fixture, but SimUAV-generated streams are not accepted as persistent seed state because local OSH omits schema-required stream metadata and serves schema bodies with Content-Type auto.",
+    "Sprint 38 verifies a reproducible SimUAV preseed/probe path and populated parent candidate selection. The fixture provides dynamic parent resources and a waypoint Command POST that completes, but still does not provide parseable Observation child collections, nested Command collections, dereferenceable CommandStatus/CommandResult URLs, strict schema media types, or exact SWE text schema responses."
   ],
   "mutationSafety": {
     "requiresExplicitOptIn": true,
@@ -161,6 +162,36 @@
       "battery_remaining"
     ],
     "disposition": "Use SimUAV only as an isolated tasking/result fixture. Disable SimUAV autostart, reset the OSH datastore, and reseed static 040g fixtures before primary TeamEngine smoke."
+  },
+  "simUavPreseededPopulatedFixture": {
+    "status": "PARTIAL_E2E_BLOCKED_BY_OSH_LIMITATIONS",
+    "story": "S-ETS-38-01",
+    "preseedArtifact": "ops/test-results/sprint-ets-38-local-osh-simuav-preseed-r3-2026-06-03.json",
+    "populatedSmokeReport": "ops/test-results/sprint-ets-38-simuav-preseed-teamengine-smoke-r3-2026-06-03.xml",
+    "cleanRestoreReport": "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-2026-06-03.xml",
+    "mutationGateUsed": {
+      "SIMUAV_PRESEED_ENABLED": "true",
+      "SMOKE_MUTATION_TESTS_ENABLED": "true",
+      "SMOKE_MUTATION_IUT_POLICY": "dedicated-mutable-iut",
+      "target": "local OSH only"
+    },
+    "preseedSummary": {
+      "dataStreams": 2,
+      "controlStreams": 3,
+      "commandPostStatus": 200,
+      "commandPostStatusCode": "COMPLETED",
+      "requestMethodCounts": {
+        "GET": 102,
+        "POST": 1
+      }
+    },
+    "remainingBlockers": [
+      "Observation child collections return HTTP 200 application/json with empty bodies instead of parseable items arrays.",
+      "Nested Command collection returns HTTP 200 application/json with an empty body after waypoint Command POST.",
+      "POST response command@id is not dereferenceable through /commands/{id}, /commands/{id}/status, or /commands/{id}/result.",
+      "Some schema endpoints still return Content-Type auto and some SWE text schema requests return HTTP 400."
+    ],
+    "disposition": "Use SimUAV preseed only as a dedicated populated E2E probe. It is not a full positive binding fixture until OSH exposes child-body and schema media-type evidence. Disable SimUAV autostart, reset OSH data, and reseed static 040g fixtures before primary clean smoke."
   },
   "openApiDerivedRequestBodies": [
     {

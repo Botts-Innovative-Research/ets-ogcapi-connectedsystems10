@@ -1,0 +1,146 @@
+verdict: GAPS_FOUND
+confidence: 0.88
+reviewer: Raze
+role: adversarial_reviewer
+created_at_utc: "2026-06-03T14:17:07Z"
+scope_mode: review_only_no_implementation_or_doc_edits
+
+reviewed_scope:
+  - AGENTS.md
+  - _bmad/agents/adversarial-reviewer.md
+  - .harness/contracts/sprint-ets-38.yaml
+  - .harness/handoffs/planner-handoff.yaml
+  - epics/stories/s-ets-38-01-simuav-preseeded-populated-iut-fixture.md
+  - epics/epic-ets-03-part2-classes.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - _bmad/traceability.md
+  - ops/status.md
+  - ops/test-results.md
+  - ops/known-issues.md
+  - ops/changelog.md
+  - ops/server.md
+  - ops/local-osh-dynamic-data-seed-fixtures.json
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/Part2CandidateSelection.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/Part2SchemaValidation.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamTests.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/VerifyPart2CandidateSelection.java
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/VerifyPart2SchemaValidation.java
+  - scripts/local-osh-simuav-preseed.py
+  - ops/test-results/sprint-ets-38-local-osh-simuav-preseed-r3-2026-06-03.json
+  - ops/test-results/sprint-ets-38-simuav-preseed-teamengine-smoke-r3-2026-06-03.xml
+  - ops/test-results/sprint-ets-38-simuav-preseed-teamengine-container-r3-2026-06-03.log
+  - ops/test-results/sprint-ets-38-final-clean-local-osh-smoke-2026-06-03.xml
+  - ops/test-results/sprint-ets-38-final-clean-local-osh-container-2026-06-03.log
+  - ops/test-results/sprint-ets-38-final-clean-local-osh-reseed-2026-06-03.json
+  - ops/test-results/sprint-ets-38-final-clean-local-osh-reset-2026-06-03.log
+
+findings:
+  - id: RAZE-ETS38-GAP-001
+    severity: high
+    status: open
+    title: Clean empty-IUT root Observation endpoint/body failures can now be skipped before probing /observations.
+    files:
+      - path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java
+        lines: "213-245, 398-406"
+      - path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java
+        lines: "279-285"
+      - path: ops/test-results/sprint-ets-38-final-clean-local-osh-smoke-2026-06-03.xml
+        lines: "1269-1277, 2148-2165"
+    evidence:
+      - Part2DatastreamTests.observationEndpointsReadable resolves selectedDatastream before it probes the root /observations collection.
+      - Part2DatastreamTests.observationsCanonicalEndpointReadable also calls selectedDatastream before probing /observations.
+      - selectedDatastream throws SkipException when /datastreams is empty, so a clean IUT can skip root Observation endpoint parsing entirely.
+      - Part2JsonTests.observationJsonSchemasValidateAgainstAnnexA9 now calls preferredDatastreamResource before firstRequiredCollectionResource("observations", ...).
+      - The final clean smoke XML shows observationJsonSchemasValidateAgainstAnnexA9 and root Observation endpoint tests SKIP because /datastreams is empty, not because /observations was inspected.
+    impact: >
+      This weakens the Sprint 37 empty-collection-body guard for the clean primary IUT. A regression where /observations returns HTTP 200 application/json
+      with an empty or unparsable body could become invisible whenever /datastreams is empty, despite the Sprint 38 claim that empty bodies remain
+      failures/blockers.
+    required_fix: >
+      Keep root /observations endpoint/body assertions independent of selected parent Datastream availability. Parent-selected evidence should gate only
+      nested /datastreams/{id}/observations and positive binding/candidate checks. Add or restore regression/E2E evidence that an empty clean IUT still
+      inspects /observations and fails on an empty/unparseable body.
+
+  - id: RAZE-ETS38-GAP-002
+    severity: medium
+    status: open
+    title: Sprint 38 Maven pass claim is not archived in repository artifacts.
+    files:
+      - path: .harness/contracts/sprint-ets-38.yaml
+        lines: "30, 44-48"
+      - path: ops/test-results.md
+        lines: "23-26"
+    evidence:
+      - The contract success criteria require Maven verification for touched ETS modules to be archived.
+      - ops/test-results.md reports the wrapper limitation and cached Docker Maven equivalent result as 294 tests / 0 failures / 0 errors / 3 skipped.
+      - A repository-wide filename search found no Sprint 38 Maven log artifact matching sprint-ets-38, ets-38, or s38 Maven naming.
+    impact: >
+      The wrapper limitation is reported honestly in docs, but the 294/0/0/3 cached Docker Maven result is not independently reproducible from the
+      committed artifact set. This is a traceability gap, not proof the Maven claim is false.
+    required_fix: >
+      Archive the Sprint 38 Maven output under ops/test-results/ or downgrade the claim to session-output-only evidence and reconcile the contract/story
+      wording accordingly. Prefer archiving a bounded cached Docker Maven log if rerunning is acceptable.
+
+evidence:
+  claims_verified:
+    - claim: Populated SimUAV TeamEngine E2E is not claimed as pass.
+      result: verified
+      details: >
+        ops/test-results/sprint-ets-38-simuav-preseed-teamengine-smoke-r3-2026-06-03.xml root reports
+        total=211, passed=83, failed=29, skipped=99. Docs consistently classify it as FAIL_OSH_LIMITATIONS_VISIBLE.
+    - claim: Final clean local OSH E2E is pass with zero IUT-bound writes.
+      result: verified_with_coverage_caveat
+      details: >
+        ops/test-results/sprint-ets-38-final-clean-local-osh-smoke-2026-06-03.xml root reports total=211, passed=67,
+        failed=0, skipped=144. The final clean container log contains IUT-bound GET=130 and OPTIONS=2, with zero POST,
+        PUT, PATCH, or DELETE request entries.
+    - claim: SimUAV is disabled and clean local OSH state is restored.
+      result: verified
+      details: >
+        Final reset artifact records field-hub_osh-data reset and OSH restart. Final reseed artifact records POST 201 for
+        /systems/040g, /procedures/040g, /deployments/040g, and /samplingFeatures/040g with authCredentialRecorded=false.
+        Live sanitized external config inspection showed sapient-driver autoStart=false and simuav-driver autoStart=false.
+    - claim: Credential values are not recorded in Sprint 38 artifacts/docs.
+      result: verified_with_low_risk_masking_note
+      details: >
+        The preseed and reseed JSON artifacts record authCredentialSupplied/authCredentialRecorded only. A redacted scan found
+        no unmasked Basic credential token or password value in the scoped Sprint 38 artifacts/docs. TeamEngine container logs
+        include masked Authorization header strings, not full credential values.
+    - claim: Strict schema evidence is not weakened in the populated SimUAV evidence.
+      result: verified_for_populated_e2e
+      details: >
+        The populated XML preserves FAIL/SKIP evidence for Content-Type auto schema responses, SWE Common Text HTTP 400 schema
+        responses, empty /observations bodies, and empty nested /controlstreams/{id}/commands bodies. See required gap
+        RAZE-ETS38-GAP-001 for clean empty-IUT root Observation coverage.
+    - claim: Preseed evidence is partial and does not claim full Observation/Command/Status/Result closure.
+      result: verified
+      details: >
+        sprint-ets-38-local-osh-simuav-preseed-r3 reports PARTIAL_MISSING_OBSERVATION_OR_COMMAND_CHILD_EVIDENCE, GET=102,
+        POST=1, two DataStreams, three ControlStreams, waypoint_feasibility command POST HTTP 200 COMPLETED, zero parseable
+        Observation child items, nested Commands HTTP 200 with non-JSON/empty body, and no dereferenceable status/result evidence.
+
+low_risk_concerns:
+  - id: RAZE-ETS38-CONCERN-001
+    title: Populated smoke method-count wording is imprecise.
+    details: >
+      The populated TeamEngine container log shows IUT-bound GET=248, OPTIONS=12, POST=3, PUT=1, DELETE=3. This is not a
+      public/shared-IUT safety issue because the run is documented as a dedicated mutable local IUT, and docs do not claim
+      populated no-mutation. However the contract phrase "no-mutation method counts" is confusing for a mutation-enabled
+      populated fixture and should be reconciled to "request method counts" or accompanied by a no-mutation artifact only
+      for read-only runs.
+  - id: RAZE-ETS38-CONCERN-002
+    title: Container logs retain masked Authorization header fragments.
+    details: >
+      No full credential value was found, but the TeamEngine request logs contain masked Authorization strings. If the policy
+      is interpreted as no auth header material of any kind, scrub or suppress these masked headers before archiving.
+
+required_fixes:
+  - RAZE-ETS38-GAP-001
+  - RAZE-ETS38-GAP-002

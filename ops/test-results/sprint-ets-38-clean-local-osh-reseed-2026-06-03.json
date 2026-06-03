@@ -1,0 +1,41 @@
+{
+  "authCredentialRecorded": false,
+  "authCredentialSupplied": true,
+  "fixturePath": "ops/local-osh-seed-fixtures.json",
+  "pass": true,
+  "results": [
+    {
+      "bodyKeys": null,
+      "bodyType": "empty-or-nonjson",
+      "collection": "/systems",
+      "location": "/systems/040g",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "bodyKeys": null,
+      "bodyType": "empty-or-nonjson",
+      "collection": "/procedures",
+      "location": "/procedures/040g",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "bodyKeys": null,
+      "bodyType": "empty-or-nonjson",
+      "collection": "/deployments",
+      "location": "/deployments/040g",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "bodyKeys": null,
+      "bodyType": "empty-or-nonjson",
+      "collection": "/samplingFeatures",
+      "location": "/samplingFeatures/040g",
+      "method": "POST",
+      "status": 201
+    }
+  ],
+  "startedAt": "2026-06-03T13:54:33.256111Z"
+}

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2CandidateSelection;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests;
 import org.testng.ITestContext;
 import org.testng.Reporter;
@@ -122,13 +123,12 @@ public class Part2ObservationCommandBindingTests {
 	public void observationBindingRequiresParentSchemaAndChildBodyEvidence() {
 		skipIfConditionClassUndeclared(CONF_DATASTREAM,
 				"Observation binding requires the Part 2 Datastreams & Observations class.");
-		Map<String, Object> datastream = firstRequiredCollectionResource("datastreams", REQ_OBS_REF_FROM_DATASTREAM,
-				"/datastreams");
-		String datastreamId = requireString(datastream, "id", REQ_OBS_REF_FROM_DATASTREAM);
+		Part2CandidateSelection.ParentChild bindingEvidence = firstDatastreamWithObservation(
+				REQ_OBS_REF_FROM_DATASTREAM);
+		String datastreamId = requireString(bindingEvidence.parent(), "id", REQ_OBS_REF_FROM_DATASTREAM);
 		Map<String, Object> parentSchema = requiredJsonObject("datastreams/" + datastreamId + "/schema",
 				REQ_DATASTREAM_SCHEMA_OP, "/datastreams/" + datastreamId + "/schema");
-		Map<String, Object> observation = firstObservationForDatastream(datastreamId, REQ_OBS_REF_FROM_DATASTREAM);
-		Map<String, Object> childBody = childBindingBody(observation, List.of("result", "parameters"),
+		Map<String, Object> childBody = childBindingBody(bindingEvidence.child(), List.of("result", "parameters"),
 				REQ_OBS_REF_FROM_DATASTREAM, "Observation");
 
 		assertChildMatchesParentSchema(childBody, parentSchema,
@@ -147,19 +147,19 @@ public class Part2ObservationCommandBindingTests {
 	public void commandBindingRequiresParentSchemaAndChildBodyEvidence() {
 		skipIfConditionClassUndeclared(CONF_CONTROLSTREAM,
 				"Command binding requires the Part 2 Control Streams & Commands class.");
-		Map<String, Object> controlStream = firstRequiredCollectionResource("controlstreams",
-				REQ_CMD_REF_FROM_CONTROLSTREAM, "/controlstreams");
-		String controlStreamId = requireString(controlStream, "id", REQ_CMD_REF_FROM_CONTROLSTREAM);
+		Part2CandidateSelection.ParentChild bindingEvidence = firstControlStreamWithCommand(
+				REQ_CMD_REF_FROM_CONTROLSTREAM);
+		String controlStreamId = requireString(bindingEvidence.parent(), "id", REQ_CMD_REF_FROM_CONTROLSTREAM);
 		Map<String, Object> parentSchema = requiredJsonObject("controlstreams/" + controlStreamId + "/schema",
 				REQ_CONTROLSTREAM_SCHEMA_OP, "/controlstreams/" + controlStreamId + "/schema");
-		Map<String, Object> command = firstCommandForControlStream(controlStreamId, REQ_CMD_REF_FROM_CONTROLSTREAM);
-		Map<String, Object> childBody = childBindingBody(command, List.of("parameters", "params"),
+		Map<String, Object> childBody = childBindingBody(bindingEvidence.child(), List.of("parameters", "params"),
 				REQ_CMD_REF_FROM_CONTROLSTREAM, "Command");
 
 		assertChildMatchesParentSchema(childBody, parentSchema,
 				List.of("parametersSchema", "paramsSchema", "recordSchema"), REQ_CMD_REF_FROM_CONTROLSTREAM,
 				"Command parameters");
-		assertAvailableCommandInlineDataMatchesParentSchema(command, parentSchema, REQ_CMD_REF_FROM_CONTROLSTREAM);
+		assertAvailableCommandInlineDataMatchesParentSchema(bindingEvidence.child(), parentSchema,
+				REQ_CMD_REF_FROM_CONTROLSTREAM);
 	}
 
 	/**
@@ -252,53 +252,74 @@ public class Part2ObservationCommandBindingTests {
 		};
 	}
 
-	private Map<String, Object> firstRequiredCollectionResource(String path, String reqUri, String source) {
+	private Part2CandidateSelection.ParentChild firstDatastreamWithObservation(String reqUri) {
+		List<Map<String, Object>> datastreams = requiredCollectionResources("datastreams", reqUri, "/datastreams");
+		Part2CandidateSelection.ParentChild selected = Part2CandidateSelection.firstParentWithChild(datastreams,
+				parent -> {
+					String datastreamId = stringValue(parent.get("id"));
+					if (datastreamId == null || datastreamId.isBlank()) {
+						return null;
+					}
+					Map<String, Object> nested = firstOptionalCollectionItem(
+							"datastreams/" + datastreamId + "/observations", reqUri,
+							"/datastreams/" + datastreamId + "/observations");
+					if (nested != null && observationReferencesDatastream(nested, datastreamId)) {
+						return nested;
+					}
+					Map<String, Object> global = firstOptionalCollectionItem("observations", reqUri, "/observations");
+					if (global != null && observationReferencesDatastream(global, datastreamId)) {
+						return global;
+					}
+					return null;
+				});
+		if (selected != null) {
+			return selected;
+		}
+		throw new SkipException(reqUri
+				+ " - no DataStream candidate on the inspected page exposed associated Observation evidence through its scoped child collection or /observations; no binding PASS was reported.");
+	}
+
+	private Part2CandidateSelection.ParentChild firstControlStreamWithCommand(String reqUri) {
+		List<Map<String, Object>> controlStreams = requiredCollectionResources("controlstreams", reqUri,
+				"/controlstreams");
+		Part2CandidateSelection.ParentChild selected = Part2CandidateSelection.firstParentWithChild(controlStreams,
+				parent -> {
+					String controlStreamId = stringValue(parent.get("id"));
+					if (controlStreamId == null || controlStreamId.isBlank()) {
+						return null;
+					}
+					Map<String, Object> nested = firstOptionalCollectionItem(
+							"controlstreams/" + controlStreamId + "/commands", reqUri,
+							"/controlstreams/" + controlStreamId + "/commands");
+					if (nested != null && commandReferencesControlStream(nested, controlStreamId)) {
+						return nested;
+					}
+					Map<String, Object> global = firstOptionalCollectionItem("commands", reqUri, "/commands");
+					if (global != null && commandReferencesControlStream(global, controlStreamId)) {
+						return global;
+					}
+					return null;
+				});
+		if (selected != null) {
+			return selected;
+		}
+		throw new SkipException(reqUri
+				+ " - no ControlStream candidate on the inspected page exposed associated Command evidence through its scoped child collection or /commands; no binding PASS was reported.");
+	}
+
+	private List<Map<String, Object>> requiredCollectionResources(String path, String reqUri, String source) {
 		Response response = given().accept("application/json")
-			.queryParam("limit", 1)
+			.queryParam("limit", Part2CandidateSelection.CANDIDATE_PAGE_LIMIT)
 			.when()
 			.get(this.baseUri.resolve(path))
 			.andReturn();
 		Map<String, Object> body = skipUnlessInspectableJsonResponse(response, reqUri, source);
-		List<?> items = items(body);
+		List<Map<String, Object>> items = Part2CandidateSelection.objectItems(body);
 		if (items.isEmpty()) {
 			throw new SkipException(reqUri + " - " + source
 					+ " returned an empty collection; no local dynamic-data candidate is available for REQ-ETS-PART2-013 binding PASS.");
 		}
-		Object first = items.get(0);
-		if (!(first instanceof Map)) {
-			ETSAssert.failWithUri(reqUri, source + " first item was not a JSON object: " + first);
-		}
-		return castMap(first);
-	}
-
-	private Map<String, Object> firstObservationForDatastream(String datastreamId, String reqUri) {
-		Map<String, Object> nested = firstOptionalCollectionItem("datastreams/" + datastreamId + "/observations",
-				reqUri, "/datastreams/" + datastreamId + "/observations");
-		if (nested != null) {
-			return nested;
-		}
-		Map<String, Object> global = firstOptionalCollectionItem("observations", reqUri, "/observations");
-		if (global != null && observationReferencesDatastream(global, datastreamId)) {
-			return global;
-		}
-		throw new SkipException(reqUri + " - neither /datastreams/" + datastreamId
-				+ "/observations nor /observations exposed an Observation associated with Datastream '" + datastreamId
-				+ "'; no binding PASS was reported.");
-	}
-
-	private Map<String, Object> firstCommandForControlStream(String controlStreamId, String reqUri) {
-		Map<String, Object> nested = firstOptionalCollectionItem("controlstreams/" + controlStreamId + "/commands",
-				reqUri, "/controlstreams/" + controlStreamId + "/commands");
-		if (nested != null) {
-			return nested;
-		}
-		Map<String, Object> global = firstOptionalCollectionItem("commands", reqUri, "/commands");
-		if (global != null && commandReferencesControlStream(global, controlStreamId)) {
-			return global;
-		}
-		throw new SkipException(reqUri + " - neither /controlstreams/" + controlStreamId
-				+ "/commands nor /commands exposed a Command associated with ControlStream '" + controlStreamId
-				+ "'; no binding PASS was reported.");
+		return items;
 	}
 
 	private Map<String, Object> firstOptionalCollectionItem(String path, String reqUri, String source) {

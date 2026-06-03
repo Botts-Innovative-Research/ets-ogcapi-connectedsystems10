@@ -1,0 +1,33 @@
+{
+  "authCredentialRecorded": false,
+  "authCredentialSupplied": true,
+  "fixturePath": "ops/local-osh-seed-fixtures.json",
+  "pass": true,
+  "results": [
+    {
+      "collection": "/systems",
+      "location": "/systems/040g",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "collection": "/procedures",
+      "location": "/procedures/040g",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "collection": "/deployments",
+      "location": "/deployments/040g",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "collection": "/samplingFeatures",
+      "location": "/samplingFeatures/040g",
+      "method": "POST",
+      "status": 201
+    }
+  ],
+  "startedAt": "2026-06-03T14:09:13.678801Z"
+}

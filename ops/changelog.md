@@ -2,6 +2,73 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-06-03T14:30Z — Sprint 38 SimUAV preseeded populated-IUT fixture
+
+**Triggered by user instruction**: "Proceed with the SimUAV preseeded populated-IUT fixture sprint"
+
+- Added OpenSpec/story/contract coverage for `SCENARIO-ETS-PART2-013-SIMUAV-PRESEEDED-POPULATED-IUT-001` and `SCENARIO-ETS-PART2-013-POPULATED-CANDIDATE-SELECTION-001`.
+- Added `Part2CandidateSelection` and regression coverage so Part 2 JSON/SWE/binding/datastream/controlstream/CRD checks prefer parent DataStreams/ControlStreams with parseable scoped child evidence.
+- Added `scripts/local-osh-simuav-preseed.py` with explicit dedicated mutable-IUT gates and credential-value redaction.
+- Verified final SimUAV preseed: `GET=102`, `POST=1`, 2 DataStreams, 3 ControlStreams, schema probes, and waypoint Command POST HTTP 200 `COMPLETED`; Observation and nested Command child collections still returned empty bodies.
+- Verified Docker Maven equivalent with a persistent host cache and archived `ops/test-results/sprint-ets-38-maven-clean-test-cached-2026-06-03.log`: `294 tests / 0 failures / 0 errors / 3 skipped`; the required wrapper was attempted and blocked by Maven Central connection resets/stall.
+- Ran final populated SimUAV TeamEngine smoke after static reseed: FAIL, `211 total / 83 passed / 29 failed / 99 skipped`, preserving strict failures for schema `Content-Type: auto`, SWE text HTTP 400, and empty child body evidence.
+- Restored clean primary local OSH after Raze gapfix: rebuilt the field-hub OSH image so the patched ConSys jar is active, reset OSH data, reseeded static `040g` fixtures, confirmed root `/observations` endpoints return parseable JSON, and reran clean TeamEngine smoke PASS, `211 total / 68 passed / 0 failed / 143 skipped`, with zero IUT-bound writes.
+- Completed Sprint 38 Raze focused recheck: `.harness/evaluations/sprint-ets-38-adversarial-recheck.yaml` returned `APPROVE_WITH_CONCERNS`, confidence `0.92`, with `required_fixes: []`.
+
+---
+
+## 2026-06-03T02:56Z — Sprint 37 follow-up Raze gapfix recheck
+
+**Triggered by user instruction**: Act as Red Team / Raze for the Sprint 37 follow-up gapfixes after `GAPS_FOUND`.
+
+- Performed focused artifact/source recheck without rerunning expensive Docker smoke.
+- Wrote `.harness/evaluations/sprint-ets-37-followup-empty-collection-adversarial-recheck.yaml` with verdict `APPROVE_WITH_CONCERNS`, confidence `0.91`, and `required_fixes: []`.
+- Verified the bounded claim: clean root Observation E2E restored, Command empty collection/count remains focused OSH regression evidence, and populated SimUAV closure remains blocked.
+
+---
+
+## 2026-06-03T02:55Z — Sprint 37 follow-up Raze gapfix
+
+**Triggered by user instruction**: "Continue" after Raze follow-up notification
+
+- Addressed follow-up Raze `GAPS_FOUND` findings for the clean local OSH empty-body fix.
+- Removed broad RuntimeException-to-empty-response masking from OSH ConSys empty collection handling so real datastore failures remain visible.
+- Rotated local OSH BasicRealm credentials after session-output exposure and kept derived auth values out of artifacts.
+- Reverified focused OSH ConSys tests: `TestObservations` passed `5/0/0/0`; `TestControlStreams` passed `2/0/0/0`.
+- Redeployed the rebuilt ConSys jar, reran direct root Observation collection/count probes, and reran mandatory clean TeamEngine smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`, writes `0`.
+- Reconciled OpenSpec, known issues, status, test results, traceability, story, and contract to keep the final claim narrow: clean root Observation E2E is restored; Command empty collection/count is focused regression evidence only; populated binding closure remains blocked.
+
+---
+
+## 2026-06-03T02:35Z — Sprint 37 clean local OSH empty-body follow-up
+
+**Triggered by user instruction**: "Continue"
+
+- Added `SCENARIO-ETS-PART2-013-EMPTY-COLLECTION-BODIES-001` coverage and focused OSH ConSys regressions for empty Observation and Command collection/count JSON responses.
+- Updated sibling OSH ConSys Observation handling so unfiltered root `/observations` and `/observations/count` on an empty read database return parseable JSON bodies instead of HTTP 200 zero-byte bodies.
+- Verified focused OSH ConSys tests in Docker Gradle with `--rerun-tasks`: `TestObservations` passed `5/0/0/0`; `TestControlStreams` passed `2/0/0/0`.
+- Reset/reseeded the primary local OSH state, redeployed the rebuilt ConSys jar, and verified direct probes: `/observations?limit=1`, `/observations?f=json&limit=1`, and `/observations/count?f=json` now return parseable JSON.
+- Ran mandatory clean local OSH TeamEngine smoke: PASS, `211 total / 68 passed / 0 failed / 143 skipped`; no-mutation evidence was `GET=133`, `OPTIONS=2`, writes `0`.
+- Full populated `part2binding` closure is still not claimed; prior SimUAV-populated smoke remains failed pending non-binding schema media-type paths, child body evidence, and SWE text schema blockers.
+
+---
+
+## 2026-06-03T00:50Z — Sprint 37 stream metadata unblock implemented, E2E blocked
+
+**Triggered by user instruction**: "Continue"
+
+- Added the missing ETS regression for `REQ-ETS-PART2-013 / SCENARIO-ETS-PART2-013-FORMAT-ASSERTION-NOW-001`; JSON Schema format assertions now reject malformed `date-time` values while preserving the literal `"now"` branch.
+- Verified ETS Maven in Docker: PASS, `291 tests / 0 failures / 0 errors / 3 skipped`.
+- Verified sibling OSH ConSys serializer changes: `TestDataStreams` passed `9/0/0/0`, `TestControlStreams` passed `1/0/0/0`, and ConSys compile tasks completed with warnings only.
+- Rebuilt/redeployed the local OSH ConSys jar into field-hub and confirmed SimUAV dynamic stream metadata now includes the required DataStream and ControlStream members.
+- Ran mandatory SimUAV-populated TeamEngine smoke: FAIL, `211 total / 78 passed / 35 failed / 98 skipped`; read-only no-mutation evidence was `GET=178`, `OPTIONS=12`, writes `0`.
+- Reset/reseeded the primary local OSH state with Sapient/SimUAV disabled and reran mandatory clean smoke: FAIL, `211 total / 67 passed / 4 failed / 140 skipped`; read-only no-mutation evidence was `GET=133`, `OPTIONS=2`, writes `0`.
+- Identified the clean-smoke blocker as local OSH returning HTTP 200 `application/json` with an empty body for `/observations?limit=1` after reset/reseed; populated-smoke blockers moved to schema `Content-Type: auto` outside binding paths, empty child Observation/Command bodies, and some SWE text schema HTTP 400 responses.
+- Ran required Raze review. Initial verdict was `GAPS_FOUND`, confidence `0.90`, for three reconciliation gaps; after updating TEAMENGINE-006 traceability, the Sprint 37 story scenario list, and known-issues freshness metadata, focused recheck returned `APPROVE_WITH_CONCERNS`, confidence `0.93`, with no required fixes.
+- Completion is not claimed; Sprint 37 remains E2E-blocked pending follow-up fixes.
+
+---
+
 ## 2026-06-02T22:36Z — Sprint 36 Raze review, OpenSpec gapfix, and push
 
 **Triggered by user instruction**: "Continue"

@@ -1,0 +1,58 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 526B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 627B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/eclipse-temurin:17-jre
+#3 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [1/9] FROM docker.io/library/eclipse-temurin:17-jre@sha256:0d79988c68791ce864fe39d149ab1dc84f680539dca77ee7f6f3b041ad7f2f43
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 787.88kB 0.1s done
+#6 DONE 0.1s
+
+#7 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends     curl libxcb1 libxcb-shm0 libxcb-xfixes0 libxcb-shape0     libasound2t64 libdrm2 libpulse0     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [3/9] WORKDIR /opt/osh
+#8 CACHED
+
+#9 [4/9] COPY lib/ lib/
+#9 DONE 1.6s
+
+#10 [5/9] COPY web/ web/
+#10 DONE 0.4s
+
+#11 [6/9] COPY processes/ processes/
+#11 DONE 0.1s
+
+#12 [7/9] COPY launch.sh load_trusted_certs.sh ./
+#12 DONE 0.1s
+
+#13 [8/9] RUN curl -o lib/postgresql-42.7.2.jar https://jdbc.postgresql.org/download/postgresql-42.7.2.jar
+#13 0.385   % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+#13 0.385                                  Dload  Upload  Total   Spent   Left   Speed
+#13 0.385   0      0   0      0   0      0      0      0                              0100  1.03M 100  1.03M   0      0  1.88M      0                              0100  1.03M 100  1.03M   0      0  1.88M      0                              0100  1.03M 100  1.03M   0      0  1.88M      0                              0
+#13 DONE 1.0s
+
+#14 [9/9] RUN chmod +x launch.sh load_trusted_certs.sh
+#14 DONE 0.4s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 1.0s done
+#15 writing image sha256:28e09f22bdab7a73915fad0a6567aaf4091ed37d8113bb8056cf51373deab9c2 done
+#15 naming to docker.io/library/field-hub-osh done
+#15 DONE 1.0s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s

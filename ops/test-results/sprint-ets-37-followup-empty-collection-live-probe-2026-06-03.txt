@@ -1,0 +1,40 @@
+
+PATH observations?limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:05:29 GMT
+Content-Type: application/json
+Content-Length: 0
+
+
+PATH observations?f=json&limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:05:30 GMT
+Content-Type: application/json
+Content-Length: 0
+
+
+PATH observations/count?f=json
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:05:30 GMT
+Content-Type: application/json
+Content-Length: 0
+
+
+PATH datastreams?limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:05:30 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{
+  "items": []
+}
+PATH controlstreams?limit=1
+HTTP/1.1 200 OK
+Date: Wed, 03 Jun 2026 02:05:30 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{
+  "items": []
+}

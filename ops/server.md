@@ -1,6 +1,6 @@
 # server.md — operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-06-02 - Sprint 35 local OSH Sapient and SimUAV tasking fixtures.
+> Last updated: 2026-06-03 - Sprint 38 SimUAV preseeded fixture and post-Raze clean local OSH restore.
 
 ## Schema provenance
 
@@ -75,7 +75,10 @@ explicit advisory interoperability probe with `SMOKE_TARGET=georobotix`.
   Observation, ControlStream, Command, CommandStatus, and CommandResult
   evidence. It must not be applied unless mutation tests are explicitly enabled
   against a dedicated mutable IUT, and it is not proof of accepted OSH payload
-  shape until Generator records actual request/response evidence.
+  shape until Generator records actual request/response evidence. Sprint 38
+  adds SimUAV preseed evidence to this manifest, but the fixture remains
+  partial because Observation/Command child collections still return empty
+  bodies and full populated binding closure is not claimed.
 
 ### Local OSH tasking fixture
 
@@ -99,10 +102,23 @@ Keep Sapient and SimUAV disabled for the primary read-only smoke. When
 temporarily enabled, Sapient can accept a real CS API Command through a local
 SAPIENT TCP peer, and SimUAV can accept a waypoint feasibility Command without
 an external peer and return inline result data. Their generated dynamic
-DataStreams/ControlStreams still fail current Part 2 schema checks, and OSH
-does not delete module-owned resources through CS API. After a fixture run,
-reset only `field-hub_osh-data`, restart OSH, and reseed
-`ops/local-osh-seed-fixtures.json` before running the primary TeamEngine smoke.
+DataStreams/ControlStreams still fail current Part 2 schema/body checks: some
+schema endpoints report `Content-Type: auto`, SWE text schema requests can
+return HTTP 400, and nested Observation/Command collections can return HTTP
+200 with empty bodies. OSH does not delete module-owned resources through CS
+API. After a fixture run, reset only `field-hub_osh-data`, restart OSH, and
+reseed `ops/local-osh-seed-fixtures.json` before running the primary TeamEngine
+smoke.
+
+The field-hub OSH container bakes `osh/lib/` into the image. After replacing a
+ConSys jar in `/home/nh/docker/gir/sar-ops/field-hub/osh/lib`, rebuild the
+`field-hub-osh` image before relying on a container restart or data-volume reset.
+
+Local OSH BasicRealm credentials were rotated on 2026-06-03 after credential
+material was accidentally printed in session tool output. Do not record the
+credential values in ETS artifacts. Derive `SMOKE_AUTH_CREDENTIAL` at runtime
+from the local field-hub config or from a user-supplied environment variable,
+and record only whether a credential was supplied.
 
 ### Spec drift documented
 

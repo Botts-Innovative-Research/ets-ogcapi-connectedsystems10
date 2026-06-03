@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2CandidateSelection;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests;
 import org.testng.ITestContext;
 import org.testng.Reporter;
@@ -80,7 +81,7 @@ public class Part2ControlStreamTests {
 		this.conformanceBody = parseBody(this.conformanceResponse);
 
 		this.controlStreamsResponse = given().accept("application/json")
-			.queryParam("limit", 2)
+			.queryParam("limit", Part2CandidateSelection.CANDIDATE_PAGE_LIMIT)
 			.when()
 			.get(this.baseUri.resolve("controlstreams"))
 			.andReturn();
@@ -378,18 +379,37 @@ public class Part2ControlStreamTests {
 					"/controlstreams body did not parse as JSON. Content-Type was: "
 							+ this.controlStreamsResponse.getContentType());
 		}
-		List<?> controlStreams = items(this.controlStreamsBody);
+		List<Map<String, Object>> controlStreams = Part2CandidateSelection.objectItems(this.controlStreamsBody);
 		if (controlStreams.isEmpty()) {
 			throw new SkipException(REQ_RESOURCES_ENDPOINT
 					+ " - /controlstreams returned an empty collection; no ControlStream item is available for canonical read-only checks.");
 		}
-		Object first = controlStreams.get(0);
-		if (!(first instanceof Map)) {
-			ETSAssert.failWithUri(REQ_RESOURCES_ENDPOINT, "/controlstreams first item was not a JSON object: " + first);
+		Part2CandidateSelection.ParentChild selected = Part2CandidateSelection.firstParentWithChild(controlStreams,
+				parent -> {
+					String id = stringValue(parent.get("id"));
+					if (id == null || id.isBlank()) {
+						return null;
+					}
+					return firstCommandItemOrNull(id);
+				});
+		return selected == null ? controlStreams.get(0) : selected.parent();
+	}
+
+	private Map<String, Object> firstCommandItemOrNull(String controlStreamId) {
+		Response response = given().accept("application/json")
+			.queryParam("limit", 1)
+			.when()
+			.get(this.baseUri.resolve("controlstreams/" + controlStreamId + "/commands"))
+			.andReturn();
+		if (response.getStatusCode() != 200) {
+			return null;
 		}
-		@SuppressWarnings("unchecked")
-		Map<String, Object> controlStream = (Map<String, Object>) first;
-		return controlStream;
+		Map<String, Object> body = parseBody(response);
+		if (!hasItemsOnlyCollectionShape(body)) {
+			return null;
+		}
+		List<Map<String, Object>> commands = Part2CandidateSelection.objectItems(body);
+		return commands.isEmpty() ? null : commands.get(0);
 	}
 
 	private static List<?> items(Map<String, Object> body) {

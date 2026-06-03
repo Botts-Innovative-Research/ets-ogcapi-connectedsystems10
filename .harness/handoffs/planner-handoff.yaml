@@ -1,21 +1,20 @@
 agent: generator
-status: sprint_36_pushed
-timestamp: "2026-06-02T22:42:13Z"
-sprint_number: "ets-36"
-sprint_name: "binding-schema-json-request-shaping"
-contract_path: ".harness/contracts/sprint-ets-36.yaml"
+status: sprint_38_partial_raze_approved_clean_e2e_restored_populated_blocked
+timestamp: "2026-06-03T14:36:00Z"
+sprint_number: "ets-38"
+sprint_name: "simuav-preseeded-populated-iut-fixture"
+contract_path: ".harness/contracts/sprint-ets-38.yaml"
 triggered_by: |
-  User said "Continue" after Sprint 35 SimUAV evidence identified local OSH
-  stream/schema representation as the remaining `part2binding` blocker.
+  User said "Proceed with the SimUAV preseeded populated-IUT fixture sprint".
 
 handoff_result:
   story:
-    id: "S-ETS-36-01"
-    title: "Binding parent schema JSON request shaping"
-    file: "epics/stories/s-ets-36-01-binding-schema-json-request-shaping.md"
-    status: "IMPLEMENTED_RAZE_APPROVED_PUSHED"
+    id: "S-ETS-38-01"
+    title: "SimUAV Preseeded Populated-IUT Fixture"
+    file: "epics/stories/s-ets-38-01-simuav-preseeded-populated-iut-fixture.md"
+    status: "PARTIAL_IMPLEMENTED_E2E_BLOCKED_BY_OSH_LIMITATIONS"
   architecture_freshness:
-    checked_at: "2026-06-02T20:55:09Z"
+    checked_at: "2026-06-03T13:12:01Z"
     architecture_last_reconciled: "2026-06-01"
     stale: false
   requirements:
@@ -23,63 +22,74 @@ handoff_result:
       - "REQ-ETS-PART2-013"
     added: []
   scenarios:
-    - "SCENARIO-ETS-PART2-013-SCHEMA-JSON-REQUEST-SHAPING-001"
-    - "SCENARIO-ETS-PART2-013-OBSERVATION-PARENT-SCHEMA-001"
-    - "SCENARIO-ETS-PART2-013-COMMAND-PARENT-SCHEMA-001"
-    - "SCENARIO-ETS-PART2-013-ENCODING-HONESTY-001"
-    - "SCENARIO-ETS-PART2-013-MUTATION-SAFETY-001"
-
-source_probe:
-  artifact: "ops/test-results/sprint-ets-36-local-osh-schema-request-shaping-source-probe-2026-06-02.txt"
-  conclusion: |
-    Local OSH ConSys schema handlers accept ResourceFormat.JSON and
-    BaseResourceHandler.getByKey sets the response Content-Type from the parsed
-    `f`/`format` query parameter. Binding parent schema GETs should append
-    `f=json` and continue rejecting non-JSON media types.
+    - "SCENARIO-ETS-PART2-013-SIMUAV-PRESEEDED-POPULATED-IUT-001"
+    - "SCENARIO-ETS-PART2-013-POPULATED-CANDIDATE-SELECTION-001"
+    - "SCENARIO-ETS-PART2-013-SIMUAV-TASKING-FIXTURE-001"
+    - "SCENARIO-ETS-PART2-013-POSITIVE-LOCAL-OSH-CLOSURE-001"
 
 implementation_target:
-  code:
+  ets_code:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/Part2CandidateSelection.java"
     - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/Part2ObservationCommandBindingTests.java"
-    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/binding/VerifyPart2ObservationCommandBindingTests.java"
-  required_behavior:
-    - "Append f=json to DataStream schema subresource GETs."
-    - "Append f=json to ControlStream schema subresource GETs."
-    - "Do not duplicate existing f or format query parameters."
-    - "Do not loosen isJsonCompatibleContentType or accept Content-Type auto as PASS evidence."
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/VerifyPart2CandidateSelection.java"
+    - "scripts/local-osh-simuav-preseed.py"
+  external_runtime_config:
+    repository: "/home/nh/docker/gir/sar-ops/field-hub"
+    file: "osh/config/config.json"
+    final_state: "Sapient autoStart=false; SimUAV autoStart=false; local OSH BasicRealm credentials rotated earlier in the session and not recorded in ETS artifacts."
   implemented: true
 
-e2e:
-  required_primary_smoke:
+verification:
+  python_preseed_compile:
     status: "PASS"
+    command: "python3 -m py_compile scripts/local-osh-simuav-preseed.py"
+  java_format:
+    status: "PASS"
+    command: "docker run --rm --user ... maven:3.9-eclipse-temurin-17 mvn -B spring-javaformat:apply"
+  ets_maven:
+    status: "PASS_WITH_WRAPPER_LIMITATION"
+    required_wrapper: "scripts/mvn-test-via-docker.sh failed twice before tests on Maven Central connection resets and a later wrapper retry was stopped after a silent stall."
+    equivalent_cached_docker_result: "294 tests / 0 failures / 0 errors / 3 skipped"
+    artifact: "ops/test-results/sprint-ets-38-maven-clean-test-cached-2026-06-03.log"
+  raze_review: "APPROVE_WITH_CONCERNS confidence 0.92; .harness/evaluations/sprint-ets-38-adversarial-recheck.yaml closes RAZE-ETS38-GAP-001 and RAZE-ETS38-GAP-002 with required_fixes: []."
+
+e2e:
+  local_osh_state:
     docker_network: "field-hub_default"
     iut_url: "http://field-hub-osh-1:8081/sensorhub/api"
-    expected_state: "Sapient and SimUAV configured but autoStart=false for primary smoke cleanliness."
-    mutation_policy: "read-only; zero POST/PUT/PATCH/DELETE expected"
+    sapient_autostart: false
+    simuav_autostart: false
+    reset_reseed_artifacts:
+      - "ops/test-results/sprint-ets-38-post-raze-field-hub-osh-rebuild-reset-2026-06-03.log"
+      - "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-reseed-2026-06-03.json"
+      - "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-observations-probe-2026-06-03.txt"
+  populated_simuav:
+    status: "FAIL_OSH_LIMITATIONS_VISIBLE"
+    result: "211 total / 83 passed / 29 failed / 99 skipped"
+    preseed_artifact: "ops/test-results/sprint-ets-38-local-osh-simuav-preseed-r3-2026-06-03.json"
+    report: "ops/test-results/sprint-ets-38-simuav-preseed-teamengine-smoke-r3-2026-06-03.xml"
+    log: "ops/test-results/sprint-ets-38-simuav-preseed-teamengine-container-r3-2026-06-03.log"
+    preseed_summary: "2 DataStreams, 3 ControlStreams, schema probes, GET=102, POST=1, waypoint Command POST HTTP 200 COMPLETED; zero parseable Observation child items; nested Command collection HTTP 200 empty body."
+  clean_primary:
+    status: "PASS"
     result: "211 total / 68 passed / 0 failed / 143 skipped"
-    no_mutation: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0"
-    artifacts:
-      - "ops/test-results/sprint-ets-36-clean-local-osh-smoke-2026-06-02.xml"
-      - "ops/test-results/sprint-ets-36-clean-local-osh-container-2026-06-02.log"
-      - "ops/test-results/sprint-ets-36-clean-local-osh-no-mutation-2026-06-02.txt"
-
-verification:
-  formatter: "PASS after bounded cached rerun; earlier unbounded cold-cache formatter run was stopped as stalled."
-  focused_maven: "PASS, 14 tests / 0 failures / 0 errors / 0 skipped."
-  required_wrapper: "FAILED before tests due Maven Central Connection reset resolving org.apache.maven.plugins:maven-plugins:pom:43."
-  full_maven_fallback: "PASS, 289 tests / 0 failures / 0 errors / 3 skipped."
-  raze_review: "APPROVE_WITH_CONCERNS, confidence 0.93, no required fixes after OpenSpec reconciliation gapfix."
-  commit: "50024c4 Implement Sprint 36 schema request shaping; pushed 21e76de..50024c4 main -> main."
-  artifacts:
-    - "ops/test-results/sprint-ets-36-focused-maven-2026-06-02.log"
-    - "ops/test-results/sprint-ets-36-maven-clean-test-2026-06-02.log"
-    - "ops/test-results/sprint-ets-36-maven-clean-test-persistent-cache-2026-06-02.log"
+    report: "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-smoke-2026-06-03.xml"
+    log: "ops/test-results/sprint-ets-38-post-raze-clean-local-osh-container-2026-06-03.log"
+    no_mutation: "zero IUT-bound POST/PUT/DELETE/PATCH in smoke stdout"
 
 pending:
-  - "Continue REQ-ETS-PART2-013 only by addressing schema-valid stream collection metadata and live populated ?f=json parent schema evidence, or specify an isolated fixture mode without weakening Annex A.9 validation."
+  - "Do not claim full populated `part2binding` closure until OSH exposes parseable Observation child bodies, nested Command collection bodies, dereferenceable CommandStatus/CommandResult resources, and strict schema media-type/SWE evidence."
+  - "If continuing implementation, target OSH ConSys child collection/body behavior or document it as an upstream/local OSH limitation."
 
-next_agent: "generator_or_orchestrator"
+next_agent: "adversarial_reviewer"
 next_action: |
-  Sprint 36 is pushed. Do not claim full populated `part2binding` PASS; local
-  OSH stream collection metadata and unexercised populated live `?f=json`
-  schema requests remain the known blockers after the schema media-type request
-  path is fixed.
+  Run Raze for Sprint 38. Clean primary local OSH is restored and passing,
+  while populated SimUAV E2E remains blocked by OSH child-body/media-type/SWE
+  evidence limits.

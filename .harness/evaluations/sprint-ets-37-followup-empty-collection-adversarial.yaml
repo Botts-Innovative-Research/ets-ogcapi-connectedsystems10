@@ -1,0 +1,141 @@
+verdict: GAPS_FOUND
+confidence: 0.88
+reviewer: "Red Team / Raze"
+reviewed_at_utc: "2026-06-03T02:36:11Z"
+review_type: followup_implementation
+expensive_reruns:
+  maven: not_rerun
+  gradle: not_rerun
+  teamengine: not_rerun
+  rationale: "The requested smoke, live-probe, no-mutation, and focused OSH XML artifacts were present and internally consistent; no concrete inconsistency required reproducing the expensive Docker smoke."
+reviewed_scope:
+  ets_repo: "/home/nh/docker/gir/ets-ogcapi-connectedsystems10"
+  osh_repo: "/home/nh/docker/gir/osh-core"
+  focus:
+    - "Sprint 37 follow-up for clean local OSH empty Observation and Command JSON responses."
+    - "False-confidence risk, spec/story/traceability/doc reconciliation, E2E evidence, credential leakage, and claim boundaries."
+  ets_artifacts:
+    - "ops/test-results/sprint-ets-37-followup-clean-local-osh-smoke-2026-06-03.xml"
+    - "ops/test-results/sprint-ets-37-followup-clean-local-osh-no-mutation-2026-06-03.txt"
+    - "ops/test-results/sprint-ets-37-followup-empty-collection-live-probe-after-reset-reseed-2026-06-03.txt"
+    - "ops/test-results/sprint-ets-37-followup-osh-TestObservations-2026-06-03.xml"
+    - "ops/test-results/sprint-ets-37-followup-osh-TestControlStreams-2026-06-03.xml"
+    - "ops/test-results.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "_bmad/traceability.md"
+    - "epics/stories/s-ets-37-01-local-osh-stream-metadata-unblock.md"
+    - ".harness/contracts/sprint-ets-37.yaml"
+  osh_files:
+    - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/ObsHandler.java"
+    - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/resource/BaseResourceHandler.java"
+    - "sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/task/CommandHandler.java"
+    - "sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestObservations.java"
+    - "sensorhub-service-consys/src/test/java/org/sensorhub/impl/service/consys/TestControlStreams.java"
+findings:
+  - id: RAZE-ETS37-FOLLOWUP-GAP-001
+    severity: HIGH
+    category: false_confidence
+    summary: "The OSH follow-up masks broad RuntimeException paths as empty JSON for Observation/Command responses."
+    evidence:
+      - path: "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/obs/ObsHandler.java"
+        lines: "643-671"
+        detail: "`hasNoRootDatastreams` and `hasNoReadableObservations` catch any RuntimeException and return true, causing list/count to emit empty Observation JSON."
+      - path: "/home/nh/docker/gir/osh-core/sensorhub-service-consys/src/main/java/org/sensorhub/impl/service/consys/resource/BaseResourceHandler.java"
+        lines: "292-302, 496-503"
+        detail: "When `forceEmptyStoreJsonResponse()` is true, datastore query/count RuntimeExceptions can be converted into empty collection or zero-count JSON."
+    risk: "A real datastore or serializer defect can become a clean PASS-looking empty response instead of a visible server failure, which is exactly the false-confidence class this sprint is trying to avoid."
+    required_fix: "Narrow the recovery path to a proven empty-store or documented stale-reference condition. Do not convert arbitrary RuntimeException failures into empty JSON, especially when the store may contain matching records."
+  - id: RAZE-ETS37-FOLLOWUP-GAP-002
+    severity: HIGH
+    category: traceability_reconciliation
+    summary: "OpenSpec and traceability still describe the clean `/observations` empty-body blocker as current after the follow-up clean smoke passed."
+    evidence:
+      - path: "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+        lines: "910-912"
+        detail: "Implementation text still says clean reset `/observations` empty-body regression blocks mandatory E2E and lists clean reset/reseed smoke as failed."
+      - path: "_bmad/traceability.md"
+        lines: "75,81"
+        detail: "REQ-ETS-PART2-013 and REQ-ETS-TEAMENGINE-006 rows omit EMPTY-COLLECTION-BODIES and still record clean reset/reseed smoke failed `211/67/4/140` as a current blocker."
+      - path: "ops/known-issues.md"
+        lines: "26"
+        detail: "Active issue text still says the clean reset/reseed primary local OSH smoke now fails because `/observations?limit=1` returns an empty body."
+    risk: "The handoff can simultaneously claim the clean blocker is fixed and still list it as active, making future work and gate decisions unreliable."
+    required_fix: "Reconcile OpenSpec, traceability, and known-issues to the follow-up evidence: clean reset/reseed smoke PASS `211/68/0/143`; direct `/observations` and count probes parseable; populated SimUAV closure still blocked."
+  - id: RAZE-ETS37-FOLLOWUP-GAP-003
+    severity: MEDIUM
+    category: e2e_evidence
+    summary: "The Command empty-collection half is not exercised by the clean TeamEngine smoke or direct reset/reseed probe."
+    evidence:
+      - path: "ops/test-results/sprint-ets-37-followup-clean-local-osh-smoke-2026-06-03.xml"
+        detail: "Smoke totals are PASS `211/68/0/143`, but `globalCommandsEndpointReadableWhenAvailable`, `controlStreamScopedCommandsReadable`, and `commandsReferenceSelectedControlStreamWhenNestedCollectionPopulated` SKIP because `/commands` is unavailable and `/controlstreams` is empty."
+      - path: "ops/test-results/sprint-ets-37-followup-empty-collection-live-probe-after-reset-reseed-2026-06-03.txt"
+        detail: "The live reset/reseed probe covers `/observations`, `/observations/count`, `/datastreams`, `/controlstreams`, and counts, but not `/controlstreams/{id}/commands` or its count endpoint."
+      - path: "ops/test-results/sprint-ets-37-followup-osh-TestControlStreams-2026-06-03.xml"
+        detail: "Focused OSH test `testEmptyCommandCollectionAndCount` passed, so the unit/regression evidence exists, but it is not clean-IUT E2E evidence."
+    risk: "It is safe to claim the clean `/observations` blocker is resolved, but not that the full Observation/Command empty-collection scenario is proven end-to-end."
+    required_fix: "Either add a direct live probe with a seeded ControlStream and empty nested Commands collection/count, or narrow the final claim to Observation clean-smoke resolution plus unit-tested Command behavior."
+  - id: RAZE-ETS37-FOLLOWUP-GAP-004
+    severity: MEDIUM
+    category: credential_hygiene
+    summary: "Artifact search did not find a Sprint 37 credential leak, but this session previously exposed a local Basic credential outside the repository artifacts."
+    evidence:
+      - path: "ops/"
+        detail: "Search for unmasked Basic credential patterns in ops, .harness, epics, OpenSpec, _bmad, ETS src, and touched OSH src found no Sprint 37 artifact leak."
+      - path: "openspec/capabilities/endpoint-discovery/spec.md"
+        detail: "Only a frozen placeholder `Authorization: Basic <...>` pattern was found; no raw value was printed in this report."
+      - path: "session"
+        detail: "Prior command output in the broader session exposed the local OSH Basic credential value outside artifact files."
+    risk: "Even if worktree artifacts are clean, copied transcripts or shared terminal logs can carry a live local development secret."
+    required_fix: "Rotate the local OSH development credential and keep future credential derivation commands from printing raw headers or encoded values."
+concerns:
+  - id: RAZE-ETS37-FOLLOWUP-CONCERN-001
+    severity: LOW
+    category: claim_boundary
+    summary: "The follow-up smoke supports restoring the clean primary local OSH gate, but it does not support claiming full populated `part2binding` closure."
+    evidence:
+      - "Follow-up clean smoke: PASS `211 total / 68 passed / 0 failed / 143 skipped`."
+      - "Prior SimUAV-populated smoke remains FAIL `211 total / 78 passed / 35 failed / 98 skipped`."
+      - "ops/status.md and ops/test-results.md correctly avoid claiming full populated-IUT closure."
+evidence:
+  clean_observation_blocker:
+    supported_claim: true
+    claim: "The clean local OSH `/observations` empty-body blocker is resolved after reset/reseed."
+    artifacts:
+      - path: "ops/test-results/sprint-ets-37-followup-empty-collection-live-probe-after-reset-reseed-2026-06-03.txt"
+        detail: "`/observations?limit=1`, `/observations?f=json&limit=1`, and `/observations/count?f=json` returned HTTP 200 `application/json` with parseable JSON bodies."
+      - path: "ops/test-results/sprint-ets-37-followup-clean-local-osh-smoke-2026-06-03.xml"
+        totals: "211 total / 68 passed / 0 failed / 143 skipped"
+        detail: "`observationsCanonicalEndpointReadable` PASS; no TeamEngine failures."
+      - path: "ops/test-results/sprint-ets-37-followup-clean-local-osh-no-mutation-2026-06-03.txt"
+        method_counts: "recognized_iut_request_logs=135; GET=133; OPTIONS=2; POST=0; PUT=0; PATCH=0; DELETE=0; writes=0"
+  focused_osh_regression:
+    result: PASS
+    artifacts:
+      - path: "ops/test-results/sprint-ets-37-followup-osh-TestObservations-2026-06-03.xml"
+        totals: "5 tests / 0 failures / 0 errors / 0 skipped"
+        relevant_test: "testEmptyObservationCollectionAndCount"
+      - path: "ops/test-results/sprint-ets-37-followup-osh-TestControlStreams-2026-06-03.xml"
+        totals: "2 tests / 0 failures / 0 errors / 0 skipped"
+        relevant_test: "testEmptyCommandCollectionAndCount"
+  story_and_contract:
+    status: mostly_reconciled
+    evidence:
+      - path: "epics/stories/s-ets-37-01-local-osh-stream-metadata-unblock.md"
+        detail: "Acceptance criteria now mark the empty-body fix, focused tests, clean smoke rerun, and Raze review as complete while retaining populated-smoke blockers."
+      - path: ".harness/contracts/sprint-ets-37.yaml"
+        detail: "Scenario list includes `SCENARIO-ETS-PART2-013-EMPTY-COLLECTION-BODIES-001` and success criteria include empty Observation/Command JSON bodies."
+  credential_hygiene:
+    artifact_scan: "No unmasked Sprint 37 Basic credential value found in repository artifacts scanned for Basic-header patterns."
+    caveat: "Session output leakage remains a real hygiene issue; rotate the local development credential."
+required_fixes:
+  - "Fix broad RuntimeException-to-empty-response masking in the OSH Observation/Command empty-response path."
+  - "Reconcile OpenSpec, _bmad/traceability.md, and ops/known-issues.md to the follow-up clean-smoke PASS and direct `/observations` probe PASS."
+  - "Add live Command empty-collection/count evidence, or explicitly narrow the final claim to Observation clean-smoke resolution plus focused Command regression tests."
+  - "Rotate the local OSH development credential after the prior session-output leak."
+approval_notes:
+  - "Do not claim full Sprint 37 completion."
+  - "Do not claim full populated-IUT `part2binding` PASS."
+  - "A narrow claim that the clean `/observations` empty-body blocker is resolved is supported by the current direct probe plus clean TeamEngine smoke evidence."

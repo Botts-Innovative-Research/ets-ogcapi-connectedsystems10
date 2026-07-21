@@ -1,8 +1,21 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-06-03T18:02Z
+Last updated: 2026-07-21T05:35Z
 
 ## Current Sprint Evidence
+
+Sprint ets-41 TeamEngine 6 runtime migration:
+
+- Runtime verifier: PASS for digest provenance, byte-for-byte immutable-base manifests, non-root identity, utilities/paths, corrected base jar inventory, selected two-file payload, Git history, effective build context, and confidential-file hygiene.
+- Formatter: PASS (`spring-javaformat:apply`).
+- Docker Maven: earlier BUILD SUCCESS, `298 tests / 0 failures / 0 errors / 3 skipped`. The final post-review rerun did not execute tests: Maven Central DNS failed on attempt one; attempt two was terminated after 17 minutes idle in repository I/O.
+- Image build: PASS using digest-pinned Maven 3.9/Temurin 17 builder and digest-pinned OGC TeamEngine 6 runtime.
+- Startup: PASS; effective uid/gid 1001 `tomcat`, inherited JDK 17.0.15+6/Tomcat 10.1.42 configuration, healthy status, `ogcapi-connectedsystems10` present in `/teamengine/rest/suites`, and no registration/linkage errors.
+- Correctness failures caught and fixed: broad dependency copying produced `/rest/suites` HTTP 500 with a Jersey `Application` class-identity conflict; an inherited copy execution later leaked three TeamEngine distribution archives and failed the base-manifest verifier. The final image adds only the shaded ETS jar and resources 6.0.0, with NetworkNT/ITU relocated, and restores registration.
+- Local OSH E2E: `NOT_RUN_BLOCKED`. The restarted environment contains no documented field-hub directory, image, volume, network, container, or credentials source. No Sprint 41 TestNG E2E totals or no-mutation claim exists.
+- Final Raze recheck: `APPROVE_WITH_CONCERNS`, confidence `0.98`, no required fixes; final Maven and local OSH E2E remain the documented infrastructure concerns.
+
+---
 
 Sprint ets-40 OSH ConSys populated binding blocker closure:
 

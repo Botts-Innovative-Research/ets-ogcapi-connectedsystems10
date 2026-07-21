@@ -1,11 +1,12 @@
 # ADR-007 — Dockerfile Base Image Deviation: `tomcat:8.5-jre17` + Manual TE 5.6.1 Assembly
 
-- **Status**: Accepted (post-hoc; ratified Sprint 2 ets-02 covering S-ETS-01-03 commit `d910808`)
+- **Status**: Superseded for the forward runtime by ADR-011; retained as the verified TeamEngine 5.6.1 baseline record
 - **Date**: 2026-04-28
 - **Decider**: Architect (Alex)
 - **Supersedes**: ADR-001 §"Decision" sentence claiming "TeamEngine 5.6.1 production Docker image (`opengeospatial/teamengine-docker/teamengine-production` master, `teamengine.version=5.6.1`) loads the resulting jar without modification" (ADR-001 amended with cross-reference to this ADR per S-ETS-02-01 acceptance criteria)
 - **Related**: ADR-001 (TeamEngine SPI registration), ADR-006 (Jersey 3.x / Jakarta EE 9 port), ADR-004 (JDK 17 toolchain), REQ-ETS-TEAMENGINE-003 (Dockerfile), REQ-ETS-TEAMENGINE-005 (smoke-test), Quinn s03 GAP-1, Raze s03 CONCERN-1
 - **Supersedes empirically (REQ wording)**: REQ-ETS-TEAMENGINE-003 original wording "extends `ogccite/teamengine-production:5.6.1`" — Sprint 2 spec-reconcile flips the REQ wording to acknowledge this deviation per S-ETS-02-01
+- **Superseded by**: ADR-011 for Sprint 41 and later runtime implementation; prior TeamEngine 5.6.1 evidence remains historically valid and is not TeamEngine 6 evidence
 
 ## Context
 

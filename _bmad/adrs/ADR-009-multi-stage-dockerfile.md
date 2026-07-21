@@ -1,10 +1,10 @@
 # ADR-009 — Multi-Stage Dockerfile Pattern: `eclipse-temurin:17-jdk` Build Stage + `tomcat:8.5-jre17` Runtime Stage
 
-- **Status**: Accepted (forward-looking; binds S-ETS-02-05 implementation)
+- **Status**: Partially superseded by ADR-011; builder/non-root principles retained, Tomcat 8.5 runtime stage superseded
 - **Date**: 2026-04-28
 - **Decider**: Architect (Alex)
 - **Related**: ADR-007 (base image deviation; this ADR builds on it), REQ-ETS-TEAMENGINE-003 (Dockerfile), REQ-ETS-CLEANUP-004 (NEW Sprint 2 — Dockerfile multi-stage + non-root USER), Quinn s03 SMOKE-TEST-DEP-CLOSURE-WORKFLOW concern, Raze s03 CONCERN-2 + CONCERN-3
-- **Supersedes**: none (Sprint 1 single-stage Dockerfile is preserved as-is at HEAD `8aeffbf` — this ADR is the Sprint 2 forward path)
+- **Supersedes**: Sprint 1 single-stage Dockerfile; ADR-011 supersedes this ADR's TeamEngine 5.6.1/Tomcat 8.5 runtime-stage decisions while preserving the multi-stage builder and non-root principles
 
 ## Context
 

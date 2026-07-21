@@ -51,7 +51,9 @@
   <properties>
     <ets-code>ogcapi-connectedsystems10</ets-code>
     <spec-version>1.0</spec-version>
-    <docker.teamengine.version>5.6.1</docker.teamengine.version>
+    <!-- REQ-ETS-TEAMENGINE-007; SCENARIO-ETS-TEAMENGINE-TE6-IMAGE-PROVENANCE-001. -->
+    <teamengine.runtime.version>6.0.0</teamengine.runtime.version>
+    <teamengine.runtime.image.digest>sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c</teamengine.runtime.image.digest>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.release>17</maven.compiler.release>
@@ -231,6 +233,41 @@
           </archive>
         </configuration>
       </plugin>
+      <!-- TeamEngine 6 already supplies an older NetworkNT validator in its webapp.
+           Relocate the ETS-required 1.5.x validator and its ITU time dependency into
+           the ETS jar so no split-version artifact is added to WEB-INF/lib. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <artifactSet>
+                <includes>
+                  <include>com.networknt:json-schema-validator</include>
+                  <include>com.ethlo.time:itu</include>
+                </includes>
+              </artifactSet>
+              <relocations>
+                <relocation>
+                  <pattern>com.networknt.schema</pattern>
+                  <shadedPattern>org.opengis.cite.ogcapiconnectedsystems10.internal.networknt.schema</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>com.ethlo.time</pattern>
+                  <shadedPattern>org.opengis.cite.ogcapiconnectedsystems10.internal.ethlo.time</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.3</version>
@@ -283,76 +320,8 @@
           <version>0.0.43</version>
         </plugin>
         <plugin>
-          <groupId>io.fabric8</groupId>
-          <artifactId>docker-maven-plugin</artifactId>
-          <version>0.28.0</version>
-          <configuration>
-            <images>
-              <image>
-                <name>ogccite/${project.artifactId}</name>
-                <build>
-                  <dockerFileDir>${project.basedir}/src/docker</dockerFileDir>
-                  <tags>
-                    <tag>${project.version}-teamengine-${docker.teamengine.version}</tag>
-                  </tags>
-                  <assembly>
-                    <inline>
-                      <fileSets>
-                        <fileSet>
-                          <directory>${project.build.directory}</directory>
-                          <outputDirectory>.</outputDirectory>
-                          <includes>
-                            <include>dependency/*teamengine-*.war</include>
-                            <include>dependency/*teamengine-*.zip</include>
-                            <include>*ets-*.zip</include>
-                          </includes>
-                        </fileSet>
-                      </fileSets>
-                    </inline>
-                  </assembly>
-                </build>
-                <run>
-                  <ports>
-                    <port>8081:8080</port>
-                  </ports>
-                  <wait>
-                    <http>
-                      <url>http://localhost:8081/teamengine</url>
-                    </http>
-                    <time>120000</time>
-                  </wait>
-                </run>
-              </image>
-            </images>
-          </configuration>
-        </plugin>
-        <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
           <version>3.0.0</version>
-          <configuration>
-            <artifactItems>
-              <artifactItem>
-                <groupId>org.opengis.cite.teamengine</groupId>
-                <artifactId>teamengine-web</artifactId>
-                <version>${docker.teamengine.version}</version>
-                <type>war</type>
-              </artifactItem>
-              <artifactItem>
-                <groupId>org.opengis.cite.teamengine</groupId>
-                <artifactId>teamengine-web</artifactId>
-                <version>${docker.teamengine.version}</version>
-                <classifier>common-libs</classifier>
-                <type>zip</type>
-              </artifactItem>
-              <artifactItem>
-                <groupId>org.opengis.cite.teamengine</groupId>
-                <artifactId>teamengine-console</artifactId>
-                <version>${docker.teamengine.version}</version>
-                <classifier>base</classifier>
-                <type>zip</type>
-              </artifactItem>
-            </artifactItems>
-          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>

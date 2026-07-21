@@ -1,3 +1,82 @@
+sprint41_resume_handoff:
+  timestamp: "2026-07-21T05:35:00Z"
+  sprint: ets-41
+  story: S-ETS-41-01
+  status: IN_PROGRESS_MAVEN_IMAGE_STARTUP_VERIFIED_LOCAL_OSH_E2E_BLOCKED
+  completed:
+    - "Corrected base inventory: SPI/core 6.0.0 present; resources 6.0.0 absent and RC2 present."
+    - "Final payload adds only the shaded ETS jar plus teamengine-resources 6.0.0; NetworkNT/ITU packages are relocated to avoid split-version additions."
+    - "Pinned the Maven 3.9/Temurin 17 builder digest and removed fragile archive installation plus unrelated go-offline prewarm."
+    - "Runtime verifier PASS, including Git history/effective context and byte-for-byte base manifests; formatter PASS; earlier Docker Maven BUILD SUCCESS 298/0/0/3."
+    - "TeamEngine 6 image build PASS; uid/gid 1001 tomcat; health PASS; ogcapi-connectedsystems10 registered; no linkage/registration errors."
+  caught_failure:
+    - "Broad dependency copying made /rest/suites return HTTP 500 with a Jersey Application class-identity conflict; inherited dependency:copy later leaked three TeamEngine archives; the final explicit two-file payload fixed both."
+  remaining_gate:
+    local_osh_e2e: "NOT_RUN_BLOCKED: documented field-hub directory, image, volume, network, container, and credential source are absent after restart."
+    final_maven: "NOT_RUN_INFRASTRUCTURE: final attempts stopped before tests due Maven Central DNS failure and prolonged repository I/O idle; prior 298/0/0/3 remains earlier evidence only."
+    final_raze: "APPROVE_WITH_CONCERNS 0.98; no required fixes"
+  next_action:
+    - "Restore or provide the documented local OSH field-hub stack and credential source."
+    - "Run final Maven and TeamEngine 6 smoke from a clean /tmp clone after infrastructure restoration; archive exact totals and no-mutation evidence."
+  cautions:
+    - "Do not claim Sprint 41 complete or reuse TeamEngine 5.6.1 E2E evidence."
+    - "Do not restore broad dependency copying; it reproducibly breaks TeamEngine REST registration."
+
+sprint41_session_handoff:
+  timestamp: "2026-07-20T13:15:48Z"
+  sprint: ets-41
+  story: S-ETS-41-01
+  status: IN_PROGRESS_IMPLEMENTATION_UNVERIFIED_RESTART_FOR_DOCKER_PERMISSIONS
+  user_instruction: "Do it"
+  objective: "Upgrade the ETS runtime to TeamEngine 6.0.0 without modifying TeamEngine-owned base-image files; fix Docker/POM/Compose and verify Maven plus local OSH E2E."
+  completed_this_session:
+    - Added explicit no-TeamEngine-modification language to OpenSpec, CP-001, ADR-011, story, and contract.
+    - Added SCENARIO-ETS-TEAMENGINE-TE6-BASE-IMMUTABILITY-001.
+    - Added VerifyTeamEngine6Packaging structural JUnit test with REQ/SCENARIO comments.
+    - Added scripts/verify-teamengine6-runtime.sh for digest, immutable-base, runtime-path/user, dependency, and confidential-file checks.
+    - Removed runtime USER root and recursive chown of TeamEngine scripts from Dockerfile.
+    - Replaced teamengine-*.jar wildcard with explicit SPI/core/resources 6.0.0 exclusions based on image inventory.
+    - Removed Compose JAVA_OPTS/CATALINA_OPTS overrides so the OGC image configuration is inherited.
+    - Replaced legacy docker.teamengine.version with TeamEngine runtime version/digest POM metadata.
+    - Removed dead Fabric8 Docker plugin configuration targeting nonexistent src/docker and legacy TeamEngine WAR/ZIP dependency assembly.
+    - Removed unrelated untracked f10m.xml scratch POM.
+  read_only_image_inventory:
+    image: "ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c"
+    result: PASS
+    facts:
+      - "User tomcat uid/gid 1001; Cmd catalina.sh run; JDK 17.0.15+6; Tomcat 10.1.42."
+      - "curl and unzip exist."
+      - "WEB-INF/lib and te_base/scripts exist, mode 755, owner tomcat:tomcat."
+      - "Base supplies teamengine-spi-6.0.0.jar, teamengine-core-6.0.0.jar, and teamengine-resources-6.0.0.jar."
+      - "Base also contains pre-existing RC2 TeamEngine jars; do not delete or alter them under the immutable-base rule."
+  infrastructure_attempts:
+    - "Focused Maven test did not start: maven:3.9-eclipse-temurin-17 pull failed through Docker Hub CloudFront IPv6 with network unreachable."
+    - "Runtime verifier static path reached Docker; sandboxed run failed Docker socket permission. Escalated run exited 1 without output and needs rerun with yolo permissions."
+  gates:
+    spec_first: PASS
+    test_files_written: PASS_NOT_EXECUTED
+    git_diff_check: PASS
+    shell_syntax: PASS
+    focused_maven: NOT_RUN
+    full_maven: NOT_RUN
+    docker_build: NOT_RUN
+    teamengine_startup_registration: NOT_RUN
+    local_osh_e2e: NOT_RUN
+    final_raze: NOT_RUN
+  exact_resume_sequence:
+    - "Run bash -x scripts/verify-teamengine6-runtime.sh with unrestricted Docker access; fix any real assertion failure."
+    - "Run bash scripts/mvn-test-via-docker.sh -Dtest=VerifyTeamEngine6Packaging; if Docker Hub remains unavailable, use an existing approved Maven image/cache or retry with host networking."
+    - "Run formatter, then bash scripts/mvn-test-via-docker.sh and record exact totals."
+    - "Build the TeamEngine 6 ETS image and inspect final effective user, inherited Cmd/env, added files, health, suite list, and linkage errors."
+    - "Run mandatory scripts/smoke-test.sh against local OSH from a clean /tmp clone with SMOKE_OUTPUT_DIR outside the worktree and credentials supplied only via environment."
+    - "Archive evidence; reconcile spec/story/contract/traceability/ops; run final Raze review and recheck required fixes."
+  cautions:
+    - "Do not reset or discard the dirty worktree; it contains the user's pre-existing migration plus Sprint 41 planning/implementation."
+    - "Do not modify, delete, patch, or recursively re-own any TeamEngine base-image file, including pre-existing RC2 jars."
+    - "Do not claim any tests pass: no Sprint 41 Maven, build, startup, or E2E gate has completed."
+    - "Confidential OGC files are ignored and must never be printed or committed."
+  next_agent: generator
+
 agent: generator
 status: implementation_raze_approved_with_concerns
 timestamp: "2026-06-02T00:47:39Z"

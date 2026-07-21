@@ -2,6 +2,64 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-21T05:35Z — Sprint 41 TeamEngine 6 implementation resumed; E2E blocked
+
+**Triggered by user instruction**: “pick up the session from where it left off” and “continue”
+
+- Corrected the prior base-image inventory: TeamEngine SPI/core 6.0.0 are present, but resources is RC2; retained `teamengine-resources-6.0.0.jar` from the ETS closure.
+- Replaced the fragile archive-downloaded builder with the digest-pinned verified Maven/Temurin 17 image and removed the unrelated `dependency:go-offline` stall.
+- Caught a real Jersey parent/webapp class-identity failure from copying the broad Maven closure, then caught three leaked TeamEngine distribution archives from inherited `dependency:copy` behavior. Replaced both with a shaded ETS jar plus one explicit resources jar; NetworkNT/ITU are relocated to avoid split versions.
+- Runtime verifier PASS, including Git history, effective Docker context, and byte-for-byte base manifests; formatter PASS; revised TeamEngine 6 image build/startup/registration PASS. Earlier Docker Maven was `298/0/0/3`; final reruns did not execute tests because Maven Central DNS failed once and the retry remained idle in repository I/O for 17 minutes.
+- Mandatory local OSH E2E is honestly `NOT_RUN_BLOCKED`: after restart, the documented field-hub directory and all related Docker image/volume/network/container state and credential source are absent. Sprint 41 is not complete.
+- Final Raze recheck returned `APPROVE_WITH_CONCERNS`, confidence `0.98`, with no required fixes; the two infrastructure-blocked gates remain explicit.
+
+---
+
+## 2026-07-20T13:15Z — Sprint 41 implementation session handoff
+
+**Triggered by user instruction**: “Prep for a session handoff - i need to restart you with yolo permissions”
+
+- Stopped Sprint 41 implementation and preserved the dirty worktree for restart with unrestricted Docker permissions.
+- Recorded completed spec/test/Docker/POM/Compose/hygiene edits and the successful read-only TeamEngine 6 base-image inventory in `.harness/handoffs/generator-handoff.yaml` and `ops/status.md`.
+- Recorded honest gate state: focused Maven did not start because Docker Hub CloudFront IPv6 was unreachable; runtime verifier remains unverified after Docker socket permission/opaque escalated-exit issues; Maven, build, startup/registration, local OSH E2E, and final Raze were not run.
+- No completion or test-pass claim is made.
+
+---
+
+## 2026-07-20T11:45Z — Sprint 41 TeamEngine 6 Generator start
+
+**Triggered by user instruction**: “Do it”
+
+- Added the explicit prohibition against modifying TeamEngine-owned base-image files and a dedicated base-immutability scenario.
+- Added structural JUnit and runtime-verifier checks, then repaired the proposed Dockerfile, Compose configuration, and POM migration boundaries.
+- Read-only image inventory established the base-supplied TeamEngine 6 jars and non-root extension paths; implementation verification was interrupted for the requested permissions restart.
+
+---
+
+## 2026-07-20T10:43Z — Sprint 41 TeamEngine 6 migration planning
+
+**Triggered by user instruction**: “Derive specs, story, archi, traceability and ADRs to support currently committed and proposed code.”
+
+- Created accepted-for-planning change proposal CP-001, Sprint 41 story and contract, and ADR-011 for an immutable OGC-published TeamEngine 6.0.0 runtime.
+- Added `_bmad/adrs/INDEX.md` because ADR-011 reaches the architecture's deferred 11+ ADR navigation threshold.
+- Reconciled OpenSpec, PRD TeamEngine requirements, architecture freshness/version, ADR-007/009 supersession status, TeamEngine epic, traceability, planner handoff, and operational status.
+- Preserved the verified TeamEngine 5.6.1 baseline and marked the current TeamEngine 6 Docker/POM diff as unverified pending dependency/image inventory, Maven, Docker startup/registration, and real local OSH E2E evidence.
+- Required Raze planning review initially returned `GAPS_FOUND` confidence `0.96`; all seven findings were addressed. Focused recheck returned `APPROVE_WITH_CONCERNS` confidence `0.97`, with only a low status-token typo, corrected immediately.
+- No implementation acceptance or test-pass claim was made; no tests were run during planning.
+
+---
+
+## 2026-07-20T10:34Z — TeamEngine 6 migration adversarial review
+
+**Triggered by user instruction**: "The undocumented work could be valid, given the latest TeamEngine work and how it relates to pom, etc. Go ahead and kick off an adversarial review of those changes."
+
+- Spawned Red Team / Raze to review the uncommitted TeamEngine 6 Docker/POM migration and confidential-file hygiene changes.
+- Raze confirmed the migration is technically plausible and verified the pinned image metadata: TeamEngine 6 lineage, JDK 17.0.15+6, Tomcat 10.1.42, non-root `tomcat` user, inherited startup command, and `TE_BASE` configuration.
+- Raze returned `GAPS_FOUND`, confidence `0.91`, because the migration bypasses spec/story/ADR/architecture reconciliation, lacks dependency/image inventory evidence, and has no migration-specific Maven, Docker startup, or real local OSH E2E verification.
+- Recorded the full report at `.harness/evaluations/teamengine-6-migration-adversarial-2026-07-20.yaml`. No tests were run and no completion claim is made.
+
+---
+
 ## 2026-06-03T18:02Z — Sprint 40 OSH ConSys populated binding blocker closure
 
 **Triggered by user instruction**: "Do 1"

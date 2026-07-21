@@ -1,0 +1,80 @@
+sprint: ets-41
+story: S-ETS-41-01
+title: TeamEngine 6 runtime migration
+status: IN_PROGRESS_MAVEN_IMAGE_STARTUP_VERIFIED_E2E_BLOCKED
+triggered_by: 'User instruction: derive specs, story, architecture, traceability, and ADRs for the current and proposed TeamEngine work.'
+requirements:
+  - REQ-ETS-TEAMENGINE-001
+  - REQ-ETS-TEAMENGINE-003
+  - REQ-ETS-TEAMENGINE-004
+  - REQ-ETS-TEAMENGINE-005
+  - REQ-ETS-TEAMENGINE-006
+  - REQ-ETS-TEAMENGINE-007
+  - REQ-ETS-CLEANUP-004
+  - REQ-ETS-CLEANUP-021
+scenarios:
+  - SCENARIO-ETS-TEAMENGINE-TE6-IMAGE-PROVENANCE-001
+  - SCENARIO-ETS-TEAMENGINE-TE6-DEPENDENCY-INVENTORY-001
+  - SCENARIO-ETS-TEAMENGINE-TE6-BASE-IMMUTABILITY-001
+  - SCENARIO-ETS-TEAMENGINE-TE6-RUNTIME-INVARIANTS-001
+  - SCENARIO-ETS-TEAMENGINE-TE6-LOCAL-OSH-E2E-001
+  - SCENARIO-ETS-TEAMENGINE-TE6-CONFIG-ALIGNMENT-001
+  - SCENARIO-ETS-CLEANUP-CONFIDENTIAL-BUILD-CONTEXT-001
+scope:
+  include:
+    - Adopt an immutable OGC-published TeamEngine 6.0.0 runtime image.
+    - Preserve the JDK 17/Maven multi-stage builder and non-root runtime.
+    - Keep TeamEngine-owned base-image files immutable; install only additive ETS-owned artifacts at supported extension locations.
+    - Align POM, Dockerfile, Compose, and smoke runtime behavior.
+    - Empirically justify explicit runtime dependency exclusions.
+    - Verify Maven, image startup/registration, and real local OSH E2E.
+    - Validate confidential-reference-file and worktree hygiene.
+    - Add test-first structural and scripted runtime checks that cite Sprint 41 REQ/SCENARIO identifiers.
+  exclude:
+    - OGC assertion behavior changes.
+    - Reusing TeamEngine 5.6.1 evidence as TeamEngine 6 proof.
+    - Publishing confidential OGC reference material.
+success_criteria:
+  - Planning and architecture artifacts are accepted before implementation completion.
+  - Runtime image provenance, filesystem, ownership, utilities, and jar inventory are recorded.
+  - Structural tests fail against the pre-existing incompatible diff where applicable, then pass after implementation and cite the relevant requirement/scenario identifiers.
+  - Maven verification completes with exact totals.
+  - TeamEngine 6 image builds, starts, and registers the suite without linkage errors.
+  - Clean local OSH TeamEngine E2E completes with exact totals and no-mutation evidence.
+  - Raze returns no unresolved required fixes.
+test_first_deliverables:
+  - Structural test for immutable runtime digest and documented TeamEngine/Tomcat/JDK metadata; cite REQ-ETS-TEAMENGINE-007 and SCENARIO-ETS-TEAMENGINE-TE6-IMAGE-PROVENANCE-001.
+  - Structural test rejecting broad unverified TeamEngine jar wildcards and comparing explicit exclusions with recorded inventory; cite REQ-ETS-TEAMENGINE-003 and SCENARIO-ETS-TEAMENGINE-TE6-DEPENDENCY-INVENTORY-001.
+  - Structural test rejecting TeamEngine file mutation, replacement, deletion, root runtime steps, and recursive ownership changes; cite REQ-ETS-TEAMENGINE-007 and SCENARIO-ETS-TEAMENGINE-TE6-BASE-IMMUTABILITY-001.
+  - Scripted image invariant test for utilities, paths, ownership, effective non-root user, health, and suite registration; cite REQ-ETS-TEAMENGINE-007 and SCENARIO-ETS-TEAMENGINE-TE6-RUNTIME-INVARIANTS-001.
+  - Structural configuration comparison for Dockerfile, Compose, Maven profile, and smoke harness; cite REQ-ETS-TEAMENGINE-004/007 and SCENARIO-ETS-TEAMENGINE-TE6-CONFIG-ALIGNMENT-001.
+  - Confidential tracked-file/build-context test that never prints protected contents; cite REQ-ETS-CLEANUP-021 and SCENARIO-ETS-CLEANUP-CONFIDENTIAL-BUILD-CONTEXT-001.
+  - Capture failing evidence against the pre-existing diff where applicable before implementation repair, then archive passing evidence.
+guardrails:
+  - Keep the current diff unverified until all gates complete.
+  - Use a fresh /tmp clone for gate E2E and output outside the worktree.
+  - Never print confidential OGC file contents or credential values.
+  - Do not remove runtime jars by wildcard without empirical inventory evidence.
+evidence:
+  final_raze:
+    result: APPROVE_WITH_CONCERNS
+    confidence: 0.98
+    required_fixes: 0
+    artifact: .harness/evaluations/sprint-ets-41-adversarial-recheck.yaml
+  planning_raze:
+    result: GAPS_FOUND
+    confidence: 0.91
+    artifact: .harness/evaluations/teamengine-6-migration-adversarial-2026-07-20.yaml
+  base_image_inventory:
+    result: PASS_READ_ONLY_CORRECTED
+    summary: "Pinned image reports uid/gid 1001 tomcat, curl/unzip, writable extension paths, TeamEngine SPI/core 6.0.0, and resources RC2. The final image adds only the shaded ETS jar plus resources 6.0.0; NetworkNT/ITU are relocated to avoid split-version additions."
+  focused_structural_test:
+    result: NOT_RUN_INFRASTRUCTURE
+    detail: "Maven container image pull failed through Docker Hub CloudFront IPv6 with network unreachable before Maven or tests started."
+  runtime_verifier:
+    result: PASS
+    detail: "Digest, byte-for-byte immutable-base boundary, user/paths/utilities, base jar inventory, selected payload, Git history, effective Docker context, and confidential tracked-file checks passed."
+  maven: "EARLIER PASS: 298 tests / 0 failures / 0 errors / 3 skipped; final post-Raze rerun blocked before tests by Maven Central DNS/repository I/O"
+  docker_build: PASS
+  teamengine_startup: "PASS: healthy; ogcapi-connectedsystems10 registered; no startup linkage/registration errors"
+  local_osh_real_iut_e2e: "NOT_RUN_BLOCKED: documented field-hub directory/image/volume/network/container and credential source absent after environment restart"

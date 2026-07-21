@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.5 | Status: Living Document | Last reconciled: 2026-06-01 (Sprint 32 local OSH primary E2E target and Observation/Command Binding planning)
+> Version: 2.0.6 | Status: Living Document | Last reconciled: 2026-07-20 (Sprint 41 TeamEngine 6 runtime migration planning)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -13,7 +13,7 @@
 
 ## 1. Overview
 
-The deliverable is **`ets-ogcapi-connectedsystems10`** — a Java 17 / Maven 3.9 / TestNG / REST Assured Executable Test Suite that registers with OGC TeamEngine 5.6.x (and forward-compatibly with 6.0.0) via the `com.occamlab.te.spi.jaxrs.TestSuiteController` SPI. An OGC API – Connected Systems server implementer points TeamEngine at their landing page; TeamEngine invokes our suite, our suite issues HTTP requests against the IUT via REST Assured, validates responses against the bundled OGC JSON Schemas, and produces a TestNG XML report TeamEngine renders for the user. Coverage targets: OGC 23-001 Part 1 (14 conformance classes, Sprint 1 lands Core; sprints 2-N land the other 13) and OGC 23-002 Part 2 conformance classes plus any explicitly scoped project cross-class closures.
+The deliverable is **`ets-ogcapi-connectedsystems10`** — a Java 17 / Maven 3.9 / TestNG / REST Assured Executable Test Suite that registers through the `com.occamlab.te.spi.jaxrs.TestSuiteController` SPI. TeamEngine 5.6.1 is the verified historical baseline; CP-001/ADR-011/Sprint 41 define migration to an immutable OGC-published TeamEngine 6.0.0 runtime aligned with the `ets-common:17` compile lineage. An OGC API – Connected Systems server implementer points TeamEngine at their landing page; TeamEngine invokes our suite, validates responses against the bundled OGC JSON Schemas, and produces a TestNG XML report TeamEngine renders for the user. Coverage targets OGC 23-001 Part 1 and OGC 23-002 Part 2 conformance classes plus explicitly scoped project cross-class closures.
 
 This is **not a web application**. It has no browser UI, no REST endpoints we author, no session storage we own. TeamEngine owns the user-facing surface; we provide a jar that TeamEngine loads.
 
@@ -28,8 +28,8 @@ The same jar runs in three contexts:
 |  mvn clean install          |   |  - mvn -B verify                 |   |  cite.opengeospatial.org/       |
 |  mvn -P run-test (TestNG    |   |  - reproducible-build double-    |   |    teamengine/                  |
 |    direct against IUT)      |   |    diff job                      |   |  Runs ets-common parent's       |
-|  docker compose up          |   |  - smoke-test.sh inside Docker   |   |    teamengine-production:5.6.1  |
-|    (spins TeamEngine + jar) |   |    against local OSH             |   |  Loads ETS via Maven Central     |
+|  docker compose up          |   |  - smoke-test.sh inside Docker   |   |    OGC-managed TeamEngine       |
+|    (TE6 image + ETS jar)    |   |    against local OSH             |   |  Loads ETS via Maven Central     |
 |                             |   |  - artifact: TestNG report XML   |   |    artifact (post-beta)         |
 +-----------------------------+   +--------------------------------+   +---------------------------------+
        |                                  |                                       |
@@ -39,7 +39,7 @@ The same jar runs in three contexts:
 
 **Local (developer)**:
 - `mvn clean install` produces `target/ets-ogcapi-connectedsystems10-<version>.jar` and `target/ets-ogcapi-connectedsystems10-<version>-aio.jar` (the all-in-one assembly).
-- `docker compose up` (Sprint 1 deliverable, REQ-ETS-TEAMENGINE-004) launches `ogccite/teamengine-production:5.6.1` with our jar mounted into `/usr/local/tomcat/webapps/teamengine/WEB-INF/lib/`. TeamEngine discovers our suite via `META-INF/services/com.occamlab.te.spi.jaxrs.TestSuiteController` (ADR-001).
+- `docker compose up` uses the repository Dockerfile. The verified historical baseline manually assembles TeamEngine 5.6.1; Sprint 41 targets a digest-pinned OGC-published TeamEngine 6.0.0 runtime with the ETS jar, justified dependency closure, and CTL resources installed under the image's TeamEngine paths. TeamEngine discovers the suite via `META-INF/services/com.occamlab.te.spi.jaxrs.TestSuiteController` (ADR-001/011). The TeamEngine 6 path remains planned until its gates pass.
 - Developer browses `http://localhost:8081/teamengine/` and runs the Connected Systems suite from the CTL UI.
 
 **Our CI (GitHub Actions)**:
@@ -56,7 +56,7 @@ The same jar runs in three contexts:
 
 ```
 +---------------------------------------------------------------------------------+
-|  TeamEngine 5.6.x (Tomcat web app, Java 11+)                                    |
+|  TeamEngine runtime (TE 5.6.1 verified baseline; TE 6.0.0 Sprint 41 target)     |
 |                                                                                 |
 |  +-----------------------------+      +-------------------------------+         |
 |  | CTL UI (Saxon XSLT)         |----->| TestSuiteController SPI       |         |
@@ -153,7 +153,7 @@ Per ADR-004:
 - **JDK**: 17 (mandatory, build fails on older)
 - **Maven**: 3.9+ (enforced by maven-enforcer)
 - **Parent POM**: `org.opengis.cite:ets-common:17` (release tag — NOT 18-SNAPSHOT)
-  - Pulls TeamEngine SPI 5.6.x artifacts via `<dependencyManagement>`
+  - Resolves TeamEngine 6.0.0 SPI artifacts via `<dependencyManagement>`
   - Pulls Jersey 3.1.8, Jackson 2.18.0, JTS 1.19, proj4j 1.1.3, etc.
 - **Direct dependencies** (no `<version>` — versions inherited from ets-common):
   - `org.opengis.cite.teamengine:teamengine-spi`
@@ -305,10 +305,11 @@ The Generator (Dana) MUST respect these or CITE SC review will reject the ETS:
 | ADR-004 | ets-archetype-testng:2.7 Modernization Checklist | Accepted (extended via ADR-006 Group F retro-row) |
 | ADR-005 | Cross-Repo Relationship with the Frozen v1.0 Web App | Accepted |
 | ADR-006 | Jersey 1.x → Jakarta EE 9 / Jersey 3.x Port (Archetype Util Layer) | Accepted (post-hoc, Sprint 2) |
-| ADR-007 | Dockerfile Base Image Deviation: `tomcat:8.5-jre17` + Manual TE 5.6.1 Assembly | Accepted (post-hoc, Sprint 2) |
+| ADR-007 | Dockerfile Base Image Deviation: `tomcat:8.5-jre17` + Manual TE 5.6.1 Assembly | Superseded for forward runtime by ADR-011; historical baseline retained |
 | ADR-008 | EtsAssert REST/JSON Helper API Surface | Accepted (forward-looking, Sprint 2) |
-| ADR-009 | Multi-Stage Dockerfile Pattern | Accepted (forward-looking, Sprint 2; Sprint 3 amendment §"Image-Size Optimization via TE common-libs ↔ deps-closure dedupe") |
+| ADR-009 | Multi-Stage Dockerfile Pattern | Partially superseded by ADR-011; builder/non-root principles retained |
 | ADR-010 | Dependency-Skip Verification Strategy: Bash Sabotage (Canonical) + TestNG Unit Test (Fast-Feedback Supplement) | Accepted (forward-looking, Sprint 3) |
+| ADR-011 | OGC-Published TeamEngine 6 Runtime Image | Provisionally accepted decision; implementation/digest verification pending |
 
 ## 14. Architecture v2.0.1 — Sprint 2 ratifications (2026-04-28)
 
@@ -411,3 +412,17 @@ Sprint 25 planning corrected the Part 2 scope model after re-checking OGC 23-002
 Architectural consequence: the ETS shall not add an OGC 23-002 System History TestNG group. GeoRobotix's `/conf/system-history` declaration is treated as non-standard/vendor extension evidence only. The active Part 2 backlog now tracks the OGC 23-002 conformance classes plus explicitly scoped project cross-class closures, not the stale v1.0 web-app count.
 
 **2026-05-09** — Sprint 25 taxonomy correction appended (§18). v2.0 sections 1-13 unchanged except the overview sentence now avoids the stale "14 Part 2 conformance classes" count. Re-reconcile required if >30 days stale per AGENTS.md.
+
+## 19. Architecture v2.0.6 — TeamEngine 6 runtime migration planning (2026-07-20)
+
+Sprint 41 replaces the forward runtime decision, not the historical evidence. ADR-007 remains the record of why TeamEngine 5.6.1 was manually assembled on Tomcat 8.5 and why that baseline was accepted. ADR-011 supersedes that runtime for future implementation and supersedes only ADR-009's Tomcat 8.5 stage; ADR-009's multi-stage builder, reproducibility, minimal-copy, and non-root principles remain binding.
+
+The target runtime is an immutable digest of the OGC-published TeamEngine 6.0.0 development image. The digest must be accompanied by recorded TeamEngine, Tomcat, and JDK versions and a refresh procedure. Mutable tags are discovery aliases, not release provenance.
+
+The runtime dependency boundary is empirical. Generator must compare the Maven runtime dependency tree with the pinned image library inventory before excluding TeamEngine artifacts. The architectural target is an explicit exclusion list, preferably expressed through Maven scope or exclusions where practical. A broad `teamengine-*.jar` deletion is not accepted without evidence that every matched artifact is supplied compatibly by the image.
+
+Dockerfile, Compose, Maven Docker profile, and smoke harness form one supported deployment contract. Their port, health endpoint, startup command, environment, install paths, and effective runtime identity must align or have documented, tested differences. Claims that base settings are inherited unchanged must account for Compose or profile overrides.
+
+The migration remains PLANNED until Maven verification, image build and filesystem checks, non-root startup, health, SPI/CTL registration, linkage-error inspection, and full TeamEngine execution against the primary local OSH IUT are archived. Sprint 40 TeamEngine 5.6.1 results remain valid baseline evidence but cannot close Sprint 41.
+
+**2026-07-20** — Architecture freshness reconciled after the required greater-than-30-day warning. CP-001, ADR-011, and S-ETS-41-01 establish the new decision and verification boundary.

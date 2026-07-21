@@ -1,0 +1,50 @@
+Sprint ETS-41 TeamEngine 6 verification — 2026-07-21 UTC
+
+Runtime verifier:
+  PASS: TeamEngine 6 provenance, immutable-base boundary, runtime invariants,
+  selected two-file payload, Git history/effective build context, byte-for-byte
+  base-file manifests, and confidential-file hygiene.
+
+Formatter:
+  BUILD SUCCESS; spring-javaformat:apply; total time 05:00 min.
+
+Final Docker Maven wrapper:
+  BUILD SUCCESS; 298 tests, 0 failures, 0 errors, 3 skipped.
+  Finished 2026-07-21T04:35:18Z; total time 10:46 min.
+  This pass predates the final two structural-test additions. The required final
+  rerun did not execute tests: attempt 1 failed resolving dependencies after
+  Maven Central DNS errors; attempt 2 was terminated after 17 minutes idle in
+  repository I/O. Do not treat 298 as final post-Raze totals.
+
+Image build:
+  PASS: ets-ogcapi-connectedsystems10:sprint41
+  Runtime base: ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
+  Builder: maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45
+
+Final startup verification:
+  Container: ets-csapi-s41-startup
+  Effective user: uid=1001(tomcat), gid=1001(tomcat)
+  Health: healthy
+  JDK: 17.0.15+6 (inherited base metadata)
+  Tomcat: 10.1.42 (inherited base metadata)
+  Startup command: catalina.sh run
+  /teamengine/rest/suites: HTTP success; etscode ogcapi-connectedsystems10 present
+  Startup log scan: no SEVERE, ServletException, LinkageError,
+  NoClassDefFoundError, or ClassNotFoundException.
+
+Caught failure and repair:
+  The first broad dependency-closure image became healthy at the shallow root
+  endpoint but /teamengine/rest/suites returned HTTP 500. Logs reported that
+  com.occamlab.te.spi.jaxrs.ApplicationComponents was not a subclass of
+  jakarta.ws.rs.core.Application. Inventory comparison showed parent/webapp
+  duplicate Jersey and Jakarta API jars. A subsequent inherited dependency-copy
+  execution added three TeamEngine distribution archives and was rejected by
+  the byte-for-byte base manifest check. The final build adds only the shaded
+  ETS jar and teamengine-resources-6.0.0.jar. NetworkNT 1.5.9 and ITU time are
+  relocated inside the ETS jar; suite registration then succeeds.
+
+Mandatory local OSH E2E:
+  NOT RUN / BLOCKED. The restarted environment has no documented
+  /home/nh/docker/gir/sar-ops/field-hub directory, field-hub Docker image,
+  volume, network, container, or credential source. No Sprint 41 TestNG E2E
+  totals or no-mutation result are claimed.

@@ -1,0 +1,179 @@
+evaluation:
+  role: "Raze / Adversarial Reviewer"
+  date: "2026-07-20"
+  subject: "Uncommitted TeamEngine 6 runtime migration"
+  verdict: "GAPS_FOUND"
+  confidence: 0.91
+  reviewed_scope:
+    changed:
+      - ".dockerignore"
+      - ".gitignore"
+      - "Dockerfile"
+      - "pom.xml"
+    untracked:
+      - "f10m.xml"
+    contextual_inputs:
+      - "AGENTS.md"
+      - "_bmad/agents/adversarial-reviewer.md"
+      - "_bmad/architecture.md"
+      - "_bmad/adrs/ADR-007-dockerfile-base-image-deviation.md"
+      - "_bmad/adrs/ADR-009-multi-stage-dockerfile.md"
+      - "openspec/AGENTS.md"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+      - "docker-compose.yml"
+      - "scripts/smoke-test.sh"
+      - "ops/e2e-test-plan.md"
+      - ".harness/contracts/sprint-ets-40.yaml"
+      - ".harness/handoffs/generator-handoff.yaml"
+
+  executive_assessment: >-
+    Moving to the OGC-published TeamEngine 6 image is technically plausible and
+    resolves the known compile-time TeamEngine 6 versus runtime TeamEngine 5.6.1
+    mismatch. The exact local image digest confirms a tomcat user, catalina.sh run
+    command, JDK 17.0.15+6, Tomcat 10.1.42, and inherited TE_BASE/heap settings.
+    However, the change silently supersedes binding requirements and two accepted
+    ADRs, has no story or test traceability, and has no Maven or real-IUT TeamEngine
+    evidence. It is therefore not eligible for completion or merge as submitted.
+
+  findings:
+    - id: "RAZE-TE6-001"
+      severity: "CRITICAL"
+      title: "Spec-first and architecture gates were bypassed"
+      evidence:
+        - "REQ-ETS-TEAMENGINE-003 still mandates a TeamEngine 5.6.1 webapp assembled on JDK 17."
+        - "_bmad/architecture.md still defines TeamEngine 5.6.x deployment and was last reconciled 2026-06-01, 49 days before this review."
+        - "Dockerfile prose declares ADR-007 superseded and discards ADR-009 runtime decisions without an accepted replacement ADR/change proposal."
+        - "No TeamEngine 6 story, REQ/SCENARIO update, contract, traceability update, or architecture reconciliation accompanies the code."
+      impact: "The implementation contradicts the project's binding design and cannot be audited through the mandatory traceability chain."
+      required_fix: >-
+        Before implementation acceptance, create/accept a change proposal; add or
+        update REQ-* and SCENARIO-* plus a story; ratify a replacement/superseding
+        ADR; reconcile architecture, traceability, and relevant handoffs.
+
+    - id: "RAZE-TE6-002"
+      severity: "CRITICAL"
+      title: "Mandatory Maven and real-IUT TeamEngine verification is absent"
+      evidence:
+        - "No test changes reference migration REQ/SCENARIO identifiers."
+        - "No Maven unit/lint run was performed for this review or documented for these uncommitted changes."
+        - "No Docker build, startup, suite-registration, or real local OSH TeamEngine E2E artifact is tied to this migration."
+        - "Prior Sprint 40 evidence predates these uncommitted runtime changes and cannot prove TeamEngine 6 behavior."
+      impact: >-
+        Image buildability, CTL/SPI registration, dependency classloading, health,
+        and actual suite execution remain unproven.
+      required_fix: >-
+        Add tests for statically testable image invariants, run the prescribed Maven
+        verification, then run scripts/smoke-test.sh against the documented running
+        local OSH IUT from a clean temporary clone. Archive exact XML/log totals and
+        reconcile ops/test-results.md. Do not reuse TeamEngine 5 evidence.
+
+    - id: "RAZE-TE6-003"
+      severity: "HIGH"
+      title: "Dependency filtering is broader than its stated SPI purpose and lacks classloader evidence"
+      evidence:
+        - "Dockerfile executes rm -f target/lib-runtime/teamengine-*.jar, removing every TeamEngine-prefixed runtime artifact rather than only teamengine-spi."
+        - "The comment states the webapp provides the SPI, but no recorded inventory proves the pinned image supplies every removed TeamEngine artifact/version needed by the ETS closure."
+        - "The prior explicit shared-lib dedupe was removed without an empirical TE6 classpath inventory or collision report."
+      impact: "The build can succeed while runtime linkage or service loading fails, or duplicate incompatible libraries remain across common and webapp classloaders."
+      required_fix: >-
+        Capture the resolved dependency tree and pinned-image jar inventory; replace
+        the wildcard with an explicit, justified exclusion list (prefer Maven scope/
+        exclusions where appropriate); prove SPI loading and no linkage errors in E2E.
+
+    - id: "RAZE-TE6-004"
+      severity: "HIGH"
+      title: "Pinned-image metadata is valid, but filesystem/tool assumptions remain unverified"
+      evidence:
+        - "docker image inspect confirmed RepoDigest sha256:981b7156..., User=tomcat, Cmd=[catalina.sh, run], JDK 17.0.15+6, Tomcat 10.1.42, JAVA_OPTS with TE_BASE and heap."
+        - "No successful check established that curl and unzip exist in the image, target directories exist with expected ownership, or the root-to-tomcat artifact installation can complete."
+        - "The Dockerfile healthcheck requires curl and CTL installation requires unzip."
+      impact: "Correct metadata does not establish that the Dockerfile builds or the container becomes healthy."
+      required_fix: >-
+        During the gated build, verify required binaries, directories, ownership,
+        effective non-root runtime identity, inherited command/environment, and
+        healthcheck behavior; record the immutable digest provenance and refresh procedure.
+
+    - id: "RAZE-TE6-005"
+      severity: "MEDIUM"
+      title: "Compose overrides undermine the claim that base environment is inherited unchanged"
+      evidence:
+        - "Dockerfile says JAVA_OPTS/CATALINA_OPTS are inherited unchanged."
+        - "docker-compose.yml overrides JAVA_OPTS to a 2 GiB heap and adds DocumentBuilderFactory, while the inspected base image uses a 6 GiB heap and TE_BASE only."
+      impact: "docker-compose and smoke-test docker-run exercise materially different runtime configurations."
+      required_fix: >-
+        Decide and specify the supported runtime environment, then align Compose,
+        Dockerfile documentation, smoke execution, and E2E evidence.
+
+    - id: "RAZE-TE6-006"
+      severity: "MEDIUM"
+      title: "Confidential-file hygiene is helpful but incomplete and overbroad"
+      evidence:
+        - ".gitignore and .dockerignore now exclude te2_webapp*, CITE_*Transcript*, and *:Zone.Identifier."
+        - "Ignore rules do not remove already-tracked material and no tracked-file/history scan or credential-leak check is recorded."
+        - "Unanchored broad patterns can hide legitimate similarly named files anywhere in the tree."
+      impact: "The rules reduce accidental inclusion but are not evidence that confidential material never entered Git/build context."
+      required_fix: >-
+        Scope patterns to documented expected locations where possible; run a
+        tracked-files/build-context/history hygiene scan without printing secrets;
+        document provenance and handling in ops guidance.
+
+    - id: "RAZE-TE6-007"
+      severity: "MEDIUM"
+      title: "f10m.xml is unrelated worktree pollution"
+      evidence:
+        - "f10m.xml is an untracked OGC API Features ETS POM using ets-common:14 and unrelated coordinates."
+        - "The migration does not reference it and ignore rules do not cover it."
+      impact: "It risks accidental publication and confuses the authoritative POM/runtime analysis."
+      required_fix: "Remove it if scratch material, or move/document it as an intentional non-confidential fixture with explicit purpose."
+
+    - id: "RAZE-TE6-008"
+      severity: "MEDIUM"
+      title: "Operational records are unreconciled"
+      evidence:
+        - "ops/status.md, ops/changelog.md, ops/server.md, ops/test-results.md, and _bmad/traceability.md do not record the migration or its verification state."
+        - "pom.xml changes docker.teamengine.version to 6.0.0, but this property primarily labels Docker Maven output; it does not itself prove the runtime image contents or compatibility."
+      impact: "A later agent can mistake a plausible code diff for a completed, tested migration."
+      required_fix: "After verification, update operational status/changelog/server/test results and implementation status with exact evidence and remaining concerns."
+
+  confirmed_positive_evidence:
+    - "The exact digest is present locally as ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c."
+    - "Image config User is tomcat; the Dockerfile deliberately returns to USER tomcat."
+    - "Image config Cmd is catalina.sh run, so omitting a replacement CMD preserves startup command."
+    - "Image config reports JDK 17.0.15+6 and Tomcat 10.1.42."
+    - "Image config JAVA_OPTS supplies TE_BASE=/usr/local/tomcat/te_base and a heap; CATALINA_OPTS carries the Log4j mitigation."
+    - "Changing away from TE 5.6.1 is directionally consistent with the project's existing ets-common:17 / TeamEngine 6 compile lineage."
+
+  commands_and_results:
+    - command: "date -u +%Y-%m-%dT%H:%M:%SZ"
+      result: "2026-07-20T10:27:10Z"
+    - command: "git status --short"
+      result: "Modified .dockerignore, .gitignore, Dockerfile, ops/metrics.md, pom.xml; untracked f10m.xml."
+    - command: "git diff -- .dockerignore .gitignore Dockerfile pom.xml"
+      result: "Reviewed complete migration diff; no command failure."
+    - command: "sed/rg reads of Raze role, OpenSpec guide, architecture, ADR-007/009, spec, contracts/handoffs, Compose, smoke plan/script, and operations records"
+      result: "Static review completed; one broad rg output was truncated, followed by focused reads."
+    - command: "docker image inspect ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c"
+      result: >-
+        Success after approval. Confirmed exact RepoDigest; User=tomcat;
+        Cmd=[catalina.sh,run]; no Entrypoint; JAVA_VERSION=jdk-17.0.15+6;
+        TOMCAT_VERSION=10.1.42; JAVA_OPTS includes 1-6 GiB heap and TE_BASE;
+        no base healthcheck.
+    - command: "docker run --rm --entrypoint sh <pinned-image> ..."
+      result: "Not completed; approval/run was aborted. No filesystem, utility, or jar-inventory conclusion is claimed."
+
+  tests:
+    maven: "NOT RUN"
+    docker_build: "NOT RUN"
+    teamengine_startup: "NOT RUN"
+    local_osh_real_iut_e2e: "NOT RUN"
+    rationale: "Review requested lightweight/static checks and parent directed immediate conclusion without further Docker/E2E work."
+
+  release_gate:
+    merge_ready: false
+    completion_claim_allowed: false
+    minimum_to_re_review:
+      - "Accepted spec/story/ADR/architecture reconciliation"
+      - "Explicit dependency and image filesystem validation"
+      - "Maven verification with exact totals"
+      - "Clean TeamEngine 6 local-OSH E2E with exact totals and archived artifacts"
+      - "Ops, traceability, and worktree-hygiene reconciliation"

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-06-03T18:02Z
+Last updated: 2026-07-21T05:35Z
 
 ## Fresh-Session Entry Point
 
@@ -18,6 +18,29 @@ Read these first:
 - `_bmad/traceability.md`
 - `.harness/handoffs/planner-handoff.yaml`
 - `.harness/contracts/sprint-ets-40.yaml`
+- `openspec/change-proposals/CP-001-teamengine-6-runtime.md`
+- `epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md`
+- `.harness/contracts/sprint-ets-41.yaml`
+
+## Session Handoff — Sprint ets-41 TeamEngine 6 Runtime Migration In Progress
+
+Sprint 41 is partially verified but not complete. Maven, image build, runtime invariants, health, SPI/CTL registration, and linkage checks pass; mandatory local OSH E2E is blocked because the restarted environment contains no documented field-hub directory, image, volume, network, container, or credentials source.
+
+- Implemented: immutable TeamEngine base boundary; pinned TeamEngine and Maven builder images; non-root runtime; inherited base configuration; a shaded ETS jar with relocated NetworkNT/ITU classes plus the single absent `teamengine-resources-6.0.0.jar`; structural JUnit/runtime verifier; Compose/POM cleanup; confidential history/effective-context hygiene; and `f10m.xml` removal.
+- Corrected the prior inventory misconception: the base has TeamEngine SPI/core 6.0.0 and resources RC2, not resources 6.0.0. The selected ETS closure therefore retains `teamengine-resources-6.0.0.jar`.
+- Verification: runtime verifier PASS, including Git-history/effective-context and byte-for-byte base manifests; formatter PASS; earlier Docker Maven `298 total / 0 failures / 0 errors / 3 skipped`; revised image build PASS; effective user `tomcat`; inherited JDK 17.0.15+6/Tomcat 10.1.42/command/environment; health PASS; authenticated `/rest/suites` registers `ogcapi-connectedsystems10`; startup logs contain no registration/linkage errors. The required final Maven rerun did not execute tests: attempt 1 failed during Maven Central DNS resolution and attempt 2 was terminated after 17 minutes idle awaiting repository I/O.
+- A first built image copied the broad dependency closure and reproduced a Jersey `Application` class-identity failure with `/rest/suites` HTTP 500. A later inherited `dependency:copy` attempt also added three TeamEngine distribution archives; the manifest verifier caught it. Explicit `dependency:get` plus one repository-path copy fixed both classes of leakage.
+- NOT RUN: real local OSH TeamEngine E2E, exact TestNG totals, and no-mutation evidence. The documented `/home/nh/docker/gir/sar-ops/field-hub` path is absent, and Docker has no field-hub image, volume, network, or container. Do not claim Sprint 41 complete.
+- Final Raze recheck: `APPROVE_WITH_CONCERNS`, confidence `0.98`, no required fixes. Its only concern is the accurately recorded final-Maven and local-OSH infrastructure blocker.
+- Exact detailed resume instructions are at the top of `.harness/handoffs/generator-handoff.yaml`.
+
+- CP-001 accepts the direction: replace the manually assembled TeamEngine 5.6.1 runtime with an immutable OGC-published TeamEngine 6.0.0 image aligned with the `ets-common:17` compile lineage.
+- ADR-011 supersedes ADR-007's forward runtime and ADR-009's Tomcat 8.5 runtime stage while preserving the multi-stage builder and non-root principles.
+- Architecture freshness was overdue by 49 days and is reconciled to v2.0.6 on 2026-07-20.
+- Existing implementation work now includes `.dockerignore`, `.gitignore`, `Dockerfile`, `docker-compose.yml`, `pom.xml`, `scripts/verify-teamengine6-runtime.sh`, and `VerifyTeamEngine6Packaging.java`; `f10m.xml` was removed as unrelated scratch material.
+- Raze planning discovery returned `GAPS_FOUND`, confidence `0.91`. The image metadata is plausible, but no migration-specific Maven, Docker build/startup, SPI/CTL registration, or local OSH E2E gate has run.
+- Sprint 41 planning Raze review initially returned `GAPS_FOUND`, confidence `0.96`; the focused recheck after reconciliation returned `APPROVE_WITH_CONCERNS`, confidence `0.97`, with the sole low editorial status-token concern corrected.
+- Required next action: restore Maven repository access plus the documented local OSH field-hub stack and credential source, then run final Maven and TeamEngine 6 E2E from a clean `/tmp` clone and archive totals/no-mutation evidence. Do not reuse Sprint 40 TeamEngine 5.6.1 evidence.
 
 ## Current State
 

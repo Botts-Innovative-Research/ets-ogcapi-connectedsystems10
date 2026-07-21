@@ -21,7 +21,7 @@
 ## Product Vision
 
 A Java/TestNG Executable Test Suite that an OGC API – Connected Systems server implementer can
-run inside TeamEngine 5.6.x (currently 5.6.1) (locally via Docker, or on `cite.opengeospatial.org/teamengine/`) to
+run inside the TeamEngine runtime selected by the accepted architecture (locally via Docker, or on `cite.opengeospatial.org/teamengine/`) to
 obtain a per-conformance-class pass/fail verdict with full HTTP request/response traces, a
 machine-readable EARL/JSON report, and — via the OGC CITE governance process — eventually an
 OGC compliance badge. The ETS is the certification deliverable; the v1.0 web app remains as a
@@ -44,7 +44,7 @@ shift-left developer pre-flight tool.
 | SC-1 | Maven archetype scaffold builds green | `mvn clean install` exits 0 on a fresh JDK 17 / Maven 3.9 environment |
 | SC-2 | All 14 OGC 23-001 (Part 1) conformance classes have at least one TestNG test method per ATS assertion | TestNG report shows ≥1 `@Test` per `/conf/<class>/<assertion>` URI from Annex A |
 | SC-3 | All OGC 23-002 (Part 2) conformance classes have at least one TestNG test method per ATS assertion | Same, against Part 2 Annex A. Sprint 25 correction: Annex A does not define `/conf/system-history`; that former placeholder is retired. |
-| SC-4 | ETS loads in TeamEngine 5.6.x (currently 5.6.1) Docker image without registration error | `docker run ogccite/teamengine-production:5.6.1` plus the ETS jar shows the suite in the suites list |
+| SC-4 | ETS loads without registration or linkage errors in the immutable TeamEngine runtime selected by the accepted architecture | TeamEngine 5.6.1 remains historical baseline evidence; Sprint 41 requires the digest-pinned OGC TeamEngine 6.0.0 image to become healthy and expose the suite through SPI/CTL before it becomes the supported runtime |
 | SC-5 | Full Part 1 + Part 2 suite passes against the primary development IUT | Local OSH is the default development IUT. All `@Test` methods that target conformance classes the IUT declares pass; conformance classes the IUT does not declare are SKIPPED, not FAILED. GeoRobotix public runs are advisory interoperability probes only. |
 | SC-6 | Three independent passing implementations identified | GeoRobotix + OpenSensorHub + `connected-systems-go` participate in beta testing, each producing a TeamEngine pass record |
 | SC-7 | ETS submitted to OGC CITE SC for beta status | CITE SC ticket open; ETS jar published to OSSRH/Maven Central |
@@ -139,9 +139,9 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 
 | ID | Requirement | OpenSpec REQ |
 |----|-------------|--------------|
-| FR-ETS-50 | The ETS SHALL register with TeamEngine 5.6.x (currently 5.6.1) via the TestNG SPI (`org.opengis.cite.teamengine.spi.TestSuite` plus `META-INF/services/` registration). | REQ-ETS-TEAMENGINE-001 |
+| FR-ETS-50 | The ETS SHALL register through the TestNG SPI and execute on the TeamEngine runtime selected by the accepted architecture. TeamEngine 5.6.1 is the verified baseline; TeamEngine 6.0.0 becomes the supported runtime only after Sprint 41 verification. | REQ-ETS-TEAMENGINE-001, REQ-ETS-TEAMENGINE-007 |
 | FR-ETS-51 | A CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` SHALL expose the suite to TeamEngine's CTL UI, accepting `iut-url` (CS API landing page) and optional `auth` parameters. | REQ-ETS-TEAMENGINE-002 |
-| FR-ETS-52 | A `Dockerfile` SHALL produce an image based on `ogccite/teamengine-production:5.6.1` with the ETS jar pre-installed at `/opt/teamengine/webapps/teamengine/WEB-INF/lib/`. | REQ-ETS-TEAMENGINE-003 |
+| FR-ETS-52 | A `Dockerfile` SHALL produce a reproducible JDK 17 image using an immutable OGC-published TeamEngine runtime compatible with the ETS compile lineage, with the ETS jar, justified dependency closure, and CTL resources installed and executed as non-root. | REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-007 |
 | FR-ETS-53 | A `docker-compose.yml` snippet SHALL bring up TeamEngine + this ETS at `http://localhost:8081/teamengine/` with no additional host dependencies. | REQ-ETS-TEAMENGINE-004 |
 | FR-ETS-54 | The TeamEngine integration SHALL be verifiable via a smoke test: a single-command Docker invocation against the configured IUT that produces a non-empty TestNG report, zero suite-registration errors, and no IUT-bound mutation unless an explicit dedicated-mutable-IUT opt-in is supplied. Local OSH is the primary development target; GeoRobotix is advisory only. | REQ-ETS-TEAMENGINE-005 |
 
@@ -180,7 +180,7 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 | NFR-ETS-01 | Build reproducibility | `mvn clean install` produces byte-identical jars from the same commit, ignoring `META-INF/` timestamps. Verified by a CI job that builds twice and diffs. |
 | NFR-ETS-02 | JDK 17 compatibility | Source compiles cleanly with JDK 17; no JDK 11 / JDK 8 fallback. |
 | NFR-ETS-03 | Development E2E pass rate against local OSH | ≥95% of `@Test` methods targeting local-OSH-declared conformance classes pass or SKIP for documented empty-IUT/missing-prerequisite reasons. Advisory GeoRobotix failures are tracked separately and do not block local-OSH-backed development work. |
-| NFR-ETS-04 | TeamEngine load time | The ETS jar registers with TeamEngine 5.6.x (currently 5.6.1) and is selectable in the suite list within 30 seconds of container start. |
+| NFR-ETS-04 | TeamEngine load time | The ETS jar registers with the selected immutable TeamEngine runtime and is selectable in the suite list within 30 seconds of container start. TeamEngine 5.6.1 is historical baseline evidence; Sprint 41 verifies TeamEngine 6.0.0. |
 | NFR-ETS-05 | Test execution throughput | The full Part 1 suite completes within 10 minutes against a responsive IUT (parity with v1.0 NFR-03 measured baseline of ~0.1 min). |
 | NFR-ETS-06 | Reproducible across environments | `mvn clean install` succeeds on Linux (Ubuntu 22.04 / Debian 12), macOS (latest), and Windows (via WSL2). CI runs all three. |
 | NFR-ETS-07 | Schema pin freshness | The OGC OpenAPI YAML commit SHA pin SHALL be reviewed quarterly; pin updates SHALL be ADR-tracked. |
@@ -203,7 +203,7 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 | ETS ↔ JSON Schemas | File-system (classpath) | Schemas bundled at `src/main/resources/schemas/` are loaded by Kaizen `openapi-parser` and used for response-body validation. |
 | ETS ↔ OpenAPI YAML | Git submodule OR Maven dependency on a YAML-only artifact | Pinned to a specific OGC `ogcapi-connected-systems` commit SHA. Pin recorded in `pom.xml` and `ops/server.md`. |
 | Build pipeline ↔ Maven Central | OSSRH staging via `mvn deploy` | At beta milestone only; requires GPG signing key and OSSRH credentials in CI secrets. |
-| CI ↔ TeamEngine 5.6.x (currently 5.6.1) Docker | Docker `ogccite/teamengine-production:5.6.1` | Smoke-test job pulls the image, mounts the ETS jar, runs the suite against the configured primary IUT, archives the report. Development default is local OSH; GeoRobotix is advisory only. |
+| CI ↔ TeamEngine Docker | Repository multi-stage image with an immutable OGC-published TeamEngine runtime | Smoke-test builds the image, verifies health and suite registration, runs against local OSH by default, and archives exact results. TeamEngine 5.6.1 is baseline-only; Sprint 41 verifies TeamEngine 6.0.0. GeoRobotix is advisory only. |
 
 ## OpenSpec Capability Mapping
 
@@ -215,7 +215,7 @@ The new capability is `ets-ogcapi-connectedsystems` at `openspec/capabilities/et
 | Part 1 Core | REQ-ETS-CORE-001..004 |
 | Part 1 (other 13 classes) | REQ-ETS-PART1-001..013 |
 | Part 2 (OGC 23-002 classes plus project cross-class closures) | REQ-ETS-PART2-001..013 |
-| TeamEngine integration | REQ-ETS-TEAMENGINE-001..005 |
+| TeamEngine integration | REQ-ETS-TEAMENGINE-001..007 |
 | Spec-trap fixture port | REQ-ETS-FIXTURES-001..003 |
 | CITE submission | REQ-ETS-CITE-001..003 |
 | Web-app freeze | REQ-ETS-WEBAPP-FREEZE-001 |
@@ -241,7 +241,7 @@ The new capability is `ets-ogcapi-connectedsystems` at `openspec/capabilities/et
 | `epic-ets-01-scaffold` | Generate archetype, modernize to JDK 17, build green | REQ-ETS-SCAFFOLD-001..007, NFR-ETS-01,02,06 |
 | `epic-ets-02-part1-classes` | Implement all 14 Part 1 conformance classes | REQ-ETS-CORE-001..004, REQ-ETS-PART1-001..013 |
 | `epic-ets-03-part2-classes` | Implement all OGC 23-002 Part 2 conformance classes plus project cross-class closures | REQ-ETS-PART2-001..013 |
-| `epic-ets-04-teamengine-integration` | SPI + CTL + Docker | REQ-ETS-TEAMENGINE-001..005 |
+| `epic-ets-04-teamengine-integration` | SPI + CTL + Docker | REQ-ETS-TEAMENGINE-001..007 |
 | `epic-ets-05-cite-submission` | Beta submission, three-impl outreach | REQ-ETS-CITE-001..003 |
 | `epic-ets-06-fixture-port` | Port spec-trap corpus to `@DataProvider` | REQ-ETS-FIXTURES-001..003 |
 | `epic-ets-07-webapp-freeze` | README reposition, freeze tag | REQ-ETS-WEBAPP-FREEZE-001 |

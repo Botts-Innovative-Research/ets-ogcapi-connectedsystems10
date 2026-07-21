@@ -1,9 +1,9 @@
 # Epic ETS-04: TeamEngine Integration (SPI / CTL / Docker)
 
-> Status: Active — Sprint 1 lands the smoke-test path | Last updated: 2026-04-27
+> Status: Active — TeamEngine 5.6.1 baseline verified; Sprint 41 TeamEngine 6 Maven/image/startup verified, local OSH E2E blocked | Last updated: 2026-07-21
 
 ## Goal
-Wire the ETS into TeamEngine 5.6.x (currently 5.6.1) via the TestNG SPI, ship a CTL wrapper that exposes the suite to the TeamEngine UI, package the integration in a Dockerfile + docker-compose snippet, and prove the round-trip via a smoke test against GeoRobotix. Owns sub-deliverable 4 of the new ETS capability.
+Wire the ETS into TeamEngine through the TestNG SPI, ship a CTL wrapper that exposes the suite to the TeamEngine UI, package the integration in Docker, and prove the round-trip against the primary local OSH IUT. TeamEngine 5.6.1 is the verified baseline; Sprint 41 migrates to an immutable OGC-published TeamEngine 6.0.0 runtime. Owns sub-deliverable 4 of the ETS capability.
 
 ## Dependencies
 - Depends on: `epic-ets-01-scaffold` (jar must exist), `epic-ets-02-part1-classes` (Sprint 1's CS API Core suite is the smoke target)
@@ -33,13 +33,15 @@ Wire the ETS into TeamEngine 5.6.x (currently 5.6.1) via the TestNG SPI, ship a 
 | S-ETS-06-03 | **(Sprint 6 WEDGE)** Wire-side unit test reclassification: spec.md + story notes amended; VerifyWireRestoresOriginalCredential companion story | **Active (Sprint 6)** | REQ-ETS-CLEANUP-016 (spec-side) |
 | S-ETS-07-01 | **(Sprint 7)** Sprint 6 carryover wedge bundle: sabotage javac fix + sabotage pipefail fix + credential-leak prong-b retarget + REQ-017 status-honesty correction + design.md wrap-pattern doc-lag fix + ADR-010 v3 retroactive validation | **Active (Sprint 7)** | REQ-ETS-CLEANUP-018, REQ-ETS-CLEANUP-017 (live close), REQ-ETS-CLEANUP-016 (automated script PASS) |
 | S-ETS-39-01 | **(Sprint 39)** Artifact hygiene and URI/schema drift report harness while populated OSH blockers remain external | Implemented; Raze approved | REQ-ETS-CLEANUP-020, REQ-ETS-SYNC-001 |
+| S-ETS-41-01 | **(Sprint 41)** Adopt and verify immutable OGC-published TeamEngine 6.0.0 runtime | Partially implemented: Maven/image/startup/registration verified; local OSH E2E blocked | REQ-ETS-TEAMENGINE-001, REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-004, REQ-ETS-TEAMENGINE-005, REQ-ETS-TEAMENGINE-006, REQ-ETS-TEAMENGINE-007, REQ-ETS-CLEANUP-004, REQ-ETS-CLEANUP-021 |
 | S-ETS-07-05 | (placeholder) docker-compose stack with healthchecks (extended beyond Sprint 1 baseline) | Backlog | REQ-ETS-TEAMENGINE-004 |
 | S-ETS-07-06 | (placeholder) CTL wrapper supports auth-type parameters end-to-end | Backlog | REQ-ETS-TEAMENGINE-002 |
 | S-ETS-07-07 | (placeholder) TeamEngine integration regression suite (CI) | Backlog | NFR-ETS-04 |
 
 ## Acceptance Criteria
-- [ ] ETS jar registers with TeamEngine 5.6.x (currently 5.6.1) via SPI without errors
+- [x] ETS jar registers with the verified TeamEngine 5.6.1 baseline via SPI without errors
+- [x] ETS jar registers with TeamEngine 6.0.0 via SPI/CTL without startup linkage errors; full IUT execution remains gated below
 - [ ] CTL wrapper exposes `iut-url` + auth parameters in TeamEngine UI
-- [ ] Dockerfile produces a working image extending `ogccite/teamengine-production:5.6.1`
+- [x] Dockerfile produces a healthy registered image from an immutable OGC-published TeamEngine 6.0.0 digest with recorded provenance
 - [ ] `docker-compose up` brings the stack up at http://localhost:8081/teamengine/
-- [ ] Smoke test against GeoRobotix produces a non-empty TestNG report with zero suite-registration errors
+- [ ] Smoke test against the primary local OSH IUT produces a non-empty TestNG report with exact totals, zero suite-registration/linkage errors, and zero read-only IUT mutations

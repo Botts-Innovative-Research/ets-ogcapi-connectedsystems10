@@ -4,16 +4,11 @@
 # http://localhost:8081/teamengine/ with a health check.
 #
 # Usage:
-#   1. Build the ETS jar + stage runtime deps:
-#        mvn clean package -DskipTests
-#        mvn dependency:copy-dependencies \
-#            -DoutputDirectory=target/lib-runtime -DincludeScope=runtime
-#        rm -f target/lib-runtime/teamengine-*.jar
-#   2. Bring up the stack:
+#   1. Bring up the stack (the multi-stage Dockerfile builds the ETS):
 #        docker compose up --build
-#   3. Open http://localhost:8081/teamengine/ (default credentials:
+#   2. Open http://localhost:8081/teamengine/ (default credentials:
 #        ogctest / ogctest)
-#   4. Hit the suite list:
+#   3. Hit the suite list:
 #        curl -u ogctest:ogctest -H 'Accept: application/xml' \
 #             http://localhost:8081/teamengine/rest/suites
 #
@@ -33,9 +28,6 @@ services:
     container_name: ets-ogcapi-connectedsystems10
     ports:
       - "8081:8080"
-    environment:
-      JAVA_OPTS: "-Xms1024m -Xmx2048m -DTE_BASE=/usr/local/tomcat/te_base -Djavax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl"
-      CATALINA_OPTS: "-Dlog4j2.formatMsgNoLookups=true"
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS -o /dev/null http://localhost:8080/teamengine/ || exit 1"]
       interval: 10s

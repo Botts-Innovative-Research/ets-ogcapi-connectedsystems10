@@ -1,3 +1,37 @@
+planning_update:
+  timestamp: "2026-07-20T10:43:34Z"
+  sprint: ets-41
+  story: S-ETS-41-01
+  title: TeamEngine 6 runtime migration
+  status: PLANNED_IMPLEMENTATION_DIFF_UNVERIFIED
+  change_proposal: openspec/change-proposals/CP-001-teamengine-6-runtime.md
+  contract: .harness/contracts/sprint-ets-41.yaml
+  architecture: _bmad/architecture.md
+  adr: _bmad/adrs/ADR-011-ogc-teamengine-6-runtime-image.md
+  architecture_freshness:
+    previous_last_reconciled: "2026-06-01"
+    stale_days_at_planning: 49
+    reconciled: true
+  current_diff:
+    - .dockerignore
+    - .gitignore
+    - Dockerfile
+    - pom.xml
+    - f10m.xml
+  required_before_completion:
+    - Explicit Maven dependency and pinned-image library inventory
+    - Required image utility/path/ownership/effective-user verification
+    - Aligned Dockerfile, Compose, Maven profile, and smoke runtime configuration
+    - Maven verification with exact totals
+    - Docker build, health, SPI/CTL registration, and linkage-error checks
+    - Real local OSH TeamEngine E2E with exact totals and no-mutation evidence
+    - Final Raze review with no unresolved required fixes
+  prior_raze:
+    artifact: .harness/evaluations/teamengine-6-migration-adversarial-2026-07-20.yaml
+    verdict: GAPS_FOUND
+    confidence: 0.91
+  next_agent: generator
+
 agent: generator
 status: sprint_40_partial_verified_raze_approved_with_concerns_clean_e2e_restored_populated_schema_blocked
 timestamp: "2026-06-03T18:02:00Z"

@@ -1,0 +1,102 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.97
+reviewed_scope:
+  basis: focused recheck of RAZE-41-001 through RAZE-41-007
+  method: current planning/documentation diffs and lightweight text inspection only
+  execution_excluded:
+    - Maven
+    - Docker build or inspection
+    - TeamEngine startup
+    - E2E
+summary: >-
+  The planning fixes close six of seven findings and materially close the seventh.
+  Architecture, PRD, epic, story, contract, traceability, hygiene anchoring, test-first
+  deliverables, baseline statuses, and ADR provisional wording now agree on an
+  unverified TeamEngine 6 migration. One low-severity editorial status-vocabulary
+  inconsistency remains in the OpenSpec implementation-summary prose. It does not
+  create a false implementation or test claim and need not block Generator handoff.
+closure_by_finding:
+  - id: RAZE-41-001
+    status: CLOSED
+    evidence:
+      - "_bmad/architecture.md current topology now labels the local path TE6 image + ETS jar and the hosted path OGC-managed TeamEngine."
+      - "The normative local narrative now identifies TeamEngine 5.6.1 as historical and TeamEngine 6.0.0 as the planned digest-pinned target."
+      - "The runtime diagram, dependency lineage, ADR table, and section 19 consistently preserve the unverified gate boundary."
+    remaining_fix: null
+
+  - id: RAZE-41-002
+    status: CLOSED
+    evidence:
+      - "_bmad/prd.md SC-4 now requires the immutable architecture-selected runtime and explicit TeamEngine 6 health/SPI/CTL proof."
+      - "The integration interface row now describes the repository multi-stage image, local OSH default, and TeamEngine 5.6.1 baseline-only status."
+      - "Capability and epic mappings now cover REQ-ETS-TEAMENGINE-001..007."
+    remaining_fix: null
+
+  - id: RAZE-41-003
+    status: CLOSED
+    evidence:
+      - "Epic acceptance now requires an immutable OGC TeamEngine 6.0.0 digest rather than the nonexistent 5.6.1 production tag."
+      - "Epic E2E acceptance now uses the primary local OSH IUT with exact totals, linkage/registration checks, and the no-mutation condition."
+      - "REQ-ETS-TEAMENGINE-006 is explicit in the story, contract, TeamEngine 6 E2E scenario mapping, and Sprint 41 traceability row."
+    remaining_fix: null
+
+  - id: RAZE-41-004
+    status: CLOSED
+    evidence:
+      - "The story requires test-first structural checks, relevant identifier citations, pre-fix failure evidence, and post-fix PASS."
+      - "The contract contains six concrete test_first_deliverables spanning provenance, dependency exclusion, runtime invariants, configuration, and confidential build-context hygiene."
+      - "The contract keeps Maven/Docker/E2E evidence as NOT_RUN."
+    remaining_fix: null
+
+  - id: RAZE-41-005
+    status: CLOSED
+    evidence:
+      - "REQ-ETS-CLEANUP-021 accurately specifies confidential tracked-file/history/build-context hygiene and f10m.xml disposition."
+      - "SCENARIO-ETS-CLEANUP-CONFIDENTIAL-BUILD-CONTEXT-001 supplies the scenario-level acceptance boundary without exposing protected contents."
+      - "CP-001, story, contract, and traceability now map the hygiene scope to REQ-ETS-CLEANUP-021 and its scenario."
+    remaining_fix: null
+
+  - id: RAZE-41-006
+    status: SUBSTANTIALLY_CLOSED_LOW_CONCERN
+    evidence:
+      - "REQ-ETS-TEAMENGINE-003 now uses the authorized PARTIALLY_IMPLEMENTED spelling."
+      - "REQ-001, REQ-002, REQ-004, and REQ-005 preserve their implemented TeamEngine 5.6.1 baseline status while explicitly deferring TeamEngine 6 verification to REQ-007."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md implementation-status summary near line 2757 still says REQ-003 PARTIAL_IMPLEMENTED."
+    remaining_fix: >-
+      Change the implementation-summary occurrence for REQ-ETS-TEAMENGINE-003 from
+      PARTIAL_IMPLEMENTED to PARTIALLY_IMPLEMENTED. This is editorial and does not
+      alter implementation status or gate evidence.
+
+  - id: RAZE-41-007
+    status: CLOSED
+    evidence:
+      - "ADR-011 now says Provisionally accepted decision for Sprint 41; implementation and selected digest acceptance pending verification."
+      - "The ADR index and architecture ADR table repeat the provisional decision/verification distinction."
+      - "Story, contract, status, and traceability continue to call the implementation diff unverified."
+    remaining_fix: null
+remaining_required_fixes:
+  - severity: low
+    file: openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    issue: "Implementation-summary prose uses PARTIAL_IMPLEMENTED for REQ-003 while its normative requirement uses PARTIALLY_IMPLEMENTED."
+    fix: "Normalize that summary occurrence to PARTIALLY_IMPLEMENTED."
+lightweight_checks:
+  - command: "rg -n 'teamengine-production:5\\.6\\.1|Smoke test against GeoRobotix' _bmad/architecture.md _bmad/prd.md epics/epic-ets-04-teamengine-integration.md"
+    observed: "No current normative migration-contract matches remain."
+  - command: "rg -n 'REQ-ETS-TEAMENGINE-006' openspec/change-proposals/CP-001-teamengine-6-runtime.md epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md .harness/contracts/sprint-ets-41.yaml _bmad/traceability.md"
+    observed: "REQ-006 is consistently bound to the Sprint 41 local OSH gate."
+  - command: "rg -n 'REQ-ETS-CLEANUP-021|SCENARIO-ETS-CLEANUP-CONFIDENTIAL-BUILD-CONTEXT-001' openspec/change-proposals/CP-001-teamengine-6-runtime.md openspec/capabilities/ets-ogcapi-connectedsystems/spec.md epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md .harness/contracts/sprint-ets-41.yaml _bmad/traceability.md"
+    observed: "Requirement and scenario are defined and mapped across planning and traceability."
+  - command: "rg -n 'test-first|test_first_deliverables|red-then-green|pre-existing incompatible diff' epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md .harness/contracts/sprint-ets-41.yaml"
+    observed: "Durable test-first deliverables and pre-fix/post-fix evidence are required."
+  - command: "rg -n 'PARTIAL_IMPLEMENTED|PARTIALLY_IMPLEMENTED' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    observed: "Normative REQ-003 is corrected; its implementation-summary occurrence remains inconsistent. Numerous pre-existing legacy uses are outside this focused Sprint 41 recheck."
+  - command: "rg -n 'Provisionally accepted|implementation and selected digest acceptance pending' _bmad/adrs/ADR-011-ogc-teamengine-6-runtime-image.md _bmad/adrs/INDEX.md _bmad/architecture.md"
+    observed: "Decision acceptance and runtime/digest verification are explicitly distinguished."
+test_execution:
+  tests_run: false
+  reason: "Focused planning recheck explicitly excluded Docker, Maven, and E2E."
+  false_completion_claim_found: false
+generator_handoff: >-
+  Approved with one low editorial concern. The migration remains planned and
+  unverified; Generator must execute the contract's test-first and runtime gates
+  before any implementation-complete claim.

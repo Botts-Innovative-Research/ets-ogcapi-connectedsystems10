@@ -26,3 +26,8 @@ jenkinsfiles/
 
 # Local Docker / smoke-test debris
 docker-compose.override.yml
+
+# CONFIDENTIAL — OGC-supplied material. Keep out of the build context.
+te2_webapp*
+CITE_*Transcript*
+*:Zone.Identifier

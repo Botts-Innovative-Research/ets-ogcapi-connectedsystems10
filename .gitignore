@@ -32,3 +32,9 @@ Thumbs.db
 
 # Ops test-result archives are committed evidence (S-ETS-01-03 smoke artifacts).
 !ops/test-results/*.log
+
+# CONFIDENTIAL — OGC-supplied material, must not be published to this public remote.
+# The te2 jar inventory was shared by OGC on the explicit condition it stay private.
+te2_webapp*
+CITE_*Transcript*
+*:Zone.Identifier

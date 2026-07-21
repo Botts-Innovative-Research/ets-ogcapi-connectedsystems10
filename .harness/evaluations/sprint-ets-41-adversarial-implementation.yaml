@@ -1,0 +1,126 @@
+verdict: GAPS_FOUND
+confidence: 0.96
+reviewer: "Red Team / Raze"
+generated_at: "2026-07-21T04:44:46Z"
+scope:
+  repository: "/home/nh/ets-ogcapi-connectedsystems10"
+  reviewed:
+    - "AGENTS.md and _bmad/agents/adversarial-reviewer.md."
+    - "Sprint 41 contract, generator/planner handoffs, story, change proposal, OpenSpec requirements/scenarios, ADRs, architecture, PRD, epic, and traceability."
+    - "Uncommitted Dockerfile, POM, Compose, ignore rules, runtime verifier, structural JUnit test, and operational evidence/reconciliation."
+    - "Live Sprint 41 image/container metadata, health, effective user, installed jar inventory, TeamEngine suite registration, and startup logs."
+  not_rerun:
+    - "Maven/formatter"
+    - "Docker image build"
+    - "TeamEngine E2E smoke"
+  rationale_for_no_rerun: "The review request explicitly prohibited expensive Maven/build reruns; existing artifacts and the live image/container were sufficient to test the claims."
+summary:
+  supported:
+    - "Docker Maven evidence reports BUILD SUCCESS: 298 tests, 0 failures, 0 errors, 3 skipped."
+    - "The digest-pinned Sprint 41 image is running as uid/gid 1001 tomcat, is healthy, inherits catalina.sh run and the base environment, and exposes ogcapi-connectedsystems10 through /teamengine/rest/suites."
+    - "The inspected startup log has no error, exception, or linkage signatures."
+    - "Local OSH E2E is honestly NOT_RUN_BLOCKED because the field-hub directory/image/volume/network/container and credential source are absent; no Sprint 40 TeamEngine 5.6.1 evidence is substituted."
+  unsupported_or_overstated:
+    - "The explicit 11-jar selection is basename-absent, but is not artifact/classpath-absent and introduces seven older duplicate artifact versions beside jars already in the base image."
+    - "The immutable-base verifier is a source-text heuristic and does not prove base-file immutability; CTL extraction uses unzip -o and can overwrite a colliding base path."
+    - "The confidential hygiene gate does not perform the specified history or effective Docker build-context check."
+findings:
+  - id: "RAZE-ETS41-GAP-001"
+    severity: HIGH
+    title: "The claimed base-absent dependency selection creates split-version duplicates"
+    finding: >-
+      Seven of the eleven selected jars duplicate artifacts already present in the pinned
+      TeamEngine webapp under newer versions. Comparing only exact basenames is not a safe
+      dependency boundary: both versions enter the same WEB-INF/lib classloader. Registration
+      success proves the earlier Jersey collision was removed, but it does not prove this
+      split-version classpath is compatible across full suite execution.
+    evidence:
+      - "Final image contains checker-qual 3.12.0 plus base 3.43.0."
+      - "Final image contains commons-logging 1.2 plus base 1.3.1 and 1.3.2."
+      - "Final image contains error_prone_annotations 2.7.1 plus base 2.28.0."
+      - "Final image contains failureaccess 1.0.1 plus base 1.0.2."
+      - "Final image contains guava 31.0.1-jre plus base 33.3.1-jre."
+      - "Final image contains j2objc-annotations 1.3 plus base 3.0.0."
+      - "Final image contains json-schema-validator 1.5.9 plus base 1.0.66."
+      - "Only itu 1.14.0, logback-classic 1.5.18, logback-core 1.5.18, and TeamEngine resources 6.0.0 lack same-artifact basenames in the observed base inventory."
+      - "scripts/verify-teamengine6-runtime.sh checks only that resources 6.0.0 is selected; VerifyTeamEngine6Packaging checks only selection-directory text and that one filename. Neither validates the eleven entries against artifact identity/version or an archived inventory."
+      - "ops/test-results.md, ops/status.md, story, contract, traceability, and handoff call this a reviewed base-absent closure and state it removes parent/webapp duplicates, which the live inventory disproves."
+    required_fix: >-
+      Derive and archive a machine-readable Maven coordinate-to-base inventory comparison,
+      remove or explicitly justify every same-artifact split version, and make the verifier
+      compare the complete selected set and reject duplicate artifact identities. Rebuild and
+      repeat startup/registration; the mandatory local OSH E2E remains required when its
+      environment is restored.
+  - id: "RAZE-ETS41-GAP-002"
+    severity: HIGH
+    title: "Immutable-base acceptance is not proven and CTL extraction permits overwrite"
+    finding: >-
+      The Dockerfile extracts the CTL zip with `unzip -q -o` directly into the base-owned
+      te_base/scripts tree. Today the selected suite directory does not collide with an observed
+      top-level base suite name, but overwrite mode silently replaces any colliding file and the
+      checks never compare base/final hashes. The regex also only catches narrowly formatted RUN
+      mutations, so its PASS cannot substantiate the absolute no-modification claim.
+    evidence:
+      - "Dockerfile: `RUN unzip -q -o /tmp/ets-ctl.zip -d /usr/local/tomcat/te_base/scripts`."
+      - "The pinned base top-level suite inventory currently has no ogcapi-connectedsystems10 directory, making this build observationally additive, not mechanically protected."
+      - "scripts/verify-teamengine6-runtime.sh rejects only a same-line RUN regex for sed/chmod/chown/rm and does not inspect the final image or hash base-owned files."
+      - "VerifyTeamEngine6Packaging is likewise source-text-only and does not reject unzip overwrite semantics."
+    required_fix: >-
+      Fail before extraction if any archive path exists in the base, remove overwrite mode, and
+      add a base-versus-final manifest/hash comparison that allows only explicitly enumerated
+      additive ETS paths. Reconcile the PASS claims until that proof exists.
+  - id: "RAZE-ETS41-GAP-003"
+    severity: MEDIUM
+    title: "Confidential hygiene verification does not meet the specified scenario"
+    finding: >-
+      The scenario requires tracked-file, history, and effective Docker build-context checks.
+      The runtime verifier checks current tracked names and ignore status for two local names,
+      but it neither scans Git history nor proves excluded files are absent from the effective
+      build context. Static .dockerignore patterns are useful but are not that evidence.
+    evidence:
+      - "SCENARIO-ETS-CLEANUP-CONFIDENTIAL-BUILD-CONTEXT-001 explicitly names history and effective Docker build-context hygiene checks."
+      - "scripts/verify-teamengine6-runtime.sh uses git ls-files and git check-ignore only."
+      - "The local review's filename-only git-history query found no protected-name matches, but this is not implemented or archived by the gate."
+      - "_bmad/traceability.md still marks REQ-ETS-CLEANUP-021 SPECIFIED; UNVERIFIED while ops/test-results.md and the contract call confidential hygiene PASS."
+    required_fix: >-
+      Add non-content-printing Git-history and effective build-context assertions, archive their
+      counts/results, and reconcile REQ-ETS-CLEANUP-021 consistently across traceability,
+      contract, story, and ops documents.
+  - id: "RAZE-ETS41-GAP-004"
+    severity: MEDIUM
+    title: "Sprint status artifacts contain stale and contradictory migration states"
+    finding: >-
+      The principal story and contract honestly remain in progress, but the epic still calls
+      Sprint 41 planned/unverified and leaves image/startup acceptance unchecked, while OpenSpec
+      REQ-ETS-TEAMENGINE-003 says the current diff is not evidence until gates including local
+      OSH E2E complete. This conflicts with the adjacent partial implementation record and the
+      ops claims. Status granularity is acceptable, but the documents must state the same facts.
+    evidence:
+      - "epics/epic-ets-04-teamengine-integration.md says `Planned; implementation diff exists but is unverified` and leaves TeamEngine 6 registration/image criteria unchecked."
+      - "openspec implementation status for REQ-ETS-TEAMENGINE-003 says the diff is not evidence until dependency inventory, Maven, startup/registration, and local OSH E2E complete."
+      - "The story, contract, ops/status, ops/test-results, and traceability record Maven/image/startup as verified and E2E as blocked."
+    required_fix: >-
+      Reconcile epic, OpenSpec implementation status, story, contract, traceability, and ops to
+      distinguish verified migration sub-gates from the blocked completion gate, without marking
+      Sprint 41 or TeamEngine 6 support complete.
+positive_evidence:
+  - "The runtime and builder images are digest pinned to the values asserted by the POM and Dockerfile."
+  - "Live container inspection confirms non-root uid/gid 1001, healthy state, JDK 17.0.15+6, Tomcat 10.1.42, inherited JAVA_OPTS/CATALINA_OPTS, and catalina.sh run."
+  - "An authenticated in-container REST request returns the suite identifier ogcapi-connectedsystems10."
+  - "The current startup log scan found no error/exception/linkage signatures."
+  - "The broad-copy Jersey Application class-identity failure is documented rather than hidden."
+  - "No protected filename was found by the review's filename-only tracked/history checks; no credential or protected file content was printed."
+  - "Local OSH E2E remains explicitly NOT_RUN_BLOCKED with no invented totals or no-mutation result."
+required_fixes:
+  - "RAZE-ETS41-GAP-001"
+  - "RAZE-ETS41-GAP-002"
+  - "RAZE-ETS41-GAP-003"
+  - "RAZE-ETS41-GAP-004"
+post_fix_recheck:
+  required: true
+  suggested_scope:
+    - "coordinate-aware dependency selection and duplicate-artifact rejection"
+    - "base/final immutable-path manifest comparison and collision-safe CTL installation"
+    - "history/effective-build-context confidential hygiene evidence"
+    - "spec/story/contract/traceability/ops reconciliation"
+    - "startup/registration rerun after packaging changes; local OSH E2E only when field-hub is restored"

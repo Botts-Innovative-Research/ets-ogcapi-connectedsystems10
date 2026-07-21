@@ -1,0 +1,79 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.98
+reviewer: "Red Team / Raze"
+generated_at: "2026-07-21T05:47:50Z"
+recheck_of: ".harness/evaluations/sprint-ets-41-adversarial-implementation.yaml"
+scope:
+  reviewed:
+    - "Focused source and evidence recheck for RAZE-ETS41-GAP-001 through GAP-004."
+    - "Updated Dockerfile, POM shade configuration, runtime verifier, structural JUnit, ignore rules, story, contract, OpenSpec, epic, traceability, handoff, and ops evidence."
+    - "Live final/base image library inventories, shaded ETS jar entries, byte-for-byte base manifests, running container health/identity/command, suite registration, and linkage-error log scan."
+  not_rerun:
+    - "Maven"
+    - "Docker production image build"
+    - "TeamEngine E2E smoke"
+  rationale_for_no_rerun: "The focused request prohibited implementation changes and asked for current file/image/container evidence; expensive gates were not repeated."
+summary:
+  prior_gaps:
+    RAZE-ETS41-GAP-001: "TECHNICALLY_FIXED"
+    RAZE-ETS41-GAP-002: "FIXED"
+    RAZE-ETS41-GAP-003: "FIXED"
+    RAZE-ETS41-GAP-004: "FIXED"
+  outcome: >-
+    The revised image itself has the intended two-file runtime payload and preserves every
+    compared TeamEngine-owned base byte. NetworkNT and ITU are relocated inside the shaded ETS
+    jar, CTL installation refuses the known suite-directory collision, confidential history and
+    effective-context checks succeed, and the live container is healthy and registered. The
+    verifier now fails closed when the final image is absent, its current rerun passed, and the
+    authoritative Sprint 41 records consistently describe the two-file payload, the earlier
+    298-test evidence, the infrastructure-blocked final Maven rerun, and blocked local OSH E2E.
+findings:
+  - id: "RAZE-ETS41-RECHECK-GAP-001"
+    severity: RESOLVED
+    title: "Byte-for-byte immutability gate now requires the final image"
+    finding: >-
+      The verifier now fails before the manifest comparison if FINAL_IMAGE_REF cannot be
+      inspected. It cannot print immutable-base PASS without an available final image, and the
+      current rerun completed the byte-for-byte comparison successfully.
+    evidence:
+      - "scripts/verify-teamengine6-runtime.sh requires `docker image inspect \"$FINAL_IMAGE_REF\"` and calls fail when unavailable."
+      - "The manifest diff follows unconditionally after the required image inspection."
+      - "Independent recheck against the currently available sprint41 image produced manifest_diff_lines=0 after excluding only the shaded ETS jar, teamengine-resources-6.0.0.jar, and the uniquely named CTL tree."
+      - "Dockerfile now refuses an existing `/usr/local/tomcat/te_base/scripts/ogcapi-connectedsystems10` path and no longer uses unzip overwrite mode."
+    required_fix: null
+  - id: "RAZE-ETS41-RECHECK-GAP-002"
+    severity: RESOLVED
+    title: "Authoritative status records distinguish final payload and Maven evidence"
+    finding: >-
+      The scoped Sprint 41 records now consistently distinguish the final shaded-ETS-plus-resources
+      payload from the superseded eleven-jar approach. They qualify 298/0/0/3 as earlier evidence,
+      record that final reruns did not execute tests due repository infrastructure, and retain
+      partial status with local OSH E2E NOT_RUN_BLOCKED.
+    evidence:
+      - "ops/test-results.md describes only the shaded ETS jar plus resources 6.0.0 and labels 298/0/0/3 an earlier pass before the blocked final rerun."
+      - "_bmad/traceability.md records the shaded ETS plus one resources-jar payload and `FINAL MAVEN/E2E BLOCKED`."
+      - "OpenSpec REQ-ETS-TEAMENGINE-003/007 distinguishes earlier Maven evidence from the final repository-infrastructure failure."
+      - "The scoped stale scan found no Sprint 41 eleven-jar or false final post-fix Maven-pass claim; the generic post-Raze hit belongs to historical Sprint 32 context."
+      - "All reviewed primary records continue to mark local OSH TeamEngine 6 E2E NOT_RUN_BLOCKED and do not substitute Sprint 40 evidence."
+    required_fix: null
+positive_evidence:
+  - "Base-versus-final WEB-INF/lib inventory adds exactly `ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar` and `teamengine-resources-6.0.0.jar`."
+  - "The shaded ETS jar contains 302 relocated NetworkNT entries and 39 relocated ITU entries, with zero original com/networknt/schema or com/ethlo/time entries."
+  - "No loose checker-qual, commons-logging, error-prone, failureaccess, Guava, J2ObjC, NetworkNT, ITU, or Logback split-version additions were observed."
+  - "The independent base/final TeamEngine file manifest diff is empty after excluding the three explicitly additive ETS paths."
+  - "CTL installation checks the destination is absent, extracts without `-o`, validates the expected archive directory, and then copies it."
+  - "Filename-only protected-history count is zero and the effective build-context audit contains zero protected/scratch matches."
+  - "The live container is healthy, runs as tomcat with `catalina.sh run`, registers ogcapi-connectedsystems10, and has no scanned SEVERE/ServletException/linkage/class-loading signatures."
+  - "The evidence artifact honestly states that the earlier Maven pass was 298/0/0/3 and that both final reruns failed before executing tests due DNS/repository I/O."
+  - "Local OSH E2E remains explicitly NOT_RUN_BLOCKED with no invented totals or no-mutation evidence."
+required_fixes: []
+concerns:
+  - id: "RAZE-ETS41-RECHECK-CONCERN-001"
+    severity: LOW
+    concern: >-
+      Sprint 41 remains incomplete by design: the final post-review Maven run has not executed
+      tests, and mandatory real local OSH TeamEngine 6 E2E is blocked by absent field-hub state.
+      This is accurately reported and is not a defect in the two reviewed fixes.
+post_fix_recheck:
+  required: false
+  result: "Both required fixes are closed; no required fixes remain."

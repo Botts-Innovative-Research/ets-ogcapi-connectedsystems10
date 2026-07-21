@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.0 | Status: Active ETS implementation | Last updated: 2026-06-03
+> Version: 1.1 | Status: Active ETS implementation | Last updated: 2026-07-20
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -11,7 +11,7 @@
 
 ## Purpose
 
-This capability defines an OGC-compliant Executable Test Suite (ETS) for the OGC API – Connected Systems standard. The ETS is generated from `org.opengis.cite:ets-archetype-testng:2.7`, runs inside TeamEngine 5.6.x (currently 5.6.1), and produces a per-conformance-class pass/fail/skip verdict against an Implementation Under Test (IUT) supplied as a CS API landing-page URL. The deliverable maps to PRD v2.0 functional requirements FR-ETS-01 through FR-ETS-90.
+This capability defines an OGC-compliant Executable Test Suite (ETS) for the OGC API – Connected Systems standard. The ETS is generated from `org.opengis.cite:ets-archetype-testng:2.7`, has a verified TeamEngine 5.6.1 baseline, and is partially implementing migration to an immutable OGC-published TeamEngine 6.0.0 runtime under CP-001 and Sprint 41. Maven, image build, startup, and registration are verified; real local OSH execution remains blocked. It produces a per-conformance-class pass/fail/skip verdict against an Implementation Under Test (IUT) supplied as a CS API landing-page URL. The deliverable maps to PRD v2.0 functional requirements FR-ETS-01 through FR-ETS-90.
 
 This capability does NOT define web-app endpoints, UI components, REST APIs, or session management — those concerns are owned by TeamEngine and superseded by the v1.0 web-app freeze.
 
@@ -1057,33 +1057,34 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-TEAMENGINE-001: SPI Registration
 - **Priority**: MUST
-- **Status**: SPECIFIED
-- **Description**: The ETS SHALL expose a class implementing the TeamEngine TestNG SPI (e.g. `org.opengis.cite.ogcapiconnectedsystems10.TestNGController` extending `com.occamlab.te.spi.executors.testng.TestNGExecutor` per `ets-common` convention). The SPI registration SHALL be declared via `META-INF/services/com.occamlab.te.spi.jaxrs.TestSuiteController` so TeamEngine 5.6.x (currently 5.6.1) discovers the suite at startup.
+- **Status**: IMPLEMENTED (TeamEngine 5.6.1 baseline); TeamEngine 6.0.0 migration verification pending under REQ-ETS-TEAMENGINE-007
+- **Description**: The ETS SHALL expose a class implementing the TeamEngine TestNG SPI (e.g. `org.opengis.cite.ogcapiconnectedsystems10.TestNGController` extending `com.occamlab.te.spi.executors.testng.TestNGExecutor` per `ets-common` convention). The SPI registration SHALL be declared via `META-INF/services/com.occamlab.te.spi.jaxrs.TestSuiteController`. The verified baseline is TeamEngine 5.6.1; Sprint 41 SHALL prove discovery and execution on TeamEngine 6.0.0 before the migration is marked implemented.
 - **Rationale**: Without SPI registration TeamEngine cannot enumerate the suite.
 - **Maps to**: PRD FR-ETS-50.
 
 #### REQ-ETS-TEAMENGINE-002: CTL Wrapper
 - **Priority**: MUST
-- **Status**: SPECIFIED
+- **Status**: IMPLEMENTED
 - **Description**: A CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` SHALL expose the suite to TeamEngine's CTL UI, accepting `iut-url` (CS API landing-page URL, required), `auth-type` (one of `none`, `bearer`, `apikey`, `basic`, optional, default `none`), and `auth-credential` (string, optional). The CTL wrapper passes these as TestNG suite parameters.
 - **Rationale**: TeamEngine 5.6.x (currently 5.6.1)'s primary entry surface is CTL; SPI alone is not enough for the user-visible UI.
 - **Maps to**: PRD FR-ETS-51.
 
 #### REQ-ETS-TEAMENGINE-003: Dockerfile
 - **Priority**: MUST
-- **Status**: SPECIFIED
-- **Description**: A `Dockerfile` SHALL produce a runnable TeamEngine 5.6.1 webapp on a JDK 17 base image with the built ETS jar staged under `/usr/local/tomcat/webapps/teamengine/WEB-INF/lib/`. The image SHALL build via `docker build -t ets-ogcapi-connectedsystems10 .` from a clean checkout with no additional host dependencies. **Original REQ wording (`extends ogccite/teamengine-production:5.6.1`) reconciled 2026-04-28T19:55Z** per Quinn s03 GAP-1 + Raze s03 CONCERN-1: the `:5.6.1` tag does not exist on Docker Hub (only `:latest` and `:1.0-SNAPSHOT`), and the production image runs JDK 8 (incompatible with the JDK 17 ETS jar — `UnsupportedClassVersionError class file version 61.0`). Implemented resolution per S-ETS-01-03 commit `d910808`: assemble TE 5.6.1 manually on `tomcat:8.5-jre17` by downloading `teamengine-web-5.6.1.war` + `teamengine-web-5.6.1-common-libs.zip` + `teamengine-console-5.6.1-base.zip` from Maven Central + 3 secondary patches. Identical TE 5.6.1 behavior + JDK 17 runtime; identical 12/12 PASS against GeoRobotix. Full audit trail at new repo `ops/server.md` "Docker smoke test" section. **ADR-007 (Dockerfile base image deviation) is a Sprint 2 follow-up** — Quinn s03 GAP-1 identifies the missing ADR-tracked decision; deferred per Quinn's recommendation.
+- **Status**: PARTIALLY_IMPLEMENTED — TeamEngine 5.6.1 baseline verified; TeamEngine 6 Maven/image/startup/registration verified by Sprint 41; local OSH E2E blocked
+- **Description**: A `Dockerfile` SHALL build the ETS on JDK 17 with Maven 3.9+ and install the thin ETS jar, required runtime dependency closure, and CTL resources into a runnable TeamEngine webapp. The runtime SHALL use an immutable digest of an OGC-published TeamEngine image compatible with the `ets-common:17` TeamEngine 6.0.0 SPI lineage, and SHALL run as non-root. Any dependency removed because TeamEngine supplies it SHALL be explicitly enumerated and justified by Maven dependency-tree and pinned-image library inventories. The image SHALL build from a clean checkout with no additional host dependencies. TeamEngine 5.6.1 remains the last verified baseline until Sprint 41 produces TeamEngine 6 evidence.
+- **Rationale**: CP-001 and ADR-011 replace the manual cross-version TeamEngine 5.6.1 assembly with a reproducible OGC-maintained TeamEngine 6 runtime without converting an unverified diff into implementation evidence.
 - **Maps to**: PRD FR-ETS-52, NFR-ETS-11.
 
 #### REQ-ETS-TEAMENGINE-004: docker-compose
 - **Priority**: SHOULD
-- **Status**: SPECIFIED
+- **Status**: IMPLEMENTED for the TeamEngine 5.6.1 baseline; TeamEngine 6 configuration alignment pending under REQ-ETS-TEAMENGINE-007
 - **Description**: A `docker-compose.yml` SHALL bring up the TeamEngine + ETS service at `http://localhost:8081/teamengine/` with port mapping, environment variable injection, and a healthcheck against `/teamengine/`.
 - **Maps to**: PRD FR-ETS-53, NFR-ETS-11.
 
 #### REQ-ETS-TEAMENGINE-005: Smoke Test
 - **Priority**: MUST
-- **Status**: SPECIFIED
+- **Status**: IMPLEMENTED for the TeamEngine 5.6.1 baseline; fresh TeamEngine 6 execution pending under REQ-ETS-TEAMENGINE-007
 - **Description**: A repository smoke-test script (`scripts/smoke-test.sh`) SHALL: (a) build the Docker image, (b) launch the container, (c) wait for healthcheck, (d) execute the suite against the configured IUT, (e) assert the TestNG report is non-empty and contains zero suite-registration errors, and (f) enforce the no-mutation oracle unless the run explicitly opts into a dedicated mutable IUT. Sprint 32 changes the primary development target from GeoRobotix to local OSH; GeoRobotix is advisory only.
 - **Maps to**: PRD FR-ETS-54, SC-4.
 
@@ -1093,6 +1094,13 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - **Description**: Development and sprint E2E gates SHALL use a self-provisioned local OpenSensorHub IUT as the primary target. The canonical Docker-network URL is `http://field-hub-osh-1:8081/sensorhub/api` on `field-hub_default`. Credentials SHALL be supplied through the environment and never recorded in repository docs, logs, or artifacts. GeoRobotix SHALL NOT be used as the default development target; it may be run only as an explicit advisory public interoperability probe.
 - **Planning evidence**: On 2026-06-01, authenticated local OSH TeamEngine smoke passed `206 total / 65 passed / 0 failed / 141 skipped` with `recognized_iut_request_logs=132` and zero IUT-bound POST/PUT/PATCH/DELETE in read-only mode (`GET=130`, `OPTIONS=2`). Local OSH declared Part 2 `/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/swecommon-json`, `/conf/swecommon-text`, `/conf/swecommon-binary`, `/conf/create-replace-delete`, and `/conf/system-event`, but returned empty DataStream, Observation, and ControlStream collections. Dynamic-data positive closure therefore requires seed fixtures.
 - **Maps to**: PRD FR-ETS-54, SC-4, NFR-ETS-11.
+
+#### REQ-ETS-TEAMENGINE-007: TeamEngine Runtime Compatibility and Provenance
+- **Priority**: MUST.
+- **Status**: PARTIALLY_IMPLEMENTED (2026-07-21: provenance, image build, non-root startup, SPI/CTL registration, and linkage checks verified; earlier Maven `298/0/0/3`, final Maven rerun blocked before tests by repository infrastructure; mandatory local OSH E2E pending).
+- **Description**: The selected TeamEngine runtime SHALL be pinned by immutable digest and SHALL have recorded TeamEngine, Tomcat, and JDK versions. The ETS build SHALL NOT modify, patch, replace, delete, or recursively change ownership of TeamEngine-owned files. It MAY only add ETS-owned jars, explicitly justified runtime dependencies, and CTL resources at TeamEngine-supported extension locations. Dockerfile, `docker-compose.yml`, Maven Docker profile, and `scripts/smoke-test.sh` SHALL agree on ports, health endpoint, runtime environment, and artifact installation paths, or document and test any intentional differences. Verification SHALL establish required utilities and directories, ownership, effective non-root identity, SPI/CTL suite registration, absence of dependency linkage errors, and full TeamEngine execution against the primary local OSH IUT.
+- **Rationale**: A matching POM label and plausible base image do not prove that the deployed runtime can load and execute the ETS.
+- **Maps to**: PRD FR-ETS-50, FR-ETS-52, FR-ETS-53, FR-ETS-54, NFR-ETS-04, NFR-ETS-11.
 
 ### Sub-deliverable 6 — Spec-Trap Fixture Port
 
@@ -1296,10 +1304,17 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-CLEANUP-020: Artifact Hygiene and Drift Harness (Sprint 39)
 - **Priority**: SHOULD
-- **Status**: IMPLEMENTED_RAZE_APPROVED (Sprint 39 S-ETS-39-01, 2026-06-03). `scripts/artifact-hygiene.py --self-test` and `scripts/uri-drift-audit.py --self-test` passed; Python compile passed; Docker Maven wrapper passed `294/0/0/3`; clean local OSH TeamEngine E2E passed `211/68/0/143` with zero IUT-bound writes. Archived hygiene reports cover Sprint 38 clean smoke, Sprint 38 populated mutable smoke, and Sprint 39 clean smoke. The Sprint 38 populated read-only gate intentionally fails because the mutable lifecycle artifact contains `POST=3`, `PUT=1`, `DELETE=3`; the report-only mutable summary passes and records zero credential leaks. Raze initially returned `APPROVE_WITH_CONCERNS` with no required fixes; a focused recheck returned `APPROVE` after post-review metadata fixes added explicit secret-input counts, archived clean paths, and Java/web-app repository provenance.
+- **Status**: IMPLEMENTED (Sprint 39 S-ETS-39-01, Raze approved 2026-06-03). `scripts/artifact-hygiene.py --self-test` and `scripts/uri-drift-audit.py --self-test` passed; Python compile passed; Docker Maven wrapper passed `294/0/0/3`; clean local OSH TeamEngine E2E passed `211/68/0/143` with zero IUT-bound writes. Archived hygiene reports cover Sprint 38 clean smoke, Sprint 38 populated mutable smoke, and Sprint 39 clean smoke. The Sprint 38 populated read-only gate intentionally fails because the mutable lifecycle artifact contains `POST=3`, `PUT=1`, `DELETE=3`; the report-only mutable summary passes and records zero credential leaks. Raze initially returned `APPROVE_WITH_CONCERNS` with no required fixes; a focused recheck returned `APPROVE` after post-review metadata fixes added explicit secret-input counts, archived clean paths, and Java/web-app repository provenance.
 - **Description**: The ETS repository SHALL provide executable report tooling that summarizes TeamEngine TestNG artifacts, request-method counts, IUT-bound write evidence, and credential-scan evidence without weakening conformance assertions. The tooling SHALL also provide a report-first URI/schema drift audit for the frozen v1.0 web app and Java ETS. The artifact-hygiene tool SHALL parse TestNG XML totals, parse smoke container request logs, count IUT-bound HTTP methods by configured IUT prefix, detect IUT-bound POST/PUT/PATCH/DELETE when a read-only smoke is expected, and scan selected artifacts for unmasked Authorization headers or explicitly supplied secret values. The drift tool SHALL extract OGC Connected Systems requirement/conformance URIs from Java ETS source and the v1.0 TypeScript registry, apply an optional allowlist, and compare schema bundle relative paths plus hashes while ignoring non-schema ADS artifacts such as `:Zone.Identifier`.
 - **Rationale**: Sprint 37/38 produced large and useful evidence sets while the remaining blockers are OSH behavior limitations. A small durable harness lets future work classify evidence, credential safety, request-method safety, and URI/schema drift quickly without spending a sprint on new conformance assertions.
 - **Maps to**: PRD FR-ETS-25, FR-ETS-26, FR-ETS-90; REQ-ETS-SYNC-001.
+
+#### REQ-ETS-CLEANUP-021: Confidential Reference and Build-Context Hygiene (Sprint 41)
+- **Priority**: MUST
+- **Status**: IMPLEMENTED (2026-07-21: tracked-file, filename-only history, and effective Docker-context checks pass without exposing protected contents; unrelated `f10m.xml` removed)
+- **Description**: Confidential OGC-supplied reference material SHALL remain untracked and excluded from the Docker build context without printing its contents during verification. Ignore patterns SHALL be scoped to the documented reference-file locations or names and SHALL be accompanied by tracked-file, history, and build-context checks. Unrelated scratch inputs such as `f10m.xml` SHALL be removed from the worktree or documented as an intentional, non-confidential fixture before Sprint 41 completion.
+- **Rationale**: Ignore rules reduce accidental inclusion but do not prove that protected material is absent from Git history or the effective Docker build context; unrelated scratch files also undermine auditable runtime analysis.
+- **Maps to**: PRD FR-ETS-25, NFR-ETS-08, CP-001, S-ETS-41-01.
 
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
@@ -1996,12 +2011,62 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 *Maps to*: REQ-ETS-CORE-003.
 
 #### SCENARIO-ETS-TEAMENGINE-LOAD-001 (CRITICAL)
-**GIVEN** the Docker image `ets-ogcapi-connectedsystems10` is built from the Sprint 1 Dockerfile
+**GIVEN** the Docker image `ets-ogcapi-connectedsystems10` is built from the current accepted Dockerfile
 **WHEN** the container is launched via `docker run -p 8081:8080 ets-ogcapi-connectedsystems10`
 **THEN** within 30 seconds `GET http://localhost:8081/teamengine/` returns HTTP 200
 **AND** the suite list at `GET http://localhost:8081/teamengine/rest/suites` includes `ogcapi-connectedsystems10`
 **AND** the TeamEngine logs show zero `ERROR`-level entries during suite registration.
 *Maps to*: REQ-ETS-TEAMENGINE-001, TEAMENGINE-003, NFR-ETS-04.
+
+#### SCENARIO-ETS-TEAMENGINE-TE6-IMAGE-PROVENANCE-001 (CRITICAL)
+**GIVEN** Sprint 41 selects an OGC-published TeamEngine 6.0.0 runtime
+**WHEN** the runtime reference and image metadata are inspected
+**THEN** the Dockerfile uses an immutable digest
+**AND** evidence records the corresponding TeamEngine, Tomcat, and JDK versions plus the digest refresh procedure
+**AND** a mutable tag alone is not accepted as reproducible runtime provenance.
+*Maps to*: REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-007.
+
+#### SCENARIO-ETS-TEAMENGINE-TE6-DEPENDENCY-INVENTORY-001 (CRITICAL)
+**GIVEN** Maven resolves the ETS runtime closure and the pinned TeamEngine 6 image supplies engine libraries
+**WHEN** the Generator chooses which dependencies to install or exclude
+**THEN** archived Maven dependency-tree and image library inventories justify every TeamEngine exclusion
+**AND** the implemented exclusion list is explicit rather than an unverified `teamengine-*.jar` wildcard
+**AND** startup and suite execution show no classloading, service-loading, or linkage errors.
+*Maps to*: REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-007, REQ-ETS-SCAFFOLD-004.
+
+#### SCENARIO-ETS-TEAMENGINE-TE6-BASE-IMMUTABILITY-001 (CRITICAL)
+**GIVEN** the runtime stage starts from the pinned OGC TeamEngine 6 image
+**WHEN** the ETS image is assembled
+**THEN** no TeamEngine-owned file from the base image is modified, patched, replaced, deleted, or recursively re-owned
+**AND** build steps only add ETS-owned jars, explicitly inventoried runtime dependencies, and uniquely named CTL resources at supported extension locations
+**AND** the final image inherits the base image's TeamEngine startup command and runtime configuration unless an intentional override is separately specified and tested.
+*Maps to*: REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-007.
+
+#### SCENARIO-ETS-TEAMENGINE-TE6-RUNTIME-INVARIANTS-001 (CRITICAL)
+**GIVEN** the TeamEngine 6 image is built with the ETS installed
+**WHEN** the final container is inspected and started
+**THEN** required installation paths and utilities exist
+**AND** ETS and CTL artifacts have runtime-readable ownership
+**AND** the effective runtime UID is non-zero
+**AND** `/teamengine/` becomes healthy and the Connected Systems suite is registered through SPI/CTL without startup errors.
+*Maps to*: REQ-ETS-TEAMENGINE-001, REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-007, REQ-ETS-CLEANUP-004.
+
+#### SCENARIO-ETS-TEAMENGINE-TE6-CONFIG-ALIGNMENT-001 (CRITICAL)
+**GIVEN** Dockerfile, Compose, Maven Docker profile, and smoke-test paths can supply runtime configuration
+**WHEN** their ports, health endpoint, `JAVA_OPTS`, `CATALINA_OPTS`, startup command, and artifact paths are compared
+**THEN** they are behaviorally aligned
+**OR** each intentional difference is specified and exercised by a corresponding gate
+**AND** documentation does not claim that inherited image settings remain unchanged when a supported launcher overrides them.
+*Maps to*: REQ-ETS-TEAMENGINE-004, REQ-ETS-TEAMENGINE-007.
+
+#### SCENARIO-ETS-TEAMENGINE-TE6-LOCAL-OSH-E2E-001 (CRITICAL)
+**GIVEN** the TeamEngine 6 image has passed Maven, build, startup, and registration checks
+**WHEN** `scripts/smoke-test.sh` executes the deployed suite against `http://field-hub-osh-1:8081/sensorhub/api` on `field-hub_default`
+**THEN** the TestNG report is non-empty and exact total/pass/fail/error/skip counts are archived
+**AND** container logs contain no suite-registration or linkage errors
+**AND** the read-only no-mutation oracle records zero IUT-bound POST, PUT, PATCH, or DELETE requests
+**AND** prior TeamEngine 5.6.1 evidence is not substituted for this run.
+*Maps to*: REQ-ETS-TEAMENGINE-005, REQ-ETS-TEAMENGINE-006, REQ-ETS-TEAMENGINE-007.
 
 #### SCENARIO-ETS-CORE-SMOKE-001 (CRITICAL)
 **GIVEN** the TeamEngine + ETS Docker container is running
@@ -2661,6 +2726,14 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **AND** unmasked Authorization headers or explicitly supplied secret values are counted as leaks without printing the secret value.
 *Maps to*: REQ-ETS-CLEANUP-020, PRD FR-ETS-25.
 
+#### SCENARIO-ETS-CLEANUP-CONFIDENTIAL-BUILD-CONTEXT-001 (CRITICAL -- Sprint 41)
+**GIVEN** locally supplied OGC reference files may exist beside the repository
+**WHEN** Sprint 41 runs tracked-file, history, and effective Docker build-context hygiene checks
+**THEN** no protected reference file is tracked or sent in the Docker build context
+**AND** the check reports only filenames/counts needed for audit and never prints protected contents
+**AND** unrelated `f10m.xml` scratch material is absent unless an explicit safe-fixture purpose is specified.
+*Maps to*: REQ-ETS-CLEANUP-021.
+
 ## Implementation Status (2026-04-28)
 
 **Status**: Sprint 1 / S-ETS-01-01 ✅ PASS at `Botts-Innovative-Research/ets-ogcapi-connectedsystems10` HEAD `1323884` (29 commits). Quinn (Gate 3.5) APPROVE_WITH_GAPS 0.88; Raze (Gate 4) GAPS_FOUND 0.84 — both gates' 3 doc gaps closed same-turn 2026-04-28T16:30Z. S-ETS-01-02 (CS API Core conformance class) and S-ETS-01-03 (TeamEngine Docker smoke) are the remaining stories in Sprint 1 contract `.harness/contracts/sprint-ets-01.yaml`.
@@ -2686,12 +2759,13 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-CORE-003: `ConformanceTests` (commit `ea59436`) — 4 @Test methods asserting GET /conformance HTTP 200 + JSON + non-empty `conformsTo` array + explicit declaration of `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core`. All 4 PASS against GeoRobotix.
 - REQ-ETS-CORE-004: `ResourceShapeTests` Sprint-1-minimal (commit `b249aa1` + URI fix `1fdfe07`) — 2 @Test methods: api-definition link resolves to non-empty content + /conformance body shape is JSON object. Full id/type/links crawl deferred to Sprint 2 per design.md "single representative resource" pattern. **Note**: a copy-paste URI typo (`ogcapi-common-2/0.0/req/oas30/oas-impl` — Common Part 2, OGC 20-024) caught by Raze GAP-3 was corrected to `ogcapi-common-1/1.0/req/oas30/oas-impl` (Common Part 1, OGC 19-072 — the standard Sprint 1 actually targets) in commit `1fdfe07`.
 
-**Sub-deliverable 5 — TeamEngine Integration** (REQ-ETS-TEAMENGINE-001..005, Implemented S-ETS-01-03):
+**Sub-deliverable 5 — TeamEngine Integration** (REQ-ETS-TEAMENGINE-001..007; TeamEngine 5.6.1 baseline implemented, TeamEngine 6 migration partially implemented by S-ETS-41-01):
 - REQ-ETS-TEAMENGINE-001: META-INF/services SPI registration file (58 bytes, single-line FQCN `org.opengis.cite.ogcapiconnectedsystems10.TestNGController`, no whitespace, no extension) — verified by Quinn s01 + Raze s01/s02 + S-ETS-01-03 smoke runtime.
 - REQ-ETS-TEAMENGINE-002: CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` from archetype. **CTL Saxon namespace verified clean** (architect-handoff S-ETS-01-03 CONCERNS pitfall #3 — silent failure mode): `xmlns:tng="java:org.opengis.cite.ogcapiconnectedsystems10.TestNGController"` is the canonical run-together ADR-003 form, no `cs10` typo. Runtime corroboration: 12/12 PASS via SPI-routed smoke confirms TeamEngine successfully loaded the CTL.
-- REQ-ETS-TEAMENGINE-003: `Dockerfile` at repo root produces TE 5.6.1 webapp + ETS jar (commit `d910808`). **🚨 IMPLEMENTATION DEVIATION FROM SPEC TEXT (REQ wording amendment proposed for next planning cycle)**: spec said `FROM ogccite/teamengine-production:5.6.1`. Dana discovered (a) that tag doesn't exist on Docker Hub (only `:latest` and `:1.0-SNAPSHOT`), and (b) the production image runs JDK 8 (`JAVA_VERSION=8u212`), incompatible with our JDK 17 ETS jar (`UnsupportedClassVersionError class file version 61.0`). Implemented resolution: assemble TE 5.6.1 manually on `tomcat:8.5-jre17` by downloading `teamengine-web-5.6.1.war` + `teamengine-web-5.6.1-common-libs.zip` + `teamengine-console-5.6.1-base.zip` from Maven Central + 3 secondary patches (VirtualWebappLoader strip, JAXB jars in shared `lib/`, full `mvn dependency:copy-dependencies` deps closure with `teamengine-*-6.0.0.jar` filtered out). Identical TE 5.6.1 behavior + JDK 17 runtime; identical assertion outcomes (12/12 PASS) on the same IUT against GeoRobotix. Audit trail at new repo `ops/server.md` "Docker smoke test" section. **Proposed amended REQ wording**: "...SHALL produce a TeamEngine 5.6.1 webapp on a JDK 17 base image" (preserves Sprint 1 semantics; acknowledges JDK 17 toolchain reality + the missing `:5.6.1` tag fact).
+- REQ-ETS-TEAMENGINE-003: **PARTIALLY_IMPLEMENTED**. The manual TeamEngine 5.6.1/JDK 17 baseline remains verified through Sprint 40. Sprint 41 verifies the immutable TeamEngine 6.0.0 digest, shaded dependency isolation, byte-for-byte base immutability, image build, non-root startup, and SPI/CTL registration. Earlier Maven passed `298/0/0/3`; final post-review Maven and full runtime execution remain open until repository access and local OSH are restored.
 - REQ-ETS-TEAMENGINE-004: `docker-compose.yml` at repo root with `8081:8080` port mapping + 60s start-period healthcheck against `http://localhost:8080/teamengine` (commit `d831da1`). Canonical port 8081 committed; for dev environments where 8081 is in use (e.g. WSL2 running other containers), use `docker run -p 8082:8080` for testing. Dev-environment caveat documented at new repo `ops/server.md`.
 - REQ-ETS-TEAMENGINE-005: `scripts/smoke-test.sh` end-to-end (commit `91308f7`). Bash, idempotent, exits 0 only on non-empty TestNG report + zero ERROR-level container logs during suite registration. End-to-end ~10s wall-clock (image cached); first run with TE image pull adds 5-10 min. Archived artifacts at `ops/test-results/s-ets-01-03-teamengine-{smoke,container}-2026-04-28.{xml,log}`.
+- REQ-ETS-TEAMENGINE-007: **PARTIALLY_IMPLEMENTED** by Sprint 41. Pinned-image/runtime inventory, byte-for-byte immutable-base checks, shaded NetworkNT/ITU isolation, the explicit ETS-plus-resources payload, image build, non-root health, SPI/CTL registration, and no-linkage-error startup are verified. Earlier Docker Maven passed `298/0/0/3`; final post-review Maven did not reach tests due repository infrastructure. Real local OSH TeamEngine 6 E2E remains `NOT_RUN` because the restarted environment lacks the documented field-hub stack and credential source.
 
 **Sprint 1 contract success_criteria walk after S-ETS-01-03**: **9/9 PASS** (per Dana's S-ETS-01-03 generator report) — all 5 critical scenarios PASS (SCAFFOLD-BUILD-001, CORE-LANDING-001, CORE-CONFORMANCE-001, TEAMENGINE-LOAD-001, CORE-SMOKE-001), all 5 normal scenarios PASS (SCAFFOLD-LAYOUT-001, SCAFFOLD-REPRODUCIBLE-001, CORE-RESOURCE-SHAPE-001, CORE-LINKS-NORMATIVE-001, CORE-API-DEF-FALLBACK-001). **Sprint 1 functionally complete pending Quinn+Raze gate close on S-ETS-01-03.**
 

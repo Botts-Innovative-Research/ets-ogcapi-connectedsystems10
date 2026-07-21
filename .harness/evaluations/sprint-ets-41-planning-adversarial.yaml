@@ -1,0 +1,181 @@
+verdict: GAPS_FOUND
+confidence: 0.96
+reviewed_scope:
+  planning_documents:
+    - openspec/change-proposals/CP-001-teamengine-6-runtime.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md
+    - .harness/contracts/sprint-ets-41.yaml
+    - _bmad/adrs/ADR-011-ogc-teamengine-6-runtime-image.md
+    - _bmad/adrs/ADR-007-dockerfile-base-image-deviation.md
+    - _bmad/adrs/ADR-009-multi-stage-dockerfile.md
+    - _bmad/adrs/INDEX.md
+    - _bmad/architecture.md
+    - _bmad/prd.md
+    - _bmad/traceability.md
+    - epics/epic-ets-04-teamengine-integration.md
+    - .harness/handoffs/planner-handoff.yaml
+    - ops/status.md
+    - ops/changelog.md
+  implementation_relationship_only:
+    - .dockerignore
+    - .gitignore
+    - Dockerfile
+    - pom.xml
+  excluded:
+    - Docker, Maven, unit, build, and E2E execution
+    - implementation modification
+summary: >-
+  CP-001, ADR-011, S-ETS-41-01, the sprint contract, the new REQ-007, and five
+  scenarios establish a useful unverified migration boundary. Status honesty is
+  generally strong: the current Docker/POM diff is not called implemented and all
+  runtime gates remain NOT_RUN. The package is not ready for Generator handoff,
+  however, because authoritative architecture, PRD, and epic text still mandate
+  the obsolete/nonexistent TeamEngine 5.6.1 production image, and the story and
+  contract omit test-first deliverables that make the new scenarios executable.
+findings:
+  - id: RAZE-41-001
+    severity: high
+    title: Architecture freshness is dated but the deployment topology remains stale
+    evidence:
+      - "_bmad/architecture.md:1 declares v2.0.6 reconciled on 2026-07-20."
+      - "_bmad/architecture.md:31 still diagrams teamengine-production:5.6.1."
+      - "_bmad/architecture.md:42 still says docker compose launches ogccite/teamengine-production:5.6.1 and mounts the jar."
+      - "Architecture section 19 instead selects the OGC TeamEngine 6 digest and an installed thin jar/dependency/CTL model."
+    risk: >-
+      A Generator has two contradictory architecture authorities. Updating only the
+      changelog-style appendix does not satisfy the claimed freshness reconciliation.
+    required_fix: >-
+      Rewrite the current deployment diagram and normative deployment narrative to
+      the TeamEngine 6 target, explicitly label TeamEngine 5.6.1 as historical, and
+      retain the PLANNED/unverified boundary.
+
+  - id: RAZE-41-002
+    severity: high
+    title: PRD still contains the superseded TeamEngine 5.6.1 acceptance contract
+    evidence:
+      - "_bmad/prd.md:47 SC-4 requires TeamEngine 5.6.x and docker run ogccite/teamengine-production:5.6.1."
+      - "_bmad/prd.md:206 repeats the TeamEngine 5.6.x production-image CI integration."
+      - "_bmad/prd.md:218 and :244 map TeamEngine integration only through REQ-001..005, omitting REQ-006 and REQ-007."
+      - "FR-ETS-50 and FR-ETS-52 were updated for TeamEngine 6, producing internal PRD disagreement."
+    risk: >-
+      CP-001 and the OpenSpec requirement cannot be traced cleanly to a single PRD
+      acceptance boundary; SC-4 would reject the proposed implementation for obeying ADR-011.
+    required_fix: >-
+      Reconcile SC-4, the CI integration row, capability mapping, and epic mapping to
+      the immutable TeamEngine 6 target and REQ-001..007 while preserving historical
+      TeamEngine 5.6.1 evidence as baseline-only.
+
+  - id: RAZE-41-003
+    severity: high
+    title: Epic acceptance criteria contradict Sprint 41 and use obsolete E2E policy
+    evidence:
+      - "epics/epic-ets-04-teamengine-integration.md:45 still requires a working image extending ogccite/teamengine-production:5.6.1."
+      - "The same acceptance block still makes GeoRobotix smoke the target, although the epic goal and REQ-006 make local OSH primary."
+      - "The story table shorthand REQ-ETS-TEAMENGINE-003..007 unintentionally includes REQ-006, while the story's explicit requirement list does include REQ-006 only indirectly through its E2E scenario mapping and omits it from the Requirements list."
+    risk: >-
+      Story completion could satisfy its own checklist while leaving the parent epic
+      permanently contradictory, or could be judged against the wrong public IUT gate.
+    required_fix: >-
+      Replace the stale epic criteria with immutable TeamEngine 6 provenance,
+      registration, Compose health, and local OSH E2E criteria. List REQ-006 explicitly
+      in story and contract requirements, or remove it from scenario mapping with rationale.
+
+  - id: RAZE-41-004
+    severity: medium
+    title: Test-first work is required by workflow but absent from story and contract deliverables
+    evidence:
+      - "The five new scenarios require provenance, dependency inventory, runtime invariants, configuration alignment, and E2E assertions."
+      - "S-ETS-41-01 acceptance criteria request evidence but do not require repository tests or scripts referencing the new REQ/SCENARIO identifiers."
+      - ".harness/contracts/sprint-ets-41.yaml has no deliverable or gate requiring red-then-green tests and identifier comments."
+      - "AGENTS.md mandates Write Tests after Spec First, and tests must reference REQ-* and SCENARIO-* in comments."
+    risk: >-
+      Generator can manually inspect the image and declare each criterion met without
+      durable regression coverage, violating the project's spec-anchored workflow.
+    required_fix: >-
+      Add explicit test-first deliverables: structural tests for digest/version,
+      explicit exclusions, effective user/paths/config agreement, and scripted runtime
+      checks. Require each test/check to cite the applicable REQ and SCENARIO IDs and
+      require captured red-then-green evidence where a pre-existing diff is corrected.
+
+  - id: RAZE-41-005
+    severity: medium
+    title: CP-001 scope does not fully bind the hygiene implementation already under review
+    evidence:
+      - "CP-001 references confidential files and scratch POMs only as hygiene inputs."
+      - "The story includes confidential-ignore validation and f10m.xml resolution, but CP-001 References omits REQ-ETS-CLEANUP-004 and defines no hygiene scenario."
+      - "REQ-ETS-CLEANUP-004 is about multi-stage/non-root packaging, not confidential-file ignore behavior or unrelated worktree files."
+    risk: >-
+      The .gitignore/.dockerignore changes can be accepted without a precise requirement
+      and scenario, or incorrectly attributed to an unrelated cleanup requirement.
+    required_fix: >-
+      Either remove hygiene changes from Sprint 41 scope or add/reuse an accurately
+      named hygiene REQ and scenario covering tracked-file checks, build-context
+      exclusion, non-disclosure, and f10m.xml disposition; map CP, story, contract,
+      tests, and traceability consistently.
+
+  - id: RAZE-41-006
+    severity: medium
+    title: OpenSpec status taxonomy and baseline statuses are inconsistent
+    evidence:
+      - "openspec/AGENTS.md permits SPECIFIED, IMPLEMENTED, PARTIALLY_IMPLEMENTED, or DEFERRED."
+      - "REQ-ETS-TEAMENGINE-003 uses PARTIAL_IMPLEMENTED rather than PARTIALLY_IMPLEMENTED."
+      - "REQ-001, REQ-002, REQ-004, and REQ-005 remain SPECIFIED although their own implementation-status narrative and traceability rows describe the TeamEngine 5.6.1 baseline as implemented."
+    risk: >-
+      Automated status checks and human readers cannot distinguish implemented baseline
+      behavior from the unverified TeamEngine 6 delta reliably.
+    required_fix: >-
+      Use the allowed status vocabulary. Separate stable baseline requirements from the
+      migration delta where necessary, so implemented SPI/CTL/Compose/smoke behavior is
+      not demoted merely because TeamEngine 6 verification remains pending.
+
+  - id: RAZE-41-007
+    severity: low
+    title: CP and ADR acceptance terminology can be mistaken for implementation acceptance
+    evidence:
+      - "CP-001 says Accepted for planning and clearly limits its acceptance boundary."
+      - "ADR-011 says Accepted for Sprint 41 implementation; runtime verification pending."
+      - "Status and contract correctly say the implementation diff is unverified and every execution gate is NOT_RUN."
+    risk: >-
+      The current wording is mostly honest, but readers may shorten ADR-011's status to
+      Accepted and infer that the selected digest or implementation has already passed.
+    required_fix: >-
+      Prefer Proposed/Provisionally accepted pending verification for ADR-011, or add a
+      prominent sentence distinguishing decision acceptance from implementation and
+      digest acceptance. Promote only after the defined gates pass.
+
+positive_observations:
+  - CP-001 explicitly states that acceptance authorizes planning, not build/start/E2E claims.
+  - The story, contract, traceability row, status, and changelog consistently say the implementation diff is unverified.
+  - Maven, Docker build, startup, and local OSH E2E evidence are honestly recorded as NOT_RUN.
+  - ADR-011 correctly supersedes ADR-007's forward runtime and only ADR-009's runtime-stage decisions while preserving builder/non-root principles.
+  - Existing identifier search found one CP-001, one REQ-ETS-TEAMENGINE-007 definition, and one definition for each new TE6 scenario; no direct identifier collision was found.
+  - The dependency wildcard is not blessed: planning explicitly requires empirical inventories and an explicit final exclusion set.
+required_fixes:
+  - Reconcile the live architecture topology and narrative, not only the v2.0.6 appendix.
+  - Reconcile PRD SC-4, integration table, and REQ range mappings.
+  - Replace obsolete epic acceptance criteria and make local OSH the required E2E target.
+  - Make REQ-006 mapping explicit and consistent across CP, story, contract, scenarios, and traceability.
+  - Add test-first structural/runtime deliverables with REQ/SCENARIO references.
+  - Give confidential-ignore and scratch-file hygiene an accurate spec/scenario anchor or remove it from scope.
+  - Normalize OpenSpec status vocabulary and preserve implemented baseline statuses.
+  - Clarify ADR decision acceptance versus runtime/digest verification acceptance.
+exact_lightweight_checks:
+  - command: "rg -n 'teamengine-production:5\\.6\\.1|TeamEngine 5\\.6\\.x|Smoke test against GeoRobotix' _bmad/architecture.md _bmad/prd.md epics/epic-ets-04-teamengine-integration.md"
+    expected_after_fix: "No normative current-target matches; any retained matches explicitly say historical/superseded."
+  - command: "rg -n 'TeamEngine integration.*REQ-ETS-TEAMENGINE-001\\.\\.005|epic-ets-04-teamengine-integration.*REQ-ETS-TEAMENGINE-001\\.\\.005' _bmad/prd.md"
+    expected_after_fix: "No matches; mappings include the currently defined 001..007 range."
+  - command: "rg -n '^#### REQ-ETS-TEAMENGINE-007:|^#### SCENARIO-ETS-TEAMENGINE-TE6-' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    expected_after_fix: "Exactly one REQ-007 and five intended TE6 scenario definitions."
+  - command: "rg -n 'REQ-ETS-TEAMENGINE-006' openspec/change-proposals/CP-001-teamengine-6-runtime.md epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md .harness/contracts/sprint-ets-41.yaml _bmad/traceability.md"
+    expected_after_fix: "The same deliberate mapping appears in all four artifacts, or an explicit rationale records its exclusion."
+  - command: "rg -n 'PARTIAL_IMPLEMENTED|PARTIALLY_IMPLEMENTED' openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    expected_after_fix: "New Sprint 41 status uses the OpenSpec-authorized spelling PARTIALLY_IMPLEMENTED."
+  - command: "rg -n 'SCENARIO-ETS-TEAMENGINE-TE6-|REQ-ETS-TEAMENGINE-007' src scripts pom.xml Dockerfile"
+    expected_after_fix: "Durable tests/checks introduced by Generator cite the applicable new identifiers; Dockerfile comments alone are insufficient."
+  - command: "git ls-files | rg '(^|/)(te2_webapp|CITE_.*Transcript|.*:Zone.Identifier|f10m\\.xml$)'"
+    expected_after_fix: "No confidential artifacts are tracked; f10m.xml is absent unless explicitly specified as a safe fixture."
+test_execution:
+  tests_run: false
+  reason: "Review brief explicitly prohibited Docker/Maven/E2E; this was a planning-document review."
+  completion_claim: false

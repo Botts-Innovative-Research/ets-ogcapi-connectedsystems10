@@ -2,6 +2,16 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-21T06:15Z — Sprint 41 committed; Botts push authentication blocked
+
+**Triggered by user instruction**: “OK, push this to the Botts repo”
+
+- Verified `origin` is `https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git` and the branch is `main`.
+- Pre-push whitespace and protected-filename audits passed; created local commit `3cdd091 Migrate ETS runtime to TeamEngine 6`.
+- Push did not occur: HTTPS has no username credential, the equivalent SSH endpoint rejected public-key authentication, and GitHub CLI is unavailable.
+
+---
+
 ## 2026-07-21T05:35Z — Sprint 41 TeamEngine 6 implementation resumed; E2E blocked
 
 **Triggered by user instruction**: “pick up the session from where it left off” and “continue”

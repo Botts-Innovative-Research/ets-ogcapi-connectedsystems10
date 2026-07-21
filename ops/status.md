@@ -26,7 +26,7 @@ Read these first:
 
 Sprint 41 is partially verified but not complete. Maven, image build, runtime invariants, health, SPI/CTL registration, and linkage checks pass; mandatory local OSH E2E is blocked because the restarted environment contains no documented field-hub directory, image, volume, network, container, or credentials source.
 
-- Push state: Sprint 41 is committed locally as `3cdd091 Migrate ETS runtime to TeamEngine 6` but is not pushed. Botts `origin` is correct; HTTPS lacks credentials, SSH public-key authentication is denied, and `gh` is unavailable.
+- Push state: Sprint 41 commits `3cdd091` and `53453ee` were pushed to Botts `main` on 2026-07-21 using the GALP SSH key. The local `origin` now uses the SSH URL for future authenticated pushes.
 
 - Implemented: immutable TeamEngine base boundary; pinned TeamEngine and Maven builder images; non-root runtime; inherited base configuration; a shaded ETS jar with relocated NetworkNT/ITU classes plus the single absent `teamengine-resources-6.0.0.jar`; structural JUnit/runtime verifier; Compose/POM cleanup; confidential history/effective-context hygiene; and `f10m.xml` removal.
 - Corrected the prior inventory misconception: the base has TeamEngine SPI/core 6.0.0 and resources RC2, not resources 6.0.0. The selected ETS closure therefore retains `teamengine-resources-6.0.0.jar`.

@@ -2,13 +2,22 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
-## 2026-07-21T06:15Z — Sprint 41 committed; Botts push authentication blocked
+## 2026-07-21T07:28Z — Sprint 41 pushed to Botts with GALP key
+
+**Triggered by user correction**: “You should have the galp key you can use to push”
+
+- Located the encrypted `/home/nh/.ssh/galp` key without printing its contents, loaded it into a temporary SSH agent using the user-supplied passphrase, and pushed Botts `main` from `0561993` through `53453ee`.
+- Changed the local `origin` transport from unauthenticated HTTPS to the equivalent Botts SSH URL for future pushes; no credential or passphrase was stored in repository files.
+
+---
+
+## 2026-07-21T06:15Z — Sprint 41 committed; initial push authentication blocked (resolved)
 
 **Triggered by user instruction**: “OK, push this to the Botts repo”
 
 - Verified `origin` is `https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10.git` and the branch is `main`.
 - Pre-push whitespace and protected-filename audits passed; created local commit `3cdd091 Migrate ETS runtime to TeamEngine 6`.
-- Push did not occur: HTTPS has no username credential, the equivalent SSH endpoint rejected public-key authentication, and GitHub CLI is unavailable.
+- Initial push did not occur: HTTPS had no username credential, default SSH identities were rejected, and GitHub CLI was unavailable. Resolved at 07:28Z by explicitly loading the GALP key into a temporary agent.
 
 ---
 

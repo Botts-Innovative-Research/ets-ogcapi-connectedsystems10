@@ -16,11 +16,12 @@ Wire the ETS into TeamEngine through the TestNG SPI, ship a CTL wrapper that exp
 | S-ETS-01-03 | (Sprint 1, CLOSED) TeamEngine 5.6.x (currently 5.6.1) Docker smoke test runs CS API Core suite against GeoRobotix | Done (Sprint 1, Quinn 0.91, Raze 0.88) | REQ-ETS-TEAMENGINE-001..005 |
 | S-ETS-02-01 | (Sprint 2) ADR-006 (Jersey 1.x → Jakarta EE 9 / Jersey 3.x port) + ADR-007 (Dockerfile base image deviation), retroactive | Active (Sprint 2) | REQ-ETS-SCAFFOLD-006 |
 | S-ETS-02-04 | (Sprint 2) Add logback.xml + CredentialMaskingFilter wired via SuiteFixtureListener | Active (Sprint 2) | REQ-ETS-CLEANUP-003, NFR-ETS-08, NFR-ETS-10 |
-| S-ETS-02-05 | (Sprint 2, CLOSED) Multi-stage Dockerfile + non-root USER + tighter `/rest/suites/<code>` parse + CI workflow `git mv` | Done (Sprint 2 PARTIAL — image size + CI workflow deferred) | REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-005, REQ-ETS-CLEANUP-004 |
+| S-ETS-02-05 | (Sprint 2, CLOSED) Multi-stage Dockerfile + non-root USER + tighter `/rest/suites/<code>` parse; historical CI branch retired | Done (runtime work retained; CI portion superseded by CP-003) | REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-005, REQ-ETS-CLEANUP-004 |
 | S-ETS-03-02 | (Sprint 3) CredentialMaskingFilter integration test + REST-Assured RequestLoggingFilter wrap | Active (Sprint 3) | REQ-ETS-CLEANUP-006, REQ-ETS-CLEANUP-003 (modified) |
-| S-ETS-03-03 | (Sprint 3) CI workflow `git mv` to `.github/workflows/build.yml` + workflow_dispatch verification | Active (Sprint 3 — USER ACTION required) | REQ-ETS-CLEANUP-007 |
+| S-ETS-03-03 | (Sprint 3) Historical GitHub Actions activation proposal | Retired by CP-003; hosted CI is outside scope | REQ-ETS-CLEANUP-007, REQ-ETS-SCOPE-002 |
 | S-ETS-03-04 | (Sprint 3, CLOSED PARTIAL) Docker image size optimization (Sprint 3 stretch <550MB; closed at 660MB; ADR-009 illustrative table empirically falsified; chown-layer attack identified for Sprint 4) | Done PARTIAL (Sprint 3, Quinn 0.95 / Raze 0.93) | REQ-ETS-CLEANUP-008, REQ-ETS-CLEANUP-004 (modified) |
-| S-ETS-04-01 | (Sprint 4) CI workflow `git mv` ESCALATION (5th-sprint-defer-risk; binary close — Path A user-action OR Path B formal drop) | Active (Sprint 4 — USER ACTION required) | REQ-ETS-CLEANUP-007 (modified), REQ-ETS-CLEANUP-009 |
+| S-ETS-04-01 | (Sprint 4) Historical CI escalation | Superseded by permanent no-CI boundary in CP-003 | REQ-ETS-CLEANUP-007, REQ-ETS-CLEANUP-009, REQ-ETS-SCOPE-002 |
+| S-ETS-43-01 | Reconcile external dependency immutability and no-hosted-CI scope | In Progress | REQ-ETS-SCOPE-001, REQ-ETS-SCOPE-002 |
 | S-ETS-04-02 | (Sprint 4) Image-size v2: chown-layer attack (target <600MB) + ADR-009 v2 amendment | Active (Sprint 4) | REQ-ETS-CLEANUP-008 (modified), REQ-ETS-CLEANUP-010 |
 | S-ETS-04-03 | (Sprint 4) Deeper E2E credential-leak smoke (S-ETS-03-02 PARTIAL → PASS at IUT-auth layer) | Active (Sprint 4) | REQ-ETS-CLEANUP-006 (modified), REQ-ETS-CLEANUP-011, REQ-ETS-CLEANUP-003 (modified) |
 | S-ETS-04-04 | (Sprint 4, CLOSED) Sabotage-script bug fixes (stub bind 0.0.0.0 + docker --add-host=host.docker.internal) for hermetic CITE-SC-grade execution | Done (Sprint 4, PASS) | REQ-ETS-CLEANUP-005 (modified), REQ-ETS-CLEANUP-012 |
@@ -36,7 +37,7 @@ Wire the ETS into TeamEngine through the TestNG SPI, ship a CTL wrapper that exp
 | S-ETS-41-01 | **(Sprint 41)** Adopt and verify immutable OGC-published TeamEngine 6.0.0 runtime plus policy-guidance remediation | Complete; exact image `sha256:829a9741...d5f9` and local OSH E2E pass `211/69/0/142` with zero writes; final Raze APPROVE `0.99` | REQ-ETS-TEAMENGINE-001, REQ-ETS-TEAMENGINE-002, REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-004, REQ-ETS-TEAMENGINE-005, REQ-ETS-TEAMENGINE-006, REQ-ETS-TEAMENGINE-007, REQ-ETS-TEAMENGINE-008, REQ-ETS-CLEANUP-004, REQ-ETS-CLEANUP-021 |
 | S-ETS-07-05 | (placeholder) docker-compose stack with healthchecks (extended beyond Sprint 1 baseline) | Backlog | REQ-ETS-TEAMENGINE-004 |
 | S-ETS-07-06 | (placeholder) CTL wrapper supports auth-type parameters end-to-end | Backlog | REQ-ETS-TEAMENGINE-002 |
-| S-ETS-07-07 | (placeholder) TeamEngine integration regression suite (CI) | Backlog | NFR-ETS-04 |
+| S-ETS-07-07 | (placeholder) TeamEngine integration regression suite (local gate) | Backlog | NFR-ETS-04 |
 
 ## Acceptance Criteria
 - [x] ETS jar registers with the verified TeamEngine 5.6.1 baseline via SPI without errors

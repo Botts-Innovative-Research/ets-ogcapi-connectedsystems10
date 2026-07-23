@@ -30,7 +30,7 @@ demonstrated.
 1. Permit a commit-pinned prebuild of `org.opengis.cite:swecommon30-validator`
    while no published release exists. The build must verify the exact Git commit,
    build only the parent plus reusable validator module, and never import
-   `ets-swecommon30`. Supported Docker, developer-wrapper, and CI build paths must
+   `ets-swecommon30`. Supported Docker and developer-wrapper build paths must
    invoke the bootstrap. Release publication remains blocked until an accepted
    repository provides a non-SNAPSHOT reusable validator artifact.
 2. Add `ConnectedSystemsSweValidatorAdapter` with an ETS-owned diagnostics result.
@@ -53,8 +53,8 @@ demonstrated.
   dual-validation, upstream-limit, diagnostics, packaging, and E2E scenarios.
 - **Code**: add the adapter and integrate it into the six Part 2 SWE Common
   Observation/Command schema assertions.
-- **Build**: add a source-pinned validator bootstrap path to Docker, developer,
-  and CI flows, plus dependency exclusions and shade inclusion. This provisional
+- **Build**: add a source-pinned validator bootstrap path to Docker and developer
+  flows, plus dependency exclusions and shade inclusion. This provisional
   SNAPSHOT path is not a release-publication solution.
 - **Tests**: add valid/invalid component parity, diagnostics-boundary, packaging,
   and runtime checks.

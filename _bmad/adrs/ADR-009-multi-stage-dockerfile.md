@@ -10,12 +10,12 @@
 
 Sprint 1's S-ETS-01-03 Dockerfile (per ADR-007) is **single-stage**. `target/lib-runtime/` is staged **outside** Docker via `scripts/smoke-test.sh` calling `mvn dependency:copy-dependencies` against the host's `~/.m2/`. This works for a developer with a populated `~/.m2/` but has two real problems Raze s03 CONCERN-2 + CONCERN-3 surfaced:
 
-1. **Fresh-CI brittleness**. A clean GitHub Actions runner with empty `~/.m2/` must download the entire ets-common:17 + Jersey 3.x + REST-Assured + jts-core dep tree on every CI run — 5-10 minutes per invocation, plus exposure to Maven Central / OSSRH intermittent outages.
+1. **Cold-host brittleness**. A clean reviewer host with empty `~/.m2/` must download the entire ets-common:17 + Jersey 3.x + REST-Assured + jts-core dependency tree before each uncached build, adding 5-10 minutes and exposure to Maven repository outages.
 2. **Image is not self-contained**. A reviewer who clones the repo on a host with no Maven cannot `docker build .` and get a working image; they must first `mvn dependency:copy-dependencies` outside Docker. CITE SC reviewers do exactly this kind of cold-cache reproduction.
 
 S-ETS-02-05 closes both via a multi-stage Dockerfile. The architect must pick **one** of three patterns Pat enumerated:
 
-| Option | What it does | Build cost | CI cold-cache cost | Image size |
+| Option | What it does | Build cost | Cold-cache cost | Image size |
 |---|---|---|---|---|
 | (a) Build stage = Maven container; `mvn dependency:resolve` + `mvn package` inside container; runtime stage `COPY --from=build` | Full mvn lifecycle in Docker | ~30-60s warm; ~4-6 min cold | One-time Maven download per `docker build`; cacheable via BuildKit | Smallest (~400MB target) |
 | (b) Build stage = TomCat container with mvn; pre-staged `target/lib-runtime/` (current pattern, just split) | Layer split only | Same as Sprint 1 | No improvement on host-`~/.m2`-dep | Same (~600MB) |
@@ -24,7 +24,7 @@ S-ETS-02-05 closes both via a multi-stage Dockerfile. The architect must pick **
 Architect picks **(a)** for these reasons:
 
 1. **Most reproducible across host environments**. A reviewer with only Docker installed (no Maven, no JDK) can `git clone && docker build .` and get a working image. CITE SC reproduction friction is minimized.
-2. **CI cold-cache cost is amortized via BuildKit cache mount**. `--mount=type=cache,target=/root/.m2` persists across `docker build` invocations on the same runner; the second CI run is fast even with no host-`~/.m2/`.
+2. **Cold-cache cost is amortized via BuildKit cache mount**. `--mount=type=cache,target=/root/.m2` persists across `docker build` invocations on the same host; the second local build is fast even with no host-`~/.m2/`.
 3. **Build environment is hermetic**. The Maven version, JDK version, settings.xml are baked into the build stage's image and don't drift with what the developer happens to have installed locally.
 4. **Aligns with the OGC ETS catalog convention** — `features10@java17Tomcat10TeamEngine6`'s emerging Dockerfile draft uses the same Maven+Tomcat split.
 
@@ -164,21 +164,21 @@ Post-multi-stage, `scripts/smoke-test.sh` SHALL:
 - DROP the `mvn -B -q dependency:copy-dependencies` step (line 75 in current).
 - Keep step 1 ("staging build artifacts") only as a sanity check (`docker build .` is the now-canonical staging).
 
-This eliminates the host `~/.m2` dependency; smoke-test runs cleanly on a runner with only Docker installed.
+This eliminates the host `~/.m2` dependency; smoke-test runs cleanly on a host with only Docker installed.
 
 ## Alternatives considered
 
 - **Option (b) — pre-staged `target/lib-runtime/`** (rejected, see §Context). Doesn't fix host-`~/.m2` dep; just splits layers cosmetically.
 - **Option (c) — bake into pom.xml profile** (rejected, see §Context). Pushes hermeticity problem one layer up.
 - **Distroless runtime stage** (`gcr.io/distroless/java17-debian12`) (rejected for Sprint 2). Distroless eliminates apt-get / curl / sed at runtime, shrinking image to ~250 MB, but: (a) Tomcat 8.5 is not pre-installed in distroless — would need to overlay; (b) the 3 secondary patches per ADR-007 (VirtualWebappLoader strip uses sed; JAXB jars via curl; both at image-build time) can be done in stage 1 before distroless final, but adds complexity. Defer to Sprint 5+ at the earliest.
-- **Single-stage with `--mount=type=cache,target=/root/.m2`** (rejected). The mount is a build-time cache, not a runtime layer. The cached Maven repo lives at `~/.m2` inside the container during `docker build` only; it is NOT shipped in the final image. So a single-stage Dockerfile with `--mount=cache` does eliminate fresh-CI brittleness — but image still contains the JDK and Maven (build tools), bloating size. Multi-stage is strictly better.
-- **Use BuildKit's `--platform=linux/arm64`** for Apple Silicon support (deferred). Out of Sprint 2 scope. The current ETS jar is JDK bytecode = platform-independent; the only platform-sensitive layers are the base images (`eclipse-temurin:17-jdk-jammy` and `tomcat:8.5-jre17` both publish multi-arch). When demand surfaces, add `--platform` to the GitHub Actions build matrix.
-- **Add `mvn test` to stage 1** (rejected). Tests are run via `mvn -B clean install` in CI before `docker build`; baking them into the image build re-runs the surefire suite on every Docker build. Wastes 30s per build. The `target/*.jar` produced by `-DskipTests` in the build stage is byte-identical to the one produced by `install` (per Sprint 1 reproducibility evidence).
+- **Single-stage with `--mount=type=cache,target=/root/.m2`** (rejected). The mount is a build-time cache, not a runtime layer. The cached Maven repo lives at `~/.m2` inside the container during `docker build` only; it is NOT shipped in the final image. So a single-stage Dockerfile with `--mount=cache` does eliminate cold-host brittleness, but the image still contains the JDK and Maven build tools. Multi-stage is strictly better.
+- **Use BuildKit's `--platform=linux/arm64`** for Apple Silicon support (deferred). Out of Sprint 2 scope. The current ETS jar is platform-independent JDK bytecode; the base images publish multi-arch variants. When demand surfaces, verify the local release candidate explicitly on that platform.
+- **Add `mvn test` to stage 1** (rejected). Tests run through the mandatory local Docker Maven gate before `docker build`; baking them into the image build re-runs the surefire suite on every Docker build. It wastes 30s per build. The `target/*.jar` produced by `-DskipTests` in the build stage is byte-identical to the one produced by `install` (per Sprint 1 reproducibility evidence).
 
 ## Consequences
 
 **Positive**:
-- Fresh-CI runners with no `~/.m2` cache complete `docker build .` end-to-end in ~5-6 min cold (Maven dep download), ~30-90 sec warm (BuildKit cache hit). Eliminates Quinn s03 SMOKE-TEST-DEP-CLOSURE-WORKFLOW concern and Raze s03 CONCERN-2/3.
+- Clean reviewer hosts with no `~/.m2` cache complete `docker build .` end-to-end in ~5-6 min cold (Maven dependency download), ~30-90 sec warm (BuildKit cache hit). Eliminates Quinn s03 SMOKE-TEST-DEP-CLOSURE-WORKFLOW concern and Raze s03 CONCERN-2/3.
 - Image is self-contained — `git clone && docker build .` is the only command needed. Maximizes CITE SC reviewer reproducibility.
 - USER tomcat directive closes REQ-ETS-CLEANUP-004 + brings the image in line with security baselines for OCI containers (CIS Docker Benchmark §4.1).
 - Layer cache discipline minimizes per-commit Docker build cost (only the source-COPY + mvn-package layer invalidates on most commits).
@@ -186,7 +186,7 @@ This eliminates the host `~/.m2` dependency; smoke-test runs cleanly on a runner
 
 **Negative**:
 - Build stage adds ~100 MB intermediate image (eclipse-temurin:17-jdk-jammy is ~440 MB compressed; ours adds Maven 3.9.9 ~10 MB). Discarded after build, but disk space briefly consumed. Acceptable.
-- BuildKit must be enabled for `--mount=type=cache` to work. Modern Docker (>= 19.03) and GitHub Actions have it enabled by default; ops/server.md should record `DOCKER_BUILDKIT=1` as a (defensive) env var.
+- BuildKit must be enabled for `--mount=type=cache` to work. Modern Docker (>= 19.03) enables it by default; `ops/server.md` records `DOCKER_BUILDKIT=1` as a defensive environment variable.
 - The `mvn dependency:go-offline` step in stage 1 doesn't fully resolve all plugins because Maven plugin classes are loaded reflectively. ~10% of `mvn package` time still requires online access for stragglers. Mitigated by BuildKit cache; for fully-offline builds add `mvn -o package` (offline mode) after a successful initial cache populate.
 - Filtering `teamengine-*-6.0.0.jar` from `target/lib-runtime/` happens inside stage 1 (per the Dockerfile snippet above, `&& rm -f target/lib-runtime/teamengine-*.jar`). If ets-common ever bumps to TE 7.x, the wildcard pattern needs updating. Mitigated by smoke-test catching the SPI-collision symptom.
 

@@ -1,3 +1,18 @@
+scope_reconciliation:
+  timestamp: "2026-07-23T04:38:48Z"
+  story: S-ETS-43-01
+  status: IN_PROGRESS
+  authority:
+    - openspec/change-proposals/CP-003-external-dependency-and-ci-scope.md
+    - _bmad/adrs/ADR-012-external-dependency-immutability-and-no-hosted-ci.md
+  supersedes:
+    - "All instructions below that propose or describe continuing OSH source patches."
+    - "All instructions below that propose activating project-operated hosted CI."
+  current_boundary:
+    - "Do not modify OSH or TeamEngine source code or binaries."
+    - "Use supported IUT configuration/test-data interfaces and additive TeamEngine ETS extension locations only."
+    - "Run verification locally; Jenkinsfiles are inert OGC submission/build metadata."
+
 planning_update:
   timestamp: "2026-07-20T10:43:34Z"
   sprint: ets-41
@@ -87,8 +102,8 @@ implementation_target:
   external_runtime_config:
     repository: "/home/nh/docker/gir/sar-ops/field-hub"
     file: "osh/config/config.json"
-    final_state: "Sapient autoStart=false; SimUAV autoStart=false; active ConSys jar rebuilt from Sprint 40 OSH code; local OSH BasicRealm credentials are not recorded in ETS artifacts."
-  implemented: true
+    final_state: "HISTORICAL ONLY. The current deployed ConSys jar identifies the clean upstream OSH checkout; Sprint 40's local patch is absent."
+  implemented: false
 
 verification:
   osh_focused_gradle:
@@ -135,7 +150,7 @@ e2e:
 
 pending:
   - "Do not claim full populated `part2binding` closure until OSH emits Annex A.9-compatible Observation/Command schema documents and positive associated Command child item evidence."
-  - "If continuing implementation, target OSH ConSys schema serialization for JSON/SWE Observation and Command schema documents."
+  - "Do not continue OSH ConSys implementation in this project. Close remaining work through ETS changes or an unmodified conforming IUT."
 
 next_agent: "planner_or_generator"
 next_action: |

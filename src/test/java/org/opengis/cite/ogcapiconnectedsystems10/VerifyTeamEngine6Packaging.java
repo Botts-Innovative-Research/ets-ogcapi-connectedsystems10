@@ -52,8 +52,6 @@ public class VerifyTeamEngine6Packaging {
 
 	private static String addedJarVerifierSelfTest;
 
-	private static String githubBuildWorkflow;
-
 	private static String jenkinsBuild;
 
 	private static String jenkinsRelease;
@@ -79,7 +77,6 @@ public class VerifyTeamEngine6Packaging {
 		runtimeVerifier = Files.readString(Path.of("scripts/verify-teamengine6-runtime.sh"));
 		addedJarVerifier = Files.readString(Path.of("scripts/verify-added-jar-inventory.sh"));
 		addedJarVerifierSelfTest = Files.readString(Path.of("scripts/test-teamengine6-jar-guard.sh"));
-		githubBuildWorkflow = Files.readString(Path.of("ci/github-workflows-build.yml"));
 		jenkinsBuild = Files.readString(Path.of("jenkinsfiles/build/Jenkinsfile"));
 		jenkinsRelease = Files.readString(Path.of("jenkinsfiles/release/Jenkinsfile"));
 	}
@@ -109,6 +106,10 @@ public class VerifyTeamEngine6Packaging {
 		assertFalse(dockerfile.contains("chown -R"));
 		assertFalse(dockerfile.contains("teamengine-*.jar"));
 		assertTrue(dockerfile.contains("USER tomcat"));
+		assertContains(runtimeVerifier, "teamengine_base_inventory");
+		assertContains(runtimeVerifier, "%y|%m|%U|%G|%p|%l");
+		assertContains(runtimeVerifier, "-type f -print0");
+		assertContains(runtimeVerifier, "sha256sum --");
 	}
 
 	/**
@@ -182,7 +183,6 @@ public class VerifyTeamEngine6Packaging {
 		assertContains(dockerfile, "COPY scripts/bootstrap-swecommon30-validator.sh ./scripts/");
 		assertContains(dockerfile, "bash scripts/bootstrap-swecommon30-validator.sh");
 		assertFalse(dockerfile.contains("swecommon30-validator-0.1-SNAPSHOT.jar"));
-		assertContains(githubBuildWorkflow, "bash scripts/bootstrap-swecommon30-validator.sh");
 		assertContains(jenkinsBuild, "bash scripts/bootstrap-swecommon30-validator.sh");
 		assertContains(jenkinsBuild, "jdk 'JDK 17'");
 		assertFalse(jenkinsBuild.contains("jdk 'JDK 8'"));
@@ -305,6 +305,48 @@ public class VerifyTeamEngine6Packaging {
 		assertTrue(dockerfile.contains("test ! -e /usr/local/tomcat/te_base/scripts/ogcapi-connectedsystems10"));
 		assertFalse(dockerfile.contains("unzip -q -o"));
 		assertTrue(dockerfile.contains("test -d /tmp/ets-ctl/ogcapi-connectedsystems10"));
+	}
+
+	/**
+	 * REQ-ETS-SCOPE-002; SCENARIO-ETS-SCOPE-HOSTED-CI-NONGOAL-001.
+	 */
+	@Test
+	public void repositoryDoesNotDefineHostedCiWorkflows() throws IOException {
+		Path ciDirectory = Path.of("ci");
+		if (Files.isDirectory(ciDirectory)) {
+			try (var entries = Files.walk(ciDirectory)) {
+				assertFalse(entries.anyMatch(Files::isRegularFile));
+			}
+		}
+		Path workflowDirectory = Path.of(".github/workflows");
+		if (Files.isDirectory(workflowDirectory)) {
+			try (var entries = Files.walk(workflowDirectory)) {
+				assertFalse(entries.anyMatch(Files::isRegularFile));
+			}
+		}
+
+		Map<String, String> activePlanningSurfaces = Map.ofEntries(Map.entry("Dockerfile", dockerfile),
+				Map.entry("product brief", Files.readString(Path.of("_bmad/product-brief.md"))),
+				Map.entry("ADR-009", Files.readString(Path.of("_bmad/adrs/ADR-009-multi-stage-dockerfile.md"))),
+				Map.entry("ADR-010",
+						Files.readString(Path.of("_bmad/adrs/ADR-010-dependency-skip-verification-strategy.md"))),
+				Map.entry("Sprint 2 story",
+						Files.readString(Path.of("epics/stories/s-ets-02-05-dockerfile-cleanup.md"))),
+				Map.entry("Sprint 1 scaffold story",
+						Files.readString(Path.of("epics/stories/s-ets-01-01-archetype-jdk17-build.md"))),
+				Map.entry("Sprint 1 runtime story",
+						Files.readString(Path.of("epics/stories/s-ets-01-03-teamengine-docker-smoke.md"))),
+				Map.entry("Sprint 3 story", Files.readString(Path.of("epics/stories/s-ets-03-03-ci-workflow-live.md"))),
+				Map.entry("Sprint 4 story",
+						Files.readString(Path.of("epics/stories/s-ets-04-01-ci-workflow-escalation.md"))),
+				Map.entry("operational status", Files.readString(Path.of("ops/status.md"))),
+				Map.entry("planner handoff", Files.readString(Path.of(".harness/handoffs/planner-handoff.yaml"))),
+				Map.entry("generator handoff", Files.readString(Path.of(".harness/handoffs/generator-handoff.yaml"))));
+		Pattern activationInstruction = Pattern.compile(
+				"(?i)(gh auth refresh -s workflow|git mv ci/github-workflows-build\\.yml|gh workflow run|workflow_dispatch run|test suite already ran in CI|GitHub Actions build matrix|runs this script as .*workflow)");
+		activePlanningSurfaces
+			.forEach((name, content) -> assertFalse(name + " retains a hosted-CI activation instruction",
+					activationInstruction.matcher(content).find()));
 	}
 
 	/**

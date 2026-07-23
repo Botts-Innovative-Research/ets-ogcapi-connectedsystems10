@@ -13,7 +13,7 @@ Publish the ETS to OSSRH/Maven Central, prepare an outreach package for OpenSens
 
 | ID | Story | Status | OpenSpec Refs |
 |----|-------|--------|---------------|
-| S-ETS-05-01 | (placeholder) Set up OSSRH credentials + GPG signing in CI | Backlog | REQ-ETS-CITE-001 |
+| S-ETS-05-01 | (placeholder) Define approved manual OSSRH credentials + GPG signing procedure | Backlog | REQ-ETS-CITE-001 |
 | S-ETS-05-02 | (placeholder) Maven Central publish at beta milestone | Backlog | REQ-ETS-CITE-001, NFR-ETS-14 |
 | S-ETS-05-03 | (placeholder) Outreach package for OpenSensorHub | Backlog | REQ-ETS-CITE-002 |
 | S-ETS-05-04 | (placeholder) Outreach package for connected-systems-go | Backlog | REQ-ETS-CITE-002 |

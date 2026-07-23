@@ -487,7 +487,7 @@ public class VerifyTestNGSuiteDependency {
 	// Two-level dependency chain (Subsystems → SystemFeatures → Core) structural lint.
 	// Mirrors the SystemFeatures patterns above; ensures the structural-lint half of
 	// ADR-010 defense-in-depth catches Subsystems-side regressions before the slow
-	// bash sabotage script runs in CI.
+	// local bash sabotage gate runs.
 
 	/**
 	 * Sprint 4 S-ETS-04-05 (REQ-ETS-PART1-003): the canonical testng.xml SHALL declare
@@ -593,7 +593,7 @@ public class VerifyTestNGSuiteDependency {
 	// ===== Sprint 5 S-ETS-05-05 / ADR-010 v3 amendment — Procedures group =====
 	// Mirrors the Subsystems patterns above; Procedures is a SystemFeatures sibling.
 	// Two-level cascade is now VERIFIED LIVE (Sprint 4 Raze sabotage exec); structural
-	// lint catches refactor regressions before the slow bash sabotage script runs in CI.
+	// lint catches refactor regressions before the slower local bash sabotage gate.
 
 	/**
 	 * Sprint 5 S-ETS-05-05 (REQ-ETS-PART1-006): the canonical testng.xml SHALL declare

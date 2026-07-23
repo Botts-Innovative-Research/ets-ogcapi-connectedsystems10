@@ -1,0 +1,30 @@
+evaluation:
+  story: S-ETS-43-01
+  reviewer: Raze
+  date: 2026-07-23
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  duration_seconds: 274
+  tokens: unavailable
+  findings:
+    - severity: HIGH
+      summary: Active operations documents still described the historical OSH patch as current.
+      remediation: Converted Sprint 40 status and known-issue material to explicit historical evidence.
+    - severity: HIGH
+      summary: Active stories and Java comments retained hosted-CI instructions.
+      remediation: Replaced them with local-gate requirements and strengthened the repository guard.
+    - severity: MEDIUM
+      summary: The OSH audit overstated manifest provenance as binary proof and global non-publication.
+      remediation: Qualified claims to current source drift, observed binary-patch evidence, and project-record assertions.
+    - severity: MEDIUM
+      summary: TeamEngine comparison omitted mode, ownership, symlink, and directory metadata.
+      remediation: Added metadata-aware base/final path inventory comparison.
+    - severity: MEDIUM
+      summary: Current gate evidence and implementation statuses were incomplete.
+      remediation: Recorded focused, full Maven, exact-image runtime, and local OSH E2E evidence.
+  recheck:
+    verdict: APPROVE
+    confidence: 0.99
+    duration_seconds: 142
+    tokens: unavailable
+    findings: []

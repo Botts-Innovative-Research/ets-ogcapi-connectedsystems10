@@ -156,6 +156,26 @@ runtime_jar_inventory() {
     '
 }
 
+teamengine_base_inventory() {
+  docker run --rm --entrypoint bash "$1" -c '
+    set -euo pipefail
+    cd /usr/local/tomcat
+    {
+      find webapps/teamengine te_base/scripts -mindepth 1 \
+        \( -path "webapps/teamengine/WEB-INF/lib/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar" \
+           -o -path "te_base/scripts/ogcapi-connectedsystems10" \) -prune \
+        -o -printf "META|%y|%m|%U|%G|%p|%l\n"
+      find webapps/teamengine te_base/scripts -mindepth 1 \
+        \( -path "webapps/teamengine/WEB-INF/lib/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar" \
+           -o -path "te_base/scripts/ogcapi-connectedsystems10" \) -prune \
+        -o -type f -print0 \
+        | sort -z \
+        | xargs -0 -r sha256sum -- \
+        | sed "s/^/CONTENT|/"
+    } | LC_ALL=C sort
+  '
+}
+
 bash scripts/test-teamengine6-jar-guard.sh
 runtime_jar_inventory "$IMAGE_REF" > "$inventory_dir/base.inventory"
 runtime_jar_inventory "$FINAL_IMAGE_REF" > "$inventory_dir/final.inventory"
@@ -167,18 +187,9 @@ if ! jar_guard_output="$(verify_added_jar_inventory \
 fi
 echo "$jar_guard_output"
 
-diff -u \
-  <(docker run --rm --entrypoint sh "$IMAGE_REF" -c '
-      cd /usr/local/tomcat
-      find webapps/teamengine te_base/scripts -type f -exec sha256sum {} + | sort
-    ') \
-  <(docker run --rm --entrypoint sh "$FINAL_IMAGE_REF" -c '
-      cd /usr/local/tomcat
-      find webapps/teamengine te_base/scripts -type f \
-        ! -path "webapps/teamengine/WEB-INF/lib/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar" \
-        ! -path "te_base/scripts/ogcapi-connectedsystems10/*" \
-        -exec sha256sum {} + | sort
-    ') >/dev/null \
-  || fail "final image modifies a TeamEngine-owned base file"
+teamengine_base_inventory "$IMAGE_REF" > "$inventory_dir/base.state"
+teamengine_base_inventory "$FINAL_IMAGE_REF" > "$inventory_dir/final.state"
+diff -u "$inventory_dir/base.state" "$inventory_dir/final.state" >/dev/null \
+  || fail "final image changes TeamEngine-owned content, type, mode, ownership, symlink target, or path inventory"
 
 echo "PASS: TeamEngine 6 provenance, coordinate-aware dependency parity, base-file immutability, runtime invariants, and confidential history/context hygiene"

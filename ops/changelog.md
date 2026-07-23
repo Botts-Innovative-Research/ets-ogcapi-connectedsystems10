@@ -2,6 +2,39 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-23 - External dependency and CI scope reconciliation
+
+**Triggered by user instruction**: CI approval will not be available, and
+OSH/TeamEngine modifications are outside project scope.
+
+- Added CP-003, ADR-012, REQ-ETS-SCOPE-001/002, four scope scenarios, and
+  S-ETS-43-01.
+- Audited the active OSH source/runtime and TeamEngine integration. No current
+  external code change exists to revert: OSH is clean with zero commits ahead of
+  upstream, the deployed ConSys jar matches its checkout, and TeamEngine remains
+  an immutable OGC base with additive ETS artifacts only.
+- Retired S-ETS-40-01 and its OSH patch path as out of scope while preserving
+  historical evidence.
+- Removed the dormant GitHub Actions workflow and activation instructions;
+  retained Jenkinsfiles only as inert OGC submission/build metadata.
+- Added a packaging regression for the no-hosted-CI boundary and reconciled
+  architecture, PRD, OpenSpec, traceability, epics, handoffs, E2E policy, status,
+  and known issues.
+- Initial Raze returned `GAPS_FOUND`, confidence `0.99`, after 274 seconds. The
+  five findings were closed by retiring residual CI guidance, moving Sprint 40
+  patch statements into historical records, qualifying provenance claims, and
+  extending TeamEngine comparison to type/mode/ownership/symlink/directory
+  metadata plus file content.
+- Test-first metadata inventory failed as expected `12/1/0/0`; corrected focused
+  packaging passed `12/0/0/0`; fresh Docker Maven passed `313/0/0/3`.
+- Exact image
+  `sha256:7071cc7694aee2d0b3ca2f44dd2fcad79e9f1eff7b6b2c4de52299adb4704b29`
+  passed runtime verification and local OSH TeamEngine E2E `211/69/0/142`
+  with 135 recognized IUT exchanges, zero writes, and zero startup errors.
+- Focused Raze recheck found no remaining issues and returned `APPROVE`,
+  confidence `0.99`, after 142 seconds. S-ETS-43-01 and
+  REQ-ETS-SCOPE-001/002 are complete.
+
 ## 2026-07-23T04:08Z - Sprint 42 closure published to Botts
 
 **Triggered by user instruction**: "Commit and push."

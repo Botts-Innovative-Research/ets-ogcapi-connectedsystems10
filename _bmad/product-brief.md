@@ -189,7 +189,9 @@ The Planner should treat R-PIVOT-01 through R-PIVOT-09 as in-scope for the next 
 1. ~~**Repository topology**~~ — **RESOLVED 2026-04-27** (user gate): sibling repo `ets-ogcapi-connectedsystems10`, our org first, propose to OGC at beta milestone. See § User Decisions.
 2. ~~**Part 1 vs Part 1 + Part 2 first cut?**~~ — **RESOLVED 2026-04-27** (user gate): Part 1 first, Part 2 follows. See § User Decisions.
 3. ~~**Web app fate post-pivot**~~ — **RESOLVED 2026-04-27** (user gate): freeze v1.0, reposition README, no further sprint investment. See § User Decisions.
-4. **CI/CD topology**: Jenkins (matches OGC convention) or GitHub Actions (matches our existing setup)? Recommend GH Actions for our development; Jenkinsfile included for OGC submission compatibility. **Pat to confirm.**
+4. **Verification topology**: Resolved by CP-003/ADR-012. Project-operated
+   hosted CI is outside scope. Development gates run locally; Jenkinsfiles are
+   retained only as inert OGC submission/build metadata.
 5. **Maven Central publishing**: Requires OSSRH account and GPG signing. Setup overhead. When is this needed — beta? Official release? **Pat to confirm timing.**
 6. **Test data hosting**: ETS may need fixture data (sample SensorML docs, SWE Common payloads). Where does this live in the repo? Per `ets-ogcapi-features10`, in `src/main/resources/data/`. **Pat to confirm.**
 7. **Architect should reconcile the full target architecture** with TeamEngine's plugin model before Generator starts.

@@ -11,7 +11,7 @@ sprint42_swecommon_adapter_implementation_handoff:
     - "Dual-validated extracted recordSchema after local wrapper validation in all six Part 2 SWE JSON/Text/Binary schema assertion paths."
     - "Added all-six complete wrapper parity and active requirement-URI coverage while preserving operational-error propagation."
     - "Extended packaging tests and scripts/verify-teamengine6-runtime.sh for final-image valid/invalid adapter execution, embedded resources, test-class exclusion, relocation, and duplicate jar-family checks."
-    - "Aligned Jenkins with JDK 17 and bootstrapped the validator in supported Jenkins/GitHub Actions build definitions."
+    - "Aligned inert OGC Jenkins build definitions with JDK 17 and the source-pin bootstrap; hosted CI is excluded by ADR-012."
   verification:
     formatter: PASS
     focused_maven: "PASS final packaging 11/0/0/0 after raw expected test-first failure 11/1/0/0; adapter/parity 19/0/0/0"

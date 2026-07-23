@@ -1,13 +1,18 @@
 # S-ETS-40-01: OSH ConSys Populated Binding Blocker Closure
 
 ## Status
-PARTIAL_IMPLEMENTED_VERIFIED_RAZE_APPROVED_WITH_CONCERNS
+RETIRED_OUT_OF_SCOPE_HISTORICAL_EVIDENCE_ONLY
+
+> CP-003 and ADR-012 supersede this story. Do not execute or extend its OSH
+> source-patch scope. The recorded patch is absent from the current OSH checkout
+> and runtime; the evidence below is retained only as project chronology.
 
 ## User Instruction
 Triggered by: "Do 1"
 
-## Scope
-Patch and verify the local OSH ConSys implementation blockers that richer SimUAV data alone could not resolve.
+## Historical Scope
+This story patched local OSH ConSys implementation blockers. That work is now
+outside project scope and is not an approved implementation path.
 
 - Requirements:
   - `REQ-ETS-PART2-013`

@@ -1,7 +1,11 @@
 sprint: ets-40
 story: S-ETS-40-01
 title: OSH ConSys populated binding blocker closure
-status: PARTIAL_IMPLEMENTED_VERIFIED_RAZE_APPROVED_WITH_CONCERNS
+status: RETIRED_OUT_OF_SCOPE_HISTORICAL_EVIDENCE_ONLY
+superseded_by:
+  - openspec/change-proposals/CP-003-external-dependency-and-ci-scope.md
+  - _bmad/adrs/ADR-012-external-dependency-immutability-and-no-hosted-ci.md
+scope_disposition: "Do not execute this contract. OSH source and binary modifications are outside project scope."
 triggered_by: 'User instruction: "Do 1"'
 requirements:
   - REQ-ETS-PART2-013
@@ -32,7 +36,8 @@ success_criteria:
   - SimUAV populated TeamEngine evidence is archived and residual blockers, if any, are reconciled.
   - Raze returns no required fixes or all required fixes are closed.
 guardrails:
-  - Keep ETS assertions strict; fixes belong in OSH unless evidence proves an ETS defect.
+  - HISTORICAL ONLY: this contract may not authorize new OSH changes.
+  - Keep ETS assertions strict; address remaining work in the ETS or with an unmodified conforming IUT.
   - Do not record local OSH credential values in artifacts.
   - Preserve clean primary local OSH read-only smoke restoration after any populated fixture run.
 evidence:

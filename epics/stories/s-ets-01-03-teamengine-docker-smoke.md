@@ -1,6 +1,9 @@
 # S-ETS-01-03: TeamEngine 5.6.x (currently 5.6.1) Docker Smoke Test
 
-> Status: Active — Sprint 1 | Epic: ETS-04 (cross-listed under ETS-01 for Sprint 1) | Priority: P0 | Complexity: M | Last updated: 2026-04-27
+> Status: Historical TeamEngine 5 baseline; superseded by S-ETS-41-01 and ADR-011/012 | Last updated: 2026-07-23
+>
+> Do not execute the TeamEngine 5 assembly or CI tasks below. Current integration
+> uses the immutable OGC TeamEngine 6 image with additive ETS artifacts only.
 
 ## Description
 Wire the ETS jar from S-ETS-01-01 into TeamEngine 5.6.x (currently 5.6.1) via the TestNG SPI, ship a CTL wrapper, build a Dockerfile that extends `ogccite/teamengine-production:5.6.1`, package a `docker-compose.yml`, and prove the round-trip via a `scripts/smoke-test.sh` that runs the CS API Core suite from S-ETS-01-02 against GeoRobotix and asserts the TestNG report is non-empty with zero suite-registration errors.
@@ -31,7 +34,7 @@ This story is the Sprint 1 capstone: it proves the entire vertical slice (scaffo
 4. Write Dockerfile extending `ogccite/teamengine-production:5.6.1`
 5. Write `docker-compose.yml` with healthcheck against `/teamengine/`
 6. Write `scripts/smoke-test.sh` that builds image, launches container, waits for healthcheck, runs Core suite against GeoRobotix, asserts report non-empty
-7. Add CI job that runs the smoke test on push to main
+7. Run the smoke test as a required local release gate
 8. Update spec implementation status
 
 ## Dependencies
@@ -47,7 +50,7 @@ This story is the Sprint 1 capstone: it proves the entire vertical slice (scaffo
 ## Definition of Done
 - [ ] All acceptance criteria checked
 - [ ] Both critical SCENARIOs pass
-- [ ] Smoke test green in CI on three platforms (Ubuntu, macOS, Windows-via-WSL2)
+- [ ] Smoke test release-candidate evidence recorded manually on available target platforms
 - [ ] Spec implementation status updated
 - [ ] Story status set to Done in this file and in `epic-ets-04-teamengine-integration.md`
 - [ ] Sprint 1 contract evaluation criteria met

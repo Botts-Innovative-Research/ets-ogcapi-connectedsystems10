@@ -1,10 +1,46 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-22T11:51Z
+Last updated: 2026-07-23T05:41Z
 
 ## Current Sprint Evidence
 
-SWE Common validator adapter release-CI and exact multi-tuple candidate:
+External dependency and CI scope reconciliation:
+
+- Provenance audit:
+  `ops/test-results/external-dependency-scope-audit-2026-07-23.md`.
+- Current OSH: clean checkout, zero commits ahead of upstream, deployed ConSys
+  build metadata reports checkout `4c87a65c...`, `/opt/osh` mount read-only.
+  This is provenance metadata, not independent binary byte-equivalence proof.
+- Current TeamEngine: no source checkout or project-authored binary patch;
+  immutable OGC base digest retained with additive ETS artifacts only.
+- Historical Sprint 40 OSH commit `79f89fb` is absent from inspected
+  repositories and current fetched refs. Project records classify it as
+  local-only; the current environment cannot prove global non-publication.
+- No external revert was executed because no current attributable source drift
+  or binary-patch evidence was found.
+- Dormant GitHub Actions workflow removed; local gates remain authoritative.
+- Test-first no-hosted-CI regression: expected pre-cleanup failure,
+  `12 tests / 1 failure / 0 errors / 0 skipped`.
+- Test-first metadata-aware TeamEngine inventory: expected failure,
+  `12 tests / 1 failure / 0 errors / 0 skipped`.
+- Corrected focused packaging: `12 tests / 0 failures / 0 errors / 0 skipped`.
+- Fresh full Docker Maven:
+  `313 tests / 0 failures / 0 errors / 3 skipped`, BUILD SUCCESS.
+- Exact candidate image:
+  `sha256:7071cc7694aee2d0b3ca2f44dd2fcad79e9f1eff7b6b2c4de52299adb4704b29`.
+- Metadata-aware exact-image runtime verifier: PASS for path type, mode,
+  ownership, symlink target, directory inventory, and file content.
+- Primary unmodified local OSH E2E:
+  `211 total / 69 passed / 0 failed / 142 skipped`; 135 recognized IUT request
+  logs, zero writes, and zero TeamEngine startup ERROR/SEVERE entries.
+- Verification summary:
+  `ops/test-results/sprint-ets-43-scope-reconciliation-verification-2026-07-23.md`.
+- Initial Raze: `GAPS_FOUND`, confidence `0.99`, duration 274 seconds. All five
+  findings were remediated.
+- Focused Raze recheck: `APPROVE`, confidence `0.99`, duration 142 seconds, no
+  findings. Token metadata was unavailable for both reviews.
+
+Prior SWE Common validator adapter release-build and exact multi-tuple candidate:
 
 - Verification summary:
   `ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md`.

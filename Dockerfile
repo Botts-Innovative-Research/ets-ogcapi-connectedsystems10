@@ -46,8 +46,8 @@ COPY scripts/bootstrap-swecommon30-validator.sh ./scripts/
 # the manifest's Implementation-Build / SCM-Revision attributes). This layer
 # invalidates per commit (frequent).
 #
-# `-DskipTests`: the test suite already ran in CI before docker build; re-running
-# tests inside the build stage wastes ~30s per docker build.
+# `-DskipTests`: the mandatory local Docker Maven gate runs before image build;
+# re-running tests inside the build stage wastes ~30s per docker build.
 #
 # The pinned image already supplies the runtime closure, often from Tomcat's
 # parent classloader. Copying those jars again into WEB-INF/lib creates class-

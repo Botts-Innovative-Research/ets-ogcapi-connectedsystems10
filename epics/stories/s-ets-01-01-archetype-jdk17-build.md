@@ -1,6 +1,6 @@
 # S-ETS-01-01: Generate Archetype, Modernize to JDK 17, First Green Build
 
-> Status: Active — Sprint 1 | Epic: ETS-01 | Priority: P0 | Complexity: M | Last updated: 2026-04-27
+> Status: Implemented — Sprint 1 historical record | Epic: ETS-01 | Priority: P0 | Complexity: M | Last updated: 2026-07-23
 
 ## Description
 Generate the `ets-ogcapi-connectedsystems10` Maven project from `org.opengis.cite:ets-archetype-testng:2.7`, modernize the resulting scaffold to JDK 17 + Maven 3.9, structure the repo to mirror `opengeospatial/ets-ogcapi-features10`, and prove a fresh `mvn clean install` exits 0 reproducibly. Each archetype-default modification is captured as an ADR.
@@ -33,7 +33,7 @@ This is the foundation story. Without a green build there is nothing for the oth
 5. Pin all dependencies to specific releases
 6. Copy 126 JSON Schemas from `csapi_compliance/schemas/` into `src/main/resources/schemas/` (Architect to confirm whether symlink, submodule, or copy)
 7. Run `mvn clean install` until green
-8. Add CI job that builds twice and diffs jars to verify reproducibility
+8. Add a local release gate that builds twice and diffs jars to verify reproducibility
 9. Write ADRs documenting each modernization delta
 
 ## Implementation Notes

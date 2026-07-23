@@ -50,7 +50,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 #### REQ-ETS-SCAFFOLD-005: Reproducible Build
 - **Priority**: MUST
 - **Status**: SPECIFIED
-- **Description**: `mvn clean install` SHALL exit 0 on a clean checkout with JDK 17 and Maven 3.9. Two builds from the same commit SHALL produce byte-identical jars excluding `META-INF/` timestamps. CI SHALL verify via a double-build diff job.
+- **Description**: `mvn clean install` SHALL exit 0 on a clean checkout with JDK 17 and Maven 3.9. Two builds from the same commit SHALL produce byte-identical jars excluding `META-INF/` timestamps. The repository's local verification procedure SHALL verify this with a double-build diff.
 - **Rationale**: NFR-ETS-01.
 - **Maps to**: PRD FR-ETS-05.
 
@@ -904,12 +904,12 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART2-013: Observation/Command Binding Cross-Class Closure
 - **Priority**: MUST.
-- **Status**: PARTIAL_IMPLEMENTED; SPRINT_40_OSH_CONSYS_BLOCKER_CLOSURE_PARTIAL (Sprints 32-36 implemented the internal Observation/Command binding closure, local OSH primary E2E target, tasking fixtures, and parent schema `f=json` request shaping. Sprint 37 implements local OSH stream metadata and ETS Annex A.9 format assertions. Follow-up OSH ConSys fixes restore clean reset/reseed `/observations` empty collection/count JSON bodies and clean primary TeamEngine smoke. Sprint 38 adds a reproducible SimUAV preseed/probe script and ETS candidate-selection hardening so read-only checks prefer parent resources with associated child evidence. Sprint 40 patches OSH ConSys schema response media types, exact `application/swe+text`, `cmdFormat` command-schema request aliasing, JSON child collection/count response bodies, and field-hub runtime temporal-sort compatibility. Full populated-IUT binding closure remains unclaimed because final SimUAV-populated TeamEngine E2E still fails on Observation/Command schema shape/mapping and still lacks positive associated Command child item evidence.)
+- **Status**: PARTIAL_IMPLEMENTED; EXTERNAL_IUT_PATCH_PATH_RETIRED (Sprints 32-38 implemented the internal Observation/Command binding closure, local OSH primary E2E target, supported tasking fixtures, parent schema `f=json` request shaping, and ETS candidate-selection hardening. Sprint 40's local OSH source patch is historical audit evidence only and is not an approved implementation path under CP-003/ADR-012. Full populated-IUT binding closure remains unclaimed.)
 - **Description**: The ETS SHALL verify the project cross-class dynamic-schema closure that Observation bodies derive from their parent DataStream schema and Command-side bodies derive from their parent ControlStream schema across supported encodings. This is an internal closure requirement derived from OGC 23-002 Part 2 resource/schema requirements and v1.0 GH#7; OGC 23-002 does not define a standalone `/conf/observation-binding` conformance class, so the ETS SHALL NOT advertise or require `/conf/observation-binding` unless a future OGC standard defines it.
 - **Scope for first Generator increment**: implement a declaration-gated, local-OSH-backed closure suite that reuses existing Part 2 DataStream, ControlStream, JSON, and SWE Common schema evidence. Positive PASS requires a candidate parent resource, its schema subresource, a candidate child Observation or Command-side resource, and a concrete field/type mapping assertion. Empty collections, missing schema members, unsupported encodings, missing validators, or unavailable endpoints SKIP with precise reasons rather than PASS.
-- **Local OSH seed prerequisite**: because authenticated local OSH probes on 2026-06-01 and 2026-06-02 declared `/conf/datastream`, `/conf/controlstream`, `/conf/json`, and SWE Common encoding classes but returned empty `/datastreams`, `/observations`, and `/controlstreams` collections, the ETS MUST either seed documented dynamic-data fixtures in local OSH or keep all positive binding checks SKIP with exact empty-IUT-state reasons. Seed fixtures must record target, credentials handling without secret values, resource IDs, payload families, cleanup plan, and TeamEngine artifact totals. Sprint 37 follow-up resolved the clean reset/reseed root Observation empty-body blocker, and Sprint 40 resolves the prior populated-IUT media-type/body blockers for schema response content types, exact SWE Text requests, ControlStream `cmdFormat`, parseable JSON child collection/count bodies, invalid-filter error masking, and the older field-hub `sensorhub-core` temporal-sort linkage issue. Sprint 40 evidence includes focused OSH regressions `23/0/0/0`, ETS Docker Maven `294/0/0/3`, direct SimUAV format/body probes with nested Observation `items=1` and nested Command `count=0`, clean local OSH smoke PASS `211/61/0/150`, and populated SimUAV smoke FAIL `211/86/17/108`. Full populated fixture closure remains open because the final TeamEngine E2E failures are now schema shape/mapping defects in OSH Observation/Command schema documents plus absent positive associated Command child item evidence.
+- **Local OSH seed prerequisite**: because authenticated local OSH probes declared relevant Part 2 classes while dynamic collections could be empty, the ETS MUST either create documented fixtures through supported OSH interfaces or keep positive binding checks SKIP with exact empty-IUT-state reasons. Fixtures must record target, credential handling without secret values, resource IDs, payload families, cleanup plan, and TeamEngine totals. Source or binary changes to OSH are prohibited. Historical Sprint 40 patched-IUT results remain audit-only and do not close this requirement.
 - **Rationale**: PRD SC-3 requires Part 2 coverage and the historical v1.0 GH#7 risk was a schema coupling bug where Observation body generation could drift from the parent DataStream schema. Sprint 32 also follows the user instruction to abandon GeoRobotix's public instance as a development test target and use a self-provisioned local OSH as the primary E2E IUT.
-- **Implementation progress**: Sprint 32 Generator implements `Part2ObservationCommandBindingTests`, helper regressions, and TestNG wiring for group `part2binding`; the first increment is read-only and SKIPs positive closure on empty local OSH collections. Sprints 33-38 add inline CommandStatus/CommandResult regressions, discover accepted local OSH seed shapes, verify real tasking fixtures with Sapient and SimUAV, add parent schema request shaping, add stream metadata and format assertions, and add populated parent-candidate selection. Sprint 40 patches OSH ConSys for schema media types, exact SWE Text, command schema aliasing, populated child JSON bodies, invalid-filter error handling, and compatibility with the older field-hub temporal-filter builder. Focused OSH regressions pass `TestDataStreams 10/0/0/0`, `TestControlStreams 5/0/0/0`, and `TestObservations 8/0/0/0`; ETS Docker Maven passes `294/0/0/3`; direct SimUAV format/body probes show JSON-compatible schema response media types for JSON/SWE formats, exact `application/swe+text` with `TextEncoding`, accepted `cmdFormat` and `commandFormat`, nested Observation `items=1`, and parseable empty nested Command bodies. Clean local OSH TeamEngine smoke passes `211/61/0/150` with zero writes. Focused Raze recheck returns `APPROVE_WITH_CONCERNS` with no required fixes. Final SimUAV-populated TeamEngine smoke improves to `211/86/17/108` but still fails, with residual failures limited to schema shape/mapping and missing positive Command child item evidence, so full populated-IUT `part2binding` PASS remains open.
+- **Implementation progress**: Sprint 32 Generator implements `Part2ObservationCommandBindingTests`, helper regressions, and TestNG wiring for group `part2binding`; the first increment is read-only and SKIPs positive closure on empty local OSH collections. Sprints 33-38 add inline CommandStatus/CommandResult regressions, accepted supported-interface seed shapes, Sapient and SimUAV tasking fixtures, parent schema request shaping, stream metadata/format assertions, and populated parent-candidate selection. CP-003 retires Sprint 40's OSH patch path. Future closure must change the ETS or exercise an unmodified conforming IUT.
 - **Maps to**: PRD FR-ETS-43, except retired non-standard FR-ETS-35 System History.
 
 #### SCENARIO-ETS-PART2-013-LOCAL-OSH-PRIMARY-IUT-001 (CRITICAL)
@@ -1083,8 +1083,8 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** it fetches `opengeospatial/ets-swecommon30` at exactly `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`, verifies the checkout SHA, and builds only the parent plus `swecommon30-validator`
 **AND** the build fails closed on a different commit or unavailable source
 **AND** it does not build, import, or package the upstream `ets-swecommon30` suite module
-**AND** every supported Docker, CI, and developer Maven path bootstraps the pinned artifact before resolving the Connected Systems project
-**AND** supported Jenkins and GitHub Actions build definitions use the project Java 17 toolchain
+**AND** every supported Docker and developer Maven path bootstraps the pinned artifact before resolving the Connected Systems project
+**AND** inert OGC Jenkins build definitions use the project Java 17 toolchain
 **AND** release publication remains blocked until an accepted repository provides a non-SNAPSHOT reusable validator artifact.
 
 #### SCENARIO-ETS-VALIDATOR-SWE-COMMON-DUAL-VALIDATION-001 (CRITICAL)
@@ -1201,6 +1201,48 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - **Rationale**: OGC CITE reviewers and TeamEngine users evaluate the shipped package through metadata and docs as well as Java behavior. Stale archetype placeholders can misrepresent suite scope even when runtime code is correct.
 - **Maps to**: PRD FR-ETS-50, FR-ETS-51, FR-ETS-52, FR-ETS-53, FR-ETS-54, NFR-ETS-11, NFR-ETS-13.
 
+### Sub-deliverable 5A — Project Scope Boundaries
+
+#### REQ-ETS-SCOPE-001: External Runtime and IUT Immutability
+- **Priority**: MUST.
+- **Status**: IMPLEMENTED; S-ETS-43-01 Raze recheck approved at confidence 0.99.
+- **Description**: This project SHALL NOT modify, patch, fork, publish, or replace OpenSensorHub or TeamEngine source code or binaries. It MAY configure an IUT and create test data through supported product interfaces, and it MAY install ETS-owned jars and CTL resources only at documented TeamEngine extension locations. E2E evidence SHALL identify the unmodified external source/image provenance used for the run.
+- **Rationale**: OSH is the implementation under test and TeamEngine is the external execution platform; changing either to satisfy this ETS is outside the approved project scope and compromises independent conformance evidence.
+- **Maps to**: ADR-011, ADR-012, REQ-ETS-TEAMENGINE-006, REQ-ETS-TEAMENGINE-007.
+
+#### REQ-ETS-SCOPE-002: No Project-Operated Hosted CI
+- **Priority**: MUST.
+- **Status**: IMPLEMENTED; S-ETS-43-01 Raze recheck approved at confidence 0.99.
+- **Description**: The project SHALL NOT plan, activate, or require GitHub Actions or another project-operated hosted CI service. Authoritative development verification SHALL run locally through the repository's Docker Maven wrapper, exact-image runtime verifier, and TeamEngine E2E procedure. Jenkinsfiles MAY remain only as inert OGC submission/build metadata and SHALL NOT be described as connected project CI.
+- **Rationale**: The project will not receive CI approval; retaining activation work creates an unfulfillable gate and misstates scope.
+- **Maps to**: ADR-012, REQ-ETS-SCAFFOLD-005, REQ-ETS-TEAMENGINE-005.
+
+#### SCENARIO-ETS-SCOPE-EXTERNAL-SOURCE-IMMUTABILITY-001 (CRITICAL)
+**GIVEN** an ETS failure is caused by OSH or TeamEngine behavior
+**WHEN** the project plans or implements a response
+**THEN** no OSH or TeamEngine source or binary is changed by this project
+**AND** the ETS records the external limitation as FAIL, SKIP, known issue, or interoperability evidence.
+
+#### SCENARIO-ETS-SCOPE-TEAMENGINE-ADDITIVE-INSTALL-001 (CRITICAL)
+**GIVEN** the ETS is installed into the digest-pinned OGC TeamEngine image
+**WHEN** the final image is compared with the base image
+**THEN** only ETS-owned jars and CTL resources exist as additions at documented extension locations
+**AND** no TeamEngine-owned file is modified, replaced, deleted, or re-owned.
+
+#### SCENARIO-ETS-SCOPE-UNMODIFIED-IUT-PROVENANCE-001 (CRITICAL)
+**GIVEN** local OSH is the primary E2E IUT
+**WHEN** a gate run is reported
+**THEN** the evidence records that the OSH source checkout has no project-authored commits ahead of upstream
+**AND** the deployed runtime artifact identifies that unmodified checkout
+**AND** supported configuration and fixture operations are distinguished from source or binary modification.
+
+#### SCENARIO-ETS-SCOPE-HOSTED-CI-NONGOAL-001 (CRITICAL)
+**GIVEN** the project has no approval for hosted CI
+**WHEN** repository verification and planning surfaces are inspected
+**THEN** no active or dormant GitHub Actions workflow or activation instruction exists
+**AND** local Docker Maven, runtime, and TeamEngine E2E commands remain the documented gates
+**AND** Jenkinsfiles are described only as inert OGC submission/build metadata.
+
 ### Sub-deliverable 6 — Spec-Trap Fixture Port
 
 #### REQ-ETS-FIXTURES-001: Corpus Port
@@ -1219,7 +1261,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 #### REQ-ETS-FIXTURES-003: Port-Diff Audit
 - **Priority**: SHOULD
 - **Status**: SPECIFIED
-- **Description**: A script `scripts/audit-fixture-port.sh` SHALL list case IDs in TS source vs Java source and flag any case present in TS but not in Java. CI runs this script; presence of an unexplained drop fails the build.
+- **Description**: A script `scripts/audit-fixture-port.sh` SHALL list case IDs in TS source vs Java source and flag any case present in TS but not in Java. The local verification gate runs this script; an unexplained drop fails the build.
 - **Maps to**: PRD FR-ETS-62.
 
 ### Sub-deliverable 7 — CITE Submission
@@ -1258,7 +1300,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 #### REQ-ETS-SYNC-001: TS↔Java URI Diff
 - **Priority**: SHOULD
 - **Status**: PARTIAL_IMPLEMENTED_REPORT_ONLY (Sprint 39 S-ETS-39-01, 2026-06-03). `scripts/uri-drift-audit.py` self-test passed and current audit is archived at `ops/test-results/sprint-ets-39-uri-schema-drift-audit-2026-06-03.json`: Java URI count `98`, web-app URI count `215`, unallowlisted URI drift detected (`missingInJava=162`, `missingInWebapp=45`), schema bundle parity verified (`126` vs `126`, no missing/extra/hash mismatch), and Java ETS/web-app repository commit plus dirty-count metadata recorded. CI-failing enforcement remains deferred until `ops/uri-coverage-allowlist.txt` is stabilized.
-- **Description**: A diff script (`scripts/sync-uri-coverage.sh` or `scripts/uri-drift-audit.py`) SHALL extract every canonical OGC requirement URI from `csapi_compliance/src/engine/registry/*.ts` and from Java ETS source, and SHALL identify URI entries that exist on one side but not the other without an explicit allowlist entry in `ops/uri-coverage-allowlist.txt`. The same harness SHOULD compare the frozen v1.0 schema bundle against the ETS schema resources by relative path and hash. CI SHALL run this script on every commit affecting either the TS registry, Java ETS, or schema bundle once the allowlist is stabilized.
+- **Description**: A diff script (`scripts/sync-uri-coverage.sh` or `scripts/uri-drift-audit.py`) SHALL extract every canonical OGC requirement URI from `csapi_compliance/src/engine/registry/*.ts` and from Java ETS source, and SHALL identify URI entries that exist on one side but not the other without an explicit allowlist entry in `ops/uri-coverage-allowlist.txt`. The same harness SHOULD compare the frozen v1.0 schema bundle against the ETS schema resources by relative path and hash. The local verification gate SHALL run this script when either the TS registry, Java ETS, or schema bundle changes once the allowlist is stabilized.
 - **Rationale**: Prevents silent drift between the v1.0 web app and the ETS as OGC errata land. Both consume the same JSON Schemas; both should cover the same URI set.
 - **Maps to**: PRD FR-ETS-90, R-PIVOT-11.
 
@@ -1282,9 +1324,9 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-CLEANUP-007: CI Workflow Live at `.github/workflows/build.yml`
 - **Priority**: MUST
-- **Status**: SPECIFIED (Sprint 3 target via S-ETS-03-03; USER ACTION required: `gh auth refresh -s workflow`)
-- **Description**: The CI workflow staged at `ci/github-workflows-build.yml` SHALL be moved to `.github/workflows/build.yml` so GitHub Actions runs it on push. Acceptance: at least one `workflow_run` exists with `conclusion=success` on a Sprint 3 commit; the run URL is captured in `ops/test-results/sprint-ets-03-ci-workflow-live-<date>.txt`. Pre-condition: orchestrator runs `gh auth refresh -s workflow` (token scope `workflow` is required to push to `.github/workflows/`). If pre-condition not met at sprint start, story DEFERRED-WITH-RATIONALE; carryover to Sprint 4 with 4th-sprint-defer-escalation flag.
-- **Maps to**: PRD FR-ETS-05 (CI plumbing), NFR-ETS-02.
+- **Status**: RETIRED by CP-003 and REQ-ETS-SCOPE-002.
+- **Description**: Historical requirement only. The staged GitHub Actions workflow SHALL NOT be activated and its dormant definition and activation instructions SHALL be removed.
+- **Maps to**: ADR-012, REQ-ETS-SCOPE-002.
 
 #### REQ-ETS-CLEANUP-008: Docker Image Size Optimization
 - **Priority**: SHOULD
@@ -1294,9 +1336,9 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-CLEANUP-009: CI Workflow ESCALATION (5th-sprint-defer-risk; binary close)
 - **Priority**: MUST
-- **Status**: IMPLEMENTED via PATH B / formal-drop (Sprint 4 Generator Run 1 2026-04-29; pending Quinn+Raze gate). `gh auth status` at run start showed token scopes `'gist', 'read:org', 'repo'` — `workflow` ABSENT; `ci/README.md` documents 2 future-activation paths; `ops/test-results/sprint-ets-04-01-ci-workflow-path-b-2026-04-29.txt` archived; `ops/status.md` updated with "Perpetual Environmental Blockers (DROPPED from sprint cadence)" section listing `ci_workflow_live`. Binary close achieved; future sprints will not re-litigate.
-- **Description**: REQ-ETS-CLEANUP-007 (CI workflow live at `.github/workflows/build.yml`) was DEFERRED-WITH-RATIONALE for 4 consecutive sprints (S-ETS-01-01..03 + S-ETS-02-05 + S-ETS-03-03). Raze cumulative APPROVE_WITH_CONCERNS verdict explicitly flagged as ESCALATION TERRITORY. Sprint 4 success_criterion `ci_workflow_live_or_formally_dropped` SHALL resolve to TRUE via either: (a) user grants `workflow` scope (`gh auth refresh -s workflow`) before Generator run AND Generator executes the `git mv` + workflow_dispatch verification (~30 min); OR (b) `ci_workflow_live` is FORMALLY DROPPED from sprint cadence with explicit "perpetual environmental blocker" deferral note in `ops/status.md` (Raze recommendation). No more 4-sprint-style "we'll try again" deferrals — Sprint 4 is the binary close. Pat documents alternative path for the user to adopt at any point post-Sprint-4: manual GitHub UI move via web (~5 min user-time; bypasses gh-cli-scope blocker entirely).
-- **Maps to**: NFR-ETS-02. Closes Raze cumulative CONCERN-3 + 4-sprint-defer pattern.
+- **Status**: SUPERSEDED by CP-003 and REQ-ETS-SCOPE-002.
+- **Description**: The historical escalation is closed permanently. Hosted CI is outside project scope; there is no future activation path or recurring user-action blocker.
+- **Maps to**: ADR-012, REQ-ETS-SCOPE-002.
 
 #### REQ-ETS-CLEANUP-010: Docker Image-Size v2 Chown-Layer Attack + ADR-009 v2 Amendment
 - **Priority**: SHOULD
@@ -2187,7 +2229,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **GIVEN** Dockerfile, Compose, and `scripts/smoke-test.sh` are the authoritative TeamEngine 6 deployment contract
 **WHEN** the Maven POM is inspected
 **THEN** it does not contain an active `docker` profile using Fabric8 Docker Maven plugin behavior
-**AND** supported CI commands do not request a nonexistent `docker` Maven profile
+**AND** supported local and inert OGC Jenkins build commands do not request a nonexistent `docker` Maven profile
 **AND** every Maven profile explicitly requested by any supported Jenkinsfile is declared by the project model
 **AND** every supported Jenkinsfile selects JDK 17 and invokes the source-pin bootstrap before this project is built or released
 **AND** it does not copy arbitrary Maven runtime dependencies into a TeamEngine webapp as an alternate deployment path.
@@ -2219,7 +2261,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 *Maps to*: REQ-ETS-SCAFFOLD-003, NFR-ETS-15.
 
 #### SCENARIO-ETS-SCAFFOLD-REPRODUCIBLE-001 (NORMAL)
-**GIVEN** the same commit checked out twice in CI
+**GIVEN** the same commit checked out twice by the local release gate
 **WHEN** `mvn clean install` runs in each checkout
 **THEN** the resulting jars are byte-identical excluding `META-INF/` timestamps.
 *Maps to*: REQ-ETS-SCAFFOLD-005, NFR-ETS-01.
@@ -2238,7 +2280,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-FIXTURES-PORT-COVERAGE-001 (NORMAL)
 **GIVEN** the spec-trap fixture corpus is ported into Java `@DataProvider` methods
-**WHEN** `scripts/audit-fixture-port.sh` runs in CI
+**WHEN** `scripts/audit-fixture-port.sh` runs in the local verification gate
 **THEN** the script exits 0
 **AND** every case ID present in TS source has a matching case ID in Java source.
 *Maps to*: REQ-ETS-FIXTURES-001, FIXTURES-003, SC-9.
@@ -2324,12 +2366,10 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 *Maps to*: REQ-ETS-TEAMENGINE-003 (modified), REQ-ETS-CLEANUP-004.
 
 #### SCENARIO-ETS-CLEANUP-CI-WORKFLOW-LIVE-001 (NORMAL — Sprint 2)
-**GIVEN** the Sprint 2 close HEAD on the new repo
-**WHEN** a developer inspects the GitHub Actions tab
-**THEN** at least one `workflow_run` exists for `.github/workflows/build.yml` triggered by a Sprint 2 push commit
-**AND** the workflow_run status is SUCCESS
-**OR** the absence is documented in ops/status.md as a deferred-with-rationale carryover (gh OAuth scope still missing).
-*Maps to*: REQ-ETS-SCAFFOLD-005, NFR-ETS-02.
+**GIVEN** this historical scenario requested a live GitHub Actions workflow
+**WHEN** CP-003 is applied
+**THEN** the scenario is retired and replaced by `SCENARIO-ETS-SCOPE-HOSTED-CI-NONGOAL-001`.
+*Maps to*: REQ-ETS-SCOPE-002.
 
 #### SCENARIO-ETS-CLEANUP-ADR-006-007-001 (NORMAL — Sprint 2)
 **GIVEN** the Sprint 2 close HEAD
@@ -2427,11 +2467,11 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 *Maps to*: REQ-ETS-PART1-002 (modified per Sprint 3 expansion).
 
 #### SCENARIO-ETS-CLEANUP-CI-WORKFLOW-ESCALATION-001 (CRITICAL — Sprint 4)
-**GIVEN** the gh OAuth token has been a 4-consecutive-sprint user-action blocker (S-ETS-01-01..03 + S-ETS-02-05 + S-ETS-03-03)
-**WHEN** Sprint 4 closes
-**THEN** EITHER GitHub Actions UI shows at least one workflow_run on a Sprint 4 commit with `conclusion=success` (Path A — user granted scope, Generator landed `git mv`)
-**OR** `ops/status.md` documents `ci_workflow_live` as DROPPED from sprint cadence with explicit "perpetual environmental blocker" rationale + alternative path note (Path B — formal drop per Raze recommendation).
-*Maps to*: REQ-ETS-CLEANUP-007 (modified), REQ-ETS-CLEANUP-009. Closes Raze cumulative CONCERN-3 + 4-sprint-defer pattern (binary outcome — no more 4-sprint-style retries).
+**GIVEN** this historical scenario allowed either activation or formal drop
+**WHEN** CP-003 is applied
+**THEN** only permanent scope removal is valid
+**AND** no future activation path remains.
+*Maps to*: REQ-ETS-SCOPE-002.
 
 #### SCENARIO-ETS-CLEANUP-CREDENTIAL-LEAK-E2E-001 (CRITICAL — Sprint 4)
 **GIVEN** the suite at the Sprint 4 close HEAD with `auth-credential` wired end-to-end through `scripts/smoke-test.sh` (or dedicated `scripts/credential-leak-e2e-test.sh`)
@@ -2697,7 +2737,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-CLEANUP-SABOTAGE-LOG-HONEST-001 (NORMAL — Sprint 6)
 **GIVEN** `scripts/sabotage-test.sh --target=systemfeatures` is running
-**WHEN** the Docker build step fails (if it were to fail, e.g. in CI with a broken environment)
+**WHEN** the Docker build step fails in a broken local environment
 **THEN** the log message reads `"Docker build FAILED"` or equivalent (NOT `"smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test)"`)
 **AND** when the Docker build succeeds but smoke exits non-zero due to the sabotage marker @Test FAIL, the log message reads `"smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test)"`.
 *Maps to*: REQ-ETS-CLEANUP-015 (improved UX).
@@ -2834,7 +2874,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### SCENARIO-ETS-SYNC-URI-DIFF-001 (NORMAL)
 **GIVEN** the v1.0 TS registry and the Java ETS each have a non-empty URI coverage list
-**WHEN** `scripts/sync-uri-coverage.sh` runs in CI
+**WHEN** `scripts/sync-uri-coverage.sh` runs in the local verification gate
 **THEN** the script exits 0 if every URI is mirrored on both sides OR has an entry in `ops/uri-coverage-allowlist.txt`
 **AND** the script exits non-zero if any URI is unmirrored without an allowlist entry.
 *Maps to*: REQ-ETS-SYNC-001.
@@ -2899,7 +2939,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-TEAMENGINE-003: **IMPLEMENTED FOR TEAMENGINE 6**. The manual TeamEngine 5.6.1/JDK 17 path remains historical baseline evidence. Sprint 41 verifies the immutable TeamEngine 6.0.0 digest, isolated shaded dependencies/resources, filename-independent added-jar coordinate/content checks, byte-for-byte base immutability, image build, non-root startup, SPI/CTL registration, and primary local OSH execution. Fresh full Docker Maven passed `312/0/0/3`; exact image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9` passed runtime and local OSH E2E `211/69/0/142`; final Raze approved.
 - REQ-ETS-TEAMENGINE-004: **IMPLEMENTED FOR TEAMENGINE 6**. `docker-compose.yml` retains the canonical `8081:8080` mapping and runtime healthcheck while using the digest-pinned repository Dockerfile. Sprint 41 readiness verified Compose build, health, and suite metadata; `ops/server.md` documents host-port fallback and amd64 emulation requirements.
 - REQ-ETS-TEAMENGINE-005: **IMPLEMENTED FOR TEAMENGINE 6**. `scripts/smoke-test.sh` builds and launches the exact image, verifies suite metadata, runs a non-empty zero-failure TestNG report, enforces the no-mutation oracle, and scans startup errors. The 2026-07-22 primary local OSH run passed `211/69/0/142`, recognized 135 IUT requests, and recorded zero writes and zero startup errors.
-- REQ-ETS-TEAMENGINE-007: **IMPLEMENTED** after release-CI and exact multi-tuple gapfix on 2026-07-22. The replacement payload adds only the shaded ETS jar and CTL resources. Generic inventory proves one added jar, no duplicate base or TeamEngine coordinate, emits both exact allowlisted TeamEngine convention paths, and rejects unused entries; its self-test asserts a complete exact two-tuple set. Both Jenkinsfiles pass Java 17/bootstrap/declared-profile checks. Exact image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9` passed runtime verification and primary local OSH with `211/69/0/142`, 135 recognized requests, zero writes, and zero startup errors. Final Raze approved at `0.99` confidence with no required actions.
+- REQ-ETS-TEAMENGINE-007: **IMPLEMENTED** after inert OGC release-definition and exact multi-tuple gapfix on 2026-07-22. The replacement payload adds only the shaded ETS jar and CTL resources. Generic inventory proves one added jar, no duplicate base or TeamEngine coordinate, emits both exact allowlisted TeamEngine convention paths, and rejects unused entries; its self-test asserts a complete exact two-tuple set. Both Jenkinsfiles pass Java 17/bootstrap/declared-profile checks and remain unconnected metadata. Exact image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9` passed runtime verification and primary local OSH with `211/69/0/142`, 135 recognized requests, zero writes, and zero startup errors. Final Raze approved at `0.99` confidence with no required actions.
 - REQ-ETS-TEAMENGINE-008: **IMPLEMENTED** by Sprint 41 closure. Public package metadata/docs, Maven-derived suite metadata, canonical run arguments, structural verification, Compose metadata, and primary local OSH TeamEngine E2E are verified without archetype placeholders.
 
 **Sprint 1 contract success_criteria walk after S-ETS-01-03**: **9/9 PASS** (per Dana's S-ETS-01-03 generator report) — all 5 critical scenarios PASS (SCAFFOLD-BUILD-001, CORE-LANDING-001, CORE-CONFORMANCE-001, TEAMENGINE-LOAD-001, CORE-SMOKE-001), all 5 normal scenarios PASS (SCAFFOLD-LAYOUT-001, SCAFFOLD-REPRODUCIBLE-001, CORE-RESOURCE-SHAPE-001, CORE-LINKS-NORMATIVE-001, CORE-API-DEF-FALLBACK-001). **Sprint 1 functionally complete pending Quinn+Raze gate close on S-ETS-01-03.**
@@ -2916,7 +2956,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - **Java root package, artifactId, ets-code, CTL filename, ets-common version, TeamEngine version**: spec text was reconciled to ADR-003/ADR-004/ADR-001 authority on 2026-04-28T14:42Z (commit `19003b1`). Spec now matches what Generator implemented.
 - **Layout refactor closed in S-ETS-01-02**: archetype-flat layout retained through S-ETS-01-01; refactored to `conformance.core.*` + `listener.*` subpackages in S-ETS-01-02 commit `2dc4414`. Closes Quinn+Raze CONCERN-3 from S-ETS-01-01 gate close.
 - **Kaizen openapi-parser declared but not consumed in Sprint 1**: per architect-handoff `surfaced_risks_pat_missed.OPENAPI-PARSER-NOT-USED-IN-SPRINT-1`, Sprint 1 Core uses everit-json-schema (transitive via ets-common:17) directly. Kaizen is on the dep list for Sprint 2+ when richer Part 1 classes need OpenAPI-driven validation.
-- **GitHub Actions workflow staged at `ci/github-workflows-build.yml` not `.github/workflows/build.yml`**: gh OAuth token at commit time lacked `workflow` scope. One-line fix: `gh auth refresh -s workflow` then `git mv`. Tracked as Raze CONCERN-2 (S-ETS-01-01 + S-ETS-01-02).
+- **GitHub Actions workflow path retired**: CP-003 removes the dormant workflow and all activation instructions because hosted CI is outside project scope. Historical deferral evidence remains audit-only.
 - **Bare `throw new AssertionError(...)` instead of `EtsAssert` helper** (architect-handoff `must` constraint #9): 21 call sites across the 3 Core test classes use bare `throw new AssertionError(URI + " — message")` rather than an `EtsAssert.failWithUri(...)` helper. **Intent met** (every FAIL message includes the canonical `/req/*` URI as required); **form violated** (no helper used). The existing `ETSAssert.java` is XML/Schematron-only and Dana didn't extend it. Tracked as Quinn GAP-1 / Raze GAP-1 (both s02). **Sprint 2 cleanup**: extend `ETSAssert` with a `failWithUri(String message, String uri)` overload and refactor the 21 call sites mechanically.
 - **URI form drift between v1.0 TS, Java port, and OGC canonical** (Quinn GAP-2 / Raze GAP-2 in s02 reports): Java cites `/req/core/root-success`; v1.0 TS uses `/req/ogcapi-common/landing-page`; OGC's normative .adoc canonical (verified by Raze upstream-fetch 2026-04-17) is `/req/landing-page/root-success`. Three different forms all citing the same correct normative text, but a CITE SC reviewer dereferencing the @Test description URIs against the OGC normative document will get a 404. **Source is upstream of S-ETS-01-02** (spec.md text already used the `/req/core/<X>-success` form when Dana implemented). **Sprint 2 cleanup**: amend spec.md + traceability.md + Java @Test descriptions to the OGC canonical `.adoc` URI form; ~30-40 sites across both repos.
 
@@ -2934,12 +2974,12 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-010 (Part 2 SWE Common JSON Encoding) - partially implemented by Sprint 29 Generator; full positive closure remains dependent on a healthy declaring IUT with SWE 3.0 JSON Encoding Rules visibility, valid DataStream/Observation SWE JSON reads, valid ControlStream/Command SWE Common JSON schema evidence, candidate Observation/Command resources, and non-mutating mediatype-write evidence. Mandatory GeoRobotix Generator smoke failed (`186 total / 31 passed / 22 failed / 133 skipped`) with zero matched public-IUT write requests.
 - REQ-ETS-PART2-011 (Part 2 SWE Common Text Encoding) - partially implemented by Sprint 30 Generator. `Part2SweCommonTextTests` implements exact `/conf/swecommon-text` declaration gating, SWE Common 3.0 `/conf/text-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+text` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `TextEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`258 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`196 total / 33 passed / 28 failed / 135 skipped`); the new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 91`, `POST/PUT/PATCH/DELETE 0`).
 - REQ-ETS-PART2-012 (Part 2 SWE Common Binary Encoding) - partially implemented by Sprint 31 Generator. `Part2SweCommonBinaryTests` implements exact `/conf/swecommon-binary` declaration gating, SWE Common 3.0 `/conf/binary-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+binary` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `BinaryEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`272 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`206 total / 35 passed / 34 failed / 137 skipped`); the new SWE Common Binary group produced 3 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 99`, `POST/PUT/PATCH/DELETE 0`).
-- REQ-ETS-PART2-013 (Observation/Command binding cross-class closure) - partially implemented by Sprint 32 Generator as an internal project closure item, not a standalone OGC `/conf/observation-binding` class. `Part2ObservationCommandBindingTests` and helper regressions are implemented with group `part2binding`, no default fixture seeding, and GET-only positive closure guards. Sprints 33-38 add inline status/result regressions, local OSH seed/tasking fixture evidence, SimUAV isolated fixture evidence, parent schema `f=json` request shaping, stream metadata and format assertions, and populated parent-candidate selection. Sprint 40 patches sibling OSH ConSys for JSON-compatible schema response media types, exact `application/swe+text`, ControlStream `cmdFormat`, parseable JSON Observation/Command collection/count bodies, invalid-filter error handling, and field-hub runtime temporal-sort compatibility. Focused OSH regressions passed `23/0/0/0`; ETS Docker Maven wrapper passed `294/0/0/3`; direct SimUAV format/body probes verified the prior blocker set and produced positive nested Observation item evidence; clean local OSH TeamEngine smoke passed `211/61/0/150` with zero writes; focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes. Final SimUAV-populated TeamEngine smoke failed `211/86/17/108`; full positive populated-IUT binding closure is still not claimed because residual failures are Observation/Command schema shape/mapping and absent positive associated Command child item evidence.
+- REQ-ETS-PART2-013 (Observation/Command binding cross-class closure) - partially implemented by Sprint 32 Generator as an internal project closure item, not a standalone OGC `/conf/observation-binding` class. `Part2ObservationCommandBindingTests` and helper regressions are implemented with group `part2binding`, no default fixture seeding, and GET-only positive closure guards. Sprints 33-38 add inline status/result regressions, local OSH seed/tasking fixture evidence, parent schema `f=json` request shaping, stream metadata and format assertions, and populated parent-candidate selection. Sprint 40's external OSH patch is retained as historical audit evidence only and is not an approved implementation path under CP-003/ADR-012. Full positive populated-IUT binding closure remains unclaimed and must proceed through ETS changes or an unmodified IUT.
 - REQ-ETS-VALIDATOR-001 (External SWE Common and SensorML Validator Integration) - the SWE Common increment is implemented and final-Raze approved; the overall requirement remains partial because SensorML is deferred. Both Java 17 Jenkins paths verify exact upstream commit `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`; the adapter returns ETS-owned diagnostics; all six schema paths retain local checks and validate extracted `recordSchema`; and the slim jar shades validator classes/resources with relocated NetworkNT bytecode and bundles. Fresh full Maven passed `312/0/0/3`. Exact image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9` passed generic jar-content verification, exact tuple evidence, adapter execution, and local OSH `211/69/0/142` with zero writes. SensorML remains deferred.
 - REQ-ETS-TEAMENGINE-006 (Local OSH Primary Development Target) - specified by Sprint 32 planning. Development E2E uses the self-provisioned local OSH IUT on `field-hub_default`; GeoRobotix is advisory-only and no longer the default development target.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.
-- REQ-ETS-SYNC-001 — CI script work, expected after Part 1 is feature-complete enough to make the diff meaningful.
+- REQ-ETS-SYNC-001 — local audit-script work, expected after Part 1 is feature-complete enough to make the diff meaningful.
 - HTTP request/response capture (full REST Assured logging-filter pattern) → Sprint 2.
 - Auth credential masking + `logback.xml` (architect-handoff `should` #3 — never log Authorization/X-API-Key) → Sprint 2 (no auth path exercised in Sprint 1; GeoRobotix is open).
 - JaCoCo ≥80% coverage instrumentation → Sprint 2.

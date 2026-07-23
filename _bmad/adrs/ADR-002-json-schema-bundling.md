@@ -5,6 +5,9 @@
 - **Decider**: Architect (Alex)
 - **Related**: REQ-ETS-SCAFFOLD-003, REQ-ETS-CORE-001, PRD FR-ETS-26, planner-handoff §`deferred_to_architect`, discovery-handoff §`flags.SCHEMAS-MAY-DRIFT` and §`flags.DUAL-MAINTENANCE-PROCESS`
 
+> **ADR-012 amendment (2026-07-23)**: every reference below to CI or nightly
+> automation is superseded. Schema drift checks remain local/manual gates.
+
 ## Context
 
 The 126 OGC JSON Schemas at `csapi_compliance/schemas/` (covering `connected-systems-1`, `connected-systems-2`, `connected-systems-shared`, `external`, `fallback`, plus a `manifest.json`) were extracted at v1.0 build time from the OGC `ogcapi-connected-systems` repo by `scripts/fetch-schemas.ts`. Both the v1.0 web app (Ajv-based, frozen) and the new ETS (Kaizen-based, in-flight) need the same schema set. Pat's PRD asserts "126 JSON Schemas SHALL be reused verbatim, copied into `src/main/resources/schemas/` of the new repo" but defers the **mechanism** to me.

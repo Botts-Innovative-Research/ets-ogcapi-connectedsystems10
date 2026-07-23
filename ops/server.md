@@ -36,7 +36,7 @@ drift. The ETS repo is the authoritative copy for OGC CITE submission;
 when the upstream OGC schemas evolve, the ETS repo's copy is refreshed
 in a controlled sprint and the upstream SHA is updated above.
 
-A future sprint will run a CI check (REQ-ETS-SYNC-001) that diffs the
+A future sprint will run a local audit check (REQ-ETS-SYNC-001) that diffs the
 URI corpora across `csapi_compliance/src/engine/registry/` and the
 Java conformance classes here. That check is gated on Part 1 being
 feature-complete and is out of scope of Sprint 1.
@@ -117,12 +117,12 @@ tasking driver as an isolated CommandResult fixture:
 Keep Sapient and SimUAV disabled for the primary read-only smoke. When
 temporarily enabled, Sapient can accept a real CS API Command through a local
 SAPIENT TCP peer, and SimUAV can accept a waypoint feasibility Command without
-an external peer and return inline result data. Sprint 40 patches the active
-  ConSys jar so direct SimUAV probes no longer show the prior schema
-  `Content-Type: auto`, exact `application/swe+text` HTTP 400, `cmdFormat`, empty
-  JSON child-body, or old field-hub temporal-sort linkage blockers. Final direct
-  probes returned nested Observation `items=1` and nested Command `count=0`, so
-  positive Command child item evidence is still missing. Their generated dynamic
+an external peer and return inline result data. Sprint 40's local ConSys patch
+and its direct probe results are historical evidence only. CP-003/ADR-012
+prohibit rebuilding or deploying that patch. The current ConSys jar identifies
+the clean upstream OSH checkout. Supported SimUAV configuration/test-data usage
+remains permitted, but positive Command child item evidence is still missing.
+Its generated dynamic
 DataStreams/ControlStreams still fail current Part 2 populated TeamEngine
   schema checks because Observation/Command schema documents do not yet match the
   Annex A.9/SWE schema shape. OSH does not delete module-owned

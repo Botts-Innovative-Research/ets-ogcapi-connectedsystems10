@@ -39,7 +39,7 @@ PASS/SKIP, no-mutation, or TeamEngine runtime behavior.
 
 - [x] A commit-pinned prebuild verifies the exact upstream SHA and builds only
   `swecommon30-validator`, never `ets-swecommon30`.
-- [x] Supported Java 17 CI build and release definitions invoke the same bootstrap
+- [x] Supported local Java 17 build and inert OGC release definitions invoke the same bootstrap
   and request only declared Maven profiles; release remains blocked until a
   non-SNAPSHOT reusable artifact is published.
 - [x] The POM excludes upstream NetworkNT/Jackson versions and packages validator
@@ -99,7 +99,7 @@ coordinate scanning, no generic functional-path intersection, stale Maven
 chronology, and an empty `.moduledata` directory. The current candidate closes
 those implementation gaps. A subsequent generic-guard recheck required explicit
 accepted collision tuples, unused-allowlist rejection, Jenkins profile cleanup,
-and final metadata reconciliation. The first metadata recheck found release-CI
+and final metadata reconciliation. The first metadata recheck found the inert OGC release definition
 and executable tuple-output coverage gaps; those findings and all fresh gates
 are now remediated. The final Raze recheck returned `APPROVE` at `0.99`
 confidence with no required actions.

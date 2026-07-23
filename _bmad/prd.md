@@ -171,18 +171,18 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 
 | ID | Requirement | OpenSpec REQ |
 |----|-------------|--------------|
-| FR-ETS-90 | A diff script SHALL exist that lists every canonical OGC requirement URI in `csapi_compliance/src/engine/registry/*.ts` and compares it against the URI list extracted from Java `@Test` `description` attributes in the new ETS. CI SHALL fail if any URI is in TS but not in Java (or vice versa) without an explicit allowlist entry. | REQ-ETS-SYNC-001 |
+| FR-ETS-90 | A diff script SHALL exist that lists every canonical OGC requirement URI in `csapi_compliance/src/engine/registry/*.ts` and compares it against the URI list extracted from Java `@Test` `description` attributes in the new ETS. The local verification gate SHALL fail if any URI is in TS but not in Java (or vice versa) without an explicit allowlist entry. | REQ-ETS-SYNC-001 |
 
 ## Non-Functional Requirements
 
 | ID | Requirement | Target |
 |----|-------------|--------|
-| NFR-ETS-01 | Build reproducibility | `mvn clean install` produces byte-identical jars from the same commit, ignoring `META-INF/` timestamps. Verified by a CI job that builds twice and diffs. |
+| NFR-ETS-01 | Build reproducibility | `mvn clean install` produces byte-identical jars from the same commit, ignoring `META-INF/` timestamps. Verified by a local double-build diff. |
 | NFR-ETS-02 | JDK 17 compatibility | Source compiles cleanly with JDK 17; no JDK 11 / JDK 8 fallback. |
 | NFR-ETS-03 | Development E2E pass rate against local OSH | ≥95% of `@Test` methods targeting local-OSH-declared conformance classes pass or SKIP for documented empty-IUT/missing-prerequisite reasons. Advisory GeoRobotix failures are tracked separately and do not block local-OSH-backed development work. |
 | NFR-ETS-04 | TeamEngine load time | The ETS jar registers with the selected immutable TeamEngine runtime and is selectable in the suite list within 30 seconds of container start. TeamEngine 5.6.1 is historical baseline evidence; Sprint 41 verifies TeamEngine 6.0.0. |
 | NFR-ETS-05 | Test execution throughput | The full Part 1 suite completes within 10 minutes against a responsive IUT (parity with v1.0 NFR-03 measured baseline of ~0.1 min). |
-| NFR-ETS-06 | Reproducible across environments | `mvn clean install` succeeds on Linux (Ubuntu 22.04 / Debian 12), macOS (latest), and Windows (via WSL2). CI runs all three. |
+| NFR-ETS-06 | Reproducible across environments | `mvn clean install` succeeds on Linux (Ubuntu 22.04 / Debian 12), macOS, and Windows via WSL2. Release-candidate evidence is collected manually where those environments are available; hosted CI is not required. |
 | NFR-ETS-07 | Schema pin freshness | The OGC OpenAPI YAML commit SHA pin SHALL be reviewed quarterly; pin updates SHALL be ADR-tracked. |
 | NFR-ETS-08 | Credential security | Auth credentials passed via TeamEngine UI are held only in test-method-scope memory; never logged, never written to TestNG reports unmasked. Equivalent to v1.0 NFR-05. |
 | NFR-ETS-09 | Error resilience | An individual test that hits a network error or unexpected response SHALL fail with a structured message and not abort the suite. Equivalent to v1.0 NFR-10. |
@@ -202,8 +202,8 @@ The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/
 | ETS ↔ IUT | HTTP/HTTPS via REST Assured | Test methods issue GET/POST/PUT/PATCH/DELETE against the IUT, carrying user-provided auth. |
 | ETS ↔ JSON Schemas | File-system (classpath) | Schemas bundled at `src/main/resources/schemas/` are loaded by Kaizen `openapi-parser` and used for response-body validation. |
 | ETS ↔ OpenAPI YAML | Git submodule OR Maven dependency on a YAML-only artifact | Pinned to a specific OGC `ogcapi-connected-systems` commit SHA. Pin recorded in `pom.xml` and `ops/server.md`. |
-| Build pipeline ↔ Maven Central | OSSRH staging via `mvn deploy` | At beta milestone only; requires GPG signing key and OSSRH credentials in CI secrets. |
-| CI ↔ TeamEngine Docker | Repository multi-stage image with an immutable OGC-published TeamEngine runtime | Smoke-test builds the image, verifies health and suite registration, runs against local OSH by default, and archives exact results. TeamEngine 5.6.1 is baseline-only; Sprint 41 verifies TeamEngine 6.0.0. GeoRobotix is advisory only. |
+| Local release process ↔ Maven Central | OSSRH staging via `mvn deploy` | At beta milestone only; credentials remain outside the repository and are supplied manually through approved release infrastructure. |
+| Local verification ↔ TeamEngine Docker | Repository multi-stage image with an immutable OGC-published TeamEngine runtime | Smoke-test builds the image, verifies health and suite registration, runs against unmodified local OSH by default, and archives exact results. TeamEngine 5.6.1 is baseline-only; Sprint 41 verifies TeamEngine 6.0.0. GeoRobotix is advisory only. |
 
 ## OpenSpec Capability Mapping
 
@@ -252,7 +252,7 @@ the matrix at the bottom of `_bmad/traceability.md` (v1.0 frozen section).
 ## Open Questions Resolved by Pat (2026-04-27)
 
 1. **Part 2 doc number**: **OGC 23-002** confirmed authoritative. The `connected-systems-go` README's "IS 24-008" is incorrect (docs.ogc.org returns 404 for 24-008). All Part 2 REQs reference 23-002.
-2. **CI/CD topology**: **GitHub Actions for our development; Jenkinsfile checked in as a stub for OGC submission compatibility.** The Jenkinsfile is configured but not wired to an active Jenkins instance; it is a structural requirement of OGC convention (see `ets-ogcapi-features10/Jenkinsfile`). Architect to confirm at design time.
+2. **Verification topology**: **No project-operated hosted CI.** Development verification runs locally through Docker Maven, exact-image runtime checks, and TeamEngine E2E. Jenkinsfiles remain inert OGC submission/build metadata only and are not wired to an active project Jenkins service. OSH and TeamEngine source/binaries are outside modification scope (ADR-012).
 3. **Maven Central publish timing**: **Beta milestone (R-PIVOT-08).** Local snapshots and OSSRH staging are sufficient for sprints 1..N; production Maven Central publishes only when the ETS is ready for CITE SC submission. Avoids the "pollute Maven Central with pre-beta noise" failure mode.
 4. **Test data hosting layout**: **`src/main/resources/data/`** for sample SensorML + SWE Common payloads, mirroring `ets-ogcapi-features10`. Spec-trap fixtures live alongside test code at `src/test/resources/fixtures/spec-traps/`. Architect to confirm during ADR.
 
@@ -270,3 +270,4 @@ the matrix at the bottom of `_bmad/traceability.md` (v1.0 frozen section).
 | 2026-03-31 | 1.0 | Initial PRD: Next.js/TypeScript web app, 9 epics | Project kickoff |
 | 2026-03-31 | 1.1 | Added Epic 09 (Part 2 dynamic data), 14 new FRs | Mid-project scope expansion |
 | 2026-04-27 | 2.0 | Full rewrite: pivot from web app to Java/TestNG TeamEngine ETS. v1.0 web app frozen. New capability `ets-ogcapi-connectedsystems`. | User pivot 2026-04-27, Discovery handoff 2026-04-27 |
+| 2026-07-23 | 2.0.1 | Removed hosted CI and external OSH/TeamEngine modification paths from project scope. | User scope correction; CP-003 and ADR-012 |

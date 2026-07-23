@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-23T04:08Z
+Last updated: 2026-07-23T05:41Z
 
 ## Fresh-Session Entry Point
 
@@ -29,12 +29,45 @@ Read these first:
 - `.harness/contracts/sprint-ets-42.yaml`
 - `.harness/evaluations/teamengine-policy-guidance-adversarial-2026-07-21.yaml`
 - `.harness/evaluations/sprint-ets-41-readiness-adversarial-2026-07-21.yaml`
+- `openspec/change-proposals/CP-003-external-dependency-and-ci-scope.md`
+- `_bmad/adrs/ADR-012-external-dependency-immutability-and-no-hosted-ci.md`
+- `epics/stories/s-ets-43-01-external-dependency-scope-reconciliation.md`
+- `ops/test-results/external-dependency-scope-audit-2026-07-23.md`
+
+## Session Handoff - External Dependency and CI Scope
+
+CP-003 and ADR-012 establish the corrected project boundary:
+
+- No OSH or TeamEngine source or binary modifications are permitted.
+- Supported IUT configuration/test data and additive ETS installation at
+  documented TeamEngine extension locations remain permitted.
+- No project-operated hosted CI will be approved. The dormant GitHub Actions
+  workflow and future-activation instructions are removed.
+- Jenkinsfiles remain inert OGC submission/build metadata, not connected CI.
+- Audit result: current OSH is clean, has `0` commits ahead of upstream, and its
+  deployed ConSys jar reports the same `4c87a65` checkout commit. The `/opt/osh`
+  mount is read-only.
+- Audit result: no TeamEngine source checkout or current TeamEngine patch exists;
+  the ETS uses the immutable OGC TeamEngine 6 image.
+- Historical Sprint 40 OSH commit `79f89fb` is absent from inspected repositories
+  and current fetched refs. Project records classify it as local-only; the
+  current environment cannot prove global non-publication.
+- No external revert was run because the audit found no current attributable
+  source drift or binary-patch evidence to reverse.
+- S-ETS-40-01 is retired as out of scope. Its evidence is chronology only.
+- S-ETS-43-01 is complete. Docker Maven `313/0/0/3`, metadata-aware exact-image
+  runtime verification, and local OSH TeamEngine E2E `211/69/0/142` are
+  complete. Focused Raze recheck returned `APPROVE`, confidence `0.99`, with no
+  findings.
+- Next work must remain ETS-owned: extend partial conformance coverage or
+  integrate the external SensorML validator after reproducible library
+  coordinates are available. Do not reopen hosted CI or external patch paths.
 
 ## Session Handoff — SWE Common and TeamEngine Closure
 
 S-ETS-42-01 documents the external SWE Common/SensorML architecture. S-ETS-42-02
 implements the first SWE Common adapter increment and is complete after
-runtime-packaging, metadata, release-CI, behavioral-coverage, fresh full gates,
+runtime-packaging, metadata, inert OGC release-definition checks, behavioral coverage, fresh full gates,
 and final Raze approval. S-ETS-41-01 is also complete.
 
 - Botts publication: primary closure commit `482b975` is pushed to `main`; the
@@ -109,7 +142,7 @@ and final Raze approval. S-ETS-41-01 is also complete.
   `ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md`.
 - Final metadata Raze recheck:
   `.harness/evaluations/sprint-ets-42-final-metadata-gapfix-adversarial-recheck-2026-07-22.yaml`
-  returned `GAPS_FOUND`, confidence `0.99`; release-CI and executable
+  returned `GAPS_FOUND`, confidence `0.99`; inert OGC release-definition and executable
   tuple-output findings are remediated in the current candidate.
 - Final Raze gapfix recheck:
   `.harness/evaluations/sprint-ets-42-final-raze-gapfix-adversarial-recheck-2026-07-22.yaml`
@@ -233,25 +266,31 @@ Existing ETS evidence in `ops/test-results/` and `ops/server.md` was preserved.
 - Latest exploration: external SWE Common and SensorML validator architecture is recorded at `ops/test-results/external-validator-library-research-2026-07-22.md` and story `epics/stories/s-ets-42-01-external-domain-validator-architecture.md`. The correct SWE Common import target is upstream `org.opengis.cite:swecommon30-validator` from `opengeospatial/ets-swecommon30` branch `issue-9-swecommon-validation-module`, not the upstream `ets-swecommon30` TeamEngine ETS module. No public FCU-GIS-Luke SensorML validator module is currently discoverable; `opengeospatial/ets-sensorml30` is an ETS scaffold and must not be imported directly. Implementation should wait for published/reproducible artifacts or add a documented source-pinned prebuild path. Validator imports must remain ETS dependency/runtime-closure changes and must not patch TeamEngine source or webapp behavior.
 - ETS HEAD includes pushed Sprint 25 planning commit `2f4a6de Plan Sprint 25 Advanced Filtering`, reconciliation commits `5a8eef4 Reconcile Sprint 25 planning push` and `f251241 Update Sprint 25 planning metrics`, pushed Sprint 25 Generator commit `d9df3ad Implement Sprint 25 Advanced Filtering`, reconciliation commit `af53188 Reconcile Sprint 25 Generator push`, metrics commit `7d57d9f Update Sprint 25 final metrics`, pushed Sprint 26 planning commit `146c4c6 Plan Sprint 26 Part 2 CRD`, pushed reconciliation commit `930cb5c`, pushed Sprint 26 Generator commit `c2d9d1e Implement Sprint 26 Part 2 CRD with local OSH E2E gate`, pushed reconciliation commit `ab9b5f6 Reconcile Sprint 26 generator push`, pushed metrics commit `bf10caa Update Sprint 26 push metrics`, pushed Sprint 27 planning commit `eab12a8 Plan Sprint 27 Part 2 Update`, pushed planning reconciliation `2be355a Reconcile Sprint 27 planning push`, pushed Sprint 27 Generator commit `6ae8f1c Implement Sprint 27 Part 2 Update with local OSH E2E gate`, pushed Sprint 28 planning commit `5d95d55 Plan Sprint 28 Part 2 JSON`, pushed Sprint 28 Generator commit `5850210 Implement Sprint 28 Part 2 JSON`, pushed Sprint 29 planning/Generator/reconciliation commits, pushed Sprint 30 planning/Generator/reconciliation commits, pushed Sprint 31 planning/Generator/reconciliation commits through `7bbbc51 Update Sprint 31 final metrics`, pushed triage commit `eb9fb3a Clarify Sprint 31 next step`, pushed Sprint 32 planning commit `f2d2ab8 Plan Sprint 32 local OSH primary E2E`, pushed Sprint 32 planning reconciliation `1d84ab0 Reconcile Sprint 32 planning push`, pushed Sprint 32 Generator commit `37a2a43 Implement Sprint 32 Observation Command binding`, pushed Sprint 32 final metrics commit `1cd6884`, and pushed Sprint 33 planning commit `efb59e6 Plan Sprint 33 local OSH dynamic data seeding`.
 - Latest csapi docs handoff commit before migration: `1568f36`
-- Latest pushed story: `S-ETS-40-01` is pushed as `44c6a80 Record Sprint 40 OSH blocker closure`; sibling OSH ConSys implementation is committed locally as `79f89fb Patch ConSys populated binding blockers`.
-- Latest pushed Generator work: Sprint 40 partially closes OSH ConSys populated binding blockers while preserving strict ETS assertions. Prior media-type/body/runtime blockers are cleared; populated binding remains open on OSH schema shape/mapping and missing positive Command child item evidence.
-- Current handoff story: `S-ETS-40-01` is verified, Raze-reviewed, committed, and pushed as `44c6a80 Record Sprint 40 OSH blocker closure`. Focused OSH regressions passed `23/0/0/0`; ETS Docker Maven wrapper passed `294/0/0/3`; direct SimUAV r4 probes cleared prior blockers with nested Observation `items=1` and nested Command `count=0`; clean local OSH TeamEngine smoke passed `211/61/0/150`; populated SimUAV TeamEngine smoke still failed `211/86/17/108`; Raze focused recheck returned `APPROVE_WITH_CONCERNS` with no required fixes.
-- Latest pushed tasking-fixture/evidence commit: `9f8a82f Record local OSH Sprint 37 and 38 evidence`.
-- Latest pushed Java implementation/evidence commit: `44c6a80 Record Sprint 40 OSH blocker closure`.
-- Push status: remote uses SSH; Sprint 40 blocker closure evidence pushed on 2026-06-03 as `44c6a80` (`8e8f679..44c6a80 main -> main`). Sibling OSH commit `79f89fb` is local only and not pushed to `opensensorhub/osh-core`.
+- Historical Sprint 40 ETS evidence was pushed as `44c6a80`. Project records
+  described sibling OSH commit `79f89fb` as local-only, but it is absent from the
+  current checkout and fetched refs. That patch is not current implementation
+  evidence and must not be recreated.
+- Current handoff is S-ETS-43-01 under CP-003/ADR-012.
 
-## Session Handoff — Sprint ets-40 OSH ConSys Blocker Closure
+## Historical Snapshot — Sprint ets-40 OSH ConSys Blocker Closure
+
+> Superseded by CP-003/ADR-012. This section records prior evidence only and
+> authorizes no OSH source or binary changes.
 
 Sprint 40 is verified as a partial closure. Do not restart from Sprint 39.
 
 - Story: `epics/stories/s-ets-40-01-osh-consys-populated-binding-blockers.md`.
 - Contract: `.harness/contracts/sprint-ets-40.yaml`.
-- OSH code changed in sibling repo `/home/nh/docker/gir/osh-core` and committed locally as `79f89fb Patch ConSys populated binding blockers`: ConSys schema format negotiation, exact SWE Text media type handling, `cmdFormat` aliasing, JSON child collection/count bodies, and focused regressions.
+- At the time, project records described changes in sibling repo
+  `/home/nh/docker/gir/osh-core` under commit `79f89fb`. That checkout and commit
+  are absent now; these details are historical and not reproducible project work.
 - Runtime state: field-hub OSH is restored to the clean primary state with Sapient and SimUAV `autoStart=false`; `field-hub_osh-data` was reset and static `040g` fixtures were reseeded.
 - Verification: OSH focused Gradle regressions PASS `23/0/0/0`; ETS Docker Maven wrapper PASS `294/0/0/3`; direct SimUAV format/body probes PASS for the Sprint 40 blocker checks; clean local OSH TeamEngine smoke PASS `211/61/0/150` with zero IUT-bound writes after restoring the tracked field-hub config and reseeding static fixtures.
 - Raze review: initial Sprint 40 review returned `GAPS_FOUND`; focused recheck `.harness/evaluations/sprint-ets-40-adversarial-recheck.yaml` returned `APPROVE_WITH_CONCERNS`, confidence `0.91`, with no required fixes.
 - Populated E2E status: final SimUAV-populated TeamEngine smoke FAIL `211/86/17/108`. Prior blockers are cleared, but remaining failures are schema shape/mapping issues in Observation/Command schema documents (`commandFormat`, SWE `recordSchema`, `encoding.type`, and `obsFormat`/schema consistency) plus missing positive Command child item evidence.
-- Current required action: either patch OSH ConSys schema serialization to emit Annex A.9-compatible Observation/Command schema documents for JSON/SWE formats, or keep populated binding closure open and move to the next partial Part 2 class.
+- Historical proposed OSH patch path: retired as out of scope. Populated binding
+  closure remains open and may proceed only through ETS-owned work or evidence
+  from an unmodified conforming IUT.
 
 ## Session Handoff — Sprint ets-39 Artifact Hygiene / Drift Harness
 

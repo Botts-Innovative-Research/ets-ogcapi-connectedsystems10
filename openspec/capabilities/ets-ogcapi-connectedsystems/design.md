@@ -351,7 +351,7 @@ Per the architect role contract, each Sprint 1 story gets a verdict. Verdicts ar
 Rationale:
 - Maven coordinates and Java root package fully specified (ADR-003).
 - Archetype modernization checklist is exhaustive (ADR-004) — Generator follows the 25-item Group A/B/C/D list. Each delta becomes one ADR row referenced from REQ-ETS-SCAFFOLD-006.
-- Reproducibility mechanism (`<project.build.outputTimestamp>`) is concrete (ADR-004 group C-5). CI verifies via SCENARIO-ETS-SCAFFOLD-REPRODUCIBLE-001.
+- Reproducibility mechanism (`<project.build.outputTimestamp>`) is concrete (ADR-004 group C-5). The local release gate verifies it via SCENARIO-ETS-SCAFFOLD-REPRODUCIBLE-001.
 - Repository layout is fully specified (Architecture §3, ADR-001).
 - Schema source is pinned (ADR-002).
 - Cross-repo relationship is documented (ADR-005); Generator does NOT need to do anything cross-repo in Sprint 1 except note the schema provenance in `ops/server.md`.
@@ -404,13 +404,13 @@ Concerns the Generator must handle and Quinn must verify:
 
 3. **CTL wrapper Saxon namespace declaration**: ADR-001 specifies `xmlns:tng="java:org.opengis.cite.ogcapiconnectedsystems10.TestNGController"`. A typo in the package name silently makes the CTL form a no-op (Saxon throws at runtime, not at CTL parse time). Quinn check: actually click "Start" on the CTL form in the smoke-test container and verify the TestNG report is non-empty.
 
-4. **Smoke test as Sprint 1's E2E gate**: `scripts/smoke-test.sh` must produce a non-empty TestNG XML report from a container-launched Core suite run against GeoRobotix. CLAUDE.md's E2E mandate applies: archived TestNG XML report is the evidence. Quinn verifies via the artifact in CI; Raze (Gate 4) verifies the archived file is from the actual smoke-test run, not a hand-crafted file.
+4. **Smoke test as Sprint 1's E2E gate**: `scripts/smoke-test.sh` must produce a non-empty TestNG XML report from a container-launched suite run against the selected real IUT. The E2E mandate applies: archived TestNG XML is the evidence. Quinn verifies the local artifact; Raze verifies it came from the actual smoke run.
 
 Constraints for Generator:
-- MUST: smoke test is **scripts/smoke-test.sh** (bash) — do not bury it in a Maven plugin invocation that hides container failures from CI logs.
+- MUST: smoke test is **scripts/smoke-test.sh** (bash) so local operators receive direct container failure output.
 - MUST: smoke test waits for TeamEngine HTTP healthcheck before invoking the suite.
 - MUST: smoke test produces an exit code: 0 only if TestNG report is non-empty AND zero suite-registration ERRORs in TeamEngine container logs.
-- MUST: archive the TestNG report into `ops/test-results.md` and (in CI) as a build artifact.
+- MUST: archive the TestNG report outside the worktree for gate execution and summarize it in `ops/test-results.md`.
 
 ## Security Considerations
 
@@ -425,7 +425,7 @@ This is a server-side test suite; the IUT-facing surface is HTTP-out, not HTTP-i
 NFR-ETS-04: TeamEngine + ETS jar registers within 30 sec of container start.
 NFR-ETS-05: full Part 1 suite completes in <10 min against a responsive IUT.
 
-Sprint 1 (Core only, ~12 @Test methods) is well within NFR-ETS-05; performance is not a Sprint 1 risk. Sprints 2+ should add JaCoCo + a CI duration timer to track regression.
+Sprint 1 (Core only, ~12 @Test methods) is well within NFR-ETS-05; performance is not a Sprint 1 risk. Sprints 2+ should add JaCoCo and capture local gate durations to track regression.
 
 ## Implementation Constraints (additional, beyond Sprint 1 stories)
 
@@ -448,8 +448,8 @@ The Generator MUST NOT:
 
 - **Unit tests** (Sprint 1): `src/test/java/...` covers `EtsAssert` formatting, `CredentialMaskingFilter` behavior, `SuiteFixtureListener` parameter parsing. Mockito for HTTP boundary; no live IUT in unit tests.
 - **Integration tests** (Sprint 1): the smoke test IS the integration test — TeamEngine + ETS + GeoRobotix end-to-end. No separate integration-test layer needed for Sprint 1.
-- **Reproducible-build CI job** (Sprint 1, NFR-ETS-01): clean checkout, `mvn install`, save jar, clean checkout again, `mvn install`, diff the jars excluding META-INF timestamps. Empty diff = pass.
-- **Cross-platform CI job** (Sprint 1, NFR-ETS-06): GitHub Actions matrix runs `mvn -B verify` on ubuntu, macos, windows. Sprint 1 may run only ubuntu and add macos/windows in Sprint 2 if time-pressed; Quinn flags as CONCERNS but not FAIL.
+- **Reproducible-build local gate** (NFR-ETS-01): clean checkout, `mvn install`, save jar, clean checkout again, `mvn install`, and diff jars excluding `META-INF` timestamps. Empty diff is the pass condition.
+- **Cross-platform evidence** (NFR-ETS-06): release-candidate checks may be run manually where environments are available. No hosted CI workflow is planned or required under ADR-012.
 
 ## Open Items for Future Sprints (NOT Sprint 1)
 
@@ -458,7 +458,7 @@ The Generator MUST NOT:
 - REQ-ETS-FIXTURES-* (epic-ets-06).
 - REQ-ETS-CITE-* (calendar-bound).
 - REQ-ETS-WEBAPP-FREEZE-001 (separate quick-win sprint).
-- REQ-ETS-SYNC-001 (CI script, post-Part-1-feature-complete).
+- REQ-ETS-SYNC-001 must be implemented as a local/manual schema-sync check; hosted CI activation is outside scope.
 
 ## ADR Cross-References
 
@@ -890,7 +890,7 @@ The Sprint 4 contract's `success_criteria.credential_leak_e2e_test_green` is sat
 
 - `scripts/verify-credential-leak.sh` exits zero.
 - `ops/test-results/sprint-ets-04-credential-leak-evidence.txt` archives: (i) the synthetic credential used, (ii) the stub-IUT received-authorization echo (full unmasked), (iii) the grep results from logs/attachments (zero unmasked + at least one masked), (iv) the cross-check verdict.
-- A CI job runs the script on every PR + main push (per S-ETS-04-01 `ci_workflow_live_or_formally_dropped` outcome — if CI workflow is dropped per Path B, the script runs locally as a `make` target).
+- The script runs as a required local verification target. Hosted workflow activation is prohibited by ADR-012.
 
 ### Sprint 4 hardening: Subsystems conformance class scope (S-ETS-04-05)
 

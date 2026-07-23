@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.16 | Status: Living Document | Last reconciled: 2026-07-22 (SWE Common and TeamEngine final-Raze closure)
+> Version: 2.0.17 | Status: Living Document | Last reconciled: 2026-07-23 (external dependency and CI scope)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -19,23 +19,19 @@ This is **not a web application**. It has no browser UI, no REST endpoints we au
 
 ## 2. Deployment topology
 
-The same jar runs in three contexts:
+The same jar is verified locally and later deployed by OGC:
 
 ```
-+-----------------------------+   +--------------------------------+   +---------------------------------+
-|  Developer laptop           |   |  Our CI (GitHub Actions)        |   |  OGC validator (production)     |
-|                             |   |                                  |   |                                 |
-|  bootstrap validator;       |   |  - bootstrap validator           |   |  cite.opengeospatial.org/       |
-|    mvn clean install        |   |  - mvn -B verify                 |   |    teamengine/                  |
-|  mvn -P run-test (TestNG    |   |  - reproducible-build double-    |   |    teamengine/                  |
-|    direct against IUT)      |   |    diff job                      |   |  Runs ets-common parent's       |
-|  docker compose up          |   |  - smoke-test.sh inside Docker   |   |    OGC-managed TeamEngine       |
-|    (TE6 image + ETS jar)    |   |    against local OSH             |   |  Loads ETS via Maven Central     |
-|                             |   |  - artifact: TestNG report XML   |   |    artifact (post-beta)         |
-+-----------------------------+   +--------------------------------+   +---------------------------------+
-       |                                  |                                       |
-       |                                  |                                       |
-       +----------- same target/ets-ogcapi-connectedsystems10-<version>.jar ------+
++--------------------------------------+   +---------------------------------+
+|  Local development and verification  |   |  OGC validator (production)     |
+|                                      |   |                                 |
+|  bootstrap validator                 |   |  cite.opengeospatial.org/       |
+|  Docker Maven unit/build checks      |   |    teamengine/                  |
+|  exact-image runtime verification    |   |  Runs OGC-managed TeamEngine    |
+|  TeamEngine E2E against local OSH    |   |  Loads released ETS artifact    |
++--------------------------------------+   +---------------------------------+
+                  |                                      |
+                  +-- same ETS-owned release artifact ---+
 ```
 
 **Local (developer)**:
@@ -49,13 +45,15 @@ The same jar runs in three contexts:
 - The supported local deployment path is the repository **Dockerfile + `docker-compose.yml` + `scripts/smoke-test.sh`**. Any Maven `docker` profile is stale unless it is removed, made a no-op, or delegates to this exact digest-pinned Dockerfile path. It must not define an independent TeamEngine runtime, independent port/startup contract, or broad dependency-copy path.
 - The canonical run-argument contract is: required `iut`, optional `auth-credential`, optional `mutation-tests-enabled`, optional `mutation-iut-policy`. TeamEngine UI and documentation may label `iut` as "CS API landing page" for users, but the serialized argument key passed into TestNG must be `iut`. Do not introduce `auth-type` unless Java/TestNG support is explicitly implemented later.
 
-**Our CI (GitHub Actions)**:
-- Build job: bootstrap the exact validator source, then run
-  `mvn -B clean verify` on JDK 17. Matrix: ubuntu-latest, macos-latest,
-  windows-latest (NFR-ETS-06).
-- Reproducible-build job: builds the same commit twice, diffs `target/*.jar` excluding META-INF timestamps. Empty diff is the pass condition (NFR-ETS-01, SCENARIO-ETS-SCAFFOLD-REPRODUCIBLE-001).
-- Smoke-test job: `scripts/smoke-test.sh` builds the Docker image, launches TeamEngine + ETS, runs the suite against the configured IUT, and archives the TestNG XML report. Sprint 32 changes the development default to a self-provisioned local OSH IUT on Docker network `field-hub_default`; GeoRobotix is advisory-only. Sprint 41 is implemented after the final TeamEngine 6 local OSH run passed `211/69/0/142` with zero writes and zero startup errors.
-- Jenkinsfile is checked in but not wired to a live Jenkins (planner-handoff resolved-question CI-CD-TOPOLOGY).
+**Verification boundary (ADR-012)**:
+- Project-operated hosted CI is not approved and is not part of the architecture.
+- Developers run the Docker Maven wrapper, exact-image runtime verifier, and
+  TeamEngine E2E locally. Reproducibility checks are local scripted gates.
+- Jenkinsfiles are retained only as inert OGC submission/build metadata. They
+  are not wired to a project Jenkins service and are not development CI.
+- OSH and TeamEngine source code and binaries are external and immutable for this
+  project. Supported IUT configuration/test data and additive ETS installation
+  at documented TeamEngine extension locations remain permitted.
 
 **OGC validator (production)** — post-beta milestone only:
 - `cite.opengeospatial.org/teamengine/` runs the OGC's `teamengine-production` Docker image. Once we publish to Maven Central (REQ-ETS-CITE-001), the OGC's `teamengine-production/pom.xml` adds `<ets-ogcapi-connectedsystems10.version>` and our jar is included in the next image rebuild.
@@ -250,7 +248,7 @@ The asymmetric `featureType`/`itemType` corpus from `csapi_compliance/tests/fixt
 - **Location**: `src/test/resources/fixtures/spec-traps/<group-name>/*.json` (mirrors PRD §4 resolution; the v1.0 layout structure is preserved).
 - **Loading**: a `org.opengis.cite.ogcapiconnectedsystems10.fixtures.SpecTrapFixtures` Java class reads the JSON files at @DataProvider time. Jackson deserializes them into typed POJOs that TestNG passes to `@Test(dataProvider=...)` methods.
 - **Case ID retention**: each fixture file has a top-level `caseId` field; the Java loader exposes it; failed @Test failure messages include `caseId` so a CITE reviewer can trace the fixture back to its v1.0 origin.
-- **Audit script**: `scripts/audit-fixture-port.sh` (REQ-ETS-FIXTURES-003) compares case-ID lists in TS source (`csapi_compliance/tests/fixtures/spec-traps/`) vs Java source (`src/test/resources/fixtures/spec-traps/`) and fails CI on unexplained drops.
+- **Audit script**: `scripts/audit-fixture-port.sh` (REQ-ETS-FIXTURES-003) compares case-ID lists in TS source (`csapi_compliance/tests/fixtures/spec-traps/`) vs Java source (`src/test/resources/fixtures/spec-traps/`) and fails the local gate on unexplained drops.
 
 This is **not a Sprint 1 deliverable** (out_of_scope per Pat's contract). Sprint 1 must NOT delete the requirement; it must reference the corpus existence in `epic-ets-06-fixture-port.md`.
 
@@ -262,7 +260,7 @@ Per ADR-005:
 - No git submodule, no symlink, no shared package. Each is independently buildable.
 - `csapi_compliance` README links to the new ETS as the certification deliverable; new ETS `README.adoc` links back to v1.0 as the dev pre-flight tool.
 - `csapi_compliance@ab53658` is tagged `v1.0-frozen`. Schemas were copied verbatim into the new ETS at that point (ADR-002).
-- URI-coverage diff (REQ-ETS-SYNC-001) is a CI script in the new ETS that clones `csapi_compliance@v1.0-frozen` into the workspace; deferred to post–Sprint-1.
+- URI-coverage diff (REQ-ETS-SYNC-001) is a local audit script in the new ETS that clones `csapi_compliance@v1.0-frozen` into the workspace; deferred to post-Sprint-1.
 
 ## 9. CITE submission pipeline
 
@@ -290,7 +288,7 @@ The Generator (Dana) MUST respect these or CITE SC review will reject the ETS:
 2. **Use ets-common's idioms**. `EtsAssert`, listener naming, package layout, ets.properties, testng.xml location — all per the features10 reference. Innovation is permitted in the test logic, not in the framework wiring.
 3. **No new transitive dep without an ADR**. Adding a dependency that ets-common doesn't already manage requires an ADR justifying it (RAML in ADR-004 group B).
 4. **Maven Central publish is a release-only action**. SNAPSHOTs go to OSSRH staging; never promote SNAPSHOTs to Maven Central (REQ-ETS-CITE-001).
-5. **Reproducible builds**. `<project.build.outputTimestamp>` is set; CI verifies double-build byte-identical jars.
+5. **Reproducible builds**. `<project.build.outputTimestamp>` is set; the local release gate verifies double-build byte-identical jars.
 6. **README is .adoc, not .md**. AsciiDoc per OGC convention. Top-level files: `README.adoc`, `LICENSE.txt`, `pom.xml`, `Jenkinsfile` (stub), `Dockerfile`, `docker-compose.yml`.
 7. **Respect the v1.0 GH#3 fix and API-def fallback**. See §6 Quality. Regressing these is a release-blocker.
 8. **Public metadata is part of the conformance package**. CTL, `src/main/config/teamengine/config.xml`, site AsciiDoc, Javadoc overview, README, and sample test-run-props files must describe the actual OGC API Connected Systems Part 1/Part 2 partial coverage, TeamEngine 6 status, local OSH primary E2E target, and real run arguments. Archetype placeholders such as XML examples, Class A/Class B, WCAG/XML citations, or W3Schools default IUTs are not acceptable in a CITE-facing package.
@@ -312,7 +310,7 @@ The Generator (Dana) MUST respect these or CITE SC review will reject the ETS:
 | **Sprint 1 (current)** | S-ETS-01-01, -02, -03 | Archetype scaffold + JDK 17 modernized + Core suite + TeamEngine Docker smoke green vs GeoRobotix |
 | Sprint 2 | TBD per Pat | 2-3 of the remaining 13 Part 1 classes (likely `common`, `system-features`, `subsystems` — top of the dependency DAG) |
 | Sprints 3-6 | TBD | Remaining Part 1 classes; spec-trap fixture port (epic-ets-06 in parallel) |
-| Sprint 7 | TBD | URI-coverage diff CI (REQ-ETS-SYNC-001); README repositions; v1.0-frozen tag |
+| Sprint 7 | TBD | URI-coverage local audit (REQ-ETS-SYNC-001); README repositions; v1.0-frozen tag |
 | Sprint 8+ | TBD | Part 2 conformance classes (per OGC 23-002) |
 | Beta milestone (calendar) | non-sprint | Maven Central publish; outreach; CITE SC ticket |
 
@@ -388,7 +386,7 @@ Cross-references **§14.5 CredentialMaskingFilter** (Sprint 2; design.md §"Cred
 
 - **Worktree-pollution constraint**: ALL Sprint 3 work (Generator + Quinn + Raze) operates against `/tmp/` clones or archived artifacts; NEVER against `~/docker/gir/ets-ogcapi-connectedsystems10/`. Sprint 2 SystemFeatures gate-run polluted that worktree; Sprint 3 contract embeds this constraint at `worktree_pollution_constraint`.
 - **ADR cardinality**: 10 ADRs is approaching the threshold where an `_bmad/adrs/INDEX.md` navigation aid would help (Pat surfaced this risk). Architect defers the index to Sprint 4 — ADR-010 is not yet over the threshold (10 vs Pat's hypothetical 11+ trigger).
-- **Generator batching guidance**: Pat suggested 2-3 sub-agent runs (cleanup batch -01..04+06 + SystemFeatures expansion -05 + Common -07). Architect concurs; recommends specifically: **Run 1** = doc-only -06 + dependency-skip -01 (both have no Java code conflicts; -06 is fast warmup); **Run 2** = -02 + -03 + -04 (security/CI/Dockerfile triad — share Dockerfile/CI context); **Run 3** = -05 + -07 (new conformance class work + SystemFeatures expansion — share testng.xml + listener context). This sequencing aligns with the file-touch graph and minimizes Generator context switching.
+- **Historical Generator batching guidance**: Sprint 3 grouped security, the then-proposed CI path, and Dockerfile work. CP-003/ADR-012 retires the CI portion; this note is chronology only.
 
 ## 16. Architecture v2.0.3 — Sprint 4 ratifications (2026-04-29)
 
@@ -417,7 +415,7 @@ Cross-references **§14.6 SystemFeatures conformance class scope** (Sprint 2). A
 ### 16.6 Architecture-level guidance for Generator (Sprint 4)
 
 - **Worktree-pollution constraint** (preserved from §15.5): ALL Sprint 4 work (Generator + Quinn + Raze) operates against `/tmp/` clones or archived artifacts; NEVER against `~/docker/gir/ets-ogcapi-connectedsystems10/`.
-- **Generator sequencing** (per Pat's `deferred_to_generator`): S-ETS-04-04 (sabotage-script bugs; mechanical; prerequisite for S-ETS-04-03) → S-ETS-04-01 (CI workflow git mv if user-action complete; else immediate formal-drop) → S-ETS-04-03 (credential-leak E2E using fixed sabotage-script + new stub-IUT primitive) → S-ETS-04-02 (chown-layer attack; touches Dockerfile; sequence after Java + script work to preserve smoke baseline) → S-ETS-04-05 (Subsystems new feature; new conformance class + two-level dependency wiring + cascade verification).
+- **Historical Generator sequencing**: Sprint 4 included a proposed CI activation step. CP-003/ADR-012 permanently retire that step; the remaining security, Docker, and conformance work is unaffected.
 - **ADR cardinality**: 10 ADRs at Sprint 3 close; Sprint 4 adds 0 new ADRs (in-place v2 amendments to ADR-009 + ADR-010 per Architect ratification). Pat's hypothetical `_bmad/adrs/INDEX.md` trigger remains 11+ ADRs; defer to Sprint 5+.
 - **Two-level cascade verification is BLOCKING** for S-ETS-04-05 close. If TestNG `<group depends-on>` cascade does NOT work, Generator MUST activate the `@BeforeSuite` fallback (no Architect re-cycle required; pattern is pre-ratified per §16.2). Document the resolution path in S-ETS-04-05 Implementation Notes.
 - **Stub-IUT script reuse**: `scripts/stub-iut.sh` is a NEW shared primitive serving BOTH S-ETS-04-03 (credential-leak; echoes Authorization header) AND potentially S-ETS-04-05 sub-tests if GeoRobotix returns 404 on `/systems/{id}/subsystems` (synthetic Subsystems response for assertion verification — defer this extension to Sprint 5+ unless GeoRobotix 404 surfaces in Generator curl-verification).
@@ -483,7 +481,7 @@ These surfaces must describe the actual OGC API Connected Systems ETS: partial O
 
 ### 20.4 Sprint 41 implementation status gate
 
-Documentation cleanup and metadata alignment were necessary but insufficient at the 2026-07-21 readiness checkpoint. The 2026-07-22 local OSH TeamEngine 6 run supplied the missing E2E evidence (`211/69/0/142`, zero writes, zero startup errors). A later final Raze review reopened Sprint 41 because the first candidate added a duplicate TeamEngine resources coordinate family. Versions 2.0.12 through 2.0.15 remove that family and close the generic inventory, resource isolation, release-CI, and exact multi-tuple findings. Version 2.0.16 records final Raze `APPROVE` at `0.99` confidence and Sprint 41 completion.
+Documentation cleanup and metadata alignment were necessary but insufficient at the 2026-07-21 readiness checkpoint. The 2026-07-22 local OSH TeamEngine 6 run supplied the missing E2E evidence (`211/69/0/142`, zero writes, zero startup errors). A later final Raze review reopened Sprint 41 because the first candidate added a duplicate TeamEngine resources coordinate family. Versions 2.0.12 through 2.0.15 remove that family and close the generic inventory, resource isolation, inert OGC release-definition, and exact multi-tuple findings. Version 2.0.16 records final Raze `APPROVE` at `0.99` confidence and Sprint 41 completion.
 
 ### 20.5 Generator constraints from Raze findings
 
@@ -508,7 +506,7 @@ version 2.0.10 reconciles the first SWE Common adapter implementation; version
 2.0.11 records the first primary local OSH E2E run; version 2.0.12 records the
 duplicate-family gapfix; version 2.0.13 records the generic jar-guard gapfix;
 version 2.0.14 records the first metadata gapfix; version 2.0.15 closes its
-release-CI and executable multi-tuple findings; version 2.0.16 records final
+inert OGC release-definition and executable multi-tuple findings; version 2.0.16 records final
 Raze approval and story closure.
 
 ### 21.1 Upstream state

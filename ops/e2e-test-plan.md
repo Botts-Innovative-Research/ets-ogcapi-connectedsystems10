@@ -1,10 +1,16 @@
 # E2E Test Plan — OGC API Connected Systems ETS
 
-Last updated: 2026-07-21T13:05Z
+Last updated: 2026-07-23T04:38Z
 
 ## Policy
 
 Every user-directed ETS change must be verified end-to-end before reporting done. For this Java/TestNG TeamEngine ETS, E2E means running the deployed TeamEngine suite against a real IUT with real HTTP protocol exchanges.
+
+OSH and TeamEngine source code and binaries are immutable external dependencies
+for this project. E2E setup may use supported configuration and test-data
+interfaces, but it must not patch either product. Gate evidence must identify the
+TeamEngine base image and confirm the local OSH checkout/runtime has no
+project-authored source or binary changes.
 
 ## Primary E2E Command
 
@@ -31,6 +37,7 @@ docker run --privileged --rm tonistiigi/binfmt --install amd64
 ## Accepted IUT Targets
 
 - **Primary development target**: A self-run local OSH instance is the default sprint E2E IUT when it is a real running OGC API Connected Systems server, TeamEngine reaches it over Docker networking, seed state and credentials handling are documented, XML/log artifacts are archived, and exact totals are recorded.
+- **External dependency provenance**: Confirm the OSH checkout has no local commits ahead of upstream and its deployed ConSys jar identifies that checkout. Confirm TeamEngine base-file immutability through `scripts/verify-teamengine6-runtime.sh`.
 - **GeoRobotix public instance**: GeoRobotix is no longer a default or required development target. It may be run only as an explicit advisory interoperability probe when useful, and failures must not block local-OSH-backed development work.
 - **Credential handling**: Do not record credential values. Supply local OSH credentials through the environment, typically `SMOKE_AUTH_CREDENTIAL="Basic <base64>"`, derived from the local stack config or a secret store.
 - **Seed-state requirement**: For Part 2 dynamic-data work, record whether local OSH has candidate DataStreams, Observations, ControlStreams, Commands, CommandStatus, CommandResult, and SystemEvents. Empty collections are acceptable planning evidence but cannot be counted as positive conformance closure.

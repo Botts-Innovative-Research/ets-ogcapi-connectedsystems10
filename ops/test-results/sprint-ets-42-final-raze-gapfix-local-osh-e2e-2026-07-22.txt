@@ -1,0 +1,18 @@
+[smoke-test 11:26:03] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 11:26:03] step 2/8 — docker build ets-ogcapi-connectedsystems10:sprint42-final-raze-gapfix-e2e (BuildKit 1)
+[smoke-test 11:26:31]   FINAL_IMAGE_ID=sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9
+[smoke-test 11:26:31] step 3/8 — docker run on host port 8081
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+[smoke-test 11:26:31] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 11:30:13]   healthcheck PASS at 11:30:13
+[smoke-test 11:30:13] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 11:30:17]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'OGC API - Connected Systems 1.0 Conformance Test Suite')
+[smoke-test 11:30:17] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=http://field-hub-osh-1:8081/sensorhub/api
+[smoke-test 11:31:15] step 7/8 — validating TestNG report → /tmp/ets-s42-final-raze.vvjqOqvR/results/s-ets-01-03-teamengine-smoke-2026-07-22.xml
+[smoke-test 11:31:15]   TestNG: total=211 passed=69 failed=0 skipped=142
+[smoke-test 11:31:15]   zero IUT-bound POST/PUT/DELETE/PATCH request-log entries for http://field-hub-osh-1:8081/sensorhub/api (recognized_iut_request_logs=135)
+[smoke-test 11:31:15] step 8/8 — scanning container startup log for ERROR/SEVERE
+[smoke-test 11:31:15]   zero startup ERROR/SEVERE
+[smoke-test 11:31:15] SMOKE PASS: total=211 passed=69 failed=0 skipped=142 on http://field-hub-osh-1:8081/sensorhub/api via TeamEngine
+[smoke-test 11:31:15]   report: /tmp/ets-s42-final-raze.vvjqOqvR/results/s-ets-01-03-teamengine-smoke-2026-07-22.xml
+[smoke-test 11:31:15]   log:    /tmp/ets-s42-final-raze.vvjqOqvR/results/s-ets-01-03-teamengine-container-2026-07-22.log

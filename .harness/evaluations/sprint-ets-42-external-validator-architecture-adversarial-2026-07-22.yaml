@@ -1,0 +1,51 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+reviewer: Red Team / Raze
+window_utc:
+  start: "2026-07-22T04:36:40Z"
+  end: "2026-07-22T04:37:55Z"
+files_edited_by_reviewer: false
+
+reviewed_scope:
+  - ops/test-results/external-validator-library-research-2026-07-22.md
+  - epics/stories/s-ets-42-01-external-domain-validator-architecture.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+  - _bmad/architecture.md
+  - _bmad/traceability.md
+  - epics/epic-ets-02-part1-classes.md
+  - epics/epic-ets-03-part2-classes.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/test-results.md
+
+commands_run:
+  - 'date -u +"%Y-%m-%dT%H:%M:%SZ"'
+  - "git status --short"
+  - "git diff --name-only -- <scoped files>"
+  - 'rg -n "S-ETS-42|external.*validator|swecommon30|sensorml30|SensorML library|SWE Common" <scoped files>'
+  - "git diff --check -- <scoped files>"
+
+maven_teamengine_rerun_expected: false
+maven_teamengine_rerun_reason: "No product-code, POM, Docker image, or runtime behavior change is claimed by S-ETS-42-01. Scoped docs explicitly mark this as planning/static documentation only."
+
+findings:
+  - id: RAZE-S42-001
+    severity: LOW
+    title: NetworkNT public API coupling should stay visible in the future implementation story
+    evidence:
+      - "ops/test-results/external-validator-library-research-2026-07-22.md records that SweCommonJsonSchemaValidator returns Set<ValidationMessage>."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md requires duplicate class-family/runtime-closure controls."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md requires adapter parity and runtime verifier expansion."
+    assessment: "The risk is acknowledged well enough for a documentation-only architecture story. Future implementation must ensure com.networknt.schema.ValidationMessage does not leak past the adapter boundary or collide with the current shaded/relocated NetworkNT strategy."
+    required: false
+
+evidence:
+  false_claims: "No blocking false claims found. Docs consistently state SWE Common has a plausible reusable validator module but no Maven Central artifact, and SensorML has no public FCU-GIS-Luke validator module."
+  spec_story_traceability: "Aligned: story scenarios match REQ-ETS-VALIDATOR-001 scenarios; traceability row maps S-ETS-42-01 to Part 1 SensorML and Part 2 SWE requirements."
+  upstream_ets_jar_boundary: "Correct: docs explicitly reject importing ets-swecommon30 or ets-sensorml30 as reusable libraries."
+  sensorml_honesty: "Correct: docs state FCU-GIS-Luke work may exist privately/unpublished, but no public module was found."
+  e2e_honesty: "Correct: ops/test-results.md says static documentation checks only and defers Maven/runtime/E2E gates to future dependency implementation."
+  whitespace_check: "git diff --check passed for scoped files."
+
+required_fixes: []

@@ -2,7 +2,7 @@ pipeline {
   agent any
   tools {
     maven 'mvn'
-    jdk 'JDK 8'
+    jdk 'JDK 17'
   }
   stages {
     stage('Preparation') {
@@ -14,8 +14,9 @@ pipeline {
     stage('Release') {
       steps{
         sh 'mvn --version'
-        sh 'mvn -Dresume=false -DdryRun=true release:prepare -Psign-artifacts-with-ogc,integration-tests,docker -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion}'
-        sh 'mvn -Dresume=false release:prepare release:perform -Psign-artifacts-with-ogc,integration-tests,docker -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion}'
+        sh 'bash scripts/bootstrap-swecommon30-validator.sh'
+        sh 'mvn -Dresume=false -DdryRun=true release:prepare -Prelease,integration-tests -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion}'
+        sh 'mvn -Dresume=false release:prepare release:perform -Prelease,integration-tests -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion}'
       }
     }
     stage('Publication of site') {

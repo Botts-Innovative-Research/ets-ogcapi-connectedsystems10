@@ -1,0 +1,75 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+reviewed_scope:
+  role: "Red Team / Raze focused recheck"
+  request: "Recheck RAZE-S41-READINESS-002 through RAZE-S41-READINESS-005 after main-agent documentation patches, and confirm RAZE-S41-READINESS-001 remains an expected infrastructure blocker."
+  constraints:
+    - "Static/artifact inspection only."
+    - "Did not rerun Maven, Docker, TeamEngine, or smoke tests."
+    - "Changed only this recheck report file."
+  source_report: ".harness/evaluations/sprint-ets-41-readiness-adversarial-2026-07-21.yaml"
+  files_reviewed:
+    - "ops/server.md"
+    - "_bmad/architecture.md"
+    - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "ops/test-results/sprint-ets-41-readiness-field-hub-absence-2026-07-21.txt"
+finding_status:
+  RAZE-S41-READINESS-001:
+    status: open_expected_infrastructure_blocker
+    severity: high
+    result: "confirmed"
+    evidence:
+      - "ops/test-results/sprint-ets-41-readiness-field-hub-absence-2026-07-21.txt:3-11 records path_exists=false and no field-hub Docker network/container/image/volume."
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:58 keeps the primary local OSH E2E acceptance criterion unchecked."
+      - ".harness/handoffs/generator-handoff.yaml:23 records local_osh_e2e as BLOCKED_AFTER_RUNTIME_RECOVERY."
+    required_fix: "Restore or replace the real field-hub local OSH stack, credential source, Docker network/container/state, and rerun primary local OSH TeamEngine 6 E2E before Sprint 41 completion."
+  RAZE-S41-READINESS-002:
+    status: closed
+    severity: medium
+    result: "fixed"
+    evidence:
+      - "ops/server.md:256-260 states the historical path and field-hub_default network are absent in this checkout and that following commands are conditional restore-time guidance, not current daemon state."
+      - "ops/server.md:262-280 consistently qualifies container, network, proxyBaseUrl, and fixtures with 'When restored'."
+      - "ops/server.md:289-302 requires running only after restoring field-hub and requires SMOKE_AUTH_CREDENTIAL from the restored config or a user-provided secret without recording the value."
+    required_fix: null
+  RAZE-S41-READINESS-003:
+    status: closed
+    severity: low
+    result: "fixed"
+    evidence:
+      - "_bmad/architecture.md:42 states Maven, image-build, runtime-verifier, Compose health, and suite-registration evidence are archived, while full local OSH E2E remains open."
+      - "_bmad/architecture.md:440 qualifies the old planning sentence as 2026-07-20 planning context and states the 2026-07-21 readiness pass archives non-IUT gates."
+      - "_bmad/architecture.md:477-493 records the current Sprint 41 status gate and v2.0.8 reconciliation."
+    required_fix: null
+  RAZE-S41-READINESS-004:
+    status: closed
+    severity: low
+    result: "fixed"
+    evidence:
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:56 points latest Docker Maven evidence to ops/test-results/sprint-ets-41-readiness-maven-2026-07-21.txt."
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:56 labels ops/test-results/sprint-ets-41-policy-guidance-maven-2026-07-21.txt as the earlier post-policy artifact."
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:99-101 separately records earlier post-policy and readiness Maven artifacts."
+    required_fix: null
+  RAZE-S41-READINESS-005:
+    status: closed
+    severity: low
+    result: "fixed"
+    evidence:
+      - ".harness/handoffs/generator-handoff.yaml:1-23 adds the 13:05Z readiness handoff with full Maven PASS and local OSH blocked after runtime recovery."
+      - ".harness/handoffs/generator-handoff.yaml:40-57 marks the older 05:35Z block as SUPERSEDED_BY_2026_07_21_1305_READINESS_HANDOFF and changes final_maven to SUPERSEDED_PASS."
+      - ".harness/handoffs/generator-handoff.yaml:60-64 keeps next actions/cautions aligned with the remaining local OSH E2E gate."
+    required_fix: null
+evidence:
+  positive_findings:
+    - "The main-agent patches resolved the four requested documentation/handoff consistency gaps."
+    - "The rechecked files do not claim Sprint 41 complete."
+    - "The remaining open item is accurately scoped as infrastructure restoration plus primary local OSH TeamEngine 6 E2E evidence."
+  residual_risks:
+    - "Sprint 41 remains incomplete until primary local OSH TeamEngine 6 E2E exact totals and no-mutation evidence are archived."
+    - "The restored field-hub credential value must be supplied through environment/config at run time and must not be written to artifacts."
+required_fixes:
+  before_sprint_41_completion:
+    - "Close RAZE-S41-READINESS-001 by restoring/replacing the real local OSH field-hub stack and rerunning the primary local OSH TeamEngine 6 E2E with archived exact totals and no-mutation evidence."
+  documentation_or_handoff:
+    - "None for RAZE-S41-READINESS-002 through RAZE-S41-READINESS-005."

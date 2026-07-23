@@ -1,0 +1,111 @@
+verdict: GAPS_FOUND
+confidence: 0.88
+reviewed_scope:
+  role: "Red Team / Raze adversarial reviewer"
+  request: "Static review of current uncommitted Sprint 41 readiness reconciliation after amd64 binfmt registration."
+  constraints:
+    - "Changed only this evaluation report."
+    - "Did not rerun Maven, Docker, TeamEngine, or smoke tests; relied on archived artifacts and static inspection."
+    - "Treated existing uncommitted product/docs edits as owned by others."
+  docs_reviewed:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md"
+    - "_bmad/architecture.md"
+    - "_bmad/traceability.md"
+    - "epics/epic-ets-04-teamengine-integration.md"
+    - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md"
+    - ".harness/contracts/sprint-ets-41.yaml"
+    - ".harness/handoffs/architect-handoff.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+    - "ops/server.md"
+    - "ops/e2e-test-plan.md"
+    - "README.adoc"
+    - "src/site/asciidoc/how-to-run-the-tests.adoc"
+  evidence_artifacts_reviewed:
+    - "ops/test-results/sprint-ets-41-readiness-focused-packaging-2026-07-21.txt"
+    - "ops/test-results/sprint-ets-41-readiness-maven-2026-07-21.txt"
+    - "ops/test-results/sprint-ets-41-readiness-docker-build-2026-07-21.txt"
+    - "ops/test-results/sprint-ets-41-readiness-runtime-verifier-2026-07-21.txt"
+    - "ops/test-results/sprint-ets-41-readiness-compose-2026-07-21.txt"
+    - "ops/test-results/sprint-ets-41-readiness-local-osh-e2e-2026-07-21.txt"
+    - "ops/test-results/sprint-ets-41-readiness-georobotix-smoke-2026-07-21.xml"
+    - "ops/test-results/sprint-ets-41-readiness-georobotix-container-2026-07-21.log"
+    - "ops/test-results/sprint-ets-41-readiness-georobotix-no-mutation-2026-07-21.txt"
+    - "ops/test-results/sprint-ets-41-readiness-georobotix-write-counts-2026-07-21.txt"
+findings:
+  - id: RAZE-S41-READINESS-001
+    severity: high
+    title: "Primary local OSH TeamEngine 6 E2E remains unclosed"
+    status: open_expected_blocker
+    evidence:
+      - "ops/test-results/sprint-ets-41-readiness-local-osh-e2e-2026-07-21.txt records docker networking failure: network field-hub_default not found."
+      - "ops/status.md, ops/test-results.md, _bmad/traceability.md, the story, and sprint contract correctly keep Sprint 41 incomplete."
+      - "No current artifact contains primary local OSH TestNG totals or local-OSH no-mutation evidence for Sprint 41."
+    impact: "Sprint 41 cannot be closed or represented as ready-for-release conformance proof until a real local OSH IUT run completes through TeamEngine 6."
+    required_fix: "Restore or replace the real field-hub OSH stack, network, container, seed state, and credential source; rerun scripts/smoke-test.sh from a clean /tmp clone with output outside the worktree; archive exact TestNG totals and no-mutation evidence."
+  - id: RAZE-S41-READINESS-002
+    severity: medium
+    title: "ops/server.md mixes absent field-hub status with active-looking restored-stack instructions"
+    status: open_doc_consistency_gap
+    evidence:
+      - "ops/server.md states the historical field-hub path and field-hub_default network were absent on 2026-07-21 and must be restored before claiming primary local OSH E2E."
+      - "The same section then states 'The OSH service container is field-hub-osh-1' and gives runnable full-health commands, which can be read as current-state guidance rather than restore-time guidance."
+    impact: "A future operator may misread the runbook and assume the local OSH container/credentials already exist, repeating the blocked smoke attempt."
+    required_fix: "Rewrite the post-absence local OSH section as conditional restore guidance, for example 'When restored, the expected service container is ...', and identify the credential source or explicitly require user-provided credentials."
+  - id: RAZE-S41-READINESS-003
+    severity: low
+    title: "Architecture still has a historical PLANNED sentence that names already-archived runtime gates"
+    status: open_editorial_consistency_gap
+    evidence:
+      - "_bmad/architecture.md v2.0.8 top matter and sections 2/20.4 correctly say Maven, image build, runtime verifier, Compose health, and suite registration are archived while local OSH E2E remains incomplete."
+      - "_bmad/architecture.md section 19 still says the migration remains PLANNED until Maven verification, image build, filesystem checks, startup, health, SPI/CTL registration, linkage inspection, and full local OSH execution are archived."
+    impact: "This is an underclaim, not an overclaim, but it creates ambiguity about which TeamEngine 6 gates remain open."
+    required_fix: "Qualify the section 19 sentence as 2026-07-20 planning context or update it to say the non-IUT runtime gates are archived and only primary local OSH E2E remains."
+  - id: RAZE-S41-READINESS-004
+    severity: low
+    title: "Story labels the earlier policy-guidance Maven artifact as Final while later readiness Maven supersedes it"
+    status: open_editorial_consistency_gap
+    evidence:
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md acceptance criterion 56 says 'Final Docker Maven verification' and points at sprint-ets-41-policy-guidance-maven-2026-07-21.txt."
+      - "The same story later records the readiness Maven artifact sprint-ets-41-readiness-maven-2026-07-21.txt with the same 303/0/0/3 totals."
+      - "ops/test-results.md correctly names the readiness artifact as the current latest artifact."
+    impact: "No false pass is created, but the duplicate 'final' label weakens traceability to the actual latest gate evidence."
+    required_fix: "Change the story acceptance criterion to point at the readiness Maven artifact as latest, or label the policy-guidance artifact as earlier post-policy evidence."
+  - id: RAZE-S41-READINESS-005
+    severity: low
+    title: "Older retained generator handoff block still says final Maven was not run"
+    status: open_handoff_staleness
+    evidence:
+      - ".harness/handoffs/generator-handoff.yaml starts with a 13:05Z block that correctly records full Maven PASS 303/0/0/3 and local OSH blocked."
+      - "A lower retained 05:35Z block still has final_maven: NOT_RUN_INFRASTRUCTURE and next action 'Run final Maven...'."
+    impact: "The latest block is first and correct, so this is not a current overclaim. It can still mislead context-reset agents that scan older blocks."
+    required_fix: "Mark the older block as superseded by the 13:05Z readiness handoff, or update its final_maven note to point to the later readiness artifact."
+evidence:
+  positive_findings:
+    - "Docs reviewed do not claim Sprint 41 complete; they keep primary local OSH E2E blocked."
+    - "Maven readiness artifact records BUILD SUCCESS with 303 tests, 0 failures, 0 errors, and 3 skipped."
+    - "Focused packaging artifact records 9 tests, 0 failures, 0 errors, and 0 skipped."
+    - "Docker build artifact records successful build of ets-ogcapi-connectedsystems10:sprint41 from the pinned TeamEngine 6 digest."
+    - "Runtime verifier artifact records PASS for TeamEngine 6 provenance, base-file immutability, runtime invariants, and confidential history/context hygiene."
+    - "Compose artifact records health=healthy and PASS for TeamEngine health plus suite metadata."
+    - "Advisory GeoRobotix TestNG XML records 211 total, 38 passed, 34 failed, 139 skipped."
+    - "GeoRobotix no-mutation artifacts record recognized_iut_request_logs=272 and POST=0, PUT=0, PATCH=0, DELETE=0."
+    - "Static public-surface scans found no current iut-url, auth-type, ics, Class A/Class B, W3Schools, Part 1-only, Fabric8 docker profile, or docker.teamengine.version exposure on governed build/docs surfaces."
+    - "Credential scan of reviewed readiness artifacts found no Authorization, Bearer, Basic credential, cookie, API key, or SMOKE_AUTH_CREDENTIAL value leak."
+  notable_risks:
+    - "The linux/amd64 TeamEngine digest still requires amd64 binfmt support on linux/arm64 Docker hosts; docs now mention this, and artifacts show warnings but successful runtime after registration."
+    - "GeoRobotix is useful only as advisory interoperability evidence here; it failed against the public IUT and must not substitute for the primary local OSH gate."
+required_fixes:
+  before_sprint_41_completion:
+    - "Close RAZE-S41-READINESS-001 with a real primary local OSH TeamEngine 6 smoke run and archived exact totals/no-mutation evidence."
+  before_clean_reconciliation_claim:
+    - "Resolve RAZE-S41-READINESS-002 in ops/server.md."
+    - "Resolve RAZE-S41-READINESS-003 in _bmad/architecture.md."
+    - "Resolve RAZE-S41-READINESS-004 in the Sprint 41 story."
+    - "Resolve or clearly supersede RAZE-S41-READINESS-005 in generator-handoff.yaml."
+non_blocking_notes:
+  - "No product or documentation files were changed by this Raze pass."
+  - "This review used artifact/static inspection only, per instruction."

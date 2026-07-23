@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.1 | Status: Active ETS implementation | Last updated: 2026-07-20
+> Version: 1.1 | Status: Active ETS implementation | Last updated: 2026-07-22
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -11,7 +11,7 @@
 
 ## Purpose
 
-This capability defines an OGC-compliant Executable Test Suite (ETS) for the OGC API – Connected Systems standard. The ETS is generated from `org.opengis.cite:ets-archetype-testng:2.7`, has a verified TeamEngine 5.6.1 baseline, and is partially implementing migration to an immutable OGC-published TeamEngine 6.0.0 runtime under CP-001 and Sprint 41. Maven, image build, startup, and registration are verified; real local OSH execution remains blocked. It produces a per-conformance-class pass/fail/skip verdict against an Implementation Under Test (IUT) supplied as a CS API landing-page URL. The deliverable maps to PRD v2.0 functional requirements FR-ETS-01 through FR-ETS-90.
+This capability defines an OGC-compliant Executable Test Suite (ETS) for the OGC API – Connected Systems standard. The ETS is generated from `org.opengis.cite:ets-archetype-testng:2.7`, retains TeamEngine 5.6.1 as verified historical baseline evidence, and uses the immutable OGC-published TeamEngine 6.0.0 runtime implemented under CP-001 and Sprint 41. Maven, image build, startup, registration, exact-image runtime checks, and real local OSH execution are verified. It produces a per-conformance-class pass/fail/skip verdict against an Implementation Under Test (IUT) supplied as a CS API landing-page URL. The deliverable maps to PRD v2.0 functional requirements FR-ETS-01 through FR-ETS-90.
 
 This capability does NOT define web-app endpoints, UI components, REST APIs, or session management — those concerns are owned by TeamEngine and superseded by the v1.0 web-app freeze.
 
@@ -1053,54 +1053,153 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **THEN** mutation requires explicit dedicated-mutable-IUT opt-in and cleanup documentation
 **AND** read-only planning smoke records zero IUT-bound POST, PUT, PATCH, or DELETE request lines.
 
+### Cross-deliverable domain validator dependencies
+
+#### REQ-ETS-VALIDATOR-001: External SWE Common and SensorML Validator Integration
+- **Priority**: MUST before full SWE Common or SensorML validation closure.
+- **Status**: PARTIALLY_IMPLEMENTED overall; the SWE Common increment is IMPLEMENTED and SensorML is deferred. Both Jenkinsfiles pass Java 17/bootstrap/declared-profile coverage; exact multi-tuple self-test assertions pass; fresh Maven `312/0/0/3`, runtime verification, and local OSH E2E pass on image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9`; final Raze approved at `0.99` confidence with no required actions.
+- **Description**: The ETS SHALL prefer reusable OGC-owned SWE Common 3.0 and SensorML 3.0 validator modules over long-term homegrown domain-schema validation when those modules are available as reproducible artifacts or source-pinned prebuilds. External validators SHALL be consumed through a thin Connected Systems adapter layer. The adapter MAY delegate pure domain schema validation, but this ETS SHALL retain CS API endpoint discovery, candidate selection, `/conformance` and prerequisite gating, exact media-type evidence, Connected Systems-specific mapping assertions, TestNG pass/fail/skip policy, no-mutation safety, TeamEngine report integration, and TeamEngine 6 runtime packaging discipline.
+- **Upstream state on 2026-07-22**: `opengeospatial/ets-swecommon30` PR 10 exposes `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT` on branch `issue-9-swecommon-validation-module` at commit `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`, but the artifact is not published to Maven Central. No public SensorML validator module attributable to `FCU-GIS-Luke` was found; `opengeospatial/ets-sensorml30` is a public ETS scaffold at commit `d2b2a6308fdf48f113f7c7faed6712dc05e33130`, not a reusable validator dependency.
+- **Replacement boundary**: The first SWE implementation SHALL retain local Connected Systems wrapper-schema validation, extract each validated `recordSchema`, and pass that pure SWE component to `swecommon30-validator` through the adapter. Local format, encoding, media-type, mapping, binding, and PASS/SKIP assertions remain authoritative during this dual-validation stage. Local SWE validation SHALL be removed only after the external validator alone proves parity and supports required format assertions plus JSON, Text, and Binary encoding schemas. Future SensorML implementation SHALL replace minimal `SensorMlTests` shape checks with full SensorML 3.0 validation only after a reusable SensorML validator module is visible. The ETS SHALL NOT depend directly on another TeamEngine ETS jar such as `ets-swecommon30` or `ets-sensorml30` to obtain domain validation.
+- **Rationale**: Reusing OGC-owned domain validators reduces duplicated schema logic and keeps SWE Common/SensorML semantics aligned across CITE suites, but importing another suite or unreviewed dependency closure could reintroduce TeamEngine classloader failures and false PASS behavior.
+- **Maps to**: PRD FR-ETS-23, FR-ETS-40, FR-ETS-41, FR-ETS-42, FR-ETS-54, NFR-ETS-11.
+
+#### SCENARIO-ETS-VALIDATOR-EXTERNAL-LIBRARY-BOUNDARY-001 (CRITICAL)
+**GIVEN** a reusable SWE Common or SensorML validator module is added to the ETS
+**WHEN** the adapter invokes the external validator
+**THEN** the external module validates only domain schema semantics
+**AND** the Connected Systems ETS retains endpoint discovery, candidate selection, conformance gating, exact media-type checks, TestNG skip/fail/report behavior, no-mutation safety, and TeamEngine packaging decisions.
+
+#### SCENARIO-ETS-VALIDATOR-SWE-COMMON-ADAPTER-001 (CRITICAL)
+**GIVEN** `org.opengis.cite:swecommon30-validator` is available as a reproducible artifact or source-pinned prebuild
+**WHEN** the ETS first integrates SWE Common component validation
+**THEN** a local adapter delegates extracted `recordSchema` objects to the upstream `sweCommon.json` schema
+**AND** it converts upstream validation messages into ETS-owned diagnostics consumed by failures citing the active OGC 23-002 requirement URI
+**AND** existing SWE JSON/Text/Binary tests preserve their current PASS/SKIP behavior until a later story explicitly changes it with tests and E2E evidence.
+
+#### SCENARIO-ETS-VALIDATOR-SOURCE-PIN-001 (CRITICAL)
+**GIVEN** `swecommon30-validator` is not published to an accepted Maven repository
+**WHEN** the ETS build prepares the provisional dependency
+**THEN** it fetches `opengeospatial/ets-swecommon30` at exactly `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`, verifies the checkout SHA, and builds only the parent plus `swecommon30-validator`
+**AND** the build fails closed on a different commit or unavailable source
+**AND** it does not build, import, or package the upstream `ets-swecommon30` suite module
+**AND** every supported Docker, CI, and developer Maven path bootstraps the pinned artifact before resolving the Connected Systems project
+**AND** supported Jenkins and GitHub Actions build definitions use the project Java 17 toolchain
+**AND** release publication remains blocked until an accepted repository provides a non-SNAPSHOT reusable validator artifact.
+
+#### SCENARIO-ETS-VALIDATOR-SWE-COMMON-DUAL-VALIDATION-001 (CRITICAL)
+**GIVEN** a Connected Systems Observation or Command schema wrapper contains `recordSchema`, format metadata, and `encoding`
+**WHEN** a Part 2 SWE Common JSON, Text, or Binary schema assertion runs
+**THEN** the local Connected Systems schema validator first validates the complete wrapper
+**AND** the adapter independently validates the extracted `recordSchema` against upstream `sweCommon.json`
+**AND** local exact media-type, encoding, canonical Time/IssueTime mapping, binding, and PASS/SKIP behavior remains unchanged.
+
+#### SCENARIO-ETS-VALIDATOR-SWE-COMMON-PARITY-CORPUS-001 (CRITICAL)
+**GIVEN** complete Observation and Command schema wrappers for SWE Common JSON, Text, and Binary encodings
+**WHEN** the provisional dual-validation implementation is verified
+**THEN** all six wrappers pass the local Connected Systems wrapper schema and the extracted `recordSchema` passes the reusable validator
+**AND** reusable-validator conformance failures cite the active OGC 23-002 requirement URI
+**AND** reusable-validator resource or configuration failures propagate as suite errors rather than conformance failures.
+
+#### SCENARIO-ETS-VALIDATOR-SWE-COMMON-UPSTREAM-LIMITS-001 (CRITICAL)
+**GIVEN** the current upstream validator API does not enable Draft 2020-12 format assertions and the root of `encodings.json` omits `BinaryEncoding`
+**WHEN** the first adapter implementation is released
+**THEN** local wrapper, format, and encoding validation remains in place
+**AND** no bundled SWE validation resource is removed until the external validator alone passes the agreed valid/invalid parity corpus and covers JSON, Text, and Binary encodings.
+
+#### SCENARIO-ETS-VALIDATOR-DIAGNOSTICS-BOUNDARY-001 (CRITICAL)
+**GIVEN** the external validator returns NetworkNT `ValidationMessage` values or encounters an internal resource/configuration error
+**WHEN** the adapter handles the result
+**THEN** conformance violations become deterministic ETS-owned string diagnostics
+**AND** NetworkNT runtime types do not escape the adapter API
+**AND** missing schemas or validator configuration failures remain suite errors rather than being misreported as IUT conformance failures.
+
+#### SCENARIO-ETS-VALIDATOR-SENSORML-DISCOVERY-001 (CRITICAL)
+**GIVEN** the user expects a SensorML validator library from FCU-GIS-Luke
+**WHEN** no public reusable SensorML validator module, branch, artifact coordinate, or API is discoverable
+**THEN** the ETS records the dependency as provisional and asks FCU/OGC for the exact source
+**AND** it SHALL NOT import `opengeospatial/ets-sensorml30` directly as a dependency while that project remains a TeamEngine ETS scaffold rather than a reusable validator module.
+
+#### SCENARIO-ETS-VALIDATOR-HOMEGROWN-REPLACEMENT-001 (NORMAL)
+**GIVEN** the ETS has local SWE Common schema helpers and minimal SensorML shape checks
+**WHEN** an upstream reusable validator reaches the dependency boundary
+**THEN** homegrown validation is replaced incrementally behind adapters with parity tests against valid and invalid fixtures
+**AND** Connected Systems mapping assertions, relation-type checks, media-type write gates, and Observation/Command parent-child binding evidence remain local to this ETS.
+
+#### SCENARIO-ETS-VALIDATOR-RUNTIME-CLOSURE-001 (CRITICAL)
+**GIVEN** an external validator introduces NetworkNT, ITU, Jackson, SLF4J, Jakarta, TestNG, or TeamEngine-related transitive dependencies
+**WHEN** the TeamEngine 6 Docker image is built
+**THEN** dependency management, exclusions, or shading SHALL prevent duplicate class families and split-version classloader behavior
+**AND** local adapter APIs SHALL convert external validator results into ETS-owned diagnostics instead of exposing NetworkNT `ValidationMessage` or other upstream runtime types beyond the adapter boundary
+**AND** the runtime verifier SHALL prove the final image adds only justified ETS-owned artifacts without modifying TeamEngine-owned files.
+
+#### SCENARIO-ETS-VALIDATOR-RUNTIME-EXECUTION-001 (CRITICAL)
+**GIVEN** the shaded ETS jar is installed in the final TeamEngine 6 image
+**WHEN** the runtime verifier exercises the validator adapter using the final image classpath
+**THEN** a valid SWE Common component passes and an invalid component returns deterministic diagnostics
+**AND** bundled `jar:` schema resolution and relocated NetworkNT execution complete without linkage errors.
+
+#### SCENARIO-ETS-VALIDATOR-E2E-GATE-001 (CRITICAL)
+**GIVEN** a future implementation story imports a SWE Common or SensorML validator dependency
+**WHEN** Generator reports the implementation complete
+**THEN** Docker Maven, the TeamEngine 6 runtime verifier, and the mandatory primary local OSH TeamEngine smoke from a clean `/tmp` clone SHALL be archived with exact totals and no-mutation evidence
+**AND** advisory public IUT evidence SHALL NOT substitute for the local OSH gate.
+
 ### Sub-deliverable 5 — TeamEngine Integration
 
 #### REQ-ETS-TEAMENGINE-001: SPI Registration
 - **Priority**: MUST
-- **Status**: IMPLEMENTED (TeamEngine 5.6.1 baseline); TeamEngine 6.0.0 migration verification pending under REQ-ETS-TEAMENGINE-007
+- **Status**: IMPLEMENTED (TeamEngine 5.6.1 historical baseline and TeamEngine 6.0.0 SPI/CTL registration plus primary local OSH E2E verified)
 - **Description**: The ETS SHALL expose a class implementing the TeamEngine TestNG SPI (e.g. `org.opengis.cite.ogcapiconnectedsystems10.TestNGController` extending `com.occamlab.te.spi.executors.testng.TestNGExecutor` per `ets-common` convention). The SPI registration SHALL be declared via `META-INF/services/com.occamlab.te.spi.jaxrs.TestSuiteController`. The verified baseline is TeamEngine 5.6.1; Sprint 41 SHALL prove discovery and execution on TeamEngine 6.0.0 before the migration is marked implemented.
 - **Rationale**: Without SPI registration TeamEngine cannot enumerate the suite.
 - **Maps to**: PRD FR-ETS-50.
 
 #### REQ-ETS-TEAMENGINE-002: CTL Wrapper
 - **Priority**: MUST
-- **Status**: IMPLEMENTED
-- **Description**: A CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` SHALL expose the suite to TeamEngine's CTL UI, accepting `iut-url` (CS API landing-page URL, required), `auth-type` (one of `none`, `bearer`, `apikey`, `basic`, optional, default `none`), and `auth-credential` (string, optional). The CTL wrapper passes these as TestNG suite parameters.
-- **Rationale**: TeamEngine 5.6.x (currently 5.6.1)'s primary entry surface is CTL; SPI alone is not enough for the user-visible UI.
+- **Status**: IMPLEMENTED (Sprint 41 policy-guidance remediation aligned CTL, TestNG defaults, smoke forwarding, docs, and sample props; structural verification and the primary local OSH TeamEngine 6 run pass)
+- **Description**: A CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` SHALL expose the suite to TeamEngine's CTL UI using the canonical TestNG run-argument contract: required `iut` (CS API landing-page URL), optional `auth-credential`, optional `mutation-tests-enabled`, and optional `mutation-iut-policy`. Human-facing form labels MAY describe `iut` as the CS API landing page, but the serialized argument key passed to Java/TestNG SHALL be `iut`. The suite SHALL NOT document or emit `iut-url`, `auth-type`, or `ics` as supported TestNG run arguments unless Java/TestNG support is intentionally added in a later requirement.
+- **Rationale**: TeamEngine's primary user-facing entry surface is CTL; SPI alone is not enough for the UI. The CTL surface, TestNG defaults, Java run-argument enum, smoke harness, README, Javadoc, site docs, and sample run props must describe the same contract or TeamEngine UI runs can silently drift from automated smoke runs.
 - **Maps to**: PRD FR-ETS-51.
 
 #### REQ-ETS-TEAMENGINE-003: Dockerfile
 - **Priority**: MUST
-- **Status**: PARTIALLY_IMPLEMENTED — TeamEngine 5.6.1 baseline verified; TeamEngine 6 Maven/image/startup/registration verified by Sprint 41; local OSH E2E blocked
+- **Status**: IMPLEMENTED - TeamEngine 6 Maven, immutable image, startup, registration, exact-image runtime verification, and primary local OSH E2E are archived.
 - **Description**: A `Dockerfile` SHALL build the ETS on JDK 17 with Maven 3.9+ and install the thin ETS jar, required runtime dependency closure, and CTL resources into a runnable TeamEngine webapp. The runtime SHALL use an immutable digest of an OGC-published TeamEngine image compatible with the `ets-common:17` TeamEngine 6.0.0 SPI lineage, and SHALL run as non-root. Any dependency removed because TeamEngine supplies it SHALL be explicitly enumerated and justified by Maven dependency-tree and pinned-image library inventories. The image SHALL build from a clean checkout with no additional host dependencies. TeamEngine 5.6.1 remains the last verified baseline until Sprint 41 produces TeamEngine 6 evidence.
 - **Rationale**: CP-001 and ADR-011 replace the manual cross-version TeamEngine 5.6.1 assembly with a reproducible OGC-maintained TeamEngine 6 runtime without converting an unverified diff into implementation evidence.
 - **Maps to**: PRD FR-ETS-52, NFR-ETS-11.
 
 #### REQ-ETS-TEAMENGINE-004: docker-compose
 - **Priority**: SHOULD
-- **Status**: IMPLEMENTED for the TeamEngine 5.6.1 baseline; TeamEngine 6 configuration alignment pending under REQ-ETS-TEAMENGINE-007
+- **Status**: IMPLEMENTED for TeamEngine 6 Compose health/suite metadata and the authoritative Docker smoke path.
 - **Description**: A `docker-compose.yml` SHALL bring up the TeamEngine + ETS service at `http://localhost:8081/teamengine/` with port mapping, environment variable injection, and a healthcheck against `/teamengine/`.
 - **Maps to**: PRD FR-ETS-53, NFR-ETS-11.
 
 #### REQ-ETS-TEAMENGINE-005: Smoke Test
 - **Priority**: MUST
-- **Status**: IMPLEMENTED for the TeamEngine 5.6.1 baseline; fresh TeamEngine 6 execution pending under REQ-ETS-TEAMENGINE-007
+- **Status**: IMPLEMENTED for TeamEngine 6; the smoke builds, registers, and executes the deployed suite against primary local OSH with exact totals and no-mutation enforcement.
 - **Description**: A repository smoke-test script (`scripts/smoke-test.sh`) SHALL: (a) build the Docker image, (b) launch the container, (c) wait for healthcheck, (d) execute the suite against the configured IUT, (e) assert the TestNG report is non-empty and contains zero suite-registration errors, and (f) enforce the no-mutation oracle unless the run explicitly opts into a dedicated mutable IUT. Sprint 32 changes the primary development target from GeoRobotix to local OSH; GeoRobotix is advisory only.
 - **Maps to**: PRD FR-ETS-54, SC-4.
 
 #### REQ-ETS-TEAMENGINE-006: Local OSH Primary Development Target
 - **Priority**: MUST.
-- **Status**: SPECIFIED (Sprint 32 planning).
+- **Status**: IMPLEMENTED (Sprint 42 final gate restored a self-provisioned local OSH target and passed deployed TeamEngine E2E `211/69/0/142` with zero writes).
 - **Description**: Development and sprint E2E gates SHALL use a self-provisioned local OpenSensorHub IUT as the primary target. The canonical Docker-network URL is `http://field-hub-osh-1:8081/sensorhub/api` on `field-hub_default`. Credentials SHALL be supplied through the environment and never recorded in repository docs, logs, or artifacts. GeoRobotix SHALL NOT be used as the default development target; it may be run only as an explicit advisory public interoperability probe.
 - **Planning evidence**: On 2026-06-01, authenticated local OSH TeamEngine smoke passed `206 total / 65 passed / 0 failed / 141 skipped` with `recognized_iut_request_logs=132` and zero IUT-bound POST/PUT/PATCH/DELETE in read-only mode (`GET=130`, `OPTIONS=2`). Local OSH declared Part 2 `/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/swecommon-json`, `/conf/swecommon-text`, `/conf/swecommon-binary`, `/conf/create-replace-delete`, and `/conf/system-event`, but returned empty DataStream, Observation, and ControlStream collections. Dynamic-data positive closure therefore requires seed fixtures.
 - **Maps to**: PRD FR-ETS-54, SC-4, NFR-ETS-11.
 
 #### REQ-ETS-TEAMENGINE-007: TeamEngine Runtime Compatibility and Provenance
 - **Priority**: MUST.
-- **Status**: PARTIALLY_IMPLEMENTED (2026-07-21: provenance, image build, non-root startup, SPI/CTL registration, and linkage checks verified; earlier Maven `298/0/0/3`, final Maven rerun blocked before tests by repository infrastructure; mandatory local OSH E2E pending).
-- **Description**: The selected TeamEngine runtime SHALL be pinned by immutable digest and SHALL have recorded TeamEngine, Tomcat, and JDK versions. The ETS build SHALL NOT modify, patch, replace, delete, or recursively change ownership of TeamEngine-owned files. It MAY only add ETS-owned jars, explicitly justified runtime dependencies, and CTL resources at TeamEngine-supported extension locations. Dockerfile, `docker-compose.yml`, Maven Docker profile, and `scripts/smoke-test.sh` SHALL agree on ports, health endpoint, runtime environment, and artifact installation paths, or document and test any intentional differences. Verification SHALL establish required utilities and directories, ownership, effective non-root identity, SPI/CTL suite registration, absence of dependency linkage errors, and full TeamEngine execution against the primary local OSH IUT.
+- **Status**: IMPLEMENTED. Runtime evidence emits both exact allowed collision tuples and rejects unused allowlist entries. The executable self-test asserts complete sorted multi-tuple output. Both Jenkinsfiles use Java 17, run the source-pin bootstrap, and request only project-declared profiles. Focused Maven `11/0/0/0`, full Maven `312/0/0/3`, exact-image runtime verification, and local OSH `211/69/0/142` pass for image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9`; final Raze approved with no required actions.
+- **Description**: The selected TeamEngine runtime SHALL be pinned by immutable digest and SHALL have recorded TeamEngine, Tomcat, and JDK versions. The ETS build SHALL NOT modify, patch, replace, delete, or recursively change ownership of TeamEngine-owned files. It MAY only add ETS-owned jars, explicitly justified runtime dependencies, and CTL resources at TeamEngine-supported extension locations. An added runtime dependency SHALL NOT duplicate a base-image Maven coordinate family at another version or provide overlapping functional paths; verification SHALL compare coordinate families and jar contents rather than exact filenames alone. Dockerfile, `docker-compose.yml`, and `scripts/smoke-test.sh` SHALL be the authoritative TeamEngine 6 deployment path and SHALL agree on ports, health endpoint, runtime environment, run-argument forwarding, and artifact installation paths, or document and test any intentional differences. A Maven `docker` profile SHALL NOT define an independent TeamEngine runtime, alternate startup contract, or broad runtime dependency-copy path; if such a profile exists, it SHALL be a no-op or delegate to the same Dockerfile path. Verification SHALL establish required utilities and directories, ownership, effective non-root identity, SPI/CTL suite registration, absence of dependency linkage errors, direct final-image identity, and full TeamEngine execution against the primary local OSH IUT.
 - **Rationale**: A matching POM label and plausible base image do not prove that the deployed runtime can load and execute the ETS.
 - **Maps to**: PRD FR-ETS-50, FR-ETS-52, FR-ETS-53, FR-ETS-54, NFR-ETS-04, NFR-ETS-11.
+
+#### REQ-ETS-TEAMENGINE-008: Public Package Metadata and Documentation Alignment
+- **Priority**: MUST.
+- **Status**: IMPLEMENTED (public package metadata/docs, structural tests, TeamEngine 6 runtime path, and primary local OSH E2E verified).
+- **Description**: Public conformance-package surfaces SHALL describe the actual OGC API Connected Systems ETS and SHALL remain aligned with the canonical run-argument contract from REQ-ETS-TEAMENGINE-002 and the TeamEngine 6 deployment contract from REQ-ETS-TEAMENGINE-007. The governed surfaces include Maven-derived public metadata (`pom.xml` name/description and `ets.properties` title), Dockerfile labels, `docker-compose.yml` operator-facing comments, CTL title/description/defaults, `src/main/config/teamengine/config.xml`, `scripts/smoke-test.sh` suite-title assertion, `README.adoc`, `src/site/asciidoc/*.adoc`, Javadoc overview, `src/main/config/test-run-props.xml`, and `src/main/resources/test-run-props.xml`. They SHALL state the implemented scope as partial OGC 23-001 Part 1 coverage plus implemented partial OGC 23-002 Part 2 coverage, TeamEngine 6 as the forward runtime, local OSH as the primary development E2E target, and GeoRobotix as advisory only. Archetype placeholders such as XML/W3Schools samples, Class A/Class B, WCAG/XML/RFC boilerplate, or generic "describe scope" text SHALL NOT appear in these public package artifacts.
+- **Rationale**: OGC CITE reviewers and TeamEngine users evaluate the shipped package through metadata and docs as well as Java behavior. Stale archetype placeholders can misrepresent suite scope even when runtime code is correct.
+- **Maps to**: PRD FR-ETS-50, FR-ETS-51, FR-ETS-52, FR-ETS-53, FR-ETS-54, NFR-ETS-11, NFR-ETS-13.
 
 ### Sub-deliverable 6 — Spec-Trap Fixture Port
 
@@ -1736,7 +1835,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - **Sprint 10 coverage scope**: SensorML systems read-only subset with 6 @Tests: (1) IUT declares `/conf/sensorml`; (2) a System resource exposes or can be requested as a SensorML JSON representation; (3) the SensorML representation returns HTTP 200 with parseable JSON; (4) the representation has minimal SensorML identity/class shape such as `type` plus identifier/member structure sufficient for a non-schema sanity check; (5) the representation links or maps back to the canonical CS API System id/UID when present; (6) TestNG dependency wiring and smoke no-regression. The Generator MAY use the existing single-system `alternate` link with `type="application/sml+json"` and `?f=sml3` when content negotiation on `Accept: application/sml+json` returns default CS API JSON. Current GeoRobotix verification at planning time: `/conformance` declares `/conf/sensorml`; collection-level `GET /systems` with `Accept: application/sml+json` returns `Content-Type: application/json` with top-level `items`; single-system JSON exposes `alternate` links of type `application/sml+json` to `?f=sml3`.
 - **Sprint 16 implemented coverage scope**: SensorML deployment/procedure/property read-only subset. GeoRobotix runtime on 2026-05-06: `/conformance` declares `/conf/sensorml`, `/conf/deployment`, `/conf/procedure`, and `/conf/property`; deployment and procedure SensorML checks PASS through explicit item-level `application/sml+json` alternate links; property SensorML SKIPs honestly because `/properties` currently has an empty `items` array. Each resource check first gates on the matching resource conformance class (`/conf/deployment`, `/conf/procedure`, `/conf/property`) before fetching or judging resource-specific SensorML evidence. Procedure mapping requires non-identity process/procedure structure (`definition`, `inputs`, `outputs`, `parameters`, `characteristics`, or `capabilities`); `identifiers` alone is not enough. Sprint 16 does not claim samplingFeature SensorML coverage because upstream `/req/sensorml` lists property schema/mapping subrequirements, not sampling feature subrequirements.
 - **Dependency wiring**: SensorML depends on SystemFeatures via `<group name="sensorml" depends-on="systemfeatures"/>`. SensorML system encoding assertions are meaningful only after the canonical SystemFeatures resource layer is available.
-- **Open subrequirements after Sprint 19 Generator**: broader positive relation-types evidence where SensorML resources expose links-member associations, full SensorML 3.0 JSON Schema validation, non-system mutation-side encoding behavior, and positive property SensorML evidence against a populated IUT remain OPEN unless separately planned.
+- **Open subrequirements after Sprint 19 Generator**: broader positive relation-types evidence where SensorML resources expose links-member associations, full SensorML 3.0 JSON Schema validation, non-system mutation-side encoding behavior, and positive property SensorML evidence against a populated IUT remain OPEN unless separately planned. S-ETS-42-01 adds the provisional architecture for replacing current minimal SensorML shape checks with a reusable SensorML validator module when FCU/OGC make that module available as a reproducible artifact; the public `opengeospatial/ets-sensorml30` suite jar is not accepted as a direct dependency boundary.
 - **Sprint 17 implemented relation-types scope**: For associations encoded in a SensorML JSON `links` member, relation-types checks require `rel` to equal the association name valid for the selected resource type. If the selected SensorML representation has no association links in a `links` member, the assertion SKIPs with reason. Generic representation links and property-level mapping links are not relation-types PASS evidence. `EncodingRelationTypes` uses resource-specific links-member allowlists only where the OGC SensorML association table maps that association to `links`: System (`subsystems`, `samplingFeatures`, `deployments`, `procedures`, `datastreams`, `controlstreams`), Deployment (`parentDeployment`, `subdeployments`, `featuresOfInterest`, `samplingFeatures`, `datastreams`, `controlstreams`), and Procedure (`implementingSystems`). SensorML `parentSystem` maps to `attachedTo`, not `links`, and Sampling Features are outside the SensorML conformance class. The runtime SensorML assertion currently checks a selected System representation and SKIPs honestly on GeoRobotix because that representation has no top-level links-member association links.
 - **Sprint 18 implemented relation-types breadth scope**: `SensorMlTests` now has 12 read-only @Tests and evaluates relation-types independently for selected System, Deployment, and Procedure SensorML representations. Each assertion evaluates its selected SensorML representation independently and SKIPs when the representation has no links-member association links. GeoRobotix runtime on 2026-05-07 SKIPped all three SensorML relation-types checks because the fetched SensorML system, deployment, and procedure bodies expose no top-level `links` member.
 - **Sprint 19 implemented mediatype-write scope**: `SensorMlTests` now has 13 @Tests and adds `sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled`. The test checks write-side `Content-Type: application/sml+json` parsing behind the existing Sprint 12 mutation safety gate, requires `/conf/create-replace-delete`, hard-denies public GeoRobotix, and requires follow-up dereference evidence preserving the submitted UID. GeoRobotix declares `/conf/create-replace-delete` and `/conf/sensorml`, but it is a shared public IUT and was not mutated by default smoke. Local OSH mutable-IUT smoke r3 proved the positive system-resource path. OPTIONS readiness alone is not conformance evidence.
@@ -2031,6 +2130,14 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **WHEN** the Generator chooses which dependencies to install or exclude
 **THEN** archived Maven dependency-tree and image library inventories justify every TeamEngine exclusion
 **AND** the implemented exclusion list is explicit rather than an unverified `teamengine-*.jar` wildcard
+**AND** no added jar duplicates a base-image Maven coordinate family at another version or supplies overlapping functional paths
+**AND** the verifier discovers every added jar from base/final inventories, scans Maven metadata regardless of jar filename, and compares coordinate families across versions
+**AND** it intersects non-signature functional paths from each added jar with all base jars and permits only exact coordinate-plus-path entries in a versioned, rationale-bearing allowlist
+**AND** runtime evidence emits every accepted coordinate-plus-path tuple and fails if any allowlist entry is unused
+**AND** shaded NetworkNT message bundles use an ETS-unique resource path referenced by relocated bytecode, so root `jsv-messages*.properties` paths are not added
+**AND** adversarial guard tests prove that a renamed duplicate-coordinate jar and an embedded functional-path collision are rejected
+**AND** the guard self-test creates at least two accepted collision tuples and asserts that stdout is exactly the complete sorted expected tuple set
+**AND** structural Java coverage proves the behavioral self-test contains that multi-tuple completeness assertion
 **AND** startup and suite execution show no classloading, service-loading, or linkage errors.
 *Maps to*: REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-007, REQ-ETS-SCAFFOLD-004.
 
@@ -2052,12 +2159,39 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 *Maps to*: REQ-ETS-TEAMENGINE-001, REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-007, REQ-ETS-CLEANUP-004.
 
 #### SCENARIO-ETS-TEAMENGINE-TE6-CONFIG-ALIGNMENT-001 (CRITICAL)
-**GIVEN** Dockerfile, Compose, Maven Docker profile, and smoke-test paths can supply runtime configuration
+**GIVEN** Dockerfile, Compose, and smoke-test paths can supply runtime configuration
 **WHEN** their ports, health endpoint, `JAVA_OPTS`, `CATALINA_OPTS`, startup command, and artifact paths are compared
 **THEN** they are behaviorally aligned
 **OR** each intentional difference is specified and exercised by a corresponding gate
-**AND** documentation does not claim that inherited image settings remain unchanged when a supported launcher overrides them.
+**AND** documentation does not claim that inherited image settings remain unchanged when a supported launcher overrides them
+**AND** no Maven `docker` profile defines an independent TeamEngine runtime or broad dependency-copy path.
 *Maps to*: REQ-ETS-TEAMENGINE-004, REQ-ETS-TEAMENGINE-007.
+
+#### SCENARIO-ETS-TEAMENGINE-RUN-ARG-CONTRACT-001 (CRITICAL)
+**GIVEN** the suite can be launched from CTL, TestNG defaults, smoke harnesses, README examples, site docs, Javadoc, and sample test-run-props
+**WHEN** those public and executable surfaces describe or serialize run arguments
+**THEN** the only supported TestNG argument keys are required `iut` plus optional `auth-credential`, `mutation-tests-enabled`, and `mutation-iut-policy`
+**AND** human-facing "CS API landing page" wording maps to serialized key `iut`
+**AND** `iut-url`, `auth-type`, and `ics` do not appear as supported serialized run arguments.
+*Maps to*: REQ-ETS-TEAMENGINE-002, REQ-ETS-TEAMENGINE-008.
+
+#### SCENARIO-ETS-TEAMENGINE-PUBLIC-METADATA-001 (CRITICAL)
+**GIVEN** the TeamEngine conformance package includes Maven-derived suite metadata, Dockerfile labels, Compose operator-facing comments, CTL, TeamEngine config, smoke title assertions, README, site docs, Javadoc, and sample test-run-props
+**WHEN** those artifacts are inspected before release or sprint close
+**THEN** they describe actual OGC API Connected Systems partial Part 1 and implemented partial Part 2 coverage
+**AND** they describe TeamEngine 6 as the forward runtime with local OSH as the primary development E2E target and GeoRobotix as advisory only
+**AND** archetype placeholders such as XML/W3Schools examples, Class A/Class B, WCAG/XML boilerplate, or generic "describe scope" text are absent.
+*Maps to*: REQ-ETS-TEAMENGINE-008.
+
+#### SCENARIO-ETS-TEAMENGINE-MAVEN-DOCKER-PROFILE-001 (CRITICAL)
+**GIVEN** Dockerfile, Compose, and `scripts/smoke-test.sh` are the authoritative TeamEngine 6 deployment contract
+**WHEN** the Maven POM is inspected
+**THEN** it does not contain an active `docker` profile using Fabric8 Docker Maven plugin behavior
+**AND** supported CI commands do not request a nonexistent `docker` Maven profile
+**AND** every Maven profile explicitly requested by any supported Jenkinsfile is declared by the project model
+**AND** every supported Jenkinsfile selects JDK 17 and invokes the source-pin bootstrap before this project is built or released
+**AND** it does not copy arbitrary Maven runtime dependencies into a TeamEngine webapp as an alternate deployment path.
+*Maps to*: REQ-ETS-TEAMENGINE-007, REQ-ETS-TEAMENGINE-008.
 
 #### SCENARIO-ETS-TEAMENGINE-TE6-LOCAL-OSH-E2E-001 (CRITICAL)
 **GIVEN** the TeamEngine 6 image has passed Maven, build, startup, and registration checks
@@ -2759,13 +2893,14 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-CORE-003: `ConformanceTests` (commit `ea59436`) — 4 @Test methods asserting GET /conformance HTTP 200 + JSON + non-empty `conformsTo` array + explicit declaration of `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core`. All 4 PASS against GeoRobotix.
 - REQ-ETS-CORE-004: `ResourceShapeTests` Sprint-1-minimal (commit `b249aa1` + URI fix `1fdfe07`) — 2 @Test methods: api-definition link resolves to non-empty content + /conformance body shape is JSON object. Full id/type/links crawl deferred to Sprint 2 per design.md "single representative resource" pattern. **Note**: a copy-paste URI typo (`ogcapi-common-2/0.0/req/oas30/oas-impl` — Common Part 2, OGC 20-024) caught by Raze GAP-3 was corrected to `ogcapi-common-1/1.0/req/oas30/oas-impl` (Common Part 1, OGC 19-072 — the standard Sprint 1 actually targets) in commit `1fdfe07`.
 
-**Sub-deliverable 5 — TeamEngine Integration** (REQ-ETS-TEAMENGINE-001..007; TeamEngine 5.6.1 baseline implemented, TeamEngine 6 migration partially implemented by S-ETS-41-01):
+**Sub-deliverable 5 — TeamEngine Integration** (REQ-ETS-TEAMENGINE-001..008; TeamEngine 5.6.1 retained as historical baseline, TeamEngine 6 replacement implemented and final-Raze approved under S-ETS-41-01):
 - REQ-ETS-TEAMENGINE-001: META-INF/services SPI registration file (58 bytes, single-line FQCN `org.opengis.cite.ogcapiconnectedsystems10.TestNGController`, no whitespace, no extension) — verified by Quinn s01 + Raze s01/s02 + S-ETS-01-03 smoke runtime.
-- REQ-ETS-TEAMENGINE-002: CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` from archetype. **CTL Saxon namespace verified clean** (architect-handoff S-ETS-01-03 CONCERNS pitfall #3 — silent failure mode): `xmlns:tng="java:org.opengis.cite.ogcapiconnectedsystems10.TestNGController"` is the canonical run-together ADR-003 form, no `cs10` typo. Runtime corroboration: 12/12 PASS via SPI-routed smoke confirms TeamEngine successfully loaded the CTL.
-- REQ-ETS-TEAMENGINE-003: **PARTIALLY_IMPLEMENTED**. The manual TeamEngine 5.6.1/JDK 17 baseline remains verified through Sprint 40. Sprint 41 verifies the immutable TeamEngine 6.0.0 digest, shaded dependency isolation, byte-for-byte base immutability, image build, non-root startup, and SPI/CTL registration. Earlier Maven passed `298/0/0/3`; final post-review Maven and full runtime execution remain open until repository access and local OSH are restored.
-- REQ-ETS-TEAMENGINE-004: `docker-compose.yml` at repo root with `8081:8080` port mapping + 60s start-period healthcheck against `http://localhost:8080/teamengine` (commit `d831da1`). Canonical port 8081 committed; for dev environments where 8081 is in use (e.g. WSL2 running other containers), use `docker run -p 8082:8080` for testing. Dev-environment caveat documented at new repo `ops/server.md`.
-- REQ-ETS-TEAMENGINE-005: `scripts/smoke-test.sh` end-to-end (commit `91308f7`). Bash, idempotent, exits 0 only on non-empty TestNG report + zero ERROR-level container logs during suite registration. End-to-end ~10s wall-clock (image cached); first run with TE image pull adds 5-10 min. Archived artifacts at `ops/test-results/s-ets-01-03-teamengine-{smoke,container}-2026-04-28.{xml,log}`.
-- REQ-ETS-TEAMENGINE-007: **PARTIALLY_IMPLEMENTED** by Sprint 41. Pinned-image/runtime inventory, byte-for-byte immutable-base checks, shaded NetworkNT/ITU isolation, the explicit ETS-plus-resources payload, image build, non-root health, SPI/CTL registration, and no-linkage-error startup are verified. Earlier Docker Maven passed `298/0/0/3`; final post-review Maven did not reach tests due repository infrastructure. Real local OSH TeamEngine 6 E2E remains `NOT_RUN` because the restarted environment lacks the documented field-hub stack and credential source.
+- REQ-ETS-TEAMENGINE-002: CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` from archetype. **CTL Saxon namespace verified clean** (architect-handoff S-ETS-01-03 CONCERNS pitfall #3 — silent failure mode): `xmlns:tng="java:org.opengis.cite.ogcapiconnectedsystems10.TestNGController"` is the canonical run-together ADR-003 form, no `cs10` typo. Runtime corroboration: 12/12 PASS via SPI-routed smoke confirms TeamEngine successfully loaded the CTL. Sprint 41 policy-guidance remediation updates the contract to canonical args `iut`, `auth-credential`, `mutation-tests-enabled`, and `mutation-iut-policy` across CTL, TestNG defaults, smoke forwarding, README, site docs, Javadoc, and sample props. Focused structural verification passed `9/0/0/0`; full Docker Maven passed `303/0/0/3`; readiness Compose and advisory GeoRobotix runs verified TeamEngine 6 suite registration with the corrected full title.
+- REQ-ETS-TEAMENGINE-003: **IMPLEMENTED FOR TEAMENGINE 6**. The manual TeamEngine 5.6.1/JDK 17 path remains historical baseline evidence. Sprint 41 verifies the immutable TeamEngine 6.0.0 digest, isolated shaded dependencies/resources, filename-independent added-jar coordinate/content checks, byte-for-byte base immutability, image build, non-root startup, SPI/CTL registration, and primary local OSH execution. Fresh full Docker Maven passed `312/0/0/3`; exact image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9` passed runtime and local OSH E2E `211/69/0/142`; final Raze approved.
+- REQ-ETS-TEAMENGINE-004: **IMPLEMENTED FOR TEAMENGINE 6**. `docker-compose.yml` retains the canonical `8081:8080` mapping and runtime healthcheck while using the digest-pinned repository Dockerfile. Sprint 41 readiness verified Compose build, health, and suite metadata; `ops/server.md` documents host-port fallback and amd64 emulation requirements.
+- REQ-ETS-TEAMENGINE-005: **IMPLEMENTED FOR TEAMENGINE 6**. `scripts/smoke-test.sh` builds and launches the exact image, verifies suite metadata, runs a non-empty zero-failure TestNG report, enforces the no-mutation oracle, and scans startup errors. The 2026-07-22 primary local OSH run passed `211/69/0/142`, recognized 135 IUT requests, and recorded zero writes and zero startup errors.
+- REQ-ETS-TEAMENGINE-007: **IMPLEMENTED** after release-CI and exact multi-tuple gapfix on 2026-07-22. The replacement payload adds only the shaded ETS jar and CTL resources. Generic inventory proves one added jar, no duplicate base or TeamEngine coordinate, emits both exact allowlisted TeamEngine convention paths, and rejects unused entries; its self-test asserts a complete exact two-tuple set. Both Jenkinsfiles pass Java 17/bootstrap/declared-profile checks. Exact image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9` passed runtime verification and primary local OSH with `211/69/0/142`, 135 recognized requests, zero writes, and zero startup errors. Final Raze approved at `0.99` confidence with no required actions.
+- REQ-ETS-TEAMENGINE-008: **IMPLEMENTED** by Sprint 41 closure. Public package metadata/docs, Maven-derived suite metadata, canonical run arguments, structural verification, Compose metadata, and primary local OSH TeamEngine E2E are verified without archetype placeholders.
 
 **Sprint 1 contract success_criteria walk after S-ETS-01-03**: **9/9 PASS** (per Dana's S-ETS-01-03 generator report) — all 5 critical scenarios PASS (SCAFFOLD-BUILD-001, CORE-LANDING-001, CORE-CONFORMANCE-001, TEAMENGINE-LOAD-001, CORE-SMOKE-001), all 5 normal scenarios PASS (SCAFFOLD-LAYOUT-001, SCAFFOLD-REPRODUCIBLE-001, CORE-RESOURCE-SHAPE-001, CORE-LINKS-NORMATIVE-001, CORE-API-DEF-FALLBACK-001). **Sprint 1 functionally complete pending Quinn+Raze gate close on S-ETS-01-03.**
 
@@ -2800,6 +2935,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 - REQ-ETS-PART2-011 (Part 2 SWE Common Text Encoding) - partially implemented by Sprint 30 Generator. `Part2SweCommonTextTests` implements exact `/conf/swecommon-text` declaration gating, SWE Common 3.0 `/conf/text-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+text` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `TextEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`258 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`196 total / 33 passed / 28 failed / 135 skipped`); the new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 91`, `POST/PUT/PATCH/DELETE 0`).
 - REQ-ETS-PART2-012 (Part 2 SWE Common Binary Encoding) - partially implemented by Sprint 31 Generator. `Part2SweCommonBinaryTests` implements exact `/conf/swecommon-binary` declaration gating, SWE Common 3.0 `/conf/binary-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+binary` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `BinaryEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`272 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`206 total / 35 passed / 34 failed / 137 skipped`); the new SWE Common Binary group produced 3 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 99`, `POST/PUT/PATCH/DELETE 0`).
 - REQ-ETS-PART2-013 (Observation/Command binding cross-class closure) - partially implemented by Sprint 32 Generator as an internal project closure item, not a standalone OGC `/conf/observation-binding` class. `Part2ObservationCommandBindingTests` and helper regressions are implemented with group `part2binding`, no default fixture seeding, and GET-only positive closure guards. Sprints 33-38 add inline status/result regressions, local OSH seed/tasking fixture evidence, SimUAV isolated fixture evidence, parent schema `f=json` request shaping, stream metadata and format assertions, and populated parent-candidate selection. Sprint 40 patches sibling OSH ConSys for JSON-compatible schema response media types, exact `application/swe+text`, ControlStream `cmdFormat`, parseable JSON Observation/Command collection/count bodies, invalid-filter error handling, and field-hub runtime temporal-sort compatibility. Focused OSH regressions passed `23/0/0/0`; ETS Docker Maven wrapper passed `294/0/0/3`; direct SimUAV format/body probes verified the prior blocker set and produced positive nested Observation item evidence; clean local OSH TeamEngine smoke passed `211/61/0/150` with zero writes; focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes. Final SimUAV-populated TeamEngine smoke failed `211/86/17/108`; full positive populated-IUT binding closure is still not claimed because residual failures are Observation/Command schema shape/mapping and absent positive associated Command child item evidence.
+- REQ-ETS-VALIDATOR-001 (External SWE Common and SensorML Validator Integration) - the SWE Common increment is implemented and final-Raze approved; the overall requirement remains partial because SensorML is deferred. Both Java 17 Jenkins paths verify exact upstream commit `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`; the adapter returns ETS-owned diagnostics; all six schema paths retain local checks and validate extracted `recordSchema`; and the slim jar shades validator classes/resources with relocated NetworkNT bytecode and bundles. Fresh full Maven passed `312/0/0/3`. Exact image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9` passed generic jar-content verification, exact tuple evidence, adapter execution, and local OSH `211/69/0/142` with zero writes. SensorML remains deferred.
 - REQ-ETS-TEAMENGINE-006 (Local OSH Primary Development Target) - specified by Sprint 32 planning. Development E2E uses the self-provisioned local OSH IUT on `field-hub_default`; GeoRobotix is advisory-only and no longer the default development target.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.

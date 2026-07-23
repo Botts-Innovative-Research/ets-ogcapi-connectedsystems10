@@ -1,0 +1,604 @@
+22-Jul-2026 07:13:02.191 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/10.1.42
+22-Jul-2026 07:13:02.216 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 22:35:46 UTC
+22-Jul-2026 07:13:02.217 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 10.1.42.0
+22-Jul-2026 07:13:02.218 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+22-Jul-2026 07:13:02.218 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.17.0-1021-nvidia
+22-Jul-2026 07:13:02.219 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+22-Jul-2026 07:13:02.219 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /opt/java/openjdk
+22-Jul-2026 07:13:02.222 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.15+6
+22-Jul-2026 07:13:02.223 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+22-Jul-2026 07:13:02.223 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /usr/local/tomcat
+22-Jul-2026 07:13:02.224 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /usr/local/tomcat
+22-Jul-2026 07:13:02.288 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties
+22-Jul-2026 07:13:02.289 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+22-Jul-2026 07:13:02.290 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+22-Jul-2026 07:13:02.291 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx6144m
+22-Jul-2026 07:13:02.291 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -DTE_BASE=/usr/local/tomcat/te_base
+22-Jul-2026 07:13:02.292 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+22-Jul-2026 07:13:02.293 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+22-Jul-2026 07:13:02.294 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dsun.io.useCanonCaches=false
+22-Jul-2026 07:13:02.294 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+22-Jul-2026 07:13:02.295 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+22-Jul-2026 07:13:02.295 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+22-Jul-2026 07:13:02.296 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+22-Jul-2026 07:13:02.297 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+22-Jul-2026 07:13:02.298 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+22-Jul-2026 07:13:02.301 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+22-Jul-2026 07:13:02.302 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dlog4j2.formatMsgNoLookups=true
+22-Jul-2026 07:13:02.303 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/usr/local/tomcat
+22-Jul-2026 07:13:02.303 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/usr/local/tomcat
+22-Jul-2026 07:13:02.304 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/usr/local/tomcat/temp
+22-Jul-2026 07:13:02.324 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [2.0.9] using APR version [1.7.2].
+22-Jul-2026 07:13:02.372 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.0.13 30 Jan 2024]
+22-Jul-2026 07:13:04.074 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+22-Jul-2026 07:13:04.226 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [3485] milliseconds
+22-Jul-2026 07:13:04.472 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+22-Jul-2026 07:13:04.473 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/10.1.42]
+22-Jul-2026 07:13:04.523 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/usr/local/tomcat/webapps/teamengine]
+22-Jul-2026 07:16:31.534 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/usr/local/tomcat/webapps/teamengine] has finished in [207,007] ms
+22-Jul-2026 07:16:31.572 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+22-Jul-2026 07:16:31.631 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [207403] milliseconds
+[Fatal Error] entity-13009583884284560208.tmp:14:7: The element type "link" must be terminated by the matching end-tag "</link>".
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+log4j:WARN No appenders could be found for logger (org.apache.http.impl.conn.BasicClientConnectionManager).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=*/*
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/collections
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/?f=json
+	Accept=*/*
+Request: GET https://api.georobotix.io/ogc/t18/api/systems
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/observations?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/observations?limit=2
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/observations?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbtnmlpqo5g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n6b7em6p5s0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m6ub945vh80/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0nkud4c5poog/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mpc91duklg0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbp537okong/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n4rvb45igq0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n88r04nmk90/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/16pqbb6qllh0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17solp67jd20/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17mf12vfndcg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17ao9od8ig50/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17tvf6mji8f0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/1698bsf7ogkg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17lstl4bmku0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/170s7sumo9pg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17aa14uap89g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17kbjgv0mcqg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=10
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbtnmlpqo5g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n6b7em6p5s0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m6ub945vh80/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0nkud4c5poog/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mpc91duklg0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbp537okong/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n4rvb45igq0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n88r04nmk90/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/16pqbb6qllh0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17solp67jd20/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17mf12vfndcg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17ao9od8ig50/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17tvf6mji8f0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/1698bsf7ogkg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17lstl4bmku0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/170s7sumo9pg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17aa14uap89g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17kbjgv0mcqg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controls/0m4qpft9sdag
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbtnmlpqo5g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n6b7em6p5s0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m6ub945vh80/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0nkud4c5poog/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mpc91duklg0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbp537okong/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n4rvb45igq0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n88r04nmk90/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/16pqbb6qllh0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17solp67jd20/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17mf12vfndcg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17ao9od8ig50/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17tvf6mji8f0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/1698bsf7ogkg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17lstl4bmku0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/170s7sumo9pg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17aa14uap89g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17kbjgv0mcqg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbtnmlpqo5g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n6b7em6p5s0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m6ub945vh80/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0nkud4c5poog/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mpc91duklg0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbp537okong/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n4rvb45igq0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n88r04nmk90/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/16pqbb6qllh0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17solp67jd20/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17mf12vfndcg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17ao9od8ig50/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17tvf6mji8f0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/1698bsf7ogkg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17lstl4bmku0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/170s7sumo9pg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17aa14uap89g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17kbjgv0mcqg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/schema
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbtnmlpqo5g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n6b7em6p5s0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m6ub945vh80/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0nkud4c5poog/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mpc91duklg0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbp537okong/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n4rvb45igq0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n88r04nmk90/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/16pqbb6qllh0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17solp67jd20/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17mf12vfndcg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17ao9od8ig50/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17tvf6mji8f0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/1698bsf7ogkg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17lstl4bmku0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/170s7sumo9pg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17aa14uap89g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17kbjgv0mcqg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=2
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbtnmlpqo5g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n6b7em6p5s0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m6ub945vh80/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0nkud4c5poog/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mpc91duklg0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbp537okong/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n4rvb45igq0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n88r04nmk90/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/16pqbb6qllh0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17solp67jd20/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17mf12vfndcg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17ao9od8ig50/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17tvf6mji8f0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/1698bsf7ogkg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17lstl4bmku0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/170s7sumo9pg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17aa14uap89g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17kbjgv0mcqg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=2
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbtnmlpqo5g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n6b7em6p5s0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m6ub945vh80/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0nkud4c5poog/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mpc91duklg0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbp537okong/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n4rvb45igq0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n88r04nmk90/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/16pqbb6qllh0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17solp67jd20/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17mf12vfndcg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17ao9od8ig50/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17tvf6mji8f0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/1698bsf7ogkg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17lstl4bmku0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/170s7sumo9pg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17aa14uap89g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17kbjgv0mcqg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems/0m5ojudgr570/controlstreams?limit=100
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=2
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=25
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 JSON resource condition classes are declared for Datastream, ControlStream, and SystemEvent.
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/observations?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systemEvents?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common JSON condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common Text condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common Binary condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+IUT declares /conf/json; runtime binding checks still require parent schema and child JSON body evidence.
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m4qpft9sdag/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbtnmlpqo5g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n6b7em6p5s0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0m6ub945vh80/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0nkud4c5poog/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mpc91duklg0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0mbp537okong/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n4rvb45igq0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/0n88r04nmk90/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/16pqbb6qllh0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17solp67jd20/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17mf12vfndcg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17ao9od8ig50/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17tvf6mji8f0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/1698bsf7ogkg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17lstl4bmku0/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/170s7sumo9pg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17aa14uap89g/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/controlstreams/17kbjgv0mcqg/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/commands?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/datastreams?limit=25
+	Accept=application/json
+REQ-ETS-PART2-013 first increment is read-only: it uses GET-only live evidence and does not seed DataStream, Observation, ControlStream, or Command fixtures.
+Request: GET https://api.georobotix.io/ogc/t18/api/collections
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0/subsystems
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems/0nco3nn2m4jg/subsystems
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems/0nco3nn2m4jg/subsystems/0nis53epuo80
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/procedures
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/procedures/164p7ed8l47g
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/deployments
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/deployments/16sp744ch58g
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/samplingFeatures
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/samplingFeatures/0mtff3l0oofg
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/properties
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems
+	Accept=application/geo+json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems?limit=1
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems
+	Accept=application/sml+json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/systems?limit=2
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/conformance
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/deployments
+	Accept=application/json
+Request: GET https://api.georobotix.io/ogc/t18/api/deployments/16sp744ch58g/subdeployments
+	Accept=application/json

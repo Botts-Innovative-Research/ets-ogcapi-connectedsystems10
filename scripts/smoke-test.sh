@@ -22,9 +22,8 @@
 # direct SMOKE_IUT_URL override.
 #
 # Port handling: prefers host port 8081 (canonical, per REQ-ETS-TEAMENGINE-004
-# + docker-compose.yml). If 8081 is busy (the WSL2 dev box ships a
-# `field-hub-osh` container on 8081 as of 2026-04-28), falls back to 8082.
-# Override via $SMOKE_PORT.
+# + docker-compose.yml). If 8081 is busy on a development host, falls back to
+# 8082. Override via $SMOKE_PORT.
 #
 # Sprint 2 S-ETS-02-05 simplification (per ADR-009 + Raze s03 CONCERN-2/3):
 #   - DROPPED host `mvn -B clean package -DskipTests` (now baked into Dockerfile
@@ -123,6 +122,9 @@ docker build -t "$IMAGE_TAG" . >/dev/null 2>&1 || {
   docker build -t "$IMAGE_TAG" .
   die "docker build returned non-zero"
 }
+IMAGE_ID="$(docker image inspect "$IMAGE_TAG" --format '{{.Id}}')" \
+  || die "could not inspect exact smoke image ID for $IMAGE_TAG"
+log "  FINAL_IMAGE_ID=$IMAGE_ID"
 
 # ---------- Step 3: launch container on a free port
 SMOKE_PORT="$(pick_port)"
@@ -158,7 +160,7 @@ done
 # /rest/suites listing. Mismatch on any of the three is a FATAL — surfaces drift
 # between the deployed jar metadata and the pom.xml expectations.
 EXPECTED_VERSION="${SMOKE_EXPECTED_VERSION:-0.1-SNAPSHOT}"
-EXPECTED_TITLE_FRAGMENT="${SMOKE_EXPECTED_TITLE_FRAGMENT:-ogcapi-connectedsystems10}"
+EXPECTED_TITLE_FRAGMENT="${SMOKE_EXPECTED_TITLE_FRAGMENT:-OGC API - Connected Systems 1.0 Conformance Test Suite}"
 log "step 5/8 — verifying ${ETS_CODE} is registered (code + version + title metadata)"
 suites_xml=$(curl -fsS -u "${TE_USER}:${TE_PASS}" -H "Accept: application/xml" \
     "http://localhost:${SMOKE_PORT}/teamengine/rest/suites") \

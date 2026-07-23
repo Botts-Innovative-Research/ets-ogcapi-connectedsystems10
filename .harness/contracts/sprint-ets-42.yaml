@@ -1,0 +1,66 @@
+sprint: ets-42
+story: S-ETS-42-02
+title: SWE Common validator adapter
+status: COMPLETE
+triggered_by: 'User instruction: document the recommended SWE Common wrapper notes in the specs, then move forward on the final gate.'
+requirements:
+  - REQ-ETS-VALIDATOR-001
+  - REQ-ETS-PART2-010
+  - REQ-ETS-PART2-011
+  - REQ-ETS-PART2-012
+  - REQ-ETS-TEAMENGINE-007
+scenarios:
+  - SCENARIO-ETS-VALIDATOR-SWE-COMMON-ADAPTER-001
+  - SCENARIO-ETS-VALIDATOR-SOURCE-PIN-001
+  - SCENARIO-ETS-VALIDATOR-SWE-COMMON-DUAL-VALIDATION-001
+  - SCENARIO-ETS-VALIDATOR-SWE-COMMON-PARITY-CORPUS-001
+  - SCENARIO-ETS-VALIDATOR-SWE-COMMON-UPSTREAM-LIMITS-001
+  - SCENARIO-ETS-VALIDATOR-DIAGNOSTICS-BOUNDARY-001
+  - SCENARIO-ETS-VALIDATOR-RUNTIME-CLOSURE-001
+  - SCENARIO-ETS-VALIDATOR-RUNTIME-EXECUTION-001
+  - SCENARIO-ETS-VALIDATOR-E2E-GATE-001
+scope:
+  include:
+    - Verify and build the exact upstream SWE Common validator source commit until a repository artifact is published.
+    - Wrap SweCommonJsonSchemaValidator behind an ETS-owned result boundary.
+    - Retain local Connected Systems wrapper, format, encoding, mapping, binding, media-type, and skip/fail behavior.
+    - Dual-validate extracted recordSchema components in all JSON, Text, and Binary Observation/Command schema assertions.
+    - Exercise all six complete wrapper variants through local and reusable validation, including active requirement-URI diagnostics.
+    - Exclude upstream NetworkNT/Jackson versions and package validator classes/resources in the slim shaded ETS jar.
+    - Extend structural and runtime verification for source provenance, shaded resources, relocation, and duplicate jar families.
+  exclude:
+    - Importing the upstream ets-swecommon30 suite jar.
+    - Removing local SWE schemas or local JSON/Text/Binary encoding validation.
+    - Adding SensorML until FCU/OGC exposes a reusable module.
+success_criteria:
+  - Tests cite REQ-ETS-VALIDATOR-001 and applicable scenario identifiers.
+  - Valid and invalid SWE components prove deterministic immutable diagnostics and operational-error classification.
+  - Supported Docker Maven and Dockerfile paths bootstrap the same exact upstream commit.
+  - The final TeamEngine image contains embedded validator classes/resources and no standalone duplicate runtime-family jar.
+  - The final-image verifier executes valid and invalid adapter calls using shaded schema resources and relocated NetworkNT.
+  - Existing advisory PASS/SKIP totals do not drift and no mutation is issued.
+  - Mandatory primary local OSH TeamEngine E2E completes before story completion.
+  - Raze returns no unresolved worktree required fixes.
+guardrails:
+  - Upstream ValidationMessage types must not escape the adapter API.
+  - Missing validator schemas or configuration are suite errors, not IUT failures.
+  - The source bootstrap must fail closed on source mismatch or unavailability.
+  - GeoRobotix remains advisory and cannot substitute for primary local OSH E2E.
+evidence:
+  formatter: PASS
+  focused_maven: 'PASS: final packaging 11/0/0/0 after raw expected test-first failure 11/1/0/0; adapter/parity 19/0/0/0'
+  full_maven: 'PASS: fresh post-fix 312 tests / 0 failures / 0 errors / 3 skipped'
+  docker_build: 'PASS: exact E2E image ets-ogcapi-connectedsystems10:sprint42-final-raze-gapfix-e2e sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9'
+  runtime_verifier: 'PASS with direct IDs, isolated message bundles, valid/invalid adapter execution, exact behavioral multi-tuple assertions, unused-allowlist rejection, renamed-coordinate/path-collision adversarial tests, one added jar, two exact allowlisted convention paths, and immutable base'
+  advisory_georobotix: 'FAIL_ADVISORY_BASELINE_UNCHANGED: 211 total / 38 passed / 34 failed / 139 skipped; recognized_iut_request_logs=272; zero writes; schema paths did not reach adapter'
+  local_osh_e2e: 'PASS: fresh /tmp clone synchronized to final worktree; 211 total / 69 passed / 0 failed / 142 skipped; recognized_iut_request_logs=135; zero writes; zero startup errors'
+  raw_gate_artifacts: 'ops/test-results/sprint-ets-42-final-raze-gapfix-{test-first-raw,focused-maven,full-maven,runtime-verifier-final,local-osh-e2e}-2026-07-22.txt plus final local OSH XML/container/no-mutation artifacts'
+  verification_artifact: ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md
+  pre_e2e_raze: 'PASS_WITH_EXTERNAL_BLOCKER: confidence 0.99; blocker subsequently cleared; artifact .harness/evaluations/sprint-ets-42-swecommon-validator-adversarial-recheck-2026-07-22.yaml'
+  final_closure_raze: 'GAPS_FOUND: confidence 0.99; duplicate TeamEngine resources family, direct image-provenance, and worktree-hygiene fixes required; artifact .harness/evaluations/sprint-ets-42-final-closure-adversarial-2026-07-22.yaml'
+  duplicate_gapfix_raze: 'GAPS_FOUND: confidence 0.99; generic jar guard, message isolation, fresh Maven, and worktree cleanup required; artifact .harness/evaluations/sprint-ets-42-duplicate-gapfix-adversarial-recheck-2026-07-22.yaml'
+  generic_guard_raze: 'GAPS_FOUND: confidence 0.98; explicit tuple output, unused-allowlist rejection, Jenkins profile cleanup, and metadata reconciliation required; artifact .harness/evaluations/sprint-ets-42-generic-jar-guard-adversarial-recheck-2026-07-22.yaml'
+  final_metadata_raze: 'GAPS_FOUND: confidence 0.99; release Jenkins profile/toolchain/bootstrap cleanup, executable exact multi-tuple assertions, fresh gates, and reconciliation required; artifact .harness/evaluations/sprint-ets-42-final-metadata-gapfix-adversarial-recheck-2026-07-22.yaml'
+  final_metadata_gapfix: 'SUPERSEDED_CANDIDATE: image 05a592e0 passed runtime/E2E but final Raze found release-CI and executable tuple-output coverage gaps; artifact ops/test-results/sprint-ets-42-final-metadata-gapfix-verification-2026-07-22.md'
+  final_raze_gapfix: 'VERIFIED_CANDIDATE: both Jenkinsfiles and exact behavioral multi-tuple output are covered; fresh Maven/runtime/local-OSH gates pass; artifact ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md; subsequently approved by final Raze'
+  final_raze_approval: 'APPROVE: confidence 0.99; no required actions; artifact .harness/evaluations/sprint-ets-42-final-raze-gapfix-adversarial-recheck-2026-07-22.yaml'

@@ -1,0 +1,104 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.93
+reviewer: "Red Team / Raze"
+gate: "focused recheck after RF-002/RF-003/RF-004 fixes"
+generated_at: "2026-07-21T11:46:04Z"
+review_mode: "static_artifact_inspection"
+expensive_commands_run: []
+
+reviewed_scope:
+  objective: "Verify closure of RF-002, RF-003, and RF-004 from the prior Sprint 41 policy-guidance implementation Raze report."
+  prior_report: ".harness/evaluations/sprint-ets-41-policy-guidance-adversarial-implementation-2026-07-21.yaml"
+  contract: ".harness/contracts/sprint-ets-41.yaml"
+  story: "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md"
+  handoffs:
+    - ".harness/handoffs/generator-handoff.yaml"
+    - ".harness/handoffs/architect-handoff.yaml"
+  specs_and_design:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md"
+  operational_docs:
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/test-results.md"
+    - "ops/changelog.md"
+  implementation_surfaces:
+    - "Dockerfile"
+    - "docker-compose.yml"
+    - "pom.xml"
+    - "scripts/smoke-test.sh"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTeamEngine6Packaging.java"
+    - "current git diff"
+  commands_run:
+    - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+    - "git diff --stat"
+    - "git diff --name-status"
+    - "git diff --check"
+    - "rg static scans for stale policy strings"
+    - "sed/nl inspection of required artifacts and cited source ranges"
+  not_rerun_rationale: "Docker/Maven/E2E reruns were not performed because archived evidence already records the RF-001 platform blocker and no static contradiction required expensive reproduction."
+
+evidence:
+  rf_001_honesty:
+    - "ops/test-results/sprint-ets-41-policy-guidance-runtime-verifier-2026-07-21.txt records linux/amd64 image on linux/arm64/v8 host and exec format error before runtime invariant checks."
+    - "ops/test-results/sprint-ets-41-policy-guidance-local-osh-e2e-2026-07-21.txt records Docker runtime-stage RUN failure with exec /bin/sh: exec format error before IUT execution."
+    - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:5 keeps Sprint 41 IN PROGRESS with runtime/E2E blocked on arm64."
+    - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:57-58 leave post-policy image/startup and local OSH TeamEngine E2E unchecked."
+    - "ops/status.md:43 and ops/test-results.md:16 state the linux/amd64 pinned TeamEngine digest cannot run on this linux/arm64 Docker host without amd64 emulation and that field-hub state/credentials are absent."
+    - ".harness/contracts/sprint-ets-41.yaml:92-98 marks runtime verifier, docker build, TeamEngine startup, and local OSH E2E as blocked/historical rather than passed."
+  rf_002_title_metadata:
+    - "pom.xml:17 sets the POM-derived public suite name to 'OGC API - Connected Systems 1.0 Conformance Test Suite'."
+    - "scripts/smoke-test.sh:159-176 defaults the smoke title expectation to the full POM-derived suite title and fails if the suite listing lacks it."
+    - "VerifyTeamEngine6Packaging.java:139-145 locks the canonical smoke run arguments and full suite-title expectation structurally."
+    - "ops/test-results.md:7-12 records the Quinn POM-derived metadata concern as remediated before final focused/full Maven evidence."
+  rf_003_deployment_metadata:
+    - "Dockerfile:88 now labels the image as partial Part 1 and Part 2 coverage on OGC TeamEngine 6.0.0."
+    - "docker-compose.yml:5-20 now states partial Part 1/Part 2 scope and removes the stale 2026-04-28 field-hub/docker.teamengine.version caveat."
+    - "VerifyTeamEngine6Packaging.java:163-181 includes Dockerfile and docker-compose.yml in the public metadata placeholder/scope structural coverage."
+    - "VerifyTeamEngine6Packaging.java:189-195 rejects the stale Maven docker profile, docker-maven-plugin, copy-dependencies goal, and docker.teamengine.version Compose drift."
+  rf_004_design_traceability:
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md:9-15 adds a Sprint 41 supersession note making TeamEngine 5.5/5.6.x guidance historical baseline only."
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md:25 reframes Sprint 1 TeamEngine 5.6.x execution as historical baseline superseded by TeamEngine 6.0.0."
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md:313-324 marks S-ETS-01-03 and its old Dockerfile content historical, not the active deployment contract."
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md:427-432 marks the ADR-009 Tomcat 8.5/manual TeamEngine 5.6.1 assembly historical and warns not to reintroduce it."
+    - "_bmad/traceability.md:78-80 marks original Dockerfile, Compose, and smoke rows as historical baselines or forward-tracked by Sprint 41."
+    - "_bmad/traceability.md:82-83 records Sprint 41 as partially/static implemented with deployed E2E blocked, not closed."
+  static_validation:
+    - "git diff --check completed with no whitespace errors."
+    - "Static scan found remaining TeamEngine 5.6.x references only in historical/baseline or explicit do-not-reuse contexts within the reviewed Sprint 41 surfaces."
+
+finding_closure_status:
+  - id: "RF-001"
+    prior_finding: "Mandatory deployed TeamEngine 6 runtime and local OSH E2E gates are still blocked."
+    status: "OPEN_INFRASTRUCTURE_BLOCKER"
+    closure_assessment: "Not closed, but honestly documented. The current worktree does not claim Sprint 41 completion, does not claim post-policy deployed E2E PASS, and records the linux/amd64 pinned TeamEngine digest failure on this linux/arm64 host before IUT execution."
+    required_before_sprint_close:
+      - "Run the runtime verifier on an amd64-capable Docker runtime or after selecting a compatible OGC TeamEngine image."
+      - "Restore the documented local OSH field-hub network/container/state and credential source."
+      - "Run deployed TeamEngine 6 smoke against the primary local OSH IUT and archive exact TestNG totals plus no-mutation evidence."
+  - id: "RF-002"
+    prior_finding: "Smoke title assertion is only a broad fragment despite claiming title-from-POM verification."
+    status: "CLOSED"
+    closure_assessment: "The default smoke title expectation and structural test now use the full suite title, matching the POM-derived name. The implementation still names the shell variable EXPECTED_TITLE_FRAGMENT and uses substring matching, but the default value is no longer the broad Connected Systems fragment cited by RF-002."
+    residual_concern: "A future hardening pass could compare the actual XML title element exactly against the POM value, but this is not required to close the prior finding."
+  - id: "RF-003"
+    prior_finding: "Docker/Compose public deployment metadata still contains stale scope/profile text outside structural coverage."
+    status: "CLOSED"
+    closure_assessment: "Dockerfile and Compose public text now describe partial Part 1/Part 2 TeamEngine 6 scope, the stale docker.teamengine.version caveat is removed, and structural coverage includes Dockerfile and Compose metadata plus profile-regression checks."
+    residual_concern: null
+  - id: "RF-004"
+    prior_finding: "OpenSpec design and traceability still expose old TeamEngine 5.6.x deployment guidance as active text."
+    status: "CLOSED"
+    closure_assessment: "The design adds upfront Sprint 41 supersession language, the cited S-ETS-01-03 and ADR-009 sections are historicalized, and traceability rows 78-80 now explicitly defer forward runtime guidance to Sprint 41/ADR-011 while rows 82-83 keep Sprint 41 open."
+    residual_concern: "Spec REQ-ETS-TEAMENGINE-003/004/005 still retain TeamEngine 5.6.1 baseline wording, but the surrounding REQ-ETS-TEAMENGINE-007/008 statuses and traceability prevent it from reading as the forward Sprint 41 runtime contract."
+
+remaining_required_fixes:
+  worktree_policy_fixes: []
+  sprint_closure_blockers:
+    - id: "RF-001"
+      action: "Produce post-policy deployed TeamEngine 6 runtime and local OSH E2E evidence on a compatible runtime, then reconcile story/contract/spec/traceability/ops to close Sprint 41."
+
+residual_concerns:
+  - "This is a static recheck. Maven, runtime verifier, Docker image startup, and TeamEngine local OSH E2E were not rerun."
+  - "The requested artifact is the only file this recheck writes; pre-existing dirty and untracked files remain outside this review action."
+  - "The smoke title check now uses the full expected title string but still performs a substring search of /rest/suites output rather than an exact XML element comparison."

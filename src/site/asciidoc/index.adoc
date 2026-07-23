@@ -1,71 +1,38 @@
-= ogcapi-connectedsystems10 Conformance Test Suite
+= OGC API - Connected Systems Conformance Test Suite
 
 == Scope
 
-This executable test suite (ETS) verifies the conformance of the implementation
-under test (IUT) with respect to the set of relevant specifications depicted in
-Figure 1. Conformance testing is a kind of "black box" testing that examines the
-externally visible characteristics or behaviors of the IUT while disregarding
-any implementation details.
+This executable test suite (ETS) verifies implemented portions of
+OGC API - Connected Systems Part 1: Feature Resources (OGC 23-001) and
+implemented portions of OGC API - Connected Systems Part 2: Dynamic Data
+(OGC 23-002). Conformance testing is black-box testing of the externally
+visible HTTP behavior of the implementation under test.
 
 .Relevant specifications
 [caption="Figure 1: "]
 image::img/specifications.png[]
 
+TeamEngine 6 is the forward runtime for this package. Local OSH is the primary
+development E2E target; GeoRobotix is available only as an explicit advisory
+interoperability probe.
 
+== Implemented coverage
 
-Several conformance classes are defined in the principal specifications; the ones
-listed below are covered by this test suite:
-
-* Class A
-   - List capabilities of conformance class A
-* Class B
-    - List capabilities of conformance class B
-
-== Test requirements
-
-The documents listed below stipulate requirements that must be satisfied by a 
-conforming implementation.
-
-1. http://www.w3.org/TR/WCAG20/[Web Content Accessibility Guidelines (WCAG) 2.0]
-2. http://www.w3.org/TR/xml/[Extensible Markup Language (XML) 1.0, Fifth Edition]
-3. https://tools.ietf.org/html/rfc7231)[RFC 7231] - Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content
-
-If any of the following preconditions are not satisfied then all tests in the
-suite will be marked as skipped.
-
-1. Precondition 1
-2. Precondition 2
+The suite includes Part 1 Core/Common/System resource coverage, additional
+implemented Part 1 conformance-class subsets, and implemented Part 2 dynamic-data
+subsets for datastreams, control streams, feasibility, events, encodings, and
+binding closure. Some Part 2 checks are declaration-gated or require a populated
+local OSH IUT for positive evidence.
 
 == Test suite structure
 
-The test suite definition file (testng.xml) is located in the root package, 
-`org.opengis.cite.ogcapiconnectedsystems10`. A conformance class corresponds to a &lt;test&gt; element, each
-of which includes a set of test classes that contain the actual test methods. 
-The general structure of the test suite is shown in Table 1.
+The test suite definition file (testng.xml) is located in the root package,
+`org.opengis.cite.ogcapiconnectedsystems10`. TestNG groups model the dependency
+graph between conformance-class subsets, and tests skip honestly when an IUT does
+not declare the corresponding conformance class or lacks required data.
 
-.Test suite structure
-[cols="2,6a",options=header]
-|===
-|Conformance class
-|Test classes
+== Test run arguments
 
-|Core (OGC 23-001 /conf/core)
-|org.opengis.cite.ogcapiconnectedsystems10.conformance.core.*
-
-|===
-
-The Javadoc documentation provides more detailed information about the test 
-methods that constitute the suite.
-
-include::how-to-run-the-tests.adoc[]
-
-== Using the REST API
-
-Using the REST API of the TEAM Engine requires some run arguments. These ate summarized in Table 2.
-The _Obligation_ descriptor can have the following values: M (mandatory), O (optional), or C (conditional).
-
-.Test run arguments
 [cols="1,1,1,6",options=header]
 |===
 |Name
@@ -76,11 +43,22 @@ The _Obligation_ descriptor can have the following values: M (mandatory), O (opt
 |iut
 |URI
 |M
-|A URI that refers to the implementation under test or metadata about it. Ampersand ('&amp;') characters must be percent-encoded as '%26'.
+|CS API landing page URL for the implementation under test.
 
-|ics
-|A comma-separated list of string values.
+|auth-credential
+|String
 |O
-|An implementation conformance statement that indicates which conformance classes or options are supported.
+|Opaque Authorization header value used for authenticated local runs.
 
+|mutation-tests-enabled
+|Boolean
+|O
+|Set to `true` only when running against a dedicated mutable IUT.
+
+|mutation-iut-policy
+|String
+|O
+|Policy acknowledgement required by mutation tests, normally `dedicated-mutable-iut`.
 |===
+
+include::how-to-run-the-tests.adoc[]

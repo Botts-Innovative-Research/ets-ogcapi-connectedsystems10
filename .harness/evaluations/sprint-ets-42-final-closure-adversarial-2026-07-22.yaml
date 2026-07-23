@@ -1,0 +1,44 @@
+review: sprint-ets-42-final-closure-adversarial
+reviewer:
+  role: Raze
+  agent: Socrates
+  agent_id: 019f890c-b742-71c2-ae99-bf4cd0080680
+scope:
+  - S-ETS-41-01 TeamEngine 6 final closure
+  - S-ETS-42-02 SWE Common validator adapter final closure
+verdict: GAPS_FOUND
+confidence: 0.99
+started_at: 2026-07-22T08:59:07Z
+ended_at: 2026-07-22T09:08:00Z
+duration: 8m53s
+token_usage: unavailable
+findings:
+  - id: RAZE-S42-FINAL-001
+    severity: HIGH
+    summary: Final image adds teamengine-resources 6.0.0 while the immutable base contains resources 6.0.0-RC2 with 89 of 89 functional paths overlapping.
+    evidence:
+      - Dockerfile explicitly adds teamengine-resources 6.0.0.
+      - scripts/verify-teamengine6-runtime.sh excludes that jar from family and immutable-base comparisons.
+      - VerifyTeamEngine6Packaging requires the duplicate addition.
+    required_fix: Remove the GA resources jar or justify the duplicate; remove verifier exceptions and reject coordinate-family duplicates across versions.
+  - id: RAZE-S42-FINAL-002
+    severity: MEDIUM
+    summary: Exact smoke image identity was inspected only after execution rather than emitted directly by smoke and runtime-verifier outputs.
+    required_fix: Rebuild and record the exact image ID directly in both runtime-verifier and E2E outputs.
+  - id: RAZE-S42-FINAL-003
+    severity: LOW
+    summary: An empty untracked .moduledata/log.txt remained after gate execution.
+    required_fix: Remove the pollution and keep OSH state outside the worktree.
+verified_evidence:
+  - TestNG XML parses as 211 total, 69 passed, 0 failed, and 142 skipped.
+  - Final log contains GET=133, OPTIONS=2, and zero POST/PUT/PATCH/DELETE.
+  - Startup contains no ERROR or SEVERE.
+  - Runtime verifier genuinely executes valid and invalid deployed SWE Common adapter calls.
+  - Focused Maven is 19/0/0/0 and full Maven is 311/0/0/3.
+  - No credentials or secrets were found in reviewed gate configuration or artifacts.
+  - Local OSH version/configuration evidence matches the versioned gate configuration.
+required_fixes:
+  - RAZE-S42-FINAL-001
+  - RAZE-S42-FINAL-002
+  - RAZE-S42-FINAL-003
+completion_justification: S-ETS-41-01 and S-ETS-42-02 must remain in progress until replacement-image verification and final Raze recheck; REQ-ETS-VALIDATOR-001 remains partial with SensorML deferred.

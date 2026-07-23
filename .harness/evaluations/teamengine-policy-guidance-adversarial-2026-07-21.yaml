@@ -1,0 +1,159 @@
+evaluation:
+  role: "Red Team / Raze"
+  date: "2026-07-21"
+  generated_at: "2026-07-21T09:24:13Z"
+  subject: "Latest TeamEngine and Connected Systems policy-guidance review applied to ETS documentation and implementation conformance"
+  verdict: "GAPS_FOUND"
+  confidence: 0.90
+  review_mode: "static_only"
+  head: "8e0b2e7ff6c041085a9abbbe4a13933e2288f36d"
+  worktree_state: "Dirty ops documentation files plus one untracked ops/test-results artifact existed before this review."
+  discovery_agent:
+    id: "019f83ee-a133-76e2-9eb5-27c0f9142239"
+    nickname: "Zeno"
+    result: "Completed public-source Discovery brief; no files edited and no tests run."
+  adversarial_agent:
+    id: "019f83f9-6192-7022-b58d-ac5456cb45d0"
+    nickname: "Averroes"
+    result: "Completed static adversarial review; returned GAPS_FOUND and did not edit files."
+  product_code_changed: false
+  tests_run:
+    maven: "NOT_RUN"
+    docker_build: "NOT_RUN"
+    teamengine_startup: "NOT_RUN"
+    local_osh_real_iut_e2e: "NOT_RUN"
+    rationale: "The user requested Discovery plus adversarial conformance review. This turn made no product-code changes and did not execute expensive gates."
+  source_access_limitations:
+    - "Public web and public GitHub issue/release data only."
+    - "No private OGC/Botts repositories, credentials, CI artifacts, or local OSH runtime were accessed."
+
+external_sources:
+  policy_and_teamengine:
+    - "https://docs.ogc.org/pol/08-134r11.html"
+    - "https://opengeospatial.github.io/teamengine/"
+    - "https://opengeospatial.github.io/teamengine/relnotes.html"
+    - "https://opengeospatial.github.io/teamengine/users.html"
+    - "https://opengeospatial.github.io/teamengine/testng-essentials.html"
+    - "https://opengeospatial.github.io/teamengine/testng-cookbook.html"
+    - "https://github.com/opengeospatial/teamengine/issues/606"
+    - "https://github.com/opengeospatial/teamengine/issues/599"
+    - "https://github.com/opengeospatial/teamengine/issues/589"
+    - "https://github.com/opengeospatial/teamengine/issues/646"
+    - "https://github.com/opengeospatial/teamengine-docker/issues/28"
+    - "https://github.com/opengeospatial/teamengine-docker/issues/29"
+    - "https://github.com/opengeospatial/teamengine-docker/issues/33"
+  connected_systems_and_iuts:
+    - "https://github.com/opengeospatial/ogcapi-connected-systems/releases"
+    - "https://docs.ogc.org/is/23-001/23-001.html"
+    - "https://docs.ogc.org/is/23-002/23-002.html"
+    - "https://github.com/opengeospatial/ogcapi-connected-systems/issues/23"
+    - "https://github.com/opengeospatial/ogcapi-connected-systems/issues/144"
+    - "https://github.com/opengeospatial/ogcapi-connected-systems/issues/181"
+    - "https://github.com/opengeospatial/ogcapi-connected-systems/issues/166"
+    - "https://github.com/opengeospatial/ogcapi-connected-systems/issues/186"
+    - "https://github.com/opensensorhub/osh-core/issues/285"
+    - "https://github.com/opensensorhub/osh-core/issues/331"
+    - "https://github.com/opensensorhub/osh-core/issues/337"
+    - "https://github.com/opensensorhub/osh-core/issues/339"
+    - "https://github.com/opensensorhub/osh-core/issues/340"
+
+discovery_summary:
+  - "OGC policy treats a compliance test package as versioned ETS, test data, standards package, and TEAM Engine build evidence; TeamEngine build provenance matters."
+  - "TeamEngine 6 guidance and migration issues make Java 17, Tomcat 10.1, newer TestNG/Jakarta/Jersey behavior, REST registration, and dependency/classloader checks high-risk review areas."
+  - "The digest-pinned TeamEngine 6 base-image direction is justified because public image tags are mutable."
+  - "Sprint 41 is not complete until final Maven and real local OSH TeamEngine 6 E2E are archived."
+  - "Connected Systems issue traffic highlights semantic risks around observation/result schema separation, SWE recordSchema/encoding wrappers, media-type/write advertising, PUT encoding loss, PATCH gaps, validTime, history, sorting, and bulk operations."
+  - "OpenSensorHub is a useful real IUT but not an oracle; public issues show active drift and edge-case defects."
+
+findings:
+  - id: "RAZE-POLICY-001"
+    severity: "HIGH"
+    title: "CTL, TestNG, Java, smoke, and docs disagree about canonical run arguments"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1068 says the CTL wrapper shall expose iut-url, auth-type, and auth-credential."
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/TestRunArg.java:12 and :36 define actual Java keys iut and auth-credential, with mutation keys at :43 and :49."
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:4-7 declares iut, ics, mutation-tests-enabled, and mutation-iut-policy, but not auth-credential."
+      - "src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl:68-76 exposes mutation controls but no auth credential field."
+      - "scripts/smoke-test.sh:196-215 forwards SMOKE_AUTH_CREDENTIAL and mutation env vars to TeamEngine REST, so the non-UI path is more complete than the CTL form and public docs."
+    impact: "Authenticated local OSH runs, mutation safety gates, and user-facing TeamEngine UI execution are not described or exposed consistently."
+    required_fix: "Choose one canonical argument contract and reconcile OpenSpec, CTL, testng.xml defaults, Java enum docs, smoke-test.sh docs, README, Javadoc, and site docs."
+
+  - id: "RAZE-POLICY-002"
+    severity: "HIGH"
+    title: "The Maven docker profile remains a stale TeamEngine 6 alignment risk"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:2055 requires Dockerfile, Compose, POM runtime metadata, and smoke harness alignment."
+      - "pom.xml:350-384 still defines a docker profile with fabric8 docker-maven-plugin plus maven-dependency-plugin:copy."
+      - "Dockerfile:58-65 uses explicit dependency:get plus one selected resources jar, avoiding the broad copy path."
+      - "scripts/verify-teamengine6-runtime.sh:37-49 guards the Dockerfile selected payload, but it does not fail on the stale POM docker profile path."
+    impact: "A future operator invoking mvn -Pdocker could bypass the reviewed digest-pinned Dockerfile path or reintroduce broad dependency-copy classpath leakage."
+    required_fix: "Remove the stale Maven docker profile or make it delegate to the same digest-pinned Dockerfile and selected payload, then add structural coverage for the profile."
+
+  - id: "RAZE-POLICY-003"
+    severity: "HIGH"
+    title: "Public suite metadata and site docs still contain archetype placeholders"
+    evidence:
+      - "src/main/config/teamengine/config.xml:15 says 'Describe scope of testing' and :16 has the inherited placeholder comment."
+      - "src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl:33-43 lists XML and XML Base plus Level 1/Level 2 instead of Connected Systems conformance classes."
+      - "src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl:53 defaults the IUT to a W3Schools XML note."
+      - "src/site/asciidoc/index.adoc:20-23 lists Class A/Class B placeholders, and :30-32 cites WCAG/XML/RFC 7231 instead of OGC 23-001/23-002/SensorML/SWE."
+      - "src/site/asciidoc/changelog.adoc:3-7 still uses '${project.version} (YYYY-MM-DD)' and Class A/Class B."
+      - "src/main/config/test-run-props.xml:5 and src/main/resources/test-run-props.xml:5 both default to the W3Schools XML note."
+    impact: "This violates TeamEngine TestNG guidance to update suite metadata, docs, Javadoc overview, and CTL wrapper after archetype creation, and it misleads CITE reviewers and IUT operators."
+    required_fix: "Replace archetype placeholders with actual OGC API Connected Systems scope, covered Part 1 and Part 2 status, real run arguments, and TeamEngine 6/local OSH execution guidance."
+
+  - id: "RAZE-POLICY-004"
+    severity: "MEDIUM"
+    title: "README.adoc is obsolete relative to Sprint 41 and current implemented scope"
+    evidence:
+      - "README.adoc:28-38 says the ETS verifies only Part 1 and is built on TeamEngine 5.6.x/5.6.1."
+      - "README.adoc:42-52 says conformance-class enumeration is deferred and Part 2 is out of scope."
+      - "README.adoc:74-76 documents mvn -P docker and a TeamEngine 5.6.1 image tag that no longer matches the digest-pinned TeamEngine 6 Dockerfile."
+    impact: "The repository front door contradicts Sprint 41, the traceability matrix, and current Part 2 implementation records."
+    required_fix: "Refresh README.adoc to describe TeamEngine 6, current partial Part 1/Part 2 ETS coverage, smoke-test.sh usage, local OSH primary E2E, and incomplete Sprint 41 gates."
+
+  - id: "RAZE-POLICY-005"
+    severity: "MEDIUM"
+    title: "Sprint 41 Maven evidence artifact has a misleading 'Final' label"
+    evidence:
+      - "ops/test-results/sprint-ets-41-teamengine6-verification-2026-07-21.txt:11 labels the 298/0/0/3 Docker Maven wrapper result as Final."
+      - "The same artifact at :14-17 says the pass predates final structural additions and must not be treated as final post-Raze totals."
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:48 and :50 correctly keep final Maven and local OSH E2E open."
+    impact: "The artifact can be quoted incorrectly even though the main story and ops status are honest."
+    required_fix: "Relabel the artifact as earlier Maven evidence and keep final failed-before-tests attempts separate."
+
+  - id: "RAZE-POLICY-006"
+    severity: "MEDIUM"
+    title: "Operational handoff has stale local-environment and remote-transport details"
+    evidence:
+      - "ops/status.md:10 points future sessions at /home/nh/docker/gir/ets-ogcapi-connectedsystems10, but this checkout is /home/nh/docker/ets-ogcapi-connectedsystems10 and the documented gir path is absent in this environment."
+      - "ops/status.md:30 says the local origin uses SSH, but git remote -v reports HTTPS fetch and push URLs in this checkout."
+      - "ops/status.md:36 accurately says the documented field-hub stack is absent; shell checks also show /home/nh/docker/gir/sar-ops/field-hub is absent."
+    impact: "A future agent following the handoff can start in the wrong path or make wrong assumptions about push/auth state."
+    required_fix: "Correct the entry path and origin note, while preserving the honest field-hub/local OSH blocker."
+
+  - id: "RAZE-POLICY-007"
+    severity: "LOW"
+    title: "One retained generator handoff line still has the superseded TeamEngine resources inventory"
+    evidence:
+      - ".harness/handoffs/generator-handoff.yaml:7 records the corrected top-level state: resources 6.0.0 absent and RC2 present."
+      - ".harness/handoffs/generator-handoff.yaml:50 in an older retained block still says the base supplies teamengine-resources-6.0.0.jar."
+    impact: "The current top handoff is correct, but a resumed agent reading deeper can resurrect the old inventory mistake."
+    required_fix: "Mark the older block as superseded or correct the stale resources line."
+
+positive_evidence:
+  - "Sprint 41 is not falsely closed in the main story, contract, traceability, or test-results summary."
+  - "Dockerfile:34 and :85 pin the Maven builder and TeamEngine runtime by digest."
+  - "Dockerfile:97-107 adds only the selected resources jar, thin ETS jar, and uniquely named CTL tree."
+  - "Dockerfile:110 restates non-root tomcat runtime identity."
+  - "pom.xml:236-266 relocates NetworkNT and ITU into the shaded ETS jar."
+  - "scripts/verify-teamengine6-runtime.sh:100-115 compares final and base TeamEngine-owned file manifests and excludes only the three additive ETS-owned paths."
+  - "OpenSpec and traceability leave REQ-ETS-TEAMENGINE-003/007 partially implemented until final Maven and local OSH TeamEngine 6 E2E are restored."
+
+required_next_actions:
+  - "Fix run-argument contract drift across spec, CTL, TestNG XML, Java, smoke script, Javadoc, site docs, and README."
+  - "Retire or align the Maven docker profile with the digest-pinned Dockerfile path."
+  - "Replace archetype placeholder suite metadata and docs."
+  - "Relabel the Sprint 41 Maven artifact as earlier evidence."
+  - "Correct stale handoff path/origin/resources inventory details."
+  - "After any code/doc fixes, rerun final Maven and mandatory local OSH TeamEngine 6 E2E before changing Sprint 41 implementation status."

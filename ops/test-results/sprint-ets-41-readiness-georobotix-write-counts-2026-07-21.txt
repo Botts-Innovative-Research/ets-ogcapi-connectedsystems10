@@ -1,0 +1,5 @@
+target=https://api.georobotix.io/ogc/t18/api
+POST=0
+PUT=0
+PATCH=0
+DELETE=0

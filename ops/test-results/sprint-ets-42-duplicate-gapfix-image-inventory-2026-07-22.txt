@@ -1,0 +1,6 @@
+tag=ets-ogcapi-connectedsystems10:sprint42-gapfix-final
+FINAL_IMAGE_ID=sha256:b52f4897c553f5d3e37caf62fa14765a774b17f943243be3d99c5d89eec5dcb3
+created=2026-07-22T05:17:45.057629447-04:00
+teamengine_resources_jars=teamengine-resources-6.0.0-RC2.jar
+added_teamengine_coordinate_families=0
+added_teamengine_resources_ga_jar=0

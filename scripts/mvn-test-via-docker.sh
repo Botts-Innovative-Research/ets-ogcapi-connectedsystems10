@@ -57,7 +57,7 @@ MAVEN_IMAGE="${MVN_DOCKER_IMAGE:-maven:3.9-eclipse-temurin-17}"
 # the Debian image has git pre-installed so no extra setup is needed.
 echo "[mvn-test-via-docker] repo root: $REPO_ROOT"
 echo "[mvn-test-via-docker] image:     $MAVEN_IMAGE"
-echo "[mvn-test-via-docker] command:   mvn clean test -B $*"
+echo "[mvn-test-via-docker] command:   bootstrap SWE Common validator; mvn clean test -B $*"
 echo "[mvn-test-via-docker] (Sprint 8 S-ETS-08-01 Wedge 6 -- closes Quinn host-PATH gap.)"
 echo
 
@@ -75,4 +75,4 @@ docker run --rm \
   -e MAVEN_CONFIG=/tmp/.m2 \
   -e MAVEN_OPTS="-Duser.home=/tmp" \
   "$MAVEN_IMAGE" \
-  mvn clean test -B "$@"
+  bash -c 'bash scripts/bootstrap-swecommon30-validator.sh && exec mvn clean test -B "$@"' bash "$@"

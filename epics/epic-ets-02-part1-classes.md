@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 19 encoding mediatype-write Generator complete | Last updated: 2026-05-07
+> Status: Active - Sprint 19 encoding mediatype-write Generator complete; Sprint 42 documents external SensorML validator dependency path | Last updated: 2026-07-22
 
 ## Goal
 Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with each `@Test` method mapped 1:1 to an OGC ATS assertion via the canonical requirement URI in the test's `description` attribute. Owns sub-deliverable 2 of the new ETS capability.
@@ -38,6 +38,7 @@ Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with e
 | S-ETS-17-01 | Add read-only `/req/geojson/relation-types` and `/req/sensorml/relation-types` association-link checks | Partial-Implemented (Sprint 17 Generator, Raze-approved) | REQ-ETS-PART1-012, REQ-ETS-PART1-013 |
 | S-ETS-18-01 | Broaden read-only encoding relation-types checks across selected GeoJSON/SensorML resource classes | Partial-Implemented (Sprint 18 Generator, Raze-approved) | REQ-ETS-PART1-012, REQ-ETS-PART1-013 |
 | S-ETS-19-01 | Add safety-gated GeoJSON/SensorML mediatype-write checks | Partial-Implemented (Sprint 19 Generator; GeoRobotix no-mutation smoke PASS; local OSH system-resource mediatype-write PASS; Raze follow-up gapfix APPROVE) | REQ-ETS-PART1-012, REQ-ETS-PART1-013, REQ-ETS-PART1-010 |
+| S-ETS-42-01 | Document external SWE Common and SensorML validator architecture and migration plan | Planned provisional architecture documented; no product dependency added | REQ-ETS-VALIDATOR-001, REQ-ETS-PART1-013 |
 | S-ETS-06-04 | (optional) Common conformance class expansion 4 → 8 @Tests (Sprint 3+ minimal-then-expand by design per Quinn CONCERN-2) | Backlog | REQ-ETS-PART1-001 (modified) |
 
 ## Acceptance Criteria

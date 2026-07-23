@@ -14,8 +14,8 @@
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>ogcapi-connectedsystems10 Conformance Test Suite</name>
-  <description>Executable Test Suite (ETS) for OGC API - Connected Systems Part 1 (OGC 23-001). Targets the OGC TeamEngine certification track. Sibling repository to csapi_compliance (developer pre-flight web app, frozen at v1.0).</description>
+  <name>OGC API - Connected Systems 1.0 Conformance Test Suite</name>
+  <description>Executable Test Suite (ETS) for OGC API - Connected Systems 1.0, currently covering selected Part 1 (OGC 23-001) and Part 2 (OGC 23-002) requirements through the TeamEngine 6 runtime.</description>
   <url>https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10</url>
   <licenses>
     <license>
@@ -54,6 +54,8 @@
     <!-- REQ-ETS-TEAMENGINE-007; SCENARIO-ETS-TEAMENGINE-TE6-IMAGE-PROVENANCE-001. -->
     <teamengine.runtime.version>6.0.0</teamengine.runtime.version>
     <teamengine.runtime.image.digest>sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c</teamengine.runtime.image.digest>
+    <!-- CP-002 source-pinned provisional artifact; bootstrap script verifies the source commit. -->
+    <swecommon30.validator.version>0.1-SNAPSHOT</swecommon30.validator.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.release>17</maven.compiler.release>
@@ -112,6 +114,24 @@
       <groupId>com.networknt</groupId>
       <artifactId>json-schema-validator</artifactId>
       <version>1.5.9</version>
+    </dependency>
+
+    <!-- Reusable SWE Common domain validator, built from the CP-002 pinned source commit. -->
+    <dependency>
+      <groupId>org.opengis.cite</groupId>
+      <artifactId>swecommon30-validator</artifactId>
+      <version>${swecommon30.validator.version}</version>
+      <exclusions>
+        <!-- Keep the ETS-managed NetworkNT/Jackson runtime closure. -->
+        <exclusion>
+          <groupId>com.networknt</groupId>
+          <artifactId>json-schema-validator</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Geometry types (used in feature/observation body validation) -->
@@ -216,6 +236,30 @@
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
       <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>isolate-networknt-message-bundles</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.networknt</groupId>
+                  <artifactId>json-schema-validator</artifactId>
+                  <version>1.5.9</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.outputDirectory}/org/opengis/cite/ogcapiconnectedsystems10/internal/networknt/schema/i18n</outputDirectory>
+                  <includes>jsv-messages*.properties</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <!-- Version inherited from ets-common:17 pluginManagement (3.4.2). ADR-004 C-4. -->
         <configuration>
@@ -252,8 +296,35 @@
                 <includes>
                   <include>com.networknt:json-schema-validator</include>
                   <include>com.ethlo.time:itu</include>
+                  <include>org.opengis.cite:swecommon30-validator</include>
                 </includes>
               </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>com.networknt:json-schema-validator</artifact>
+                  <excludes>
+                    <exclude>jsv-messages*.properties</exclude>
+                    <exclude>META-INF/maven/**</exclude>
+                    <exclude>META-INF/versions/**/module-info.class</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.ethlo.time:itu</artifact>
+                  <excludes>
+                    <exclude>META-INF/maven/**</exclude>
+                    <exclude>META-INF/versions/**/module-info.class</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>org.opengis.cite:swecommon30-validator</artifact>
+                  <excludes>
+                    <!-- Upstream currently packages this test fixture under src/main. -->
+                    <exclude>org/opengis/cite/swecommon30/BaseJsonSchemaValidatorTest.class</exclude>
+                    <exclude>META-INF/maven/**</exclude>
+                    <exclude>META-INF/versions/**/module-info.class</exclude>
+                  </excludes>
+                </filter>
+              </filters>
               <relocations>
                 <relocation>
                   <pattern>com.networknt.schema</pattern>
@@ -262,6 +333,10 @@
                 <relocation>
                   <pattern>com.ethlo.time</pattern>
                   <shadedPattern>org.opengis.cite.ogcapiconnectedsystems10.internal.ethlo.time</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>jsv-messages</pattern>
+                  <shadedPattern>org.opengis.cite.ogcapiconnectedsystems10.internal.networknt.schema.i18n.jsv-messages</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
@@ -340,41 +415,6 @@
                 <goals>
                   <goal>integration-test</goal>
                   <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>docker</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>build</id>
-                <goals>
-                  <goal>build</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>push</id>
-                <goals>
-                  <goal>push</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>copy</goal>
                 </goals>
               </execution>
             </executions>

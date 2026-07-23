@@ -1,15 +1,17 @@
 sprint: ets-41
 story: S-ETS-41-01
 title: TeamEngine 6 runtime migration
-status: IN_PROGRESS_MAVEN_IMAGE_STARTUP_VERIFIED_E2E_BLOCKED
+status: COMPLETE
 triggered_by: 'User instruction: derive specs, story, architecture, traceability, and ADRs for the current and proposed TeamEngine work.'
 requirements:
   - REQ-ETS-TEAMENGINE-001
+  - REQ-ETS-TEAMENGINE-002
   - REQ-ETS-TEAMENGINE-003
   - REQ-ETS-TEAMENGINE-004
   - REQ-ETS-TEAMENGINE-005
   - REQ-ETS-TEAMENGINE-006
   - REQ-ETS-TEAMENGINE-007
+  - REQ-ETS-TEAMENGINE-008
   - REQ-ETS-CLEANUP-004
   - REQ-ETS-CLEANUP-021
 scenarios:
@@ -19,6 +21,9 @@ scenarios:
   - SCENARIO-ETS-TEAMENGINE-TE6-RUNTIME-INVARIANTS-001
   - SCENARIO-ETS-TEAMENGINE-TE6-LOCAL-OSH-E2E-001
   - SCENARIO-ETS-TEAMENGINE-TE6-CONFIG-ALIGNMENT-001
+  - SCENARIO-ETS-TEAMENGINE-RUN-ARG-CONTRACT-001
+  - SCENARIO-ETS-TEAMENGINE-PUBLIC-METADATA-001
+  - SCENARIO-ETS-TEAMENGINE-MAVEN-DOCKER-PROFILE-001
   - SCENARIO-ETS-CLEANUP-CONFIDENTIAL-BUILD-CONTEXT-001
 scope:
   include:
@@ -26,6 +31,9 @@ scope:
     - Preserve the JDK 17/Maven multi-stage builder and non-root runtime.
     - Keep TeamEngine-owned base-image files immutable; install only additive ETS-owned artifacts at supported extension locations.
     - Align POM, Dockerfile, Compose, and smoke runtime behavior.
+    - Align CTL, TestNG defaults, README, site docs, Javadoc, and sample run props on the canonical run-argument contract.
+    - Remove archetype placeholders and stale scope/profile text from public TeamEngine metadata, including Maven-derived suite title/description, Dockerfile labels, Compose comments, and describe actual partial Part 1/Part 2 coverage.
+    - Remove or neuter the stale Maven docker profile as an independent runtime path.
     - Empirically justify explicit runtime dependency exclusions.
     - Verify Maven, image startup/registration, and real local OSH E2E.
     - Validate confidential-reference-file and worktree hygiene.
@@ -45,9 +53,13 @@ success_criteria:
 test_first_deliverables:
   - Structural test for immutable runtime digest and documented TeamEngine/Tomcat/JDK metadata; cite REQ-ETS-TEAMENGINE-007 and SCENARIO-ETS-TEAMENGINE-TE6-IMAGE-PROVENANCE-001.
   - Structural test rejecting broad unverified TeamEngine jar wildcards and comparing explicit exclusions with recorded inventory; cite REQ-ETS-TEAMENGINE-003 and SCENARIO-ETS-TEAMENGINE-TE6-DEPENDENCY-INVENTORY-001.
+  - Structural and runtime checks rejecting any added jar that duplicates a base-image Maven coordinate family at another version or provides overlapping functional paths.
   - Structural test rejecting TeamEngine file mutation, replacement, deletion, root runtime steps, and recursive ownership changes; cite REQ-ETS-TEAMENGINE-007 and SCENARIO-ETS-TEAMENGINE-TE6-BASE-IMMUTABILITY-001.
   - Scripted image invariant test for utilities, paths, ownership, effective non-root user, health, and suite registration; cite REQ-ETS-TEAMENGINE-007 and SCENARIO-ETS-TEAMENGINE-TE6-RUNTIME-INVARIANTS-001.
   - Structural configuration comparison for Dockerfile, Compose, Maven profile, and smoke harness; cite REQ-ETS-TEAMENGINE-004/007 and SCENARIO-ETS-TEAMENGINE-TE6-CONFIG-ALIGNMENT-001.
+  - Structural public-contract test for canonical run arguments across CTL, TestNG XML, README, site docs, Javadoc, and sample props; cite REQ-ETS-TEAMENGINE-002/008 and SCENARIO-ETS-TEAMENGINE-RUN-ARG-CONTRACT-001.
+  - Structural public-metadata test rejecting archetype placeholders and stale Part 1-only scope in POM-derived suite metadata, Dockerfile labels, Compose comments, CTL, config.xml, smoke title assertion, site docs, Javadoc, README, and sample props; cite REQ-ETS-TEAMENGINE-008 and SCENARIO-ETS-TEAMENGINE-PUBLIC-METADATA-001.
+  - Structural POM test rejecting a Fabric8/broad-dependency-copy Maven docker profile; cite REQ-ETS-TEAMENGINE-007/008 and SCENARIO-ETS-TEAMENGINE-MAVEN-DOCKER-PROFILE-001.
   - Confidential tracked-file/build-context test that never prints protected contents; cite REQ-ETS-CLEANUP-021 and SCENARIO-ETS-CLEANUP-CONFIDENTIAL-BUILD-CONTEXT-001.
   - Capture failing evidence against the pre-existing diff where applicable before implementation repair, then archive passing evidence.
 guardrails:
@@ -56,25 +68,70 @@ guardrails:
   - Never print confidential OGC file contents or credential values.
   - Do not remove runtime jars by wildcard without empirical inventory evidence.
 evidence:
-  final_raze:
+  policy_guidance_raze:
     result: APPROVE_WITH_CONCERNS
+    confidence: 0.93
+    required_fixes: "0; RF-001 cleared by the 2026-07-22 primary local OSH E2E"
+    artifact: .harness/evaluations/sprint-ets-41-policy-guidance-adversarial-recheck-2026-07-21.yaml
+    detail: "Focused recheck closed RF-002 through RF-004. Primary local OSH E2E on 2026-07-22 cleared RF-001 with 211/69/0/142 and zero writes."
+  readiness_raze:
+    result: APPROVE_WITH_CONCERNS
+    confidence: 0.91
+    artifact: .harness/evaluations/sprint-ets-41-readiness-adversarial-recheck-2026-07-21.yaml
+    detail: "Initial readiness Raze returned GAPS_FOUND. The focused recheck closed documentation findings, and 2026-07-22 primary local OSH evidence clears RAZE-S41-READINESS-001."
+  final_closure_raze:
+    result: GAPS_FOUND
+    confidence: 0.99
+    artifact: .harness/evaluations/sprint-ets-42-final-closure-adversarial-2026-07-22.yaml
+    detail: "Duplicate TeamEngine resources family, direct image identity, and worktree cleanup were required."
+  duplicate_gapfix_raze:
+    result: GAPS_FOUND
+    confidence: 0.99
+    artifact: .harness/evaluations/sprint-ets-42-duplicate-gapfix-adversarial-recheck-2026-07-22.yaml
+    detail: "Generic jar-content enforcement, message isolation, fresh Maven, and worktree cleanup were required."
+  generic_guard_raze:
+    result: GAPS_FOUND
     confidence: 0.98
-    required_fixes: 0
-    artifact: .harness/evaluations/sprint-ets-41-adversarial-recheck.yaml
+    artifact: .harness/evaluations/sprint-ets-42-generic-jar-guard-adversarial-recheck-2026-07-22.yaml
+    detail: "Explicit tuple output, unused-allowlist rejection, Jenkins profile cleanup, and final metadata reconciliation remain."
+  final_metadata_raze:
+    result: GAPS_FOUND
+    confidence: 0.99
+    artifact: .harness/evaluations/sprint-ets-42-final-metadata-gapfix-adversarial-recheck-2026-07-22.yaml
+    detail: "Release Jenkins profile/toolchain/bootstrap cleanup, executable exact multi-tuple assertions, fresh gates, and final reconciliation remain."
+  final_metadata_gapfix:
+    result: SUPERSEDED_CANDIDATE
+    detail: "Image 05a592e0 emitted both runtime tuples and rejected unused entries, but final Raze found incomplete self-test assertions and stale release Jenkins configuration. Evidence: ops/test-results/sprint-ets-42-final-metadata-gapfix-verification-2026-07-22.md."
+  final_raze_gapfix:
+    result: VERIFIED_CANDIDATE
+    detail: "Both Jenkinsfiles use Java 17, bootstrap SWE Common, and request only declared profiles. The behavioral self-test asserts the complete exact two-tuple set. Fresh focused/full/runtime/local-OSH gates pass. Evidence: ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md."
+  final_raze_approval:
+    result: APPROVE
+    confidence: 0.99
+    artifact: .harness/evaluations/sprint-ets-42-final-raze-gapfix-adversarial-recheck-2026-07-22.yaml
+    detail: "No unresolved required fix remains; Sprint 41 may close."
   planning_raze:
     result: GAPS_FOUND
     confidence: 0.91
     artifact: .harness/evaluations/teamengine-6-migration-adversarial-2026-07-20.yaml
   base_image_inventory:
     result: PASS_READ_ONLY_CORRECTED
-    summary: "Pinned image reports uid/gid 1001 tomcat, curl/unzip, writable extension paths, TeamEngine SPI/core 6.0.0, and resources RC2. The final image adds only the shaded ETS jar plus resources 6.0.0; NetworkNT/ITU are relocated to avoid split-version additions."
+    summary: "Pinned image reports uid/gid 1001 tomcat, required utilities, writable extension paths, TeamEngine SPI/core 6.0.0, and resources RC2. Exact image 829a9741 adds one ETS jar, no duplicate coordinate, emits two exact allowlisted paths, and rejects unused entries."
   focused_structural_test:
-    result: NOT_RUN_INFRASTRUCTURE
-    detail: "Maven container image pull failed through Docker Hub CloudFront IPv6 with network unreachable before Maven or tests started."
-  runtime_verifier:
     result: PASS
-    detail: "Digest, byte-for-byte immutable-base boundary, user/paths/utilities, base jar inventory, selected payload, Git history, effective Docker context, and confidential tracked-file checks passed."
-  maven: "EARLIER PASS: 298 tests / 0 failures / 0 errors / 3 skipped; final post-Raze rerun blocked before tests by Maven Central DNS/repository I/O"
-  docker_build: PASS
-  teamengine_startup: "PASS: healthy; ogcapi-connectedsystems10 registered; no startup linkage/registration errors"
-  local_osh_real_iut_e2e: "NOT_RUN_BLOCKED: documented field-hub directory/image/volume/network/container and credential source absent after environment restart"
+    detail: "Final VerifyTeamEngine6Packaging passed 11/0/0/0 after raw expected test-first failure 11/1/0/0; artifact ops/test-results/sprint-ets-42-final-raze-gapfix-focused-maven-2026-07-22.txt."
+  policy_guidance_remediation:
+    result: IMPLEMENTED_STATIC
+    detail: "Canonical run arguments, public metadata cleanup including POM-derived suite title/description and smoke title assertion, Maven docker profile retirement, and primary local OSH E2E are verified."
+  evaluator:
+    result: CONCERNS_REMEDIATED_STATIC
+    artifact: .harness/evaluations/sprint-ets-41-policy-guidance-evaluator-2026-07-21.yaml
+    detail: "Quinn's POM-derived metadata concern was remediated before final Maven and Raze."
+  runtime_verifier:
+    result: PASS_FINAL_CANDIDATE
+    detail: "Exact image passes direct IDs, adapter execution, exact behavioral multi-tuple output, unused-allowlist rejection, one added jar, two exact allowlisted paths, and immutable base; artifact ops/test-results/sprint-ets-42-final-raze-gapfix-runtime-verifier-final-2026-07-22.txt."
+  maven: "PASS_FINAL_CANDIDATE: fresh 312 tests / 0 failures / 0 errors / 3 skipped; artifact ops/test-results/sprint-ets-42-final-raze-gapfix-full-maven-2026-07-22.txt"
+  docker_build: "PASS_FINAL_CANDIDATE: exact E2E image sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9."
+  teamengine_startup: "PASS_READINESS: docker compose built the image, reached healthy, and /rest/suites exposed ogcapi-connectedsystems10 with the expected full title; artifact ops/test-results/sprint-ets-41-readiness-compose-2026-07-21.txt."
+  advisory_georobotix_real_iut: "FAIL_ADVISORY: deployed TeamEngine 6 suite executed against GeoRobotix and returned 211 total / 38 passed / 34 failed / 139 skipped with zero public-IUT writes; artifacts ops/test-results/sprint-ets-41-readiness-georobotix-smoke-2026-07-21.* and write-count/no-mutation files."
+  local_osh_real_iut_e2e: "PASS_FINAL_CANDIDATE: 211 total / 69 passed / 0 failed / 142 skipped; recognized_iut_request_logs=135; zero writes; zero startup errors; artifacts ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-final-2026-07-22.xml, container log, and no-mutation file."

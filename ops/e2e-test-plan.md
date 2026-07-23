@@ -1,6 +1,6 @@
 # E2E Test Plan — OGC API Connected Systems ETS
 
-Last updated: 2026-06-02T19:45Z
+Last updated: 2026-07-21T13:05Z
 
 ## Policy
 
@@ -20,6 +20,13 @@ SMOKE_DOCKER_NETWORK=field-hub_default \
 ```
 
 The smoke script builds the Docker image, starts TeamEngine, verifies suite registration, runs the ETS against the configured IUT, archives XML/log artifacts, and exits non-zero if TestNG reports failures or TeamEngine startup has registration errors.
+
+The pinned OGC TeamEngine 6 image digest is linux/amd64-only. On linux/arm64
+Docker hosts, register amd64 binfmt support before running the smoke gate:
+
+```bash
+docker run --privileged --rm tonistiigi/binfmt --install amd64
+```
 
 ## Accepted IUT Targets
 

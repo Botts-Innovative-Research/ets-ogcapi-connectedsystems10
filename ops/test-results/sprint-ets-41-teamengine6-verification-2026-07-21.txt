@@ -8,7 +8,7 @@ Runtime verifier:
 Formatter:
   BUILD SUCCESS; spring-javaformat:apply; total time 05:00 min.
 
-Final Docker Maven wrapper:
+Earlier Docker Maven wrapper evidence:
   BUILD SUCCESS; 298 tests, 0 failures, 0 errors, 3 skipped.
   Finished 2026-07-21T04:35:18Z; total time 10:46 min.
   This pass predates the final two structural-test additions. The required final

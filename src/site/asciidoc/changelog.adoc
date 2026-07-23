@@ -1,7 +1,10 @@
 = Release Notes
 
-== ${project.version} (YYYY-MM-DD)
+== ${project.version} (2026-07-21)
 
-The initial release implements the following test requirements:
+Current OGC API - Connected Systems ETS package status:
 
-- all mandatory conformance classes (Class A, Class B)
+* TeamEngine 6 is the forward runtime.
+* Implemented coverage includes partial OGC 23-001 Part 1 and implemented partial OGC 23-002 Part 2 checks.
+* The supported run arguments are `iut`, `auth-credential`, `mutation-tests-enabled`, and `mutation-iut-policy`.
+* Local OSH is the primary development E2E target; GeoRobotix runs are advisory only.

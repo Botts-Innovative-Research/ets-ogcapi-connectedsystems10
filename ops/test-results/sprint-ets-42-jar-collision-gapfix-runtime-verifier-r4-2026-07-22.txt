@@ -1,0 +1,9 @@
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+BASE_IMAGE_ID=sha256:9d53016965c4cca0f4d8baec136ad11258dccc552e9a8c969a1a6f889336d90c
+FINAL_IMAGE_ID=sha256:1e505b3e9f21b634cd5c02dfcee4b386497d3c0ac48da059311f5dce6946dd37
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+PASS: deployed SWE Common adapter executed valid and invalid components
+PASS: renamed-coordinate rejection, functional-path rejection, and exact allowlist acceptance
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+FAIL: added-jar coordinate or functional-path collision verification failed: FAIL: functional-path collision: ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar supplies base path META-INF/versions/9/module-info.class

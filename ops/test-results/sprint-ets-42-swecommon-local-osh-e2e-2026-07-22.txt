@@ -1,0 +1,10 @@
+fresh_copy=/tmp/ets-ogcapi-connectedsystems10-s42-final.UGsKVBGD/source
+output_dir=/tmp/ets-ogcapi-connectedsystems10-s42-final.UGsKVBGD/results
+[smoke-test 07:40:26] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 07:40:26] step 2/8 — docker build ets-ogcapi-connectedsystems10:smoke (BuildKit 1)
+[smoke-test 07:40:55] step 3/8 — docker run on host port 8081
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+docker: Error response from daemon: failed to set up container networking: network field-hub_default not found
+
+Run 'docker run --help' for more information
+[smoke-test FATAL] docker run failed (port 8081)

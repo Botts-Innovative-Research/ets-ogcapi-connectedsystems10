@@ -1,0 +1,123 @@
+reviewer:
+  role: Raze
+  review_type: bounded_final_raze_gapfix_adversarial_recheck
+  agent: Codex
+started_at: "2026-07-22T11:42:14Z"
+completed_at: "2026-07-22T11:48:13Z"
+duration: "5m59s"
+verdict: APPROVE
+confidence: 0.99
+scope:
+  - "Closure of RAZE-S42-FINAL-METADATA-001 for both Jenkinsfiles, declared Maven profiles, and structural coverage."
+  - "Closure of RAZE-S42-FINAL-METADATA-002 for exact multi-tuple jar-guard behavior, structural coverage, and runtime wiring."
+  - "Closure of RAZE-S42-FINAL-METADATA-003 for candidate chronology, status honesty, SensorML deferral, and REQ-ETS-VALIDATOR-001 partial status."
+  - "Read-only confirmation of archived test-first, focused Maven, full Maven, exact-image runtime, and local OSH TeamEngine evidence."
+  - "Read-only hygiene check for credential leakage and .moduledata absence. Docker, Maven, TeamEngine, and E2E were not rerun."
+evidence_reviewed:
+  - "_bmad/agents/adversarial-reviewer.md"
+  - ".harness/evaluations/sprint-ets-42-final-metadata-gapfix-adversarial-recheck-2026-07-22.yaml"
+  - "jenkinsfiles/build/Jenkinsfile"
+  - "jenkinsfiles/release/Jenkinsfile"
+  - "pom.xml"
+  - "scripts/bootstrap-swecommon30-validator.sh"
+  - "scripts/test-teamengine6-jar-guard.sh"
+  - "scripts/verify-added-jar-inventory.sh"
+  - "scripts/verify-teamengine6-runtime.sh"
+  - "scripts/teamengine6-functional-path-allowlist.txt"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTeamEngine6Packaging.java"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md"
+  - "openspec/change-proposals/CP-002-swecommon-validator-adapter.md"
+  - "epics/epic-ets-03-part2-classes.md"
+  - "epics/epic-ets-04-teamengine-integration.md"
+  - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md"
+  - "epics/stories/s-ets-42-01-external-domain-validator-architecture.md"
+  - "epics/stories/s-ets-42-02-swecommon-validator-adapter.md"
+  - ".harness/contracts/sprint-ets-41.yaml"
+  - ".harness/contracts/sprint-ets-42.yaml"
+  - "_bmad/architecture.md v2.0.15"
+  - "_bmad/traceability.md"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/test-results.md"
+  - "ops/e2e-test-plan.md"
+  - "ops/local-osh-gate-config.json"
+  - "ops/local-osh-seed-fixtures.json"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-test-first-raw-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-focused-maven-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-full-maven-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-runtime-verifier-final-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-e2e-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-final-2026-07-22.xml"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-final-container-2026-07-22.log"
+  - "ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-final-no-mutation-2026-07-22.txt"
+findings:
+  - id: RAZE-S42-FINAL-METADATA-001
+    severity: MEDIUM
+    required_fix: >-
+      Both build and release Jenkinsfiles must select JDK 17, invoke the
+      source-pinned SWE Common bootstrap, request only Maven profiles declared
+      by this project, and have structural coverage inspect both files and every
+      explicit -P profile.
+    status: CLOSED
+    evidence:
+      - "jenkinsfiles/build/Jenkinsfile:5,17-18 selects JDK 17, invokes scripts/bootstrap-swecommon30-validator.sh, and requests only integration-tests."
+      - "jenkinsfiles/release/Jenkinsfile:5,17-19 selects JDK 17, invokes the same bootstrap, and requests only release,integration-tests for both release commands."
+      - "pom.xml:405-452 declares exactly the integration-tests and release project profiles requested by those Jenkins commands; no docker profile exists."
+      - "VerifyTeamEngine6Packaging.java:83-84 loads both Jenkinsfiles; lines 285-297 iterate both, require JDK 17/bootstrap, parse every explicit -P argument, split comma-separated IDs, and require each ID in the POM."
+      - "Archived test-first evidence fails 11/1/0/0 on the stale release JDK; corrected focused evidence passes 11/0/0/0."
+  - id: RAZE-S42-FINAL-METADATA-002
+    severity: MEDIUM
+    required_fix: >-
+      The executable jar-guard self-test must construct at least two accepted
+      collisions, capture stdout, assert the complete exact sorted
+      ALLOWED_COLLISION plus PASS output, and be structurally required and wired
+      into runtime verification.
+    status: CLOSED
+    evidence:
+      - "scripts/test-teamengine6-jar-guard.sh:55-65 constructs two separate accepted coordinate/path collisions and an exact two-entry allowlist."
+      - "scripts/test-teamengine6-jar-guard.sh:67-76 captures stdout and compares it byte-for-byte with two sorted ALLOWED_COLLISION records plus the exact PASS summary."
+      - "VerifyTeamEngine6Packaging.java:150-155 requires both tuple literals, stdout capture, exact actual-versus-expected comparison, and runtime-verifier wiring."
+      - "scripts/verify-teamengine6-runtime.sh:159 executes the behavioral self-test before deployed inventory verification."
+      - "The fresh runtime artifact records the self-test PASS, both exact deployed ALLOWED_COLLISION tuples in sorted order, the deployed guard PASS, and the final TeamEngine verifier PASS."
+  - id: RAZE-S42-FINAL-METADATA-003
+    severity: LOW
+    required_fix: >-
+      Reconcile specs, stories, contracts, architecture v2.0.15, traceability,
+      and operations records to supersede image 05a592e0, identify exact image
+      sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9
+      as current, preserve SensorML deferral and REQ-ETS-VALIDATOR-001 partial
+      status, and claim only readiness for final Raze.
+    status: CLOSED
+    evidence:
+      - "Both active stories and sprint contracts are READY FOR FINAL RAZE/READY_FOR_FINAL_RAZE and leave the final-Raze acceptance item unchecked or pending."
+      - "Both contracts explicitly classify image 05a592e0 as SUPERSEDED_CANDIDATE and identify image 829a9741 as VERIFIED_CANDIDATE."
+      - "Architecture v2.0.15 section 21.6 records the 05a592e0 findings, identifies the full 829a9741 digest as the replacement, and says it is ready for final Raze."
+      - "OpenSpec implementation status, traceability, epic rows, ops/status.md, ops/changelog.md, and ops/test-results.md consistently identify the full 829a9741 digest and retain final Raze as the remaining gate."
+      - "REQ-ETS-VALIDATOR-001 remains PARTIALLY_IMPLEMENTED overall; SWE Common is ready for final Raze and SensorML remains explicitly deferred across OpenSpec, architecture, traceability, stories, contracts, and operations."
+  - id: RAZE-S42-FINAL-RAZE-EVIDENCE-001
+    severity: INFO
+    required_fix: null
+    status: CLOSED
+    evidence:
+      - "Fresh archived Maven totals are test-first 11/1/0/0 with BUILD FAILURE, focused 11/0/0/0 with BUILD SUCCESS, and full 312/0/0/3 with BUILD SUCCESS."
+      - "Runtime and smoke artifacts both directly report FINAL_IMAGE_ID=sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9."
+      - "The local OSH smoke and TestNG XML report 211/69/0/142; no-mutation evidence reports 135 recognized requests, GET=133, OPTIONS=2, and POST/PUT/PATCH/DELETE=0."
+      - "The smoke artifact reports zero startup ERROR/SEVERE entries."
+      - "A filename-only credential scan of the reviewed fresh artifacts and local OSH configuration found no unmasked Basic/Bearer authorization value, password assignment, private-key marker, or auth-credential value."
+      - "A worktree search found no .moduledata directory."
+residual_risks:
+  - "No gate was rerun by explicit instruction; runtime and E2E conclusions rely on internally consistent archived raw artifacts."
+  - "The SWE Common validator remains source-pinned at unpublished 0.1-SNAPSHOT coordinates; release remains blocked pending a reusable non-SNAPSHOT artifact."
+  - "SensorML integration remains deferred, so REQ-ETS-VALIDATOR-001 correctly remains partial after this bounded approval."
+  - "The reviewed implementation and evidence remain in a dirty, largely untracked worktree; this review establishes content consistency, not commit provenance."
+required_actions: []
+completion_recommendation: >-
+  Approve closure of RAZE-S42-FINAL-METADATA-001, -002, and -003. The exact
+  replacement candidate has no unresolved required fix in this bounded scope.
+  Normal post-Raze reconciliation may advance the two stories, while the overall
+  validator requirement must remain partial because SensorML is deferred.
+token_metadata:
+  status: unavailable
+  detail: "The execution interface exposed no authoritative token count or cost metadata for this review."

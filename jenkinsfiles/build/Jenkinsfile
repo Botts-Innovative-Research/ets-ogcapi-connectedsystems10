@@ -2,7 +2,7 @@ pipeline {
   agent any
   tools {
     maven 'mvn'
-    jdk 'JDK 8'
+    jdk 'JDK 17'
   }
   stages {
     stage('Preparation') {
@@ -14,7 +14,8 @@ pipeline {
     stage('Build') {
       steps{
         sh 'mvn --version'
-        sh 'mvn clean install site -Pintegration-tests,docker'
+        sh 'bash scripts/bootstrap-swecommon30-validator.sh'
+        sh 'mvn clean install site -Pintegration-tests'
       }
     }
     stage('Results') {

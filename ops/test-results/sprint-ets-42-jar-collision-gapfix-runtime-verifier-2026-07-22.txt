@@ -1,0 +1,5 @@
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+BASE_IMAGE_ID=sha256:9d53016965c4cca0f4d8baec136ad11258dccc552e9a8c969a1a6f889336d90c
+FINAL_IMAGE_ID=sha256:1e505b3e9f21b634cd5c02dfcee4b386497d3c0ac48da059311f5dce6946dd37
+FAIL: final ETS jar does not contain the isolated SWE Common validator payload: WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+sh: 16: Holder: parameter not set

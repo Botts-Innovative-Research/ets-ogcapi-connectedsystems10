@@ -1,0 +1,63 @@
+Verified SWE Common validator source: https://github.com/opengeospatial/ets-swecommon30.git@3ba75ceabe57cea85f4a8513c59e0f90e386ba96
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] SWE Common 3.0 Conformance Test Suite Parent                       [pom]
+[INFO] SWE Common 3.0 Validation Module                                   [jar]
+[INFO] 
+[INFO] ----------------< org.opengis.cite:swecommon30-parent >-----------------
+[INFO] Building SWE Common 3.0 Conformance Test Suite Parent 0.1-SNAPSHOT [1/2]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- site:3.5.1:jar (site-package) @ swecommon30-parent ---
+[WARNING]  Parameter 'reportPlugins' is read-only, must not be used in configuration
+[INFO] maven.site.skip = true: Skipping jar generation
+[INFO] 
+[INFO] --- install:3.1.4:install (default-install) @ swecommon30-parent ---
+[INFO] Installing /tmp/swecommon30-validator.WQUw4EuF/pom.xml to /tmp/.m2/repository/org/opengis/cite/swecommon30-parent/0.1-SNAPSHOT/swecommon30-parent-0.1-SNAPSHOT.pom
+[INFO] 
+[INFO] ---------------< org.opengis.cite:swecommon30-validator >---------------
+[INFO] Building SWE Common 3.0 Validation Module 0.1-SNAPSHOT             [2/2]
+[INFO]   from swecommon30-validator/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ swecommon30-validator ---
+[INFO] Copying 106 resources from src/main/resources to target/classes
+[INFO] skip non existing resourceDirectory /tmp/swecommon30-validator.WQUw4EuF/swecommon30-validator/src/main/javadoc
+[INFO] 
+[INFO] --- compiler:3.6.0:compile (default-compile) @ swecommon30-validator ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /tmp/swecommon30-validator.WQUw4EuF/swecommon30-validator/target/classes
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ swecommon30-validator ---
+[INFO] skip non existing resourceDirectory /tmp/swecommon30-validator.WQUw4EuF/swecommon30-validator/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.6.0:testCompile (default-testCompile) @ swecommon30-validator ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:2.19.1:test (default-test) @ swecommon30-validator ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- site:3.5.1:jar (site-package) @ swecommon30-validator ---
+[WARNING]  Parameter 'reportPlugins' is read-only, must not be used in configuration
+[INFO] maven.site.skip = true: Skipping jar generation
+[INFO] 
+[INFO] --- jar:3.0.2:jar (default-jar) @ swecommon30-validator ---
+[INFO] Building jar: /tmp/swecommon30-validator.WQUw4EuF/swecommon30-validator/target/swecommon30-validator-0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- install:3.1.4:install (default-install) @ swecommon30-validator ---
+[INFO] Installing /tmp/swecommon30-validator.WQUw4EuF/swecommon30-validator/pom.xml to /tmp/.m2/repository/org/opengis/cite/swecommon30-validator/0.1-SNAPSHOT/swecommon30-validator-0.1-SNAPSHOT.pom
+[INFO] Installing /tmp/swecommon30-validator.WQUw4EuF/swecommon30-validator/target/swecommon30-validator-0.1-SNAPSHOT.jar to /tmp/.m2/repository/org/opengis/cite/swecommon30-validator/0.1-SNAPSHOT/swecommon30-validator-0.1-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for SWE Common 3.0 Conformance Test Suite Parent 0.1-SNAPSHOT:
+[INFO] 
+[INFO] SWE Common 3.0 Conformance Test Suite Parent ....... SUCCESS [  9.309 s]
+[INFO] SWE Common 3.0 Validation Module ................... SUCCESS [  4.283 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  18.909 s
+[INFO] Finished at: 2026-07-22T07:46:46Z
+[INFO] ------------------------------------------------------------------------

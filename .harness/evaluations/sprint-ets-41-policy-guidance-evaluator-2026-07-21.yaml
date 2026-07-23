@@ -1,0 +1,105 @@
+verdict: CONCERNS
+confidence: 0.87
+reviewer: "BMAD Evaluator / Quinn"
+gate: "Gate 2"
+generated_at: "2026-07-21T11:45:00Z"
+scope:
+  story: "S-ETS-41-01"
+  subject: "Sprint 41 policy-guidance remediation for TeamEngine 6 runtime migration"
+  reviewed_files:
+    - ".harness/prompts/evaluator.md"
+    - ".harness/contracts/sprint-ets-41.yaml"
+    - ".harness/handoffs/architect-handoff.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md"
+    - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md"
+    - "_bmad/traceability.md"
+    - "current git diff"
+  evaluated_remediation:
+    - "Canonical run arguments across CTL, TestNG XML, smoke forwarding, README, site docs, Javadoc, and sample run props."
+    - "Public metadata/docs cleanup for the listed TeamEngine package surfaces."
+    - "Removal of the stale Maven docker profile and structural regression coverage."
+    - "Sprint 41 structural tests citing REQ/SCENARIO identifiers."
+    - "Post-remediation Maven and runtime/E2E evidence."
+
+evidence:
+  git_status: "Dirty worktree with existing multi-file Sprint 41 remediation changes; evaluator only wrote this YAML."
+  structural_diff:
+    run_args: "src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl and testng.xml now serialize iut, auth-credential, mutation-tests-enabled, and mutation-iut-policy; ics was removed from executable defaults."
+    maven_profile: "pom.xml removes the docker profile containing Fabric8 docker-maven-plugin and maven-dependency-plugin copy execution."
+    docs_metadata: "README, CTL, config.xml, Javadoc overview, site docs, and sample test-run-props now describe OGC API - Connected Systems partial Part 1/Part 2 scope, TeamEngine 6, local OSH primary E2E, and GeoRobotix advisory status."
+    tests: "VerifyTeamEngine6Packaging adds Sprint 41 REQ/SCENARIO comments for run-argument contract, public metadata placeholders, Maven docker profile, provenance/config/inventory/base immutability, and confidential context hygiene."
+  maven:
+    artifact: "ops/test-results/sprint-ets-41-policy-guidance-maven-2026-07-21.txt"
+    result: "PASS"
+    focused_packaging: "9 tests / 0 failures / 0 errors / 0 skipped"
+    full_totals: "303 tests / 0 failures / 0 errors / 3 skipped"
+    finished_at: "2026-07-21T11:16:35Z"
+  runtime_verifier:
+    artifact: "ops/test-results/sprint-ets-41-policy-guidance-runtime-verifier-2026-07-21.txt"
+    result: "BLOCKED_FAIL_BEFORE_VERIFICATION"
+    detail: "exec /usr/bin/sh: exec format error because the pinned OGC TeamEngine image is linux/amd64 and this host is linux/arm64/v8 without amd64 emulation."
+  local_osh_e2e:
+    artifact: "ops/test-results/sprint-ets-41-policy-guidance-local-osh-e2e-2026-07-21.txt"
+    result: "BLOCKED_FAIL_BEFORE_IUT_EXECUTION"
+    detail: "Docker build failed in the TeamEngine runtime stage with exec format error before suite execution or no-mutation evidence."
+  prior_raze:
+    artifact: ".harness/evaluations/teamengine-policy-guidance-adversarial-2026-07-21.yaml"
+    result: "GAPS_FOUND"
+  sprint41_raze_recheck:
+    artifact: ".harness/evaluations/sprint-ets-41-adversarial-recheck.yaml"
+    result: "APPROVE_WITH_CONCERNS"
+    required_fixes: 0
+
+findings:
+  - id: "QUINN-ETS41-POLICY-001"
+    severity: "HIGH"
+    status: "CONCERN"
+    title: "Mandatory TeamEngine 6 runtime verifier and local OSH E2E remain blocked by platform"
+    evidence:
+      - "ops/test-results/sprint-ets-41-policy-guidance-runtime-verifier-2026-07-21.txt records linux/amd64 image on linux/arm64/v8 host and exec format error."
+      - "ops/test-results/sprint-ets-41-policy-guidance-local-osh-e2e-2026-07-21.txt fails during Docker build stage 5/5 with exec /bin/sh: exec format error."
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md keeps local OSH E2E unchecked."
+    impact: "Static remediation and Maven are verified, but Sprint 41 cannot close because the deployed TeamEngine suite has not executed against local OSH on TeamEngine 6 after remediation."
+    required_follow_up: "Rerun runtime verifier and scripts/smoke-test.sh on an amd64-capable Docker host or with working amd64 emulation, then archive exact TeamEngine totals and no-mutation evidence."
+
+  - id: "QUINN-ETS41-POLICY-002"
+    severity: "MEDIUM"
+    status: "CONCERN"
+    title: "Maven/TeamEngine title metadata still has stale Part 1-only wording"
+    evidence:
+      - "pom.xml:17 keeps project name 'ogcapi-connectedsystems10 Conformance Test Suite'."
+      - "pom.xml:18 describes only OGC API - Connected Systems Part 1."
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ets.properties maps ets-title to ${project.name}."
+      - "TestNGController#getTitle() returns ets-title, and scripts/smoke-test.sh still expects the old title fragment."
+    impact: "The explicitly listed docs and TeamEngine config were cleaned, but Maven-derived suite title/description metadata can still present stale Part 1-only public information."
+    required_follow_up: "Align pom.xml project name/description and the smoke title assertion with the current OGC API - Connected Systems Part 1/Part 2 partial-scope wording."
+
+  - id: "QUINN-ETS41-POLICY-003"
+    severity: "LOW"
+    status: "CONCERN"
+    title: "Pre-fix structural failure evidence was not archived"
+    evidence:
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md says separate pre-fix failure output was not captured before implementation."
+      - ".harness/contracts/sprint-ets-41.yaml requested failing evidence against the pre-existing diff where applicable before implementation repair."
+    impact: "The new structural tests assert the right stale surfaces and now pass, but the test-first audit trail is incomplete."
+    required_follow_up: "Do not block this remediation solely on reconstructed failure evidence; preserve the gap in the story and avoid claiming full test-first compliance for this slice."
+
+non_blocking_observations:
+  - "The only targeted grep hit for copy-dependencies outside the new regression test is a historical smoke-test comment saying host dependency copying was dropped; it is not an active Maven docker profile."
+  - "The public surfaces named in REQ-ETS-TEAMENGINE-008 no longer contain the checked archetype placeholders or unsupported run-argument keys."
+  - "The story is honest that Sprint 41 remains incomplete until local OSH TeamEngine 6 E2E evidence exists."
+
+decision_rationale: >
+  Gate 2 cannot be a clean PASS because required deployed-runtime/E2E evidence is
+  blocked and Maven-derived public suite metadata remains stale. It is not a FAIL:
+  the requested policy-guidance remediation is substantially implemented, the stale
+  Maven docker profile is removed, canonical run arguments are structurally covered,
+  archetype placeholders in the listed public docs are cleaned, and full Docker Maven
+  verification passes with exact totals.
+
+required_follow_up:
+  - "Run runtime verifier and local OSH TeamEngine 6 smoke on amd64-capable infrastructure; archive exact TestNG totals, logs, and no-mutation evidence."
+  - "Update Maven project title/description and smoke title assertion to match the cleaned Connected Systems scope."
+  - "Keep Sprint 41 status partial/in-progress until the E2E blocker is resolved."

@@ -1,0 +1,40 @@
+verdict: GAPS_FOUND
+confidence: 0.96
+reviewed_scope:
+  role: "Red Team / Raze adversarial reviewer"
+  request: "Review the provisional SWE Common validator adapter, packaging, specifications, and final-gate evidence."
+  files_edited: []
+findings:
+  - id: RAZE-S42-001
+    severity: high
+    title: "Primary local OSH E2E remains unsatisfied"
+    status: open_external_blocker
+    required_fix: "Restore field-hub_default and the local OSH IUT, then archive TeamEngine totals and no-mutation evidence."
+  - id: RAZE-S42-002
+    severity: high
+    title: "Shaded validator was inspected but not executed in the final image"
+    status: required_fix
+    required_fix: "Invoke valid and invalid adapter calls on the deployed TeamEngine classpath."
+  - id: RAZE-S42-003
+    severity: high
+    title: "Six-wrapper local/reusable parity corpus was missing"
+    status: required_fix
+    required_fix: "Cover Observation and Command JSON, Text, and Binary wrappers plus active requirement-URI and operational-error behavior."
+  - id: RAZE-S42-004
+    severity: medium
+    title: "Most gate evidence was summarized rather than archived raw"
+    status: required_fix
+    required_fix: "Archive formatter, bootstrap, Maven, image, runtime, and local-attempt command output."
+  - id: RAZE-S42-005
+    severity: medium
+    title: "Jenkins selected JDK 8 for a Java 17 project"
+    status: required_fix
+    required_fix: "Move the supported Jenkins build definition to JDK 17."
+  - id: RAZE-S42-006
+    severity: low
+    title: "Runtime-closure wording overstated the base image inventory"
+    status: required_fix
+    required_fix: "State that the ETS adds no separate validator family rather than claiming TeamEngine contains none."
+review_duration: "9m27s"
+review_window: "2026-07-22T07:20:33Z/2026-07-22T07:30:00Z"
+token_metadata: "not exposed"

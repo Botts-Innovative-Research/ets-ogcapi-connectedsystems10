@@ -40,6 +40,7 @@ WORKDIR /build
 # dependency:go-offline step is intentionally avoided because it resolves unrelated
 # report/deploy artifacts and can stall an otherwise buildable image.
 COPY pom.xml ./
+COPY scripts/bootstrap-swecommon30-validator.sh ./scripts/
 
 # Now copy source + .git (.git is required by buildnumber-maven-plugin to populate
 # the manifest's Implementation-Build / SCM-Revision attributes). This layer
@@ -51,18 +52,14 @@ COPY pom.xml ./
 # The pinned image already supplies the runtime closure, often from Tomcat's
 # parent classloader. Copying those jars again into WEB-INF/lib creates class-
 # identity failures. The Maven shade execution relocates the newer NetworkNT
-# validator required by this ETS into the ETS jar. The only separate dependency
-# added here is TeamEngine resources 6.0.0, absent from the base's RC2 inventory.
+# validator required by this ETS into the ETS jar. The base already supplies the
+# TeamEngine resources coordinate as RC2, so adding the GA jar would duplicate
+# every functional path in that artifact family.
 COPY .git ./.git
 COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 \
-    mvn -B -q clean package -DskipTests \
- && mkdir target/lib-runtime-selected \
- && mvn -B -q dependency:get \
-        -Dartifact=org.opengis.cite.teamengine:teamengine-resources:6.0.0 \
-        -Dtransitive=false \
- && cp /root/.m2/repository/org/opengis/cite/teamengine/teamengine-resources/6.0.0/teamengine-resources-6.0.0.jar \
-        target/lib-runtime-selected/
+    bash scripts/bootstrap-swecommon30-validator.sh \
+ && mvn -B -q clean package -DskipTests
 
 # Verification-only stage. The runtime verifier targets this stage to inspect the
 # effective Docker context after .dockerignore processing without exposing file
@@ -85,16 +82,13 @@ COPY . /context
 FROM ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
 
 LABEL org.opencontainers.image.title="ets-ogcapi-connectedsystems10"
-LABEL org.opencontainers.image.description="OGC API - Connected Systems Part 1 ETS on OGC TeamEngine 6.0.0"
+LABEL org.opencontainers.image.description="OGC API - Connected Systems 1.0 ETS with partial Part 1 and Part 2 coverage on OGC TeamEngine 6.0.0"
 LABEL org.opencontainers.image.source="https://github.com/Botts-Innovative-Research/ets-ogcapi-connectedsystems10"
 LABEL org.opencontainers.image.licenses="Apache-2.0"
 
-# Our shaded ETS jar + the one reviewed runtime resource jar absent from the base.
-#
-# IMPORTANT: copy ONLY the slim jar (NOT -aio.jar / -javadoc.jar / -site.jar). The
+# Copy only our slim shaded ETS jar (not -aio.jar / -javadoc.jar / -site.jar). The
 # aio jar shades the full transitive closure and would conflict with libraries
 # already supplied by TeamEngine.
-COPY --from=builder --chown=tomcat:tomcat /build/target/lib-runtime-selected/ /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
 COPY --from=builder --chown=tomcat:tomcat /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
 
 # Our CTL scripts, alongside the suites the base image already ships.

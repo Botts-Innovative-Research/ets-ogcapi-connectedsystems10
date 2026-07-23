@@ -1,25 +1,100 @@
+sprint42_swecommon_adapter_implementation_handoff:
+  timestamp: "2026-07-22T08:44:29Z"
+  sprint: ets-42
+  story: S-ETS-42-02
+  status: COMPLETE
+  user_instruction: "Document the recommended SWE Common wrapper notes in the specs, then move forward on the final gate."
+  implementation:
+    - "Added scripts/bootstrap-swecommon30-validator.sh with exact source SHA verification and parent-plus-validator-only Maven build."
+    - "Added POM dependency exclusions and shaded validator classes/resources with relocated NetworkNT/ITU."
+    - "Added ConnectedSystemsSweValidatorAdapter and immutable SweValidationResult."
+    - "Dual-validated extracted recordSchema after local wrapper validation in all six Part 2 SWE JSON/Text/Binary schema assertion paths."
+    - "Added all-six complete wrapper parity and active requirement-URI coverage while preserving operational-error propagation."
+    - "Extended packaging tests and scripts/verify-teamengine6-runtime.sh for final-image valid/invalid adapter execution, embedded resources, test-class exclusion, relocation, and duplicate jar-family checks."
+    - "Aligned Jenkins with JDK 17 and bootstrapped the validator in supported Jenkins/GitHub Actions build definitions."
+  verification:
+    formatter: PASS
+    focused_maven: "PASS final packaging 11/0/0/0 after raw expected test-first failure 11/1/0/0; adapter/parity 19/0/0/0"
+    full_maven: "PASS fresh post-fix 312/0/0/3"
+    docker_image: "PASS exact E2E image ets-ogcapi-connectedsystems10:sprint42-final-raze-gapfix-e2e sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9"
+    runtime_verifier: "PASS direct IDs, isolated messages, valid/invalid adapter execution, exact behavioral multi-tuple assertions, unused-allowlist rejection, one added jar, two exact allowlisted paths, and immutable base"
+    advisory_georobotix: "FAIL_ADVISORY baseline unchanged 211/38/34/139; recognized_iut_request_logs=272; zero writes; schema paths did not reach adapter"
+    local_osh_e2e: "PASS 211/69/0/142 from fresh /tmp clone synchronized to final worktree; recognized_iut_request_logs=135; zero writes; zero startup errors"
+    artifact: "ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md"
+  final_raze:
+    - "APPROVE confidence 0.99; no required actions; .harness/evaluations/sprint-ets-42-final-raze-gapfix-adversarial-recheck-2026-07-22.yaml"
+  pre_e2e_raze: "PASS_WITH_EXTERNAL_BLOCKER confidence 0.99; external blocker subsequently cleared; .harness/evaluations/sprint-ets-42-swecommon-validator-adversarial-recheck-2026-07-22.yaml"
+  cautions:
+    - "Do not import ets-swecommon30 or ets-sensorml30 suite jars."
+    - "Do not classify upstream resource/configuration failure as an IUT conformance failure."
+    - "Do not remove local wrapper/format/encoding checks while upstream format and Binary root support remain incomplete."
+    - "Do not claim primary E2E completion from the advisory GeoRobotix run."
+
+sprint41_policy_guidance_implementation_handoff:
+  timestamp: "2026-07-21T13:05:00Z"
+  sprint: ets-41
+  story: S-ETS-41-01
+  status: COMPLETE
+  user_instruction: "Complete all necessary readiness items, including but not limited to Sprint 41, and make the software as ready as possible."
+  completed:
+    - "Architect/Alex updated architecture v2.0.7 and architect handoff for the policy-guidance remediation boundary."
+    - "OpenSpec, design, story, contract, traceability, epic, status, changelog, and test-results were reconciled to the current evidence state."
+    - "Canonical run arguments are now iut, auth-credential, mutation-tests-enabled, and mutation-iut-policy across CTL, TestNG defaults, smoke forwarding, README, site docs, Javadoc, and sample props."
+    - "Public metadata now includes actual partial OGC 23-001 Part 1 and OGC 23-002 Part 2 scope, TeamEngine 6 forward-runtime status, local OSH primary E2E, and GeoRobotix advisory-only status."
+    - "POM-derived suite title/description and scripts/smoke-test.sh title assertion were aligned after Quinn flagged stale Part 1-only metadata."
+    - "The stale Maven docker profile and Fabric8/broad-dependency-copy alternate runtime path were removed."
+    - "scripts/verify-teamengine6-runtime.sh now reports container execution failures honestly instead of misclassifying an exec-format failure as protected-file leakage."
+    - "Readiness pass registered amd64 binfmt support, built the TeamEngine 6 image, passed the runtime verifier, verified Compose health/suite metadata, ran advisory GeoRobotix, and isolated the primary local OSH blocker to the absent field-hub stack."
+  verification:
+    formatter: "PASS: spring-javaformat:apply"
+    focused_packaging: "PASS: VerifyTeamEngine6Packaging 9 tests / 0 failures / 0 errors / 0 skipped; latest artifact ops/test-results/sprint-ets-41-readiness-focused-packaging-2026-07-21.txt"
+    full_maven: "PASS: 303 tests / 0 failures / 0 errors / 3 skipped; ops/test-results/sprint-ets-41-readiness-maven-2026-07-21.txt and earlier ops/test-results/sprint-ets-41-policy-guidance-maven-2026-07-21.txt"
+    runtime_verifier: "PASS_READINESS: amd64 binfmt registered; Sprint 41 image build plus verifier pass; ops/test-results/sprint-ets-41-readiness-runtime-verifier-2026-07-21.txt"
+    compose_startup: "PASS_READINESS: docker compose reached healthy and /rest/suites exposed ogcapi-connectedsystems10 with expected full title; ops/test-results/sprint-ets-41-readiness-compose-2026-07-21.txt"
+    advisory_georobotix: "FAIL_ADVISORY_REAL_IUT: TeamEngine 6 executed 211 total / 38 passed / 34 failed / 139 skipped against GeoRobotix with zero public-IUT writes; ops/test-results/sprint-ets-41-readiness-georobotix-smoke-2026-07-21.xml"
+    local_osh_e2e: "PASS_FINAL: Sprint 42 closure run 211/69/0/142; 135 recognized IUT requests; zero writes; zero startup errors"
+  evaluator:
+    verdict: CONCERNS
+    artifact: ".harness/evaluations/sprint-ets-41-policy-guidance-evaluator-2026-07-21.yaml"
+    concern_status: "Required POM-derived metadata/smoke title follow-up remediated before final Maven rerun."
+  final_raze:
+    status: APPROVE_WITH_CONCERNS
+    confidence: 0.93
+    artifact: ".harness/evaluations/sprint-ets-41-policy-guidance-adversarial-recheck-2026-07-21.yaml"
+    closure_status: "RF-001 through RF-004 closed; RF-001 cleared by final primary local OSH E2E."
+  readiness_raze:
+    status: APPROVE_WITH_CONCERNS
+    confidence: 0.91
+    artifact: ".harness/evaluations/sprint-ets-41-readiness-adversarial-recheck-2026-07-21.yaml"
+    closure_status: "RAZE-S41-READINESS-001 through -005 closed; -001 cleared by final primary local OSH E2E."
+  next_action:
+    - "On linux/arm64 Docker hosts, keep amd64 binfmt support available for the pinned linux/amd64 TeamEngine 6 digest."
+  cautions:
+    - "Do not reuse TeamEngine 5.6.1 or historical pre-policy TeamEngine 6 startup evidence as post-policy E2E proof."
+
 sprint41_resume_handoff:
   timestamp: "2026-07-21T05:35:00Z"
   sprint: ets-41
   story: S-ETS-41-01
-  status: IN_PROGRESS_MAVEN_IMAGE_STARTUP_VERIFIED_LOCAL_OSH_E2E_BLOCKED
+  status: SUPERSEDED_BY_2026_07_21_1305_READINESS_HANDOFF
+  superseded_by: "sprint41_policy_guidance_implementation_handoff"
+  supersession_note: "The 13:05Z readiness handoff superseded this block for Maven/runtime state. Its former local OSH blocker was subsequently cleared by the 2026-07-22 final TeamEngine 6 run (211/69/0/142)."
   completed:
     - "Corrected base inventory: SPI/core 6.0.0 present; resources 6.0.0 absent and RC2 present."
-    - "Final payload adds only the shaded ETS jar plus teamengine-resources 6.0.0; NetworkNT/ITU packages are relocated to avoid split-version additions."
+    - "SUPERSEDED DEFECT: this historical payload added teamengine-resources 6.0.0 beside inherited resources RC2; Sprint 42 gapfix removes every added TeamEngine coordinate family."
     - "Pinned the Maven 3.9/Temurin 17 builder digest and removed fragile archive installation plus unrelated go-offline prewarm."
     - "Runtime verifier PASS, including Git history/effective context and byte-for-byte base manifests; formatter PASS; earlier Docker Maven BUILD SUCCESS 298/0/0/3."
     - "TeamEngine 6 image build PASS; uid/gid 1001 tomcat; health PASS; ogcapi-connectedsystems10 registered; no linkage/registration errors."
   caught_failure:
     - "Broad dependency copying made /rest/suites return HTTP 500 with a Jersey Application class-identity conflict; inherited dependency:copy later leaked three TeamEngine archives; the final explicit two-file payload fixed both."
   remaining_gate:
-    local_osh_e2e: "NOT_RUN_BLOCKED: documented field-hub directory, image, volume, network, container, and credential source are absent after restart."
-    final_maven: "NOT_RUN_INFRASTRUCTURE: final attempts stopped before tests due Maven Central DNS failure and prolonged repository I/O idle; prior 298/0/0/3 remains earlier evidence only."
+    local_osh_e2e: "SUPERSEDED_PASS: restored local OSH final TeamEngine 6 run passed 211/69/0/142 with 135 recognized IUT requests, zero writes, and zero startup errors."
+    final_maven: "SUPERSEDED_PASS: later readiness Docker Maven passed 303 tests / 0 failures / 0 errors / 3 skipped; artifact ops/test-results/sprint-ets-41-readiness-maven-2026-07-21.txt."
     final_raze: "APPROVE_WITH_CONCERNS 0.98; no required fixes"
   next_action:
-    - "Restore or provide the documented local OSH field-hub stack and credential source."
-    - "Run final Maven and TeamEngine 6 smoke from a clean /tmp clone after infrastructure restoration; archive exact totals and no-mutation evidence."
+    - "No Sprint 41 action remains; preserve the restored local OSH configuration and final archived evidence."
   cautions:
-    - "Do not claim Sprint 41 complete or reuse TeamEngine 5.6.1 E2E evidence."
+    - "Use the 2026-07-22 TeamEngine 6 local OSH evidence for Sprint 41 completion; do not reuse TeamEngine 5.6.1 E2E evidence."
     - "Do not restore broad dependency copying; it reproducibly breaks TeamEngine REST registration."
 
 sprint41_session_handoff:
@@ -47,7 +122,7 @@ sprint41_session_handoff:
       - "User tomcat uid/gid 1001; Cmd catalina.sh run; JDK 17.0.15+6; Tomcat 10.1.42."
       - "curl and unzip exist."
       - "WEB-INF/lib and te_base/scripts exist, mode 755, owner tomcat:tomcat."
-      - "Base supplies teamengine-spi-6.0.0.jar, teamengine-core-6.0.0.jar, and teamengine-resources-6.0.0.jar."
+      - "SUPERSEDED INVENTORY NOTE: later verification corrected this line; base supplies teamengine-spi-6.0.0.jar and teamengine-core-6.0.0.jar, while teamengine-resources-6.0.0.jar is absent and a resources RC2 jar is present."
       - "Base also contains pre-existing RC2 TeamEngine jars; do not delete or alter them under the immutable-base rule."
   infrastructure_attempts:
     - "Focused Maven test did not start: maven:3.9-eclipse-temurin-17 pull failed through Docker Hub CloudFront IPv6 with network unreachable."

@@ -1,0 +1,58 @@
+review: sprint-ets-42-duplicate-gapfix-adversarial-recheck
+reviewer:
+  role: Raze
+  agent: Sartre
+  agent_id: 019f8929-eb66-7903-9592-0d503d107e13
+scope:
+  - S-ETS-41-01 TeamEngine 6 duplicate-family replacement candidate
+  - S-ETS-42-02 SWE Common validator adapter replacement candidate
+verdict: GAPS_FOUND
+confidence: 0.99
+started_at: 2026-07-22T09:31:00Z
+ended_at: 2026-07-22T09:41:22Z
+duration: 10m22s
+token_usage: unavailable
+findings:
+  - id: RAZE-S42-GAPFIX-001
+    severity: HIGH
+    summary: The GA TeamEngine resources jar is removed, but the verifier does not scan Maven metadata in every added jar or intersect added-jar functional paths with base jars.
+    evidence:
+      - The replacement image contains only inherited teamengine-resources-6.0.0-RC2.jar.
+      - Coordinate scanning is restricted to teamengine-*.jar filenames, allowing renamed coordinate-bearing jars to bypass it.
+      - The shaded ETS jar overlaps base functional paths jsv-messages.properties, jsv-messages_zh_CN.properties, and test-run-props.xml.
+      - The two jsv-messages bundles differ from the base NetworkNT jar while relocated bytecode still requests their root names.
+    required_fix: Scan all added jars independent of filename, compare functional paths with a narrow documented allowlist, and eliminate or isolate the differing message-bundle collision.
+  - id: RAZE-S42-GAPFIX-002
+    severity: MEDIUM
+    summary: Fresh raw post-gapfix focused and full Maven evidence is not archived.
+    evidence:
+      - The archived 311/0/0/3 log predates the final Raze and duplicate-family test-first record.
+      - Corrected 10/0/0/0 is visible in generated Surefire evidence but lacks a raw focused log.
+      - The 10/1/0/0 test-first artifact is a manually authored summary rather than raw Maven output.
+    required_fix: Archive fresh post-fix focused and full Maven output and label the test-first summary accurately unless raw output is recovered.
+  - id: RAZE-S42-GAPFIX-003
+    severity: LOW
+    summary: The empty gate-created .moduledata directory remains in the repository root.
+    required_fix: Remove the directory and keep gate state outside the worktree.
+  - id: RAZE-S42-GAPFIX-004
+    severity: MEDIUM
+    summary: Reconciled documents overstate functional-path enforcement and full remediation.
+    required_fix: Reconcile status only after the verifier, fresh Maven, runtime, and E2E gaps are closed.
+prior_finding_disposition:
+  RAZE-S42-FINAL-001: PARTIAL; duplicate GA jar removed, generic coordinate and functional-path enforcement still open
+  RAZE-S42-FINAL-002: CLOSED; smoke and runtime-verifier outputs directly emit the same replacement image ID
+  RAZE-S42-FINAL-003: PARTIAL; log file absent, empty directory remains
+verified_evidence:
+  - Replacement image identity is sha256:b52f4897c553f5d3e37caf62fa14765a774b17f943243be3d99c5d89eec5dcb3 in both direct outputs.
+  - TestNG XML parses as 211 total, 69 passed, 0 failed, and 142 skipped.
+  - No-mutation evidence records 135 requests, GET=133, OPTIONS=2, and zero writes.
+  - Startup evidence contains no ERROR, SEVERE, or linkage signatures.
+  - The standalone final-image probe executes valid and invalid SWE components.
+  - SensorML remains deferred consistently.
+  - No credentials or unrelated pollution were found beyond .moduledata.
+required_fixes:
+  - RAZE-S42-GAPFIX-001
+  - RAZE-S42-GAPFIX-002
+  - RAZE-S42-GAPFIX-003
+  - RAZE-S42-GAPFIX-004
+completion_justification: S-ETS-41-01 and S-ETS-42-02 remain in progress until collision isolation, generic added-jar verification, fresh Maven/runtime/E2E evidence, reconciliation, and another final Raze recheck.

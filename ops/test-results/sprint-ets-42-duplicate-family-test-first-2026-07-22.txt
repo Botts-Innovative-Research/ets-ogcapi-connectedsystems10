@@ -1,0 +1,9 @@
+Date: 2026-07-22T09:12:37Z
+Evidence type: manually recorded summary; raw Maven output was not retained
+Command: bash scripts/mvn-test-via-docker.sh -Dtest=VerifyTeamEngine6Packaging
+Expected pre-fix result: BUILD FAILURE
+Tests run: 10, Failures: 1, Errors: 0, Skipped: 0
+Failing test: VerifyTeamEngine6Packaging.dependencyExclusionsAreExplicit
+Failing assertion: Dockerfile must not contain target/lib-runtime-selected/
+Source line: VerifyTeamEngine6Packaging.java:110
+Purpose: proves the test-first structural guard detects the duplicate TeamEngine resources payload before the Dockerfile/runtime-verifier fix.

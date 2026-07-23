@@ -651,6 +651,14 @@ public class Part2SweCommonBinaryTests {
 			ETSAssert.failWithUri(reqUri,
 					source + " could not be schema-validated against " + schemaFile + ": " + ex.getMessage());
 		}
+		validateSweCommonRecordSchema(node, schemaFile, reqUri, source);
+	}
+
+	private static void validateSweCommonRecordSchema(JsonNode node, String schemaFile, String reqUri, String source) {
+		if (!OBSERVATION_SCHEMA_SWE.equals(schemaFile) && !COMMAND_SCHEMA_SWE.equals(schemaFile)) {
+			return;
+		}
+		Part2SchemaValidation.assertValidSweRecordSchema(node, reqUri, source);
 	}
 
 	private static void assertSchemaResourceBundled(String schemaFile, String reqUri) {

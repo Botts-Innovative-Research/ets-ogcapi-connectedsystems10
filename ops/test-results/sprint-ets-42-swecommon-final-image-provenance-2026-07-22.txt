@@ -1,0 +1,9 @@
+recorded_at=2026-07-22T09:00:19Z
+command=docker image inspect ets-ogcapi-connectedsystems10:smoke --format 'id={{.Id}} repo_digests={{json .RepoDigests}} created={{.Created}}'
+tag=ets-ogcapi-connectedsystems10:smoke
+id=sha256:5e0a557ade09d87a8372dcec9a4bbc867ee91dbded54d269235ba2683e932424
+repo_digests=[]
+created=2026-07-22T04:15:49.246407917-04:00
+e2e_artifact=ops/test-results/sprint-ets-42-swecommon-local-osh-e2e-final-2026-07-22.txt
+runtime_verifier_command=TEAMENGINE_FINAL_IMAGE=ets-ogcapi-connectedsystems10:smoke bash scripts/verify-teamengine6-runtime.sh
+runtime_verifier_artifact=ops/test-results/sprint-ets-42-swecommon-runtime-verifier-final-2026-07-22.txt

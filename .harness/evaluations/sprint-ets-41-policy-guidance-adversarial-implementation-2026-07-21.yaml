@@ -1,0 +1,116 @@
+verdict: GAPS_FOUND
+confidence: 0.89
+reviewer: "Red Team / Raze"
+gate: "Gate 4"
+generated_at: "2026-07-21T11:37:07Z"
+review_mode: "static_artifact_inspection"
+expensive_commands_run: []
+
+reviewed_scope:
+  subject: "Sprint 41 policy-guidance remediation implementation after Architect and Quinn"
+  story: "S-ETS-41-01"
+  required_inputs:
+    - "AGENTS.md"
+    - "_bmad/agents/adversarial-reviewer.md"
+    - ".harness/contracts/sprint-ets-41.yaml"
+    - ".harness/handoffs/architect-handoff.yaml"
+    - ".harness/handoffs/generator-handoff.yaml"
+    - ".harness/evaluations/teamengine-policy-guidance-adversarial-2026-07-21.yaml"
+    - ".harness/evaluations/sprint-ets-41-policy-guidance-evaluator-2026-07-21.yaml"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md"
+    - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md"
+    - "_bmad/traceability.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+    - "current git diff"
+  focus:
+    - "canonical TeamEngine run-argument contract"
+    - "public metadata/docs including POM-derived suite title/description and smoke title assertion"
+    - "Maven docker profile retirement"
+    - "runtime verifier diagnostic honesty"
+    - "evidence/status reconciliation and false completion claims"
+
+evidence:
+  positive:
+    - "Canonical TestNG argument keys are now implemented across CTL, testng.xml, smoke forwarding, README, site docs, Javadoc, and sample props: iut, auth-credential, mutation-tests-enabled, mutation-iut-policy."
+    - "pom.xml:17-18 now exposes the corrected OGC API - Connected Systems 1.0 title and partial Part 1/Part 2 description; ets.properties:1 maps TeamEngine title to ${project.name}."
+    - "pom.xml removes the active Maven docker profile; VerifyTeamEngine6Packaging.java:188-193 guards against <id>docker</id>, docker-maven-plugin, and copy-dependencies regression."
+    - "VerifyTeamEngine6Packaging.java:121-193 adds Sprint 41 structural coverage for canonical run args, public metadata placeholders, smoke title assertion, and Maven docker-profile retirement."
+    - "scripts/verify-teamengine6-runtime.sh:73-77 now reports container execution failure directly instead of misclassifying an exec-format failure as protected-file leakage."
+    - "ops/test-results/sprint-ets-41-policy-guidance-maven-2026-07-21.txt records Docker Maven BUILD SUCCESS with 303 tests / 0 failures / 0 errors / 3 skipped."
+    - "ops/status.md:37-45, ops/test-results.md:7-17, story lines 56-59, and contract evidence keep Sprint 41 open; no final E2E PASS is claimed."
+  blocked_gates:
+    runtime_verifier: "ops/test-results/sprint-ets-41-policy-guidance-runtime-verifier-2026-07-21.txt fails before invariant checks with linux/amd64 pinned image on linux/arm64/v8 host and exec format error."
+    local_osh_e2e: "ops/test-results/sprint-ets-41-policy-guidance-local-osh-e2e-2026-07-21.txt fails during Docker runtime-stage RUN with exec /bin/sh: exec format error before contacting the IUT."
+    field_hub_state: "ops/status.md:43 and ops/test-results.md:16 record absent field-hub network/container/credential source."
+  not_rerun_rationale: "Known Docker/E2E blockers are already reproduced and archived; user requested artifact inspection unless a concrete discrepancy required expensive reproduction."
+
+findings:
+  - id: "RAZE-ETS41-POLICY-IMPL-001"
+    severity: "HIGH"
+    status: "REQUIRED_FIX"
+    title: "Mandatory deployed TeamEngine 6 runtime and local OSH E2E gates are still blocked"
+    evidence:
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:57 keeps post-policy image/startup unchecked after exec-format failure."
+      - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:58 keeps local OSH TeamEngine E2E unchecked and records failure before IUT execution."
+      - "ops/test-results/sprint-ets-41-policy-guidance-runtime-verifier-2026-07-21.txt records linux/amd64 image on linux/arm64/v8 host and exec format error."
+      - "ops/test-results/sprint-ets-41-policy-guidance-local-osh-e2e-2026-07-21.txt records Docker build failure at runtime-stage RUN before suite execution."
+    impact: "Policy remediation is statically verified, but Sprint 41 cannot close under AGENTS.md E2E rules or the sprint contract until the deployed suite executes against the primary local OSH IUT."
+    minimal_correction: "Run scripts/verify-teamengine6-runtime.sh and scripts/smoke-test.sh from a clean /tmp clone on an amd64-capable Docker runtime or after selecting a compatible OGC TeamEngine image, restore field-hub local OSH state and credentials, archive exact TeamEngine totals and no-mutation evidence, then update story/contract/spec/traceability/ops."
+
+  - id: "RAZE-ETS41-POLICY-IMPL-002"
+    severity: "MEDIUM"
+    status: "REQUIRED_FIX"
+    title: "Smoke title assertion is still only a broad fragment despite claiming title-from-POM verification"
+    evidence:
+      - "scripts/smoke-test.sh:156-159 says the smoke gate asserts title-from-pom and catches deployed jar metadata drift."
+      - "scripts/smoke-test.sh:160-179 only checks EXPECTED_TITLE_FRAGMENT defaulting to 'OGC API - Connected Systems'."
+      - "pom.xml:17 and src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ets.properties:1 define the actual TeamEngine title as the full Maven project name."
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTeamEngine6Packaging.java:143-144 locks the loose fragment instead of the full POM-derived title."
+    impact: "A deployed suite title such as an old or truncated Connected Systems title could pass the smoke metadata gate, weakening Quinn's remediated POM-derived metadata concern."
+    minimal_correction: "Change the default smoke expectation and structural test to the full POM-derived title, e.g. 'OGC API - Connected Systems 1.0 Conformance Test Suite', or implement an explicit POM-derived comparison before claiming title-from-POM coverage."
+
+  - id: "RAZE-ETS41-POLICY-IMPL-003"
+    severity: "MEDIUM"
+    status: "REQUIRED_FIX"
+    title: "Docker/Compose public deployment metadata still contains stale scope/profile text outside structural coverage"
+    evidence:
+      - "Dockerfile:88 labels the image as 'OGC API - Connected Systems Part 1 ETS on OGC TeamEngine 6.0.0', omitting the implemented partial Part 2 scope now required by REQ-ETS-TEAMENGINE-008."
+      - "docker-compose.yml:15-20 still references a 2026-04-28 field-hub port collision and a removed pom.xml <docker.teamengine.version> profile."
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTeamEngine6Packaging.java:163-169 does not include Dockerfile or Compose in the public metadata placeholder/scope map."
+    impact: "The implementation claims public metadata alignment and Maven docker-profile retirement, but the image label and Compose header can still mislead operators or reviewers."
+    minimal_correction: "Update Dockerfile:88 to the same partial Part 1/Part 2 scope language used in pom.xml, update docker-compose.yml:15-20 to remove the obsolete field-hub/profile caveat, and extend VerifyTeamEngine6Packaging to reject stale Docker/Compose metadata such as Part 1-only labels and docker.teamengine.version."
+
+  - id: "RAZE-ETS41-POLICY-IMPL-004"
+    severity: "MEDIUM"
+    status: "REQUIRED_FIX"
+    title: "OpenSpec design and traceability still expose old TeamEngine 5.6.x deployment guidance as active text"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md:17 and :25 still describe the Sprint 1 runtime as TeamEngine 5.6.x in the primary overview/diagram."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md:305-316 still instructs S-ETS-01-03 around TeamEngine 5.5/5.6.1 and ogccite/teamengine-production:5.6.1."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md:416-425 still summarizes the old ADR-009 Tomcat 8.5/manual TeamEngine 5.6.1 multi-stage runtime as current design-reader guidance."
+      - "_bmad/traceability.md:78-80 still mark the original Dockerfile/Compose/smoke rows as Implemented against TeamEngine 5.6.1 evidence while row 82 separately records the TeamEngine 6 partial migration."
+    impact: "A future Generator can follow stale design/traceability rows instead of ADR-011 and the updated architecture, reintroducing the retired runtime path or overstating historical TeamEngine 5.6 evidence."
+    minimal_correction: "Add a Sprint 41/ADR-011 supersession note at the start of design.md and update or clearly historicalize the cited sections; in traceability rows 78-80, mark TeamEngine 5.6.1 evidence as historical baseline superseded for forward runtime by row 82/REQ-ETS-TEAMENGINE-007."
+
+non_blocking_observations:
+  - "Quinn's POM-derived metadata finding appears remediated in the working tree: pom.xml:17-18 and scripts/smoke-test.sh:161 are no longer the stale Part 1-only values cited by the evaluator artifact."
+  - "The pre-fix structural failure artifact was not captured, but the story documents that gap at epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md:46; do not claim full test-first evidence for this remediation slice."
+  - "The canonical run-argument contract is implemented in Java-facing code: TestRunArg exposes the four expected keys and SuiteFixtureListener stores auth/mutation parameters."
+  - "Historical ops/test-results XML/log artifacts still contain old terms and run arguments; they were not treated as current docs unless referenced by current status."
+
+required_fixes:
+  - id: "RF-001"
+    finding: "RAZE-ETS41-POLICY-IMPL-001"
+    action: "Resolve runtime platform/local OSH blockers and archive post-policy deployed TeamEngine 6 E2E with exact totals and no-mutation evidence before closing Sprint 41."
+  - id: "RF-002"
+    finding: "RAZE-ETS41-POLICY-IMPL-002"
+    action: "Make smoke metadata verification exact enough to prove the POM-derived suite title, and update the structural test accordingly."
+  - id: "RF-003"
+    finding: "RAZE-ETS41-POLICY-IMPL-003"
+    action: "Clean stale Dockerfile/Compose public deployment metadata and add structural coverage for those surfaces."
+  - id: "RF-004"
+    finding: "RAZE-ETS41-POLICY-IMPL-004"
+    action: "Historicalize or update stale TeamEngine 5.6.x design/traceability guidance so it cannot be read as the forward Sprint 41 implementation contract."

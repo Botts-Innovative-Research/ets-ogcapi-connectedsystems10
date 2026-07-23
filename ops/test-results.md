@@ -1,19 +1,133 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-21T05:35Z
+Last updated: 2026-07-22T11:51Z
 
 ## Current Sprint Evidence
 
-Sprint ets-41 TeamEngine 6 runtime migration:
+SWE Common validator adapter release-CI and exact multi-tuple candidate:
+
+- Verification summary:
+  `ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md`.
+- Initial final Raze: `GAPS_FOUND`, confidence `0.99`. The first candidate added
+  TeamEngine resources 6.0.0 beside inherited resources RC2 with 89 overlapping
+  functional paths; image identity was indirect; an empty `.moduledata/log.txt`
+  remained. Artifact:
+  `.harness/evaluations/sprint-ets-42-final-closure-adversarial-2026-07-22.yaml`.
+- Replacement recheck: `GAPS_FOUND`, confidence `0.99`; generic coordinate/path
+  checks, message-bundle isolation, fresh Maven, and `.moduledata` removal were
+  required. Artifact:
+  `.harness/evaluations/sprint-ets-42-duplicate-gapfix-adversarial-recheck-2026-07-22.yaml`.
+- Generic-guard recheck: `GAPS_FOUND`, confidence `0.98`; accepted collision
+  tuples had to be explicit, unused allowlist entries had to fail, Jenkins had
+  to stop requesting a nonexistent Maven profile, and metadata needed final
+  reconciliation. Artifact:
+  `.harness/evaluations/sprint-ets-42-generic-jar-guard-adversarial-recheck-2026-07-22.yaml`.
+- Final metadata recheck: `GAPS_FOUND`, confidence `0.99`; release Jenkins still
+  used JDK 8 without the bootstrap and requested undeclared profiles, while the
+  self-test did not assert complete exact multi-tuple stdout. Artifact:
+  `.harness/evaluations/sprint-ets-42-final-metadata-gapfix-adversarial-recheck-2026-07-22.yaml`.
+- Current test-first assertion: expected FAIL,
+  `11 tests / 1 failure / 0 errors / 0 skipped`, captured as raw Maven output.
+- Corrected focused packaging: PASS,
+  `11 tests / 0 failures / 0 errors / 0 skipped`.
+- Fresh full Docker Maven: PASS,
+  `312 tests / 0 failures / 0 errors / 3 skipped`.
+- Exact replacement image:
+  `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9`.
+  The final stage adds one ETS jar and CTL resources. NetworkNT bundles are
+  isolated; no TeamEngine or duplicate base coordinate is added.
+- Strengthened TeamEngine 6 runtime verifier: PASS with direct base/final image
+  IDs, generic coordinate and functional-path enforcement, two exact convention
+  allowlist entries, exact behavioral multi-tuple output, unused-entry
+  rejection, byte-for-byte base immutability, and adapter execution.
+- Primary local OSH E2E: PASS from a fresh `/tmp` clone synchronized to the
+  final worktree, `211 total / 69 passed / 0 failed / 142 skipped`; 135
+  recognized IUT requests, zero writes, and zero startup errors.
+- Advisory GeoRobotix: FAIL with exact unchanged Sprint 41 baseline
+  `211 total / 38 passed / 34 failed / 139 skipped`; no adapter/linkage regressions;
+  `recognized_iut_request_logs=272`; zero writes.
+- Current raw gate artifacts:
+  `ops/test-results/sprint-ets-42-final-raze-gapfix-test-first-raw-2026-07-22.txt`,
+  `ops/test-results/sprint-ets-42-final-raze-gapfix-focused-maven-2026-07-22.txt`,
+  `ops/test-results/sprint-ets-42-final-raze-gapfix-full-maven-2026-07-22.txt`,
+  `ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-e2e-2026-07-22.txt`,
+  `ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-final-2026-07-22.xml`,
+  `ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-final-container-2026-07-22.log`,
+  `ops/test-results/sprint-ets-42-final-raze-gapfix-local-osh-final-no-mutation-2026-07-22.txt`,
+  and `ops/test-results/sprint-ets-42-final-raze-gapfix-runtime-verifier-final-2026-07-22.txt`.
+- Pre-E2E Raze recheck: `PASS_WITH_EXTERNAL_BLOCKER`, confidence `0.99`; the
+  external blocker was subsequently cleared; artifact
+  `.harness/evaluations/sprint-ets-42-swecommon-validator-adversarial-recheck-2026-07-22.yaml`.
+- Final Raze gapfix recheck: `APPROVE`, confidence `0.99`, with no required
+  actions; artifact
+  `.harness/evaluations/sprint-ets-42-final-raze-gapfix-adversarial-recheck-2026-07-22.yaml`.
+- Gate status: S-ETS-41-01 and S-ETS-42-02 complete. Overall
+  REQ-ETS-VALIDATOR-001 remains partial because SensorML is deferred.
+
+External SWE Common/SensorML validator architecture research:
+
+- Scope: S-ETS-42-01 documentation/planning predecessor; S-ETS-42-02 now implements the first SWE Common adapter increment described above.
+- Research artifact: `ops/test-results/external-validator-library-research-2026-07-22.md`.
+- SWE Common: `opengeospatial/ets-swecommon30` PR 10 branch `issue-9-swecommon-validation-module` at `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`; intended artifact `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT`; not published to Maven Central as of 2026-07-22.
+- SensorML: no public SensorML validator module found under `FCU-GIS-Luke`; public `opengeospatial/ets-sensorml30` is an ETS scaffold and not accepted as a reusable dependency.
+- Verification for this planning pass: static documentation checks only; future implementation that imports a validator must run Docker Maven, the TeamEngine 6 runtime verifier, and primary local OSH TeamEngine E2E.
+- Raze review: `.harness/evaluations/sprint-ets-42-external-validator-architecture-adversarial-2026-07-22.yaml` returned `APPROVE_WITH_CONCERNS`, confidence `0.91`, with no required fixes. The one low concern about NetworkNT `ValidationMessage` leakage was captured in the future adapter boundary.
+
+---
+
+Sprint ets-41 readiness pass:
+
+- Scope: canonical run-argument contract, public TeamEngine metadata/docs cleanup, Maven `docker` profile removal, TeamEngine 6 runtime verification, Compose startup verification, advisory deployed execution, and primary local OSH blocker isolation.
+- Focused structural test: PASS, `VerifyTeamEngine6Packaging`, `9 tests / 0 failures / 0 errors / 0 skipped`; latest artifact `ops/test-results/sprint-ets-41-readiness-focused-packaging-2026-07-21.txt`.
+- Full Docker Maven: PASS, `303 tests / 0 failures / 0 errors / 3 skipped`.
+- Maven artifact: `ops/test-results/sprint-ets-41-readiness-maven-2026-07-21.txt`; earlier post-policy Maven artifact `ops/test-results/sprint-ets-41-policy-guidance-maven-2026-07-21.txt` also passed with the same totals.
+- Docker image build: PASS, artifact `ops/test-results/sprint-ets-41-readiness-docker-build-2026-07-21.txt`.
+- Runtime verifier: PASS for TeamEngine 6 provenance, immutable-base manifests, runtime invariants, and confidential history/context hygiene; artifact `ops/test-results/sprint-ets-41-readiness-runtime-verifier-2026-07-21.txt`.
+- Compose startup: PASS; `docker compose up -d --build` reached healthy and `/teamengine/rest/suites` exposed `ogcapi-connectedsystems10` with the expected full title; artifact `ops/test-results/sprint-ets-41-readiness-compose-2026-07-21.txt`.
+- Local OSH TeamEngine E2E: PASS `211/69/0/142`, 135 recognized IUT requests,
+  zero writes, and zero startup errors; final Sprint 42 closure artifacts listed above.
+- Field-hub absence check: `path_exists=false`; Docker networks are only `bridge`, `host`, and `none`; no matching field-hub/OSH containers, images, or volumes; artifact `ops/test-results/sprint-ets-41-readiness-field-hub-absence-2026-07-21.txt`.
+- Advisory GeoRobotix deployed run: FAIL against the public IUT, `211 total / 38 passed / 34 failed / 139 skipped`; artifacts `ops/test-results/sprint-ets-41-readiness-georobotix-smoke-2026-07-21.xml` and `ops/test-results/sprint-ets-41-readiness-georobotix-container-2026-07-21.log`.
+- Advisory GeoRobotix no-mutation evidence: `recognized_iut_request_logs=272` and explicit write counts `POST=0`, `PUT=0`, `PATCH=0`, `DELETE=0`; artifacts `ops/test-results/sprint-ets-41-readiness-georobotix-no-mutation-2026-07-21.txt` and `ops/test-results/sprint-ets-41-readiness-georobotix-write-counts-2026-07-21.txt`.
+- Gate 2 evaluator: `CONCERNS`, artifact `.harness/evaluations/sprint-ets-41-policy-guidance-evaluator-2026-07-21.yaml`; the POM-derived metadata/smoke title finding was remediated before the final focused and full Maven reruns.
+- Raze implementation review: initial `GAPS_FOUND` at `.harness/evaluations/sprint-ets-41-policy-guidance-adversarial-implementation-2026-07-21.yaml`; focused recheck `APPROVE_WITH_CONCERNS`, confidence `0.93`, at `.harness/evaluations/sprint-ets-41-policy-guidance-adversarial-recheck-2026-07-21.yaml`. RF-001 through RF-004 are now closed.
+- Readiness Raze: initial `GAPS_FOUND` at `.harness/evaluations/sprint-ets-41-readiness-adversarial-2026-07-21.yaml`; focused recheck `APPROVE_WITH_CONCERNS`, confidence `0.91`, at `.harness/evaluations/sprint-ets-41-readiness-adversarial-recheck-2026-07-21.yaml`. Documentation findings `RAZE-S41-READINESS-002` through `-005` were closed in Sprint 41, and the 2026-07-22 final local OSH run subsequently cleared `RAZE-S41-READINESS-001`.
+- Historical status: this readiness evidence was accepted before the later
+  duplicate-family finding. The replacement candidate at the top supersedes its
+  runtime payload and awaits fresh final Raze.
+
+---
+
+Policy-guidance Discovery and Raze static review:
+
+- Discovery agent `Zeno` completed a public-source review of OGC compliance policy, TeamEngine 6 migration guidance, TeamEngine Docker/ETS issue signals, OGC API Connected Systems issue guidance, and OpenSensorHub implementation issue signals.
+- Raze agent `Averroes` used the Discovery brief for a static docs/implementation conformance review and returned `GAPS_FOUND`, confidence `0.90`.
+- Artifact: `.harness/evaluations/teamengine-policy-guidance-adversarial-2026-07-21.yaml`.
+- No product code changed. Maven, Docker build/startup, and TeamEngine local OSH E2E were not run during this review-only pass.
+
+---
+
+Sprint ets-41 TeamEngine 6 runtime migration (historical pre-closure state):
 
 - Runtime verifier: PASS for digest provenance, byte-for-byte immutable-base manifests, non-root identity, utilities/paths, corrected base jar inventory, selected two-file payload, Git history, effective build context, and confidential-file hygiene.
 - Formatter: PASS (`spring-javaformat:apply`).
-- Docker Maven: earlier BUILD SUCCESS, `298 tests / 0 failures / 0 errors / 3 skipped`. The final post-review rerun did not execute tests: Maven Central DNS failed on attempt one; attempt two was terminated after 17 minutes idle in repository I/O.
+- Docker Maven: readiness BUILD SUCCESS, `303 tests / 0 failures / 0 errors / 3 skipped`, artifact `ops/test-results/sprint-ets-41-readiness-maven-2026-07-21.txt`.
 - Image build: PASS using digest-pinned Maven 3.9/Temurin 17 builder and digest-pinned OGC TeamEngine 6 runtime.
-- Startup: PASS; effective uid/gid 1001 `tomcat`, inherited JDK 17.0.15+6/Tomcat 10.1.42 configuration, healthy status, `ogcapi-connectedsystems10` present in `/teamengine/rest/suites`, and no registration/linkage errors.
+- Startup: PASS; effective uid/gid 1001 `tomcat`, inherited JDK 17.0.15+6/Tomcat 10.1.42 configuration, healthy status, `ogcapi-connectedsystems10` present in `/teamengine/rest/suites` with the expected full title, and no registration/linkage errors.
 - Correctness failures caught and fixed: broad dependency copying produced `/rest/suites` HTTP 500 with a Jersey `Application` class-identity conflict; an inherited copy execution later leaked three TeamEngine distribution archives and failed the base-manifest verifier. The final image adds only the shaded ETS jar and resources 6.0.0, with NetworkNT/ITU relocated, and restores registration.
-- Local OSH E2E: `NOT_RUN_BLOCKED`. The restarted environment contains no documented field-hub directory, image, volume, network, container, or credentials source. No Sprint 41 TestNG E2E totals or no-mutation claim exists.
-- Final Raze recheck: `APPROVE_WITH_CONCERNS`, confidence `0.98`, no required fixes; final Maven and local OSH E2E remain the documented infrastructure concerns.
+- Local OSH E2E was `BLOCKED_BEFORE_IUT_EXECUTION` at this checkpoint because the field-hub runtime was absent. This historical blocker is superseded by the 2026-07-22 final pass (`211/69/0/142`) and no-mutation evidence listed above.
+- Raze recheck at this checkpoint: `APPROVE_WITH_CONCERNS`, confidence `0.98`, no required fixes. Its infrastructure concern was subsequently cleared by the final local OSH run.
+
+---
+
+SWE Common 3.0 validator import exploration:
+
+- Artifact: `ops/test-results/swecommon30-validator-import-analysis-2026-07-17.txt`.
+- Upstream checked: `opengeospatial/ets-swecommon30` branch `issue-9-swecommon-validation-module`, HEAD `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`.
+- Result: the correct import target is `org.opengis.cite:swecommon30-validator`, not `ets-swecommon30`; the validator is not published on Maven Central as of 2026-07-17.
+- TeamEngine inventory use: the user-provided WEB-INF/lib list was used as the dependency baseline; it appears to be TeamEngine 5.7 and contains `json-schema-validator-1.0.76.jar`, Jackson 2.12.x/2.15.0 jars, `itu-1.7.0.jar`, and `slf4j-api-1.7.30.jar`.
+- Verification: Docker Maven compiled the upstream validator with default versions, then compiled it again with `-Dnetworknt.version=1.0.76 -Djackson.version=2.12.1` to prove compatibility with the key TeamEngine-list validation libraries. The upstream validator module has no tests.
+- Scope: no Connected Systems product code changed; TeamEngine E2E was not rerun.
 
 ---
 

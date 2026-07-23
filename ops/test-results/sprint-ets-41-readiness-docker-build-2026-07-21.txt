@@ -1,0 +1,64 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 6.61kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.6
+#2 DONE 0.1s
+
+#3 docker-image://docker.io/docker/dockerfile:1.6@sha256:ac85f380a63b13dfcefa89046420e1781752bab202122f8f50032edf31be0021
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45
+#4 DONE 0.0s
+
+#5 [internal] load metadata for docker.io/ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
+#5 DONE 0.0s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 881B done
+#6 DONE 0.0s
+
+#7 [builder 1/6] FROM docker.io/library/maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45
+#7 DONE 0.0s
+
+#8 [stage-2 1/5] FROM docker.io/ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
+#8 DONE 0.0s
+
+#9 [internal] load build context
+#9 transferring context: 47.23kB 0.0s done
+#9 DONE 0.0s
+
+#10 [builder 3/6] COPY pom.xml ./
+#10 CACHED
+
+#11 [builder 5/6] COPY src ./src
+#11 CACHED
+
+#12 [builder 6/6] RUN --mount=type=cache,target=/root/.m2     mvn -B -q clean package -DskipTests  && mkdir target/lib-runtime-selected  && mvn -B -q dependency:get         -Dartifact=org.opengis.cite.teamengine:teamengine-resources:6.0.0         -Dtransitive=false  && cp /root/.m2/repository/org/opengis/cite/teamengine/teamengine-resources/6.0.0/teamengine-resources-6.0.0.jar         target/lib-runtime-selected/
+#12 CACHED
+
+#13 [builder 4/6] COPY .git ./.git
+#13 CACHED
+
+#14 [stage-2 2/5] COPY --from=builder --chown=tomcat:tomcat /build/target/lib-runtime-selected/ /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
+#14 CACHED
+
+#15 [builder 2/6] WORKDIR /build
+#15 CACHED
+
+#16 [stage-2 3/5] COPY --from=builder --chown=tomcat:tomcat /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
+#16 CACHED
+
+#17 [stage-2 4/5] COPY --from=builder --chown=tomcat:tomcat /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT-ctl.zip /tmp/ets-ctl.zip
+#17 CACHED
+
+#18 [stage-2 5/5] RUN test ! -e /usr/local/tomcat/te_base/scripts/ogcapi-connectedsystems10  && mkdir /tmp/ets-ctl  && unzip -q /tmp/ets-ctl.zip -d /tmp/ets-ctl  && test -d /tmp/ets-ctl/ogcapi-connectedsystems10  && cp -R /tmp/ets-ctl/ogcapi-connectedsystems10 /usr/local/tomcat/te_base/scripts/  && rm -rf /tmp/ets-ctl /tmp/ets-ctl.zip
+#18 DONE 0.3s
+
+#19 exporting to image
+#19 exporting layers 0.0s done
+#19 writing image sha256:c43c0f40183093a4fa503488d7accd129837bb6260225e31202deaf4c8fe8ef2 done
+#19 naming to docker.io/library/ets-ogcapi-connectedsystems10:sprint41 done
+#19 DONE 0.0s

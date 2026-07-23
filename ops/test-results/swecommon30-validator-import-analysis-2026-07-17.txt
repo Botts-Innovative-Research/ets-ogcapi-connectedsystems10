@@ -1,0 +1,123 @@
+SWE Common 3.0 validator import analysis
+Date: 2026-07-17
+User instruction: explore proper import of opengeospatial/ets-swecommon30 branch
+issue-9-swecommon-validation-module, use the provided TeamEngine webapp jar
+inventory, and avoid altering TeamEngine itself.
+
+Inputs
+------
+- Upstream repository: https://github.com/opengeospatial/ets-swecommon30
+- Branch: issue-9-swecommon-validation-module
+- Cloned HEAD: 3ba75ceabe57cea85f4a8513c59e0f90e386ba96
+- User-provided TeamEngine webapp inventory:
+  /tmp/codex-remote-attachments/019f7013-dfa0-7573-b588-97c76ceac180/25F5723C-1E08-4112-B195-7EFA33996E65/1-te2_webapp.txt
+
+Upstream structure
+------------------
+- Root artifact: org.opengis.cite:swecommon30-parent:0.1-SNAPSHOT
+- Modules:
+  - swecommon30-validator
+  - swecommon30-ets
+- The correct import target for this ETS is swecommon30-validator, not
+  ets-swecommon30. The ETS module contains TestNG and TeamEngine workflow that
+  should not be embedded in Connected Systems.
+- Upstream docs explicitly state that consuming ETS projects keep their own
+  TestNG tests, suite context, pass/fail/skip decisions, and TeamEngine reports.
+
+Publication status checked on 2026-07-17
+----------------------------------------
+- search.maven.org query for org.opengis.cite:swecommon30-validator returned
+  numFound=0.
+- Maven Central direct lookup for
+  org/opengis/cite/swecommon30-validator/0.1-SNAPSHOT returned HTTP 404.
+- Therefore a plain POM dependency is not reproducible in a clean Docker Maven
+  environment until the validator is published or the build deliberately
+  installs it from a checked-out upstream source.
+
+Validator dependency surface
+----------------------------
+Default upstream validator runtime tree:
+- org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT
+- com.networknt:json-schema-validator:1.5.4
+- com.ethlo.time:itu:1.10.2
+- com.fasterxml.jackson.core:jackson-databind:2.17.2
+- com.fasterxml.jackson.core:jackson-annotations:2.17.2
+- com.fasterxml.jackson.core:jackson-core:2.17.2
+- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.1
+- org.yaml:snakeyaml:2.3
+- org.slf4j:slf4j-api:2.0.16
+
+Current Connected Systems ETS runtime already includes:
+- com.networknt:json-schema-validator:1.5.9
+- com.ethlo.time:itu:1.14.0
+- com.reprezen.kaizen:openapi-parser:4.0.4, which brings Jackson 2.18.0
+- org.slf4j:slf4j-api:2.0.16
+
+TeamEngine webapp inventory implications
+----------------------------------------
+The attachment appears to be a TeamEngine 5.7 WEB-INF/lib inventory because it
+contains teamengine-core-5.7.jar, teamengine-resources-5.7.jar, and
+teamengine-spi-5.7.jar. It also contains older/shared validation libraries,
+including:
+- json-schema-validator-1.0.76.jar
+- jackson-databind-2.12.1.jar
+- jackson-core-2.12.1.jar and jackson-core-2.15.0.jar
+- jackson-dataformat-yaml-2.12.1.jar
+- itu-1.7.0.jar
+- slf4j-api-1.7.30.jar
+
+The upstream validator compiles successfully when forced to the key
+TeamEngine-list versions:
+
+Command:
+docker run --rm --user "$(id -u):$(id -g)" \
+  -v /tmp/ets-swecommon30-issue9:/workspace -w /workspace \
+  -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS="-Duser.home=/tmp" \
+  maven:3.9-eclipse-temurin-17 \
+  mvn -B -pl swecommon30-validator -am clean test \
+    -Dnetworknt.version=1.0.76 -Djackson.version=2.12.1
+
+Result:
+- BUILD SUCCESS
+- No validator tests are present in that upstream module.
+
+Recommended import pattern
+--------------------------
+1. Do not import or bundle ets-swecommon30. Import only
+   org.opengis.cite:swecommon30-validator.
+2. Do not modify TeamEngine source, TeamEngine WAR contents, or TeamEngine
+   runtime behavior to make the validator available.
+3. Keep all Connected Systems TestNG methods, skip/fail semantics, no-mutation
+   policy, and TeamEngine reporting in this ETS.
+4. When the validator artifact becomes published, add it as a normal ETS
+   dependency and include its jar in the ETS runtime dependency closure that is
+   copied into WEB-INF/lib alongside this ETS jar.
+5. Exclude validator transitives that are already supplied by the selected
+   TeamEngine/ETS runtime, or pin dependencyManagement to the runtime versions
+   chosen for the TeamEngine webapp inventory. This avoids adding a second
+   competing Jackson/NetworkNT/SLF4J stack.
+6. If development must proceed before publication, use a documented local
+   install/prebuild step in CI and smoke scripts. A plain POM dependency on
+   0.1-SNAPSHOT is not enough for reproducible Docker Maven builds.
+
+Boundary note
+-------------
+If "do not alter TeamEngine itself" means "do not patch TeamEngine source or the
+deployed webapp to integrate SWE Common", the validator import can satisfy that:
+the ETS jar and its dependency jar are the integration boundary. If it means
+"do not change any TeamEngine container assembly at all", this repository's
+existing Dockerfile already applies legacy TeamEngine 5.6.1/JDK 17 runtime
+patches unrelated to SWE Common. A SWE Common import should not add new
+TeamEngine patches.
+
+Verification performed
+----------------------
+- Upstream validator module compiled with its default dependency versions.
+- Upstream validator module compiled with NetworkNT/Jackson versions matching
+  the important validation libraries in the attached TeamEngine inventory.
+- Current ETS runtime dependency tree was inspected.
+- Maven Central publication status was checked.
+
+No Connected Systems product code was changed during this exploration.
+TeamEngine E2E was not rerun because this pass made no runtime implementation
+change.

@@ -1,50 +1,65 @@
 == How to run the tests
 
-The options for running the test suite are summarized below.
+The entry point is the CS API landing page for the implementation under test.
+TeamEngine 6 is the supported runtime path for this OGC API - Connected Systems
+ETS. Current coverage is partial for Part 1 (OGC 23-001) and Part 2 (OGC
+23-002).
 
-As entry point the Landing Page of the ogcapi-connectedsystems10 is expected.
+=== 1. Integrated development environment
 
-=== 1. Integrated development environment (IDE)
+Set the main class to:
 
-Use a Java IDE such as Eclipse, NetBeans, or IntelliJ. Clone the repository and build the project.
+`org.opengis.cite.ogcapiconnectedsystems10.TestNGController`
 
-Set the main class to run: `org.opengis.cite.ogcapiconnectedsystems10.TestNGController`
-
-Arguments: The first argument must refer to an XML properties file containing the
-required test run arguments. If not specified, the default location at `$
-{user.home}/test-run-props.xml` will be used.
-
-You can modify the sample file in `src/main/config/test-run-props.xml`
+The first argument is an XML properties file containing the test run arguments.
+If it is not supplied, the controller uses `${user.home}/test-run-props.xml`.
 
 [source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties version="1.0">
-  <comment>Test run arguments</comment>
-  <entry key="iut">https://host/capabilities</entry>
+  <comment>OGC API - Connected Systems partial Part 1 and Part 2 test run arguments</comment>
+  <entry key="iut">http://field-hub-osh-1:8081/sensorhub/api</entry>
+  <entry key="auth-credential"></entry>
+  <entry key="mutation-tests-enabled">false</entry>
+  <entry key="mutation-iut-policy"></entry>
 </properties>
 ----
 
-The TestNG results file (`testng-results.xml`) will be written to a subdirectory
-in `${user.home}/testng/` having a UUID value as its name.
+=== 2. Command shell
 
-=== 2. Command shell (console)
-
-One of the build artifacts is an "all-in-one" JAR file that includes the test
-suite and all of its dependencies; this makes it very easy to execute the test
-suite in a command shell:
+The all-in-one JAR can run the same properties file from a shell:
 
 `java -jar ets-ogcapi-connectedsystems10-0.1-SNAPSHOT-aio.jar [-o|--outputDir $TMPDIR] [test-run-props.xml]`
 
-=== 3. Docker
+=== 3. Docker and TeamEngine 6
 
-This test suite comes with a Dockerfile which can be used to easily setup the OGC test harness with
-the test suite. Details can be found on https://github.com/opengeospatial/cite/wiki/How-to-create-Docker-Images-of-test-suites#create-docker-image-and-create-and-start-docker-container[Create Docker Image and create and start Docker Container].
+The pinned OGC TeamEngine 6 digest is linux/amd64-only. On a linux/arm64 Docker
+host, register amd64 binfmt support before starting the container:
 
-=== 4. OGC test harness
+[source,bash]
+----
+docker run --privileged --rm tonistiigi/binfmt --install amd64
+----
 
-Use https://github.com/opengeospatial/teamengine[TEAM Engine], the official OGC test harness.
-The latest test suite release are usually available at the http://cite.opengeospatial.org/te2/[beta testing facility].
-You can also https://github.com/opengeospatial/teamengine[build and deploy] the test
-harness yourself and use a local installation.
+[source,bash]
+----
+docker compose up --build
+----
+
+The TeamEngine UI is served at `http://localhost:8081/teamengine/`.
+
+=== 4. Local OSH smoke gate
+
+[source,bash]
+----
+SMOKE_DOCKER_NETWORK=field-hub_default \
+  SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
+  SMOKE_AUTH_CREDENTIAL="$SMOKE_AUTH_CREDENTIAL" \
+  SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
+  bash scripts/smoke-test.sh
+----
+
+Use GeoRobotix only when intentionally running an advisory public
+interoperability probe.

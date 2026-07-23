@@ -1,0 +1,334 @@
+22-Jul-2026 10:14:07.026 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/10.1.42
+22-Jul-2026 10:14:07.054 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 22:35:46 UTC
+22-Jul-2026 10:14:07.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 10.1.42.0
+22-Jul-2026 10:14:07.056 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+22-Jul-2026 10:14:07.057 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.17.0-1021-nvidia
+22-Jul-2026 10:14:07.058 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+22-Jul-2026 10:14:07.058 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /opt/java/openjdk
+22-Jul-2026 10:14:07.059 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.15+6
+22-Jul-2026 10:14:07.060 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+22-Jul-2026 10:14:07.060 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /usr/local/tomcat
+22-Jul-2026 10:14:07.061 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /usr/local/tomcat
+22-Jul-2026 10:14:07.126 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties
+22-Jul-2026 10:14:07.128 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+22-Jul-2026 10:14:07.128 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+22-Jul-2026 10:14:07.129 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx6144m
+22-Jul-2026 10:14:07.130 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -DTE_BASE=/usr/local/tomcat/te_base
+22-Jul-2026 10:14:07.130 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+22-Jul-2026 10:14:07.131 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+22-Jul-2026 10:14:07.132 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dsun.io.useCanonCaches=false
+22-Jul-2026 10:14:07.132 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+22-Jul-2026 10:14:07.133 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+22-Jul-2026 10:14:07.135 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+22-Jul-2026 10:14:07.136 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+22-Jul-2026 10:14:07.137 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+22-Jul-2026 10:14:07.137 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+22-Jul-2026 10:14:07.138 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+22-Jul-2026 10:14:07.138 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dlog4j2.formatMsgNoLookups=true
+22-Jul-2026 10:14:07.138 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/usr/local/tomcat
+22-Jul-2026 10:14:07.139 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/usr/local/tomcat
+22-Jul-2026 10:14:07.139 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/usr/local/tomcat/temp
+22-Jul-2026 10:14:07.160 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [2.0.9] using APR version [1.7.2].
+22-Jul-2026 10:14:07.212 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.0.13 30 Jan 2024]
+22-Jul-2026 10:14:08.821 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+22-Jul-2026 10:14:08.961 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [3239] milliseconds
+22-Jul-2026 10:14:09.173 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+22-Jul-2026 10:14:09.174 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/10.1.42]
+22-Jul-2026 10:14:09.251 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/usr/local/tomcat/webapps/teamengine]
+22-Jul-2026 10:17:32.841 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/usr/local/tomcat/webapps/teamengine] has finished in [203,583] ms
+22-Jul-2026 10:17:32.884 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+22-Jul-2026 10:17:32.945 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [203983] milliseconds
+[Fatal Error] entity-6198943751172176548.tmp:14:7: The element type "link" must be terminated by the matching end-tag "</link>".
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+log4j:WARN No appenders could be found for logger (org.apache.http.impl.conn.BasicClientConnectionManager).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=*/*
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/?f=json
+	Accept=*/*
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/observations?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/observations?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/observations?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/commands?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 JSON resource condition classes are declared for Datastream, ControlStream, and SystemEvent.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/observations?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systemEvents?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common JSON condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common Text condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common Binary condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+IUT declares /conf/json; runtime binding checks still require parent schema and child JSON body evidence.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+REQ-ETS-PART2-013 first increment is read-only: it uses GET-only live evidence and does not seed DataStream, Observation, ControlStream, or Command fixtures.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g/subsystems
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/properties
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments?limit=1
+	Accept=application/geo+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures?limit=1
+	Accept=application/geo+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures?limit=1
+	Accept=application/geo+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g?f=sml3
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g?f=sml3
+	Accept=application/sml+json
+Deployment SensorML representation source: application/sml+json alternate link (http://field-hub-osh-1:8081/sensorhub/api/deployments/040g?f=sml3)
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures/040g
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures/040g?f=sml3
+	Accept=application/sml+json
+Procedure SensorML representation source: application/sml+json alternate link (http://field-hub-osh-1:8081/sensorhub/api/procedures/040g?f=sml3)
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/properties?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g?f=sml3
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures/040g
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures/040g?f=sml3
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems?limit=1
+	Accept=application/json
+Request: OPTIONS http://field-hub-osh-1:8081/sensorhub/api/systems/040g
+	Accept=*/*
+Request: OPTIONS http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=*/*
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systemEvents?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections?limit=100
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systemEvents?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g/events?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+IUT declares Part 2 /conf/create-replace-delete and the OGC API Features Part 4 prerequisite.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/commands?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/feasibility?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systemEvents?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g/events?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+SensorML representation source: application/sml+json alternate link (http://field-hub-osh-1:8081/sensorhub/api/systems/040g?f=sml3)
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments/040g/subdeployments
+	Accept=application/json

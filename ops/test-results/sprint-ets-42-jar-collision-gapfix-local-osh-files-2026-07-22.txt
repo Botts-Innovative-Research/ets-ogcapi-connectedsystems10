@@ -1,0 +1,2 @@
+/tmp/ets-s42-jar-collision-final.kYPbWNhL/results/s-ets-01-03-teamengine-container-2026-07-22.log
+/tmp/ets-s42-jar-collision-final.kYPbWNhL/results/s-ets-01-03-teamengine-smoke-2026-07-22.xml

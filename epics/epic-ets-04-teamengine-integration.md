@@ -1,6 +1,6 @@
 # Epic ETS-04: TeamEngine Integration (SPI / CTL / Docker)
 
-> Status: Active — TeamEngine 5.6.1 baseline verified; Sprint 41 TeamEngine 6 Maven/image/startup verified, local OSH E2E blocked | Last updated: 2026-07-21
+> Status: Active - TeamEngine 5.6.1 historical baseline and Sprint 41 TeamEngine 6 runtime plus primary local OSH E2E verified | Last updated: 2026-07-22
 
 ## Goal
 Wire the ETS into TeamEngine through the TestNG SPI, ship a CTL wrapper that exposes the suite to the TeamEngine UI, package the integration in Docker, and prove the round-trip against the primary local OSH IUT. TeamEngine 5.6.1 is the verified baseline; Sprint 41 migrates to an immutable OGC-published TeamEngine 6.0.0 runtime. Owns sub-deliverable 4 of the ETS capability.
@@ -33,15 +33,15 @@ Wire the ETS into TeamEngine through the TestNG SPI, ship a CTL wrapper that exp
 | S-ETS-06-03 | **(Sprint 6 WEDGE)** Wire-side unit test reclassification: spec.md + story notes amended; VerifyWireRestoresOriginalCredential companion story | **Active (Sprint 6)** | REQ-ETS-CLEANUP-016 (spec-side) |
 | S-ETS-07-01 | **(Sprint 7)** Sprint 6 carryover wedge bundle: sabotage javac fix + sabotage pipefail fix + credential-leak prong-b retarget + REQ-017 status-honesty correction + design.md wrap-pattern doc-lag fix + ADR-010 v3 retroactive validation | **Active (Sprint 7)** | REQ-ETS-CLEANUP-018, REQ-ETS-CLEANUP-017 (live close), REQ-ETS-CLEANUP-016 (automated script PASS) |
 | S-ETS-39-01 | **(Sprint 39)** Artifact hygiene and URI/schema drift report harness while populated OSH blockers remain external | Implemented; Raze approved | REQ-ETS-CLEANUP-020, REQ-ETS-SYNC-001 |
-| S-ETS-41-01 | **(Sprint 41)** Adopt and verify immutable OGC-published TeamEngine 6.0.0 runtime | Partially implemented: Maven/image/startup/registration verified; local OSH E2E blocked | REQ-ETS-TEAMENGINE-001, REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-004, REQ-ETS-TEAMENGINE-005, REQ-ETS-TEAMENGINE-006, REQ-ETS-TEAMENGINE-007, REQ-ETS-CLEANUP-004, REQ-ETS-CLEANUP-021 |
+| S-ETS-41-01 | **(Sprint 41)** Adopt and verify immutable OGC-published TeamEngine 6.0.0 runtime plus policy-guidance remediation | Complete; exact image `sha256:829a9741...d5f9` and local OSH E2E pass `211/69/0/142` with zero writes; final Raze APPROVE `0.99` | REQ-ETS-TEAMENGINE-001, REQ-ETS-TEAMENGINE-002, REQ-ETS-TEAMENGINE-003, REQ-ETS-TEAMENGINE-004, REQ-ETS-TEAMENGINE-005, REQ-ETS-TEAMENGINE-006, REQ-ETS-TEAMENGINE-007, REQ-ETS-TEAMENGINE-008, REQ-ETS-CLEANUP-004, REQ-ETS-CLEANUP-021 |
 | S-ETS-07-05 | (placeholder) docker-compose stack with healthchecks (extended beyond Sprint 1 baseline) | Backlog | REQ-ETS-TEAMENGINE-004 |
 | S-ETS-07-06 | (placeholder) CTL wrapper supports auth-type parameters end-to-end | Backlog | REQ-ETS-TEAMENGINE-002 |
 | S-ETS-07-07 | (placeholder) TeamEngine integration regression suite (CI) | Backlog | NFR-ETS-04 |
 
 ## Acceptance Criteria
 - [x] ETS jar registers with the verified TeamEngine 5.6.1 baseline via SPI without errors
-- [x] ETS jar registers with TeamEngine 6.0.0 via SPI/CTL without startup linkage errors; full IUT execution remains gated below
-- [ ] CTL wrapper exposes `iut-url` + auth parameters in TeamEngine UI
+- [x] ETS jar registers with TeamEngine 6.0.0 via SPI/CTL without startup linkage errors and completes full primary-IUT execution
+- [x] CTL wrapper exposes a CS API landing-page field serialized as `iut`, optional `auth-credential`, and optional mutation controls in TeamEngine UI; static/package verification and TeamEngine 6 suite registration passed
 - [x] Dockerfile produces a healthy registered image from an immutable OGC-published TeamEngine 6.0.0 digest with recorded provenance
-- [ ] `docker-compose up` brings the stack up at http://localhost:8081/teamengine/
-- [ ] Smoke test against the primary local OSH IUT produces a non-empty TestNG report with exact totals, zero suite-registration/linkage errors, and zero read-only IUT mutations
+- [x] `docker-compose up` brings the stack up at http://localhost:8081/teamengine/; 2026-07-21 readiness pass reached healthy status and verified suite metadata
+- [x] Smoke test against the primary local OSH IUT produces a non-empty TestNG report with exact totals, zero suite-registration/linkage errors, and zero read-only IUT mutations; final evidence `211/69/0/142`, 135 recognized requests, zero writes

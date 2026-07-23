@@ -6,16 +6,19 @@
   "iutBaseUrlDocker": "http://field-hub-osh-1:8081/sensorhub/api",
   "proxyBaseUrl": "http://field-hub-osh-1:8081",
   "notes": [
-    "Apply these payloads to the local OSH stack at /home/nh/docker/gir/sar-ops/field-hub using credentials supplied through the environment.",
+    "The historical field-hub stack used environment-supplied credentials; the isolated Sprint 42 gate at http://field-hub-osh-1:8081/sensorhub/api requires no authentication.",
+    "On a new host, start OpenSensorHub with ops/local-osh-gate-config.json, replay these four fixtures with their declared media types, then retain the resulting H2 state for read-only TeamEngine smoke runs.",
     "The observed resource ids on 2026-05-06 were /systems/040g, /procedures/040g, /deployments/040g, and /samplingFeatures/040g.",
     "Feature type values are required for OSH SensorML conversion; unsupported or missing featureType values made ?f=sml3 return HTTP 500.",
-    "System uses http://www.w3.org/ns/sosa/System, Procedure uses http://www.w3.org/ns/sosa/Procedure, and Deployment uses http://www.w3.org/ns/sosa/Deployment."
+    "System uses http://www.w3.org/ns/sosa/System and Procedure uses http://www.w3.org/ns/sosa/Procedure.",
+    "The Sprint 42 local gate posts Deployment as application/sml+json so the H2 deployment store retains a full SensorML description and direct item lookup remains valid."
   ],
   "fixtures": [
     {
       "collection": "/systems",
       "observedLocation": "/systems/040g",
       "method": "POST",
+      "mediaType": "application/geo+json",
       "payload": {
         "type": "Feature",
         "geometry": {
@@ -37,6 +40,7 @@
       "collection": "/procedures",
       "observedLocation": "/procedures/040g",
       "method": "POST",
+      "mediaType": "application/geo+json",
       "payload": {
         "type": "Feature",
         "geometry": null,
@@ -52,55 +56,31 @@
       "collection": "/deployments",
       "observedLocation": "/deployments/040g",
       "method": "POST",
+      "mediaType": "application/sml+json",
       "payload": {
-        "type": "Feature",
-        "geometry": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [
-                -77.038,
-                38.897
-              ],
-              [
-                -77.035,
-                38.897
-              ],
-              [
-                -77.035,
-                38.9
-              ],
-              [
-                -77.038,
-                38.9
-              ],
-              [
-                -77.038,
-                38.897
-              ]
-            ]
-          ]
-        },
-        "properties": {
-          "uid": "urn:ets:local-osh:deployment:alpha",
-          "featureType": "http://www.w3.org/ns/sosa/Deployment",
-          "name": "ETS Local OSH Synthetic Deployment Alpha",
-          "description": "Synthetic deployment seed for ETS local OSH full-suite health.",
-          "deployedSystems@link": [
-            {
-              "href": "/systems/040g",
-              "rel": "deployed-system",
-              "type": "application/json",
-              "title": "ETS Local OSH Synthetic System Alpha"
+        "type": "Deployment",
+        "uniqueId": "urn:ets:local-osh:deployment:alpha",
+        "label": "ETS Local OSH Synthetic Deployment Alpha",
+        "description": "Synthetic deployment seed for ETS local OSH full-suite health.",
+        "validTime": [
+          "2026-01-01T00:00:00Z",
+          "2027-01-01T00:00:00Z"
+        ],
+        "deployedSystems": [
+          {
+            "name": "alpha",
+            "system": {
+              "href": "urn:ets:local-osh:system:alpha"
             }
-          ]
-        }
+          }
+        ]
       }
     },
     {
       "collection": "/samplingFeatures",
       "observedLocation": "/samplingFeatures/040g",
       "method": "POST",
+      "mediaType": "application/geo+json",
       "payload": {
         "type": "Feature",
         "geometry": {
@@ -142,6 +122,19 @@
         "passed": 62,
         "failed": 0,
         "skipped": 84
+      }
+    },
+    "sprint42FinalGate": {
+      "localOshConfig": "ops/local-osh-gate-config.json",
+      "teamEngineSmokeArtifact": "ops/test-results/sprint-ets-42-swecommon-local-osh-final-2026-07-22.xml",
+      "teamEngineSmokeLog": "ops/test-results/sprint-ets-42-swecommon-local-osh-final-container-2026-07-22.log",
+      "recognizedIutRequestLogs": 135,
+      "writes": 0,
+      "teamEngineSmokeTotals": {
+        "total": 211,
+        "passed": 69,
+        "failed": 0,
+        "skipped": 142
       }
     }
   }

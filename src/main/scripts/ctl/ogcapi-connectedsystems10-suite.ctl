@@ -18,8 +18,8 @@
 	</ctl:function>
 
    <ctl:suite name="tns:ets-ogcapi-connectedsystems10-${version}">
-     <ctl:title>ogcapi-connectedsystems10 Conformance Test Suite</ctl:title>
-     <ctl:description>Describe scope of testing.</ctl:description>
+     <ctl:title>OGC API - Connected Systems Conformance Test Suite</ctl:title>
+     <ctl:description>Tests implemented portions of OGC API - Connected Systems Part 1 (OGC 23-001) and implemented portions of Part 2 (OGC 23-002) using TeamEngine 6.</ctl:description>
      <ctl:starting-test>tns:Main</ctl:starting-test>
    </ctl:suite>
  
@@ -28,42 +28,30 @@
 	  <ctl:code>
         <xsl:variable name="form-data">
            <ctl:form method="POST" width="800" height="600" xmlns="http://www.w3.org/1999/xhtml">
-             <h2>ogcapi-connectedsystems10 Conformance Test Suite</h2>
+             <h2>OGC API - Connected Systems Conformance Test Suite</h2>
              <div style="background:#F0F8FF" bgcolor="#F0F8FF">
-               <p>The implementation under test (IUT) is checked against the following specifications:</p>
+               <p>The implementation under test (IUT) is checked against implemented portions of the following specifications:</p>
                <ul>
-                 <li><a href="http://www.w3.org/TR/xml/">Extensible Markup Language (XML) 1.0</a>, 
-				 Fifth Edition</li>
-				 <li><a href="http://www.w3.org/TR/xmlbase/">XML Base</a>, Second Edition</li>
+                 <li><a href="https://docs.ogc.org/is/23-001/23-001.html">OGC API - Connected Systems Part 1: Feature Resources (OGC 23-001)</a></li>
+                 <li><a href="https://docs.ogc.org/is/23-002/23-002.html">OGC API - Connected Systems Part 2: Dynamic Data (OGC 23-002)</a></li>
                </ul>
-               <p>Two conformance levels are defined:</p>
-               <ul>
-                 <li>Level 1</li>
-                 <li>Level 2</li>
-               </ul>
+               <p>TeamEngine 6 is the forward runtime for this ETS. Local OSH is the primary development E2E target; GeoRobotix is an advisory interoperability target only.</p>
              </div>
              <fieldset style="background:#ccffff">
                <legend style="font-family: sans-serif; color: #000099; 
 			                 background-color:#F0F8FF; border-style: solid; 
                        border-width: medium; padding:4px">Implementation under test</legend>
                <p>
-                 <label for="uri">
-                   <h4 style="margin-bottom: 0.5em">Location of IUT (absolute http: or file: URI)</h4>
+                 <label for="iut">
+                   <h4 style="margin-bottom: 0.5em">CS API landing page URL</h4>
                  </label>
-                 <input id="uri" name="uri" size="128" type="text" value="http://www.w3schools.com/xml/note.xml" />
+                 <input id="iut" name="iut" size="128" type="text" value="" />
                </p>
                <p>
-                 <label for="doc">
-                   <h4 style="margin-bottom: 0.5em">Upload IUT</h4>
+                 <label for="auth-credential">
+                   <h4 style="margin-bottom: 0.5em">Authorization header value</h4>
                  </label>
-                 <input name="doc" id="doc" size="128" type="file" />
-               </p>
-               <p>
-                 <label for="level">Conformance class: </label>
-                 <input id="level-1" type="radio" name="level" value="1" checked="checked" />
-                 <label for="level-1"> Level 1 | </label>
-                 <input id="level-2" type="radio" name="level" value="2" />
-                 <label class="form-label" for="level-2"> Level 2</label>
+                 <input id="auth-credential" name="auth-credential" size="128" type="password" value="" />
                </p>
                <p>
                  <input id="mutation-tests-enabled" name="mutation-tests-enabled" type="checkbox" value="true" />
@@ -82,20 +70,12 @@
              </p>
            </ctl:form>
         </xsl:variable>
-        <xsl:variable name="iut-file" select="$form-data//value[@key='doc']/ctl:file-entry/@full-path" />
 	      <xsl:variable name="test-run-props">
 		    <properties version="1.0">
           <entry key="iut">
-            <xsl:choose>
-              <xsl:when test="empty($iut-file)">
-                <xsl:value-of select="normalize-space($form-data/values/value[@key='uri'])"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:copy-of select="concat('file:///', $iut-file)" />
-              </xsl:otherwise>
-            </xsl:choose>
+            <xsl:value-of select="normalize-space($form-data/values/value[@key='iut'])"/>
           </entry>
-          <entry key="ics"><xsl:value-of select="$form-data/values/value[@key='level']"/></entry>
+          <entry key="auth-credential"><xsl:value-of select="normalize-space($form-data/values/value[@key='auth-credential'])"/></entry>
           <entry key="mutation-tests-enabled"><xsl:value-of select="normalize-space($form-data/values/value[@key='mutation-tests-enabled'])"/></entry>
           <entry key="mutation-iut-policy"><xsl:value-of select="normalize-space($form-data/values/value[@key='mutation-iut-policy'])"/></entry>
 		    </properties>

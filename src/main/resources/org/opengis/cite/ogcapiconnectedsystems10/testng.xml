@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="ogcapi-connectedsystems10-${version}" verbose="0" configfailurepolicy="continue">
   <parameter name="iut"  value=""/>
-  <parameter name="ics"  value=""/>
+  <parameter name="auth-credential"  value=""/>
   <parameter name="mutation-tests-enabled"  value=""/>
   <parameter name="mutation-iut-policy"  value=""/>
 

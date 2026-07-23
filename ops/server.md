@@ -1,6 +1,6 @@
-# server.md — operational reference for ets-ogcapi-connectedsystems10
+# server.md - operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-06-03 - Sprint 40 OSH ConSys blocker closure and clean local OSH restore.
+> Last updated: 2026-07-22 - Sprint 42 primary local OSH gate restoration.
 
 ## Schema provenance
 
@@ -52,18 +52,34 @@ feature-complete and is out of scope of Sprint 1.
 
 ## TeamEngine integration
 
-The ETS targets TeamEngine 5.6.x (currently 5.6.1) — the production
-deployment behind https://cite.opengeospatial.org/teamengine/.
-Pin recorded in `pom.xml` `<docker.teamengine.version>` property.
+The forward development runtime is the immutable OGC TeamEngine 6 image pinned
+by digest in `Dockerfile` and `pom.xml`:
+
+- `ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c`
+- TeamEngine SPI/core: 6.0.0
+- Runtime user: `tomcat`
+- JDK/Tomcat inherited from the base image: JDK 17.0.15+6, Tomcat 10.1.42
+
+Sprint 1/2 TeamEngine 5.6.1 evidence is historical baseline evidence only.
+New runtime work must follow ADR-011 and `REQ-ETS-TEAMENGINE-007/008`.
 
 ## Docker smoke test (S-ETS-01-03)
 
 The repo-root `Dockerfile` + `docker-compose.yml` + `scripts/smoke-test.sh`
-build a TeamEngine 5.6.1 container with this ETS preinstalled and run the
-suite against the configured IUT. As of Sprint 32, the development default is
+build a TeamEngine 6 container with this ETS preinstalled and run the suite
+against the configured IUT. As of Sprint 32, the development default is
 the self-provisioned local OSH target on Docker network `field-hub_default`.
 GeoRobotix (`https://api.georobotix.io/ogc/t18/api`) is available only as an
 explicit advisory interoperability probe with `SMOKE_TARGET=georobotix`.
+
+The linux/arm64 host uses amd64 emulation registered with `tonistiigi/binfmt`
+because the pinned OGC TeamEngine digest is linux/amd64-only. On 2026-07-22 the
+local OSH target was restored as `field-hub-osh-1` on `field-hub_default`, using
+the local OpenSensorHub 2.0.1 distribution at commit `4c87a65` and durable state
+under `/home/nh/docker/ets-ogcapi-connectedsystems10-local-osh/state`. The
+versioned, non-secret runtime configuration is `ops/local-osh-gate-config.json`.
+The final primary E2E gate passed `211/69/0/142` with zero writes and zero
+startup errors; no credential is required by this isolated gate configuration.
 
 ### Local OSH seed fixture manifests
 
@@ -124,7 +140,7 @@ credential values in ETS artifacts. Derive `SMOKE_AUTH_CREDENTIAL` at runtime
 from the local field-hub config or from a user-supplied environment variable,
 and record only whether a credential was supplied.
 
-### Spec drift documented
+### Historical TeamEngine 5.6 baseline
 
 The architect-handoff (`.harness/handoffs/architect-handoff.yaml` in the
 sibling `csapi_compliance` repo) directed
@@ -141,7 +157,7 @@ forced a deviation:
    dropped into that image's WEB-INF/lib (smoke confirmed
    2026-04-28T19:28Z).
 
-**Resolution**: the Sprint 1 Dockerfile assembles TeamEngine 5.6.1 on top
+**Historical resolution**: the Sprint 1 Dockerfile assembled TeamEngine 5.6.1 on top
 of `tomcat:8.5-jre17` by downloading the published TE 5.6.1 web WAR /
 console / common-libs zips from Maven Central. This produces a
 TeamEngine 5.6.1 + JDK 17 container that is byte-for-byte equivalent in
@@ -150,7 +166,7 @@ our JDK 17 ETS jar. Empirical evidence:
 12/12 @Test methods PASS against GeoRobotix in 1.6 s via the SPI route
 (report at `ops/test-results/s-ets-01-03-teamengine-smoke-2026-04-28.xml`).
 
-Three secondary patches the Dockerfile applies, with their root causes:
+Three secondary patches the historical Dockerfile applied, with their root causes:
 
 - TE 5.6.1's `META-INF/context.xml` references
   `org.apache.catalina.loader.VirtualWebappLoader` (a Tomcat 7-only
@@ -169,24 +185,19 @@ Three secondary patches the Dockerfile applies, with their root causes:
   WEB-INF/lib via `mvn dependency:copy-dependencies` (with the TE 6.0.0
   jars filtered out so they do not collide with the bundled TE 5.6.1).
 
-**Spec reconciliation**: the new repo's openspec `spec.md` (in
-`csapi_compliance`) still says
-`Dockerfile SHALL extend ogccite/teamengine-production:5.6.1`. Sam
-should reconcile that line at the next planning cycle to read
-`Dockerfile SHALL produce a TeamEngine 5.6.1 webapp on a JDK 17 base
-image`. Until then, this `ops/server.md` block is the authoritative
-record of why the implementation deviates.
+ADR-011 supersedes the TeamEngine 5.6.1/Tomcat 8.5 runtime path for Sprint 41
+and later. Keep this block only as the historical explanation for Sprint 1/2
+baseline evidence; do not use it as current Dockerfile guidance.
 
 ### How to build
 
 ```
-mvn clean package -DskipTests
-mvn dependency:copy-dependencies \
-    -DoutputDirectory=target/lib-runtime \
-    -DincludeScope=runtime
-rm -f target/lib-runtime/teamengine-*.jar
 docker build -t ets-ogcapi-connectedsystems10:smoke .
 ```
+
+The Dockerfile builder stage runs Maven and selects the reviewed runtime
+payload. Do not run a separate broad `dependency:copy-dependencies` path for
+TeamEngine packaging.
 
 ### How to run interactively
 
@@ -211,9 +222,9 @@ bash scripts/smoke-test.sh
 ```
 
 The script tries host port 8081 first, falls back to 8082 if 8081 is
-busy. Override with `SMOKE_PORT=8083 bash scripts/smoke-test.sh`. Reports
-land at `ops/test-results/s-ets-01-03-teamengine-smoke-<DATE>.xml` and
-`s-ets-01-03-teamengine-container-<DATE>.log`.
+busy. Override with `SMOKE_PORT=8083 bash scripts/smoke-test.sh`. When
+`SMOKE_OUTPUT_DIR` is set, reports land in that directory; otherwise they land
+under `ops/test-results/`.
 
 For an advisory public interoperability probe only:
 
@@ -223,40 +234,67 @@ SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-georobotix-advisory-results 
 bash scripts/smoke-test.sh
 ```
 
-### Dev-environment caveat: port 8081 collision
+### Dev-environment caveats
 
-In the WSL2 host this repo is developed on, an unrelated container
-`field-hub-osh-1` holds host port 8081 as of 2026-04-28
-(`docker ps | grep field-hub-osh`). The committed configuration
-(`docker-compose.yml`, `pom.xml` `<docker.teamengine.version>` plumbing)
-keeps the canonical 8081 port — `scripts/smoke-test.sh`'s `pick_port()`
-auto-detects the conflict and falls back to 8082 for the smoke run.
+- The pinned TeamEngine 6 digest is linux/amd64-only. On linux/arm64 Docker
+  hosts, register amd64 binfmt support before running the Dockerfile:
+
+  ```
+  docker run --privileged --rm tonistiigi/binfmt --install amd64
+  ```
+
+- `scripts/smoke-test.sh` auto-detects host-port collisions and falls back from
+  8081 to 8082/8083 for the TeamEngine container.
 
 ## Local OpenSensorHub mutable IUT
 
 The local OpenSensorHub stack used for Sprint 12 mutable-IUT follow-up is
-outside this ETS repository at:
+outside this ETS repository. Historical Sprint 32-40 evidence used:
 
 ```
 /home/nh/docker/gir/sar-ops/field-hub
 ```
 
-The OSH service container is `field-hub-osh-1`. It publishes the CS API on
-the host at `http://localhost:8081/sensorhub/api` and is reachable from the
+That historical path was absent on 2026-07-21. On 2026-07-22, the gate was
+restored using local OpenSensorHub 2.0.1 build `4c87a65` from
+`/home/nh/docker/osh-core/build/install/osh-core`. Durable no-secret state is at
+`/home/nh/docker/ets-ogcapi-connectedsystems10-local-osh/state`, with the
+versioned configuration at `ops/local-osh-gate-config.json`. The running
+container is `field-hub-osh-1` on `field-hub_default`.
+
+The current OSH service has no host-port binding; it is reachable from the
 TeamEngine smoke container on Docker network `field-hub_default` at:
 
 ```
 http://field-hub-osh-1:8081/sensorhub/api
 ```
 
-The local OSH config file
-`/home/nh/docker/gir/sar-ops/field-hub/osh/config/config.json` was updated
-on 2026-05-06 so `proxyBaseUrl` is `http://field-hub-osh-1:8081`. This makes
-dereference links usable from the TeamEngine smoke container instead of
-pointing at the public `osh.gis.tw` host.
+The restored container was started with this equivalent command after copying
+`ops/local-osh-gate-config.json` to the durable state path as `config.json`:
 
-The following synthetic mutable-IUT fixtures are intentionally present for
-full-suite health runs. The exact payloads are versioned in
+```
+docker network create field-hub_default 2>/dev/null || true
+docker run -d --name field-hub-osh-1 --network field-hub_default \
+  -v /home/nh/docker/ets-ogcapi-connectedsystems10-local-osh/state:/state \
+  -v /home/nh/docker/osh-core/build/install/osh-core:/opt/osh:ro \
+  maven:3.9-eclipse-temurin-17 \
+  java -Xmx512m -Dlogback.configurationFile=/opt/osh/logback.xml \
+  -cp '/opt/osh/lib/*' org.sensorhub.impl.SensorHub /state/config.json
+```
+
+The H2 files under the durable state path contain the four seeded resources and
+are intentionally not version-controlled. To recreate them on a new host,
+start with empty state and POST each fixture from
+`ops/local-osh-seed-fixtures.json` to its declared collection using its declared
+media type. Preserve the resulting state, then run only the read-only smoke gate.
+
+The current config sets `proxyBaseUrl` to `http://field-hub-osh-1:8081` so
+dereference links remain reachable inside TeamEngine. It intentionally omits an
+`exposedResources` system-filter view because that view caused Deployment item
+lookup to enter an unnecessary H2 system-filter path.
+
+The following synthetic fixtures are intentionally present for full-suite
+read-only health runs. The exact payloads are versioned in
 `ops/local-osh-seed-fixtures.json`.
 
 | Collection | Resource | UID / notable property |
@@ -266,20 +304,21 @@ full-suite health runs. The exact payloads are versioned in
 | `/deployments` | `/deployments/040g` | `urn:ets:local-osh:deployment:alpha` |
 | `/samplingFeatures` | `/samplingFeatures/040g` | `urn:ets:local-osh:sampling-feature:alpha` |
 
-Run the seeded local OSH full-health smoke with credentials supplied through
-the environment:
+The current isolated target does not require authentication. For any future
+authenticated replacement, supply credentials through `SMOKE_AUTH_CREDENTIAL`
+and never record the value in artifacts. The verified read-only command is:
 
 ```
-SMOKE_CONTAINER_NAME=ets-csapi-osh-full-health \
 SMOKE_DOCKER_NETWORK=field-hub_default \
 SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
-SMOKE_MUTATION_TESTS_ENABLED=true \
-SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut \
-SMOKE_OUTPUT_DIR=/tmp/ets-csapi-osh-full-health-r3 \
+SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
 bash scripts/smoke-test.sh
 ```
 
-Latest evidence: `/tmp/ets-csapi-osh-full-health-r3` completed on
+Current final evidence: `211 total / 69 passed / 0 failed / 142 skipped`,
+`recognized_iut_request_logs=135`, zero writes, and zero startup errors.
+
+Historical evidence: `/tmp/ets-csapi-osh-full-health-r3` completed on
 2026-05-06 with exact archived totals `69 total / 50 passed / 0 failed /
 19 skipped`. The 19 skips are expected for undeclared or unpopulated
 surfaces that remain outside the current implemented ETS scope. The CRD

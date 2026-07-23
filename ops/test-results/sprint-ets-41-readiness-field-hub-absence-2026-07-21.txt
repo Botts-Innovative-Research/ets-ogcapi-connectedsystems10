@@ -1,0 +1,12 @@
+timestamp=2026-07-21T13:20:53Z
+workspace=/home/nh/docker/ets-ogcapi-connectedsystems10
+expected_path=/home/nh/docker/gir/sar-ops/field-hub
+path_exists=false
+matching_dirs_under_home_maxdepth6:
+docker_networks:
+bridge
+host
+none
+matching_containers:
+matching_images:
+matching_volumes:

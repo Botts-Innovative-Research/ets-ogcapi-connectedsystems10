@@ -1,0 +1,103 @@
+ Image ets-ogcapi-connectedsystems10:latest Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 598B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 6.61kB done
+#2 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1.6
+#3 DONE 0.3s
+
+#4 docker-image://docker.io/docker/dockerfile:1.6@sha256:ac85f380a63b13dfcefa89046420e1781752bab202122f8f50032edf31be0021
+#4 CACHED
+
+#5 [internal] load metadata for docker.io/library/maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45
+#5 DONE 0.0s
+
+#6 [internal] load metadata for docker.io/ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
+#6 DONE 0.0s
+
+#7 [internal] load .dockerignore
+#7 transferring context: 881B done
+#7 DONE 0.0s
+
+#8 [builder 1/6] FROM docker.io/library/maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45
+#8 DONE 0.0s
+
+#9 [stage-2 1/5] FROM docker.io/ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
+#9 DONE 0.0s
+
+#10 [internal] load build context
+#10 transferring context: 47.23kB 0.0s done
+#10 DONE 0.0s
+
+#11 [stage-2 2/5] COPY --from=builder --chown=tomcat:tomcat /build/target/lib-runtime-selected/ /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
+#11 CACHED
+
+#12 [stage-2 3/5] COPY --from=builder --chown=tomcat:tomcat /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
+#12 CACHED
+
+#13 [builder 4/6] COPY .git ./.git
+#13 CACHED
+
+#14 [builder 6/6] RUN --mount=type=cache,target=/root/.m2     mvn -B -q clean package -DskipTests  && mkdir target/lib-runtime-selected  && mvn -B -q dependency:get         -Dartifact=org.opengis.cite.teamengine:teamengine-resources:6.0.0         -Dtransitive=false  && cp /root/.m2/repository/org/opengis/cite/teamengine/teamengine-resources/6.0.0/teamengine-resources-6.0.0.jar         target/lib-runtime-selected/
+#14 CACHED
+
+#15 [stage-2 4/5] COPY --from=builder --chown=tomcat:tomcat /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT-ctl.zip /tmp/ets-ctl.zip
+#15 CACHED
+
+#16 [builder 2/6] WORKDIR /build
+#16 CACHED
+
+#17 [builder 5/6] COPY src ./src
+#17 CACHED
+
+#18 [builder 3/6] COPY pom.xml ./
+#18 CACHED
+
+#19 [stage-2 5/5] RUN test ! -e /usr/local/tomcat/te_base/scripts/ogcapi-connectedsystems10  && mkdir /tmp/ets-ctl  && unzip -q /tmp/ets-ctl.zip -d /tmp/ets-ctl  && test -d /tmp/ets-ctl/ogcapi-connectedsystems10  && cp -R /tmp/ets-ctl/ogcapi-connectedsystems10 /usr/local/tomcat/te_base/scripts/  && rm -rf /tmp/ets-ctl /tmp/ets-ctl.zip
+#19 CACHED
+
+#20 exporting to image
+#20 exporting layers done
+#20 writing image sha256:fd7c366c8f527a107222df552a193e08f561e4ad368a1af64456d2e0a804a4a2 done
+#20 naming to docker.io/library/ets-ogcapi-connectedsystems10:latest done
+#20 DONE 0.0s
+
+#21 resolving provenance for metadata file
+#21 DONE 0.0s
+ Image ets-ogcapi-connectedsystems10:latest Built 
+ Network ets-ogcapi-connectedsystems10_default Creating 
+ Network ets-ogcapi-connectedsystems10_default Created 
+ Container ets-ogcapi-connectedsystems10 Creating 
+ teamengine The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested 
+ Container ets-ogcapi-connectedsystems10 Created 
+ Container ets-ogcapi-connectedsystems10 Starting 
+ Container ets-ogcapi-connectedsystems10 Started 
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=starting
+health=healthy
+PASS: compose TeamEngine health and suite metadata

@@ -1,0 +1,49 @@
+verdict: PASS_WITH_EXTERNAL_BLOCKER
+confidence: 0.99
+source_report: ".harness/evaluations/sprint-ets-42-swecommon-validator-adversarial-2026-07-22.yaml"
+reviewed_scope:
+  role: "Red Team / Raze focused recheck"
+  request: "Verify remediation of all repository-controlled Sprint 42 validator findings."
+  files_edited: []
+finding_status:
+  RAZE-S42-001:
+    status: open_external_blocker
+    result: "Confirmed: field-hub_default remains absent; no local totals or no-mutation completion are claimed."
+  RAZE-S42-002:
+    status: closed
+    result: "The runtime verifier executes valid and invalid adapter calls; archived output reports PASS."
+  RAZE-S42-003:
+    status: closed
+    result: "Focused tests cover all six complete wrappers, active requirement-URI reporting, and operational-error propagation."
+  RAZE-S42-004:
+    status: closed
+    result: "Raw formatter, bootstrap, focused/full Maven, image, runtime, local-attempt, and advisory evidence is archived."
+  RAZE-S42-005:
+    status: closed
+    result: "Jenkins selects JDK 17 and invokes the exact source bootstrap."
+  RAZE-S42-006:
+    status: closed
+    result: "Design wording now correctly says the ETS adds no separate validator, NetworkNT, or ITU jar."
+recheck_rounds:
+  - verdict: GAPS_FOUND
+    confidence: 0.97
+    duration: "5m05s"
+    finding: "The operational-error test cited the source-pin scenario instead of diagnostics/parity scenarios."
+    resolution: "Updated the test traceability comment to cite both applicable scenarios."
+  - verdict: PASS_WITH_EXTERNAL_BLOCKER
+    confidence: 0.99
+    duration: "5s"
+    findings: []
+    conclusion: "No repository-controlled required fixes remain."
+evidence:
+  focused_maven: "19 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven: "311 tests / 0 failures / 0 errors / 3 skipped"
+  final_image: "sha256:5f5bcee26345325fb20a44440db89d6479c60cba098a0a6ab62ae6988e0f88cc"
+  runtime_probe: "PASS: deployed SWE Common adapter executed valid and invalid components"
+  local_osh: "BLOCKED before IUT execution: Docker network field-hub_default not found"
+required_fixes:
+  repository_controlled: []
+  external:
+    - "Restore the local OSH field-hub stack and complete mandatory TeamEngine E2E with exact totals and no-mutation evidence."
+total_recheck_duration: "5m10s"
+token_metadata: "not exposed"

@@ -1,0 +1,133 @@
+reviewer:
+  role: Raze
+  review_type: bounded_final_metadata_gapfix_adversarial_recheck
+  agent: Codex
+started_at: "2026-07-22T11:10:53Z"
+completed_at: "2026-07-22T11:17:14Z"
+duration: "6m21s"
+verdict: GAPS_FOUND
+confidence: 0.99
+scope:
+  - "Closure question 1: accepted coordinate/path tuple output, unused-allowlist rejection, and structural regression coverage."
+  - "Closure question 2: epic/story/contract Raze chronology and final-metadata candidate identity."
+  - "Closure question 3: Jenkins Maven-profile validity and regression coverage for -Pintegration-tests,docker."
+  - "Closure question 4: direct exact-image, Maven, runtime, and local OSH evidence attestation."
+  - "Closure question 5: specification/operations consistency, deferred SensorML status, REQ-ETS-VALIDATOR-001 status honesty, and secret leakage."
+  - "Read-only review of repository state and archived raw evidence; Docker, Maven, TeamEngine, and E2E were not rerun."
+evidence_reviewed:
+  - "_bmad/agents/adversarial-reviewer.md"
+  - ".harness/evaluations/sprint-ets-42-final-closure-adversarial-2026-07-22.yaml"
+  - ".harness/evaluations/sprint-ets-42-duplicate-gapfix-adversarial-recheck-2026-07-22.yaml"
+  - ".harness/evaluations/sprint-ets-42-generic-jar-guard-adversarial-recheck-2026-07-22.yaml"
+  - ".harness/evaluations/sprint-ets-42-swecommon-validator-adversarial-recheck-2026-07-22.yaml"
+  - "scripts/verify-added-jar-inventory.sh"
+  - "scripts/test-teamengine6-jar-guard.sh"
+  - "scripts/verify-teamengine6-runtime.sh"
+  - "scripts/teamengine6-functional-path-allowlist.txt"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTeamEngine6Packaging.java"
+  - "jenkinsfiles/build/Jenkinsfile"
+  - "jenkinsfiles/release/Jenkinsfile"
+  - "pom.xml"
+  - "epics/epic-ets-03-part2-classes.md"
+  - "epics/epic-ets-04-teamengine-integration.md"
+  - "epics/stories/s-ets-41-01-teamengine-6-runtime-migration.md"
+  - "epics/stories/s-ets-42-02-swecommon-validator-adapter.md"
+  - ".harness/contracts/sprint-ets-41.yaml"
+  - ".harness/contracts/sprint-ets-42.yaml"
+  - "_bmad/architecture.md v2.0.14, reread after the live historical-image chronology correction"
+  - "_bmad/traceability.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md"
+  - "openspec/change-proposals/CP-002-swecommon-validator-adapter.md"
+  - "ops/status.md"
+  - "ops/changelog.md"
+  - "ops/test-results.md"
+  - "ops/e2e-test-plan.md"
+  - "ops/local-osh-gate-config.json"
+  - "ops/local-osh-seed-fixtures.json"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-verification-2026-07-22.md, reread after the live wording correction"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-test-first-raw-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-focused-maven-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-full-maven-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-runtime-verifier-final-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-local-osh-e2e-2026-07-22.txt"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-local-osh-final-2026-07-22.xml"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-local-osh-final-container-2026-07-22.log"
+  - "ops/test-results/sprint-ets-42-final-metadata-gapfix-local-osh-final-no-mutation-2026-07-22.txt"
+findings:
+  - id: RAZE-S42-FINAL-METADATA-001
+    severity: MEDIUM
+    required_fix: >-
+      Remove the nonexistent docker profile from both release Jenkins commands,
+      verify every explicitly requested profile exists in the effective Maven
+      model, and extend structural coverage across all Jenkinsfiles so
+      -Pintegration-tests,docker is rejected wherever it appears.
+    status: OPEN
+    evidence:
+      - "jenkinsfiles/release/Jenkinsfile:17-18 still requests -Psign-artifacts-with-ogc,integration-tests,docker."
+      - "pom.xml defines integration-tests and release profiles and no docker profile."
+      - "VerifyTeamEngine6Packaging loads only jenkinsfiles/build/Jenkinsfile at lines 53 and 76, then checks only that content at line 272."
+      - "The archived 11/1/0/0 test-first failure and corrected 11/0/0/0 pass therefore cover the build Jenkinsfile, not the still-stale release Jenkinsfile."
+  - id: RAZE-S42-FINAL-METADATA-002
+    severity: MEDIUM
+    required_fix: >-
+      Extend test-teamengine6-jar-guard.sh with at least two observed allowlisted
+      collisions and assert the verifier's complete, exact ALLOWED_COLLISION
+      stdout set. Extend VerifyTeamEngine6Packaging to structurally require that
+      behavioral self-test and its output-completeness assertion, not merely the
+      presence of output/error string literals in the implementation source.
+    status: OPEN
+    evidence:
+      - "verify-added-jar-inventory.sh:115-123 sorts observed pairs, rejects unused pairs, and emits each observed pair; the implementation behavior is correct on inspection."
+      - "test-teamengine6-jar-guard.sh:56-67 creates only one accepted collision, discards successful stdout, and tests unused-entry rejection; it never asserts emitted tuples or completeness."
+      - "VerifyTeamEngine6Packaging:140-142 checks only that source text contains ALLOWED_COLLISION, unused allowlist entry, and the self-test filename."
+      - "The exact runtime artifact emits both current tuples, but a regression that emits only one tuple can still satisfy the present shell and Java tests."
+  - id: RAZE-S42-FINAL-METADATA-003
+    severity: LOW
+    required_fix: >-
+      After findings 001 and 002 are fixed and verified, reconcile the story,
+      contracts, architecture, traceability, and operations handoff so they no
+      longer state that every generic-guard finding is remediated or that no
+      implementation gate remains prematurely.
+    status: OPEN
+    evidence:
+      - "The epic/story/contract chain correctly preserves the earlier Raze reports and identifies sha256:05a592e0f09de6dfb18f3c01457c7f2dcdcdb635d16ff672485130c32b9b988d as the final-metadata candidate."
+      - "The corrected architecture v2.0.14 now distinguishes historical v2.0.13 image 9a34fd4... from final-metadata image 05a592e..., closing the reported image-chronology ambiguity."
+      - "S-ETS-42-02 lines 98-101, both sprint contracts, architecture section 21.6, ops/status.md lines 83-105, ops/changelog.md lines 9-24, and the verification summary claim Jenkins cleanup/all required-fix remediation despite finding 001."
+      - "ops/status.md says no implementation gate remains, which is inconsistent with findings 001 and 002."
+  - id: RAZE-S42-FINAL-METADATA-004
+    severity: INFO
+    required_fix: null
+    status: CLOSED
+    evidence:
+      - "Fresh runtime evidence directly reports FINAL_IMAGE_ID=sha256:05a592e0f09de6dfb18f3c01457c7f2dcdcdb635d16ff672485130c32b9b988d and both accepted collision tuples."
+      - "Fresh smoke evidence directly reports the same final image ID and TestNG 211/69/0/142."
+      - "Raw expected Maven is 11/1/0/0 with BUILD FAILURE; corrected focused Maven is 11/0/0/0 with BUILD SUCCESS; full Maven is 312/0/0/3 with BUILD SUCCESS."
+      - "The local OSH no-mutation artifact records 135 recognized requests, GET=133, OPTIONS=2, and POST/PUT/PATCH/DELETE=0; smoke reports zero startup ERROR/SEVERE."
+  - id: RAZE-S42-FINAL-METADATA-005
+    severity: INFO
+    required_fix: null
+    status: CLOSED_WITH_METADATA_EXCEPTION_003
+    evidence:
+      - "REQ-ETS-VALIDATOR-001 remains PARTIALLY_IMPLEMENTED overall, SWE Common remains ready for final Raze, and SensorML remains explicitly deferred in OpenSpec, traceability, stories, contracts, architecture, and operations."
+      - "No reviewed final-metadata raw artifact contains credential markers, unmasked Basic/Bearer authorization values, or private-key material."
+      - "The local OSH gate configuration has no credential/authentication fields; the seed manifest explicitly records that the isolated Sprint 42 gate requires no authentication."
+      - "The only internal-consistency exception is the premature completion language captured by finding 003."
+residual_risks:
+  - "No gate was rerun by design; conclusions about runtime and E2E behavior rely on archived raw evidence and cross-artifact consistency."
+  - "The provisional swecommon30-validator dependency remains source-pinned at an unpublished 0.1-SNAPSHOT; release stays blocked pending an accepted non-SNAPSHOT coordinate."
+  - "SensorML validator integration remains deferred and keeps REQ-ETS-VALIDATOR-001 partial even after SWE Common story closure."
+  - "The dirty worktree predates this review; no unrelated file was changed by the reviewer."
+required_actions:
+  - "Close RAZE-S42-FINAL-METADATA-001 across build and release Jenkins surfaces."
+  - "Close RAZE-S42-FINAL-METADATA-002 with exact multi-tuple output assertions and structural wiring coverage."
+  - "Reconcile the premature closure claims identified by RAZE-S42-FINAL-METADATA-003."
+  - "Run the repository-mandated focused/full Maven and TeamEngine local OSH gates for the fixes, archive exact results, and perform another bounded final Raze recheck."
+completion_recommendation: >-
+  Do not close S-ETS-41-01 or S-ETS-42-02. The exact-image runtime, Maven,
+  local OSH, SensorML-deferred, and secret-hygiene evidence is accepted, but
+  APPROVE is prohibited while the release Jenkins profile defect, tuple-output
+  regression-coverage gap, and resulting metadata overclaim remain unresolved.
+token_metadata:
+  status: unavailable
+  detail: "The execution interface exposed no authoritative token count or cost metadata for this review."

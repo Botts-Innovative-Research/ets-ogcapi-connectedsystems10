@@ -2,6 +2,8 @@
 #
 # REQ-ETS-TEAMENGINE-004: bring up the TeamEngine + ETS service at
 # http://localhost:8081/teamengine/ with a health check.
+# OGC API - Connected Systems 1.0 ETS; current package scope is partial
+# Part 1 and Part 2 coverage on the forward TeamEngine 6 runtime.
 #
 # Usage:
 #   1. Bring up the stack (the multi-stage Dockerfile builds the ETS):
@@ -12,12 +14,10 @@
 #        curl -u ogctest:ogctest -H 'Accept: application/xml' \
 #             http://localhost:8081/teamengine/rest/suites
 #
-# Dev-environment caveat (recorded in ops/server.md): on the WSL2 host this
-# repo is developed on, port 8081 is occupied by the unrelated `field-hub-osh`
-# container as of 2026-04-28. The smoke-test script (`scripts/smoke-test.sh`)
-# falls back to host port 8082 in that case via `docker run -p`. Compose stays
-# pinned to the canonical 8081 to match REQ-ETS-TEAMENGINE-004 and the
-# pom.xml `<docker.teamengine.version>` profile.
+# Compose stays pinned to the canonical 8081 service port. For ad hoc
+# development on a busy host, use `scripts/smoke-test.sh`; it selects an
+# available host port while preserving the same Dockerfile-built TeamEngine 6
+# runtime.
 
 services:
   teamengine:

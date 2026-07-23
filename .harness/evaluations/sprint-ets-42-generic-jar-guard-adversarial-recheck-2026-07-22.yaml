@@ -1,0 +1,45 @@
+review: sprint-ets-42-generic-jar-guard-adversarial-recheck
+reviewer:
+  role: Raze
+  agent: Mendel
+  agent_id: 019f895e-fe38-7bd1-a0e2-cb45054f62bf
+scope:
+  - S-ETS-41-01 TeamEngine 6 generic jar-guard candidate
+  - S-ETS-42-02 SWE Common validator adapter final candidate
+verdict: GAPS_FOUND
+confidence: 0.98
+started_at: 2026-07-22T10:29:00Z
+ended_at: 2026-07-22T10:43:58Z
+duration: 14m58s
+token_usage: unavailable
+findings:
+  - id: RAZE-S42-GENERIC-001
+    severity: MEDIUM
+    summary: Runtime evidence reports only a collision count, not each reviewed coordinate/path tuple, and does not reject unused allowlist entries.
+    required_fix: Emit every observed allowed tuple, reject unused allowlist entries, and refresh exact-image runtime evidence.
+  - id: RAZE-S42-GENERIC-002
+    severity: MEDIUM
+    summary: The Part 2 epic header and Sprint 41 Raze chronology contradict current gate state.
+    required_fix: Reconcile the epic header and contract with current E2E and all later Raze reports.
+  - id: RAZE-S42-GENERIC-003
+    severity: LOW
+    summary: Jenkins requests the removed nonexistent docker Maven profile.
+    required_fix: Remove docker from the Jenkins Maven profile list and cover the command structurally.
+verified_evidence:
+  - Exact image sha256:9a34fd4abda872637635271b3f17a977ec3b0c0928fc70b83b0980d20e98f50e matches smoke and runtime output.
+  - One ETS jar is added with no TeamEngine or duplicate base coordinate family.
+  - Renamed-coordinate and embedded functional-path adversarial tests reject their fixtures.
+  - NetworkNT message bundles and bytecode references use the unique relocated path; wildcard classpath adapter execution passes.
+  - Raw Maven chronology is valid at expected 11/1/0/0, focused 11/0/0/0, and full 312/0/0/3.
+  - E2E is 211/69/0/142 with 135 requests, GET=133, OPTIONS=2, zero writes, and no startup/linkage error.
+  - .moduledata is absent, SensorML remains deferred, and no credential leak or unexplained pollution was found.
+prior_finding_disposition:
+  RAZE-S42-GAPFIX-001: PARTIAL; enforcement and isolation pass, exact collision reporting remains
+  RAZE-S42-GAPFIX-002: CLOSED
+  RAZE-S42-GAPFIX-003: CLOSED
+  RAZE-S42-GAPFIX-004: PARTIAL; epic header and Sprint 41 contract remain stale
+required_fixes:
+  - RAZE-S42-GENERIC-001
+  - RAZE-S42-GENERIC-002
+  - RAZE-S42-GENERIC-003
+completion_justification: Stories remain in progress until tuple evidence, stale metadata, Jenkins profile cleanup, refreshed gates, reconciliation, and final Raze recheck are complete.

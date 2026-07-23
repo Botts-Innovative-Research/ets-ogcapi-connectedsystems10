@@ -23,7 +23,9 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn -B clean verify
+        run: |
+          bash scripts/bootstrap-swecommon30-validator.sh
+          mvn -B clean verify
 
       - name: Upload jar (on success)
         if: success()

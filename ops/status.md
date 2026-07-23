@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-22T11:51Z
+Last updated: 2026-07-23T04:08Z
 
 ## Fresh-Session Entry Point
 
@@ -37,6 +37,9 @@ implements the first SWE Common adapter increment and is complete after
 runtime-packaging, metadata, release-CI, behavioral-coverage, fresh full gates,
 and final Raze approval. S-ETS-41-01 is also complete.
 
+- Botts publication: primary closure commit `482b975` is pushed to `main`; the
+  working tree contains only this publication-record follow-up until its final
+  commit and push.
 - Research artifact: `ops/test-results/external-validator-library-research-2026-07-22.md`.
 - SWE Common: `opengeospatial/ets-swecommon30` PR 10 exposes the intended
   reusable module `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT` on branch

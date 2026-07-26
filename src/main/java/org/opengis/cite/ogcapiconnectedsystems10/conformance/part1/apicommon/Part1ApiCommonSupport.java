@@ -9,7 +9,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +31,7 @@ import io.restassured.specification.RequestSpecification;
 /**
  * Read-only support for the two released OGC 23-001 API Common supporting tests.
  */
-final class Part1ApiCommonSupport {
+public final class Part1ApiCommonSupport {
 
 	static final String CONF_CANONICAL_RESOURCES = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/canonical-resources";
 
@@ -57,12 +59,26 @@ final class Part1ApiCommonSupport {
 	 * @param resourceType Part 1 resource type path token.
 	 * @return all resources, or empty when the endpoint returns 404.
 	 */
-	static Optional<List<Map<String, Object>>> canonicalResources(URI apiRoot, String resourceType) {
-		return canonicalResources(apiRoot, resourceType, Part1ApiCommonSupport::get);
+	public static Optional<List<Map<String, Object>>> canonicalResources(URI apiRoot, String resourceType) {
+		return canonicalResourcesDetailed(apiRoot, resourceType).map(TraversalResult::items);
 	}
 
 	static Optional<List<Map<String, Object>>> canonicalResources(URI apiRoot, String resourceType,
 			Requester requester) {
+		return canonicalResourcesDetailed(apiRoot, resourceType, requester).map(TraversalResult::items);
+	}
+
+	/**
+	 * Retrieves canonical resources and preserves each representation page as evidence.
+	 * @param apiRoot normalized API root.
+	 * @param resourceType Part 1 resource type path token.
+	 * @return traversal evidence, or empty when the endpoint returns 404.
+	 */
+	public static Optional<TraversalResult> canonicalResourcesDetailed(URI apiRoot, String resourceType) {
+		return canonicalResourcesDetailed(apiRoot, resourceType, Part1ApiCommonSupport::get);
+	}
+
+	static Optional<TraversalResult> canonicalResourcesDetailed(URI apiRoot, String resourceType, Requester requester) {
 		requireApiRoot(apiRoot);
 		if (resourceType == null || resourceType.isBlank() || resourceType.contains("/")
 				|| resourceType.contains("..")) {
@@ -88,8 +104,8 @@ final class Part1ApiCommonSupport {
 	 * @param collection advertised collection metadata.
 	 * @return all items, or empty when no supported items media type is advertised.
 	 */
-	static Optional<List<Map<String, Object>>> collectionItems(URI apiRoot, Map<String, Object> collection) {
-		return collectionItems(apiRoot, collection, Map.of(), Part1ApiCommonSupport::get);
+	public static Optional<List<Map<String, Object>>> collectionItems(URI apiRoot, Map<String, Object> collection) {
+		return collectionItemsDetailed(apiRoot, collection).map(TraversalResult::items);
 	}
 
 	static Optional<List<Map<String, Object>>> collectionItems(URI apiRoot, Map<String, Object> collection,
@@ -98,6 +114,28 @@ final class Part1ApiCommonSupport {
 	}
 
 	static Optional<List<Map<String, Object>>> collectionItems(URI apiRoot, Map<String, Object> collection,
+			Map<String, String> query, Requester requester) {
+		return collectionItemsDetailed(apiRoot, collection, query, requester).map(TraversalResult::items);
+	}
+
+	/**
+	 * Retrieves advertised collection items and preserves each representation page as
+	 * evidence.
+	 * @param apiRoot normalized API root.
+	 * @param collection advertised collection metadata.
+	 * @return traversal evidence, or empty when no supported items media type is
+	 * advertised.
+	 */
+	public static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection) {
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), Part1ApiCommonSupport::get);
+	}
+
+	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
+			Requester requester) {
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), requester);
+	}
+
+	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
 			Map<String, String> query, Requester requester) {
 		requireApiRoot(apiRoot);
 		if (collection == null) {
@@ -246,12 +284,13 @@ final class Part1ApiCommonSupport {
 				&& (query.end() == null || begin == null || !query.end().isBefore(begin));
 	}
 
-	private static List<Map<String, Object>> traverse(URI initial, String accept, Map<String, String> initialQuery,
+	private static TraversalResult traverse(URI initial, String accept, Map<String, String> initialQuery,
 			Requester requester, Response firstResponse, String requirement) {
 		if (requester == null) {
 			throw new IllegalArgumentException("requester must not be null");
 		}
 		List<Map<String, Object>> items = new ArrayList<>();
+		List<PageDocument> pages = new ArrayList<>();
 		Set<URI> visited = new LinkedHashSet<>();
 		URI current = initial;
 		Map<String, String> query = initialQuery;
@@ -273,6 +312,7 @@ final class Part1ApiCommonSupport {
 			ETSAssert.assertStatus(response, 200, requirement);
 			Map<String, Object> body = parseObject(response, current, requirement);
 			List<?> pageItems = pageItems(response, body, current, requirement);
+			List<Map<String, Object>> typedPageItems = new ArrayList<>();
 			for (Object item : pageItems) {
 				if (!(item instanceof Map)) {
 					ETSAssert.failWithUri(requirement,
@@ -281,7 +321,9 @@ final class Part1ApiCommonSupport {
 				@SuppressWarnings("unchecked")
 				Map<String, Object> typed = (Map<String, Object>) item;
 				items.add(typed);
+				typedPageItems.add(typed);
 			}
+			pages.add(new PageDocument(current, responseMediaType(response), body, typedPageItems));
 			URI next = nextUri(current, body, requirement);
 			if (next != null && !sameOrigin(initial, next)) {
 				ETSAssert.failWithUri(requirement,
@@ -291,7 +333,7 @@ final class Part1ApiCommonSupport {
 			query = Map.of();
 			response = null;
 		}
-		return List.copyOf(items);
+		return new TraversalResult(items, pages);
 	}
 
 	private static List<?> pageItems(Response response, Map<String, Object> body, URI source, String requirement) {
@@ -564,6 +606,45 @@ final class Part1ApiCommonSupport {
 			if (begin != null && end != null && end.isBefore(begin)) {
 				throw new IllegalArgumentException("datetime query end precedes its begin");
 			}
+		}
+
+	}
+
+	/**
+	 * Immutable evidence for one retrieved collection page.
+	 *
+	 * @param source effective page URI.
+	 * @param mediaType normalized response media type.
+	 * @param body parsed JSON object.
+	 * @param items typed items extracted from the representation.
+	 */
+	public record PageDocument(URI source, String mediaType, Map<String, Object> body,
+			List<Map<String, Object>> items) {
+
+		public PageDocument {
+			if (source == null || mediaType == null || body == null || items == null) {
+				throw new IllegalArgumentException("page evidence values must not be null");
+			}
+			body = Collections.unmodifiableMap(new LinkedHashMap<>(body));
+			items = List.copyOf(items);
+		}
+
+	}
+
+	/**
+	 * Immutable aggregate for a complete paginated traversal.
+	 *
+	 * @param items all items in traversal order.
+	 * @param pages all retrieved pages in traversal order.
+	 */
+	public record TraversalResult(List<Map<String, Object>> items, List<PageDocument> pages) {
+
+		public TraversalResult {
+			if (items == null || pages == null) {
+				throw new IllegalArgumentException("traversal evidence values must not be null");
+			}
+			items = List.copyOf(items);
+			pages = List.copyOf(pages);
 		}
 
 	}

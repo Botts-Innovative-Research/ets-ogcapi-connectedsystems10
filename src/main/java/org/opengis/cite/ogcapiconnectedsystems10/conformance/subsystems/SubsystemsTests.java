@@ -393,7 +393,7 @@ public class SubsystemsTests {
 	 *
 	 * <p>
 	 * Same v1.0 GH#3 fix policy as
-	 * {@link org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemsCollectionLinksDiscipline()}:
+	 * {@link org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#everySystemHasCanonicalUrl()}:
 	 * {@code rel="canonical"} is the load-bearing assertion; absence of
 	 * {@code rel="self"} is NOT a FAIL.
 	 * </p>

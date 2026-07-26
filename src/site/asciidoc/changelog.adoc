@@ -6,5 +6,5 @@ Current OGC API - Connected Systems ETS package status:
 
 * TeamEngine 6 is the forward runtime.
 * Implemented coverage includes partial OGC 23-001 Part 1 and implemented partial OGC 23-002 Part 2 checks.
-* The supported run arguments are `iut`, `auth-credential`, `mutation-tests-enabled`, and `mutation-iut-policy`.
+* The supported run arguments are `iut`, `auth-credential`, `mutation-tests-enabled`, `mutation-iut-policy`, and `mobile-system-id`.
 * Local OSH is the primary development E2E target; GeoRobotix runs are advisory only.

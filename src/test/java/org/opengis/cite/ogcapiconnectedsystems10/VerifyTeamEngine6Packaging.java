@@ -232,18 +232,21 @@ public class VerifyTeamEngine6Packaging {
 		assertContains(testngXml, "name=\"auth-credential\"");
 		assertContains(testngXml, "name=\"mutation-tests-enabled\"");
 		assertContains(testngXml, "name=\"mutation-iut-policy\"");
+		assertContains(testngXml, "name=\"mobile-system-id\"");
 		assertDoesNotExposeUnsupportedRunArgs("testng.xml", testngXml);
 
 		assertContains(ctl, "<entry key=\"iut\">");
 		assertContains(ctl, "<entry key=\"auth-credential\">");
 		assertContains(ctl, "<entry key=\"mutation-tests-enabled\">");
 		assertContains(ctl, "<entry key=\"mutation-iut-policy\">");
+		assertContains(ctl, "<entry key=\"mobile-system-id\">");
 		assertDoesNotExposeUnsupportedRunArgs("CTL", ctl);
 
 		assertContains(smokeScript, "--data-urlencode \"iut=${IUT_URL}\"");
 		assertContains(smokeScript, "--data-urlencode \"auth-credential=${SMOKE_AUTH_CREDENTIAL}\"");
 		assertContains(smokeScript, "--data-urlencode \"mutation-tests-enabled=${SMOKE_MUTATION_TESTS_ENABLED}\"");
 		assertContains(smokeScript, "--data-urlencode \"mutation-iut-policy=${SMOKE_MUTATION_IUT_POLICY}\"");
+		assertContains(smokeScript, "--data-urlencode \"mobile-system-id=${SMOKE_MOBILE_SYSTEM_ID}\"");
 		assertContains(smokeScript,
 				"EXPECTED_TITLE_FRAGMENT=\"${SMOKE_EXPECTED_TITLE_FRAGMENT:-OGC API - Connected Systems 1.0 Conformance Test Suite}\"");
 		assertDoesNotExposeUnsupportedRunArgs("scripts/smoke-test.sh", smokeScript);
@@ -256,6 +259,7 @@ public class VerifyTeamEngine6Packaging {
 			assertContains(name, content, "auth-credential");
 			assertContains(name, content, "mutation-tests-enabled");
 			assertContains(name, content, "mutation-iut-policy");
+			assertContains(name, content, "mobile-system-id");
 			assertDoesNotExposeUnsupportedRunArgs(name, content);
 		});
 	}

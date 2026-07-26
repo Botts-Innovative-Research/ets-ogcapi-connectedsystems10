@@ -46,7 +46,13 @@ public enum TestRunArg {
 	 * Optional Sprint 12 safety-gate policy marker. The only value that unlocks IUT-bound
 	 * mutation requests is {@code dedicated-mutable-iut}.
 	 */
-	MUTATION_IUT_POLICY;
+	MUTATION_IUT_POLICY,
+
+	/**
+	 * Optional identifier of a known moving System. When supplied, the released
+	 * location-time procedure polls its canonical resource for a location change.
+	 */
+	MOBILE_SYSTEM_ID;
 
 	@Override
 	public String toString() {

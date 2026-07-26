@@ -59,6 +59,11 @@ not declare the corresponding conformance class or lacks required data.
 |String
 |O
 |Policy acknowledgement required by mutation tests, normally `dedicated-mutable-iut`.
+
+|mobile-system-id
+|String
+|O
+|Identifier of a known moving System. Enables the released location-time procedure; omitted for static IUTs.
 |===
 
 include::how-to-run-the-tests.adoc[]

@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.21 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 API Common closure design)
+> Version: 2.0.23 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 System E2E execution remediation)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -43,7 +43,7 @@ The same jar is verified locally and later deployed by OGC:
 - `docker compose up` uses the repository Dockerfile. The verified historical baseline manually assembles TeamEngine 5.6.1; Sprint 41 replaces it with a digest-pinned OGC-published TeamEngine 6.0.0 runtime containing the ETS jar, justified dependency closure, and CTL resources at supported TeamEngine extension paths. TeamEngine discovers the suite via `META-INF/services/com.occamlab.te.spi.jaxrs.TestSuiteController` (ADR-001/011). Maven, image build, runtime verification, Compose health, suite registration, and the final local OSH TeamEngine E2E gate are archived.
 - Developer browses `http://localhost:8081/teamengine/` and runs the Connected Systems suite from the CTL UI.
 - The supported local deployment path is the repository **Dockerfile + `docker-compose.yml` + `scripts/smoke-test.sh`**. Any Maven `docker` profile is stale unless it is removed, made a no-op, or delegates to this exact digest-pinned Dockerfile path. It must not define an independent TeamEngine runtime, independent port/startup contract, or broad dependency-copy path.
-- The canonical run-argument contract is: required `iut`, optional `auth-credential`, optional `mutation-tests-enabled`, optional `mutation-iut-policy`. TeamEngine UI and documentation may label `iut` as "CS API landing page" for users, but the serialized argument key passed into TestNG must be `iut`. Do not introduce `auth-type` unless Java/TestNG support is explicitly implemented later.
+- The canonical run-argument contract is: required `iut`; optional `auth-credential`, `mutation-tests-enabled`, `mutation-iut-policy`, and `mobile-system-id`. The last argument supplies the released `/conf/system/location-time` prerequisite and never enables mutation. TeamEngine UI and documentation may label `iut` as "CS API landing page" for users, but the serialized argument key passed into TestNG must be `iut`. Do not introduce `auth-type` unless Java/TestNG support is explicitly implemented later.
 
 **Verification boundary (ADR-012)**:
 - Project-operated hosted CI is not approved and is not part of the architecture.
@@ -363,7 +363,12 @@ Cross-references **§6 Quality, assertions, and logging** ("Credential masking" 
 
 ### 14.6 SystemFeatures conformance class (Sprint 2 S-ETS-02-06)
 
-Cross-references **§3 Component model** ("conformance.<class>.* (sprints 2..14; placeholders)" entry). Architect ratified Sprint-1-style minimal-then-expand: 4 @Test methods at Sprint 2 close, full-coverage expansion deferred to Sprint 3 with explicit per-method roadmap captured in design.md §"SystemFeatures conformance class scope". The 4 methods cover (a) `/systems` returns 200 + JSON, (b) collection has non-empty items array, (c) item shape (id/type/links), (d) collection-level links discipline including v1.0 GH#3 fix carryover (rel=self example-only). `dependsOnGroups="core"` wiring satisfies the dependency-skip CRITICAL scenario. Subpackage at `conformance.systemfeatures.SystemFeaturesTests`.
+**Historical ratification, superseded by §25 and §26.** Cross-references
+**§3 Component model** ("conformance.<class>.* (sprints 2..14; placeholders)"
+entry). The Sprint 2 four-method minimal increment and its Sprint 3 expansion
+roadmap are retained only as implementation history. They are not active
+architecture requirements or released ATS mappings. Sprint 47's six exact
+procedures and explicit prerequisite-result boundary are authoritative.
 
 ### 14.7 ADR-001 cross-reference amendment
 
@@ -840,3 +845,58 @@ This component closes the four directly owned tests and two supporting tests in
 the Connected Systems inventory only. Full `/conf/api-common` conformance
 remains partial until the five inherited external OGC API Features/Common
 classes are completed and reviewed.
+
+## 25. Architecture v2.0.22 - Part 1 System direct procedures (2026-07-26)
+
+System Features consumes API Common's bounded traversal as a public read-only
+service. The original helper signatures remain the reviewed supporting-test
+entry points. Detailed variants return each parsed page together with its
+source URI and actual response media type, allowing class-specific schema
+validation without repeating network requests.
+
+`SystemFeaturesTests` contains exactly the six released `/conf/system`
+procedures. `SystemFeaturesSupport` owns GeoJSON/SensorML extraction, the five
+allowed SOSA System URI/CURIE pairs, canonical-link normalization, same-origin
+canonical URL resolution, and one endpoint-parameterized NetworkNT validation
+procedure against the bundled Part 1 System collection schemas. The GeoJSON
+dependency closure is a pinned complete copy of the schemas published at
+`geojson.org/schema`; permissive resolution stubs are prohibited.
+
+Class setup loads only immutable run arguments. Each released test retrieves
+its own prerequisite resources, so a canonical `/systems` failure cannot
+configuration-skip collection-only procedures or an absent-input
+location-time result. Collection procedures accumulate unsupported-media
+warnings, continue through later collections, and SKIP only when no supported
+collection was executed.
+
+Location is warning-only because its target is a recommendation. Location-time
+is never inferred from static shape. It requires optional `mobile-system-id`,
+polls a canonical System GET at one-second intervals for at most 30 seconds,
+and passes only after an actual GeoJSON geometry or SensorML positional
+coordinate change. Orientation-only or reference-frame metadata changes do not
+prove movement. Missing input is SKIP. No OSH or TeamEngine source or binary
+changes are part of this component.
+
+## 26. Architecture v2.0.23 - Inherited evidence-limitation isolation (2026-07-26)
+
+The unmodified local OSH hard-codes `/collections` without temporal extents.
+Consequently `/conf/api-common/datetime` reports the specified
+no-positive-evidence SKIP. TestNG's raw group dependency semantics treat that
+single evidence limitation like a failed prerequisite and dependency-SKIP all
+System methods, preventing E2E execution of Sprint 47 code.
+
+The `part1apicommon -> systemfeatures` dependency remains declared to preserve
+ordering. System configuration and tests run with TestNG `alwaysRun` semantics,
+then apply an explicit result gate before System IUT access. Any prerequisite
+test or configuration failure blocks System. Any skipped API Common procedure
+other than `datetimeUsesValidTime` blocks System. The sole allowed continuation
+is that method's documented no-temporal-extent `SkipException`; it remains
+visible in the report and therefore prevents any full inherited-conformance
+claim. This isolates procedure execution from evidence availability without
+converting SKIP into PASS.
+
+All six deployed System methods also execute through a controlled direct HTTP
+regression. That fixture proves successful location, positional movement,
+canonical dereference/content comparison, resources validation, canonical
+endpoint validation, and collection validation while asserting the expected
+wire exchanges. Local OSH TeamEngine remains the mandatory primary E2E target.

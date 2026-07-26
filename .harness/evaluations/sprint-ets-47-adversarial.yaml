@@ -1,0 +1,90 @@
+review:
+  id: sprint-ets-47-adversarial
+  reviewer: Raze
+  agent_id: 019f9ec8-c904-7081-949b-f312a1149774
+  nickname: Plato
+  role: adversarial-reviewer
+  date: "2026-07-26"
+  verdict: APPROVE
+  confidence: 0.99
+  required_findings: []
+  scope_note: >-
+    Approval covers the six directly owned released OGC 23-001 /conf/system
+    procedures. The three local OSH SKIPs remain explicit evidence limitations
+    and do not count as positive inherited conformance evidence.
+
+token_metadata:
+  available: false
+  total_tokens: null
+  reason: "The subagent runtime returned duration metadata but no token count."
+
+review_cycles:
+  - verdict: GAPS_FOUND
+    duration_seconds: 328
+    findings: 6
+    disposition: CLOSED
+  - verdict: GAPS_FOUND
+    duration_seconds: 206
+    findings: 4
+    disposition: CLOSED
+  - verdict: GAPS_FOUND
+    duration_seconds: null
+    findings: 1
+    disposition: CLOSED
+    note: "Superseded Sprint 2/3 approximation clauses remained active."
+  - verdict: GAPS_FOUND
+    duration_seconds: null
+    findings: 1
+    disposition: CLOSED
+    note: "Additional historical scenarios and design text remained active."
+  - verdict: BLOCK
+    duration_seconds: 175
+    findings: 1
+    disposition: CLOSED
+    note: "The System-target sabotage parser omitted Part 2 dependency descendants."
+  - verdict: BLOCK
+    duration_seconds: 143
+    findings: 1
+    disposition: CLOSED
+    note: "Closure records still described final review as pending."
+  - verdict: BLOCK
+    duration_seconds: 145
+    findings: 1
+    disposition: CLOSED
+    note: "One changelog heading still described final review as pending."
+  - verdict: APPROVE
+    duration_seconds: 12
+    findings: 0
+    disposition: FINAL
+
+final_evidence:
+  coverage: "240 total / 10 exact / 2 helper / 145 candidate / 83 unmapped"
+  system_coverage: "6 exact / 0 helper / 0 candidate / 0 unmapped"
+  focused_maven: "46 total / 0 failures / 0 errors / 0 skipped"
+  ats_audit_maven: "23 total / 0 failures / 0 errors / 0 skipped"
+  full_maven: "395 total / 0 failures / 0 errors / 3 skipped"
+  local_osh_teamengine: "215 total / 38 passed / 0 failed / 177 skipped"
+  exact_image: "sha256:101e20653097fea9891ff5fbe1f4c160ae163ca97338cf63cfb5980dd958cf6e"
+  core_dependency_sabotage: "215 total / 2 passed / 10 failed / 203 skipped"
+  system_dependency_sabotage: "215 total / 37 passed / 1 failed / 177 skipped"
+  system_dependency_descendants: "13 direct and 2 transitive groups entirely skipped"
+  credential_gates: "integration and wire-layer PASS"
+
+closed_findings:
+  - complete, provenance-pinned GeoJSON schemas and malformed-input regressions
+  - unsupported-media collection ordering and failure visibility
+  - released ATS evidence reconciliation
+  - positional-only SensorML movement evidence
+  - endpoint-parameterized resources validation
+  - independent procedure setup and retrieval
+  - explicit API Common evidence-limit boundary
+  - successful direct HTTP paths for all six procedures
+  - archived focused, ATS-audit, and full Maven logs
+  - mobile-system-id run-argument documentation
+  - all historical Sprint 2/3 approximation clauses marked superseded
+  - TestNG group-graph sabotage coverage for all dependency descendants
+  - closure metadata reconciliation
+
+reviewed_snapshot:
+  tracked_diff_sha256_before_evaluation_record: "9a3615e19f3c3cef4cc30b1429662d99cc68fde1f98de763412302e106841f15"
+  source_edited_by_reviewer: false

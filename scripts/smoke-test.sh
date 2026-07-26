@@ -232,12 +232,18 @@ if [[ -n "${SMOKE_MUTATION_IUT_POLICY:-}" ]]; then
   MUTATION_ARGS+=(--data-urlencode "mutation-iut-policy=${SMOKE_MUTATION_IUT_POLICY}")
   log "  SMOKE_MUTATION_IUT_POLICY set (value=${SMOKE_MUTATION_IUT_POLICY}) — forwarding to Sprint 12 CRD safety gate"
 fi
+MOBILE_SYSTEM_ARGS=()
+if [[ -n "${SMOKE_MOBILE_SYSTEM_ID:-}" ]]; then
+  MOBILE_SYSTEM_ARGS+=(--data-urlencode "mobile-system-id=${SMOKE_MOBILE_SYSTEM_ID}")
+  log "  SMOKE_MOBILE_SYSTEM_ID set - forwarding to the released location-time procedure"
+fi
 log "step 6/8 — POST suite/${ETS_CODE}/run iut=${IUT_URL}"
 http_code=$(curl -s -u "${TE_USER}:${TE_PASS}" -G \
     "http://localhost:${SMOKE_PORT}/teamengine/rest/suites/${ETS_CODE}/run" \
     --data-urlencode "iut=${IUT_URL}" \
     "${AUTH_CRED_ARGS[@]}" \
     "${MUTATION_ARGS[@]}" \
+    "${MOBILE_SYSTEM_ARGS[@]}" \
     -H "Accept: application/xml" \
     -o "$REPORT_XML" \
     -w "%{http_code}" \

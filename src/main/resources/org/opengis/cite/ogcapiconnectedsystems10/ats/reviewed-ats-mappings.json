@@ -68,6 +68,60 @@
       "reviewedBy": "Codex Sprint 46 ATS line review",
       "reviewedOn": "2026-07-26",
       "evidence": "The deployed TestNG method iterates advertised collections with temporal extents, queries released collection-items with instant, bounded, open-start, and open-end datetime forms, resolves now at captured request time, rejects non-intersecting validTime, requires unfiltered timeless IDs in every filtered result, and SKIPs with no eligible collection; focused positive, boundary, and fail-closed temporal coverage passes."
+    },
+    {
+      "part": 1,
+      "test": "/conf/system/location",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemLocationsFollowRecommendation()",
+      "reviewedBy": "Codex Sprint 47 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The deployed TestNG method evaluates every canonical System page, applies the released GeoJSON geometry and SensorML position mappings, exempts only Simulation and Process assets, and reports recommendation warnings without converting them to conformance failures."
+    },
+    {
+      "part": 1,
+      "test": "/conf/system/location-time",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#mobileSystemLocationIsUpdated()",
+      "reviewedBy": "Codex Sprint 47 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The deployed TestNG method accepts the optional public mobile-system-id argument, dereferences that known moving System, applies representation-specific coordinate mappings, and requires a position change during bounded 30-second polling; SensorML orientation-only changes do not prove movement, and absent input produces an explicit SKIP rather than positive evidence."
+    },
+    {
+      "part": 1,
+      "test": "/conf/system/canonical-url",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#everySystemHasCanonicalUrl()",
+      "reviewedBy": "Codex Sprint 47 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The deployed TestNG method traverses every advertised sosa:System collection through the reviewed collection-items helper, requires one same-origin canonical URL per item, dereferences it with the source representation media type, and compares complete parsed content after removing only canonical links."
+    },
+    {
+      "part": 1,
+      "test": "/conf/system/resources-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemResourcesEndpointIsValid()",
+      "reviewedBy": "Codex Sprint 47 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The deployed TestNG method retrieves its own canonical System evidence and invokes the endpoint-parameterized resources procedure for /systems. Every page is validated against the bundled released GeoJSON or SensorML System collection schema selected from the actual response media type; the complete pinned GeoJSON dependencies are provenance-bound by SHA-256, malformed wrappers/features/geometries fail closed, and unsupported media produces an explicit SKIP."
+    },
+    {
+      "part": 1,
+      "test": "/conf/system/canonical-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#canonicalSystemsEndpointIsValid()",
+      "reviewedBy": "Codex Sprint 47 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The independently executable deployed TestNG method retrieves its own evidence and executes the endpoint-parameterized released resources procedure against the fixed API-root /systems canonical endpoint through the reviewed canonical-resources traversal, including HTTP, media-type, pagination, collection-shape, and fail-closed schema evidence."
+    },
+    {
+      "part": 1,
+      "test": "/conf/system/collections",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemCollectionsAreValid()",
+      "reviewedBy": "Codex Sprint 47 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The independently executable deployed TestNG method selects every /collections entry with featureType=sosa:System, continues after unsupported collections, traverses every supported items page through the reviewed helper, invokes the same endpoint-parameterized schema procedure, and restricts each representation-specific System type to the five released SOSA URI or CURIE values. Direct HTTP regression coverage proves an earlier unsupported collection cannot hide a later invalid supported collection. It deliberately adds no collection-existence or itemType assertion absent from the released Annex A procedure."
     }
   ]
 }

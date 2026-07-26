@@ -78,6 +78,39 @@ public class VerifyPart1ApiCommonSupport {
 	}
 
 	/**
+	 * REQ-ETS-PART1-001, REQ-ETS-PART1-002;
+	 * SCENARIO-ETS-PART1-002-RELEASED-RESOURCES-ENDPOINT-001.
+	 */
+	@Test
+	public void detailedTraversalRetainsActualPageEvidenceWithoutDuplicateRequests() {
+		URI root = URI.create("https://example.test/api/");
+		Map<URI, Response> responses = new LinkedHashMap<>();
+		responses.put(root.resolve("systems"), json(200, "application/geo+json", """
+				{"type":"FeatureCollection","features":[{"id":"one"}],
+				 "links":[{"rel":"next","href":"systems?cursor=two"}]}
+				"""));
+		responses.put(root.resolve("systems?cursor=two"), json(200, "application/sml+json", """
+				{"items":[{"id":"two"}],"links":[]}
+				"""));
+		List<URI> requests = new ArrayList<>();
+
+		Part1ApiCommonSupport.TraversalResult result = Part1ApiCommonSupport
+			.canonicalResourcesDetailed(root, "systems", (uri, accept, query) -> {
+				requests.add(uri);
+				return responses.get(uri);
+			})
+			.orElseThrow();
+
+		assertEquals(List.of("one", "two"), result.items().stream().map(item -> item.get("id")).toList());
+		assertEquals(List.of("application/geo+json", "application/sml+json"),
+				result.pages().stream().map(Part1ApiCommonSupport.PageDocument::mediaType).toList());
+		assertEquals(List.of(root.resolve("systems"), root.resolve("systems?cursor=two")),
+				result.pages().stream().map(Part1ApiCommonSupport.PageDocument::source).toList());
+		assertEquals(requests, result.pages().stream().map(Part1ApiCommonSupport.PageDocument::source).toList());
+		assertEquals("FeatureCollection", result.pages().get(0).body().get("type"));
+	}
+
+	/**
 	 * REQ-ETS-PART1-001; SCENARIO-ETS-PART1-001-CANONICAL-RESOURCES-001.
 	 */
 	@Test

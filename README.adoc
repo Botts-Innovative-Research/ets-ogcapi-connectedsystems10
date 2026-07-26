@@ -54,6 +54,11 @@ The supported TestNG run-argument contract is:
 |String
 |Optional
 |Policy acknowledgement required by mutation tests, normally `dedicated-mutable-iut`.
+
+|mobile-system-id
+|String
+|Optional
+|Identifier of a known moving System. Enables the released location-time procedure; omitted for static IUTs.
 |===
 
 == How to run locally

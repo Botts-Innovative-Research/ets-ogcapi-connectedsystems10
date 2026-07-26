@@ -23,9 +23,10 @@
 #     SystemFeaturesTests.java to throw AssertionError unconditionally,
 #     rebuild the Docker image from the temp tree (different IMAGE_TAG to
 #     avoid clobbering the dev cache), and run smoke against the
-#     real GeoRobotix IUT. Observe SystemFeatures FAIL (1) + SKIP (5) +
-#     Subsystems SKIP (4) + Procedures SKIP (P) + Deployments SKIP (D); Core
-#     and Common PASS. The original SystemFeaturesTests.java in the user's
+#     configured read-only IUT. Observe at least one SystemFeatures FAIL while
+#     its other independently executable methods retain their evidence-honest
+#     results; Subsystems, Procedures, Deployments, and later descendants SKIP.
+#     Core and Common PASS. The original SystemFeaturesTests.java in the user's
 #     worktree is NEVER modified — all sabotage happens in the temp clone.
 #
 # Strategy for --target=core (per ADR-010 §"Approach to sabotage" —
@@ -55,11 +56,12 @@
 #      the temp dir to keep the user worktree pristine.
 #   4. Use sed to inject `throw new AssertionError("SABOTAGED by --target=
 #      systemfeatures Sprint 5 S-ETS-05-03");` as the FIRST line of the
-#      systemsCollectionReturns200 method body in the temp copy of
+#      systemLocationsFollowRecommendation method body in the temp copy of
 #      SystemFeaturesTests.java. Verify the patch landed (grep check).
 #   5. Run scripts/smoke-test.sh from inside the temp dir with a unique
 #      IMAGE_TAG and CONTAINER_NAME to avoid clobbering the dev cache. Smoke
-#      builds the image, runs against GeoRobotix, archives the TestNG XML.
+#      builds the image, runs against the configured read-only IUT, and archives
+#      the TestNG XML.
 #   6. Parse the TestNG XML. Assert:
 #        (a) Core @Tests all PASS (Core unaffected)
 #        (b) Common @Tests all PASS (Common is independent)
@@ -129,9 +131,10 @@ for arg in "$@"; do
       echo "  --target=core (default): HTTP-500 stub-server sabotage of Core; "
       echo "                           observe one-level SKIP cascade in SystemFeatures."
       echo "  --target=systemfeatures: temp-dir sed-patch sabotage of SystemFeatures; "
-      echo "                           rebuild + smoke against GeoRobotix; observe "
-      echo "                           two-level SKIP cascade in Subsystems + Procedures + "
-      echo "                           Deployments. User worktree NEVER modified."
+      echo "                           rebuild + smoke against the configured IUT; derive "
+      echo "                           every direct/transitive descendant from testng.xml "
+      echo "                           and require each group to SKIP. User worktree "
+      echo "                           NEVER modified."
       exit 0
       ;;
     *)
@@ -226,8 +229,8 @@ if [[ "$SABOTAGE_TARGET" == "systemfeatures" ]]; then
   log "step 3/6 — sed-patching $SF_TESTS_TMP (FIRST @Test method body)"
   [[ -f "$SF_TESTS_TMP" ]] || die "expected sabotaged copy at $SF_TESTS_TMP; rsync/cp failed"
   # Inject `throw new AssertionError("SABOTAGED ...");` as the FIRST statement of
-  # systemsCollectionReturns200's body. Robust to whitespace: the @Test block
-  # ends with `public void systemsCollectionReturns200() {`; we insert the
+  # systemLocationsFollowRecommendation's body. Robust to whitespace: the @Test
+  # block ends with `public void systemLocationsFollowRecommendation() {`; we insert the
   # throw immediately after that opening brace. The python form is more robust
   # than sed for multi-line block matching across distros (BSD vs GNU sed
   # quirks), so we use python to do the targeted insertion.
@@ -261,19 +264,19 @@ path = sys.argv[1]
 with open(path, 'r', encoding='utf-8') as f:
     src = f.read()
 
-# Match `public void systemsCollectionReturns200() {` followed by optional
+# Match `public void systemLocationsFollowRecommendation() {` followed by optional
 # whitespace + a newline; insert the throw on the next line.
 pat = re.compile(
-    r'(public\s+void\s+systemsCollectionReturns200\s*\(\s*\)\s*\{)',
+    r'(public\s+void\s+systemLocationsFollowRecommendation\s*\(\s*\)\s*\{)',
     re.MULTILINE,
 )
 m = pat.search(src)
 if not m:
-    print(f"FATAL: could not find systemsCollectionReturns200 method header in {path}", file=sys.stderr)
+    print(f"FATAL: could not find systemLocationsFollowRecommendation method header in {path}", file=sys.stderr)
     sys.exit(2)
 
 # Spring-javaformat-compliant + javac-reachability-defeating shape:
-#   public void systemsCollectionReturns200() {
+#   public void systemLocationsFollowRecommendation() {
 #   \t\tif (true)
 #   \t\t\tthrow new AssertionError("SABOTAGED ...");
 #   \t\tETSAssert.assertStatus(...);
@@ -296,12 +299,12 @@ PY
     die "WORKTREE POLLUTION: sabotage marker leaked into $REPO_ROOT/$SF_TESTS_REL — abort."
   fi
 
-  # ---------- Step 4: run smoke from temp worktree against GeoRobotix
+  # ---------- Step 4: run smoke from temp worktree against configured IUT
   log "step 4/6 — running smoke from sabotaged temp tree (image $IMAGE_TAG, container $CONTAINER_NAME)"
   log "  IUT: ${SMOKE_IUT_URL:-https://api.georobotix.io/ogc/t18/api}"
   # Sprint 6 S-ETS-06-02 honest log message — capture smoke exit code so we
   # can distinguish Docker build failure from smoke @Test failure. Pre-Sprint
-  # 6 the unconditional "EXPECTED — SystemFeatures FAIL on first @Test"
+  # 6 the unconditional "EXPECTED — sabotaged SystemFeatures method FAIL"
   # message fired even when the Docker build step failed (which was the
   # actual failure mode in Sprint 5 due to the .git rsync exclude).
   SMOKE_EXIT_CODE=0
@@ -339,134 +342,138 @@ PY
     die "smoke-test.sh did not produce a TestNG report under ${SABOTAGE_TMPDIR}/test-results"
   fi
   if [[ "$SMOKE_EXIT_CODE" -ne 0 ]]; then
-    log "  smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test); TestNG report present at $LATEST_REPORT"
+    log "  smoke exited non-zero (EXPECTED — sabotaged SystemFeatures method FAIL); TestNG report present at $LATEST_REPORT"
   fi
   cp -f "$LATEST_REPORT" "$SABOTAGE_REPORT_XML"
   log "  TestNG report captured to $SABOTAGE_REPORT_XML"
 
   # ---------- Step 5: parse TestNG XML; assert two-level cascade
   log "step 5/6 — parsing TestNG report; asserting two-level cascade pattern"
-  PARSE_RESULT="$(python3 - "$SABOTAGE_REPORT_XML" <<'PY'
+  PARSE_RESULT="$(python3 - "$SABOTAGE_REPORT_XML" \
+    "$SABOTAGE_WORKTREE/src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml" <<'PY'
 import re
 import sys
 import xml.etree.ElementTree as ET
 
 report = sys.argv[1]
+suite_config = sys.argv[2]
 try:
-    tree = ET.parse(report)
+    report_root = ET.parse(report).getroot()
 except ET.ParseError as e:
     print(f"FATAL: report unparseable: {e}", file=sys.stderr)
     sys.exit(2)
-root = tree.getroot()
+try:
+    config_root = ET.parse(suite_config).getroot()
+except ET.ParseError as e:
+    print(f"FATAL: TestNG suite config unparseable: {e}", file=sys.stderr)
+    sys.exit(2)
 
-# Sprint 8 S-ETS-08-01 Wedge 1 (REQ-ETS-CLEANUP-019, Raze GAP-1 Sprint 7):
-# Dynamic sibling-class enumeration. Previous Sprint 5 baseline hard-coded
-# 3 buckets (subsystems, procedures, deployments). Sprint 7 added 2 more
-# (samplingfeatures, propertydefinitions) -- bringing the SystemFeatures-
-# level cascade DAG width to 5 sibling classes. The hard-coded enumeration
-# lagged behind the testng.xml group declarations: the Raze gate-time XML
-# had all 5 sibling classes SKIPped, but the script's stdout VERDICT-summary
-# still said "Subsystems+Procedures+Deployments" -- false-narrowing.
-# Sprint 8 fix: enumerate ALL sibling buckets DYNAMICALLY from the cascade
-# XML test-method signatures rather than from a hard-coded list. The
-# package convention is
-# `org.opengis.cite.ogcapiconnectedsystems10.conformance.<class>.<TestClass>`,
-# so we extract the segment immediately after `conformance.` from each
-# signature. Independent and dependent classes are then partitioned via a
-# fixed top-level set (core, common, systemfeatures), with everything else
-# treated as a dependent sibling subject to cascade-SKIP. Sprint 8+ classes
-# (e.g. subdeployments) appear automatically without further script edits.
-INDEPENDENT_CLASSES = ("core", "common")
-SABOTAGE_TARGET_CLASS = "systemfeatures"
+INDEPENDENT_GROUPS = ("core", "common")
+SABOTAGE_TARGET_GROUP = "systemfeatures"
 
-def classify(sig):
-    # Match `conformance.<segment>` to identify the conformance class name.
-    m = re.search(r"conformance\.([a-z][a-z0-9_]*)", sig)
-    if m:
-        return m.group(1)
-    return "other"
+dependencies = {}
+for group in config_root.findall(".//groups/dependencies/group"):
+    name = group.get("name", "")
+    depends_on = set(re.split(r"[\s,]+", group.get("depends-on", "").strip()))
+    dependencies[name] = {dep for dep in depends_on if dep}
 
-buckets = {}
-for tm in root.iter("test-method"):
+def dependency_closure_contains(group, target, visiting=None):
+    visiting = set() if visiting is None else visiting
+    if group in visiting:
+        print(f"FATAL: TestNG group dependency cycle includes {group}", file=sys.stderr)
+        sys.exit(2)
+    visiting = visiting | {group}
+    for dependency in dependencies.get(group, set()):
+        if dependency == target or dependency_closure_contains(dependency, target, visiting):
+            return True
+    return False
+
+direct_descendants = sorted(
+    group for group, required in dependencies.items()
+    if SABOTAGE_TARGET_GROUP in required
+)
+descendant_groups = sorted(
+    group for group in dependencies
+    if group != SABOTAGE_TARGET_GROUP
+    and dependency_closure_contains(group, SABOTAGE_TARGET_GROUP)
+)
+transitive_descendants = sorted(set(descendant_groups) - set(direct_descendants))
+
+group_rows = {}
+for tm in report_root.iter("test-method"):
     if tm.get("is-config", "false").lower() == "true":
         continue
-    sig = tm.get("signature", "") or ""
     name = tm.get("name", "")
     status = tm.get("status", "")
-    cls = classify(sig)
-    buckets.setdefault(cls, []).append((name, status))
+    groups = {
+        group for group in re.split(r"[\s,]+", tm.get("groups", "").strip())
+        if group
+    }
+    for group in groups:
+        group_rows.setdefault(group, []).append((name, status))
 
-# Stable display order: independent classes first, then sabotage target,
-# then alphabetical for the cascade siblings.
-ordered = list(INDEPENDENT_CLASSES) + [SABOTAGE_TARGET_CLASS]
-sibling_classes = sorted(
-    c for c in buckets
-    if c not in INDEPENDENT_CLASSES and c != SABOTAGE_TARGET_CLASS and c != "other"
-)
-ordered.extend(sibling_classes)
-
-for cls in ordered:
-    rows = buckets.get(cls, [])
-    print(f"{cls} @Tests seen: {len(rows)}")
+ordered = list(INDEPENDENT_GROUPS) + [SABOTAGE_TARGET_GROUP] + descendant_groups
+for group in ordered:
+    rows = group_rows.get(group, [])
+    print(f"{group} @Tests seen: {len(rows)}")
     for n, s in rows:
-        print(f"  {cls:18s} {s:8s}  {n}")
+        print(f"  {group:28s} {s:8s}  {n}")
 
 failures = []
-# Independent classes (core, common): every @Test PASS
-for cls in INDEPENDENT_CLASSES:
-    rows = buckets.get(cls, [])
+for group in INDEPENDENT_GROUPS:
+    rows = group_rows.get(group, [])
     if not rows:
-        failures.append(f"VERDICT FAIL: no {cls} @Tests seen (suite scope wrong)")
+        failures.append(f"VERDICT FAIL: no {group} @Tests seen (suite scope wrong)")
         continue
     not_pass = [r for r in rows if r[1] != "PASS"]
     if not_pass:
-        failures.append(f"VERDICT FAIL: {cls} has {len(not_pass)} non-PASS results "
-                        f"(should be all PASS -- independent of {SABOTAGE_TARGET_CLASS}): {not_pass}")
+        failures.append(
+            f"VERDICT FAIL: {group} has {len(not_pass)} non-PASS results "
+            f"(should be all PASS -- independent of {SABOTAGE_TARGET_GROUP}): {not_pass}"
+        )
 
-# Sabotage target (systemfeatures): at least 1 FAIL (sabotage worked)
-sabot = buckets.get(SABOTAGE_TARGET_CLASS, [])
+sabot = group_rows.get(SABOTAGE_TARGET_GROUP, [])
 if not sabot:
-    failures.append(f"VERDICT FAIL: no {SABOTAGE_TARGET_CLASS} @Tests seen (suite scope wrong)")
+    failures.append(
+        f"VERDICT FAIL: no {SABOTAGE_TARGET_GROUP} @Tests seen (suite scope wrong)"
+    )
 else:
     sabot_failed = [r for r in sabot if r[1] == "FAIL"]
     if not sabot_failed:
         failures.append(
-            f"VERDICT FAIL: no {SABOTAGE_TARGET_CLASS} @Test FAILed "
+            f"VERDICT FAIL: no {SABOTAGE_TARGET_GROUP} @Test FAILed "
             "(sabotage marker did not fire)")
 
-# Cascade siblings (subsystems, procedures, deployments, samplingfeatures,
-# propertydefinitions, ...): every @Test SKIP (dynamic -- whatever sibling
-# classes are declared in testng.xml at run time).
-for cls in sibling_classes:
-    rows = buckets.get(cls, [])
+for group in descendant_groups:
+    rows = group_rows.get(group, [])
     if not rows:
-        # If the class has no smoke @Tests yet (e.g. mid-sprint dev state),
-        # skip the assertion rather than fail.
-        print(f"NOTE: no {cls} @Tests seen; skipping cascade assertion for {cls}")
+        failures.append(
+            f"VERDICT FAIL: descendant group {group} has no reported @Tests"
+        )
         continue
     not_skipped = [r for r in rows if r[1] != "SKIP"]
     if not_skipped:
-        failures.append(f"VERDICT FAIL: {cls} has {len(not_skipped)} non-SKIP results "
-                        f"(should be all SKIP via two-level cascade): {not_skipped}")
+        failures.append(
+            f"VERDICT FAIL: descendant group {group} has "
+            f"{len(not_skipped)} non-SKIP results: {not_skipped}"
+        )
 
-# Sprint 8 S-ETS-08-01 Wedge 1: human-readable VERDICT-summary now enumerates
-# the ACTUAL sibling classes that received SKIP verdict (dynamic -- derived
-# from cascade XML signatures, NOT a hard-coded 3-class list).
-sibling_summary = (", ".join(sibling_classes) if sibling_classes
-                   else "(no cascade siblings observed)")
+descendant_summary = ", ".join(descendant_groups)
 print()
+print(f"direct descendants ({len(direct_descendants)}): "
+      f"{', '.join(direct_descendants)}")
+print(f"transitive descendants ({len(transitive_descendants)}): "
+      f"{', '.join(transitive_descendants) if transitive_descendants else '(none)'}")
 if failures:
     for f in failures:
         print(f, file=sys.stderr)
-    print(f"VERDICT-summary (siblings observed: {len(sibling_classes)}): "
-          f"core+common PASS | {SABOTAGE_TARGET_CLASS} FAIL | "
-          f"{sibling_summary} SKIP-expected", file=sys.stderr)
+    print(f"VERDICT-summary: core+common PASS | {SABOTAGE_TARGET_GROUP} FAIL | "
+          f"{descendant_summary} SKIP-expected", file=sys.stderr)
     sys.exit(1)
-print(f"VERDICT-summary (siblings observed: {len(sibling_classes)}): "
-      f"core+common PASS | {SABOTAGE_TARGET_CLASS} FAIL | "
-      f"{sibling_summary} SKIP")
-print(f"VERDICT: PASS -- Core+Common PASS, {SABOTAGE_TARGET_CLASS} FAILed, "
-      f"{sibling_summary} cascade-SKIPped ({len(sibling_classes)}-class cascade verified)")
+print(f"VERDICT-summary: core+common PASS | {SABOTAGE_TARGET_GROUP} FAIL | "
+      f"{descendant_summary} SKIP")
+print(f"VERDICT: PASS -- Core+Common PASS, {SABOTAGE_TARGET_GROUP} FAILed, "
+      f"all {len(descendant_groups)} TestNG dependency descendants cascade-SKIPped")
 sys.exit(0)
 PY
 )" || PARSE_EXIT=$?
@@ -483,7 +490,7 @@ PY
   log "step 6/6 — VERDICT: PASS (two-level cascade verified end-to-end)"
   log "  report: $SABOTAGE_REPORT_XML"
   log "  log:    $SABOTAGE_LOG"
-  log "SABOTAGE PASS: SystemFeatures FAILed; Subsystems+Procedures+Deployments cascade-SKIPped"
+  log "SABOTAGE PASS: SystemFeatures FAILed; every TestNG dependency descendant group cascade-SKIPped"
   log "  (User worktree at $REPO_ROOT/$SF_TESTS_REL UNMODIFIED — sabotage was hermetic via temp clone.)"
   cleanup_all
   trap - EXIT

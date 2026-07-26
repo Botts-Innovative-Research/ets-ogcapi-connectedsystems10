@@ -63,6 +63,12 @@
                  </label>
                  <input id="mutation-iut-policy" name="mutation-iut-policy" size="48" type="text" value="" />
                </p>
+               <p>
+                 <label for="mobile-system-id">
+                   <h4 style="margin-bottom: 0.5em">Known moving System identifier (optional)</h4>
+                 </label>
+                 <input id="mobile-system-id" name="mobile-system-id" size="128" type="text" value="" />
+               </p>
              </fieldset>
              <p>
                <input class="form-button" type="submit" value="Start"/> | 
@@ -78,6 +84,7 @@
           <entry key="auth-credential"><xsl:value-of select="normalize-space($form-data/values/value[@key='auth-credential'])"/></entry>
           <entry key="mutation-tests-enabled"><xsl:value-of select="normalize-space($form-data/values/value[@key='mutation-tests-enabled'])"/></entry>
           <entry key="mutation-iut-policy"><xsl:value-of select="normalize-space($form-data/values/value[@key='mutation-iut-policy'])"/></entry>
+          <entry key="mobile-system-id"><xsl:value-of select="normalize-space($form-data/values/value[@key='mobile-system-id'])"/></entry>
 		    </properties>
 		   </xsl:variable>
        <xsl:variable name="testRunDir">

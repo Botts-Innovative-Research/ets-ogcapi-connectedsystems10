@@ -2,6 +2,51 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-26 - Part 1 System direct ATS complete
+
+**Triggered by user instruction**: execute accepted recommendations 1-4
+continuously, including completion of every released Part 1 gap.
+
+- Added CP-007, S-ETS-47-01, its contract, eleven exact scenarios,
+  architecture, traceability, and operational handoff before implementation.
+- Recorded why the six historical System methods cannot be promoted directly:
+  presence-only location-time and discovery-only collections checks do not
+  execute the released procedures.
+- Defined API Common detailed page evidence, actual-media schema validation,
+  every-item canonical comparison, warning-only location behavior, and an
+  optional read-only `mobile-system-id` input with honest SKIP semantics.
+- Replaced the historical methods with all six released procedures and mapped
+  `/conf/system` `6/6 exact`. Coverage is now
+  `10 exact / 2 helper / 145 candidate / 83 unmapped`.
+- Replaced four permissive `geojson.org` placeholders with complete pinned
+  schemas and adjacent URL/date/SHA-256 provenance.
+- Closed adversarial implementation findings for representation parsing,
+  same-origin canonical handling, all-collection traversal, positional-only
+  movement, schema failure behavior, and procedure isolation.
+- Remediated TestNG's overly broad dependency-SKIP behavior with an explicit
+  boundary that permits only API Common datetime's exact no-temporal-extent
+  evidence limitation. Every failure, configuration failure, or other
+  prerequisite SKIP still blocks System before IUT access.
+- Added controlled successful HTTP coverage for all six deployed methods.
+- Replacement gates: focused Maven `46/0/0/0`, released-ATS audit `23/0/0/0`,
+  full Docker Maven `395/0/0/3`, exact image
+  `sha256:101e2065...58cf6e` runtime PASS, local OSH TeamEngine
+  `215/38/0/177`, dependency sabotage PASS, and both credential gates PASS.
+- ATS audit self-test and exact-source reproduction at released commit
+  `8e03b236...` pass.
+- Reconciled every superseded Sprint 2/3 System approximation clause after
+  final-review feedback. Updated the stale System-target sabotage injector to
+  `systemLocationsFollowRecommendation()` and replaced package inference with
+  a TestNG dependency-graph and report-group parser. The exact-current rerun
+  passes: all 13 direct and 2 transitive descendant groups are entirely SKIP
+  after the injected System failure.
+- Local OSH executes all six System methods: three PASS and three explicit
+  unsupported-media or missing-input SKIPs. No OSH or TeamEngine source or
+  binary was modified.
+- Archived focused, ATS, full, E2E, sabotage, runtime, and credential evidence.
+- Final Raze verifies the implementation and exact-current dependency evidence
+  with no unresolved required findings (`APPROVE`, confidence `0.99`).
+
 ## 2026-07-26 - Part 1 API Common direct ATS closure
 
 **Triggered by user instruction**: execute accepted recommendations 1-4

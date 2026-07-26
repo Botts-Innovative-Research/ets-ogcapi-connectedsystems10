@@ -516,6 +516,13 @@ The ADR explicitly REJECTED options (b) (pre-staged target/lib-runtime split-onl
 
 ### SystemFeatures conformance class scope (Sprint 2 S-ETS-02-06)
 
+> **Entire section superseded by Sprint 47.** Everything through the next
+> top-level design heading records the historical Sprint 2/3 implementation
+> sequence only. The four-method table, cached setup, raw dependency behavior,
+> and expansion names are not active design requirements or mappings. The
+> released six-procedure design under "Sprint 47: released Part 1 System direct
+> procedures" is authoritative.
+
 **Architect ratifies: Sprint-1-style minimal-then-expand. 4 @Test methods at Sprint 2 close, full-coverage expansion deferred to Sprint 3.**
 
 Pat enumerated 4 SCENARIOs in REQ-ETS-PART1-002 (now SPECIFIED in spec.md). Architect maps these to 4 @Test methods, mirroring the LandingPageTests/ConformanceTests pattern:
@@ -560,7 +567,13 @@ No new fixtures or listeners needed for Sprint 2. The existing `SuiteFixtureList
 
 `@BeforeClass` in `SystemFeaturesTests` performs the `GET /systems` once and caches the response shape into a class-level field (so the 4 @Tests don't redundantly hit the IUT). Pattern mirrors `ConformanceTests.fetchConformancePage()`.
 
-#### Coverage scope rationale (Sprint-1-style narrowing)
+#### Historical coverage scope rationale (Sprint-1-style narrowing)
+
+> **Superseded by Sprint 47.** This subsection records the Sprint 2/3
+> implementation sequence only. Its approximation method names and deferred
+> expansion list are not active design requirements, mappings, or future
+> roadmap. The released six-procedure design under "Sprint 47: released Part 1
+> System direct procedures" is authoritative.
 
 Pat recommended Sprint-1-style narrowing for risk control on the first pattern extension. Architect concurs because:
 
@@ -569,7 +582,7 @@ Pat recommended Sprint-1-style narrowing for risk control on the first pattern e
 3. **Beta gate doesn't require full per-class coverage**. CITE SC review approves on the basis of "the test class exists, runs, and produces deterministic verdicts" — depth comes during the 6-12 month beta period via passing-IUT outreach.
 4. **GeoRobotix's `/systems` collection shape is unknown until Generator curls it**. Acceptance criterion #1 mandates the curl-first approach; if `/systems` returns an unexpected shape (e.g. paginated wrapper, GeoJSON FeatureCollection), 4 @Tests adapt cleanly while 12-15 would force structural choices we'd regret.
 
-Sprint 3 expansion (per the spec.md Implementation Status update Pat will make at S-ETS-02-06 close) targets:
+The historical Sprint 3 expansion list was:
 
 - `systemCanonicalUrlReturns200` — REQ-ETS-PART1-002 / `/req/system/canonical-url`
 - `systemHasGeometryAndValidTime` (NORMAL — `MAY` priority) — REQ-ETS-PART1-002 / `/req/system/location-time`
@@ -1118,6 +1131,80 @@ The official `ets-ogcapi-features10` implementation was inspected at commit
 selection model. Its `fc-time-response` method still contains a response
 assertion TODO, so this ETS implements the normative inclusion checks directly
 instead of importing an incomplete implementation.
+
+### Sprint 47: released Part 1 System direct procedures
+
+Sprint 47 keeps the existing `systemfeatures` group and replaces its six
+historical methods with one method for each released `/conf/system` test.
+
+```text
+Part1ApiCommonSupport
+  |-- canonicalResourcesDetailed()
+  `-- collectionItemsDetailed()
+          |
+          v
+SystemFeaturesTests
+  |-- systemLocationsFollowRecommendation()
+  |-- mobileSystemLocationIsUpdated()
+  |-- everySystemHasCanonicalUrl()
+  |-- systemResourcesEndpointIsValid()
+  |-- canonicalSystemsEndpointIsValid()
+  `-- systemCollectionsAreValid()
+          |
+          v
+SystemFeaturesSupport
+  representation extraction + canonical normalization
+  + endpoint-parameterized validation + fail-closed bundled schemas
+```
+
+The detailed API Common results preserve the existing reviewed helper
+signatures while exposing immutable page documents containing source URI,
+actual response media type, parsed body, and page items. Descendants therefore
+validate the exact traversed response without duplicate HTTP requests.
+
+System media behavior is closed over the two released representations.
+GeoJSON location/type use `geometry` and `properties.featureType`; SensorML JSON
+uses `position` and `definition`. GeoJSON pages validate against
+`connected-systems-1/geojson/systemCollection.json`; SensorML pages validate
+against `connected-systems-1/sensorml/systemCollection.json`. Unsupported media
+warns and is accumulated as unsupported evidence. Collection loops continue,
+and SKIP occurs only when no supported collection was executed. Every
+`geojson.org` reference resolves to a pinned complete schema; permissive
+resolution stubs are not accepted.
+
+The resources-endpoint procedure is endpoint-parameterized and owns HTTP 200,
+actual-media selection, and every-page schema validation. The canonical
+endpoint invokes it for `{api_root}/systems`; collection procedures invoke it
+for their traversed item pages. Test-class setup loads only run arguments so a
+network failure in one released procedure does not suppress unrelated results.
+
+Location-time has a real external prerequisite: a known moving System. The
+optional `mobile-system-id` TeamEngine argument identifies that resource. The
+test polls the canonical endpoint once per second for at most 30 seconds and
+passes only after observing changed GeoJSON geometry or SensorML positional
+coordinates. SensorML orientation and reference-frame metadata are excluded
+from the movement comparison. Missing input yields immediate SKIP. This does
+not modify or seed OSH and does not reinterpret a static local fixture as
+mobile evidence.
+
+The local OSH target does not advertise collection temporal extents, so API
+Common datetime reports its specified no-positive-evidence SKIP. Raw TestNG
+group dependency semantics would propagate that evidence limitation to every
+System method even though their HTTP prerequisites are independently
+available. Sprint 47 therefore keeps the declared
+`part1apicommon -> systemfeatures` ordering but makes System tests
+`alwaysRun`. System setup inspects completed prerequisite results before any
+System IUT access: any Core/Common/API Common failure, configuration failure,
+or API Common skip other than the exact datetime evidence limitation produces
+SKIP; the datetime-only limitation is logged and the six direct procedures
+execute. The inherited SKIP remains in the report, so this does not create a
+full `/conf/system` conformance claim.
+
+Focused HTTP coverage executes the same six deployed methods against a
+controlled server that records endpoint exchanges, returns complete
+schema-valid System collections and canonical resources, and changes only the
+mobile System's positional coordinates. This supplements, but does not replace,
+TeamEngine execution against the unmodified local OSH.
 
 ## Status
 

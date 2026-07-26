@@ -170,6 +170,12 @@ public class SuiteFixtureListener implements ISuiteListener {
 					"mutation-iut-policy suite parameter present (value=%s) — Sprint 12 create/replace/delete safety gate will evaluate it.",
 					mutationIutPolicy));
 		}
+		String mobileSystemId = params.get(TestRunArg.MOBILE_SYSTEM_ID.toString());
+		if (mobileSystemId != null && !mobileSystemId.isBlank()) {
+			suite.setAttribute(SuiteAttribute.MOBILE_SYSTEM_ID.getName(), mobileSystemId.trim());
+			TestSuiteLogger.log(Level.CONFIG,
+					"mobile-system-id suite parameter present - released location-time procedure is enabled.");
+		}
 		URI iutRef = URI.create(iutParam.trim());
 		// Stash the raw IUT URI on the suite so REST Assured-based test classes (Sprint 1
 		// onwards) can read it without re-parsing the XmlSuite parameter map. Coexists

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T13:02Z
+Last updated: 2026-07-26T15:48Z
 
 ## Fresh-Session Entry Point
 
@@ -47,6 +47,37 @@ Read these first:
 - `.harness/contracts/sprint-ets-46.yaml`
 - `.harness/evaluations/sprint-ets-46-adversarial.yaml`
 - `ops/test-results/sprint-ets-46-part1-api-common-verification-2026-07-26.md`
+- `openspec/change-proposals/CP-007-part1-system-closure.md`
+- `epics/stories/s-ets-47-01-part1-system-closure.md`
+- `.harness/contracts/sprint-ets-47.yaml`
+
+## Session Handoff - Part 1 System Direct ATS
+
+S-ETS-47-01 is complete. Final Raze reports no unresolved required findings.
+
+- Released coverage is `10 exact / 2 helper / 145 candidate / 83 unmapped`;
+  `/conf/system` is `6/6 exact`.
+- Focused Maven is `46/0/0/0`, released-ATS audit is `23/0/0/0`, and full
+  Docker Maven is `395/0/0/3`.
+- Exact image
+  `sha256:101e20653097fea9891ff5fbe1f4c160ae163ca97338cf63cfb5980dd958cf6e`
+  passes deployed-adapter, dependency-collision, immutable-base, and runtime
+  verification.
+- Primary local OSH TeamEngine is `215/38/0/177`, with 105 recognized GET
+  requests, zero writes, and zero startup errors. All six System methods
+  execute: three PASS; three explicit unsupported-media or missing-input SKIPs.
+- Controlled direct HTTP coverage proves successful positive paths for all six
+  deployed methods, including positional movement and schema validation.
+- API Common datetime's no-temporal-extent SKIP remains visible. The explicit
+  System boundary allows only that exact evidence limitation and blocks every
+  prerequisite failure, configuration failure, or other prerequisite SKIP.
+- Core-target and System-target dependency sabotage plus both credential gates
+  pass. The exact-current System-target gate derives dependencies from
+  `testng.xml` and proves all 13 direct and 2 transitive descendant groups
+  entirely SKIP after the injected System failure.
+- Durable summary:
+  `ops/test-results/sprint-ets-47-part1-system-verification-2026-07-26.md`.
+- No OSH or TeamEngine modification and no hosted CI are in scope.
 
 ## Session Handoff - Part 1 API Common Direct ATS
 

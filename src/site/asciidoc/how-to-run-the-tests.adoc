@@ -24,6 +24,7 @@ If it is not supplied, the controller uses `${user.home}/test-run-props.xml`.
   <entry key="auth-credential"></entry>
   <entry key="mutation-tests-enabled">false</entry>
   <entry key="mutation-iut-policy"></entry>
+  <entry key="mobile-system-id"></entry>
 </properties>
 ----
 

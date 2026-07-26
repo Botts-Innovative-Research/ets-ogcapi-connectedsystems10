@@ -1,8 +1,40 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T13:02Z
+Last updated: 2026-07-26T15:48Z
 
 ## Current Sprint Evidence
+
+Sprint 47 Part 1 System direct ATS:
+
+- Coverage: `240 total / 10 exact / 2 helper / 145 candidate / 83 unmapped`;
+  `/conf/system` is `6/6 exact`.
+- Focused Docker Maven: `46/0/0/0`.
+- Released-ATS audit Docker Maven: `23/0/0/0`.
+- ATS audit self-test and exact released-source reproduction: PASS.
+- Full Docker Maven: `395/0/0/3`.
+- Exact image:
+  `sha256:101e20653097fea9891ff5fbe1f4c160ae163ca97338cf63cfb5980dd958cf6e`.
+- Exact-image TeamEngine runtime, deployed SWE Common adapter, dependency
+  collision, and immutable-base verification: PASS.
+- Primary local OSH TeamEngine: `215/38/0/177`, 105 recognized GET requests,
+  zero writes, zero startup errors.
+- System method results: canonical URL PASS, collections PASS, location
+  recommendation PASS, canonical endpoint SKIP for unsupported media,
+  resources endpoint SKIP for unsupported media, and location-time SKIP for
+  absent optional `mobile-system-id`.
+- All six methods execute. API Common datetime retains its documented
+  no-temporal-extent SKIP; prerequisite failures and every other prerequisite
+  SKIP still block System before IUT access.
+- Controlled direct HTTP coverage executes successful positive paths for all
+  six methods.
+- Core-target and System-target dependency sabotage plus both credential gates:
+  PASS. The System-target gate verifies all 13 direct and 2 transitive TestNG
+  dependency descendant groups SKIP.
+- Verification summary:
+  `ops/test-results/sprint-ets-47-part1-system-verification-2026-07-26.md`.
+- Final Raze: APPROVE (`0.99` confidence), no unresolved required findings.
+
+---
 
 Sprint 46 Part 1 API Common direct ATS:
 

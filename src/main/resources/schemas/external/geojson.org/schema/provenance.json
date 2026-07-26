@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "1.0",
+  "source": "https://geojson.org/schema/",
+  "retrievedOn": "2026-07-26",
+  "files": {
+    "Feature.json": "3957840b2ff19f9450ea97a12f85944d938c68a7a6bf115a2e69b98e007b9922",
+    "FeatureCollection.json": "83e781f1513e447be9287b2180c300621f8b4c65245d7822a22fcf39431e0471",
+    "Geometry.json": "152369d7eb6b3314ffc7deca1d66f9d498ed5b614ca38ed4e2c813fed01024fd",
+    "Point.json": "35dd9cc5537e3a02a58ec63c22001508bd0c26036803f86004bb7cad0e9ad8b1"
+  }
+}

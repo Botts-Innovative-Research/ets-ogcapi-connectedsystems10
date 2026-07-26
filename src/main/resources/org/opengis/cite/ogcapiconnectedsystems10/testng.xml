@@ -5,6 +5,7 @@
   <parameter name="auth-credential"  value=""/>
   <parameter name="mutation-tests-enabled"  value=""/>
   <parameter name="mutation-iut-policy"  value=""/>
+  <parameter name="mobile-system-id"  value=""/>
 
   <listeners>
     <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.listener.TestRunListener" />

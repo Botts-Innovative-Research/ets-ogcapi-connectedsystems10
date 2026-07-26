@@ -169,8 +169,9 @@ even when a historical implementation increment for that class is complete.
 
 ### Sub-deliverable 3 — Other Part 1 Conformance Classes
 
-> Sprint 2 expands REQ-ETS-PART1-002 (SystemFeatures) from PLACEHOLDER → SPECIFIED.
-> The remaining 12 placeholder REQs below establish the certification surface and traceability chain.
+> Historical sprint increments are retained in their story artifacts. Active
+> requirements below describe the released ATS procedures and supersede earlier
+> approximation methods.
 
 #### REQ-ETS-PART1-001: API Common Direct ATS Procedures (Sprint 46)
 - **Priority**: MUST
@@ -182,12 +183,103 @@ even when a historical implementation increment for that class is complete.
 - **Rationale**: Released `/conf/api-common` is the foundation inherited by every other OGC 23-001 class. Completing it first provides both correct prerequisite semantics and reusable bounded traversal for later Annex A procedures.
 - **Maps to**: PRD FR-ETS-11.
 
-#### REQ-ETS-PART1-002: SystemFeatures Conformance Class (Sprint 2 target — extended Sprint 3)
+#### REQ-ETS-PART1-002: System Direct ATS Procedures (Sprint 47)
 - **Priority**: MUST
-- **Status**: PARTIAL_UNREVIEWED_ATS (historical Sprint 2/3 increments complete; 0/6 released `/conf/system` tests have reviewed exact mappings)
-- **Description**: For each assertion in OGC 23-001 Annex A `/conf/system/`, the ETS SHALL provide at least one TestNG `@Test` method whose `description` attribute starts with the OGC canonical `.adoc` requirement URI form `/req/system/<assertion>` (e.g. `OGC-23-001 .../req/system/resources-endpoint`). **URI form reconciled 2026-04-28T23:35Z**: design.md text and Sprint 2 contract used `/conf/system-features/` and `/req/system-features/<X>`; OGC `.adoc` canonical source uses `/conf/system` (singular, no `-features` suffix) and `/req/system/<X>`. The 5 sub-requirement `.adoc` files at `raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/system/` (HTTP-200-verified by Generator at S-ETS-02-06): `req_resources_endpoint.adoc`, `req_canonical_url.adoc`, `req_canonical_endpoint.adoc`, `req_collections.adoc`, `req_location_time.adoc`. The IUT (GeoRobotix) also declares `/conf/system` in `/conformance` — same form. v1.0 registry `csapi_compliance/src/engine/registry/system-features.ts` uses `/req/system/<X>`. Same drift class as S-ETS-02-03's `/req/core/*` → `/req/landing-page/*` correction. The class lives at `org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests` per design.md placeholder. Required behaviors: (a) `GET /systems` returns HTTP 200 with JSON body containing a non-empty `items` array (per OGC API – Features clause 7.15.2-7.15.8 inherited via `/req/system/resources-endpoint`); (b) `GET /systems/{id}` returns the canonical single-item shape — `id` (string), `type` (string), `links` (array per REQ-ETS-CORE-004 base shape) — per `/req/system/canonical-endpoint`; (c) `/systems/{id}` `links` array contains `rel="canonical"` per `/req/system/canonical-url` — absence of `rel="self"` is NOT FAIL (carries v1.0 GH#3 fix policy from Core landing page; v1.0 audit at `system-features.ts:36-44`); (d) TestNG group `systemfeatures` depends on `part1apicommon`, which depends on both `core` and `common`, so SystemFeatures @Tests SKIP transitively if either inherited prerequisite fails. Coverage scope: Sprint-1-style minimal (4 @Tests) at Sprint 2 close per Architect ratification (design.md §"SystemFeatures conformance class scope"); Sprint 3 expansion adds `/req/system/collections` + `/req/system/location-time` + pagination/filter coverage.
-- **Rationale**: SystemFeatures is the foundational CS API collection — every other CS API endpoint exposes `/systems` collections, so the patterns established here (collection shape, item shape, dependency-skip wiring) propagate to Subsystems, Procedures, Sampling, Properties, Deployments. GeoRobotix serves a non-empty `/systems` collection (36 items confirmed at S-ETS-02-06 curl-verification 2026-04-28T23:30Z, Implementation Notes archive in `epics/stories/s-ets-02-06-systemfeatures-conformance-class.md`).
+- **Status**: IMPLEMENTED_RELEASED_ATS (Sprint 47 implements and review-maps
+  all 6 released `/conf/system` tests; replacement engineering, E2E, and final
+  Raze gates pass)
+- **Description**: The ETS SHALL implement exactly the six released OGC 23-001
+  Annex A `/conf/system` procedures: `/conf/system/location`,
+  `/conf/system/location-time`, `/conf/system/canonical-url`,
+  `/conf/system/resources-endpoint`, `/conf/system/canonical-endpoint`, and
+  `/conf/system/collections`. Each procedure SHALL have one independently
+  executable TestNG method whose description cites its canonical target URI.
+  The Sprint 2/3 collection-shape, item-shape, landing-page discovery,
+  geometry-presence, and `validTime`-presence methods are superseded historical
+  increments and SHALL NOT be treated as active requirements or reviewed ATS
+  mappings. Their evidence remains only in the corresponding historical story
+  artifacts.
+- **Dependency**: Group `systemfeatures` remains ordered after
+  `part1apicommon`. Before any System IUT access, its explicit result gate SHALL
+  block every Core/Common/API Common failure, configuration failure, and API
+  Common SKIP except the exact documented no-temporal-extent SKIP from
+  `datetimeUsesValidTime`. That sole evidence limitation remains visible while
+  direct System procedures execute; it never becomes PASS or full inherited
+  conformance evidence.
+- **Rationale**: `/conf/system` is the released prerequisite for descendant
+  Part 1 classes. Exact direct procedures and explicit prerequisite-result
+  handling replace the narrower historical approximations.
 - **Maps to**: PRD FR-ETS-12.
+
+Sprint 47 SHALL replace the historical target-URI approximations with the six
+complete procedures in released OGC 23-001 Annex A. Canonical-resource location
+inspection SHALL warn, not fail, when a non-`Simulation`/non-`Process` System
+lacks GeoJSON `geometry` or SensorML `position`. Location-time SHALL use the
+optional `mobile-system-id` run argument, poll for at most 30 seconds, require
+two HTTP 200 canonical representations with different GeoJSON geometry or
+SensorML positional coordinates, ignore orientation-only changes, and SKIP
+when the input is absent. For every collection advertised with
+`featureType=sosa:System`, canonical links SHALL be dereferenced and their
+content compared with the collection item after removing canonical links from
+both documents. One endpoint-parameterized procedure SHALL validate `/systems`
+and System collection pages against the bundled GeoJSON or SensorML System
+collection schema according to the actual response Content-Type. Referenced
+GeoJSON schemas SHALL be pinned complete schemas, not permissive stubs.
+Unsupported collections SHALL warn without suppressing later supported
+collection evidence, and the procedure SHALL SKIP only when no supported
+collection was executed.
+The collections procedure SHALL select only exact `featureType=sosa:System`
+entries and each selected item SHALL use one of the five released SOSA System
+type URI/CURIE pairs. The released Annex A procedure does not independently
+assert collection existence or `itemType`; the ETS SHALL not add either as an
+extra gate to this exact ATS mapping. Shared setup SHALL load only run
+arguments; each direct procedure SHALL retrieve its own network prerequisites.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-SCHEMA-FAIL-CLOSED-001 (CRITICAL)
+**GIVEN** a System endpoint reports GeoJSON or SensorML JSON
+**WHEN** its collection wrapper, feature, geometry, or System member violates
+the selected bundled schema
+**THEN** the applicable released procedure SHALL fail
+**AND** permissive external-schema placeholders SHALL NOT convert malformed
+content into PASS evidence.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-MULTI-COLLECTION-001 (CRITICAL)
+**GIVEN** multiple exact `featureType=sosa:System` collections
+**WHEN** one collection advertises unsupported media and a later supported
+collection is invalid
+**THEN** the ETS SHALL continue to the supported collection and report its
+failure
+**AND** SHALL SKIP only when no supported collection was executed.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** the six released System procedures have different prerequisites
+**WHEN** one prerequisite is absent or fails
+**THEN** shared setup SHALL NOT suppress unrelated direct procedure results
+**AND** the endpoint-parameterized resources procedure SHALL be reused by the
+canonical and collection procedures.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** an unmodified local OSH omits collection temporal extents
+**AND** `/conf/api-common/datetime` reports its documented no-positive-evidence
+SKIP
+**WHEN** the full TeamEngine suite reaches `/conf/system`
+**THEN** the six direct System procedures SHALL execute rather than inherit a
+blanket TestNG dependency SKIP
+**AND** any API Common failure, configuration failure, or skipped direct
+procedure other than that exact datetime evidence limitation SHALL still block
+System execution before System IUT access
+**AND** the inherited datetime SKIP SHALL remain visible so the run is not
+reported as full `/conf/system` conformance.
+*Maps to*: REQ-ETS-PART1-001, REQ-ETS-PART1-002.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled HTTP fixture with schema-valid System collections,
+canonical links, and a mobile System whose coordinates change
+**WHEN** the six deployed System procedures execute
+**THEN** location, location-time, canonical URL, resources endpoint, canonical
+endpoint, and collections SHALL each complete their HTTP path
+**AND** the regression SHALL assert the expected endpoint exchanges occurred.
+*Maps to*: REQ-ETS-PART1-002.
 
 #### REQ-ETS-PART1-003: Subsystems Conformance Class (Sprint 4 target)
 
@@ -1428,7 +1520,13 @@ even when a historical implementation increment for that class is complete.
 #### REQ-ETS-CLEANUP-005: Live Break-Core Dependency-Skip Verification
 - **Priority**: MUST
 - **Status**: IMPLEMENTED (pending Quinn+Raze) 2026-04-29 — Generator Run 1: TestNG XmlSuite parser unit test `VerifyTestNGSuiteDependency.java` (4 @Tests, all PASS in mvn test; 49 → 53 surefire) + bash sabotage script `scripts/sabotage-test.sh` (stub-server approach per ADR-010, authored + committed but live execution deferred to next gate run with proper Docker time budget per Sprint 3 mitigation plan). Defense-in-depth role split per ADR-010: structural lint + behavioral verification both shipped.
-- **Description**: The dependency-skip wiring (TestNG `dependsOnGroups` declaration in `testng.xml`) SHALL be verified at runtime via cascading-SKIP behavior under a FAILing Core test, NOT just at static layers (source `groups` annotations + testng.xml declaration + smoke XML attribute). Verification approach: TestNG programmatic-API unit test (`VerifyTestNGSuiteDependency.java`) OR bash sabotage script (`scripts/sabotage-test.sh`) OR both per Architect ratification. Acceptance: when Core's `landingPageReturnsHttp200` is sabotaged to fail, all 4 SystemFeatures @Tests report `status="SKIP"` (NOT FAIL/ERROR); when Core is restored, all PASS. Closes Quinn s06 CONCERN-1 + Raze s06 CONCERN-1.
+- **Description**: The dependency boundary SHALL be verified behaviorally, not
+  only through annotations and XML structure. When a Core method is sabotaged
+  to fail, all six released System methods SHALL report SKIP before System IUT
+  access. The separate System-target sabotage mode SHALL inject the current
+  `systemLocationsFollowRecommendation()` method and verify descendant
+  cascading behavior. The restored suite SHALL retain its evidence-honest
+  PASS/SKIP results rather than require every System method to PASS.
 - **Maps to**: PRD FR-ETS-24, NFR-ETS-15.
 
 #### REQ-ETS-CLEANUP-006: CredentialMaskingFilter Integration Test + REST-Assured RequestLoggingFilter Wrap
@@ -1506,7 +1604,15 @@ even when a historical implementation increment for that class is complete.
 #### REQ-ETS-CLEANUP-017: Sabotage Three-Class Cascade Live-Exec Verified (Sprint 6 — GAP-2 fix; Sprint 7 closure)
 - **Priority**: SHOULD
 - **Status**: IMPLEMENTED (Sprint 7 S-ETS-07-01 Wedge 1 close 2026-04-30; live 3-class cascade XML produced end-to-end at sister repo `ops/test-results/sprint-ets-07-01-wedge1-sabotage-cascade-2026-04-30.xml` (53KB) — Generator Run 1 cascade verdict: Core 8 PASS, Common 4 PASS, SystemFeatures 1 FAIL + 5 SKIP, Subsystems 4 SKIP, Procedures 4 SKIP, Deployments 4 SKIP; sabotage-test.sh step 5/6 verdict "PASS — two-level cascade verified end-to-end". The Wedge 1 fix changed the sabotage marker injection from bare `throw new AssertionError(...)` (which produced javac unreachable-statement at line 210 per JLS §14.21) to a two-line `if (true)\n\t\t\tthrow new AssertionError(...)` shape that defeats javac reachability analysis AND complies with spring-javaformat-maven-plugin:validate. The two-line shape was discovered necessary at /tmp clone live-exec time when an initial single-line `if (true) throw ...` PASSed javac but FAILed the Dockerfile builder stage 8/8 spring-javaformat:validate step; sister commit `94a4971` records the formatter-aware fix. Cascade XML retroactively validates ADR-010 v3 "forward-extends to Procedures + Deployments" claim at the live-exec layer (v3 amendment was empirical inference; Sprint 7 provides direct evidence). The 2-sprint-old `credential_leak_e2e_full_pass` success criterion was already CLOSED at Sprint 6 wire layer; this REQ closes the cascade-verification companion criterion.
-- **Description**: After the rsync `.git` include fix in `scripts/sabotage-test.sh` (S-ETS-06-02) AND the spring-javaformat-aware sabotage marker injection fix in S-ETS-07-01 Wedge 1, the sabotage script `--target=systemfeatures` SHALL run end-to-end at gate time producing a cascade XML showing: Core+Common all PASS; SystemFeatures 1×FAIL + Nx SKIP; Subsystems+Procedures+Deployments all SKIP. This closes the ADR-010 v3 "forward-extends to Procedures + Deployments" claim at the live-exec layer. The sabotage log message SHALL correctly distinguish Docker build failure from smoke @Test failure (Sprint 6 honesty fix; verified live in Sprint 7 Generator Run 1 first attempt).
+- **Description**: The sabotage script `--target=systemfeatures` SHALL inject
+  the current `systemLocationsFollowRecommendation()` method and run end to end
+  from a temporary worktree. Core and Common SHALL PASS, at least one System
+  method SHALL FAIL, other System methods SHALL retain their evidence-honest
+  results, and every direct or transitive TestNG dependency descendant group
+  SHALL SKIP. Descendants SHALL be derived from `testng.xml`, and report
+  methods SHALL be associated through their `groups` attribute rather than
+  package names. The log SHALL distinguish Docker build failure from the
+  expected sabotaged-method failure.
 - **Maps to**: ADR-010 §"Defense-in-depth role split". Closes GAP-2 from Sprint 5 Raze cumulative GAPS_FOUND 0.74 + Quinn cumulative APPROVE_WITH_CONCERNS 0.82 (cross-corroborated; reclassified from HIGH → MEDIUM per meta-Raze severity calibration). Closes Sprint 6 Raze HIGH GAP-1 + meta-Raze META-GAP-M2.
 
 > Sprint 7 adds REQ-ETS-CLEANUP-018 (Sprint 6 carryover wedge bundle) and REQ-ETS-PART1-007..008 (Sampling Features + Property Definitions — twice-deferred from Sprints 5+6). Stories S-ETS-07-01..03 are Active Sprint 7.
@@ -2332,7 +2438,7 @@ even when a historical implementation increment for that class is complete.
 #### SCENARIO-ETS-TEAMENGINE-RUN-ARG-CONTRACT-001 (CRITICAL)
 **GIVEN** the suite can be launched from CTL, TestNG defaults, smoke harnesses, README examples, site docs, Javadoc, and sample test-run-props
 **WHEN** those public and executable surfaces describe or serialize run arguments
-**THEN** the only supported TestNG argument keys are required `iut` plus optional `auth-credential`, `mutation-tests-enabled`, and `mutation-iut-policy`
+**THEN** the only supported TestNG argument keys are required `iut` plus optional `auth-credential`, `mutation-tests-enabled`, `mutation-iut-policy`, and `mobile-system-id`
 **AND** human-facing "CS API landing page" wording maps to serialized key `iut`
 **AND** `iut-url`, `auth-type`, and `ics` do not appear as supported serialized run arguments.
 *Maps to*: REQ-ETS-TEAMENGINE-002, REQ-ETS-TEAMENGINE-008.
@@ -2392,11 +2498,22 @@ even when a historical implementation increment for that class is complete.
 **THEN** the response body has `id` (string), `type` (string), and `links` (array of objects with `href`, `rel`).
 *Maps to*: REQ-ETS-CORE-004.
 
-#### SCENARIO-ETS-PART1-DEPENDENCY-SKIP-001 (NORMAL)
-**GIVEN** the Core suite produces at least one FAIL verdict for a target IUT
-**WHEN** the System Features suite (`/conf/system-features`) attempts to run
-**THEN** all `@Test` methods in System Features emit SKIP with reason `dependency /conf/core not satisfied`.
-*Maps to*: REQ-ETS-PART1-001..013, PRD FR-ETS-24.
+#### Historical Sprint 2 System Approximation Scenarios (SUPERSEDED)
+
+The following scenario identifiers described the removed four-method
+SystemFeatures approximation and raw TestNG dependency behavior:
+
+- `SCENARIO-ETS-PART1-DEPENDENCY-SKIP-001`
+- `SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LANDING-001`
+- `SCENARIO-ETS-PART1-002-SYSTEMFEATURES-DEPENDENCY-SKIP-001`
+- `SCENARIO-ETS-PART1-002-SYSTEMFEATURES-RESOURCE-SHAPE-001`
+- `SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LINKS-NORMATIVE-001`
+
+They are non-normative historical records. Sprint 47's
+`SCENARIO-ETS-PART1-002-RELEASED-*` scenarios and
+`SCENARIO-ETS-PART1-001-DEPENDENCY-CASCADE-001` supersede them. They SHALL NOT
+drive implementation, method counts, dependency semantics, coverage mappings,
+or conformance claims.
 
 #### SCENARIO-ETS-FIXTURES-PORT-COVERAGE-001 (NORMAL)
 **GIVEN** the spec-trap fixture corpus is ported into Java `@DataProvider` methods
@@ -2416,41 +2533,6 @@ even when a historical implementation increment for that class is complete.
 **WHEN** the Core suite runs the API-definition assertion
 **THEN** the test PASSES via the service-doc fallback.
 *Maps to*: REQ-ETS-CORE-002. Direct port of v1.0 SCENARIO-API-DEF-FALLBACK-001.
-
-#### SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LANDING-001 (CRITICAL — Sprint 2)
-**GIVEN** the IUT is `https://api.georobotix.io/ogc/t18/api`
-**AND** Core suite has PASSED (no dependency-skip triggered)
-**WHEN** the SystemFeatures suite executes `GET /systems`
-**THEN** the response is HTTP 200
-**AND** the body is parseable JSON containing an `items` array (the CS API uses the `items` wrapper key per OGC API – Features clause 7.15.2-7.15.8 inherited via `/req/system/resources-endpoint`)
-**AND** the `items` array is non-empty (S-ETS-02-06 curl-verification confirmed 36 items).
-*Maps to*: REQ-ETS-PART1-002 (`/req/system/resources-endpoint`).
-
-#### SCENARIO-ETS-PART1-002-SYSTEMFEATURES-DEPENDENCY-SKIP-001 (CRITICAL — Sprint 2)
-**GIVEN** the Core suite produces at least one FAIL verdict for a target IUT
-**WHEN** the SystemFeatures suite (`/conf/system`) attempts to run
-**THEN** API Common emits SKIP for the unsatisfied `core` prerequisite
-**AND** all `@Test` methods in SystemFeatures emit SKIP through the deployed
-`systemfeatures -> part1apicommon -> core common` dependency chain
-**AND** no assertion in SystemFeatures is reported as FAIL or ERROR.
-*Maps to*: REQ-ETS-PART1-001, REQ-ETS-PART1-002. Closes
-SCENARIO-ETS-PART1-DEPENDENCY-SKIP-001 against SystemFeatures specifically.
-Sprint 46 live sabotage verifies the current transitive dependency chain.
-
-#### SCENARIO-ETS-PART1-002-SYSTEMFEATURES-RESOURCE-SHAPE-001 (NORMAL — Sprint 2)
-**GIVEN** the first item in the `/systems` collection has been dereferenced via `GET /systems/{id}`
-**WHEN** the SystemFeatures suite asserts the canonical-endpoint single-item shape
-**THEN** the item has `id` (string), `type` (string), and `links` (array of objects with `href`, `rel`).
-*Note*: Operates on the **single-item endpoint** `/systems/{id}` per `/req/system/canonical-endpoint`, NOT the collection level. S-ETS-02-06 curl-verification proved that GeoRobotix `/systems` collection items are minimal GeoJSON Feature stubs without `links`; only the single-item canonical endpoint carries the load-bearing `links` array. v1.0 registry `system-features.ts:225-297` `testCanonicalEndpoint` uses the same single-item-endpoint pattern.
-*Maps to*: REQ-ETS-PART1-002 (`/req/system/canonical-endpoint`), REQ-ETS-CORE-004.
-
-#### SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LINKS-NORMATIVE-001 (NORMAL — Sprint 2)
-**GIVEN** the single-item `/systems/{id}` response on the IUT
-**WHEN** the SystemFeatures suite runs the links-discipline assertion
-**THEN** the `links` array contains an entry with `rel=canonical` (the load-bearing assertion per OGC 23-001 `/req/system/canonical-url` — the canonical URL discipline)
-**AND** absence of `rel=self` is NOT a FAIL (consistent with the v1.0 GH#3 fix policy applied at the Core landing page; v1.0 audit at `csapi_compliance/src/engine/registry/system-features.ts:36-44` + `:273-286` documents that OGC 23-001 `/req/system/canonical-url` mandates `rel="canonical"` only on **non-canonical** URLs and does NOT require `rel="self"` on `/systems/{id}`).
-*Note*: Adapted from design.md text (collection-level `rel=collection`/`rel=items`) per S-ETS-02-06 curl-verification: GeoRobotix `/systems` has only `items` (no collection-level `links`); the load-bearing link discipline lives on `/systems/{id}`.
-*Maps to*: REQ-ETS-PART1-002 (`/req/system/canonical-url`), REQ-ETS-CORE-002 (link-discipline policy carryover).
 
 #### SCENARIO-ETS-CLEANUP-URI-CANONICALIZATION-001 (CRITICAL — Sprint 2)
 **GIVEN** the spec.md REQ blocks for REQ-ETS-CORE-002..004 + the Java `static final String REQ_*` constants in `conformance/core/*.java`
@@ -2508,8 +2590,9 @@ Sprint 46 live sabotage verifies the current transitive dependency chain.
 **AND** Core's `landingPageReturnsHttp200` @Test is sabotaged (e.g. assertion changed to expect HTTP 999) OR a programmatic TestNG XmlSuite mocks Core failure
 **WHEN** the suite runs end-to-end (smoke OR unit-test)
 **THEN** Core @Test reports `status="FAIL"`
-**AND** all 4 SystemFeatures @Tests report `status="SKIP"` (NOT FAIL, NOT ERROR)
-**AND** the SKIP reason references the unsatisfied `core` group dependency.
+**AND** all six released System methods report `status="SKIP"` (NOT FAIL, NOT
+ERROR) before System IUT access
+**AND** the SKIP reason references the unsatisfied Core prerequisite.
 *Maps to*: REQ-ETS-CLEANUP-005, REQ-ETS-PART1-002. Closes Quinn s06 CONCERN-1 + Raze s06 CONCERN-1 (both flagged the gap that Sprint 2's static-only dependency-skip verification did not exercise the live cascade).
 
 #### SCENARIO-ETS-CLEANUP-CREDENTIAL-LEAK-INTEGRATION-001 (CRITICAL — Sprint 3)
@@ -2642,27 +2725,75 @@ open-start interval, and open-end interval derived from that extent
 OGC API Common results before reading the IUT or issuing any request
 **AND** a failed or skipped prerequisite causes the API Common configuration
 method to report SKIP rather than FAIL
-**AND** TestNG dependency semantics skip those dependent groups
+**AND** the explicit System result gate blocks IUT access after every
+prerequisite failure, configuration failure, or API Common SKIP other than the
+exact documented no-temporal-extent result from `datetimeUsesValidTime`
+**AND** that sole allowed evidence limitation remains SKIP while the six direct
+System procedures execute
+**AND** descendants remain dependency-SKIP when inherited System conformance is
+incomplete
 **AND** the failure-path gate accepts exactly one report newer than its
 per-run marker from an isolated smoke output directory
-**AND** no dependent class reports positive conformance evidence.
+**AND** no inherited conformance class reports positive evidence for a skipped
+prerequisite.
 *Maps to*: REQ-ETS-PART1-001..013.
 
-#### SCENARIO-ETS-PART1-002-SYSTEMFEATURES-COLLECTIONS-001 (CRITICAL — Sprint 3)
-**GIVEN** the IUT is `https://api.georobotix.io/ogc/t18/api`
-**AND** Core suite has PASSED (no dependency-skip triggered)
-**WHEN** the SystemFeatures expansion @Test `systemAppearsInCollections` runs
-**THEN** EITHER `GET /collections` returns 200 + JSON with a `collections` array containing an entry for `systems` (id, title, or canonical IUT path matches)
-**OR** the IUT's landing page contains a link with `rel="collection"` (or equivalent) referencing `/systems` (fallback discovery)
-**OR** SKIP-with-reason if neither path is available (the IUT may surface `/systems` differently than OGC 23-001 §`/req/system/collections` standardizes).
-*Maps to*: REQ-ETS-PART1-002 (modified per Sprint 3 expansion).
+#### Historical Sprint 3 System Scenarios (SUPERSEDED)
 
-#### SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LOCATION-TIME-001 (NORMAL — Sprint 3)
-**GIVEN** the first item in the `/systems` collection on the IUT
-**WHEN** the SystemFeatures expansion @Test `systemHasGeometryAndValidTime` runs
-**THEN** the item has `geometry` field (GeoJSON Geometry or null) AND/OR `properties.validTime` (string/array per OGC 23-001 §`/req/system/location-time`)
-**OR** if neither is present: SKIP-with-reason (MAY priority per v1.0 audit at `csapi_compliance/src/engine/registry/system-features.ts`; absence is NOT FAIL).
-*Maps to*: REQ-ETS-PART1-002 (modified per Sprint 3 expansion).
+`SCENARIO-ETS-PART1-002-SYSTEMFEATURES-COLLECTIONS-001` and
+`SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LOCATION-TIME-001` described the removed
+`systemAppearsInCollections` and `systemHasGeometryAndValidTime` approximation
+methods. They are non-normative historical records and are superseded by the
+Sprint 47 `SCENARIO-ETS-PART1-002-RELEASED-*` scenarios below. They SHALL NOT
+drive implementation, coverage mapping, or conformance claims.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-LOCATION-001 (NORMAL — Sprint 47)
+**GIVEN** all canonical System resources have been retrieved through the reviewed API Common helper
+**WHEN** `/conf/system/location` executes
+**THEN** every resource except `Simulation` and `Process` assets is inspected for GeoJSON `geometry` or SensorML `position`
+**AND** a missing location emits a warning without failing the recommendation.
+*Maps to*: REQ-ETS-PART1-002, `/rec/system/location`.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-LOCATION-TIME-001 (CRITICAL — Sprint 47)
+**GIVEN** `mobile-system-id` identifies a mobile System known to move within 30 seconds
+**WHEN** `/conf/system/location-time` polls its canonical endpoint
+**THEN** both selected responses are HTTP 200
+**AND** the second GeoJSON `geometry` or SensorML `position` differs from the first
+**AND** absence of the input reports SKIP without positive evidence.
+*Maps to*: REQ-ETS-PART1-002, `/req/system/location-time`.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-CANONICAL-URL-001 (CRITICAL — Sprint 47)
+**GIVEN** every advertised collection with `featureType=sosa:System`
+**WHEN** `/conf/system/canonical-url` retrieves all collection items
+**THEN** every item has one unambiguous same-origin canonical URL
+**AND** dereferencing it returns HTTP 200
+**AND** the returned JSON equals the item after canonical links are removed from both.
+*Maps to*: REQ-ETS-PART1-002, `/req/system/canonical-url`.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-RESOURCES-ENDPOINT-001 (CRITICAL — Sprint 47)
+**GIVEN** a System resources endpoint URL
+**WHEN** `/conf/system/resources-endpoint` retrieves every page
+**THEN** every response is HTTP 200
+**AND** actual `application/geo+json` pages validate against `geojson/systemCollection.json`
+**AND** actual `application/sml+json` pages validate against `sensorml/systemCollection.json`
+**AND** an unsupported media type warns and reports SKIP.
+*Maps to*: REQ-ETS-PART1-002, `/req/system/resources-endpoint`.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-CANONICAL-ENDPOINT-001 (CRITICAL — Sprint 47)
+**GIVEN** the normalized API root
+**WHEN** `/conf/system/canonical-endpoint` executes
+**THEN** `{api_root}/systems` passes the complete resources-endpoint procedure.
+*Maps to*: REQ-ETS-PART1-002, `/req/system/canonical-endpoint`.
+
+#### SCENARIO-ETS-PART1-002-RELEASED-COLLECTIONS-001 (CRITICAL — Sprint 47)
+**GIVEN** the advertised `/collections` metadata
+**WHEN** `/conf/system/collections` executes
+**THEN** every collection with exact `featureType=sosa:System` is selected
+**AND** every selected item reports one released SOSA System URI/CURIE
+**AND** every returned page passes the schema selected by its actual media type.
+**AND** zero selected collections is the released procedure's vacuous loop result,
+not an added existence or `itemType` assertion.
+*Maps to*: REQ-ETS-PART1-002, `/req/system/collections`.
 
 #### SCENARIO-ETS-CLEANUP-CI-WORKFLOW-ESCALATION-001 (CRITICAL — Sprint 4)
 **GIVEN** this historical scenario allowed either activation or formal drop
@@ -2775,7 +2906,10 @@ per-run marker from an isolated smoke output directory
 #### SCENARIO-ETS-CLEANUP-SABOTAGE-TARGET-001 (NORMAL — Sprint 5)
 **GIVEN** `scripts/sabotage-test.sh --target=systemfeatures` is invoked
 **WHEN** the script runs end-to-end
-**THEN** the produced TestNG XML shows SystemFeatures @Tests FAIL (1) + SKIP (5) + Subsystems SKIP (4) + Procedures SKIP (P) + Deployments SKIP (D); Core + Common PASS
+**THEN** the produced TestNG XML shows Core and Common PASS, at least one
+SystemFeatures method FAIL, the remaining System methods retain their
+evidence-honest results, and every direct or transitive TestNG dependency
+descendant group SKIP
 **AND** the original SystemFeaturesTests.java file in the worktree is UNMODIFIED after the run.
 *Maps to*: REQ-ETS-CLEANUP-015.
 
@@ -2902,7 +3036,9 @@ per-run marker from an isolated smoke output directory
 **WHEN** `bash scripts/sabotage-test.sh --target=systemfeatures` runs from `/tmp/<role>-fresh-sprint6/`
 **THEN** the Docker build step succeeds (no `COPY .git ./.git: not found` error)
 **AND** the smoke run executes against the sabotaged temp tree
-**AND** the cascade XML shows Core+Common PASS, SystemFeatures 1×FAIL+Nx SKIP, Subsystems+Procedures+Deployments all SKIP
+**AND** the cascade XML shows Core and Common PASS, at least one
+SystemFeatures method FAIL, and all direct or transitive TestNG dependency
+descendant groups SKIP
 **AND** the script exits 0 with cascade verdict PASS.
 *Maps to*: REQ-ETS-CLEANUP-017, REQ-ETS-CLEANUP-015 (promoted from PARTIAL to FULLY-IMPLEMENTED).
 
@@ -2936,16 +3072,23 @@ per-run marker from an isolated smoke output directory
 #### SCENARIO-ETS-CLEANUP-SABOTAGE-LOG-HONEST-001 (NORMAL — Sprint 6)
 **GIVEN** `scripts/sabotage-test.sh --target=systemfeatures` is running
 **WHEN** the Docker build step fails in a broken local environment
-**THEN** the log message reads `"Docker build FAILED"` or equivalent (NOT `"smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test)"`)
-**AND** when the Docker build succeeds but smoke exits non-zero due to the sabotage marker @Test FAIL, the log message reads `"smoke exited non-zero (EXPECTED — SystemFeatures FAIL on first @Test)"`.
+**THEN** the log message reads `"Docker build FAILED"` or equivalent rather
+than claiming a sabotage hit
+**AND** when the Docker build succeeds but smoke exits non-zero due to the
+sabotage marker, the log identifies the expected sabotaged System method
+failure.
 *Maps to*: REQ-ETS-CLEANUP-015 (improved UX).
 
 #### SCENARIO-ETS-CLEANUP-SABOTAGE-JAVAC-FIX-001 (CRITICAL — Sprint 7)
 **GIVEN** `scripts/sabotage-test.sh --target=systemfeatures` is run from a /tmp clone at Sprint 7 HEAD
-**WHEN** the python injector injects `if (true) throw new AssertionError("SABOTAGED ...")` as the first statement of `systemsCollectionReturns200()`
+**WHEN** the python injector injects
+`if (true) throw new AssertionError("SABOTAGED ...")` as the first statement of
+`systemLocationsFollowRecommendation()`
 **THEN** Docker build step 8/8 (`mvn clean package`) succeeds without `unreachable statement` compile error
 **AND** the smoke run produces a TestNG XML cascade report
-**AND** the cascade report shows Core+Common all PASS, SystemFeatures 1×FAIL + Nx SKIP, Subsystems+Procedures+Deployments all SKIP.
+**AND** the cascade report shows Core and Common PASS, at least one
+SystemFeatures method FAIL, and all direct or transitive TestNG dependency
+descendant groups SKIP.
 *Maps to*: REQ-ETS-CLEANUP-017 (live acceptance), REQ-ETS-CLEANUP-018.
 
 #### SCENARIO-ETS-CLEANUP-SABOTAGE-PIPEFAIL-FIX-001 (CRITICAL — Sprint 7)
@@ -3145,8 +3288,34 @@ per-run marker from an isolated smoke output directory
 **Sub-deliverable 3 (cont.) — Common conformance class** (REQ-ETS-PART1-001, historical increment complete; released ATS partial/unreviewed):
 - REQ-ETS-PART1-001: `conformance.common.CommonTests` 4 @Test methods (Sprint-1-style minimal-then-expand per architect-handoff item 17 — distinct surface from Core to avoid duplication) all PASS against GeoRobotix at HEAD commit `c56df10` (new repo). Smoke total = 22/22 (12 Core + 6 SystemFeatures + 4 Common). 2 commits at new repo: `f384509` (CommonTests + testng.xml single-block consolidation extension), `c56df10` (live smoke evidence + nested-properties fix in S-ETS-03-05). Common is INDEPENDENT of Core (no dependsOnGroups declaration on the common group); runs in parallel. URI canonical form: `/req/json/{definition,content}` (Common Part 1 JSON encoding class), `/req/landing-page/conformance-success` (reused at Common-class layer to assert `ogcapi-common-1/1.0/conf/core` IS declared in `/conformance` body), `/req/collections/collections-list-success` (Common Part 2). All 4 .adoc URLs HTTP-200-verified at `raw.githubusercontent.com/opengeospatial/ogcapi-common/master/{19-072,collections}/requirements/`. ETSAssert helpers throughout; zero new bare-throw sites. GeoRobotix curl evidence: `/conformance` declares `ogcapi-common-1/1.0/conf/core` AND `ogcapi-common-2/0.0/conf/collections`; `/collections` returns 200 with `id="all_systems"` entry; `?f=json` returns JSON; `?f=html` returns 400 (acceptable per content-negotiation discipline — IUT explicitly handles parameter). Full curl evidence + URI mapping archived in `epics/stories/s-ets-03-07-common-conformance-class.md` Implementation Notes.
 
-**Sub-deliverable 3 (cont.) — SystemFeatures conformance class** (REQ-ETS-PART1-002, historical increments complete; released ATS partial/unreviewed):
-- REQ-ETS-PART1-002: `conformance.systemfeatures.SystemFeaturesTests` Sprint 2 4 @Test methods + Sprint 3 2 new @Test methods = 6 @Tests total (5/5 v1.0 SystemFeatures URI coverage achieved, was 3/5 at Sprint 2 close) all PASS against GeoRobotix at HEAD commit `c56df10` (new repo). Smoke total = 22/22 (12 Core + 6 SystemFeatures + 4 Common). Sprint 3 expansion commits: `bfa0e6b` (2 new @Tests for /req/system/collections + /req/system/location-time), `c56df10` (nested-properties fix for GeoJSON Feature shape — items have validTime under `properties` not top-level). New URI canonical forms: `/req/system/collections` (defense-in-depth: PASS via /collections OR landing-page rel=systems link — GeoRobotix has both), `/req/system/location-time` (MAY-priority: SKIP rather than FAIL if both validTime and geometry absent; PASS against GeoRobotix because items carry `properties.validTime`). Sprint 2 close artifact (16/16): 4 commits at new repo: `9847544` (SystemFeaturesTests + Core `groups = "core"` annotations), `d99665d`+`02796dd` (testng.xml dependency wiring; consolidated to single `<test>` block after empirical TestNG group-scope discovery), `3bd7fc6` (smoke artifact archive `ops/test-results/sprint-ets-02-systemfeatures-georobotix-smoke-2026-04-28.xml`). Reproducible build verified (sha256 `b51577cfb48535c6322cfc117514bd501e4d180b6c1435f8628b56d31a7a000a` byte-identical across two consecutive `mvn clean install -DskipTests`). All 4 SCENARIO-ETS-PART1-002-* satisfied: LANDING-001 + RESOURCE-SHAPE-001 + LINKS-NORMATIVE-001 PASS at runtime; DEPENDENCY-SKIP-001 PASS via TestNG XML output `depends-on-groups="core"` recorded on each of the 4 SystemFeatures @Tests (live break-Core verification deferred to Quinn/Raze gate). v1.0 GH#3 fix preserved at SystemFeatures level. URI form `/req/system/<X>` per OGC `.adoc` canonical (5 sub-requirement `.adoc` URLs HTTP-200-verified at `raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/system/`). Adapted from design.md table — collection-level GeoRobotix `/systems` has only `items` (no `links`); per-item entries are minimal stubs without `links`; the load-bearing `links` array lives on `/systems/{id}` (single-item canonical endpoint); `systemItemHasIdTypeLinks` and `systemsCollectionLinksDiscipline` operate on the single-item endpoint per `/req/system/canonical-endpoint` + `/req/system/canonical-url`. Full curl evidence + URI-form pivot rationale archived in `epics/stories/s-ets-02-06-systemfeatures-conformance-class.md` Implementation Notes.
+**Sub-deliverable 3 (cont.) — SystemFeatures conformance class**
+(REQ-ETS-PART1-002, released ATS implemented; final Raze approved):
+- Sprint 47 replaces the historical six-method approximation with six exact
+  released `/conf/system` procedures. The direct tests independently retrieve
+  their prerequisites and cover warning-only canonical location inspection,
+  explicit moving-System location polling, every-item canonical dereference and
+  normalized content comparison, endpoint-parameterized resources validation,
+  canonical `/systems` validation, and every exact System collection's released
+  type/schema checks. Actual GeoJSON/SensorML media types select their bundled
+  collection schemas. Four pinned complete `geojson.org` dependencies replace
+  permissive placeholders and carry source URL/date/SHA-256 provenance.
+  Unsupported collections cannot hide later supported failures; SensorML
+  orientation-only changes cannot prove movement; missing `mobile-system-id`
+  remains an evidence-honest SKIP.
+- Reviewed coverage is `6/6 exact` for `/conf/system` and
+  `10 exact / 2 helper / 145 candidate / 83 unmapped` overall. Focused Maven is
+  `46/0/0/0`, the released-ATS audit is `23/0/0/0`, full Docker Maven is
+  `395/0/0/3`, and exact image
+  `sha256:101e20653097fea9891ff5fbe1f4c160ae163ca97338cf63cfb5980dd958cf6e`
+  passes runtime verification. Primary local OSH TeamEngine is
+  `215/38/0/177`, with 105 recognized GET requests, zero writes, and zero
+  startup errors. All six System methods execute: three PASS and three retain
+  explicit unsupported-media or missing-input SKIPs. The controlled HTTP
+  fixture proves successful positive paths for all six methods. Dependency
+  sabotage and both credential gates pass.
+- Historical Sprint 2/3 implementation and advisory GeoRobotix evidence remain
+  archived in `epics/stories/s-ets-02-06-systemfeatures-conformance-class.md`;
+  they no longer establish released ATS completion.
 
 **Sub-deliverable 8 — Web-App Freeze**: REQ-ETS-WEBAPP-FREEZE-001 ✅ closed (commit `44c279e`, tag `v1.0-frozen` at `ab53658`). README.adoc reverse cross-link in new repo closes ADR-005 "both directions" requirement.
 

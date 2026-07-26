@@ -93,6 +93,7 @@ public class VerifyAuthCredentialPropagation {
 	public void testRunArg_MutationControls_keyMatchesContract() {
 		assertEquals("mutation-tests-enabled", TestRunArg.MUTATION_TESTS_ENABLED.toString());
 		assertEquals("mutation-iut-policy", TestRunArg.MUTATION_IUT_POLICY.toString());
+		assertEquals("mobile-system-id", TestRunArg.MOBILE_SYSTEM_ID.toString());
 	}
 
 	/**
@@ -115,6 +116,8 @@ public class VerifyAuthCredentialPropagation {
 		assertEquals(String.class, SuiteAttribute.MUTATION_TESTS_ENABLED.getType());
 		assertEquals("mutationIutPolicy", SuiteAttribute.MUTATION_IUT_POLICY.getName());
 		assertEquals(String.class, SuiteAttribute.MUTATION_IUT_POLICY.getType());
+		assertEquals("mobileSystemId", SuiteAttribute.MOBILE_SYSTEM_ID.getName());
+		assertEquals(String.class, SuiteAttribute.MOBILE_SYSTEM_ID.getType());
 	}
 
 	/**
@@ -160,6 +163,22 @@ public class VerifyAuthCredentialPropagation {
 		org.mockito.Mockito.verify(suite).setAttribute(SuiteAttribute.MUTATION_TESTS_ENABLED.getName(), "true");
 		org.mockito.Mockito.verify(suite)
 			.setAttribute(SuiteAttribute.MUTATION_IUT_POLICY.getName(), "dedicated-mutable-iut");
+	}
+
+	/**
+	 * REQ-ETS-PART1-002; SCENARIO-ETS-PART1-002-RELEASED-LOCATION-TIME-001.
+	 */
+	@Test
+	public void processSuiteParameters_setsMobileSystemIdAttribute() throws Exception {
+		URL url = this.getClass().getResource("/atom-feed.xml");
+		Map<String, String> params = new HashMap<>();
+		params.put(TestRunArg.IUT.toString(), url.toURI().toString());
+		params.put(TestRunArg.MOBILE_SYSTEM_ID.toString(), "moving-system-1");
+		when(xmlSuite.getParameters()).thenReturn(params);
+
+		new SuiteFixtureListener().processSuiteParameters(suite);
+
+		org.mockito.Mockito.verify(suite).setAttribute(SuiteAttribute.MOBILE_SYSTEM_ID.getName(), "moving-system-1");
 	}
 
 	/**

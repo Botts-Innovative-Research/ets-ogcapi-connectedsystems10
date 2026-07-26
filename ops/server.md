@@ -1,14 +1,15 @@
 # server.md - operational reference for ets-ogcapi-connectedsystems10
 
-> Last updated: 2026-07-22 - Sprint 42 primary local OSH gate restoration.
+> Last updated: 2026-07-26 - Sprint 47 GeoJSON dependency provenance.
 
 ## Schema provenance
 
-The 126 OGC JSON Schemas under `src/main/resources/schemas/` are a
-verbatim copy from the sibling repository `csapi_compliance`. Per
-ADR-002 (in `csapi_compliance/_bmad/adrs/`), the schemas were
-copied at scaffold time rather than included via git submodule or
-shared third repository.
+The initial 126 OGC JSON Schemas under `src/main/resources/schemas/` were a
+verbatim copy from the sibling repository `csapi_compliance`. Per ADR-002 (in
+`csapi_compliance/_bmad/adrs/`), they were copied at scaffold time rather than
+included via git submodule or shared third repository. Sprint 47 intentionally
+replaced four permissive `geojson.org` reference placeholders with complete
+upstream schemas, so the current bundle is no longer byte-identical as a whole.
 
 | Field | Value |
 |---|---|
@@ -19,6 +20,14 @@ shared third repository.
 | Source path | `csapi_compliance/schemas/` |
 | File count | 126 JSON Schemas |
 | Manifest | `csapi_compliance/schemas/manifest.json` (`generatedAt`: 2026-04-17T01:18:41.614Z) |
+
+**Sprint 47 controlled refresh.** `Feature.json`, `FeatureCollection.json`,
+`Geometry.json`, and `Point.json` under
+`src/main/resources/schemas/external/geojson.org/schema/` are complete copies
+retrieved from their `https://geojson.org/schema/` source URLs on 2026-07-26.
+Their exact URL, retrieval date, and SHA-256 values are recorded in adjacent
+`provenance.json`. All other scaffolded schema files retain the provenance
+above.
 
 **Upstream OGC repository** (the ultimate source of truth for the
 schemas before csapi_compliance fetched them):

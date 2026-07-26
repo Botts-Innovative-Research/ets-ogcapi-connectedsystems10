@@ -1,0 +1,48 @@
+sprint: ets-47
+story: S-ETS-47-01
+title: Part 1 System direct ATS closure
+status: COMPLETE
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-PART1-002
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-PART1-002-RELEASED-LOCATION-001
+  - SCENARIO-ETS-PART1-002-RELEASED-LOCATION-TIME-001
+  - SCENARIO-ETS-PART1-002-RELEASED-CANONICAL-URL-001
+  - SCENARIO-ETS-PART1-002-RELEASED-RESOURCES-ENDPOINT-001
+  - SCENARIO-ETS-PART1-002-RELEASED-CANONICAL-ENDPOINT-001
+  - SCENARIO-ETS-PART1-002-RELEASED-COLLECTIONS-001
+  - SCENARIO-ETS-PART1-002-RELEASED-SCHEMA-FAIL-CLOSED-001
+  - SCENARIO-ETS-PART1-002-RELEASED-MULTI-COLLECTION-001
+  - SCENARIO-ETS-PART1-002-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-002-RELEASED-E2E-EXECUTION-001
+  - SCENARIO-ETS-PART1-002-RELEASED-DIRECT-HTTP-COVERAGE-001
+success_criteria:
+  - All six released System procedures have exact reviewed mappings.
+  - Location warnings do not become failures.
+  - Location-time never passes without a supplied moving-System identifier and observed location change.
+  - Canonical URL evidence covers every item and compares normalized content.
+  - Actual GeoJSON and SensorML JSON page media types select fail-closed bundled schemas, including pinned complete GeoJSON dependencies.
+  - Every exact featureType=sosa:System collection and its item types follow the released ATS procedure without extra existence or itemType gates; unsupported collections cannot suppress supported failures.
+  - SensorML movement requires changed positional coordinates rather than orientation-only changes.
+  - One endpoint-parameterized resources procedure is reused by canonical and collection validation.
+  - Shared setup cannot configuration-skip procedures with independent prerequisites.
+  - Focused and full Maven verification succeeds.
+  - TeamEngine executes the changed suite against the primary local OSH IUT.
+  - Exact-image runtime, dependency, and credential gates pass.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive evidence.
+  - Do not weaken released procedures to fit the local IUT.
+verification:
+  focused_maven: PASS_46_0_0_0
+  full_maven: PASS_395_0_0_3
+  coverage_audit: PASS_23_0_0_0_10_EXACT_2_HELPER
+  local_osh_teamengine: PASS_215_38_0_177_ALL_SIX_SYSTEM_METHODS_EXECUTED
+  exact_image: PASS_SHA256_101E20653097FEA9891FF5FBE1F4C160AE163CA97338CF63CFB5980DD958CF6E
+  dependency_sabotage: PASS_CORE_AND_SYSTEM_TARGET_CASCADES
+  credential_gates: PASS_INTEGRATION_AND_WIRE
+  raze: APPROVE_0_99_NO_REQUIRED_FINDINGS

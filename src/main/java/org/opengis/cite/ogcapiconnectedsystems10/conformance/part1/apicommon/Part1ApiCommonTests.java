@@ -38,6 +38,9 @@ public class Part1ApiCommonTests {
 
 	static final String REQ_DATETIME = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime";
 
+	public static final String DATETIME_EVIDENCE_LIMITATION = REQ_DATETIME
+			+ " - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available.";
+
 	private static final List<String> RESOURCE_TYPES = List.of("systems", "deployments", "procedures",
 			"samplingFeatures", "properties");
 
@@ -232,8 +235,7 @@ public class Part1ApiCommonTests {
 			}
 		}
 		if (executedQueries == 0) {
-			throw new SkipException(REQ_DATETIME
-					+ " - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available.");
+			throw new SkipException(DATETIME_EVIDENCE_LIMITATION);
 		}
 	}
 

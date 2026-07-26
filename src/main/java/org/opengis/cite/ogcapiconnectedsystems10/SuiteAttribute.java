@@ -53,7 +53,13 @@ public enum SuiteAttribute {
 	 * Optional Sprint 12 safety-gate policy copied from the suite-level
 	 * {@code mutation-iut-policy} parameter.
 	 */
-	MUTATION_IUT_POLICY("mutationIutPolicy", String.class);
+	MUTATION_IUT_POLICY("mutationIutPolicy", String.class),
+
+	/**
+	 * Optional identifier of a known moving System copied from the suite-level
+	 * {@code mobile-system-id} parameter.
+	 */
+	MOBILE_SYSTEM_ID("mobileSystemId", String.class);
 
 	private final Class attrType;
 

@@ -2,6 +2,33 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-25 - Reproducible populated local OSH E2E implemented
+
+**Triggered by user instruction**: "Make it so."
+
+- Added CP-004, S-ETS-44-01, its sprint contract, four OpenSpec scenarios, and
+  the architecture for an isolated API-populated local OSH target.
+- Added exact static/dynamic fixtures, a hard mutation-gated seeder, and an
+  owned lifecycle orchestrator without modifying OSH or TeamEngine source or
+  binaries.
+- Initial Raze returned `GAPS_FOUND`, confidence `0.99`, with ten required
+  ownership, abort, cleanup, provenance, verdict, and testability findings.
+- Closed those findings with unique labeled containers, exact ID-only cleanup,
+  container-bound seeding evidence, always-run finalization, normalized primary
+  fingerprints, strict XML verdict parsing, source/install/image provenance,
+  SHA-256 evidence manifests, and 12 behavioral safety tests.
+- Final gates: behavioral `12/0/0/0`, focused Maven `9/0/0/0`, full Docker
+  Maven `322/0/0/3`, and exact TeamEngine runtime verification PASS on
+  `sha256:cc8c9d711e57ed50d2ed08cdef01cb1236052e775ff27ad016185672e9de8169`.
+- Fresh-clone workflow provisioning passed; populated TestNG failed honestly
+  `211/91/28/92`; cleanup passed; primary state was unchanged; clean-primary
+  TestNG passed `211/69/0/142` with zero writes.
+- Archived the complete 32-file E2E directory and verification summary under
+  `ops/test-results/`.
+- Focused Raze recheck returned `APPROVE`, confidence `0.99`, after 372 seconds;
+  all ten initial findings are closed, no new findings remain, and
+  S-ETS-44-01 is complete. Token metadata was unavailable.
+
 ## 2026-07-23 - External dependency and CI scope reconciliation
 
 **Triggered by user instruction**: CI approval will not be available, and

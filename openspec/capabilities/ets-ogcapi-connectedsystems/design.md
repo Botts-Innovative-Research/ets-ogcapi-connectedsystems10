@@ -943,6 +943,55 @@ Architect estimates Sprint 5 Subsystems-expansion-bundled-with-Procedures/Sampli
 - **Subdeployments coverage**: REQ-ETS-PART1-005 (`subdeployments`) is a related-but-distinct OGC 23-001 conformance class; deferred to Sprint 5+ batching.
 - **Common conformance class expansion** (4 → 8 @Tests per Quinn cumulative CONCERN-2): per-Pat-Sprint-4-conformance-class-pick rationale, this is "by-design minimal-then-expand" — explicit deferral to Sprint 5+ when user prioritizes batching with sibling classes.
 
+### Sprint 44: reproducible populated local OSH E2E
+
+CP-004 and S-ETS-44-01 add a supplemental populated-IUT workflow without
+changing the primary clean-smoke contract.
+
+The workflow has four layers:
+
+1. **External provenance check**: require a clean OSH checkout with no commits
+   ahead of its configured upstream; record its commit and a deterministic
+   installed-file manifest. The install is mounted read-only.
+2. **Ephemeral IUT lifecycle**: derive a no-secret runtime configuration from
+   `ops/local-osh-gate-config.json`, start a uniquely named OSH process on
+   `field-hub_default`, use a Docker-assigned loopback host port for fixture
+   application, and isolate all database/module state under a temporary
+   directory.
+3. **Supported-interface seeding**: a versioned manifest supplies exact static
+   and dynamic payloads. The seeder hard-requires explicit dedicated mutable-IUT
+   controls, rejects public/non-local targets, posts resources in dependency
+   order, and records resource ids, response status/media type, parent schemas,
+   associated Observation evidence, and request method counts.
+4. **Two-verdict execution**: TeamEngine runs against the Docker-network IUT
+   URL. The summary records `provisioningReady` independently from exact TestNG
+   totals. TestNG failures remain non-zero. Cleanup removes the ephemeral IUT,
+   verifies the primary container/state identity, and runs the authoritative
+   clean primary smoke.
+
+The populated target is acceptable E2E evidence when provisioning succeeds and
+TeamEngine produces a real report. It is not a passing conformance target unless
+the report itself contains zero failures. This distinction lets the project
+increase exercised coverage while preserving IUT defects as evidence.
+
+The discovery run against unmodified OSH 2.0.1 produced
+`211 total / 86 passed / 28 failed / 97 skipped`. All failures came from missing
+required DataStream/ControlStream metadata. The implementation SHALL NOT add a
+response proxy, modify OSH, or relax Annex A.9 to change that result.
+
+The completed implementation uses per-run container names and labels, exact
+owned-container IDs, an ownership-evidence capability for the loopback seeder,
+strict TestNG XML parsing, distinct conformance/infrastructure/overall verdicts,
+an always-run finalizer, observable cleanup, and a normalized primary-container
+and state fingerprint. It validates canonical OSH upstream/source/build
+metadata, an installed-file manifest, and a digest-pinned runtime image.
+
+The final fresh-clone run provisioned all seven resource families, then returned
+populated TestNG `211/91/28/92` with conformance `FAIL`. Cleanup passed, primary
+state was unchanged, and clean-primary TestNG passed `211/69/0/142`. This closes
+the reproducible populated-IUT workflow, not the wider positive binding
+conformance requirement.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

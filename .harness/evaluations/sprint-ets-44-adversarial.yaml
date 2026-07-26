@@ -1,0 +1,315 @@
+review:
+  id: sprint-ets-44-adversarial
+  reviewer: Raze
+  role: adversarial-reviewer
+  date: "2026-07-25"
+  verdict: GAPS_FOUND
+  confidence: 0.99
+
+reviewed_scope:
+  story: S-ETS-44-01
+  change_proposal: CP-004
+  contract: .harness/contracts/sprint-ets-44.yaml
+  implementation:
+    - scripts/local-osh-populated-e2e.sh
+    - scripts/local-osh-populated-fixture.py
+    - ops/local-osh-populated-fixtures.json
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyLocalOshPopulatedE2e.java
+  specifications:
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - openspec/change-proposals/CP-004-reproducible-populated-local-osh-e2e.md
+    - epics/stories/s-ets-44-01-reproducible-populated-local-osh-e2e.md
+    - _bmad/architecture.md
+    - _bmad/traceability.md
+  supplied_runtime_artifacts: /tmp/ets-csapi-s44-e2e-20260725-r2
+  expensive_gates_rerun: false
+
+verification_evidence:
+  focused_maven:
+    total: 7
+    failures: 0
+    errors: 0
+    skipped: 0
+  full_maven:
+    total: 320
+    failures: 0
+    errors: 0
+    skipped: 3
+  populated_teamengine:
+    total: 211
+    passed: 91
+    failed: 28
+    skipped: 92
+    provisioning: PASS
+    conformance: FAIL
+    assessment: "The TestNG XML honestly preserves all 28 failures."
+  clean_primary_teamengine:
+    total: 211
+    passed: 69
+    failed: 0
+    skipped: 142
+    verdict: PASS
+  teamengine_runtime:
+    image_id: sha256:424aff495a3eaef47c30d4ccf30c080e7a33df345f1831c62d0261aec14900d6
+    immutability: PASS
+  normal_path_cleanup:
+    ephemeral_container_absent: true
+    teamengine_containers_absent: true
+    ephemeral_state_absent: true
+  credential_scan:
+    credential_value_found: false
+
+findings:
+  - id: RAZE-S44-001
+    severity: CRITICAL
+    title: Unowned container cleanup can delete the primary OSH
+    finding: >-
+      LOCAL_OSH_CONTAINER is caller-controlled, is never required to differ from
+      PRIMARY_OSH_CONTAINER, and cleanup blindly executes docker rm -f before
+      this run creates or identifies an owned container. Setting both names to
+      field-hub-osh-1 satisfies the mutation strings and causes the primary IUT
+      to be removed at startup. The fixed TeamEngine container names inherit the
+      same unowned-deletion behavior from smoke-test.sh. The static default also
+      contradicts the design's "uniquely named" claim.
+    evidence:
+      - "scripts/local-osh-populated-e2e.sh:15"
+      - "scripts/local-osh-populated-e2e.sh:19"
+      - "scripts/local-osh-populated-e2e.sh:41-42"
+      - "scripts/local-osh-populated-e2e.sh:358-359"
+      - "scripts/smoke-test.sh:44"
+      - "scripts/smoke-test.sh:94-95"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md:956-958"
+    required_fix: >-
+      Generate per-run unique container names, reject every collision with the
+      primary and TeamEngine names, label each created container with a run
+      identifier, capture its exact container ID, and remove only that owned ID.
+      Refuse to start when an unowned name already exists. Add executable
+      regressions proving the primary and unrelated containers cannot be
+      selected or removed.
+
+  - id: RAZE-S44-002
+    severity: HIGH
+    title: Abort paths skip isolation verification, summary evidence, and clean-primary rerun
+    finding: >-
+      The EXIT trap calls cleanup only. Any startup timeout, seeder exception,
+      provisioning failure, Docker failure, or evidence-write failure exits
+      before primary-state-after is captured, run-summary.json is written, or
+      the clean-primary smoke is executed. This violates the critical scenario
+      explicitly covering attempts that "finish or abort."
+    evidence:
+      - "scripts/local-osh-populated-e2e.sh:36-39"
+      - "scripts/local-osh-populated-e2e.sh:358"
+      - "scripts/local-osh-populated-e2e.sh:394"
+      - "scripts/local-osh-populated-e2e.sh:397-403"
+      - "scripts/local-osh-populated-e2e.sh:417-440"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:949-955"
+    required_fix: >-
+      Replace the cleanup-only trap with an idempotent finalizer that preserves
+      the originating status while always attempting owned-resource cleanup,
+      post-run primary identity/state verification, clean-primary smoke, and a
+      summary containing the precise abort phase and error. Add injected-failure
+      tests for startup, provisioning, populated smoke, evidence parsing, and
+      cleanup.
+
+  - id: RAZE-S44-003
+    severity: HIGH
+    title: Cleanup failures are silently converted to success
+    finding: >-
+      Container removal, in-container state deletion, and host state deletion
+      all use "|| true"; cleanup then unconditionally returns zero and never
+      verifies absence. A failed cleanup can therefore leave a mutable OSH
+      container or state directory while the workflow reports only the earlier
+      conformance status.
+    evidence:
+      - "scripts/local-osh-populated-e2e.sh:41-52"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:952-955"
+      - "epics/stories/s-ets-44-01-reproducible-populated-local-osh-e2e.md:45-48"
+    required_fix: >-
+      Make cleanup best-effort but observable: attempt every cleanup action,
+      verify the owned container and non-retained state are absent, record a
+      cleanup verdict and retained-state path, and force the final workflow
+      verdict non-zero on cleanup failure without masking the original failure.
+
+  - id: RAZE-S44-004
+    severity: HIGH
+    title: Primary-state isolation ignores primary container identity
+    finding: >-
+      The workflow archives before/after docker-inspect JSON but computes
+      primaryStateUnchanged from only the state-file hashes and mount-source
+      text. A stopped, replaced, reconfigured, or image-changed primary
+      container using the same state mount passes this predicate. The supplied
+      artifacts happen to contain byte-identical inspect JSON, but the
+      implementation does not enforce that evidence.
+    evidence:
+      - "scripts/local-osh-populated-e2e.sh:62-77"
+      - "scripts/local-osh-populated-e2e.sh:419-425"
+      - "/tmp/ets-csapi-s44-e2e-20260725-r2/primary-state-before.container.json"
+      - "/tmp/ets-csapi-s44-e2e-20260725-r2/primary-state-after.container.json"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:954"
+    required_fix: >-
+      Compare a normalized primary fingerprint that includes exact container
+      ID, name, image ID, command/config identity, running state, network
+      membership, /state source, and read-only /opt/osh mount in addition to
+      state hashes. Fail and report the exact changed fields. Test container
+      replacement, stop, image/config drift, and mount drift.
+
+  - id: RAZE-S44-005
+    severity: HIGH
+    title: Supplied E2E artifacts do not verify the current implementation
+    finding: >-
+      The current orchestrator was modified at 15:21:31 local time, after
+      run-summary.json and populated-failures.json were generated at 15:19:24.
+      The supplied summary omits provisioningVerdict, TeamEngine image ID,
+      request-method counts, and startup verdicts that the current script now
+      emits. The supplied failure JSON also has an empty class for all 28
+      entries and lacks current description fields. Maven's structural
+      assertions do not execute these runtime paths.
+    evidence:
+      - "/tmp/ets-csapi-s44-e2e-20260725-r2/run-summary.json"
+      - "/tmp/ets-csapi-s44-e2e-20260725-r2/populated-failures.json"
+      - "scripts/local-osh-populated-e2e.sh:192-308"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyLocalOshPopulatedE2e.java:89-108"
+    required_fix: >-
+      After required fixes, rerun the full populated/clean workflow from the
+      exact reviewed source state. Assert the generated summary schema and all
+      28 extracted class/name/message records against the same TestNG XML, and
+      archive hashes tying source, report, log, summary, and failure evidence
+      together.
+
+  - id: RAZE-S44-006
+    severity: HIGH
+    title: Conformance verdict is derived from process status instead of TestNG
+    finding: >-
+      When an XML report exists, conformanceVerdict and cleanPrimaryVerdict are
+      selected from smoke-test.sh exit status. That status also covers build,
+      health, registration, artifact, no-mutation, and startup-log failures.
+      Consequently a zero-failure TestNG report followed by an infrastructure
+      failure is mislabeled as conformance FAIL, violating the requirement that
+      the conformance verdict remain the exact TestNG verdict.
+    evidence:
+      - "scripts/local-osh-populated-e2e.sh:236-257"
+      - "scripts/smoke-test.sh:8-13"
+      - "openspec/change-proposals/CP-004-reproducible-populated-local-osh-e2e.md:64-68"
+      - "_bmad/architecture.md:701-711"
+    required_fix: >-
+      Derive TestNG conformance strictly from validated XML totals and report
+      validity. Record a separate workflow/gate verdict and phase-specific
+      infrastructure verdicts. Use NOT_RUN or ERROR when no trustworthy TestNG
+      verdict exists, and keep the overall process non-zero for either
+      conformance failures or infrastructure failures.
+
+  - id: RAZE-S44-007
+    severity: HIGH
+    title: Loopback validation does not prove a dedicated mutable target
+    finding: >-
+      The standalone seeder accepts any unauthenticated HTTP URL on any loopback
+      address and explicit port after checking two caller-supplied strings. It
+      does not bind the endpoint to the ephemeral container created by this run.
+      A locally published primary or shared OSH can therefore be mutated if a
+      caller labels it "dedicated" in the environment.
+    evidence:
+      - "scripts/local-osh-populated-fixture.py:17-45"
+      - "scripts/local-osh-populated-fixture.py:148-155"
+      - ".harness/contracts/sprint-ets-44.yaml:17-18"
+      - ".harness/contracts/sprint-ets-44.yaml:30"
+    required_fix: >-
+      Bind seeding authorization to orchestrator-generated ownership evidence:
+      exact labeled container ID, published host port, expected API path, and
+      isolated state source. Reject standalone targets lacking that evidence.
+      Add behavioral tests for primary-loopback, unrelated-loopback,
+      non-loopback, credentialed, HTTPS, wrong-path, and wrong-port targets.
+
+  - id: RAZE-S44-008
+    severity: MEDIUM
+    title: OSH source provenance is not tied to the installed runtime
+    finding: >-
+      A clean checkout with zero commits ahead of a caller-configurable ref and
+      a hash inventory of a separate caller-configurable install directory do
+      not prove that the mounted distribution came from that checkout/commit.
+      The workflow records no upstream remote URL or upstream commit and makes
+      no runtime/build-metadata comparison to osh_commit. The read-only mount
+      prevents runtime writes but does not establish provenance.
+    evidence:
+      - "scripts/local-osh-populated-e2e.sh:9-18"
+      - "scripts/local-osh-populated-e2e.sh:330-355"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1257-1261"
+      - "/tmp/ets-csapi-s44-e2e-20260725-r2/osh-source-provenance.json"
+      - "/tmp/ets-csapi-s44-e2e-20260725-r2/installed-files.sha256"
+    required_fix: >-
+      Record and validate the canonical upstream remote URL and resolved
+      upstream commit, require the reviewed commit to be an ancestor, and prove
+      the mounted distribution identifies the same source commit using OSH
+      build/runtime metadata or a reproducible build manifest. Pin the runtime
+      image by digest rather than relying only on a mutable tag plus local ID.
+
+  - id: RAZE-S44-009
+    severity: MEDIUM
+    title: Regression coverage is primarily string-presence lint
+    finding: >-
+      Six of seven focused tests assert source fragments. The sole subprocess
+      test checks only the first missing mutation variable. No test executes
+      target denial, owned cleanup, abort finalization, cleanup failure,
+      container identity comparison, summary verdict derivation, or exact
+      TestNG failure extraction. The focused 7/0/0/0 result therefore provides
+      little confidence in the safety-critical behavior and did not catch the
+      critical deletion path.
+    evidence:
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyLocalOshPopulatedE2e.java:35-118"
+      - "ops/test-results/sprint-ets-44-focused-raw-2026-07-25.txt"
+    required_fix: >-
+      Add behavioral unit/integration tests using controlled fake
+      docker/curl/smoke commands and fixture servers. Exercise every safety and
+      failure branch identified above, then retain narrow structural assertions
+      only for contracts that cannot be observed behaviorally.
+
+  - id: RAZE-S44-010
+    severity: MEDIUM
+    title: Sprint records remain unreconciled with the supplied final gates
+    finding: >-
+      The story and contract remain IN_PROGRESS, all implementation and
+      verification acceptance items except spec-first are unchecked,
+      traceability and the epic still cite only the 211/86/28/97 discovery run,
+      and ops/status.md, ops/changelog.md, and ops/test-results.md contain no
+      Sprint 44 implementation handoff or current 211/91/28/92 evidence. This is
+      acceptable during review but blocks completion under repository AGENTS.md.
+    evidence:
+      - ".harness/contracts/sprint-ets-44.yaml:4"
+      - "epics/stories/s-ets-44-01-reproducible-populated-local-osh-e2e.md:3-5"
+      - "epics/stories/s-ets-44-01-reproducible-populated-local-osh-e2e.md:29-51"
+      - "epics/epic-ets-03-part2-classes.md:51"
+      - "_bmad/traceability.md:76"
+      - "ops/status.md"
+      - "ops/changelog.md"
+      - "ops/test-results.md"
+    required_fix: >-
+      After code fixes and replacement gates, reconcile the story, contract,
+      capability implementation status, epic, traceability, operational status,
+      changelog, test-results summary, and session handoff. Preserve 28 failures
+      as current IUT evidence and do not claim full populated conformance.
+
+required_fixes:
+  - RAZE-S44-001
+  - RAZE-S44-002
+  - RAZE-S44-003
+  - RAZE-S44-004
+  - RAZE-S44-005
+  - RAZE-S44-006
+  - RAZE-S44-007
+  - RAZE-S44-008
+  - RAZE-S44-009
+  - RAZE-S44-010
+
+positive_evidence:
+  - "The supplied populated TestNG XML reports 211/91/28/92 and does not hide the 28 OSH representation failures."
+  - "The supplied clean-primary TestNG XML reports 211/69/0/142."
+  - "The populated OSH install mount is read-only in the supplied docker-inspect artifact."
+  - "The normal-path primary before/after inspect files and state hashes are identical."
+  - "Normal-path ephemeral containers and state were absent at review time."
+  - "E2E outputs were written under /tmp rather than into the worktree."
+  - "No credential value was found in the reviewed Sprint 44 artifacts."
+
+decision: >-
+  Do not mark S-ETS-44-01 complete or treat the workflow as a safe reusable E2E
+  candidate until all required fixes are implemented and replacement behavioral
+  and E2E evidence is generated from the exact reviewed source state.

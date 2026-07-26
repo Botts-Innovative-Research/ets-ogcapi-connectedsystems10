@@ -1,6 +1,6 @@
 # E2E Test Plan — OGC API Connected Systems ETS
 
-Last updated: 2026-07-23T04:38Z
+Last updated: 2026-07-25T15:28Z
 
 ## Policy
 
@@ -27,6 +27,32 @@ SMOKE_DOCKER_NETWORK=field-hub_default \
 
 The smoke script builds the Docker image, starts TeamEngine, verifies suite registration, runs the ETS against the configured IUT, archives XML/log artifacts, and exits non-zero if TestNG reports failures or TeamEngine startup has registration errors.
 
+## Populated Supplemental Candidate
+
+Use the Sprint 44 orchestrator to create a separate populated OSH process from
+the clean external installation, seed it through supported HTTP APIs, execute
+TeamEngine, remove the process and state, verify primary-state isolation, and
+rerun the authoritative clean primary:
+
+```bash
+SMOKE_MUTATION_TESTS_ENABLED=true \
+  SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut \
+  SMOKE_OUTPUT_DIR=/tmp/ets-csapi-populated-local-osh-results \
+  bash scripts/local-osh-populated-e2e.sh
+```
+
+The output directory must be absent or empty. The workflow accepts only a
+loopback seeding URL, records no credential values, mounts the external OSH
+installation at `/opt/osh:ro`, and removes ephemeral state unless
+`LOCAL_OSH_KEEP_STATE=true` is explicitly selected for diagnostics.
+
+`provisioningVerdict` and `conformanceVerdict` are independent. A populated
+fixture readiness PASS does not make TestNG failures pass. The current
+unmodified OSH process provisions all seven resource types successfully but
+omits required DataStream/ControlStream collection metadata, so the populated
+workflow correctly exits non-zero while its subsequent clean-primary run
+remains the authoritative development gate.
+
 The pinned OGC TeamEngine 6 image digest is linux/amd64-only. On linux/arm64
 Docker hosts, register amd64 binfmt support before running the smoke gate:
 
@@ -40,7 +66,12 @@ docker run --privileged --rm tonistiigi/binfmt --install amd64
 - **External dependency provenance**: Confirm the OSH checkout has no local commits ahead of upstream and its deployed ConSys jar identifies that checkout. Confirm TeamEngine base-file immutability through `scripts/verify-teamengine6-runtime.sh`.
 - **GeoRobotix public instance**: GeoRobotix is no longer a default or required development target. It may be run only as an explicit advisory interoperability probe when useful, and failures must not block local-OSH-backed development work.
 - **Credential handling**: Do not record credential values. Supply local OSH credentials through the environment, typically `SMOKE_AUTH_CREDENTIAL="Basic <base64>"`, derived from the local stack config or a secret store.
-- **Seed-state requirement**: For Part 2 dynamic-data work, record whether local OSH has candidate DataStreams, Observations, ControlStreams, Commands, CommandStatus, CommandResult, and SystemEvents. Empty collections are acceptable planning evidence but cannot be counted as positive conformance closure.
+- **Seed-state requirement**: For Part 2 dynamic-data work, use
+  `ops/local-osh-populated-fixtures.json` and
+  `scripts/local-osh-populated-e2e.sh` for the supported-interface
+  DataStream/Observation/ControlStream candidate. Record absent
+  Command/CommandStatus/CommandResult/SystemEvent evidence explicitly. Empty or
+  unsupported collections cannot be counted as positive conformance closure.
 - **Tasking-fixture isolation**: Sapient and SimUAV are configured as local tasking-capable fixtures but remain disabled by default for primary smoke. If a sprint enables either fixture to prove Command acknowledgement/result evidence, record the fixture ids, submitted Command body, terminal CommandStatus evidence, and any inline CommandResult data, then reset the OSH datastore and reseed the static fixtures before the primary read-only TeamEngine smoke.
 
 Local OSH command shape:
@@ -57,6 +88,10 @@ SMOKE_DOCKER_NETWORK=field-hub_default \
 
 - Maven unit/lint verification: `bash scripts/mvn-test-via-docker.sh`
 - TeamEngine smoke: `scripts/smoke-test.sh` with `SMOKE_OUTPUT_DIR` outside the worktree for gate runs
+- Populated local OSH workflow for dynamic-resource changes:
+  `scripts/local-osh-populated-e2e.sh` with both dedicated mutable-IUT controls
+  and a fresh output directory; a non-zero conformance result must remain
+  non-zero.
 - For Sapient or SimUAV tasking fixture runs: isolated local fixture E2E evidence plus a subsequent clean primary local OSH TeamEngine smoke. Do not accept fixture-populated smoke as the primary gate while dynamic stream resources fail the schema suites.
 - Targeted sabotage/credential scripts when the changed surface touches dependency cascade or auth/logging:
   - `scripts/sabotage-test.sh`

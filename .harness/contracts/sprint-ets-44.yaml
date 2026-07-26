@@ -1,0 +1,64 @@
+sprint: ets-44
+story: S-ETS-44-01
+title: Reproducible populated local OSH E2E
+status: COMPLETE
+triggered_by: 'User instruction: "Make it so"'
+requirements:
+  - REQ-ETS-PART2-013
+  - REQ-ETS-TEAMENGINE-006
+  - REQ-ETS-SCOPE-001
+scenarios:
+  - SCENARIO-ETS-PART2-013-EPHEMERAL-POPULATED-IUT-001
+  - SCENARIO-ETS-PART2-013-POPULATED-PROVISIONING-VERDICT-001
+  - SCENARIO-ETS-PART2-013-POPULATED-EVIDENCE-001
+  - SCENARIO-ETS-PART2-013-PRIMARY-STATE-ISOLATION-001
+success_criteria:
+  - Exact static and dynamic fixture payloads are versioned.
+  - Mutation requires both explicit dedicated mutable-IUT controls.
+  - Public and non-local mutation targets are rejected.
+  - External OSH source/install provenance is recorded and the install is mounted read-only.
+  - Ephemeral state is isolated from the clean primary OSH state.
+  - TeamEngine produces populated-IUT XML/log evidence.
+  - Fixture readiness and conformance verdicts are separate.
+  - Any TestNG failure remains non-zero.
+  - Ephemeral state is cleaned and clean-primary TeamEngine E2E is rerun.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not install project-built OSH drivers or patches.
+  - Do not record credentials.
+  - Do not mutate public or shared IUTs.
+  - Do not weaken conformance assertions to accommodate OSH behavior.
+discovery:
+  osh_commit: 4c87a65c9a967d52af9df476e65d7862c7673a15
+  static_resources_created: 4
+  dynamic_resources_created:
+    datastreams: 1
+    observations: 1
+    controlstreams: 1
+  teamengine_totals: "211 total / 86 passed / 28 failed / 97 skipped"
+  failure_summary:
+    - DataStream items omit required live.
+    - ControlStream items omit required issueTime, executionTime, live, and async.
+verification:
+  behavioral: "12 total / 0 failures / 0 errors / 0 skipped"
+  focused_maven: "9 total / 0 failures / 0 errors / 0 skipped"
+  full_maven: "322 total / 0 failures / 0 errors / 3 skipped"
+  teamengine_image: "sha256:cc8c9d711e57ed50d2ed08cdef01cb1236052e775ff27ad016185672e9de8169"
+  provisioning: "PASS; POST=7; GET=10"
+  populated_testng: "FAIL; 211 total / 91 passed / 28 failed / 92 skipped"
+  populated_gate: COMPLETE_WITH_CONFORMANCE_FAILURE
+  cleanup: PASS
+  primary_state_unchanged: true
+  clean_primary_testng: "PASS; 211 total / 69 passed / 0 failed / 142 skipped"
+  evidence: ops/test-results/sprint-ets-44-final-e2e-2026-07-25/
+review:
+  initial_verdict: GAPS_FOUND
+  initial_confidence: 0.99
+  required_findings_addressed: 10
+  recheck: APPROVE
+  recheck_confidence: 0.99
+  recheck_duration_seconds: 372
+  recheck_required_fixes: 0
+  recheck_new_findings: 0
+  recheck_artifact: .harness/evaluations/sprint-ets-44-adversarial-recheck.yaml

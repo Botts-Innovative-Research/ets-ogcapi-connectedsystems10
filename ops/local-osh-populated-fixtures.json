@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "description": "Exact supported-interface fixtures for the isolated populated local OSH E2E workflow.",
+  "requirements": [
+    "REQ-ETS-PART2-013",
+    "SCENARIO-ETS-PART2-013-EPHEMERAL-POPULATED-IUT-001",
+    "SCENARIO-ETS-PART2-013-POPULATED-PROVISIONING-VERDICT-001"
+  ],
+  "safety": {
+    "allowedTarget": "loopback-only",
+    "requiredMutationTestsEnabled": "true",
+    "requiredMutationIutPolicy": "dedicated-mutable-iut",
+    "cleanup": "Remove the isolated OSH container and ephemeral state directory."
+  },
+  "staticFixtures": [
+    {
+      "name": "system",
+      "collection": "/systems",
+      "method": "POST",
+      "mediaType": "application/geo+json",
+      "payload": {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -77.0365,
+            38.8977
+          ]
+        },
+        "properties": {
+          "uid": "urn:ets:local-osh:system:populated-alpha",
+          "featureType": "http://www.w3.org/ns/sosa/System",
+          "name": "ETS Populated Local OSH System Alpha",
+          "description": "API-created system fixture for isolated populated E2E."
+        }
+      }
+    },
+    {
+      "name": "procedure",
+      "collection": "/procedures",
+      "method": "POST",
+      "mediaType": "application/geo+json",
+      "payload": {
+        "type": "Feature",
+        "geometry": null,
+        "properties": {
+          "uid": "urn:ets:local-osh:procedure:populated-alpha",
+          "featureType": "http://www.w3.org/ns/sosa/Procedure",
+          "name": "ETS Populated Local OSH Procedure Alpha",
+          "description": "API-created procedure fixture for isolated populated E2E."
+        }
+      }
+    },
+    {
+      "name": "deployment",
+      "collection": "/deployments",
+      "method": "POST",
+      "mediaType": "application/sml+json",
+      "payload": {
+        "type": "Deployment",
+        "uniqueId": "urn:ets:local-osh:deployment:populated-alpha",
+        "label": "ETS Populated Local OSH Deployment Alpha",
+        "description": "API-created deployment fixture for isolated populated E2E.",
+        "validTime": [
+          "2026-01-01T00:00:00Z",
+          "2027-01-01T00:00:00Z"
+        ],
+        "deployedSystems": [
+          {
+            "name": "alpha",
+            "system": {
+              "href": "urn:ets:local-osh:system:populated-alpha"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "samplingFeature",
+      "collection": "/samplingFeatures",
+      "method": "POST",
+      "mediaType": "application/geo+json",
+      "payload": {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -77.037,
+            38.898
+          ]
+        },
+        "properties": {
+          "uid": "urn:ets:local-osh:sampling-feature:populated-alpha",
+          "name": "ETS Populated Local OSH Sampling Feature Alpha",
+          "description": "API-created sampling feature fixture for isolated populated E2E.",
+          "featureType": "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint"
+        }
+      }
+    }
+  ],
+  "dynamicFixtures": {
+    "dataStream": {
+      "collection": "/systems/{systemId}/datastreams",
+      "method": "POST",
+      "mediaType": "application/json",
+      "payload": {
+        "name": "ETS Populated Temperature Stream",
+        "description": "API-created E2E fixture",
+        "outputName": "temperature",
+        "schema": {
+          "obsFormat": "application/om+json",
+          "resultSchema": {
+            "type": "DataRecord",
+            "fields": [
+              {
+                "type": "Quantity",
+                "name": "temperature",
+                "definition": "urn:ets:populated:temperature",
+                "label": "temperature",
+                "uom": {
+                  "code": "Cel"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "observation": {
+      "collection": "/datastreams/{dataStreamId}/observations",
+      "method": "POST",
+      "mediaType": "application/om+json",
+      "payload": {
+        "phenomenonTime": "{timestamp}",
+        "resultTime": "{timestamp}",
+        "result": {
+          "temperature": 23.5
+        }
+      }
+    },
+    "controlStream": {
+      "collection": "/systems/{systemId}/controlstreams",
+      "method": "POST",
+      "mediaType": "application/json",
+      "payload": {
+        "name": "ETS Populated Setpoint Control",
+        "description": "API-created E2E fixture",
+        "inputName": "setpoint",
+        "schema": {
+          "commandFormat": "application/json",
+          "parametersSchema": {
+            "type": "DataRecord",
+            "fields": [
+              {
+                "type": "Quantity",
+                "name": "setpoint",
+                "definition": "urn:ets:populated:setpoint",
+                "label": "setpoint",
+                "uom": {
+                  "code": "Cel"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

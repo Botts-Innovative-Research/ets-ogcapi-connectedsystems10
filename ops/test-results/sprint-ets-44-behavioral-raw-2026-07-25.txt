@@ -1,0 +1,32 @@
+test_accepts_exact_owned_endpoint (__main__.SeederOwnershipBehaviorTests.test_accepts_exact_owned_endpoint) ... ok
+test_rejects_non_loopback_credentialed_https_wrong_path_and_wrong_port (__main__.SeederOwnershipBehaviorTests.test_rejects_non_loopback_credentialed_https_wrong_path_and_wrong_port) ... ok
+test_rejects_primary_or_unrelated_loopback_container (__main__.SeederOwnershipBehaviorTests.test_rejects_primary_or_unrelated_loopback_container) ... ok
+test_rejects_wrong_published_port_state_install_and_network (__main__.SeederOwnershipBehaviorTests.test_rejects_wrong_published_port_state_install_and_network) ... ok
+test_cleanup_failure_does_not_skip_remaining_finalizers (__main__.WorkflowBehaviorTests.test_cleanup_failure_does_not_skip_remaining_finalizers) ... [local-osh-populated-e2e 11:52:26] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 11:52:26] populated attempt aborted in startup: injected startup failure
+[local-osh-populated-e2e 11:52:26] summary: /tmp/testsafe-output/run-summary.json
+ok
+test_cleanup_refuses_unowned_container_and_never_removes_it (__main__.WorkflowBehaviorTests.test_cleanup_refuses_unowned_container_and_never_removes_it) ... ok
+test_cleanup_removes_only_owned_container_id (__main__.WorkflowBehaviorTests.test_cleanup_removes_only_owned_container_id) ... ok
+test_every_started_abort_phase_runs_all_finalizers (__main__.WorkflowBehaviorTests.test_every_started_abort_phase_runs_all_finalizers) ... [local-osh-populated-e2e 11:52:26] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 11:52:26] populated attempt aborted in startup: injected startup failure
+[local-osh-populated-e2e 11:52:26] summary: /tmp/testsafe-output/run-summary.json
+[local-osh-populated-e2e 11:52:26] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 11:52:26] populated attempt aborted in provisioning: injected provisioning failure
+[local-osh-populated-e2e 11:52:26] summary: /tmp/testsafe-output/run-summary.json
+[local-osh-populated-e2e 11:52:26] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 11:52:26] populated attempt aborted in populated-smoke: injected populated-smoke failure
+[local-osh-populated-e2e 11:52:26] summary: /tmp/testsafe-output/run-summary.json
+[local-osh-populated-e2e 11:52:26] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 11:52:26] populated attempt aborted in evidence-parsing: injected evidence-parsing failure
+[local-osh-populated-e2e 11:52:26] summary: /tmp/testsafe-output/run-summary.json
+ok
+test_primary_and_existing_unrelated_names_are_rejected_without_removal (__main__.WorkflowBehaviorTests.test_primary_and_existing_unrelated_names_are_rejected_without_removal) ... ok
+test_primary_fingerprint_detects_identity_image_config_state_network_and_mount_drift (__main__.WorkflowBehaviorTests.test_primary_fingerprint_detects_identity_image_config_state_network_and_mount_drift) ... ok
+test_testng_rejects_unreconciled_totals (__main__.WorkflowBehaviorTests.test_testng_rejects_unreconciled_totals) ... ok
+test_testng_verdict_comes_only_from_xml_and_extracts_exact_failures (__main__.WorkflowBehaviorTests.test_testng_verdict_comes_only_from_xml_and_extracts_exact_failures) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.023s
+
+OK

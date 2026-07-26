@@ -94,9 +94,25 @@ The primary development E2E target is the self-run local OSH instance on the
 SMOKE_DOCKER_NETWORK=field-hub_default \
   SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
   SMOKE_AUTH_CREDENTIAL="$SMOKE_AUTH_CREDENTIAL" \
-  SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
+SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-local-osh-results \
   bash scripts/smoke-test.sh
 ----
+
+For dynamic-resource evidence, create and populate a separate disposable OSH
+process through supported HTTP APIs, run TeamEngine, verify cleanup and primary
+state isolation, then rerun the clean primary:
+
+[source,bash]
+----
+SMOKE_MUTATION_TESTS_ENABLED=true \
+  SMOKE_MUTATION_IUT_POLICY=dedicated-mutable-iut \
+  SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-populated-local-osh-results \
+  bash scripts/local-osh-populated-e2e.sh
+----
+
+Provisioning readiness and TestNG conformance are separate verdicts. The
+workflow exits non-zero when the populated IUT has conformance failures even
+when every fixture was created successfully.
 
 An advisory public interoperability probe can be run explicitly:
 

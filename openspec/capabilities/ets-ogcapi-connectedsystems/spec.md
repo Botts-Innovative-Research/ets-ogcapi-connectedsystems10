@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.1 | Status: Active ETS implementation | Last updated: 2026-07-22
+> Version: 1.1 | Status: Active ETS implementation | Last updated: 2026-07-23
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -904,12 +904,12 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-PART2-013: Observation/Command Binding Cross-Class Closure
 - **Priority**: MUST.
-- **Status**: PARTIAL_IMPLEMENTED; EXTERNAL_IUT_PATCH_PATH_RETIRED (Sprints 32-38 implemented the internal Observation/Command binding closure, local OSH primary E2E target, supported tasking fixtures, parent schema `f=json` request shaping, and ETS candidate-selection hardening. Sprint 40's local OSH source patch is historical audit evidence only and is not an approved implementation path under CP-003/ADR-012. Full populated-IUT binding closure remains unclaimed.)
+- **Status**: PARTIAL_IMPLEMENTED; REPRODUCIBLE_POPULATED_IUT_WORKFLOW_IMPLEMENTED (Sprints 32-38 implemented the internal Observation/Command binding closure, local OSH primary E2E target, supported tasking fixtures, parent schema `f=json` request shaping, and ETS candidate-selection hardening. Sprint 40's local OSH source patch is historical audit evidence only and is not an approved implementation path under CP-003/ADR-012. S-ETS-44-01 implements an isolated supported-interface populated-IUT workflow under CP-004. The workflow is verified; full populated-IUT binding conformance remains unclaimed because unmodified OSH fails 28 strict representation checks.)
 - **Description**: The ETS SHALL verify the project cross-class dynamic-schema closure that Observation bodies derive from their parent DataStream schema and Command-side bodies derive from their parent ControlStream schema across supported encodings. This is an internal closure requirement derived from OGC 23-002 Part 2 resource/schema requirements and v1.0 GH#7; OGC 23-002 does not define a standalone `/conf/observation-binding` conformance class, so the ETS SHALL NOT advertise or require `/conf/observation-binding` unless a future OGC standard defines it.
 - **Scope for first Generator increment**: implement a declaration-gated, local-OSH-backed closure suite that reuses existing Part 2 DataStream, ControlStream, JSON, and SWE Common schema evidence. Positive PASS requires a candidate parent resource, its schema subresource, a candidate child Observation or Command-side resource, and a concrete field/type mapping assertion. Empty collections, missing schema members, unsupported encodings, missing validators, or unavailable endpoints SKIP with precise reasons rather than PASS.
 - **Local OSH seed prerequisite**: because authenticated local OSH probes declared relevant Part 2 classes while dynamic collections could be empty, the ETS MUST either create documented fixtures through supported OSH interfaces or keep positive binding checks SKIP with exact empty-IUT-state reasons. Fixtures must record target, credential handling without secret values, resource IDs, payload families, cleanup plan, and TeamEngine totals. Source or binary changes to OSH are prohibited. Historical Sprint 40 patched-IUT results remain audit-only and do not close this requirement.
 - **Rationale**: PRD SC-3 requires Part 2 coverage and the historical v1.0 GH#7 risk was a schema coupling bug where Observation body generation could drift from the parent DataStream schema. Sprint 32 also follows the user instruction to abandon GeoRobotix's public instance as a development test target and use a self-provisioned local OSH as the primary E2E IUT.
-- **Implementation progress**: Sprint 32 Generator implements `Part2ObservationCommandBindingTests`, helper regressions, and TestNG wiring for group `part2binding`; the first increment is read-only and SKIPs positive closure on empty local OSH collections. Sprints 33-38 add inline CommandStatus/CommandResult regressions, accepted supported-interface seed shapes, Sapient and SimUAV tasking fixtures, parent schema request shaping, stream metadata/format assertions, and populated parent-candidate selection. CP-003 retires Sprint 40's OSH patch path. Future closure must change the ETS or exercise an unmodified conforming IUT.
+- **Implementation progress**: Sprint 32 Generator implements `Part2ObservationCommandBindingTests`, helper regressions, and TestNG wiring for group `part2binding`; the first increment is read-only and SKIPs positive closure on empty local OSH collections. Sprints 33-38 add inline CommandStatus/CommandResult regressions, accepted supported-interface seed shapes, Sapient and SimUAV tasking fixtures, parent schema request shaping, stream metadata/format assertions, and populated parent-candidate selection. CP-003 retires Sprint 40's OSH patch path. CP-004/S-ETS-44-01 implements a reproducible ephemeral local OSH process, exact API-created fixtures, source/install/image provenance, owned-resource cleanup, XML-derived provisioning/conformance/gate verdicts, abort-path finalization, normalized primary-state comparison, and a clean-primary rerun. Final evidence is provisioning PASS, populated TestNG `211/91/28/92` FAIL, cleanup PASS, unchanged primary state, and clean-primary `211/69/0/142` PASS. Future positive closure must change the ETS or exercise an unmodified conforming IUT.
 - **Maps to**: PRD FR-ETS-43, except retired non-standard FR-ETS-35 System History.
 
 #### SCENARIO-ETS-PART2-013-LOCAL-OSH-PRIMARY-IUT-001 (CRITICAL)
@@ -923,6 +923,35 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 **WHEN** planning, Generator, or gate agents choose an E2E IUT
 **THEN** they SHALL NOT use GeoRobotix as the default or required target
 **AND** any GeoRobotix run is explicitly advisory interoperability evidence only.
+
+#### SCENARIO-ETS-PART2-013-EPHEMERAL-POPULATED-IUT-001 (CRITICAL)
+**GIVEN** an unmodified local OSH source checkout and installed distribution are available
+**WHEN** the populated local E2E workflow starts
+**THEN** it SHALL create a separate ephemeral OSH process with isolated state and a versioned configuration
+**AND** it SHALL mount the external OSH installation read-only
+**AND** it SHALL populate static and dynamic resources only through supported Connected Systems HTTP APIs
+**AND** it SHALL record source commit, source cleanliness/ahead state, installation manifest, configuration hash, container identity, network, and fixture ids without recording credentials.
+
+#### SCENARIO-ETS-PART2-013-POPULATED-PROVISIONING-VERDICT-001 (CRITICAL)
+**GIVEN** the ephemeral local OSH process is reachable
+**WHEN** fixture application completes
+**THEN** provisioning readiness SHALL require the expected System, Procedure, Deployment, SamplingFeature, DataStream, Observation, and ControlStream resources plus readable parent schemas and associated Observation body evidence
+**AND** provisioning readiness SHALL be reported separately from TeamEngine conformance
+**AND** a provisioning PASS SHALL NOT convert any TestNG FAIL or SKIP into PASS.
+
+#### SCENARIO-ETS-PART2-013-POPULATED-EVIDENCE-001 (CRITICAL)
+**GIVEN** populated provisioning is ready
+**WHEN** TeamEngine executes the Connected Systems suite against the ephemeral IUT
+**THEN** the workflow SHALL archive a non-empty TestNG XML report, TeamEngine log, exact totals, failed test names and messages, request method counts, and startup status
+**AND** the workflow SHALL exit non-zero if TeamEngine reports one or more failed tests
+**AND** known unmodified-IUT representation defects SHALL remain visible rather than being hidden by fixture shaping or weakened validation.
+
+#### SCENARIO-ETS-PART2-013-PRIMARY-STATE-ISOLATION-001 (CRITICAL)
+**GIVEN** a populated local OSH run may create mutable test state
+**WHEN** the populated attempt finishes or aborts
+**THEN** the workflow SHALL remove its ephemeral container and state unless explicit diagnostic retention is selected
+**AND** it SHALL verify that the existing primary OSH container and state mount are unchanged
+**AND** it SHALL run the clean primary local OSH TeamEngine smoke and record its exact verdict.
 
 #### SCENARIO-ETS-PART2-013-DYNAMIC-SEED-STATE-001 (CRITICAL)
 **GIVEN** local OSH currently declares Part 2 dynamic-data conformance classes but has empty DataStream, Observation, and ControlStream collections

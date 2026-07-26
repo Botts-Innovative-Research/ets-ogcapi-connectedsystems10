@@ -74,6 +74,15 @@ DOCKER_NETWORK_ARGS=()
 if [[ -n "${SMOKE_DOCKER_NETWORK:-}" ]]; then
   DOCKER_NETWORK_ARGS+=(--network "$SMOKE_DOCKER_NETWORK")
 fi
+DOCKER_LABEL_ARGS=()
+if [[ -n "${SMOKE_RUN_LABEL:-}" ]]; then
+  [[ "$SMOKE_RUN_LABEL" =~ ^[A-Za-z0-9_.:-]+$ ]] \
+    || {
+      echo "[smoke-test FATAL] SMOKE_RUN_LABEL contains unsupported characters" >&2
+      exit 1
+    }
+  DOCKER_LABEL_ARGS+=(--label "org.opengeospatial.ets.csapi.run-id=${SMOKE_RUN_LABEL}")
+fi
 
 DATE_STAMP="$(date -u +%Y-%m-%d)"
 # REQ-ETS-CLEANUP-014 (Sprint 5 S-ETS-05-02): SMOKE_OUTPUT_DIR override.
@@ -92,7 +101,20 @@ log() { echo "[smoke-test $(date -u +%H:%M:%S)] $*"; }
 die() { echo "[smoke-test FATAL] $*" >&2; cleanup_silent; exit 1; }
 
 cleanup_silent() {
-  docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
+  local container_id
+  local container_label
+  container_id="$(docker inspect "$CONTAINER_NAME" --format '{{.Id}}' 2>/dev/null)" \
+    || return 0
+  if [[ -n "${SMOKE_RUN_LABEL:-}" ]]; then
+    container_label="$(docker inspect "$container_id" \
+      --format '{{index .Config.Labels "org.opengeospatial.ets.csapi.run-id"}}' 2>/dev/null)" \
+      || return 1
+    if [[ "$container_label" != "$SMOKE_RUN_LABEL" ]]; then
+      echo "[smoke-test FATAL] refusing to remove unowned container name $CONTAINER_NAME" >&2
+      return 1
+    fi
+  fi
+  docker rm -f "$container_id" >/dev/null 2>&1
 }
 trap cleanup_silent EXIT
 
@@ -139,6 +161,7 @@ cleanup_silent
 docker run -d --name "$CONTAINER_NAME" \
   --add-host=host.docker.internal:host-gateway \
   "${DOCKER_NETWORK_ARGS[@]}" \
+  "${DOCKER_LABEL_ARGS[@]}" \
   -p "${SMOKE_PORT}:8080" "$IMAGE_TAG" >/dev/null \
   || die "docker run failed (port $SMOKE_PORT)"
 

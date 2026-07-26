@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-23T05:41Z
+Last updated: 2026-07-25T16:07Z
 
 ## Fresh-Session Entry Point
 
@@ -33,6 +33,38 @@ Read these first:
 - `_bmad/adrs/ADR-012-external-dependency-immutability-and-no-hosted-ci.md`
 - `epics/stories/s-ets-43-01-external-dependency-scope-reconciliation.md`
 - `ops/test-results/external-dependency-scope-audit-2026-07-23.md`
+- `openspec/change-proposals/CP-004-reproducible-populated-local-osh-e2e.md`
+- `epics/stories/s-ets-44-01-reproducible-populated-local-osh-e2e.md`
+- `.harness/contracts/sprint-ets-44.yaml`
+- `ops/test-results/sprint-ets-44-populated-local-osh-verification-2026-07-25.md`
+- `.harness/evaluations/sprint-ets-44-adversarial-recheck.yaml`
+
+## Session Handoff - Reproducible Populated Local OSH
+
+CP-004/S-ETS-44-01 now provide the requested acceptable populated local OSH
+candidate without external source or binary changes.
+
+- `scripts/local-osh-populated-e2e.sh` runs an isolated OSH from the existing
+  external install, applies versioned fixtures through supported APIs, executes
+  TeamEngine, cleans owned state, compares the primary, and reruns clean-primary
+  TeamEngine.
+- Safety is ownership-based: unique labels/names, exact container IDs,
+  orchestrator-bound loopback seeding, and no preemptive deletion.
+- Every started abort path attempts cleanup, primary comparison, clean-primary
+  smoke, and summary generation; finalization failures remain non-zero.
+- Provisioning passed. Populated TestNG failed honestly `211/91/28/92`; this is
+  useful E2E coverage, not a conformance pass.
+- Cleanup passed, the primary fingerprint was unchanged, and clean-primary
+  TestNG passed `211/69/0/142` with zero writes.
+- Behavioral `12/0/0/0`, focused Maven `9/0/0/0`, full Docker Maven
+  `322/0/0/3`, and exact-image TeamEngine runtime verification pass.
+- Complete evidence:
+  `ops/test-results/sprint-ets-44-final-e2e-2026-07-25/`.
+- Initial Raze `GAPS_FOUND` at `0.99`; focused recheck `APPROVE` at `0.99`
+  closed all ten findings with no new findings. S-ETS-44-01 is complete.
+- Next work is ETS-owned Part 2 ATS coverage or external SensorML validator
+  integration when reusable coordinates become available. The current OSH
+  representation failures cannot be corrected by out-of-scope OSH changes.
 
 ## Session Handoff - External Dependency and CI Scope
 

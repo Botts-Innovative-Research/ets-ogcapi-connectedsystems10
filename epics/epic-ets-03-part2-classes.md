@@ -1,6 +1,6 @@
 # Epic ETS-03: CS API Part 2 Conformance Classes
 
-> Status: Active - Sprint 40 partially closes OSH ConSys populated binding blockers. Sprint 42 implements the first source-pinned SWE Common adapter increment and passes its primary local OSH E2E gate; full populated binding PASS remains open. | Last updated: 2026-07-22
+> Status: Active - Sprint 42 implements the first source-pinned SWE Common adapter increment. Sprint 44 implements and verifies an isolated, reproducible populated local OSH evidence workflow; full populated binding PASS remains open on 28 unmodified-IUT representation failures. | Last updated: 2026-07-25
 
 ## Goal
 Implement TestNG suite classes for the OGC 23-002 conformance classes (Dynamic Data: datastreams, observations, control streams, commands, system events, advanced filtering, mutation classes, JSON, and SWE Common formats). Sprint 25 corrects the earlier backlog error that treated GeoRobotix's `/conf/system-history` declaration as an OGC 23-002 conformance class; OGC 23-002 Annex A does not define `/conf/system-history`.
@@ -48,6 +48,7 @@ Implement TestNG suite classes for the OGC 23-002 conformance classes (Dynamic D
 | S-ETS-40-01 | Historical OSH ConSys patch experiment | Retired as out of scope by CP-003/ADR-012; patch is absent from the current checkout/runtime and its evidence is audit-only | REQ-ETS-PART2-013, REQ-ETS-SCOPE-001 |
 | S-ETS-42-01 | Document external SWE Common and SensorML validator architecture and migration plan | Planned provisional architecture documented; no product dependency added | REQ-ETS-VALIDATOR-001, REQ-ETS-PART2-010, REQ-ETS-PART2-011, REQ-ETS-PART2-012 |
 | S-ETS-42-02 | Implement the source-pinned SWE Common validator adapter and dual-validate extracted Observation/Command `recordSchema` components | Complete; exact image `sha256:829a9741...d5f9` passes adapter execution and local OSH E2E `211/69/0/142` with zero writes; final Raze APPROVE `0.99` | REQ-ETS-VALIDATOR-001; SCENARIO-ETS-VALIDATOR-SOURCE-PIN-001, -SWE-COMMON-DUAL-VALIDATION-001, -SWE-COMMON-PARITY-CORPUS-001, -DIAGNOSTICS-BOUNDARY-001, -RUNTIME-CLOSURE-001, -RUNTIME-EXECUTION-001, -E2E-GATE-001 |
+| S-ETS-44-01 | Provision an isolated populated local OSH through supported APIs and execute TeamEngine with separate provisioning/conformance verdicts | Complete; provisioning PASS, populated `211/91/28/92` FAIL, cleanup PASS, unchanged primary, clean-primary `211/69/0/142` PASS, final Raze APPROVE `0.99` | REQ-ETS-PART2-013, REQ-ETS-TEAMENGINE-006, REQ-ETS-SCOPE-001; SCENARIO-ETS-PART2-013-EPHEMERAL-POPULATED-IUT-001, -POPULATED-PROVISIONING-VERDICT-001, -POPULATED-EVIDENCE-001, -PRIMARY-STATE-ISOLATION-001 |
 | S-ETS-03-14 | (placeholder) Implement observation-binding cross-class closure (internal project closure; not an OGC `/conf/observation-binding` class) | Superseded by S-ETS-32-01 planning | REQ-ETS-PART2-013 |
 
 ## Acceptance Criteria

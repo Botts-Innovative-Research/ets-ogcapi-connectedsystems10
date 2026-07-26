@@ -1,0 +1,239 @@
+review:
+  id: sprint-ets-44-adversarial-recheck
+  reviewer: Raze
+  role: adversarial-reviewer
+  date: "2026-07-25"
+  started_at_utc: "2026-07-25T16:14:00Z"
+  completed_at_utc: "2026-07-25T16:20:12Z"
+  duration_seconds: 372
+  verdict: APPROVE
+  confidence: 0.99
+  scope_note: >-
+    Approval is for the safety, reproducibility, evidence, and reconciliation of
+    the Sprint 44 workflow. The populated OSH TestNG result remains the expected
+    honest conformance FAIL at 211/91/28/92 and is not approved as conformant.
+
+token_metadata:
+  available: false
+  source: null
+  total_tokens: null
+  reason: >-
+    No active goal token report was available and scripts/session-metrics.py
+    found no session JSONL for this repository. No subagent was spawned for this
+    focused recheck, so no subagent token metadata exists.
+
+reviewed_scope:
+  original_report: .harness/evaluations/sprint-ets-44-adversarial.yaml
+  story: epics/stories/s-ets-44-01-reproducible-populated-local-osh-e2e.md
+  change_proposal: openspec/change-proposals/CP-004-reproducible-populated-local-osh-e2e.md
+  contract: .harness/contracts/sprint-ets-44.yaml
+  implementation:
+    - scripts/local-osh-populated-e2e.sh
+    - scripts/local_osh_populated_e2e.py
+    - scripts/local-osh-populated-fixture.py
+    - scripts/smoke-test.sh
+    - scripts/test-local-osh-populated-workflow.sh
+    - scripts/test_local_osh_populated_workflow.py
+    - ops/local-osh-populated-fixtures.json
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyLocalOshPopulatedE2e.java
+  specifications_and_ops:
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - _bmad/architecture.md
+    - _bmad/traceability.md
+    - epics/epic-ets-03-part2-classes.md
+    - README.adoc
+    - ops/status.md
+    - ops/changelog.md
+    - ops/test-results.md
+    - ops/e2e-test-plan.md
+    - ops/known-issues.md
+  archived_e2e: ops/test-results/sprint-ets-44-final-e2e-2026-07-25
+
+commands_and_evidence_reviewed:
+  commands:
+    - "sed/nl inspection of both Raze prompts, original report, implementation, tests, contract, story, specifications, architecture, traceability, and ops diffs"
+    - "bash scripts/test-local-osh-populated-workflow.sh"
+    - "bash -n scripts/local-osh-populated-e2e.sh scripts/test-local-osh-populated-workflow.sh scripts/smoke-test.sh"
+    - "python3 -m py_compile for the workflow, seeder, and behavioral suite with external pycache"
+    - "sha256sum -c ops/test-results/sprint-ets-44-final-e2e-2026-07-25/artifact-manifest.sha256"
+    - "sha256sum -c ops/test-results/sprint-ets-44-final-e2e-2026-07-25/source-files.sha256"
+    - "sha256sum -c installed-files.sha256 from the archived OSH installation root"
+    - "independent ElementTree parsing and reconciliation of both archived TestNG XML reports"
+    - "exact comparison of XML failure records with populated-failures.json and clean-primary-failures.json"
+    - "git status/remote/HEAD/upstream/ahead checks and installed ConSys Bundle-BuildNumber inspection"
+    - "live Docker absence checks for all per-run containers and current primary-container ID comparison"
+    - "credential-pattern scan across final E2E evidence and Sprint 44 raw outputs"
+    - "git diff --check"
+    - "python3 scripts/session-metrics.py"
+  archived_raw_outputs:
+    behavioral: ops/test-results/sprint-ets-44-behavioral-raw-2026-07-25.txt
+    focused_maven: ops/test-results/sprint-ets-44-focused-raw-2026-07-25.txt
+    full_maven: ops/test-results/sprint-ets-44-full-maven-raw-2026-07-25.txt
+    teamengine_runtime: ops/test-results/sprint-ets-44-teamengine-runtime-raw-2026-07-25.txt
+    verification_summary: ops/test-results/sprint-ets-44-populated-local-osh-verification-2026-07-25.md
+  expensive_docker_gates_rerun: false
+  rationale: >-
+    Complete exact-source, artifact, XML, runtime, and cleanup evidence existed;
+    no concrete discrepancy required another expensive Docker execution.
+
+independent_verification:
+  behavioral_recheck:
+    total: 12
+    failures: 0
+    errors: 0
+    skipped: 0
+    verdict: PASS
+  focused_maven_archived:
+    total: 9
+    failures: 0
+    errors: 0
+    skipped: 0
+    verdict: PASS
+  full_maven_archived:
+    total: 322
+    failures: 0
+    errors: 0
+    skipped: 3
+    verdict: PASS_WITH_EXPECTED_SKIPS
+  teamengine_runtime:
+    image_id: sha256:cc8c9d711e57ed50d2ed08cdef01cb1236052e775ff27ad016185672e9de8169
+    immutable_base_and_runtime_checks: PASS
+  provisioning:
+    verdict: PASS
+    posts: 7
+    gets: 10
+    credential_supplied: false
+  populated_testng:
+    verdict: FAIL
+    total: 211
+    passed: 91
+    failed: 28
+    skipped: 92
+    gate_verdict: COMPLETE_WITH_CONFORMANCE_FAILURE
+    smoke_status: 1
+    exact_failure_records: 28
+    failure_json_matches_xml: true
+  cleanup:
+    verdict: PASS
+    retained_state: false
+    ephemeral_state_absent: true
+    populated_osh_container_absent: true
+    populated_teamengine_container_absent: true
+    clean_primary_teamengine_container_absent: true
+  primary_isolation:
+    unchanged: true
+    normalized_fingerprint_diff_empty: true
+    state_manifest_diff_empty: true
+    current_container_id_matches_archive: true
+    current_container_running: true
+  clean_primary_testng:
+    verdict: PASS
+    total: 211
+    passed: 69
+    failed: 0
+    skipped: 142
+    gate_verdict: PASS
+    writes: 0
+  manifests:
+    source_files: PASS
+    artifacts: PASS
+    installed_osh_files: PASS
+  osh_provenance:
+    origin: https://github.com/opensensorhub/osh-core.git
+    head: 4c87a65c9a967d52af9df476e65d7862c7673a15
+    upstream: ce8dd961c3f4dfdd739e5e2c78d42d8f62eb99bd
+    ahead: 0
+    behind: 3
+    clean: true
+    head_is_upstream_ancestor: true
+    installed_consys_build_number: 4c87a65
+    runtime_image: "maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45"
+
+original_finding_dispositions:
+  - id: RAZE-S44-001
+    disposition: CLOSED
+    evidence:
+      - "Per-run random names are generated for OSH and both TeamEngine containers."
+      - "Preflight rejects primary/name collisions and any existing unowned name."
+      - "OSH and TeamEngine containers receive the run label; OSH also receives the role label."
+      - "Cleanup verifies labels and removes only the exact captured container ID."
+      - "Behavioral tests prove primary and unrelated names are rejected without removal."
+
+  - id: RAZE-S44-002
+    disposition: CLOSED
+    evidence:
+      - "Every started attempt calls the finalizer after startup, provisioning, populated-smoke, or evidence-parsing failure."
+      - "The finalizer independently attempts cleanup, primary comparison, clean-primary smoke, and summary generation."
+      - "Behavioral injected-failure tests verify the complete operation order for all four phases."
+
+  - id: RAZE-S44-003
+    disposition: CLOSED
+    evidence:
+      - "Cleanup verifies owned-container absence and non-retained state-directory absence."
+      - "Removal/helper failures become cleanupVerdict FAIL and remain in finalizationErrors."
+      - "Cleanup failure does not skip primary comparison, clean-primary smoke, or summary generation."
+      - "Final E2E evidence records cleanupVerdict PASS with live container/state absence independently confirmed."
+
+  - id: RAZE-S44-004
+    disposition: CLOSED
+    evidence:
+      - "The normalized primary fingerprint covers container ID/name, image, safe configuration, running state, networks, /state, and read-only /opt/osh."
+      - "Primary state-file manifests are compared separately."
+      - "Behavioral tests detect identity, image, command, state, network, state-mount, and install-mount drift."
+      - "Archived before/after fingerprints, container JSON, mounts, and state manifests are identical."
+
+  - id: RAZE-S44-005
+    disposition: CLOSED
+    evidence:
+      - "The archived source manifest exactly matches every current Sprint 44 workflow source file."
+      - "The artifact manifest verifies every archived evidence file."
+      - "Both XML reports independently reproduce the summary totals."
+      - "All 28 populated failure class/name/description/message records exactly match the XML."
+
+  - id: RAZE-S44-006
+    disposition: CLOSED
+    evidence:
+      - "Strict XML parsing validates the TestNG root, numeric totals, reconciliation, non-zero execution, and failure-record count."
+      - "Conformance verdicts derive only from XML failed totals."
+      - "Smoke/infrastructure status is represented separately by populatedGateVerdict and cleanPrimaryGateVerdict."
+      - "The final summary correctly reports conformance FAIL, gate COMPLETE_WITH_CONFORMANCE_FAILURE, and overall FAIL."
+
+  - id: RAZE-S44-007
+    disposition: CLOSED
+    evidence:
+      - "The seeder requires mode-0600 ownership evidence generated after the OSH container starts."
+      - "It verifies exact container ID/name/run+role labels, running state, loopback port, API path, network, isolated state source, and read-only install source."
+      - "Behavioral tests reject public, unrelated/primary loopback, credentialed, HTTPS, wrong-path, wrong-port, wrong-network, and mount-drift targets."
+
+  - id: RAZE-S44-008
+    disposition: CLOSED
+    evidence:
+      - "Provenance validates and records origin URL, resolved HEAD/upstream commits, ancestry, clean status, and zero ahead commits."
+      - "The installed ConSys Bundle-BuildNumber matches OSH HEAD."
+      - "The complete installed-file manifest verifies against the archived installation."
+      - "The OSH runtime image is digest-pinned and its RepoDigest is verified."
+
+  - id: RAZE-S44-009
+    disposition: CLOSED
+    evidence:
+      - "Twelve executable behavioral tests cover ownership, target denial, exact XML verdicts, total reconciliation, primary drift, cleanup, and abort finalization."
+      - "Nine focused Maven structural tests bind the behavioral harness and safety boundaries to the requirements."
+      - "Current behavioral recheck passed 12/0/0/0; archived focused and full Maven results passed 9/0/0/0 and 322/0/0/3."
+
+  - id: RAZE-S44-010
+    disposition: CLOSED
+    evidence:
+      - "Story and contract are READY_FOR_RAZE_RECHECK with implementation gates recorded and only this recheck pending."
+      - "Spec, design, architecture, epic, and traceability consistently mark the workflow implemented while retaining wider binding conformance as partial."
+      - "Status, changelog, test-results, E2E plan, known issues, README, and verification summary consistently preserve populated 211/91/28/92 as FAIL."
+
+new_findings: []
+required_fixes: []
+
+decision: >-
+  APPROVE S-ETS-44-01 workflow correctness. All RAZE-S44-001 through
+  RAZE-S44-010 are closed and no new finding was identified. This decision does
+  not convert the populated OSH conformance result to PASS: provisioning passed,
+  TeamEngine completed with the expected honest 211/91/28/92 FAIL, cleanup and
+  primary isolation passed, and clean-primary TeamEngine passed 211/69/0/142.

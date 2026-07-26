@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.17 | Status: Living Document | Last reconciled: 2026-07-23 (external dependency and CI scope)
+> Version: 2.0.19 | Status: Living Document | Last reconciled: 2026-07-25 (owned populated local OSH E2E)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -661,3 +661,90 @@ Maven/runtime/local-OSH evidence pending final Raze.
 **2026-07-22** - v2.0.16 records final Raze `APPROVE` at `0.99` confidence,
 closes S-ETS-41-01 and the SWE Common S-ETS-42-02 increment, and preserves the
 overall validator requirement as partial for deferred SensorML integration.
+
+## 22. Architecture v2.0.18 - Populated local OSH evidence (2026-07-23)
+
+CP-004/S-ETS-44-01 implement populated local OSH as a supplemental, ephemeral
+E2E target. The clean `field-hub-osh-1` instance remains the authoritative
+primary development gate.
+
+### 22.1 Boundary
+
+- OSH source and installed binaries are external and immutable.
+- The workflow may derive runtime configuration and create fixtures through the
+  public Connected Systems API.
+- The external OSH install is mounted read-only into a separate container.
+- The primary OSH state directory is never mounted by the populated workflow.
+- TeamEngine remains the immutable OGC base plus ETS extension artifacts.
+
+### 22.2 Execution topology
+
+```text
+clean OSH checkout/install (read-only)
+             |
+             v
+ephemeral OSH container + isolated state
+             |
+             +-- loopback random port --> ETS fixture seeder
+             |
+             +-- field-hub_default -----> TeamEngine 6 + Connected Systems ETS
+                                                   |
+                                                   v
+                                      TestNG XML/log/exact verdict
+
+cleanup ephemeral OSH/state
+             |
+             v
+clean field-hub-osh-1 TeamEngine smoke
+```
+
+### 22.3 Verdict model
+
+The workflow publishes two independent results:
+
+- **Provisioning readiness**: exact fixtures were accepted and required
+  resources/schema/body evidence is observable.
+- **Conformance verdict**: exact TeamEngine/TestNG totals.
+
+Provisioning readiness may PASS while conformance FAILS. The process remains
+non-zero for any TeamEngine failure. This prevents the infrastructure gate from
+masking an IUT defect.
+
+### 22.4 Current unmodified-IUT evidence
+
+The planning probe created four static resources plus one DataStream,
+Observation, and ControlStream through supported HTTP APIs. TeamEngine executed
+all 211 methods and returned `86 passed / 28 failed / 97 skipped`. All 28
+failures were strict Annex A.9/SWE paths reached by the populated resources:
+DataStream items omitted `live`; ControlStream items omitted `issueTime`,
+`executionTime`, `live`, and `async`. Those defects remain IUT evidence.
+
+### 22.5 Implemented ownership and failure model
+
+The production workflow generates unique per-run OSH and TeamEngine names,
+labels every owned container, captures exact container IDs, and removes only
+IDs whose labels, names, and mounts still match the ownership record. Existing
+names are refused, including the primary OSH. The seeder accepts only the
+Docker-published loopback port proven by an orchestrator-generated ownership
+record for the isolated container and state source.
+
+Every started attempt enters one finalizer that independently attempts owned
+cleanup, normalized primary identity/state comparison, clean-primary TeamEngine,
+and summary generation. Cleanup or finalization failures cannot mask the
+originating phase and force an overall non-zero verdict. TestNG conformance is
+derived only from validated XML; infrastructure and overall workflow verdicts
+are separate.
+
+The final fresh-clone evidence uses OSH source
+`4c87a65c9a967d52af9df476e65d7862c7673a15`, installed ConSys build
+`4c87a65`, pinned runtime image reference
+`maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45`,
+and TeamEngine image
+`sha256:cc8c9d711e57ed50d2ed08cdef01cb1236052e775ff27ad016185672e9de8169`.
+Provisioning passed; populated TestNG failed `211/91/28/92`; cleanup and primary
+isolation passed; clean-primary TestNG passed `211/69/0/142`. Therefore the
+reproducible E2E architecture is implemented while positive binding conformance
+remains open.
+
+Focused Raze recheck approved this workflow at confidence `0.99`; all ten
+initial safety/evidence findings are closed and no new findings remain.

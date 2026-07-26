@@ -1,8 +1,38 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-23T05:41Z
+Last updated: 2026-07-25T16:07Z
 
 ## Current Sprint Evidence
+
+Sprint 44 reproducible populated local OSH E2E:
+
+- Workflow infrastructure completed against a separately configured,
+  API-populated, unmodified OSH process.
+- Provisioning PASS: seven resource-creation POSTs and ten verification GETs.
+- Populated TestNG conformance FAIL:
+  `211 total / 91 passed / 28 failed / 92 skipped`.
+- Populated gate: `COMPLETE_WITH_CONFORMANCE_FAILURE`; the process exited
+  non-zero and all 28 class/name/message records are archived.
+- All failures are missing unmodified-OSH DataStream/ControlStream collection
+  metadata (`live`, `issueTime`, `executionTime`, and `async`).
+- Cleanup PASS; no owned containers or ephemeral state remained.
+- Normalized primary identity/state comparison PASS with no changed fields.
+- Clean-primary TestNG PASS:
+  `211 total / 69 passed / 0 failed / 142 skipped`; `GET=133`, `OPTIONS=2`,
+  writes zero.
+- Behavioral safety tests PASS `12/0/0/0`; focused Maven PASS `9/0/0/0`; full
+  Docker Maven PASS `322/0/0/3`.
+- Exact-image TeamEngine runtime verification PASS for
+  `sha256:cc8c9d711e57ed50d2ed08cdef01cb1236052e775ff27ad016185672e9de8169`.
+- Verification summary:
+  `ops/test-results/sprint-ets-44-populated-local-osh-verification-2026-07-25.md`.
+- Complete hashed E2E evidence:
+  `ops/test-results/sprint-ets-44-final-e2e-2026-07-25/`.
+- Initial Raze returned `GAPS_FOUND`, confidence `0.99`. Focused recheck
+  returned `APPROVE`, confidence `0.99`, after 372 seconds; all ten findings are
+  closed, no new findings remain, and token metadata was unavailable.
+
+---
 
 External dependency and CI scope reconciliation:
 

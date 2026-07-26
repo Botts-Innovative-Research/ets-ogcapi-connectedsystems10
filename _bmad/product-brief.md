@@ -156,7 +156,9 @@ High-level requirements that the Planner should decompose into REQ-* / SCENARIO-
 
 1. **R-PIVOT-01** — Generate an OGC-compliant ETS project from `ets-archetype-testng:2.7` named `ets-ogcapi-connectedsystems10` covering OGC 23-001 (Part 1).
 2. **R-PIVOT-02** — Mirror the structure of `ets-ogcapi-features10` (TestNG suite definition at `src/main/resources/.../testng.xml`, CTL wrapper at `src/main/scripts/ctl/`, TeamEngine SPI integration).
-3. **R-PIVOT-03** — Implement TestNG test classes for all 14 Part 1 conformance classes, with each `@Test` method 1:1 mapped to an OGC 23-001 ATS assertion via canonical requirement URI.
+3. **R-PIVOT-03** — Implement all 13 released Part 1 conformance classes and
+   all 110 OGC 23-001 Annex A tests, with class tests mapped 1:1 to TestNG
+   methods and the two supporting tests mapped to reviewed helpers.
 4. **R-PIVOT-04** — Implement TestNG test classes for the OGC 23-002 Part 2 conformance classes plus explicitly scoped project cross-class closures. Sprint 25 corrected the earlier "14 Part 2 classes" wording because OGC 23-002 Annex A does not define `/conf/system-history`.
 5. **R-PIVOT-05** — Reuse the 126 JSON Schemas from `csapi_compliance/schemas/` as the validation source. Pin the OGC OpenAPI YAML to a specific commit SHA in the ETS pom.xml.
 6. **R-PIVOT-06** — Port the spec-trap fixture corpus (asymmetric featureType/itemType cases, half-conformant collections, missing OGC 23-001 markers) as TestNG `@DataProvider` inputs.

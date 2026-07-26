@@ -1,8 +1,41 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-25T16:07Z
+Last updated: 2026-07-26T10:27Z
 
 ## Current Sprint Evidence
+
+Sprint 45 released ATS coverage inventory:
+
+- Released authority: OGC 23-001/23-002 v1.0, reproducible source tag
+  `v1.0.0` at commit `8e03b236...`.
+- Exact inventory: Part 1 `13 classes / 110 tests` including two supporting
+  tests; Part 2 `12 classes / 130 tests`.
+- Baseline: `240 total / 0 exact / 0 helper / 150 candidate / 90 unmapped`.
+  Candidate mappings do not count as implemented.
+- Expected test-first focused failure:
+  `5 tests / 5 failures / 0 errors / 0 skipped`.
+- Audit self-test and exact-source reproduction: PASS.
+- Final focused Maven:
+  `23 tests / 0 failures / 0 errors / 0 skipped`.
+- Fresh full Docker Maven:
+  `345 tests / 0 failures / 0 errors / 3 skipped`.
+- Exact candidate image:
+  `sha256:ad2594ef5f41beadc5f9de59c8caba27d3af1116d3732892fd498860ee23749c`.
+- Primary local OSH TeamEngine E2E:
+  `211 total / 69 passed / 0 failed / 142 skipped`; 135 recognized IUT
+  requests, zero writes, and zero startup errors.
+- Exact-image runtime verification: PASS for deployed adapter execution,
+  dependency parity, reviewed collision inventory, TeamEngine base
+  immutability, and runtime invariants.
+- Verification summary:
+  `ops/test-results/sprint-ets-45-released-ats-coverage-inventory-2026-07-26.md`.
+- Initial Raze and first recheck: `GAPS_FOUND`, both confidence `0.99`.
+  Mapping, membership, evidence, status variants, constructor factories,
+  inherited class tests, and all `@Ignore` scopes are remediated.
+- Final Raze: `APPROVE`, confidence `0.99`, duration 334 seconds; all findings
+  closed and no new findings.
+
+---
 
 Sprint 44 reproducible populated local OSH E2E:
 

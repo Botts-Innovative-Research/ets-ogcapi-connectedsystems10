@@ -1,9 +1,13 @@
 # Epic ETS-03: CS API Part 2 Conformance Classes
 
-> Status: Active - Sprint 42 implements the first source-pinned SWE Common adapter increment. Sprint 44 implements and verifies an isolated, reproducible populated local OSH evidence workflow; full populated binding PASS remains open on 28 unmodified-IUT representation failures. | Last updated: 2026-07-25
+> Status: Active - Sprint 45 inventory implemented; all Part 2 classes remain partial until exact mappings close | Last updated: 2026-07-26
 
 ## Goal
-Implement TestNG suite classes for the OGC 23-002 conformance classes (Dynamic Data: datastreams, observations, control streams, commands, system events, advanced filtering, mutation classes, JSON, and SWE Common formats). Sprint 25 corrects the earlier backlog error that treated GeoRobotix's `/conf/system-history` declaration as an OGC 23-002 conformance class; OGC 23-002 Annex A does not define `/conf/system-history`.
+Implement all 12 released OGC 23-002 conformance classes and all 130 Annex A
+tests (Dynamic Data: datastreams, observations, control streams, commands,
+system events, advanced filtering, mutation classes, JSON, and SWE Common
+formats). Sprint 25 correctly retired GeoRobotix's non-standard
+`/conf/system-history` declaration from the released ATS backlog.
 
 ## Dependencies
 - Depends on: `epic-ets-02-part1-classes` (Part 2 references Part 1 resources, e.g. systems own datastreams; also reuses base test infrastructure)
@@ -13,30 +17,30 @@ Implement TestNG suite classes for the OGC 23-002 conformance classes (Dynamic D
 
 | ID | Story | Status | OpenSpec Refs |
 |----|-------|--------|---------------|
-| S-ETS-20-01 | Implement `/conf/api-common` (Part 2) read-only declaration-gated subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-001 |
+| S-ETS-20-01 | Implement `/conf/api-common` (Part 2) read-only declaration-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-001 |
 | S-ETS-03-01 | (placeholder) Implement `/conf/api-common` (Part 2) suite | Superseded by S-ETS-20-01 planning | REQ-ETS-PART2-001 |
-| S-ETS-21-01 | Implement `/conf/datastream` (Part 2 Datastreams & Observations) read-only declaration-gated subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-002 |
+| S-ETS-21-01 | Implement `/conf/datastream` (Part 2 Datastreams & Observations) read-only declaration-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-002 |
 | S-ETS-03-02 | (placeholder) Implement `/conf/datastream` suite | Superseded by S-ETS-21-01 planning | REQ-ETS-PART2-002 |
-| S-ETS-22-01 | Implement `/conf/controlstream` (Part 2 Control Streams & Commands) read-only declaration-gated subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-003 |
+| S-ETS-22-01 | Implement `/conf/controlstream` (Part 2 Control Streams & Commands) read-only declaration-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-003 |
 | S-ETS-03-03 | (placeholder) Implement `/conf/controlstream` suite | Superseded by S-ETS-22-01 planning | REQ-ETS-PART2-003 |
-| S-ETS-23-01 | Implement `/conf/feasibility` (Part 2 Command Feasibility) safety-gated declaration subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-004 |
+| S-ETS-23-01 | Implement `/conf/feasibility` (Part 2 Command Feasibility) safety-gated declaration subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-004 |
 | S-ETS-03-04 | (placeholder) Implement `/conf/feasibility` suite | Superseded by S-ETS-23-01 planning | REQ-ETS-PART2-004 |
-| S-ETS-24-01 | Implement `/conf/system-event` (Part 2 System Events) read-only declaration-gated subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-005 |
+| S-ETS-24-01 | Implement `/conf/system-event` (Part 2 System Events) read-only declaration-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-005 |
 | S-ETS-03-05 | (placeholder) Implement `/conf/system-event` suite | Superseded by S-ETS-24-01 planning | REQ-ETS-PART2-005 |
 | S-ETS-03-06 | (placeholder) Implement `/conf/system-history` suite | Retired — not defined by OGC 23-002 Annex A | retired |
-| S-ETS-25-01 | Implement `/conf/advanced-filtering` (Part 2) read-only declaration-gated subset using official OGC 23-002 identifiers | Partial Implemented | REQ-ETS-PART2-006 |
+| S-ETS-25-01 | Implement `/conf/advanced-filtering` (Part 2) read-only declaration-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-006 |
 | S-ETS-03-07 | (placeholder) Implement `/conf/advanced-filtering` (Part 2) suite | Superseded by S-ETS-25-01 planning | REQ-ETS-PART2-006 |
-| S-ETS-26-01 | Implement first `/conf/create-replace-delete` (Part 2) safety-gated subset using official OGC 23-002 identifiers | Partial Implemented; local OSH E2E accepted | REQ-ETS-PART2-007 |
+| S-ETS-26-01 | Implement first `/conf/create-replace-delete` (Part 2) safety-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-007 |
 | S-ETS-03-08 | (placeholder) Implement `/conf/create-replace-delete` (Part 2) suite | Superseded by S-ETS-26-01 | REQ-ETS-PART2-007 |
-| S-ETS-27-01 | Implement first `/conf/update` (Part 2) safety-gated subset using official OGC 23-002 identifiers | Partial Implemented; local OSH E2E accepted | REQ-ETS-PART2-008 |
+| S-ETS-27-01 | Implement first `/conf/update` (Part 2) safety-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-008 |
 | S-ETS-03-09 | (placeholder) Implement `/conf/update` (Part 2) suite | Superseded by S-ETS-27-01 | REQ-ETS-PART2-008 |
-| S-ETS-28-01 | Implement first `/conf/json` (Part 2 JSON Encoding) declaration-gated read-only subset using official OGC 23-002 identifiers | Partial Implemented; public GeoRobotix E2E failed | REQ-ETS-PART2-009 |
+| S-ETS-28-01 | Implement first `/conf/json` (Part 2 JSON Encoding) declaration-gated read-only subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-009 |
 | S-ETS-03-10 | (placeholder) Implement `/conf/json` (Part 2) suite | Superseded by S-ETS-28-01 | REQ-ETS-PART2-009 |
-| S-ETS-29-01 | Implement first `/conf/swecommon-json` (Part 2 SWE Common JSON Encoding) declaration-gated read-only subset using official OGC 23-002 identifiers | Partial Implemented; public GeoRobotix E2E failed; Raze gapfix approved with concerns | REQ-ETS-PART2-010 |
+| S-ETS-29-01 | Implement first `/conf/swecommon-json` (Part 2 SWE Common JSON Encoding) declaration-gated read-only subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-010 |
 | S-ETS-03-11 | (placeholder) Implement `/conf/swecommon-json` suite | Superseded by S-ETS-29-01 | REQ-ETS-PART2-010 |
-| S-ETS-30-01 | Implement first `/conf/swecommon-text` (Part 2 SWE Common Text Encoding) declaration-gated read-only subset using official OGC 23-002 identifiers | Partial Implemented; public GeoRobotix Generator E2E failed | REQ-ETS-PART2-011 |
+| S-ETS-30-01 | Implement first `/conf/swecommon-text` (Part 2 SWE Common Text Encoding) declaration-gated read-only subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-011 |
 | S-ETS-03-12 | (placeholder) Implement `/conf/swecommon-text` suite | Superseded by S-ETS-30-01 planning | REQ-ETS-PART2-011 |
-| S-ETS-31-01 | Implement first `/conf/swecommon-binary` (Part 2 SWE Common Binary Encoding) declaration-gated read-only subset using official OGC 23-002 identifiers | Partial Implemented; public GeoRobotix Generator E2E failed | REQ-ETS-PART2-012 |
+| S-ETS-31-01 | Implement first `/conf/swecommon-binary` (Part 2 SWE Common Binary Encoding) declaration-gated read-only subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-012 |
 | S-ETS-03-13 | (placeholder) Implement `/conf/swecommon-binary` suite | Superseded by S-ETS-31-01 planning | REQ-ETS-PART2-012 |
 | S-ETS-32-01 | Implement Observation/Command binding cross-class closure with local OSH as primary development IUT | Partial Implemented; post-Raze gapfix local OSH Generator E2E accepted; Raze APPROVE_WITH_CONCERNS | REQ-ETS-PART2-013, REQ-ETS-TEAMENGINE-006 |
 | S-ETS-33-01 | Plan and probe local OSH dynamic-data seed fixtures; implement inline CommandStatus/CommandResult helper regressions for populated binding closure | Generator partial discovery; helper regressions implemented; Command seed blocked by OSH acknowledgement timeout | REQ-ETS-PART2-013, REQ-ETS-TEAMENGINE-006; SCENARIO-ETS-PART2-013-DYNAMIC-SEED-FIXTURES-001, -SEED-MUTATION-SAFETY-001, -INLINE-STATUS-RESULT-REGRESSIONS-001, -POSITIVE-LOCAL-OSH-CLOSURE-001 |
@@ -49,10 +53,11 @@ Implement TestNG suite classes for the OGC 23-002 conformance classes (Dynamic D
 | S-ETS-42-01 | Document external SWE Common and SensorML validator architecture and migration plan | Planned provisional architecture documented; no product dependency added | REQ-ETS-VALIDATOR-001, REQ-ETS-PART2-010, REQ-ETS-PART2-011, REQ-ETS-PART2-012 |
 | S-ETS-42-02 | Implement the source-pinned SWE Common validator adapter and dual-validate extracted Observation/Command `recordSchema` components | Complete; exact image `sha256:829a9741...d5f9` passes adapter execution and local OSH E2E `211/69/0/142` with zero writes; final Raze APPROVE `0.99` | REQ-ETS-VALIDATOR-001; SCENARIO-ETS-VALIDATOR-SOURCE-PIN-001, -SWE-COMMON-DUAL-VALIDATION-001, -SWE-COMMON-PARITY-CORPUS-001, -DIAGNOSTICS-BOUNDARY-001, -RUNTIME-CLOSURE-001, -RUNTIME-EXECUTION-001, -E2E-GATE-001 |
 | S-ETS-44-01 | Provision an isolated populated local OSH through supported APIs and execute TeamEngine with separate provisioning/conformance verdicts | Complete; provisioning PASS, populated `211/91/28/92` FAIL, cleanup PASS, unchanged primary, clean-primary `211/69/0/142` PASS, final Raze APPROVE `0.99` | REQ-ETS-PART2-013, REQ-ETS-TEAMENGINE-006, REQ-ETS-SCOPE-001; SCENARIO-ETS-PART2-013-EPHEMERAL-POPULATED-IUT-001, -POPULATED-PROVISIONING-VERDICT-001, -POPULATED-EVIDENCE-001, -PRIMARY-STATE-ISOLATION-001 |
+| S-ETS-45-01 | Build the released 23-001/23-002 ATS inventory and compiled TestNG coverage audit | Complete; Raze approved | REQ-ETS-COVERAGE-001 |
 | S-ETS-03-14 | (placeholder) Implement observation-binding cross-class closure (internal project closure; not an OGC `/conf/observation-binding` class) | Superseded by S-ETS-32-01 planning | REQ-ETS-PART2-013 |
 
 ## Acceptance Criteria
-- [ ] All OGC 23-002 Part 2 conformance classes have at least one `@Test` per ATS assertion
+- [ ] All 12 OGC 23-002 Part 2 classes have reviewed exact mappings for all 130 Annex A tests
 - [ ] Cross-class dynamic schema coupling (REQ-ETS-PART2-013) is enforced — Observation/Command bodies validate against parent-resource schema
 - [ ] Same dependency-aware skip semantics as Part 1
 - [ ] Same HTTP capture, schema validation, credential masking semantics as Part 1

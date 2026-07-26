@@ -1,0 +1,2373 @@
+{
+  "schemaVersion" : "1.0",
+  "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
+  "suiteTestMethodCount" : 211,
+  "tests" : [ {
+    "part" : 1,
+    "identifier" : "/conf/api-common/canonical-resources",
+    "classIdentifier" : null,
+    "target" : null,
+    "supporting" : true,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/api-common/collection-items",
+    "classIdentifier" : null,
+    "target" : null,
+    "supporting" : true,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/api-common/resource-ids",
+    "classIdentifier" : "/conf/api-common",
+    "target" : "/req/api-common/resource-ids",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/api-common/resource-uids",
+    "classIdentifier" : "/conf/api-common",
+    "target" : "/req/api-common/resource-uids",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/api-common/resource-uids-types",
+    "classIdentifier" : "/conf/api-common",
+    "target" : "/rec/api-common/resource-uids-types",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/api-common/datetime",
+    "classIdentifier" : "/conf/api-common",
+    "target" : "/req/api-common/datetime",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/system/location",
+    "classIdentifier" : "/conf/system",
+    "target" : "/rec/system/location",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/system/location-time",
+    "classIdentifier" : "/conf/system",
+    "target" : "/req/system/location-time",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemItemHasGeometryOrValidTime()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/system/canonical-url",
+    "classIdentifier" : "/conf/system",
+    "target" : "/req/system/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemItemHasCanonicalLink()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemsCollectionLinksDiscipline()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/system/resources-endpoint",
+    "classIdentifier" : "/conf/system",
+    "target" : "/req/system/resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemsCollectionHasItemsArray()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemsCollectionReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/system/canonical-endpoint",
+    "classIdentifier" : "/conf/system",
+    "target" : "/req/system/canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemItemHasIdTypeLinks()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemItemHasIdTypeLinks()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/system/collections",
+    "classIdentifier" : "/conf/system",
+    "target" : "/req/system/collections",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#systemsDiscoverableViaCollectionsOrLandingPage()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subsystem/collection",
+    "classIdentifier" : "/conf/subsystem",
+    "target" : "/req/subsystem/collection",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemsCollectionReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subsystem/recursive-param",
+    "classIdentifier" : "/conf/subsystem",
+    "target" : "/req/subsystem/recursive-param",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subsystem/recursive-search-systems",
+    "classIdentifier" : "/conf/subsystem",
+    "target" : "/req/subsystem/recursive-search-systems",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subsystem/recursive-search-subsystems",
+    "classIdentifier" : "/conf/subsystem",
+    "target" : "/req/subsystem/recursive-search-subsystems",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subsystem/recursive-assoc",
+    "classIdentifier" : "/conf/subsystem",
+    "target" : "/req/subsystem/recursive-assoc",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/deployment/canonical-url",
+    "classIdentifier" : "/conf/deployment",
+    "target" : "/req/deployment/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentItemHasCanonicalLink()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentItemHasCanonicalLink()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/deployment/resources-endpoint",
+    "classIdentifier" : "/conf/deployment",
+    "target" : "/req/deployment/resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentsCollectionReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/deployment/canonical-endpoint",
+    "classIdentifier" : "/conf/deployment",
+    "target" : "/req/deployment/canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentItemHasIdTypeLinks()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentItemHasIdTypeLinks()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/deployment/collections",
+    "classIdentifier" : "/conf/deployment",
+    "target" : "/req/deployment/collections",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/deployment/ref-from-system",
+    "classIdentifier" : "/conf/deployment",
+    "target" : "/req/deployment/ref-from-system",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subdeployment/collection",
+    "classIdentifier" : "/conf/subdeployment",
+    "target" : "/req/subdeployment/collection",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentsCollectionReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subdeployment/recursive-param",
+    "classIdentifier" : "/conf/subdeployment",
+    "target" : "/req/subdeployment/recursive-param",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subdeployment/recursive-search-deployments",
+    "classIdentifier" : "/conf/subdeployment",
+    "target" : "/req/subdeployment/recursive-search-deployments",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subdeployment/recursive-search-subdeployments",
+    "classIdentifier" : "/conf/subdeployment",
+    "target" : "/req/subdeployment/recursive-search-subdeployments",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/subdeployment/recursive-assoc",
+    "classIdentifier" : "/conf/subdeployment",
+    "target" : "/req/subdeployment/recursive-assoc",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/procedure/location",
+    "classIdentifier" : "/conf/procedure",
+    "target" : "/req/procedure/location",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureItemsHaveNoGeometry()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/procedure/canonical-url",
+    "classIdentifier" : "/conf/procedure",
+    "target" : "/req/procedure/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureItemHasCanonicalLink()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/procedure/resources-endpoint",
+    "classIdentifier" : "/conf/procedure",
+    "target" : "/req/procedure/resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#proceduresCollectionReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/procedure/canonical-endpoint",
+    "classIdentifier" : "/conf/procedure",
+    "target" : "/req/procedure/canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureItemHasIdTypeLinks()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/procedure/collections",
+    "classIdentifier" : "/conf/procedure",
+    "target" : "/req/procedure/collections",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sf/canonical-url",
+    "classIdentifier" : "/conf/sf",
+    "target" : "/req/sf/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests#samplingFeatureCanonicalUrlReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sf/resources-endpoint",
+    "classIdentifier" : "/conf/sf",
+    "target" : "/req/sf/resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests#samplingFeaturesCollectionReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sf/canonical-endpoint",
+    "classIdentifier" : "/conf/sf",
+    "target" : "/req/sf/canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests#samplingFeatureItemHasIdType()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sf/collections",
+    "classIdentifier" : "/conf/sf",
+    "target" : "/req/sf/collections",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sf/ref-from-system",
+    "classIdentifier" : "/conf/sf",
+    "target" : "/req/sf/ref-from-system",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/property/canonical-url",
+    "classIdentifier" : "/conf/property",
+    "target" : "/req/property/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyCanonicalUrlReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/property/resources-endpoint",
+    "classIdentifier" : "/conf/property",
+    "target" : "/req/property/resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertiesCollectionReturns200()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/property/canonical-endpoint",
+    "classIdentifier" : "/conf/property",
+    "target" : "/req/property/canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyItemHasIdType()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/property/collections",
+    "classIdentifier" : "/conf/property",
+    "target" : "/req/property/collections",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/id-list-schema",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/id-list-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#advancedFilteringIdListSchema()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/resource-by-id",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/resource-by-id",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterById()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/resource-by-keyword",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/resource-by-keyword",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByKeyword()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/resource-by-property",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/rec/advanced-filtering/resource-by-property",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/feature-by-geom",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/feature-by-geom",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByGeomSmoke()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/system-by-parent",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/system-by-parent",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/system-by-procedure",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/system-by-procedure",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/system-by-foi",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/system-by-foi",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/system-by-obsprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/system-by-obsprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/system-by-controlprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/system-by-controlprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/deployment-by-parent",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/deployment-by-parent",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/deployment-by-system",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/deployment-by-system",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/deployment-by-foi",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/deployment-by-foi",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/deployment-by-obsprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/deployment-by-obsprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/deployment-by-controlprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/deployment-by-controlprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/procedure-by-obsprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/procedure-by-obsprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/procedure-by-controlprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/procedure-by-controlprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/sf-by-foi",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/sf-by-foi",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/sf-by-obsprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/sf-by-obsprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/sf-by-controlprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/sf-by-controlprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/prop-by-baseprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/prop-by-baseprop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/prop-by-object",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/prop-by-object",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/combined-filters",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/combined-filters",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/indirect-prop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/rec/advanced-filtering/indirect-prop",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/advanced-filtering/indirect-foi",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/rec/advanced-filtering/indirect-foi",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/system",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/system",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#systemResourceOptionsReadinessPrecondition()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#systemsCollectionOptionsReadinessPrecondition()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#systemsCreateReplaceDeleteLifecycle()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/system-delete-cascade",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/system-delete-cascade",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/subsystem",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/subsystem",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/deployment",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/deployment",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/subdeployment",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/subdeployment",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/procedure",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/procedure",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/sampling-feature",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/sampling-feature",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/property",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/property",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/create-in-collection",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/create-in-collection",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/replace-in-collection",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/replace-in-collection",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/delete-in-collection",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/delete-in-collection",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/create-replace-delete/add-to-collection",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/add-to-collection",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/update/system",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/system",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#systemResourceOptionsPatchReadinessPrecondition()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#systemsPatchLifecycleOptIn()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/update/deployment",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/deployment",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/update/procedure",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/procedure",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/update/sampling-feature",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/sampling-feature",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/update/property",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/property",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/mediatype-read",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/mediatype-read",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonMediaTypeRead()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/mediatype-write",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/mediatype-write",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/relation-types",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/relation-types",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonDeploymentLinksMemberAssociationRelsUseResourceSpecificNames()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonLinksMemberAssociationRelsUseResourceSpecificNames()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonProcedureLinksMemberAssociationRelsUseResourceSpecificNames()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonSamplingFeatureLinksMemberAssociationRelsUseResourceSpecificNames()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/feature-attribute-mapping",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/feature-attribute-mapping",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/system-schema",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/system-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#systemsCollectionIsGeoJsonFeatureCollection()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/system-mappings",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/system-mappings",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#systemFeatureHasGeoJsonShapeAndProperties()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/deployment-schema",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/deployment-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#deploymentFeatureHasGeoJsonSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/deployment-mappings",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/deployment-mappings",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#deploymentFeatureHasGeoJsonSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/procedure-schema",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/procedure-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#procedureFeatureHasGeoJsonSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/procedure-mappings",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/procedure-mappings",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#procedureFeatureHasGeoJsonSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/sf-schema",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/sf-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#samplingFeatureHasGeoJsonSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/geojson/sf-mappings",
+    "classIdentifier" : "/conf/geojson",
+    "target" : "/req/geojson/sf-mappings",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#samplingFeatureHasGeoJsonSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/mediatype-read",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/mediatype-read",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeRead()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlRepresentationDiscoveredForSystem()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/mediatype-write",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/mediatype-write",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/relation-types",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/relation-types",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlDeploymentLinksMemberAssociationRelsUseResourceSpecificNames()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlLinksMemberAssociationRelsUseResourceSpecificNames()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlProcedureLinksMemberAssociationRelsUseResourceSpecificNames()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/resource-id",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/resource-id",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/feature-attribute-mapping",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/feature-attribute-mapping",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/system-schema",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/system-schema",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/system-sml-class",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/system-sml-class",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlSystemHasMinimalShape()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/system-mappings",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/system-mappings",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlSystemPreservesIdentityMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/deployment-schema",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/deployment-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlHasSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/deployment-mappings",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/deployment-mappings",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlHasSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/procedure-schema",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/procedure-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlHasSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/procedure-sml-class",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/procedure-sml-class",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlHasSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/procedure-mappings",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/procedure-mappings",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlHasSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/property-schema",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/property-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlHasSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 1,
+    "identifier" : "/conf/sensorml/property-mappings",
+    "classIdentifier" : "/conf/sensorml",
+    "target" : "/req/sensorml/property-mappings",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlHasSchemaAndMapping()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/api-common/resources",
+    "classIdentifier" : "/conf/api-common",
+    "target" : "/req/api-common/resources",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourceTerminology()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/api-common/resource-collection",
+    "classIdentifier" : "/conf/api-common",
+    "target" : "/req/api-common/resource-collection",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourceCollectionsReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/sf-ref-from-datastream",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/sf-ref-from-datastream",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/foi-ref-from-datastream",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/foi-ref-from-datastream",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/canonical-url",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamCanonicalResourceReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/resources-endpoint",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamsCollectionReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/canonical-endpoint",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamsCanonicalEndpointExposesDatastreamItems()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/ref-from-system",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/ref-from-system",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#systemScopedDatastreamsReadableWhenSystemReferencePresent()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/ref-from-deployment",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/ref-from-deployment",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/collections",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/collections",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/schema-op",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/schema-op",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#bindingClosureRequiresInspectableJsonEvidenceForFirstIncrement()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#observationBindingRequiresParentSchemaAndChildBodyEvidence()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamSchemaReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/obs-canonical-url",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/obs-canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationCanonicalResourceReadableWhenCollectionPopulated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/obs-resources-endpoint",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/obs-resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationEndpointsReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/obs-canonical-endpoint",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/obs-canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationsCanonicalEndpointReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/obs-ref-from-datastream",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/obs-ref-from-datastream",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#observationBindingRequiresParentSchemaAndChildBodyEvidence()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationsReferenceSelectedDatastreamWhenNestedCollectionPopulated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/datastream/obs-collections",
+    "classIdentifier" : "/conf/datastream",
+    "target" : "/req/datastream/obs-collections",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/sf-ref-from-controlstream",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/sf-ref-from-controlstream",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/foi-ref-from-controlstream",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/foi-ref-from-controlstream",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/canonical-url",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamCanonicalUrlReadableWhenControlsPathAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/resources-endpoint",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamsCollectionReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/canonical-endpoint",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamResourceReadableViaObservedEndpoint()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamsEndpointExposesControlStreamItems()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/ref-from-system",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/ref-from-system",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#systemScopedControlStreamsReadableWhenSystemReferencePresent()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/ref-from-deployment",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/ref-from-deployment",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/collections",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/collections",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/schema-op",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/schema-op",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#bindingClosureRequiresInspectableJsonEvidenceForFirstIncrement()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#commandBindingRequiresParentSchemaAndChildBodyEvidence()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamSchemaReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/cmd-canonical-url",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/cmd-canonical-url",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/cmd-resources-endpoint",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/cmd-resources-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamScopedCommandsReadable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/cmd-canonical-endpoint",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/cmd-canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#globalCommandsEndpointReadableWhenAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/cmd-ref-from-controlstream",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/cmd-ref-from-controlstream",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#commandBindingRequiresParentSchemaAndChildBodyEvidence()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandsReferenceSelectedControlStreamWhenNestedCollectionPopulated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/cmd-collections",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/cmd-collections",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/status-resources-endpoint",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/status-resources-endpoint",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/command-status-endpoint",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/command-status-endpoint",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/result-resources-endpoint",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/result-resources-endpoint",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/controlstream/command-result-endpoint",
+    "classIdentifier" : "/conf/controlstream",
+    "target" : "/req/controlstream/command-result-endpoint",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/feasibility/canonical-url",
+    "classIdentifier" : "/conf/feasibility",
+    "target" : "/req/feasibility/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCanonicalResourceReadableWhenAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/feasibility/ref-from-controlstream",
+    "classIdentifier" : "/conf/feasibility",
+    "target" : "/req/feasibility/ref-from-controlstream",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#controlStreamScopedFeasibilityEndpointUsesNormativeSingularPath()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/feasibility/status-endpoint",
+    "classIdentifier" : "/conf/feasibility",
+    "target" : "/req/feasibility/status-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityStatusEndpointReadableWhenResourceAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/feasibility/result-endpoint",
+    "classIdentifier" : "/conf/feasibility",
+    "target" : "/req/feasibility/result-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityResultEndpointReadableWhenResourceAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/feasibility/collections",
+    "classIdentifier" : "/conf/feasibility",
+    "target" : "/req/feasibility/collections",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCollectionsCheckedWhenAdvertised()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/system-event/canonical-url",
+    "classIdentifier" : "/conf/system-event",
+    "target" : "/req/system-event/canonical-url",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemEventCanonicalResourceReadableWhenAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/system-event/resources-endpoint",
+    "classIdentifier" : "/conf/system-event",
+    "target" : "/req/system-event/resources-endpoint",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/system-event/canonical-endpoint",
+    "classIdentifier" : "/conf/system-event",
+    "target" : "/req/system-event/canonical-endpoint",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemEventsCanonicalEndpointReadableWhenAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/system-event/ref-from-system",
+    "classIdentifier" : "/conf/system-event",
+    "target" : "/req/system-event/ref-from-system",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemScopedEventsEndpointUsesNormativePath()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/system-event/collections",
+    "classIdentifier" : "/conf/system-event",
+    "target" : "/req/system-event/collections",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemEventCollectionsCheckedWhenAdvertised()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/datastream-by-phenomenontime",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/datastream-by-phenomenontime",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#datastreamTimeFiltersVerifyReturnedPredicates()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/datastream-by-resulttime",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/datastream-by-resulttime",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#datastreamTimeFiltersVerifyReturnedPredicates()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/datastream-by-obsprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/datastream-by-obsprop",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#datastreamObservedPropertyFilterVerifiesReturnedPredicates()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/datastream-by-foi",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/datastream-by-foi",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/obs-by-phenomenontime",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/obs-by-phenomenontime",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#observationTimeFiltersVerifyReturnedPredicates()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/obs-by-resulttime",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/obs-by-resulttime",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#observationTimeFiltersVerifyReturnedPredicates()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/obs-by-foi",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/obs-by-foi",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/controlstream-by-issuetime",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/controlstream-by-issuetime",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#controlStreamTimeFiltersVerifyReturnedPredicates()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/controlstream-by-exectime",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/controlstream-by-exectime",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#controlStreamTimeFiltersVerifyReturnedPredicates()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/controlstream-by-controlprop",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/controlstream-by-controlprop",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#controlStreamControlledPropertyFilterVerifiesReturnedPredicates()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/controlstream-by-foi",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/controlstream-by-foi",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/cmd-by-issuetime",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/cmd-by-issuetime",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandFiltersVerifyReturnedPredicatesWhenEndpointAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/cmd-by-exectime",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/cmd-by-exectime",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandFiltersVerifyReturnedPredicatesWhenEndpointAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/cmd-by-status",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/cmd-by-status",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandFiltersVerifyReturnedPredicatesWhenEndpointAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/cmd-by-sender",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/cmd-by-sender",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandFiltersVerifyReturnedPredicatesWhenEndpointAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/cmd-by-foi",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/cmd-by-foi",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/status-by-statuscode",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/status-by-statuscode",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/advanced-filtering/event-by-type",
+    "classIdentifier" : "/conf/advanced-filtering",
+    "target" : "/req/advanced-filtering/event-by-type",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#systemEventTypeFilterVerifiesReturnedPredicatesWhenEndpointAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/datastream",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/datastream",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamAndObservationOptionsReadinessIsReadOnly()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamObservationLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/datastream-update-schema",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/datastream-update-schema",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/datastream-delete-cascade",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/datastream-delete-cascade",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/observation",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/observation",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamAndObservationOptionsReadinessIsReadOnly()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamObservationLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/observation-schema",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/observation-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamObservationLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/controlstream",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/controlstream",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamAndNestedCommandOptionsReadinessIsReadOnly()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/controlstream-update-schema",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/controlstream-update-schema",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/controlstream-delete-cascade",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/controlstream-delete-cascade",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/command",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/command",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamAndNestedCommandOptionsReadinessIsReadOnly()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/command-schema",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/command-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/command-status",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/command-status",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/command-result",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/command-result",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/feasibility",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/feasibility",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/feasibility-status",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/feasibility-status",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/feasibility-result",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/feasibility-result",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/create-replace-delete/system-event",
+    "classIdentifier" : "/conf/create-replace-delete",
+    "target" : "/req/create-replace-delete/system-event",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/datastream",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/datastream",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamObservationPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamObservationPatchReadinessIsConditionGated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/datastream-update-schema",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/datastream-update-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#schemaRejectionPatchChecksRequireSafeEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/observation",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/observation",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamObservationPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamObservationPatchReadinessIsConditionGated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/observation-schema",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/observation-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#schemaRejectionPatchChecksRequireSafeEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/controlstream",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/controlstream",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchReadinessIsConditionGated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/controlstream-update-schema",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/controlstream-update-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#schemaRejectionPatchChecksRequireSafeEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/command",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/command",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchReadinessIsConditionGated()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/command-schema",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/command-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#schemaRejectionPatchChecksRequireSafeEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/command-status",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/command-status",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchReadinessIsConditionGated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/command-result",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/command-result",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchReadinessIsConditionGated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/feasibility",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/feasibility",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchReadinessIsConditionGated()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/feasibility-status",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/feasibility-status",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchReadinessIsConditionGated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/feasibility-result",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/feasibility-result",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchReadinessIsConditionGated()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/update/system-event",
+    "classIdentifier" : "/conf/update",
+    "target" : "/req/update/system-event",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#systemEventPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#systemEventPatchReadinessIsConditionGated()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/mediatype-read",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/mediatype-read",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/mediatype-write",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/mediatype-write",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#jsonMediatypeWriteAdvertisedByApiDefinitionOnly()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/datastream-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/datastream-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#datastreamJsonSchemasValidateAgainstAnnexA9()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/obsschema-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/obsschema-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationSchemaJsonValidWhenDatastreamCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/observation-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/observation-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationJsonSchemasValidateAgainstAnnexA9()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/observation-constraints",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/observation-constraints",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationConstraintsRequireParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/controlstream-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/controlstream-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#controlStreamJsonSchemasValidateAgainstAnnexA9()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/commandschema-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/commandschema-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandSchemaJsonValidWhenControlStreamCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/command-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/command-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandJsonSchemasValidateWhenCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/command-constraints",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/command-constraints",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandConstraintsRequireParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/commandstatus-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/commandstatus-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandStatusJsonSchemasValidateWhenCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/commandresult-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/commandresult-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandResultJsonSchemasValidateWhenCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/commandresult-constraints",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/commandresult-constraints",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandResultConstraintsRequireParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/json/systemevent-schema",
+    "classIdentifier" : "/conf/json",
+    "target" : "/req/json/systemevent-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#systemEventJsonSchemasValidateWhenEndpointEvidenceExists()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-json/mediatype-read",
+    "classIdentifier" : "/conf/swecommon-json",
+    "target" : "/req/swecommon-json/mediatype-read",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-json/mediatype-write",
+    "classIdentifier" : "/conf/swecommon-json",
+    "target" : "/req/swecommon-json/mediatype-write",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#sweCommonJsonMediatypeWriteAdvertisedByApiDefinitionOnly()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-json/obsschema-schema",
+    "classIdentifier" : "/conf/swecommon-json",
+    "target" : "/req/swecommon-json/obsschema-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSchemaSweJsonValidWhenDatastreamCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-json/obsschema-mapping",
+    "classIdentifier" : "/conf/swecommon-json",
+    "target" : "/req/swecommon-json/obsschema-mapping",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSchemaSweMappingRequiresTimeComponentEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-json/observation-encoding",
+    "classIdentifier" : "/conf/swecommon-json",
+    "target" : "/req/swecommon-json/observation-encoding",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSweJsonEncodingRequiresParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-json/cmdschema-schema",
+    "classIdentifier" : "/conf/swecommon-json",
+    "target" : "/req/swecommon-json/cmdschema-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSchemaSweJsonValidWhenControlStreamCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-json/cmdschema-mapping",
+    "classIdentifier" : "/conf/swecommon-json",
+    "target" : "/req/swecommon-json/cmdschema-mapping",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-json/command-encoding",
+    "classIdentifier" : "/conf/swecommon-json",
+    "target" : "/req/swecommon-json/command-encoding",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSweJsonEncodingRequiresParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-text/mediatype-read",
+    "classIdentifier" : "/conf/swecommon-text",
+    "target" : "/req/swecommon-text/mediatype-read",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-text/mediatype-write",
+    "classIdentifier" : "/conf/swecommon-text",
+    "target" : "/req/swecommon-text/mediatype-write",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#sweCommonTextMediatypeWriteAdvertisedByApiDefinitionOnly()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-text/obsschema-schema",
+    "classIdentifier" : "/conf/swecommon-text",
+    "target" : "/req/swecommon-text/obsschema-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#observationSchemaSweTextValidWhenDatastreamCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-text/obsschema-mapping",
+    "classIdentifier" : "/conf/swecommon-text",
+    "target" : "/req/swecommon-text/obsschema-mapping",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#observationSchemaSweMappingRequiresTimeComponentEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-text/observation-encoding",
+    "classIdentifier" : "/conf/swecommon-text",
+    "target" : "/req/swecommon-text/observation-encoding",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#observationSweTextEncodingRequiresParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-text/cmdschema-schema",
+    "classIdentifier" : "/conf/swecommon-text",
+    "target" : "/req/swecommon-text/cmdschema-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#commandSchemaSweTextValidWhenControlStreamCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-text/cmdschema-mapping",
+    "classIdentifier" : "/conf/swecommon-text",
+    "target" : "/req/swecommon-text/cmdschema-mapping",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-text/command-encoding",
+    "classIdentifier" : "/conf/swecommon-text",
+    "target" : "/req/swecommon-text/command-encoding",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#commandSweTextEncodingRequiresParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-binary/mediatype-read",
+    "classIdentifier" : "/conf/swecommon-binary",
+    "target" : "/req/swecommon-binary/mediatype-read",
+    "supporting" : false,
+    "state" : "unmapped",
+    "candidateMappings" : [ ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-binary/mediatype-write",
+    "classIdentifier" : "/conf/swecommon-binary",
+    "target" : "/req/swecommon-binary/mediatype-write",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#sweCommonBinaryMediatypeWriteAdvertisedByApiDefinitionOnly()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-binary/obsschema-schema",
+    "classIdentifier" : "/conf/swecommon-binary",
+    "target" : "/req/swecommon-binary/obsschema-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#observationSchemaSweBinaryValidWhenDatastreamCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-binary/obsschema-mapping",
+    "classIdentifier" : "/conf/swecommon-binary",
+    "target" : "/req/swecommon-binary/obsschema-mapping",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#observationSchemaSweMappingRequiresTimeComponentEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-binary/observation-encoding",
+    "classIdentifier" : "/conf/swecommon-binary",
+    "target" : "/req/swecommon-binary/observation-encoding",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#observationSweBinaryEncodingRequiresParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-binary/cmdschema-schema",
+    "classIdentifier" : "/conf/swecommon-binary",
+    "target" : "/req/swecommon-binary/cmdschema-schema",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#commandSchemaSweBinaryValidWhenControlStreamCandidateAvailable()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-binary/cmdschema-mapping",
+    "classIdentifier" : "/conf/swecommon-binary",
+    "target" : "/req/swecommon-binary/cmdschema-mapping",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent()" ],
+    "reviewedMapping" : null
+  }, {
+    "part" : 2,
+    "identifier" : "/conf/swecommon-binary/command-encoding",
+    "classIdentifier" : "/conf/swecommon-binary",
+    "target" : "/req/swecommon-binary/command-encoding",
+    "supporting" : false,
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#commandSweBinaryEncodingRequiresParentSchemaAndCandidateEvidence()" ],
+    "reviewedMapping" : null
+  } ],
+  "summary" : {
+    "total" : 240,
+    "exact" : 0,
+    "helper" : 0,
+    "candidate" : 150,
+    "unmapped" : 90,
+    "byPart" : {
+      "1" : {
+        "total" : 110,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 49,
+        "unmapped" : 61
+      },
+      "2" : {
+        "total" : 130,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 101,
+        "unmapped" : 29
+      }
+    },
+    "byClass" : {
+      "1:null" : {
+        "total" : 2,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 0,
+        "unmapped" : 2
+      },
+      "1:/conf/api-common" : {
+        "total" : 4,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 0,
+        "unmapped" : 4
+      },
+      "1:/conf/system" : {
+        "total" : 6,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 5,
+        "unmapped" : 1
+      },
+      "1:/conf/subsystem" : {
+        "total" : 5,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 1,
+        "unmapped" : 4
+      },
+      "1:/conf/deployment" : {
+        "total" : 5,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 3,
+        "unmapped" : 2
+      },
+      "1:/conf/subdeployment" : {
+        "total" : 5,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 1,
+        "unmapped" : 4
+      },
+      "1:/conf/procedure" : {
+        "total" : 5,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 4,
+        "unmapped" : 1
+      },
+      "1:/conf/sf" : {
+        "total" : 5,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 3,
+        "unmapped" : 2
+      },
+      "1:/conf/property" : {
+        "total" : 4,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 3,
+        "unmapped" : 1
+      },
+      "1:/conf/advanced-filtering" : {
+        "total" : 25,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 4,
+        "unmapped" : 21
+      },
+      "1:/conf/create-replace-delete" : {
+        "total" : 12,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 1,
+        "unmapped" : 11
+      },
+      "1:/conf/update" : {
+        "total" : 5,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 1,
+        "unmapped" : 4
+      },
+      "1:/conf/geojson" : {
+        "total" : 12,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 11,
+        "unmapped" : 1
+      },
+      "1:/conf/sensorml" : {
+        "total" : 15,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 12,
+        "unmapped" : 3
+      },
+      "2:/conf/api-common" : {
+        "total" : 2,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 2,
+        "unmapped" : 0
+      },
+      "2:/conf/datastream" : {
+        "total" : 14,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 9,
+        "unmapped" : 5
+      },
+      "2:/conf/controlstream" : {
+        "total" : 18,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 8,
+        "unmapped" : 10
+      },
+      "2:/conf/feasibility" : {
+        "total" : 5,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 5,
+        "unmapped" : 0
+      },
+      "2:/conf/system-event" : {
+        "total" : 5,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 4,
+        "unmapped" : 1
+      },
+      "2:/conf/advanced-filtering" : {
+        "total" : 18,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 13,
+        "unmapped" : 5
+      },
+      "2:/conf/create-replace-delete" : {
+        "total" : 16,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 12,
+        "unmapped" : 4
+      },
+      "2:/conf/update" : {
+        "total" : 14,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 14,
+        "unmapped" : 0
+      },
+      "2:/conf/json" : {
+        "total" : 14,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 13,
+        "unmapped" : 1
+      },
+      "2:/conf/swecommon-json" : {
+        "total" : 8,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 7,
+        "unmapped" : 1
+      },
+      "2:/conf/swecommon-text" : {
+        "total" : 8,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 7,
+        "unmapped" : 1
+      },
+      "2:/conf/swecommon-binary" : {
+        "total" : 8,
+        "exact" : 0,
+        "helper" : 0,
+        "candidate" : 7,
+        "unmapped" : 1
+      }
+    }
+  }
+}

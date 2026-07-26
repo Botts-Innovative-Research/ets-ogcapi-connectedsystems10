@@ -1,0 +1,79 @@
+review:
+  id: sprint-ets-45-released-ats-coverage-adversarial-recheck
+  reviewer: Raze
+  agent_id: 019f9df8-89d6-79c0-a0e1-1b59786a43d1
+  nickname: Cicero
+  role: adversarial-reviewer
+  started_at_utc: "2026-07-26T10:29:10Z"
+  completed_at_utc: "2026-07-26T10:36:16Z"
+  duration_seconds: 426
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  read_only: true
+
+token_metadata:
+  available: false
+  total_tokens: null
+  reason: Spawned subagent returned duration metadata but no token count.
+
+scope:
+  story: epics/stories/s-ets-45-01-released-ats-coverage-inventory.md
+  initial_review: .harness/evaluations/sprint-ets-45-released-ats-coverage-adversarial.yaml
+  requirement: REQ-ETS-COVERAGE-001
+  baseline: 240/0/0/150/90
+
+original_findings:
+  - id: RAZE-S45-001
+    status: CLOSED
+    evidence: Exact mappings require delimited targets, unique implementation identities, review provenance, and deployed TestNG methods.
+  - id: RAZE-S45-002
+    status: CLOSED
+    evidence: Membership, source metadata, semantic digests, tag resolution, self-test, and exact source reproduction pass.
+  - id: RAZE-S45-003
+    status: OPEN
+    severity: HIGH
+    evidence: >-
+      Seventeen released owning requirements still used PARTIAL_IMPLEMENTED or
+      PARTIAL-IMPLEMENTED while exact and helper coverage were both zero. The
+      executable status check rejected only statuses beginning with IMPLEMENTED.
+    required_fix:
+      - Mark the owning requirements RELEASED_ATS_PARTIAL_UNREVIEWED.
+      - Preserve completed sprint work as historical increments.
+      - Reject every implementation-status variant without complete reviewed coverage.
+  - id: RAZE-S45-004
+    status: OPEN
+    severity: MEDIUM
+    evidence: >-
+      Discovery did not reject constructor factories, method/class/package
+      @Ignore, or inherited class-level @Test annotations.
+    required_fix:
+      - Reject constructor factories and every @Ignore scope.
+      - Inspect class-level TestNG annotations throughout the inherited hierarchy.
+      - Add a negative regression for each path.
+  - id: RAZE-S45-005
+    status: CLOSED
+    evidence: Focused 18/0/0/0, full Maven 340/0/0/3, exact-image runtime PASS, and local OSH 211/69/0/142 evidence were current.
+
+new_findings: []
+
+decision: >-
+  GAPS_FOUND. Sprint ETS-45 could not close at this checkpoint. RAZE-S45-003
+  and RAZE-S45-004 required remediation and another final review.
+
+post_review_remediation:
+  status: IMPLEMENTED_FRESH_FULL_GATES_PASS_FINAL_RECHECK_PENDING
+  test_first: 23/6/0/0
+  focused_after_fix: 23/0/0/0
+  full_maven_after_fix: 345/0/0/3
+  exact_image_after_fix: sha256:ad2594ef5f41beadc5f9de59c8caba27d3af1116d3732892fd498860ee23749c
+  local_osh_teamengine_after_fix: 211/69/0/142
+  recognized_iut_requests: 135
+  writes: 0
+  startup_errors: 0
+  exact_image_runtime_verifier: PASS
+  inventory_audits: PASS
+  changes:
+    - All 25 released owning requirements now use an unreviewed ATS status until reviewed exact coverage is complete.
+    - Historical sprint work is retained separately from released coverage status.
+    - Status verification rejects every implementation-status variant for incomplete released coverage.
+    - Discovery rejects constructor factories, method/class/package @Ignore, and inherited class-level tests.

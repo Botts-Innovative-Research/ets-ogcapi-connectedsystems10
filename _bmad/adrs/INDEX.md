@@ -1,6 +1,6 @@
 # Architecture Decision Record Index
 
-Last updated: 2026-07-23
+Last updated: 2026-07-26
 
 | ADR | Decision | Current status |
 |---|---|---|
@@ -16,6 +16,8 @@ Last updated: 2026-07-23
 | [ADR-010](ADR-010-dependency-skip-verification-strategy.md) | Dependency-skip verification strategy | Accepted |
 | [ADR-011](ADR-011-ogc-teamengine-6-runtime-image.md) | OGC-published TeamEngine 6 runtime image | Provisionally accepted decision; implementation/digest verification pending |
 | [ADR-012](ADR-012-external-dependency-immutability-and-no-hosted-ci.md) | External dependency immutability and no hosted CI | Accepted |
+| [ADR-013](ADR-013-released-ats-source-of-truth.md) | Released OGC 23-001/23-002 ATS source of truth | Accepted |
 
 ADR-011 is the current authority for the TeamEngine runtime. ADR-007 remains authoritative only for historical TeamEngine 5.6.1 evidence. ADR-009 remains authoritative for builder-stage and non-root principles except where ADR-011 explicitly replaces its runtime-stage decisions.
 ADR-012 is the current authority for project scope: OSH and TeamEngine may not be patched, and project-operated hosted CI is excluded.
+ADR-013 is the current authority for the released conformance-test inventory and coverage status.

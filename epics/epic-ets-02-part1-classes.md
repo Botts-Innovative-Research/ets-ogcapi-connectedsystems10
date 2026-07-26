@@ -1,9 +1,13 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 19 encoding mediatype-write Generator complete; Sprint 42 documents external SensorML validator dependency path | Last updated: 2026-07-22
+> Status: Active - Sprint 45 inventory implemented; released Part 1 remains partial at 0 exact mappings | Last updated: 2026-07-26
 
 ## Goal
-Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with each `@Test` method mapped 1:1 to an OGC ATS assertion via the canonical requirement URI in the test's `description` attribute. Owns sub-deliverable 2 of the new ETS capability.
+Implement the 13 released OGC 23-001 conformance classes and all 110 Annex A
+tests, including two supporting tests. Each class test maps 1:1 to a reviewed
+TestNG assertion carrying the canonical target URI; supporting tests map to
+reviewed parameterized helpers. Owns sub-deliverable 2 of the new ETS
+capability.
 
 ## Dependencies
 - Depends on: `epic-ets-01-scaffold` (need a buildable project)
@@ -16,35 +20,39 @@ Implement TestNG suite classes for all 14 OGC 23-001 conformance classes, with e
 | S-ETS-01-02 | (Sprint 1, CLOSED) Implement CS API Core conformance class against GeoRobotix | Done (Sprint 1, Quinn 0.85, Raze 0.82) | REQ-ETS-CORE-001..004 |
 | S-ETS-02-02 | (Sprint 2) Extend ETSAssert with REST-friendly helpers + refactor 21 bare-throw sites | Active (Sprint 2) | REQ-ETS-CORE-001, REQ-ETS-CLEANUP-001 |
 | S-ETS-02-03 | (Sprint 2) URI form drift sweep — spec.md + traceability.md + Java @Test descriptions to OGC canonical .adoc form | Active (Sprint 2) | REQ-ETS-CORE-001..004, REQ-ETS-CLEANUP-002 |
-| S-ETS-02-06 | (Sprint 2, CLOSED) Implement CS API SystemFeatures conformance class end-to-end against GeoRobotix | Done (Sprint 2, Quinn 0.96, Raze 0.92) | REQ-ETS-PART1-002 |
+| S-ETS-02-06 | (Sprint 2, CLOSED) Implement CS API SystemFeatures conformance class end-to-end against GeoRobotix | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-002 |
 | S-ETS-03-01 | (Sprint 3) Live break-Core dependency-skip sabotage test | Active (Sprint 3) | REQ-ETS-CLEANUP-005 |
 | S-ETS-03-05 | (Sprint 3) SystemFeatures expansion: `/req/system/collections` + `/req/system/location-time` | Active (Sprint 3) | REQ-ETS-PART1-002 (modified) |
 | S-ETS-03-06 | (Sprint 3) Doc cleanups: VerifySystemFeaturesTests reference + ops/test-results/ convention | Active (Sprint 3) | (none — pure doc) |
-| S-ETS-03-07 | (Sprint 3, CLOSED) Implement CS API Common (`/conf/common`) conformance class end-to-end against GeoRobotix | Done (Sprint 3, Quinn 0.95, Raze 0.93) | REQ-ETS-PART1-001 |
-| S-ETS-04-05 | (Sprint 4, CLOSED) Implement CS API Subsystems (`/conf/subsystem`) conformance class — first TWO-LEVEL dependency chain | Done (Sprint 4, Quinn 0.84 / Raze 0.84 APPROVE_WITH_GAPS — 4 @Tests PASS 26/26 smoke) | REQ-ETS-PART1-003 |
-| S-ETS-05-05 | (Sprint 5) Implement CS API Procedures (`/conf/procedure-features`) conformance class — geometry=null invariant unique assertion | Active (Sprint 5) | REQ-ETS-PART1-006 |
-| S-ETS-05-06 | (Sprint 5) Implement CS API Deployments (`/conf/deployment-features`) conformance class — deployed-system-resource SKIP-with-reason | Active (Sprint 5) | REQ-ETS-PART1-004 |
-| S-ETS-07-02 | **(Sprint 7 Active)** Implement `/conf/sf` (Sampling Features) suite — depends on SystemFeatures; GeoRobotix /samplingFeatures HTTP 200 confirmed | **Active (Sprint 7)** | REQ-ETS-PART1-007 |
-| S-ETS-07-03 | **(Sprint 7 Active)** Implement `/conf/property` (Property Definitions) suite — depends on SystemFeatures; GeoRobotix /properties HTTP 200 confirmed | **Active (Sprint 7)** | REQ-ETS-PART1-008 |
-| S-ETS-08-02 | Implement `/conf/subdeployment` suite — first 3-deep Subdeployments→Deployments→SystemFeatures→Core chain | Done (Sprint 8, Quinn follow-up APPROVE_WITH_CONCERNS 0.91, Raze gap-fix APPROVE 0.94) | REQ-ETS-PART1-005 |
-| S-ETS-11-01 | Implement `/conf/advanced-filtering` suite - declaration-gated systems/common-resource read-only subset | Partial-Implemented (Sprint 11, Quinn/Raze APPROVE_WITH_CONCERNS) | REQ-ETS-PART1-009 |
-| S-ETS-12-01 | Implement `/conf/create-replace-delete` suite - safety-gated systems subset, no default public-IUT mutation | Partial-Implemented (Sprint 12 Generator) | REQ-ETS-PART1-010 |
-| S-ETS-13-01 | Implement `/conf/update` suite - PATCH safety-gated systems subset, no default public-IUT mutation | Partial-Implemented (Sprint 13 Generator) | REQ-ETS-PART1-011 |
-| S-ETS-14-01 | Harden `/conf/update` positive mutable-IUT path - changed-field assertion and local OSH readiness truth | Implemented (Sprint 14 Generator; Raze APPROVE) | REQ-ETS-PART1-011 |
-| S-ETS-09-01 | Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Partial-Implemented (Sprint 9, Quinn/Raze APPROVE_WITH_CONCERNS) | REQ-ETS-PART1-012 |
-| S-ETS-15-01 | Expand `/conf/geojson` non-system read-only schema/mapping checks for deployments, procedures, and sampling features | Partial-Implemented (Sprint 15 Generator) | REQ-ETS-PART1-012 |
-| S-ETS-10-01 | Implement `/conf/sensorml` encoding suite - systems read-only subset, depends on SystemFeatures | Partial-Implemented (Sprint 10, Quinn APPROVE_WITH_CONCERNS, Raze APPROVE) | REQ-ETS-PART1-013 |
-| S-ETS-16-01 | Expand `/conf/sensorml` non-system read-only schema/mapping checks for deployments, procedures, and properties | Partial-Implemented (Sprint 16 Generator, Raze-approved) | REQ-ETS-PART1-013 |
-| S-ETS-17-01 | Add read-only `/req/geojson/relation-types` and `/req/sensorml/relation-types` association-link checks | Partial-Implemented (Sprint 17 Generator, Raze-approved) | REQ-ETS-PART1-012, REQ-ETS-PART1-013 |
-| S-ETS-18-01 | Broaden read-only encoding relation-types checks across selected GeoJSON/SensorML resource classes | Partial-Implemented (Sprint 18 Generator, Raze-approved) | REQ-ETS-PART1-012, REQ-ETS-PART1-013 |
-| S-ETS-19-01 | Add safety-gated GeoJSON/SensorML mediatype-write checks | Partial-Implemented (Sprint 19 Generator; GeoRobotix no-mutation smoke PASS; local OSH system-resource mediatype-write PASS; Raze follow-up gapfix APPROVE) | REQ-ETS-PART1-012, REQ-ETS-PART1-013, REQ-ETS-PART1-010 |
+| S-ETS-03-07 | (Sprint 3, CLOSED) Implement CS API Common (`/conf/common`) conformance class end-to-end against GeoRobotix | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-001 |
+| S-ETS-04-05 | (Sprint 4, CLOSED) Implement CS API Subsystems (`/conf/subsystem`) conformance class — first TWO-LEVEL dependency chain | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-003 |
+| S-ETS-05-05 | (Sprint 5) Implement CS API Procedures (`/conf/procedure-features`) conformance class — geometry=null invariant unique assertion | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-006 |
+| S-ETS-05-06 | (Sprint 5) Implement CS API Deployments (`/conf/deployment-features`) conformance class — deployed-system-resource SKIP-with-reason | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-004 |
+| S-ETS-07-02 | (Sprint 7 historical) Implement `/conf/sf` (Sampling Features) suite — depends on SystemFeatures; GeoRobotix /samplingFeatures HTTP 200 confirmed | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-007 |
+| S-ETS-07-03 | (Sprint 7 historical) Implement `/conf/property` (Property Definitions) suite — depends on SystemFeatures; GeoRobotix /properties HTTP 200 confirmed | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-008 |
+| S-ETS-08-02 | Implement `/conf/subdeployment` suite — first 3-deep Subdeployments→Deployments→SystemFeatures→Core chain | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-005 |
+| S-ETS-11-01 | Implement `/conf/advanced-filtering` suite - declaration-gated systems/common-resource read-only subset | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-009 |
+| S-ETS-12-01 | Implement `/conf/create-replace-delete` suite - safety-gated systems subset, no default public-IUT mutation | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-010 |
+| S-ETS-13-01 | Implement `/conf/update` suite - PATCH safety-gated systems subset, no default public-IUT mutation | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |
+| S-ETS-14-01 | Harden `/conf/update` positive mutable-IUT path - changed-field assertion and local OSH readiness truth | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |
+| S-ETS-09-01 | Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012 |
+| S-ETS-15-01 | Expand `/conf/geojson` non-system read-only schema/mapping checks for deployments, procedures, and sampling features | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012 |
+| S-ETS-10-01 | Implement `/conf/sensorml` encoding suite - systems read-only subset, depends on SystemFeatures | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-013 |
+| S-ETS-16-01 | Expand `/conf/sensorml` non-system read-only schema/mapping checks for deployments, procedures, and properties | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-013 |
+| S-ETS-17-01 | Add read-only `/req/geojson/relation-types` and `/req/sensorml/relation-types` association-link checks | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012, REQ-ETS-PART1-013 |
+| S-ETS-18-01 | Broaden read-only encoding relation-types checks across selected GeoJSON/SensorML resource classes | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012, REQ-ETS-PART1-013 |
+| S-ETS-19-01 | Add safety-gated GeoJSON/SensorML mediatype-write checks | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012, REQ-ETS-PART1-013, REQ-ETS-PART1-010 |
 | S-ETS-42-01 | Document external SWE Common and SensorML validator architecture and migration plan | Planned provisional architecture documented; no product dependency added | REQ-ETS-VALIDATOR-001, REQ-ETS-PART1-013 |
+| S-ETS-45-01 | Build the released 23-001/23-002 ATS inventory and compiled TestNG coverage audit | Complete; Raze approved | REQ-ETS-COVERAGE-001 |
 | S-ETS-06-04 | (optional) Common conformance class expansion 4 → 8 @Tests (Sprint 3+ minimal-then-expand by design per Quinn CONCERN-2) | Backlog | REQ-ETS-PART1-001 (modified) |
 
+Story completion records the scoped historical increment only. Released-class
+completion is derived exclusively from `ops/ats-coverage-report.json`.
+
 ## Acceptance Criteria
-- [ ] All 14 Part 1 conformance classes have at least one `@Test` per ATS assertion
+- [ ] All 13 Part 1 conformance classes and both supporting tests have reviewed mappings for all 110 Annex A tests
 - [ ] Every `@Test`'s `description` attribute carries the OGC requirement URI
 - [ ] Dependency-aware skip semantics: prerequisite-class FAIL → dependent-class SKIP
 - [ ] Each test captures full HTTP request/response in TestNG report attachments
 - [ ] Schema validation via Kaizen openapi-parser pinned to a specific OGC OpenAPI YAML SHA
-- [ ] All 14 classes pass against GeoRobotix demo server for IUT-declared classes
+- [ ] All IUT-declared released classes execute honestly against the primary local OSH target; advisory IUT failures remain visible

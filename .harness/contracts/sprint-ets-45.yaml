@@ -1,0 +1,38 @@
+sprint: ets-45
+story: S-ETS-45-01
+title: Released ATS coverage inventory
+status: COMPLETE
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-COVERAGE-RELEASED-SOURCES-001
+  - SCENARIO-ETS-COVERAGE-EXACT-INVENTORY-001
+  - SCENARIO-ETS-COVERAGE-COMPILED-MAPPING-001
+  - SCENARIO-ETS-COVERAGE-FAIL-CLOSED-001
+  - SCENARIO-ETS-COVERAGE-STATUS-HONESTY-001
+success_criteria:
+  - Released OGC 23-001 and 23-002 are the normative ATS authority.
+  - The source form is pinned to v1.0.0 commit 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2.
+  - Part 1 contains exactly 13 classes and 110 tests, including two supporting tests.
+  - Part 2 contains exactly 12 classes and 130 tests.
+  - Every inventory entry has deterministic provenance, identity, membership, and target data.
+  - Compiled TestNG metadata supplies target-URI candidate mappings.
+  - Only reviewed exact mappings can be classified as implemented.
+  - Source drift, duplicates, unknown methods, and unsupported status claims fail closed.
+  - Focused and full Maven verification succeeds.
+  - TeamEngine executes the candidate against the real primary local OSH IUT.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not use later draft content as released ATS authority.
+  - Do not infer coverage from Java class existence or smoke success.
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+verification:
+  inventory_self_test: PASS
+  source_reproduction: PASS
+  focused_maven: PASS_23_TESTS
+  full_maven: PASS_345_TESTS_3_SKIPPED
+  local_osh_teamengine: PASS_211_TOTAL_69_PASSED_0_FAILED_142_SKIPPED
+  exact_image: sha256:ad2594ef5f41beadc5f9de59c8caba27d3af1116d3732892fd498860ee23749c
+  raze: APPROVE_CONFIDENCE_0_99_NO_OPEN_FINDINGS

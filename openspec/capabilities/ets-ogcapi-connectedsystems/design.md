@@ -923,7 +923,10 @@ Pat recommended Sprint-1-style minimal for risk control on the third pattern ext
 
 1. **First two-level dependency chain compounds risk surface.** Sprint 4 introduces TWO new architectural firsts simultaneously: (i) the third conformance-class extension, (ii) the first multi-level group-dependency chain. Minimizing per-class @Test count concentrates Generator + gate verification effort on the dependency-cascade verification (the riskier of the two firsts).
 2. **The 4 chosen SCENARIOs cover the foundational shape** AND the unique-to-Subsystems `parent-system-link` assertion. The remaining ~3-5 ATS items in OGC 23-001 Annex A `/conf/subsystem/` (canonical-url depth, location-time geometry, cross-system queries, write operations, advanced filtering interactions) layer on top — once the foundation + two-level cascade are proven, expansion is mechanical AND batches cleanly with sibling classes.
-3. **Beta gate doesn't require full per-class coverage.** Per the SystemFeatures rationale (§"Coverage scope rationale (Sprint-1-style narrowing)" line 453), CITE SC review approves on the basis of "the test class exists, runs, and produces deterministic verdicts" — depth comes during the 6-12 month beta period via passing-IUT outreach.
+3. **Historical increment boundary.** Sprint 4 accepted a minimal subset so the
+   dependency mechanism could be evaluated independently. ADR-013 supersedes
+   any interpretation that class existence is enough for certification
+   completeness: unreconciled Annex A tests keep the class partial.
 4. **GeoRobotix's `/systems/{id}/subsystems` shape is unknown until Generator curls it** (acceptance criterion #1 mandates curl-first). 4 @Tests adapt cleanly to whatever GeoRobotix returns; 12-15 would force structural choices we'd regret OR force a SKIP-with-reason cascade that breaks the demonstration of the multi-level dependency mechanism.
 5. **GEOROBOTIX-SUBSYSTEMS-SHAPE-MISMATCH risk** (Pat surfaced; medium severity). If GeoRobotix returns 404 on `/systems/{id}/subsystems`, the entire Subsystems class SKIP-with-reasons (acceptable Sprint 4 outcome — the testng.xml two-level dependency wiring is still verified via the sabotage exec, which doesn't require IUT 200s). 4 @Tests narrow the scope of "what to SKIP gracefully if IUT doesn't implement Subsystems".
 
@@ -991,6 +994,43 @@ populated TestNG `211/91/28/92` with conformance `FAIL`. Cleanup passed, primary
 state was unchanged, and clean-primary TestNG passed `211/69/0/142`. This closes
 the reproducible populated-IUT workflow, not the wider positive binding
 conformance requirement.
+
+### Sprint 45: released ATS inventory and coverage gate
+
+ADR-013 and CP-005 separate three inputs that were previously conflated:
+
+1. the approved 23-001/23-002 Annex A suites, which define certification
+   coverage;
+2. the later OpenAPI repository pin, which supplies API/schema input for its
+   documented purpose;
+3. IUT declarations and the frozen web application, which provide
+   interoperability evidence but cannot redefine the ATS.
+
+The inventory extractor reads the exact `v1.0.0` release source commit and emits
+a deterministic semantic manifest. The manifest keys every test by standard
+part plus identifier, retains target-less supporting tests, and records class
+ordering and target requirements/recommendations. Semantic hashes avoid binding
+the gate to generated HTML element IDs while official PDF hashes retain
+document provenance.
+
+Coverage auditing operates on compiled TestNG annotations because Java source
+descriptions are commonly assembled from constants. Matching an annotation
+description to a target URI yields only a candidate. A separate reviewed
+mapping is required before the inventory can call an ATS test implemented.
+Target-less supporting tests map to named reusable helper methods.
+
+The gate fails closed for released-source drift, duplicate or missing entries,
+unknown classes/methods, a mapping whose annotation omits the canonical target,
+or an implemented status without an exact reviewed mapping. Method identities
+include parameter signatures. Discovery walks inherited methods, ignores
+method-level disabled tests, and rejects suite filters, factories, class-level
+TestNG tests, and other execution features until the audit models them exactly.
+Supporting mappings must resolve to the explicit approved-helper registry.
+Summary counts are derived from per-test entries. Consequently, a successful
+Maven or TeamEngine run proves regression health but cannot promote an
+incomplete conformance class. Historical story completion remains chronology;
+every released class stays partial until every owning test is exact and its
+supporting helpers are reviewed.
 
 ## Status
 

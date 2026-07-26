@@ -1,6 +1,6 @@
 # Project Brief — OGC API CS API TeamEngine ETS
 
-> Version: 2.0 | Status: Living Document | Last updated: 2026-04-27
+> Version: 2.1 | Status: Living Document | Last updated: 2026-07-26
 >
 > **Supersedes v1.1 (2026-03-31)** which framed the project as a Next.js/TypeScript web app for ad-hoc CS API conformance assessment. The user pivoted on 2026-04-27 to a certification-track Java/TestNG ETS for OGC TeamEngine. v1.0 of the web app shipped at HEAD `ab53658` and is frozen.
 
@@ -10,7 +10,7 @@ OGC API – Connected Systems Part 1 (OGC 23-001, approved 2025-06-02) and Part 
 
 ## Vision
 
-A Java/TestNG Executable Test Suite, hosted in our org as `ets-ogcapi-connectedsystems10` (Part 1 first, Part 2 follows), that an implementer can run inside TeamEngine 5.6.x (currently 5.6.1) (locally via Docker, or on the OGC validator) to obtain a per-conformance-class pass/fail verdict with HTTP traces and an EARL/JSON report. The ETS is greenfield in the OGC ecosystem (verified: no `ets-ogcapi-connectedsystems*` exists in the OGC GitHub org). Submission to OGC CITE for beta status is a milestone deliverable; official OGC release follows the CITE SC + TC governance loop with three independent passing implementations.
+A Java/TestNG Executable Test Suite, hosted in our org as `ets-ogcapi-connectedsystems10`, that an implementer can run inside the immutable OGC TeamEngine 6 runtime (locally via Docker, or eventually on the OGC validator) to obtain per-conformance-class results with HTTP traces. The released OGC 23-001 and 23-002 Annex A inventories are the coverage authority. Submission to OGC CITE for beta status is a milestone deliverable; official OGC release follows the CITE SC + TC governance loop with three independent passing implementations.
 
 ## Stakeholders
 
@@ -27,9 +27,9 @@ A Java/TestNG Executable Test Suite, hosted in our org as `ets-ogcapi-connecteds
 | ID | Criterion | Measure |
 |----|-----------|---------|
 | SC-1 | Maven scaffold builds green on JDK 17 | `mvn clean install` exits 0 |
-| SC-2 | All 14 Part 1 conformance classes have TestNG coverage | Annex A assertion → `@Test` 1:1 mapping |
-| SC-3 | ETS loads in TeamEngine 5.6.x (currently 5.6.1) Docker without registration error | Suite appears in CTL UI suite list |
-| SC-4 | Full Part 1 suite passes against GeoRobotix | All declared-class tests pass; non-declared are SKIP, not FAIL |
+| SC-2 | All 13 released Part 1 classes and 110 Annex A tests have reviewed ETS coverage | Class assertion → exact `@Test`; supporting test → reviewed helper |
+| SC-3 | ETS loads in the pinned TeamEngine 6 Docker runtime without registration error | Suite appears in TeamEngine metadata and executes through its REST API |
+| SC-4 | Released Part 1 behavior is verified against a self-run, unmodified local OSH IUT | Every verdict is backed by a real protocol exchange; unsupported or undeclared behavior never becomes a false pass |
 | SC-5 | Three independent passing implementations identified | GeoRobotix + OpenSensorHub + connected-systems-go beta participation |
 | SC-6 | Submitted to OGC CITE SC for beta status | OSSRH publish + CITE SC ticket open |
 
@@ -39,20 +39,21 @@ Full criteria in `_bmad/prd.md` v2.0.
 
 - **Toolchain locked**: JDK 17, Maven 3.9, TestNG, REST Assured, Kaizen `openapi-parser`, `org.opengis.cite:ets-common:17`. No CTL (legacy), no non-Java (TeamEngine SPI is Java).
 - **Repo topology**: sibling repo `ets-ogcapi-connectedsystems10` in our org first; propose to OGC at beta milestone (user gate 2026-04-27).
-- **Scope**: Part 1 first, Part 2 follows (user gate 2026-04-27). Sprint 1 implements scaffold + CS API Core conformance class only.
+- **Scope**: Complete all released Part 1 and Part 2 Annex A tests. OSH and TeamEngine modifications are outside project scope; both are consumed through supported interfaces only.
+- **Verification**: Local Maven, exact-image runtime checks, and Dockerized TeamEngine E2E against a self-run local OSH IUT. Hosted CI is explicitly out of scope.
 - **Web app frozen**: csapi_compliance at HEAD `ab53658`. README repositioned, no further sprint investment (user gate 2026-04-27).
 - **OGC governance external**: CITE SC review velocity, TC voting, three-implementation rule are calendar dependencies. Code-complete reachable in 1-2 quarters; official release in 3-7 quarters.
 
 ## Architecture (Outline — Architect Owns Detail)
 
 - **Build artifact**: a Maven jar published as `org.opengis.cite:ets-ogcapi-connectedsystems10:<version>` to OSSRH/Maven Central at the beta milestone.
-- **Runtime host**: TeamEngine 5.6.x (currently 5.6.1) Docker image (`ogccite/teamengine-production:5.6.1`) with the ETS jar mounted into `WEB-INF/lib/`.
+- **Runtime host**: digest-pinned OGC TeamEngine 6 source-built Docker image with the ETS and source-pinned external validator adapter artifacts installed without modifying TeamEngine.
 - **Test framework**: TestNG suites, one class per conformance class. Sprint 25 corrected the Part 2 count: OGC 23-002 Annex A does not define `/conf/system-history`, so current scope is the Part 1 classes, OGC Part 2 classes, and explicitly scoped project cross-class closures.
 - **Spec traceability**: every `@Test` has a `description` attribute carrying the OGC requirement URI (e.g. `OGC-23-001 /req/system/canonical-url`).
 - **Schema validation**: Kaizen `openapi-parser` against the OGC OpenAPI YAML pinned to a specific commit SHA in `pom.xml`. JSON Schemas at `src/main/resources/schemas/` (ported verbatim from `csapi_compliance/schemas/`).
 - **Spec-trap fixtures**: TestNG `@DataProvider`-supplied corpus ported from `csapi_compliance/tests/fixtures/spec-traps/` (~30-50 cases).
 
-Detailed architecture → Architect Alex in `_bmad/architecture.md` v2.0.
+Detailed architecture is maintained in `_bmad/architecture.md`.
 
 ## Technology Decisions
 
@@ -60,13 +61,13 @@ Detailed architecture → Architect Alex in `_bmad/architecture.md` v2.0.
 |----------|--------|-----------|
 | Language | Java 17 | TeamEngine SPI is Java; all 10 active `ets-ogcapi-*` repos are Java; non-Java is rejected by CITE SC review |
 | Build tool | Maven 3.9 | OGC convention; `ets-archetype-testng:2.7` is the official scaffold |
-| Test framework | TestNG | TeamEngine 5.6.x (currently 5.6.1) supports TestNG and CTL; no new ETS since ~2020 has chosen CTL |
+| Test framework | TestNG | TeamEngine 6 exposes the TestNG SPI used by the suite |
 | HTTP DSL | REST Assured | Standard in 9 reference ETSs |
 | OpenAPI parser | Kaizen `openapi-parser` | Standard in `ets-common`; runtime parsing avoids build-time bundling |
 | Geometry | JTS + proj4j | Standard in `ets-common` |
 | Reporting | TestNG built-in HTML + EARL via `ets-common` | TeamEngine renders these natively |
 | Source control | Git + GitHub | Standard; sibling repo to csapi_compliance |
-| CI/CD | GH Actions for our dev; Jenkinsfile stub for OGC submission compat | OGC convention requires Jenkinsfile; we run actual CI on GH Actions |
+| Verification | Local Maven, runtime verifier, and Docker E2E gates | Hosted CI is not approved; Jenkinsfiles remain submission metadata, not an active project gate |
 | Container runtime | Docker + docker-compose | Single-command local dev: `docker-compose up` brings TeamEngine + ETS |
 | Deployment | OSSRH → Maven Central at beta milestone | OGC convention for ETS distribution |
 

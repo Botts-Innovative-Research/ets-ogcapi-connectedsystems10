@@ -1,6 +1,6 @@
 # Product Requirements Document — OGC API CS API TeamEngine ETS
 
-> Version: 2.0 | Status: Living Document | Last updated: 2026-04-27
+> Version: 2.1 | Status: Living Document | Last updated: 2026-07-26
 >
 > **Supersedes v1.1 (2026-03-31).** v1.1 framed the deliverable as a Next.js/TypeScript web application
 > for ad-hoc CS API conformance assessment. The user pivoted on 2026-04-27 to a certification-track
@@ -42,13 +42,13 @@ shift-left developer pre-flight tool.
 | ID | Criterion | Measure |
 |----|-----------|---------|
 | SC-1 | Maven archetype scaffold builds green | `mvn clean install` exits 0 on a fresh JDK 17 / Maven 3.9 environment |
-| SC-2 | All 14 OGC 23-001 (Part 1) conformance classes have at least one TestNG test method per ATS assertion | TestNG report shows ≥1 `@Test` per `/conf/<class>/<assertion>` URI from Annex A |
-| SC-3 | All OGC 23-002 (Part 2) conformance classes have at least one TestNG test method per ATS assertion | Same, against Part 2 Annex A. Sprint 25 correction: Annex A does not define `/conf/system-history`; that former placeholder is retired. |
+| SC-2 | All 13 released OGC 23-001 conformance classes and both supporting tests have reviewed ETS mappings | The released semantic inventory accounts for all 110 Annex A tests; each class test has an exact TestNG mapping and each supporting test has a reviewed helper mapping |
+| SC-3 | All 12 released OGC 23-002 conformance classes have reviewed ETS mappings | The released semantic inventory accounts for all 130 Part 2 Annex A tests. `/conf/system-history` is not part of the released ATS. |
 | SC-4 | ETS loads without registration or linkage errors in the immutable TeamEngine runtime selected by the accepted architecture | TeamEngine 5.6.1 remains historical baseline evidence; Sprint 41 requires the digest-pinned OGC TeamEngine 6.0.0 image to become healthy and expose the suite through SPI/CTL before it becomes the supported runtime |
 | SC-5 | Full Part 1 + Part 2 suite passes against the primary development IUT | Local OSH is the default development IUT. All `@Test` methods that target conformance classes the IUT declares pass; conformance classes the IUT does not declare are SKIPPED, not FAILED. GeoRobotix public runs are advisory interoperability probes only. |
 | SC-6 | Three independent passing implementations identified | GeoRobotix + OpenSensorHub + `connected-systems-go` participate in beta testing, each producing a TeamEngine pass record |
 | SC-7 | ETS submitted to OGC CITE SC for beta status | CITE SC ticket open; ETS jar published to OSSRH/Maven Central |
-| SC-8 | URI-mapping fidelity preserved from TS web app | Every canonical OGC requirement URI in `csapi_compliance/src/engine/registry/*.ts` has a Java `@Test` method whose `description` attribute or `requirement-uri` annotation contains the same URI |
+| SC-8 | Released ATS mapping fidelity is machine-verifiable | Every OGC 23-001/23-002 version 1.0 Annex A identifier is present once in the ADR-013 inventory and has an honest exact/candidate/helper/unmapped state; frozen TS drift remains advisory |
 | SC-9 | Spec-trap fixtures preserved | The asymmetric `featureType`/`itemType` corpus (~30-50 cases) ports as TestNG `@DataProvider` inputs, exercised by at least one `@Test` per fixture |
 | SC-10 | OGC OpenAPI YAML pinned by commit SHA | `pom.xml` references the OGC `ogcapi-connected-systems` repo at a specific commit, not `master`; pin recorded in `ops/server.md` |
 
@@ -82,19 +82,23 @@ shift-left developer pre-flight tool.
 
 ### Sub-deliverable 2: CS API Part 1 Conformance Classes (R-PIVOT-03, OGC 23-001)
 
-The 14 OGC 23-001 conformance classes (verified against `docs.ogc.org/is/23-001/23-001.html` Annex A on 2026-04-27):
+OGC 23-001 Annex A defines 13 conformance classes and 110 abstract tests,
+including two target-less supporting tests. ADR-013 reverified this against the
+approved documents and release source on 2026-07-26. FR-ETS-10 is the inherited
+OGC API foundation used by the suite; it is not a fourteenth OGC 23-001 Annex A
+class.
 
 | Conformance class URI | FR | OpenSpec REQ |
 |---|---|---|
-| `/conf/core` (CS API Core — landing page, conformance, base resource shape) | FR-ETS-10 | REQ-ETS-CORE-001 |
-| `/conf/common` (CS API Common — link relations, content negotiation) | FR-ETS-11 | REQ-ETS-PART1-001 |
-| `/conf/system-features` | FR-ETS-12 | REQ-ETS-PART1-002 |
-| `/conf/subsystems` | FR-ETS-13 | REQ-ETS-PART1-003 |
-| `/conf/deployment-features` | FR-ETS-14 | REQ-ETS-PART1-004 |
-| `/conf/subdeployments` | FR-ETS-15 | REQ-ETS-PART1-005 |
-| `/conf/procedure-features` | FR-ETS-16 | REQ-ETS-PART1-006 |
-| `/conf/sampling-features` | FR-ETS-17 | REQ-ETS-PART1-007 |
-| `/conf/property-definitions` | FR-ETS-18 | REQ-ETS-PART1-008 |
+| Inherited OGC API foundation (not a 23-001 Annex A class) | FR-ETS-10 | REQ-ETS-CORE-001 |
+| `/conf/api-common` | FR-ETS-11 | REQ-ETS-PART1-001 |
+| `/conf/system` | FR-ETS-12 | REQ-ETS-PART1-002 |
+| `/conf/subsystem` | FR-ETS-13 | REQ-ETS-PART1-003 |
+| `/conf/deployment` | FR-ETS-14 | REQ-ETS-PART1-004 |
+| `/conf/subdeployment` | FR-ETS-15 | REQ-ETS-PART1-005 |
+| `/conf/procedure` | FR-ETS-16 | REQ-ETS-PART1-006 |
+| `/conf/sf` | FR-ETS-17 | REQ-ETS-PART1-007 |
+| `/conf/property` | FR-ETS-18 | REQ-ETS-PART1-008 |
 | `/conf/advanced-filtering` | FR-ETS-19 | REQ-ETS-PART1-009 |
 | `/conf/create-replace-delete` | FR-ETS-20 | REQ-ETS-PART1-010 |
 | `/conf/update` | FR-ETS-21 | REQ-ETS-PART1-011 |
@@ -239,7 +243,7 @@ The new capability is `ets-ogcapi-connectedsystems` at `openspec/capabilities/et
 | Epic | Goal | Scope |
 |---|---|---|
 | `epic-ets-01-scaffold` | Generate archetype, modernize to JDK 17, build green | REQ-ETS-SCAFFOLD-001..007, NFR-ETS-01,02,06 |
-| `epic-ets-02-part1-classes` | Implement all 14 Part 1 conformance classes | REQ-ETS-CORE-001..004, REQ-ETS-PART1-001..013 |
+| `epic-ets-02-part1-classes` | Implement all 13 released Part 1 classes and 110 Annex A tests | REQ-ETS-COVERAGE-001, REQ-ETS-CORE-001..004, REQ-ETS-PART1-001..013 |
 | `epic-ets-03-part2-classes` | Implement all OGC 23-002 Part 2 conformance classes plus project cross-class closures | REQ-ETS-PART2-001..013 |
 | `epic-ets-04-teamengine-integration` | SPI + CTL + Docker | REQ-ETS-TEAMENGINE-001..007 |
 | `epic-ets-05-cite-submission` | Beta submission, three-impl outreach | REQ-ETS-CITE-001..003 |

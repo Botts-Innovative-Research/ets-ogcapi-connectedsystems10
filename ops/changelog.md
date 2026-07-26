@@ -2,6 +2,41 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-26 - Released ATS coverage authority and executable inventory
+
+**Triggered by user instruction**: execute recommendations 1-4 continuously,
+starting with publication and a formal normative Annex A coverage inventory.
+
+- Published Sprint 44 to Botts `main` as commit `a41cb184`.
+- Added CP-005, ADR-013, REQ-ETS-COVERAGE-001, S-ETS-45-01, and its sprint
+  contract.
+- Corrected the released surface to Part 1 `13 classes / 110 tests` and Part 2
+  `12 classes / 130 tests`; the earlier 14/13 counts and five-gap Part 1 claim
+  were stale.
+- Added a deterministic released-source extractor/auditor pinned to `v1.0.0`
+  commit `8e03b236...`, plus the complete machine-readable 240-test inventory.
+- Added compiled-TestNG coverage discovery, reviewed mapping validation,
+  per-test/per-class reporting, and fail-closed regressions for duplicate,
+  unknown, and undeployed mappings.
+- Baseline report: `0 exact / 0 helper / 150 candidate / 90 unmapped`.
+  Candidates remain unimplemented until test-method review is recorded.
+- Expected test-first gate failed `5/5/0/0` while artifacts were absent.
+  Final focused Maven passes `23/0/0/0`; Python self-test and exact-source
+  reproduction pass.
+- Initial Raze returned `GAPS_FOUND`, confidence `0.99`, and identified exact
+  mapping, inventory membership, status honesty, deployed TestNG/helper
+  modeling, and stale-evidence gaps. All five are remediated.
+- First Raze recheck returned `GAPS_FOUND`, confidence `0.99`, because 17
+  historical partial-implemented statuses remained and discovery did not reject
+  constructor factories, inherited class tests, or `@Ignore`. Added six
+  test-first failures and closed every path with focused `23/0/0/0`.
+- Fresh full Docker Maven passes `345/0/0/3`. Exact image
+  `sha256:ad2594ef...23749c` passes runtime verification and primary local OSH
+  TeamEngine `211/69/0/142`, with 135 recognized requests, zero writes, and
+  zero startup errors.
+- Final Raze returned `APPROVE`, confidence `0.99`, after 334 seconds; all five
+  findings are closed and no new findings remain. Sprint 45 is complete.
+
 ## 2026-07-25 - Reproducible populated local OSH E2E implemented
 
 **Triggered by user instruction**: "Make it so."

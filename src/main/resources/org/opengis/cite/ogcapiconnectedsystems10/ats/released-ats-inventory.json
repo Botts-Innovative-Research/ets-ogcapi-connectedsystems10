@@ -1,0 +1,2663 @@
+{
+  "schemaVersion": "1.0",
+  "source": {
+    "repository": "https://github.com/opengeospatial/ogcapi-connected-systems.git",
+    "tag": "v1.0.0",
+    "commit": "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
+    "parts": [
+      {
+        "part": 1,
+        "document": "OGC 23-001",
+        "specificationBase": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0",
+        "sourcePath": "api/part1/standard/sections/annex-abstract-test-suite.adoc",
+        "officialHtml": "https://docs.ogc.org/is/23-001/23-001.html",
+        "officialPdf": "https://docs.ogc.org/is/23-001/23-001.pdf",
+        "pdfSha256": "c444bff07193daf8ce880077b1d728127868b48c056fe35278129e04d439f9e4",
+        "classCount": 13,
+        "testCount": 110,
+        "supportingTestCount": 2,
+        "semanticSha256": "25f2aa8f2f8218593d5371193ae7d5859105f6615cf6c42111c8af052eb9e418"
+      },
+      {
+        "part": 2,
+        "document": "OGC 23-002",
+        "specificationBase": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0",
+        "sourcePath": "api/part2/standard/sections/annex-abstract-test-suite.adoc",
+        "officialHtml": "https://docs.ogc.org/is/23-002/23-002.html",
+        "officialPdf": "https://docs.ogc.org/is/23-002/23-002.pdf",
+        "pdfSha256": "78531c637053890dd501bb153a0046261b9c03fa064d0888a39e2b0dc383d154",
+        "classCount": 12,
+        "testCount": 130,
+        "supportingTestCount": 0,
+        "semanticSha256": "5d57d3824a5e5d415b5de79b2eb82fbd06aea325340014d2a6c99c4ff18cd5af"
+      }
+    ]
+  },
+  "classes": [
+    {
+      "part": 1,
+      "identifier": "/conf/api-common",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+      "target": "/req/api-common",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common",
+      "tests": [
+        "/conf/api-common/resource-ids",
+        "/conf/api-common/resource-uids",
+        "/conf/api-common/resource-uids-types",
+        "/conf/api-common/datetime"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system",
+      "target": "/req/system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system",
+      "tests": [
+        "/conf/system/location",
+        "/conf/system/location-time",
+        "/conf/system/canonical-url",
+        "/conf/system/resources-endpoint",
+        "/conf/system/canonical-endpoint",
+        "/conf/system/collections"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subsystem",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem",
+      "target": "/req/subsystem",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem",
+      "tests": [
+        "/conf/subsystem/collection",
+        "/conf/subsystem/recursive-param",
+        "/conf/subsystem/recursive-search-systems",
+        "/conf/subsystem/recursive-search-subsystems",
+        "/conf/subsystem/recursive-assoc"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/deployment",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment",
+      "target": "/req/deployment",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment",
+      "tests": [
+        "/conf/deployment/canonical-url",
+        "/conf/deployment/resources-endpoint",
+        "/conf/deployment/canonical-endpoint",
+        "/conf/deployment/ref-from-system",
+        "/conf/deployment/collections"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subdeployment",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment",
+      "target": "/req/subdeployment",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment",
+      "tests": [
+        "/conf/subdeployment/collection",
+        "/conf/subdeployment/recursive-param",
+        "/conf/subdeployment/recursive-search-deployments",
+        "/conf/subdeployment/recursive-search-subdeployments",
+        "/conf/subdeployment/recursive-assoc"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/procedure",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure",
+      "target": "/req/procedure",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure",
+      "tests": [
+        "/conf/procedure/location",
+        "/conf/procedure/canonical-url",
+        "/conf/procedure/resources-endpoint",
+        "/conf/procedure/canonical-endpoint",
+        "/conf/procedure/collections"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sf",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf",
+      "target": "/req/sf",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf",
+      "tests": [
+        "/conf/sf/canonical-url",
+        "/conf/sf/resources-endpoint",
+        "/conf/sf/canonical-endpoint",
+        "/conf/sf/ref-from-system",
+        "/conf/sf/collections"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/property",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property",
+      "target": "/req/property",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property",
+      "tests": [
+        "/conf/property/canonical-url",
+        "/conf/property/resources-endpoint",
+        "/conf/property/canonical-endpoint",
+        "/conf/property/collections"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering",
+      "target": "/req/advanced-filtering",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering",
+      "tests": [
+        "/conf/advanced-filtering/id-list-schema",
+        "/conf/advanced-filtering/resource-by-id",
+        "/conf/advanced-filtering/resource-by-keyword",
+        "/conf/advanced-filtering/resource-by-property",
+        "/conf/advanced-filtering/feature-by-geom",
+        "/conf/advanced-filtering/system-by-parent",
+        "/conf/advanced-filtering/system-by-procedure",
+        "/conf/advanced-filtering/system-by-foi",
+        "/conf/advanced-filtering/system-by-obsprop",
+        "/conf/advanced-filtering/system-by-controlprop",
+        "/conf/advanced-filtering/deployment-by-parent",
+        "/conf/advanced-filtering/deployment-by-system",
+        "/conf/advanced-filtering/deployment-by-foi",
+        "/conf/advanced-filtering/deployment-by-obsprop",
+        "/conf/advanced-filtering/deployment-by-controlprop",
+        "/conf/advanced-filtering/procedure-by-obsprop",
+        "/conf/advanced-filtering/procedure-by-controlprop",
+        "/conf/advanced-filtering/sf-by-foi",
+        "/conf/advanced-filtering/sf-by-obsprop",
+        "/conf/advanced-filtering/sf-by-controlprop",
+        "/conf/advanced-filtering/prop-by-baseprop",
+        "/conf/advanced-filtering/prop-by-object",
+        "/conf/advanced-filtering/combined-filters",
+        "/conf/advanced-filtering/indirect-prop",
+        "/conf/advanced-filtering/indirect-foi"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+      "target": "/req/create-replace-delete",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete",
+      "tests": [
+        "/conf/create-replace-delete/system",
+        "/conf/create-replace-delete/system-delete-cascade",
+        "/conf/create-replace-delete/subsystem",
+        "/conf/create-replace-delete/deployment",
+        "/conf/create-replace-delete/subdeployment",
+        "/conf/create-replace-delete/procedure",
+        "/conf/create-replace-delete/sampling-feature",
+        "/conf/create-replace-delete/property",
+        "/conf/create-replace-delete/create-in-collection",
+        "/conf/create-replace-delete/replace-in-collection",
+        "/conf/create-replace-delete/delete-in-collection",
+        "/conf/create-replace-delete/add-to-collection"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/update",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+      "target": "/req/update",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/update",
+      "tests": [
+        "/conf/update/system",
+        "/conf/update/deployment",
+        "/conf/update/procedure",
+        "/conf/update/sampling-feature",
+        "/conf/update/property"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson",
+      "target": "/req/geojson",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson",
+      "tests": [
+        "/conf/geojson/mediatype-read",
+        "/conf/geojson/mediatype-write",
+        "/conf/geojson/relation-types",
+        "/conf/geojson/feature-attribute-mapping",
+        "/conf/geojson/system-schema",
+        "/conf/geojson/system-mappings",
+        "/conf/geojson/deployment-schema",
+        "/conf/geojson/deployment-mappings",
+        "/conf/geojson/procedure-schema",
+        "/conf/geojson/procedure-mappings",
+        "/conf/geojson/sf-schema",
+        "/conf/geojson/sf-mappings"
+      ]
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml",
+      "target": "/req/sensorml",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml",
+      "tests": [
+        "/conf/sensorml/mediatype-read",
+        "/conf/sensorml/mediatype-write",
+        "/conf/sensorml/relation-types",
+        "/conf/sensorml/resource-id",
+        "/conf/sensorml/feature-attribute-mapping",
+        "/conf/sensorml/system-schema",
+        "/conf/sensorml/system-sml-class",
+        "/conf/sensorml/system-mappings",
+        "/conf/sensorml/deployment-schema",
+        "/conf/sensorml/deployment-mappings",
+        "/conf/sensorml/procedure-schema",
+        "/conf/sensorml/procedure-sml-class",
+        "/conf/sensorml/procedure-mappings",
+        "/conf/sensorml/property-schema",
+        "/conf/sensorml/property-mappings"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/api-common",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common",
+      "target": "/req/api-common",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common",
+      "tests": [
+        "/conf/api-common/resources",
+        "/conf/api-common/resource-collection"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+      "target": "/req/datastream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream",
+      "tests": [
+        "/conf/datastream/sf-ref-from-datastream",
+        "/conf/datastream/foi-ref-from-datastream",
+        "/conf/datastream/canonical-url",
+        "/conf/datastream/resources-endpoint",
+        "/conf/datastream/canonical-endpoint",
+        "/conf/datastream/ref-from-system",
+        "/conf/datastream/ref-from-deployment",
+        "/conf/datastream/collections",
+        "/conf/datastream/schema-op",
+        "/conf/datastream/obs-canonical-url",
+        "/conf/datastream/obs-resources-endpoint",
+        "/conf/datastream/obs-canonical-endpoint",
+        "/conf/datastream/obs-ref-from-datastream",
+        "/conf/datastream/obs-collections"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+      "target": "/req/controlstream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream",
+      "tests": [
+        "/conf/controlstream/sf-ref-from-controlstream",
+        "/conf/controlstream/foi-ref-from-controlstream",
+        "/conf/controlstream/canonical-url",
+        "/conf/controlstream/resources-endpoint",
+        "/conf/controlstream/canonical-endpoint",
+        "/conf/controlstream/ref-from-system",
+        "/conf/controlstream/ref-from-deployment",
+        "/conf/controlstream/collections",
+        "/conf/controlstream/schema-op",
+        "/conf/controlstream/cmd-canonical-url",
+        "/conf/controlstream/cmd-resources-endpoint",
+        "/conf/controlstream/cmd-canonical-endpoint",
+        "/conf/controlstream/cmd-ref-from-controlstream",
+        "/conf/controlstream/cmd-collections",
+        "/conf/controlstream/status-resources-endpoint",
+        "/conf/controlstream/command-status-endpoint",
+        "/conf/controlstream/result-resources-endpoint",
+        "/conf/controlstream/command-result-endpoint"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/feasibility",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility",
+      "target": "/req/feasibility",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/feasibility",
+      "tests": [
+        "/conf/feasibility/canonical-url",
+        "/conf/feasibility/ref-from-controlstream",
+        "/conf/feasibility/status-endpoint",
+        "/conf/feasibility/result-endpoint",
+        "/conf/feasibility/collections"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/system-event",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event",
+      "target": "/req/system-event",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/system-event",
+      "tests": [
+        "/conf/system-event/canonical-url",
+        "/conf/system-event/resources-endpoint",
+        "/conf/system-event/canonical-endpoint",
+        "/conf/system-event/ref-from-system",
+        "/conf/system-event/collections"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering",
+      "target": "/req/advanced-filtering",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering",
+      "tests": [
+        "/conf/advanced-filtering/datastream-by-phenomenontime",
+        "/conf/advanced-filtering/datastream-by-resulttime",
+        "/conf/advanced-filtering/datastream-by-obsprop",
+        "/conf/advanced-filtering/datastream-by-foi",
+        "/conf/advanced-filtering/obs-by-phenomenontime",
+        "/conf/advanced-filtering/obs-by-resulttime",
+        "/conf/advanced-filtering/obs-by-foi",
+        "/conf/advanced-filtering/controlstream-by-issuetime",
+        "/conf/advanced-filtering/controlstream-by-exectime",
+        "/conf/advanced-filtering/controlstream-by-controlprop",
+        "/conf/advanced-filtering/controlstream-by-foi",
+        "/conf/advanced-filtering/cmd-by-issuetime",
+        "/conf/advanced-filtering/cmd-by-exectime",
+        "/conf/advanced-filtering/cmd-by-status",
+        "/conf/advanced-filtering/cmd-by-sender",
+        "/conf/advanced-filtering/cmd-by-foi",
+        "/conf/advanced-filtering/status-by-statuscode",
+        "/conf/advanced-filtering/event-by-type"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+      "target": "/req/create-replace-delete",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete",
+      "tests": [
+        "/conf/create-replace-delete/datastream",
+        "/conf/create-replace-delete/datastream-update-schema",
+        "/conf/create-replace-delete/datastream-delete-cascade",
+        "/conf/create-replace-delete/observation",
+        "/conf/create-replace-delete/observation-schema",
+        "/conf/create-replace-delete/controlstream",
+        "/conf/create-replace-delete/controlstream-update-schema",
+        "/conf/create-replace-delete/controlstream-delete-cascade",
+        "/conf/create-replace-delete/command",
+        "/conf/create-replace-delete/command-schema",
+        "/conf/create-replace-delete/command-status",
+        "/conf/create-replace-delete/command-result",
+        "/conf/create-replace-delete/feasibility",
+        "/conf/create-replace-delete/feasibility-status",
+        "/conf/create-replace-delete/feasibility-result",
+        "/conf/create-replace-delete/system-event"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+      "target": "/req/update",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update",
+      "tests": [
+        "/conf/update/datastream",
+        "/conf/update/datastream-update-schema",
+        "/conf/update/observation",
+        "/conf/update/observation-schema",
+        "/conf/update/controlstream",
+        "/conf/update/controlstream-update-schema",
+        "/conf/update/command",
+        "/conf/update/command-schema",
+        "/conf/update/command-status",
+        "/conf/update/command-result",
+        "/conf/update/feasibility",
+        "/conf/update/feasibility-status",
+        "/conf/update/feasibility-result",
+        "/conf/update/system-event"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json",
+      "target": "/req/json",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json",
+      "tests": [
+        "/conf/json/mediatype-read",
+        "/conf/json/mediatype-write",
+        "/conf/json/datastream-schema",
+        "/conf/json/obsschema-schema",
+        "/conf/json/observation-schema",
+        "/conf/json/observation-constraints",
+        "/conf/json/controlstream-schema",
+        "/conf/json/commandschema-schema",
+        "/conf/json/command-schema",
+        "/conf/json/command-constraints",
+        "/conf/json/commandstatus-schema",
+        "/conf/json/commandresult-schema",
+        "/conf/json/commandresult-constraints",
+        "/conf/json/systemevent-schema"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json",
+      "target": "/req/swecommon-json",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json",
+      "tests": [
+        "/conf/swecommon-json/mediatype-read",
+        "/conf/swecommon-json/mediatype-write",
+        "/conf/swecommon-json/obsschema-schema",
+        "/conf/swecommon-json/obsschema-mapping",
+        "/conf/swecommon-json/observation-encoding",
+        "/conf/swecommon-json/cmdschema-schema",
+        "/conf/swecommon-json/cmdschema-mapping",
+        "/conf/swecommon-json/command-encoding"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text",
+      "target": "/req/swecommon-text",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text",
+      "tests": [
+        "/conf/swecommon-text/mediatype-read",
+        "/conf/swecommon-text/mediatype-write",
+        "/conf/swecommon-text/obsschema-schema",
+        "/conf/swecommon-text/obsschema-mapping",
+        "/conf/swecommon-text/observation-encoding",
+        "/conf/swecommon-text/cmdschema-schema",
+        "/conf/swecommon-text/cmdschema-mapping",
+        "/conf/swecommon-text/command-encoding"
+      ]
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary",
+      "target": "/req/swecommon-binary",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary",
+      "tests": [
+        "/conf/swecommon-binary/mediatype-read",
+        "/conf/swecommon-binary/mediatype-write",
+        "/conf/swecommon-binary/obsschema-schema",
+        "/conf/swecommon-binary/obsschema-mapping",
+        "/conf/swecommon-binary/observation-encoding",
+        "/conf/swecommon-binary/cmdschema-schema",
+        "/conf/swecommon-binary/cmdschema-mapping",
+        "/conf/swecommon-binary/command-encoding"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "part": 1,
+      "identifier": "/conf/api-common/canonical-resources",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/canonical-resources",
+      "target": null,
+      "fullTarget": null,
+      "classIdentifier": null,
+      "supporting": true
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/api-common/collection-items",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/collection-items",
+      "target": null,
+      "fullTarget": null,
+      "classIdentifier": null,
+      "supporting": true
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/api-common/resource-ids",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/resource-ids",
+      "target": "/req/api-common/resource-ids",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/resource-ids",
+      "classIdentifier": "/conf/api-common",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/api-common/resource-uids",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/resource-uids",
+      "target": "/req/api-common/resource-uids",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/resource-uids",
+      "classIdentifier": "/conf/api-common",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/api-common/resource-uids-types",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/resource-uids-types",
+      "target": "/rec/api-common/resource-uids-types",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types",
+      "classIdentifier": "/conf/api-common",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/api-common/datetime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/datetime",
+      "target": "/req/api-common/datetime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime",
+      "classIdentifier": "/conf/api-common",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/system/location",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system/location",
+      "target": "/rec/system/location",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/system/location",
+      "classIdentifier": "/conf/system",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/system/location-time",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system/location-time",
+      "target": "/req/system/location-time",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/location-time",
+      "classIdentifier": "/conf/system",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/system/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system/canonical-url",
+      "target": "/req/system/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/canonical-url",
+      "classIdentifier": "/conf/system",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/system/resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system/resources-endpoint",
+      "target": "/req/system/resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/resources-endpoint",
+      "classIdentifier": "/conf/system",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/system/canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system/canonical-endpoint",
+      "target": "/req/system/canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/canonical-endpoint",
+      "classIdentifier": "/conf/system",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/system/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system/collections",
+      "target": "/req/system/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/collections",
+      "classIdentifier": "/conf/system",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subsystem/collection",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem/collection",
+      "target": "/req/subsystem/collection",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/collection",
+      "classIdentifier": "/conf/subsystem",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subsystem/recursive-param",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem/recursive-param",
+      "target": "/req/subsystem/recursive-param",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-param",
+      "classIdentifier": "/conf/subsystem",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subsystem/recursive-search-systems",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem/recursive-search-systems",
+      "target": "/req/subsystem/recursive-search-systems",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-search-systems",
+      "classIdentifier": "/conf/subsystem",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subsystem/recursive-search-subsystems",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem/recursive-search-subsystems",
+      "target": "/req/subsystem/recursive-search-subsystems",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-search-subsystems",
+      "classIdentifier": "/conf/subsystem",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subsystem/recursive-assoc",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem/recursive-assoc",
+      "target": "/req/subsystem/recursive-assoc",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-assoc",
+      "classIdentifier": "/conf/subsystem",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/deployment/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment/canonical-url",
+      "target": "/req/deployment/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url",
+      "classIdentifier": "/conf/deployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/deployment/resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment/resources-endpoint",
+      "target": "/req/deployment/resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/resources-endpoint",
+      "classIdentifier": "/conf/deployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/deployment/canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment/canonical-endpoint",
+      "target": "/req/deployment/canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-endpoint",
+      "classIdentifier": "/conf/deployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/deployment/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment/collections",
+      "target": "/req/deployment/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections",
+      "classIdentifier": "/conf/deployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/deployment/ref-from-system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment/ref-from-system",
+      "target": "/req/deployment/ref-from-system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system",
+      "classIdentifier": "/conf/deployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subdeployment/collection",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment/collection",
+      "target": "/req/subdeployment/collection",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/collection",
+      "classIdentifier": "/conf/subdeployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subdeployment/recursive-param",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment/recursive-param",
+      "target": "/req/subdeployment/recursive-param",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-param",
+      "classIdentifier": "/conf/subdeployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subdeployment/recursive-search-deployments",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment/recursive-search-deployments",
+      "target": "/req/subdeployment/recursive-search-deployments",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-deployments",
+      "classIdentifier": "/conf/subdeployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subdeployment/recursive-search-subdeployments",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment/recursive-search-subdeployments",
+      "target": "/req/subdeployment/recursive-search-subdeployments",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-subdeployments",
+      "classIdentifier": "/conf/subdeployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/subdeployment/recursive-assoc",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subdeployment/recursive-assoc",
+      "target": "/req/subdeployment/recursive-assoc",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-assoc",
+      "classIdentifier": "/conf/subdeployment",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/procedure/location",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure/location",
+      "target": "/req/procedure/location",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/location",
+      "classIdentifier": "/conf/procedure",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/procedure/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure/canonical-url",
+      "target": "/req/procedure/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url",
+      "classIdentifier": "/conf/procedure",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/procedure/resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure/resources-endpoint",
+      "target": "/req/procedure/resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/resources-endpoint",
+      "classIdentifier": "/conf/procedure",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/procedure/canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure/canonical-endpoint",
+      "target": "/req/procedure/canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-endpoint",
+      "classIdentifier": "/conf/procedure",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/procedure/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure/collections",
+      "target": "/req/procedure/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections",
+      "classIdentifier": "/conf/procedure",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sf/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf/canonical-url",
+      "target": "/req/sf/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/canonical-url",
+      "classIdentifier": "/conf/sf",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sf/resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf/resources-endpoint",
+      "target": "/req/sf/resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/resources-endpoint",
+      "classIdentifier": "/conf/sf",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sf/canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf/canonical-endpoint",
+      "target": "/req/sf/canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/canonical-endpoint",
+      "classIdentifier": "/conf/sf",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sf/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf/collections",
+      "target": "/req/sf/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/collections",
+      "classIdentifier": "/conf/sf",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sf/ref-from-system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf/ref-from-system",
+      "target": "/req/sf/ref-from-system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/ref-from-system",
+      "classIdentifier": "/conf/sf",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/property/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property/canonical-url",
+      "target": "/req/property/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/canonical-url",
+      "classIdentifier": "/conf/property",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/property/resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property/resources-endpoint",
+      "target": "/req/property/resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/resources-endpoint",
+      "classIdentifier": "/conf/property",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/property/canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property/canonical-endpoint",
+      "target": "/req/property/canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/canonical-endpoint",
+      "classIdentifier": "/conf/property",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/property/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property/collections",
+      "target": "/req/property/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections",
+      "classIdentifier": "/conf/property",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/id-list-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/id-list-schema",
+      "target": "/req/advanced-filtering/id-list-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/id-list-schema",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/resource-by-id",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/resource-by-id",
+      "target": "/req/advanced-filtering/resource-by-id",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/resource-by-id",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/resource-by-keyword",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/resource-by-keyword",
+      "target": "/req/advanced-filtering/resource-by-keyword",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/resource-by-keyword",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/resource-by-property",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/resource-by-property",
+      "target": "/rec/advanced-filtering/resource-by-property",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/advanced-filtering/resource-by-property",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/feature-by-geom",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/feature-by-geom",
+      "target": "/req/advanced-filtering/feature-by-geom",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/feature-by-geom",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/system-by-parent",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/system-by-parent",
+      "target": "/req/advanced-filtering/system-by-parent",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-parent",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/system-by-procedure",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/system-by-procedure",
+      "target": "/req/advanced-filtering/system-by-procedure",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-procedure",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/system-by-foi",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/system-by-foi",
+      "target": "/req/advanced-filtering/system-by-foi",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-foi",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/system-by-obsprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/system-by-obsprop",
+      "target": "/req/advanced-filtering/system-by-obsprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-obsprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/system-by-controlprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/system-by-controlprop",
+      "target": "/req/advanced-filtering/system-by-controlprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-controlprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/deployment-by-parent",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/deployment-by-parent",
+      "target": "/req/advanced-filtering/deployment-by-parent",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-parent",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/deployment-by-system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/deployment-by-system",
+      "target": "/req/advanced-filtering/deployment-by-system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-system",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/deployment-by-foi",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/deployment-by-foi",
+      "target": "/req/advanced-filtering/deployment-by-foi",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-foi",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/deployment-by-obsprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/deployment-by-obsprop",
+      "target": "/req/advanced-filtering/deployment-by-obsprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-obsprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/deployment-by-controlprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/deployment-by-controlprop",
+      "target": "/req/advanced-filtering/deployment-by-controlprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-controlprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/procedure-by-obsprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/procedure-by-obsprop",
+      "target": "/req/advanced-filtering/procedure-by-obsprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/procedure-by-obsprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/procedure-by-controlprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/procedure-by-controlprop",
+      "target": "/req/advanced-filtering/procedure-by-controlprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/procedure-by-controlprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/sf-by-foi",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/sf-by-foi",
+      "target": "/req/advanced-filtering/sf-by-foi",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/sf-by-foi",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/sf-by-obsprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/sf-by-obsprop",
+      "target": "/req/advanced-filtering/sf-by-obsprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/sf-by-obsprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/sf-by-controlprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/sf-by-controlprop",
+      "target": "/req/advanced-filtering/sf-by-controlprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/sf-by-controlprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/prop-by-baseprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/prop-by-baseprop",
+      "target": "/req/advanced-filtering/prop-by-baseprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/prop-by-baseprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/prop-by-object",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/prop-by-object",
+      "target": "/req/advanced-filtering/prop-by-object",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/prop-by-object",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/combined-filters",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/combined-filters",
+      "target": "/req/advanced-filtering/combined-filters",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/combined-filters",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/indirect-prop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/indirect-prop",
+      "target": "/rec/advanced-filtering/indirect-prop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/advanced-filtering/indirect-prop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/advanced-filtering/indirect-foi",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering/indirect-foi",
+      "target": "/rec/advanced-filtering/indirect-foi",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/advanced-filtering/indirect-foi",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/system",
+      "target": "/req/create-replace-delete/system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/system",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/system-delete-cascade",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/system-delete-cascade",
+      "target": "/req/create-replace-delete/system-delete-cascade",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/system-delete-cascade",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/subsystem",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/subsystem",
+      "target": "/req/create-replace-delete/subsystem",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/subsystem",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/deployment",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/deployment",
+      "target": "/req/create-replace-delete/deployment",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/deployment",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/subdeployment",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/subdeployment",
+      "target": "/req/create-replace-delete/subdeployment",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/subdeployment",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/procedure",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/procedure",
+      "target": "/req/create-replace-delete/procedure",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/procedure",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/sampling-feature",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/sampling-feature",
+      "target": "/req/create-replace-delete/sampling-feature",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/sampling-feature",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/property",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/property",
+      "target": "/req/create-replace-delete/property",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/property",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/create-in-collection",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/create-in-collection",
+      "target": "/req/create-replace-delete/create-in-collection",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/create-in-collection",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/replace-in-collection",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/replace-in-collection",
+      "target": "/req/create-replace-delete/replace-in-collection",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/replace-in-collection",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/delete-in-collection",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/delete-in-collection",
+      "target": "/req/create-replace-delete/delete-in-collection",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/delete-in-collection",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/create-replace-delete/add-to-collection",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete/add-to-collection",
+      "target": "/req/create-replace-delete/add-to-collection",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/add-to-collection",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/update/system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update/system",
+      "target": "/req/update/system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/update/system",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/update/deployment",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update/deployment",
+      "target": "/req/update/deployment",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/update/deployment",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/update/procedure",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update/procedure",
+      "target": "/req/update/procedure",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/update/procedure",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/update/sampling-feature",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update/sampling-feature",
+      "target": "/req/update/sampling-feature",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/update/sampling-feature",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/update/property",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update/property",
+      "target": "/req/update/property",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/update/property",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/mediatype-read",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/mediatype-read",
+      "target": "/req/geojson/mediatype-read",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/mediatype-read",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/mediatype-write",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/mediatype-write",
+      "target": "/req/geojson/mediatype-write",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/mediatype-write",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/relation-types",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/relation-types",
+      "target": "/req/geojson/relation-types",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/feature-attribute-mapping",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/feature-attribute-mapping",
+      "target": "/req/geojson/feature-attribute-mapping",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/system-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/system-schema",
+      "target": "/req/geojson/system-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-schema",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/system-mappings",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/system-mappings",
+      "target": "/req/geojson/system-mappings",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-mappings",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/deployment-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/deployment-schema",
+      "target": "/req/geojson/deployment-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/deployment-schema",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/deployment-mappings",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/deployment-mappings",
+      "target": "/req/geojson/deployment-mappings",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/deployment-mappings",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/procedure-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/procedure-schema",
+      "target": "/req/geojson/procedure-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/procedure-schema",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/procedure-mappings",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/procedure-mappings",
+      "target": "/req/geojson/procedure-mappings",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/procedure-mappings",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/sf-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/sf-schema",
+      "target": "/req/geojson/sf-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/sf-schema",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/geojson/sf-mappings",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson/sf-mappings",
+      "target": "/req/geojson/sf-mappings",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/sf-mappings",
+      "classIdentifier": "/conf/geojson",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/mediatype-read",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/mediatype-read",
+      "target": "/req/sensorml/mediatype-read",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/mediatype-write",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/mediatype-write",
+      "target": "/req/sensorml/mediatype-write",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-write",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/relation-types",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/relation-types",
+      "target": "/req/sensorml/relation-types",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/resource-id",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/resource-id",
+      "target": "/req/sensorml/resource-id",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/feature-attribute-mapping",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/feature-attribute-mapping",
+      "target": "/req/sensorml/feature-attribute-mapping",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/system-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/system-schema",
+      "target": "/req/sensorml/system-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/system-sml-class",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/system-sml-class",
+      "target": "/req/sensorml/system-sml-class",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/system-mappings",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/system-mappings",
+      "target": "/req/sensorml/system-mappings",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/deployment-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/deployment-schema",
+      "target": "/req/sensorml/deployment-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/deployment-mappings",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/deployment-mappings",
+      "target": "/req/sensorml/deployment-mappings",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/procedure-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/procedure-schema",
+      "target": "/req/sensorml/procedure-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/procedure-sml-class",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/procedure-sml-class",
+      "target": "/req/sensorml/procedure-sml-class",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/procedure-mappings",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/procedure-mappings",
+      "target": "/req/sensorml/procedure-mappings",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/property-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/property-schema",
+      "target": "/req/sensorml/property-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 1,
+      "identifier": "/conf/sensorml/property-mappings",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sensorml/property-mappings",
+      "target": "/req/sensorml/property-mappings",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings",
+      "classIdentifier": "/conf/sensorml",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/api-common/resources",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common/resources",
+      "target": "/req/api-common/resources",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common/resources",
+      "classIdentifier": "/conf/api-common",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/api-common/resource-collection",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common/resource-collection",
+      "target": "/req/api-common/resource-collection",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common/resource-collection",
+      "classIdentifier": "/conf/api-common",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/sf-ref-from-datastream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/sf-ref-from-datastream",
+      "target": "/req/datastream/sf-ref-from-datastream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/sf-ref-from-datastream",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/foi-ref-from-datastream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/foi-ref-from-datastream",
+      "target": "/req/datastream/foi-ref-from-datastream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/foi-ref-from-datastream",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/canonical-url",
+      "target": "/req/datastream/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/canonical-url",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/resources-endpoint",
+      "target": "/req/datastream/resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/resources-endpoint",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/canonical-endpoint",
+      "target": "/req/datastream/canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/canonical-endpoint",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/ref-from-system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/ref-from-system",
+      "target": "/req/datastream/ref-from-system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/ref-from-system",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/ref-from-deployment",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/ref-from-deployment",
+      "target": "/req/datastream/ref-from-deployment",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/ref-from-deployment",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/collections",
+      "target": "/req/datastream/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/collections",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/schema-op",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/schema-op",
+      "target": "/req/datastream/schema-op",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/schema-op",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/obs-canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/obs-canonical-url",
+      "target": "/req/datastream/obs-canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/obs-canonical-url",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/obs-resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/obs-resources-endpoint",
+      "target": "/req/datastream/obs-resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/obs-resources-endpoint",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/obs-canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/obs-canonical-endpoint",
+      "target": "/req/datastream/obs-canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/obs-canonical-endpoint",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/obs-ref-from-datastream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/obs-ref-from-datastream",
+      "target": "/req/datastream/obs-ref-from-datastream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/obs-ref-from-datastream",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/datastream/obs-collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream/obs-collections",
+      "target": "/req/datastream/obs-collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/obs-collections",
+      "classIdentifier": "/conf/datastream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/sf-ref-from-controlstream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/sf-ref-from-controlstream",
+      "target": "/req/controlstream/sf-ref-from-controlstream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/sf-ref-from-controlstream",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/foi-ref-from-controlstream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/foi-ref-from-controlstream",
+      "target": "/req/controlstream/foi-ref-from-controlstream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/foi-ref-from-controlstream",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/canonical-url",
+      "target": "/req/controlstream/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/canonical-url",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/resources-endpoint",
+      "target": "/req/controlstream/resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/resources-endpoint",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/canonical-endpoint",
+      "target": "/req/controlstream/canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/canonical-endpoint",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/ref-from-system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/ref-from-system",
+      "target": "/req/controlstream/ref-from-system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/ref-from-system",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/ref-from-deployment",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/ref-from-deployment",
+      "target": "/req/controlstream/ref-from-deployment",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/ref-from-deployment",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/collections",
+      "target": "/req/controlstream/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/collections",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/schema-op",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/schema-op",
+      "target": "/req/controlstream/schema-op",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/schema-op",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/cmd-canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/cmd-canonical-url",
+      "target": "/req/controlstream/cmd-canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/cmd-canonical-url",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/cmd-resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/cmd-resources-endpoint",
+      "target": "/req/controlstream/cmd-resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/cmd-resources-endpoint",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/cmd-canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/cmd-canonical-endpoint",
+      "target": "/req/controlstream/cmd-canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/cmd-canonical-endpoint",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/cmd-ref-from-controlstream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/cmd-ref-from-controlstream",
+      "target": "/req/controlstream/cmd-ref-from-controlstream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/cmd-ref-from-controlstream",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/cmd-collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/cmd-collections",
+      "target": "/req/controlstream/cmd-collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/cmd-collections",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/status-resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/status-resources-endpoint",
+      "target": "/req/controlstream/status-resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/status-resources-endpoint",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/command-status-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/command-status-endpoint",
+      "target": "/req/controlstream/command-status-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/command-status-endpoint",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/result-resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/result-resources-endpoint",
+      "target": "/req/controlstream/result-resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/result-resources-endpoint",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/controlstream/command-result-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream/command-result-endpoint",
+      "target": "/req/controlstream/command-result-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/command-result-endpoint",
+      "classIdentifier": "/conf/controlstream",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/feasibility/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility/canonical-url",
+      "target": "/req/feasibility/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/feasibility/canonical-url",
+      "classIdentifier": "/conf/feasibility",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/feasibility/ref-from-controlstream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility/ref-from-controlstream",
+      "target": "/req/feasibility/ref-from-controlstream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/feasibility/ref-from-controlstream",
+      "classIdentifier": "/conf/feasibility",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/feasibility/status-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility/status-endpoint",
+      "target": "/req/feasibility/status-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/feasibility/status-endpoint",
+      "classIdentifier": "/conf/feasibility",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/feasibility/result-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility/result-endpoint",
+      "target": "/req/feasibility/result-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/feasibility/result-endpoint",
+      "classIdentifier": "/conf/feasibility",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/feasibility/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility/collections",
+      "target": "/req/feasibility/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/feasibility/collections",
+      "classIdentifier": "/conf/feasibility",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/system-event/canonical-url",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event/canonical-url",
+      "target": "/req/system-event/canonical-url",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/system-event/canonical-url",
+      "classIdentifier": "/conf/system-event",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/system-event/resources-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event/resources-endpoint",
+      "target": "/req/system-event/resources-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/system-event/resources-endpoint",
+      "classIdentifier": "/conf/system-event",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/system-event/canonical-endpoint",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event/canonical-endpoint",
+      "target": "/req/system-event/canonical-endpoint",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/system-event/canonical-endpoint",
+      "classIdentifier": "/conf/system-event",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/system-event/ref-from-system",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event/ref-from-system",
+      "target": "/req/system-event/ref-from-system",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/system-event/ref-from-system",
+      "classIdentifier": "/conf/system-event",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/system-event/collections",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event/collections",
+      "target": "/req/system-event/collections",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/system-event/collections",
+      "classIdentifier": "/conf/system-event",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/datastream-by-phenomenontime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/datastream-by-phenomenontime",
+      "target": "/req/advanced-filtering/datastream-by-phenomenontime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/datastream-by-phenomenontime",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/datastream-by-resulttime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/datastream-by-resulttime",
+      "target": "/req/advanced-filtering/datastream-by-resulttime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/datastream-by-resulttime",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/datastream-by-obsprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/datastream-by-obsprop",
+      "target": "/req/advanced-filtering/datastream-by-obsprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/datastream-by-obsprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/datastream-by-foi",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/datastream-by-foi",
+      "target": "/req/advanced-filtering/datastream-by-foi",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/datastream-by-foi",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/obs-by-phenomenontime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/obs-by-phenomenontime",
+      "target": "/req/advanced-filtering/obs-by-phenomenontime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/obs-by-phenomenontime",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/obs-by-resulttime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/obs-by-resulttime",
+      "target": "/req/advanced-filtering/obs-by-resulttime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/obs-by-resulttime",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/obs-by-foi",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/obs-by-foi",
+      "target": "/req/advanced-filtering/obs-by-foi",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/obs-by-foi",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/controlstream-by-issuetime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/controlstream-by-issuetime",
+      "target": "/req/advanced-filtering/controlstream-by-issuetime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/controlstream-by-issuetime",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/controlstream-by-exectime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/controlstream-by-exectime",
+      "target": "/req/advanced-filtering/controlstream-by-exectime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/controlstream-by-exectime",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/controlstream-by-controlprop",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/controlstream-by-controlprop",
+      "target": "/req/advanced-filtering/controlstream-by-controlprop",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/controlstream-by-controlprop",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/controlstream-by-foi",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/controlstream-by-foi",
+      "target": "/req/advanced-filtering/controlstream-by-foi",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/controlstream-by-foi",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/cmd-by-issuetime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/cmd-by-issuetime",
+      "target": "/req/advanced-filtering/cmd-by-issuetime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/cmd-by-issuetime",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/cmd-by-exectime",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/cmd-by-exectime",
+      "target": "/req/advanced-filtering/cmd-by-exectime",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/cmd-by-exectime",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/cmd-by-status",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/cmd-by-status",
+      "target": "/req/advanced-filtering/cmd-by-status",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/cmd-by-status",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/cmd-by-sender",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/cmd-by-sender",
+      "target": "/req/advanced-filtering/cmd-by-sender",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/cmd-by-sender",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/cmd-by-foi",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/cmd-by-foi",
+      "target": "/req/advanced-filtering/cmd-by-foi",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/cmd-by-foi",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/status-by-statuscode",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/status-by-statuscode",
+      "target": "/req/advanced-filtering/status-by-statuscode",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/status-by-statuscode",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/advanced-filtering/event-by-type",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/advanced-filtering/event-by-type",
+      "target": "/req/advanced-filtering/event-by-type",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/advanced-filtering/event-by-type",
+      "classIdentifier": "/conf/advanced-filtering",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/datastream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/datastream",
+      "target": "/req/create-replace-delete/datastream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/datastream",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/datastream-update-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/datastream-update-schema",
+      "target": "/req/create-replace-delete/datastream-update-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/datastream-update-schema",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/datastream-delete-cascade",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/datastream-delete-cascade",
+      "target": "/req/create-replace-delete/datastream-delete-cascade",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/datastream-delete-cascade",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/observation",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/observation",
+      "target": "/req/create-replace-delete/observation",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/observation",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/observation-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/observation-schema",
+      "target": "/req/create-replace-delete/observation-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/observation-schema",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/controlstream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/controlstream",
+      "target": "/req/create-replace-delete/controlstream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/controlstream",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/controlstream-update-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/controlstream-update-schema",
+      "target": "/req/create-replace-delete/controlstream-update-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/controlstream-update-schema",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/controlstream-delete-cascade",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/controlstream-delete-cascade",
+      "target": "/req/create-replace-delete/controlstream-delete-cascade",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/controlstream-delete-cascade",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/command",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/command",
+      "target": "/req/create-replace-delete/command",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/command",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/command-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/command-schema",
+      "target": "/req/create-replace-delete/command-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/command-schema",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/command-status",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/command-status",
+      "target": "/req/create-replace-delete/command-status",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/command-status",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/command-result",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/command-result",
+      "target": "/req/create-replace-delete/command-result",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/command-result",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/feasibility",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/feasibility",
+      "target": "/req/create-replace-delete/feasibility",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/feasibility",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/feasibility-status",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/feasibility-status",
+      "target": "/req/create-replace-delete/feasibility-status",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/feasibility-status",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/feasibility-result",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/feasibility-result",
+      "target": "/req/create-replace-delete/feasibility-result",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/feasibility-result",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/create-replace-delete/system-event",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete/system-event",
+      "target": "/req/create-replace-delete/system-event",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete/system-event",
+      "classIdentifier": "/conf/create-replace-delete",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/datastream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/datastream",
+      "target": "/req/update/datastream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/datastream",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/datastream-update-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/datastream-update-schema",
+      "target": "/req/update/datastream-update-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/datastream-update-schema",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/observation",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/observation",
+      "target": "/req/update/observation",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/observation",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/observation-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/observation-schema",
+      "target": "/req/update/observation-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/observation-schema",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/controlstream",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/controlstream",
+      "target": "/req/update/controlstream",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/controlstream",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/controlstream-update-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/controlstream-update-schema",
+      "target": "/req/update/controlstream-update-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/controlstream-update-schema",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/command",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/command",
+      "target": "/req/update/command",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/command-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/command-schema",
+      "target": "/req/update/command-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-schema",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/command-status",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/command-status",
+      "target": "/req/update/command-status",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-status",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/command-result",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/command-result",
+      "target": "/req/update/command-result",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-result",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/feasibility",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/feasibility",
+      "target": "/req/update/feasibility",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/feasibility-status",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/feasibility-status",
+      "target": "/req/update/feasibility-status",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility-status",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/feasibility-result",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/feasibility-result",
+      "target": "/req/update/feasibility-result",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility-result",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/update/system-event",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update/system-event",
+      "target": "/req/update/system-event",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/system-event",
+      "classIdentifier": "/conf/update",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/mediatype-read",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/mediatype-read",
+      "target": "/req/json/mediatype-read",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/mediatype-read",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/mediatype-write",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/mediatype-write",
+      "target": "/req/json/mediatype-write",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/mediatype-write",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/datastream-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/datastream-schema",
+      "target": "/req/json/datastream-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/datastream-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/obsschema-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/obsschema-schema",
+      "target": "/req/json/obsschema-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/obsschema-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/observation-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/observation-schema",
+      "target": "/req/json/observation-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/observation-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/observation-constraints",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/observation-constraints",
+      "target": "/req/json/observation-constraints",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/observation-constraints",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/controlstream-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/controlstream-schema",
+      "target": "/req/json/controlstream-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/controlstream-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/commandschema-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/commandschema-schema",
+      "target": "/req/json/commandschema-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandschema-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/command-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/command-schema",
+      "target": "/req/json/command-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/command-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/command-constraints",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/command-constraints",
+      "target": "/req/json/command-constraints",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/command-constraints",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/commandstatus-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/commandstatus-schema",
+      "target": "/req/json/commandstatus-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandstatus-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/commandresult-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/commandresult-schema",
+      "target": "/req/json/commandresult-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandresult-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/commandresult-constraints",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/commandresult-constraints",
+      "target": "/req/json/commandresult-constraints",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandresult-constraints",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/json/systemevent-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json/systemevent-schema",
+      "target": "/req/json/systemevent-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/systemevent-schema",
+      "classIdentifier": "/conf/json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json/mediatype-read",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json/mediatype-read",
+      "target": "/req/swecommon-json/mediatype-read",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/mediatype-read",
+      "classIdentifier": "/conf/swecommon-json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json/mediatype-write",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json/mediatype-write",
+      "target": "/req/swecommon-json/mediatype-write",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/mediatype-write",
+      "classIdentifier": "/conf/swecommon-json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json/obsschema-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json/obsschema-schema",
+      "target": "/req/swecommon-json/obsschema-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/obsschema-schema",
+      "classIdentifier": "/conf/swecommon-json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json/obsschema-mapping",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json/obsschema-mapping",
+      "target": "/req/swecommon-json/obsschema-mapping",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/obsschema-mapping",
+      "classIdentifier": "/conf/swecommon-json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json/observation-encoding",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json/observation-encoding",
+      "target": "/req/swecommon-json/observation-encoding",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/observation-encoding",
+      "classIdentifier": "/conf/swecommon-json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json/cmdschema-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json/cmdschema-schema",
+      "target": "/req/swecommon-json/cmdschema-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/cmdschema-schema",
+      "classIdentifier": "/conf/swecommon-json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json/cmdschema-mapping",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json/cmdschema-mapping",
+      "target": "/req/swecommon-json/cmdschema-mapping",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/cmdschema-mapping",
+      "classIdentifier": "/conf/swecommon-json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-json/command-encoding",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json/command-encoding",
+      "target": "/req/swecommon-json/command-encoding",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/command-encoding",
+      "classIdentifier": "/conf/swecommon-json",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text/mediatype-read",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text/mediatype-read",
+      "target": "/req/swecommon-text/mediatype-read",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/mediatype-read",
+      "classIdentifier": "/conf/swecommon-text",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text/mediatype-write",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text/mediatype-write",
+      "target": "/req/swecommon-text/mediatype-write",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/mediatype-write",
+      "classIdentifier": "/conf/swecommon-text",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text/obsschema-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text/obsschema-schema",
+      "target": "/req/swecommon-text/obsschema-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/obsschema-schema",
+      "classIdentifier": "/conf/swecommon-text",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text/obsschema-mapping",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text/obsschema-mapping",
+      "target": "/req/swecommon-text/obsschema-mapping",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/obsschema-mapping",
+      "classIdentifier": "/conf/swecommon-text",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text/observation-encoding",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text/observation-encoding",
+      "target": "/req/swecommon-text/observation-encoding",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/observation-encoding",
+      "classIdentifier": "/conf/swecommon-text",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text/cmdschema-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text/cmdschema-schema",
+      "target": "/req/swecommon-text/cmdschema-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/cmdschema-schema",
+      "classIdentifier": "/conf/swecommon-text",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text/cmdschema-mapping",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text/cmdschema-mapping",
+      "target": "/req/swecommon-text/cmdschema-mapping",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/cmdschema-mapping",
+      "classIdentifier": "/conf/swecommon-text",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-text/command-encoding",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text/command-encoding",
+      "target": "/req/swecommon-text/command-encoding",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/command-encoding",
+      "classIdentifier": "/conf/swecommon-text",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary/mediatype-read",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary/mediatype-read",
+      "target": "/req/swecommon-binary/mediatype-read",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/mediatype-read",
+      "classIdentifier": "/conf/swecommon-binary",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary/mediatype-write",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary/mediatype-write",
+      "target": "/req/swecommon-binary/mediatype-write",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/mediatype-write",
+      "classIdentifier": "/conf/swecommon-binary",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary/obsschema-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary/obsschema-schema",
+      "target": "/req/swecommon-binary/obsschema-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/obsschema-schema",
+      "classIdentifier": "/conf/swecommon-binary",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary/obsschema-mapping",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary/obsschema-mapping",
+      "target": "/req/swecommon-binary/obsschema-mapping",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/obsschema-mapping",
+      "classIdentifier": "/conf/swecommon-binary",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary/observation-encoding",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary/observation-encoding",
+      "target": "/req/swecommon-binary/observation-encoding",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/observation-encoding",
+      "classIdentifier": "/conf/swecommon-binary",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary/cmdschema-schema",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary/cmdschema-schema",
+      "target": "/req/swecommon-binary/cmdschema-schema",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/cmdschema-schema",
+      "classIdentifier": "/conf/swecommon-binary",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary/cmdschema-mapping",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary/cmdschema-mapping",
+      "target": "/req/swecommon-binary/cmdschema-mapping",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/cmdschema-mapping",
+      "classIdentifier": "/conf/swecommon-binary",
+      "supporting": false
+    },
+    {
+      "part": 2,
+      "identifier": "/conf/swecommon-binary/command-encoding",
+      "fullIdentifier": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary/command-encoding",
+      "target": "/req/swecommon-binary/command-encoding",
+      "fullTarget": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/command-encoding",
+      "classIdentifier": "/conf/swecommon-binary",
+      "supporting": false
+    }
+  ]
+}

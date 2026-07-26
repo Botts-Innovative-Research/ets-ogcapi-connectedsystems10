@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-25T16:07Z
+Last updated: 2026-07-26T10:27Z
 
 ## Fresh-Session Entry Point
 
@@ -38,6 +38,40 @@ Read these first:
 - `.harness/contracts/sprint-ets-44.yaml`
 - `ops/test-results/sprint-ets-44-populated-local-osh-verification-2026-07-25.md`
 - `.harness/evaluations/sprint-ets-44-adversarial-recheck.yaml`
+- `openspec/change-proposals/CP-005-released-ats-coverage-inventory.md`
+- `_bmad/adrs/ADR-013-released-ats-source-of-truth.md`
+- `epics/stories/s-ets-45-01-released-ats-coverage-inventory.md`
+- `ops/ats-coverage-report.json`
+
+## Session Handoff - Released ATS Coverage Inventory
+
+S-ETS-45-01 is complete. ADR-013 makes the released standards,
+not a later OpenAPI pin or historical registry, the certification authority.
+
+- Reproducible source: `v1.0.0` commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+- Exact surface: Part 1 `13 classes / 110 tests`, including two supporting
+  tests; Part 2 `12 classes / 130 tests`.
+- `scripts/ats-coverage-audit.py` reproduces the committed semantic inventory
+  and fails closed on drift or malformed source structure.
+- `ops/ats-coverage-report.json` is generated from compiled TestNG metadata.
+  Its honest baseline is `240 total / 0 exact / 0 helper / 150 candidate / 90
+  unmapped`; candidates do not count as implemented.
+- Part 1 is `49 candidate / 61 unmapped`; Part 2 is `101 candidate / 29
+  unmapped`.
+- Source reproduction and the audit self-test pass. Focused Maven passes
+  `23/0/0/0`; fresh full Docker Maven passes `345/0/0/3`.
+- Exact candidate image `sha256:ad2594ef...23749c` passes the runtime verifier
+  and primary local OSH TeamEngine `211/69/0/142`, with 135 recognized requests,
+  zero writes, and zero startup errors.
+- Initial Raze found five gaps. The first recheck closed three and retained
+  status-honesty plus TestNG-semantics gaps. The second remediation now rejects
+  all implementation-status variants, constructor factories, method/class/
+  package `@Ignore`, and inherited class-level tests. Final Raze returned
+  `APPROVE`, confidence `0.99`, with all findings closed and no new findings.
+- Current work proceeds to Sprint 46: implement and review-map Part 1 API Common
+  first, including its two reusable supporting tests. Prior planning language
+  that only five Part 1 gaps remained was stale.
 
 ## Session Handoff - Reproducible Populated Local OSH
 

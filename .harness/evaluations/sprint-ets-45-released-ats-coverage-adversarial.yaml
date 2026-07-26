@@ -1,0 +1,332 @@
+review:
+  id: sprint-ets-45-released-ats-coverage-adversarial
+  reviewer: Raze
+  role: adversarial-reviewer
+  date: "2026-07-26"
+  started_at_utc: "2026-07-26T09:45:36Z"
+  completed_at_utc: "2026-07-26T10:01:13Z"
+  duration_seconds: 937
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  scope_note: >-
+    This review covers only Sprint ETS-45 story S-ETS-45-01 and its released
+    ATS inventory, coverage report, mapping gate, specifications, planning
+    status, and verification evidence. It does not judge whether any candidate
+    mapping implements its complete abstract test method.
+
+token_metadata:
+  available: false
+  source: null
+  total_tokens: null
+  reason: >-
+    Spawned subagent 019f9dd0-b704-76b0-9398-fdb9fb0d2109 returned duration
+    metadata but no token count.
+
+reviewed_scope:
+  instructions:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+  contract: .harness/contracts/sprint-ets-45.yaml
+  change_proposal: openspec/change-proposals/CP-005-released-ats-coverage-inventory.md
+  architecture_decision: _bmad/adrs/ADR-013-released-ats-source-of-truth.md
+  story: epics/stories/s-ets-45-01-released-ats-coverage-inventory.md
+  specifications:
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - _bmad/architecture.md
+    - _bmad/prd.md
+    - _bmad/project-brief.md
+    - _bmad/product-brief.md
+    - _bmad/traceability.md
+    - epics/epic-ets-02-part1-classes.md
+    - epics/epic-ets-03-part2-classes.md
+  implementation:
+    - scripts/ats-coverage-audit.py
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/released-ats-inventory.json
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/ReleasedAtsCoverage.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyReleasedAtsCoverage.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+  reports_and_evidence:
+    - ops/ats-coverage-report.json
+    - ops/test-results/sprint-ets-45-ats-inventory-test-first-2026-07-26.xml
+    - ops/test-results/sprint-ets-45-full-maven-2026-07-26.log
+    - ops/test-results/sprint-ets-45-local-osh-teamengine-2026-07-26.xml
+    - ops/test-results/sprint-ets-45-local-osh-teamengine-container-2026-07-26.log
+    - ops/test-results/sprint-ets-45-released-ats-coverage-inventory-2026-07-26.md
+    - ops/status.md
+    - ops/changelog.md
+    - ops/test-results.md
+  released_source_checkout: /tmp/ogcapi-connected-systems-s45
+  fresh_e2e_directory: /tmp/ets-cs-s45-local-osh-results-20260726
+
+commands_and_evidence_reviewed:
+  - "git status --short; git diff; git diff --check"
+  - "independent tag and commit resolution in /tmp/ogcapi-connected-systems-s45"
+  - "independent source marker, metadata, membership, target-less-test, and count inspection"
+  - "sha256sum /tmp/23-001.pdf /tmp/23-002.pdf"
+  - "python3 scripts/ats-coverage-audit.py --self-test"
+  - "python3 scripts/ats-coverage-audit.py"
+  - "python3 scripts/ats-coverage-audit.py --source-repo /tmp/ogcapi-connected-systems-s45"
+  - "focused Docker Maven execution of VerifyReleasedAtsCoverage against the final reviewed worktree"
+  - "independent TestNG XML total parsing and no-mutation-oracle execution"
+  - "exact-image inspection and TEAMENGINE_FINAL_IMAGE=sha256:34c5... runtime verifier execution"
+
+independent_verification:
+  released_authority:
+    tag: v1.0.0
+    tag_commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+    expected_commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+    tag_matches_commit: true
+    part_1_pdf_sha256: c444bff07193daf8ce880077b1d728127868b48c056fe35278129e04d439f9e4
+    part_2_pdf_sha256: 78531c637053890dd501bb153a0046261b9c03fa064d0888a39e2b0dc383d154
+  inventory:
+    source_reproduction: PASS
+    internal_current_manifest_validation: PASS
+    self_test: PASS_AFTER_CONCURRENT_REMEDIATION
+    initial_self_test_failure: "Self-test tampered class membership was not rejected"
+    part_1:
+      classes: 13
+      tests: 110
+      class_tests: 108
+      supporting_tests: 2
+      semantic_sha256: 25f2aa8f2f8218593d5371193ae7d5859105f6615cf6c42111c8af052eb9e418
+    part_2:
+      classes: 12
+      tests: 130
+      supporting_tests: 0
+      semantic_sha256: 5d57d3824a5e5d415b5de79b2eb82fbd06aea325340014d2a6c99c4ff18cd5af
+    source_note: >-
+      Part 2 contains 131 literal abstract_test markers only if a commented-out
+      block at source line 946 is counted. The extractor correctly ignores that
+      commented block and emits the 130 active abstract tests.
+  coverage_report:
+    total: 240
+    exact: 0
+    helper: 0
+    candidate: 150
+    unmapped: 90
+    part_1_candidate: 49
+    part_1_unmapped: 61
+    part_2_candidate: 101
+    part_2_unmapped: 29
+    entries_with_multiple_candidate_methods: 31
+    candidate_status_is_honest: true
+  current_focused_maven:
+    total: 10
+    failures: 0
+    errors: 0
+    skipped: 0
+    verdict: PASS_AFTER_CONCURRENT_REMEDIATION
+    initially_failing_tests:
+      - exactMappingRequiresReviewProvenance
+      - implementationCannotClaimTwoReleasedTests
+      - targetPrefixIsNotACandidateMapping
+  archived_focused_maven:
+    total: 7
+    failures: 0
+    errors: 0
+    skipped: 0
+    verdict: STALE_AFTER_ADDITIONAL_TESTS
+  archived_full_maven:
+    total: 329
+    failures: 0
+    errors: 0
+    skipped: 3
+    verdict: STALE_AFTER_ADDITIONAL_TESTS
+  teamengine_e2e:
+    image_id: sha256:34c5b5cb0e6374d0f663373b8dae3f31ce5f0a11860a98aaa48b5803cc7c1b73
+    total: 211
+    passed: 69
+    failed: 0
+    skipped: 142
+    recognized_iut_requests: 135
+    writes: 0
+    xml_matches_archived_copy: true
+    verdict: PASS
+  exact_image_runtime_recheck:
+    deployed_adapter_probe: PASS
+    jar_collision_guard: PASS
+    dependency_parity: PASS
+    base_immutability: PASS
+    runtime_invariants: PASS
+    confidential_context_hygiene: PASS
+    verdict: PASS
+  diff_check: PASS
+
+findings:
+  - id: RAZE-S45-001
+    severity: HIGH
+    title: Reviewed mappings can be promoted without exact one-to-one evidence
+    status: CLOSED_DURING_REVIEW
+    evidence:
+      - >-
+        ReleasedAtsCoverage.java candidateMappings and exact validation use
+        String.contains at lines 139-146 and 170-177. A requirement URI that is
+        merely a prefix of another URI is therefore accepted.
+      - >-
+        Reviewed mappings are unique only by ATS key at lines 40-49. The same
+        Class#method can claim multiple released tests.
+      - >-
+        No review provenance is required before a mapping becomes exact or
+        helper, despite REQ-ETS-COVERAGE-001 lines 116-122 requiring recorded
+        review state and complete-method review.
+      - >-
+        Initial focused hardening Maven proved all three defects: 10 tests ran
+        with 3 failures in exactMappingRequiresReviewProvenance,
+        implementationCannotClaimTwoReleasedTests, and
+        targetPrefixIsNotACandidateMapping.
+    impact: >-
+      Once reviewed mappings are populated, the gate can create false exact
+      coverage and violate the central no-false-confidence guarantee.
+    resolution:
+      - Canonical targets now require complete delimited URI tokens.
+      - Reuse of one implementation identity by multiple released tests is rejected.
+      - reviewedBy, reviewedOn, and evidence are mandatory and reviewedOn is parsed as a date.
+      - The three negative tests now pass; focused Maven is 10/0/0/0.
+
+  - id: RAZE-S45-002
+    severity: HIGH
+    title: Committed-inventory membership validation is not fail-closed
+    status: CLOSED_DURING_REVIEW
+    evidence:
+      - >-
+        scripts/ats-coverage-audit.py validate_part at lines 145-176 verifies
+        duplicate identifiers, counts, supporting counts, and target presence,
+        but does not reconcile each class tests list with each test
+        classIdentifier/supporting value.
+      - >-
+        The strengthened self-test initially failed with "Self-test tampered
+        class membership was not rejected".
+      - >-
+        Exact source reproduction still passes, proving the committed inventory
+        content is currently correct while the standalone validator remains
+        incomplete.
+    impact: >-
+      A manually changed manifest can pass internal validation after updating
+      its self-referential semantic digest even when class membership is false.
+    resolution:
+      - Membership is rebuilt from classes[].tests and compared to every test.
+      - Full identifier, full target, allowed part, and source-parts invariants are validated.
+      - Source reproduction verifies v1.0.0^{commit} resolves to SOURCE_COMMIT.
+      - The strengthened audit self-test and exact source reproduction now pass.
+
+  - id: RAZE-S45-003
+    severity: HIGH
+    title: Active implementation statuses contradict the zero-exact baseline
+    status: OPEN
+    evidence:
+      - >-
+        ops/ats-coverage-report.json reports 0 exact and 0 helper mappings; all
+        240 released tests are candidate or unmapped.
+      - >-
+        OpenSpec REQ-ETS-COVERAGE-001 lines 153-157 says candidate-only or
+        unmapped tests keep the owning class partial.
+      - >-
+        The same active spec still labels Part 1 API Common, System,
+        Subsystem, Deployment, Procedure, Sampling Feature, Property, and
+        Subdeployment requirements IMPLEMENTED, including lines 164-204 and
+        later duplicate requirement sections.
+      - >-
+        Traceability and epic story rows preserve Done/Implemented labels based
+        on historical class existence or smoke evidence. Story acceptance line
+        39 nevertheless claims stale status correction is complete.
+    impact: >-
+      Readers can still infer released-class implementation from the active
+      specifications even though the new authority explicitly prohibits that.
+    required_fix:
+      - >-
+        Distinguish historical increment completion from released ATS coverage,
+        and mark every owning class UNREVIEWED/PARTIAL until all required exact
+        or helper mappings are reviewed.
+      - Reconcile OpenSpec, traceability, both epics, story acceptance, status, and changelog.
+      - Add an executable status-honesty check so unsupported implemented claims fail the gate.
+
+  - id: RAZE-S45-004
+    severity: MEDIUM
+    title: Suite deployment and helper validation are only approximations
+    status: OPEN
+    evidence:
+      - >-
+        ReleasedAtsCoverage.java lines 125-136 uses getDeclaredMethods and
+        accepts every method-level Test annotation without checking enabled
+        state, inherited TestNG methods, overload signatures, suite method
+        filters, factories, or class-level TestNG annotations.
+      - >-
+        Implementation identity is only Class#method and findMethod returns the
+        first name match at lines 186-193, so overloads are ambiguous.
+      - >-
+        Helper mappings need only resolve by reflection. They are not required
+        to be deployed, reusable, unambiguous, or in an approved helper set.
+      - >-
+        Present discovery nevertheless finds 211 methods, matching the current
+        TeamEngine execution total, so this is a promotion-path defect rather
+        than a current inventory-count error.
+    impact: >-
+      Future suite structure changes or supporting-test mappings can be counted
+      as deployed without matching what TestNG actually executes.
+    required_fix:
+      - Use unambiguous method identities including parameter signatures.
+      - Model TestNG-enabled and inherited execution semantics, or derive the deployed method set from TestNG itself.
+      - Constrain helper mappings to reviewed reusable helpers with explicit signatures and evidence.
+      - Add negative tests for disabled, inherited, overloaded, filtered, and arbitrary helper methods.
+
+  - id: RAZE-S45-005
+    severity: MEDIUM
+    title: Gate evidence and current living documentation are stale
+    status: OPEN
+    evidence:
+      - >-
+        Contract, status, test-results, changelog, and the Sprint 45 summary
+        still report focused 7/0/0/0 and full Maven 329/0/0/3, but the current
+        focused worktree is 10/0/0/0 after additional hardening tests and code.
+        The archived full run predates those changes.
+      - >-
+        The archived E2E XML and request log prove 211/69/0/142 and 135
+        recognized requests with zero writes. The exact image also passes an
+        independent runtime recheck, but the Sprint 45 artifact list does not
+        retain raw smoke stdout or a raw runtime-verifier transcript containing
+        image identity and startup-scan evidence.
+      - >-
+        _bmad/project-brief.md is marked v2.1/current but still specifies
+        TeamEngine 5.6.1 and GitHub Actions at lines 31, 48-49, 63, and 69,
+        contradicting ADR-011 and the no-hosted-CI ADR-012 guardrail.
+    impact: >-
+      The recorded final gate is not reproducible from the latest source and
+      current living documents disagree with accepted architecture and scope.
+    required_fix:
+      - Rerun focused and full Maven after RAZE-S45-001 and RAZE-S45-002 are fixed.
+      - Regenerate the coverage report if exact candidate-token semantics change its counts.
+      - Rerun the exact-image runtime and primary local OSH TeamEngine gates from a fresh synchronized clone.
+      - Archive raw smoke stdout and runtime-verifier output, including exact image identity and startup scan.
+      - Reconcile contract, story, status, changelog, test-results, traceability, and the current project brief.
+
+required_fixes:
+  - RAZE-S45-003
+  - RAZE-S45-004
+  - RAZE-S45-005
+
+remediation_state:
+  updated_at_utc: "2026-07-26T10:27:22Z"
+  status: ALL_INITIAL_REQUIRED_FIXES_REMEDIATED_FINAL_RECHECK_PENDING
+  focused_maven: 18/0/0/0
+  full_maven: 340/0/0/3
+  exact_image: sha256:1fedd384476bb78727c312a098710cb07ae1cc67cbb3bd4f4930b56dceeb6fe4
+  local_osh_teamengine: 211/69/0/142
+  recognized_iut_requests: 135
+  writes: 0
+  startup_errors: 0
+  note: >-
+    The original verdict remains the historical initial review result. A fresh
+    independent Raze report will record the final closure verdict.
+
+decision: >-
+  GAPS_FOUND. The released source pin and current 240-test inventory reproduce
+  correctly, candidate/unmapped reporting is honest, E2E totals and no-mutation
+  evidence are valid, and the exact image passes runtime verification. The
+  mapping-promotion and inventory-membership defects found during review were
+  remediated concurrently and focused verification now passes 10/0/0/0. Sprint
+  ETS-45 still cannot close because active implementation statuses contradict
+  the zero-exact baseline, suite/helper deployment validation remains an
+  approximation, and full/evidence/documentation gates are stale for the
+  reviewed worktree.

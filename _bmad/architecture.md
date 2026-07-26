@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.19 | Status: Living Document | Last reconciled: 2026-07-25 (owned populated local OSH E2E)
+> Version: 2.0.20 | Status: Living Document | Last reconciled: 2026-07-26 (released ATS coverage authority)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -298,7 +298,12 @@ The Generator (Dana) MUST respect these or CITE SC review will reject the ETS:
 1. **`teamengine-spi` 5.6 vs 6.0 SPI/runtime alignment** (residual after ADR-001/011). The SPI interface has been stable across 5.x, but TE 6.0.0 brings Tomcat 10.1, Jakarta/Jersey behavior, and classloader differences. Mitigation: stay on `ets-common:17`, use the digest-pinned TeamEngine 6 Dockerfile path, inspect linkage errors, and archive full TeamEngine execution against the primary local OSH IUT before marking Sprint 41 implemented.
 2. **OGC OpenAPI YAML structure for CS API is not yet finalized** (Mary's `SCHEMAS-MAY-DRIFT`). Sprint 1 sidesteps by validating Core responses directly against bundled JSON Schemas (Kaizen-loaded) rather than via the OpenAPI YAML. Sprint 2+ Part 1 classes that depend on the OpenAPI structure (e.g. operation-parameter validation) will need to revisit when SWG settles.
 3. **Spec-trap fixture port fidelity** (Mary's `SPEC-TRAP-FIXTURES-UNIQUE-IP`). Mitigation: REQ-ETS-FIXTURES-003 audit script enforces 1:1 case-ID mapping. Generator's epic-ets-06 work must not silently drop cases.
-4. **TestNG dependency-graph correctness** (sprints 2+). The 14 Part 1 conformance classes have a dependency DAG inherited from v1.0 `csapi_compliance/src/engine/registry/index.ts`. Translating that DAG into TestNG `<groups>` + `dependsOnGroups` is mechanical but error-prone. Mitigation: a unit test in the new ETS asserts the DAG matches the TS source, run as part of REQ-ETS-SYNC-001.
+4. **TestNG dependency-graph correctness** (sprints 2+). The 13 released Part
+   1 conformance classes have a dependency DAG defined by their normative
+   prerequisites. The frozen v1.0 registry is an advisory comparison only.
+   Translating the released DAG into TestNG `<groups>` +
+   `dependsOnGroups` is mechanical but error-prone. Mitigation: structural
+   tests verify the released dependency mapping under REQ-ETS-COVERAGE-001.
 5. **Reproducible builds on Windows**. `<project.build.outputTimestamp>` works on Windows, but git's autocrlf can introduce line-ending differences in resource files inside the jar. Mitigation: `.gitattributes` enforces LF for all `.json`, `.xml`, `.ctl`, `.properties` files at scaffold time.
 6. **Logback + ets-common's `java.util.logging`**. Both run in the JVM. If a CITE reviewer expects only ets-common's logging idiom, our slf4j+logback addition is justified by NFR-ETS-10 but is a deviation from the features10 baseline. Mitigation: documented in §6 above.
 7. **Public docs and TeamEngine metadata drift**. The ETS generated from the TestNG archetype has several public surfaces that can drift independently: CTL, config.xml, README, site AsciiDoc, Javadoc overview, and sample test-run-props. Mitigation: treat these as conformance package artifacts, not marketing docs; keep them aligned with the canonical run-argument contract and actual partial Part 1/Part 2 coverage.
@@ -329,6 +334,8 @@ The Generator (Dana) MUST respect these or CITE SC review will reject the ETS:
 | ADR-009 | Multi-Stage Dockerfile Pattern | Partially superseded by ADR-011; builder/non-root/minimal-copy principles retained; stale Maven docker profile must not remain an alternate broad-copy runtime path |
 | ADR-010 | Dependency-Skip Verification Strategy: Bash Sabotage (Canonical) + TestNG Unit Test (Fast-Feedback Supplement) | Accepted (forward-looking, Sprint 3) |
 | ADR-011 | OGC-Published TeamEngine 6 Runtime Image | Accepted and implemented for the forward runtime; final local OSH TeamEngine 6 E2E archived on 2026-07-22 |
+| ADR-012 | External Dependency Immutability and No Hosted CI | Accepted; OSH/TeamEngine patches and project-hosted CI are out of scope |
+| ADR-013 | Released OGC 23-001/23-002 ATS Source of Truth | Accepted; released tag and semantic inventory govern coverage |
 
 ## 14. Architecture v2.0.1 — Sprint 2 ratifications (2026-04-28)
 
@@ -748,3 +755,43 @@ remains open.
 
 Focused Raze recheck approved this workflow at confidence `0.99`; all ten
 initial safety/evidence findings are closed and no new findings remain.
+
+## 23. Architecture v2.0.20 - Released ATS coverage authority (2026-07-26)
+
+ADR-013 establishes approved OGC 23-001 and OGC 23-002 version 1.0 as the
+certification source of truth. Their reproducible source form is
+`opengeospatial/ogcapi-connected-systems` tag `v1.0.0`, commit
+`8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+
+The coverage subsystem has two layers:
+
+```text
+released Annex A source
+        |
+        v
+deterministic semantic inventory
+  part + class + test + target
+        |
+        v
+compiled TestNG annotation audit ---- reviewed exact/helper mapping
+        |                                      |
+        +-------------- coverage report <------+
+                               |
+                               v
+                  specs, traceability, backlog
+```
+
+The source extractor must retain all 240 released abstract tests: Part 1 has 13
+classes, 108 class tests, and two target-less supporting tests; Part 2 has 12
+classes and 130 tests. The manifest is keyed by part and identifier because
+class/test paths such as `/conf/api-common` occur in both standards.
+
+Compiled annotation inspection is required because TestNG descriptions are
+assembled from Java constants. A canonical target match is classified as a
+candidate mapping. It becomes implemented only after an exact method or helper
+mapping is recorded and reviewed against the complete published test method.
+
+The newer Connected Systems commit `3fd86c73...` remains the separately
+documented OpenAPI input pin. It is not an ATS authority. Later drafts, IUT
+declarations, and frozen web-app registries cannot alter the released coverage
+surface.

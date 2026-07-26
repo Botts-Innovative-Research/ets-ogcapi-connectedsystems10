@@ -75,8 +75,9 @@ inherited external conformance classes explicitly partial.
 - Docker Maven: `373 total / 0 failures / 0 errors / 3 skipped`.
 - Released ATS coverage: `240 total / 4 exact / 2 helper / 150 candidate /
   84 unmapped`.
+- Implementation commit: `449fbcf`.
 - Exact image:
-  `sha256:81e16f442d0733c440e1880440ca4b3f6261324e64a42db6ec99e9250ffe0dd7`.
+  `sha256:bc5b9cf5a425e6ce2ed1054ee225a68b353f5d8113363414f404b0d4ff27769e`.
 - Primary local OSH TeamEngine: `215 total / 35 passed / 0 failed / 180
   skipped`; the three executable UID/ID procedures pass, date-time skips
   because the fixture advertises no usable temporal extent, and four

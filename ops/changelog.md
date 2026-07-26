@@ -2,6 +2,37 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-26 - Part 1 API Common direct ATS closure
+
+**Triggered by user instruction**: execute accepted recommendations 1-4
+continuously, including completion of every released Part 1 gap.
+
+- Added CP-006, S-ETS-46-01, its contract, eight scenarios, architecture, and
+  traceability before implementation.
+- Implemented and review-mapped all four directly owned released
+  `/conf/api-common` tests and both supporting helpers.
+- Added representation-aware canonical retrieval, supported collection-items
+  discovery, bounded same-origin pagination, per-type ID uniqueness, global UID
+  validity/uniqueness, IANA UID-form warnings, and four-form date-time
+  intersection with request-time `now`.
+- Added deterministic IANA Formal and Informal URN Namespace evidence with 104
+  registered namespaces and source URL/date/hash provenance.
+- Rewired the dependency chain to
+  `core common -> part1apicommon -> systemfeatures`, guarded setup before any
+  IUT access, and made sabotage evidence freshness fail closed.
+- Repaired the credential integration gate to use Docker Maven and a dynamic
+  non-zero green target count instead of host Maven and a stale fixed count.
+- Verification: coverage `240/4 exact/2 helper/150 candidate/84 unmapped`;
+  Maven `373/0/0/3`; local OSH TeamEngine `215/35/0/180`; implementation
+  commit `449fbcf`; exact image `sha256:bc5b9cf5...27769e` runtime PASS;
+  dependency sabotage PASS; credential
+  unit/wire gates PASS; ATS source reproduction PASS.
+- Raze completed four cycles. All findings are closed; final verdict is
+  `APPROVE`, confidence `0.99`, with no required findings.
+- Full `/conf/api-common` remains explicitly partial for five inherited
+  external OGC API Features/Common suites. Next work is Sprint 47
+  `/conf/system`.
+
 ## 2026-07-26 - Released ATS coverage authority and executable inventory
 
 **Triggered by user instruction**: execute recommendations 1-4 continuously,

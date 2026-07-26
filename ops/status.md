@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T10:27Z
+Last updated: 2026-07-26T13:02Z
 
 ## Fresh-Session Entry Point
 
@@ -42,6 +42,39 @@ Read these first:
 - `_bmad/adrs/ADR-013-released-ats-source-of-truth.md`
 - `epics/stories/s-ets-45-01-released-ats-coverage-inventory.md`
 - `ops/ats-coverage-report.json`
+- `openspec/change-proposals/CP-006-part1-api-common-closure.md`
+- `epics/stories/s-ets-46-01-part1-api-common-closure.md`
+- `.harness/contracts/sprint-ets-46.yaml`
+- `.harness/evaluations/sprint-ets-46-adversarial.yaml`
+- `ops/test-results/sprint-ets-46-part1-api-common-verification-2026-07-26.md`
+
+## Session Handoff - Part 1 API Common Direct ATS
+
+S-ETS-46-01 is complete for the six directly owned OGC 23-001 procedures.
+Full `/conf/api-common` conformance remains partial because five inherited
+external OGC API Features/Common suites are not complete.
+
+- Added four exact runtime tests for IDs, UIDs, UID-form recommendation, and
+  date-time, plus reviewed canonical-resource and collection-items helpers.
+- Retrieval negotiates GeoJSON/SensorML JSON, parses `features`/`items`, and
+  follows bounded same-origin pagination with cycle detection.
+- UID authority is SensorML `uniqueId`, then GeoJSON `properties.uid`, then
+  direct extension `uid`. The bundled deterministic IANA registry contains 104
+  formal/informal namespaces with source provenance.
+- Date-time covers instant, bounded, open-start, and open-end intervals,
+  request-time `now`, intersection, and timeless-feature retention.
+- Coverage is `240 total / 4 exact / 2 helper / 150 candidate / 84 unmapped`.
+- Docker Maven is `373/0/0/3`.
+- Implementation commit: `449fbcf`.
+- Exact image
+  `sha256:bc5b9cf5a425e6ce2ed1054ee225a68b353f5d8113363414f404b0d4ff27769e`
+  passes TeamEngine 6 runtime verification.
+- Primary local OSH TeamEngine is `215/35/0/180`, with zero writes and startup
+  errors. IDs/UIDs/recommendation pass; date-time skips for no usable extent.
+- Dependency sabotage and both credential gates pass.
+- Final Raze is `APPROVE`, confidence `0.99`, with no required findings.
+- Next: Sprint 47 closes the six released `/conf/system` procedures, currently
+  reported as five candidates and one unmapped test.
 
 ## Session Handoff - Released ATS Coverage Inventory
 
@@ -69,9 +102,8 @@ not a later OpenAPI pin or historical registry, the certification authority.
   all implementation-status variants, constructor factories, method/class/
   package `@Ignore`, and inherited class-level tests. Final Raze returned
   `APPROVE`, confidence `0.99`, with all findings closed and no new findings.
-- Current work proceeds to Sprint 46: implement and review-map Part 1 API Common
-  first, including its two reusable supporting tests. Prior planning language
-  that only five Part 1 gaps remained was stale.
+- Sprint 46 completed the six directly owned Part 1 API Common procedures.
+  Work proceeds to the released `/conf/system` class.
 
 ## Session Handoff - Reproducible Populated Local OSH
 

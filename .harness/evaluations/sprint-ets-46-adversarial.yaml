@@ -1,0 +1,61 @@
+review:
+  id: sprint-ets-46-adversarial
+  reviewer: Raze
+  role: adversarial-reviewer
+  date: "2026-07-26"
+  verdict: APPROVE
+  confidence: 0.99
+  required_findings: []
+  scope_note: >-
+    Approval covers the six directly owned released OGC 23-001 API Common
+    procedures. It does not claim completion of the five inherited external
+    OGC API Features/Common conformance classes.
+
+token_metadata:
+  available: false
+  total_tokens: null
+  reason: "The subagent runtime returned no usable token or budget metadata."
+
+review_cycles:
+  - verdict: GAPS_FOUND
+    duration_seconds: 754
+    findings: 6
+    disposition: CLOSED
+  - verdict: GAPS_FOUND
+    duration_seconds: 794
+    findings: 3
+    disposition: CLOSED
+  - verdict: GAPS_FOUND
+    duration_seconds: 242
+    findings: 1
+    disposition: CLOSED
+  - verdict: APPROVE
+    duration_seconds: 61
+    findings: 0
+    disposition: FINAL
+
+final_evidence:
+  coverage: "240 total / 4 exact / 2 helper / 150 candidate / 84 unmapped"
+  maven: "373 total / 0 failures / 0 errors / 3 skipped"
+  local_osh_teamengine: "215 total / 35 passed / 0 failed / 180 skipped"
+  implementation_commit: "449fbcf"
+  exact_image: "sha256:bc5b9cf5a425e6ce2ed1054ee225a68b353f5d8113363414f404b0d4ff27769e"
+  dependency_sabotage: "Core FAIL=6; API setup SKIP=1; API tests SKIP=4; SystemFeatures SKIP=6"
+  credential_integration: "6/0/0/0 targeted; zero literal leaks"
+  credential_wire: "zero artifact leaks; 42 masked log hits; 42 wire-only unmasked hits"
+
+closed_findings:
+  - media negotiation and GeoJSON/SensorML wrapper parsing
+  - request-time handling for SensorML validTime bound now
+  - all four required datetime query forms
+  - full-class completion overclaim
+  - stale verification and coverage evidence
+  - registry provenance and runtime enforcement wording
+  - stale or ambiguous sabotage report acceptance
+  - SensorML uniqueId representation precedence
+  - obsolete formal-only registry snapshot
+  - active SystemFeatures dependency-chain contradiction
+
+reviewed_snapshot:
+  tracked_diff_sha256: "76cd08e8ac02fbb1fbad300d48e40db34920912ef38c2839e06e71cdb4ccf21d"
+  source_edited_by_reviewer: false

@@ -1,8 +1,33 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T10:27Z
+Last updated: 2026-07-26T13:02Z
 
 ## Current Sprint Evidence
+
+Sprint 46 Part 1 API Common direct ATS:
+
+- Coverage: `240 total / 4 exact / 2 helper / 150 candidate / 84 unmapped`.
+- Final Docker Maven: `373 tests / 0 failures / 0 errors / 3 skipped`.
+- Implementation commit: `449fbcf`.
+- Exact image:
+  `sha256:bc5b9cf5a425e6ce2ed1054ee225a68b353f5d8113363414f404b0d4ff27769e`.
+- Exact-image TeamEngine 6 runtime verification: PASS.
+- Primary local OSH TeamEngine:
+  `215 total / 35 passed / 0 failed / 180 skipped`; 102 recognized requests,
+  zero writes, and zero startup errors.
+- API Common runtime: setup PASS, IDs PASS, UIDs PASS, UID-form recommendation
+  PASS with four warnings, and date-time SKIP for no usable temporal extent.
+- Dependency sabotage: Core `FAIL=6`, API setup `SKIP=1`, API tests `SKIP=4`,
+  SystemFeatures `SKIP=6`.
+- Credential integration and wire gates: PASS with zero unmasked artifact hits.
+- ATS audit self-test and exact released-source reproduction: PASS.
+- Final Raze: `APPROVE`, confidence `0.99`, no required findings.
+- Verification summary:
+  `ops/test-results/sprint-ets-46-part1-api-common-verification-2026-07-26.md`.
+- Durable E2E:
+  `ops/test-results/sprint-ets-46-part1-api-common-e2e-2026-07-26/`.
+
+---
 
 Sprint 45 released ATS coverage inventory:
 

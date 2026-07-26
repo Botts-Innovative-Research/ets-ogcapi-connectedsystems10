@@ -42,7 +42,7 @@ verification:
   full_maven: "PASS_WITH_3_SKIPS: 373/0/0/3"
   coverage_audit: "PASS: 240 total, 4 exact, 2 helper, 150 candidate, 84 unmapped"
   local_osh_teamengine: "PASS_WITH_180_SKIPS: 215/35/0/180"
-  exact_image: "PASS: sha256:81e16f442d0733c440e1880440ca4b3f6261324e64a42db6ec99e9250ffe0dd7"
+  exact_image: "PASS: sha256:bc5b9cf5a425e6ce2ed1054ee225a68b353f5d8113363414f404b0d4ff27769e"
   dependency_sabotage: "PASS: Core FAIL 6, API setup SKIP 1, API tests SKIP 4, SystemFeatures SKIP 6"
   credential_gates: PASS
   raze: "APPROVE 0.99"

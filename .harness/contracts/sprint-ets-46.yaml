@@ -1,0 +1,48 @@
+sprint: ets-46
+story: S-ETS-46-01
+title: Part 1 API Common direct ATS closure
+status: COMPLETE
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-PART1-001
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-PART1-001-CANONICAL-RESOURCES-001
+  - SCENARIO-ETS-PART1-001-COLLECTION-ITEMS-001
+  - SCENARIO-ETS-PART1-001-RESOURCE-IDS-001
+  - SCENARIO-ETS-PART1-001-RESOURCE-UIDS-001
+  - SCENARIO-ETS-PART1-001-RESOURCE-UID-TYPES-001
+  - SCENARIO-ETS-PART1-001-DATETIME-001
+  - SCENARIO-ETS-PART1-001-PAGINATION-FAIL-CLOSED-001
+  - SCENARIO-ETS-PART1-001-DEPENDENCY-CASCADE-001
+success_criteria:
+  - The directly owned released API Common inventory contains four exact and two helper mappings.
+  - Full class conformance remains unclaimed while inherited external suites are partial.
+  - Canonical retrieval negotiates and parses GeoJSON and SensorML JSON representations.
+  - Canonical-resource and collection-item traversal follows bounded next links.
+  - Resource IDs are unique within each supported Part 1 resource type.
+  - Resource UIDs are valid absolute URIs and unique across all Part 1 resources.
+  - UID extraction prefers SensorML uniqueId, then GeoJSON properties.uid, then direct extension uid.
+  - Non-recommended UID forms are warnings rather than failures.
+  - Date-time filtering validates instant, bounded, and half-bounded intersection, request-time now, and timeless-feature inclusion.
+  - Missing usable temporal extents produce an evidence-honest SKIP.
+  - The TestNG dependency DAG makes API Common a prerequisite for System Features.
+  - Failed or skipped Core/Common results make API Common setup SKIP before any IUT request.
+  - Sabotage rejects stale or ambiguous smoke reports.
+  - Focused and full Maven verification succeeds.
+  - TeamEngine executes the changed suite against the real primary local OSH IUT.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not treat target-URI candidate mappings as implemented.
+verification:
+  focused_maven: PASS
+  full_maven: "PASS_WITH_3_SKIPS: 373/0/0/3"
+  coverage_audit: "PASS: 240 total, 4 exact, 2 helper, 150 candidate, 84 unmapped"
+  local_osh_teamengine: "PASS_WITH_180_SKIPS: 215/35/0/180"
+  exact_image: "PASS: sha256:81e16f442d0733c440e1880440ca4b3f6261324e64a42db6ec99e9250ffe0dd7"
+  dependency_sabotage: "PASS: Core FAIL 6, API setup SKIP 1, API tests SKIP 4, SystemFeatures SKIP 6"
+  credential_gates: PASS
+  raze: "APPROVE 0.99"

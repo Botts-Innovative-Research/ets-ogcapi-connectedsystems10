@@ -19,8 +19,9 @@
        TestNG-1.0.dtd semantics; verified empirically via DependencyMap "depends
        on nonexistent group" error when split across blocks).
 
-       Group "systemfeatures" depends-on "core" so all systemfeatures-tagged
-       @Tests SKIP gracefully if any core-tagged @Test FAILs (closes
+       Group "part1apicommon" depends-on "core common", and "systemfeatures"
+       depends-on "part1apicommon", so all systemfeatures-tagged @Tests SKIP
+       gracefully if a released prerequisite is not satisfied (closes
        SCENARIO-ETS-PART1-002-SYSTEMFEATURES-DEPENDENCY-SKIP-001 per design.md
        §"SystemFeatures conformance class scope" snippet).
 
@@ -37,6 +38,10 @@
        dependency map handles ordering and skip semantics.
        Core tests stay in group "core"; SystemFeatures tests stay in group
        "systemfeatures"; Common tests stay in group "common". -->
+  <!-- Sprint 46 S-ETS-46-01 (REQ-ETS-PART1-001): the released OGC 23-001
+       /conf/api-common class is distinct from inherited OGC API Common.
+       part1apicommon depends on core+common; SystemFeatures now depends on
+       part1apicommon and all existing descendants inherit that prerequisite. -->
   <!-- Sprint 4 S-ETS-04-05 (REQ-ETS-PART1-003): Subsystems group added; FIRST
        two-level dependency chain in this ETS (Subsystems → SystemFeatures → Core).
        Per ADR-010 v2 amendment (Architect 2026-04-29) defense-in-depth: the
@@ -185,7 +190,8 @@
   <test name="Conformance Classes - Core + SystemFeatures + Common + Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions + Subdeployments + GeoJSON + SensorML + AdvancedFiltering + CreateReplaceDelete + Update + Part2ApiCommon + Part2Datastream + Part2ControlStream + Part2Feasibility + Part2SystemEvent + Part2AdvancedFiltering + Part2CreateReplaceDelete + Part2Update + Part2Json + Part2SweCommonJson + Part2SweCommonText + Part2SweCommonBinary + Part2Binding (OGC 23-001 /conf/core, /conf/system, /conf/subsystem, /conf/procedure, /conf/deployment, /conf/sf, /conf/property, /conf/subdeployment, /conf/geojson, /conf/sensorml, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update; OGC 23-002 /conf/api-common, /conf/datastream, /conf/controlstream, /conf/feasibility, /conf/system-event, /conf/advanced-filtering, /conf/create-replace-delete, /conf/update, /conf/json, /conf/swecommon-json, /conf/swecommon-text, /conf/swecommon-binary; internal REQ-ETS-PART2-013 binding closure; OGC 19-072 /conf/common)">
     <groups>
       <dependencies>
-        <group name="systemfeatures" depends-on="core"/>
+        <group name="part1apicommon" depends-on="core common"/>
+        <group name="systemfeatures" depends-on="part1apicommon"/>
         <group name="subsystems" depends-on="systemfeatures"/>
         <group name="procedures" depends-on="systemfeatures"/>
         <group name="deployments" depends-on="systemfeatures"/>
@@ -217,6 +223,7 @@
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.LandingPageTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ConformanceTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.core.ResourceShapeTests" />
+      <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.common.CommonTests" />
       <class name="org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests" />

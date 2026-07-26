@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 45 inventory implemented; released Part 1 remains partial at 0 exact mappings | Last updated: 2026-07-26
+> Status: Active - Sprint 46 direct API Common ATS complete; Sprint 47 System next | Last updated: 2026-07-26
 
 ## Goal
 Implement the 13 released OGC 23-001 conformance classes and all 110 Annex A
@@ -44,6 +44,7 @@ capability.
 | S-ETS-19-01 | Add safety-gated GeoJSON/SensorML mediatype-write checks | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012, REQ-ETS-PART1-013, REQ-ETS-PART1-010 |
 | S-ETS-42-01 | Document external SWE Common and SensorML validator architecture and migration plan | Planned provisional architecture documented; no product dependency added | REQ-ETS-VALIDATOR-001, REQ-ETS-PART1-013 |
 | S-ETS-45-01 | Build the released 23-001/23-002 ATS inventory and compiled TestNG coverage audit | Complete; Raze approved | REQ-ETS-COVERAGE-001 |
+| S-ETS-46-01 | Implement all four released `/conf/api-common` tests and both supporting helpers | Complete; full class remains partial for five external inherited suites | REQ-ETS-PART1-001, REQ-ETS-COVERAGE-001 |
 | S-ETS-06-04 | (optional) Common conformance class expansion 4 → 8 @Tests (Sprint 3+ minimal-then-expand by design per Quinn CONCERN-2) | Backlog | REQ-ETS-PART1-001 (modified) |
 
 Story completion records the scoped historical increment only. Released-class

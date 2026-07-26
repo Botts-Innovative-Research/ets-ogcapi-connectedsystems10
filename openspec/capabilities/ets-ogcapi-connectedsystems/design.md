@@ -527,7 +527,11 @@ Pat enumerated 4 SCENARIOs in REQ-ETS-PART1-002 (now SPECIFIED in spec.md). Arch
 | `systemItemHasIdTypeLinks` | for the first item in the collection: has string `id`, string `type` (matching `System` or the IUT's discriminator), array `links` per REQ-ETS-CORE-004 base shape | SCENARIO-ETS-PART1-002-SYSTEMFEATURES-RESOURCE-SHAPE-001 (NORMAL) |
 | `systemsCollectionLinksDiscipline` | collection-level `links` array contains `rel=collection` AND/OR `rel=items` per OGC Common; absence of `rel=self` is NOT FAIL (carries v1.0 GH#3 fix policy from Core landing page) | SCENARIO-ETS-PART1-002-SYSTEMFEATURES-LINKS-NORMATIVE-001 (NORMAL) |
 
-The `dependsOnGroups="core"` wiring (CRITICAL SCENARIO-ETS-PART1-002-SYSTEMFEATURES-DEPENDENCY-SKIP-001) is a **testng.xml change**, not a @Test method — handled inline in the `<test name="SystemFeatures">` block:
+The following direct `dependsOnGroups="core"` wiring records the historical
+Sprint 2 design. Sprint 46 supersedes it with
+`systemfeatures -> part1apicommon -> core common`, preserving Core failure
+cascade while adding the released API Common and inherited Common
+prerequisites:
 
 ```xml
 <test name="SystemFeatures">
@@ -542,7 +546,9 @@ The `dependsOnGroups="core"` wiring (CRITICAL SCENARIO-ETS-PART1-002-SYSTEMFEATU
 </test>
 ```
 
-The `dependsOnGroups` semantics auto-skip every @Test in `conformance.systemfeatures.*` if any @Test in `conformance.core.*` produces FAIL. Verification per S-ETS-02-06 acceptance criterion #7: temporarily make Core FAIL (e.g. point IUT at server returning 500 on `/conformance`) and confirm SystemFeatures @Tests emit SKIP not FAIL/ERROR.
+The current `dependsOnGroups` semantics auto-skip API Common and then every
+`@Test` in `conformance.systemfeatures.*` if Core or Common produces FAIL.
+Sprint 46 verifies that current transitive chain with the live sabotage gate.
 
 #### Subpackage layout
 
@@ -1031,6 +1037,87 @@ Maven or TeamEngine run proves regression health but cannot promote an
 incomplete conformance class. Historical story completion remains chronology;
 every released class stays partial until every owning test is exact and its
 supporting helpers are reviewed.
+
+### Sprint 46: released Part 1 API Common direct procedures
+
+The historical `CommonTests` class remains responsible for selected inherited
+OGC API Common behavior. It is not renamed or reused as a Connected Systems
+mapping because released OGC 23-001 defines a distinct `/conf/api-common`
+class.
+
+Sprint 46 adds:
+
+```text
+core -----------+
+                +--> part1apicommon --> systemfeatures --> existing descendants
+common ---------+
+
+Part1ApiCommonTests
+  |-- resourceIdsAreUniqueWithinEachType()
+  |-- resourceUidsAreValidAndGloballyUnique()
+  |-- resourceUidTypesFollowRecommendation()
+  `-- datetimeUsesValidTime()
+          |
+          v
+Part1ApiCommonSupport
+  |-- canonicalResources(apiRoot, resourceType)
+  `-- collectionItems(apiRoot, collection)
+```
+
+`Part1ApiCommonSupport` performs read-only JSON retrieval with a finite page
+limit and visited-URI set. Canonical requests negotiate the released
+representation set for each resource type: GeoJSON, SensorML JSON, or the JSON
+extension where applicable. Each page must return HTTP 200 and the collection
+member required by its actual media type: GeoJSON `features`, SensorML JSON
+`items`, or either recognized wrapper for an extension JSON type. A malformed,
+cyclic, cross-origin, or over-limit traversal fails closed. Canonical-resource
+support probes the five resource types fixed by OGC 23-001; HTTP 404 means that
+resource type is not supported by the IUT, while other non-200 responses fail.
+UID extraction gives the normative SensorML `uniqueId` first priority, then
+GeoJSON `properties.uid`, and finally a direct `uid` extension fallback.
+
+The API Common `@BeforeClass` configuration explicitly depends on the `core`
+and `common` groups in addition to the suite's group dependency. TestNG orders
+the configuration after those groups but does not reliably suppress a
+configuration method when only part of a prerequisite group fails. The setup
+therefore inspects the completed failed and skipped test results for both
+prerequisite groups and throws `SkipException` before reading the IUT suite
+attribute or issuing a request. The failure-path gate requires the
+configuration itself, all four API Common tests, and System Features to report
+SKIP after Core sabotage. The sabotage run writes to a unique smoke output
+directory and accepts exactly one XML report newer than a marker created
+immediately before smoke starts, preventing pre-existing evidence from
+satisfying a no-report run.
+
+The date-time method reads collection metadata from `/collections`. Collections
+without a usable temporal extent do not produce positive evidence. For each
+eligible collection, the test derives instant, bounded, open-start, and
+open-end query forms from the extent. It retrieves unfiltered items once and
+filtered items for every form, rejects returned `validTime` values that do not
+intersect the query, resolves a `now` bound using the timestamp captured
+immediately before that request, and compares feature IDs to prove timeless
+features were retained in every filtered result. The method skips only when no
+query can execute against an eligible collection.
+
+UID recommendation evaluation uses a deterministic JSON snapshot of the IANA
+Formal and Informal URN Namespaces registries. The resource records the source
+URL, registry update date, retrieval date, and source XML SHA-256; runtime
+initialization checks those metadata and both expected namespace counts before
+using the snapshot. Valid URI forms outside UUID URNs and that snapshot remain
+warnings, because the released procedure expresses this check as a
+recommendation.
+
+These six reviewed mappings cover only the four directly owned class tests and
+two supporting tests in the OGC 23-001 inventory. The released class also
+inherits five external OGC API Features/Common conformance classes. Those
+external suites remain partial, so Sprint 46 does not claim full
+`/conf/api-common` conformance.
+
+The official `ets-ogcapi-features10` implementation was inspected at commit
+`a314c1e6a9278b14ab9a2ed865cfe36d202f0125` for the referenced temporal-extent
+selection model. Its `fc-time-response` method still contains a response
+assertion TODO, so this ETS implements the normative inclusion checks directly
+instead of importing an incomplete implementation.
 
 ## Status
 

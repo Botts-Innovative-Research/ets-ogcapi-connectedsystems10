@@ -5,8 +5,8 @@
 #   Closes Sprint 2 PARTIAL `no_credential_leak_in_test_logs` → PASS.
 #
 # Strategy (per architect-handoff constraints_for_generator.must item 9):
-#   1. Run the new VerifyMaskingRequestLoggingFilter unit-test class (8 tests),
-#      one of which exercises the filter() method end-to-end with synthetic
+#   1. Run the VerifyMaskingRequestLoggingFilter unit-test class,
+#      including the test that exercises filter() end-to-end with synthetic
 #      credential `Bearer ABCDEFGH12345678WXYZ` and writes the formatter output
 #      to a ByteArrayOutputStream that is then asserted in the unit test itself.
 #      This script captures Maven's full surefire output (NOT just the summary)
@@ -19,9 +19,9 @@
 #      where surefire suppresses stdout but writes it to test-output XML).
 #   4. Exit 0 on zero-leak + masked-form-present; exit 1 otherwise.
 #
-# Hermeticity: runs `mvn test -Dtest=VerifyMaskingRequestLoggingFilter` only
-# (fast: ~5-10s vs full suite). Output captured to /tmp/credential-leak-* by
-# default. Set ARCHIVE_DIR to opt into archiving the evidence to ops/test-results/.
+# Hermeticity: runs the targeted class through mvn-test-via-docker.sh, so host
+# Maven is not required. Output is captured to /tmp/credential-leak-* by
+# default. Set ARCHIVE_DIR to choose another evidence directory.
 
 set -eo pipefail
 
@@ -48,14 +48,14 @@ log "Archive: $ARCHIVE_DIR"
 log ""
 
 # Step 1: run the targeted unit-test class with full surefire output captured.
-log "Step 1/4 — running VerifyMaskingRequestLoggingFilter (8 @Tests)"
-export PATH="${HOME}/.local/apache-maven-3.9.9/bin:$PATH"
-if ! mvn test -Dtest=VerifyMaskingRequestLoggingFilter -o > "$MVN_OUT" 2>&1; then
+log "Step 1/4 — running VerifyMaskingRequestLoggingFilter through Docker Maven"
+if ! bash scripts/mvn-test-via-docker.sh \
+  -Dtest=VerifyMaskingRequestLoggingFilter > "$MVN_OUT" 2>&1; then
   log "FATAL: mvn test FAILED — see $MVN_OUT"
   tail -40 "$MVN_OUT" | tee -a "$GREP_REPORT"
   exit 1
 fi
-log "  unit tests PASS (8/8 expected)"
+log "  targeted unit tests PASS"
 log ""
 
 # Step 2: grep Maven output for literal credential body (leak guard)
@@ -87,8 +87,8 @@ log "Step 4/4 — grep mvn output for masked form '$MASKED_FORM_PROBE' (>=1 hit 
 # ByteArrayOutputStream (NOT System.out), so masked form is not in mvn output by
 # design — it's verified inside the test assertions. We therefore check the
 # surefire XML test results for assertion success indicators instead.
-PASSED=$(grep -c "Tests run: 8, Failures: 0, Errors: 0" "$MVN_OUT" || true)
-log "  surefire summary lines matching '8/0/0/0': $PASSED (>=1 expected)"
+PASSED=$(grep -Ec "Tests run: [1-9][0-9]*, Failures: 0, Errors: 0, Skipped: 0" "$MVN_OUT" || true)
+log "  fully green non-zero surefire summary lines: $PASSED (>=1 expected)"
 log ""
 
 # Verdict
@@ -102,13 +102,13 @@ if [[ "$TOTAL_LEAKS" -gt 0 ]]; then
   exit 1
 fi
 if [[ "$PASSED" -lt 1 ]]; then
-  log "FAIL: surefire did not report 8/0/0/0 — filter may not have actually run."
+  log "FAIL: surefire did not report a non-zero fully green targeted run."
   exit 1
 fi
-log "PASS: zero credential leaks + 8 unit tests (incl. masked-form-present"
+log "PASS: zero credential leaks + targeted unit tests (incl. masked-form-present"
 log "      assertions) ran green. SCENARIO-ETS-CLEANUP-CREDENTIAL-LEAK-INTEGRATION-001"
-log "      verified at the unit-test integration layer (deeper E2E IUT-auth"
-log "      wiring deferred to Sprint 4 per architect-handoff)."
+log "      verified at the unit-test integration layer; the separate"
+log "      credential-leak-e2e-test.sh provides wire-layer proof."
 log ""
 log "Archive: $ARCHIVE_DIR"
 exit 0

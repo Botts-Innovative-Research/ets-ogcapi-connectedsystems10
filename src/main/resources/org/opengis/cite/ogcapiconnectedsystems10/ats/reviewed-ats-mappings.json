@@ -1,5 +1,73 @@
 {
   "schemaVersion": "1.0",
-  "approvedHelpers": [],
-  "mappings": []
+  "approvedHelpers": [
+    {
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport#canonicalResources(java.net.URI,java.lang.String)",
+      "reviewedBy": "Codex Sprint 46 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "Part1ApiCommonSupport canonicalResources and traverse implement parameterized canonical GET, per-resource GeoJSON/SensorML JSON negotiation, response-media-specific features/items validation, next-link traversal, and cycle/page/cross-origin guards; focused tests cover both released representations, pagination, 404 unsupported types, and fail-closed behavior."
+    },
+    {
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport#collectionItems(java.net.URI,java.util.Map)",
+      "reviewedBy": "Codex Sprint 46 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "Part1ApiCommonSupport collectionItems inspects rel=items media types, requests the released collections/{id}/items path, validates HTTP 200 and representation-specific GeoJSON features or SensorML JSON items, and delegates bounded next-link traversal; focused tests cover both released representations, path encoding, Accept selection, and unsupported-media evidence."
+    }
+  ],
+  "mappings": [
+    {
+      "part": 1,
+      "test": "/conf/api-common/canonical-resources",
+      "kind": "helper",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport#canonicalResources(java.net.URI,java.lang.String)",
+      "reviewedBy": "Codex Sprint 46 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The parameterized helper executes every released canonical-resources step, including resource-specific representation negotiation, GeoJSON features and SensorML JSON items parsing, and all-page retrieval through bounded next links."
+    },
+    {
+      "part": 1,
+      "test": "/conf/api-common/collection-items",
+      "kind": "helper",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport#collectionItems(java.net.URI,java.util.Map)",
+      "reviewedBy": "Codex Sprint 46 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The parameterized helper executes media-type discovery, unsupported-media evidence, released endpoint retrieval, response-media-specific GeoJSON/SensorML collection parsing, HTTP validation, and all-page traversal."
+    },
+    {
+      "part": 1,
+      "test": "/conf/api-common/resource-ids",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests#resourceIdsAreUniqueWithinEachType()",
+      "reviewedBy": "Codex Sprint 46 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The deployed TestNG method consumes canonicalResources for every supported Part 1 type, requires each local ID, and fails duplicate IDs within the same type; focused duplicate-ID coverage passes."
+    },
+    {
+      "part": 1,
+      "test": "/conf/api-common/resource-uids",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests#resourceUidsAreValidAndGloballyUnique()",
+      "reviewedBy": "Codex Sprint 46 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The deployed TestNG method consumes all supported canonical resources, gives normative SensorML uniqueId precedence followed by GeoJSON properties.uid and direct extension uid, validates absolute URI syntax, and rejects duplicate UIDs across resource types; focused conflicting-shape and cross-type duplication coverage passes."
+    },
+    {
+      "part": 1,
+      "test": "/conf/api-common/resource-uids-types",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests#resourceUidTypesFollowRecommendation()",
+      "reviewedBy": "Codex Sprint 46 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The deployed TestNG method evaluates every retrieved UID, recognizes valid UUID URNs and namespaces in the bundled provenance-recorded IANA Formal and Informal URN Namespaces registry snapshot, and emits TestNG warnings rather than failures for other valid forms; focused recommendation-form and registry-integrity coverage passes."
+    },
+    {
+      "part": 1,
+      "test": "/conf/api-common/datetime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests#datetimeUsesValidTime()",
+      "reviewedBy": "Codex Sprint 46 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The deployed TestNG method iterates advertised collections with temporal extents, queries released collection-items with instant, bounded, open-start, and open-end datetime forms, resolves now at captured request time, rejects non-intersecting validTime, requires unfiltered timeless IDs in every filtered result, and SKIPs with no eligible collection; focused positive, boundary, and fail-closed temporal coverage passes."
+    }
+  ]
 }

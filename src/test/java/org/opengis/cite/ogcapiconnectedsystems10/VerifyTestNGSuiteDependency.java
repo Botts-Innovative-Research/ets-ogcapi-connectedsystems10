@@ -31,12 +31,11 @@ import org.testng.xml.XmlTest;
  *
  * <p>
  * Per ADR-010 §"Role boundary": this test asserts that the canonical {@code testng.xml}
- * shipped in the ETS jar declares the SystemFeatures→Core group dependency correctly AND
- * that every SystemFeatures @Test method carries {@code groups = "systemfeatures"} AND
- * every Core @Test method carries {@code groups = "core"}. Catches the regression
- * "someone deleted the &lt;group depends-on&gt; block during a refactor" or "someone
- * forgot {@code groups = "core"} on a new Core @Test" before the slow bash script runs in
- * CI.
+ * shipped in the ETS jar declares the SystemFeatures dependency chain correctly AND that
+ * every SystemFeatures @Test method carries {@code groups = "systemfeatures"} AND every
+ * Core @Test method carries {@code groups = "core"}. Catches the regression "someone
+ * deleted the &lt;group depends-on&gt; block during a refactor" or "someone forgot
+ * {@code groups = "core"} on a new Core @Test" before the slow bash script runs in CI.
  *
  * <p>
  * Pinned to {@code org.testng.xml.Parser} → {@link XmlSuite} API (TestNG 7.x; per
@@ -56,6 +55,8 @@ public class VerifyTestNGSuiteDependency {
 	private static final String SYSTEMFEATURES_GROUP = "systemfeatures";
 
 	private static final String COMMON_GROUP = "common";
+
+	private static final String PART1_API_COMMON_GROUP = "part1apicommon";
 
 	/**
 	 * Sprint 4 S-ETS-04-05 / ADR-010 v2 amendment — Subsystems group (FIRST two-level
@@ -345,7 +346,8 @@ public class VerifyTestNGSuiteDependency {
 	/**
 	 * SCENARIO-ETS-CLEANUP-DEPENDENCY-SKIP-LIVE-001 (structural lint half): the canonical
 	 * testng.xml SHALL declare the
-	 * {@code <group name="systemfeatures" depends-on="core"/>} block inside a
+	 * {@code <group name="part1apicommon" depends-on="core common"/>} and
+	 * {@code <group name="systemfeatures" depends-on="part1apicommon"/>} block inside a
 	 * {@code <test>} that hosts BOTH Core and SystemFeatures classes.
 	 *
 	 * <p>
@@ -355,7 +357,7 @@ public class VerifyTestNGSuiteDependency {
 	 * catches at the behavioral layer).
 	 */
 	@org.junit.Test
-	public void testSystemFeaturesGroupDependsOnCore() throws Exception {
+	public void testSystemFeaturesGroupDependsOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -371,17 +373,19 @@ public class VerifyTestNGSuiteDependency {
 			if (deps != null && deps.containsKey(SYSTEMFEATURES_GROUP)) {
 				String dependsOn = deps.get(SYSTEMFEATURES_GROUP);
 				assertNotNull("group '" + SYSTEMFEATURES_GROUP + "' has null depends-on attribute", dependsOn);
-				assertTrue("group '" + SYSTEMFEATURES_GROUP + "' depends-on '" + dependsOn + "' missing '" + CORE_GROUP
-						+ "'", dependsOn.contains(CORE_GROUP));
+				assertTrue("group '" + SYSTEMFEATURES_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ PART1_API_COMMON_GROUP + "'", dependsOn.contains(PART1_API_COMMON_GROUP));
+				String apiCommonDependsOn = deps.get(PART1_API_COMMON_GROUP);
+				assertNotNull("group '" + PART1_API_COMMON_GROUP + "' has no dependency declaration",
+						apiCommonDependsOn);
+				assertTrue("group '" + PART1_API_COMMON_GROUP + "' must depend on Core and Common",
+						apiCommonDependsOn.contains(CORE_GROUP) && apiCommonDependsOn.contains(COMMON_GROUP));
 				foundDependency = true;
 				break;
 			}
 		}
-		assertTrue(
-				"testng.xml does not declare <group name=\"" + SYSTEMFEATURES_GROUP + "\" depends-on=\"" + CORE_GROUP
-						+ "\"/> — see ADR-010 §Role boundary + design.md §SystemFeatures conformance class scope. "
-						+ "If the declaration was deliberately moved/restructured, update this test in lockstep.",
-				foundDependency);
+		assertTrue("testng.xml does not declare the Core+Common -> Part1ApiCommon -> SystemFeatures chain. "
+				+ "See CP-006 and design.md Sprint 46.", foundDependency);
 	}
 
 	/**
@@ -456,10 +460,11 @@ public class VerifyTestNGSuiteDependency {
 	 * SCENARIO-ETS-CLEANUP-DEPENDENCY-SKIP-LIVE-001 (structural lint half): every
 	 * SystemFeatures
 	 * @Test method SHALL carry {@code groups = "systemfeatures"} so the
-	 * {@code <group name="systemfeatures" depends-on="core"/>} declaration tags those
-	 * methods for the cascading-SKIP. A SystemFeatures @Test missing the group annotation
-	 * would FAIL/ERROR directly rather than SKIP when Core fails — invisible at the
-	 * testng.xml layer.
+	 * {@code <group name="systemfeatures" depends-on="part1apicommon"/>} declaration tags
+	 * those methods for the cascading-SKIP through API Common's Core/Common
+	 * prerequisites. A SystemFeatures @Test missing the group annotation would FAIL/ERROR
+	 * directly rather than SKIP when a prerequisite fails -- invisible at the testng.xml
+	 * layer.
 	 */
 	@org.junit.Test
 	public void testEverySystemFeaturesTestMethodCarriesSystemFeaturesGroup() {

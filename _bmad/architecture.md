@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.20 | Status: Living Document | Last reconciled: 2026-07-26 (released ATS coverage authority)
+> Version: 2.0.21 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 API Common closure design)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -795,3 +795,48 @@ The newer Connected Systems commit `3fd86c73...` remains the separately
 documented OpenAPI input pin. It is not an ATS authority. Later drafts, IUT
 declarations, and frozen web-app registries cannot alter the released coverage
 surface.
+
+## 24. Architecture v2.0.21 - Part 1 API Common direct procedures (2026-07-26)
+
+Released OGC 23-001 `/conf/api-common` is a distinct ETS component from the
+existing inherited OGC API Common tests:
+
+```text
+conformance.common.CommonTests
+  inherited OGC API Common assertions
+                 |
+                 +---+
+                     v
+core ----------> part1apicommon ----------> systemfeatures
+                     |                            |
+                     v                            v
+          Part1ApiCommonSupport          current Part 1 DAG
+```
+
+The `part1apicommon` group depends on both `core` and `common`.
+`systemfeatures` depends on `part1apicommon`, making the released foundation a
+transitive prerequisite for all current System Features descendants without
+duplicating dependency declarations.
+
+`Part1ApiCommonSupport` owns bounded, read-only pagination for canonical
+resources and collection items. It is intentionally independent of encoding
+validators: SWE Common and SensorML adapter responsibilities remain behind the
+external validator boundaries defined in Sprint 42. The support layer may
+issue GET requests only and must fail on pagination cycles, excessive pages,
+cross-origin next links, non-200 supported endpoints, or malformed JSON
+collection bodies. It negotiates the representation set allowed for each
+canonical resource type and parses GeoJSON `features`, SensorML JSON `items`,
+and recognized extension JSON wrappers according to the actual response media
+type.
+
+Date-time conformance is evidence-sensitive. Collections lacking temporal
+extent are ineligible rather than passing. Every eligible collection is queried
+with instant, bounded, open-start, and open-end forms. Returned features with
+`validTime` must intersect each query, `now` is resolved at the captured request
+time, and every timeless feature found by the unfiltered traversal must remain
+in every filtered result. Zero executed queries yields SKIP.
+
+This component closes the four directly owned tests and two supporting tests in
+the Connected Systems inventory only. Full `/conf/api-common` conformance
+remains partial until the five inherited external OGC API Features/Common
+classes are completed and reviewed.

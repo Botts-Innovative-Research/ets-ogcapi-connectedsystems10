@@ -12,7 +12,7 @@
 #
 #   --target=core (DEFAULT — backward compatible with Sprint 3 + 4):
 #     Launch a Python HTTP-500 stub server, run smoke against the stub URL,
-#     observe Core FAIL + SystemFeatures SKIP (one-level cascade). This is
+#     observe Core FAIL + API Common SKIP + SystemFeatures SKIP. This is
 #     the "approach (b) bash sabotage script" canonical CITE-SC-grade artifact
 #     per ADR-010, complementing the structural-lint unit test
 #     VerifyTestNGSuiteDependency.
@@ -32,17 +32,20 @@
 # stub-server preferred):
 #   1. Launch a Python HTTP stub server bound to an ephemeral port that
 #      returns HTTP 500 to every request (sabotages Core's landing-page
-#      assertion).
+#      assertion). API Common depends on Core and Common; SystemFeatures depends
+#      on API Common.
 #   2. Run the existing smoke pipeline against the stub URL (instead of
 #      GeoRobotix). Core's first @Test fails on the GET /; the
-#      <group name="systemfeatures" depends-on="core"/> declaration in
-#      testng.xml then cascades SKIP to all SystemFeatures @Tests.
+#      <group name="part1apicommon" depends-on="core common"/> and
+#      <group name="systemfeatures" depends-on="part1apicommon"/> declarations
+#      in testng.xml then cascade SKIP to API Common and SystemFeatures.
 #   3. Parse the produced TestNG XML report. Assert:
 #        (a) at least one Core @Test has status="FAIL" (sabotage worked)
-#        (b) every SystemFeatures @Test has status="SKIP" (NOT "FAIL"/"PASS")
-#   4. Exit 0 on correct cascading-SKIP behavior; exit 1 if SystemFeatures
-#      @Tests show FAIL or PASS (which would mean the dependency wiring is
-#      broken — exactly the regression this script catches).
+#        (b) every API Common @Test has status="SKIP" (NOT "FAIL"/"PASS")
+#        (c) API Common setup is SKIP, proving dependent requests did not run
+#        (d) every SystemFeatures @Test has status="SKIP" (NOT "FAIL"/"PASS")
+#   4. Exit 0 on correct cascading-SKIP behavior; exit 1 if either dependent
+#      class or API Common setup does not SKIP.
 #
 # Strategy for --target=systemfeatures (Sprint 5 — REQ-ETS-CLEANUP-015):
 #   1. Validate prerequisites: docker daemon reachable; SystemFeaturesTests.java
@@ -557,22 +560,33 @@ log "  (Core landing-page @Test expected to FAIL; SystemFeatures @Tests expected
 
 # Run smoke with explicit overrides: SMOKE_IUT_URL points at stub; container
 # adds host.docker.internal mapping so curl from inside container reaches
-# the ephemeral port. Use a unique container name to avoid collision with
-# concurrent smoke runs.
+# the ephemeral port. Use a unique output directory and marker so this gate can
+# consume only the report produced by this run, never stale worktree evidence.
+CORE_SMOKE_OUTPUT_DIR="${SABOTAGE_TMPDIR}/core-smoke-results-${TS}"
+CORE_SMOKE_MARKER="${CORE_SMOKE_OUTPUT_DIR}/.run-started"
+mkdir -p "$CORE_SMOKE_OUTPUT_DIR"
+if find "$CORE_SMOKE_OUTPUT_DIR" -maxdepth 1 -type f \
+  -name 's-ets-01-03-teamengine-smoke-*.xml' -print -quit | grep -q .; then
+  die "isolated smoke output already contains a TestNG report: $CORE_SMOKE_OUTPUT_DIR"
+fi
+: > "$CORE_SMOKE_MARKER"
+
 SMOKE_IUT_URL="$STUB_URL" \
   SMOKE_CONTAINER_NAME="$CONTAINER_NAME" \
   SMOKE_IMAGE_TAG="$IMAGE_TAG" \
+  SMOKE_OUTPUT_DIR="$CORE_SMOKE_OUTPUT_DIR" \
   bash scripts/smoke-test.sh 2>&1 | tee -a "$SABOTAGE_LOG" \
   || log "  smoke exited non-zero (EXPECTED — Core FAILs against sabotage stub)"
 
-# Locate the smoke-test report — smoke-test.sh writes to ops/test-results/ by
-# default. Capture it into the sabotage archive for behavioral evidence.
-LATEST_REPORT="$(ls -t ops/test-results/s-ets-01-03-teamengine-smoke-*.xml 2>/dev/null | head -1)"
-[[ -n "$LATEST_REPORT" ]] || die "smoke-test.sh did not produce a TestNG report; aborting"
+# Select exactly one report created after this run's marker. A failed smoke that
+# produces no report cannot reuse an earlier worktree or archive artifact.
+LATEST_REPORT="$(bash scripts/require-fresh-smoke-report.sh \
+  "$CORE_SMOKE_OUTPUT_DIR" "$CORE_SMOKE_MARKER")" \
+  || die "smoke-test.sh did not produce exactly one fresh TestNG report; aborting"
 cp -f "$LATEST_REPORT" "$SABOTAGE_REPORT_XML"
 log "  TestNG report captured to $SABOTAGE_REPORT_XML"
 
-# ---------- Step 3: parse TestNG XML; assert Core has FAIL + SystemFeatures all SKIP
+# ---------- Step 3: parse TestNG XML; assert Core FAIL + dependent API Common/SystemFeatures SKIP
 log "step 3/5 — parsing TestNG report; asserting cascading-SKIP semantics"
 
 PARSE_RESULT="$(python3 - "$SABOTAGE_REPORT_XML" <<'PY'
@@ -590,6 +604,8 @@ root = tree.getroot()
 # Find every <test-method> child with a status attribute. TestNG's
 # canonical XML report is <testng-results><suite><test><class><test-method/>.
 core_methods = []
+api_methods = []
+api_configs = []
 sf_methods = []
 for tm in root.iter("test-method"):
     status = tm.get("status", "")
@@ -602,28 +618,42 @@ for tm in root.iter("test-method"):
         pass
     # Use signature to classify by class name
     sig = tm.get("signature", "") or ""
-    # configuration methods (BeforeClass, etc) carry is-config="true"
-    if tm.get("is-config", "false").lower() == "true":
-        continue
     if "conformance.core" in sig:
-        core_methods.append((name, status, sig))
+        if tm.get("is-config", "false").lower() != "true":
+            core_methods.append((name, status, sig))
+    elif "conformance.part1.apicommon" in sig:
+        if tm.get("is-config", "false").lower() == "true":
+            api_configs.append((name, status, sig))
+        else:
+            api_methods.append((name, status, sig))
     elif "conformance.systemfeatures" in sig:
-        sf_methods.append((name, status, sig))
+        if tm.get("is-config", "false").lower() != "true":
+            sf_methods.append((name, status, sig))
 
 print(f"Core @Test methods seen: {len(core_methods)}")
 for n, s, _ in core_methods:
     print(f"  Core  {s:8s}  {n}")
+print(f"API Common @Test methods seen: {len(api_methods)}")
+for n, s, _ in api_methods:
+    print(f"  API   {s:8s}  {n}")
+print(f"API Common configuration methods seen: {len(api_configs)}")
+for n, s, _ in api_configs:
+    print(f"  CFG   {s:8s}  {n}")
 print(f"SystemFeatures @Test methods seen: {len(sf_methods)}")
 for n, s, _ in sf_methods:
     print(f"  SF    {s:8s}  {n}")
 
 # Acceptance assertions
 core_failed = [m for m in core_methods if m[1] == "FAIL"]
+api_not_skipped = [m for m in api_methods if m[1] != "SKIP"]
+api_config_not_skipped = [m for m in api_configs if m[1] != "SKIP"]
 sf_skipped = [m for m in sf_methods if m[1] == "SKIP"]
 sf_not_skipped = [m for m in sf_methods if m[1] != "SKIP"]
 
 print()
 print(f"Core failures: {len(core_failed)}")
+print(f"API Common NOT skipped (should be 0): {len(api_not_skipped)}")
+print(f"API Common config NOT skipped (should be 0): {len(api_config_not_skipped)}")
 print(f"SF skipped:    {len(sf_skipped)}")
 print(f"SF NOT skipped (should be 0): {len(sf_not_skipped)}")
 
@@ -632,6 +662,24 @@ if not core_methods:
     sys.exit(1)
 if not core_failed:
     print("VERDICT: FAIL — no Core @Test FAILed (sabotage stub did not break Core)", file=sys.stderr)
+    sys.exit(1)
+if not api_methods:
+    print("VERDICT: FAIL — no API Common @Tests seen (suite scope wrong)", file=sys.stderr)
+    sys.exit(1)
+if api_not_skipped:
+    print(f"VERDICT: FAIL — {len(api_not_skipped)} API Common @Tests did NOT SKIP "
+          "(dependency wiring broken)", file=sys.stderr)
+    for n, s, _ in api_not_skipped:
+        print(f"  offending: {s:8s}  {n}", file=sys.stderr)
+    sys.exit(1)
+if not api_configs:
+    print("VERDICT: FAIL — no API Common configuration method seen", file=sys.stderr)
+    sys.exit(1)
+if api_config_not_skipped:
+    print(f"VERDICT: FAIL — {len(api_config_not_skipped)} API Common configuration "
+          "methods did NOT SKIP (dependent setup may have issued requests)", file=sys.stderr)
+    for n, s, _ in api_config_not_skipped:
+        print(f"  offending: {s:8s}  {n}", file=sys.stderr)
     sys.exit(1)
 if not sf_methods:
     print("VERDICT: FAIL — no SystemFeatures @Tests seen (suite scope wrong)", file=sys.stderr)
@@ -643,7 +691,8 @@ if sf_not_skipped:
         print(f"  offending: {s:8s}  {n}", file=sys.stderr)
     sys.exit(1)
 
-print("VERDICT: PASS — Core FAILed (sabotage worked), all SystemFeatures @Tests SKIPped (cascading-SKIP wiring verified)")
+print("VERDICT: PASS — Core FAILed; API Common setup and @Tests SKIPped; "
+      "all SystemFeatures @Tests SKIPped")
 sys.exit(0)
 PY
 )" || PARSE_EXIT=$?
@@ -661,7 +710,7 @@ log "step 4/5 — VERDICT: PASS (cascading-SKIP wiring verified end-to-end)"
 log "step 5/5 — archiving evidence + cleaning up"
 log "  report: $SABOTAGE_REPORT_XML"
 log "  log:    $SABOTAGE_LOG"
-log "SABOTAGE PASS: SystemFeatures @Tests cascade-SKIPped when Core was sabotaged via HTTP-500 stub"
+log "SABOTAGE PASS: API Common setup/@Tests and SystemFeatures @Tests cascade-SKIPped when Core failed"
 
 cleanup_all
 trap - EXIT

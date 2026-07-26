@@ -52,6 +52,8 @@ public class VerifyTeamEngine6Packaging {
 
 	private static String addedJarVerifierSelfTest;
 
+	private static String credentialLeakIntegrationScript;
+
 	private static String jenkinsBuild;
 
 	private static String jenkinsRelease;
@@ -77,8 +79,20 @@ public class VerifyTeamEngine6Packaging {
 		runtimeVerifier = Files.readString(Path.of("scripts/verify-teamengine6-runtime.sh"));
 		addedJarVerifier = Files.readString(Path.of("scripts/verify-added-jar-inventory.sh"));
 		addedJarVerifierSelfTest = Files.readString(Path.of("scripts/test-teamengine6-jar-guard.sh"));
+		credentialLeakIntegrationScript = Files.readString(Path.of("scripts/credential-leak-integration-test.sh"));
 		jenkinsBuild = Files.readString(Path.of("jenkinsfiles/build/Jenkinsfile"));
 		jenkinsRelease = Files.readString(Path.of("jenkinsfiles/release/Jenkinsfile"));
+	}
+
+	/**
+	 * REQ-ETS-CLEANUP-006; SCENARIO-ETS-CLEANUP-CREDENTIAL-LEAK-INTEGRATION-001.
+	 */
+	@Test
+	public void credentialLeakIntegrationGateDoesNotRequireHostMaven() {
+		assertContains(credentialLeakIntegrationScript, "bash scripts/mvn-test-via-docker.sh");
+		assertContains(credentialLeakIntegrationScript, "Tests run: [1-9][0-9]*, Failures: 0, Errors: 0, Skipped: 0");
+		assertFalse(credentialLeakIntegrationScript.contains("export PATH="));
+		assertFalse(credentialLeakIntegrationScript.contains("mvn test -Dtest="));
 	}
 
 	/**

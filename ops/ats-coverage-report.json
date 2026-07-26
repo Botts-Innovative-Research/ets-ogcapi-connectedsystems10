@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 215,
+  "suiteTestMethodCount" : 216,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -145,7 +145,7 @@
     "target" : "/req/system/canonical-url",
     "supporting" : false,
     "state" : "exact",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemItemHasCanonicalLink()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#everySystemHasCanonicalUrl()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#everySystemHasCanonicalUrl()" ],
     "reviewedMapping" : {
       "part" : 1,
       "test" : "/conf/system/canonical-url",
@@ -179,7 +179,7 @@
     "target" : "/req/system/canonical-endpoint",
     "supporting" : false,
     "state" : "exact",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemItemHasIdTypeLinks()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#canonicalSystemsEndpointIsValid()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.SystemFeaturesTests#canonicalSystemsEndpointIsValid()" ],
     "reviewedMapping" : {
       "part" : 1,
       "test" : "/conf/system/canonical-endpoint",
@@ -212,45 +212,85 @@
     "classIdentifier" : "/conf/subsystem",
     "target" : "/req/subsystem/collection",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemsCollectionReturns200()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemCollectionIsValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subsystem/collection",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemCollectionIsValid()",
+      "reviewedBy" : "Codex Sprint 48 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method probes bounded, media-gated nested collections to select a parent with a nonempty subsystem collection without requiring local item ids, dereferences that parent System resource, counts exactly one rel=subsystems link occurrence, and requires its resolved URI to exactly equal the already-fetched api_root/systems/{id}/subsystems endpoint. It rejects duplicate-identical, trailing-slash, query, fragment, and cross-origin variants, reuses the accepted first response, establishes HTTP 200 and actual media before parsing every page, warns and SKIPs unsupported or absent media, and validates every supported page against the existing released GeoJSON or SensorML System collection schema."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subsystem/recursive-param",
     "classIdentifier" : "/conf/subsystem",
     "target" : "/req/subsystem/recursive-param",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#recursiveParameterUsesBooleanValues()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subsystem/recursive-param",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#recursiveParameterUsesBooleanValues()",
+      "reviewedBy" : "Codex Sprint 48 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method issues read-only /systems requests with the exact recursive=false and recursive=true query values and requires HTTP 200 for both without parsing representation content outside the released procedure. Controlled HTTP coverage records both exact query strings and proves successful non-JSON responses do not create unrelated failures."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subsystem/recursive-search-systems",
     "classIdentifier" : "/conf/subsystem",
     "target" : "/req/subsystem/recursive-search-systems",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#systemsRecursiveSearchIsComplete()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subsystem/recursive-search-systems",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#systemsRecursiveSearchIsComplete()",
+      "reviewedBy" : "Codex Sprint 48 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The deployed TestNG method builds a bounded, iteratively cycle-rejecting hierarchy oracle solely from default direct-child subsystem endpoints, rejects shortcut overlap when a direct child is also reachable through a longer path, then proves default and recursive=false /systems exclude every discovered child while recursive=true includes all independently discovered hierarchy nodes. Blank and duplicate resource ids fail closed; absent hierarchy data produces an explicit SKIP."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subsystem/recursive-search-subsystems",
     "classIdentifier" : "/conf/subsystem",
     "target" : "/req/subsystem/recursive-search-subsystems",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemsRecursiveSearchIsComplete()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subsystem/recursive-search-subsystems",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemsRecursiveSearchIsComplete()",
+      "reviewedBy" : "Codex Sprint 48 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The deployed TestNG method selects a parent with independently established transitive descendants, rejects direct-child shortcut overlap before evidence selection, proves default and recursive=false nested endpoints contain exactly direct children, and proves recursive=true contains every descendant. It never derives expected hierarchy membership from the recursive=true response itself."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subsystem/recursive-assoc",
     "classIdentifier" : "/conf/subsystem",
     "target" : "/req/subsystem/recursive-assoc",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#nestedAssociationsAreIncluded()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subsystem/recursive-assoc",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#nestedAssociationsAreIncluded()",
+      "reviewedBy" : "Codex Sprint 48 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "For every independently discovered parent with subsystems, the deployed TestNG method probes canonical top-level samplingFeatures, datastreams, and controlstreams endpoints as independent implementation evidence. Once a type returns HTTP 200 there, every parent and descendant nested endpoint must return HTTP 200; all-parent 404 cannot become an unsupported-type SKIP. The method unions descendant resource ids and requires each parent endpoint to contain that closure. Top-level-unsupported types and an entirely empty descendant evidence set produce explicit SKIPs rather than positive conformance."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/deployment/canonical-url",
@@ -2261,17 +2301,17 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 10,
+    "exact" : 15,
     "helper" : 2,
-    "candidate" : 145,
-    "unmapped" : 83,
+    "candidate" : 144,
+    "unmapped" : 79,
     "byPart" : {
       "1" : {
         "total" : 110,
-        "exact" : 10,
+        "exact" : 15,
         "helper" : 2,
-        "candidate" : 44,
-        "unmapped" : 54
+        "candidate" : 43,
+        "unmapped" : 50
       },
       "2" : {
         "total" : 130,
@@ -2305,10 +2345,10 @@
       },
       "1:/conf/subsystem" : {
         "total" : 5,
-        "exact" : 0,
+        "exact" : 5,
         "helper" : 0,
-        "candidate" : 1,
-        "unmapped" : 4
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "1:/conf/deployment" : {
         "total" : 5,

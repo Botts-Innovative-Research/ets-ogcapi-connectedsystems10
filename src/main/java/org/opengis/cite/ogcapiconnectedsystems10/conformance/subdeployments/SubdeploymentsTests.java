@@ -407,9 +407,9 @@ public class SubdeploymentsTests {
 	 * {@code /req/deployment/canonical-url} (inherited).
 	 *
 	 * <p>
-	 * Same v1.0 GH#3 fix policy as
-	 * {@link org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests#subsystemItemHasCanonicalLink()}
-	 * + {@code DeploymentsTests#deploymentItemHasCanonicalLink()}:
+	 * Same v1.0 GH#3 fix policy retained by the released
+	 * {@link org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests}
+	 * replacement and {@code DeploymentsTests#deploymentItemHasCanonicalLink()}:
 	 * {@code rel="canonical"} is the load-bearing assertion; absence of
 	 * {@code rel="self"} is NOT a FAIL.
 	 * </p>

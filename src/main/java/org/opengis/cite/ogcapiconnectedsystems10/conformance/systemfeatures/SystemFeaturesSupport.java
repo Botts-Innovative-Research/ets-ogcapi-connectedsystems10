@@ -27,7 +27,7 @@ import org.testng.Reporter;
 /**
  * Representation-neutral support for the released System conformance procedures.
  */
-final class SystemFeaturesSupport {
+public final class SystemFeaturesSupport {
 
 	private static final String GEOJSON = "application/geo+json";
 
@@ -199,7 +199,7 @@ final class SystemFeaturesSupport {
 	 * @return {@code true} when every page used a supported media type and validated;
 	 * {@code false} when the endpoint media type is unsupported.
 	 */
-	static boolean validateSystemEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static boolean validateSystemEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		if (endpoint == null || !endpoint.isAbsolute()) {
 			throw new IllegalArgumentException("endpoint must be an absolute URI");
 		}

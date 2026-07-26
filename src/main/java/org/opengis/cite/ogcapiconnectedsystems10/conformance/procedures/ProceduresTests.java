@@ -364,8 +364,8 @@ public class ProceduresTests {
 	 *
 	 * <p>
 	 * Same v1.0 GH#3 fix policy as
-	 * {@code SubsystemsTests.subsystemItemHasCanonicalLink()}: {@code rel="canonical"} is
-	 * the load-bearing assertion; absence of {@code rel="self"} is NOT a FAIL.
+	 * {@code SystemFeaturesTests.everySystemHasCanonicalUrl()}: {@code rel="canonical"}
+	 * is the load-bearing assertion; absence of {@code rel="self"} is NOT a FAIL.
 	 * </p>
 	 */
 	@Test(description = "OGC-23-001 " + REQ_PROCEDURE_CANONICAL_URL

@@ -281,15 +281,163 @@ endpoint, and collections SHALL each complete their HTTP path
 **AND** the regression SHALL assert the expected endpoint exchanges occurred.
 *Maps to*: REQ-ETS-PART1-002.
 
-#### REQ-ETS-PART1-003: Subsystems Conformance Class (Sprint 4 target)
-
-> Sprint 5 Run 1 doc-only amendment (S-ETS-05-04 item A): SubsystemsTests.java class-level javadoc enumeration of OGC `.adoc` files corrected from 5 → 6 (added `req_subcollection_time.adoc` per Raze CONCERN-1) and clarified that the subcollection_time .adoc exists in the GitHub directory but is NOT enumerated in `requirements_class_system_components.adoc`'s `requirement::` list (deferred to Sprint 5+ recursive-* expansion). No behaviour change; the historical increment remains complete while released ATS status is partial.
-
+#### REQ-ETS-PART1-003: Subsystem Direct ATS Procedures (Sprint 48)
 - **Priority**: MUST
-- **Status**: PARTIAL_UNREVIEWED_ATS (historical Sprint 4 increment complete; 0/5 released `/conf/subsystem` tests have reviewed exact mappings)
-- **Description**: For each assertion in OGC 23-001 Annex A `/conf/subsystem/`, the ETS SHALL provide at least one TestNG `@Test` method whose `description` attribute starts with the OGC canonical `.adoc` requirement URI form `/req/subsystem/<assertion>` (e.g. `OGC-23-001 .../req/subsystem/resources-endpoint`). Generator MUST verify the canonical form via OGC `.adoc` source HTTP-200 fetch BEFORE writing assertions (continuing the S-ETS-02-03 / S-ETS-02-06 / S-ETS-03-07 URI-canonicalization discipline). Expected sub-requirements (~4-5 per OGC 23-001 Annex A `/conf/subsystem/`): (a) `/req/subsystem/resources-endpoint` — `GET /systems/{id}/subsystems` returns HTTP 200 + non-empty `items` array (if implemented by IUT; SKIP-with-reason if 404); (b) `/req/subsystem/canonical-endpoint` — `GET /subsystems/{id}` returns canonical single-item shape (id, type, links per REQ-ETS-CORE-004 base shape); (c) `/req/subsystem/canonical-url` — subsystem links contain `rel="canonical"` (absence of `rel="self"` is NOT FAIL — preserves v1.0 GH#3 fix policy from Core landing page); (d) `/req/subsystem/parent-system-link` — subsystem links contain `rel="system"` (or equivalent) referencing the parent system. The Subsystems class lives at `org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.SubsystemsTests` per design.md placeholder. Subsystems DEPENDS ON SystemFeatures via TestNG group dependency wiring (`<dependencies><group name="subsystems" depends-on="systemfeatures"/>`) — FIRST two-level dependency chain in the project (Subsystems→SystemFeatures→Core). Coverage scope at Sprint 4 close: Sprint-1-style minimal (4 @Tests covering 4 highest-priority assertions per Architect ratification — see design.md Sprint 4 ratifications); Sprint 5+ expansion adds remaining ATS items.
-- **Rationale**: Subsystems is the FIRST class to exercise a TWO-LEVEL group dependency chain (Subsystems→SystemFeatures→Core). Sprint 3 proved one-level (SystemFeatures→Core) live cascading-skip via S-ETS-03-01 sabotage exec. Subsystems extends to two levels — critical proof point before Sprint 5+ scales to remaining 10 Part 1 classes (most depend on either SystemFeatures or SystemFeatures+Common). Procedures/Sampling/Properties/Deployments are siblings of Subsystems (also depend on SystemFeatures); once Subsystems proves the two-level pattern, Sprint 5+ can BATCH 2-3 of these classes per sprint with confidence. GeoRobotix readily exercises Subsystems via `/systems/{id}/subsystems` (Generator MUST curl-verify BEFORE writing assertions).
+- **Status**: IMPLEMENTED_RELEASED_ATS (Sprint 48 replaces the historical
+  four-method approximation with all 5 released `/conf/subsystem` tests;
+  focused, full, exact-image runtime, local OSH TeamEngine, controlled HTTP,
+  dependency sabotage, and credential gates pass; final Raze has no unresolved
+  required findings)
+- **Description**: The ETS SHALL implement exactly the five released OGC
+  23-001 Annex A `/conf/subsystem` procedures: `/collection`,
+  `/recursive-param`, `/recursive-search-systems`,
+  `/recursive-search-subsystems`, and `/recursive-assoc`. Each procedure SHALL
+  have one independently executable TestNG method whose description cites its
+  canonical target URI. The Sprint 4 non-empty collection, inherited canonical
+  shape, canonical-link, and parent-link methods are superseded historical
+  increments and SHALL NOT be treated as active requirements or reviewed ATS
+  mappings.
+- **Hierarchy evidence**: Expected recursive closure SHALL be derived
+  independently by bounded traversal of default direct-subsystems endpoints.
+  Pagination cycles, hierarchy cycles, duplicate IDs, and malformed
+  representations SHALL fail closed. A node returned as a direct child while
+  also reachable from the same parent by a path of length two or more SHALL be
+  rejected as a shortcut edge rather than removed from transitive evidence.
+  Default and `recursive=false` responses
+  SHALL exclude independently known transitive descendants;
+  `recursive=true` SHALL include every independently discovered descendant.
+  No positive hierarchy evidence SHALL produce SKIP rather than a vacuous PASS.
+- **Collection and associations**: Collection discovery SHALL require the
+  parent System's single exact `rel=subsystems` link and resolved URL, with no
+  duplicate qualifying link, trailing slash, query, fragment, or cross-origin
+  variation. Dereference SHALL require HTTP 200 before representation parsing,
+  and actual-media GeoJSON or SensorML System schema validation SHALL follow.
+  Unsupported or absent media SHALL warn and SKIP without first attempting JSON
+  parsing. Association-type implementation SHALL be established independently
+  from its canonical top-level endpoint, not inferred from nested parent
+  responses. For every discovered parent, each implemented Sampling Feature,
+  DataStream, and ControlStream endpoint SHALL return HTTP 200 and include all
+  resource IDs observed through its descendants. No descendant association
+  evidence SHALL produce SKIP.
+- **Dependency**: Group `subsystems` remains ordered after `systemfeatures`.
+  Its explicit result gate SHALL block every inherited failure, configuration
+  failure, and unexpected SKIP. It may continue only past the exact documented
+  API Common datetime, System unsupported-media, and missing-mobile-input
+  evidence limitations. Those inherited SKIPs remain visible and cannot become
+  positive full-class conformance evidence.
+- **Rationale**: The released class tests recursive graph semantics, not the
+  historical canonical-resource shape. Independent hierarchy discovery and
+  evidence-sensitive execution are required to prevent self-fulfilling or
+  empty-result PASS outcomes.
 - **Maps to**: PRD FR-ETS-13.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-COLLECTION-001 (CRITICAL)
+**GIVEN** a parent System known to have one or more subsystems
+**WHEN** the collection procedure retrieves its canonical resource
+**THEN** exactly one `rel=subsystems` link SHALL target
+`{api_root}/systems/{sysId}/subsystems`
+**AND** dereferencing the link SHALL return HTTP 200
+**AND** every page SHALL validate against the GeoJSON or SensorML System schema
+selected from its actual Content-Type
+**AND** unsupported media SHALL warn and SKIP.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-MEDIA-GATE-001 (CRITICAL)
+**GIVEN** hierarchy discovery retrieves the root `/systems` collection or a
+nested subsystem collection, or collection validation retrieves a nested
+subsystem collection page
+**WHEN** the response is received
+**THEN** HTTP status and actual Content-Type SHALL be evaluated before parsing
+that page
+**AND** every pagination page SHALL apply the same gate
+**AND** unsupported or missing media SHALL warn and SKIP without parsing
+**AND** a supported SensorML response SHALL be accepted from the first request
+without requiring a prior GeoJSON representation
+**AND** collection validation SHALL NOT require a non-standard `id` member;
+recursive hierarchy discovery MAY require local IDs as graph evidence.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-EXACT-LINK-001 (CRITICAL)
+**GIVEN** a parent System has subsystem hierarchy evidence
+**WHEN** its `rel=subsystems` links are resolved
+**THEN** exactly one qualifying link occurrence SHALL exist
+**AND** its resolved URI SHALL exactly equal
+`{api_root}/systems/{sysId}/subsystems`
+**AND** duplicate-identical, trailing-slash, query, fragment, or cross-origin
+targets SHALL fail.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-RECURSIVE-PARAM-001 (NORMAL)
+**GIVEN** the recursive-parameter procedure
+**WHEN** it issues its read-only requests
+**THEN** each request SHALL contain `recursive`
+**AND** the values SHALL be exactly `false` and `true`
+**AND** both responses SHALL be successful
+**AND** this procedure SHALL NOT require a parseable or supported response
+representation.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-RECURSIVE-SYSTEMS-001 (CRITICAL)
+**GIVEN** an independently discovered multi-level System hierarchy
+**WHEN** `/systems`, `/systems?recursive=false`, and
+`/systems?recursive=true` are retrieved
+**THEN** default and false results SHALL exclude all known subsystem IDs
+**AND** true results SHALL include every root and descendant at every level.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-RECURSIVE-SUBSYSTEMS-001 (CRITICAL)
+**GIVEN** a parent with direct and transitive subsystems
+**WHEN** its default, false, and true Subsystems endpoints are retrieved
+**THEN** default and false results SHALL include direct children but exclude
+known transitive descendants
+**AND** true results SHALL include every independently discovered descendant.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-RECURSIVE-ASSOC-001 (CRITICAL)
+**GIVEN** one or more parent Systems with subsystems
+**WHEN** Sampling Feature, DataStream, or ControlStream resources are
+implemented
+**AND** implementation is established by the corresponding canonical
+top-level endpoint
+**THEN** every corresponding parent association endpoint SHALL return HTTP 200
+**AND** include every resource ID observed through that parent's descendants
+at all levels.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-ASSOCIATION-IMPLEMENTATION-001 (CRITICAL)
+**GIVEN** a canonical top-level Sampling Feature, DataStream, or ControlStream
+endpoint returns HTTP 200
+**WHEN** every nested parent endpoint for that resource type returns HTTP 404
+**THEN** recursive-association validation SHALL fail
+**AND** SHALL NOT reinterpret the implemented resource type as unsupported.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-HIERARCHY-FAIL-CLOSED-001 (CRITICAL)
+**GIVEN** hierarchy and association expectations must be independent
+**WHEN** traversal encounters pagination cycles, hierarchy cycles, duplicate
+IDs, shortcut edges, malformed collection bodies, or only empty positive
+evidence
+**THEN** structural defects SHALL fail
+**AND** absent positive evidence SHALL SKIP
+**AND** a recursive endpoint response SHALL NOT be its own expectation oracle.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** the five released procedures have different evidence prerequisites
+**WHEN** one procedure has no hierarchy, media, or association evidence
+**THEN** shared setup SHALL NOT suppress unrelated direct procedure results.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** the unmodified local OSH returns unsupported `application/json` for
+root System collection traversal
+**AND** inherited System procedures retain documented evidence SKIPs
+**WHEN** the full TeamEngine suite reaches `/conf/subsystem`
+**THEN** all five direct methods SHALL execute
+**AND** recursive-parameter evidence MAY PASS
+**AND** hierarchy-dependent methods SHALL SKIP honestly rather than dependency
+SKIP or vacuous PASS
+**AND** every inherited failure or unexpected SKIP SHALL still block Subsystem
+IUT access.
+
+#### SCENARIO-ETS-PART1-003-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled read-only HTTP fixture with a three-level System
+hierarchy, schema-valid representations, and descendant Sampling Feature,
+DataStream, and ControlStream resources
+**WHEN** the five deployed Subsystem procedures execute
+**THEN** every successful positive path SHALL complete
+**AND** the fixture SHALL record the expected default, false, true, collection,
+and association exchanges.
 
 #### REQ-ETS-PART1-004: Deployments Conformance Class (Sprint 5 target)
 - **Priority**: MUST
@@ -2839,7 +2987,15 @@ not an added existence or `itemType` assertion.
 **AND** Sprint 3 one-level cascade-skip behavior preserved (no regression).
 *Maps to*: REQ-ETS-CLEANUP-012, ADR-010 (extended).
 
-#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-RESOURCES-001 (CRITICAL — Sprint 4)
+> **Entire historical Sprint 4 Subsystems scenario block superseded by Sprint
+> 48.** The five scenarios through
+> `SCENARIO-ETS-PART1-003-SUBSYSTEMS-DEPENDENCY-SKIP-001` describe the removed
+> four-method approximation and are retained only as audit history. They SHALL
+> NOT be treated as active requirements or released ATS mappings. The active
+> requirements are the Sprint 48
+> `SCENARIO-ETS-PART1-003-RELEASED-*` scenarios above.
+
+#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-RESOURCES-001 (SUPERSEDED — Sprint 4)
 **GIVEN** the IUT is `https://api.georobotix.io/ogc/t18/api`
 **AND** Core suite has PASSED + SystemFeatures suite has PASSED (no two-level cascade-skip triggered)
 **WHEN** the Subsystems suite executes `subsystemsResourcesEndpointReturnsCollection` @Test
@@ -2848,28 +3004,28 @@ not an added existence or `itemType` assertion.
 **AND** the @Test description references the canonical OGC `.adoc` URI for `/req/subsystem/resources-endpoint`.
 *Maps to*: REQ-ETS-PART1-003.
 
-#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-CANONICAL-001 (NORMAL — Sprint 4)
+#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-CANONICAL-001 (SUPERSEDED — Sprint 4)
 **GIVEN** at least one subsystem id discovered from `/systems/{id}/subsystems`
 **WHEN** the Subsystems suite executes `subsystemCanonicalEndpointReturnsBaseShape` @Test
 **THEN** `GET /subsystems/{id}` returns 200 + JSON with `id` (string), `type` (string), `links` (array per REQ-ETS-CORE-004 base shape)
 **AND** the @Test description references the canonical OGC `.adoc` URI for `/req/subsystem/canonical-endpoint`.
 *Maps to*: REQ-ETS-PART1-003.
 
-#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-PARENT-LINK-001 (NORMAL — Sprint 4)
+#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-PARENT-LINK-001 (SUPERSEDED — Sprint 4)
 **GIVEN** at least one subsystem item from `/subsystems/{id}` or `/systems/{id}/subsystems`
 **WHEN** the Subsystems suite executes `subsystemHasParentSystemLink` @Test
 **THEN** the subsystem item's `links` array contains an entry with `rel="system"` (or equivalent per OGC `.adoc`) referencing the parent system URI
 **AND** the @Test description references the canonical OGC `.adoc` URI for `/req/subsystem/parent-system-link`.
 *Maps to*: REQ-ETS-PART1-003.
 
-#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-CANONICAL-URL-001 (NORMAL — Sprint 4)
+#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-CANONICAL-URL-001 (SUPERSEDED — Sprint 4)
 **GIVEN** at least one subsystem item from `/subsystems/{id}` or `/systems/{id}/subsystems`
 **WHEN** the Subsystems suite executes `subsystemHasCanonicalLink` @Test
 **THEN** the subsystem item's `links` array contains an entry with `rel="canonical"` per `/req/subsystem/canonical-url`
 **AND** absence of `rel="self"` is NOT FAIL (preserves v1.0 GH#3 fix policy from Core landing page).
 *Maps to*: REQ-ETS-PART1-003.
 
-#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-DEPENDENCY-SKIP-001 (CRITICAL — Sprint 4)
+#### SCENARIO-ETS-PART1-003-SUBSYSTEMS-DEPENDENCY-SKIP-001 (SUPERSEDED — Sprint 4)
 **GIVEN** the Subsystems conformance class is wired with `dependsOnGroups="systemfeatures"` per Sprint 4 close
 **AND** SystemFeatures' tests are sabotaged to FAIL (e.g. extended bash sabotage script targeting SystemFeatures, or VerifyTestNGSuiteDependency.java extension exercising the two-level chain)
 **WHEN** the suite runs end-to-end (smoke OR unit-test)
@@ -3316,6 +3472,39 @@ descendant groups SKIP.
 - Historical Sprint 2/3 implementation and advisory GeoRobotix evidence remain
   archived in `epics/stories/s-ets-02-06-systemfeatures-conformance-class.md`;
   they no longer establish released ATS completion.
+
+**Sub-deliverable 3 (cont.) - Subsystem conformance class**
+(REQ-ETS-PART1-003, released ATS implemented; final Raze approved):
+- Sprint 48 replaces the historical four-method canonical-shape/link
+  approximation with the five released `/conf/subsystem` procedures.
+  Independent bounded direct-edge discovery rejects duplicate IDs, pagination
+  and hierarchy cycles, and shortcut overlap. Collection discovery requires
+  exactly one exact `rel=subsystems` URI and validates successful supported
+  GeoJSON or SensorML pages through the existing System schemas. Recursive
+  boolean requests are status-only. Association implementation is established
+  independently at the top-level resource endpoint before every parent and
+  descendant endpoint is required.
+- Reviewed coverage is `5/5 exact` for `/conf/subsystem` and
+  `15 exact / 2 helper / 144 candidate / 79 unmapped` overall. The Raze
+  gap-fix gate reproduced seven expected failures; its first recheck exposed
+  three additional nested first/later-page media failures at `7/3/0/0`; final
+  review exposed three root first/later-page failures at `10/3/0/0`. Focused
+  Maven is `45/0/0/0` and full Docker Maven is `417/0/0/3`. Exact image
+  `sha256:32a43f81b441f3b687b9e83d9d6688016278f4f7a5fec5d8a3c2b174490f285c`
+  passes runtime verification. Primary local OSH TeamEngine is
+  `216/39/0/177`, with 109 recognized requests, zero writes, and zero startup
+  errors. All five methods execute: recursive-param passes and the four
+  hierarchy procedures skip because the root System collection uses unsupported
+  `application/json`.
+  Controlled HTTP regressions execute every successful path. SystemFeatures
+  sabotage makes all five Subsystem methods skip, and both credential gates
+  pass. Final Raze is `APPROVE_WITH_CONCERNS` at confidence `0.99`, with every
+  required finding closed.
+- The local OSH checkout is clean and zero commits ahead of upstream, `/opt/osh`
+  is mounted read-only, and the deployed ConSys jar manifest matches checkout
+  `4c87a65`. No OSH or TeamEngine source or binary was modified.
+- Historical Sprint 4 implementation evidence remains audit history only and
+  no longer establishes released ATS completion.
 
 **Sub-deliverable 8 — Web-App Freeze**: REQ-ETS-WEBAPP-FREEZE-001 ✅ closed (commit `44c279e`, tag `v1.0-frozen` at `ab53658`). README.adoc reverse cross-link in new repo closes ADR-005 "both directions" requirement.
 

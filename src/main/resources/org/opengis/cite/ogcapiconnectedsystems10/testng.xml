@@ -43,17 +43,13 @@
        /conf/api-common class is distinct from inherited OGC API Common.
        part1apicommon depends on core+common; SystemFeatures now depends on
        part1apicommon and all existing descendants inherit that prerequisite. -->
-  <!-- Sprint 4 S-ETS-04-05 (REQ-ETS-PART1-003): Subsystems group added; FIRST
-       two-level dependency chain in this ETS (Subsystems → SystemFeatures → Core).
-       Per ADR-010 v2 amendment (Architect 2026-04-29) defense-in-depth: the
-       <group depends-on> declaration here is the structural cascade; a
-       @BeforeClass SkipException fallback in SubsystemsTests.fetchSubsystemsCollection
-       cascades all 4 @Tests to SKIP if (a) IUT attribute missing, (b) no parent
-       system has subsystems, or (c) /subsystems returns non-200. This mitigates
-       Architect-surfaced risk TESTNG-BEFORE-SUITE-VS-DEPENDS-ON-GROUPS-INTERACTION-
-       ORDERING (TestNG 7.9.0 transitive cascade behavior is undocumented; the
-       @BeforeClass fallback is conditionally inert if cascade works as expected,
-       load-bearing if not). -->
+  <!-- Sprint 48 S-ETS-48-01 (REQ-ETS-PART1-003): Subsystems retains its
+       two-level dependency chain (Subsystems to SystemFeatures to API Common/Core)
+       while replacing the historical four-method approximation. The @BeforeClass
+       gate loads only immutable arguments and blocks failed or unexpected skipped
+       prerequisites. Each of the five released direct procedures independently
+       retrieves its own hierarchy, media, or association evidence, so one
+       procedure's no-data SKIP cannot suppress unrelated methods. -->
   <!-- Sprint 5 S-ETS-05-05 (REQ-ETS-PART1-006) + S-ETS-05-06 (REQ-ETS-PART1-004):
        Procedures and Deployments groups added; both depend on SystemFeatures via
        the now-VERIFIED-LIVE TestNG 7.9.0 transitive cascade (ADR-010 v3 amendment

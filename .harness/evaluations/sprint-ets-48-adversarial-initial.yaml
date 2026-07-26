@@ -1,0 +1,75 @@
+review:
+  id: sprint-ets-48-adversarial-initial
+  reviewer: Raze
+  agent_id: 019f9f7b-1cdb-73e1-9626-894b7928ae66
+  nickname: Huygens
+  role: adversarial-reviewer
+  date: "2026-07-26"
+  verdict: GAPS_FOUND
+  confidence: 0.98
+  duration_seconds: 900
+  source_edited_by_reviewer: false
+
+token_metadata:
+  available: false
+  total_tokens: null
+  reason: "The subagent result exposed the review window but no token count."
+
+required_findings:
+  - id: RAZE-ETS48-GAP-001
+    severity: HIGH
+    summary: >-
+      Nested association HTTP 404 responses could make every association type
+      appear unsupported because implementation was inferred only from those
+      nested endpoints.
+    required_fix: >-
+      Establish association implementation independently through each
+      canonical top-level endpoint, then fail when an implemented type returns
+      404 from a required parent or descendant endpoint.
+    disposition: CLOSED_BY_FIRST_RECHECK
+  - id: RAZE-ETS48-GAP-002
+    severity: HIGH
+    summary: >-
+      A hierarchy containing both root-to-grandchild and
+      root-to-child-to-grandchild edges could be accepted by removing the
+      direct grandchild from transitive evidence.
+    required_fix: >-
+      Reject shortcut overlap and cover both the helper and deployed recursive
+      procedure with a negative regression.
+    disposition: CLOSED_BY_FIRST_RECHECK
+  - id: RAZE-ETS48-GAP-003
+    severity: HIGH
+    summary: >-
+      Shared traversal parsed bodies before media handling, and the
+      recursive-parameter procedure parsed representations although the
+      released procedure requires only successful exact-boolean requests.
+    required_fix: >-
+      Establish HTTP status and supported media before parsing collection
+      bodies; support SensorML explicitly; keep recursive-parameter validation
+      status-only; add unsupported, missing-media, SensorML, and status-only
+      regressions.
+    disposition: PARTIALLY_CLOSED_FIRST_RECHECK_MEDIA_PAGE_ORDER_REOPENED
+  - id: RAZE-ETS48-GAP-004
+    severity: HIGH
+    summary: >-
+      Duplicate identical rel=subsystems links were deduplicated and
+      trailing-slash variants were accepted.
+    required_fix: >-
+      Count qualifying link occurrences and require exact resolved URI
+      equality, rejecting duplicate-identical, trailing-slash, query,
+      fragment, and cross-origin variants.
+    disposition: CLOSED_BY_FIRST_RECHECK
+
+non_blocking_concerns:
+  - "Reconcile stale TestNG commentary and final Sprint 48 status records."
+  - "Prefer iterative hierarchy-cycle detection over recursive DFS."
+  - >-
+    Explain the TeamEngine log's XML parser diagnostic if final startup and
+    test evidence show it is the expected JSON-to-DOM fallback.
+
+test_first_evidence:
+  path: "/tmp/sprint48-raze-gapfix-test-first.log"
+  result: "12 total / 7 failures / 0 errors / 0 skipped"
+  interpretation: >-
+    The seven failures reproduced the four required findings before the
+    production gap fixes.

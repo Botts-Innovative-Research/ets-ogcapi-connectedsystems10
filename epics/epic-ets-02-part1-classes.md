@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 47 complete; Sprint 48 Subsystems next | Last updated: 2026-07-26
+> Status: Active - Sprint 48 Subsystems released ATS complete; Sprint 49 Deployments next | Last updated: 2026-07-26
 
 ## Goal
 Implement the 13 released OGC 23-001 conformance classes and all 110 Annex A
@@ -46,6 +46,7 @@ capability.
 | S-ETS-45-01 | Build the released 23-001/23-002 ATS inventory and compiled TestNG coverage audit | Complete; Raze approved | REQ-ETS-COVERAGE-001 |
 | S-ETS-46-01 | Implement all four released `/conf/api-common` tests and both supporting helpers | Complete; full class remains partial for five external inherited suites | REQ-ETS-PART1-001, REQ-ETS-COVERAGE-001 |
 | S-ETS-47-01 | Replace historical approximations with all six released `/conf/system` procedures | Complete; 6/6 exact, replacement gates pass, final Raze approved | REQ-ETS-PART1-002, REQ-ETS-COVERAGE-001 |
+| S-ETS-48-01 | Replace historical approximations with all five released `/conf/subsystem` procedures | Complete; 5/5 exact, all gates pass, final Raze approved | REQ-ETS-PART1-003, REQ-ETS-COVERAGE-001 |
 | S-ETS-06-04 | (optional) Common conformance class expansion 4 → 8 @Tests (Sprint 3+ minimal-then-expand by design per Quinn CONCERN-2) | Backlog | REQ-ETS-PART1-001 (modified) |
 
 Story completion records the scoped historical increment only. Released-class

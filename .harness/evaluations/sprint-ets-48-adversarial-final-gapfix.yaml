@@ -1,0 +1,55 @@
+review:
+  id: sprint-ets-48-adversarial-final-gapfix
+  reviewer: Raze
+  agent_id: 019f9f7b-1cdb-73e1-9626-894b7928ae66
+  nickname: Huygens
+  role: adversarial-reviewer
+  date: "2026-07-26"
+  verdict: APPROVE_WITH_CONCERNS
+  confidence: 0.99
+  started_at: "2026-07-26T20:09:29Z"
+  ended_at: "2026-07-26T20:14:25Z"
+  duration_seconds: 296
+  source_edited_by_reviewer: false
+
+token_metadata:
+  available: false
+  total_tokens: null
+  reason: "The subagent result exposed the review window but no token count."
+
+required_findings: []
+
+gap_dispositions:
+  RAZE-ETS48-GAP-001: CLOSED
+  RAZE-ETS48-GAP-002: CLOSED
+  RAZE-ETS48-GAP-003: CLOSED
+  RAZE-ETS48-GAP-004: CLOSED
+  RAZE-ETS48-RECHECK-GAP-001: CLOSED
+  RAZE-ETS48-FINAL-GAP-001: CLOSED
+  RAZE-ETS48-FINAL-GAP-002: CLOSED
+
+evidence:
+  root_media_test_first: "10 total / 3 failures / 0 errors / 0 skipped"
+  root_media_regression: "10 total / 0 failures / 0 errors / 0 skipped"
+  focused_maven: "45 total / 0 failures / 0 errors / 0 skipped"
+  full_maven: "417 total / 0 failures / 0 errors / 3 skipped"
+  coverage_audit: "240 total / 15 exact / 2 helper / 144 candidate / 79 unmapped; subsystem 5/5 exact"
+  exact_image: "sha256:32a43f81b441f3b687b9e83d9d6688016278f4f7a5fec5d8a3c2b174490f285c"
+  local_osh_teamengine: "216 total / 39 passed / 0 failed / 177 skipped; 109 requests; zero writes/startup errors"
+  dependency_sabotage: "216 total / 37 passed / 1 intentional failure / 178 skipped; all five subsystem methods skipped"
+  credential_wire: "0 unmasked execution-artifact hits; 40 masked events; 40 intact synthetic transmissions"
+
+non_blocking_concern:
+  summary: >-
+    A separate, undeployed /home/nh/docker/osh-addons checkout contains two
+    unrelated user edits in ONVIF sources.
+  disposition: ACCEPTED_OUTSIDE_SPRINT_SCOPE
+  rationale: >-
+    Sprint 48 did not edit or deploy that checkout. The deployed
+    /home/nh/docker/osh-core checkout is clean, /opt/osh is read-only, and the
+    deployed ConSys manifest matches the clean checkout. The unrelated user
+    edits were not touched or reverted.
+
+conclusion: >-
+  All required adversarial findings are closed. Sprint 48 satisfies its
+  acceptance boundary and may be published.

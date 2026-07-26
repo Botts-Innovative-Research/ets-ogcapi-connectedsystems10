@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.testng.Reporter;
+import org.testng.SkipException;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -78,6 +79,55 @@ public final class Part1ApiCommonSupport {
 		return canonicalResourcesDetailed(apiRoot, resourceType, Part1ApiCommonSupport::get);
 	}
 
+	/**
+	 * Traverses an arbitrary read-only collection endpoint with the same bounded,
+	 * same-origin pagination rules used by the released API Common procedures.
+	 * @param endpoint absolute collection endpoint.
+	 * @param accept HTTP Accept value.
+	 * @param query immutable query parameters for the first page.
+	 * @param requirement requirement URI owning the request.
+	 * @return traversal evidence, or empty when the endpoint returns HTTP 404.
+	 */
+	public static Optional<TraversalResult> resourcesAtEndpoint(URI endpoint, String accept, Map<String, String> query,
+			String requirement) {
+		return resourcesAtEndpoint(endpoint, accept, query, requirement, Set.of());
+	}
+
+	/**
+	 * Traverses an arbitrary read-only collection endpoint, gating every page by actual
+	 * response media type before parsing.
+	 * @param endpoint absolute collection endpoint.
+	 * @param accept HTTP Accept value.
+	 * @param query immutable query parameters for the first page.
+	 * @param requirement requirement URI owning the request.
+	 * @param supportedMediaTypes allowed actual response media types; an empty set
+	 * disables the additional gate.
+	 * @return traversal evidence, or empty when the endpoint returns HTTP 404.
+	 */
+	public static Optional<TraversalResult> resourcesAtEndpoint(URI endpoint, String accept, Map<String, String> query,
+			String requirement, Set<String> supportedMediaTypes) {
+		if (endpoint == null || !endpoint.isAbsolute()) {
+			throw new IllegalArgumentException("endpoint must be an absolute URI");
+		}
+		if (accept == null || accept.isBlank()) {
+			throw new IllegalArgumentException("accept must not be blank");
+		}
+		if (requirement == null || requirement.isBlank()) {
+			throw new IllegalArgumentException("requirement must not be blank");
+		}
+		Set<String> mediaTypes = normalizedMediaTypes(supportedMediaTypes);
+		Map<String, String> parameters = query == null ? Map.of() : Map.copyOf(query);
+		Response first = get(endpoint, accept, parameters);
+		if (first == null) {
+			ETSAssert.failWithUri(requirement, endpoint + " returned no HTTP response.");
+		}
+		if (first.getStatusCode() == 404) {
+			return Optional.empty();
+		}
+		return Optional
+			.of(traverse(endpoint, accept, parameters, Part1ApiCommonSupport::get, first, requirement, mediaTypes));
+	}
+
 	static Optional<TraversalResult> canonicalResourcesDetailed(URI apiRoot, String resourceType, Requester requester) {
 		requireApiRoot(apiRoot);
 		if (resourceType == null || resourceType.isBlank() || resourceType.contains("/")
@@ -95,7 +145,7 @@ public final class Part1ApiCommonSupport {
 					+ " (canonical endpoint returned HTTP 404).", true);
 			return Optional.empty();
 		}
-		return Optional.of(traverse(endpoint, accept, Map.of(), requester, first, CONF_CANONICAL_RESOURCES));
+		return Optional.of(traverse(endpoint, accept, Map.of(), requester, first, CONF_CANONICAL_RESOURCES, Set.of()));
 	}
 
 	/**
@@ -155,7 +205,7 @@ public final class Part1ApiCommonSupport {
 		String encodedId = URLEncoder.encode(id, StandardCharsets.UTF_8).replace("+", "%20");
 		URI endpoint = apiRoot.resolve("collections/" + encodedId + "/items");
 		return Optional.of(traverse(endpoint, mediaType.orElseThrow(), query == null ? Map.of() : query, requester,
-				null, CONF_COLLECTION_ITEMS));
+				null, CONF_COLLECTION_ITEMS, Set.of()));
 	}
 
 	static Optional<String> resourceUid(Map<String, Object> resource) {
@@ -285,7 +335,7 @@ public final class Part1ApiCommonSupport {
 	}
 
 	private static TraversalResult traverse(URI initial, String accept, Map<String, String> initialQuery,
-			Requester requester, Response firstResponse, String requirement) {
+			Requester requester, Response firstResponse, String requirement, Set<String> supportedMediaTypes) {
 		if (requester == null) {
 			throw new IllegalArgumentException("requester must not be null");
 		}
@@ -310,6 +360,7 @@ public final class Part1ApiCommonSupport {
 				ETSAssert.failWithUri(requirement, current + " returned no HTTP response.");
 			}
 			ETSAssert.assertStatus(response, 200, requirement);
+			requireSupportedMediaType(response, current, requirement, supportedMediaTypes);
 			Map<String, Object> body = parseObject(response, current, requirement);
 			List<?> pageItems = pageItems(response, body, current, requirement);
 			List<Map<String, Object>> typedPageItems = new ArrayList<>();
@@ -334,6 +385,35 @@ public final class Part1ApiCommonSupport {
 			response = null;
 		}
 		return new TraversalResult(items, pages);
+	}
+
+	private static Set<String> normalizedMediaTypes(Set<String> supportedMediaTypes) {
+		if (supportedMediaTypes == null || supportedMediaTypes.isEmpty()) {
+			return Set.of();
+		}
+		Set<String> normalized = new LinkedHashSet<>();
+		for (String mediaType : supportedMediaTypes) {
+			if (mediaType == null || mediaType.isBlank()) {
+				throw new IllegalArgumentException("supportedMediaTypes must not contain blank values");
+			}
+			normalized.add(mediaType.trim().toLowerCase(Locale.ROOT));
+		}
+		return Collections.unmodifiableSet(normalized);
+	}
+
+	private static void requireSupportedMediaType(Response response, URI source, String requirement,
+			Set<String> supportedMediaTypes) {
+		if (supportedMediaTypes.isEmpty()) {
+			return;
+		}
+		String mediaType = responseMediaType(response);
+		if (supportedMediaTypes.contains(mediaType)) {
+			return;
+		}
+		String detail = mediaType.isEmpty() ? "no Content-Type" : "unsupported media type '" + mediaType + "'";
+		Reporter.log(requirement + " - " + source + " returned " + detail + "; representation parsing skipped.", true);
+		throw new SkipException(
+				requirement + " - " + source + " returned " + detail + "; representation parsing skipped.");
 	}
 
 	private static List<?> pageItems(Response response, Map<String, Object> body, URI source, String requirement) {

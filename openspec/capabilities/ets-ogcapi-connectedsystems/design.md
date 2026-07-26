@@ -913,6 +913,12 @@ The Sprint 4 contract's `success_criteria.credential_leak_e2e_test_green` is sat
 
 ### Sprint 4 hardening: Subsystems conformance class scope (S-ETS-04-05)
 
+> **Entire section superseded by Sprint 48.** Everything through the next
+> top-level design heading records the historical Sprint 4 implementation only.
+> The four-method table, cached setup, and parent-link assertion are not active
+> design requirements or released ATS mappings. The five-procedure design under
+> "Sprint 48: released Part 1 Subsystem direct procedures" is authoritative.
+
 **Architect ratifies: Sprint-1-style minimal — 4 @Test methods at Sprint 4 close** (parallel to SystemFeatures Sprint 2 §"SystemFeatures conformance class scope" + Common Sprint 3 baseline). Full per-class expansion deferred to Sprint 5+ when sibling classes (Procedures, Sampling, Properties, Deployments) are batched.
 
 Pat enumerated 5 SCENARIOs in REQ-ETS-PART1-003 (now SPECIFIED in spec.md). Architect maps these to 4 @Test methods + 1 testng.xml-level wiring concern (the dependency-skip SCENARIO is `<dependencies>` config, not a method):
@@ -1205,6 +1211,89 @@ controlled server that records endpoint exchanges, returns complete
 schema-valid System collections and canonical resources, and changes only the
 mobile System's positional coordinates. This supplements, but does not replace,
 TeamEngine execution against the unmodified local OSH.
+
+### Sprint 48: released Part 1 Subsystem direct procedures
+
+Sprint 48 retains the `subsystems` TestNG group but replaces its four
+historical shape/link methods with the five released Annex A procedures.
+
+```text
+SubsystemsTests
+  |-- subsystemCollectionIsValid()
+  |-- recursiveParameterUsesBooleanValues()
+  |-- systemsRecursiveSearchIsComplete()
+  |-- subsystemsRecursiveSearchIsComplete()
+  `-- nestedAssociationsAreIncluded()
+          |
+          v
+SubsystemsSupport
+  bounded page traversal + direct-edge hierarchy discovery
+  + cycle/duplicate rejection + recursive set assertions
+  + association-resource closure
+          |
+          +--> Part1ApiCommonSupport traversal model
+          `--> SystemFeaturesSupport endpoint schema validation
+```
+
+Hierarchy expectations are never derived from the `recursive=true` response
+under test. The support layer starts with top-level Systems, follows each
+default direct-subsystems endpoint, and recursively records direct edges.
+Traversal has fixed page and node limits, rejects repeated page URLs, rejects
+cycles in the parent-child graph, rejects a shortcut edge when a reported direct
+child is also reachable through a path of length two or more, and requires
+unique non-empty resource IDs. It retains direct children separately from
+transitive descendants so default, false, and true response sets can be
+evaluated without conflating levels. Cycle detection is iterative so the
+10,000-node bound cannot exhaust the Java call stack first.
+
+The collection procedure probes bounded nested collections to identify a parent
+with actual children without requiring returned collection items to expose
+local IDs. It then retrieves the parent resource and resolves exactly one
+`rel=subsystems` link. The resolved target must exactly equal the already
+probed `{api_root}/systems/{sysId}/subsystems` endpoint;
+duplicate-identical links, trailing slashes, queries, fragments, and
+cross-origin variants fail. Every traversal page checks HTTP status and actual
+Content-Type before representation parsing. The accepted first response is
+reused rather than fetched again. Supported responses use bounded
+representation traversal, and `SystemFeaturesSupport` validates each returned
+page according to its actual GeoJSON or SensorML JSON media type. Unsupported
+or absent media warns and SKIPs without attempting JSON parsing, including on
+later pages. First-response SensorML collections do not need a preliminary
+GeoJSON response or an `id` member merely to execute this collection procedure.
+Recursive hierarchy discovery applies the same per-page media gate to the root
+`/systems` traversal and every nested subsystem traversal before its separate
+local-ID extraction.
+
+Recursive-parameter validation issues exact `recursive=false` and
+`recursive=true` requests, checks the effective request query, and requires only
+HTTP success; it does not parse response representations outside that released
+procedure. Recursive Systems and Subsystems checks require at least one
+independently discovered descendant, and nested-Subsystem checks require at
+least one transitive descendant. Missing hierarchy evidence is SKIP, not PASS.
+
+Association closure is evaluated for every discovered parent and for each
+implemented Sampling Feature, DataStream, and ControlStream resource type.
+Implementation evidence comes from the corresponding canonical top-level
+endpoint before any nested endpoint is evaluated. A top-level HTTP 200 means
+every applicable parent and descendant endpoint must return HTTP 200; nested
+404 responses cannot redefine the type as unsupported. The parent endpoint must
+include every ID observed through descendant endpoints. If no descendant
+association resources exist, the procedure SKIPs rather than claiming
+conformance from empty-set containment.
+
+Subsystem setup loads only the API root and inspects completed prerequisites.
+It allows direct execution past only the exact inherited no-evidence outcomes
+already documented by API Common and System. Any failure, configuration
+failure, or unexpected inherited SKIP blocks all Subsystem IUT access. The
+allowed inherited SKIPs remain visible, so direct procedure execution does not
+become a full inherited-conformance claim.
+
+The unmodified local OSH target currently serves the root System collection as
+unsupported `application/json` for these released hierarchy procedures.
+TeamEngine must still execute all five methods: the recursive boolean request
+procedure can pass, while hierarchy-dependent procedures SKIP at the root media
+gate. A controlled multi-level HTTP fixture supplies positive GeoJSON/SensorML
+collection and nested-association evidence for all five deployed paths.
 
 ## Status
 

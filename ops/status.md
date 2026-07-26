@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T15:48Z
+Last updated: 2026-07-26T20:14Z
 
 ## Fresh-Session Entry Point
 
@@ -50,6 +50,60 @@ Read these first:
 - `openspec/change-proposals/CP-007-part1-system-closure.md`
 - `epics/stories/s-ets-47-01-part1-system-closure.md`
 - `.harness/contracts/sprint-ets-47.yaml`
+- `openspec/change-proposals/CP-008-part1-subsystem-closure.md`
+- `epics/stories/s-ets-48-01-part1-subsystem-closure.md`
+- `.harness/contracts/sprint-ets-48.yaml`
+- `.harness/evaluations/sprint-ets-48-adversarial-initial.yaml`
+- `.harness/evaluations/sprint-ets-48-adversarial-final-gapfix.yaml`
+- `ops/test-results/sprint-ets-48-part1-subsystem-verification-2026-07-26.md`
+
+## Session Handoff - Part 1 Subsystem Direct ATS
+
+S-ETS-48-01 is complete under CP-008. Final Raze is
+`APPROVE_WITH_CONCERNS` at confidence `0.99`, with no unresolved required
+findings.
+
+- Released coverage is `15 exact / 2 helper / 144 candidate / 79 unmapped`;
+  `/conf/subsystem` is `5/5 exact`.
+- The historical four-method canonical-shape/link approximation is superseded
+  by the five released collection, recursive-parameter, recursive Systems,
+  recursive Subsystems, and recursive association procedures.
+- Independent bounded direct-edge discovery rejects duplicates, pagination and
+  hierarchy cycles, malformed collections, and shortcut overlap. Recursive
+  responses never serve as their own oracle.
+- Collection links require exactly one occurrence and exact canonical URI.
+  Status/media handling precedes parsing, and supported GeoJSON/SensorML pages
+  reuse the released System schemas.
+- Association implementation is established independently at top-level
+  Sampling Feature, DataStream, and ControlStream endpoints. Implemented nested
+  endpoints cannot turn HTTP 404 into unsupported-resource SKIPs.
+- Raze gap-fix test-first is `12/7/0/0`; nested-media test-first is
+  `7/3/0/0`; root-media test-first is `10/3/0/0`; focused Maven is
+  `45/0/0/0`; full Docker Maven is `417/0/0/3`.
+- Exact image
+  `sha256:32a43f81b441f3b687b9e83d9d6688016278f4f7a5fec5d8a3c2b174490f285c`
+  passes TeamEngine runtime verification.
+- Primary local OSH TeamEngine is `216/39/0/177`, with 109 recognized requests,
+  zero writes, and zero startup errors. All five direct methods execute: the
+  boolean procedure passes and four hierarchy procedures skip on unsupported
+  root `application/json` before nested traversal.
+- Controlled HTTP coverage executes every successful positive path and the
+  adversarial failure cases.
+- SystemFeatures sabotage is `216/37/1/178`; all five Subsystem methods and all
+  15 dependency descendants skip.
+- Credential integration and wire E2E pass with zero unmasked artifact hits,
+  40 masked events, and 40 intact synthetic wire transmissions.
+- Local OSH remains clean, zero commits ahead, and mounted read-only; its
+  ConSys jar manifest matches checkout `4c87a65`.
+- Durable summary:
+  `ops/test-results/sprint-ets-48-part1-subsystem-verification-2026-07-26.md`.
+- Final adversarial review found the root traversal bypass and stale SKIP
+  wording. Both are corrected with deployed-procedure regressions and reconciled
+  records; the gap-fix recheck closed every required finding.
+- Sprint 48 did not modify or deploy OSH or TeamEngine. The deployed `osh-core`
+  checkout is clean. Raze separately observed unrelated user edits in an
+  undeployed `osh-addons` checkout; those edits remain untouched and outside
+  Sprint 48 scope. Hosted CI remains outside scope.
 
 ## Session Handoff - Part 1 System Direct ATS
 
@@ -1347,8 +1401,11 @@ Gate Results:
 
 ## Next Action
 
-1. Start Generator for `S-ETS-21-01`.
+1. Publish the completed Sprint 48 increment.
+2. Start Sprint 49 for the five released `/conf/deployment` procedures,
+   preserving the unmodified local OSH's observed conformance result.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree should contain only post-push status/metrics reconciliation until committed.
+Current dirty worktree contains the completed Sprint 48 increment pending
+commit and push.

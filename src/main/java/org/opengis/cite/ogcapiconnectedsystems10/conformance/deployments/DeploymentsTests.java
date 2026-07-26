@@ -332,7 +332,7 @@ public class DeploymentsTests {
 	 *
 	 * <p>
 	 * Same v1.0 GH#3 fix policy as
-	 * {@code SubsystemsTests.subsystemItemHasCanonicalLink()} +
+	 * {@code SystemFeaturesTests.everySystemHasCanonicalUrl()} +
 	 * {@code ProceduresTests.procedureItemHasCanonicalLink()}: {@code rel="canonical"} is
 	 * the load-bearing assertion; absence of {@code rel="self"} is NOT a FAIL.
 	 * </p>

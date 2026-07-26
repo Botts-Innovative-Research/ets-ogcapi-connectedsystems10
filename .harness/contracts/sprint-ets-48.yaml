@@ -1,0 +1,59 @@
+sprint: ets-48
+story: S-ETS-48-01
+title: Part 1 Subsystem direct ATS closure
+status: COMPLETE
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-PART1-003
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-PART1-003-RELEASED-COLLECTION-001
+  - SCENARIO-ETS-PART1-003-RELEASED-MEDIA-GATE-001
+  - SCENARIO-ETS-PART1-003-RELEASED-EXACT-LINK-001
+  - SCENARIO-ETS-PART1-003-RELEASED-RECURSIVE-PARAM-001
+  - SCENARIO-ETS-PART1-003-RELEASED-RECURSIVE-SYSTEMS-001
+  - SCENARIO-ETS-PART1-003-RELEASED-RECURSIVE-SUBSYSTEMS-001
+  - SCENARIO-ETS-PART1-003-RELEASED-RECURSIVE-ASSOC-001
+  - SCENARIO-ETS-PART1-003-RELEASED-ASSOCIATION-IMPLEMENTATION-001
+  - SCENARIO-ETS-PART1-003-RELEASED-HIERARCHY-FAIL-CLOSED-001
+  - SCENARIO-ETS-PART1-003-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-003-RELEASED-E2E-EXECUTION-001
+  - SCENARIO-ETS-PART1-003-RELEASED-DIRECT-HTTP-COVERAGE-001
+success_criteria:
+  - All five released Subsystem procedures have exact reviewed mappings.
+  - Collection discovery counts exact rel=subsystems link occurrences and validates the exact resolved target.
+  - HTTP success and actual media are established before parsing every root and nested hierarchy page; absent or unsupported media warns and skips.
+  - SensorML hierarchy evidence is accepted from the first response without requiring a prior GeoJSON response.
+  - Collection validation accepts schema-valid SensorML without a non-standard id member; recursive graph discovery may require local ids.
+  - Actual GeoJSON and SensorML JSON media types select fail-closed System schemas.
+  - Recursive-parameter requests contain exact true or false values and do not parse unrelated response content.
+  - Expected descendants are derived independently from bounded direct hierarchy edges.
+  - Shortcut edges that also expose a transitive descendant as direct fail closed.
+  - Default and recursive=false exclude transitive descendants while recursive=true includes every level.
+  - Duplicate IDs, pagination cycles, and hierarchy cycles fail closed.
+  - Association implementation is established from canonical top-level endpoints before every parent and descendant is checked.
+  - Empty positive evidence produces SKIP rather than PASS.
+  - Each procedure retrieves only its own prerequisites.
+  - Focused and full Maven verification succeeds.
+  - TeamEngine executes every changed method against the primary local OSH IUT.
+  - A controlled HTTP fixture executes successful positive paths for all five methods.
+  - Exact-image runtime, dependency, and credential gates pass.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not use a recursive endpoint response as its own expected closure.
+verification:
+  test_first: "12 total / 7 failures / 0 errors / 0 skipped"
+  media_recheck_test_first: "7 total / 3 failures / 0 errors / 0 skipped"
+  root_media_test_first: "10 total / 3 failures / 0 errors / 0 skipped"
+  focused_maven: "45 total / 0 failures / 0 errors / 0 skipped"
+  full_maven: "417 total / 0 failures / 0 errors / 3 skipped"
+  coverage_audit: "240 total / 15 exact / 2 helper / 144 candidate / 79 unmapped; subsystem 5/5 exact"
+  local_osh_teamengine: "216 total / 39 passed / 0 failed / 177 skipped; 109 requests; zero writes/startup errors; four hierarchy methods skip on unsupported root application/json"
+  controlled_http: "PASS; all five positive paths plus Raze gap-fix regressions"
+  exact_image: "sha256:32a43f81b441f3b687b9e83d9d6688016278f4f7a5fec5d8a3c2b174490f285c; runtime PASS"
+  dependency_sabotage: "216 total / 37 passed / 1 intentional failure / 178 skipped; all five subsystem methods skipped"
+  credential_gates: "PASS; zero unmasked artifact hits, 40 masked events, 40 intact synthetic wire transmissions"
+  raze: "APPROVE_WITH_CONCERNS; confidence 0.99; no unresolved required findings"

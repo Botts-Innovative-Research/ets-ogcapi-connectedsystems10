@@ -1,0 +1,105 @@
+review:
+  id: sprint-ets-48-adversarial-recheck
+  reviewer: Raze
+  agent_id: 019f9f7b-1cdb-73e1-9626-894b7928ae66
+  nickname: Huygens
+  role: adversarial-reviewer
+  date: "2026-07-26"
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  started_at: "2026-07-26T18:29:45Z"
+  ended_at: "2026-07-26T18:36:08Z"
+  duration_seconds: 383
+  source_edited_by_reviewer: false
+
+token_metadata:
+  available: false
+  total_tokens: null
+  reason: "The subagent result exposed the review window but no token count."
+
+initial_gap_dispositions:
+  RAZE-ETS48-GAP-001: CLOSED
+  RAZE-ETS48-GAP-002: CLOSED
+  RAZE-ETS48-GAP-003: PARTIALLY_CLOSED
+  RAZE-ETS48-GAP-004: CLOSED
+
+required_findings:
+  - id: RAZE-ETS48-RECHECK-GAP-001
+    severity: HIGH
+    summary: >-
+      Collection hierarchy discovery still parsed the first and later nested
+      pages before the collection procedure's media gate, while regressions
+      changed media only after a GeoJSON warm-up request.
+    required_fix: >-
+      Gate status and actual media before parsing every traversal page, reuse
+      the accepted first response, and test consistent unsupported,
+      missing-media, and SensorML responses from the first request.
+    disposition: FIXED_PENDING_FINAL_RECHECK
+
+remediation_evidence:
+  test_first:
+    path: "ops/test-results/sprint-ets-48-raze-recheck-test-first-2026-07-26.log"
+    result: "7 total / 3 failures / 0 errors / 0 skipped"
+  focused_maven: "42 total / 0 failures / 0 errors / 0 skipped"
+  full_maven: "414 total / 0 failures / 0 errors / 3 skipped"
+  exact_image: "sha256:5968b9ae2848b63563d5f6fb48d2664b80c19ed998ce40545958b3a5679f1384"
+  local_osh_teamengine: "216 total / 39 passed / 0 failed / 177 skipped; 112 recognized requests; zero writes"
+  dependency_sabotage: "216 total / 37 passed / 1 intentional failure / 178 skipped"
+  credential_wire: "0 unmasked execution-artifact hits; 40 masked events; 40 intact synthetic transmissions"
+
+non_blocking_concern:
+  summary: >-
+    The archived credential transcript embedded the synthetic marker.
+  disposition: CLOSED
+  closure: >-
+    The repository artifact is now a scoped count summary. Raw verifier and
+    stub captures remain local and are not archived; no real credential was
+    exposed.
+
+final_review:
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  started_at: "2026-07-26T19:24:27Z"
+  ended_at: "2026-07-26T19:31:33Z"
+  duration_seconds: 426
+  source_edited_by_reviewer: false
+  required_findings:
+    - id: RAZE-ETS48-FINAL-GAP-001
+      severity: HIGH
+      summary: >-
+        Root hierarchy traversal used the ungated generic traversal even though
+        nested hierarchy pages used the System media gate.
+      disposition: FIXED_PENDING_GAPFIX_RECHECK
+      remediation: >-
+        Root discovery now uses requireSystemTraversal. Three deployed-procedure
+        regressions cover unsupported and missing first-root media plus
+        unsupported later-root pagination media with exact request counts.
+    - id: RAZE-ETS48-FINAL-GAP-002
+      severity: MEDIUM
+      summary: >-
+        Closure records misstated four unsupported-media SKIPs as no-hierarchy
+        SKIPs, no-id SensorML wording was overbroad, and the collection mapping
+        rationale still described direct-edge discovery.
+      disposition: FIXED_PENDING_GAPFIX_RECHECK
+      remediation: >-
+        Records now state the exact root application/json SKIPs, no-id
+        SensorML is scoped to collection schema validation, and the mapping
+        describes the bounded media-gated collection probe and response reuse.
+  remediation_evidence:
+    root_media_test_first: "10 total / 3 failures / 0 errors / 0 skipped"
+    focused_maven: "45 total / 0 failures / 0 errors / 0 skipped"
+    full_maven: "417 total / 0 failures / 0 errors / 3 skipped"
+    exact_image: "sha256:32a43f81b441f3b687b9e83d9d6688016278f4f7a5fec5d8a3c2b174490f285c"
+    local_osh_teamengine: "216 total / 39 passed / 0 failed / 177 skipped; 109 requests; zero writes"
+    dependency_sabotage: "216 total / 37 passed / 1 intentional failure / 178 skipped"
+    credential_wire: "0 unmasked execution-artifact hits; 40 masked events; 40 intact synthetic transmissions"
+
+final_gapfix_recheck:
+  artifact: ".harness/evaluations/sprint-ets-48-adversarial-final-gapfix.yaml"
+  verdict: APPROVE_WITH_CONCERNS
+  confidence: 0.99
+  started_at: "2026-07-26T20:09:29Z"
+  ended_at: "2026-07-26T20:14:25Z"
+  duration_seconds: 296
+  required_findings: []
+  conclusion: "All Sprint 48 required findings are closed."

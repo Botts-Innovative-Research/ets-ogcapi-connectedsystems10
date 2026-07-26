@@ -2,6 +2,57 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-26 - Part 1 Subsystem direct ATS complete
+
+**Triggered by user instruction**: execute accepted recommendations 1-4
+continuously, including completion of every released Part 1 gap.
+
+- Added CP-008, S-ETS-48-01, its contract, twelve exact scenarios,
+  architecture v2.0.25, traceability, epic, and operational handoff before code.
+- Reconciled the released `/conf/subsystem` inventory to five procedures and
+  marked the four historical canonical-shape/link methods superseded.
+- Required independent bounded hierarchy discovery, cycle/duplicate rejection,
+  non-vacuous recursive and association evidence, and reuse of System
+  actual-media schema validation.
+- Replaced the historical approximation with all five released methods and
+  reviewed exact mappings. Coverage is now
+  `15 exact / 2 helper / 144 candidate / 79 unmapped`; `/conf/subsystem` is
+  `5/5 exact`.
+- Closed Raze's four initial required gaps, its first recheck's nested
+  page-media defect, and its final review's root page-media defect with
+  test-first regressions:
+  top-level association implementation evidence, shortcut-edge rejection,
+  status/media-before-parse plus status-only recursive requests, and exact
+  link occurrence/URI validation. The RED gates were `12/7/0/0`, nested-media
+  `7/3/0/0`, and root-media `10/3/0/0`; corrected focused Maven is
+  `45/0/0/0`.
+- Full Docker Maven passes `417/0/0/3`. Exact image
+  `sha256:32a43f81b441f3b687b9e83d9d6688016278f4f7a5fec5d8a3c2b174490f285c`
+  passes deployed-adapter, collision, immutable-base, and runtime checks.
+- Primary local OSH TeamEngine passes `216/39/0/177`, with 109 recognized
+  requests, zero writes, and zero startup errors. All five methods execute:
+  recursive-param passes and four hierarchy procedures skip on unsupported
+  root `application/json` before nested traversal.
+- Controlled HTTP coverage executes every successful path and all adversarial
+  cases. SystemFeatures sabotage passes with `216/37/1/178`; every Subsystem
+  method and all 15 dependency descendants skip.
+- Credential integration and wire E2E pass with zero unmasked artifact hits,
+  40 masked log events, and 40 intact synthetic wire transmissions. Positive
+  and sabotage artifact hygiene both pass.
+- Replaced the raw synthetic credential transcript with a scoped count summary;
+  raw verifier and stub captures remain local and no real credential is
+  archived.
+- Reverified OSH provenance: clean, zero commits ahead, read-only `/opt/osh`,
+  and ConSys manifest build `4c87a65` matching the checkout.
+- Corrected the closure records to reflect the actual four unsupported-media
+  SKIPs and scoped no-`id` SensorML acceptance to collection schema validation;
+  recursive graph discovery still requires local IDs.
+- Final root-media gap-fix Raze recheck returned `APPROVE_WITH_CONCERNS` at
+  confidence `0.99`, with every required finding closed.
+- Sprint 48 did not change the deployed OSH or TeamEngine. The deployed
+  `osh-core` checkout is clean; unrelated user edits in a separate, undeployed
+  `osh-addons` checkout remain untouched. Hosted CI remains outside scope.
+
 ## 2026-07-26 - Part 1 System direct ATS complete
 
 **Triggered by user instruction**: execute accepted recommendations 1-4

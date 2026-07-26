@@ -1,8 +1,52 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T15:48Z
+Last updated: 2026-07-26T20:14Z
 
 ## Current Sprint Evidence
+
+Sprint 48 Part 1 Subsystem direct ATS:
+
+- Coverage: `240 total / 15 exact / 2 helper / 144 candidate / 79 unmapped`;
+  `/conf/subsystem` is `5/5 exact`.
+- Raze gap-fix test-first: `12/7/0/0`; seven failures reproduce the required
+  independent-association, shortcut-edge, media-ordering/status-only, and
+  exact-link defects before production fixes.
+- Final media recheck test-first: `7/3/0/0`; three failures reproduce
+  first-page unsupported/missing media, first-response SensorML, and
+  later-page media-order defects before the final correction.
+- Root-media test-first: `10/3/0/0`; three failures independently reproduce
+  unsupported and missing first-root media plus unsupported later-root
+  pagination media before the correction.
+- Focused Docker Maven: `45/0/0/0`.
+- Full Docker Maven: `417/0/0/3`.
+- Exact image:
+  `sha256:32a43f81b441f3b687b9e83d9d6688016278f4f7a5fec5d8a3c2b174490f285c`.
+- Exact-image TeamEngine runtime, deployed SWE Common adapter, dependency
+  collision, and immutable-base verification: PASS.
+- Primary local OSH TeamEngine: `216/39/0/177`, 109 recognized requests, zero
+  writes, zero startup errors.
+- All five Subsystem methods execute. Recursive-param PASSes; collection,
+  recursive Systems, recursive Subsystems, and recursive associations SKIP
+  before parsing because root `/systems` returns unsupported `application/json`.
+- Controlled HTTP coverage executes all five successful positive procedures,
+  plus SensorML, unsupported/missing media, nested-404, shortcut, and exact-link
+  adversarial regressions.
+- SystemFeatures sabotage: `216/37/1/178`; all five Subsystem procedures and
+  all 15 dependency descendants SKIP.
+- Credential integration and wire gates: PASS with zero unmasked
+  execution-artifact hits, 40 masked events, and 40 intact synthetic wire
+  transmissions. The durable artifact is a scoped summary; raw synthetic
+  verifier and stub captures are not archived.
+- Positive and sabotage artifact hygiene: PASS with zero credential leaks and
+  zero IUT writes.
+- OSH provenance: clean, zero commits ahead, `/opt/osh` read-only, deployed
+  ConSys manifest at checkout `4c87a65`.
+- Verification summary:
+  `ops/test-results/sprint-ets-48-part1-subsystem-verification-2026-07-26.md`.
+- Final Raze gap-fix recheck is `APPROVE_WITH_CONCERNS` at confidence `0.99`.
+  Every required finding is closed.
+
+---
 
 Sprint 47 Part 1 System direct ATS:
 

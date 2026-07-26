@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.23 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 System E2E execution remediation)
+> Version: 2.0.25 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 Subsystem released ATS complete; final Raze approved)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -417,6 +417,10 @@ Cross-references **§15.1 ADR-010** (Sprint 3) + **§14.6 SystemFeatures conform
 Cross-references **§15.3 MaskingRequestLoggingFilter wrap pattern** (Sprint 3) + **§14.5 CredentialMaskingFilter** (Sprint 2). Architect ratifies **option (a) stub IUT in /tmp/** — REJECTS (b) authenticated IUT pivot (sacrifices hermeticity; CITE SC reproduction friction) and (c) extended unit-layer fallback (already shipped in Sprint 3; insufficient as deeper-E2E evidence). New `scripts/stub-iut.sh` (extends Sprint 3 sabotage-server pattern; echoes inbound Authorization header verbatim in 401 response body for cross-check). New `scripts/verify-credential-leak.sh` (composes with S-ETS-04-04 sabotage-script bug fixes — same ephemeral-port + `trap cleanup EXIT` primitives) executes three-fold cross-check: (i) grep `EFGH12345678WXYZ` in TestNG XML + container logs + REST-Assured stdout (zero hits required); (ii) grep `Bear***WXYZ` masked form (≥1 hit required); (iii) parse stub-IUT echo and assert it received the FULL UNMASKED credential (proves try/finally restoration per §15.3). **NO separate ADR** (precedent: §14.5 + §15.4 NO-ADR-for-CredentialMaskingFilter ruling). Closes Quinn cumulative CONCERN-3 / Raze cumulative CONCERN-1 deeper-E2E gap.
 
 ### 16.4 design.md §"Sprint 4 hardening: Subsystems conformance class scope (S-ETS-04-05)" — Sprint-1-style minimal
+
+**Historical ratification, superseded by §27.** The four-method shape/link
+surface below is retained only as Sprint 4 audit history. It is not an active
+architecture requirement or released ATS mapping.
 
 Cross-references **§14.6 SystemFeatures conformance class scope** (Sprint 2). Architect ratifies **Sprint-1-style minimal (4 @Tests)** parallel to SystemFeatures pattern: `subsystemsResourcesEndpointReturnsCollection` (CRITICAL) + `subsystemCanonicalEndpointReturnsBaseShape` + `subsystemHasParentSystemLink` (UNIQUE-TO-SUBSYSTEMS — the architectural invariant distinguishing subsystems from sibling collection types) + `subsystemHasCanonicalLink`. The `dependsOnGroups="systemfeatures"` wiring (CRITICAL SCENARIO-ETS-PART1-003-SUBSYSTEMS-DEPENDENCY-SKIP-001) is testng.xml + `@BeforeSuite` defense-in-depth per §16.2 above. Sprint 5+ expansion targets ~3-5 additional ATS items (canonical-url depth, location-time, cross-system queries) — mechanical extensions BATCHED with Procedures/Sampling/Properties/Deployments siblings. Coverage scope rationale: third pattern extension AND first multi-level dependency chain compound risk surface; minimal per-class @Test count concentrates Generator + gate verification effort on the cascade verification.
 
@@ -900,3 +904,60 @@ regression. That fixture proves successful location, positional movement,
 canonical dereference/content comparison, resources validation, canonical
 endpoint validation, and collection validation while asserting the expected
 wire exchanges. Local OSH TeamEngine remains the mandatory primary E2E target.
+
+## 27. Architecture v2.0.25 - Part 1 Subsystem graph procedures (2026-07-26)
+
+`SubsystemsTests` replaces its historical four shape/link assertions with the
+five released `/conf/subsystem` procedures. Shared setup only normalizes the API
+root and evaluates inherited results. Each test discovers its own collection,
+hierarchy, or association evidence so a no-data result cannot suppress
+unrelated procedures.
+
+`SubsystemsSupport` is a read-only graph and collection service. It uses bounded
+pagination, unique local IDs, explicit direct-parent edges, node/page limits,
+iterative cycle rejection, and shortcut-edge rejection when a direct child is
+also reachable by a path of length two or more. Expected recursive closure
+comes only from walking default direct-subsystems endpoints; the
+`recursive=true` response under test is never used as its own oracle. Direct
+children and transitive descendants remain separate evidence sets.
+
+The collection procedure uses a bounded, media-gated subcollection probe to
+identify a parent with actual children without requiring those returned
+representations to expose local IDs. It then resolves exactly one parent
+`rel=subsystems` link occurrence and requires its resolved target to exactly
+match the already-probed normative nested endpoint. Duplicate-identical links,
+trailing slashes, queries, fragments, and cross-origin variants fail. HTTP 200
+and actual Content-Type are checked on every traversal page before parsing;
+unsupported or absent media warns and SKIPs. The accepted first response is
+reused rather than fetched again. Supported GeoJSON/SensorML collections reuse
+`SystemFeaturesSupport` schema validation, including schema-valid SensorML
+items without an `id` member for collection validation. Recursive hierarchy
+discovery applies the same per-page gate to root `/systems` and every nested
+subsystem traversal before extracting required local graph IDs. The
+recursive-parameter procedure checks only exact boolean requests and HTTP
+success. Recursive graph procedures require positive hierarchy evidence and
+compare default, false, and true result sets against the independently
+discovered graph. Missing evidence SKIPs instead of passing vacuously.
+
+Association closure covers every discovered parent and each implemented
+Sampling Feature, DataStream, and ControlStream endpoint. Implementation is
+established independently by the canonical top-level endpoint. Once that
+endpoint returns HTTP 200, every applicable nested parent and descendant
+endpoint must return HTTP 200; all-parent 404 cannot become an unsupported-type
+SKIP. Parent results must contain every resource ID observed through descendant
+endpoints. Empty descendant association sets are evidence limitations, not
+PASS.
+
+The `systemfeatures -> subsystems` TestNG ordering remains. Subsystem methods
+run with an explicit prerequisite-result gate that permits only the exact
+already documented API Common datetime, System unsupported-media, and
+missing-mobile-input SKIPs. All failures, configuration failures, and other
+SKIPs block before Subsystem IUT access. Allowed inherited SKIPs remain visible
+and prevent a full inherited-conformance claim.
+
+Primary E2E remains Dockerized TeamEngine against unmodified local OSH. Its
+root System collection currently uses unsupported `application/json`, so the
+expected evidence is one boolean-request PASS and four hierarchy-procedure
+media-gate SKIPs. A controlled read-only multi-level fixture must execute all
+five positive paths, including all three association resource types. This
+architecture adds no OSH or TeamEngine source or binary changes.

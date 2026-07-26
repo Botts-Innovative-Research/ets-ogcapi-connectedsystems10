@@ -59,6 +59,10 @@ TS="$(date -u +%Y-%m-%dT%H%M%SZ)"
 ARCHIVE_DIR="${ARCHIVE_DIR:-/tmp/credential-leak-e2e-${TS}}"
 mkdir -p "$ARCHIVE_DIR"
 
+SMOKE_RESULTS_DIR="${SMOKE_OUTPUT_DIR:-${REPO_ROOT}/ops/test-results}"
+SMOKE_MARKER="${ARCHIVE_DIR}/.smoke-run-started"
+mkdir -p "$SMOKE_RESULTS_DIR"
+
 STUB_LOGFILE="${ARCHIVE_DIR}/stub-iut.log"
 SMOKE_LOG="${ARCHIVE_DIR}/smoke.log"
 CONTAINER_LOG="${ARCHIVE_DIR}/container.log"
@@ -114,10 +118,12 @@ STUB_URL="http://host.docker.internal:${STUB_PORT}"
 log "Step 2/5 — running smoke-test.sh against stub IUT URL: $STUB_URL"
 log "  (expect: Core landing-page @Test FAILs on 401; SystemFeatures + Subsystems cascade-SKIP;"
 log "   credential MUST appear in stub-IUT log + MUST NOT appear unmasked in TestNG XML/container log)"
+: > "$SMOKE_MARKER"
 SMOKE_IUT_URL="$STUB_URL" \
   SMOKE_AUTH_CREDENTIAL="$SYNTHETIC_CREDENTIAL" \
   SMOKE_CONTAINER_NAME="$CONTAINER_NAME" \
   SMOKE_IMAGE_TAG="$IMAGE_TAG" \
+  SMOKE_OUTPUT_DIR="$SMOKE_RESULTS_DIR" \
   bash scripts/smoke-test.sh > "$SMOKE_LOG" 2>&1 \
   || log "  smoke exited non-zero (EXPECTED — stub returns 401 to all)"
 log ""
@@ -131,27 +137,28 @@ log ""
 # being correct (Quinn GAP-Q1 from sprint-ets-06-evaluator-cumulative.yaml).
 # Sprint 6 S-ETS-06-01 added smoke-test.sh container-log timing fix that
 # archives catalina.out to ${SMOKE_OUTPUT_DIR}/s-ets-01-03-teamengine-container-*.log
-# BEFORE the container is removed. Try that archive first, fall back to
-# `docker logs` only if archive missing (e.g. older smoke-test.sh, or test run
-# without container-log capture).
+# BEFORE the container is removed. This gate accepts only artifacts created by
+# the current smoke invocation.
 log "Step 3/5 — capturing container catalina.out + per-suite TestNG XML"
-SMOKE_CONTAINER_LOG_GLOB="${SMOKE_OUTPUT_DIR:-ops/test-results}/s-ets-01-03-teamengine-container-*.log"
-SMOKE_CONTAINER_LOG_HIT=""
-for _cl in $SMOKE_CONTAINER_LOG_GLOB; do
-  [[ -e "$_cl" ]] && SMOKE_CONTAINER_LOG_HIT="$_cl"
-done
-if [[ -n "$SMOKE_CONTAINER_LOG_HIT" ]]; then
-  cp -f "$SMOKE_CONTAINER_LOG_HIT" "$CONTAINER_LOG"
-  log "  container catalina.out copied from smoke archive: $SMOKE_CONTAINER_LOG_HIT"
-else
-  docker logs "$CONTAINER_NAME" > "$CONTAINER_LOG" 2>&1 || true
-  log "  container catalina.out captured via docker logs (no archive found at $SMOKE_CONTAINER_LOG_GLOB)"
+mapfile -d '' SMOKE_CONTAINER_LOGS < <(
+  find "$SMOKE_RESULTS_DIR" -maxdepth 1 -type f \
+    -name 's-ets-01-03-teamengine-container-*.log' \
+    -newer "$SMOKE_MARKER" -print0
+)
+if [[ "${#SMOKE_CONTAINER_LOGS[@]}" -ne 1 ]]; then
+  log "FATAL: expected exactly one current-smoke container log; found ${#SMOKE_CONTAINER_LOGS[@]}"
+  exit 1
 fi
-LATEST_REPORT="$(ls -t ops/test-results/s-ets-01-03-teamengine-smoke-*.xml 2>/dev/null | head -1)"
-if [[ -n "$LATEST_REPORT" ]]; then
-  cp -f "$LATEST_REPORT" "$ARCHIVE_DIR/testng-results.xml"
-  log "  TestNG XML archived: $ARCHIVE_DIR/testng-results.xml"
-fi
+cp -f "${SMOKE_CONTAINER_LOGS[0]}" "$CONTAINER_LOG"
+log "  container catalina.out copied from smoke archive: ${SMOKE_CONTAINER_LOGS[0]}"
+
+LATEST_REPORT="$(bash scripts/require-fresh-smoke-report.sh \
+  "$SMOKE_RESULTS_DIR" "$SMOKE_MARKER")" || {
+  log "FATAL: current smoke did not produce exactly one fresh TestNG XML report"
+  exit 1
+}
+cp -f "$LATEST_REPORT" "$ARCHIVE_DIR/testng-results.xml"
+log "  TestNG XML archived: $ARCHIVE_DIR/testng-results.xml"
 log "  container log archived: $CONTAINER_LOG ($(wc -l < "$CONTAINER_LOG") lines)"
 log "  smoke log archived: $SMOKE_LOG ($(wc -l < "$SMOKE_LOG") lines)"
 log ""

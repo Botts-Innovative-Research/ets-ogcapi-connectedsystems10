@@ -72,16 +72,14 @@ public class VerifyTestNGSuiteDependency {
 	private static final String PROCEDURES_GROUP = "procedures";
 
 	/**
-	 * Sprint 5 S-ETS-05-06 / ADR-010 v3 amendment — Deployments group (sibling of
-	 * Subsystems + Procedures; depends on SystemFeatures via the same cascade pattern).
+	 * Sprint 49 S-ETS-49-01 — Deployments inherits Part 1 API Common directly.
 	 */
 	private static final String DEPLOYMENTS_GROUP = "deployments";
 
 	/**
-	 * Sprint 7 S-ETS-07-02 — SamplingFeatures group (sibling of Subsystems + Procedures +
-	 * Deployments; depends on SystemFeatures via the now-VERIFIED-LIVE 3-class cascade —
-	 * Sprint 7 S-ETS-07-01 Wedge 1 closed the sabotage-marker javac defect that had
-	 * blocked live verification for 2 sprints).
+	 * Sprint 7 S-ETS-07-02 — SamplingFeatures group. It remains a SystemFeatures
+	 * dependent alongside Subsystems and Procedures. Sprint 49 moved Deployments to the
+	 * separate direct API Common dependency path.
 	 */
 	private static final String SAMPLINGFEATURES_GROUP = "samplingfeatures";
 
@@ -92,15 +90,14 @@ public class VerifyTestNGSuiteDependency {
 	private static final String PROPERTYDEFINITIONS_GROUP = "propertydefinitions";
 
 	/**
-	 * Sprint 8 S-ETS-08-02 — Subdeployments group (FIRST three-deep dependency chain in
-	 * this ETS: Subdeployments → Deployments → SystemFeatures → Core). depends-on the
-	 * {@code deployments} group (NOT {@code systemfeatures} directly); the SystemFeatures
-	 * dependency is transitive through Deployments per TestNG 7.9.0 cascade semantics.
+	 * Sprint 8 S-ETS-08-02 — Subdeployments group. Sprint 49 rewires the chain to
+	 * Subdeployments → Deployments → Part 1 API Common → Core/Common. It depends on the
+	 * {@code deployments} group directly; the API Common dependency is transitive.
 	 * ADR-010 v4 amendment (Sprint 8 — Generator close, 2026-04-30) records the 3-deep
 	 * chain wiring; sister cascade XML
 	 * {@code ops/test-results/sprint-ets-08-cascade-2026-04-30.xml} verifies the cascade
-	 * end-to-end (6 sibling classes SKIP when SystemFeatures is sabotaged: 5
-	 * SystemFeatures-level direct + 1 Subdeployments transitive via Deployments).
+	 * end-to-end for the historical chain; Sprint 49 records replacement cascade evidence
+	 * for the released dependency.
 	 */
 	private static final String SUBDEPLOYMENTS_GROUP = "subdeployments";
 
@@ -699,18 +696,13 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 5 S-ETS-05-06 / ADR-010 v3 amendment — Deployments group =====
-	// Mirrors the Procedures patterns above; Deployments is also a SystemFeatures
-	// sibling.
+	// ===== Sprint 49 S-ETS-49-01 — released Deployment dependency boundary =====
 
 	/**
-	 * Sprint 5 S-ETS-05-06 (REQ-ETS-PART1-004): the canonical testng.xml SHALL declare
-	 * {@code <group name="deployments" depends-on="systemfeatures"/>} so the Deployments
-	 * conformance class participates in the two-level dependency cascade (Deployments →
-	 * SystemFeatures → Core).
+	 * REQ-ETS-PART1-004; SCENARIO-ETS-PART1-004-RELEASED-DEPENDENCY-CASCADE-001.
 	 */
 	@org.junit.Test
-	public void testDeploymentsGroupDependsOnSystemFeatures() throws Exception {
+	public void testDeploymentsGroupDependsOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -721,22 +713,21 @@ public class VerifyTestNGSuiteDependency {
 				String dependsOn = deps.get(DEPLOYMENTS_GROUP);
 				assertNotNull("group '" + DEPLOYMENTS_GROUP + "' has null depends-on attribute", dependsOn);
 				assertTrue("group '" + DEPLOYMENTS_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+						+ PART1_API_COMMON_GROUP + "'", dependsOn.contains(PART1_API_COMMON_GROUP));
+				assertFalse("group '" + DEPLOYMENTS_GROUP + "' retains superseded SystemFeatures dependency",
+						dependsOn.contains(SYSTEMFEATURES_GROUP));
 				foundDependency = true;
 				break;
 			}
 		}
-		assertTrue(
-				"testng.xml does not declare <group name=\"" + DEPLOYMENTS_GROUP + "\" depends-on=\""
-						+ SYSTEMFEATURES_GROUP + "\"/> — see ADR-010 v3 amendment + Sprint 5 S-ETS-05-06.",
-				foundDependency);
+		assertTrue("testng.xml does not declare <group name=\"" + DEPLOYMENTS_GROUP + "\" depends-on=\""
+				+ PART1_API_COMMON_GROUP + "\"/> — see Sprint 49 S-ETS-49-01.", foundDependency);
 	}
 
 	/**
 	 * Sprint 5 S-ETS-05-06: every Deployments @Test method SHALL carry
 	 * {@code groups = "deployments"} so the {@code <group name="deployments"
-	 * depends-on="systemfeatures"/>} declaration in testng.xml has tagged methods to
-	 * resolve against.
+	 * depends-on="part1apicommon"/>} declaration has tagged methods to resolve.
 	 */
 	@org.junit.Test
 	public void testEveryDeploymentsTestMethodCarriesDeploymentsGroup() {
@@ -762,17 +753,14 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 5 S-ETS-05-06: Deployments classes MUST be co-located in the SAME
-	 * {@code <test>} block as SystemFeatures so the two-level group-dependency cascade
-	 * can resolve within scope.
+	 * Sprint 49: Deployments and Part 1 API Common share the same TestNG block.
 	 */
 	@org.junit.Test
-	public void testDeploymentsCoLocatedWithSystemFeatures() throws Exception {
+	public void testDeploymentsCoLocatedWithPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> systemFeaturesClassNames = new HashSet<>();
-		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
-			systemFeaturesClassNames.add(c.getName());
-		}
+		Set<String> apiCommonClassNames = Set
+			.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests.class
+				.getName());
 		Set<String> deploymentsClassNames = new HashSet<>();
 		for (Class<?> c : DEPLOYMENTS_CLASSES) {
 			deploymentsClassNames.add(c.getName());
@@ -784,18 +772,15 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasApiCommon = xtClasses.containsAll(apiCommonClassNames);
 			boolean hasAnyDeployments = !java.util.Collections.disjoint(xtClasses, deploymentsClassNames);
-			if (hasAllSystemFeatures && hasAnyDeployments) {
+			if (hasApiCommon && hasAnyDeployments) {
 				coAlloc = true;
 				break;
 			}
 		}
-		assertTrue(
-				"SystemFeatures (" + systemFeaturesClassNames + ") and Deployments (" + deploymentsClassNames
-						+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
-						+ "(Deployments → SystemFeatures → Core) resolves within scope. See ADR-010 v3 amendment.",
-				coAlloc);
+		assertTrue("Part 1 API Common (" + apiCommonClassNames + ") and Deployments (" + deploymentsClassNames
+				+ ") must share a <test> block so the released inheritance dependency resolves.", coAlloc);
 	}
 
 	// ===== Sprint 7 S-ETS-07-02 — SamplingFeatures group =====
@@ -1001,17 +986,17 @@ public class VerifyTestNGSuiteDependency {
 
 	// ===== Sprint 8 S-ETS-08-02 — Subdeployments group =====
 	// Mirrors the patterns above; Subdeployments is the FIRST three-deep dependency chain
-	// in this ETS (Subdeployments → Deployments → SystemFeatures → Core). Critical
+	// in this ETS. Sprint 49 changes the transitive parent below Deployments from
+	// SystemFeatures to Part 1 API Common.
 	// distinction: Subdeployments depends-on="deployments" (NOT "systemfeatures") — the
-	// transitive cascade is carried by Deployments' own depends-on="systemfeatures".
+	// transitive cascade is carried by Deployments' own depends-on="part1apicommon".
 
 	/**
 	 * Sprint 8 S-ETS-08-02 (REQ-ETS-PART1-005): the canonical testng.xml SHALL declare
 	 * {@code <group name="subdeployments" depends-on="deployments"/>} so the
 	 * Subdeployments conformance class participates in the THREE-deep dependency cascade
-	 * (Subdeployments → Deployments → SystemFeatures → Core). Critical: depends-on must
-	 * be {@code "deployments"} (NOT {@code "systemfeatures"} directly) — the
-	 * SystemFeatures dependency is transitive through Deployments.
+	 * (Subdeployments → Deployments → Part 1 API Common → Core/Common). Critical:
+	 * depends-on must be {@code "deployments"}; API Common is transitive.
 	 */
 	@org.junit.Test
 	public void testSubdeploymentsGroupDependsOnDeployments() throws Exception {
@@ -1026,7 +1011,7 @@ public class VerifyTestNGSuiteDependency {
 				assertNotNull("group '" + SUBDEPLOYMENTS_GROUP + "' has null depends-on attribute", dependsOn);
 				assertTrue("group '" + SUBDEPLOYMENTS_GROUP + "' depends-on '" + dependsOn + "' missing '"
 						+ DEPLOYMENTS_GROUP
-						+ "' (3-deep chain Subdeployments → Deployments → SystemFeatures → Core requires Deployments as direct parent, NOT SystemFeatures)",
+						+ "' (Subdeployments → Deployments → Part 1 API Common requires Deployments as direct parent)",
 						dependsOn.contains(DEPLOYMENTS_GROUP));
 				foundDependency = true;
 				break;
@@ -1035,7 +1020,7 @@ public class VerifyTestNGSuiteDependency {
 		assertTrue("testng.xml does not declare <group name=\"" + SUBDEPLOYMENTS_GROUP + "\" depends-on=\""
 				+ DEPLOYMENTS_GROUP + "\"/> — see Sprint 8 S-ETS-08-02 + ADR-010 v4 amendment. The "
 				+ "Subdeployments conformance class requires this declaration to participate in the three-level "
-				+ "dependency cascade (Subdeployments → Deployments → SystemFeatures → Core).", foundDependency);
+				+ "dependency cascade (Subdeployments → Deployments → Part 1 API Common).", foundDependency);
 	}
 
 	/**
@@ -1073,9 +1058,8 @@ public class VerifyTestNGSuiteDependency {
 	 * {@code <test>} block as Deployments so the three-level group-dependency cascade can
 	 * resolve within scope. Stronger condition than the SystemFeatures co-location lint:
 	 * the 3-deep chain requires the parent (Deployments) to be in the same block, which
-	 * ALSO transitively requires Deployments' own parent (SystemFeatures) to be in the
-	 * same block (already covered by
-	 * {@link #testDeploymentsCoLocatedWithSystemFeatures}).
+	 * ALSO transitively requires Deployments' own parent (Part 1 API Common) in the same
+	 * block (already covered by {@link #testDeploymentsCoLocatedWithPart1ApiCommon}).
 	 */
 	@org.junit.Test
 	public void testSubdeploymentsCoLocatedWithDeployments() throws Exception {
@@ -1104,8 +1088,8 @@ public class VerifyTestNGSuiteDependency {
 		}
 		assertTrue("Deployments (" + deploymentsClassNames + ") and Subdeployments (" + subdeploymentsClassNames
 				+ ") must be declared in the SAME <test> block of testng.xml so the three-level group dependency "
-				+ "(Subdeployments → Deployments → SystemFeatures → Core) resolves within scope. See Sprint 8 "
-				+ "S-ETS-08-02 + ADR-010 v4 amendment.", coAlloc);
+				+ "(Subdeployments → Deployments → Part 1 API Common) resolves within scope. See Sprint 49 "
+				+ "S-ETS-49-01.", coAlloc);
 	}
 
 	// ===== Sprint 9 S-ETS-09-01 — GeoJSON group =====

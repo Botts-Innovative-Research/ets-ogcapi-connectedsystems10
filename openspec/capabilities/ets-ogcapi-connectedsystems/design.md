@@ -1295,6 +1295,82 @@ procedure can pass, while hierarchy-dependent procedures SKIP at the root media
 gate. A controlled multi-level HTTP fixture supplies positive GeoJSON/SensorML
 collection and nested-association evidence for all five deployed paths.
 
+### Sprint 49: released Part 1 Deployment direct procedures
+
+Sprint 49 replaces the historical eager four-method Deployment approximation
+with the five released Annex A procedures.
+
+```text
+DeploymentsTests
+  |-- everyDeploymentHasCanonicalUrl()
+  |-- deploymentResourcesEndpointIsValid()
+  |-- canonicalDeploymentsEndpointIsValid()
+  |-- deploymentCollectionsAreValid()
+  `-- deploymentsReferencedFromSystemsAreValid()
+          |
+          v
+DeploymentFeaturesSupport
+  collection selection + canonical equivalence
+  + Deployment schema dispatch + exact System-link matching
+          |
+          +--> Part1ApiCommonSupport bounded traversal
+          `--> future ConnectedSystemsSensorMlValidatorAdapter
+```
+
+Class setup normalizes only the API root after checking Part 1 API Common
+results. Every procedure retrieves its own evidence and uses `alwaysRun`
+without method dependencies. The group dependency becomes
+`part1apicommon -> deployments`; a completed System ATS is not an inherited
+prerequisite for all Deployment procedures. The `ref-from-system` method
+retrieves Systems exactly as its released procedure specifies.
+
+Both collection procedures enumerate every exact
+`featureType=sosa:Deployment` collection and require at least one. The
+collections procedure also requires `itemType=feature`. No selected collection
+can pass vacuously or be hidden by another supported collection. API Common
+resolves the advertised items endpoint and bounds same-origin pagination. Its
+restricted overload selects from the intersection of advertised item-link
+media and Deployment-supported GeoJSON/SensorML media, so an earlier generic
+JSON link cannot cause a false SKIP. Schema-controlled paths add an
+actual-media gate on every page before parsing.
+
+Canonical comparison requires at least one canonical relation. Every canonical
+occurrence must resolve to the IUT origin and path
+`{api_root}/deployments/{id}`; representation query variants and duplicate
+occurrences are allowed by the released procedure. The first occurrence in
+document order is dereferenced deterministically with HTTP 200. Jackson trees
+are compared after removing all canonical relation links from both top-level
+`links` arrays. Query parameters used for representation selection are
+retained; fragments and path aliases fail.
+
+Resources endpoint validation dispatches actual `application/geo+json` and
+`application/sml+json` pages to the bundled released Deployment collection
+schemas. This support class is intentionally the replacement seam described by
+`REQ-ETS-VALIDATOR-001`: Connected Systems protocol and mapping behavior remain
+local, while a future reusable FCU/OGC SensorML validator will replace only the
+SensorML schema backend. The SWE Common component adapter is not misapplied to a
+complete SensorML Deployment document, and the ETS suite jar
+`ets-sensorml30` is not imported.
+
+System-reference validation retrieves every canonical System, requires each
+normative nested endpoint, follows all pages, validates each page by actual
+media, and accepts only explicit GeoJSON `deployedSystems@link` or SensorML
+`deployedSystems[].system` hrefs resolving to the exact owning System path.
+Unrelated links and substring ID matches fail.
+
+The unmodified local OSH baseline is expected to produce real conformance
+failures: no `sosa:Deployment` collection, unsupported generic media from
+`/deployments`, and HTTP 400 from `/systems/040g/deployments`. Mandatory
+TeamEngine E2E preserves those outcomes. Controlled read-only HTTP coverage
+provides the positive oracle for all five deployed procedures.
+
+The defensive `@BeforeClass` result scan is narrower than the shared TestNG
+context: only Core, Common, and Part 1 API Common test/configuration results are
+eligible blockers. SystemFeatures and sibling configuration results are ignored
+because they are not inherited by `/conf/deployment`. Credential wire gates
+select exactly one TestNG XML and container log produced after a per-run marker
+from `SMOKE_OUTPUT_DIR`; stale worktree artifacts cannot satisfy the gate.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

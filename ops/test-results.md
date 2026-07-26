@@ -1,8 +1,50 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T20:14Z
+Last updated: 2026-07-26T22:26Z
 
 ## Current Sprint Evidence
+
+Sprint 49 Part 1 Deployment direct ATS:
+
+- Coverage: `240 total / 20 exact / 2 helper / 141 candidate / 77 unmapped`;
+  `/conf/deployment` is `5/5 exact`.
+- Test-first evidence records the intentionally missing restricted-media
+  overload. Corrected remediation Maven is `35/0/0/0`; broader focused Maven is
+  `90/0/0/0`; full Maven is `434/0/0/3`.
+- Released-source reproduction and ATS audit self-test pass at
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+- Exact image:
+  `sha256:9049b284529b53845403e985fae2b03a9598073724320de2ad2e395006506d47`.
+  Exact-image TeamEngine runtime, adapter, dependency-collision,
+  immutable-base, and context-hygiene verification pass.
+- Primary unmodified local OSH TeamEngine: `217/39/3/175`; all five Deployment
+  methods execute with three genuine FAIL and two unsupported-media SKIP
+  outcomes.
+- Deployment outcomes: collections FAIL for no `sosa:Deployment` collection;
+  canonical URL FAIL for the same missing evidence; System reference FAIL on
+  nested HTTP 400; resources and canonical endpoints SKIP on unsupported
+  `application/json`.
+- Positive artifact hygiene: 117 recognized requests, 112 IUT GETs, zero
+  writes, zero credential leaks.
+- Controlled HTTP coverage executes every successful path for the five released
+  procedures and adversarial media, canonical, collection, and System-reference
+  cases.
+- API Common sabotage: `217/34/1/182`; all five Deployment methods skip
+  directly on the injected API Common failure before IUT access. Sabotage
+  hygiene passes with 100 recognized requests, 95 IUT GETs, and zero writes.
+- Credential integration and corrected wire E2E pass. Exactly one fresh XML and
+  container log were selected from the current `SMOKE_OUTPUT_DIR`; XML hashes
+  match. Artifacts contain zero unmasked hits, 39 masked events, and the stub
+  records 39 intact transmissions.
+- OSH provenance: clean at `4c87a65`, zero commits ahead, `/opt/osh` read-only,
+  deployed ConSys build `4c87a65`. No OSH or TeamEngine modification.
+- Final focused Raze documentation recheck: `APPROVE`, confidence `0.99`,
+  duration 46 seconds; `RAZE-S49-FINAL-001` is closed and no required findings
+  remain.
+- Verification summary:
+  `ops/test-results/sprint-ets-49-part1-deployment-verification-2026-07-26.md`.
+
+---
 
 Sprint 48 Part 1 Subsystem direct ATS:
 

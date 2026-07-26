@@ -2,6 +2,48 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-26 - Part 1 Deployment direct ATS complete
+
+**Triggered by user instruction**: execute accepted recommendations 1-4
+continuously, including completion of every released Part 1 gap.
+
+- Published completed Sprint 48 to Botts `main` as commit `528466f`, then added
+  CP-009, S-ETS-49-01, its contract, scenarios, design, architecture,
+  traceability, epic, and operational handoff before Sprint 49 code.
+- Replaced the historical four-method Deployment approximation with exactly the
+  five released procedures and reviewed mappings. Coverage is
+  `240/20 exact/2 helper/141 candidate/77 unmapped`; Deployment is `5/5 exact`.
+- Added complete collection/item traversal, actual-media schema dispatch,
+  canonical content equivalence, exact System references, and independently
+  executable procedure setup.
+- Closed Raze's initial false-SKIP media selection, SystemFeatures configuration
+  coupling, canonical multiplicity, stale record, and credential artifact
+  provenance findings with spec-first, test-first corrections.
+- Restricted API Common collection retrieval now prefers advertised
+  GeoJSON/SensorML over earlier generic JSON. Canonical duplicates and
+  representation-query variants are accepted only when every occurrence maps
+  to the exact Deployment identity.
+- Rewired Deployment directly to API Common and constrained defensive result
+  scanning to Core/Common/API Common. API Common sabotage proves all five
+  methods skip directly on the injected prerequisite failure.
+- Remediation Maven passes `35/0/0/0`; focused Deployment Maven passes
+  `90/0/0/0`; full Maven passes `434/0/0/3`; source and coverage audits pass.
+- Exact image `sha256:9049b284...06d47` passes runtime and immutable-base
+  verification. Primary local OSH TeamEngine is honestly `217/39/3/175`, with
+  three Deployment FAIL and two SKIP.
+- Controlled HTTP coverage executes all five positive procedures. Positive and
+  sabotage hygiene pass with zero writes and no credential leaks.
+- Corrected the credential gate to require exactly one XML and container log
+  newer than a per-run marker in `SMOKE_OUTPUT_DIR`. Integration and wire gates
+  pass with zero unmasked artifact hits, 39 masked events, and 39 intact
+  synthetic transmissions.
+- Reverified OSH provenance: clean at `4c87a65`, zero commits ahead, read-only
+  mount, matching ConSys build manifest. No OSH or TeamEngine modification;
+  hosted CI remains outside scope.
+- Reconciled the historical Sprint 8 and current Sprint 49 dependency
+  topologies. Focused final Raze recheck closed `RAZE-S49-FINAL-001` with
+  `APPROVE`, confidence `0.99`, and no remaining required findings.
+
 ## 2026-07-26 - Part 1 Subsystem direct ATS complete
 
 **Triggered by user instruction**: execute accepted recommendations 1-4

@@ -1,0 +1,62 @@
+sprint: ets-49
+story: S-ETS-49-01
+title: Part 1 Deployment direct ATS closure
+status: COMPLETE
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-PART1-004
+  - REQ-ETS-COVERAGE-001
+  - REQ-ETS-VALIDATOR-001
+scenarios:
+  - SCENARIO-ETS-PART1-004-RELEASED-CANONICAL-URL-001
+  - SCENARIO-ETS-PART1-004-RELEASED-RESOURCES-ENDPOINT-001
+  - SCENARIO-ETS-PART1-004-RELEASED-CANONICAL-ENDPOINT-001
+  - SCENARIO-ETS-PART1-004-RELEASED-COLLECTIONS-001
+  - SCENARIO-ETS-PART1-004-RELEASED-REF-FROM-SYSTEM-001
+  - SCENARIO-ETS-PART1-004-RELEASED-MEDIA-GATE-001
+  - SCENARIO-ETS-PART1-004-RELEASED-COLLECTION-COMPLETE-001
+  - SCENARIO-ETS-PART1-004-RELEASED-CANONICAL-EQUIVALENCE-001
+  - SCENARIO-ETS-PART1-004-RELEASED-SYSTEM-REFERENCE-001
+  - SCENARIO-ETS-PART1-004-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-004-RELEASED-DEPENDENCY-CASCADE-001
+  - SCENARIO-ETS-PART1-004-RELEASED-E2E-EXECUTION-001
+  - SCENARIO-ETS-PART1-004-RELEASED-DIRECT-HTTP-COVERAGE-001
+  - SCENARIO-ETS-CLEANUP-CREDENTIAL-LEAK-THREE-FOLD-CLOSE-001
+success_criteria:
+  - All five released Deployment procedures have exact reviewed mappings.
+  - All selected Deployment collections and every item are processed.
+  - Missing Deployment collection evidence fails instead of passing vacuously.
+  - HTTP status and actual media are established before parsing every schema-controlled page.
+  - Advertised GeoJSON or SensorML is selected ahead of an earlier generic JSON items link.
+  - GeoJSON and SensorML actual media select fail-closed Deployment collection schemas.
+  - Canonical links resolve to the canonical Deployment path and dereference with HTTP 200.
+  - Canonical content equals collection content after canonical links are removed from both.
+  - Every canonical System nested Deployment endpoint returns HTTP 200 and follows bounded pagination.
+  - Every nested Deployment explicitly references the owning System local ID.
+  - Each procedure retrieves only its own prerequisites.
+  - API Common prerequisite failures cascade before Deployment IUT access.
+  - Unrelated and SystemFeatures configurations cannot block Deployment.
+  - Canonical representation variants sharing the required Deployment identity are accepted deterministically.
+  - Focused and full Maven verification completes.
+  - TeamEngine executes every changed method against the primary unmodified local OSH IUT.
+  - Local OSH conformance failures remain visible and unmodified.
+  - A controlled HTTP fixture executes successful positive paths for all five methods.
+  - Exact-image runtime, dependency, and credential gates complete.
+  - Credential evidence is selected only from current-run SMOKE_OUTPUT_DIR artifacts.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not import ets-sensorml30 or expose external validator types to TestNG procedures.
+verification:
+  test_first: "compile RED on the intentionally absent restricted-media overload"
+  focused_maven: "remediation 35 total / 0 failures / 0 errors / 0 skipped; Deployment gate 90/0/0/0"
+  full_maven: "434 total / 0 failures / 0 errors / 3 skipped"
+  coverage_audit: "240 total / 20 exact / 2 helper / 141 candidate / 77 unmapped; deployment 5/5 exact"
+  local_osh_teamengine: "217 total / 39 passed / 3 failed / 175 skipped; Deployment 0 PASS / 3 FAIL / 2 SKIP; 117 recognized requests, 112 IUT GETs, zero writes"
+  controlled_http: "PASS; all five successful procedures plus media, canonical, collection, and System-reference regressions"
+  exact_image: "sha256:9049b284529b53845403e985fae2b03a9598073724320de2ad2e395006506d47; runtime and immutable-base verification PASS"
+  dependency_sabotage: "217 total / 34 passed / 1 intentional failure / 182 skipped; all five Deployment methods skipped directly on API Common"
+  credential_gates: "PASS; current-run artifact freshness proven; zero unmasked artifact hits, 39 masked events, 39 intact synthetic wire transmissions"
+  raze: "APPROVE confidence 0.99; focused documentation recheck closed RAZE-S49-FINAL-001; no unresolved required findings"

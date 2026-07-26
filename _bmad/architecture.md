@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.25 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 Subsystem released ATS complete; final Raze approved)
+> Version: 2.0.26 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 Deployment exact-procedure architecture)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -961,3 +961,41 @@ expected evidence is one boolean-request PASS and four hierarchy-procedure
 media-gate SKIPs. A controlled read-only multi-level fixture must execute all
 five positive paths, including all three association resource types. This
 architecture adds no OSH or TeamEngine source or binary changes.
+
+## 28. Architecture v2.0.26 - Part 1 Deployment procedures (2026-07-26)
+
+`DeploymentsTests` replaces four eager historical approximations with the five
+released `/conf/deployment` procedures. Setup retains only the normalized API
+root. Each method independently discovers collections, canonical resources, or
+Systems so one missing input cannot configuration-skip unrelated procedures.
+
+The dependency changes from `systemfeatures -> deployments` to the class's
+released inheritance boundary, `part1apicommon -> deployments`. API Common
+failures and unexpected SKIPs block before IUT access. Its exact documented
+datetime no-evidence SKIP remains visible while direct Deployment procedures
+execute. System resources are retrieved inside `ref-from-system`, as required,
+instead of making all five procedures depend on unrelated System ATS outcomes.
+
+`DeploymentFeaturesSupport` owns collection selection, canonical link/path
+resolution, canonical-content normalization, representation-specific System
+link matching, and media-to-schema dispatch. `Part1ApiCommonSupport` remains the
+single bounded, same-origin pagination implementation and gains an
+actual-media-gated collection-items entry point for schema-controlled callers.
+Every selected collection and every page is processed; zero selected
+Deployment collections fail rather than pass vacuously.
+
+The schema backend uses the released bundled GeoJSON/SensorML Deployment
+collection schemas behind the support boundary. This preserves the external
+validator architecture: a future `ConnectedSystemsSensorMlValidatorAdapter`
+replaces only SensorML schema semantics after FCU/OGC provides a reusable
+module. TestNG policy, endpoint discovery, canonical equivalence, pagination,
+and Connected Systems mappings stay local. The SWE Common component adapter
+does not validate whole SensorML Deployment documents, and no executable
+SensorML ETS jar enters the runtime closure.
+
+Primary TeamEngine E2E executes against unmodified local OSH and intentionally
+retains its observed failures: no `sosa:Deployment` collection, unsupported
+generic `/deployments` media, and HTTP 400 for the nested System endpoint.
+Controlled read-only HTTP coverage proves all five successful procedures and
+the key fail-closed branches. No OSH or TeamEngine source or binary change is
+part of this architecture.

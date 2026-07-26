@@ -1,0 +1,347 @@
+review:
+  id: sprint-ets-49-adversarial-initial
+  role: Raze
+  sprint: ets-49
+  story: S-ETS-49-01
+  reviewed_at: "2026-07-26T21:31:49Z"
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  summary: >-
+    The five released Deployment methods, schema dispatch, actual-media gates on
+    schema-controlled pages, local OSH outcomes, exact-image runtime, credential
+    gates, and immutable external-system evidence are substantially real.
+    Closure is not approvable because advertised representation selection can
+    produce a false SKIP, the setup fallback can restore an unintended
+    dependency on unrelated configuration outcomes, canonical-link cardinality
+    is stricter and less coherent than the released procedure, and the exact
+    coverage claims disagree with the unreconciled sprint records.
+
+reviewed_scope:
+  released_source:
+    checkout: /tmp/ogcapi-connected-systems-s45
+    requested_worktree_head: 3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f
+    pinned_inventory_commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+    annex: api/part1/standard/sections/annex-abstract-test-suite.adoc
+    lines: "338-433"
+    note: >-
+      The requested checkout is clean at a later commit, but the reviewed Annex,
+      Deployment requirement, and Deployment schema paths have no diff between
+      its HEAD and the pinned inventory commit.
+    requirements:
+      - api/part1/standard/requirements/deployment/req_canonical_url.adoc
+      - api/part1/standard/requirements/deployment/req_resources_endpoint.adoc
+      - api/part1/standard/requirements/deployment/req_canonical_endpoint.adoc
+      - api/part1/standard/requirements/deployment/req_collections.adoc
+      - api/part1/standard/sections/clause_10_requirements_class_deployment_features.adoc
+  planning_and_reconciliation:
+    - openspec/change-proposals/CP-009-part1-deployment-closure.md
+    - epics/stories/s-ets-49-01-part1-deployment-closure.md
+    - .harness/contracts/sprint-ets-49.yaml
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - _bmad/architecture.md
+    - _bmad/traceability.md
+    - epics/epic-ets-02-part1-classes.md
+    - ops/status.md
+    - ops/changelog.md
+    - ops/test-results.md
+  implementation:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/DeploymentsTests.java
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/DeploymentFeaturesSupport.java
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part1/apicommon/Part1ApiCommonSupport.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+    - ops/ats-coverage-report.json
+  tests:
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/VerifyDeploymentsSuite.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/VerifyDeploymentFeaturesSupport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/VerifyDeploymentsHttpProcedures.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+  evidence:
+    - ops/test-results/sprint-ets-49-full-maven-2026-07-26.log
+    - ops/test-results/sprint-ets-49-local-osh-teamengine-2026-07-26.xml
+    - ops/test-results/sprint-ets-49-local-osh-teamengine-container-2026-07-26.log
+    - ops/test-results/sprint-ets-49-local-osh-smoke-2026-07-26.log
+    - ops/test-results/sprint-ets-49-teamengine6-runtime-2026-07-26.log
+    - ops/test-results/sprint-ets-49-apicommon-sabotage-teamengine-2026-07-26.xml
+    - ops/test-results/sprint-ets-49-apicommon-sabotage-verification-2026-07-26.log
+    - ops/test-results/sprint-ets-49-positive-hygiene-2026-07-26.json
+    - ops/test-results/sprint-ets-49-apicommon-sabotage-hygiene-2026-07-26.json
+    - ops/test-results/sprint-ets-49-ats-source-reproduction-2026-07-26.log
+    - ops/test-results/sprint-ets-49-credential-integration-2026-07-26.log
+    - ops/test-results/sprint-ets-49-credential-e2e-2026-07-26.txt
+
+findings:
+  - id: RAZE-S49-001
+    severity: HIGH
+    disposition: REQUIRED_FIX
+    category: false_skip
+    title: Deployment-aware collection traversal can select generic JSON before an advertised supported representation
+    evidence:
+      - >-
+        Released supporting procedure lines 32-36 requires inspecting rel=items
+        links and SKIP only when the server offers no media type supported by the
+        testing engine.
+      - >-
+        Released Deployment collections procedure lines 408-413 dispatches
+        GeoJSON and SensorML and SKIPs only for other unsupported response media.
+      - >-
+        Part1ApiCommonSupport.java:218-228 obtains the advertised media from
+        supportedItemsMediaType(collection) without supplying the new
+        supportedMediaTypes restriction.
+      - >-
+        Part1ApiCommonSupport.java:507-529 returns the first generic JSON or
+        +json items link. A preceding application/json link therefore wins over
+        a later application/geo+json or application/sml+json link.
+      - >-
+        DeploymentsTests.java:133-144 then applies the actual-media gate and
+        SKIPs a generic JSON response, despite the same collection advertising a
+        representation this Deployment procedure can validate.
+      - >-
+        VerifyDeploymentsHttpProcedures.java:180-188 advertises only one items
+        representation per collection, so the generic-first ordering defect is
+        not covered.
+    impact: >-
+      A conforming server that advertises generic JSON first and a supported
+      Deployment representation second can receive SKIP rather than having the
+      supported representation requested and validated. This violates the
+      supporting test's stated SKIP condition and the sprint's media-selection
+      contract.
+    required_fix: >-
+      Make the restricted collectionItemsDetailed overload choose an advertised
+      rel=items media type from the normalized supportedMediaTypes intersection.
+      Preserve the unrestricted API Common behavior for existing callers. Add
+      regressions where application/json precedes GeoJSON and SensorML, proving
+      the supported Accept value is selected and actual media is still gated on
+      every page.
+
+  - id: RAZE-S49-002
+    severity: HIGH
+    disposition: REQUIRED_FIX
+    category: dependency_isolation
+    title: Deployment setup treats unrelated configuration outcomes as inherited prerequisites
+    evidence:
+      - >-
+        CP-009 lines 77-81 and the capability design lines 1320-1325 remove the
+        historical all-System ATS dependency and retain only Core, Common, and
+        Part 1 API Common prerequisite outcomes.
+      - >-
+        DeploymentsTests.java:237-260 scans every failed and skipped
+        configuration in the shared ITestContext. configurationBlocker applies
+        no class or group filter, unlike testBlocker at lines 265-291.
+      - >-
+        The API Common sabotage XML at lines 2170-2240 records
+        fetchDeploymentArguments and all five Deployment methods as SKIP because
+        configuration fetchSystemArguments skipped. That is a SystemFeatures
+        configuration, not the direct Part 1 API Common failure the new boundary
+        is intended to evaluate.
+      - >-
+        VerifyDeploymentsSuite and VerifyTestNGSuiteDependency prove structural
+        group wiring but do not exercise an unrelated failed/skipped
+        configuration in the same TestNG block.
+    impact: >-
+      A SystemFeatures or unrelated sibling configuration failure can suppress
+      all five Deployment procedures even when Core, Common, and Part 1 API
+      Common are satisfied. This silently reintroduces the dependency the sprint
+      claims to remove and creates false SKIPs.
+    required_fix: >-
+      Restrict configuration blockers to the actual inherited prerequisite
+      groups/classes, while retaining fail-closed behavior for Core, Common, and
+      Part 1 API Common configurations. Add behavioral tests proving an
+      unrelated/SystemFeatures configuration failure does not block Deployment,
+      and an API Common configuration or test failure does block before
+      Deployment IUT access. Rerun the sabotage gate and require its reason to
+      identify the direct prerequisite, not fetchSystemArguments.
+
+  - id: RAZE-S49-003
+    severity: MEDIUM
+    disposition: REQUIRED_FIX
+    category: canonical_link_semantics
+    title: Canonical-link cardinality is both over-strict and occurrence-blind
+    evidence:
+      - >-
+        Released canonical-url procedure lines 364-368 requires that a
+        rel=canonical link is included, then dereferenced and compared. It does
+        not require exactly one link object.
+      - >-
+        DeploymentFeaturesSupport.java:92-119 stores CanonicalLink(uri,
+        mediaType) records in a Set and requires set size exactly one.
+      - >-
+        Two canonical links to the same canonical URI with different type
+        attributes become two records and falsely FAIL. Two duplicate link
+        objects with the same URI and type collapse to one record and PASS even
+        though the design at lines 1334-1338 says exactly one canonical
+        relation.
+      - >-
+        VerifyDeploymentFeaturesSupport.java:42-64 covers only a single
+        canonical link and a wrong path; it does not define or test duplicate
+        occurrence, same-target representation variants, or distinct-target
+        behavior.
+    impact: >-
+      Legitimate representation variants can be rejected, while duplicate
+      occurrences can evade the project's stated exact-one rule. The mapping's
+      "requires one" claim has no stable cardinality meaning.
+    required_fix: >-
+      Reconcile the project rule to the released procedure, distinguish link
+      occurrences from unique canonical target URIs, and implement a documented
+      deterministic dereference policy. At minimum, links sharing one canonical
+      URI must not become distinct solely because type differs, and conflicting
+      canonical targets must fail. Add multiplicity and representation-variant
+      regressions and update spec/design/mapping evidence to the chosen released-
+      compatible rule.
+
+  - id: RAZE-S49-004
+    severity: MEDIUM
+    disposition: REQUIRED_FIX
+    category: reconciliation_and_overclaim
+    title: Exact coverage and closure records currently disagree
+    evidence:
+      - >-
+        reviewed-ats-mappings.json lines 171-215 and
+        ops/ats-coverage-report.json classify all five Deployment tests exact.
+      - >-
+        spec.md lines 442-445, traceability.md line 33, ops/status.md lines
+        64-69, and ops/test-results.md lines 7-20 still report 0/5 exact and
+        implementation active/specified.
+      - >-
+        The story remains SPECIFIED with implementation and gate criteria
+        unchecked; the contract remains SPECIFIED with all verification fields
+        PENDING.
+      - >-
+        testng.xml lines 53-61 and 70-78 retain historical comments saying
+        Deployment depends on SystemFeatures, while the executable dependency at
+        line 194 now points directly to part1apicommon.
+      - >-
+        The three behavioral findings above invalidate the current exact mapping
+        overclaim until corrected and re-reviewed.
+    impact: >-
+      Consumers cannot determine whether Sprint 49 is planned, implemented, or
+      closed, and the coverage report currently grants exact status to methods
+      with unresolved released-procedure defects.
+    required_fix: >-
+      After behavioral fixes and rerun evidence, regenerate the coverage report
+      and reconcile CP/story/contract/spec/design/architecture/traceability/epic/
+      status/changelog/test-results plus stale TestNG comments. Do not mark the
+      story complete or retain 5/5 exact until a final Raze recheck has no
+      unresolved required findings.
+
+concerns:
+  - id: RAZE-S49-C01
+    severity: LOW
+    title: Positive HTTP evidence is broad but does not exercise positive multi-page and multi-item completeness
+    detail: >-
+      The fixture covers two selected collections, both encodings, all five
+      methods, an unsupported later page, changed canonical content, and a wrong
+      System reference. It does not prove a successful second page, multiple
+      items on one page, multiple Systems, or a later invalid item. The loops and
+      collection schemas appear complete on inspection, so this is a residual
+      test-depth concern rather than a separate required defect.
+  - id: RAZE-S49-C02
+    severity: LOW
+    title: The parameterized resources procedure is exposed only as a canonical endpoint instance
+    detail: >-
+      DeploymentsTests.java:108-121 runs both resources-endpoint and
+      canonical-endpoint against api_root/deployments. The shared private
+      validateEndpoint method implements the parameterized behavior, but no
+      external endpoint parameter is supplied. This mirrors the project's
+      established System closure pattern and does not currently justify a
+      required finding, but the exact mapping should describe this as the
+      canonical instantiation rather than imply arbitrary endpoint injection.
+  - id: RAZE-S49-C03
+    severity: LOW
+    title: Released Annex contains an apparent undefined SensorML media variable in ref-from-system
+    detail: >-
+      Annex line 431 uses {sensorml-mediatype}, while the encoding clause defines
+      {sensorml-json-mediatype}=application/sml+json and the adjacent Deployment
+      procedures use that variable. Treating line 431 as application/sml+json is
+      a reasonable source inference, but the final verification record should
+      note it.
+
+verified_evidence:
+  source_and_mapping:
+    - >-
+      Released Annex contains exactly five /conf/deployment procedures at lines
+      349-353, with method text at lines 356-433.
+    - >-
+      Source reproduction artifact reports PASS against pinned commit
+      8e03b236a049849f2ccc24b4fd9fdce5ff69bed2.
+    - >-
+      Coverage report parses and currently reports 240 total / 20 exact /
+      2 helper / 141 candidate / 77 unmapped, with /conf/deployment 5/5 exact.
+  implementation:
+    - >-
+      DeploymentsTests declares exactly five TestNG methods, all in group
+      deployments, alwaysRun, and without dependsOnMethods.
+    - >-
+      Schema-controlled resources, collection-items, and nested-System traversal
+      assert HTTP 200 and gate actual media before parsing on every page.
+    - >-
+      Successful paths iterate every selected collection, page, item, and System;
+      same-origin bounded pagination, schema validation, canonical comparison,
+      and representation-specific owning-System path matching are present.
+    - >-
+      Bundled GeoJSON, SensorML, common, and SensorML-shared schema trees are
+      semantically identical to the released checkout for compared files after
+      ignoring intentional local $id/$ref rewrites.
+  build_and_runtime:
+    - "Full Docker Maven: 428 total / 0 failures / 0 errors / 3 skipped; BUILD SUCCESS."
+    - >-
+      Primary local OSH TeamEngine: 217 total / 39 passed / 3 failed /
+      175 skipped. Deployment methods are 0 PASS / 3 FAIL / 2 SKIP with the
+      documented missing collection, unsupported application/json, and nested
+      HTTP 400 outcomes.
+    - >-
+      Exact image sha256:765d36895e7384310351a57c5e91f77ee846bacd7af3bc82e7eb9ca41ed1d5bc
+      passes SWE Common adapter execution, dependency/collision checks,
+      TeamEngine provenance, and base-file immutability checks.
+    - >-
+      API Common sabotage: 217 total / 34 passed / 1 intentional failure /
+      182 skipped; all five Deployment methods skip before Deployment IUT
+      access. The incorrect System configuration reason is finding
+      RAZE-S49-002.
+    - >-
+      Positive and sabotage artifact hygiene both report zero IUT writes and
+      zero credential leaks.
+    - >-
+      Credential integration and wire E2E report PASS, zero unmasked execution-
+      artifact hits, 39 masked log events, and 39 intact synthetic wire
+      transmissions.
+  external_immutability:
+    - >-
+      /home/nh/docker/osh-core is clean at
+      4c87a65c9a967d52af9df476e65d7862c7673a15.
+    - >-
+      field-hub-osh-1 mounts that checkout's build/install/osh-core at /opt/osh
+      with RW=false; only its separate state mount is writable.
+    - >-
+      No TeamEngine source checkout was found under /home/nh/docker. The exact-
+      image runtime evidence verifies the TeamEngine base files are immutable
+      and the ETS is installed additively.
+
+required_fixes:
+  - Fix restricted advertised-media selection and add generic-first regressions.
+  - Filter setup configuration blockers to actual inherited prerequisite groups and strengthen sabotage assertions.
+  - Reconcile canonical-link cardinality/target semantics and add multiplicity regressions.
+  - Rerun focused/full Maven, exact-image TeamEngine local OSH, API Common sabotage, runtime, hygiene, and credential gates as affected.
+  - Regenerate exact coverage and reconcile every Sprint 49 status/evidence document.
+  - Obtain a final Raze recheck with no unresolved required findings before commit/push closure.
+
+review_execution:
+  mode: read_only_except_report
+  production_files_modified: false
+  test_files_modified: false
+  spec_files_modified: false
+  ops_files_modified: false
+  report_written: .harness/evaluations/sprint-ets-49-adversarial-initial.yaml
+  expensive_gates_rerun: false
+  rationale: >-
+    Existing Maven, exact-image, TeamEngine, sabotage, hygiene, source, and
+    credential artifacts were sufficient to verify the claimed gates and expose
+    the defects. Rerunning would violate the requested write boundary and would
+    not address the identified code paths.
+  started_at: "2026-07-26T21:22:34Z"
+  completed_at: "2026-07-26T21:31:49Z"
+  duration_seconds: 555
+  token_metadata:
+    available: false
+    reason: Direct in-context Raze review did not provide separate agent token metadata.

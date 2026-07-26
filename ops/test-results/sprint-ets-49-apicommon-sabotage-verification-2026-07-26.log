@@ -1,0 +1,8 @@
+intentionalApiCommonFailure=PASS
+fetchDeploymentArguments=SKIP
+canonicalDeploymentsEndpointIsValid=SKIP
+deploymentCollectionsAreValid=SKIP
+deploymentResourcesEndpointIsValid=SKIP
+deploymentsReferencedFromSystemsAreValid=SKIP
+everyDeploymentHasCanonicalUrl=SKIP
+deploymentDependencyGate=PASS

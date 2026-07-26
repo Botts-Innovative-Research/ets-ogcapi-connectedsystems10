@@ -1,0 +1,11 @@
+[smoke-test 21:59:17] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 21:59:17] step 2/8 — docker build ets-ogcapi-connectedsystems10:sprint49-apicommon-final-sabotage (BuildKit 1)
+[smoke-test 21:59:45]   FINAL_IMAGE_ID=sha256:9bdbfe68c357a4ac0b5374efdc7bfa8e83dcd4fc623fccb5c57f5957608ef5a5
+[smoke-test 21:59:45] step 3/8 — docker run on host port 8081
+[smoke-test 21:59:46] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 22:03:29]   healthcheck PASS at 22:03:29
+[smoke-test 22:03:29] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 22:03:33]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'OGC API - Connected Systems 1.0 Conformance Test Suite')
+[smoke-test 22:03:33] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=http://field-hub-osh-1:8081/sensorhub/api
+[smoke-test 22:04:22] step 7/8 — validating TestNG report → /tmp/ets-ogcapi-connectedsystems10-sprint49-final-apicommon-sabotage-20260726T2200Z/s-ets-01-03-teamengine-smoke-2026-07-26.xml
+[smoke-test 22:04:22]   TestNG: total=217 passed=34 failed=1 skipped=182

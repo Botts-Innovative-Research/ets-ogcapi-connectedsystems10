@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 216,
+  "suiteTestMethodCount" : 217,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -297,45 +297,85 @@
     "classIdentifier" : "/conf/deployment",
     "target" : "/req/deployment/canonical-url",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentItemHasCanonicalLink()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentItemHasCanonicalLink()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#everyDeploymentHasCanonicalUrl()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentItemHasCanonicalLink()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/deployment/canonical-url",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#everyDeploymentHasCanonicalUrl()",
+      "reviewedBy" : "Codex Sprint 49 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method selects every advertised collection with exact featureType=sosa:Deployment, traverses each through the reviewed API Common collection-items procedure, and evaluates every returned item. It requires at least one canonical link and validates every canonical occurrence as the same-origin api_root/deployments/{encoded id} identity while allowing duplicate or representation-query variants; it dereferences the first occurrence deterministically with its advertised representation or source-page media type, requires HTTP 200, and compares complete parsed content after removing only top-level canonical links. Missing Deployment collections fail and unsupported selected collections SKIP instead of yielding partial positive evidence."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/deployment/resources-endpoint",
     "classIdentifier" : "/conf/deployment",
     "target" : "/req/deployment/resources-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentsCollectionReturns200()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentResourcesEndpointIsValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/deployment/resources-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentResourcesEndpointIsValid()",
+      "reviewedBy" : "Codex Sprint 49 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method invokes the endpoint-parameterized released resources procedure against /deployments, requires HTTP 200, gates every page by its actual GeoJSON or SensorML media type before parsing, traverses bounded same-origin pagination, and validates every page against the corresponding bundled released Deployment collection schema. HTTP 404 fails; unsupported actual media produces an explicit SKIP."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/deployment/canonical-endpoint",
     "classIdentifier" : "/conf/deployment",
     "target" : "/req/deployment/canonical-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentItemHasIdTypeLinks()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentItemHasIdTypeLinks()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#canonicalDeploymentsEndpointIsValid()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentItemHasIdTypeLinks()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/deployment/canonical-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#canonicalDeploymentsEndpointIsValid()",
+      "reviewedBy" : "Codex Sprint 49 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method supplies the fixed api_root/deployments URL to the same released endpoint-parameterized resources procedure. It independently retrieves, media-gates, paginates, and schema-validates the canonical endpoint rather than depending on another Deployment test method."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/deployment/collections",
     "classIdentifier" : "/conf/deployment",
     "target" : "/req/deployment/collections",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentCollectionsAreValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/deployment/collections",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentCollectionsAreValid()",
+      "reviewedBy" : "Codex Sprint 49 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method retrieves /collections, selects every exact featureType=sosa:Deployment entry, requires itemType=feature and a nonempty id, and traverses every selected items endpoint through the reviewed API Common helper with an additional actual-media gate on every page. Every supported GeoJSON or SensorML page is validated against the corresponding bundled released Deployment collection schema; no advertised Deployment collection fails and unsupported evidence SKIPs."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/deployment/ref-from-system",
     "classIdentifier" : "/conf/deployment",
     "target" : "/req/deployment/ref-from-system",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentsReferencedFromSystemsAreValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/deployment/ref-from-system",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentsReferencedFromSystemsAreValid()",
+      "reviewedBy" : "Codex Sprint 49 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method retrieves all canonical Systems through the reviewed API Common procedure, then requests and completely paginates systems/{encoded id}/deployments for every System. It gates each page by actual GeoJSON or SensorML media before parsing, validates the released Deployment collection schema, and requires every Deployment to contain the representation-specific owning-System reference: GeoJSON properties.deployedSystems@link or SensorML deployedSystems[].system.href. Matching is exact on same-origin canonical System path, preventing prefix, substring, cross-origin, and fragment false positives."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subdeployment/collection",
@@ -2301,17 +2341,17 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 15,
+    "exact" : 20,
     "helper" : 2,
-    "candidate" : 144,
-    "unmapped" : 79,
+    "candidate" : 141,
+    "unmapped" : 77,
     "byPart" : {
       "1" : {
         "total" : 110,
-        "exact" : 15,
+        "exact" : 20,
         "helper" : 2,
-        "candidate" : 43,
-        "unmapped" : 50
+        "candidate" : 40,
+        "unmapped" : 48
       },
       "2" : {
         "total" : 130,
@@ -2352,10 +2392,10 @@
       },
       "1:/conf/deployment" : {
         "total" : 5,
-        "exact" : 0,
+        "exact" : 5,
         "helper" : 0,
-        "candidate" : 3,
-        "unmapped" : 2
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "1:/conf/subdeployment" : {
         "total" : 5,

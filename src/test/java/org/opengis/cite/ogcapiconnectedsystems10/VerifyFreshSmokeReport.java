@@ -17,6 +17,8 @@ public class VerifyFreshSmokeReport {
 
 	private static final Path HELPER = Path.of("scripts/require-fresh-smoke-report.sh").toAbsolutePath();
 
+	private static final Path CREDENTIAL_GATE = Path.of("scripts/credential-leak-e2e-test.sh").toAbsolutePath();
+
 	/**
 	 * REQ-ETS-PART1-001; SCENARIO-ETS-PART1-001-DEPENDENCY-CASCADE-001.
 	 */
@@ -48,6 +50,21 @@ public class VerifyFreshSmokeReport {
 
 		assertEquals(result.output(), 0, result.exitCode());
 		assertEquals(fresh.toString(), result.output().trim());
+	}
+
+	/**
+	 * REQ-ETS-CLEANUP-011; SCENARIO-ETS-CLEANUP-CREDENTIAL-LEAK-THREE-FOLD-CLOSE-001.
+	 */
+	@Test
+	public void credentialGateUsesCurrentSmokeOutputAndFreshnessMarker() throws Exception {
+		String script = Files.readString(CREDENTIAL_GATE);
+
+		assertTrue(script.contains("SMOKE_RESULTS_DIR=\"${SMOKE_OUTPUT_DIR:-${REPO_ROOT}/ops/test-results}\""));
+		assertTrue(script.contains("SMOKE_MARKER=\"${ARCHIVE_DIR}/.smoke-run-started\""));
+		assertTrue(script.contains("bash scripts/require-fresh-smoke-report.sh"));
+		assertTrue(script.contains("\"$SMOKE_RESULTS_DIR\" \"$SMOKE_MARKER\""));
+		assertTrue(script.contains("-newer \"$SMOKE_MARKER\""));
+		assertTrue(!script.contains("ls -t ops/test-results/s-ets-01-03-teamengine-smoke-"));
 	}
 
 	private static CommandResult runHelper(Path directory, Path marker) throws IOException, InterruptedException {

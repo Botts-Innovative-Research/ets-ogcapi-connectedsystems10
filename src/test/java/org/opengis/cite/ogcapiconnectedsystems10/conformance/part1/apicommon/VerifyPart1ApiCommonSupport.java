@@ -13,12 +13,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.builder.ResponseBuilder;
 import io.restassured.response.Response;
 import org.junit.Test;
+import org.testng.SkipException;
 
 /**
  * Focused checks for REQ-ETS-PART1-001 and the released API Common helpers.
@@ -223,6 +225,46 @@ public class VerifyPart1ApiCommonSupport {
 						"""));
 
 		assertEquals("procedure-1", items.orElseThrow().get(0).get("id"));
+	}
+
+	/**
+	 * REQ-ETS-PART1-004; SCENARIO-ETS-PART1-004-RELEASED-MEDIA-GATE-001.
+	 */
+	@Test
+	public void restrictedCollectionItemsPreferSupportedAdvertisedMedia() {
+		URI root = URI.create("https://example.test/api/");
+		for (String supported : List.of("application/geo+json", "application/sml+json")) {
+			Map<String, Object> collection = Map.of("id", "deployments", "links", List
+				.of(Map.of("rel", "items", "type", "application/json"), Map.of("rel", "items", "type", supported)));
+			List<String> accepts = new ArrayList<>();
+			String body = "application/geo+json".equals(supported)
+					? "{\"type\":\"FeatureCollection\",\"features\":[{\"id\":\"deployment-1\"}],\"links\":[]}"
+					: "{\"items\":[{\"id\":\"deployment-1\"}],\"links\":[]}";
+
+			Optional<Part1ApiCommonSupport.TraversalResult> result = Part1ApiCommonSupport.collectionItemsDetailed(root,
+					collection, Set.of("application/geo+json", "application/sml+json"), (uri, accept, query) -> {
+						accepts.add(accept);
+						return json(200, supported, body);
+					});
+
+			assertEquals(List.of(supported), accepts);
+			assertEquals("deployment-1", result.orElseThrow().items().get(0).get("id"));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-004; SCENARIO-ETS-PART1-004-RELEASED-MEDIA-GATE-001.
+	 */
+	@Test
+	public void restrictedCollectionItemsStillGateActualMediaBeforeParsing() {
+		URI root = URI.create("https://example.test/api/");
+		Map<String, Object> collection = Map.of("id", "deployments", "links",
+				List.of(Map.of("rel", "items", "type", "application/geo+json")));
+
+		assertThrows(SkipException.class,
+				() -> Part1ApiCommonSupport.collectionItemsDetailed(root, collection,
+						Set.of("application/geo+json", "application/sml+json"),
+						(uri, accept, query) -> json(200, "application/json", "not JSON")));
 	}
 
 	/**

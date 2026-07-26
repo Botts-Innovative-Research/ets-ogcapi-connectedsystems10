@@ -1,0 +1,112 @@
+review:
+  id: sprint-ets-49-adversarial-recheck
+  role: Raze
+  sprint: ets-49
+  story: S-ETS-49-01
+  reviewed_at: "2026-07-26T22:25:29Z"
+  verdict: APPROVE
+  confidence: 0.99
+  duration_seconds: 46
+  unresolved_required_fix_remains: false
+  summary: >-
+    The focused documentation corrections close RAZE-S49-FINAL-001. Current
+    capability and traceability records identify Part 1 API Common as
+    Deployment's parent and preserve the direct Subdeployments-to-Deployments
+    edge. Sprint 8's SystemFeatures topology remains only as explicitly labeled
+    historical evidence. The operational Next Action and dirty-worktree
+    statement reflect the current review/publication state, while the story and
+    contract consistently remain REVIEW_PENDING_RAZE_RECHECK with the no-open-
+    Raze criterion incomplete. This recheck supplies the approval needed for
+    final closure reconciliation.
+
+reviewed_files:
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - _bmad/traceability.md
+  - ops/status.md
+  - epics/stories/s-ets-49-01-part1-deployment-closure.md
+  - .harness/contracts/sprint-ets-49.yaml
+  - .harness/evaluations/sprint-ets-49-adversarial-final.yaml
+
+recheck:
+  finding: RAZE-S49-FINAL-001
+  status: CLOSED
+  checks:
+    - id: current_topology
+      result: PASS
+      evidence:
+        - >-
+          spec.md:1972 states the current transitive chain as
+          Subdeployments to Deployments to Part 1 API Common to Core/Common.
+        - >-
+          spec.md:1973 explicitly labels
+          Subdeployments-to-Deployments-to-SystemFeatures-to-Core as the
+          historical Sprint 8 topology and repeats the current Sprint 49 chain.
+        - >-
+          _bmad/traceability.md:34 distinguishes the period-accurate Sprint 8
+          topology from the current Sprint 49 topology and states that the old
+          sabotage artifact is not current-parent evidence.
+
+    - id: historical_evidence_scope
+      result: PASS
+      evidence:
+        - >-
+          The reviewed spec and traceability text retain Sprint 8's original
+          SystemFeatures chain only with explicit historical and at-the-time
+          qualifiers.
+        - >-
+          No reviewed current-state statement presents SystemFeatures as
+          Deployment's current prerequisite.
+
+    - id: current_next_action
+      result: PASS
+      evidence:
+        - >-
+          ops/status.md:1446-1451 makes this focused Raze recheck and publication
+          the immediate action, followed by Sprint 50 /conf/procedure work.
+        - >-
+          The stale instruction to implement Sprint 49 no longer appears in the
+          terminal Next Action.
+
+    - id: current_worktree_statement
+      result: PASS
+      evidence:
+        - >-
+          ops/status.md:1453-1457 describes Sprint 49 implementation, tests,
+          specifications, reconciliation, and verification evidence in the
+          worktree and explicitly excludes OSH or TeamEngine source/binary
+          changes.
+        - >-
+          The stale specification-only worktree claim has been removed.
+
+    - id: pending_review_status
+      result: PASS
+      evidence:
+        - >-
+          epics/stories/s-ets-49-01-part1-deployment-closure.md:5 is
+          REVIEW_PENDING_RAZE_RECHECK; line 60 leaves the no-unresolved-Raze
+          criterion unchecked; lines 90-91 accurately describe the focused
+          recheck as pending.
+        - >-
+          .harness/contracts/sprint-ets-49.yaml:4 is
+          REVIEW_PENDING_RAZE_RECHECK, and line 62 records the prior
+          GAPS_FOUND verdict plus pending focused recheck.
+        - >-
+          The operational handoff summarizes completed implementation while its
+          terminal Next Action still withholds reviewed publication until this
+          recheck. That distinction is coherent with the formal pending status.
+
+required_findings: []
+
+scope_limits:
+  product_code_reviewed: false
+  product_code_modified: false
+  maven_rerun: false
+  e2e_rerun: false
+  rationale: >-
+    The user requested a documentation-only recheck. RAZE-S49-FINAL-001 required
+    no product-code or execution-gate changes.
+
+commands_reviewed:
+  - "Targeted numbered-line reads of the five corrected records"
+  - "Targeted git diff for the five corrected records"
+  - "Targeted current-topology, Next Action, worktree, and review-status scans"

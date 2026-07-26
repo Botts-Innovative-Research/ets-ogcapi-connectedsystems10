@@ -177,16 +177,40 @@ public final class Part1ApiCommonSupport {
 	 * advertised.
 	 */
 	public static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection) {
-		return collectionItemsDetailed(apiRoot, collection, Map.of(), Part1ApiCommonSupport::get);
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), Part1ApiCommonSupport::get, Set.of());
+	}
+
+	/**
+	 * Retrieves advertised collection items while gating every response page by its
+	 * actual media type before parsing.
+	 * @param apiRoot normalized API root.
+	 * @param collection advertised collection metadata.
+	 * @param supportedMediaTypes allowed actual response media types.
+	 * @return traversal evidence, or empty when no supported items media type is
+	 * advertised.
+	 */
+	public static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
+			Set<String> supportedMediaTypes) {
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), Part1ApiCommonSupport::get, supportedMediaTypes);
 	}
 
 	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
 			Requester requester) {
-		return collectionItemsDetailed(apiRoot, collection, Map.of(), requester);
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), requester, Set.of());
+	}
+
+	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
+			Set<String> supportedMediaTypes, Requester requester) {
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), requester, supportedMediaTypes);
 	}
 
 	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
 			Map<String, String> query, Requester requester) {
+		return collectionItemsDetailed(apiRoot, collection, query, requester, Set.of());
+	}
+
+	private static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
+			Map<String, String> query, Requester requester, Set<String> supportedMediaTypes) {
 		requireApiRoot(apiRoot);
 		if (collection == null) {
 			throw new IllegalArgumentException("collection must not be null");
@@ -196,7 +220,8 @@ public final class Part1ApiCommonSupport {
 			ETSAssert.failWithUri(CONF_COLLECTION_ITEMS, "advertised collection is missing a non-empty string id.");
 		}
 		String id = (String) idValue;
-		Optional<String> mediaType = supportedItemsMediaType(collection);
+		Set<String> mediaTypes = normalizedMediaTypes(supportedMediaTypes);
+		Optional<String> mediaType = supportedItemsMediaType(collection, mediaTypes);
 		if (mediaType.isEmpty()) {
 			Reporter.log(CONF_COLLECTION_ITEMS + " - collection " + id
 					+ " has no rel=items link with a JSON media type supported by this ETS; collection skipped.", true);
@@ -205,7 +230,7 @@ public final class Part1ApiCommonSupport {
 		String encodedId = URLEncoder.encode(id, StandardCharsets.UTF_8).replace("+", "%20");
 		URI endpoint = apiRoot.resolve("collections/" + encodedId + "/items");
 		return Optional.of(traverse(endpoint, mediaType.orElseThrow(), query == null ? Map.of() : query, requester,
-				null, CONF_COLLECTION_ITEMS, Set.of()));
+				null, CONF_COLLECTION_ITEMS, mediaTypes));
 	}
 
 	static Optional<String> resourceUid(Map<String, Object> resource) {
@@ -484,7 +509,8 @@ public final class Part1ApiCommonSupport {
 		return nextUris.stream().findFirst().orElse(null);
 	}
 
-	private static Optional<String> supportedItemsMediaType(Map<String, Object> collection) {
+	private static Optional<String> supportedItemsMediaType(Map<String, Object> collection,
+			Set<String> supportedMediaTypes) {
 		Object links = collection.get("links");
 		if (!(links instanceof List)) {
 			return Optional.empty();
@@ -502,8 +528,11 @@ public final class Part1ApiCommonSupport {
 				continue;
 			}
 			String normalized = ((String) type).split(";", 2)[0].trim().toLowerCase(Locale.ROOT);
-			if (SUPPORTED_JSON_TYPES.contains(normalized)
-					|| normalized.startsWith("application/") && normalized.endsWith("+json")) {
+			boolean acceptable = supportedMediaTypes.isEmpty()
+					? SUPPORTED_JSON_TYPES.contains(normalized)
+							|| normalized.startsWith("application/") && normalized.endsWith("+json")
+					: supportedMediaTypes.contains(normalized);
+			if (acceptable) {
 				return Optional.of(normalized);
 			}
 		}

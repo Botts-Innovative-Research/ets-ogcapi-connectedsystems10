@@ -439,12 +439,176 @@ DataStream, and ControlStream resources
 **AND** the fixture SHALL record the expected default, false, true, collection,
 and association exchanges.
 
-#### REQ-ETS-PART1-004: Deployments Conformance Class (Sprint 5 target)
+#### REQ-ETS-PART1-004: Deployment Direct ATS Procedures (Sprint 49)
 - **Priority**: MUST
-- **Status**: PARTIAL_UNREVIEWED_ATS (historical Sprint 5 increment complete; 0/5 released `/conf/deployment` tests have reviewed exact mappings)
-- **Description**: For each assertion in OGC 23-001 Annex A `/conf/deployment-features/`, the ETS SHALL provide at least one TestNG `@Test` method whose `description` attribute starts with the OGC canonical `.adoc` requirement URI form `/req/deployment/<assertion>`. The 5 sub-requirement `.adoc` files at `raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/deployment/` (HTTP-200-verified by Pat 2026-04-29): `req_resources_endpoint.adoc`, `req_canonical_url.adoc`, `req_canonical_endpoint.adoc`, `req_deployed_system_resource.adoc` (identifier: `/req/deployment/deployed-system-resource` — HYPHENATED), `req_collections.adoc`. The class lives at `org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests`. Deployments DEPENDS ON SystemFeatures via `<group name="deployments" depends-on="systemfeatures"/>`. Coverage scope at Sprint 5: Sprint-1-style minimal (4-5 @Tests): (a) GET /deployments 200 + non-empty items; (b) GET /deployments/{id} canonical shape; (c) rel=canonical link; (d) /req/deployment/deployed-system-resource — SKIP-with-reason if IUT doesn't declare DeployedSystem encoding conformance class. GeoRobotix serves 1 deployment (single-item shape is valid; non-empty check passes). Generator MUST re-verify at sprint time.
-- **Rationale**: Deployments is a SystemFeatures sibling (depends on SystemFeatures, not Core directly). With the two-level cascade proven at Sprint 4, Sprint 5 mechanically extends to Deployments using the identical pattern. GeoRobotix confirms the /deployments endpoint exists (1 item).
+- **Status**: IMPLEMENTED_RELEASED_ATS (Sprint 49 replaces the historical
+  four-method approximation with all 5 released `/conf/deployment` tests;
+  focused, full, exact-image runtime, local OSH TeamEngine, controlled HTTP,
+  API Common sabotage, credential freshness, and hygiene gates complete)
+- **Description**: The ETS SHALL implement exactly the five released OGC 23-001
+  Annex A `/conf/deployment` procedures: `/canonical-url`,
+  `/resources-endpoint`, `/canonical-endpoint`, `/collections`, and
+  `/ref-from-system`. Each procedure SHALL have one independently executable
+  TestNG method whose description cites its canonical target URI. The
+  historical non-empty canonical collection, generic item shape, canonical-link
+  presence, and encoding-declaration methods are superseded approximations and
+  SHALL NOT be reviewed as exact mappings.
+- **Collection completeness**: Canonical URL and collections procedures SHALL
+  process every collection advertised with `featureType=sosa:Deployment` and
+  require at least one such collection. Selected metadata SHALL use
+  `itemType=feature`. Missing selected collections SHALL fail rather than
+  produce vacuous PASS. An unsupported selected collection SHALL warn and SKIP
+  the procedure; one supported collection SHALL NOT conceal another
+  unsupported selected collection. When a selected collection advertises
+  multiple `rel=items` representations, a GeoJSON or SensorML representation
+  supported by the Deployment procedure SHALL be selected in preference to an
+  earlier generic JSON representation.
+- **Canonical equivalence**: Every selected collection item SHALL contain a
+  canonical link resolving on the IUT origin to
+  `{api_root}/deployments/{id}`. Multiple canonical relation occurrences and
+  representation variants MAY be present, but every occurrence SHALL resolve
+  to that canonical resource identity. A representation query MAY remain. The
+  first canonical occurrence in document order SHALL be dereferenced
+  deterministically. The canonical resource SHALL return HTTP 200 and equal the
+  collection item after canonical links are removed from both JSON documents.
+- **Endpoint validation**: The parameterized resources procedure SHALL require
+  HTTP 200 and validate every page against the released GeoJSON or SensorML
+  Deployment collection schema selected from actual response `Content-Type`.
+  The canonical endpoint procedure SHALL invoke the same behavior at
+  `{api_root}/deployments`. HTTP status and actual media SHALL be gated before
+  parsing every page. Unsupported or absent media SHALL warn and SKIP.
+- **System reference**: The procedure SHALL retrieve every canonical System
+  through the reviewed API Common helper. For every System local ID it SHALL
+  require HTTP 200 from `{api_root}/systems/{sysId}/deployments`, follow bounded
+  same-origin pagination, validate every page by actual media, and require every
+  returned Deployment to contain an explicit representation-specific link to
+  that System ID.
+- **Dependency and validator boundary**: Deployment SHALL inherit Part 1 API
+  Common directly. It SHALL NOT make all five procedures depend on completed
+  System ATS outcomes. The defensive setup gate SHALL inspect only Core, Common,
+  and Part 1 API Common configuration/test outcomes; unrelated or
+  SystemFeatures configuration outcomes SHALL NOT block Deployment. Deployment
+  schema dispatch remains behind an ETS-owned support boundary so a future
+  reusable SensorML validator can replace local SensorML schema semantics
+  without taking ownership of protocol discovery, TestNG verdict policy,
+  canonical comparison, pagination, or Connected Systems mappings.
+  `ets-sensorml30` SHALL NOT be imported as a library.
+- **Historical record**: Sprint 5's four-method approximation and advisory
+  GeoRobotix evidence remain archived in
+  `epics/stories/s-ets-05-06-deployments-conformance-class.md`; they do not
+  establish released ATS completion.
+- **Implementation evidence**: Coverage is
+  `240 total / 20 exact / 2 helper / 141 candidate / 77 unmapped`, with
+  `/conf/deployment` `5/5 exact`. Focused Maven passes `35/0/0/0` for the
+  adversarial corrections and `90/0/0/0` for the Deployment gate; full Maven
+  is `434/0/0/3`. Exact image
+  `sha256:9049b284529b53845403e985fae2b03a9598073724320de2ad2e395006506d47`
+  passes runtime and immutable-base verification. Unmodified local OSH
+  TeamEngine executes `217/39/3/175`; Deployment reports three genuine FAIL
+  and two unsupported-media SKIP outcomes. API Common sabotage reports
+  `217/34/1/182` and all five Deployment methods SKIP directly on the injected
+  API Common failure before Deployment IUT access. Credential freshness and
+  wire gates pass with zero unmasked artifact hits, 39 masked events, and 39
+  intact synthetic transmissions. Positive and sabotage hygiene record zero
+  IUT writes. Focused final Raze recheck closed the last reconciliation finding
+  with `APPROVE` at confidence `0.99` and no unresolved required findings.
 - **Maps to**: PRD FR-ETS-14.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-CANONICAL-URL-001 (CRITICAL)
+**GIVEN** every advertised `featureType=sosa:Deployment` collection
+**WHEN** its items are retrieved through the API Common helper
+**THEN** every item SHALL expose a canonical Deployment URL
+**AND** dereferencing it SHALL return HTTP 200 equivalent content.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-RESOURCES-ENDPOINT-001 (CRITICAL)
+**GIVEN** a Deployment resources endpoint parameter
+**WHEN** the released procedure executes
+**THEN** every page SHALL return HTTP 200
+**AND** actual GeoJSON or SensorML media SHALL select the corresponding released
+Deployment collection schema.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-CANONICAL-ENDPOINT-001 (CRITICAL)
+**GIVEN** the normalized API root
+**WHEN** the canonical-endpoint procedure executes
+**THEN** `{api_root}/deployments` SHALL satisfy the complete parameterized
+resources-endpoint procedure.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-COLLECTIONS-001 (CRITICAL)
+**GIVEN** advertised feature collections
+**WHEN** the collections procedure executes
+**THEN** at least one SHALL use `itemType=feature` and
+`featureType=sosa:Deployment`
+**AND** every selected collection page SHALL satisfy the released Deployment
+schema for its actual media type.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-REF-FROM-SYSTEM-001 (CRITICAL)
+**GIVEN** every canonical System local ID
+**WHEN** `{api_root}/systems/{sysId}/deployments` is traversed
+**THEN** every page SHALL return HTTP 200 and validate by actual media
+**AND** every returned Deployment SHALL explicitly reference `sysId`.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-MEDIA-GATE-001 (CRITICAL)
+**GIVEN** a first or later schema-controlled page has absent or unsupported
+actual media
+**WHEN** Deployment validation reaches that page
+**THEN** the ETS SHALL warn and SKIP before representation parsing.
+**AND** if collection metadata advertises generic JSON before a supported
+GeoJSON or SensorML representation, the supported representation SHALL be
+requested instead of producing a false SKIP.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-COLLECTION-COMPLETE-001 (CRITICAL)
+**GIVEN** zero or multiple selected Deployment collections
+**WHEN** canonical or collection validation executes
+**THEN** zero selected collections SHALL fail as missing required evidence
+**AND** every selected collection SHALL be processed without first-item,
+first-collection, or partial-supported PASS.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-CANONICAL-EQUIVALENCE-001 (CRITICAL)
+**GIVEN** canonical and collection representations of one Deployment
+**WHEN** canonical relation links are removed from both
+**THEN** the remaining JSON documents SHALL be structurally equal
+**AND** canonical path, origin, status, or content differences SHALL fail
+**AND** multiple canonical links that resolve to the same canonical Deployment
+identity SHALL be accepted regardless of representation media, using the first
+occurrence for deterministic dereference.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-SYSTEM-REFERENCE-001 (CRITICAL)
+**GIVEN** a nested Deployment represented as GeoJSON or SensorML
+**WHEN** its owning System ID is evaluated
+**THEN** only an explicit representation-specific System link to that exact
+local ID SHALL satisfy the procedure
+**AND** substring or unrelated-link matches SHALL fail.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** the five procedures have different inputs
+**WHEN** one procedure fails or lacks supported media
+**THEN** eager shared setup and method dependencies SHALL NOT suppress the
+other direct procedures.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-DEPENDENCY-CASCADE-001 (CRITICAL)
+**GIVEN** Part 1 API Common fails
+**WHEN** Deployment setup starts
+**THEN** all five direct methods SHALL SKIP before Deployment IUT access
+**AND** the skip reason SHALL identify the direct Core/Common/API Common
+prerequisite
+**AND** unrelated or SystemFeatures configuration outcomes SHALL NOT restore
+the historical all-method System ATS dependency.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** the unmodified local OSH advertises no Deployment feature collection,
+returns generic `application/json` from `/deployments`, and returns HTTP 400
+from `/systems/040g/deployments`
+**WHEN** TeamEngine executes `/conf/deployment`
+**THEN** all five methods SHALL execute with honest FAIL/SKIP outcomes
+**AND** no OSH or TeamEngine change SHALL mask those IUT defects.
+
+#### SCENARIO-ETS-PART1-004-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled read-only fixture with GeoJSON and SensorML Deployment
+collections, canonical resources, and System-scoped Deployment endpoints
+**WHEN** all five deployed procedures execute
+**THEN** every successful path SHALL complete
+**AND** missing collections, unsupported later pages, canonical differences,
+and wrong System references SHALL fail or SKIP as specified.
 
 #### REQ-ETS-PART1-006: Procedures Conformance Class (Sprint 5 target)
 - **Priority**: MUST
@@ -1806,8 +1970,8 @@ and association exchanges.
 - **Priority status correction**: original Pat planning narrative referenced `/conf/subdeployments` (plural) for the conformance class identifier. Generator curl-verified that GeoRobotix declares `/conf/subdeployment` (singular) per OGC 23-001 Annex A; OGC source repo also uses singular `/req/subdeployment/` directory naming with class identifier `/req/subdeployment` (singular) declared in `requirements_class_subdeployments.adoc`. Both forms appear in OGC sources at different abstraction layers (plural class file name; singular identifier path). The IUT and OGC source agree on the singular identifier; Generator implementation honors the singular form for all OGC URIs.
 - **OGC requirement structure** (Generator HTTP-200-verified 2026-04-30T20:24Z): 5 .adoc files at `raw.githubusercontent.com/.../requirements/subdeployment/` — `requirements_class_subdeployments.adoc` (declares `inherit:: /req/deployment` — Subdeployments inherit Deployment resource exposure and canonical URL discipline from /req/deployment), `req_subcollection.adoc` (path `/deployments/{parentId}/subdeployments`), `req_recursive_param.adoc`, `req_recursive_search_deployments.adoc`, `req_recursive_search_subdeployments.adoc`. NOTE: there is NO `/req/subdeployment/parent-deployment-link` — Subdeployments do NOT have the equivalent of Subsystems' parent-system-link uniqueness; the inheritance from /req/deployment is the architectural composition mechanism. The 4 @Tests therefore use `/req/subdeployment/collection` (collection presence) + `/req/deployment/canonical-endpoint` (inherited Deployment resource endpoint exposure at `/deployments/{id}`) + `/req/deployment/canonical-url` (inherited canonical URL at `/deployments/{id}`) + the `/req/subdeployment` class URI (3-deep cascade runtime tracer). Any `id`, `type`, and `links` checks are ETS structural sanity checks for the returned resource representation and are not attributed solely to `req_canonical_endpoint.adoc`.
 - **GeoRobotix IUT state at sprint time**: 1 deployment exists (`16sp744ch58g`); `/deployments/16sp744ch58g/subdeployments` returns HTTP 200 + empty `items` array. IUT declares `/conf/subdeployment` in `/conformance`. Future GeoRobotix release that populates the subdeployments collection automatically promotes 4 @Tests from SKIP to PASS without code changes — the @BeforeClass probe-loop scans up to 15 parent deployments looking for non-empty subdeployments and only SKIPs when no parent has non-empty children. Sprint 8 IUT-state-honest SKIP outcome is the contract-anticipated PASS-with-caveat per Pat planning (SUBDEPLOYMENTS-IUT-STATE-UNKNOWN risk MEDIUM mitigation).
-- **Description**: For `/conf/subdeployment`, the ETS SHALL provide at least one TestNG `@Test` method whose `description` attribute starts with the OGC canonical `.adoc` requirement URI form `/req/subdeployment/<assertion>`. Generator MUST verify canonical URI form via OGC `.adoc` source HTTP-200 fetch before writing assertions. Generator verified the OGC source directory at `raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/subdeployment/`; it contains `requirements_class_subdeployments.adoc`, `req_subcollection.adoc`, `req_recursive_param.adoc`, `req_recursive_search_deployments.adoc`, and `req_recursive_search_subdeployments.adoc`, with Subdeployments inheriting Deployment canonical endpoint and canonical URL discipline from `/req/deployment`. The class lives at `org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests`. Subdeployments DEPENDS ON Deployments via `<group name="subdeployments" depends-on="deployments"/>` — this creates the 3-deep cascade chain Subdeployments→Deployments→SystemFeatures→Core. Coverage scope Sprint 8: Sprint-1-style minimal (4 @Tests per pattern): (a) GET /deployments/{id}/subdeployments HTTP 200 + non-empty items; (b) inherited Deployment canonical endpoint exposure at `/deployments/{id}` plus ETS structural sanity checks on the returned resource; (c) inherited Deployment canonical URL at `/deployments/{id}`; (d) 3-deep cascade runtime tracer. If GeoRobotix does not declare `/conf/subdeployment` in conformance OR returns 404 for `/deployments/{id}/subdeployments`, all @Tests SKIP-with-reason (IUT-state-honest per sprint policy).
-- **Rationale**: Subdeployments completes the deepest dependency chain in Part 1. Deployments (S-ETS-05-06, Sprint 5 IMPLEMENTED) is the parent. Subdeployments→Deployments→SystemFeatures→Core is the same structural depth as the Subsystems→SystemFeatures→Core chain proven at Sprint 4, extended one level. Completing this chain proves the n-level cascade pattern scales to 3 levels.
+- **Description**: For `/conf/subdeployment`, the ETS SHALL provide at least one TestNG `@Test` method whose `description` attribute starts with the OGC canonical `.adoc` requirement URI form `/req/subdeployment/<assertion>`. Generator MUST verify canonical URI form via OGC `.adoc` source HTTP-200 fetch before writing assertions. Generator verified the OGC source directory at `raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/subdeployment/`; it contains `requirements_class_subdeployments.adoc`, `req_subcollection.adoc`, `req_recursive_param.adoc`, `req_recursive_search_deployments.adoc`, and `req_recursive_search_subdeployments.adoc`, with Subdeployments inheriting Deployment canonical endpoint and canonical URL discipline from `/req/deployment`. The class lives at `org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests`. Subdeployments DEPENDS ON Deployments via `<group name="subdeployments" depends-on="deployments"/>`; since Sprint 49, the current transitive chain is Subdeployments→Deployments→Part 1 API Common→Core/Common. Coverage scope Sprint 8: Sprint-1-style minimal (4 @Tests per pattern): (a) GET /deployments/{id}/subdeployments HTTP 200 + non-empty items; (b) inherited Deployment canonical endpoint exposure at `/deployments/{id}` plus ETS structural sanity checks on the returned resource; (c) inherited Deployment canonical URL at `/deployments/{id}`; (d) dependency-cascade runtime tracer. If GeoRobotix does not declare `/conf/subdeployment` in conformance OR returns 404 for `/deployments/{id}/subdeployments`, all @Tests SKIP-with-reason (IUT-state-honest per sprint policy).
+- **Rationale**: Subdeployments completes the deepest dependency chain in Part 1. Deployments remains its direct parent. Sprint 8 originally established Subdeployments→Deployments→SystemFeatures→Core as the first three-deep chain; that topology is historical evidence. Sprint 49 replaced Deployment's parent, so the current chain is Subdeployments→Deployments→Part 1 API Common→Core/Common. The historical and current chains both demonstrate transitive dependency behavior without making SystemFeatures a current Deployment prerequisite.
 - **Maps to**: PRD FR-ETS-15.
 
 > Sprint 39 adds cleanup/sync tooling that can continue while the remaining populated local OSH blockers are outside the ETS safety envelope.
@@ -3182,6 +3346,9 @@ descendant group SKIP
 **GIVEN** Sprint 6 lands the MaskingRequestLoggingFilter fix (S-ETS-06-01) AND the container-log capture timing fix (bundled)
 **WHEN** `scripts/credential-leak-e2e-test.sh` runs from `/tmp/<role>-fresh-sprint6/` with `SMOKE_OUTPUT_DIR=/tmp/<role>-fresh-sprint6/test-results/`
 **THEN** the script exits 0 with overall verdict PASS
+**AND** the TestNG XML and container log SHALL each be selected from
+`SMOKE_OUTPUT_DIR` only when produced after the current run's start marker;
+stale worktree or prior-run artifacts SHALL fail the gate
 **AND** prong (a): ZERO unmasked literal hits in TestNG XML + container log + smoke log (container log is now captured BEFORE teardown — not vacuously empty)
 **AND** prong (b): AT LEAST ONE masked-form `Bear***WXYZ` hit in container log (filter emits masked form during smoke)
 **AND** prong (c): AT LEAST ONE unmasked `Bearer ABCDEFGH12345678WXYZ` hit in stub-IUT log (wire carries original credential).

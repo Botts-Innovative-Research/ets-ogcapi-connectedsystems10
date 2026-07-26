@@ -50,15 +50,11 @@
        prerequisites. Each of the five released direct procedures independently
        retrieves its own hierarchy, media, or association evidence, so one
        procedure's no-data SKIP cannot suppress unrelated methods. -->
-  <!-- Sprint 5 S-ETS-05-05 (REQ-ETS-PART1-006) + S-ETS-05-06 (REQ-ETS-PART1-004):
-       Procedures and Deployments groups added; both depend on SystemFeatures via
-       the now-VERIFIED-LIVE TestNG 7.9.0 transitive cascade (ADR-010 v3 amendment
-       2026-04-29 — Sprint 4 Raze sabotage exec total=26/passed=16/failed=1/skipped=9
-       confirms two-level cascade fires end-to-end). Mechanical pattern extension of
-       Subsystems Sprint 4 baseline: same single-block consolidation, same
-       <group depends-on="systemfeatures"/> declaration, same @BeforeClass
-       SkipException fallback in each new class (defense-in-depth retained as
-       inert insurance per Sprint 4 live verification). -->
+  <!-- Sprint 49 S-ETS-49-01 (REQ-ETS-PART1-004): Deployments now implements
+       the five released procedures and depends directly on API Common. Procedures
+       retains its SystemFeatures dependency. Deployment setup filters prerequisite
+       results to Core, Common, and API Common so sibling configuration outcomes
+       cannot suppress its direct procedures. -->
   <!-- Sprint 7 S-ETS-07-02 (REQ-ETS-PART1-007) + S-ETS-07-03 (REQ-ETS-PART1-008):
        SamplingFeatures and PropertyDefinitions groups added; both depend on
        SystemFeatures via the same cascade pattern. Sprint 7 S-ETS-07-01 Wedge 1
@@ -67,19 +63,8 @@
        2026-04-30.xml retroactively VERIFIES the 3-class cascade (Subsystems +
        Procedures + Deployments) — adding SamplingFeatures + PropertyDefinitions
        extends the cascade to 5 sibling classes at the SystemFeatures level. -->
-  <!-- Sprint 8 S-ETS-08-02 (REQ-ETS-PART1-005): Subdeployments group added; FIRST
-       three-deep dependency chain in this ETS (Subdeployments to Deployments to
-       SystemFeatures to Core). Subdeployments depends-on="deployments" (NOT
-       "systemfeatures"); the cascade is transitive — when SystemFeatures is
-       sabotaged, Deployments cascade-SKIPs, and Subdeployments cascade-SKIPs
-       transitively via its dependency on Deployments. ADR-010 v4 amendment
-       (this sprint) records the 3-deep chain wiring. Sister cascade XML
-       ops/test-results/sprint-ets-08-cascade-2026-04-30.xml VERIFIES the
-       6-class cascade (5 SystemFeatures-level + 1 Deployments-transitive).
-       GeoRobotix IUT state at sprint time: 1 deployment (16sp744ch58g) with
-       empty subdeployments — IUT-state-honest SKIP applies for all 4 @Tests
-       (HTTP 200 + items: [] empty pattern, per Sprint 7 PropertyDefinitions
-       precedent). -->
+  <!-- Sprint 49 dependency chain: Subdeployments depends on Deployments, which
+       now depends directly on API Common/Core rather than SystemFeatures. -->
   <!-- Sprint 9 S-ETS-09-01 (REQ-ETS-PART1-012): GeoJSON group added as a PARTIAL
        systems read-only subset. GeoJSON depends-on="systemfeatures" because the subset
        validates /systems GeoJSON encoding and must cascade-SKIP if SystemFeatures fails.
@@ -191,7 +176,7 @@
         <group name="systemfeatures" depends-on="part1apicommon"/>
         <group name="subsystems" depends-on="systemfeatures"/>
         <group name="procedures" depends-on="systemfeatures"/>
-        <group name="deployments" depends-on="systemfeatures"/>
+      <group name="deployments" depends-on="part1apicommon"/>
         <group name="samplingfeatures" depends-on="systemfeatures"/>
         <group name="propertydefinitions" depends-on="systemfeatures"/>
         <group name="subdeployments" depends-on="deployments"/>

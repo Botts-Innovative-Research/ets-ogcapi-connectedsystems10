@@ -167,6 +167,51 @@
       "reviewedBy": "Codex Sprint 48 ATS line review",
       "reviewedOn": "2026-07-26",
       "evidence": "For every independently discovered parent with subsystems, the deployed TestNG method probes canonical top-level samplingFeatures, datastreams, and controlstreams endpoints as independent implementation evidence. Once a type returns HTTP 200 there, every parent and descendant nested endpoint must return HTTP 200; all-parent 404 cannot become an unsupported-type SKIP. The method unions descendant resource ids and requires each parent endpoint to contain that closure. Top-level-unsupported types and an entirely empty descendant evidence set produce explicit SKIPs rather than positive conformance."
+    },
+    {
+      "part": 1,
+      "test": "/conf/deployment/canonical-url",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#everyDeploymentHasCanonicalUrl()",
+      "reviewedBy": "Codex Sprint 49 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The independently executable deployed TestNG method selects every advertised collection with exact featureType=sosa:Deployment, traverses each through the reviewed API Common collection-items procedure, and evaluates every returned item. It requires at least one canonical link and validates every canonical occurrence as the same-origin api_root/deployments/{encoded id} identity while allowing duplicate or representation-query variants; it dereferences the first occurrence deterministically with its advertised representation or source-page media type, requires HTTP 200, and compares complete parsed content after removing only top-level canonical links. Missing Deployment collections fail and unsupported selected collections SKIP instead of yielding partial positive evidence."
+    },
+    {
+      "part": 1,
+      "test": "/conf/deployment/resources-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentResourcesEndpointIsValid()",
+      "reviewedBy": "Codex Sprint 49 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The independently executable deployed TestNG method invokes the endpoint-parameterized released resources procedure against /deployments, requires HTTP 200, gates every page by its actual GeoJSON or SensorML media type before parsing, traverses bounded same-origin pagination, and validates every page against the corresponding bundled released Deployment collection schema. HTTP 404 fails; unsupported actual media produces an explicit SKIP."
+    },
+    {
+      "part": 1,
+      "test": "/conf/deployment/canonical-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#canonicalDeploymentsEndpointIsValid()",
+      "reviewedBy": "Codex Sprint 49 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The independently executable deployed TestNG method supplies the fixed api_root/deployments URL to the same released endpoint-parameterized resources procedure. It independently retrieves, media-gates, paginates, and schema-validates the canonical endpoint rather than depending on another Deployment test method."
+    },
+    {
+      "part": 1,
+      "test": "/conf/deployment/collections",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentCollectionsAreValid()",
+      "reviewedBy": "Codex Sprint 49 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The independently executable deployed TestNG method retrieves /collections, selects every exact featureType=sosa:Deployment entry, requires itemType=feature and a nonempty id, and traverses every selected items endpoint through the reviewed API Common helper with an additional actual-media gate on every page. Every supported GeoJSON or SensorML page is validated against the corresponding bundled released Deployment collection schema; no advertised Deployment collection fails and unsupported evidence SKIPs."
+    },
+    {
+      "part": 1,
+      "test": "/conf/deployment/ref-from-system",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentsReferencedFromSystemsAreValid()",
+      "reviewedBy": "Codex Sprint 49 ATS line review",
+      "reviewedOn": "2026-07-26",
+      "evidence": "The independently executable deployed TestNG method retrieves all canonical Systems through the reviewed API Common procedure, then requests and completely paginates systems/{encoded id}/deployments for every System. It gates each page by actual GeoJSON or SensorML media before parsing, validates the released Deployment collection schema, and requires every Deployment to contain the representation-specific owning-System reference: GeoJSON properties.deployedSystems@link or SensorML deployedSystems[].system.href. Matching is exact on same-origin canonical System path, preventing prefix, substring, cross-origin, and fragment false positives."
     }
   ]
 }

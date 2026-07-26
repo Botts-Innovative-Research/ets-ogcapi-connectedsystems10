@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T20:14Z
+Last updated: 2026-07-26T22:26Z
 
 ## Fresh-Session Entry Point
 
@@ -56,6 +56,53 @@ Read these first:
 - `.harness/evaluations/sprint-ets-48-adversarial-initial.yaml`
 - `.harness/evaluations/sprint-ets-48-adversarial-final-gapfix.yaml`
 - `ops/test-results/sprint-ets-48-part1-subsystem-verification-2026-07-26.md`
+- `openspec/change-proposals/CP-009-part1-deployment-closure.md`
+- `epics/stories/s-ets-49-01-part1-deployment-closure.md`
+- `.harness/contracts/sprint-ets-49.yaml`
+- `.harness/evaluations/sprint-ets-49-adversarial-recheck.yaml`
+- `ops/test-results/sprint-ets-49-local-osh-baseline-2026-07-26.md`
+
+## Session Handoff - Part 1 Deployment Direct ATS
+
+S-ETS-49-01 is complete under CP-009.
+
+- Coverage is `240 total / 20 exact / 2 helper / 141 candidate / 77 unmapped`;
+  `/conf/deployment` is `5/5 exact`.
+- The historical four-method eager approximation is replaced by the five
+  released canonical URL, resources endpoint, canonical endpoint, collections,
+  and System-reference procedures.
+- Restricted collection retrieval selects advertised GeoJSON/SensorML ahead of
+  generic JSON. Every canonical occurrence must resolve to the same Deployment
+  identity; duplicates and representation-query variants remain valid.
+- Deployment depends directly on API Common. Its setup filters configuration
+  blockers to Core, Common, and API Common rather than SystemFeatures or
+  sibling groups.
+- Remediation tests pass `35/0/0/0`; the broader Deployment gate passes
+  `90/0/0/0`; full Docker Maven passes `434/0/0/3`.
+- Exact image
+  `sha256:9049b284529b53845403e985fae2b03a9598073724320de2ad2e395006506d47`
+  passes TeamEngine runtime, deployed SWE Common adapter, collision,
+  immutable-base, and confidential-context verification.
+- Primary unmodified local OSH TeamEngine is `217/39/3/175`. Deployment reports
+  three genuine FAIL and two unsupported-media SKIP outcomes: missing
+  `sosa:Deployment` collection, generic `/deployments` media, and nested System
+  HTTP 400 remain visible.
+- Positive hygiene passes across 117 recognized requests and 112 IUT GETs with
+  zero writes or credential leaks. Controlled HTTP tests execute all five
+  successful procedure paths.
+- API Common sabotage is `217/34/1/182`; all five Deployment methods skip
+  directly on `resourceIdsAreUniqueWithinEachType` before Deployment IUT
+  access. Sabotage hygiene is 100 recognized requests, 95 IUT GETs, zero writes.
+- Credential integration and corrected wire E2E pass. Current-run freshness is
+  hash-verified; execution artifacts have zero unmasked hits, 39 masked events,
+  and the stub receives 39 intact synthetic transmissions.
+- Local OSH is clean at `4c87a65`, zero commits ahead, mounted read-only, and
+  its deployed ConSys manifest is build `4c87a65`. No OSH or TeamEngine source
+  or binary was modified. Hosted CI remains outside scope.
+- Focused final Raze recheck is `APPROVE` at confidence `0.99`;
+  `RAZE-S49-FINAL-001` is closed and no required findings remain.
+- Durable summary:
+  `ops/test-results/sprint-ets-49-part1-deployment-verification-2026-07-26.md`.
 
 ## Session Handoff - Part 1 Subsystem Direct ATS
 
@@ -1401,11 +1448,11 @@ Gate Results:
 
 ## Next Action
 
-1. Publish the completed Sprint 48 increment.
-2. Start Sprint 49 for the five released `/conf/deployment` procedures,
-   preserving the unmodified local OSH's observed conformance result.
+1. Start Sprint 50 with the next released Part 1 gap, `/conf/procedure`, using
+   the same spec-first, exact-mapping, local-OSH, and immutable-runtime gates.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree contains the completed Sprint 48 increment pending
-commit and push.
+The Sprint 49 closure contains implementation, tests,
+specification/reconciliation records, and generated verification evidence. It
+contains no OSH or TeamEngine source or binary changes.

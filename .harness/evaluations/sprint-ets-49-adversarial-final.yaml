@@ -1,0 +1,334 @@
+review:
+  id: sprint-ets-49-adversarial-final
+  role: Raze
+  sprint: ets-49
+  story: S-ETS-49-01
+  reviewed_at: "2026-07-26T22:20:11Z"
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  unresolved_required_fix_remains: true
+  summary: >-
+    The restricted-media, prerequisite-isolation, canonical-link, and
+    current-run credential-provenance corrections are implemented, directly
+    tested, and supported by credible Maven, TeamEngine, sabotage, runtime,
+    hygiene, and external-immutability evidence. The initial reconciliation
+    finding remains open: current capability, traceability, operational-status,
+    story, and contract records still contradict the deployed Sprint 49
+    dependency and review state. Sprint 49 must not be recorded as finally
+    closed until those records are reconciled and this required finding is
+    rechecked.
+
+reviewed_scope:
+  role_contract:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+    - .harness/prompts/adversarial.md
+    - .harness/evaluations/sprint-ets-49-adversarial-initial.yaml
+  specification_and_planning:
+    - openspec/change-proposals/CP-009-part1-deployment-closure.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - epics/stories/s-ets-49-01-part1-deployment-closure.md
+    - .harness/contracts/sprint-ets-49.yaml
+    - _bmad/architecture.md
+    - _bmad/traceability.md
+    - epics/epic-ets-02-part1-classes.md
+  implementation:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/DeploymentsTests.java
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/DeploymentFeaturesSupport.java
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part1/apicommon/Part1ApiCommonSupport.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - scripts/credential-leak-e2e-test.sh
+    - scripts/require-fresh-smoke-report.sh
+  tests_and_mapping:
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/VerifyDeploymentsSuite.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/VerifyDeploymentFeaturesSupport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/VerifyDeploymentsHttpProcedures.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part1/apicommon/VerifyPart1ApiCommonSupport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyFreshSmokeReport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+    - ops/ats-coverage-report.json
+  execution_evidence:
+    - ops/test-results/sprint-ets-49-full-maven-final-2026-07-26.log
+    - ops/test-results/sprint-ets-49-local-osh-teamengine-final-2026-07-26.xml
+    - ops/test-results/sprint-ets-49-local-osh-teamengine-container-final-2026-07-26.log
+    - ops/test-results/sprint-ets-49-local-osh-smoke-final-2026-07-26.log
+    - ops/test-results/sprint-ets-49-teamengine6-runtime-final-2026-07-26.log
+    - ops/test-results/sprint-ets-49-apicommon-sabotage-teamengine-final-2026-07-26.xml
+    - ops/test-results/sprint-ets-49-apicommon-sabotage-verification-2026-07-26.log
+    - ops/test-results/sprint-ets-49-positive-hygiene-final-2026-07-26.json
+    - ops/test-results/sprint-ets-49-apicommon-sabotage-hygiene-final-2026-07-26.json
+    - ops/test-results/sprint-ets-49-credential-integration-final-2026-07-26.log
+    - ops/test-results/sprint-ets-49-credential-e2e-2026-07-26.txt
+    - ops/test-results/sprint-ets-49-part1-deployment-verification-2026-07-26.md
+
+initial_finding_closure:
+  - id: RAZE-S49-001
+    title: Restricted media selection
+    status: CLOSED
+    evidence:
+      - >-
+        Part1ApiCommonSupport.java:223-224 normalizes the allowed media set
+        before selecting an advertised items representation.
+      - >-
+        Part1ApiCommonSupport.java:512-539 returns the first advertised media
+        type in the restricted intersection while preserving unrestricted JSON
+        selection when the allowed set is empty.
+      - >-
+        VerifyPart1ApiCommonSupport.java:230-267 covers generic JSON followed
+        by both GeoJSON and SensorML, verifies the selected Accept value, and
+        proves actual response media is gated before parsing.
+      - "Independent current-worktree focused Maven included these tests and passed."
+
+  - id: RAZE-S49-002
+    title: Configuration blocker scope
+    status: CLOSED
+    evidence:
+      - >-
+        DeploymentsTests.java:237-298 filters failed and skipped configuration
+        and test results through isInheritedPrerequisite, which accepts only
+        Core, Common, and Part 1 API Common groups/classes.
+      - >-
+        VerifyDeploymentsSuite.java:75-93 proves a SystemFeatures configuration
+        does not block Deployment and an API Common configuration does.
+      - >-
+        sprint-ets-49-apicommon-sabotage-teamengine-final-2026-07-26.xml:
+        2168-2224 records setup and all five Deployment methods as SKIP because
+        resourceIdsAreUniqueWithinEachType failed, not because
+        fetchSystemArguments skipped.
+      - >-
+        The sabotage totals are 217 total / 34 passed / 1 intentional failure /
+        182 skipped; hygiene reports 95 IUT GETs and zero writes.
+
+  - id: RAZE-S49-003
+    title: Canonical-link multiplicity and identity
+    status: CLOSED
+    evidence:
+      - >-
+        DeploymentFeaturesSupport.java:91-129 preserves occurrence order,
+        validates every canonical occurrence against the same-origin canonical
+        Deployment path, allows representation-query and duplicate variants,
+        and dereferences the first occurrence deterministically.
+      - >-
+        VerifyDeploymentFeaturesSupport.java:66-91 covers two media/query
+        variants, an identical duplicate, deterministic first selection, and a
+        conflicting Deployment path failure.
+      - >-
+        spec.md:466-473, CP-009:49-55, and reviewed-ats-mappings.json:173-178
+        agree on the released-compatible at-least-one and same-identity rule.
+
+  - id: RAZE-S49-004
+    title: Stale records and comments
+    status: OPEN
+    partially_closed_evidence:
+      - >-
+        testng.xml:53-67 describes Deployment as a direct API Common dependent
+        and the current Subdeployment chain without presenting SystemFeatures
+        as Deployment's current parent.
+      - >-
+        VerifyTestNGSuiteDependency.java:75-82 and 93-100 now distinguish the
+        current Deployment/API Common path from SamplingFeatures and historical
+        Subdeployment evidence.
+      - >-
+        epics/epic-ets-02-part1-classes.md:33 records the current
+        Subdeployments-to-Deployments-to-API Common/Core path, and line 50
+        records Sprint 49 at 5/5 exact.
+      - >-
+        Current Sprint 49 spec, mapping, coverage, traceability row, status
+        header, changelog, and test-results sections report 5/5 exact and the
+        honest local OSH failures.
+    unresolved_evidence:
+      - >-
+        openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1972-1973 is
+        active capability text that still says the current Subdeployment chain
+        is Subdeployments to Deployments to SystemFeatures to Core.
+      - >-
+        _bmad/traceability.md:34 repeats that superseded chain without
+        distinguishing the historical Sprint 8 topology from the current
+        Sprint 49 topology.
+      - >-
+        ops/status.md:1446-1454 ends with an active-looking Next Action to
+        implement Sprint 49 and says the dirty worktree contains specification
+        artifacts only, contradicting the completed handoff at lines 64-102
+        and the actual implementation/evidence worktree.
+      - >-
+        epics/stories/s-ets-49-01-part1-deployment-closure.md:5 and 60 mark the
+        story COMPLETE and final-Raze criterion complete while lines 90-91 say
+        final Raze is pending. .harness/contracts/sprint-ets-49.yaml:4 and 46
+        similarly mark COMPLETE and require no open Raze fixes while line 62
+        still says final review is pending.
+    required_fix: >-
+      Reconcile the active REQ-ETS-PART1-005 dependency description and
+      traceability row to the current API Common parent while retaining clearly
+      labeled historical Sprint 8 evidence. Replace the stale ops/status.md
+      terminal Next Action and dirty-worktree note. Because this review found an
+      unresolved required fix, return the story and contract to an active or
+      review-pending state and leave the no-open-Raze criterion incomplete until
+      a focused recheck approves the corrected records.
+
+credential_current_run_artifact_provenance:
+  status: CLOSED
+  evidence:
+    - >-
+      credential-leak-e2e-test.sh:62-64 defines SMOKE_RESULTS_DIR and a per-run
+      marker; lines 121-160 creates the marker before smoke and requires exactly
+      one newer container log and TestNG report from that output directory.
+    - >-
+      require-fresh-smoke-report.sh:18-27 fails unless exactly one matching XML
+      is newer than the marker.
+    - >-
+      VerifyFreshSmokeReport.java:58-68 structurally guards current output,
+      marker, newer-than, and removal of the stale worktree ls selection.
+    - >-
+      Independent raw-artifact inspection found exactly one fresh XML and one
+      fresh container log. The source and archived XML both had SHA-256
+      dec038cc79dbedde494ef2a5b878b28a83c2ab81956eafb976eb26ef4b8a0da1.
+    - >-
+      The safe summary honestly records 217 total / 2 passed / 10 failed / 205
+      skipped for the synthetic-401 run, zero unmasked execution-artifact hits,
+      39 masked events, and 39 intact synthetic wire transmissions.
+
+findings:
+  - id: RAZE-S49-FINAL-001
+    severity: MEDIUM
+    disposition: REQUIRED_FIX
+    category: reconciliation_and_false_closure
+    title: Current records still describe the superseded dependency and an unfinished-yet-complete Sprint 49
+    file_references:
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1972
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1973
+      - _bmad/traceability.md:34
+      - ops/status.md:1446
+      - ops/status.md:1454
+      - epics/stories/s-ets-49-01-part1-deployment-closure.md:5
+      - epics/stories/s-ets-49-01-part1-deployment-closure.md:60
+      - epics/stories/s-ets-49-01-part1-deployment-closure.md:90
+      - .harness/contracts/sprint-ets-49.yaml:4
+      - .harness/contracts/sprint-ets-49.yaml:46
+      - .harness/contracts/sprint-ets-49.yaml:62
+    impact: >-
+      A fresh maintainer can follow the wrong Subdeployment prerequisite chain,
+      restart already completed Sprint 49 implementation, or treat a pending
+      adversarial gate as complete. This violates the project's spec-anchored
+      reconciliation rule even though the corrected executable behavior is
+      sound.
+    required_fix: >-
+      Apply the reconciliation described under RAZE-S49-004, then run a focused
+      documentation recheck. No product-code or E2E rerun is required if only
+      those records change.
+
+concerns:
+  - id: RAZE-S49-C01
+    severity: LOW
+    title: Positive fixture depth remains narrower than the traversal implementation
+    detail: >-
+      Controlled HTTP coverage executes all five positive methods and several
+      fail-closed cases, but does not establish a fully successful second page
+      containing multiple valid Deployment items and multiple Systems. Code
+      inspection shows complete loops, so this remains test-depth risk rather
+      than a required defect.
+  - id: RAZE-S49-C02
+    severity: LOW
+    title: The resources procedure is deployed through its canonical endpoint instance
+    detail: >-
+      The private endpoint-parameterized implementation is exercised at
+      api_root/deployments by both resources and canonical methods. This matches
+      the established project pattern, but mapping language should continue to
+      identify the canonical instantiation rather than imply external endpoint
+      injection.
+  - id: RAZE-S49-C03
+    severity: LOW
+    title: Released Annex has an apparent SensorML media-variable typo
+    detail: >-
+      The released ref-from-system procedure uses an undefined SensorML media
+      variable while adjacent text defines application/sml+json. The
+      implementation's application/sml+json interpretation remains reasonable
+      and should stay documented as a source inference.
+
+verified_evidence:
+  current_worktree:
+    - >-
+      Repository wrapper focused gate passed 139 total / 0 failures / 0 errors /
+      0 skipped across Deployment support/suite/HTTP, API Common support,
+      TestNG dependency, fresh-report, and released ATS coverage tests.
+    - >-
+      An earlier ad hoc single-module Maven invocation failed dependency
+      resolution because it omitted the repository's SWE Common bootstrap. This
+      was an invalid invocation, not a product-test failure; the mandated
+      wrapper then built pinned validator commit
+      3ba75ceabe57cea85f4a8513c59e0f90e386ba96 and passed.
+    - >-
+      Archived full Maven is 434 total / 0 failures / 0 errors / 3 skipped with
+      BUILD SUCCESS. The three skips are retained honestly and are not reported
+      as passes.
+    - >-
+      git diff --check passed; current mapping and coverage JSON and sprint
+      contract/initial-review YAML parse successfully.
+  source_and_mapping:
+    - >-
+      Released-source reproduction and ATS audit self-test pass at pinned
+      OGC 23-001 commit 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2.
+    - >-
+      Coverage is 240 total / 20 exact / 2 helper / 141 candidate / 77 unmapped;
+      /conf/deployment is 5/5 exact.
+    - >-
+      DeploymentsTests contains exactly five TestNG test annotations, one for
+      each released Deployment procedure.
+  local_osh_e2e:
+    - >-
+      Exact candidate image
+      sha256:9049b284529b53845403e985fae2b03a9598073724320de2ad2e395006506d47
+      is present locally and matches the recorded final smoke image.
+    - >-
+      Primary unmodified local OSH TeamEngine reports 217 total / 39 passed / 3
+      failed / 175 skipped. Deployment is 0 PASS / 3 FAIL / 2 SKIP: missing
+      sosa:Deployment collection and nested HTTP 400 remain failures, while
+      application/json endpoint representations remain unsupported-media skips.
+    - >-
+      Positive hygiene reports 117 recognized requests, 112 IUT GETs, zero IUT
+      writes, and zero credential leaks. These IUT failures are not presented as
+      a passing conformance gate.
+  external_immutability:
+    - >-
+      /home/nh/docker/osh-core is clean at
+      4c87a65c9a967d52af9df476e65d7862c7673a15 and zero commits ahead.
+    - >-
+      field-hub-osh-1 mounts that checkout at /opt/osh with RW=false; its
+      separate /state mount is writable.
+    - >-
+      The deployed ConSys bundle reports Bundle-BuildNumber 4c87a65. No
+      TeamEngine source checkout was found under /home/nh/docker.
+    - >-
+      Exact-image runtime evidence passes TeamEngine 6 provenance, SWE Common
+      adapter execution, dependency/collision controls, and immutable base-file
+      checks. No OSH or TeamEngine source or binary modification was found.
+
+commands_and_evidence_reviewed:
+  commands:
+    - "date -u +%Y-%m-%dT%H:%M:%SZ"
+    - "git status --short; git diff --stat; git diff --name-only"
+    - "git diff --check"
+    - "bash scripts/mvn-test-via-docker.sh -Dtest=VerifyDeploymentsSuite,VerifyDeploymentFeaturesSupport,VerifyDeploymentsHttpProcedures,VerifyPart1ApiCommonSupport,VerifyFreshSmokeReport,VerifyTestNGSuiteDependency,VerifyReleasedAtsCoverage"
+    - "Python XML inspection of final local OSH and API Common sabotage reports"
+    - "Python JSON/YAML parsing of coverage, mappings, contract, and initial review"
+    - "Fresh marker/file-count and SHA-256 comparison for credential raw artifacts"
+    - "git -C /home/nh/docker/osh-core status --short; rev-parse HEAD; rev-list --count @{upstream}..HEAD"
+    - "docker inspect field-hub-osh-1 mount inspection"
+    - "ConSys bundle manifest inspection"
+    - "docker image inspect ets-ogcapi-connectedsystems10:sprint49-final"
+  expensive_reruns_not_repeated:
+    - >-
+      TeamEngine local OSH, sabotage, credential-wire, and exact-image runtime
+      executions were not repeated because current complete artifacts, raw
+      provenance, immutable image identity, and independent focused tests were
+      sufficient to verify or falsify the reviewed claims.
+
+required_fixes:
+  - RAZE-S49-FINAL-001
+
+review_metrics:
+  duration_seconds: 340
+  token_metadata:
+    status: unavailable
+    detail: "No agent-result token metadata was exposed to this review context."

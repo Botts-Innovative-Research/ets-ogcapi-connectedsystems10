@@ -1,6 +1,6 @@
 # ADR-011 — OGC-Published TeamEngine 6 Runtime Image
 
-- **Status**: Provisionally accepted decision for Sprint 41; implementation and selected digest acceptance pending verification
+- **Status**: Accepted and implemented in Sprint 41; final Raze approved
 - **Date**: 2026-07-20
 - **Decider**: Architect (Codex, acting under user instruction)
 - **Supersedes**: ADR-007's manual TeamEngine 5.6.1 runtime decision and ADR-009's Tomcat 8.5 runtime stage

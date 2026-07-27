@@ -8,7 +8,8 @@
 - Build: Maven
 - Test framework: TestNG plus JUnit-based structural tests
 - HTTP client: REST Assured
-- Runtime verification: Dockerized TeamEngine smoke against GeoRobotix by default
+- Runtime verification: Dockerized TeamEngine smoke against unmodified local
+  OSH by default; GeoRobotix is advisory only
 
 ## Layout
 
@@ -43,7 +44,10 @@ docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/workspace -w /workspace \
 
 bash scripts/mvn-test-via-docker.sh
 
-SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results bash scripts/smoke-test.sh
+SMOKE_DOCKER_NETWORK=field-hub_default \
+  SMOKE_IUT_URL=http://field-hub-osh-1:8081/sensorhub/api \
+  SMOKE_OUTPUT_DIR=/tmp/ets-ogcapi-connectedsystems10-smoke-results \
+  bash scripts/smoke-test.sh
 ```
 
 For gate runs, use a fresh `/tmp` clone and place smoke artifacts outside the worktree.

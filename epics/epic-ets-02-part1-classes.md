@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 51 Subdeployment released ATS replacement complete and Raze-approved | Last updated: 2026-07-27
+> Status: Active - Sprint 52 Sampling Features released ATS replacement complete and Raze-approved | Last updated: 2026-07-27
 
 ## Goal
 Implement the 13 released OGC 23-001 conformance classes and all 110 Annex A
@@ -29,6 +29,7 @@ capability.
 | S-ETS-05-05 | (Sprint 5) Implement CS API Procedures (`/conf/procedure-features`) conformance class — geometry=null invariant unique assertion | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-006 |
 | S-ETS-05-06 | (Sprint 5) Implement CS API Deployments (`/conf/deployment-features`) conformance class — deployed-system-resource SKIP-with-reason | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-004 |
 | S-ETS-07-02 | (Sprint 7 historical) Implement `/conf/sf` (Sampling Features) suite — depends on SystemFeatures; GeoRobotix /samplingFeatures HTTP 200 confirmed | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-007 |
+| S-ETS-52-01 | Replace Sampling Features approximations with all five released `/conf/sf` procedures | Complete; 5/5 exact, both findings closed, Raze APPROVE 0.99 | REQ-ETS-PART1-007 |
 | S-ETS-07-03 | (Sprint 7 historical) Implement `/conf/property` (Property Definitions) suite — depends on SystemFeatures; GeoRobotix /properties HTTP 200 confirmed | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-008 |
 | S-ETS-08-02 | Implement `/conf/subdeployment` suite — historical first 3-deep chain; current path is Subdeployments→Deployments→API Common/Core | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-005 |
 | S-ETS-11-01 | Implement `/conf/advanced-filtering` suite - declaration-gated systems/common-resource read-only subset | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-009 |

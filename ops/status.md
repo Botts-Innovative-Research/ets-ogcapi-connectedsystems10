@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-27T02:47Z
+Last updated: 2026-07-27T10:11Z
 
 ## Fresh-Session Entry Point
 
@@ -72,6 +72,58 @@ Read these first:
 - `.harness/evaluations/sprint-ets-51-adversarial-final.yaml`
 - `ops/test-results/sprint-ets-51-local-osh-baseline-2026-07-26.md`
 - `ops/test-results/sprint-ets-51-part1-subdeployment-verification-2026-07-27.md`
+- `openspec/change-proposals/CP-012-part1-sampling-features-closure.md`
+- `epics/stories/s-ets-52-01-part1-sampling-features-closure.md`
+- `.harness/contracts/sprint-ets-52.yaml`
+- `.harness/evaluations/sprint-ets-52-adversarial-final.yaml`
+- `.harness/evaluations/sprint-ets-52-adversarial-recheck.yaml`
+- `ops/test-results/sprint-ets-52-part1-sampling-features-verification-2026-07-27.md`
+
+## Session Handoff - Part 1 Sampling Features Direct ATS
+
+S-ETS-52-01 is complete under CP-012. Focused Raze recheck returned `APPROVE`
+at confidence `0.99`; both initial findings are closed, with no new findings
+and no required fixes.
+
+- Coverage is `240 total / 35 exact / 2 helper / 133 candidate / 70 unmapped`;
+  `/conf/sf` is `5/5 exact`.
+- Exactly five independent methods implement canonical URL, resources endpoint,
+  canonical endpoint, collections, and reference-from-System procedures.
+- The ETS owns only a GeoJSON Sampling Feature schema boundary because released
+  OGC 23-001 defines no SensorML Sampling Feature representation.
+- Every endpoint is status/media gated and bounded by same-origin pagination.
+  Every exact `sosa:Sample` collection and inspectable item is processed.
+- Canonical identity requires exact same-origin
+  `/samplingFeatures/{encodedId}` and equivalent JSON after removing only
+  canonical links.
+- A narrow method-specific, reason-shape allowlist lets independent Sampling Features
+  procedures execute despite documented inherited no-evidence SKIPs; failures,
+  configuration failures, and unexpected SKIPs still block before IUT access.
+- Test-first evidence includes the initial compile failure, a `6/1/0/0`
+  prerequisite execution defect, and a `1/1/0/0` partial-collection false PASS.
+  Both defects are corrected.
+- Initial Raze reported `GAPS_FOUND` at confidence `0.98`: nested System
+  GeoJSON pages lacked conditional schema validation, and early expected media
+  SKIPs could hide later defects.
+- Page-observer traversal now validates each supported page before pagination
+  advances. Expected media limitations aggregate only at narrow
+  collection/item/System boundaries; later inspectable defects remain FAIL.
+- Raze gap-fix regressions first failed `13/5/0/0` and `16/3/0/0`.
+  Final focused Maven is `49/0/0/0`; full Docker Maven is `506/0/0/3`.
+- Exact image `sha256:ae3a7b6b...580ff3` passes TeamEngine provenance,
+  immutable-base, dependency, deployed-validator, and context-hygiene gates.
+- Primary unmodified local OSH TeamEngine is honestly `220/40/6/174`. All five
+  Sampling Features procedures execute: one PASS, one genuine IUT FAIL, and
+  three evidence SKIPs.
+- System sabotage makes all five Sampling Features methods SKIP. Primary
+  hygiene records 117 recognized requests, zero writes, and zero credential
+  leaks.
+- Credential integration and wire E2E pass with zero unmasked artifact hits,
+  36 masked events, and 36 intact synthetic transmissions.
+- OSH remains clean at `4c87a65`, zero commits ahead, with `/opt/osh`
+  read-only. No OSH or TeamEngine source or binary was modified.
+- Next action: publish Sprint 52, then start the released Part 1 Property
+  Definitions `/conf/property` replacement.
 
 ## Session Handoff - Part 1 Subdeployment Direct ATS
 

@@ -268,6 +268,28 @@ public class VerifyPart1ApiCommonSupport {
 	}
 
 	/**
+	 * REQ-ETS-PART1-007; SCENARIO-ETS-PART1-007-RELEASED-COLLECTION-COMPLETE-001.
+	 */
+	@Test
+	public void restrictedTraversalObservesSupportedPagesBeforeALaterMediaSkip() {
+		URI root = URI.create("https://example.test/api/");
+		URI first = root.resolve("collections/samples/items");
+		URI second = root.resolve("collections/samples/items?page=2");
+		Map<String, Object> collection = Map.of("id", "samples", "links",
+				List.of(Map.of("rel", "items", "type", "application/geo+json")));
+		List<URI> observed = new ArrayList<>();
+
+		assertThrows(SkipException.class, () -> Part1ApiCommonSupport.collectionItemsDetailed(root, collection,
+				Set.of("application/geo+json"), page -> observed.add(page.source()),
+				(uri, accept, query) -> uri.equals(first) ? json(200, "application/geo+json",
+						"{\"type\":\"FeatureCollection\",\"features\":[],\"links\":[{\"rel\":\"next\",\"href\":\""
+								+ second + "\"}]}")
+						: json(200, "application/json", "not JSON")));
+
+		assertEquals(List.of(first), observed);
+	}
+
+	/**
 	 * REQ-ETS-PART1-001; SCENARIO-ETS-PART1-001-COLLECTION-ITEMS-001.
 	 */
 	@Test

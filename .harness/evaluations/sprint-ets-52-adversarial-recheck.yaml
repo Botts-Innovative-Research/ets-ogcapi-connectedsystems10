@@ -1,0 +1,255 @@
+schema_version: "1.0"
+evaluation: sprint-ets-52-adversarial-recheck
+reviewer: Raze
+role: adversarial-reviewer
+generated_at: "2026-07-27T10:05:20Z"
+verdict: APPROVE
+confidence: 0.99
+
+source_state:
+  repository: /home/nh/docker/ets-ogcapi-connectedsystems10
+  head: 763ccd220410e23173cb6e707bf692b6807c4db2
+  working_tree: dirty
+  reviewed_state: current uncommitted source, tests, mappings, specifications, documentation, and archived final evidence
+  reviewer_changes:
+    production_files: none
+    evaluation_artifact_only: true
+
+reviewed_scope:
+  story: S-ETS-52-01
+  change_proposal: CP-012
+  prior_findings:
+    - RAZE-S52-001
+    - RAZE-S52-002
+  regression_surfaces:
+    - conditional nested GeoJSON validation on every page and later System
+    - page-observer ordering before pagination advances
+    - narrow expected-SKIP aggregation across collections, items, pages, and Systems
+    - HTTP, media, metadata, schema, pagination, canonical identity, and content failure precedence
+    - System prerequisite gate and sabotage causality
+    - exact ATS mappings and TestNG lifecycle
+    - final Maven, TeamEngine, credential, hygiene, and immutability evidence
+    - specification and operational-document reconciliation honesty
+
+closure_status:
+  - id: RAZE-S52-001
+    original_severity: HIGH
+    status: CLOSED
+    conclusion: >-
+      The System-reference procedure now observes every safely parsed nested
+      page and conditionally validates every application/geo+json page against
+      the released Sampling Feature collection schema. Controlled HTTP tests
+      fail on an invalid later page and on an invalid later System, proving the
+      branch is neither first-page-only nor first-System-only.
+    code_evidence:
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/SamplingFeaturesTests.java:167
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/SamplingFeaturesSupport.java:109
+    test_evidence:
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesHttpProcedures.java:169
+
+  - id: RAZE-S52-002
+    original_severity: MEDIUM
+    status: CLOSED
+    conclusion: >-
+      Traversal asserts HTTP status and actual media, parses and types the
+      current page, invokes its observer, then validates and follows the next
+      link. Sampling Features catches only SkipException at narrow independent
+      media/comparability boundaries and emits one aggregate SKIP after later
+      inspectable candidates complete. AssertionError paths for HTTP, metadata,
+      parsing, schema, pagination, canonical identity, and content remain
+      uncaught and therefore cannot be downgraded.
+    code_evidence:
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part1/apicommon/Part1ApiCommonSupport.java:418
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/SamplingFeaturesTests.java:82
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/SamplingFeaturesTests.java:136
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/SamplingFeaturesTests.java:167
+    test_evidence:
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part1/apicommon/VerifyPart1ApiCommonSupport.java:274
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesHttpProcedures.java:192
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesHttpProcedures.java:215
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesHttpProcedures.java:229
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesHttpProcedures.java:244
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesHttpProcedures.java:267
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesHttpProcedures.java:281
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesHttpProcedures.java:295
+
+new_findings: []
+required_fixes: []
+
+gate_verification:
+  exact_ats_mapping:
+    result: PASS
+    observed: "5 total / 5 exact / 0 helper / 0 candidate / 0 unmapped"
+    procedures:
+      - /conf/sf/canonical-url
+      - /conf/sf/resources-endpoint
+      - /conf/sf/canonical-endpoint
+      - /conf/sf/collections
+      - /conf/sf/ref-from-system
+    evidence:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/released-ats-inventory.json
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+      - ops/ats-coverage-report.json
+
+  testng_structure:
+    result: PASS
+    observed: >-
+      Exactly five independent alwaysRun methods use the samplingfeatures
+      group, have no method dependencies, and inherit only the System group
+      prerequisite. The reason-shape allowlist admits only documented inherited
+      evidence limitations; unexpected skips and failures block setup.
+    evidence:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/samplingfeatures/VerifySamplingFeaturesSuite.java
+
+  focused_maven:
+    result: PASS
+    observed:
+      tests: 49
+      failures: 0
+      errors: 0
+      skipped: 0
+    evidence: ops/test-results/sprint-ets-52-raze-gapfix-focused-final-2026-07-27.log
+
+  full_maven:
+    result: PASS
+    observed:
+      tests: 506
+      failures: 0
+      errors: 0
+      skipped: 3
+    evidence: ops/test-results/sprint-ets-52-raze-gapfix-full-maven-final-2026-07-27.log
+
+  exact_image_runtime:
+    result: PASS
+    image_id: sha256:ae3a7b6b17d98c328ca7dff95afa05fbfecf6a2f1ebe313a75c7429ae2580ff3
+    local_tag_at_recheck: ets-ogcapi-connectedsystems10:smoke
+    observed: >-
+      The immutable image ID exists locally and the archived runtime command
+      exited zero after deployed SWE Common adapter, collision, provenance,
+      base-file immutability, runtime-invariant, and context-hygiene checks.
+    evidence: ops/test-results/sprint-ets-52-final-teamengine-runtime-2026-07-27.log
+
+  primary_local_osh_teamengine:
+    result: PASS_HONEST_NONCONFORMANCE
+    observed:
+      total: 220
+      passed: 40
+      failed: 6
+      skipped: 174
+      sampling_features:
+        passed: 1
+        failed: 1
+        skipped: 3
+    interpretation: >-
+      System-reference passes on supported generic JSON evidence; collections
+      genuinely fails because no exact sosa:Sample collection is advertised;
+      canonical URL and both endpoint-schema procedures honestly SKIP for
+      absent collection or unsupported GeoJSON evidence. Documentation
+      explicitly states that controlled HTTP, not local OSH generic JSON,
+      exercises the nested GeoJSON schema branch.
+    evidence:
+      - ops/test-results/sprint-ets-52-final-local-osh-teamengine-2026-07-27.xml
+      - ops/test-results/sprint-ets-52-final-local-osh-container-2026-07-27.log
+
+  system_sabotage:
+    result: PASS
+    observed:
+      total: 220
+      passed: 37
+      failed: 6
+      skipped: 177
+      sampling_features_setup: "SKIP: prerequisite method systemLocationsFollowRecommendation failed"
+      sampling_features_methods: "5 SKIP at 0 ms"
+      sampling_feature_iut_requests: 0
+    evidence:
+      - ops/test-results/sprint-ets-52-systemfeatures-sabotage-teamengine-2026-07-27.xml
+      - ops/test-results/sprint-ets-52-systemfeatures-sabotage-container-2026-07-27.log
+
+  artifact_and_credential_hygiene:
+    result: PASS
+    observed:
+      recognized_iut_gets: 117
+      recognized_iut_writes: 0
+      credential_artifact_hits: 0
+      credential_wire_e2e:
+        unmasked_artifact_hits: 0
+        masked_events: 36
+        intact_stub_transmissions: 36
+      archived_primary_xml_sha256: f89e1bb107d32e468d1bd08ba01ddf25f4c9958250b92fc0ee669dfd0734e942
+      archived_primary_log_sha256: bd0a8b56ea92822b16a7bae453e0e9dfefb8b6840a4164a502b1c31bf05c83
+      worktree_test_output_directory: absent
+    evidence:
+      - ops/test-results/sprint-ets-52-final-primary-hygiene-2026-07-27.json
+      - ops/test-results/sprint-ets-52-credential-e2e-2026-07-27.txt
+      - ops/test-results/sprint-ets-52-credential-integration-2026-07-27.txt
+
+  external_immutability:
+    result: PASS
+    observed:
+      osh_head: 4c87a65c9a967d52af9df476e65d7862c7673a15
+      osh_worktree: clean
+      osh_commits_ahead_of_upstream: 0
+      osh_mount: "/opt/osh read-only"
+      host_and_container_consys_jar_sha256: 4af3bb25e850c959126baa797cecd980dd54bab26cac1140611c91757274d942
+      teamengine_base: "runtime verifier reports byte-for-byte base-file immutability"
+      out_of_scope_source_or_binary_changes: none found
+    evidence:
+      - ops/test-results/sprint-ets-52-final-teamengine-runtime-2026-07-27.log
+      - ops/test-results/sprint-ets-52-part1-sampling-features-verification-2026-07-27.md
+
+  reconciliation_honesty:
+    result: PASS
+    observed: >-
+      Capability spec, design, CP-012, story, contract, traceability, status,
+      test results, and known issues consistently record both prior findings as
+      remediated while retaining focused Raze recheck as pending. They preserve
+      exact Maven and TeamEngine totals, the local OSH FAIL/SKIPs, controlled
+      GeoJSON evidence boundaries, and the prohibition on OSH or TeamEngine
+      modification.
+    evidence:
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+      - openspec/change-proposals/CP-012-part1-sampling-features-closure.md
+      - epics/stories/s-ets-52-01-part1-sampling-features-closure.md
+      - .harness/contracts/sprint-ets-52.yaml
+      - _bmad/traceability.md
+      - ops/status.md
+      - ops/test-results.md
+      - ops/known-issues.md
+
+evidence_reviewed:
+  - .harness/evaluations/sprint-ets-52-adversarial-final.yaml
+  - ops/test-results/sprint-ets-52-raze-gapfix-test-first-2026-07-27.log
+  - ops/test-results/sprint-ets-52-page-observer-test-first-2026-07-27.log
+  - ops/test-results/sprint-ets-52-raze-gapfix-focused-final-2026-07-27.log
+  - ops/test-results/sprint-ets-52-raze-gapfix-full-maven-final-2026-07-27.log
+  - ops/test-results/sprint-ets-52-final-teamengine-runtime-2026-07-27.log
+  - ops/test-results/sprint-ets-52-final-local-osh-teamengine-2026-07-27.xml
+  - ops/test-results/sprint-ets-52-final-local-osh-container-2026-07-27.log
+  - ops/test-results/sprint-ets-52-systemfeatures-sabotage-teamengine-2026-07-27.xml
+  - ops/test-results/sprint-ets-52-systemfeatures-sabotage-container-2026-07-27.log
+  - ops/test-results/sprint-ets-52-final-primary-hygiene-2026-07-27.json
+  - ops/test-results/sprint-ets-52-credential-e2e-2026-07-27.txt
+  - ops/test-results/sprint-ets-52-credential-integration-2026-07-27.txt
+
+residual_concerns:
+  - severity: NOTE
+    concern: >-
+      The mutable local :latest image tag is not the Sprint 52 acceptance
+      image. Gate evidence correctly uses the immutable image digest, which
+      remains present as ets-ogcapi-connectedsystems10:smoke.
+    required_action: none
+  - severity: NOTE
+    concern: >-
+      Local OSH cannot supply positive GeoJSON evidence for the released
+      endpoint schema branches. This is documented and covered by controlled
+      read-only HTTP tests; it is an IUT limitation, not a Sprint 52 false PASS.
+    required_action: none
+
+metrics:
+  started_at: "2026-07-27T09:57:05Z"
+  completed_at: "2026-07-27T10:06:54Z"
+  duration_seconds: 589
+  token_metadata: unavailable
+  token_metadata_reason: no active goal or completion-budget usage metadata was exposed

@@ -1,0 +1,180 @@
+schema_version: 1
+review:
+  sprint: ets-52
+  story: S-ETS-52-01
+  change_proposal: CP-012
+  gate: 4
+  reviewer: Raze
+  started_at: "2026-07-27T08:55:50Z"
+  completed_at: "2026-07-27T09:06:32Z"
+  duration_seconds: 642
+  token_metadata:
+    status: unavailable
+
+verdict: GAPS_FOUND
+confidence: 0.98
+
+reviewed_scope:
+  - Exactly five released OGC 23-001 /conf/sf procedures and requirement URIs
+  - Reviewed exact ATS mappings and generated coverage status
+  - Status, actual media, schema, pagination, and complete-iteration behavior
+  - Canonical URL same-origin identity and post-normalization equivalence
+  - Partial unsupported-collection and unsupported-System behavior
+  - TestNG lifecycle, inherited System gate, and sabotage causality
+  - Focused/full Maven, controlled HTTP, and TeamEngine local-OSH evidence
+  - Runtime, artifact, credential, OSH, and TeamEngine immutability evidence
+  - Spec, design, story, contract, traceability, status, changelog, and known issues
+
+source_authority:
+  repository: https://github.com/opengeospatial/ogcapi-connected-systems.git
+  tag: v1.0.0
+  commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+  sampling_features_ats:
+    path: api/part1/standard/sections/annex-abstract-test-suite.adoc
+    lines: 656-746
+  verified_procedures:
+    - /conf/sf/canonical-url
+    - /conf/sf/resources-endpoint
+    - /conf/sf/canonical-endpoint
+    - /conf/sf/collections
+    - /conf/sf/ref-from-system
+
+findings:
+  - id: RAZE-S52-001
+    severity: HIGH
+    status: OPEN
+    category: false_exact_mapping
+    title: The System-reference procedure omits its released GeoJSON schema branch
+    summary: >-
+      The pinned /conf/sf/ref-from-system procedure requires each nested
+      /systems/{sysId}/samplingFeatures response to be traversed and, when its
+      Content-Type is application/geo+json, validated through /conf/geojson/sf-schema.
+      The implementation traverses the response and discards the TraversalResult.
+      It never invokes SamplingFeaturesSupport schema validation, so invalid GeoJSON
+      can PASS. The CP, capability scenario, reviewed mapping evidence, and 5/5 exact
+      status all omit the same released step.
+    impact: >-
+      /conf/sf/ref-from-system is not an exact implementation. The method can emit a
+      false PASS for schema-invalid nested GeoJSON, and the reported 5/5 exact
+      coverage and final-gate status are overstated.
+    evidence:
+      - >-
+        Pinned Annex A lines 740-745 retrieve every System, GET each nested endpoint,
+        require 200, paginate, and execute /conf/geojson/sf-schema for GeoJSON.
+      - >-
+        SamplingFeaturesTests.java lines 181-198 accept and traverse nested responses
+        but never inspect the returned pages or call validateSamplingFeatureEndpoint.
+      - >-
+        VerifySamplingFeaturesHttpProcedures.java lines 211-223 use generic JSON empty
+        nested collections; the positive test therefore never exercises the mandatory
+        GeoJSON schema branch.
+      - >-
+        reviewed-ats-mappings.json classifies /conf/sf/ref-from-system as exact while
+        its evidence mentions only status and pagination, not the released schema step.
+      - >-
+        CP-012, REQ-ETS-PART1-007, its REF-FROM-SYSTEM scenario, traceability, story,
+        contract, status, and test-results all repeat or rely on the incomplete model.
+      - >-
+        The local-OSH XML honestly records the current method as PASS, but that generic
+        JSON run cannot verify the omitted GeoJSON branch.
+    required_fixes:
+      - >-
+        Add the released conditional schema validation to every GeoJSON page returned
+        by every nested System Sampling Features endpoint.
+      - >-
+        Add controlled HTTP tests proving valid nested GeoJSON passes and invalid
+        nested GeoJSON fails, including a defect on a later page and later System.
+      - >-
+        Correct the spec, CP, scenario, design, and exact-mapping evidence to state the
+        released conditional schema step.
+      - >-
+        Treat /conf/sf/ref-from-system as not exact until the implementation and tests
+        satisfy that step; regenerate coverage after remediation.
+
+  - id: RAZE-S52-002
+    severity: MEDIUM
+    status: OPEN
+    category: incomplete_iteration
+    title: Actual-media evidence SKIPs can hide later defects
+    summary: >-
+      The collection procedures accumulate an unsupported flag only when the
+      advertised items link is filtered before request. If a link advertises GeoJSON
+      but an actual response page is unsupported, Part1ApiCommonSupport throws
+      SkipException and the outer collection loop terminates immediately. The same
+      early termination occurs for a non-comparable canonical response and for an
+      unsupported nested System response.
+    impact: >-
+      A first unsupported response can prevent inspection of a later malformed
+      collection, canonical item, page, or System. The outcome becomes SKIP instead of
+      the required later FAIL, contradicting the complete-iteration scenarios and the
+      claim that inspectable defects are retained before final SKIP.
+    evidence:
+      - >-
+        Part1ApiCommonSupport.java lines 429-441 throws SkipException on unsupported
+        actual media before parsing.
+      - >-
+        SamplingFeaturesTests.java lines 87-115 and 153-166 call the helper without
+        catching per-collection evidence SKIPs; lines 101-105 also immediately SKIP on
+        non-comparable canonical actual media.
+      - >-
+        SamplingFeaturesTests.java lines 185-198 calls the nested System helper without
+        preserving later-System inspection after an evidence SKIP.
+      - >-
+        The partial-collection regression at VerifySamplingFeaturesHttpProcedures.java
+        lines 152-162 covers only an advertised application/json link and asserts that
+        the unsupported endpoint is never requested. It does not cover advertised
+        GeoJSON followed by unsupported actual media.
+      - >-
+        REQ-ETS-PART1-007 and SCENARIO-ETS-PART1-007-RELEASED-COLLECTION-COMPLETE-001
+        require all inspectable evidence to be processed and prohibit an earlier result
+        from hiding a later defect.
+    required_fixes:
+      - >-
+        Accumulate expected evidence-limitation SKIPs at the narrow collection, item,
+        or System boundary, continue all independently inspectable evidence, and throw
+        the aggregate SKIP only after no later failure is found.
+      - >-
+        Do not catch or downgrade assertion failures, unsafe pagination, non-200
+        responses, invalid metadata, invalid schema, or canonical identity/content
+        failures.
+      - >-
+        Add regressions where an actual-media mismatch precedes a later invalid
+        collection, canonical item, page, and System response.
+
+required_fixes:
+  - Resolve RAZE-S52-001 and RAZE-S52-002 with spec-first tests and implementation.
+  - Re-run focused and full Docker Maven verification.
+  - Build a new exact image and re-run TeamEngine against the unmodified local OSH.
+  - Re-run System sabotage, runtime immutability, artifact, and credential gates.
+  - Reconcile mapping counts, expected PASS/FAIL/SKIP totals, story, contract, traceability, operational records, and known issues.
+  - Submit the remediated tree for a focused Raze Gate 4 re-review.
+
+verified_strengths:
+  - The released inventory contains exactly the five canonical /conf/sf procedures.
+  - The deployed class contains exactly five independently declared alwaysRun methods with no method dependencies.
+  - Resources and canonical endpoint procedures status-gate, actual-media-gate before parsing, paginate with a bound and cycle detection, and validate supported GeoJSON pages.
+  - Collection selection uses exact featureType=sosa:Sample and requires itemType=feature plus a nonempty ID.
+  - Canonical validation rejects cross-origin and wrong-path links, checks every canonical occurrence identity, dereferences comparable media, and compares content after canonical-link-only normalization.
+  - The TestNG group is co-located and wired systemfeatures to samplingfeatures; the defensive gate filters inherited groups and blocks failures, configuration failures, and unexpected SKIPs.
+  - System sabotage evidence shows setup and all five direct methods SKIP with zero-duration direct methods and no Sampling Features request logs.
+  - Full Maven evidence is BUILD SUCCESS at 497 tests, 0 failures, 0 errors, and 3 skips; this does not cover the findings above.
+  - Primary TeamEngine evidence is fresh and internally consistent at 220 total, 40 passed, 6 failed, and 174 skipped.
+  - Exact image sha256:40b46769294fa17f733835543ef7ce26059817c9033a2029d60e835feb2d1ddd matches the runtime gate and current smoke tag.
+  - Primary artifact copies hash-match the files scanned by the hygiene report; it records 117 recognized IUT GETs, zero IUT writes, and no credential hits.
+  - Credential integration and wire tests contain only documented synthetic test-vector exposure; no real credential leak was found in the reviewed artifacts.
+  - The external OSH checkout is clean at 4c87a65c9a967d52af9df476e65d7862c7673a15, zero commits ahead and three behind.
+  - The running OSH /opt/osh mount is read-only, and host/container Connected Systems jar hashes match.
+  - The TeamEngine exact-image gate verifies published-base identity and no base-file modification.
+  - No repository-root test-output directory was left behind.
+
+residual_concerns:
+  - >-
+    The prerequisite media-SKIP allowlist is method-specific and reason-shape-specific,
+    but its endpoint text is prefix/suffix matched rather than literally exact as some
+    documentation claims. This is not a blocker because the producing methods and
+    semantic reason are narrowly identified, but documentation should avoid calling it
+    a byte-for-byte exact-message allowlist.
+  - >-
+    The archived credential gate summary intentionally prints its synthetic test vector.
+    It is not a real secret, but future hygiene claims should continue to distinguish
+    synthetic wire proof from scanning of user-supplied credentials.

@@ -2,6 +2,70 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-27 - Part 1 Sampling Features implementation and Raze remediation
+
+**Triggered by user instruction**: execute accepted recommendations 1-4
+continuously, including completion of every released Part 1 gap.
+
+- Audited pinned OGC 23-001 Annex A and confirmed five released `/conf/sf`
+  procedures versus the historical four coupled approximations.
+- Added CP-012, S-ETS-52-01, its contract, thirteen exact scenarios, design,
+  architecture, traceability, epic, baseline, and operational records before
+  implementation.
+- Replaced the historical class with exactly five independent procedures and
+  an ETS-owned Sampling Features support boundary for exact collection
+  metadata, GeoJSON schema validation, canonical identity, and canonical-link
+  normalization.
+- Retained direct System inheritance while narrowing defensive prerequisite
+  inspection to Core, Common, API Common, and System. Method-specific,
+  reason-shape documented
+  inherited no-evidence SKIPs remain visible but do not suppress independent
+  Sampling Features evidence; failures and unexpected SKIPs remain blockers.
+- Initial local OSH E2E exposed the inherited optional mobile-System SKIP
+  blocking all five direct procedures. A test-first `6/1/0/0` regression
+  reproduced it before the narrow allowlist correction.
+- A final self-review exposed canonical URL passing from only partially
+  inspectable collection evidence. A test-first `1/1/0/0` regression reproduced
+  it before both canonical and collections procedures were made fail-closed on
+  any unsupported selected collection.
+- Controlled HTTP now executes all five positive procedures and fail-closed
+  media, schema, metadata, canonical, partial-collection, pagination,
+  isolation, and dependency branches.
+- Reviewed all five mappings exact. Coverage is
+  `240/35 exact/2 helper/133 candidate/70 unmapped`; Sampling Features is
+  `5/5`.
+- Initial Raze returned `GAPS_FOUND` at confidence `0.98`.
+  `RAZE-S52-001` found missing conditional nested GeoJSON schema validation;
+  `RAZE-S52-002` found that early expected actual-media SKIPs could hide later
+  defects.
+- Added reviewed API Common page-observer overloads. Supported pages are
+  inspected before pagination advances, nested System GeoJSON pages are
+  schema-validated, and expected evidence SKIPs aggregate only at narrow
+  collection/item/System boundaries.
+- Gap-fix test-first runs failed `13/5/0/0` and `16/3/0/0` before remediation.
+  Final focused Maven is `49/0/0/0`; full Docker Maven is `506/0/0/3`.
+- Built exact image `sha256:ae3a7b6b...580ff3`; TeamEngine provenance,
+  immutable-base, dependency, deployed SWE Common adapter, runtime, and
+  confidential-context gates pass.
+- Primary unmodified local OSH TeamEngine is honestly `220/40/6/174`; all five
+  Sampling Features methods execute with one PASS, one genuine collections
+  FAIL, and three evidence SKIPs.
+- System sabotage is `220/37/6/177` and makes all five Sampling Features
+  methods SKIP before IUT access. Primary artifact hygiene records 117
+  recognized requests, zero writes, and zero credential leaks.
+- Credential integration and wire E2E pass with zero unmasked artifact hits,
+  36 masked events, and 36 intact synthetic transmissions.
+- Verified OSH remains clean at `4c87a65`, zero commits ahead, with `/opt/osh`
+  mounted read-only. No OSH or TeamEngine source or binary was modified.
+- Focused Raze recheck returned `APPROVE` at confidence `0.99` after 589
+  seconds. Both initial findings are closed, with no new findings and no
+  required fixes.
+- Reconciled the completed implementation and evidence across OpenSpec,
+  architecture, traceability, story, contract, epic, status, changelog, known
+  issues, test results, and durable evidence summary.
+- User instruction outcome: continued the accepted released-ATS closure work,
+  remediated both required Raze findings, and reran every affected gate.
+
 ## 2026-07-27 - Part 1 Subdeployment direct ATS complete and Raze-approved
 
 **Triggered by user instruction**: execute accepted recommendations 1-4

@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-25T15:28Z
+Last updated: 2026-07-27T10:11Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,6 +14,15 @@ Last updated: 2026-07-25T15:28Z
 
 ## Active Issues
 
+- Local OSH declares Part 1 `/conf/sf`, but `/samplingFeatures` returns
+  `application/json` even when GeoJSON is requested, and `/collections`
+  advertises `featureType=featureOfInterest` rather than exact `sosa:Sample`.
+  Sprint 52 therefore records honest endpoint/canonical evidence SKIPs and a
+  genuine collections FAIL. The nested System-reference procedure passes. Do
+  not patch OSH or weaken the ETS; positive conformance requires another
+  unmodified IUT exposing the released metadata and GeoJSON representation.
+  Controlled HTTP covers the nested GeoJSON schema branch that this generic
+  JSON local-OSH response cannot exercise.
 - GeoJSON is PARTIAL-IMPLEMENTED only. Sprint 19 adds safety-gated `mediatype-write` coverage with positive system-resource evidence against a local OSH mutable IUT, but full GeoJSON remains open for positive relation-types evidence where non-system resources expose links-member associations, property GeoJSON mapping, non-system mutation-side encoding coverage, and future stricter schema validation.
 - SensorML is PARTIAL-IMPLEMENTED only. Sprint 19 adds safety-gated `mediatype-write` coverage with positive system-resource evidence against a local OSH mutable IUT. Current GeoRobotix SensorML bodies have no top-level `links` member. The Sprint 26 local OSH seedfix repaired deployment/procedure `?f=sml3` HTTP 500 responses by adding `properties.featureType` to those seeded resources; however, generated OSH deployment SensorML still lacks non-empty `deployedSystems` mapping evidence, generated deployment/procedure SensorML bodies lack JSON `links` association evidence, and local OSH `/properties` remains unpopulated. Full SensorML remains open for broader positive relation-types evidence, full SensorML 3.0 JSON Schema validation, non-system mutation-side behavior, and positive property evidence against a populated IUT.
 - Part 2 placeholder taxonomy was corrected during Sprint 25 planning and extended during Sprints 26, 27, 28, 29, 30, and 31. OpenSpec and epic ETS-03 now treat API Common as `REQ-ETS-PART2-001`, Datastreams & Observations as `REQ-ETS-PART2-002`, Control Streams & Commands as `REQ-ETS-PART2-003`, Command Feasibility as partial implemented `REQ-ETS-PART2-004`, System Events as partial implemented `REQ-ETS-PART2-005`, Advanced Filtering as partial implemented `REQ-ETS-PART2-006`, Create/Replace/Delete as partial implemented `REQ-ETS-PART2-007`, Update as partial implemented `REQ-ETS-PART2-008`, JSON Encoding as partial implemented `REQ-ETS-PART2-009`, SWE Common JSON Encoding as partial implemented `REQ-ETS-PART2-010`, SWE Common Text Encoding as partial implemented `REQ-ETS-PART2-011`, SWE Common Binary Encoding as partial implemented `REQ-ETS-PART2-012`, and remaining observation-binding placeholder as `REQ-ETS-PART2-013`. The former `/conf/system-history` placeholder is retired because OGC 23-002 Annex A does not define it; GeoRobotix's `/conf/system-history` declaration is treated as non-standard/vendor extension evidence only, and `systemhistory` is no longer treated as an OGC Part 2 collection discovery token.

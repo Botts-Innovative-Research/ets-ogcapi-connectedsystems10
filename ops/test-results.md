@@ -1,8 +1,55 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-27T02:47Z
+Last updated: 2026-07-27T10:11Z
 
 ## Current Sprint Evidence
+
+Sprint 52 Part 1 Sampling Features direct ATS:
+
+- Coverage: `240 total / 35 exact / 2 helper / 133 candidate / 70 unmapped`;
+  `/conf/sf` is `5/5 exact`; deployed suite methods are 220.
+- Test-first evidence includes the expected initial compile failure, a
+  `6/1/0/0` prerequisite execution defect, and a `1/1/0/0`
+  partial-collection false PASS. Both behavioral defects are corrected.
+- Initial Raze returned `GAPS_FOUND` at confidence `0.98`. Gap-fix test-first
+  runs reproduced omitted nested GeoJSON validation and early-SKIP masking at
+  `13/5/0/0` and `16/3/0/0`.
+- The remediated page observer validates supported pages before pagination
+  advances. Narrow collection/item/System evidence SKIPs aggregate only after
+  all independently inspectable candidates have run.
+- Final focused Maven is `49/0/0/0`; full Docker Maven is `506/0/0/3`.
+- ATS audit consistency passes against released source
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+- Exact image `sha256:ae3a7b6b...580ff3` passes TeamEngine provenance, deployed
+  SWE Common adapter execution, dependency collision, immutable-base, and
+  confidential-context verification.
+- Primary unmodified local OSH TeamEngine is honestly `220/40/6/174`; all five
+  Sampling Features procedures execute as one PASS, one genuine FAIL, and
+  three evidence SKIPs.
+- Sampling Features outcomes: System-reference PASS; collections FAIL because
+  no exact `sosa:Sample` collection exists; canonical URL SKIP for missing
+  collection evidence; both endpoint-schema procedures SKIP on unsupported
+  actual `application/json`.
+- Controlled HTTP executes every positive path and fail-closed media, schema,
+  metadata, canonical, partial-collection, pagination, isolation, and
+  dependency branches.
+- System sabotage is `220/37/6/177`; all five Sampling Features methods SKIP
+  before their IUT access.
+- Primary hygiene records 117 recognized requests, zero writes, and zero
+  credential leaks.
+- Credential integration and wire E2E pass with zero unmasked artifact hits,
+  36 masked events, and 36 intact synthetic transmissions.
+- OSH is clean at `4c87a65`, zero commits ahead, `/opt/osh` read-only. No OSH
+  or TeamEngine modification.
+- Focused Raze recheck: `APPROVE`, confidence `0.99`, duration 589 seconds.
+  `RAZE-S52-001` and `RAZE-S52-002` are closed; no new findings or required
+  fixes remain.
+- Raze evidence:
+  `.harness/evaluations/sprint-ets-52-adversarial-recheck.yaml`.
+- Verification summary:
+  `ops/test-results/sprint-ets-52-part1-sampling-features-verification-2026-07-27.md`.
+
+---
 
 Sprint 51 Part 1 Subdeployment direct ATS:
 

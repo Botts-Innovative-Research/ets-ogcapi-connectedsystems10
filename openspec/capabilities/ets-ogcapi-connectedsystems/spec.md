@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.2 | Status: Active ETS implementation | Last updated: 2026-07-26
+> Version: 1.2 | Status: Active ETS implementation | Last updated: 2026-07-27
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -2103,11 +2103,175 @@ SKIP as specified.
 - **Sprint 8 amendment (S-ETS-08-01 Wedge 2 — META-GAP-S7-1 closure)**: the live cascade evidence is no longer 3-class only. Raze's Sprint 7 gate-time sabotage exec from `/tmp/raze-fresh-sprint7/` produced a **5-class** cascade XML (archived per Raze cumulative gate evaluation evidence_artifacts) extending the Sprint 7 Generator's 3-class XML to all 5 SystemFeatures-level sibling classes (Subsystems + Procedures + Deployments + SamplingFeatures + PropertyDefinitions). Sprint 8 retires the prior phrasing ("live 3-class cascade XML produced end-to-end") in favour of "live cascade XML — 3-class at Generator run, 5-class at Raze gate"; the high-water-mark evidence is the Raze gate-time XML. ADR-010 v4 amendment (this sprint) records the Raze gate outcome. The dynamic sibling-enumeration fix landed in Sprint 8 S-ETS-08-01 Wedge 1 ensures the script's stdout VERDICT-summary now matches the actual cascade DAG width without further code edits as Sprint 8+ classes are added (e.g. Subdeployments).
 
 #### REQ-ETS-PART1-007: Sampling Features Conformance Class (`/conf/sf`)
-- **Priority**: SHOULD
-- **Status**: PARTIAL_UNREVIEWED_ATS (historical Sprint 7 increment complete; 0/5 released `/conf/sf` tests have reviewed exact mappings).
-- **OGC requirement prefix**: `/req/sf/` (HTTP 200 verified at raw.githubusercontent.com 2026-04-30 by Generator: `req_resources_endpoint.adoc`, `req_canonical_endpoint.adoc`, `req_canonical_url.adoc`. NOTE: OGC repo folder is `sf/` not `sampling/` — Pat's planning-time guidance was correct on URI form; folder naming clarified by Generator).
-- **SF-unique implementation note**: GeoRobotix per-item shape (`/samplingFeatures/{id}`) does NOT include the `links` array that Procedures + Deployments items carry. Per defense-in-depth, the canonical-URL @Test asserts HTTP 200 at the path-based canonical URL form rather than `rel=canonical` link search; if a future GeoRobotix release adds item-level links the assertion can be tightened in lockstep.
-- **Maps to**: PRD FR-ETS-17; twice-deferred from Sprint 5 (wedge-deferred) + Sprint 6 (wedge sprint, excluded).
+- **Priority**: MUST
+- **Status**: IMPLEMENTED_RELEASED_ATS (Sprint 52 replaces the
+  historical four-method approximation with all 5 released `/conf/sf` tests;
+  implementation and required non-adversarial gates pass).
+- **Description**: The ETS SHALL implement exactly the five released OGC
+  23-001 Annex A `/conf/sf` procedures: `/canonical-url`,
+  `/resources-endpoint`, `/canonical-endpoint`, `/collections`, and
+  `/ref-from-system`. Each procedure SHALL have one independently executable
+  TestNG method whose description cites its canonical target URI. The
+  historical non-empty endpoint check, first-item shape check, path-only
+  canonical check, and dependency tracer are superseded approximations and
+  SHALL NOT receive exact mappings.
+- **Endpoint validation**: Resources-endpoint and canonical-endpoint SHALL
+  independently require HTTP 200, traverse bounded same-origin pagination,
+  establish actual response media before parsing every page, and validate
+  every supported `application/geo+json` page against the bundled released
+  Sampling Feature collection schema. HTTP 404 and invalid supported content
+  SHALL fail. Unsupported actual media SHALL warn and SKIP.
+- **Collections**: The collections procedure SHALL inspect every advertised
+  collection whose `featureType` is exactly `sosa:Sample`, require at least one,
+  require `itemType=feature` and a non-empty string ID, retrieve each items
+  endpoint through the reviewed API Common helper, and validate every supported
+  GeoJSON page against the released Sampling Feature collection schema. If any
+  selected collection lacks a supported representation, the procedure SHALL
+  retain other observed defects, then warn and SKIP rather than pass.
+- **Canonical URL**: The canonical-URL procedure SHALL inspect every item in
+  every advertised `sosa:Sample` collection with a supported JSON items
+  representation. Every item SHALL include a canonical relation resolving on
+  the IUT origin to `{api_root}/samplingFeatures/{encodedId}`. A comparable
+  occurrence SHALL return HTTP 200 with actual media matching the collection
+  item and SHALL contain equal JSON content after canonical links are removed
+  from both resources. Missing collections or any unsupported selected
+  representation SHALL SKIP as an evidence limitation after all inspectable
+  evidence is processed. Missing, unsafe, wrong-target, or content-different
+  canonical links SHALL fail.
+- **Reference from System**: The system-reference procedure SHALL retrieve
+  every canonical System through the reviewed API Common helper. For every
+  non-empty System ID it SHALL request
+  `{api_root}/systems/{encodedSysId}/samplingFeatures`, require HTTP 200, and
+  iterate all pages through bounded same-origin pagination. Every returned
+  `application/geo+json` page SHALL pass the released Sampling Feature
+  collection schema. Unsupported actual representation media SHALL be
+  accumulated at the System boundary so later Systems remain inspectable, then
+  warn and SKIP; missing IDs, invalid supported GeoJSON, pagination defects,
+  and non-200 responses SHALL fail.
+- **Evidence-limitation aggregation**: Expected unsupported-media and
+  non-comparable-representation SKIPs SHALL be caught only at the narrow
+  collection, item, or System boundary. Every independently inspectable later
+  collection, item, and System SHALL still be processed before one aggregate
+  SKIP. Assertion failures, unsafe pagination, non-200 responses, invalid
+  metadata or schema, and canonical identity or content failures SHALL NOT be
+  caught or downgraded.
+- **Dependency and validator boundary**: Sampling Features SHALL inherit
+  System directly. Setup SHALL inspect only Core, Common, Part 1 API Common,
+  and System outcomes; unrelated sibling classes SHALL NOT block Sampling
+  Features. The released GeoJSON schema SHALL remain behind an ETS-owned
+  `SamplingFeaturesSupport` boundary. OGC 23-001 defines no SensorML Sampling
+  Feature representation, so neither a SensorML suite jar nor a SensorML
+  library enters this increment. No OSH or TeamEngine source or binary SHALL be
+  modified.
+- **Historical record**: Sprint 7's four-method approximation, GeoRobotix
+  evidence, and historical scenarios remain archived below. They do not
+  establish released ATS completion and are superseded by the Sprint 52
+  requirement and scenarios.
+- **Verification target**: All five procedures SHALL receive reviewed exact
+  mappings. Focused and full Maven, pinned-source coverage reproduction,
+  exact-image runtime, controlled read-only HTTP, unmodified-local-OSH
+  TeamEngine, System dependency, credential, artifact-hygiene, and adversarial
+  gates SHALL complete before this status is promoted.
+- **Maps to**: PRD FR-ETS-17.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-CANONICAL-URL-001 (CRITICAL)
+**GIVEN** one or more `sosa:Sample` collections expose supported JSON items
+**WHEN** the released canonical-URL procedure executes
+**THEN** every item SHALL expose a same-origin canonical Sampling Feature URL
+**AND** dereferenced content SHALL equal the collection item after canonical
+links are removed.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-RESOURCES-ENDPOINT-001 (CRITICAL)
+**GIVEN** a Sampling Feature resources endpoint
+**WHEN** the released parameterized endpoint procedure executes
+**THEN** every page SHALL return HTTP 200
+**AND** every supported GeoJSON page SHALL pass the released Sampling Feature
+collection schema.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-CANONICAL-ENDPOINT-001 (CRITICAL)
+**GIVEN** the IUT API root
+**WHEN** the released canonical-endpoint procedure evaluates
+`{api_root}/samplingFeatures`
+**THEN** the endpoint SHALL independently satisfy the released resources
+procedure.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-COLLECTIONS-001 (CRITICAL)
+**GIVEN** the IUT advertises Feature collections
+**WHEN** the released collections procedure executes
+**THEN** at least one collection SHALL use `featureType=sosa:Sample`
+**AND** every selected collection SHALL use `itemType=feature` and expose
+schema-valid supported items.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-REF-FROM-SYSTEM-001 (CRITICAL)
+**GIVEN** all canonical System resources
+**WHEN** the released system-reference procedure executes
+**THEN** every `{api_root}/systems/{sysId}/samplingFeatures` endpoint SHALL
+return HTTP 200
+**AND** every page SHALL be iterated through bounded same-origin pagination
+**AND** every nested GeoJSON page SHALL pass the released Sampling Feature
+collection schema.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-MEDIA-GATE-001 (CRITICAL)
+**GIVEN** any endpoint page returns a representation unsupported by the testing
+engine
+**WHEN** a released Sampling Features procedure processes that page
+**THEN** actual media SHALL be established before parsing
+**AND** the procedure SHALL warn and SKIP rather than pass or parse unsupported
+content.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-CANONICAL-EQUIVALENCE-001 (CRITICAL)
+**GIVEN** a collection item has canonical relation occurrences
+**WHEN** the canonical procedure resolves and dereferences a comparable
+occurrence
+**THEN** every occurrence SHALL identify the exact same-origin Sampling Feature
+path
+**AND** any post-normalization content difference SHALL fail.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-COLLECTION-COMPLETE-001 (CRITICAL)
+**GIVEN** multiple `sosa:Sample` collections or multiple pages are advertised
+**WHEN** canonical and collections procedures execute
+**THEN** every selected collection and every page SHALL be processed
+**AND** one valid first result SHALL NOT hide a later defect or unsupported
+selected representation
+**AND** an expected evidence SKIP SHALL NOT hide a later independently
+inspectable collection, item, or System defect.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-SYSTEM-COMPLETE-001 (CRITICAL)
+**GIVEN** multiple canonical Systems or paginated nested endpoints
+**WHEN** the system-reference procedure executes
+**THEN** every System and every nested page SHALL be requested
+**AND** one valid System SHALL NOT hide a later non-200 or pagination defect.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** one released Sampling Features procedure lacks evidence
+**WHEN** another released procedure executes
+**THEN** setup SHALL NOT have retrieved procedure-specific IUT responses
+**AND** the other procedure SHALL reach its own evidence independently.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-DEPENDENCY-CASCADE-001 (CRITICAL)
+**GIVEN** an inherited System prerequisite fails
+**WHEN** Sampling Features setup begins
+**THEN** setup and all five methods SHALL SKIP before Sampling Features IUT
+access
+**AND** unrelated sibling outcomes SHALL NOT block Sampling Features
+**AND** method-specific, reason-shape no-evidence SKIPs for API Common datetime, optional
+mobile-System input, and unsupported System endpoint media SHALL remain visible
+but SHALL NOT block the independent direct procedures.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** the exact Sprint 52 image and unmodified local OSH IUT
+**WHEN** TeamEngine executes the suite
+**THEN** all five released methods SHALL appear in TestNG results
+**AND** genuine IUT failures and unsupported-representation SKIPs SHALL remain
+visible.
+
+#### SCENARIO-ETS-PART1-007-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled read-only HTTP fixture satisfies all released
+preconditions
+**WHEN** each Sampling Features method executes independently
+**THEN** all five positive paths SHALL reach their normative endpoints
+**AND** media, metadata, canonical, pagination, and completeness defects SHALL
+fail or SKIP according to the released procedure.
 
 #### REQ-ETS-PART1-008: Property Definitions Conformance Class (`/conf/property`)
 - **Priority**: SHOULD

@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.31 | Status: Living Document | Last reconciled: 2026-07-27 (Part 1 Subdeployment complete; final Raze approved)
+> Version: 2.0.34 | Status: Living Document | Last reconciled: 2026-07-27 (Part 1 Sampling Features Raze remediation and final gates)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1121,3 +1121,71 @@ plus stale evidence. TestNG now writes only to JUnit-managed temporary
 directories, focused/full Maven leave `test-output/` absent, and records use
 the corrected causal proof. Final Raze returns `APPROVE_WITH_CONCERNS`,
 confidence `0.99`, with all six findings closed and no required fixes.
+
+## 31. Architecture v2.0.34 - Part 1 Sampling Features procedures (2026-07-27)
+
+`SamplingFeaturesTests` replaces four coupled historical approximations with
+the five released `/conf/sf` procedures. Setup retains only the normalized API
+root. Every method independently obtains its endpoint, collections, canonical
+items, or System reference evidence.
+
+The released Annex A class inherits `/conf/system`, so the dependency remains
+`systemfeatures -> samplingfeatures`. Core, Common, and Part 1 API Common are
+transitive prerequisites through System. The defensive setup gate recognizes
+only those four inherited groups; unrelated siblings cannot block Sampling
+Features.
+
+`SamplingFeaturesSupport` owns exact `sosa:Sample` collection selection,
+`itemType=feature` metadata, GeoJSON Sampling Feature collection schema
+dispatch, canonical same-origin path identity, comparable representation
+selection, and canonical-link content normalization.
+
+Resources and canonical endpoints use `Part1ApiCommonSupport` for bounded,
+same-origin pagination and actual-media gating. Supported
+`application/geo+json` pages are schema validated. Unsupported actual media
+warns and SKIPs before parsing. Collections process every selected collection;
+canonical validation processes every supported item and compares complete JSON
+content after canonical links are removed. If any selected collection lacks a
+supported representation, inspectable evidence remains fail-closed and the
+procedure ultimately SKIPs rather than producing a partial-evidence PASS.
+
+The System-reference procedure uses the reviewed canonical-resources helper to
+obtain every System, then traverses each exact
+`/systems/{sysId}/samplingFeatures` endpoint. Every endpoint must return HTTP
+200 and every page must remain on origin and inside the pagination bound.
+Every nested GeoJSON page is validated against the released Sampling Feature
+collection schema.
+
+Expected unsupported-media or non-comparable-representation SKIPs are retained
+at the narrow collection, item, or System boundary while later independently
+inspectable evidence continues. Assertions, non-200 responses, unsafe
+pagination, invalid supported content, and canonical identity/content defects
+are never caught or downgraded. An aggregate SKIP is emitted only after no
+later failure is found.
+
+Released OGC 23-001 defines no SensorML Sampling Feature representation. This
+increment therefore retains an ETS-owned GeoJSON schema boundary and does not
+import an executable SensorML suite jar or a reusable SensorML library.
+Primary TeamEngine E2E preserves the unmodified local OSH generic-media SKIPs
+and non-`sosa:Sample` collection failure. Positive behavior is proven through
+a controlled read-only HTTP fixture. OSH and TeamEngine source and binaries
+remain immutable.
+
+Initial Raze returned `GAPS_FOUND` at confidence `0.98`. It identified missing
+conditional nested-System GeoJSON validation and early expected media SKIPs
+that could hide later defects. Reviewed `Part1ApiCommonSupport` page observers
+now run after safe parsing and before pagination advances. Sampling Features
+endpoint, collection, canonical, and nested-System procedures use those
+observers, while expected limitations aggregate only at narrow independent
+boundaries.
+
+The final remediated gate uses exact image
+`sha256:ae3a7b6b17d98c328ca7dff95afa05fbfecf6a2f1ebe313a75c7429ae2580ff3`.
+Focused Maven is `49/0/0/0`, full Maven is `506/0/0/3`, and coverage is
+`240/35 exact/2 helper/133 candidate/70 unmapped`. Primary local OSH
+TeamEngine is honestly `220/40/6/174`; all five methods execute with one PASS,
+one genuine IUT FAIL, and three evidence SKIPs. System sabotage proves all five
+descendant procedures SKIP. Runtime, immutable-base, dependency, credential,
+and zero-write/zero-leak hygiene gates pass. Focused Raze recheck returns
+`APPROVE` at confidence `0.99`; both findings are closed, with no new findings
+and no required fixes.

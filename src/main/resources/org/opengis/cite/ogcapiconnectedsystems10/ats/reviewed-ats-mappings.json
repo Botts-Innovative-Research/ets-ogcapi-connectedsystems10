@@ -302,6 +302,51 @@
       "reviewedBy": "Codex Sprint 50 ATS line review",
       "reviewedOn": "2026-07-26",
       "evidence": "The independently executable deployed TestNG method retrieves /collections, selects every exact featureType=sosa:Procedure entry, requires itemType=feature and a nonempty id, and traverses every selected items endpoint through the reviewed API Common helper with an additional actual-media gate on every page. Every supported GeoJSON or SensorML page is validated against the corresponding bundled released Procedure collection schema and every item is checked against the nine released Procedure types in CURIE or URI form; no advertised Procedure collection fails and unsupported evidence SKIPs."
+    },
+    {
+      "part": 1,
+      "test": "/conf/sf/canonical-url",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests#everySamplingFeatureHasCanonicalUrl()",
+      "reviewedBy": "Codex Sprint 52 ATS line review",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The independently executable deployed TestNG method selects every exact featureType=sosa:Sample collection and observes every safely parsed supported GeoJSON items page before pagination advances. For every item it validates all canonical-link occurrences as same-origin api_root/samplingFeatures/{encoded id} identities, dereferences a representation-compatible occurrence, requires HTTP 200 and comparable actual media, and compares complete parsed content after removing only top-level canonical links. Expected media or comparability limitations are accumulated at collection and item boundaries so later inspectable defects still fail before one aggregate evidence SKIP."
+    },
+    {
+      "part": 1,
+      "test": "/conf/sf/resources-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests#samplingFeaturesResourcesEndpointIsValid()",
+      "reviewedBy": "Codex Sprint 52 ATS line review",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The independently executable deployed TestNG method invokes the endpoint-parameterized released resources procedure against /samplingFeatures, requires HTTP 200, gates every page by actual GeoJSON media before parsing, traverses bounded same-origin pagination, and validates every page against the bundled released Sampling Feature collection schema. HTTP 404 fails and unsupported actual media produces an explicit SKIP."
+    },
+    {
+      "part": 1,
+      "test": "/conf/sf/canonical-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests#canonicalSamplingFeaturesEndpointIsValid()",
+      "reviewedBy": "Codex Sprint 52 ATS line review",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The independently executable deployed TestNG method supplies the fixed api_root/samplingFeatures URL to the same released endpoint-parameterized resources procedure. It independently retrieves, media-gates, paginates, and schema-validates the canonical endpoint without depending on another Sampling Features method."
+    },
+    {
+      "part": 1,
+      "test": "/conf/sf/collections",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests#samplingFeatureCollectionsAreValid()",
+      "reviewedBy": "Codex Sprint 52 ATS line review",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The independently executable deployed TestNG method retrieves /collections, selects every exact featureType=sosa:Sample entry, requires itemType=feature and a nonempty id, and traverses every selected items endpoint through the reviewed API Common helper with an actual GeoJSON media gate on every page. A page observer schema-validates each safely parsed supported page before pagination advances, so a later media SKIP cannot erase an earlier schema failure. Expected media limitations are accumulated per collection so later inspectable defects still fail before one aggregate evidence SKIP."
+    },
+    {
+      "part": 1,
+      "test": "/conf/sf/ref-from-system",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests#samplingFeaturesAreAvailableFromEverySystem()",
+      "reviewedBy": "Codex Sprint 52 ATS line review",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The independently executable deployed TestNG method retrieves every canonical System through the reviewed API Common procedure and then requests systems/{encoded id}/samplingFeatures for every System. It requires HTTP 200, completely traverses bounded same-origin pagination, and conditionally validates every safely parsed application/geo+json page against the released Sampling Feature collection schema before pagination advances. Expected media limitations are accumulated per System so a later System HTTP, pagination, or schema defect still fails before one aggregate evidence SKIP."
     }
   ]
 }

@@ -1,0 +1,60 @@
+sprint: ets-52
+story: S-ETS-52-01
+title: Part 1 Sampling Features direct ATS closure
+status: COMPLETE
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-PART1-007
+  - REQ-ETS-COVERAGE-001
+  - REQ-ETS-VALIDATOR-001
+scenarios:
+  - SCENARIO-ETS-PART1-007-RELEASED-CANONICAL-URL-001
+  - SCENARIO-ETS-PART1-007-RELEASED-RESOURCES-ENDPOINT-001
+  - SCENARIO-ETS-PART1-007-RELEASED-CANONICAL-ENDPOINT-001
+  - SCENARIO-ETS-PART1-007-RELEASED-COLLECTIONS-001
+  - SCENARIO-ETS-PART1-007-RELEASED-REF-FROM-SYSTEM-001
+  - SCENARIO-ETS-PART1-007-RELEASED-MEDIA-GATE-001
+  - SCENARIO-ETS-PART1-007-RELEASED-CANONICAL-EQUIVALENCE-001
+  - SCENARIO-ETS-PART1-007-RELEASED-COLLECTION-COMPLETE-001
+  - SCENARIO-ETS-PART1-007-RELEASED-SYSTEM-COMPLETE-001
+  - SCENARIO-ETS-PART1-007-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-007-RELEASED-DEPENDENCY-CASCADE-001
+  - SCENARIO-ETS-PART1-007-RELEASED-E2E-EXECUTION-001
+  - SCENARIO-ETS-PART1-007-RELEASED-DIRECT-HTTP-COVERAGE-001
+success_criteria:
+  - All five released Sampling Features procedures have exact reviewed mappings.
+  - Every procedure retrieves only its own evidence and has no method dependency.
+  - Every page is status and actual-media gated before parsing.
+  - Pagination is bounded, cycle-safe, and same-origin.
+  - Supported Sampling Feature pages pass the released GeoJSON collection schema.
+  - Every exact sosa:Sample collection advertises itemType=feature and a nonempty id.
+  - Every supported collection item has exact canonical identity and equivalent content.
+  - Every canonical System nested Sampling Features endpoint is requested and fully traversed.
+  - Missing collections and unsupported representations cannot produce vacuous PASS.
+  - System prerequisite failures cascade before Sampling Features IUT access.
+  - Unrelated sibling configurations cannot block Sampling Features.
+  - Focused and full Maven verification completes.
+  - TeamEngine deploys every changed method against the primary unmodified local OSH IUT.
+  - Local OSH conformance failures and evidence SKIPs remain visible and unmodified.
+  - Controlled HTTP coverage executes successful positive paths for all five methods.
+  - Exact-image runtime, credential, dependency, and artifact-hygiene gates complete.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not import ets-sensorml30 or expose external validator types to TestNG procedures.
+verification:
+  test_first: PASS
+  test_first_raze_gapfix: EXPECTED_FAIL_13_5_0_0_AND_16_3_0_0
+  focused_maven: PASS_49_0_0_0
+  full_maven: PASS_506_0_0_3
+  coverage_audit: PASS_5_OF_5_EXACT
+  local_osh_teamengine: HONEST_220_40_6_174
+  controlled_http: PASS
+  exact_image: PASS_SHA256_AE3A7B6B17D98C328CA7DFF95AFA05FBFECF6A2F1EBE313A75C7429AE2580FF3
+  dependency_sabotage: PASS
+  credential_gates: PASS
+  artifact_hygiene: PASS_ZERO_WRITES_ZERO_LEAKS
+  raze_initial: GAPS_FOUND_0_98_RAZE_S52_001_AND_002_REMEDIATED
+  raze_recheck: APPROVE_0_99_BOTH_FINDINGS_CLOSED_NO_REQUIRED_FIXES

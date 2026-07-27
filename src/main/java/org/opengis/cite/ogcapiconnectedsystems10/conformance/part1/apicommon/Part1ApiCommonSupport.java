@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -106,6 +107,23 @@ public final class Part1ApiCommonSupport {
 	 */
 	public static Optional<TraversalResult> resourcesAtEndpoint(URI endpoint, String accept, Map<String, String> query,
 			String requirement, Set<String> supportedMediaTypes) {
+		return resourcesAtEndpoint(endpoint, accept, query, requirement, supportedMediaTypes, ignored -> {
+		});
+	}
+
+	/**
+	 * Traverses an arbitrary read-only collection endpoint and observes each supported
+	 * page before pagination advances.
+	 * @param endpoint absolute collection endpoint.
+	 * @param accept HTTP Accept value.
+	 * @param query immutable query parameters for the first page.
+	 * @param requirement requirement URI owning the request.
+	 * @param supportedMediaTypes allowed actual response media types.
+	 * @param pageObserver callback invoked after safe parsing and before the next page.
+	 * @return traversal evidence, or empty when the endpoint returns HTTP 404.
+	 */
+	public static Optional<TraversalResult> resourcesAtEndpoint(URI endpoint, String accept, Map<String, String> query,
+			String requirement, Set<String> supportedMediaTypes, Consumer<PageDocument> pageObserver) {
 		if (endpoint == null || !endpoint.isAbsolute()) {
 			throw new IllegalArgumentException("endpoint must be an absolute URI");
 		}
@@ -114,6 +132,9 @@ public final class Part1ApiCommonSupport {
 		}
 		if (requirement == null || requirement.isBlank()) {
 			throw new IllegalArgumentException("requirement must not be blank");
+		}
+		if (pageObserver == null) {
+			throw new IllegalArgumentException("pageObserver must not be null");
 		}
 		Set<String> mediaTypes = normalizedMediaTypes(supportedMediaTypes);
 		Map<String, String> parameters = query == null ? Map.of() : Map.copyOf(query);
@@ -124,8 +145,8 @@ public final class Part1ApiCommonSupport {
 		if (first.getStatusCode() == 404) {
 			return Optional.empty();
 		}
-		return Optional
-			.of(traverse(endpoint, accept, parameters, Part1ApiCommonSupport::get, first, requirement, mediaTypes));
+		return Optional.of(traverse(endpoint, accept, parameters, Part1ApiCommonSupport::get, first, requirement,
+				mediaTypes, pageObserver));
 	}
 
 	static Optional<TraversalResult> canonicalResourcesDetailed(URI apiRoot, String resourceType, Requester requester) {
@@ -145,7 +166,9 @@ public final class Part1ApiCommonSupport {
 					+ " (canonical endpoint returned HTTP 404).", true);
 			return Optional.empty();
 		}
-		return Optional.of(traverse(endpoint, accept, Map.of(), requester, first, CONF_CANONICAL_RESOURCES, Set.of()));
+		return Optional
+			.of(traverse(endpoint, accept, Map.of(), requester, first, CONF_CANONICAL_RESOURCES, Set.of(), ignored -> {
+			}));
 	}
 
 	/**
@@ -191,7 +214,24 @@ public final class Part1ApiCommonSupport {
 	 */
 	public static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
 			Set<String> supportedMediaTypes) {
-		return collectionItemsDetailed(apiRoot, collection, Map.of(), Part1ApiCommonSupport::get, supportedMediaTypes);
+		return collectionItemsDetailed(apiRoot, collection, supportedMediaTypes, ignored -> {
+		});
+	}
+
+	/**
+	 * Retrieves advertised collection items and observes each supported page before
+	 * pagination advances.
+	 * @param apiRoot normalized API root.
+	 * @param collection advertised collection metadata.
+	 * @param supportedMediaTypes allowed actual response media types.
+	 * @param pageObserver callback invoked after safe parsing and before the next page.
+	 * @return traversal evidence, or empty when no supported items media type is
+	 * advertised.
+	 */
+	public static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
+			Set<String> supportedMediaTypes, Consumer<PageDocument> pageObserver) {
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), Part1ApiCommonSupport::get, supportedMediaTypes,
+				pageObserver);
 	}
 
 	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
@@ -201,7 +241,13 @@ public final class Part1ApiCommonSupport {
 
 	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
 			Set<String> supportedMediaTypes, Requester requester) {
-		return collectionItemsDetailed(apiRoot, collection, Map.of(), requester, supportedMediaTypes);
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), requester, supportedMediaTypes, ignored -> {
+		});
+	}
+
+	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
+			Set<String> supportedMediaTypes, Consumer<PageDocument> pageObserver, Requester requester) {
+		return collectionItemsDetailed(apiRoot, collection, Map.of(), requester, supportedMediaTypes, pageObserver);
 	}
 
 	static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
@@ -211,9 +257,19 @@ public final class Part1ApiCommonSupport {
 
 	private static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
 			Map<String, String> query, Requester requester, Set<String> supportedMediaTypes) {
+		return collectionItemsDetailed(apiRoot, collection, query, requester, supportedMediaTypes, ignored -> {
+		});
+	}
+
+	private static Optional<TraversalResult> collectionItemsDetailed(URI apiRoot, Map<String, Object> collection,
+			Map<String, String> query, Requester requester, Set<String> supportedMediaTypes,
+			Consumer<PageDocument> pageObserver) {
 		requireApiRoot(apiRoot);
 		if (collection == null) {
 			throw new IllegalArgumentException("collection must not be null");
+		}
+		if (pageObserver == null) {
+			throw new IllegalArgumentException("pageObserver must not be null");
 		}
 		Object idValue = collection.get("id");
 		if (!(idValue instanceof String) || ((String) idValue).isBlank()) {
@@ -230,7 +286,7 @@ public final class Part1ApiCommonSupport {
 		String encodedId = URLEncoder.encode(id, StandardCharsets.UTF_8).replace("+", "%20");
 		URI endpoint = apiRoot.resolve("collections/" + encodedId + "/items");
 		return Optional.of(traverse(endpoint, mediaType.orElseThrow(), query == null ? Map.of() : query, requester,
-				null, CONF_COLLECTION_ITEMS, mediaTypes));
+				null, CONF_COLLECTION_ITEMS, mediaTypes, pageObserver));
 	}
 
 	static Optional<String> resourceUid(Map<String, Object> resource) {
@@ -360,7 +416,8 @@ public final class Part1ApiCommonSupport {
 	}
 
 	private static TraversalResult traverse(URI initial, String accept, Map<String, String> initialQuery,
-			Requester requester, Response firstResponse, String requirement, Set<String> supportedMediaTypes) {
+			Requester requester, Response firstResponse, String requirement, Set<String> supportedMediaTypes,
+			Consumer<PageDocument> pageObserver) {
 		if (requester == null) {
 			throw new IllegalArgumentException("requester must not be null");
 		}
@@ -399,7 +456,9 @@ public final class Part1ApiCommonSupport {
 				items.add(typed);
 				typedPageItems.add(typed);
 			}
-			pages.add(new PageDocument(current, responseMediaType(response), body, typedPageItems));
+			PageDocument page = new PageDocument(current, responseMediaType(response), body, typedPageItems);
+			pages.add(page);
+			pageObserver.accept(page);
 			URI next = nextUri(current, body, requirement);
 			if (next != null && !sameOrigin(initial, next)) {
 				ETSAssert.failWithUri(requirement,

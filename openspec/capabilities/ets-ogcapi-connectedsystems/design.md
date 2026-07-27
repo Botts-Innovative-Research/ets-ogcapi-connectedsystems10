@@ -1554,6 +1554,127 @@ now uses JUnit-managed temporary directories; focused and full Maven leave no
 `test-output/`. Final Raze returns `APPROVE_WITH_CONCERNS`, confidence `0.99`,
 with all six findings closed and no required fixes.
 
+### Sprint 52: released Part 1 Sampling Features procedures
+
+Sprint 52 replaces the historical four-method Sampling Features approximation
+with all five released Annex A procedures.
+
+```text
+SamplingFeaturesTests
+  |-- everySamplingFeatureHasCanonicalUrl()
+  |-- samplingFeaturesResourcesEndpointIsValid()
+  |-- canonicalSamplingFeaturesEndpointIsValid()
+  |-- samplingFeatureCollectionsAreValid()
+  `-- samplingFeaturesAreAvailableFromEverySystem()
+          |
+          v
+SamplingFeaturesSupport
+  exact collection metadata + canonical identity/equivalence
+  + GeoJSON Sampling Feature schema boundary
+          |
+          `--> Part1ApiCommonSupport bounded traversal
+```
+
+Class setup normalizes only the API root after checking Core, Common, Part 1
+API Common, and System outcomes. Every procedure retrieves its own evidence,
+uses `alwaysRun`, and has no method dependency. The released group chain is
+`Core/Common -> Part 1 API Common -> System -> Sampling Features`; unrelated
+siblings cannot block Sampling Features.
+
+The defensive prerequisite gate fails closed for inherited failures,
+configuration failures, and unexpected SKIPs. It permits only method-specific,
+reason-shape documented
+no-evidence SKIPs already established by the System boundary: API Common
+datetime without an eligible temporal collection, absent optional
+`mobile-system-id`, and unsupported actual media at the two System endpoint
+schema procedures. Those limitations remain logged and keep inherited
+conformance incomplete while the independent Sampling Features procedures
+collect their own evidence.
+
+Resources and canonical endpoint procedures independently traverse
+`/samplingFeatures`, require HTTP 200, gate actual media before parsing, and
+validate every supported GeoJSON page against the bundled released Sampling
+Feature collection schema. Generic `application/json` and other unsupported
+representations warn and SKIP. The canonical endpoint does not reuse another
+TestNG result; it independently executes the parameterized procedure.
+
+Collection discovery requests `/collections`, selects every exact
+`featureType=sosa:Sample` entry, requires `itemType=feature` and a non-empty ID,
+and retrieves each items endpoint through the reviewed API Common helper.
+Every supported page is GeoJSON-schema validated. No matching collection
+fails. If any matching collection has no supported items representation, all
+inspectable collections are still processed before the procedure SKIPs instead
+of creating a partial-evidence PASS.
+
+Canonical URL validation processes every item from every matching collection
+whose JSON representation is supported. Every canonical occurrence must
+resolve on the IUT origin to the encoded
+`/samplingFeatures/{id}` resource identity. A representation comparable with
+the collection page is dereferenced, must return HTTP 200 with matching actual
+media, and must equal the collection item after canonical links are removed
+from both JSON documents. An empty `links` member after removal is normalized
+to omission. No matching collections or any unsupported selected collection
+SKIPs after all inspectable evidence is processed; observed missing, unsafe,
+wrong-target, or different canonical content fails.
+
+System reference validation obtains every canonical System through the
+reviewed API Common helper, then independently traverses
+`/systems/{sysId}/samplingFeatures` for every ID. Every nested page must return
+HTTP 200, use supported JSON media, and follow bounded same-origin pagination.
+Every nested GeoJSON page also passes the released Sampling Feature collection
+schema. Expected unsupported-media evidence is retained per System while later
+Systems continue; one valid or unsupported System cannot hide a later failure.
+
+Canonical collection traversal, per-item canonical dereference, and nested
+System traversal catch only expected `SkipException` evidence limitations at
+their narrow independent boundaries. They continue later collections, items,
+and Systems, then throw one aggregate SKIP after all inspectable evidence has
+been processed. Assertions, non-200 responses, unsafe pagination, invalid
+schema or metadata, and canonical identity or content defects escape
+immediately as failures.
+
+Sampling Features have only a GeoJSON representation in released OGC 23-001.
+The schema remains behind the ETS-owned `SamplingFeaturesSupport` boundary; no
+SensorML suite jar or SensorML library enters this path. Primary TeamEngine E2E
+uses unmodified local OSH. Its generic JSON media and
+`featureType=featureOfInterest` collection metadata remain visible as honest
+SKIP/FAIL evidence. Controlled read-only HTTP coverage supplies the positive
+oracle for all five methods. OSH and TeamEngine source and binaries remain
+unchanged.
+
+Initial Raze returned `GAPS_FOUND` at confidence `0.98`. Its two required
+findings identified omitted conditional GeoJSON validation in nested System
+pages and early expected media SKIPs that could hide later defects.
+`Part1ApiCommonSupport` now exposes reviewed page-observer overloads. The
+observer runs after safe parsing of each supported page and before pagination
+advances, so an earlier supported-page defect cannot be erased by a later
+evidence SKIP. Sampling Features endpoint, collection, canonical, and nested
+System procedures use that ordering.
+
+Remediated implementation verification closes all non-adversarial gates. Reviewed
+coverage is `5/5 exact` for `/conf/sf` and
+`35 exact / 2 helper / 133 candidate / 70 unmapped` overall. Test-first
+evidence includes the expected initial compile failure, the real prerequisite
+execution gap at `6/1/0/0`, and a partial-collection false-PASS regression at
+`1/1/0/0`. Raze gap-fix test-first runs fail `13/5/0/0` and `16/3/0/0`.
+Final focused Maven is `49/0/0/0`; full Docker Maven is
+`506/0/0/3`. Exact image
+`sha256:ae3a7b6b17d98c328ca7dff95afa05fbfecf6a2f1ebe313a75c7429ae2580ff3`
+passes TeamEngine runtime, immutable-base, dependency, deployed SWE Common
+adapter, and confidential-context verification.
+
+Primary unmodified local OSH TeamEngine is honestly `220/40/6/174`. The five
+Sampling Features methods all execute: System-reference passes, collections
+fails because no collection advertises exact `sosa:Sample`, and the canonical
+URL plus two endpoint-schema procedures SKIP for missing collection or
+unsupported actual-media evidence. System sabotage makes all five procedures
+SKIP before Sampling Features IUT access. Artifact hygiene records 117
+recognized IUT requests, zero writes, and zero credential leaks. Credential
+integration and wire E2E pass with zero unmasked artifact hits, 36 masked
+events, and 36 intact synthetic transmissions. Focused adversarial recheck
+returns `APPROVE` at confidence `0.99`; both findings are closed, with no new
+findings and no required fixes.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

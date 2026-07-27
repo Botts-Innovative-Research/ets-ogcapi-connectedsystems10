@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.26 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 Deployment exact-procedure architecture)
+> Version: 2.0.29 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 Procedure Raze-approved)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -999,3 +999,61 @@ generic `/deployments` media, and HTTP 400 for the nested System endpoint.
 Controlled read-only HTTP coverage proves all five successful procedures and
 the key fail-closed branches. No OSH or TeamEngine source or binary change is
 part of this architecture.
+
+## 29. Architecture v2.0.27 - Part 1 Procedure procedures (2026-07-26)
+
+`ProceduresTests` replaces four eager historical approximations with the five
+released `/conf/procedure` procedures. Setup retains only the normalized API
+root. Each method independently retrieves canonical Procedure pages or
+advertised Procedure collections, preventing one missing evidence source from
+configuration-skipping unrelated procedures.
+
+The dependency changes from `systemfeatures -> procedures` to the released
+inheritance boundary, `part1apicommon -> procedures`. Core, Common, and API
+Common failures or unexpected SKIPs block before IUT access. The documented API
+Common datetime no-evidence SKIP remains visible while direct Procedure
+procedures execute. SystemFeatures and sibling outcomes cannot block Procedure.
+
+`ProcedureFeaturesSupport` owns collection selection, collection metadata,
+Procedure type extraction, media-specific location absence, canonical
+link/path resolution, canonical-content normalization, and media-to-schema
+dispatch. `Part1ApiCommonSupport` remains the single bounded, same-origin
+pagination implementation. Schema-controlled collection paths use its
+restricted media entry point so GeoJSON or SensorML is selected ahead of an
+earlier generic JSON link.
+
+The location procedure traverses all canonical `/procedures` pages and gates
+actual media before parsing. GeoJSON requires `geometry` to be JSON null;
+SensorML forbids the `position` member. The collections procedure requires
+`itemType=feature`, `featureType=sosa:Procedure`, one of the nine released
+Procedure type URI/CURIE values, and the matching released Procedure collection
+schema on every page.
+
+Canonical comparison requires every canonical relation occurrence to resolve
+on the IUT origin to `{api_root}/procedures/{id}`. Duplicate occurrences and
+representation queries are allowed only for that exact identity. The first
+occurrence with no advertised media type or one matching the collection page
+media type is dereferenced; no comparable occurrence warns and SKIPs. Content
+is compared after canonical links are removed from both resources, and a
+`links` member emptied by that removal is normalized to omitted.
+
+The schema backend uses bundled released GeoJSON/SensorML Procedure collection
+schemas behind the support boundary. A future
+`ConnectedSystemsSensorMlValidatorAdapter` replaces only SensorML schema
+semantics after a reusable FCU/OGC module exists. TestNG policy, endpoint
+discovery, pagination, canonical equivalence, and Connected Systems mapping
+remain local. No executable SensorML ETS jar enters the runtime closure.
+
+Primary TeamEngine E2E executes against unmodified local OSH and intentionally
+retains unsupported generic `/procedures` media and missing
+`sosa:Procedure`-collection outcomes. Controlled read-only HTTP coverage proves
+all five successful procedures and fail-closed location, media, type,
+canonical, and collection branches. No OSH or TeamEngine source or binary
+change is part of this architecture.
+
+Implementation reconciliation confirms all five methods are deployed and
+reviewed exact. The local OSH result is `218/39/5/174`, with the expected three
+Procedure media SKIPs and two collection failures. API Common sabotage skips
+Procedure setup and all five methods before Procedure IUT access. The exact
+image passes immutable TeamEngine runtime and deployed SWE Common adapter
+checks; no external source or binary was changed.

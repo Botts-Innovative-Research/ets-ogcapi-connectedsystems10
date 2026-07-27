@@ -610,12 +610,178 @@ collections, canonical resources, and System-scoped Deployment endpoints
 **AND** missing collections, unsupported later pages, canonical differences,
 and wrong System references SHALL fail or SKIP as specified.
 
-#### REQ-ETS-PART1-006: Procedures Conformance Class (Sprint 5 target)
+#### REQ-ETS-PART1-006: Procedure Direct ATS Procedures (Sprint 50)
 - **Priority**: MUST
-- **Status**: PARTIAL_UNREVIEWED_ATS (historical Sprint 5 increment complete; 0/5 released `/conf/procedure` tests have reviewed exact mappings)
-- **Description**: For each assertion in OGC 23-001 Annex A `/conf/procedure-features/`, the ETS SHALL provide at least one TestNG `@Test` method whose `description` attribute starts with the OGC canonical `.adoc` requirement URI form `/req/procedure/<assertion>`. The 5 sub-requirement `.adoc` files at `raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/procedure/` (HTTP-200-verified by Pat 2026-04-29): `req_resources_endpoint.adoc`, `req_canonical_url.adoc`, `req_canonical_endpoint.adoc`, `req_location.adoc` (identifier: `/req/procedure/location` — Procedure SHALL NOT include geometry), `req_collections.adoc`. The class lives at `org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests`. Procedures DEPENDS ON SystemFeatures via `<group name="procedures" depends-on="systemfeatures"/>`. Coverage scope at Sprint 5: Sprint-1-style minimal (4-5 @Tests): (a) GET /procedures 200 + non-empty items; (b) GET /procedures/{id} canonical shape; (c) rel=canonical link; (d) `/req/procedure/location` — geometry=null invariant (UNIQUE to Procedures — not in Subsystems or SystemFeatures). Generator MUST curl-verify geometry value BEFORE writing assertion; if IUT returns non-null geometry, use SKIP-with-reason. GeoRobotix serves 19 procedures. Generator MUST re-verify at sprint time.
-- **Rationale**: Procedures is a SystemFeatures sibling. Sprint 5 two-class batch (with Deployments) uses the now-proven cascade pattern. The geometry=null invariant is Procedures-unique and represents new assertion surface not present in prior classes.
+- **Status**: IMPLEMENTED_VERIFIED_RAZE_APPROVED (Sprint 50 replaces the
+  historical four-method approximation with all 5 released
+  `/conf/procedure` tests)
+- **Description**: The ETS SHALL implement exactly the five released OGC 23-001
+  Annex A `/conf/procedure` procedures: `/location`, `/canonical-url`,
+  `/resources-endpoint`, `/canonical-endpoint`, and `/collections`. Each
+  procedure SHALL have one independently executable TestNG method whose
+  description cites its canonical target URI. The historical non-empty generic
+  collection, representative canonical shape, canonical-link presence, and
+  GeoJSON-only location methods are superseded approximations and SHALL NOT be
+  reviewed as exact mappings.
+- **Location absence**: The location procedure SHALL retrieve every page from
+  `{api_root}/procedures`, following bounded same-origin pagination. HTTP status
+  and actual media SHALL be gated before parsing each page. Every GeoJSON
+  Procedure SHALL have `geometry` set to `null`; every SensorML Procedure SHALL
+  omit `position`. Unsupported or absent actual media SHALL warn and SKIP
+  before representation parsing.
+- **Collection completeness**: Canonical URL and collections procedures SHALL
+  process every collection advertised with `featureType=sosa:Procedure` and
+  require at least one. Selected metadata SHALL use `itemType=feature`. Missing
+  selected collections SHALL fail rather than produce vacuous PASS. When a
+  schema-controlled selected collection advertises multiple `rel=items`
+  representations, GeoJSON or SensorML SHALL be selected in preference to an
+  earlier generic JSON representation.
+- **Canonical equivalence**: Every selected collection item SHALL contain a
+  canonical link resolving on the IUT origin to
+  `{api_root}/procedures/{id}`. Multiple canonical relation occurrences and
+  representation variants MAY be present, but every occurrence SHALL resolve
+  to that exact Procedure identity. A representation query MAY remain. The
+  first occurrence in document order whose advertised media type is absent or
+  equals the collection page media type SHALL be dereferenced. If no occurrence
+  is representation-comparable, the procedure SHALL warn and SKIP rather than
+  report a false conformance failure. The canonical resource SHALL return HTTP
+  200 and equal the collection item after canonical links are removed from both
+  JSON documents. If canonical-link removal empties the item's `links` array,
+  the empty member SHALL be treated as equivalent to an omitted optional
+  `links` member in the canonical response.
+- **Endpoint validation**: The parameterized resources procedure SHALL require
+  HTTP 200 and validate every page against the released GeoJSON or SensorML
+  Procedure collection schema selected from actual response `Content-Type`.
+  The canonical endpoint procedure SHALL invoke the same behavior at
+  `{api_root}/procedures`. Unsupported or absent actual media SHALL warn and
+  SKIP before parsing.
+- **Procedure type**: For each collection item, the collections procedure SHALL
+  read `properties.featureType` from GeoJSON or `definition` from SensorML and
+  require one of the nine URI/CURIE values in the released OGC 23-001 Clause 12
+  Procedure Types table. Every page SHALL also satisfy the released
+  representation-specific Procedure collection schema.
+- **Dependency and validator boundary**: Procedure SHALL inherit Part 1 API
+  Common directly. The defensive setup gate SHALL inspect only Core, Common,
+  and Part 1 API Common configuration/test outcomes; unrelated or
+  SystemFeatures outcomes SHALL NOT block Procedure. Procedure schema dispatch
+  remains behind an ETS-owned support boundary so a future reusable SensorML
+  validator can replace local SensorML schema semantics without taking
+  ownership of protocol discovery, TestNG verdict policy, canonical
+  comparison, pagination, or Connected Systems mappings. `ets-sensorml30`
+  SHALL NOT be imported as a library.
+- **Historical record**: Sprint 5's four-method approximation and advisory
+  GeoRobotix evidence remain archived in
+  `epics/stories/s-ets-05-05-procedures-conformance-class.md`; they do not
+  establish released ATS completion.
+- **Verification**: Reviewed coverage is `5/5 exact`. Final focused Maven passes
+  `116/0/0/0`; full Docker Maven passes `451/0/0/3`; exact-image runtime
+  verification passes on
+  `sha256:6e1beeb598ab4c734f2e2d30e0ecb70d3270af9f9f2d5a1029d1b74259b54d98`.
+  Unmodified-local-OSH TeamEngine executes all five direct methods and reports
+  three unsupported-media SKIPs plus two missing-collection FAILs within the
+  honest suite total `218/39/5/174`. API Common sabotage makes Procedure setup
+  and all five methods SKIP before Procedure IUT access. Credential and
+  artifact-hygiene gates pass with zero writes or leaks. The initial Raze
+  review found canonical representation selection, optional `links`
+  normalization, and stale dependency-comment gaps; all three are remediated
+  and covered by focused regressions. Focused Raze recheck passes at confidence
+  `0.99` with all three findings closed and no required fixes.
 - **Maps to**: PRD FR-ETS-16.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-LOCATION-001 (CRITICAL)
+**GIVEN** the canonical Procedure endpoint returns one or more supported
+representation pages
+**WHEN** the released location procedure executes
+**THEN** every GeoJSON item SHALL have `geometry=null`
+**AND** every SensorML item SHALL omit `position`
+**AND** every pagination page SHALL be processed.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-MEDIA-GATE-001 (CRITICAL)
+**GIVEN** a Procedure endpoint returns unsupported or absent actual media
+**WHEN** a representation-specific procedure executes
+**THEN** it SHALL warn and SKIP before representation parsing
+**AND** later pagination pages SHALL apply the same gate.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-CANONICAL-URL-001 (CRITICAL)
+**GIVEN** every advertised `featureType=sosa:Procedure` collection
+**WHEN** its items are retrieved through the API Common helper
+**THEN** every item SHALL expose a canonical Procedure URL
+**AND** dereferencing it SHALL return HTTP 200 equivalent content.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-RESOURCES-ENDPOINT-001 (CRITICAL)
+**GIVEN** a Procedure resources endpoint parameter
+**WHEN** the released procedure executes
+**THEN** every page SHALL return HTTP 200
+**AND** actual GeoJSON or SensorML media SHALL select the corresponding
+released Procedure collection schema.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-CANONICAL-ENDPOINT-001 (CRITICAL)
+**GIVEN** the normalized API root
+**WHEN** the released canonical endpoint procedure executes
+**THEN** it SHALL apply the resources endpoint procedure at
+`{api_root}/procedures`.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-COLLECTIONS-001 (CRITICAL)
+**GIVEN** the server's advertised collections
+**WHEN** the released collections procedure executes
+**THEN** at least one collection SHALL have `itemType=feature` and
+`featureType=sosa:Procedure`
+**AND** every selected page SHALL satisfy its actual-media Procedure schema.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-COLLECTION-COMPLETE-001 (CRITICAL)
+**GIVEN** zero, one, or multiple advertised Procedure collections
+**WHEN** canonical URL or collections validation executes
+**THEN** zero selected collections SHALL fail
+**AND** every selected collection and every pagination page SHALL contribute
+evidence.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-CANONICAL-EQUIVALENCE-001 (CRITICAL)
+**GIVEN** a Procedure item has one or more canonical relation occurrences
+**WHEN** canonical URL validation executes
+**THEN** every occurrence SHALL resolve to the exact same-origin canonical
+Procedure identity
+**AND** the first representation-comparable occurrence SHALL return HTTP 200
+content equal to the collection item after canonical links are removed from
+both
+**AND** an item `links` member emptied by that removal SHALL equal an omitted
+canonical-response `links` member
+**AND** no comparable occurrence SHALL warn and SKIP.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-PROCEDURE-TYPE-001 (CRITICAL)
+**GIVEN** GeoJSON or SensorML Procedure collection items
+**WHEN** the collections procedure retrieves each reported type
+**THEN** GeoJSON SHALL use `properties.featureType`
+**AND** SensorML SHALL use `definition`
+**AND** every value SHALL be one of the released Clause 12 Procedure type URI
+or CURIE values.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** one Procedure procedure lacks evidence or receives unsupported media
+**WHEN** the other four methods execute
+**THEN** no method dependency or eager shared retrieval SHALL suppress their
+independent outcomes.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-DEPENDENCY-CASCADE-001 (CRITICAL)
+**GIVEN** a Core, Common, or Part 1 API Common prerequisite fails
+**WHEN** Procedure setup starts
+**THEN** all five direct methods SHALL SKIP before Procedure IUT access
+**AND** unrelated or SystemFeatures outcomes SHALL NOT restore the historical
+System ATS dependency.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** the unmodified local OSH returns generic `application/json` from
+`/procedures` and advertises no Procedure feature collection
+**WHEN** TeamEngine executes `/conf/procedure`
+**THEN** all five methods SHALL execute with honest FAIL/SKIP outcomes
+**AND** no OSH or TeamEngine change SHALL mask those IUT limitations.
+
+#### SCENARIO-ETS-PART1-006-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled read-only fixture with GeoJSON and SensorML Procedure
+collections and canonical resources
+**WHEN** all five deployed procedures execute
+**THEN** every successful path SHALL complete
+**AND** location, media, type, canonical, and collection defects SHALL fail or
+SKIP as specified.
 
 #### REQ-ETS-PART1-007..013: Remaining Per-Class Conformance Suites
 - **Priority**: MUST
@@ -3247,6 +3413,12 @@ descendant group SKIP
 **AND** cites Raze Sprint 4 sabotage evidence (total=26/passed=16/failed=1/skipped=9)
 **AND** does NOT modify the architectural decision text of the original ADR.
 *Maps to*: ADR-010 amendment.
+
+> The following five Sprint 5 Procedure scenarios are retained as historical
+> planning records. Sprint 50's `RELEASED-*` scenarios under
+> `REQ-ETS-PART1-006` supersede them as current acceptance criteria. In
+> particular, a non-null Procedure location is now a conformance FAIL, not a
+> SKIP, and Procedure inherits API Common directly rather than SystemFeatures.
 
 #### SCENARIO-ETS-PART1-006-PROCEDURES-RESOURCES-001 (CRITICAL — Sprint 5)
 **GIVEN** the IUT is `https://api.georobotix.io/ogc/t18/api`

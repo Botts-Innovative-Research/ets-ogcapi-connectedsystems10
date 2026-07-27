@@ -1,0 +1,260 @@
+review:
+  id: sprint-ets-50-adversarial
+  reviewer: Raze
+  role: adversarial-reviewer
+  sprint: ets-50
+  story: S-ETS-50-01
+  reviewed_at: "2026-07-26T23:26:31Z"
+  verdict: GAPS_FOUND
+  confidence: 0.98
+  duration_seconds: 528
+  unresolved_required_fix_remains: true
+  source_edited_by_reviewer: false
+  summary: >-
+    The five Procedure methods, target mappings, media-before-parse traversal,
+    representation-specific location and type semantics, direct API Common
+    dependency, honest local OSH outcomes, sabotage cascade, exact-image
+    runtime evidence, hygiene evidence, and external immutability claims are
+    supported by the inspected source and artifacts. Approval is withheld
+    because canonical equivalence can falsely fail conforming representations
+    in two ways, and shipped TestNG commentary contradicts the current
+    dependency graph.
+
+reviewed_scope:
+  released_source:
+    repository: /tmp/ogcapi-connected-systems-sprint46-source
+    commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+    inspected:
+      - api/part1/standard/sections/annex-abstract-test-suite.adoc
+      - api/part1/standard/requirements/procedure/requirements_class_procedure_features.adoc
+      - api/part1/standard/requirements/procedure/req_location.adoc
+      - api/part1/standard/requirements/procedure/req_canonical_url.adoc
+      - api/part1/standard/requirements/procedure/req_resources_endpoint.adoc
+      - api/part1/standard/requirements/procedure/req_canonical_endpoint.adoc
+      - api/part1/standard/requirements/procedure/req_collections.adoc
+      - api/part1/standard/sections/clause_12_requirements_class_procedure_features.adoc
+      - api/part1/openapi/schemas/geojson/procedureCollection.json
+      - api/part1/openapi/schemas/sensorml/procedureCollection.json
+  planning_and_reconciliation:
+    - openspec/change-proposals/CP-010-part1-procedure-closure.md
+    - epics/stories/s-ets-50-01-part1-procedure-closure.md
+    - .harness/contracts/sprint-ets-50.yaml
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - _bmad/architecture.md
+    - _bmad/traceability.md
+    - _bmad/adrs/ADR-010-dependency-skip-verification-strategy.md
+    - epics/epic-ets-02-part1-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+  implementation_and_tests:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/ProceduresTests.java
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/ProcedureFeaturesSupport.java
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part1/apicommon/Part1ApiCommonSupport.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/VerifyProceduresSuite.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/VerifyProcedureFeaturesSupport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/VerifyProceduresHttpProcedures.java
+    - ops/ats-coverage-report.json
+  archived_evidence:
+    - ops/test-results/sprint-ets-50-part1-procedure-verification-2026-07-26.md
+    - ops/test-results/sprint-ets-50-focused-final-2026-07-26.log
+    - ops/test-results/sprint-ets-50-full-maven-final-2026-07-26.log
+    - ops/test-results/sprint-ets-50-local-osh-teamengine-2026-07-26.xml
+    - ops/test-results/sprint-ets-50-local-osh-teamengine-container-2026-07-26.log
+    - ops/test-results/sprint-ets-50-apicommon-sabotage-teamengine-2026-07-26.xml
+    - ops/test-results/sprint-ets-50-apicommon-sabotage-container-2026-07-26.log
+    - ops/test-results/sprint-ets-50-teamengine6-runtime-2026-07-26.log
+    - ops/test-results/sprint-ets-50-positive-hygiene-2026-07-26.json
+    - ops/test-results/sprint-ets-50-apicommon-sabotage-hygiene-2026-07-26.json
+    - ops/test-results/sprint-ets-50-credential-integration-2026-07-26.log
+    - ops/test-results/sprint-ets-50-credential-e2e-2026-07-26.txt
+
+required_findings:
+  - id: RAZE-S50-001
+    severity: HIGH
+    title: First canonical occurrence can create a false conformance failure
+    summary: >-
+      The released ATS requires each item to include a canonical link, then to
+      dereference that link and compare equivalent content. It does not require
+      document-order selection when several representation-specific canonical
+      links are present. Sprint 50 instead mandates and implements
+      dereferencing the first occurrence. A conforming item with an HTML or
+      SensorML canonical link first and an equivalent GeoJSON canonical link
+      later can therefore be requested with an incomparable media type and
+      fail JSON parsing or content comparison despite providing valid
+      canonical evidence.
+    evidence:
+      - >-
+        Pinned Annex A lines 600-604 say that a canonical link is included,
+        dereferenced with HTTP 200, and compared except for that link; they do
+        not prescribe first-in-document-order selection.
+      - >-
+        openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:638-646
+        adds a first-occurrence requirement not present in the released ATS.
+      - >-
+        ProcedureFeaturesSupport.java:132-170 collects candidates but returns
+        candidates.get(0); ProceduresTests.java:106-115 uses that candidate's
+        advertised media type for dereference and immediate JSON comparison.
+      - >-
+        VerifyProcedureFeaturesSupport.java:89-102 and the controlled HTTP
+        fixture cover only a supported, comparable first canonical link.
+    required_fix: >-
+      Reconcile the spec, design, story, and contract to the released ATS.
+      Deterministically select a canonical occurrence whose advertised or
+      negotiated representation is supported and comparable with the
+      collection item, while retaining target-valid identity checks. Add a
+      deployed HTTP regression with an unsupported or different-media
+      canonical occurrence first and a valid comparable occurrence later.
+      Re-review the exact mapping after the regression passes.
+    disposition: OPEN
+
+  - id: RAZE-S50-002
+    severity: MEDIUM
+    title: Canonical-link exclusion does not equate absent and emptied links
+    summary: >-
+      The canonical URL requirement mandates a canonical relation only when a
+      resource is retrieved away from its canonical URL. A canonical response
+      may therefore omit its optional links member when the collection item
+      contained only the canonical link. The current comparator removes the
+      link object but retains an empty links array, then compares it with the
+      canonical document that has no links member. This reports a content
+      difference caused solely by the ATS-excluded canonical link.
+    evidence:
+      - >-
+        Pinned req_canonical_url.adoc:8 requires the canonical relation only
+        for retrieval through a non-canonical URL.
+      - >-
+        Pinned Annex A line 604 explicitly excludes the canonical link from
+        content equivalence.
+      - >-
+        ProcedureFeaturesSupport.java:173-189 always writes the retained links
+        array, including when it becomes empty.
+      - >-
+        VerifyProcedureFeaturesSupport.java:89-102 keeps links members and
+        non-canonical links in both compared documents; no unit or HTTP test
+        covers a collection item with only a canonical link and a canonical
+        response omitting links.
+    required_fix: >-
+      Define semantic canonical-link exclusion so a links member emptied only
+      by removing canonical relations is equivalent to an omitted links
+      member. Add focused and controlled HTTP regressions for this allowed
+      representation before restoring the exact mapping claim.
+    disposition: OPEN
+
+  - id: RAZE-S50-003
+    severity: LOW
+    title: Shipped TestNG commentary contradicts the current dependency graph
+    summary: >-
+      The executable dependency is correct, but the adjacent shipped comment
+      still states that Procedure retains its SystemFeatures dependency. This
+      contradicts Sprint 50, ADR-010 v5, structural lint, and the actual
+      part1apicommon dependency.
+    evidence:
+      - >-
+        testng.xml:53-57 says Procedures retains its SystemFeatures dependency.
+      - >-
+        testng.xml:178 declares procedures depends-on part1apicommon, and
+        VerifyTestNGSuiteDependency explicitly rejects SystemFeatures.
+    required_fix: >-
+      Correct the stale TestNG comment to identify the historical Sprint 49
+      state and the current Sprint 50 direct Part 1 API Common dependency.
+    disposition: OPEN
+
+verified_evidence:
+  released_inventory_and_mappings:
+    result: PASS
+    details:
+      - Pinned source commit matches 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2.
+      - The released Procedure class contains exactly five tests and inherits /conf/api-common.
+      - Reviewed mappings identify all five canonical test and target URI pairs.
+      - Coverage report records /conf/procedure as 5/5 exact, subject to the canonical fixes above.
+  traversal_media_and_schema:
+    result: PASS
+    details:
+      - Shared traversal checks HTTP 200 and actual media before parsing every page.
+      - Pagination is bounded, cycle-checked, same-origin, and every page/item is retained.
+      - Restricted collection retrieval skips earlier generic JSON links and selects advertised GeoJSON or SensorML.
+      - GeoJSON null geometry, absent SensorML position, nine URI/CURIE type pairs, and schema dispatch match the pinned source.
+      - Bundled Procedure schemas differ from the pinned source only by local absolute reference rewrites, formatting, and local identifiers.
+  dependency_behavior:
+    result: PASS
+    details:
+      - Procedure depends directly on part1apicommon and is co-located in the same TestNG block.
+      - Defensive setup scanning is limited to Core, Common, and Part 1 API Common.
+      - SystemFeatures configuration does not block Procedure.
+  build_and_controlled_http:
+    result: PASS_WITH_THREE_DOCUMENTED_MAVEN_SKIPS
+    details:
+      - Focused Maven artifact records 114/0/0/0.
+      - Full Maven artifact records 449/0/0/3 and BUILD SUCCESS.
+      - Existing controlled HTTP tests exercise all five positive methods and current fail-closed branches, but not the two canonical cases in RAZE-S50-001 and RAZE-S50-002.
+  local_osh_e2e:
+    result: HONEST_IUT_FAILURES_PRESERVED
+    totals:
+      total: 218
+      passed: 39
+      failed: 5
+      skipped: 174
+    procedure:
+      setup: PASS
+      canonical_endpoint: SKIP_UNSUPPORTED_APPLICATION_JSON
+      canonical_url: FAIL_MISSING_PROCEDURE_COLLECTION
+      collections: FAIL_MISSING_PROCEDURE_COLLECTION
+      location: SKIP_UNSUPPORTED_APPLICATION_JSON
+      resources_endpoint: SKIP_UNSUPPORTED_APPLICATION_JSON
+  api_common_sabotage:
+    result: PASS
+    totals:
+      total: 218
+      passed: 34
+      failed: 1
+      skipped: 183
+    details:
+      - The only failure is the intentional API Common resource-ID sabotage.
+      - Procedure setup and all five methods skip before Procedure IUT access.
+  runtime_and_image:
+    result: PASS
+    image: sha256:10e8d80a525d1e6824f9cda07ae5294b73a16f291cbdaa2c626fd7a49b23943e
+    details:
+      - The claimed image exists locally at the exact digest.
+      - Production Java, TestNG, and mapping files predate the exact image build.
+      - Archived runtime evidence passes TeamEngine 6 provenance, immutable-base, deployed SWE Common adapter, collision, and context checks.
+  credential_and_hygiene:
+    result: PASS
+    details:
+      - Positive evidence records 120 recognized requests, 115 IUT GETs, zero IUT writes, and zero credential leaks.
+      - Sabotage evidence records 98 recognized requests, 93 IUT GETs, zero IUT writes, and zero credential leaks.
+      - Credential integration and wire evidence record zero unmasked execution-artifact hits and 38 intact synthetic transmissions.
+      - Independent scoped scans found zero authorization lines and zero IUT write requests in Sprint 50 artifacts.
+  external_immutability:
+    result: PASS
+    details:
+      - /home/nh/docker/osh-core is clean at 4c87a65c9a967d52af9df476e65d7862c7673a15 and zero commits ahead.
+      - The running local OSH /opt/osh mount is read-only.
+      - No Sprint 50 changed path is OSH or TeamEngine source or binary content.
+
+required_fixes:
+  - RAZE-S50-001
+  - RAZE-S50-002
+  - RAZE-S50-003
+
+scope_limits:
+  implementation_modified: false
+  reconciliation_modified: false
+  only_report_written: .harness/evaluations/sprint-ets-50-adversarial.yaml
+  expensive_docker_gates_rerun: false
+  rationale: >-
+    The review used pinned source, current source, structured artifact parsing,
+    image inspection, and lightweight integrity checks. Existing evidence was
+    sufficient to establish the verdict.
+
+token_metadata:
+  available: false
+  total_tokens: null
+  reason: >-
+    This execution surface did not expose an authoritative reviewer token
+    count.

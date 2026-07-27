@@ -1,0 +1,64 @@
+sprint: ets-50
+story: S-ETS-50-01
+title: Part 1 Procedure direct ATS closure
+status: COMPLETE_RAZE_APPROVED
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-PART1-006
+  - REQ-ETS-COVERAGE-001
+  - REQ-ETS-VALIDATOR-001
+scenarios:
+  - SCENARIO-ETS-PART1-006-RELEASED-LOCATION-001
+  - SCENARIO-ETS-PART1-006-RELEASED-MEDIA-GATE-001
+  - SCENARIO-ETS-PART1-006-RELEASED-CANONICAL-URL-001
+  - SCENARIO-ETS-PART1-006-RELEASED-RESOURCES-ENDPOINT-001
+  - SCENARIO-ETS-PART1-006-RELEASED-CANONICAL-ENDPOINT-001
+  - SCENARIO-ETS-PART1-006-RELEASED-COLLECTIONS-001
+  - SCENARIO-ETS-PART1-006-RELEASED-COLLECTION-COMPLETE-001
+  - SCENARIO-ETS-PART1-006-RELEASED-CANONICAL-EQUIVALENCE-001
+  - SCENARIO-ETS-PART1-006-RELEASED-PROCEDURE-TYPE-001
+  - SCENARIO-ETS-PART1-006-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-006-RELEASED-DEPENDENCY-CASCADE-001
+  - SCENARIO-ETS-PART1-006-RELEASED-E2E-EXECUTION-001
+  - SCENARIO-ETS-PART1-006-RELEASED-DIRECT-HTTP-COVERAGE-001
+success_criteria:
+  - All five released Procedure procedures have exact reviewed mappings.
+  - Every canonical Procedure page and every selected collection page is processed.
+  - Missing Procedure collection evidence fails instead of passing vacuously.
+  - HTTP status and actual media are established before parsing every representation page.
+  - GeoJSON Procedure items have null geometry.
+  - SensorML Procedure items have no position member.
+  - Advertised GeoJSON or SensorML is selected ahead of an earlier generic JSON items link for schema-controlled paths.
+  - GeoJSON and SensorML actual media select fail-closed Procedure collection schemas.
+  - Every Procedure type is one of the released Clause 12 URI or CURIE values.
+  - Every canonical link resolves to exact Procedure identity.
+  - The first canonical occurrence with absent or page-matching media dereferences with HTTP 200; no comparable occurrence warns and skips.
+  - Canonical content equals collection content after canonical links are removed from both, including canonical-only links versus omitted links.
+  - Each procedure retrieves only its own prerequisites.
+  - API Common prerequisite failures cascade before Procedure IUT access.
+  - Unrelated and SystemFeatures configurations cannot block Procedure.
+  - Focused and full Maven verification completes.
+  - TeamEngine executes every changed method against the primary unmodified local OSH IUT.
+  - Local OSH conformance failures remain visible and unmodified.
+  - A controlled HTTP fixture executes successful positive paths for all five methods.
+  - Exact-image runtime, dependency, credential, and artifact-hygiene gates complete.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not import ets-sensorml30 or expose external validator types to TestNG procedures.
+verification:
+  test_first: PASS_EXPECTED_39_TEST_COMPILE_ERRORS
+  raze_gapfix_test_first: PASS_EXPECTED_2_TEST_COMPILE_ERRORS
+  focused_maven: PASS_116_0_0_0
+  full_maven: PASS_451_0_0_3
+  coverage_audit: PASS_5_OF_5_EXACT
+  local_osh_teamengine: HONEST_IUT_RESULT_218_39_5_174
+  controlled_http: PASS
+  exact_image: PASS_SHA256_6E1BEEB598AB
+  dependency_sabotage: PASS_218_34_1_183_ALL_PROCEDURES_SKIP
+  credential_gates: PASS
+  artifact_hygiene: PASS_ZERO_WRITES_ZERO_LEAKS
+  raze_initial: GAPS_FOUND_3_REMEDIATED
+  raze: PASS_0_99_ALL_FINDINGS_CLOSED

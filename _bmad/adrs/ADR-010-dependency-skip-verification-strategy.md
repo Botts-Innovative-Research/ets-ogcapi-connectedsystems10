@@ -355,3 +355,32 @@ The Sprint 7 v3 retroval note above closed the inference gap for the 3-class cas
 - Sprint 7 contract reference: `.harness/contracts/sprint-ets-07.yaml` `success_criteria.sabotage_cascade_xml_produced`
 - Sprint 7 generator-handoff (Run 1 close): `.harness/handoffs/generator-handoff.yaml`
 - spec.md REQ-ETS-CLEANUP-017 status promoted from STRUCTURAL-IMPLEMENTED-LIVE-EXEC-FAILED (Sprint 6 close) → IMPLEMENTED (Sprint 7 close) with cascade XML evidence pointer.
+
+## Sprint 50 v5 amendment (2026-07-26) - released inheritance replaces historical sibling topology
+
+The Sprint 5 through Sprint 8 topology and sabotage evidence above remain
+period-accurate historical records. They do not define the current prerequisite
+graph for a class after its released Annex A procedures are reviewed.
+
+OGC 23-001's released `/conf/procedure` and `/conf/deployment` classes inherit
+`/conf/api-common` directly. Sprint 49 therefore changed Deployment from
+`systemfeatures` to `part1apicommon`; Sprint 50 specifies the same correction
+for Procedure. The current target chains are:
+
+- Procedure -> Part 1 API Common -> Core/Common.
+- Deployment -> Part 1 API Common -> Core/Common.
+- Subdeployments -> Deployment -> Part 1 API Common -> Core/Common.
+
+Subsystem, Sampling Feature, Property Definition, encoding, filtering, and
+mutation classes retain their current declared dependencies until their own
+released ATS closure increments review and replace those historical mappings.
+
+TestNG group dependency remains the ordering and cascade mechanism. For direct
+Procedure execution, an explicit result gate may permit only API Common's exact
+documented datetime no-evidence SKIP while blocking all failures,
+configuration failures, and unexpected SKIPs. SystemFeatures failures cannot
+block Procedure because SystemFeatures is not an inherited requirement.
+
+Sprint 50 must prove the new direct boundary with structural lint, API Common
+sabotage, and full TeamEngine E2E. Historical SystemFeatures sabotage XML
+remains evidence for the old graph only.

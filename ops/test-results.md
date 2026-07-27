@@ -1,8 +1,48 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T22:26Z
+Last updated: 2026-07-26T23:13Z
 
 ## Current Sprint Evidence
+
+Sprint 50 Part 1 Procedure direct ATS:
+
+- Coverage: `240 total / 25 exact / 2 helper / 137 candidate / 76 unmapped`;
+  `/conf/procedure` is `5/5 exact`.
+- Test-first compilation produced the expected 39 missing-symbol errors; the
+  Raze gap-fix test-first run produced two expected missing-method errors.
+  Final focused Maven is `116/0/0/0`; full Docker Maven is `451/0/0/3`.
+- ATS audit self-test, internal consistency, and released-source reproduction
+  pass at `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+- Exact image:
+  `sha256:6e1beeb598ab4c734f2e2d30e0ecb70d3270af9f9f2d5a1029d1b74259b54d98`.
+  Exact-image TeamEngine runtime, adapter, dependency-collision,
+  immutable-base, and context-hygiene verification pass.
+- Primary unmodified local OSH TeamEngine: `218/39/5/174`; all five Procedure
+  methods execute with three unsupported-media SKIPs and two genuine
+  missing-collection FAILs.
+- Procedure outcomes: location, resources endpoint, and canonical endpoint
+  SKIP on unsupported `application/json`; canonical URL and collections FAIL
+  because no collection advertises exact `featureType=sosa:Procedure`.
+- Positive artifact hygiene: 120 recognized requests, 115 IUT GETs, zero
+  writes, zero credential leaks.
+- Controlled HTTP coverage executes every successful path for the five released
+  procedures and adversarial media, location, type, canonical, and collection
+  cases.
+- API Common sabotage: `218/34/1/183`; Procedure setup and all five methods
+  skip before Procedure IUT access. Sabotage hygiene passes with zero writes
+  and zero credential leaks.
+- Credential integration and wire E2E pass with zero unmasked execution
+  artifact hits, 38 masked events, and 38 intact synthetic transmissions.
+- OSH provenance: clean at `4c87a65`, zero commits ahead, `/opt/osh` read-only.
+  No OSH or TeamEngine modification.
+- Initial Raze review found three canonical-selection, optional-member, and
+  dependency-comment gaps; all are remediated with focused regressions.
+- Focused Raze recheck: `PASS`, confidence `0.99`, duration 189 seconds, all
+  three prior findings closed, no required fixes.
+- Verification summary:
+  `ops/test-results/sprint-ets-50-part1-procedure-verification-2026-07-26.md`.
+
+---
 
 Sprint 49 Part 1 Deployment direct ATS:
 

@@ -2,6 +2,67 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-26 - Part 1 Procedure direct ATS complete and Raze-approved
+
+**Triggered by user instruction**: execute accepted recommendations 1-4
+continuously, including completion of every released Part 1 gap.
+
+- Replaced the historical four-method Procedure approximation with exactly the
+  five released procedures and reviewed mappings. Coverage is
+  `240/25 exact/2 helper/137 candidate/76 unmapped`; Procedure is `5/5 exact`.
+- Added complete page and collection traversal, actual-media schema dispatch,
+  GeoJSON/SensorML location absence, all nine released Procedure types, exact
+  canonical identity, and canonical content equivalence.
+- Rewired Procedure directly to API Common and constrained defensive result
+  scanning to Core/Common/API Common. API Common sabotage proves Procedure
+  setup and all five methods skip before Procedure IUT access.
+- Test-first compilation produced the expected 39 errors. The Raze gap-fix
+  test-first run produced two expected errors; final focused Maven passes
+  `116/0/0/0`, full Maven passes `451/0/0/3`, and source/coverage audits pass.
+- Exact image `sha256:6e1beeb5...54d98` passes runtime, embedded SWE Common
+  adapter, dependency collision, immutable-base, and confidential-context
+  verification.
+- Primary unmodified local OSH TeamEngine is honestly `218/39/5/174`, with
+  three Procedure SKIPs on unsupported generic media and two FAILs for the
+  missing exact Procedure collection.
+- Controlled HTTP coverage executes all five positive procedures. Positive and
+  sabotage hygiene pass with zero writes and no credential leaks.
+- Credential integration and wire gates pass with zero unmasked artifact hits,
+  38 masked events, and 38 intact synthetic transmissions.
+- Reverified OSH provenance: clean at `4c87a65`, zero commits ahead, read-only
+  mount. No OSH or TeamEngine source or binary modification; hosted CI remains
+  outside scope.
+- Reconciled spec, design, architecture v2.0.29, traceability, story, contract,
+  epic, status, test results, and durable verification evidence.
+- Initial Raze review found unsupported-first canonical selection,
+  canonical-only versus omitted `links`, and stale dependency commentary.
+  Media-aware comparable selection, optional-member normalization, corrected
+  commentary, and focused regressions remediate all three findings.
+- Focused Raze recheck returns `PASS`, confidence `0.99`, after 189 seconds.
+  All three prior findings are closed with no required fixes.
+
+## 2026-07-26 - Part 1 Procedure direct ATS specified
+
+**Triggered by user instruction**: execute accepted recommendations 1-4
+continuously, including completion of every released Part 1 gap.
+
+- Published completed Sprint 49 to Botts `main` as commit `670ccf2`.
+- Audited the pinned OGC 23-001 Annex A source and confirmed five released
+  `/conf/procedure` tests versus the historical four-method approximation.
+- Added CP-010, S-ETS-50-01, its contract, thirteen exact scenarios, design,
+  architecture v2.0.27, traceability, epic, baseline, and operational handoff
+  before product code.
+- Specified direct API Common inheritance, independent procedure evidence,
+  every-page media gating, GeoJSON/SensorML location absence, complete
+  collections, all nine Procedure types, exact canonical equivalence, and
+  released Procedure schema dispatch.
+- Direct read-only local OSH probes found generic `application/json` from
+  `/procedures` for all requested media and no advertised Procedure collection.
+  Existing TeamEngine evidence hides all four historical methods behind
+  SystemFeatures; replacement E2E must expose the genuine IUT outcomes.
+- Reverified OSH provenance as clean at `4c87a65`, zero commits ahead, and
+  read-only mounted. No OSH or TeamEngine source or binary changed.
+
 ## 2026-07-26 - Part 1 Deployment direct ATS complete
 
 **Triggered by user instruction**: execute accepted recommendations 1-4

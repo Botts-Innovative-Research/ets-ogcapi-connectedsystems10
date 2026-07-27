@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T22:26Z
+Last updated: 2026-07-26T23:58Z
 
 ## Fresh-Session Entry Point
 
@@ -61,6 +61,55 @@ Read these first:
 - `.harness/contracts/sprint-ets-49.yaml`
 - `.harness/evaluations/sprint-ets-49-adversarial-recheck.yaml`
 - `ops/test-results/sprint-ets-49-local-osh-baseline-2026-07-26.md`
+- `openspec/change-proposals/CP-010-part1-procedure-closure.md`
+- `epics/stories/s-ets-50-01-part1-procedure-closure.md`
+- `.harness/contracts/sprint-ets-50.yaml`
+- `ops/test-results/sprint-ets-50-local-osh-baseline-2026-07-26.md`
+
+## Session Handoff - Part 1 Procedure Direct ATS
+
+S-ETS-50-01 is complete under CP-010.
+
+- Coverage is `240 total / 25 exact / 2 helper / 137 candidate / 76 unmapped`;
+  `/conf/procedure` is `5/5 exact`.
+- The historical four-method approximation is replaced by the five released
+  location, canonical URL, resources endpoint, canonical endpoint, and
+  collections procedures.
+- Every method retrieves its own evidence and depends directly on API Common.
+  Every page is status/media gated before parsing. GeoJSON requires
+  `geometry=null`; SensorML forbids `position`.
+- Procedure collections are complete and non-vacuous, every item uses one of
+  the nine released types, and actual GeoJSON/SensorML media select the
+  released Procedure collection schema.
+- Canonical occurrences must identify the exact same-origin Procedure and
+  canonical content must equal collection content after canonical links are
+  removed from both.
+- Final focused Maven is `116/0/0/0`; full Maven is `451/0/0/3`; ATS audit
+  self-test, internal consistency, and released-source reproduction pass.
+- Exact image
+  `sha256:6e1beeb598ab4c734f2e2d30e0ecb70d3270af9f9f2d5a1029d1b74259b54d98`
+  passes TeamEngine runtime, deployed SWE Common adapter, immutable-base,
+  collision, and confidential-context verification.
+- Primary unmodified local OSH TeamEngine is honestly `218/39/5/174`.
+  Procedure setup passes; three direct endpoint methods SKIP on unsupported
+  `application/json`, while canonical URL and collections FAIL because no
+  exact `sosa:Procedure` collection is advertised.
+- Positive hygiene covers 120 recognized requests and 115 IUT GETs with zero
+  writes and zero credential leaks. Controlled HTTP tests execute every
+  successful path and fail-closed branch.
+- API Common sabotage is `218/34/1/183`; Procedure setup and all five methods
+  skip before Procedure access. Credential integration and wire E2E pass with
+  zero unmasked artifact hits, 38 masked events, and 38 intact synthetic
+  transmissions.
+- Local OSH remains clean at `4c87a65`, zero commits ahead, with `/opt/osh`
+  mounted read-only. No OSH or TeamEngine source or binary changed.
+- Initial Raze review found three gaps. Comparable canonical selection,
+  canonical-only versus omitted `links`, and stale dependency commentary are
+  remediated with focused regressions.
+- Focused Raze recheck passes at confidence `0.99` after 189 seconds. All three
+  prior findings are closed with no required fixes.
+- Remaining Sprint 50 publication work: final integrity check, commit, and
+  push.
 
 ## Session Handoff - Part 1 Deployment Direct ATS
 
@@ -1448,11 +1497,12 @@ Gate Results:
 
 ## Next Action
 
-1. Start Sprint 50 with the next released Part 1 gap, `/conf/procedure`, using
-   the same spec-first, exact-mapping, local-OSH, and immutable-runtime gates.
+1. Complete Sprint 50 final integrity checks, commit, and push to Botts `main`.
+2. Begin the released Part 1 Subdeployment closure increment.
+3. Continue remaining released Part 1 classes before Part 2 closure.
 
 ## Dirty Worktree Notes
 
-The Sprint 49 closure contains implementation, tests,
-specification/reconciliation records, and generated verification evidence. It
-contains no OSH or TeamEngine source or binary changes.
+Current dirty worktree contains Sprint 50 specifications, implementation,
+tests, generated coverage, runtime evidence, and reconciliation. It contains no
+OSH or TeamEngine source or binary changes.

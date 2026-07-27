@@ -51,10 +51,11 @@
        retrieves its own hierarchy, media, or association evidence, so one
        procedure's no-data SKIP cannot suppress unrelated methods. -->
   <!-- Sprint 49 S-ETS-49-01 (REQ-ETS-PART1-004): Deployments now implements
-       the five released procedures and depends directly on API Common. Procedures
-       retains its SystemFeatures dependency. Deployment setup filters prerequisite
-       results to Core, Common, and API Common so sibling configuration outcomes
-       cannot suppress its direct procedures. -->
+       the five released procedures and depends directly on API Common. Sprint 50
+       likewise moves Procedures from its historical SystemFeatures dependency to
+       direct API Common inheritance. Both setup gates filter prerequisite results
+       to Core, Common, and API Common so sibling configuration outcomes cannot
+       suppress their direct procedures. -->
   <!-- Sprint 7 S-ETS-07-02 (REQ-ETS-PART1-007) + S-ETS-07-03 (REQ-ETS-PART1-008):
        SamplingFeatures and PropertyDefinitions groups added; both depend on
        SystemFeatures via the same cascade pattern. Sprint 7 S-ETS-07-01 Wedge 1
@@ -175,8 +176,8 @@
         <group name="part1apicommon" depends-on="core common"/>
         <group name="systemfeatures" depends-on="part1apicommon"/>
         <group name="subsystems" depends-on="systemfeatures"/>
-        <group name="procedures" depends-on="systemfeatures"/>
-      <group name="deployments" depends-on="part1apicommon"/>
+        <group name="procedures" depends-on="part1apicommon"/>
+        <group name="deployments" depends-on="part1apicommon"/>
         <group name="samplingfeatures" depends-on="systemfeatures"/>
         <group name="propertydefinitions" depends-on="systemfeatures"/>
         <group name="subdeployments" depends-on="deployments"/>

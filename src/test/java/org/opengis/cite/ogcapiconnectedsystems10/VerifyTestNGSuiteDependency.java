@@ -65,9 +65,7 @@ public class VerifyTestNGSuiteDependency {
 	private static final String SUBSYSTEMS_GROUP = "subsystems";
 
 	/**
-	 * Sprint 5 S-ETS-05-05 / ADR-010 v3 amendment — Procedures group (sibling of
-	 * Subsystems; depends on SystemFeatures via the now-VERIFIED-LIVE TestNG 7.9.0
-	 * transitive cascade).
+	 * Sprint 50 S-ETS-50-01 — released Procedures inherits Part 1 API Common directly.
 	 */
 	private static final String PROCEDURES_GROUP = "procedures";
 
@@ -592,19 +590,13 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 5 S-ETS-05-05 / ADR-010 v3 amendment — Procedures group =====
-	// Mirrors the Subsystems patterns above; Procedures is a SystemFeatures sibling.
-	// Two-level cascade is now VERIFIED LIVE (Sprint 4 Raze sabotage exec); structural
-	// lint catches refactor regressions before the slower local bash sabotage gate.
+	// ===== Sprint 50 S-ETS-50-01 — released Procedure dependency boundary =====
 
 	/**
-	 * Sprint 5 S-ETS-05-05 (REQ-ETS-PART1-006): the canonical testng.xml SHALL declare
-	 * {@code <group name="procedures" depends-on="systemfeatures"/>} so the Procedures
-	 * conformance class participates in the two-level dependency cascade (Procedures →
-	 * SystemFeatures → Core).
+	 * REQ-ETS-PART1-006; SCENARIO-ETS-PART1-006-RELEASED-DEPENDENCY-CASCADE-001.
 	 */
 	@org.junit.Test
-	public void testProceduresGroupDependsOnSystemFeatures() throws Exception {
+	public void testProceduresGroupDependsOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -615,23 +607,21 @@ public class VerifyTestNGSuiteDependency {
 				String dependsOn = deps.get(PROCEDURES_GROUP);
 				assertNotNull("group '" + PROCEDURES_GROUP + "' has null depends-on attribute", dependsOn);
 				assertTrue("group '" + PROCEDURES_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+						+ PART1_API_COMMON_GROUP + "'", dependsOn.contains(PART1_API_COMMON_GROUP));
+				assertFalse("group '" + PROCEDURES_GROUP + "' retains superseded SystemFeatures dependency",
+						dependsOn.contains(SYSTEMFEATURES_GROUP));
 				foundDependency = true;
 				break;
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + PROCEDURES_GROUP + "\" depends-on=\""
-				+ SYSTEMFEATURES_GROUP + "\"/> — see ADR-010 v3 amendment + Sprint 5 S-ETS-05-05. The Procedures "
-				+ "conformance class requires this declaration to participate in the two-level dependency "
-				+ "cascade (Procedures → SystemFeatures → Core).", foundDependency);
+				+ PART1_API_COMMON_GROUP + "\"/> - see Sprint 50 S-ETS-50-01.", foundDependency);
 	}
 
 	/**
-	 * Sprint 5 S-ETS-05-05: every Procedures @Test method SHALL carry
+	 * Sprint 50 S-ETS-50-01: every Procedures @Test method SHALL carry
 	 * {@code groups = "procedures"} so the {@code <group name="procedures"
-	 * depends-on="systemfeatures"/>} declaration in testng.xml has tagged methods to
-	 * resolve against. A Procedures @Test missing the group annotation would FAIL/ERROR
-	 * directly rather than cascade-SKIP.
+	 * depends-on="part1apicommon"/>} declaration has tagged methods to resolve.
 	 */
 	@org.junit.Test
 	public void testEveryProceduresTestMethodCarriesProceduresGroup() {
@@ -657,20 +647,14 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 5 S-ETS-05-05: Procedures classes MUST be co-located in the SAME
-	 * {@code <test>} block as SystemFeatures so the two-level group-dependency cascade
-	 * can resolve within scope (TestNG group dependencies are {@code <test>}-scoped per
-	 * TestNG-1.0.dtd; if Procedures were in a separate block, the
-	 * {@code depends-on="systemfeatures"} would fail with "depends on nonexistent
-	 * group").
+	 * Sprint 50: Procedures and Part 1 API Common share the same TestNG block.
 	 */
 	@org.junit.Test
-	public void testProceduresCoLocatedWithSystemFeatures() throws Exception {
+	public void testProceduresCoLocatedWithPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> systemFeaturesClassNames = new HashSet<>();
-		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
-			systemFeaturesClassNames.add(c.getName());
-		}
+		Set<String> apiCommonClassNames = Set
+			.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests.class
+				.getName());
 		Set<String> proceduresClassNames = new HashSet<>();
 		for (Class<?> c : PROCEDURES_CLASSES) {
 			proceduresClassNames.add(c.getName());
@@ -682,18 +666,15 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasApiCommon = xtClasses.containsAll(apiCommonClassNames);
 			boolean hasAnyProcedures = !java.util.Collections.disjoint(xtClasses, proceduresClassNames);
-			if (hasAllSystemFeatures && hasAnyProcedures) {
+			if (hasApiCommon && hasAnyProcedures) {
 				coAlloc = true;
 				break;
 			}
 		}
-		assertTrue(
-				"SystemFeatures (" + systemFeaturesClassNames + ") and Procedures (" + proceduresClassNames
-						+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
-						+ "(Procedures → SystemFeatures → Core) resolves within scope. See ADR-010 v3 amendment.",
-				coAlloc);
+		assertTrue("Part 1 API Common (" + apiCommonClassNames + ") and Procedures (" + proceduresClassNames
+				+ ") must share a <test> block so the released inheritance dependency resolves.", coAlloc);
 	}
 
 	// ===== Sprint 49 S-ETS-49-01 — released Deployment dependency boundary =====

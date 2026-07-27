@@ -1,0 +1,60 @@
+{
+  "containerLogs": [
+    {
+      "iutMethodCounts": {
+        "GET": 93
+      },
+      "iutWriteCount": 0,
+      "iutWrites": [],
+      "methodCounts": {
+        "GET": 98
+      },
+      "path": "ops/test-results/sprint-ets-50-apicommon-sabotage-container-2026-07-26.log",
+      "recognizedIutRequestLogs": 93,
+      "recognizedRequestLogs": 98
+    }
+  ],
+  "credentialScan": {
+    "explicitSecretInputsProvided": 0,
+    "explicitSecretInputsScanned": 0,
+    "explicitSecretValueHits": 0,
+    "filesScanned": 2,
+    "filesWithHits": [],
+    "genericBasicCredentialPatternHits": 0,
+    "shortSecretInputsIgnored": 0,
+    "unmaskedAuthorizationHeaderHits": 0
+  },
+  "failures": [],
+  "generatedAt": "2026-07-26T23:08:44Z",
+  "policy": {
+    "failOnCredentialLeak": true,
+    "iutPrefixes": [
+      "http://field-hub-osh-1:8081/sensorhub/api"
+    ],
+    "requireZeroIutWrites": true
+  },
+  "requirements": [
+    "REQ-ETS-CLEANUP-020"
+  ],
+  "scenarios": [
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001",
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001"
+  ],
+  "testngReports": [
+    {
+      "methodStatusCounts": {
+        "FAIL": 1,
+        "PASS": 58,
+        "SKIP": 190
+      },
+      "path": "ops/test-results/sprint-ets-50-apicommon-sabotage-teamengine-2026-07-26.xml",
+      "totals": {
+        "failed": 1,
+        "passed": 34,
+        "skipped": 183,
+        "total": 218
+      }
+    }
+  ],
+  "verdict": "PASS"
+}

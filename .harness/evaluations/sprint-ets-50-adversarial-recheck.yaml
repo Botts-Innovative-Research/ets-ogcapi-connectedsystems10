@@ -1,0 +1,231 @@
+review:
+  id: sprint-ets-50-adversarial-recheck
+  reviewer: Raze
+  role: adversarial-reviewer
+  sprint: ets-50
+  story: S-ETS-50-01
+  reviewed_at: "2026-07-26T23:56:04Z"
+  verdict: PASS
+  confidence: 0.99
+  duration_seconds: 189
+  independent_recheck: true
+  unresolved_required_fix_remains: false
+  source_edited_by_reviewer: false
+  summary: >-
+    RAZE-S50-001 through RAZE-S50-003 are closed. The current specification,
+    architecture, implementation, focused tests, deployed HTTP regressions,
+    TestNG wiring, reviewed mappings, coverage report, and final candidate
+    evidence agree. No false PASS, false conformance failure, dependency
+    regression, credential leak, IUT mutation, or external-source modification
+    was found.
+
+reviewed_scope:
+  planning_and_reconciliation:
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/change-proposals/CP-010-part1-procedure-closure.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - _bmad/architecture.md
+    - _bmad/traceability.md
+    - _bmad/adrs/ADR-010-dependency-skip-verification-strategy.md
+    - .harness/contracts/sprint-ets-50.yaml
+    - epics/stories/s-ets-50-01-part1-procedure-closure.md
+    - epics/epic-ets-02-part1-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/test-results/sprint-ets-50-part1-procedure-verification-2026-07-26.md
+  implementation_and_tests:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/ProcedureFeaturesSupport.java
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/ProceduresTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/VerifyProcedureFeaturesSupport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/VerifyProceduresHttpProcedures.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/procedures/VerifyProceduresSuite.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+    - ops/ats-coverage-report.json
+  final_candidate_evidence:
+    - ops/test-results/sprint-ets-50-focused-gapfix-final-2026-07-26.log
+    - ops/test-results/sprint-ets-50-full-maven-gapfix-final-2026-07-26.log
+    - ops/test-results/sprint-ets-50-teamengine6-runtime-gapfix-final-2026-07-26.log
+    - ops/test-results/sprint-ets-50-local-osh-smoke-gapfix-final-2026-07-26.log
+    - ops/test-results/sprint-ets-50-local-osh-teamengine-gapfix-final-2026-07-26.xml
+    - ops/test-results/sprint-ets-50-local-osh-teamengine-container-gapfix-final-2026-07-26.log
+    - ops/test-results/sprint-ets-50-positive-hygiene-gapfix-final-2026-07-26.json
+    - /tmp/credential-leak-e2e-sprint50-gapfix-final/credential-leak-e2e-report-2026-07-26T234803Z.txt
+    - /tmp/credential-leak-e2e-sprint50-gapfix-final/smoke.log
+
+prior_findings:
+  - id: RAZE-S50-001
+    severity: HIGH
+    status: CLOSED
+    closure: >-
+      ProcedureFeaturesSupport validates every canonical occurrence for a
+      non-empty href, same origin, exact encoded Procedure path, and no
+      fragment before selecting any candidate. It then selects the first
+      occurrence with absent media or media matching the collection page.
+      ProceduresTests requests that representation and verifies the negotiated
+      response media remains comparable before parsing. No comparable
+      occurrence throws SkipException with a requirement-scoped reason.
+    evidence:
+      - ProcedureFeaturesSupport.java:124-179
+      - ProceduresTests.java:95-125
+      - VerifyProcedureFeaturesSupport.java:83-122
+      - VerifyProceduresHttpProcedures.java:132-144
+      - VerifyProceduresHttpProcedures.java:269-283
+      - >-
+        The focused HTTP regression places text/html first and
+        application/geo+json second; the Procedure method completes through
+        the later comparable representation.
+      - >-
+        The unit regression rejects a conflicting later canonical target,
+        proving unsupported earlier links do not escape all-target identity
+        validation.
+      - >-
+        The unit regression verifies a canonical set with no comparable
+        representation produces SkipException rather than FAIL or PASS.
+  - id: RAZE-S50-002
+    severity: MEDIUM
+    status: CLOSED
+    closure: >-
+      withoutCanonicalLinks removes the optional links member when canonical
+      removal leaves no retained links. Applying the same normalization to a
+      canonical-only collection item and a canonical response that omits links
+      therefore produces equal JSON trees.
+    evidence:
+      - ProcedureFeaturesSupport.java:181-207
+      - VerifyProcedureFeaturesSupport.java:107-110
+      - VerifyProceduresHttpProcedures.java:146-158
+      - VerifyProceduresHttpProcedures.java:291-296
+      - >-
+        The deployed HTTP regression dereferences a canonical response with no
+        links member and completes canonical equivalence successfully.
+  - id: RAZE-S50-003
+    severity: LOW
+    status: CLOSED
+    closure: >-
+      The shipped TestNG comment now states that Sprint 50 moved Procedure from
+      historical SystemFeatures inheritance to direct Part 1 API Common
+      inheritance. The executable group dependency and structural lint agree.
+    evidence:
+      - testng.xml:53-58
+      - testng.xml:176-180
+      - VerifyTestNGSuiteDependency.java:595-677
+
+final_candidate_verification:
+  specification_and_mapping:
+    result: PASS
+    details:
+      - The spec, CP-010, design, architecture, contract, and story describe the same media-aware canonical policy.
+      - Reviewed mappings record all five /conf/procedure tests as exact.
+      - Coverage is 240 total, 25 exact, 2 helper, 137 candidate, and 76 unmapped.
+      - /conf/procedure is 5 of 5 exact.
+  focused_maven:
+    result: PASS
+    totals:
+      tests: 116
+      failures: 0
+      errors: 0
+      skipped: 0
+    artifact_sha256: 71cd8cb43201a486d5a2ada4ccc56a8dad1e1eeaf60da7715ff245512850e041
+  full_maven:
+    result: PASS_WITH_DOCUMENTED_SKIPS
+    totals:
+      tests: 451
+      failures: 0
+      errors: 0
+      skipped: 3
+    artifact_sha256: deebc29bb0839b6f0d694a6e4dfb764cb8929b311aeddc9ec3a10dc0a42ec17d
+  exact_image_runtime:
+    result: PASS
+    image: sha256:6e1beeb598ab4c734f2e2d30e0ecb70d3270af9f9f2d5a1029d1b74259b54d98
+    details:
+      - The final image was created after the remediated production, test, TestNG, mapping, and coverage files.
+      - TeamEngine 6 provenance and base-file immutability pass.
+      - Deployed SWE Common adapter execution and dependency-collision controls pass.
+      - Runtime, confidential-history, and build-context hygiene pass.
+  local_osh_teamengine:
+    result: HONEST_NONCONFORMANT_IUT_OUTCOME
+    conformance_gate_passed: false
+    totals:
+      total: 218
+      passed: 39
+      failed: 5
+      skipped: 174
+    procedure:
+      setup: PASS
+      location: SKIP_UNSUPPORTED_APPLICATION_JSON
+      resources_endpoint: SKIP_UNSUPPORTED_APPLICATION_JSON
+      canonical_endpoint: SKIP_UNSUPPORTED_APPLICATION_JSON
+      canonical_url: FAIL_MISSING_EXACT_PROCEDURE_COLLECTION
+      collections: FAIL_MISSING_EXACT_PROCEDURE_COLLECTION
+    classification: >-
+      The smoke script terminates FATAL because failed=5. Sprint records
+      explicitly preserve these as genuine local-OSH conformance outcomes and
+      do not classify the run as a passing conformance gate.
+    artifact_sha256: 919ad143f6ac76c1c64fc807299d706e41fe30d1f5e3ff78495e96c708505cb0
+  artifact_hygiene:
+    result: PASS
+    recognized_requests: 120
+    iut_gets: 115
+    iut_writes: 0
+    credential_leaks: 0
+    artifact_sha256: f6e7daaeff72a319dfcc9e23a18ccc4caca0fabc9bbf81df2559c3ba19b26bbc
+  credential_wire_e2e:
+    result: PASS
+    image: sha256:6e1beeb598ab4c734f2e2d30e0ecb70d3270af9f9f2d5a1029d1b74259b54d98
+    unmasked_execution_artifact_hits: 0
+    masked_execution_artifact_hits: 38
+    intact_stub_transmissions: 38
+    report_sha256: 4f98c0c9740c5375d1850befe42ba22b851570ed80b451759606248e13c533b1
+  external_immutability:
+    result: PASS
+    osh:
+      head: 4c87a65c9a967d52af9df476e65d7862c7673a15
+      worktree_clean: true
+      commits_ahead_of_upstream: 0
+      commits_behind_upstream: 3
+      deployed_opt_osh_mount_read_only: true
+    teamengine:
+      project_source_or_binary_changes: false
+      approved_base_immutability_verifier: PASS
+
+new_findings: []
+required_fixes: []
+
+residual_risks:
+  - >-
+    The unmodified local OSH cannot execute the successful canonical branches
+    because it advertises no exact Procedure collection. Controlled deployed
+    HTTP regressions are therefore the positive oracle for the remediated
+    canonical behavior.
+  - >-
+    A canonical link without an advertised media type is eligible before an
+    explicitly typed later link. If negotiation returns a different media
+    type, the method conservatively SKIPs; it cannot create a false PASS or
+    false conformance FAIL.
+  - >-
+    Final credential wire detail is intentionally retained under /tmp rather
+    than archived with synthetic raw captures. Its durable project summary
+    records only counts and no credential value.
+  - >-
+    The clean OSH checkout is three commits behind its configured upstream.
+    This does not indicate a Sprint 50 modification, but it remains provenance
+    context for future local-IUT refresh decisions.
+
+scope_limits:
+  implementation_modified: false
+  reconciliation_modified: false
+  only_report_written: .harness/evaluations/sprint-ets-50-adversarial-recheck.yaml
+  expensive_docker_gates_rerun: false
+  rationale: >-
+    Current final Maven, exact-image runtime, TeamEngine XML/log, hygiene,
+    credential-wire, image-inspection, and external-provenance evidence was
+    sufficient for the focused recheck.
+
+token_metadata:
+  available: false
+  total_tokens: null
+  reason: >-
+    This execution surface did not expose an authoritative reviewer token
+    count.

@@ -98,9 +98,9 @@ The capability extends mechanically across sprints 2..N: each remaining Part 1 c
 | `CommonTests` | `conformance.common` | REQ-ETS-PART1-001 |
 | `SystemFeaturesTests` | `conformance.systemfeatures` | REQ-ETS-PART1-002 |
 | `SubsystemsTests` | `conformance.subsystems` | REQ-ETS-PART1-003 |
-| `DeploymentFeaturesTests` | `conformance.deploymentfeatures` | REQ-ETS-PART1-004 |
+| `DeploymentsTests` | `conformance.deployments` | REQ-ETS-PART1-004 |
 | `SubdeploymentsTests` | `conformance.subdeployments` | REQ-ETS-PART1-005 |
-| `ProcedureFeaturesTests` | `conformance.procedurefeatures` | REQ-ETS-PART1-006 |
+| `ProceduresTests` | `conformance.procedures` | REQ-ETS-PART1-006 |
 | `SamplingFeaturesTests` | `conformance.samplingfeatures` | REQ-ETS-PART1-007 |
 | `PropertyDefinitionsTests` | `conformance.propertydefinitions` | REQ-ETS-PART1-008 |
 | `AdvancedFilteringTests` | `conformance.advancedfiltering` | REQ-ETS-PART1-009 |
@@ -1370,6 +1370,95 @@ eligible blockers. SystemFeatures and sibling configuration results are ignored
 because they are not inherited by `/conf/deployment`. Credential wire gates
 select exactly one TestNG XML and container log produced after a per-run marker
 from `SMOKE_OUTPUT_DIR`; stale worktree artifacts cannot satisfy the gate.
+
+### Sprint 50: released Part 1 Procedure direct procedures
+
+Sprint 50 replaces the historical eager four-method Procedure approximation
+with the five released Annex A procedures.
+
+```text
+ProceduresTests
+  |-- procedureLocationIsAbsent()
+  |-- everyProcedureHasCanonicalUrl()
+  |-- procedureResourcesEndpointIsValid()
+  |-- canonicalProceduresEndpointIsValid()
+  `-- procedureCollectionsAreValid()
+          |
+          v
+ProcedureFeaturesSupport
+  location + collection metadata + Procedure types
+  + canonical equivalence + Procedure schema dispatch
+          |
+          +--> Part1ApiCommonSupport bounded traversal
+          `--> future ConnectedSystemsSensorMlValidatorAdapter
+```
+
+Class setup normalizes only the API root after checking Core, Common, and Part 1
+API Common results. Every procedure retrieves its own evidence, uses
+`alwaysRun`, and has no method dependency. The group dependency becomes
+`part1apicommon -> procedures`; completed System ATS outcomes are not inherited
+by the released Procedure class.
+
+The location procedure traverses `{api_root}/procedures` directly with a
+GeoJSON/SensorML Accept value and a strict actual-media gate on every page. It
+checks every GeoJSON `geometry` value for JSON null and rejects any SensorML
+item containing `position`. Unsupported or missing actual media logs the
+released requirement and SKIPs before parsing.
+
+Canonical URL and collections procedures enumerate every exact
+`featureType=sosa:Procedure` collection and require at least one. The
+collections procedure also requires `itemType=feature`. API Common resolves
+advertised items endpoints and bounds same-origin pagination. Schema-controlled
+collection retrieval uses the restricted media overload so advertised GeoJSON
+or SensorML is selected ahead of an earlier generic JSON link.
+
+Canonical comparison requires at least one canonical relation. Every canonical
+occurrence must resolve to the IUT origin and path
+`{api_root}/procedures/{id}`; representation query variants and duplicate
+occurrences are allowed only for that exact identity. After all targets are
+validated, the first occurrence with no advertised media type or one matching
+the collection page media type is dereferenced. No comparable occurrence
+produces a warning and SKIP. Jackson trees are compared after removing all
+canonical relation links from both top-level `links` arrays; a `links` member
+emptied by that removal is dropped so it equals an omitted optional member.
+
+Resources endpoint validation dispatches actual `application/geo+json` and
+`application/sml+json` pages to the bundled released Procedure collection
+schemas. The canonical endpoint invokes the same behavior at
+`{api_root}/procedures`.
+
+The collections procedure extracts Procedure type from
+`properties.featureType` for GeoJSON and `definition` for SensorML. The value
+must match one of the nine URI/CURIE pairs in OGC 23-001 Clause 12. Every page
+also passes representation-specific Procedure collection schema validation.
+
+`ProcedureFeaturesSupport` is the validator replacement boundary from
+`REQ-ETS-VALIDATOR-001`. Connected Systems protocol and mapping behavior remain
+local. A future reusable FCU/OGC SensorML validator can replace SensorML schema
+semantics behind this boundary; the suite jar `ets-sensorml30` is not imported.
+
+The unmodified local OSH baseline returns generic `application/json` from
+`/procedures` and advertises no `sosa:Procedure` collection. Mandatory
+TeamEngine E2E must execute all five methods and preserve the resulting
+unsupported-media SKIPs and missing-collection FAILs. Controlled read-only HTTP
+coverage provides positive GeoJSON/SensorML evidence for all successful paths
+and adversarial location, type, media, canonical, and collection cases.
+
+Sprint 50 verification confirms this design. Reviewed coverage is `5/5 exact`;
+final focused Maven is `116/0/0/0`, full Maven is `451/0/0/3`, and the exact
+image is
+`sha256:6e1beeb598ab4c734f2e2d30e0ecb70d3270af9f9f2d5a1029d1b74259b54d98`.
+Local OSH TeamEngine is honestly `218/39/5/174`: Procedure setup passes, the
+three direct endpoint methods SKIP on unsupported `application/json`, and both
+collection-dependent methods FAIL because no exact `sosa:Procedure`
+collection is advertised. API Common sabotage proves setup plus all five
+methods SKIP before Procedure access. Runtime, credential, and artifact
+hygiene gates pass without modifying OSH or TeamEngine. Initial adversarial
+review exposed unsupported-first canonical selection, canonical-only versus
+omitted `links` normalization, and stale dependency-comment gaps. Media-aware
+selection, optional-member normalization, and focused regressions now close
+those gaps. Focused Raze recheck passes at confidence `0.99`, closes all three
+findings, and reports no required fixes.
 
 ## Status
 

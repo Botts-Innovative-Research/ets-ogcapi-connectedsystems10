@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 217,
+  "suiteTestMethodCount" : 218,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -427,45 +427,85 @@
     "classIdentifier" : "/conf/procedure",
     "target" : "/req/procedure/location",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureItemsHaveNoGeometry()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureLocationIsAbsent()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/procedure/location",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureLocationIsAbsent()",
+      "reviewedBy" : "Codex Sprint 50 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method retrieves and completely paginates the canonical /procedures endpoint. It gates every page by actual GeoJSON or SensorML media before evaluating items, requires every GeoJSON Procedure to contain geometry set to null, and requires every SensorML Procedure to omit the position member. Unsupported actual media produces an explicit SKIP and cannot become positive evidence."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/procedure/canonical-url",
     "classIdentifier" : "/conf/procedure",
     "target" : "/req/procedure/canonical-url",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureItemHasCanonicalLink()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#everyProcedureHasCanonicalUrl()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/procedure/canonical-url",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#everyProcedureHasCanonicalUrl()",
+      "reviewedBy" : "Codex Sprint 50 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method selects every advertised collection with exact featureType=sosa:Procedure, traverses each through the reviewed API Common collection-items procedure, and evaluates every returned item. It requires at least one canonical link and validates every canonical occurrence as the same-origin api_root/procedures/{encoded id} identity while allowing duplicate or representation-query variants. It dereferences the first occurrence whose advertised media is absent or matches the collection page, requires HTTP 200 and comparable negotiated media, and compares complete parsed content after removing top-level canonical links; a links member emptied by canonical-link removal is normalized to omitted. No comparable occurrence warns and SKIPs, and missing Procedure collections fail."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/procedure/resources-endpoint",
     "classIdentifier" : "/conf/procedure",
     "target" : "/req/procedure/resources-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#proceduresCollectionReturns200()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureResourcesEndpointIsValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/procedure/resources-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureResourcesEndpointIsValid()",
+      "reviewedBy" : "Codex Sprint 50 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method invokes the endpoint-parameterized released resources procedure against /procedures, requires HTTP 200, gates every page by its actual GeoJSON or SensorML media type before parsing, traverses bounded same-origin pagination, and validates every page against the corresponding bundled released Procedure collection schema. It also verifies every item uses one of the nine released Procedure types in CURIE or URI form. HTTP 404 fails; unsupported actual media produces an explicit SKIP."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/procedure/canonical-endpoint",
     "classIdentifier" : "/conf/procedure",
     "target" : "/req/procedure/canonical-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureItemHasIdTypeLinks()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#canonicalProceduresEndpointIsValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/procedure/canonical-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#canonicalProceduresEndpointIsValid()",
+      "reviewedBy" : "Codex Sprint 50 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method supplies the fixed api_root/procedures URL to the same released endpoint-parameterized resources procedure. It independently retrieves, media-gates, paginates, schema-validates, and validates Procedure types at the canonical endpoint without depending on another Procedure test method."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/procedure/collections",
     "classIdentifier" : "/conf/procedure",
     "target" : "/req/procedure/collections",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureCollectionsAreValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/procedure/collections",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureCollectionsAreValid()",
+      "reviewedBy" : "Codex Sprint 50 ATS line review",
+      "reviewedOn" : "2026-07-26",
+      "evidence" : "The independently executable deployed TestNG method retrieves /collections, selects every exact featureType=sosa:Procedure entry, requires itemType=feature and a nonempty id, and traverses every selected items endpoint through the reviewed API Common helper with an additional actual-media gate on every page. Every supported GeoJSON or SensorML page is validated against the corresponding bundled released Procedure collection schema and every item is checked against the nine released Procedure types in CURIE or URI form; no advertised Procedure collection fails and unsupported evidence SKIPs."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sf/canonical-url",
@@ -2341,17 +2381,17 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 20,
+    "exact" : 25,
     "helper" : 2,
-    "candidate" : 141,
-    "unmapped" : 77,
+    "candidate" : 137,
+    "unmapped" : 76,
     "byPart" : {
       "1" : {
         "total" : 110,
-        "exact" : 20,
+        "exact" : 25,
         "helper" : 2,
-        "candidate" : 40,
-        "unmapped" : 48
+        "candidate" : 36,
+        "unmapped" : 47
       },
       "2" : {
         "total" : 130,
@@ -2406,10 +2446,10 @@
       },
       "1:/conf/procedure" : {
         "total" : 5,
-        "exact" : 0,
+        "exact" : 5,
         "helper" : 0,
-        "candidate" : 4,
-        "unmapped" : 1
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "1:/conf/sf" : {
         "total" : 5,

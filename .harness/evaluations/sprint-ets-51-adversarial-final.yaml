@@ -1,0 +1,376 @@
+review:
+  id: sprint-ets-51-adversarial-final
+  reviewer: Raze
+  role: adversarial-reviewer
+  sprint: ets-51
+  story: S-ETS-51-01
+  reviewed_at: "2026-07-27T02:45:22Z"
+  verdict: APPROVE_WITH_CONCERNS
+  confidence: 0.99
+  completion_state: NO_REQUIRED_FIXES
+  unresolved_required_fix_remains: false
+  source_edited_by_reviewer: false
+  heavy_verification_rerun: false
+  summary: >-
+    Sprint 51 is technically fit to close. RAZE-S51-001 through
+    RAZE-S51-004 remain closed, and both follow-up release-hygiene findings
+    are closed. Programmatic TestNG now writes beneath JUnit-managed temporary
+    directories, asserts that repository-root test-output is absent, and the
+    independently committed clean-source snapshot remains Git-clean after
+    full Maven with no root test-output directory. Canonical Sprint 51 records
+    consistently use focused 131/0/0/0, full 480/0/0/3, final image
+    sha256:e88aa5f94ce98d474b66168fbe95ccd6ef574511bce910142acb38a5484b1dca,
+    honest local-OSH 219/39/5/175, the causal programmatic dependency proof,
+    and historical/non-causal classification for the direct local-OSH
+    Deployment sabotage. Final-image runtime, local-OSH TeamEngine and hygiene,
+    clean-snapshot Maven and hygiene, released ATS source reproduction, and
+    exact mapping evidence are coherent. Remaining concerns are advisory
+    integration and diagnostic-precision risks, not release blockers.
+
+reviewed_scope:
+  reviewer_instructions:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+    - .harness/prompts/adversarial.md
+    - .harness/evaluations/sprint-ets-51-adversarial-implementation.yaml
+    - .harness/evaluations/sprint-ets-51-adversarial-gapfix.yaml
+  implementation:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/subdeployments/SubdeploymentsTests.java
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/subdeployments/SubdeploymentsSupport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/subdeployments/VerifySubdeploymentsSupport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/subdeployments/VerifySubdeploymentsHttpProcedures.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/subdeployments/VerifySubdeploymentsCausalDependency.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/subdeployments/VerifySubdeploymentsSuite.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+    - scripts/smoke-test.sh
+  canonical_records:
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - openspec/change-proposals/CP-011-part1-subdeployment-closure.md
+    - epics/stories/s-ets-51-01-part1-subdeployment-closure.md
+    - epics/epic-ets-02-part1-classes.md
+    - .harness/contracts/sprint-ets-51.yaml
+    - .harness/handoffs/sprint-ets-51-generator-handoff.yaml
+    - _bmad/architecture.md
+    - _bmad/traceability.md
+    - ops/status.md
+    - ops/changelog.md
+    - ops/test-results.md
+    - ops/test-results/sprint-ets-51-part1-subdeployment-verification-2026-07-27.md
+  final_evidence:
+    - ops/test-results/sprint-ets-51-raze-hygiene-focused-final-2026-07-27.log
+    - ops/test-results/sprint-ets-51-raze-hygiene-full-maven-2026-07-27.log
+    - ops/test-results/sprint-ets-51-clean-snapshot-full-maven-2026-07-27.log
+    - ops/test-results/sprint-ets-51-clean-snapshot-hygiene-2026-07-27.md
+    - ops/test-results/sprint-ets-51-final-teamengine-runtime-2026-07-27.log
+    - ops/test-results/sprint-ets-51-final-local-osh-teamengine-2026-07-27.xml
+    - ops/test-results/sprint-ets-51-final-local-osh-container-2026-07-27.log
+    - ops/test-results/sprint-ets-51-final-primary-hygiene-2026-07-27.json
+    - ops/test-results/sprint-ets-51-raze-gapfix-ats-audit-self-test-2026-07-27.log
+    - ops/test-results/sprint-ets-51-raze-gapfix-ats-inventory-consistency-2026-07-27.log
+    - ops/test-results/sprint-ets-51-raze-gapfix-ats-source-reproduction-2026-07-27.log
+    - ops/test-results/sprint-ets-51-raze-gapfix-coverage-update-2026-07-27.log
+
+finding_dispositions:
+  - id: RAZE-S51-001
+    original_severity: HIGH
+    disposition: CLOSED
+    title: Parent-plus-descendant association oracle remains independent and complete
+    evidence:
+      - >-
+        SubdeploymentsSupport.java:201-250 parses explicit JSON fixture
+        evidence independently of IUT association responses and rejects
+        malformed, duplicate, blank, and over-bound evidence.
+      - >-
+        SubdeploymentsSupport.java:540-552 requires relation evidence for the
+        parent plus every hierarchy descendant and returns their complete ID
+        union.
+      - >-
+        SubdeploymentsTests.java:201-242 retrieves only the parent association
+        endpoint for comparison; incomplete independent evidence SKIPs and an
+        observed omission fails.
+      - >-
+        VerifySubdeploymentsHttpProcedures.java:153-183 independently proves
+        both descendant-owned and parent-owned omissions fail while missing
+        fixture evidence SKIPs.
+    conclusion: >-
+      A response containing every descendant-owned ID but omitting a known
+      parent-owned ID cannot pass.
+
+  - id: RAZE-S51-002
+    original_severity: MEDIUM
+    disposition: CLOSED
+    title: Causal single-variable TestNG dependency proof remains valid
+    evidence:
+      - >-
+        VerifySubdeploymentsCausalDependency.java:49-72 first runs a passing
+        synthetic Deployment prerequisite, proves all five procedures start
+        and reach the IUT, then changes only that prerequisite to fail and
+        proves the exact five methods SKIP with zero sabotage-side IUT calls.
+      - >-
+        VerifySubdeploymentsCausalDependency.java:116-165 captures the injected
+        failure, all method skips, and the blocker reason through programmatic
+        TestNG listeners.
+      - >-
+        sprint-ets-51-raze-hygiene-focused-final-2026-07-27.log records the
+        causal class as 1/0/0/0 and the focused gate as 131/0/0/0.
+      - >-
+        All canonical records classify the direct local-OSH Deployment
+        sabotage as historical and non-causal because Deployment already
+        failed in its baseline.
+    conclusion: >-
+      The controlled baseline/sabotage pair isolates one variable and supplies
+      the causal proof that the local-OSH sabotage could not provide.
+
+  - id: RAZE-S51-003
+    original_severity: MEDIUM
+    disposition: CLOSED
+    title: Equivalent HTTP target forms remain normalized
+    evidence:
+      - >-
+        SubdeploymentsSupport.java:407-466 compares case-insensitive
+        scheme/host, effective default port, normalized path, and decoded
+        percent-encoded unreserved characters while rejecting query and
+        fragment variants.
+      - >-
+        VerifySubdeploymentsSupport.java:85-118 retains wrong-target rejection
+        and accepts explicit port 80 plus host-case and percent-encoding
+        equivalence.
+      - >-
+        VerifySubdeploymentsHttpProcedures.java:212-223 executes the equivalent
+        percent-encoded target through the production collection procedure.
+    conclusion: >-
+      Semantically equivalent default-port and unreserved-encoding target URLs
+      do not receive a lexical false failure.
+
+  - id: RAZE-S51-004
+    original_severity: MEDIUM
+    disposition: CLOSED
+    title: Association selection continues to inspect all occurrences safely
+    evidence:
+      - >-
+        SubdeploymentsSupport.java:149-186 scans every occurrence, refuses
+        unsafe candidates, separates typed JSON-compatible and untyped
+        candidates, ignores unsupported types, and deterministically prefers a
+        typed usable candidate.
+      - >-
+        VerifySubdeploymentsSupport.java:120-148 proves that cross-origin and
+        same-origin HTML occurrences cannot hide a later usable same-origin
+        JSON occurrence.
+      - >-
+        VerifySubdeploymentsHttpProcedures.java:186-209 proves the production
+        path dereferences the later usable endpoint and SKIPs when no safe
+        comparable endpoint exists.
+    conclusion: >-
+      An unsafe or unsupported first occurrence cannot hide a usable later
+      association representation.
+
+  - id: RAZE-S51-GF-001
+    original_severity: MEDIUM
+    disposition: CLOSED
+    title: Programmatic TestNG no longer pollutes repository-root test-output
+    evidence:
+      - >-
+        VerifySubdeploymentsCausalDependency.java:38-40 uses JUnit
+        TemporaryFolder; lines 53-63 allocate distinct baseline and sabotage
+        directories beneath it.
+      - >-
+        VerifySubdeploymentsCausalDependency.java:75-90 explicitly sets the
+        TestNG output directory, disables default listeners, and confines
+        generated reports to disposable test storage.
+      - >-
+        VerifySubdeploymentsCausalDependency.java:70-71 executes a regression
+        assertion that repository-root test-output is absent after both nested
+        TestNG runs.
+      - >-
+        The corrected focused 131/0/0/0 and full 480/0/0/3 logs execute that
+        regression successfully; repository-root test-output was absent during
+        this final review.
+      - >-
+        Independent snapshot /tmp/ets-s51-final-clean-source remains at commit
+        57c0c94e6461f84164cc941e476103a9fcdea1fa with empty git status and no
+        repository-root test-output after clean full Maven 480/0/0/3. Build
+        output is confined to ignored target/.
+    conclusion: >-
+      Focused, full, and independently committed clean-snapshot Maven evidence
+      establishes zero repository-root TestNG report pollution.
+
+  - id: RAZE-S51-GF-002
+    original_severity: MEDIUM
+    disposition: CLOSED
+    title: Canonical records use corrected final evidence and honest causality
+    evidence:
+      - >-
+        The capability spec, story, contract, architecture, traceability,
+        status, changelog, test-results index, durable verification summary,
+        and generator handoff all use focused 131/0/0/0 and full 480/0/0/3.
+      - >-
+        Full final image identity
+        sha256:e88aa5f94ce98d474b66168fbe95ccd6ef574511bce910142acb38a5484b1dca
+        is recorded in the handoff, durable verification summary, and runtime
+        evidence; abbreviated narrative references consistently identify the
+        same e88aa5f9...b1dca image.
+      - >-
+        Every canonical Sprint 51 record reports local OSH honestly as
+        219/39/5/175, keeps five genuine Deployment/Procedure failures visible,
+        and classifies all five Subdeployment outcomes as inherited pre-IUT
+        SKIPs.
+      - >-
+        Every canonical record uses the controlled programmatic TestNG
+        baseline/sabotage pair as causal dependency evidence and classifies the
+        earlier direct local-OSH Deployment sabotage as historical,
+        non-causal, and ineligible as closure proof.
+      - >-
+        Active Sprint 51 canonical sections contain no superseded aa44f0d8 or
+        197ec2a2 image claim and no 121/0/0/0 or 473/0/0/3 completion claim.
+        Older artifacts remain only as explicitly superseded historical
+        evidence.
+    conclusion: >-
+      A release reader can identify one coherent final Sprint 51 evidence set
+      without relying on the disproven local-OSH sabotage.
+
+verified_controls:
+  corrected_maven:
+    result: PASS
+    focused:
+      tests: 131
+      failures: 0
+      errors: 0
+      skipped: 0
+      evidence: ops/test-results/sprint-ets-51-raze-hygiene-focused-final-2026-07-27.log
+    full:
+      tests: 480
+      failures: 0
+      errors: 0
+      skipped: 3
+      evidence: ops/test-results/sprint-ets-51-raze-hygiene-full-maven-2026-07-27.log
+    note: >-
+      The three full-suite skips remain documented environment/controller
+      skips; no failure or error is hidden.
+
+  clean_snapshot:
+    result: PASS
+    commit: 57c0c94e6461f84164cc941e476103a9fcdea1fa
+    tests: 480
+    failures: 0
+    errors: 0
+    skipped: 3
+    git_status: CLEAN
+    repository_root_test_output: ABSENT
+    evidence:
+      - ops/test-results/sprint-ets-51-clean-snapshot-full-maven-2026-07-27.log
+      - ops/test-results/sprint-ets-51-clean-snapshot-hygiene-2026-07-27.md
+
+  final_image_runtime:
+    result: PASS
+    image: sha256:e88aa5f94ce98d474b66168fbe95ccd6ef574511bce910142acb38a5484b1dca
+    evidence: ops/test-results/sprint-ets-51-final-teamengine-runtime-2026-07-27.log
+    details:
+      - TeamEngine 6 provenance and runtime invariants pass.
+      - TeamEngine base-file identity is unchanged.
+      - The embedded SWE Common adapter executes valid and invalid components.
+      - Dependency parity, allowed-collision, and confidential-context controls pass.
+
+  local_osh_teamengine:
+    result: HONEST_NONCONFORMANT_IUT_OUTCOME
+    totals:
+      total: 219
+      passed: 39
+      failed: 5
+      skipped: 175
+    subdeployment:
+      deployed_methods: 5
+      methods_skipped: 5
+      own_iut_requests: 0
+      reason: INHERITED_DEPLOYMENT_FAILURES
+    evidence:
+      - ops/test-results/sprint-ets-51-final-local-osh-teamengine-2026-07-27.xml
+      - ops/test-results/sprint-ets-51-final-local-osh-container-2026-07-27.log
+      - ops/test-results/sprint-ets-51-final-primary-hygiene-2026-07-27.json
+    classification: >-
+      The five genuine local-OSH failures remain visible. The deployed
+      Subdeployment methods are SKIP, not PASS, and the run is not claimed as
+      positive Subdeployment conformance evidence.
+
+  artifact_and_external_hygiene:
+    result: PASS
+    recognized_requests: 118
+    iut_gets: 113
+    iut_writes: 0
+    credential_leaks: 0
+    osh_repository:
+      head: 4c87a65c9a967d52af9df476e65d7862c7673a15
+      worktree_clean: true
+      commits_ahead_of_upstream: 0
+      deployed_mount_read_only: true
+    teamengine_source_or_binary_modified: false
+    hosted_ci_added: false
+    executable_sensorml_suite_jar_imported: false
+
+  ats_source_and_mapping:
+    result: PASS
+    released_commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+    inventory:
+      total: 240
+      exact: 30
+      helper: 2
+      candidate: 136
+      unmapped: 72
+    subdeployment:
+      released_tests: 5
+      reviewed_exact_mappings: 5
+    evidence:
+      - ops/test-results/sprint-ets-51-raze-gapfix-ats-audit-self-test-2026-07-27.log
+      - ops/test-results/sprint-ets-51-raze-gapfix-ats-inventory-consistency-2026-07-27.log
+      - ops/test-results/sprint-ets-51-raze-gapfix-ats-source-reproduction-2026-07-27.log
+      - ops/test-results/sprint-ets-51-raze-gapfix-coverage-update-2026-07-27.log
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+
+required_findings: []
+required_fixes: []
+
+advisories:
+  - id: RAZE-S51-FINAL-A01
+    severity: LOW
+    title: Positive hierarchy paths still lack real-IUT TeamEngine execution
+    detail: >-
+      Local OSH honestly dependency-SKIPs all five methods because inherited
+      Deployment procedures fail and exposes no usable positive hierarchy.
+      Controlled HTTP tests execute production methods and the causal test
+      executes programmatic TestNG, but no real IUT currently supplies a
+      positive three-level hierarchy plus independent association fixture
+      through TeamEngine. This is accepted residual integration risk under the
+      Sprint 51 contract, not a required fix.
+
+  - id: RAZE-S51-FINAL-A02
+    severity: LOW
+    title: Association omission diagnostic calls every fixture ID a descendant
+    detail: >-
+      SubdeploymentsSupport.java:260-267 reports missing parent-owned and
+      descendant-owned IDs as descendant resource IDs. Verdict behavior and
+      exact mapping are correct, but a future diagnostic-only cleanup should
+      say parent-or-descendant fixture resource IDs.
+
+  - id: RAZE-S51-FINAL-A03
+    severity: LOW
+    title: Durable E2E summary names one of several failing Deployment methods
+    detail: >-
+      The durable verification summary attributes inherited Subdeployment
+      skips to deploymentCollectionsAreValid, which is genuinely FAIL in the
+      final XML, while the explicit Subdeployment SkipException text names
+      everyDeploymentHasCanonicalUrl as the selected blocker. Both are
+      inherited Deployment failures and the totals, SKIP classification, and
+      causal gate remain correct. Future wording should use plural inherited
+      Deployment failures or quote the selected blocker exactly.
+
+  - id: RAZE-S51-FINAL-A04
+    severity: INFO
+    title: Post-review status-token reconciliation remains procedural
+    detail: >-
+      Story, contract, architecture, traceability, status, and handoff
+      correctly say final Raze recheck pending because this report did not yet
+      exist when they were written. The implementation has no remaining
+      required fix; the owning agent may now replace those pending tokens with
+      this APPROVE_WITH_CONCERNS and NO_REQUIRED_FIXES outcome.

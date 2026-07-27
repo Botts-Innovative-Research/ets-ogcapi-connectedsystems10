@@ -59,6 +59,11 @@ The supported TestNG run-argument contract is:
 |String
 |Optional
 |Identifier of a known moving System. Enables the released location-time procedure; omitted for static IUTs.
+
+|subdeployment-association-evidence
+|JSON object
+|Optional
+|Independent directly owned resource identifiers by Deployment and association relation. Enables the released recursive-association comparison.
 |===
 
 == How to run locally

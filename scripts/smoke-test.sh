@@ -237,6 +237,11 @@ if [[ -n "${SMOKE_MOBILE_SYSTEM_ID:-}" ]]; then
   MOBILE_SYSTEM_ARGS+=(--data-urlencode "mobile-system-id=${SMOKE_MOBILE_SYSTEM_ID}")
   log "  SMOKE_MOBILE_SYSTEM_ID set - forwarding to the released location-time procedure"
 fi
+SUBDEPLOYMENT_EVIDENCE_ARGS=()
+if [[ -n "${SMOKE_SUBDEPLOYMENT_ASSOCIATION_EVIDENCE:-}" ]]; then
+  SUBDEPLOYMENT_EVIDENCE_ARGS+=(--data-urlencode "subdeployment-association-evidence=${SMOKE_SUBDEPLOYMENT_ASSOCIATION_EVIDENCE}")
+  log "  SMOKE_SUBDEPLOYMENT_ASSOCIATION_EVIDENCE set (length=${#SMOKE_SUBDEPLOYMENT_ASSOCIATION_EVIDENCE}) - forwarding independent association evidence"
+fi
 log "step 6/8 — POST suite/${ETS_CODE}/run iut=${IUT_URL}"
 http_code=$(curl -s -u "${TE_USER}:${TE_PASS}" -G \
     "http://localhost:${SMOKE_PORT}/teamengine/rest/suites/${ETS_CODE}/run" \
@@ -244,6 +249,7 @@ http_code=$(curl -s -u "${TE_USER}:${TE_PASS}" -G \
     "${AUTH_CRED_ARGS[@]}" \
     "${MUTATION_ARGS[@]}" \
     "${MOBILE_SYSTEM_ARGS[@]}" \
+    "${SUBDEPLOYMENT_EVIDENCE_ARGS[@]}" \
     -H "Accept: application/xml" \
     -o "$REPORT_XML" \
     -w "%{http_code}" \

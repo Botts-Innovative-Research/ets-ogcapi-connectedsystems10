@@ -52,7 +52,15 @@ public enum TestRunArg {
 	 * Optional identifier of a known moving System. When supplied, the released
 	 * location-time procedure polls its canonical resource for a location change.
 	 */
-	MOBILE_SYSTEM_ID;
+	MOBILE_SYSTEM_ID,
+
+	/**
+	 * Optional JSON object that independently maps each Deployment and released
+	 * association relation to its directly owned resource identifiers. The released
+	 * recursive-association procedure unions the parent and descendant entries as its
+	 * comparison oracle.
+	 */
+	SUBDEPLOYMENT_ASSOCIATION_EVIDENCE;
 
 	@Override
 	public String toString() {

@@ -88,14 +88,8 @@ public class VerifyTestNGSuiteDependency {
 	private static final String PROPERTYDEFINITIONS_GROUP = "propertydefinitions";
 
 	/**
-	 * Sprint 8 S-ETS-08-02 — Subdeployments group. Sprint 49 rewires the chain to
-	 * Subdeployments → Deployments → Part 1 API Common → Core/Common. It depends on the
-	 * {@code deployments} group directly; the API Common dependency is transitive.
-	 * ADR-010 v4 amendment (Sprint 8 — Generator close, 2026-04-30) records the 3-deep
-	 * chain wiring; sister cascade XML
-	 * {@code ops/test-results/sprint-ets-08-cascade-2026-04-30.xml} verifies the cascade
-	 * end-to-end for the historical chain; Sprint 49 records replacement cascade evidence
-	 * for the released dependency.
+	 * Sprint 51 S-ETS-51-01 - released Subdeployment procedures inherit Deployment
+	 * directly. API Common and Core/Common dependencies remain transitive.
 	 */
 	private static final String SUBDEPLOYMENTS_GROUP = "subdeployments";
 
@@ -965,15 +959,11 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 8 S-ETS-08-02 — Subdeployments group =====
-	// Mirrors the patterns above; Subdeployments is the FIRST three-deep dependency chain
-	// in this ETS. Sprint 49 changes the transitive parent below Deployments from
-	// SystemFeatures to Part 1 API Common.
-	// distinction: Subdeployments depends-on="deployments" (NOT "systemfeatures") — the
-	// transitive cascade is carried by Deployments' own depends-on="part1apicommon".
+	// ===== Sprint 51 S-ETS-51-01 - released Subdeployment procedures =====
 
 	/**
-	 * Sprint 8 S-ETS-08-02 (REQ-ETS-PART1-005): the canonical testng.xml SHALL declare
+	 * REQ-ETS-PART1-005; SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-CASCADE-001. The
+	 * canonical testng.xml SHALL declare
 	 * {@code <group name="subdeployments" depends-on="deployments"/>} so the
 	 * Subdeployments conformance class participates in the THREE-deep dependency cascade
 	 * (Subdeployments → Deployments → Part 1 API Common → Core/Common). Critical:
@@ -990,10 +980,8 @@ public class VerifyTestNGSuiteDependency {
 			if (deps != null && deps.containsKey(SUBDEPLOYMENTS_GROUP)) {
 				String dependsOn = deps.get(SUBDEPLOYMENTS_GROUP);
 				assertNotNull("group '" + SUBDEPLOYMENTS_GROUP + "' has null depends-on attribute", dependsOn);
-				assertTrue("group '" + SUBDEPLOYMENTS_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ DEPLOYMENTS_GROUP
-						+ "' (Subdeployments → Deployments → Part 1 API Common requires Deployments as direct parent)",
-						dependsOn.contains(DEPLOYMENTS_GROUP));
+				assertEquals("Subdeployments must have Deployment as its only direct dependency", DEPLOYMENTS_GROUP,
+						dependsOn);
 				foundDependency = true;
 				break;
 			}
@@ -1005,8 +993,9 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 8 S-ETS-08-02: every Subdeployments @Test method SHALL carry
-	 * {@code groups = "subdeployments"} so the {@code <group name="subdeployments"
+	 * REQ-ETS-PART1-005; SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-CASCADE-001. Every
+	 * Subdeployments @Test method SHALL carry {@code groups = "subdeployments"} so the
+	 * {@code <group name="subdeployments"
 	 * depends-on="deployments"/>} declaration in testng.xml has tagged methods to resolve
 	 * against. A Subdeployments @Test missing the group annotation would FAIL/ERROR
 	 * directly rather than cascade-SKIP via the 3-deep chain.
@@ -1028,19 +1017,19 @@ public class VerifyTestNGSuiteDependency {
 				}
 			}
 		}
-		assertTrue("Expected at least one @Test method in Subdeployments conformance classes; found 0",
-				totalSubdeployments > 0);
+		assertEquals("Expected exactly the five released Subdeployment procedures", 5, totalSubdeployments);
 		assertTrue("Subdeployments @Test methods missing groups=\"" + SUBDEPLOYMENTS_GROUP + "\": " + offenders,
 				offenders.isEmpty());
 	}
 
 	/**
-	 * Sprint 8 S-ETS-08-02: Subdeployments classes MUST be co-located in the SAME
-	 * {@code <test>} block as Deployments so the three-level group-dependency cascade can
-	 * resolve within scope. Stronger condition than the SystemFeatures co-location lint:
-	 * the 3-deep chain requires the parent (Deployments) to be in the same block, which
-	 * ALSO transitively requires Deployments' own parent (Part 1 API Common) in the same
-	 * block (already covered by {@link #testDeploymentsCoLocatedWithPart1ApiCommon}).
+	 * REQ-ETS-PART1-005; SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-CASCADE-001.
+	 * Subdeployments classes MUST be co-located in the SAME {@code <test>} block as
+	 * Deployments so the three-level group-dependency cascade can resolve within scope.
+	 * Stronger condition than the SystemFeatures co-location lint: the 3-deep chain
+	 * requires the parent (Deployments) to be in the same block, which ALSO transitively
+	 * requires Deployments' own parent (Part 1 API Common) in the same block (already
+	 * covered by {@link #testDeploymentsCoLocatedWithPart1ApiCommon}).
 	 */
 	@org.junit.Test
 	public void testSubdeploymentsCoLocatedWithDeployments() throws Exception {

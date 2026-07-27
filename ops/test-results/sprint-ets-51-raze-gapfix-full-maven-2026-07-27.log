@@ -1,0 +1,222 @@
+Script started on 2026-07-26 21:57:39-04:00 [COMMAND="docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/workspace -v ets-ogcapi-s45-m2:/tmp/.m2 -w /workspace -e MAVEN_CONFIG=/tmp/.m2 -e MAVEN_OPTS="-Duser.home=/tmp" maven:3.9-eclipse-temurin-17 mvn -B clean test" <not executed on terminal>]
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 1 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 1 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] 
+[INFO] -----------< org.opengis.cite:ets-ogcapi-connectedsystems10 >-----------
+[INFO] Building OGC API - Connected Systems 1.0 Conformance Test Suite 0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Deleting /workspace/target
+[INFO] 
+[INFO] --- spring-javaformat:0.0.43:validate (default) @ ets-ogcapi-connectedsystems10 ---
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-versions) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] 
+[INFO] --- buildnumber:3.2.1:create (default) @ ets-ogcapi-connectedsystems10 ---
+[INFO] ShortRevision tag detected. The value is '10'.
+[INFO] Executing: /bin/sh -c cd '/workspace' && 'git' 'log' '-1' '--no-merges' '--format=format:%H %aI %aE %aN'
+[INFO] Working directory: /workspace
+[INFO] Storing buildNumber: 29ce2e682c at timestamp: 1785117461804
+[INFO] Executing: /bin/sh -c cd '/workspace' && 'git' 'symbolic-ref' 'HEAD'
+[INFO] Working directory: /workspace
+[INFO] Storing scmBranch: main
+[INFO] 
+[INFO] --- dependency:3.0.0:unpack (isolate-networknt-message-bundles) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Configured Artifact: com.networknt:json-schema-validator:1.5.9:jar
+[INFO] Unpacking /tmp/.m2/repository/com/networknt/json-schema-validator/1.5.9/json-schema-validator-1.5.9.jar to /workspace/target/classes/org/opengis/cite/ogcapiconnectedsystems10/internal/networknt/schema/i18n with includes "jsv-messages*.properties" and excludes ""
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Copying 150 resources from src/main/resources to target/classes
+[INFO] Copying 2 resources from src/main/javadoc to target/classes/doc/ogcapi-connectedsystems10/0.1-SNAPSHOT
+[INFO] The encoding used to copy filtered properties files has not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resources. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 67 source files with javac [debug release 17] to target/classes
+[INFO] /workspace/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/DeploymentFeaturesSupport.java: Some input files use or override a deprecated API.
+[INFO] /workspace/src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/deployments/DeploymentFeaturesSupport.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Copying 7 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 58 source files with javac [debug release 17] to target/test-classes
+[INFO] /workspace/src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyETSAssert.java: Some input files use or override a deprecated API.
+[INFO] /workspace/src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyETSAssert.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- surefire:3.5.1:test (default-test) @ ets-ogcapi-connectedsystems10 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junit4.JUnit4Provider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyLocalOshPopulatedE2e
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyLocalOshPopulatedE2e
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.util.VerifyURIUtils
+[WARNING] Tests run: 5, Failures: 0, Errors: 0, Skipped: 2, Time elapsed: 0.021 s -- in org.opengis.cite.ogcapiconnectedsystems10.util.VerifyURIUtils
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.util.VerifyXMLUtils
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 s -- in org.opengis.cite.ogcapiconnectedsystems10.util.VerifyXMLUtils
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.util.VerifyValidationUtils
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 s -- in org.opengis.cite.ogcapiconnectedsystems10.util.VerifyValidationUtils
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGController
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGController
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency
+[INFO] Tests run: 76, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyTestNGSuiteDependency
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.validation.swecommon.VerifyConnectedSystemsSweValidatorAdapter
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.639 s -- in org.opengis.cite.ogcapiconnectedsystems10.validation.swecommon.VerifyConnectedSystemsSweValidatorAdapter
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.VerifyPart1ApiCommonSupport
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/collection-items - https://example.test/api/collections/deployments/items returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/canonical-resources - IUT does not support resource type properties (canonical endpoint returned HTTP 404).
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/collection-items - collection systems has no rel=items link with a JSON media type supported by this ETS; collection skipped.
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.281 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.VerifyPart1ApiCommonSupport
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.VerifyPart1ApiCommonSuite
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.614 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.VerifyPart1ApiCommonSuite
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.VerifyPart2SweCommonBinaryTests
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.VerifyPart2SweCommonBinaryTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.VerifyPart2CandidateSelection
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.VerifyPart2CandidateSelection
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.VerifyPart2JsonTests
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.VerifyPart2JsonTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.VerifyPart2FeasibilityTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.VerifyPart2FeasibilityTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.VerifyPart2SweCommonJsonTests
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.VerifyPart2SweCommonJsonTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.VerifyPart2AdvancedFilteringTests
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.VerifyPart2AdvancedFilteringTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.VerifyPart2SchemaValidation
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.235 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.VerifyPart2SchemaValidation
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.VerifyPart2SweCommonTextTests
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.VerifyPart2SweCommonTextTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.VerifyPart2ControlStreamTests
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.VerifyPart2ControlStreamTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.VerifyPart2ApiCommonTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.VerifyPart2ApiCommonTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.VerifyPart2UpdateTests
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.VerifyPart2UpdateTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.VerifyPart2ObservationCommandBindingTests
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.VerifyPart2ObservationCommandBindingTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.VerifyPart2CreateReplaceDeleteTests
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.VerifyPart2CreateReplaceDeleteTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.VerifyPart2SystemEventTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.VerifyPart2SystemEventTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.VerifyPart2DatastreamTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.VerifyPart2DatastreamTests
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.VerifySensorMlResourceMappingAssertions
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.VerifySensorMlResourceMappingAssertions
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.VerifySubsystemsHttpProcedures
+log4j:WARN No appenders could be found for logger (org.apache.http.impl.conn.BasicClientConnectionManager).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/collection - http://127.0.0.1:35867/api/systems/root/subsystems returned unsupported media type 'text/xml'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/collection - http://127.0.0.1:33553/api/systems/root/subsystems returned no Content-Type; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-search-systems - http://127.0.0.1:39485/api/systems returned unsupported media type 'text/xml'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/collection - http://127.0.0.1:46399/api/subsystem-page-2 returned unsupported media type 'text/xml'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-search-systems - http://127.0.0.1:41889/api/systems returned no Content-Type; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-search-systems - http://127.0.0.1:37067/api/system-page-2 returned unsupported media type 'text/xml'; representation parsing skipped.
+2026-07-27 01:57:52,681 [main] WARN  c.n.schema.UnknownKeywordFactory - Unknown keyword example - you should define your own Meta Schema. If the keyword is irrelevant for validation, just use a NonValidationKeyword or if it should generate annotations AnnotationKeyword
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.772 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.VerifySubsystemsHttpProcedures
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.VerifySubsystemsSupport
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.VerifySubsystemsSupport
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.VerifySubsystemsSuite
+Subsystem direct procedures will execute despite documented inherited evidence limitation mobileSystemLocationIsUpdated.
+Subsystem direct procedures will execute despite documented inherited evidence limitation systemResourcesEndpointIsValid.
+Subsystem direct procedures will execute despite documented inherited evidence limitation canonicalSystemsEndpointIsValid.
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.subsystems.VerifySubsystemsSuite
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.VerifyEncodingRelationTypes
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.VerifyEncodingRelationTypes
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.VerifySubdeploymentsSupport
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-subdeployments - refusing cross-origin rel=deployedSystems candidate https://other.test/api/deployments/root/systems.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-subdeployments - ignoring rel=deployedSystems occurrence at https://example.test/api/deployments/root/systems.html with unsupported advertised type 'text/html'.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-subdeployments - refusing cross-origin rel=deployedSystems candidate https://other.test/api/deployments/root/systems.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-subdeployments - ignoring rel=deployedSystems occurrence at https://example.test/api/deployments/root/systems.html with unsupported advertised type 'text/html'.
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.VerifySubdeploymentsSupport
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.VerifySubdeploymentsHttpProcedures
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-assoc - refusing cross-origin rel=deployedSystems candidate https://other.test/api/deployments/root/deployedSystems.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-assoc - ignoring rel=deployedSystems occurrence at http://127.0.0.1:45317/api/deployments/root/deployedSystems.html with unsupported advertised type 'text/html'.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/collection - http://127.0.0.1:43971/api/deployments/root/subdeployments returned unsupported media type 'text/xml'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/collection - http://127.0.0.1:36253/api/deployments/root/subdeployments returned no Content-Type; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/collection - http://127.0.0.1:33963/api/deployment-page-2 returned unsupported media type 'text/xml'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-assoc - refusing cross-origin rel=deployedSystems candidate https://other.test/api/deployments/root/deployedSystems.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-assoc - ignoring rel=deployedSystems occurrence at http://127.0.0.1:41049/api/deployments/root/deployedSystems.html with unsupported advertised type 'text/html'.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-deployments - http://127.0.0.1:33987/api/deployments returned unsupported media type 'text/xml'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-deployments - http://127.0.0.1:38817/api/deployments returned no Content-Type; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subdeployment/recursive-search-deployments - http://127.0.0.1:35705/api/root-page-2 returned unsupported media type 'text/xml'; representation parsing skipped.
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.362 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.VerifySubdeploymentsHttpProcedures
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.VerifySubdeploymentsCausalDependency
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.195 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.VerifySubdeploymentsCausalDependency
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.VerifySubdeploymentsSuite
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.VerifySubdeploymentsSuite
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.VerifyGeoJsonResourceMappingAssertions
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.VerifyGeoJsonResourceMappingAssertions
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.update.VerifyUpdateChangedFieldAssertion
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.update.VerifyUpdateChangedFieldAssertion
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.VerifyProceduresHttpProcedures
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/location - http://127.0.0.1:34915/api/procedures-page-2 returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/resources-endpoint - http://127.0.0.1:34915/api/procedures-page-2 returned unsupported media type 'application/json'; representation parsing skipped.
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.296 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.VerifyProceduresHttpProcedures
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.VerifyProceduresSuite
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.VerifyProceduresSuite
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.VerifyProcedureFeaturesSupport
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections - https://example.test/api/procedures returned unsupported media type 'application/json'; Procedure validation was not executed.
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.188 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.VerifyProcedureFeaturesSupport
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.VerifyCreateReplaceDeleteLocationResolution
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.VerifyCreateReplaceDeleteLocationResolution
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.VerifyDeploymentFeaturesSupport
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections - https://example.test/api/deployments returned unsupported media type 'application/json'; Deployment validation was not executed.
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.VerifyDeploymentFeaturesSupport
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.VerifyDeploymentsHttpProcedures
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/resources-endpoint - http://127.0.0.1:34091/api/deployments-page-2 returned unsupported media type 'application/json'; representation parsing skipped.
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.050 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.VerifyDeploymentsHttpProcedures
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.VerifyDeploymentsSuite
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.VerifyDeploymentsSuite
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.VerifyEncodingMediatypeWrite
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.VerifyEncodingMediatypeWrite
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.VerifySystemFeaturesSuite
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. System direct procedures will execute, but inherited conformance remains incomplete.
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.VerifySystemFeaturesSuite
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.VerifySystemFeaturesHttpProcedures
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/collection-items - collection unsupported has no rel=items link with a JSON media type supported by this ETS; collection skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common/collection-items - collection unsupported has no rel=items link with a JSON media type supported by this ETS; collection skipped.
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.043 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.VerifySystemFeaturesHttpProcedures
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.VerifySystemFeaturesSupport
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/collections - https://example.test/api/systems returned unsupported media type 'application/json'; endpoint procedure not executed for this representation.
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.360 s -- in org.opengis.cite.ogcapiconnectedsystems10.conformance.systemfeatures.VerifySystemFeaturesSupport
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyMaskingRequestLoggingFilter
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyMaskingRequestLoggingFilter
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyCredentialMaskingFilter
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyCredentialMaskingFilter
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifySuiteFixtureListener
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.143 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifySuiteFixtureListener
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyWireRestoresOriginalCredential
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyWireRestoresOriginalCredential
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyAuthCredentialPropagation
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in org.opengis.cite.ogcapiconnectedsystems10.listener.VerifyAuthCredentialPropagation
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyFreshSmokeReport
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyFreshSmokeReport
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyTeamEngine6Packaging
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyTeamEngine6Packaging
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyETSAssert
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyETSAssert
+[INFO] Running org.opengis.cite.ogcapiconnectedsystems10.VerifyReleasedAtsCoverage
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in org.opengis.cite.ogcapiconnectedsystems10.VerifyReleasedAtsCoverage
+[INFO] 
+[INFO] Results:
+[INFO] 
+[WARNING] Tests run: 480, Failures: 0, Errors: 0, Skipped: 3
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.815 s
+[INFO] Finished at: 2026-07-27T01:57:56Z
+[INFO] ------------------------------------------------------------------------
+
+Script done on 2026-07-26 21:57:56-04:00 [COMMAND_EXIT_CODE="0"]

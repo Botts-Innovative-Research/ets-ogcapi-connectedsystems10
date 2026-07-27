@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.29 | Status: Living Document | Last reconciled: 2026-07-26 (Part 1 Procedure Raze-approved)
+> Version: 2.0.31 | Status: Living Document | Last reconciled: 2026-07-27 (Part 1 Subdeployment complete; final Raze approved)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -43,7 +43,7 @@ The same jar is verified locally and later deployed by OGC:
 - `docker compose up` uses the repository Dockerfile. The verified historical baseline manually assembles TeamEngine 5.6.1; Sprint 41 replaces it with a digest-pinned OGC-published TeamEngine 6.0.0 runtime containing the ETS jar, justified dependency closure, and CTL resources at supported TeamEngine extension paths. TeamEngine discovers the suite via `META-INF/services/com.occamlab.te.spi.jaxrs.TestSuiteController` (ADR-001/011). Maven, image build, runtime verification, Compose health, suite registration, and the final local OSH TeamEngine E2E gate are archived.
 - Developer browses `http://localhost:8081/teamengine/` and runs the Connected Systems suite from the CTL UI.
 - The supported local deployment path is the repository **Dockerfile + `docker-compose.yml` + `scripts/smoke-test.sh`**. Any Maven `docker` profile is stale unless it is removed, made a no-op, or delegates to this exact digest-pinned Dockerfile path. It must not define an independent TeamEngine runtime, independent port/startup contract, or broad dependency-copy path.
-- The canonical run-argument contract is: required `iut`; optional `auth-credential`, `mutation-tests-enabled`, `mutation-iut-policy`, and `mobile-system-id`. The last argument supplies the released `/conf/system/location-time` prerequisite and never enables mutation. TeamEngine UI and documentation may label `iut` as "CS API landing page" for users, but the serialized argument key passed into TestNG must be `iut`. Do not introduce `auth-type` unless Java/TestNG support is explicitly implemented later.
+- The canonical run-argument contract is: required `iut`; optional `auth-credential`, `mutation-tests-enabled`, `mutation-iut-policy`, `mobile-system-id`, and `subdeployment-association-evidence`. The last two arguments respectively supply the released `/conf/system/location-time` prerequisite and an independent Deployment-association ownership oracle; neither enables mutation. TeamEngine UI and documentation may label `iut` as "CS API landing page" for users, but the serialized argument key passed into TestNG must be `iut`. Do not introduce `auth-type` unless Java/TestNG support is explicitly implemented later.
 
 **Verification boundary (ADR-012)**:
 - Project-operated hosted CI is not approved and is not part of the architecture.
@@ -473,6 +473,8 @@ The suite has one canonical run-argument contract:
 - optional `auth-credential`
 - optional `mutation-tests-enabled`
 - optional `mutation-iut-policy`
+- optional `mobile-system-id`
+- optional `subdeployment-association-evidence`
 
 CTL, TestNG XML, Java enum/docs, smoke harness docs, README, Javadoc, site docs, and sample test-run-props must converge on those keys. Human-facing UI text may describe `iut` as the "CS API landing page"; that label must not leak into serialized TestNG argument names as `iut-url`. `auth-type` must not appear in public docs, CTL, sample run props, or testng defaults unless a later code change implements and verifies that argument.
 
@@ -1057,3 +1059,65 @@ Procedure media SKIPs and two collection failures. API Common sabotage skips
 Procedure setup and all five methods before Procedure IUT access. The exact
 image passes immutable TeamEngine runtime and deployed SWE Common adapter
 checks; no external source or binary was changed.
+
+## 30. Architecture v2.0.31 - Part 1 Subdeployment graph procedures (2026-07-27)
+
+`SubdeploymentsTests` replaces four eager historical approximations with the
+five released `/conf/subdeployment` procedures. Setup retains only the
+normalized API root. Each method independently discovers the hierarchy,
+recursive result, or association evidence it needs, so missing evidence in one
+procedure cannot configuration-skip another.
+
+The released dependency remains `deployments -> subdeployments`. The defensive
+setup gate recognizes only Core, Common, Part 1 API Common, and Deployment
+prerequisite outcomes. Unrelated sibling groups cannot become implicit
+prerequisites. Deployment sabotage must skip setup and all five methods before
+Subdeployment IUT access.
+
+`SubdeploymentsSupport` owns a bounded, same-origin Deployment graph built from
+the root collection plus every direct Subdeployment endpoint. Every hierarchy
+page is status/media gated before parsing and validated through
+`DeploymentFeaturesSupport`. Duplicate identities, cycles, non-direct shortcut
+edges, and safety overflow fail closed.
+
+The collection procedure requires exact same-origin
+`/deployments/{id}/subdeployments` relation targets and schema-valid collection
+pages. Recursive search uses exact ID-set equality: root default/false equals
+roots, root true equals all nodes, child default/false equals direct children,
+and child true equals all descendants.
+
+Recursive association closure uses immutable run-argument fixture evidence for
+resources owned directly by the parent and by every descendant for each of the
+five released association relations. It examines every occurrence, refuses
+cross-origin candidates, and selects a same-origin JSON-compatible or untyped
+negotiable link. The parent endpoint must include the complete fixture union.
+Missing fixture evidence or no safe comparable link SKIPs with warning; an
+observed omission fails. Descendant endpoint responses do not become the
+expected oracle.
+
+Deployment schema validation remains an ETS-owned adapter boundary. A future
+reusable SensorML module may replace schema semantics behind that boundary, but
+the `ets-sensorml30` executable suite jar does not enter this runtime closure.
+Protocol traversal, graph semantics, TestNG verdict policy, and Connected
+Systems mappings remain local.
+
+Primary TeamEngine E2E executes against unmodified local OSH and preserves
+inherited Deployment failures as five Subdeployment dependency SKIPs.
+Controlled read-only HTTP coverage supplies positive graph and association
+evidence. No OSH or TeamEngine source or binary change is permitted.
+
+Implementation reconciliation confirms all five methods are independently
+deployed and reviewed exact. Primary local OSH TeamEngine is honestly
+`219/39/5/175`; the inherited Deployment failures remain visible and all five
+Subdeployment methods SKIP before IUT access. A controlled programmatic TestNG
+experiment establishes causality with a passing Deployment baseline and a
+single-variable failing prerequisite; the earlier direct local-OSH sabotage is
+historical non-causal evidence only. Corrected focused Maven is `131/0/0/0`,
+full Maven is `480/0/0/3`, and exact image
+`sha256:e88aa5f9...b1dca` passes runtime, controlled HTTP, credential,
+provenance, and zero-write/zero-leak hygiene gates. Focused adversarial recheck
+closed the initial four findings and identified repository-root TestNG output
+plus stale evidence. TestNG now writes only to JUnit-managed temporary
+directories, focused/full Maven leave `test-output/` absent, and records use
+the corrected causal proof. Final Raze returns `APPROVE_WITH_CONCERNS`,
+confidence `0.99`, with all six findings closed and no required fixes.

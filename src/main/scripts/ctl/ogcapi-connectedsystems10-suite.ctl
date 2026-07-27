@@ -69,6 +69,12 @@
                  </label>
                  <input id="mobile-system-id" name="mobile-system-id" size="128" type="text" value="" />
                </p>
+               <p>
+                 <label for="subdeployment-association-evidence">
+                   <h4 style="margin-bottom: 0.5em">Subdeployment association evidence JSON (optional)</h4>
+                 </label>
+                 <textarea id="subdeployment-association-evidence" name="subdeployment-association-evidence" cols="96" rows="6"></textarea>
+               </p>
              </fieldset>
              <p>
                <input class="form-button" type="submit" value="Start"/> | 
@@ -85,6 +91,7 @@
           <entry key="mutation-tests-enabled"><xsl:value-of select="normalize-space($form-data/values/value[@key='mutation-tests-enabled'])"/></entry>
           <entry key="mutation-iut-policy"><xsl:value-of select="normalize-space($form-data/values/value[@key='mutation-iut-policy'])"/></entry>
           <entry key="mobile-system-id"><xsl:value-of select="normalize-space($form-data/values/value[@key='mobile-system-id'])"/></entry>
+          <entry key="subdeployment-association-evidence"><xsl:value-of select="normalize-space($form-data/values/value[@key='subdeployment-association-evidence'])"/></entry>
 		    </properties>
 		   </xsl:variable>
        <xsl:variable name="testRunDir">

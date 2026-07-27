@@ -94,6 +94,7 @@ public class VerifyAuthCredentialPropagation {
 		assertEquals("mutation-tests-enabled", TestRunArg.MUTATION_TESTS_ENABLED.toString());
 		assertEquals("mutation-iut-policy", TestRunArg.MUTATION_IUT_POLICY.toString());
 		assertEquals("mobile-system-id", TestRunArg.MOBILE_SYSTEM_ID.toString());
+		assertEquals("subdeployment-association-evidence", TestRunArg.SUBDEPLOYMENT_ASSOCIATION_EVIDENCE.toString());
 	}
 
 	/**

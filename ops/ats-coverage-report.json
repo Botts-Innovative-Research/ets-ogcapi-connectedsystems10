@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 218,
+  "suiteTestMethodCount" : 219,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -298,7 +298,7 @@
     "target" : "/req/deployment/canonical-url",
     "supporting" : false,
     "state" : "exact",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#everyDeploymentHasCanonicalUrl()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentItemHasCanonicalLink()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#everyDeploymentHasCanonicalUrl()" ],
     "reviewedMapping" : {
       "part" : 1,
       "test" : "/conf/deployment/canonical-url",
@@ -332,7 +332,7 @@
     "target" : "/req/deployment/canonical-endpoint",
     "supporting" : false,
     "state" : "exact",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#canonicalDeploymentsEndpointIsValid()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentItemHasIdTypeLinks()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#canonicalDeploymentsEndpointIsValid()" ],
     "reviewedMapping" : {
       "part" : 1,
       "test" : "/conf/deployment/canonical-endpoint",
@@ -382,45 +382,85 @@
     "classIdentifier" : "/conf/subdeployment",
     "target" : "/req/subdeployment/collection",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentsCollectionReturns200()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentCollectionIsValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subdeployment/collection",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentCollectionIsValid()",
+      "reviewedBy" : "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn" : "2026-07-27",
+      "evidence" : "The independently executable deployed TestNG method discovers every parent with direct Subdeployments through bounded, actual-media-gated hierarchy traversal. For each parent it retrieves the canonical Deployment, requires every rel=subdeployments occurrence to resolve to the normalized same-origin api_root/deployments/{encoded id}/subdeployments target without query or fragment, and accepts equivalent explicit default ports and percent-encoded unreserved path characters. It then requires HTTP 200, bounded same-origin pagination, and released GeoJSON or SensorML Deployment collection schema validity on every page. No hierarchy data produces an explicit SKIP."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subdeployment/recursive-param",
     "classIdentifier" : "/conf/subdeployment",
     "target" : "/req/subdeployment/recursive-param",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#recursiveParameterUsesBooleanValues()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subdeployment/recursive-param",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#recursiveParameterUsesBooleanValues()",
+      "reviewedBy" : "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn" : "2026-07-27",
+      "evidence" : "The independently executable deployed TestNG method issues read-only /deployments requests with the exact recursive=false and recursive=true query values and requires HTTP 200 for both. It deliberately makes a status-only comparison and does not parse or impose representation-media constraints absent from the released procedure; controlled HTTP coverage proves both exact requests execute against successful non-JSON responses."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subdeployment/recursive-search-deployments",
     "classIdentifier" : "/conf/subdeployment",
     "target" : "/req/subdeployment/recursive-search-deployments",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#deploymentsRecursiveSearchIsComplete()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subdeployment/recursive-search-deployments",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#deploymentsRecursiveSearchIsComplete()",
+      "reviewedBy" : "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn" : "2026-07-27",
+      "evidence" : "The deployed TestNG method independently builds a bounded Deployment hierarchy solely from default direct-child Subdeployment endpoints, with every page gated by actual GeoJSON or SensorML media and validated against the released Deployment schema. Duplicate ids, multiple parents, cycles, shortcut edges, and safety-bound overflow fail closed. It proves default and recursive=false /deployments results equal exactly the hierarchy roots and recursive=true equals every discovered node; absent hierarchy data explicitly SKIPs."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subdeployment/recursive-search-subdeployments",
     "classIdentifier" : "/conf/subdeployment",
     "target" : "/req/subdeployment/recursive-search-subdeployments",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentsRecursiveSearchIsComplete()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subdeployment/recursive-search-subdeployments",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentsRecursiveSearchIsComplete()",
+      "reviewedBy" : "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn" : "2026-07-27",
+      "evidence" : "The deployed TestNG method independently discovers a parent with direct and transitive Subdeployments through bounded, schema-validated, actual-media-gated default hierarchy traversal. It proves that parent's default and recursive=false nested endpoint results equal exactly its direct children while recursive=true equals every descendant. Expected membership is never derived from a recursive=true response, and no transitive hierarchy produces an explicit SKIP."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/subdeployment/recursive-assoc",
     "classIdentifier" : "/conf/subdeployment",
     "target" : "/req/subdeployment/recursive-assoc",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#recursiveAssociationsIncludeDescendants()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/subdeployment/recursive-assoc",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#recursiveAssociationsIncludeDescendants()",
+      "reviewedBy" : "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn" : "2026-07-27",
+      "evidence" : "For each independently discovered parent with direct Subdeployments, the deployed TestNG method inspects deployedSystems, featuresOfInterest, samplingFeatures, datastreams, and controlstreams. For every advertised relation it selects a safe same-origin JSON-compatible link across all occurrences, preferring typed JSON while allowing actual-media-gated untyped negotiation and refusing cross-origin or unsupported candidates. The optional public fixture independently identifies directly owned ids for the parent and every descendant; their complete union is required in the parent endpoint. Missing fixture coverage, no safe comparable link, or no advertised relation explicitly SKIPs, while any observed parent-owned or descendant-owned omission fails."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/procedure/location",
@@ -2381,17 +2421,17 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 25,
+    "exact" : 30,
     "helper" : 2,
-    "candidate" : 137,
-    "unmapped" : 76,
+    "candidate" : 136,
+    "unmapped" : 72,
     "byPart" : {
       "1" : {
         "total" : 110,
-        "exact" : 25,
+        "exact" : 30,
         "helper" : 2,
-        "candidate" : 36,
-        "unmapped" : 47
+        "candidate" : 35,
+        "unmapped" : 43
       },
       "2" : {
         "total" : 130,
@@ -2439,10 +2479,10 @@
       },
       "1:/conf/subdeployment" : {
         "total" : 5,
-        "exact" : 0,
+        "exact" : 5,
         "helper" : 0,
-        "candidate" : 1,
-        "unmapped" : 4
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "1:/conf/procedure" : {
         "total" : 5,

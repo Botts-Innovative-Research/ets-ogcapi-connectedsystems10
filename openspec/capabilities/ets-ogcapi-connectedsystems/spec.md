@@ -1842,7 +1842,7 @@ SKIP as specified.
 #### REQ-ETS-TEAMENGINE-002: CTL Wrapper
 - **Priority**: MUST
 - **Status**: IMPLEMENTED (Sprint 41 policy-guidance remediation aligned CTL, TestNG defaults, smoke forwarding, docs, and sample props; structural verification and the primary local OSH TeamEngine 6 run pass)
-- **Description**: A CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` SHALL expose the suite to TeamEngine's CTL UI using the canonical TestNG run-argument contract: required `iut` (CS API landing-page URL), optional `auth-credential`, optional `mutation-tests-enabled`, and optional `mutation-iut-policy`. Human-facing form labels MAY describe `iut` as the CS API landing page, but the serialized argument key passed to Java/TestNG SHALL be `iut`. The suite SHALL NOT document or emit `iut-url`, `auth-type`, or `ics` as supported TestNG run arguments unless Java/TestNG support is intentionally added in a later requirement.
+- **Description**: A CTL wrapper at `src/main/scripts/ctl/ogcapi-connectedsystems10-suite.ctl` SHALL expose the suite to TeamEngine's CTL UI using the canonical TestNG run-argument contract: required `iut` (CS API landing-page URL), optional `auth-credential`, optional `mutation-tests-enabled`, optional `mutation-iut-policy`, optional `mobile-system-id`, and optional `subdeployment-association-evidence`. Human-facing form labels MAY describe `iut` as the CS API landing page, but the serialized argument key passed to Java/TestNG SHALL be `iut`. The suite SHALL NOT document or emit `iut-url`, `auth-type`, or `ics` as supported TestNG run arguments unless Java/TestNG support is intentionally added in a later requirement.
 - **Rationale**: TeamEngine's primary user-facing entry surface is CTL; SPI alone is not enough for the UI. The CTL surface, TestNG defaults, Java run-argument enum, smoke harness, README, Javadoc, site docs, and sample run props must describe the same contract or TeamEngine UI runs can silently drift from automated smoke runs.
 - **Maps to**: PRD FR-ETS-51.
 
@@ -2130,15 +2130,234 @@ SKIP as specified.
   (6) `scripts/mvn-test-via-docker.sh` wrapper in sister repo. Closes META-GAP-S7-2 / Quinn W1 (RECURRING-MEDIUM): "Quinn cannot run mvn lifecycle outside Docker across ALL 7 ETS sprints." Gives Quinn host-side independent mvn handle for Sprint 8+.
 - **Maps to**: meta-Raze sprint-ets-07-meta-review.yaml META-GAP-S7-1, META-GAP-S7-2, META-GAP-S7-3 + sprint-ets-07-adversarial-cumulative.yaml GAP-1, GAP-3 + sprint-ets-07-evaluator-cumulative.yaml W1, W3.
 
-#### REQ-ETS-PART1-005: Subdeployments Conformance Class (`/conf/subdeployment`) (Sprint 8 target)
+#### REQ-ETS-PART1-005: Subdeployment Direct ATS Procedures (Sprint 51)
 - **Priority**: MUST
-- **Status**: PARTIAL_UNREVIEWED_ATS (historical Sprint 8 increment complete; 0/5 released `/conf/subdeployment` tests have reviewed exact mappings).
-- **Priority status correction**: original Pat planning narrative referenced `/conf/subdeployments` (plural) for the conformance class identifier. Generator curl-verified that GeoRobotix declares `/conf/subdeployment` (singular) per OGC 23-001 Annex A; OGC source repo also uses singular `/req/subdeployment/` directory naming with class identifier `/req/subdeployment` (singular) declared in `requirements_class_subdeployments.adoc`. Both forms appear in OGC sources at different abstraction layers (plural class file name; singular identifier path). The IUT and OGC source agree on the singular identifier; Generator implementation honors the singular form for all OGC URIs.
-- **OGC requirement structure** (Generator HTTP-200-verified 2026-04-30T20:24Z): 5 .adoc files at `raw.githubusercontent.com/.../requirements/subdeployment/` — `requirements_class_subdeployments.adoc` (declares `inherit:: /req/deployment` — Subdeployments inherit Deployment resource exposure and canonical URL discipline from /req/deployment), `req_subcollection.adoc` (path `/deployments/{parentId}/subdeployments`), `req_recursive_param.adoc`, `req_recursive_search_deployments.adoc`, `req_recursive_search_subdeployments.adoc`. NOTE: there is NO `/req/subdeployment/parent-deployment-link` — Subdeployments do NOT have the equivalent of Subsystems' parent-system-link uniqueness; the inheritance from /req/deployment is the architectural composition mechanism. The 4 @Tests therefore use `/req/subdeployment/collection` (collection presence) + `/req/deployment/canonical-endpoint` (inherited Deployment resource endpoint exposure at `/deployments/{id}`) + `/req/deployment/canonical-url` (inherited canonical URL at `/deployments/{id}`) + the `/req/subdeployment` class URI (3-deep cascade runtime tracer). Any `id`, `type`, and `links` checks are ETS structural sanity checks for the returned resource representation and are not attributed solely to `req_canonical_endpoint.adoc`.
-- **GeoRobotix IUT state at sprint time**: 1 deployment exists (`16sp744ch58g`); `/deployments/16sp744ch58g/subdeployments` returns HTTP 200 + empty `items` array. IUT declares `/conf/subdeployment` in `/conformance`. Future GeoRobotix release that populates the subdeployments collection automatically promotes 4 @Tests from SKIP to PASS without code changes — the @BeforeClass probe-loop scans up to 15 parent deployments looking for non-empty subdeployments and only SKIPs when no parent has non-empty children. Sprint 8 IUT-state-honest SKIP outcome is the contract-anticipated PASS-with-caveat per Pat planning (SUBDEPLOYMENTS-IUT-STATE-UNKNOWN risk MEDIUM mitigation).
-- **Description**: For `/conf/subdeployment`, the ETS SHALL provide at least one TestNG `@Test` method whose `description` attribute starts with the OGC canonical `.adoc` requirement URI form `/req/subdeployment/<assertion>`. Generator MUST verify canonical URI form via OGC `.adoc` source HTTP-200 fetch before writing assertions. Generator verified the OGC source directory at `raw.githubusercontent.com/opengeospatial/ogcapi-connected-systems/master/api/part1/standard/requirements/subdeployment/`; it contains `requirements_class_subdeployments.adoc`, `req_subcollection.adoc`, `req_recursive_param.adoc`, `req_recursive_search_deployments.adoc`, and `req_recursive_search_subdeployments.adoc`, with Subdeployments inheriting Deployment canonical endpoint and canonical URL discipline from `/req/deployment`. The class lives at `org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests`. Subdeployments DEPENDS ON Deployments via `<group name="subdeployments" depends-on="deployments"/>`; since Sprint 49, the current transitive chain is Subdeployments→Deployments→Part 1 API Common→Core/Common. Coverage scope Sprint 8: Sprint-1-style minimal (4 @Tests per pattern): (a) GET /deployments/{id}/subdeployments HTTP 200 + non-empty items; (b) inherited Deployment canonical endpoint exposure at `/deployments/{id}` plus ETS structural sanity checks on the returned resource; (c) inherited Deployment canonical URL at `/deployments/{id}`; (d) dependency-cascade runtime tracer. If GeoRobotix does not declare `/conf/subdeployment` in conformance OR returns 404 for `/deployments/{id}/subdeployments`, all @Tests SKIP-with-reason (IUT-state-honest per sprint policy).
-- **Rationale**: Subdeployments completes the deepest dependency chain in Part 1. Deployments remains its direct parent. Sprint 8 originally established Subdeployments→Deployments→SystemFeatures→Core as the first three-deep chain; that topology is historical evidence. Sprint 49 replaced Deployment's parent, so the current chain is Subdeployments→Deployments→Part 1 API Common→Core/Common. The historical and current chains both demonstrate transitive dependency behavior without making SystemFeatures a current Deployment prerequisite.
+- **Status**: IMPLEMENTED_RELEASED_ATS (Sprint 51 replaces the
+  historical four-method approximation with all 5 released
+  `/conf/subdeployment` tests; all four initial Raze oracle and
+  dependency-evidence findings plus both follow-up hygiene findings are
+  corrected and verified; final Raze reports no required fixes)
+- **Description**: The ETS SHALL implement exactly the five released OGC
+  23-001 Annex A `/conf/subdeployment` procedures: `/collection`,
+  `/recursive-param`, `/recursive-search-deployments`,
+  `/recursive-search-subdeployments`, and `/recursive-assoc`. Each procedure
+  SHALL have one independently executable TestNG method whose description
+  cites its canonical target URI. The historical non-empty collection,
+  inherited canonical shape, canonical-link, and dependency-tracer methods are
+  superseded approximations and SHALL NOT be reviewed as exact mappings.
+- **Hierarchy evidence**: Each procedure that needs hierarchy evidence SHALL
+  independently traverse `{api_root}/deployments` and every direct
+  `{api_root}/deployments/{id}/subdeployments` endpoint with bounded,
+  same-origin pagination. HTTP status and actual GeoJSON or SensorML media SHALL
+  be established before parsing every page. Each page SHALL satisfy the
+  released Deployment collection schema selected from actual media. Duplicate
+  Deployment IDs, cycles, shortcut edges to non-direct descendants, or a
+  safety-bound overflow SHALL fail closed.
+- **Subcollection**: For every discovered parent with direct children, the
+  collection procedure SHALL retrieve the canonical parent Deployment and
+  require at least one `rel=subdeployments` occurrence. Every occurrence SHALL
+  resolve on the IUT origin to the normalized HTTP target
+  `{api_root}/deployments/{encodedParentId}/subdeployments`, without query or
+  fragment variants. Normalization SHALL compare case-insensitive scheme and
+  host, effective default port, normalized path segments, and percent-encoded
+  unreserved path characters; wrong-parent and trailing-path variants SHALL
+  still fail. The selected link SHALL return HTTP 200, and all returned pages
+  SHALL pass the released Deployment collection schema selected from actual
+  media. If no parent has direct children, the procedure SHALL warn and SKIP.
+- **Recursive parameter**: The recursive-parameter procedure SHALL issue
+  status-only requests carrying the exact values `recursive=false` and
+  `recursive=true`. Its verdict SHALL depend on HTTP status, not on parsing or
+  representation media.
+- **Recursive search from Deployments**: The default and `recursive=false`
+  top-level Deployment results SHALL equal the independently discovered root
+  ID set. The `recursive=true` result SHALL equal every independently
+  discovered Deployment ID. Missing or additional IDs SHALL fail.
+- **Recursive search from Subdeployments**: For a parent with direct children,
+  default and `recursive=false` results SHALL equal the parent's direct-child
+  ID set. The `recursive=true` result SHALL equal all transitive descendant
+  IDs. Missing or additional IDs SHALL fail. If no discovered parent has a
+  transitive descendant, the procedure SHALL warn and SKIP.
+- **Recursive association closure**: For every parent with direct children,
+  the procedure SHALL inspect the relations `deployedSystems`,
+  `featuresOfInterest`, `samplingFeatures`, `datastreams`, and
+  `controlstreams`. For every advertised parent relation, an explicit
+  read-only fixture SHALL independently identify the resource IDs owned
+  directly by that parent and every descendant. The parent relation's resource
+  IDs SHALL include the complete parent-plus-descendant fixture union. Missing
+  ownership evidence SHALL warn and SKIP rather than permit a vacuous PASS.
+  Association-link selection SHALL inspect every occurrence, refuse to
+  dereference cross-origin candidates, prefer same-origin JSON-compatible
+  media, and allow a same-origin occurrence without `type` to be negotiated and
+  gated by actual response media. An unsupported, unsafe first occurrence SHALL
+  NOT hide a usable later occurrence. If no safe comparable occurrence exists,
+  the procedure SHALL warn and SKIP; any observed omission SHALL fail.
+- **Dependency and validator boundary**: Subdeployment SHALL inherit
+  Deployment directly. The defensive setup gate SHALL inspect only Core,
+  Common, Part 1 API Common, and Deployment outcomes; unrelated sibling
+  classes SHALL NOT block Subdeployment. Deployment collection schema dispatch
+  SHALL reuse the ETS-owned `DeploymentFeaturesSupport` validator boundary.
+  `ets-sensorml30` SHALL NOT be imported as a library, and no OSH or TeamEngine
+  source or binary SHALL be modified.
+- **Historical record**: Sprint 8's four-method approximation, advisory
+  GeoRobotix evidence, and five historical scenarios remain archived below.
+  They do not establish released ATS completion and are superseded by the
+  Sprint 51 requirement and scenarios.
+- **Verification target**: All five procedures SHALL receive reviewed exact
+  mappings. Focused and full Maven, pinned-source coverage reproduction,
+  exact-image runtime, controlled read-only HTTP, unmodified-local-OSH
+  TeamEngine, a causal single-variable Deployment dependency experiment,
+  credential, artifact-hygiene, and adversarial gates SHALL complete before
+  this status is promoted. The causal experiment SHALL first run with a passing
+  Deployment prerequisite and prove Subdeployment setup and methods are
+  runnable, then inject exactly one Deployment failure and prove setup plus all
+  five methods change to SKIP before Subdeployment IUT access with the injected
+  method reported as blocker. Programmatic TestNG output SHALL be confined to a
+  disposable temporary directory that is removed after the experiment; the
+  causal test SHALL NOT create repository-root `test-output/` artifacts.
+- **Implementation evidence**: All five procedures are independently deployed
+  and their exact mappings are restored after correcting Raze findings
+  `RAZE-S51-001` through `RAZE-S51-004`. Coverage is
+  `240/30 exact/2 helper/136 candidate/72 unmapped`; `/conf/subdeployment` is
+  `5/5 exact`. Corrected focused Maven is
+  `131/0/0/0`; full Maven is `480/0/0/3`. Exact image
+  `sha256:e88aa5f9...b1dca` passes runtime and immutable-base verification.
+  Unmodified local OSH TeamEngine is honestly `219/39/5/175`; all five
+  Subdeployment methods dependency-SKIP before IUT access while the five
+  inherited Deployment/Procedure failures remain visible. The first direct
+  Deployment sabotage archive is non-causal because Deployment already fails
+  in the baseline; it is retained as historical evidence and SHALL NOT satisfy
+  the corrected causal gate. A programmatic TestNG experiment instead proves a
+  passing synthetic Deployment baseline reaches the IUT through all five
+  methods, while changing only that prerequisite to fail makes setup and all
+  five methods SKIP before IUT access with the injected blocker reported.
+  Corrected controlled HTTP, deployed TeamEngine, credential,
+  zero-write/zero-leak hygiene, ATS-source, and exact-image gates pass.
+  Programmatic TestNG reports are confined to JUnit-managed temporary storage;
+  focused and full Maven leave repository-root `test-output/` absent. Final
+  Raze is `APPROVE_WITH_CONCERNS`, confidence `0.99`, with all six findings
+  closed and no required fixes.
 - **Maps to**: PRD FR-ETS-15.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-COLLECTION-001 (CRITICAL)
+**GIVEN** one or more Deployments have direct Subdeployments
+**WHEN** the released collection procedure executes
+**THEN** every parent SHALL advertise the exact same-origin Subdeployment
+collection
+**AND** every returned page SHALL return HTTP 200 and satisfy the released
+Deployment collection schema selected from actual media.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-RECURSIVE-PARAM-001 (CRITICAL)
+**GIVEN** a Deployment endpoint supports the recursive parameter
+**WHEN** the released parameter procedure sends `recursive=false` and
+`recursive=true`
+**THEN** both exact boolean values SHALL return HTTP 200
+**AND** the status-only procedure SHALL NOT require response parsing.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-RECURSIVE-DEPLOYMENTS-001 (CRITICAL)
+**GIVEN** an independently discovered Deployment hierarchy
+**WHEN** the canonical Deployment endpoint is queried by default, with
+`recursive=false`, and with `recursive=true`
+**THEN** default and false IDs SHALL equal the root IDs
+**AND** true IDs SHALL equal all discovered Deployment IDs.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-RECURSIVE-SUBDEPLOYMENTS-001 (CRITICAL)
+**GIVEN** a parent has direct and transitive Subdeployments
+**WHEN** its Subdeployment endpoint is queried by default, with
+`recursive=false`, and with `recursive=true`
+**THEN** default and false IDs SHALL equal its direct children
+**AND** true IDs SHALL equal all descendants.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-RECURSIVE-ASSOC-001 (CRITICAL)
+**GIVEN** a parent advertises one of the five recursive association relations
+**AND** explicit fixture evidence identifies resources owned directly by the
+parent and every descendant
+**WHEN** the released recursive-association procedure executes
+**THEN** the parent's associated-resource IDs SHALL include the complete
+parent-plus-descendant fixture union
+**AND** any omission SHALL fail.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-ASSOCIATION-ORACLE-001 (CRITICAL)
+**GIVEN** a parent has Subdeployments and advertises a recursive association
+**WHEN** independent parent-owned or descendant-owned fixture evidence is
+absent
+**THEN** the procedure SHALL warn and SKIP
+**AND** descendant-only comparison SHALL NOT produce a PASS.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-MEDIA-GATE-001 (CRITICAL)
+**GIVEN** any hierarchy or recursive-result page has unsupported or absent
+actual media
+**WHEN** a representation-specific procedure executes
+**THEN** it SHALL warn and SKIP before parsing
+**AND** every later pagination and child page SHALL apply the same gate.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-LINK-EXACT-001 (CRITICAL)
+**GIVEN** a parent advertises one or more `rel=subdeployments` occurrences
+**WHEN** link identity is validated
+**THEN** every occurrence SHALL resolve to the normalized same-origin parent
+Subdeployment target, treating explicit default ports and equivalent
+unreserved path encodings as equal
+**AND** cross-origin, wrong-parent, query, fragment, or trailing-path variants
+SHALL fail.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-HIERARCHY-FAIL-CLOSED-001 (CRITICAL)
+**GIVEN** independently discovered Deployment graph evidence
+**WHEN** duplicate IDs, cycles, shortcut edges, or safety overflow are observed
+**THEN** hierarchy construction SHALL fail before recursive set comparisons
+can pass.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-ASSOCIATION-LINK-001 (CRITICAL)
+**GIVEN** a parent Deployment advertises multiple occurrences of one
+association relation
+**WHEN** association evidence is retrieved
+**THEN** selection SHALL prefer a same-origin JSON-compatible occurrence over
+earlier unsupported or cross-origin occurrences
+**AND** an untyped same-origin occurrence SHALL be negotiated and gated by
+actual response media
+**AND** relation values encoded as a string or list SHALL be recognized.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** one Subdeployment procedure lacks hierarchy, media, or association
+evidence
+**WHEN** the other four methods execute
+**THEN** no method dependency or eager shared retrieval SHALL suppress their
+independent outcomes.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-CASCADE-001 (CRITICAL)
+**GIVEN** a Core, Common, Part 1 API Common, or Deployment prerequisite fails
+**WHEN** Subdeployment setup starts
+**THEN** all five direct methods SHALL SKIP before Subdeployment IUT access
+**AND** unrelated sibling outcomes SHALL NOT become prerequisites.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-CAUSAL-001 (CRITICAL)
+**GIVEN** a controlled TestNG baseline where the Deployment prerequisite passes
+and all five Subdeployment methods reach the IUT
+**WHEN** exactly one Deployment prerequisite method is changed to fail
+**THEN** Subdeployment setup and all five methods SHALL change to SKIP
+**AND** the injected method SHALL be the reported blocker
+**AND** the sabotage run SHALL issue zero Subdeployment IUT requests.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-ARTIFACT-HYGIENE-001 (CRITICAL)
+**GIVEN** the controlled programmatic TestNG baseline/sabotage pair
+**WHEN** both synthetic suites execute
+**THEN** TestNG reports SHALL be written only beneath a disposable temporary
+directory
+**AND** the temporary directory SHALL be removed after the test
+**AND** repository-root `test-output/` SHALL remain absent.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** unmodified local OSH exposes genuine Deployment failures and no
+populated Subdeployment hierarchy
+**WHEN** TeamEngine executes `/conf/subdeployment`
+**THEN** all five methods SHALL retain honest inherited-SKIP outcomes
+**AND** no OSH or TeamEngine change SHALL mask the prerequisite defects.
+
+#### SCENARIO-ETS-PART1-005-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled read-only fixture with a supported Deployment hierarchy,
+exact Subdeployment links, recursive results, and association endpoints
+**WHEN** all five deployed procedures execute
+**THEN** every successful path SHALL complete
+**AND** media, hierarchy, link, recursive-set, and association defects SHALL
+fail or SKIP as specified.
 
 > Sprint 39 adds cleanup/sync tooling that can continue while the remaining populated local OSH blockers are outside the ETS safety envelope.
 
@@ -2781,6 +3000,10 @@ SKIP as specified.
 **AND** the surefire summary shows the current expected test count (≥89: 86 baseline + 3 subdeployment lint tests) with 0 failures and 0 errors.
 *Maps to*: REQ-ETS-CLEANUP-019, META-GAP-S7-2, Quinn recurring mvn host PATH gap.
 
+> The following five Sprint 8 scenarios are historical and superseded by the
+> Sprint 51 `SCENARIO-ETS-PART1-005-RELEASED-*` scenarios above. They remain
+> only as provenance for the original approximation.
+
 #### SCENARIO-ETS-PART1-005-SUBDEP-RESOURCES-001 (CRITICAL)
 **GIVEN** the IUT is `https://api.georobotix.io/ogc/t18/api`
 **AND** the IUT declares `/conf/subdeployment` in `/conformance`
@@ -2916,7 +3139,7 @@ SKIP as specified.
 #### SCENARIO-ETS-TEAMENGINE-RUN-ARG-CONTRACT-001 (CRITICAL)
 **GIVEN** the suite can be launched from CTL, TestNG defaults, smoke harnesses, README examples, site docs, Javadoc, and sample test-run-props
 **WHEN** those public and executable surfaces describe or serialize run arguments
-**THEN** the only supported TestNG argument keys are required `iut` plus optional `auth-credential`, `mutation-tests-enabled`, `mutation-iut-policy`, and `mobile-system-id`
+**THEN** the only supported TestNG argument keys are required `iut` plus optional `auth-credential`, `mutation-tests-enabled`, `mutation-iut-policy`, `mobile-system-id`, and `subdeployment-association-evidence`
 **AND** human-facing "CS API landing page" wording maps to serialized key `iut`
 **AND** `iut-url`, `auth-type`, and `ics` do not appear as supported serialized run arguments.
 *Maps to*: REQ-ETS-TEAMENGINE-002, REQ-ETS-TEAMENGINE-008.

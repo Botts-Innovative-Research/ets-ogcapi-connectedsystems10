@@ -1460,6 +1460,100 @@ selection, optional-member normalization, and focused regressions now close
 those gaps. Focused Raze recheck passes at confidence `0.99`, closes all three
 findings, and reports no required fixes.
 
+### Sprint 51: released Part 1 Subdeployment graph procedures
+
+Sprint 51 replaces the historical four-method Subdeployment approximation with
+the five released Annex A procedures.
+
+```text
+SubdeploymentsTests
+  |-- subdeploymentCollectionIsValid()
+  |-- recursiveParameterUsesBooleanValues()
+  |-- deploymentsRecursiveSearchIsComplete()
+  |-- subdeploymentsRecursiveSearchIsComplete()
+  `-- recursiveAssociationsIncludeDescendants()
+          |
+          v
+SubdeploymentsSupport
+  fail-closed Deployment graph + exact link identity
+  + recursive set equality + association closure
+          |
+          +--> Part1ApiCommonSupport bounded traversal
+          `--> DeploymentFeaturesSupport schema boundary
+```
+
+Class setup normalizes only the API root after checking Core, Common, Part 1
+API Common, and Deployment outcomes. Every procedure retrieves its own
+prerequisites, uses `alwaysRun`, and has no method dependency. The released
+group chain remains
+`Core/Common -> Part 1 API Common -> Deployment -> Subdeployment`; unrelated
+siblings cannot block Subdeployment.
+
+`SubdeploymentsSupport` discovers the Deployment graph independently from the
+top-level `/deployments` endpoint and every direct
+`/deployments/{id}/subdeployments` endpoint. Traversal is same-origin and
+bounded. Each page must establish status and actual GeoJSON or SensorML media
+before parsing and must pass the released Deployment collection schema.
+Duplicate IDs, cycles, shortcut edges, and safety overflow fail before the
+graph can be used as conformance evidence.
+
+The collection procedure examines every parent proven to have direct children.
+It retrieves the canonical parent, requires every `rel=subdeployments`
+occurrence to identify the normalized same-origin parent path without query or
+fragment, including equivalent default-port and unreserved percent-encoding
+forms. It dereferences a valid occurrence and schema-validates every returned
+page. No parent with children warns and SKIPs.
+
+The recursive-parameter procedure is intentionally status-only. It sends the
+exact boolean values `false` and `true` and requires HTTP 200 without imposing
+representation parsing on a requirement that specifies parameter support.
+
+Recursive root search compares exact sets: default and false equal graph roots,
+while true equals all graph nodes. Recursive child search compares default and
+false with direct children and true with all transitive descendants. The child
+procedure warns and SKIPs when the IUT has no transitive hierarchy.
+
+Recursive association validation evaluates `deployedSystems`,
+`featuresOfInterest`, `samplingFeatures`, `datastreams`, and `controlstreams`.
+For each advertised parent relation, immutable run-argument fixture evidence
+independently identifies resources owned directly by that parent and by every
+descendant. The procedure examines every link occurrence, ignores unsafe or
+unsupported earlier candidates, and selects a same-origin JSON-compatible or
+untyped negotiable occurrence. The parent endpoint's ID set must include the
+complete parent-plus-descendant fixture union. Missing ownership evidence or
+no safe comparable occurrence warns and SKIPs; observed omissions fail. Child
+association responses are never used to manufacture the expected oracle.
+
+Deployment collection schemas remain behind the existing
+`DeploymentFeaturesSupport` validator boundary. A future reusable SensorML
+library may replace SensorML schema semantics there. The executable
+`ets-sensorml30` suite jar is not imported because it owns a separate
+TeamEngine/TestNG lifecycle rather than a reusable validation API.
+
+The unmodified local OSH baseline has one root Deployment, no children, no
+`rel=subdeployments` link, generic `application/json` Deployment collections,
+and genuine failures in the inherited Deployment group. Mandatory TeamEngine
+E2E therefore preserves five dependency SKIPs before Subdeployment access.
+Controlled read-only HTTP coverage is the positive oracle for all five
+successful paths and the media, graph, link, recursive-set, and association
+fail-closed branches. OSH and TeamEngine source and binaries remain unchanged.
+
+Implementation reconciliation confirms all five methods are deployed and
+reviewed exact. Corrected focused Maven is `131/0/0/0`; full Maven is
+`480/0/0/3`. Exact image `sha256:e88aa5f9...b1dca` passes immutable TeamEngine
+and embedded-validator checks. Primary local OSH is honestly `219/39/5/175`.
+A programmatic TestNG baseline/sabotage pair proves causality: all five methods
+reach the IUT while the synthetic Deployment prerequisite passes, then setup
+and all five methods SKIP before IUT access when that single prerequisite is
+changed to fail. The earlier direct local-OSH sabotage is retained only as
+historical non-causal evidence. Corrected controlled HTTP, credential,
+ATS-source, and zero-write/zero-leak hygiene gates pass. Focused adversarial
+recheck closed the initial four findings and exposed repository-root TestNG
+output plus stale records. The records are reconciled, and programmatic TestNG
+now uses JUnit-managed temporary directories; focused and full Maven leave no
+`test-output/`. Final Raze returns `APPROVE_WITH_CONCERNS`, confidence `0.99`,
+with all six findings closed and no required fixes.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

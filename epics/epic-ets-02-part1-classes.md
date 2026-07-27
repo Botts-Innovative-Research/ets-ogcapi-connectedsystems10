@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 50 Procedure released ATS replacement complete and Raze-approved | Last updated: 2026-07-26
+> Status: Active - Sprint 51 Subdeployment released ATS replacement complete and Raze-approved | Last updated: 2026-07-27
 
 ## Goal
 Implement the 13 released OGC 23-001 conformance classes and all 110 Annex A
@@ -49,6 +49,7 @@ capability.
 | S-ETS-48-01 | Replace historical approximations with all five released `/conf/subsystem` procedures | Complete; 5/5 exact, all gates pass, final Raze approved | REQ-ETS-PART1-003, REQ-ETS-COVERAGE-001 |
 | S-ETS-49-01 | Replace historical approximations with all five released `/conf/deployment` procedures | Complete; 5/5 exact, all gates complete, Raze APPROVE 0.99 | REQ-ETS-PART1-004, REQ-ETS-COVERAGE-001, REQ-ETS-VALIDATOR-001 |
 | S-ETS-50-01 | Replace historical approximations with all five released `/conf/procedure` procedures | Complete; 5/5 exact, all gates complete, Raze PASS 0.99 | REQ-ETS-PART1-006, REQ-ETS-COVERAGE-001, REQ-ETS-VALIDATOR-001 |
+| S-ETS-51-01 | Replace historical approximations with all five released `/conf/subdeployment` procedures | Complete; 5/5 exact, all six Raze findings closed, no required fixes | REQ-ETS-PART1-005, REQ-ETS-COVERAGE-001, REQ-ETS-VALIDATOR-001 |
 | S-ETS-06-04 | (optional) Common conformance class expansion 4 → 8 @Tests (Sprint 3+ minimal-then-expand by design per Quinn CONCERN-2) | Backlog | REQ-ETS-PART1-001 (modified) |
 
 Story completion records the scoped historical increment only. Released-class

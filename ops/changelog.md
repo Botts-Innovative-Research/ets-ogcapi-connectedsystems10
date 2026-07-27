@@ -2,6 +2,88 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-27 - Part 1 Subdeployment direct ATS complete and Raze-approved
+
+**Triggered by user instruction**: execute accepted recommendations 1-4
+continuously, including completion of every released Part 1 gap.
+
+- Published completed Sprint 50 to Botts `main` as commit `29ce2e6`.
+- Audited pinned OGC 23-001 Annex A and confirmed five released
+  `/conf/subdeployment` tests versus the historical four-method approximation.
+- Added CP-011, S-ETS-51-01, its contract, fifteen exact scenarios, design,
+  architecture v2.0.30, traceability, epic, baseline, and operational handoff
+  before product code.
+- Specified fail-closed Deployment graph discovery, exact Subdeployment link
+  identity, boolean recursive support, exact recursive result sets, recursive
+  association closure, independent methods, and Deployment prerequisite
+  isolation.
+- Direct read-only local OSH probes found one root Deployment, no children, no
+  Subdeployment link, and generic media. Existing Deployment failures imply
+  five honest TeamEngine dependency SKIPs; controlled HTTP will provide the
+  positive oracle.
+- Replaced the historical approximation with exactly five independent released
+  procedures and a fail-closed graph/link/set/association support boundary.
+- Added focused support, suite-shape, dependency, and real HTTP regressions.
+  The test-first compile failed as expected with 45 missing-symbol errors;
+  the corrected focused Maven gate is `131/0/0/0` and full Maven is
+  `480/0/0/3`.
+- Reviewed all five mappings exact. Coverage is now
+  `240/30 exact/2 helper/136 candidate/72 unmapped`; Subdeployment is `5/5`.
+- Pinned-source reproduction passes. Exact image
+  `sha256:e88aa5f9...b1dca` passes immutable TeamEngine, collision, embedded SWE
+  Common execution, and confidential-context verification.
+- Primary unmodified local OSH TeamEngine is honestly `219/39/5/175`; all five
+  Subdeployment methods dependency-SKIP before IUT access while inherited
+  Deployment and Procedure failures remain visible.
+- Initial Raze returned `GAPS_FOUND` at confidence `0.99`: the association
+  oracle omitted parent-owned resources, the direct Deployment sabotage was
+  non-causal, URI identity was lexical, and first-occurrence association
+  selection could hide a usable later representation.
+- Added explicit parent-plus-descendant ownership evidence through the
+  `subdeployment-association-evidence` run argument. Missing evidence now
+  SKIPs, while omission of a known parent-owned resource fails.
+- Added normalized HTTP target identity for effective default ports and
+  percent-encoded unreserved path characters, plus all-occurrence,
+  media-aware safe association selection.
+- Added a causal programmatic TestNG baseline/sabotage pair: all five methods
+  reach the IUT in the passing baseline, then setup and all five methods SKIP
+  before IUT access after only one synthetic Deployment prerequisite changes
+  to FAIL. The direct local-OSH sabotage remains archived as historical
+  non-causal evidence.
+- Controlled HTTP coverage executes every successful procedure and adversarial
+  media, pagination, schema, link, hierarchy, recursive-set, association,
+  sibling-isolation, and dependency branch.
+- Primary and sabotage artifact hygiene pass with zero IUT writes and zero
+  credential leaks. Credential integration and wire E2E pass with zero
+  unmasked artifact hits, 37 masked events, and 37 intact synthetic
+  transmissions.
+- Reran the exact current source through local OSH TeamEngine with honest
+  `219/39/5/175`, exact-image runtime and immutable-base verification, ATS
+  source reproduction, credential integration and wire E2E, and artifact
+  hygiene. Primary hygiene remains 113 IUT GETs, zero writes, and zero leaks.
+- Reconciled spec, design, architecture v2.0.31, traceability, story, contract,
+  epic, handoff, status, changelog, and test results to the corrections.
+  The corrected slice then entered focused Raze recheck.
+- Focused Raze recheck closes `RAZE-S51-001` through `RAZE-S51-004` and reports
+  two follow-up release-hygiene gaps: programmatic TestNG wrote
+  repository-root `test-output/`, and its review snapshot preceded operational
+  reconciliation.
+- Specified and implemented JUnit-managed temporary output for both synthetic
+  TestNG runs with an executable repository-root absence assertion. Corrected
+  focused Maven remains `131/0/0/0`; full Maven remains `480/0/0/3`; both leave
+  no `test-output/`.
+- Rebuilt final image `sha256:e88aa5f9...b1dca`; final local-OSH TeamEngine
+  remains honestly `219/39/5/175`, with 113 IUT GETs, zero writes, and zero
+  leaks. Final-image immutable-base verification passes.
+- Created an independently committed clean source snapshot and reran full
+  Docker Maven: `480/0/0/3`; post-run Git status is empty and repository-root
+  `test-output/` is absent.
+- Final Raze returns `APPROVE_WITH_CONCERNS`, confidence `0.99`. All four
+  initial technical findings and both follow-up hygiene findings are closed;
+  no required fixes remain.
+- Reverified the scope boundary: no OSH or TeamEngine source or binary
+  modification, and no executable SensorML suite-jar import.
+
 ## 2026-07-26 - Part 1 Procedure direct ATS complete and Raze-approved
 
 **Triggered by user instruction**: execute accepted recommendations 1-4

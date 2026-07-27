@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T23:58Z
+Last updated: 2026-07-27T02:47Z
 
 ## Fresh-Session Entry Point
 
@@ -65,6 +65,60 @@ Read these first:
 - `epics/stories/s-ets-50-01-part1-procedure-closure.md`
 - `.harness/contracts/sprint-ets-50.yaml`
 - `ops/test-results/sprint-ets-50-local-osh-baseline-2026-07-26.md`
+- `openspec/change-proposals/CP-011-part1-subdeployment-closure.md`
+- `epics/stories/s-ets-51-01-part1-subdeployment-closure.md`
+- `.harness/contracts/sprint-ets-51.yaml`
+- `.harness/handoffs/sprint-ets-51-generator-handoff.yaml`
+- `.harness/evaluations/sprint-ets-51-adversarial-final.yaml`
+- `ops/test-results/sprint-ets-51-local-osh-baseline-2026-07-26.md`
+- `ops/test-results/sprint-ets-51-part1-subdeployment-verification-2026-07-27.md`
+
+## Session Handoff - Part 1 Subdeployment Direct ATS
+
+S-ETS-51-01 is complete under CP-011. All six Raze findings are closed and no
+required fixes remain.
+
+- Coverage is `240 total / 30 exact / 2 helper / 136 candidate / 72 unmapped`;
+  `/conf/subdeployment` is `5/5 exact`.
+- Five independent methods implement collection, recursive parameter,
+  recursive Deployment search, recursive Subdeployment search, and recursive
+  association closure.
+- Bounded same-origin graph discovery status/media-gates and schema-validates
+  every page, rejecting duplicate IDs, cycles, shortcut edges, and overflow.
+- Exact relation identity, exact recursive result sets, and all five released
+  association surfaces have controlled positive and fail-closed HTTP coverage.
+- Association expectations come from explicit parent-owned and
+  descendant-owned fixture evidence. Missing evidence SKIPs instead of
+  producing a vacuous PASS.
+- Target identity normalizes default ports and unreserved percent encoding.
+  Association selection examines all occurrences and prefers safe JSON or
+  negotiable untyped candidates.
+- Corrected focused Maven is `131/0/0/0`; full Maven is `480/0/0/3`; ATS
+  source reproduction passes.
+- Exact image `sha256:e88aa5f9...b1dca` passes immutable TeamEngine,
+  dependency, embedded validator, and context-hygiene gates.
+- Primary unmodified local OSH TeamEngine is honestly `219/39/5/175`. All five
+  Subdeployment methods SKIP before IUT access because inherited Deployment
+  fails; the five Deployment/Procedure failures remain visible.
+- A controlled programmatic TestNG baseline reaches the IUT through all five
+  methods; changing only one synthetic Deployment prerequisite to FAIL makes
+  setup and all five methods SKIP before IUT access. The direct local-OSH
+  sabotage is retained only as historical non-causal evidence.
+- Primary hygiene reports 118 recognized requests, 113 IUT GETs, zero writes,
+  and zero credential leaks.
+- Credential integration and wire E2E pass. OSH remains clean at `4c87a65`,
+  zero commits ahead, with `/opt/osh` mounted read-only.
+- First focused Raze recheck closes all four initial technical findings and
+  identifies repository-root TestNG output plus stale records. TestNG now uses
+  JUnit-managed temporary storage; focused and full Maven leave no
+  `test-output/`, and the records are reconciled. An independently committed
+  clean source snapshot passes `480/0/0/3`, remains Git-clean, and has no
+  `test-output/`.
+- Final Raze is `APPROVE_WITH_CONCERNS`, confidence `0.99`, with no required
+  fixes. Residual advisories cover unavailable positive real-IUT hierarchy
+  execution and diagnostic wording only.
+- Durable verification:
+  `ops/test-results/sprint-ets-51-part1-subdeployment-verification-2026-07-27.md`.
 
 ## Session Handoff - Part 1 Procedure Direct ATS
 
@@ -108,8 +162,7 @@ S-ETS-50-01 is complete under CP-010.
   remediated with focused regressions.
 - Focused Raze recheck passes at confidence `0.99` after 189 seconds. All three
   prior findings are closed with no required fixes.
-- Remaining Sprint 50 publication work: final integrity check, commit, and
-  push.
+- Sprint 50 is published to Botts `main` as commit `29ce2e6`.
 
 ## Session Handoff - Part 1 Deployment Direct ATS
 

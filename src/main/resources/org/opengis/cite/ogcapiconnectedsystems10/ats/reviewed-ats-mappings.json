@@ -215,6 +215,51 @@
     },
     {
       "part": 1,
+      "test": "/conf/subdeployment/collection",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentCollectionIsValid()",
+      "reviewedBy": "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The independently executable deployed TestNG method discovers every parent with direct Subdeployments through bounded, actual-media-gated hierarchy traversal. For each parent it retrieves the canonical Deployment, requires every rel=subdeployments occurrence to resolve to the normalized same-origin api_root/deployments/{encoded id}/subdeployments target without query or fragment, and accepts equivalent explicit default ports and percent-encoded unreserved path characters. It then requires HTTP 200, bounded same-origin pagination, and released GeoJSON or SensorML Deployment collection schema validity on every page. No hierarchy data produces an explicit SKIP."
+    },
+    {
+      "part": 1,
+      "test": "/conf/subdeployment/recursive-param",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#recursiveParameterUsesBooleanValues()",
+      "reviewedBy": "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The independently executable deployed TestNG method issues read-only /deployments requests with the exact recursive=false and recursive=true query values and requires HTTP 200 for both. It deliberately makes a status-only comparison and does not parse or impose representation-media constraints absent from the released procedure; controlled HTTP coverage proves both exact requests execute against successful non-JSON responses."
+    },
+    {
+      "part": 1,
+      "test": "/conf/subdeployment/recursive-search-deployments",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#deploymentsRecursiveSearchIsComplete()",
+      "reviewedBy": "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The deployed TestNG method independently builds a bounded Deployment hierarchy solely from default direct-child Subdeployment endpoints, with every page gated by actual GeoJSON or SensorML media and validated against the released Deployment schema. Duplicate ids, multiple parents, cycles, shortcut edges, and safety-bound overflow fail closed. It proves default and recursive=false /deployments results equal exactly the hierarchy roots and recursive=true equals every discovered node; absent hierarchy data explicitly SKIPs."
+    },
+    {
+      "part": 1,
+      "test": "/conf/subdeployment/recursive-search-subdeployments",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#subdeploymentsRecursiveSearchIsComplete()",
+      "reviewedBy": "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn": "2026-07-27",
+      "evidence": "The deployed TestNG method independently discovers a parent with direct and transitive Subdeployments through bounded, schema-validated, actual-media-gated default hierarchy traversal. It proves that parent's default and recursive=false nested endpoint results equal exactly its direct children while recursive=true equals every descendant. Expected membership is never derived from a recursive=true response, and no transitive hierarchy produces an explicit SKIP."
+    },
+    {
+      "part": 1,
+      "test": "/conf/subdeployment/recursive-assoc",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.subdeployments.SubdeploymentsTests#recursiveAssociationsIncludeDescendants()",
+      "reviewedBy": "Codex Sprint 51 ATS line review and post-Raze correction",
+      "reviewedOn": "2026-07-27",
+      "evidence": "For each independently discovered parent with direct Subdeployments, the deployed TestNG method inspects deployedSystems, featuresOfInterest, samplingFeatures, datastreams, and controlstreams. For every advertised relation it selects a safe same-origin JSON-compatible link across all occurrences, preferring typed JSON while allowing actual-media-gated untyped negotiation and refusing cross-origin or unsupported candidates. The optional public fixture independently identifies directly owned ids for the parent and every descendant; their complete union is required in the parent endpoint. Missing fixture coverage, no safe comparable link, or no advertised relation explicitly SKIPs, while any observed parent-owned or descendant-owned omission fails."
+    },
+    {
+      "part": 1,
       "test": "/conf/procedure/location",
       "kind": "exact",
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureLocationIsAbsent()",

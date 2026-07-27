@@ -1,0 +1,5 @@
+reportTotals={'ignored': '0', 'total': '219', 'passed': '39', 'failed': '6', 'skipped': '174'}
+deploymentMarker=[('canonicalDeploymentsEndpointIsValid', 'FAIL')]
+subdeploymentMethods=[('deploymentsRecursiveSearchIsComplete', 'SKIP'), ('recursiveAssociationsIncludeDescendants', 'SKIP'), ('recursiveParameterUsesBooleanValues', 'SKIP'), ('subdeploymentCollectionIsValid', 'SKIP'), ('subdeploymentsRecursiveSearchIsComplete', 'SKIP')]
+subdeploymentSetup=['SKIP']
+PASS: direct Deployment sabotage FAILed and Subdeployment setup plus all five released methods SKIPped

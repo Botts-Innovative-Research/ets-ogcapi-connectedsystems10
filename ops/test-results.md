@@ -1,8 +1,50 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-26T23:13Z
+Last updated: 2026-07-27T02:47Z
 
 ## Current Sprint Evidence
+
+Sprint 51 Part 1 Subdeployment direct ATS:
+
+- Coverage: `240 total / 30 exact / 2 helper / 136 candidate / 72 unmapped`;
+  `/conf/subdeployment` is `5/5 exact`; deployed suite methods are 219.
+- Test-first compile fails as expected with 45 missing-symbol errors.
+- Initial Raze returned `GAPS_FOUND` at confidence `0.99`. All four required
+  association-oracle, dependency-causality, normalized-URI, and
+  multi-occurrence link-selection findings are corrected.
+- Corrected focused Maven is `131/0/0/0`; full Maven is `480/0/0/3`.
+- ATS audit self-test and released-source reproduction pass at
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+- Final exact image `sha256:e88aa5f9...b1dca` passes TeamEngine provenance, embedded
+  SWE Common execution, collision, immutable-base, and context-hygiene gates.
+- Primary unmodified local OSH TeamEngine is honestly `219/39/5/175`; all five
+  Subdeployment methods SKIP before IUT access because inherited Deployment
+  fails. The five genuine Deployment/Procedure failures remain visible.
+- Controlled HTTP executes all five positive procedures and fail-closed media,
+  pagination, schema, link, graph, recursive-set, association, isolation, and
+  dependency branches.
+- A causal programmatic TestNG experiment proves all five methods reach the IUT
+  under a passing synthetic Deployment prerequisite and all five become
+  pre-IUT SKIPs when only that prerequisite changes to FAIL. The earlier direct
+  local-OSH sabotage is retained only as historical non-causal evidence.
+- Primary hygiene: 118 recognized requests, 113 IUT GETs, zero writes, zero
+  leaks.
+- Credential integration and wire E2E pass with zero unmasked artifact hits,
+  37 masked events, and 37 intact synthetic transmissions.
+- OSH is clean at `4c87a65`, zero commits ahead, `/opt/osh` read-only. No OSH
+  or TeamEngine modification.
+- First focused Raze recheck closes all four initial findings and identifies
+  repository-root TestNG output plus stale records. Programmatic TestNG now
+  writes only to JUnit-managed temporary storage; focused/full Maven leave no
+  `test-output/`, and the records are reconciled.
+- Independently committed clean source snapshot: full Maven `480/0/0/3`,
+  post-run Git status empty, repository-root `test-output/` absent.
+- Final Raze: `APPROVE_WITH_CONCERNS`, confidence `0.99`; all six findings are
+  closed and no required fixes remain.
+- Verification summary:
+  `ops/test-results/sprint-ets-51-part1-subdeployment-verification-2026-07-27.md`.
+
+---
 
 Sprint 50 Part 1 Procedure direct ATS:
 

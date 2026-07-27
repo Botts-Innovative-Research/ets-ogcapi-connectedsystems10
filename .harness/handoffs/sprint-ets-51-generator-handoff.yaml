@@ -1,0 +1,42 @@
+sprint: ets-51
+story: S-ETS-51-01
+role: generator
+status: COMPLETE
+generated_at: "2026-07-27T02:19:19Z"
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+scope:
+  - Replace the historical Subdeployment approximation with all five released OGC 23-001 procedures.
+  - Preserve OSH and TeamEngine source and binary immutability.
+  - Keep hosted CI outside project scope.
+implementation:
+  released_methods: 5
+  reviewed_exact_mappings: 5
+  association_oracle: EXPLICIT_PARENT_PLUS_ALL_DESCENDANT_FIXTURE_EVIDENCE
+  target_identity: NORMALIZED_HTTP_DEFAULT_PORT_AND_UNRESERVED_ENCODING
+  association_selection: ALL_OCCURRENCES_SAFE_JSON_OR_UNTYPED_NEGOTIATION
+  dependency_proof: CAUSAL_PROGRAMMATIC_TESTNG_BASELINE_SABOTAGE
+verification:
+  focused_maven: PASS_131_0_0_0
+  full_maven: PASS_480_0_0_3
+  coverage: PASS_240_TOTAL_30_EXACT_5_OF_5_SUBDEPLOYMENT
+  exact_image: sha256:e88aa5f94ce98d474b66168fbe95ccd6ef574511bce910142acb38a5484b1dca
+  local_osh_teamengine: HONEST_219_39_5_175
+  local_osh_hygiene: PASS_113_IUT_GETS_ZERO_WRITES_ZERO_LEAKS
+  clean_snapshot_hygiene: PASS_480_0_0_3_GIT_CLEAN_NO_TEST_OUTPUT
+  credential_integration: PASS
+  credential_wire_e2e: PASS
+  ats_source_reproduction: PASS_8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+adversarial:
+  initial_verdict: GAPS_FOUND_0_99
+  initial_findings:
+    - RAZE-S51-001
+    - RAZE-S51-002
+    - RAZE-S51-003
+    - RAZE-S51-004
+  correction_status: INITIAL_FOUR_AND_FOLLOWUP_HYGIENE_RECORD_GAPS_IMPLEMENTED
+  recheck: APPROVE_WITH_CONCERNS_0_99_NO_REQUIRED_FIXES
+historical_evidence:
+  direct_deployment_sabotage: NON_CAUSAL_DO_NOT_USE_AS_CLOSURE_PROOF
+next:
+  - Commit and push the completed Sprint 51 slice.
+  - Plan the next released ATS direct-closure slice.

@@ -1,0 +1,60 @@
+{
+  "containerLogs": [
+    {
+      "iutMethodCounts": {
+        "GET": 113
+      },
+      "iutWriteCount": 0,
+      "iutWrites": [],
+      "methodCounts": {
+        "GET": 118
+      },
+      "path": "ops/test-results/sprint-ets-51-final-local-osh-container-2026-07-27.log",
+      "recognizedIutRequestLogs": 113,
+      "recognizedRequestLogs": 118
+    }
+  ],
+  "credentialScan": {
+    "explicitSecretInputsProvided": 0,
+    "explicitSecretInputsScanned": 0,
+    "explicitSecretValueHits": 0,
+    "filesScanned": 2,
+    "filesWithHits": [],
+    "genericBasicCredentialPatternHits": 0,
+    "shortSecretInputsIgnored": 0,
+    "unmaskedAuthorizationHeaderHits": 0
+  },
+  "failures": [],
+  "generatedAt": "2026-07-27T02:33:26Z",
+  "policy": {
+    "failOnCredentialLeak": true,
+    "iutPrefixes": [
+      "http://field-hub-osh-1:8081/sensorhub/api"
+    ],
+    "requireZeroIutWrites": true
+  },
+  "requirements": [
+    "REQ-ETS-CLEANUP-020"
+  ],
+  "scenarios": [
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001",
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001"
+  ],
+  "testngReports": [
+    {
+      "methodStatusCounts": {
+        "FAIL": 5,
+        "PASS": 67,
+        "SKIP": 178
+      },
+      "path": "ops/test-results/sprint-ets-51-final-local-osh-teamengine-2026-07-27.xml",
+      "totals": {
+        "failed": 5,
+        "passed": 39,
+        "skipped": 175,
+        "total": 219
+      }
+    }
+  ],
+  "verdict": "PASS"
+}

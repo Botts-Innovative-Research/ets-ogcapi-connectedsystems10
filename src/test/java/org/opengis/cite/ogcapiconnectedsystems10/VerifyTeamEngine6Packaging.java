@@ -233,6 +233,7 @@ public class VerifyTeamEngine6Packaging {
 		assertContains(testngXml, "name=\"mutation-tests-enabled\"");
 		assertContains(testngXml, "name=\"mutation-iut-policy\"");
 		assertContains(testngXml, "name=\"mobile-system-id\"");
+		assertContains(testngXml, "name=\"subdeployment-association-evidence\"");
 		assertDoesNotExposeUnsupportedRunArgs("testng.xml", testngXml);
 
 		assertContains(ctl, "<entry key=\"iut\">");
@@ -240,6 +241,8 @@ public class VerifyTeamEngine6Packaging {
 		assertContains(ctl, "<entry key=\"mutation-tests-enabled\">");
 		assertContains(ctl, "<entry key=\"mutation-iut-policy\">");
 		assertContains(ctl, "<entry key=\"mobile-system-id\">");
+		assertContains(ctl, "<entry key=\"subdeployment-association-evidence\">");
+		assertContains(ctl, "name=\"subdeployment-association-evidence\"");
 		assertDoesNotExposeUnsupportedRunArgs("CTL", ctl);
 
 		assertContains(smokeScript, "--data-urlencode \"iut=${IUT_URL}\"");
@@ -247,6 +250,8 @@ public class VerifyTeamEngine6Packaging {
 		assertContains(smokeScript, "--data-urlencode \"mutation-tests-enabled=${SMOKE_MUTATION_TESTS_ENABLED}\"");
 		assertContains(smokeScript, "--data-urlencode \"mutation-iut-policy=${SMOKE_MUTATION_IUT_POLICY}\"");
 		assertContains(smokeScript, "--data-urlencode \"mobile-system-id=${SMOKE_MOBILE_SYSTEM_ID}\"");
+		assertContains(smokeScript,
+				"--data-urlencode \"subdeployment-association-evidence=${SMOKE_SUBDEPLOYMENT_ASSOCIATION_EVIDENCE}\"");
 		assertContains(smokeScript,
 				"EXPECTED_TITLE_FRAGMENT=\"${SMOKE_EXPECTED_TITLE_FRAGMENT:-OGC API - Connected Systems 1.0 Conformance Test Suite}\"");
 		assertDoesNotExposeUnsupportedRunArgs("scripts/smoke-test.sh", smokeScript);
@@ -260,6 +265,7 @@ public class VerifyTeamEngine6Packaging {
 			assertContains(name, content, "mutation-tests-enabled");
 			assertContains(name, content, "mutation-iut-policy");
 			assertContains(name, content, "mobile-system-id");
+			assertContains(name, content, "subdeployment-association-evidence");
 			assertDoesNotExposeUnsupportedRunArgs(name, content);
 		});
 	}

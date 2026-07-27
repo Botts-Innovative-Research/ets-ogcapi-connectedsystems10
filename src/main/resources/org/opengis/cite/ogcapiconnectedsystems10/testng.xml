@@ -6,6 +6,7 @@
   <parameter name="mutation-tests-enabled"  value=""/>
   <parameter name="mutation-iut-policy"  value=""/>
   <parameter name="mobile-system-id"  value=""/>
+  <parameter name="subdeployment-association-evidence"  value=""/>
 
   <listeners>
     <listener class-name="org.opengis.cite.ogcapiconnectedsystems10.listener.TestRunListener" />
@@ -64,8 +65,9 @@
        2026-04-30.xml retroactively VERIFIES the 3-class cascade (Subsystems +
        Procedures + Deployments) — adding SamplingFeatures + PropertyDefinitions
        extends the cascade to 5 sibling classes at the SystemFeatures level. -->
-  <!-- Sprint 49 dependency chain: Subdeployments depends on Deployments, which
-       now depends directly on API Common/Core rather than SystemFeatures. -->
+  <!-- Sprint 51 S-ETS-51-01 (REQ-ETS-PART1-005): exactly five independent
+       released Subdeployment procedures depend directly on Deployment.
+       API Common and Core/Common remain transitive prerequisites. -->
   <!-- Sprint 9 S-ETS-09-01 (REQ-ETS-PART1-012): GeoJSON group added as a PARTIAL
        systems read-only subset. GeoJSON depends-on="systemfeatures" because the subset
        validates /systems GeoJSON encoding and must cascade-SKIP if SystemFeatures fails.

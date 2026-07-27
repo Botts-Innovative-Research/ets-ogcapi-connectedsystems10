@@ -7,4 +7,5 @@
     <entry key="mutation-tests-enabled">false</entry>
     <entry key="mutation-iut-policy"></entry>
     <entry key="mobile-system-id"></entry>
+    <entry key="subdeployment-association-evidence"></entry>
 </properties>

@@ -64,6 +64,11 @@ not declare the corresponding conformance class or lacks required data.
 |String
 |O
 |Identifier of a known moving System. Enables the released location-time procedure; omitted for static IUTs.
+
+|subdeployment-association-evidence
+|JSON object
+|O
+|Independent directly owned resource identifiers by Deployment and association relation. Enables the released recursive-association comparison.
 |===
 
 include::how-to-run-the-tests.adoc[]

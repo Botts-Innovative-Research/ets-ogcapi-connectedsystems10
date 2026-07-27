@@ -1,0 +1,67 @@
+sprint: ets-51
+story: S-ETS-51-01
+title: Part 1 Subdeployment direct ATS closure
+status: COMPLETE
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-PART1-005
+  - REQ-ETS-COVERAGE-001
+  - REQ-ETS-VALIDATOR-001
+scenarios:
+  - SCENARIO-ETS-PART1-005-RELEASED-COLLECTION-001
+  - SCENARIO-ETS-PART1-005-RELEASED-RECURSIVE-PARAM-001
+  - SCENARIO-ETS-PART1-005-RELEASED-RECURSIVE-DEPLOYMENTS-001
+  - SCENARIO-ETS-PART1-005-RELEASED-RECURSIVE-SUBDEPLOYMENTS-001
+  - SCENARIO-ETS-PART1-005-RELEASED-RECURSIVE-ASSOC-001
+  - SCENARIO-ETS-PART1-005-RELEASED-MEDIA-GATE-001
+  - SCENARIO-ETS-PART1-005-RELEASED-LINK-EXACT-001
+  - SCENARIO-ETS-PART1-005-RELEASED-HIERARCHY-FAIL-CLOSED-001
+  - SCENARIO-ETS-PART1-005-RELEASED-ASSOCIATION-LINK-001
+  - SCENARIO-ETS-PART1-005-RELEASED-ASSOCIATION-ORACLE-001
+  - SCENARIO-ETS-PART1-005-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-CASCADE-001
+  - SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-CAUSAL-001
+  - SCENARIO-ETS-PART1-005-RELEASED-DEPENDENCY-ARTIFACT-HYGIENE-001
+  - SCENARIO-ETS-PART1-005-RELEASED-E2E-EXECUTION-001
+  - SCENARIO-ETS-PART1-005-RELEASED-DIRECT-HTTP-COVERAGE-001
+success_criteria:
+  - All five released Subdeployment procedures have exact reviewed mappings.
+  - Every hierarchy and result page is processed through bounded same-origin traversal.
+  - HTTP status and actual media are established before parsing hierarchy evidence.
+  - GeoJSON and SensorML pages use released Deployment collection schemas.
+  - Duplicate IDs, cycles, shortcut edges, and safety-bound violations fail.
+  - Every rel=subdeployments occurrence resolves to the exact normative target.
+  - Recursive accepts exact boolean true and false values.
+  - Root default and false results equal roots; true equals all nodes.
+  - Child default and false results equal direct children; true equals all descendants.
+  - Advertised parent associations include explicit parent-owned and descendant-owned fixture resources.
+  - Missing independent ownership evidence skips instead of passing.
+  - Equivalent default-port and unreserved-encoding targets compare equal.
+  - Association selection prefers usable same-origin JSON occurrences.
+  - Each procedure retrieves only its own prerequisites.
+  - Deployment prerequisite failures cascade before Subdeployment IUT access.
+  - Unrelated sibling configurations cannot block Subdeployment.
+  - Focused and full Maven verification completes.
+  - TeamEngine deploys every changed method against the primary unmodified local OSH IUT.
+  - Local OSH conformance failures and inherited skips remain visible and unmodified.
+  - A controlled HTTP fixture executes successful positive paths for all five methods.
+  - Exact-image runtime, causal dependency, credential, and artifact-hygiene gates complete.
+  - Programmatic TestNG output uses disposable temporary storage and leaves no repository-root test-output directory.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not import ets-sensorml30 or expose external validator types to TestNG procedures.
+verification:
+  test_first: PASS_EXPECTED_45_COMPILE_ERRORS
+  focused_maven: PASS_131_0_0_0
+  full_maven: PASS_480_0_0_3
+  coverage_audit: PASS_5_OF_5_EXACT
+  local_osh_teamengine: EXECUTED_HONEST_219_39_5_175
+  controlled_http: PASS_ALL_FIVE_POSITIVE_AND_FAIL_CLOSED_PATHS
+  exact_image: PASS_SHA256_E88AA5F9
+  dependency_sabotage: PASS_CAUSAL_PROGRAMMATIC_TESTNG_BASELINE_SABOTAGE
+  credential_gates: PASS_INTEGRATION_AND_WIRE
+  artifact_hygiene: PASS_ZERO_WRITES_ZERO_LEAKS_AND_CLEAN_SNAPSHOT
+  raze: APPROVE_WITH_CONCERNS_0_99_NO_REQUIRED_FIXES

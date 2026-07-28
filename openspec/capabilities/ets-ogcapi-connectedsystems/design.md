@@ -1774,6 +1774,80 @@ credential, controlled-HTTP, and zero-write/zero-leak hygiene gates pass.
 No exact mapping is assigned to `/conf/sensorml/property-schema`. Raze returns
 `APPROVE_WITH_CONCERNS` at confidence `0.98`, with no required fixes.
 
+### Sprint 54: released Part 1 GeoJSON procedures
+
+Sprint 54 replaces the historical thirteen-method GeoJSON approximation with
+the twelve released Annex A procedures.
+
+```text
+GeoJsonTests (12 independent procedures)
+          |
+          v
+GeoJsonSupport
+  OpenAPI JSON/YAML operation inspection
+  + canonical resource selection and media gates
+  + released single/collection schema dispatch
+  + common/resource mapping inspection
+  + resource-specific relation tables
+          |
+          `--> Part1ApiCommonSupport bounded traversal
+```
+
+Class setup normalizes only the API root after checking Core, Common, and Part
+1 API Common outcomes. Every procedure retrieves its own evidence, uses
+`alwaysRun`, and has no method dependency. The released group chain is
+`Core/Common -> Part 1 API Common -> GeoJSON`; System and unrelated siblings
+cannot block the encoding class.
+
+The read- and write-media procedures discover `rel=service-desc` from the
+landing page and parse either JSON or YAML OpenAPI. Missing, inaccessible, or
+unparseable service-description evidence SKIPs. Once a definition parses,
+missing required operation metadata is a conformance failure. Read media
+checks successful GET response content on canonical endpoints for every
+declared feature-resource class and the custom collections items path when the
+IUT advertises custom collections. Write media checks request content on at
+least one canonical POST or PUT operation. Neither procedure issues a
+mutation, and OPTIONS evidence is not accepted.
+
+Each resource schema procedure independently requests its canonical collection
+and one canonical item with `Accept: application/geo+json`. HTTP status and
+actual media are established before parsing. The complete collection and
+single-resource documents are validated against the released System,
+Deployment, Procedure, or Sampling Feature schemas. Canonical item selection
+comes from safely parsed collection evidence; an empty collection or
+unsupported actual media SKIPs without creating a false PASS.
+
+Manual-inspection procedures automate the released mapping tables over every
+inspectable feature from bounded canonical collection traversal. The common
+feature procedure validates URI-valued `properties.uid` and string-valued
+optional `name` and `description`. Resource procedures validate each present
+attribute and association at its defined GeoJSON location and type. Optional
+members remain optional. The relation-types procedure aggregates all four
+resource classes, rejects any association relation not valid for that type,
+ignores generic links, and emits a no-evidence SKIP only after complete
+inspection.
+
+Expected unsupported-media or empty-resource limitations are retained at the
+narrow resource boundary while later resource types continue. Assertion
+failures, non-200 responses, unsafe pagination, invalid supported content,
+wrong schema, and mapping or relation defects are not caught or downgraded.
+
+The eight released single and collection schema entries plus their transitive
+references pass resolver-normalized semantic parity against pinned release
+commit `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`. The parity tool verifies that
+the source checkout is at that exact commit and clean. The same fail-closed
+source-provenance check is added to the Property parity tool. Dedicated
+Property controlled-HTTP regressions cover pagination and continuation after
+later collection or item evidence limitations.
+
+Primary TeamEngine E2E uses unmodified local OSH. It declares GeoJSON and
+advertises external OpenAPI 3.1 YAML, but canonical feature collections return
+generic `application/json` under a GeoJSON Accept header. Those schema and
+manual-inspection procedures remain honest media SKIPs. Controlled read-only
+HTTP coverage provides positive JSON/YAML API-definition, schema, mapping,
+relation, pagination, and continuation evidence. No OSH or TeamEngine source
+or binary change and no hosted CI are permitted.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

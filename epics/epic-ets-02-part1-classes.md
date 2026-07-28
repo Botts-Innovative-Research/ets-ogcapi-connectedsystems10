@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 53 Property Definitions complete | Last updated: 2026-07-28
+> Status: Active - Sprint 54 GeoJSON closure in progress | Last updated: 2026-07-28
 
 ## Goal
 Implement the 13 released OGC 23-001 conformance classes and all 110 Annex A
@@ -39,6 +39,7 @@ capability.
 | S-ETS-14-01 | Harden `/conf/update` positive mutable-IUT path - changed-field assertion and local OSH readiness truth | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |
 | S-ETS-09-01 | Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012 |
 | S-ETS-15-01 | Expand `/conf/geojson` non-system read-only schema/mapping checks for deployments, procedures, and sampling features | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012 |
+| S-ETS-54-01 | Replace GeoJSON approximations with all twelve released `/conf/geojson` procedures and close Sprint 53 hardening carryovers | In progress; spec and baseline frozen before code | REQ-ETS-PART1-012, REQ-ETS-COVERAGE-001 |
 | S-ETS-10-01 | Implement `/conf/sensorml` encoding suite - systems read-only subset, depends on SystemFeatures | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-013 |
 | S-ETS-16-01 | Expand `/conf/sensorml` non-system read-only schema/mapping checks for deployments, procedures, and properties | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-013 |
 | S-ETS-17-01 | Add read-only `/req/geojson/relation-types` and `/req/sensorml/relation-types` association-link checks | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012, REQ-ETS-PART1-013 |

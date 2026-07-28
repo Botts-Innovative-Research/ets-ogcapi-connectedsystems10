@@ -277,3 +277,4 @@ the matrix at the bottom of `_bmad/traceability.md` (v1.0 frozen section).
 | 2026-07-23 | 2.0.1 | Removed hosted CI and external OSH/TeamEngine modification paths from project scope. | User scope correction; CP-003 and ADR-012 |
 | 2026-07-28 | 2.1 | Recorded released Property Definitions inheritance and replaceable SensorML validator boundary under existing FR-ETS-18/24/26. | CP-013 and Sprint 53 planning |
 | 2026-07-28 | 2.1.1 | Recorded four exact Property Definitions procedures, normalized 53-schema parity, direct API Common cascade, and honest local-OSH E2E under existing FR-ETS-18/24/26. | CP-013 and Sprint 53 implementation |
+| 2026-07-28 | 2.2 | Planned twelve direct GeoJSON procedures, non-mutating JSON/YAML OpenAPI media inspection, complete released schema/mapping coverage, direct API Common inheritance, and pinned clean-checkout parity under existing FR-ETS-22/24/26. | CP-014 and Sprint 54 planning |

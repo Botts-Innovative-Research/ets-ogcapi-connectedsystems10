@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T08:11Z
+Last updated: 2026-07-28T13:12Z
 
 ## Fresh-Session Entry Point
 
@@ -84,6 +84,39 @@ Read these first:
 - `.harness/evaluations/sprint-ets-53-adversarial.yaml`
 - `ops/test-results/sprint-ets-53-local-osh-baseline-2026-07-28.md`
 - `ops/test-results/sprint-ets-53-part1-property-definitions-verification-2026-07-28.md`
+- `openspec/change-proposals/CP-014-part1-geojson-closure.md`
+- `epics/stories/s-ets-54-01-part1-geojson-closure.md`
+- `.harness/contracts/sprint-ets-54.yaml`
+- `ops/test-results/sprint-ets-54-local-osh-baseline-2026-07-28.md`
+
+## Session Handoff - Part 1 GeoJSON Direct ATS
+
+S-ETS-54-01 is in progress under CP-014.
+
+- Pinned released Annex A defines twelve `/conf/geojson` procedures. Current
+  coverage is zero exact, eleven candidate, and one unmapped.
+- The historical thirteen methods are not one-to-one equivalents: they add two
+  non-normative tracers, mutate for mediatype-write, combine schema/mapping
+  procedures, split relation-types, and retain coupled first-item evidence.
+- Planned replacement has exactly twelve independent methods behind
+  `GeoJsonSupport`.
+- Released inheritance changes from historical System to direct API Common;
+  Core and Common remain transitive.
+- Media procedures inspect JSON or YAML `service-desc` OpenAPI metadata and
+  issue no mutation.
+- Schema procedures validate complete canonical single and collection
+  documents. Manual procedures inspect all available common mappings,
+  resource mappings, and association relations.
+- Eight released single/collection entry schemas require pinned clean-checkout
+  semantic and transitive-reference parity.
+- Both Sprint 53 LOW carryovers are in scope: fail-closed parity checkout
+  provenance and dedicated Property pagination/later-evidence tests.
+- Local OSH declares GeoJSON and OGC API Features GeoJSON but returns HTTP 200
+  `application/json` for all four canonical collections under a GeoJSON Accept
+  header. Exact schema and manual procedures must SKIP honestly.
+- No OSH or TeamEngine source or binary modification and no hosted CI.
+- Next action: write requirement-linked tests, record the expected red gate,
+  implement the twelve procedures, then run every mandatory local gate.
 
 ## Session Handoff - Part 1 Property Definitions Direct ATS
 

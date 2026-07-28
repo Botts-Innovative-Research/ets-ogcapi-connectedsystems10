@@ -2,6 +2,31 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-28 - Part 1 GeoJSON planning and baseline
+
+**Triggered by user instruction**: execute the recommended next project step.
+
+- Audited pinned OGC 23-001 Annex A and confirmed twelve released
+  `/conf/geojson` procedures versus thirteen non-equivalent historical methods.
+- Added CP-014, S-ETS-54-01, its contract, thirteen exact scenarios, design,
+  architecture, traceability, epic, and operational baseline before code.
+- Corrected planned inheritance from historical System to direct Part 1 API
+  Common, with Core and Common transitive.
+- Defined `GeoJsonSupport` for JSON/YAML OpenAPI inspection, complete
+  single/collection schema validation, bounded canonical traversal, common and
+  resource mappings, and relation tables.
+- Defined non-mutating API-definition media checks. Historical write lifecycle
+  mutation and OPTIONS readiness are not exact mediatype-write evidence.
+- Added pinned clean-checkout semantic/transitive parity for eight released
+  GeoJSON entry schemas to the acceptance boundary.
+- Included both Sprint 53 LOW Raze carryovers: fail-closed parity source
+  provenance and dedicated Property pagination/later-evidence tests.
+- Probed unmodified local OSH. It declares Connected Systems and OGC API
+  Features GeoJSON and advertises external OpenAPI 3.1 YAML, but all four
+  canonical collections return generic `application/json` under GeoJSON
+  Accept.
+- No OSH or TeamEngine source or binary modification; no hosted CI.
+
 ## 2026-07-28 - Part 1 Property Definitions implementation and technical gates
 
 - User instruction: continue continuously executing the accepted released-ATS

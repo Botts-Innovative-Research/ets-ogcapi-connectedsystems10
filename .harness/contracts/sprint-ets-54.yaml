@@ -1,0 +1,65 @@
+sprint: ets-54
+story: S-ETS-54-01
+title: Part 1 GeoJSON direct ATS closure
+status: IN_PROGRESS
+triggered_by: "User instructed execution of the recommended next project step"
+requirements:
+  - REQ-ETS-PART1-012
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-PART1-012-RELEASED-MEDIATYPE-READ-001
+  - SCENARIO-ETS-PART1-012-RELEASED-MEDIATYPE-WRITE-001
+  - SCENARIO-ETS-PART1-012-RELEASED-RELATION-TYPES-001
+  - SCENARIO-ETS-PART1-012-RELEASED-FEATURE-MAPPING-001
+  - SCENARIO-ETS-PART1-012-RELEASED-SCHEMAS-001
+  - SCENARIO-ETS-PART1-012-RELEASED-RESOURCE-MAPPINGS-001
+  - SCENARIO-ETS-PART1-012-RELEASED-MEDIA-GATE-001
+  - SCENARIO-ETS-PART1-012-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-012-RELEASED-DEPENDENCY-CASCADE-001
+  - SCENARIO-ETS-PART1-012-RELEASED-SCHEMA-PARITY-001
+  - SCENARIO-ETS-PART1-012-RELEASED-DIRECT-HTTP-COVERAGE-001
+  - SCENARIO-ETS-PART1-012-RELEASED-E2E-EXECUTION-001
+  - SCENARIO-ETS-PART1-012-S53-HARDENING-001
+success_criteria:
+  - Exactly twelve independent TestNG methods map the twelve released procedures.
+  - API-definition inspection accepts JSON and YAML without issuing mutations.
+  - Read media is advertised for every required canonical and custom collection GET operation.
+  - Write media is advertised for at least one canonical POST or PUT operation.
+  - Complete single and collection documents pass their released GeoJSON schemas.
+  - Status and actual media are established before every parse.
+  - Pagination is bounded, cycle-safe, and same-origin.
+  - Common and resource mappings inspect all available features and present mapped members.
+  - Optional mapped attributes and associations are not made unconditionally mandatory.
+  - Relation-type evidence is aggregated across all four resource types.
+  - No association evidence cannot produce a vacuous PASS.
+  - API Common prerequisite failures cascade before GeoJSON IUT access.
+  - System and unrelated sibling configurations cannot block GeoJSON.
+  - Eight released schema entries prove pinned-source semantic and transitive parity.
+  - Property schema parity verifies clean exact source provenance.
+  - Dedicated Property pagination and later-evidence continuation regressions pass.
+  - Focused and full Maven verification completes.
+  - TeamEngine deploys every changed method against unmodified local OSH.
+  - Local OSH fallback limitations remain visible and unmodified.
+  - Controlled HTTP coverage executes every positive procedure and key fail-closed branch.
+  - Exact-image runtime, credential, dependency, and artifact-hygiene gates complete.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not issue POST, PUT, PATCH, or DELETE from GeoJSON procedures.
+  - Do not import an executable OGC conformance-suite jar as a library.
+verification:
+  test_first: PENDING
+  focused_maven: PENDING
+  full_maven: PENDING
+  coverage_audit: PENDING
+  geojson_schema_parity: PENDING
+  property_hardening: PENDING
+  local_osh_teamengine: PENDING
+  controlled_http: PENDING
+  exact_image: PENDING
+  dependency_sabotage: PENDING
+  credential_gates: PENDING
+  artifact_hygiene: PENDING
+  raze: PENDING

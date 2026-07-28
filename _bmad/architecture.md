@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.36 | Status: Living Document | Last reconciled: 2026-07-28 (Part 1 Property Definitions implementation verified)
+> Version: 2.0.37 | Status: Living Document | Last reconciled: 2026-07-28 (Part 1 GeoJSON direct closure planned)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1262,3 +1262,46 @@ API Common sabotage skips all four methods before Property endpoint access.
 Credential and artifact-hygiene gates record zero unmasked artifact hits,
 zero IUT writes, and no OSH or TeamEngine modification. Raze returns
 `APPROVE_WITH_CONCERNS` at confidence `0.98`, with no required fixes.
+
+## 33. Architecture v2.0.37 - Part 1 GeoJSON procedures (2026-07-28)
+
+`GeoJsonTests` replaces thirteen historical approximations with exactly the
+twelve released `/conf/geojson` procedures. Setup retains only the normalized
+API root. Every method independently obtains API-definition, canonical
+resource, schema, mapping, or relation evidence.
+
+Released Annex A inheritance is direct API Common plus OGC API Features 1
+GeoJSON. The local TestNG chain is
+`Core/Common -> Part 1 API Common -> GeoJSON`; System and sibling classes
+cannot block GeoJSON. The inherited OGC API Features definition step is
+implemented through the ETS-owned OpenAPI inspection boundary rather than
+importing an executable suite jar.
+
+`GeoJsonSupport` owns JSON/YAML OpenAPI parsing, canonical endpoint selection,
+actual-media gating, bounded same-origin traversal, released schema dispatch,
+common and resource mapping checks, and resource-specific relation tables.
+The media-read procedure checks successful GET response content for all
+canonical endpoints implied by declared feature-resource classes and the
+custom collections items path when advertised. The media-write procedure
+checks request content on at least one canonical POST or PUT operation. No
+mutation is issued.
+
+Each resource schema procedure validates complete canonical single and
+collection documents against the released GeoJSON schemas after HTTP and
+actual-media gates. Manual-inspection procedures process every inspectable
+feature, validate present mapped values without requiring absent optional
+members, and aggregate expected evidence limitations so later defects remain
+visible. Relation-types cannot PASS without observed association-relation
+evidence.
+
+The eight released single and collection entry schemas and their transitive
+graph require resolver-normalized semantic parity against pinned release
+commit `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`. Parity scripts verify exact
+clean-checkout provenance. Sprint 54 also adds dedicated Property pagination
+and later-evidence continuation regressions, closing the two LOW Sprint 53
+Raze carryovers.
+
+Primary TeamEngine E2E preserves unmodified local OSH's generic JSON fallback
+as explicit GeoJSON media SKIPs. Controlled read-only HTTP fixtures provide
+positive procedure evidence. OSH and TeamEngine source and binaries remain
+immutable, and project-operated hosted CI remains out of scope.

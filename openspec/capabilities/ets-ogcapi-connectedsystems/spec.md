@@ -2962,7 +2962,7 @@ fail or SKIP as specified.
 
 #### REQ-ETS-PART1-012: GeoJSON Encoding Conformance Class (`/conf/geojson`) (Sprint 9 target)
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
+- **Status**: IMPLEMENTATION_PLANNED (Sprint 54 direct released ATS closure; historical methods remain `RELEASED_ATS_PARTIAL_UNREVIEWED` until replacement gates pass)
 - **Historical increment**: (Sprint 9 Generator 2026-05-05; Sprint 15 non-system read-only expansion Generator 2026-05-06; Sprint 17 selected-resource relation-types Generator 2026-05-07; Sprint 18 relation-types breadth Generator 2026-05-07; Sprint 19 mediatype-write safety-gated Generator 2026-05-07; stories S-ETS-09-01, S-ETS-15-01, S-ETS-17-01, S-ETS-18-01, and S-ETS-19-01). Sprint 19 adds safety-gated `/req/geojson/mediatype-write` checks with positive system-resource evidence against a dedicated local OSH mutable IUT. Sprint 18 added independent GeoJSON relation-types checks for selected System, Deployment, Procedure, and Sampling Feature items. Sprint 9 closed the systems read-only subset. Sprint 15 adds deployment/procedure/sampling-feature read-only schema and mapping checks with fallback honesty when an IUT returns default CS API `items` wrappers. Full REQ-ETS-PART1-012 remains open until broader positive relation-types evidence where IUT resources expose association links, property GeoJSON mapping, non-system mutation-side encoding coverage, and full schema-validation closure are implemented.
 - **OGC source verified**: Upstream master commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f` dated 2026-04-20. Requirement class file exists at `api/part1/standard/requirements/encoding/geojson/requirements_class_geojson.adoc`. The class identifier is `/req/geojson`, inherits `/req/api-common` and OGC API Features 1.0 GeoJSON, and lists 12 subrequirements: `mediatype-read`, `mediatype-write`, `relation-types`, `feature-attribute-mapping`, `system-schema`, `system-mappings`, `deployment-schema`, `deployment-mappings`, `procedure-schema`, `procedure-mappings`, `sf-schema`, and `sf-mappings`.
 - **Sprint 9 coverage scope**: Sprint-1-style minimal systems read-only subset with 5 @Tests: (1) IUT declares `/conf/geojson`; (2) `Accept: application/geo+json` or default JSON response for `/systems` returns HTTP 200 + honest media-type/fallback reporting; (3) `/systems` GeoJSON path requires `type="FeatureCollection"` and a `features` array; (4) first system feature carries GeoJSON `Feature` shape with `id`, `type`, `geometry`, and `properties`; (5) TestNG dependency wiring and smoke no-regression.
@@ -2973,7 +2973,35 @@ fail or SKIP as specified.
 - **Sprint 17 implemented relation-types scope**: For associations encoded in a JSON `links` member, relation-types checks require `rel` to equal the association name valid for the selected resource type. Generic `canonical`, `alternate`, pagination, collection, service-desc, and service-doc links are not association evidence. Property-level links such as `deployedSystems@link` and `hostedProcedure@link` remain mapping evidence, not `links` member relation-types evidence. `EncodingRelationTypes` uses resource-specific GeoJSON links-member allowlists derived from the OGC association tables: System (`parentSystem`, `subsystems`, `samplingFeatures`, `deployments`, `procedures`, `datastreams`, `controlstreams`); Deployment (`parentDeployment`, `subdeployments`, `featuresOfInterest`, `samplingFeatures`, `datastreams`, `controlstreams`); Procedure (`implementingSystems`); Sampling Feature (`parentSystem`, `sampleOf`, `datastreams`, `controlstreams`). The runtime GeoJSON assertion currently checks a selected System representation.
 - **Sprint 18 implemented relation-types breadth scope**: `GeoJsonTests` now has 12 read-only @Tests and evaluates relation-types independently for selected System, Deployment, Procedure, and Sampling Feature representations. Each assertion PASSes, FAILs, or SKIPs independently so the System PASS cannot hide non-system SKIPs. GeoRobotix runtime on 2026-05-07: System PASSed from `samplingFeatures` and `datastreams`; Deployment and Procedure SKIPped because item `links` members contain only generic `canonical`/`alternate` links; Sampling Feature SKIPped because the selected item has no top-level `links` member. Property-level `deployedSystems@link` and `hostedProcedure@link` remain excluded from relation-types PASS evidence.
 - **Sprint 19 implemented mediatype-write scope**: `GeoJsonTests` now has 13 @Tests and adds `geoJsonMediaTypeWriteParsesSystemBodyWhenMutationEnabled`. The test checks write-side `Content-Type: application/geo+json` parsing behind the existing Sprint 12 mutation safety gate, requires `/conf/create-replace-delete`, hard-denies public GeoRobotix, and requires follow-up dereference evidence preserving the submitted UID. GeoRobotix declares `/conf/create-replace-delete` and `/conf/geojson`, and OPTIONS advertises POST/PUT/DELETE, but GeoRobotix is a shared public IUT and was not mutated by default smoke. OPTIONS readiness alone is not conformance evidence. Sprint 19 verification: formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS with `144 tests / 0 failures / 0 errors / 3 skipped`, log `ops/test-results/sprint-ets-19-maven-r3-2026-05-07.log`; GeoRobotix TeamEngine smoke r3 reported `89 total / 55 passed / 0 failed / 34 skipped`, with both mediatype-write tests SKIP-before-mutation and zero IUT-bound POST/PUT/DELETE/PATCH across 69 recognized IUT request-log entries. Authenticated local OSH mutable-IUT smoke r3 reported `89 total / 52 passed / 4 failed / 33 skipped`; the GeoJSON mediatype-write test PASSed with exact `Content-Type=application/geo+json`, follow-up GET, and cleanup DELETE evidence. The four local failures were SensorML non-system HTTP 500 responses outside GeoJSON mediatype-write.
+- **Sprint 54 planned released closure**: CP-014 and S-ETS-54-01 replace the historical 13-method approximation with exactly twelve independent methods matching the twelve released Annex A procedures. Media tests inspect JSON or YAML API-definition operation metadata without mutation. Schema tests independently validate complete canonical single and collection documents. Automated manual-inspection tests process every inspectable feature for common mappings, resource mappings, and relation types. Released inheritance changes from historical System to direct API Common; Core and Common remain transitive. Unsupported actual GeoJSON media, empty resource evidence, or unreadable API-definition evidence SKIPs honestly, while parseable missing advertisements, HTTP defects, invalid schemas, unsafe traversal, and incorrect mappings fail. The eight released single/collection schema entries require pinned-source semantic and transitive-reference parity before exact promotion. Sprint 54 also hardens parity checkout provenance and adds dedicated Property pagination and later-evidence continuation regressions carried from Sprint 53 Raze.
 - **Maps to**: PRD FR-ETS-22.
+
+Sprint 54 SHALL retain only immutable API-root setup in `GeoJsonTests`.
+Every released procedure SHALL retrieve its own evidence, use `alwaysRun`, and
+have no method dependency. `GeoJsonSupport` SHALL own OpenAPI JSON/YAML
+inspection, exact endpoint selection, status and actual-media gates, bounded
+same-origin pagination, schema dispatch, mapping assertions, and relation
+tables. A missing or unreadable API definition is an evidence SKIP; a
+parseable API definition that omits required GeoJSON media is a failure. No
+GeoJSON procedure SHALL issue POST, PUT, PATCH, or DELETE.
+
+The read-media procedure SHALL require `application/geo+json` in successful
+GET response content for every canonical System, Deployment, Procedure, and
+Sampling Feature endpoint whose resource class is declared by the IUT, and for
+the custom collections items path when custom collections are advertised. The
+write-media procedure SHALL require `application/geo+json` request content on
+at least one canonical POST or PUT create/replace operation.
+
+Each of the four schema procedures SHALL independently request a canonical
+collection and one canonical single resource with `Accept:
+application/geo+json`, establish status and actual media before parsing, and
+validate complete documents against the corresponding released schemas. The
+manual-inspection procedures SHALL process every feature available through
+bounded canonical collection traversal. They SHALL validate every present
+mapped value but SHALL NOT make optional attributes or associations mandatory
+merely to manufacture evidence. Relation-types SHALL aggregate all four
+resource classes and SKIP only after complete inspection when no association
+relation is present.
 
 ### Acceptance Scenarios for Sprint 9
 
@@ -3124,6 +3152,107 @@ fail or SKIP as specified.
 **OR IF** no association is encoded in the selected representation's `links` member
 **THEN** the assertion SKIPs with reason.
 *Maps to*: REQ-ETS-PART1-012.
+
+### Acceptance Scenarios for Sprint 54
+
+#### SCENARIO-ETS-PART1-012-RELEASED-MEDIATYPE-READ-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/geojson`
+**AND** its landing page advertises a readable JSON or YAML `service-desc`
+**WHEN** the released mediatype-read procedure inspects the API definition
+**THEN** every required canonical feature-resource GET operation advertises `application/geo+json` in successful response content
+**AND** an advertised custom collections items GET operation does likewise
+**AND** a parseable omission fails instead of SKIPping.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-MEDIATYPE-WRITE-001 (CRITICAL)
+**GIVEN** the IUT declares `/conf/geojson`
+**WHEN** the released mediatype-write procedure inspects the API definition
+**THEN** at least one canonical feature-resource POST or PUT operation advertises `application/geo+json` request content
+**AND** the procedure issues no mutation request
+**AND** OPTIONS-only evidence is not sufficient.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-RELATION-TYPES-001 (CRITICAL)
+**GIVEN** inspectable GeoJSON resource representations
+**WHEN** the released relation-types procedure processes their `links` members
+**THEN** every association relation is valid for its System, Deployment, Procedure, or Sampling Feature resource type
+**AND** generic links are ignored
+**AND** all resource types are inspected before a no-association-evidence SKIP
+**AND** evidence from one resource type cannot hide an invalid later resource.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-FEATURE-MAPPING-001 (CRITICAL)
+**GIVEN** inspectable GeoJSON feature resources
+**WHEN** the released feature-attribute-mapping procedure processes every feature
+**THEN** `properties.uid` is a valid URI
+**AND** present `properties.name` and `properties.description` values are strings
+**AND** no first-item shortcut can hide a later invalid feature.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-SCHEMAS-001 (CRITICAL)
+**GIVEN** the IUT exposes actual `application/geo+json` for a canonical System, Deployment, Procedure, or Sampling Feature collection
+**WHEN** the corresponding released schema procedure executes
+**THEN** it validates the complete collection document and one complete canonical single-resource document against their released schemas
+**AND** each of the four resource types remains an independent procedure.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-RESOURCE-MAPPINGS-001 (CRITICAL)
+**GIVEN** inspectable GeoJSON resource representations
+**WHEN** the corresponding released System, Deployment, Procedure, or Sampling Feature mapping procedure executes
+**THEN** every present mapped attribute and association is validated against the resource-specific tables
+**AND** optional absent members are not made mandatory
+**AND** all inspectable features are processed.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-MEDIA-GATE-001 (CRITICAL)
+**GIVEN** a canonical request uses `Accept: application/geo+json`
+**WHEN** the IUT returns unsupported actual media
+**THEN** the procedure records a reasoned evidence SKIP before parsing
+**AND** HTTP failures, invalid supported content, and unsafe pagination remain failures.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** one released GeoJSON procedure lacks optional runtime evidence
+**WHEN** TestNG executes the class
+**THEN** that procedure's SKIP does not suppress any other released procedure
+**AND** setup retains no mutable response state.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-DEPENDENCY-CASCADE-001 (CRITICAL)
+**GIVEN** Core, Common, or Part 1 API Common fails
+**WHEN** the GeoJSON group is scheduled
+**THEN** all twelve direct procedures SKIP before GeoJSON IUT access
+**AND** System or an unrelated sibling outcome cannot block GeoJSON.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-SCHEMA-PARITY-001 (CRITICAL)
+**GIVEN** the eight released GeoJSON single and collection entry schemas
+**WHEN** exact mappings are promoted
+**THEN** the bundled resolver-normalized transitive graph is semantically equal to pinned release commit `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
+**AND** the parity gate fails if the source checkout is dirty or at another commit.
+*Maps to*: REQ-ETS-PART1-012, REQ-ETS-COVERAGE-001.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled read-only HTTP IUT
+**WHEN** the twelve released procedures execute
+**THEN** positive JSON and YAML API-definition, schema, mapping, relation, pagination, and later-evidence paths execute
+**AND** key unsupported-media, omission, invalid-schema, invalid-mapping, unsafe-link, and no-evidence branches remain fail closed or SKIP honest as specified.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** the exact ETS image and the unmodified primary local OSH IUT
+**WHEN** Dockerized TeamEngine executes the complete suite
+**THEN** all twelve GeoJSON methods are deployed and execute or dependency-SKIP honestly
+**AND** no IUT mutation occurs
+**AND** no OSH or TeamEngine source or binary modification is used.
+*Maps to*: REQ-ETS-PART1-012.
+
+#### SCENARIO-ETS-PART1-012-S53-HARDENING-001 (CRITICAL)
+**GIVEN** the two LOW Sprint 53 Raze carryovers
+**WHEN** Sprint 54 verification runs
+**THEN** Property schema parity rejects dirty or wrong-commit source checkouts
+**AND** dedicated Property HTTP tests prove pagination and continuation after later item or collection limitations.
+*Maps to*: REQ-ETS-PART1-012, REQ-ETS-PART1-008, REQ-ETS-COVERAGE-001.
 
 > Sprint 10 targets SensorML as another read-only encoding increment. The sprint is intentionally PARTIAL for the SensorML requirement class: it proves conformance declaration, discovers a SensorML alternate representation for an existing System resource, fetches that representation, and checks a minimal SensorML system shape. It does not close write media type behavior, relation types, deployments/procedures/properties SensorML schema or mapping assertions, or full JSON Schema validation. Alternate-link fallback is evidence for this sprint subset only unless the fetched body proves SensorML JSON support and the fallback is documented in runtime output.
 

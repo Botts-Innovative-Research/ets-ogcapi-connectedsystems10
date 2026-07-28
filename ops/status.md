@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T14:20Z
+Last updated: 2026-07-28T15:04Z
 
 ## Fresh-Session Entry Point
 
@@ -117,10 +117,10 @@ S-ETS-54-01 is complete under CP-014. Final Raze is `APPROVE` at confidence
   leaks.
 - OSH source remains clean at `4c87a65`, and `/opt/osh` is read-only. No OSH
   or TeamEngine source or binary was modified; hosted CI remains out of scope.
-- Next action: publish Sprint 54, then begin the spec-first released-ATS audit
-  for Part 1 `/conf/advanced-filtering`, the largest remaining Part 1 exact
-  coverage opportunity that does not depend on the unavailable SensorML
-  library.
+- Sprint 54 is published to Botts `main` through `5dd877b`.
+- Next action: begin the spec-first released-ATS audit for Part 1
+  `/conf/advanced-filtering`, the largest remaining Part 1 exact coverage
+  opportunity that does not depend on the unavailable SensorML library.
 
 ## Session Handoff - Part 1 Property Definitions Direct ATS
 

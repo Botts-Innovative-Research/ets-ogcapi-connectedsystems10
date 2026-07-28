@@ -1763,6 +1763,17 @@ read-only HTTP coverage supplies the positive oracle for all four methods. OSH
 and TeamEngine source and binaries remain unchanged; hosted CI remains out of
 scope.
 
+Implementation conforms to this design. All four procedures have reviewed
+exact mappings; focused Maven is `95/0/0/0`, full Maven is `525/0/0/3`, and
+coverage is `240/39 exact/2 helper/130 candidate/69 unmapped`.
+Resolver-normalized parity covers three entry schemas and 53 transitive
+schemas without mismatch. The exact image passes TeamEngine and validator
+runtime checks. Unmodified local OSH TeamEngine is honestly `220/40/7/173`,
+with one Property collections failure and three evidence SKIPs. Dependency,
+credential, controlled-HTTP, and zero-write/zero-leak hygiene gates pass.
+No exact mapping is assigned to `/conf/sensorml/property-schema`. Raze returns
+`APPROVE_WITH_CONCERNS` at confidence `0.98`, with no required fixes.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

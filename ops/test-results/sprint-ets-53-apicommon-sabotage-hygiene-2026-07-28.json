@@ -1,0 +1,60 @@
+{
+  "containerLogs": [
+    {
+      "iutMethodCounts": {
+        "GET": 35
+      },
+      "iutWriteCount": 0,
+      "iutWrites": [],
+      "methodCounts": {
+        "GET": 35
+      },
+      "path": "ops/test-results/sprint-ets-53-apicommon-sabotage-container-2026-07-28.log",
+      "recognizedIutRequestLogs": 35,
+      "recognizedRequestLogs": 35
+    }
+  ],
+  "credentialScan": {
+    "explicitSecretInputsProvided": 0,
+    "explicitSecretInputsScanned": 0,
+    "explicitSecretValueHits": 0,
+    "filesScanned": 2,
+    "filesWithHits": [],
+    "genericBasicCredentialPatternHits": 0,
+    "shortSecretInputsIgnored": 0,
+    "unmaskedAuthorizationHeaderHits": 0
+  },
+  "failures": [],
+  "generatedAt": "2026-07-28T07:45:53Z",
+  "policy": {
+    "failOnCredentialLeak": true,
+    "iutPrefixes": [
+      "http://host.docker.internal:2991"
+    ],
+    "requireZeroIutWrites": true
+  },
+  "requirements": [
+    "REQ-ETS-CLEANUP-020"
+  ],
+  "scenarios": [
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001",
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001"
+  ],
+  "testngReports": [
+    {
+      "methodStatusCounts": {
+        "FAIL": 10,
+        "PASS": 20,
+        "SKIP": 221
+      },
+      "path": "ops/test-results/sprint-ets-53-apicommon-sabotage-teamengine-2026-07-28.xml",
+      "totals": {
+        "failed": 10,
+        "passed": 2,
+        "skipped": 208,
+        "total": 220
+      }
+    }
+  ],
+  "verdict": "PASS"
+}

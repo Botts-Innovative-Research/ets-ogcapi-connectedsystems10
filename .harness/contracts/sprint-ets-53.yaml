@@ -1,7 +1,7 @@
 sprint: ets-53
 story: S-ETS-53-01
 title: Part 1 Property Definitions direct ATS closure
-status: IN_PROGRESS
+status: COMPLETE
 triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
 requirements:
   - REQ-ETS-PART1-008
@@ -48,15 +48,15 @@ guardrails:
   - Do not classify SKIP as positive conformance evidence.
   - Do not import ets-sensorml30 or expose external validator types to TestNG procedures.
 verification:
-  test_first: PENDING
-  focused_maven: PENDING
-  full_maven: PENDING
-  coverage_audit: PENDING
-  property_schema_parity: PENDING
-  local_osh_teamengine: PENDING
-  controlled_http: PENDING
-  exact_image: PENDING
-  dependency_sabotage: PENDING
-  credential_gates: PENDING
-  artifact_hygiene: PENDING
-  raze: PENDING
+  test_first: PASS_EXPECTED_39_MISSING_SYMBOLS
+  focused_maven: PASS_95_0_0_0
+  full_maven: PASS_525_0_0_3_HISTORICAL_SKIPS
+  coverage_audit: PASS_240_39_EXACT_2_HELPER_130_CANDIDATE_69_UNMAPPED
+  property_schema_parity: PASS_3_ENTRY_53_TRANSITIVE_0_MISMATCH
+  local_osh_teamengine: HONEST_220_40_7_173
+  controlled_http: PASS_9_0_0_0
+  exact_image: PASS_SHA256_80CA0A313BA903411F23A67EFA93DF631309EC43699CE5E71BFEADD642DC2BB0
+  dependency_sabotage: PASS_ALL_4_PROPERTY_METHODS_PRE_IUT_SKIP
+  credential_gates: PASS_ZERO_UNMASKED_35_MASKED_35_WIRE
+  artifact_hygiene: PASS_120_IUT_GET_0_WRITE_0_LEAK
+  raze: APPROVE_WITH_CONCERNS_0_98_NO_REQUIRED_FIXES

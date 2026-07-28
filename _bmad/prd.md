@@ -1,6 +1,6 @@
 # Product Requirements Document — OGC API CS API TeamEngine ETS
 
-> Version: 2.1 | Status: Living Document | Last updated: 2026-07-28
+> Version: 2.1.1 | Status: Living Document | Last updated: 2026-07-28
 >
 > **Supersedes v1.1 (2026-03-31).** v1.1 framed the deliverable as a Next.js/TypeScript web application
 > for ad-hoc CS API conformance assessment. The user pivoted on 2026-04-27 to a certification-track
@@ -276,3 +276,4 @@ the matrix at the bottom of `_bmad/traceability.md` (v1.0 frozen section).
 | 2026-04-27 | 2.0 | Full rewrite: pivot from web app to Java/TestNG TeamEngine ETS. v1.0 web app frozen. New capability `ets-ogcapi-connectedsystems`. | User pivot 2026-04-27, Discovery handoff 2026-04-27 |
 | 2026-07-23 | 2.0.1 | Removed hosted CI and external OSH/TeamEngine modification paths from project scope. | User scope correction; CP-003 and ADR-012 |
 | 2026-07-28 | 2.1 | Recorded released Property Definitions inheritance and replaceable SensorML validator boundary under existing FR-ETS-18/24/26. | CP-013 and Sprint 53 planning |
+| 2026-07-28 | 2.1.1 | Recorded four exact Property Definitions procedures, normalized 53-schema parity, direct API Common cascade, and honest local-OSH E2E under existing FR-ETS-18/24/26. | CP-013 and Sprint 53 implementation |

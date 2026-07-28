@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.35 | Status: Living Document | Last reconciled: 2026-07-28 (Part 1 Property Definitions planned architecture)
+> Version: 2.0.36 | Status: Living Document | Last reconciled: 2026-07-28 (Part 1 Property Definitions implementation verified)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1244,3 +1244,21 @@ Primary TeamEngine E2E preserves the unmodified local OSH generic-media SKIPs
 and missing-Property-collection failure. Positive behavior is proven through a
 controlled read-only HTTP fixture. OSH and TeamEngine source and binaries
 remain immutable; project-operated hosted CI remains out of scope.
+
+The implemented boundary follows this design without introducing external
+validator types. Four independent methods map all four released procedures
+exactly; coverage is `240/39 exact/2 helper/130 candidate/69 unmapped`.
+Resolver-normalized parity passes for three Property entry schemas and 53
+transitive schemas with zero mismatches. Focused Maven is `95/0/0/0`; full
+Maven is `525/0/0/3`. Exact image
+`sha256:80ca0a313ba903411f23a67efa93df631309ec43699ce5e71bfeadd642dc2bb0`
+passes TeamEngine provenance, immutable-base, deployed-adapter, dependency,
+and confidential-context checks.
+
+Primary unmodified local OSH TeamEngine is honestly `220/40/7/173`: the
+collections procedure exposes one genuine missing-collection failure, while
+canonical URL and both endpoint procedures expose three evidence SKIPs.
+API Common sabotage skips all four methods before Property endpoint access.
+Credential and artifact-hygiene gates record zero unmasked artifact hits,
+zero IUT writes, and no OSH or TeamEngine modification. Raze returns
+`APPROVE_WITH_CONCERNS` at confidence `0.98`, with no required fixes.

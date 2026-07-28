@@ -1,0 +1,114 @@
+28-Jul-2026 07:41:10.706 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/10.1.42
+28-Jul-2026 07:41:10.732 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 22:35:46 UTC
+28-Jul-2026 07:41:10.733 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 10.1.42.0
+28-Jul-2026 07:41:10.734 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+28-Jul-2026 07:41:10.735 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.17.0-1026-nvidia
+28-Jul-2026 07:41:10.735 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+28-Jul-2026 07:41:10.736 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /opt/java/openjdk
+28-Jul-2026 07:41:10.736 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.15+6
+28-Jul-2026 07:41:10.737 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+28-Jul-2026 07:41:10.737 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /usr/local/tomcat
+28-Jul-2026 07:41:10.739 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /usr/local/tomcat
+28-Jul-2026 07:41:10.799 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties
+28-Jul-2026 07:41:10.800 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+28-Jul-2026 07:41:10.800 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+28-Jul-2026 07:41:10.801 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx6144m
+28-Jul-2026 07:41:10.801 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -DTE_BASE=/usr/local/tomcat/te_base
+28-Jul-2026 07:41:10.802 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+28-Jul-2026 07:41:10.802 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+28-Jul-2026 07:41:10.803 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dsun.io.useCanonCaches=false
+28-Jul-2026 07:41:10.804 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+28-Jul-2026 07:41:10.804 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+28-Jul-2026 07:41:10.805 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+28-Jul-2026 07:41:10.806 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+28-Jul-2026 07:41:10.807 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+28-Jul-2026 07:41:10.808 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+28-Jul-2026 07:41:10.808 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+28-Jul-2026 07:41:10.810 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dlog4j2.formatMsgNoLookups=true
+28-Jul-2026 07:41:10.811 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/usr/local/tomcat
+28-Jul-2026 07:41:10.811 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/usr/local/tomcat
+28-Jul-2026 07:41:10.812 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/usr/local/tomcat/temp
+28-Jul-2026 07:41:10.833 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [2.0.9] using APR version [1.7.2].
+28-Jul-2026 07:41:10.878 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.0.13 30 Jan 2024]
+28-Jul-2026 07:41:12.493 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+28-Jul-2026 07:41:12.649 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [3237] milliseconds
+28-Jul-2026 07:41:12.888 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+28-Jul-2026 07:41:12.889 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/10.1.42]
+28-Jul-2026 07:41:13.326 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/usr/local/tomcat/webapps/teamengine]
+28-Jul-2026 07:44:41.891 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/usr/local/tomcat/webapps/teamengine] has finished in [208,561] ms
+28-Jul-2026 07:44:41.930 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+28-Jul-2026 07:44:41.995 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [209344] milliseconds
+[Fatal Error] entity-2537283447822751611.tmp:1:1: Content is not allowed in prolog.
+Request: GET http://host.docker.internal:2991
+	Accept=application/json
+log4j:WARN No appenders could be found for logger (org.apache.http.impl.conn.BasicClientConnectionManager).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/collections
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/?f=json
+	Accept=*/*
+Request: GET http://host.docker.internal:2991
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/datastreams?limit=25
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/controlstreams?limit=2
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/systems?limit=2
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json
+Request: GET http://host.docker.internal:2991/conformance
+	Accept=application/json

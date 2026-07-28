@@ -2,6 +2,46 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-28 - Part 1 Property Definitions implementation and technical gates
+
+- User instruction: continue continuously executing the accepted released-ATS
+  completion recommendations.
+- Replaced the four historical Property Definitions approximations with four
+  independent released procedures for canonical URL, resources endpoint,
+  canonical endpoint, and collections.
+- Added `PropertyDefinitionsSupport` for exact `sosa:Property` selection,
+  SensorML Property schema validation, canonical same-origin identity,
+  comparable representation choice, and canonical-content normalization.
+- Changed the suite dependency from historical System inheritance to direct
+  Part 1 API Common inheritance. Setup inspects only Core, Common, and API
+  Common evidence; System and sibling outcomes cannot block Property.
+- Added requirement-linked structural, support, and controlled-HTTP tests.
+  Test-first compilation produced 39 expected missing-symbol errors. Final
+  focused Maven is `95/0/0/0`; full Maven is `525/0/0/3`.
+- Added a resolver-normalized parity gate for all three Property entry schemas
+  and their 53-schema transitive graph. It reports zero semantic and graph
+  mismatches against released source
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+- Promoted all four `/conf/property` inventory entries to reviewed exact
+  mappings. Coverage is now
+  `240/39 exact/2 helper/130 candidate/69 unmapped`.
+- Built and executed exact image
+  `sha256:80ca0a313ba903411f23a67efa93df631309ec43699ce5e71bfeadd642dc2bb0`
+  against unmodified local OSH through Dockerized TeamEngine. The full suite is
+  honestly `220/40/7/173`; Property has one missing-collection FAIL and three
+  unsupported-media or missing-evidence SKIPs.
+- Runtime, API Common sabotage, controlled HTTP, credential integration,
+  credential wire E2E, and artifact-hygiene gates pass. Primary evidence
+  records 120 IUT GETs, zero writes, and zero credential leaks.
+- Kept validation behind an ETS-owned adapter. No `ets-sensorml30` suite jar
+  was imported, no `/conf/sensorml/property-schema` closure was claimed, and
+  no OSH or TeamEngine source or binary was modified.
+- Reconciled OpenSpec, CP-013, story, contract, architecture, PRD,
+  traceability, epic, status, known issues, and test-results records.
+- Raze returned `APPROVE_WITH_CONCERNS` at confidence `0.98`, with no required
+  fixes. Two LOW future-hardening concerns cover fail-closed parity-checkout
+  provenance and dedicated Property pagination/later-item fixtures.
+
 ## 2026-07-28 - Part 1 Property Definitions planning and baseline
 
 **Triggered by user instruction**: continue executing accepted recommendations

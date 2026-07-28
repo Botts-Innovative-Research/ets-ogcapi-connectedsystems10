@@ -1,0 +1,221 @@
+schema_version: 1
+review:
+  sprint: ets-53
+  story: S-ETS-53-01
+  part: 1
+  change_proposal: CP-013
+  gate: 4
+  reviewer: Raze
+  started_at: "2026-07-28T07:57:33Z"
+  completed_at: "2026-07-28T08:10:24Z"
+  duration_seconds: 771
+  token_metadata:
+    status: unavailable
+    reason: Main-agent runtime does not expose a per-review token count.
+
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.98
+
+reviewed_scope:
+  - Sprint 53 contract, CP-013, S-ETS-53-01 story, OpenSpec capability spec and design
+  - Architecture, PRD, traceability, status, changelog, known issues, and test-results reconciliation
+  - Commits 3aa24ca and 332fd75 plus the uncommitted reconciliation and gate artifacts
+  - PropertyDefinitionsTests, PropertyDefinitionsSupport, shared API Common traversal, TestNG wiring, and structural lint coverage
+  - Controlled HTTP tests, schema resources, schema-parity scripts, ATS mappings, and coverage reports
+  - All ops/test-results/sprint-ets-53-* evidence and exact TeamEngine result totals
+  - Credential masking, request/write hygiene, runtime provenance, and OSH/TeamEngine immutability evidence
+  - Executable-suite dependency boundaries and public adapter type boundaries
+  - Direct comparison of all four mappings with the pinned released source checkout
+
+source_authority:
+  repository: https://github.com/opengeospatial/ogcapi-connected-systems.git
+  tag: v1.0.0
+  commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+  checkout: /tmp/ogcapi-connected-systems-s52-release
+  checkout_verification:
+    head_matches_pinned_commit: true
+    worktree_clean: true
+  property_ats:
+    path: api/part1/standard/sections/annex-abstract-test-suite.adoc
+    lines: 750-822
+  verified_procedures:
+    - /conf/property/canonical-url
+    - /conf/property/resources-endpoint
+    - /conf/property/canonical-endpoint
+    - /conf/property/collections
+
+findings:
+  - id: RAZE-S53-001
+    severity: LOW
+    status: NON_BLOCKING
+    category: parity_provenance_hardening
+    title: The parity script reports but does not independently verify its pinned source commit
+    summary: >-
+      scripts/property-schema-parity.py hard-codes the expected source commit in its
+      output but does not fail when the supplied release checkout has a different
+      HEAD or dirty source files. The current Sprint 53 parity result remains valid
+      because this review independently verified that the supplied checkout is clean
+      at the exact pinned commit.
+    impact: >-
+      A future operator could run the script against the wrong checkout while
+      producing an artifact that still names the pinned commit. This is a provenance
+      weakness, not a defect in the currently reviewed schema graph or result.
+    evidence:
+      - >-
+        scripts/property-schema-parity.py declares SOURCE_COMMIT and serializes it
+        without invoking git rev-parse or checking checkout cleanliness.
+      - >-
+        Independent review verified /tmp/ogcapi-connected-systems-s52-release HEAD as
+        8e03b236a049849f2ccc24b4fd9fdce5ff69bed2 with a clean worktree.
+      - >-
+        The reviewed parity artifact reports three entry schemas, 53 transitive
+        schemas, and zero graph or semantic mismatches.
+      - >-
+        The script removes only expected local $id values, normalizes equivalent $ref
+        forms, and otherwise compares the complete resolver-reachable schema graph.
+    required_fixes: []
+
+  - id: RAZE-S53-002
+    severity: LOW
+    status: NON_BLOCKING
+    category: regression_coverage_hardening
+    title: Property-specific HTTP tests rely on shared traversal tests for pagination coverage
+    summary: >-
+      The nine Property-specific controlled HTTP tests exercise the four procedures,
+      actual-media ordering, schema failure, canonical identity and equivalence, and
+      collection continuation, but they do not include a Property fixture with a
+      later page or an explicit first-item limitation followed by a later-item defect.
+      Shared traversal tests cover pagination, cycles, cross-origin next links, and
+      later-page media limitations, while code inspection confirms the Property loops
+      preserve collection and item continuation.
+    impact: >-
+      Current behavior is supported by shared-helper tests and direct implementation
+      inspection, but a future Property-specific integration regression could require
+      more diagnosis than a dedicated fixture would.
+    evidence:
+      - >-
+        VerifyPropertyDefinitionsHttpProcedures contains nine direct tests, including
+        unsupported actual media before parse, invalid schema, canonical content
+        difference, canonical media limitation, links omission normalization, and a
+        later invalid collection after an unsupported collection.
+      - >-
+        Part1ApiCommonSupport traversal tests cover bounded pagination, cycle
+        detection, cross-origin next links, and later-page actual-media behavior.
+      - >-
+        PropertyDefinitionsTests catches expected evidence-limitation SkipException
+        values at collection and item boundaries, continues inspectable evidence, and
+        does not downgrade status, schema, identity, pagination, or assertion defects.
+    required_fixes: []
+
+required_fixes: []
+
+evidence:
+  released_mapping:
+    procedure_count: 4
+    exact_mapping_count: 4
+    duplicate_mapping_count: 0
+    notes:
+      - /conf/property directly inherits /conf/api-common in the released ATS.
+      - Collection selection requires at least one itemType exactly equal to sosa:Property.
+      - The released Property schema requires uniqueId and does not define a local id member.
+      - The release's undefined sensorml-mediatype placeholder is consistently interpreted as application/sml+json.
+  implementation:
+    direct_test_methods: 4
+    independent_always_run_methods: true
+    mutable_cross_method_state: false
+    api_common_dependency_wired: true
+    system_dependency_wired: false
+    actual_media_checked_before_parse: true
+    complete_schema_validation: true
+    resolver_normalized_parity: true
+    canonical_same_origin_identity: true
+    canonical_content_equivalence: true
+    multi_collection_continuation: true
+    multi_item_continuation: true
+    procedure_independence: true
+  dependency_boundary:
+    executable_swecommon_suite_imported: false
+    executable_sensorml_suite_imported: false
+    external_validator_types_exposed_by_public_adapter: false
+  verification:
+    test_first_expected_compilation_failure:
+      missing_production_symbols: 39
+    focused_maven:
+      tests: 95
+      failures: 0
+      errors: 0
+      skipped: 0
+      result: BUILD_SUCCESS
+    full_maven:
+      tests: 525
+      failures: 0
+      errors: 0
+      skipped: 3
+      result: BUILD_SUCCESS_WITH_HISTORICAL_SKIPS
+    property_schema_parity:
+      entry_schemas: 3
+      transitive_schemas: 53
+      graph_mismatches: 0
+      semantic_mismatches: 0
+    ats_audit: PASS
+    exact_image: sha256:80ca0a313ba903411f23a67efa93df631309ec43699ce5e71bfeadd642dc2bb0
+  primary_local_osh_e2e:
+    total: 220
+    passed: 40
+    failed: 7
+    skipped: 173
+    property_results:
+      setup: PASS
+      canonical_url: SKIP_NO_PROPERTY_COLLECTION
+      resources_endpoint: SKIP_UNSUPPORTED_ACTUAL_APPLICATION_JSON
+      canonical_endpoint: SKIP_UNSUPPORTED_ACTUAL_APPLICATION_JSON
+      collections: FAIL_NO_PROPERTY_COLLECTION
+    interpretation: >-
+      The failures and skips are honestly recorded as local-IUT limitations or
+      nonconformance; the evidence does not overstate a green conformance result.
+  api_common_sabotage:
+    total: 220
+    passed: 2
+    failed: 10
+    skipped: 208
+    property_setup_and_methods: SKIP_DUE_TO_API_COMMON_CONFIGURATION_SKIP
+    property_methods_executed: false
+    causality_verified: true
+  hygiene:
+    recognized_requests: 125
+    iut_get_requests: 120
+    iut_write_requests: 0
+    credential_leaks: 0
+    credential_integration_gate: PASS
+    credential_e2e_gate: PASS
+    unmasked_credential_occurrences: 0
+  scope_integrity:
+    osh_source_modified: false
+    teamengine_base_modified: false
+    osh_mount_read_only: true
+    expensive_docker_gates_rerun_by_reviewer: false
+    reason_not_rerun: Existing artifacts were internally consistent and revealed no concrete blocker requiring reproduction.
+  consistency:
+    sensorml_property_schema_claimed_exact: false
+    sensorml_property_schema_status: candidate_only
+    specs_code_docs_consistent: true
+    e2e_totals_consistent: true
+
+verified_strengths:
+  - The pinned release contains exactly the four reviewed Property procedures, and each has one exact mapping.
+  - The deployed class declares exactly four independent alwaysRun methods and stores only immutable API-root state.
+  - API Common is the direct prerequisite; System is not introduced as an unrelated blocker.
+  - Status and actual Content-Type gates precede parsing of Property result pages.
+  - Supported pages receive complete local schema validation backed by resolver-normalized parity over the full released graph.
+  - Canonical processing validates every occurrence, enforces same-origin Property-path identity, and compares representations after canonical-link-only normalization.
+  - Expected media limitations are accumulated narrowly so earlier unsupported collections or items do not hide later inspectable defects.
+  - API Common sabotage causally blocks Property setup and all direct methods before Property endpoint execution.
+  - No executable SensorML or SWE Common conformance-suite jar is imported.
+  - Coverage evidence leaves /conf/sensorml/property-schema at candidate status rather than claiming exact closure.
+  - Primary E2E, credential, request-method, runtime, and immutability artifacts are mutually consistent and preserve non-green results.
+
+reviewer_changes:
+  implementation_modified: false
+  documentation_modified: false
+  evaluation_written: .harness/evaluations/sprint-ets-53-adversarial.yaml
+  mandatory_metrics_updated: ops/metrics.md

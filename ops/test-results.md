@@ -1,26 +1,45 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T07:02Z
+Last updated: 2026-07-28T08:11Z
 
 ## Current Sprint Evidence
 
-Sprint 53 Part 1 Property Definitions planning baseline:
+Sprint 53 Part 1 Property Definitions direct ATS:
 
-- Released source `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
-  defines four `/conf/property` procedures and direct `/conf/api-common`
-  inheritance.
-- Baseline coverage is
-  `240 total / 35 exact / 2 helper / 133 candidate / 70 unmapped`;
-  `/conf/property` is `0/4 exact`; deployed suite methods are 220.
-- Local OSH `GET /properties` with `Accept: application/sml+json` returns HTTP
-  200, actual `application/json`, and empty `items`.
-- Local OSH `GET /collections` advertises no exact
-  `itemType=sosa:Property` collection.
-- Expected released-procedure outcomes are two unsupported-media SKIPs, one
-  missing-collection FAIL, and one missing-evidence canonical SKIP.
-- Baseline record:
-  `ops/test-results/sprint-ets-53-local-osh-baseline-2026-07-28.md`.
-- Implementation and verification remain pending.
+- Four released `/conf/property` procedures have reviewed exact mappings.
+  Coverage is `240 total / 39 exact / 2 helper / 130 candidate / 69 unmapped`;
+  `/conf/property` is `4/4 exact`; deployed suite methods remain 220.
+- Test-first compilation has the expected 39 missing production symbols.
+  Focused Docker Maven is `95/0/0/0`; full Docker Maven is `525/0/0/3`, with
+  three unchanged historical harness skips.
+- Controlled HTTP has nine tests covering all four positive procedures and
+  media, schema, metadata, canonical, pagination, completeness, isolation, and
+  dependency behavior.
+- Released-source inventory reproduction passes at
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+- Resolver-normalized Property schema parity passes for three entry schemas
+  and 53 transitive schemas with zero semantic or graph mismatches.
+- Exact image `sha256:80ca0a313...2bb0` passes TeamEngine provenance,
+  deployed SWE Common adapter, collision, immutable-base, runtime, and
+  confidential-context gates.
+- Primary unmodified local OSH TeamEngine is honestly `220/40/7/173`.
+  Property outcomes are one missing-collection FAIL and three unsupported
+  media or missing-evidence SKIPs.
+- Core sabotage causes API Common configuration and tests to skip; all four
+  Property methods then skip before Property endpoint access.
+- Primary hygiene recognizes 120 IUT GETs, zero writes, and zero credential
+  leaks.
+- Credential integration and wire E2E pass with zero unmasked artifact hits,
+  35 masked events, and 35 intact synthetic transmissions.
+- OSH remains clean at `4c87a65`, with `/opt/osh` read-only. No OSH or
+  TeamEngine modification.
+- Raze is `APPROVE_WITH_CONCERNS` at confidence `0.98`, with no required
+  fixes. Two LOW future-hardening concerns cover parity-checkout provenance and
+  dedicated Property pagination/later-item fixtures.
+- Raze evidence:
+  `.harness/evaluations/sprint-ets-53-adversarial.yaml`.
+- Verification summary:
+  `ops/test-results/sprint-ets-53-part1-property-definitions-verification-2026-07-28.md`.
 
 ---
 

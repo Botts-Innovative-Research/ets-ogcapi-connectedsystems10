@@ -2,7 +2,7 @@
 
 ## Status
 
-IN PROGRESS
+COMPLETE
 
 ## User Instruction
 
@@ -36,33 +36,33 @@ implementations of all four released OGC 23-001 `/conf/property` procedures.
 - [x] CP-013, this story, contract, capability requirement/scenarios, design,
   architecture, traceability, epic, and baseline define the increment before
   code.
-- [ ] Exactly four deployed methods implement the four released procedures.
-- [ ] Every procedure retrieves only its own evidence and has no method
+- [x] Exactly four deployed methods implement the four released procedures.
+- [x] Every procedure retrieves only its own evidence and has no method
   dependency.
-- [ ] Every page is status/media gated before parsing and traversed with
+- [x] Every page is status/media gated before parsing and traversed with
   bounded same-origin pagination.
-- [ ] Supported Property endpoint pages pass the released SensorML Property
+- [x] Supported Property endpoint pages pass the released SensorML Property
   collection schema.
-- [ ] The release's undefined `{sensorml-mediatype}` token is explicitly
+- [x] The release's undefined `{sensorml-mediatype}` token is explicitly
   interpreted as `application/sml+json`.
-- [ ] Resolver-normalized bundled Property schemas prove semantic and
+- [x] Resolver-normalized bundled Property schemas prove semantic and
   transitive-reference parity with the pinned release.
-- [ ] Every advertised `sosa:Property` collection has a non-empty ID and a
+- [x] Every advertised `sosa:Property` collection has a non-empty ID and a
   supported items representation or produces an explicit evidence SKIP.
-- [ ] Every supported collection item has a same-origin canonical Property URL
+- [x] Every supported collection item has a same-origin canonical Property URL
   and equivalent dereferenced content.
-- [ ] API Common prerequisite failures cascade before Property IUT access;
+- [x] API Common prerequisite failures cascade before Property IUT access;
   System and unrelated siblings cannot block the class.
-- [ ] SensorML validation remains behind the ETS-owned replaceable adapter
+- [x] SensorML validation remains behind the ETS-owned replaceable adapter
   boundary, does not import the executable SensorML suite jar, and does not
   claim closure of `/conf/sensorml/property-schema`.
-- [ ] All four methods have reviewed exact ATS mappings.
-- [ ] Focused/full Maven, coverage audit, local OSH TeamEngine E2E, controlled
+- [x] All four methods have reviewed exact ATS mappings.
+- [x] Focused/full Maven, coverage audit, local OSH TeamEngine E2E, controlled
   HTTP, exact-image runtime, dependency, credential, and artifact-hygiene gates
   are archived.
-- [ ] Local OSH unsupported media and missing Property collection remain
+- [x] Local OSH unsupported media and missing Property collection remain
   visible and are not repaired through OSH or TeamEngine changes.
-- [ ] Raze reports no unresolved required findings.
+- [x] Raze reports no unresolved required findings.
 
 ## Baseline
 
@@ -77,4 +77,7 @@ implementations of all four released OGC 23-001 `/conf/property` procedures.
 
 ## Completion Evidence
 
-Pending implementation and verification.
+Implementation and verification are complete. Evidence is recorded in
+`ops/test-results/sprint-ets-53-part1-property-definitions-verification-2026-07-28.md`.
+Raze returned `APPROVE_WITH_CONCERNS` at confidence `0.98`, with two LOW
+non-blocking hardening concerns and no required fixes.

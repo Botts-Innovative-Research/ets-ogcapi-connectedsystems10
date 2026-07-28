@@ -2275,9 +2275,9 @@ fail or SKIP according to the released procedure.
 
 #### REQ-ETS-PART1-008: Property Definitions Conformance Class (`/conf/property`)
 - **Priority**: MUST
-- **Status**: SPECIFIED_RELEASED_ATS (Sprint 53 replaces the historical
+- **Status**: IMPLEMENTED_RELEASED_ATS (Sprint 53 replaces the historical
   four-method approximation with all four released `/conf/property`
-  procedures; implementation and verification pending).
+  procedures. All gates are complete).
 - **Description**: The ETS SHALL implement exactly the four released OGC
   23-001 Annex A `/conf/property` procedures: `/canonical-url`,
   `/resources-endpoint`, `/canonical-endpoint`, and `/collections`. Each
@@ -2341,6 +2341,18 @@ fail or SKIP according to the released procedure.
   exact-image runtime, controlled read-only HTTP, unmodified-local-OSH
   TeamEngine, API Common dependency, credential, artifact-hygiene, and
   adversarial gates SHALL complete before this status is promoted.
+- **Implementation evidence**: Exactly four independent deployed methods now
+  hold reviewed exact mappings. Focused Maven is `95/0/0/0`; full Maven is
+  `525/0/0/3` with three unchanged historical harness skips. Coverage is
+  `240/39 exact/2 helper/130 candidate/69 unmapped`, including
+  `/conf/property` at `4/4 exact`. Normalized parity passes for three Property
+  entry schemas and 53 transitive schemas with zero semantic or graph
+  mismatches. Exact-image runtime, dependency sabotage, credential, and
+  zero-write/zero-leak hygiene gates pass. Primary unmodified local OSH
+  TeamEngine is honestly `220/40/7/173`: all four Property methods appear as
+  one missing-collection FAIL and three evidence SKIPs. This evidence does not
+  close `/conf/sensorml/property-schema`. Raze returned
+  `APPROVE_WITH_CONCERNS` at confidence `0.98`, with no required fixes.
 - **Maps to**: PRD FR-ETS-18.
 
 #### SCENARIO-ETS-PART1-008-RELEASED-CANONICAL-URL-001 (CRITICAL)

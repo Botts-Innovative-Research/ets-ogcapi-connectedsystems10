@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T07:02Z
+Last updated: 2026-07-28T08:11Z
 
 ## Fresh-Session Entry Point
 
@@ -81,38 +81,50 @@ Read these first:
 - `openspec/change-proposals/CP-013-part1-property-definitions-closure.md`
 - `epics/stories/s-ets-53-01-part1-property-definitions-closure.md`
 - `.harness/contracts/sprint-ets-53.yaml`
+- `.harness/evaluations/sprint-ets-53-adversarial.yaml`
 - `ops/test-results/sprint-ets-53-local-osh-baseline-2026-07-28.md`
+- `ops/test-results/sprint-ets-53-part1-property-definitions-verification-2026-07-28.md`
 
 ## Session Handoff - Part 1 Property Definitions Direct ATS
 
-S-ETS-53-01 is in progress under CP-013.
+S-ETS-53-01 is complete under CP-013. Raze returned
+`APPROVE_WITH_CONCERNS` at confidence `0.98`, with no required fixes.
 
-- Released OGC 23-001 defines exactly four `/conf/property` procedures:
-  canonical URL, resources endpoint, canonical endpoint, and collections.
-- Released inheritance is API Common directly. The historical System
-  dependency and dependency-tracer method must be removed.
-- Planned implementation has exactly four independent `alwaysRun` methods,
-  immutable API-root setup, bounded same-origin traversal, actual-media gating,
-  and narrow aggregate evidence SKIPs.
-- `PropertyDefinitionsSupport` owns exact `sosa:Property` collection selection,
-  SensorML Property collection schema validation, canonical identity, and
-  canonical content normalization.
-- The support class is the replaceable SensorML validator adapter. A future
-  reusable FCU-GIS-Luke library may replace adapter internals; the executable
-  `ets-sensorml30` suite jar is not imported.
-- Baseline coverage remains
-  `240/35 exact/2 helper/133 candidate/70 unmapped`; `/conf/property` is `0/4`
-  exact.
-- Local OSH `/properties` returns HTTP 200 generic `application/json` with
-  empty `items`, even when SensorML is requested. `/collections` advertises no
-  `itemType=sosa:Property` collection.
-- Expected local outcomes are two endpoint media SKIPs, one collections FAIL,
-  and one canonical evidence SKIP. Controlled read-only HTTP fixtures must
-  prove all positive paths.
-- OSH `/opt/osh` remains mounted read-only. No OSH or TeamEngine source or
-  binary changes and no hosted CI.
-- Next action: write requirement-linked tests, capture the red gate, then
-  implement the four released procedures.
+- Coverage is `240 total / 39 exact / 2 helper / 130 candidate / 69 unmapped`;
+  `/conf/property` is `4/4 exact`; the deployed suite remains 220 methods.
+- Exactly four independent methods implement canonical URL, resources
+  endpoint, canonical endpoint, and collections.
+- Released inheritance is direct API Common. Core sabotage causes API Common
+  setup and all four Property methods to SKIP before Property endpoint access;
+  System and sibling outcomes are not blockers.
+- `PropertyDefinitionsSupport` owns exact `sosa:Property` selection, SensorML
+  Property collection schema validation, canonical identity, and canonical
+  content normalization.
+- The adapter boundary remains replaceable by FCU-GIS-Luke's future reusable
+  SensorML library. No `ets-sensorml30` executable suite jar is imported, and
+  `/conf/sensorml/property-schema` remains unclaimed.
+- Resolver-normalized parity passes for three Property entry schemas and 53
+  transitive schemas with zero semantic or graph mismatches.
+- Test-first evidence has 39 expected missing-symbol errors. Focused Maven is
+  `95/0/0/0`; full Maven is `525/0/0/3` with three historical harness skips.
+- Exact image `sha256:80ca0a313...2bb0` passes TeamEngine provenance,
+  immutable-base, adapter, dependency, runtime, and context-hygiene checks.
+- Primary unmodified local OSH TeamEngine is honestly `220/40/7/173`. Property
+  outcomes are one missing-collection FAIL and three unsupported-media or
+  missing-evidence SKIPs.
+- Controlled HTTP covers every positive procedure and key fail-closed branch.
+  Credential gates pass with zero unmasked artifact hits, 35 masked events,
+  and 35 intact synthetic transmissions.
+- Primary hygiene records 120 IUT GETs, zero writes, and zero leaks. OSH is
+  clean at `4c87a65`, `/opt/osh` is read-only, and no TeamEngine container
+  remains.
+- No OSH or TeamEngine source or binary was modified; hosted CI remains out of
+  scope.
+- Raze's two LOW concerns are retained for future hardening: make schema-parity
+  checkout provenance fail closed, and add dedicated Property pagination and
+  later-item continuation fixtures.
+- Next action: commit and push Sprint 53, then select the next released ATS
+  closure from the remaining candidate/unmapped inventory.
 
 ## Session Handoff - Part 1 Sampling Features Direct ATS
 

@@ -10,7 +10,7 @@
 - `REQ-ETS-COVERAGE-001`
 - `REQ-ETS-VALIDATOR-001`
 
-**Status**: Accepted
+**Status**: Implemented
 
 ## Motivation
 

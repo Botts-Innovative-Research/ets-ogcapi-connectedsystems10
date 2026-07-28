@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T07:02Z
+Last updated: 2026-07-28T08:11Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,12 +14,20 @@ Last updated: 2026-07-28T07:02Z
 
 ## Active Issues
 
+- Sprint 53 Raze left two LOW non-blocking hardening concerns. The Property
+  schema parity script records the pinned source commit but does not itself
+  fail on a mismatched or dirty checkout; the reviewed run was independently
+  verified clean at the pinned commit. Property-specific HTTP fixtures also
+  rely on shared traversal tests for pagination and later-item continuation.
+  Neither concern invalidates the current `4/4 exact` result.
 - Local OSH declares Part 1 `/conf/property`, but `/properties` returns
   `application/json` with empty `items` even when SensorML is requested, and
   `/collections` advertises no `itemType=sosa:Property` collection. Sprint 53
-  must preserve two endpoint evidence SKIPs, one canonical evidence SKIP, and
-  one genuine collections FAIL. Do not patch OSH or weaken the ETS; controlled
-  read-only HTTP provides positive SensorML Property evidence.
+  preserves two endpoint evidence SKIPs, one canonical evidence SKIP, and one
+  genuine collections FAIL in the `220/40/7/173` primary run. Do not patch OSH
+  or weaken the ETS; controlled read-only HTTP supplies positive SensorML
+  Property procedure evidence. This remains an IUT interoperability
+  limitation, not an ETS implementation gap.
 - Local OSH declares Part 1 `/conf/sf`, but `/samplingFeatures` returns
   `application/json` even when GeoJSON is requested, and `/collections`
   advertises `featureType=featureOfInterest` rather than exact `sosa:Sample`.

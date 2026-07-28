@@ -2,6 +2,45 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-28 - Part 1 GeoJSON implementation and technical gates
+
+**Triggered by user instruction**: execute the recommended next project step
+continuously through completion.
+
+- Replaced thirteen historical GeoJSON approximations with twelve independent
+  methods matching every released `/conf/geojson` procedure.
+- Added `GeoJsonSupport` for non-mutating JSON/YAML OpenAPI inspection,
+  canonical traversal, strict actual-media gates, released schemas, mapping
+  tables, and association relation validation.
+- Changed GeoJSON inheritance from historical System to direct API Common and
+  proved pre-IUT cascade through API Common sabotage.
+- Added resolver-normalized pinned-source parity for eight GeoJSON entry
+  schemas and 20 transitive schemas. Hardened Property parity provenance and
+  added its pagination and later-evidence carryover regressions.
+- Promoted all twelve GeoJSON mappings to exact. Coverage is
+  `240/51 exact/2 helper/119 candidate/68 unmapped`.
+- Test-first evidence includes the expected missing-symbol compile red and a
+  later `9/1/0/0` discovery-media regression red. Final focused Maven is
+  `45/0/0/0`; full Maven is `548/0/0/3`.
+- Built exact image `sha256:9277fe99e6c...245c19` and ran Dockerized
+  TeamEngine against unmodified local OSH. The honest result is
+  `219/40/7/172`; all twelve GeoJSON methods SKIP at actual-media or
+  API-definition evidence boundaries.
+- Controlled HTTP, runtime, dependency, credential, and artifact-hygiene gates
+  pass. Hygiene records 145 IUT GETs, zero writes, and zero leaks.
+- Kept local OSH's valid discovery JSON labeled `Content-Type: auto` visible
+  through a narrow discovery parser exception without weakening canonical
+  GeoJSON media gates.
+- OSH remains clean at `4c87a65` with `/opt/osh` read-only. No OSH or
+  TeamEngine source or binary was modified; no hosted CI was added.
+- Reconciled OpenSpec, architecture, traceability, CP-014, story, contract,
+  epic, status, changelog, known issues, and verification records.
+- Initial Raze found documentation-state, positive-IUT scope, raw test-first,
+  and baseline-attribution gaps. Raw red gates and method-for-method baseline
+  evidence were archived; the positive-IUT demand was rejected as outside the
+  accepted immutable-IUT/honest-SKIP contract. Final Raze is `APPROVE 0.99`;
+  all four findings are closed with no required fixes.
+
 ## 2026-07-28 - Part 1 GeoJSON planning and baseline
 
 **Triggered by user instruction**: execute the recommended next project step.

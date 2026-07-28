@@ -1,6 +1,6 @@
 # Product Requirements Document — OGC API CS API TeamEngine ETS
 
-> Version: 2.1.1 | Status: Living Document | Last updated: 2026-07-28
+> Version: 2.2.1 | Status: Living Document | Last updated: 2026-07-28
 >
 > **Supersedes v1.1 (2026-03-31).** v1.1 framed the deliverable as a Next.js/TypeScript web application
 > for ad-hoc CS API conformance assessment. The user pivoted on 2026-04-27 to a certification-track
@@ -278,3 +278,4 @@ the matrix at the bottom of `_bmad/traceability.md` (v1.0 frozen section).
 | 2026-07-28 | 2.1 | Recorded released Property Definitions inheritance and replaceable SensorML validator boundary under existing FR-ETS-18/24/26. | CP-013 and Sprint 53 planning |
 | 2026-07-28 | 2.1.1 | Recorded four exact Property Definitions procedures, normalized 53-schema parity, direct API Common cascade, and honest local-OSH E2E under existing FR-ETS-18/24/26. | CP-013 and Sprint 53 implementation |
 | 2026-07-28 | 2.2 | Planned twelve direct GeoJSON procedures, non-mutating JSON/YAML OpenAPI media inspection, complete released schema/mapping coverage, direct API Common inheritance, and pinned clean-checkout parity under existing FR-ETS-22/24/26. | CP-014 and Sprint 54 planning |
+| 2026-07-28 | 2.2.1 | Recorded twelve exact GeoJSON procedures, strict representation media gates, normalized 20-schema parity, direct API Common cascade, and honest unmodified-local-OSH E2E under existing FR-ETS-22/24/26. | CP-014 and Sprint 54 implementation |

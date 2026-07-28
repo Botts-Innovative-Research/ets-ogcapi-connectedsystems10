@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-012`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Approved for implementation
+**Status**: Implemented and verified
 
 ## Motivation
 

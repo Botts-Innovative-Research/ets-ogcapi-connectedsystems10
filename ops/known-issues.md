@@ -14,17 +14,15 @@ Last updated: 2026-07-28T08:11Z
 
 ## Active Issues
 
-- Sprint 53 Raze left two LOW non-blocking hardening concerns. The Property
-  schema parity script records the pinned source commit but does not itself
-  fail on a mismatched or dirty checkout; the reviewed run was independently
-  verified clean at the pinned commit. Property-specific HTTP fixtures also
-  rely on shared traversal tests for pagination and later-item continuation.
-  Neither concern invalidates the current `4/4 exact` result.
+- Sprint 54 closes both LOW Sprint 53 hardening concerns. Property schema
+  parity now fails closed on wrong-commit or dirty source checkouts, and
+  Property-specific controlled HTTP regressions cover pagination and
+  continuation after later collection or item limitations.
 - Local OSH declares Part 1 `/conf/property`, but `/properties` returns
   `application/json` with empty `items` even when SensorML is requested, and
   `/collections` advertises no `itemType=sosa:Property` collection. Sprint 53
   preserves two endpoint evidence SKIPs, one canonical evidence SKIP, and one
-  genuine collections FAIL in the `220/40/7/173` primary run. Do not patch OSH
+  genuine collections FAIL in the current `219/40/7/172` primary run. Do not patch OSH
   or weaken the ETS; controlled read-only HTTP supplies positive SensorML
   Property procedure evidence. This remains an IUT interoperability
   limitation, not an ETS implementation gap.
@@ -37,7 +35,13 @@ Last updated: 2026-07-28T08:11Z
   unmodified IUT exposing the released metadata and GeoJSON representation.
   Controlled HTTP covers the nested GeoJSON schema branch that this generic
   JSON local-OSH response cannot exercise.
-- GeoJSON is PARTIAL-IMPLEMENTED only. Sprint 19 adds safety-gated `mediatype-write` coverage with positive system-resource evidence against a local OSH mutable IUT, but full GeoJSON remains open for positive relation-types evidence where non-system resources expose links-member associations, property GeoJSON mapping, non-system mutation-side encoding coverage, and future stricter schema validation.
+- GeoJSON is `12/12 exact` after Sprint 54. The released write-media procedure
+  is non-mutating OpenAPI inspection, not the historical safety-gated
+  lifecycle. Local OSH still returns generic `application/json` for canonical
+  resources and exposes unusable API-definition evidence, so all twelve
+  procedures honestly SKIP there. Controlled HTTP supplies positive procedure
+  coverage; these fixtures and local-IUT SKIPs are not external conformance
+  certification.
 - SensorML is PARTIAL-IMPLEMENTED only. Sprint 19 adds safety-gated `mediatype-write` coverage with positive system-resource evidence against a local OSH mutable IUT. Current GeoRobotix SensorML bodies have no top-level `links` member. The Sprint 26 local OSH seedfix repaired deployment/procedure `?f=sml3` HTTP 500 responses by adding `properties.featureType` to those seeded resources; however, generated OSH deployment SensorML still lacks non-empty `deployedSystems` mapping evidence, generated deployment/procedure SensorML bodies lack JSON `links` association evidence, and local OSH `/properties` remains unpopulated. Full SensorML remains open for broader positive relation-types evidence, full SensorML 3.0 JSON Schema validation, non-system mutation-side behavior, and positive property evidence against a populated IUT.
 - Part 2 placeholder taxonomy was corrected during Sprint 25 planning and extended during Sprints 26, 27, 28, 29, 30, and 31. OpenSpec and epic ETS-03 now treat API Common as `REQ-ETS-PART2-001`, Datastreams & Observations as `REQ-ETS-PART2-002`, Control Streams & Commands as `REQ-ETS-PART2-003`, Command Feasibility as partial implemented `REQ-ETS-PART2-004`, System Events as partial implemented `REQ-ETS-PART2-005`, Advanced Filtering as partial implemented `REQ-ETS-PART2-006`, Create/Replace/Delete as partial implemented `REQ-ETS-PART2-007`, Update as partial implemented `REQ-ETS-PART2-008`, JSON Encoding as partial implemented `REQ-ETS-PART2-009`, SWE Common JSON Encoding as partial implemented `REQ-ETS-PART2-010`, SWE Common Text Encoding as partial implemented `REQ-ETS-PART2-011`, SWE Common Binary Encoding as partial implemented `REQ-ETS-PART2-012`, and remaining observation-binding placeholder as `REQ-ETS-PART2-013`. The former `/conf/system-history` placeholder is retired because OGC 23-002 Annex A does not define it; GeoRobotix's `/conf/system-history` declaration is treated as non-standard/vendor extension evidence only, and `systemhistory` is no longer treated as an OGC Part 2 collection discovery token.
 - GeoRobotix currently fails the Sprint 26 advisory public smoke with HTTP 500 responses on existing read endpoints. On 2026-05-22, direct probes returned HTTP 500 for `GET /systems/0mqcvdnfoca0`, `GET /datastreams?limit=1`, and `GET /observations?limit=2`; post-gapfix TeamEngine smoke failed `146 total / 27 passed / 5 failed / 114 skipped`. New Part 2 Create/Replace/Delete tests dependency-SKIP because `systemfeatures` does not finish successfully. This is not the accepted Sprint 26 E2E gate after the user accepted seeded local OSH as the IUT.
@@ -68,7 +72,10 @@ Last updated: 2026-07-28T08:11Z
   are genuine unmodified-IUT limitations: preserve the FAIL/SKIP evidence or
   use another unmodified conforming IUT; do not patch OSH or weaken the ETS.
 - Local OSH is the accepted Sprint 26 E2E gate and seeded mutable health target after the seedfix restored it as a clean full-suite run: `146 total / 62 passed / 0 failed / 84 skipped` on 2026-05-22 after adding Procedure/Deployment `featureType` metadata to the seeded records. It is still not evidence for out-of-scope CRD subrequirements such as non-system CRUD, cascade behavior, `text/uri-list`, or `/conf/update`. Existing Part 1 system CRD checks issued system POST/PUT/DELETE under explicit opt-in during that run; the new Part 2 lifecycle checks did not issue datastream, observation, controlstream, command, feasibility, or system-event lifecycle mutation.
-- GeoRobotix currently declares `/conf/geojson`, but `/systems` with `Accept: application/geo+json` returns `Content-Type: application/json` and a CS API `items` wrapper. Current ETS behavior is SKIP-with-reason for GeoJSON mediatype-read, FeatureCollection, and feature-mapping assertions.
+- GeoRobotix has historically declared `/conf/geojson`, but its sampled
+  canonical responses use generic `application/json`. Sprint 54's exact
+  procedures SKIP unsupported actual media per resource boundary; GeoRobotix
+  remains advisory and is not the primary development gate.
 - Sprint 9 non-blocking gate concerns remain as cleanup candidates: smoke log archival can lose the container log when Docker cleanup races `docker logs`, and future default-JSON GeoJSON FeatureCollection fallback PASS branches need clearer runtime reporting.
 
 ## Worktree Hygiene

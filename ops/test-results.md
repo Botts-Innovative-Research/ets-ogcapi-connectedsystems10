@@ -1,8 +1,41 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T08:11Z
+Last updated: 2026-07-28T14:20Z
 
 ## Current Sprint Evidence
+
+Sprint 54 Part 1 GeoJSON direct ATS:
+
+- Twelve released `/conf/geojson` procedures have reviewed exact mappings.
+  Coverage is `240 total / 51 exact / 2 helper / 119 candidate / 68 unmapped`;
+  `/conf/geojson` is `12/12 exact`.
+- Focused Docker Maven is `45/0/0/0`; full Docker Maven is `548/0/0/3`, with
+  three unchanged historical harness skips.
+- Resolver-normalized GeoJSON schema parity passes for eight entry schemas and
+  20 transitive schemas. Property parity provenance and dedicated pagination
+  and later-evidence carryovers pass.
+- Controlled HTTP executes all twelve positive procedures and key fail-closed
+  branches. API Common sabotage skips every GeoJSON method before IUT access.
+- Exact image `sha256:9277fe99e6c...245c19` passes TeamEngine provenance,
+  deployed SWE Common adapter, collision, immutable-base, runtime, and
+  confidential-context gates.
+- Primary unmodified local OSH TeamEngine is honestly `219/40/7/172`. All
+  twelve GeoJSON procedures are evidence SKIPs, not conformance passes.
+- Credential integration and wire E2E pass with zero unmasked artifact hits,
+  34 masked events, and 34 intact synthetic transmissions.
+- Hygiene recognizes 150 request entries, including 145 IUT GETs, zero writes,
+  and zero credential leaks.
+- OSH remains clean at `4c87a65`, with `/opt/osh` read-only. No OSH or
+  TeamEngine modification.
+- Initial Raze findings on documentation state, positive-IUT scope, raw red
+  evidence, and failure attribution are closed. Final Raze is `APPROVE` at
+  confidence `0.99`, with no required fixes.
+- Raze evidence:
+  `.harness/evaluations/sprint-ets-54-adversarial-final.yaml`.
+- Verification summary:
+  `ops/test-results/sprint-ets-54-part1-geojson-verification-2026-07-28.md`.
+
+---
 
 Sprint 53 Part 1 Property Definitions direct ATS:
 

@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.37 | Status: Living Document | Last reconciled: 2026-07-28 (Part 1 GeoJSON direct closure planned)
+> Version: 2.0.37 | Status: Living Document | Last reconciled: 2026-07-28 (Part 1 GeoJSON complete; Raze approved)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1305,3 +1305,26 @@ Primary TeamEngine E2E preserves unmodified local OSH's generic JSON fallback
 as explicit GeoJSON media SKIPs. Controlled read-only HTTP fixtures provide
 positive procedure evidence. OSH and TeamEngine source and binaries remain
 immutable, and project-operated hosted CI remains out of scope.
+
+The implementation matches this boundary with one narrow reconciliation:
+discovery JSON from landing, conformance, and collections endpoints tolerates
+local OSH's known `Content-Type: auto`, while actual GeoJSON representations
+remain strictly media gated. Twelve independent methods map all twelve
+released procedures exactly. Coverage is
+`240/51 exact/2 helper/119 candidate/68 unmapped`; focused Maven is
+`45/0/0/0`, and full Maven is `548/0/0/3`.
+
+Exact image
+`sha256:9277fe99e6cf4bacbee9b839ab6890e789ebeaac1e6a8de6eecd052494245c19`
+passes deployed-adapter, collision, provenance, immutable-base, runtime, and
+confidential-context checks. Unmodified local OSH TeamEngine is honestly
+`219/40/7/172`; all twelve GeoJSON methods SKIP on actual-media or
+API-definition evidence, and controlled HTTP supplies positive procedure
+coverage. API Common sabotage proves pre-IUT dependency cascade. Credential
+and hygiene gates record zero writes and leaks.
+
+Initial Raze findings on documentation state, positive-IUT scope, raw
+test-first evidence, and baseline attribution are closed. The positive-IUT
+demand was rejected as an uncontracted requirement conflicting with honest
+media validation and the immutable-IUT boundary. Final Raze is `APPROVE` at
+confidence `0.99`, with no required fixes.

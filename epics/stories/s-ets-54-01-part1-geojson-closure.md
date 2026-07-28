@@ -2,7 +2,7 @@
 
 ## Status
 
-IN PROGRESS
+COMPLETE
 
 ## User Instruction
 
@@ -36,37 +36,37 @@ all twelve released OGC 23-001 `/conf/geojson` procedures.
 - [x] CP-014, this story, contract, capability requirement/scenarios, design,
   architecture, traceability, epic, and baseline define the increment before
   code.
-- [ ] Exactly twelve deployed methods implement the twelve released procedures.
-- [ ] Every procedure retrieves only its own evidence and has no method
+- [x] Exactly twelve deployed methods implement the twelve released procedures.
+- [x] Every procedure retrieves only its own evidence and has no method
   dependency.
-- [ ] API-definition inspection accepts JSON and YAML and never mutates the IUT.
-- [ ] Every required canonical and advertised custom-collection GET operation
+- [x] API-definition inspection accepts JSON and YAML and never mutates the IUT.
+- [x] Every required canonical and advertised custom-collection GET operation
   advertises `application/geo+json`.
-- [ ] At least one canonical POST or PUT operation advertises
+- [x] At least one canonical POST or PUT operation advertises
   `application/geo+json` request content.
-- [ ] Every schema procedure validates complete single and collection
+- [x] Every schema procedure validates complete single and collection
   documents against the released schemas.
-- [ ] Every supported page is status/media gated before parsing and traversed
+- [x] Every supported page is status/media gated before parsing and traversed
   with bounded same-origin pagination.
-- [ ] Discovery JSON tolerates the inherited known `Content-Type: auto`
+- [x] Discovery JSON tolerates the inherited known `Content-Type: auto`
   behavior without weakening canonical `application/geo+json` media gates.
-- [ ] Common and resource-specific mapping checks process all inspectable
+- [x] Common and resource-specific mapping checks process all inspectable
   features without requiring absent optional associations.
-- [ ] Relation-types aggregates across all resource types and cannot PASS
+- [x] Relation-types aggregates across all resource types and cannot PASS
   without association relation evidence.
-- [ ] API Common prerequisite failures cascade before GeoJSON IUT access;
+- [x] API Common prerequisite failures cascade before GeoJSON IUT access;
   System and unrelated siblings cannot block the class.
-- [ ] All eight released entry schemas prove pinned-source semantic and
+- [x] All eight released entry schemas prove pinned-source semantic and
   transitive-reference parity.
-- [ ] Property parity provenance fails closed and dedicated Property
+- [x] Property parity provenance fails closed and dedicated Property
   pagination/later-evidence regressions pass.
-- [ ] All twelve methods have reviewed exact ATS mappings.
-- [ ] Focused/full Maven, coverage audit, local OSH TeamEngine E2E, controlled
+- [x] All twelve methods have reviewed exact ATS mappings.
+- [x] Focused/full Maven, coverage audit, local OSH TeamEngine E2E, controlled
   HTTP, exact-image runtime, dependency, credential, and artifact-hygiene gates
   are archived.
-- [ ] Local OSH generic JSON fallback remains visible and is not repaired
+- [x] Local OSH generic JSON fallback remains visible and is not repaired
   through OSH or TeamEngine changes.
-- [ ] Raze reports no unresolved required findings.
+- [x] Raze reports no unresolved required findings.
 
 ## Baseline
 
@@ -82,4 +82,12 @@ all twelve released OGC 23-001 `/conf/geojson` procedures.
 
 ## Completion Evidence
 
-Pending implementation and all mandatory gates.
+Exactly twelve methods have reviewed exact mappings, and `/conf/geojson` is
+`12/12 exact`. Focused Maven is `45/0/0/0`; full Maven is `548/0/0/3`.
+Exact-image unmodified-local-OSH TeamEngine is honestly `219/40/7/172`; all
+twelve GeoJSON methods SKIP at actual-media or API-definition evidence gates.
+Controlled HTTP, schema parity, Sprint 53 carryovers, API Common sabotage,
+runtime, credential, zero-write, and artifact-hygiene gates pass. See
+`ops/test-results/sprint-ets-54-part1-geojson-verification-2026-07-28.md`.
+Initial Raze findings are closed. Final Raze is `APPROVE` at confidence
+`0.99`, with no required fixes.

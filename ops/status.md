@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T13:12Z
+Last updated: 2026-07-28T14:20Z
 
 ## Fresh-Session Entry Point
 
@@ -87,36 +87,40 @@ Read these first:
 - `openspec/change-proposals/CP-014-part1-geojson-closure.md`
 - `epics/stories/s-ets-54-01-part1-geojson-closure.md`
 - `.harness/contracts/sprint-ets-54.yaml`
+- `.harness/evaluations/sprint-ets-54-adversarial-final.yaml`
 - `ops/test-results/sprint-ets-54-local-osh-baseline-2026-07-28.md`
+- `ops/test-results/sprint-ets-54-part1-geojson-verification-2026-07-28.md`
 
 ## Session Handoff - Part 1 GeoJSON Direct ATS
 
-S-ETS-54-01 is in progress under CP-014.
+S-ETS-54-01 is complete under CP-014. Final Raze is `APPROVE` at confidence
+`0.99`, with all four initial findings closed and no required fixes.
 
-- Pinned released Annex A defines twelve `/conf/geojson` procedures. Current
-  coverage is zero exact, eleven candidate, and one unmapped.
-- The historical thirteen methods are not one-to-one equivalents: they add two
-  non-normative tracers, mutate for mediatype-write, combine schema/mapping
-  procedures, split relation-types, and retain coupled first-item evidence.
-- Planned replacement has exactly twelve independent methods behind
-  `GeoJsonSupport`.
-- Released inheritance changes from historical System to direct API Common;
-  Core and Common remain transitive.
-- Media procedures inspect JSON or YAML `service-desc` OpenAPI metadata and
-  issue no mutation.
-- Schema procedures validate complete canonical single and collection
-  documents. Manual procedures inspect all available common mappings,
-  resource mappings, and association relations.
-- Eight released single/collection entry schemas require pinned clean-checkout
-  semantic and transitive-reference parity.
-- Both Sprint 53 LOW carryovers are in scope: fail-closed parity checkout
-  provenance and dedicated Property pagination/later-evidence tests.
-- Local OSH declares GeoJSON and OGC API Features GeoJSON but returns HTTP 200
-  `application/json` for all four canonical collections under a GeoJSON Accept
-  header. Exact schema and manual procedures must SKIP honestly.
-- No OSH or TeamEngine source or binary modification and no hosted CI.
-- Next action: write requirement-linked tests, record the expected red gate,
-  implement the twelve procedures, then run every mandatory local gate.
+- Exactly twelve independent methods implement the twelve released
+  `/conf/geojson` procedures; coverage is now
+  `240/51 exact/2 helper/119 candidate/68 unmapped`, and GeoJSON is `12/12
+  exact`.
+- `GeoJsonSupport` owns non-mutating JSON/YAML OpenAPI inspection, complete
+  schema validation, bounded traversal, common/resource mappings, and relation
+  tables.
+- Released inheritance is direct API Common. API Common sabotage skips all
+  twelve methods before GeoJSON IUT access.
+- Eight entry and 20 transitive GeoJSON schemas pass pinned clean-checkout
+  parity. Both Sprint 53 LOW carryovers are closed by tests.
+- Focused Maven is `45/0/0/0`; full Maven is `548/0/0/3`.
+- Exact image `sha256:9277fe99e6c...245c19` passes runtime, dependency,
+  adapter, provenance, immutable-base, and confidential-context gates.
+- Primary unmodified local OSH TeamEngine is honestly `219/40/7/172`. All
+  twelve GeoJSON methods SKIP at actual-media or API-definition evidence
+  boundaries; these are not conformance passes.
+- Credential and artifact gates pass with 145 IUT GETs, zero writes, and zero
+  leaks.
+- OSH source remains clean at `4c87a65`, and `/opt/osh` is read-only. No OSH
+  or TeamEngine source or binary was modified; hosted CI remains out of scope.
+- Next action: publish Sprint 54, then begin the spec-first released-ATS audit
+  for Part 1 `/conf/advanced-filtering`, the largest remaining Part 1 exact
+  coverage opportunity that does not depend on the unavailable SensorML
+  library.
 
 ## Session Handoff - Part 1 Property Definitions Direct ATS
 

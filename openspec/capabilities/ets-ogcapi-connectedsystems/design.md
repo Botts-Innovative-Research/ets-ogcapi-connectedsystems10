@@ -1848,6 +1848,25 @@ HTTP coverage provides positive JSON/YAML API-definition, schema, mapping,
 relation, pagination, and continuation evidence. No OSH or TeamEngine source
 or binary change and no hosted CI are permitted.
 
+The implemented boundary follows this design. Discovery parsing tolerates
+valid JSON bodies from landing, conformance, and collections endpoints when
+local OSH supplies the known nonstandard `Content-Type: auto`; that exception
+does not apply to canonical GeoJSON representations. Exactly twelve methods
+are deployed and all twelve have reviewed exact mappings. Coverage is
+`240/51 exact/2 helper/119 candidate/68 unmapped`; `/conf/geojson` is `12/12
+exact`. Focused Maven is `45/0/0/0`, and full Maven is `548/0/0/3`.
+
+Exact image
+`sha256:9277fe99e6cf4bacbee9b839ab6890e789ebeaac1e6a8de6eecd052494245c19`
+passes runtime, dependency, credential, and immutable-base gates. Primary
+unmodified local OSH TeamEngine is honestly `219/40/7/172`; the twelve
+GeoJSON procedures are evidence SKIPs, not conformance passes. Controlled HTTP
+executes every positive procedure and key fail-closed branch. API Common
+sabotage skips all twelve methods before GeoJSON IUT access. Credential and
+artifact-hygiene gates record zero writes and zero leaks. Final Raze review is
+`APPROVE` at confidence `0.99`; all four initial findings are closed and no
+required fixes remain.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

@@ -34,6 +34,7 @@ import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
 /**
@@ -339,7 +340,7 @@ public class GeoJsonTests {
 		URI endpoint = this.apiRoot.resolve("conformance");
 		Response response = get(endpoint, "application/json");
 		ETSAssert.assertStatus(response, 200, requirement);
-		Map<String, Object> body = parseObject(response, endpoint, requirement);
+		Map<String, Object> body = parseDiscoveryObject(response, endpoint, requirement);
 		Object value = body.get("conformsTo");
 		if (!(value instanceof List<?>)) {
 			ETSAssert.failWithUri(requirement, endpoint + " response is missing a conformsTo array.");
@@ -355,7 +356,7 @@ public class GeoJsonTests {
 	private ApiDefinition apiDefinition(String requirement) {
 		requireGeoJsonDeclaration(requirement);
 		URI landingUri = this.apiRoot;
-		Map<String, Object> landing = parseObject(getExpected200(landingUri, "application/json", requirement),
+		Map<String, Object> landing = parseDiscoveryObject(getExpected200(landingUri, "application/json", requirement),
 				landingUri, requirement);
 		Object links = landing.get("links");
 		if (!(links instanceof List<?>)) {
@@ -444,7 +445,7 @@ public class GeoJsonTests {
 			return false;
 		}
 		ETSAssert.assertStatus(response, 200, REQ_MEDIATYPE_READ);
-		Object collections = parseObject(response, endpoint, REQ_MEDIATYPE_READ).get("collections");
+		Object collections = parseDiscoveryObject(response, endpoint, REQ_MEDIATYPE_READ).get("collections");
 		if (!(collections instanceof List<?>)) {
 			ETSAssert.failWithUri(REQ_MEDIATYPE_READ, endpoint + " response is missing a collections array.");
 		}
@@ -477,14 +478,23 @@ public class GeoJsonTests {
 	}
 
 	private static Map<String, Object> parseObject(Response response, URI source, String requirement) {
+		return parseJsonObject(response, source, requirement, true);
+	}
+
+	private static Map<String, Object> parseDiscoveryObject(Response response, URI source, String requirement) {
+		return parseJsonObject(response, source, requirement, false);
+	}
+
+	private static Map<String, Object> parseJsonObject(Response response, URI source, String requirement,
+			boolean requireJsonMedia) {
 		try {
 			String mediaType = normalizeMediaType(response.getContentType());
-			if (!"application/json".equals(mediaType)
+			if (requireJsonMedia && !"application/json".equals(mediaType)
 					&& !(mediaType.startsWith("application/") && mediaType.endsWith("+json"))) {
 				ETSAssert.failWithUri(requirement,
 						source + " response is not a JSON media type: '" + response.getContentType() + "'.");
 			}
-			Map<String, Object> body = response.jsonPath().getMap("$");
+			Map<String, Object> body = JsonPath.from(response.asString()).getMap("$");
 			if (body == null) {
 				ETSAssert.failWithUri(requirement, source + " response body is not a JSON object.");
 			}

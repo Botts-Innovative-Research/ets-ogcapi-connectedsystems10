@@ -48,6 +48,8 @@ all twelve released OGC 23-001 `/conf/geojson` procedures.
   documents against the released schemas.
 - [ ] Every supported page is status/media gated before parsing and traversed
   with bounded same-origin pagination.
+- [ ] Discovery JSON tolerates the inherited known `Content-Type: auto`
+  behavior without weakening canonical `application/geo+json` media gates.
 - [ ] Common and resource-specific mapping checks process all inspectable
   features without requiring absent optional associations.
 - [ ] Relation-types aggregates across all resource types and cannot PASS

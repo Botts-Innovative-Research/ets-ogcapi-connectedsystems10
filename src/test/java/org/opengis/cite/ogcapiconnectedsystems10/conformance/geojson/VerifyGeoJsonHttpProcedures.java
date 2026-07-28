@@ -76,6 +76,20 @@ public class VerifyGeoJsonHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-012; SCENARIO-ETS-PART1-012-RELEASED-MEDIA-GATE-001.
+	 */
+	@Test
+	public void nonstandardDiscoveryMediaDoesNotWeakenGeoJsonRepresentationGate() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.AUTO_DISCOVERY_MEDIA)) {
+			server.start();
+			GeoJsonTests tests = configured(server);
+
+			tests.geoJsonMediaTypeReadIsAdvertised();
+			tests.systemGeoJsonSchemasAreValid();
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-012; SCENARIO-ETS-PART1-012-RELEASED-MEDIATYPE-READ-001.
 	 */
 	@Test
@@ -182,8 +196,8 @@ public class VerifyGeoJsonHttpProcedures {
 
 	private enum Mode {
 
-		VALID, JSON_MEDIA, MISSING_READ_MEDIA, LATER_INVALID_MAPPING, INVALID_SCHEMA, CROSS_ORIGIN_PAGINATION,
-		NO_ASSOCIATIONS, CROSS_ORIGIN_DEFINITION
+		VALID, JSON_MEDIA, AUTO_DISCOVERY_MEDIA, MISSING_READ_MEDIA, LATER_INVALID_MAPPING, INVALID_SCHEMA,
+		CROSS_ORIGIN_PAGINATION, NO_ASSOCIATIONS, CROSS_ORIGIN_DEFINITION
 
 	}
 
@@ -258,13 +272,13 @@ public class VerifyGeoJsonHttpProcedures {
 		private void landing(HttpExchange exchange) throws IOException {
 			URI definition = this.mode == Mode.CROSS_ORIGIN_DEFINITION ? this.externalDefinition
 					: apiRoot().resolve("openapi.yaml");
-			send(exchange, 200, "application/json",
+			send(exchange, 200, discoveryContentType(),
 					"{\"links\":[{\"rel\":\"service-desc\",\"type\":\"application/vnd.oai.openapi\"," + "\"href\":\""
 							+ definition + "\"}]}");
 		}
 
 		private void conformance(HttpExchange exchange) throws IOException {
-			send(exchange, 200, "application/json", """
+			send(exchange, 200, discoveryContentType(), """
 					{"conformsTo":[
 					  "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson",
 					  "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system",
@@ -276,10 +290,14 @@ public class VerifyGeoJsonHttpProcedures {
 		}
 
 		private void collections(HttpExchange exchange) throws IOException {
-			send(exchange, 200, "application/json", """
+			send(exchange, 200, discoveryContentType(), """
 					{"collections":[{"id":"custom","itemType":"feature",
 					  "links":[{"rel":"items","type":"application/geo+json","href":"%s"}]}]}
 					""".formatted(apiRoot().resolve("collections/custom/items")));
+		}
+
+		private String discoveryContentType() {
+			return this.mode == Mode.AUTO_DISCOVERY_MEDIA ? "auto" : "application/json";
 		}
 
 		private void collection(HttpExchange exchange, String type) throws IOException {

@@ -3208,6 +3208,7 @@ relation is present.
 **GIVEN** a canonical request uses `Accept: application/geo+json`
 **WHEN** the IUT returns unsupported actual media
 **THEN** the procedure records a reasoned evidence SKIP before parsing
+**AND** inherited landing-page, conformance, and collections discovery JSON remains parseable when a known non-standard media value such as `auto` is returned
 **AND** HTTP failures, invalid supported content, and unsafe pagination remain failures.
 *Maps to*: REQ-ETS-PART1-012.
 

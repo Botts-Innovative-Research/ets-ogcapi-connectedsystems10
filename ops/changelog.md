@@ -2,6 +2,27 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-28 - Part 1 Property Definitions planning and baseline
+
+**Triggered by user instruction**: continue executing accepted recommendations
+1-4 continuously.
+
+- Audited pinned OGC 23-001 Annex A and confirmed four released
+  `/conf/property` procedures versus four non-equivalent historical methods.
+- Corrected the planned inheritance from historical System to direct Part 1
+  API Common.
+- Added CP-013, S-ETS-53-01, its contract, thirteen exact scenarios, design,
+  architecture, traceability, epic, and operational baseline before code.
+- Defined an ETS-owned `PropertyDefinitionsSupport` adapter for bundled
+  SensorML Property schema validation and future replacement by a reusable
+  SensorML library. The executable `ets-sensorml30` jar remains excluded.
+- Probed unmodified local OSH: `/properties` is HTTP 200 generic
+  `application/json` with empty `items`; no collection advertises
+  `itemType=sosa:Property`.
+- Recorded expected honest local outcomes: two endpoint media SKIPs, one
+  collections FAIL, and one canonical evidence SKIP.
+- No OSH or TeamEngine source or binary modification; no hosted CI.
+
 ## 2026-07-27 - Part 1 Sampling Features implementation and Raze remediation
 
 **Triggered by user instruction**: execute accepted recommendations 1-4

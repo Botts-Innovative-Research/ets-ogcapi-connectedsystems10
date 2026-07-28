@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.34 | Status: Living Document | Last reconciled: 2026-07-27 (Part 1 Sampling Features Raze remediation and final gates)
+> Version: 2.0.35 | Status: Living Document | Last reconciled: 2026-07-28 (Part 1 Property Definitions planned architecture)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1189,3 +1189,58 @@ descendant procedures SKIP. Runtime, immutable-base, dependency, credential,
 and zero-write/zero-leak hygiene gates pass. Focused Raze recheck returns
 `APPROVE` at confidence `0.99`; both findings are closed, with no new findings
 and no required fixes.
+
+## 32. Architecture v2.0.35 - Part 1 Property Definitions procedures (2026-07-28)
+
+`PropertyDefinitionsTests` replaces four coupled historical approximations
+with the four released `/conf/property` procedures. Setup retains only the
+normalized API root. Every method independently obtains its endpoint,
+collection, or canonical-item evidence.
+
+The released Annex A class inherits `/conf/api-common`, so the dependency
+changes from the historical System chain to
+`part1apicommon -> propertydefinitions`. Core and Common remain transitive
+prerequisites. The defensive setup gate recognizes only those three inherited
+groups; System and unrelated siblings cannot block Property Definitions.
+
+`PropertyDefinitionsSupport` owns exact `itemType=sosa:Property` collection
+selection, SensorML Property collection schema dispatch, canonical same-origin
+Property path identity, comparable representation selection, and
+canonical-link content normalization.
+
+Resources and canonical endpoints use `Part1ApiCommonSupport` for bounded,
+same-origin pagination and actual-media gating. Supported
+`application/sml+json` pages are schema validated. Unsupported actual media
+warns and SKIPs before parsing. Collections process every selected collection;
+canonical validation processes every supported item and compares complete JSON
+content after canonical links are removed.
+
+The released Annex's undefined `{sensorml-mediatype}` token is interpreted as
+its defined `{sensorml-json-mediatype}` value, `application/sml+json`.
+
+Expected unsupported-media or non-comparable-representation SKIPs are retained
+at the narrow collection or item boundary while later independently
+inspectable evidence continues. Assertions, non-200 responses, unsafe
+pagination, invalid supported content, and canonical identity/content defects
+are never caught or downgraded. An aggregate SKIP is emitted only after no
+later failure is found.
+
+The support class is the ETS-owned replaceable SensorML validation boundary
+defined by the external-validator architecture. It initially validates the
+bundled released Property schema graph. A future reusable FCU-GIS-Luke
+SensorML library may replace only adapter internals after pinned-source,
+diagnostic, and parity review. The executable `ets-sensorml30` suite jar is not
+a library dependency, and external validator types do not cross into TestNG
+procedures.
+
+Bundled Property schemas are resolver-normalized rather than byte-identical:
+local `$id` values and equivalent absolute local `$ref` targets replace release
+relative references. Exact mapping promotion requires pinned-source semantic
+and transitive-reference parity for all three Property entry schemas. Reusing
+that graph closes only schema steps inside `/conf/property`; it does not map or
+close the separate `/conf/sensorml/property-schema` procedure.
+
+Primary TeamEngine E2E preserves the unmodified local OSH generic-media SKIPs
+and missing-Property-collection failure. Positive behavior is proven through a
+controlled read-only HTTP fixture. OSH and TeamEngine source and binaries
+remain immutable; project-operated hosted CI remains out of scope.

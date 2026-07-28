@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-27T10:11Z
+Last updated: 2026-07-28T07:02Z
 
 ## Fresh-Session Entry Point
 
@@ -78,6 +78,41 @@ Read these first:
 - `.harness/evaluations/sprint-ets-52-adversarial-final.yaml`
 - `.harness/evaluations/sprint-ets-52-adversarial-recheck.yaml`
 - `ops/test-results/sprint-ets-52-part1-sampling-features-verification-2026-07-27.md`
+- `openspec/change-proposals/CP-013-part1-property-definitions-closure.md`
+- `epics/stories/s-ets-53-01-part1-property-definitions-closure.md`
+- `.harness/contracts/sprint-ets-53.yaml`
+- `ops/test-results/sprint-ets-53-local-osh-baseline-2026-07-28.md`
+
+## Session Handoff - Part 1 Property Definitions Direct ATS
+
+S-ETS-53-01 is in progress under CP-013.
+
+- Released OGC 23-001 defines exactly four `/conf/property` procedures:
+  canonical URL, resources endpoint, canonical endpoint, and collections.
+- Released inheritance is API Common directly. The historical System
+  dependency and dependency-tracer method must be removed.
+- Planned implementation has exactly four independent `alwaysRun` methods,
+  immutable API-root setup, bounded same-origin traversal, actual-media gating,
+  and narrow aggregate evidence SKIPs.
+- `PropertyDefinitionsSupport` owns exact `sosa:Property` collection selection,
+  SensorML Property collection schema validation, canonical identity, and
+  canonical content normalization.
+- The support class is the replaceable SensorML validator adapter. A future
+  reusable FCU-GIS-Luke library may replace adapter internals; the executable
+  `ets-sensorml30` suite jar is not imported.
+- Baseline coverage remains
+  `240/35 exact/2 helper/133 candidate/70 unmapped`; `/conf/property` is `0/4`
+  exact.
+- Local OSH `/properties` returns HTTP 200 generic `application/json` with
+  empty `items`, even when SensorML is requested. `/collections` advertises no
+  `itemType=sosa:Property` collection.
+- Expected local outcomes are two endpoint media SKIPs, one collections FAIL,
+  and one canonical evidence SKIP. Controlled read-only HTTP fixtures must
+  prove all positive paths.
+- OSH `/opt/osh` remains mounted read-only. No OSH or TeamEngine source or
+  binary changes and no hosted CI.
+- Next action: write requirement-linked tests, capture the red gate, then
+  implement the four released procedures.
 
 ## Session Handoff - Part 1 Sampling Features Direct ATS
 
@@ -122,8 +157,7 @@ and no required fixes.
   36 masked events, and 36 intact synthetic transmissions.
 - OSH remains clean at `4c87a65`, zero commits ahead, with `/opt/osh`
   read-only. No OSH or TeamEngine source or binary was modified.
-- Next action: publish Sprint 52, then start the released Part 1 Property
-  Definitions `/conf/property` replacement.
+- Next action completed by Sprint 53 planning above.
 
 ## Session Handoff - Part 1 Subdeployment Direct ATS
 

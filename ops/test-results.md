@@ -1,8 +1,28 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-27T10:11Z
+Last updated: 2026-07-28T07:02Z
 
 ## Current Sprint Evidence
+
+Sprint 53 Part 1 Property Definitions planning baseline:
+
+- Released source `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
+  defines four `/conf/property` procedures and direct `/conf/api-common`
+  inheritance.
+- Baseline coverage is
+  `240 total / 35 exact / 2 helper / 133 candidate / 70 unmapped`;
+  `/conf/property` is `0/4 exact`; deployed suite methods are 220.
+- Local OSH `GET /properties` with `Accept: application/sml+json` returns HTTP
+  200, actual `application/json`, and empty `items`.
+- Local OSH `GET /collections` advertises no exact
+  `itemType=sosa:Property` collection.
+- Expected released-procedure outcomes are two unsupported-media SKIPs, one
+  missing-collection FAIL, and one missing-evidence canonical SKIP.
+- Baseline record:
+  `ops/test-results/sprint-ets-53-local-osh-baseline-2026-07-28.md`.
+- Implementation and verification remain pending.
+
+---
 
 Sprint 52 Part 1 Sampling Features direct ATS:
 

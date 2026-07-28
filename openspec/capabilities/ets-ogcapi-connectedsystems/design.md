@@ -1675,6 +1675,94 @@ events, and 36 intact synthetic transmissions. Focused adversarial recheck
 returns `APPROVE` at confidence `0.99`; both findings are closed, with no new
 findings and no required fixes.
 
+### Sprint 53: released Part 1 Property Definitions procedures
+
+Sprint 53 replaces the historical four-method Property Definitions
+approximation with the four released Annex A procedures.
+
+```text
+PropertyDefinitionsTests
+  |-- everyPropertyHasCanonicalUrl()
+  |-- propertyResourcesEndpointIsValid()
+  |-- canonicalPropertiesEndpointIsValid()
+  `-- propertyCollectionsAreValid()
+          |
+          v
+PropertyDefinitionsSupport
+  exact sosa:Property collection selection
+  + SensorML Property collection schema adapter
+  + canonical identity/equivalence
+          |
+          `--> Part1ApiCommonSupport bounded traversal
+```
+
+Class setup normalizes only the API root after checking Core, Common, and Part
+1 API Common outcomes. Every procedure retrieves its own evidence, uses
+`alwaysRun`, and has no method dependency. The released group chain is
+`Core/Common -> Part 1 API Common -> Property Definitions`; System and
+unrelated siblings cannot block Property Definitions.
+
+Resources and canonical endpoint procedures independently traverse their
+parameterized endpoint or `/properties`, require HTTP 200, gate actual media
+before parsing, and validate every supported `application/sml+json` page
+against the bundled released Property collection schema. Generic
+`application/json` and other unsupported representations warn and SKIP. The
+canonical endpoint does not reuse another TestNG result; it independently
+executes the parameterized procedure.
+
+The Annex source uses `{sensorml-mediatype}` without defining that token. The
+release does define `{sensorml-json-mediatype}` as `application/sml+json`;
+Sprint 53 records and tests that as the only supported Property media
+interpretation.
+
+Collection discovery requests `/collections`, selects every exact
+`itemType=sosa:Property` entry, requires at least one and a non-empty ID, and
+retrieves each items endpoint through the reviewed API Common helper. Every
+supported page is SensorML-schema validated. If a selected collection lacks a
+supported representation, later collections remain inspectable and an
+otherwise clean incomplete run ends in aggregate SKIP.
+
+Canonical URL validation processes every item from every matching collection
+whose SensorML representation is supported. Every canonical occurrence must
+resolve on the IUT origin below `/properties/` with exactly one non-empty local
+ID segment. A comparable representation is dereferenced, must return HTTP 200,
+and must equal the collection item after canonical links are removed from both
+JSON documents. An empty `links` member after removal is normalized to
+omission. Missing collections, empty item evidence, unsupported selected
+collections, or no comparable occurrence SKIP only after all later inspectable
+evidence has been processed. Missing, unsafe, wrong-target, or different
+canonical content fails.
+
+Canonical collection traversal and per-item canonical dereference catch only
+expected `SkipException` evidence limitations at narrow independent
+boundaries. Assertions, non-200 responses, unsafe pagination, invalid schema
+or metadata, and canonical identity or content defects escape immediately as
+failures. An aggregate SKIP is emitted only after no later failure is found.
+
+`PropertyDefinitionsSupport` is the ETS-owned replaceable SensorML validator
+adapter. Current implementation uses the bundled released
+`propertyCollection.json` graph. FCU-GIS-Luke's future reusable SensorML
+library can replace the adapter internals after source and diagnostic parity
+review; TestNG procedures remain unchanged. The executable
+`ets-sensorml30` suite jar is not imported as a library.
+
+The bundled Property schemas are resolver-normalized: `$id` values support
+local resolution and relative release `$ref` values are rewritten to
+equivalent absolute local URIs. A pinned-release parity gate normalizes those
+resolver-only differences and compares all three Property entry schemas plus
+their transitive reference graph before exact status is assigned. This adapter
+reuse implements schema steps inside `/conf/property`; the reviewed mapping
+inventory must not assign it to the distinct
+`/conf/sensorml/property-schema` procedure.
+
+Primary TeamEngine E2E uses unmodified local OSH. Its `/properties` endpoint
+returns HTTP 200 generic `application/json` with an empty `items` array, and
+`/collections` advertises no `sosa:Property` collection. These remain honest
+endpoint/canonical evidence SKIPs and a collections failure. Controlled
+read-only HTTP coverage supplies the positive oracle for all four methods. OSH
+and TeamEngine source and binaries remain unchanged; hosted CI remains out of
+scope.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

@@ -1,0 +1,62 @@
+sprint: ets-53
+story: S-ETS-53-01
+title: Part 1 Property Definitions direct ATS closure
+status: IN_PROGRESS
+triggered_by: "User accepted recommendations 1-4 and requested continuous execution"
+requirements:
+  - REQ-ETS-PART1-008
+  - REQ-ETS-COVERAGE-001
+  - REQ-ETS-VALIDATOR-001
+scenarios:
+  - SCENARIO-ETS-PART1-008-RELEASED-CANONICAL-URL-001
+  - SCENARIO-ETS-PART1-008-RELEASED-RESOURCES-ENDPOINT-001
+  - SCENARIO-ETS-PART1-008-RELEASED-CANONICAL-ENDPOINT-001
+  - SCENARIO-ETS-PART1-008-RELEASED-COLLECTIONS-001
+  - SCENARIO-ETS-PART1-008-RELEASED-MEDIA-GATE-001
+  - SCENARIO-ETS-PART1-008-RELEASED-SENSORML-SCHEMA-001
+  - SCENARIO-ETS-PART1-008-RELEASED-CANONICAL-EQUIVALENCE-001
+  - SCENARIO-ETS-PART1-008-RELEASED-COLLECTION-COMPLETE-001
+  - SCENARIO-ETS-PART1-008-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-008-RELEASED-DEPENDENCY-CASCADE-001
+  - SCENARIO-ETS-PART1-008-RELEASED-VALIDATOR-BOUNDARY-001
+  - SCENARIO-ETS-PART1-008-RELEASED-E2E-EXECUTION-001
+  - SCENARIO-ETS-PART1-008-RELEASED-DIRECT-HTTP-COVERAGE-001
+success_criteria:
+  - All four released Property Definitions procedures have exact reviewed mappings.
+  - Every procedure retrieves only its own evidence and has no method dependency.
+  - Every page is status and actual-media gated before parsing.
+  - Pagination is bounded, cycle-safe, and same-origin.
+  - Supported Property pages pass the released SensorML Property collection schema.
+  - The undefined released sensorml-mediatype token is interpreted as application/sml+json.
+  - Resolver-normalized bundled Property schemas prove pinned-source semantic and transitive-reference parity.
+  - At least one exact sosa:Property collection is advertised with a nonempty id.
+  - Every supported collection item has same-origin canonical identity and equivalent content.
+  - Missing collections, empty items, and unsupported representations cannot produce vacuous PASS.
+  - API Common prerequisite failures cascade before Property IUT access.
+  - System and unrelated sibling configurations cannot block Property Definitions.
+  - SensorML validation remains behind an ETS-owned replaceable adapter boundary.
+  - Reused schema validation does not claim closure of /conf/sensorml/property-schema.
+  - Focused and full Maven verification completes.
+  - TeamEngine deploys every changed method against the primary unmodified local OSH IUT.
+  - Local OSH conformance failures and evidence SKIPs remain visible and unmodified.
+  - Controlled HTTP coverage executes successful positive paths for all four methods.
+  - Exact-image runtime, credential, dependency, and artifact-hygiene gates complete.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not import ets-sensorml30 or expose external validator types to TestNG procedures.
+verification:
+  test_first: PENDING
+  focused_maven: PENDING
+  full_maven: PENDING
+  coverage_audit: PENDING
+  property_schema_parity: PENDING
+  local_osh_teamengine: PENDING
+  controlled_http: PENDING
+  exact_image: PENDING
+  dependency_sabotage: PENDING
+  credential_gates: PENDING
+  artifact_hygiene: PENDING
+  raze: PENDING

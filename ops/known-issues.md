@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-27T10:11Z
+Last updated: 2026-07-28T07:02Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,6 +14,12 @@ Last updated: 2026-07-27T10:11Z
 
 ## Active Issues
 
+- Local OSH declares Part 1 `/conf/property`, but `/properties` returns
+  `application/json` with empty `items` even when SensorML is requested, and
+  `/collections` advertises no `itemType=sosa:Property` collection. Sprint 53
+  must preserve two endpoint evidence SKIPs, one canonical evidence SKIP, and
+  one genuine collections FAIL. Do not patch OSH or weaken the ETS; controlled
+  read-only HTTP provides positive SensorML Property evidence.
 - Local OSH declares Part 1 `/conf/sf`, but `/samplingFeatures` returns
   `application/json` even when GeoJSON is requested, and `/collections`
   advertises `featureType=featureOfInterest` rather than exact `sosa:Sample`.

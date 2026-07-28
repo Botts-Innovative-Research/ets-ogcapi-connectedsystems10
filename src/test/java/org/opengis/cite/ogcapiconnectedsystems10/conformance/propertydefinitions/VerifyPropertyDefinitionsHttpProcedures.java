@@ -162,10 +162,42 @@ public class VerifyPropertyDefinitionsHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-008; SCENARIO-ETS-PART1-008-RELEASED-COLLECTION-COMPLETE-001;
+	 * SCENARIO-ETS-PART1-012-S53-HARDENING-001.
+	 */
+	@Test
+	public void invalidSecondPaginationPageCannotBeHiddenByValidFirstPage() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.PAGINATED_INVALID)) {
+			server.start();
+			PropertyDefinitionsTests tests = new PropertyDefinitionsTests();
+			tests.configure(server.apiRoot());
+
+			assertThrows(AssertionError.class, tests::propertyResourcesEndpointIsValid);
+			assertTrue(server.calls("/api/properties?page=2") >= 1);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-008; SCENARIO-ETS-PART1-008-RELEASED-COLLECTION-COMPLETE-001;
+	 * SCENARIO-ETS-PART1-012-S53-HARDENING-001.
+	 */
+	@Test
+	public void laterItemCanonicalDifferenceCannotBeHiddenByValidFirstItem() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.LATER_ITEM_DIFFERENCE)) {
+			server.start();
+			PropertyDefinitionsTests tests = new PropertyDefinitionsTests();
+			tests.configure(server.apiRoot());
+
+			assertThrows(AssertionError.class, tests::everyPropertyHasCanonicalUrl);
+			assertTrue(server.calls("/api/properties/property-2") >= 1);
+		}
+	}
+
 	private enum Mode {
 
 		VALID, NO_COLLECTIONS, UNSUPPORTED_ENDPOINT, INVALID_SCHEMA, CANONICAL_DIFFERENCE, UNSUPPORTED_CANONICAL_FIRST,
-		CANONICAL_OMITS_LINKS, MEDIA_THEN_INVALID_COLLECTION, EMPTY_ITEMS
+		CANONICAL_OMITS_LINKS, MEDIA_THEN_INVALID_COLLECTION, EMPTY_ITEMS, PAGINATED_INVALID, LATER_ITEM_DIFFERENCE
 
 	}
 
@@ -200,6 +232,12 @@ public class VerifyPropertyDefinitionsHttpProcedures {
 		private void handle(HttpExchange exchange) throws IOException {
 			String path = exchange.getRequestURI().getPath();
 			this.calls.computeIfAbsent(path, ignored -> new AtomicInteger()).incrementAndGet();
+			if (exchange.getRequestURI().getRawQuery() != null) {
+				this.calls
+					.computeIfAbsent(path + "?" + exchange.getRequestURI().getRawQuery(),
+							ignored -> new AtomicInteger())
+					.incrementAndGet();
+			}
 			switch (path) {
 				case "/api/collections" -> collections(exchange);
 				case "/api/collections/properties/items" -> propertyItems(exchange, false);
@@ -207,7 +245,7 @@ public class VerifyPropertyDefinitionsHttpProcedures {
 					send(exchange, 200, "application/json", "deliberately-not-json");
 				case "/api/collections/invalid/items" -> propertyItems(exchange, true);
 				case "/api/properties" -> properties(exchange);
-				case "/api/properties/property-1" -> canonicalProperty(exchange);
+				case "/api/properties/property-1", "/api/properties/property-2" -> canonicalProperty(exchange);
 				default -> send(exchange, 404, "application/json", "{}");
 			}
 		}
@@ -242,6 +280,17 @@ public class VerifyPropertyDefinitionsHttpProcedures {
 				send(exchange, 200, "application/json", "deliberately-not-json");
 				return;
 			}
+			if (this.mode == Mode.PAGINATED_INVALID) {
+				if ("page=2".equals(exchange.getRequestURI().getRawQuery())) {
+					send(exchange, 200, "application/sml+json", "{\"items\":[" + invalidProperty() + "]}");
+				}
+				else {
+					send(exchange, 200, "application/sml+json",
+							"{\"items\":[" + property() + "],\"links\":[{\"rel\":\"next\",\"href\":\""
+									+ apiRoot().resolve("properties?page=2") + "\"}]}");
+				}
+				return;
+			}
 			propertyItems(exchange, this.mode == Mode.INVALID_SCHEMA);
 		}
 
@@ -252,7 +301,15 @@ public class VerifyPropertyDefinitionsHttpProcedures {
 			}
 			String property = invalid || this.mode == Mode.INVALID_SCHEMA
 					|| this.mode == Mode.MEDIA_THEN_INVALID_COLLECTION ? invalidProperty() : property();
-			send(exchange, 200, "application/sml+json", "{\"items\":[" + property + "]}");
+			if (this.mode == Mode.LATER_ITEM_DIFFERENCE) {
+				String second = property().replace("urn:example:property:temperature", "urn:example:property:humidity")
+					.replace("Temperature", "Humidity")
+					.replace("property-1", "property-2");
+				send(exchange, 200, "application/sml+json", "{\"items\":[" + property + "," + second + "]}");
+			}
+			else {
+				send(exchange, 200, "application/sml+json", "{\"items\":[" + property + "]}");
+			}
 		}
 
 		private void canonicalProperty(HttpExchange exchange) throws IOException {
@@ -260,9 +317,14 @@ public class VerifyPropertyDefinitionsHttpProcedures {
 				send(exchange, 200, "text/html", "<html><body>Temperature</body></html>");
 				return;
 			}
-			String property = this.mode == Mode.CANONICAL_DIFFERENCE
-					? propertyWithoutLinks().replace("\"Temperature\"", "\"Changed Temperature\"")
-					: this.mode == Mode.CANONICAL_OMITS_LINKS ? propertyWithoutLinks() : property();
+			String property = this.mode == Mode.LATER_ITEM_DIFFERENCE
+					&& exchange.getRequestURI().getPath().endsWith("property-2")
+							? propertyWithoutLinks()
+								.replace("urn:example:property:temperature", "urn:example:property:humidity")
+								.replace("Temperature", "Changed Humidity")
+							: this.mode == Mode.CANONICAL_DIFFERENCE
+									? propertyWithoutLinks().replace("\"Temperature\"", "\"Changed Temperature\"")
+									: this.mode == Mode.CANONICAL_OMITS_LINKS ? propertyWithoutLinks() : property();
 			send(exchange, 200, "application/sml+json", property);
 		}
 

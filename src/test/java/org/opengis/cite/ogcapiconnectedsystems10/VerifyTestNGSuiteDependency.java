@@ -93,8 +93,7 @@ public class VerifyTestNGSuiteDependency {
 	private static final String SUBDEPLOYMENTS_GROUP = "subdeployments";
 
 	/**
-	 * Sprint 9 S-ETS-09-01 — GeoJSON systems read-only subset group (depends on
-	 * SystemFeatures).
+	 * Sprint 54 S-ETS-54-01 - released GeoJSON inherits API Common directly.
 	 */
 	private static final String GEOJSON_GROUP = "geojson";
 
@@ -1057,18 +1056,14 @@ public class VerifyTestNGSuiteDependency {
 				+ "S-ETS-49-01.", coAlloc);
 	}
 
-	// ===== Sprint 9 S-ETS-09-01 — GeoJSON group =====
-	// GeoJSON systems read-only subset depends on SystemFeatures because it validates
-	// /systems GeoJSON encoding. This is intentionally a PARTIAL implementation of
-	// REQ-ETS-PART1-012.
+	// ===== Sprint 54 S-ETS-54-01 - released GeoJSON group =====
 
 	/**
-	 * Sprint 9 S-ETS-09-01 (REQ-ETS-PART1-012): the canonical testng.xml SHALL declare
-	 * {@code <group name="geojson" depends-on="systemfeatures"/>} so GeoJSON tests
-	 * cascade-SKIP when the SystemFeatures prerequisite fails.
+	 * Sprint 54 S-ETS-54-01 (REQ-ETS-PART1-012): released GeoJSON inherits Part 1 API
+	 * Common directly.
 	 */
 	@org.junit.Test
-	public void testGeoJsonGroupDependsOnSystemFeatures() throws Exception {
+	public void testGeoJsonGroupDependsOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -1079,14 +1074,15 @@ public class VerifyTestNGSuiteDependency {
 				String dependsOn = deps.get(GEOJSON_GROUP);
 				assertNotNull("group '" + GEOJSON_GROUP + "' has null depends-on attribute", dependsOn);
 				assertTrue("group '" + GEOJSON_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+						+ PART1_API_COMMON_GROUP + "'", dependsOn.contains(PART1_API_COMMON_GROUP));
+				assertFalse("released GeoJSON must not depend directly on SystemFeatures",
+						dependsOn.contains(SYSTEMFEATURES_GROUP));
 				foundDependency = true;
 				break;
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + GEOJSON_GROUP + "\" depends-on=\""
-				+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 9 S-ETS-09-01. The GeoJSON systems read-only "
-				+ "subset requires SystemFeatures as its direct prerequisite.", foundDependency);
+				+ PART1_API_COMMON_GROUP + "\"/> - see Sprint 54 S-ETS-54-01.", foundDependency);
 	}
 
 	/**
@@ -1116,17 +1112,14 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 9 S-ETS-09-01: GeoJSON classes MUST be co-located in the SAME {@code <test>}
-	 * block as SystemFeatures so the group-dependency cascade resolves within TestNG's
-	 * test-scoped dependency map.
+	 * Sprint 54 S-ETS-54-01: GeoJSON and Part 1 API Common MUST be co-located in the same
+	 * TestNG block.
 	 */
 	@org.junit.Test
-	public void testGeoJsonCoLocatedWithSystemFeatures() throws Exception {
+	public void testGeoJsonCoLocatedWithPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> systemFeaturesClassNames = new HashSet<>();
-		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
-			systemFeaturesClassNames.add(c.getName());
-		}
+		String apiCommonClassName = org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests.class
+			.getName();
 		Set<String> geoJsonClassNames = new HashSet<>();
 		for (Class<?> c : GEOJSON_CLASSES) {
 			geoJsonClassNames.add(c.getName());
@@ -1138,17 +1131,15 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasApiCommon = xtClasses.contains(apiCommonClassName);
 			boolean hasAnyGeoJson = !java.util.Collections.disjoint(xtClasses, geoJsonClassNames);
-			if (hasAllSystemFeatures && hasAnyGeoJson) {
+			if (hasApiCommon && hasAnyGeoJson) {
 				coAlloc = true;
 				break;
 			}
 		}
-		assertTrue(
-				"SystemFeatures (" + systemFeaturesClassNames + ") and GeoJSON (" + geoJsonClassNames
-						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
-						+ "(GeoJSON → SystemFeatures → Core) resolves within scope. See Sprint 9 S-ETS-09-01.",
+		assertTrue("Part 1 API Common and GeoJSON (" + geoJsonClassNames
+				+ ") must be declared in the SAME <test> block so GeoJSON -> API Common resolves. See Sprint 54 S-ETS-54-01.",
 				coAlloc);
 	}
 

@@ -1,0 +1,21 @@
+{
+  "allowedNormalization": [
+    "expected local resolver $id",
+    "equivalent relative-to-absolute local $ref"
+  ],
+  "entrySchemas": [
+    "connected-systems-1/geojson/system.json",
+    "connected-systems-1/geojson/systemCollection.json",
+    "connected-systems-1/geojson/deployment.json",
+    "connected-systems-1/geojson/deploymentCollection.json",
+    "connected-systems-1/geojson/procedure.json",
+    "connected-systems-1/geojson/procedureCollection.json",
+    "connected-systems-1/geojson/samplingFeature.json",
+    "connected-systems-1/geojson/samplingFeatureCollection.json"
+  ],
+  "graphMismatches": [],
+  "semanticMismatches": [],
+  "sourceCommit": "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
+  "status": "PASS",
+  "transitiveSchemaCount": 20
+}

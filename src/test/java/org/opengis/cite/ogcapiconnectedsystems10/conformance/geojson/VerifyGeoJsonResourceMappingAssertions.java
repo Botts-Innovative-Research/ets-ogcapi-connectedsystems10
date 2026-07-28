@@ -1,77 +1,79 @@
 package org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import org.testng.SkipException;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonSupport.ResourceType;
 
 /**
- * Regression coverage for S-ETS-15-01 resource-specific GeoJSON assertion helpers.
- *
- * <p>
- * Traceability: REQ-ETS-PART1-012,
- * SCENARIO-ETS-PART1-012-GEOJSON-DEPLOYMENT-SCHEMA-MAPPING-001,
- * SCENARIO-ETS-PART1-012-GEOJSON-PROCEDURE-SCHEMA-MAPPING-001,
- * SCENARIO-ETS-PART1-012-GEOJSON-SF-SCHEMA-MAPPING-001, and
- * SCENARIO-ETS-PART1-012-GEOJSON-NON-SYSTEM-FALLBACK-HONESTY-001.
- * </p>
+ * Resource-specific regressions for the released GeoJSON mapping procedures.
  */
 public class VerifyGeoJsonResourceMappingAssertions {
 
+	private static final String REQUIREMENT = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/test";
+
+	/**
+	 * REQ-ETS-PART1-012; SCENARIO-ETS-PART1-012-RELEASED-MEDIA-GATE-001.
+	 */
 	@Test
-	public void skipsItemsWrapperWithoutFeatures() {
-		Map<String, Object> body = Map.of("items", List.of(Map.of("uid", "d-1")));
+	public void collectionSchemaRejectsHistoricalItemsFallback() {
+		Map<String, Object> body = Map.of("items", List.of(Map.of("uid", "urn:example:deployment:1")));
 
-		SkipException error = assertThrows(SkipException.class,
-				() -> GeoJsonTests.firstGeoJsonFeature(body, "/deployments", GeoJsonTests.REQ_DEPLOYMENT_SCHEMA));
+		AssertionError error = assertThrows(AssertionError.class,
+				() -> GeoJsonSupport.validateCollection(body, ResourceType.DEPLOYMENT, REQUIREMENT, "/deployments"));
 
-		assertTrue(error.getMessage().contains("items"));
-		assertTrue(error.getMessage().contains("not GeoJSON 'features'"));
+		assertTrue(error.getMessage().contains(REQUIREMENT));
 	}
 
+	/**
+	 * REQ-ETS-PART1-012; SCENARIO-ETS-PART1-012-RELEASED-RESOURCE-MAPPINGS-001.
+	 */
 	@Test
-	public void extractsFirstGeoJsonFeature() {
-		Map<String, Object> first = Map.of("type", "Feature", "id", "d-1", "geometry", Map.of("type", "Point"),
-				"properties", Map.of("uid", "d-1"));
-		Map<String, Object> body = Map.of("type", "FeatureCollection", "features", List.of(first));
-
-		Map<String, Object> extracted = GeoJsonTests.firstGeoJsonFeature(body, "/deployments",
-				GeoJsonTests.REQ_DEPLOYMENT_SCHEMA);
-
-		assertSame(first, extracted);
+	public void optionalDeploymentAssociationsMayBeAbsent() {
+		GeoJsonSupport.validateResourceMappings(deploymentFeature(), ResourceType.DEPLOYMENT, REQUIREMENT,
+				"/deployments");
 	}
 
+	/**
+	 * REQ-ETS-PART1-012; SCENARIO-ETS-PART1-012-RELEASED-RESOURCE-MAPPINGS-001.
+	 */
 	@Test
-	public void rejectsGenericFeatureWithoutMappingValue() {
-		Map<String, Object> properties = Map.of("uid", "d-1");
+	public void malformedPresentDeploymentAssociationFails() {
+		Map<String, Object> feature = deploymentFeature();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> properties = new LinkedHashMap<>((Map<String, Object>) feature.get("properties"));
+		properties.put("deployedSystems@link", List.of(Map.of("href", "relative/system")));
+		feature.put("properties", properties);
 
-		assertFalse(GeoJsonTests.hasMappingValue(properties, "deployedSystems@link"));
+		assertThrows(AssertionError.class, () -> GeoJsonSupport.validateResourceMappings(feature,
+				ResourceType.DEPLOYMENT, REQUIREMENT, "/deployments"));
 	}
 
+	/**
+	 * REQ-ETS-PART1-012; SCENARIO-ETS-PART1-012-RELEASED-SCHEMAS-001.
+	 */
 	@Test
-	public void acceptsNonEmptyMappingValues() {
-		assertTrue(GeoJsonTests.hasMappingValue(Map.of("deployedSystems@link", List.of(Map.of("href", "/systems/1"))),
-				"deployedSystems@link"));
-		assertTrue(GeoJsonTests.hasMappingValue(Map.of("radius", 12), "radius"));
-		assertFalse(GeoJsonTests.hasMappingValue(Map.of("hostedProcedure@link", List.of()), "hostedProcedure@link"));
-	}
-
-	@Test
-	public void rejectsFeatureShapeWithoutGeometryMember() {
+	public void procedureSchemaRejectsMissingGeometryMember() {
 		Map<String, Object> feature = Map.of("type", "Feature", "id", "p-1", "properties",
-				Map.of("uid", "p-1", "featureType", "procedure"));
+				Map.of("uid", "urn:example:procedure:1", "name", "Procedure", "featureType", "sosa:Procedure"));
 
-		AssertionError error = assertThrows(AssertionError.class, () -> GeoJsonTests.assertGeoJsonFeatureShape(feature,
-				"/procedures", GeoJsonTests.REQ_PROCEDURE_SCHEMA));
+		assertThrows(AssertionError.class,
+				() -> GeoJsonSupport.validateSingle(feature, ResourceType.PROCEDURE, REQUIREMENT, "/procedures/p-1"));
+	}
 
-		assertTrue(error.getMessage().contains(GeoJsonTests.REQ_PROCEDURE_SCHEMA));
-		assertTrue(error.getMessage().contains("geometry"));
+	private static Map<String, Object> deploymentFeature() {
+		Map<String, Object> feature = new LinkedHashMap<>();
+		feature.put("type", "Feature");
+		feature.put("id", "d-1");
+		feature.put("geometry", Map.of("type", "Point", "coordinates", List.of(1, 2)));
+		feature.put("properties", Map.of("uid", "urn:example:deployment:1", "name", "Deployment", "featureType",
+				"sosa:Deployment", "validTime", List.of("2026-01-01T00:00:00Z", "2027-01-01T00:00:00Z")));
+		return feature;
 	}
 
 }

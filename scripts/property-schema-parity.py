@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import posixpath
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -13,6 +14,7 @@ from typing import Any
 from urllib.parse import urldefrag, urlparse
 
 SOURCE_COMMIT = "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2"
+SELF_TEST_LABEL = "Property"
 LOCAL_PREFIX = "https://csapi-compliance.local/schemas/"
 ENTRY_SCHEMAS = (
     "connected-systems-1/sensorml/property.json",
@@ -30,6 +32,41 @@ RELEASE_MAPPINGS = (
 
 class ParityError(RuntimeError):
     """A fail-closed Property schema parity error."""
+
+
+def git_output(release_root: Path, *arguments: str) -> str:
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(release_root), *arguments],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError as error:
+        raise ParityError(f"could not execute git: {error}") from error
+    if result.returncode != 0:
+        detail = result.stderr.strip() or result.stdout.strip()
+        raise ParityError(
+            f"release root is not a readable git checkout: {release_root}: {detail}"
+        )
+    return result.stdout.strip()
+
+
+def verify_release_checkout(
+    release_root: Path, expected_commit: str = SOURCE_COMMIT
+) -> None:
+    if git_output(release_root, "rev-parse", "--is-inside-work-tree") != "true":
+        raise ParityError(f"release root is not a git work tree: {release_root}")
+    actual_commit = git_output(release_root, "rev-parse", "HEAD")
+    if actual_commit != expected_commit:
+        raise ParityError(
+            f"released source commit is {actual_commit}; expected {expected_commit}"
+        )
+    dirty = git_output(release_root, "status", "--porcelain", "--untracked-files=all")
+    if dirty:
+        raise ParityError(
+            f"released source checkout is dirty; refusing parity comparison: {dirty}"
+        )
 
 
 def release_path(release_root: Path, virtual_path: str) -> Path:
@@ -154,7 +191,11 @@ def read_graph(
     return graph
 
 
-def compare(release_root: Path, bundled_root: Path) -> dict[str, Any]:
+def compare(
+    release_root: Path, bundled_root: Path, verify_provenance: bool = True
+) -> dict[str, Any]:
+    if verify_provenance:
+        verify_release_checkout(release_root)
     release_graph = read_graph(release_root, ENTRY_SCHEMAS, True)
     bundled_graph = read_graph(bundled_root, ENTRY_SCHEMAS, False)
     release_paths = set(release_graph)
@@ -217,19 +258,52 @@ def self_test() -> None:
             bundled_root = base / "bundled"
             write_fixture(release_root / "api/part1/openapi/schemas", False)
             write_fixture(bundled_root, True)
-            result = compare(release_root, bundled_root)
+            result = compare(release_root, bundled_root, verify_provenance=False)
             if result["transitiveSchemaCount"] != 2:
                 raise ParityError("self-test did not traverse the reference graph")
             write_fixture(bundled_root, True, changed=True)
             try:
-                compare(release_root, bundled_root)
+                compare(release_root, bundled_root, verify_provenance=False)
             except ParityError:
                 pass
             else:
                 raise ParityError("self-test accepted semantic drift")
+            checkout = base / "checkout"
+            checkout.mkdir()
+            subprocess.run(["git", "-C", str(checkout), "init", "-q"], check=True)
+            subprocess.run(
+                ["git", "-C", str(checkout), "config", "user.email", "parity@example.test"],
+                check=True,
+            )
+            subprocess.run(
+                ["git", "-C", str(checkout), "config", "user.name", "Parity Self Test"],
+                check=True,
+            )
+            marker = checkout / "marker"
+            marker.write_text("clean\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(checkout), "add", "marker"], check=True)
+            subprocess.run(
+                ["git", "-C", str(checkout), "commit", "-q", "-m", "fixture"],
+                check=True,
+            )
+            fixture_commit = git_output(checkout, "rev-parse", "HEAD")
+            verify_release_checkout(checkout, fixture_commit)
+            try:
+                verify_release_checkout(checkout, "0" * 40)
+            except ParityError:
+                pass
+            else:
+                raise ParityError("self-test accepted the wrong source commit")
+            marker.write_text("dirty\n", encoding="utf-8")
+            try:
+                verify_release_checkout(checkout, fixture_commit)
+            except ParityError:
+                pass
+            else:
+                raise ParityError("self-test accepted a dirty source checkout")
     finally:
         ENTRY_SCHEMAS = original_entries
-    print("PASS: Property schema parity self-test")
+    print(f"PASS: {SELF_TEST_LABEL} schema parity self-test")
 
 
 def parse_args() -> argparse.Namespace:

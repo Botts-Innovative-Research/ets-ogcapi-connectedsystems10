@@ -383,6 +383,114 @@
       "reviewedBy": "Codex Sprint 53 ATS line review",
       "reviewedOn": "2026-07-28",
       "evidence": "The independently executable deployed TestNG method retrieves /collections, requires at least one exact itemType=sosa:Property entry with a nonempty id, and traverses every selected items endpoint through the reviewed API Common helper. Every safely parsed application/sml+json page is validated against the released SensorML Property collection schema before pagination advances; expected media limitations aggregate without masking later metadata, HTTP, pagination, or schema failures."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/mediatype-read",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonMediaTypeReadIsAdvertised()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method parses landing-page service-desc OpenAPI as JSON or YAML and requires application/geo+json response content on every declared canonical resource GET plus the generic custom-collection items GET when collections are advertised. A parseable omission fails; absent or unusable definitions SKIP with reason."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/mediatype-write",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonMediaTypeWriteIsAdvertised()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method requires application/geo+json request content on at least one canonical collection POST or canonical item PUT in parsed OpenAPI. It issues only GET requests, does not accept OPTIONS as evidence, and controlled HTTP coverage proves zero mutations."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/relation-types",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#geoJsonAssociationRelationTypesAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method traverses every declared System, Deployment, Procedure, and Sampling Feature GeoJSON collection, inspects every feature link, ignores only generic relations, and checks associations against the released resource-specific tables. It aggregates expected evidence limitations and cannot PASS without at least one association."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/feature-attribute-mapping",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#commonFeatureAttributesAreMapped()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method traverses all declared canonical GeoJSON resource collections and validates every feature: properties.uid is an absolute URI and present name and description members are strings. Pagination and later-invalid-feature HTTP regressions prevent first-item false positives."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/system-schema",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#systemGeoJsonSchemasAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method requests the complete canonical System collection and one selected canonical System item with exact GeoJSON Accept, requires HTTP 200 and actual application/geo+json before parsing, and validates complete documents against the released resolver-normalized schemas."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/system-mappings",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#systemGeoJsonMappingsAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method validates every safely traversed System feature's featureType, optional assetType and validTime, Point location, systemKind link, and resource-specific links relations without making absent optional associations mandatory."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/deployment-schema",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#deploymentGeoJsonSchemasAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method requests complete canonical Deployment collection and single-item documents, establishes HTTP 200 and actual GeoJSON before parsing, and validates both against the semantically parity-checked released Deployment schema graph."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/deployment-mappings",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#deploymentGeoJsonMappingsAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method inspects every Deployment feature for featureType and validTime plus present platform, deployedSystems, and links-member association mappings. Malformed present links fail while absent optional associations remain valid."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/procedure-schema",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#procedureGeoJsonSchemasAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method requests complete canonical Procedure collection and single-item documents, establishes HTTP 200 and actual GeoJSON before parsing, and validates both against the semantically parity-checked released Procedure schema graph."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/procedure-mappings",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#procedureGeoJsonMappingsAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method inspects every Procedure feature's featureType and optional validTime and validates any implementingSystems links-member association against the released relation mapping."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/sf-schema",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#samplingFeatureGeoJsonSchemasAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method requests complete canonical Sampling Feature collection and single-item documents, establishes HTTP 200 and actual GeoJSON before parsing, and validates both against the semantically parity-checked released Sampling Feature schema graph."
+    },
+    {
+      "part": 1,
+      "test": "/conf/geojson/sf-mappings",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.geojson.GeoJsonTests#samplingFeatureGeoJsonMappingsAreValid()",
+      "reviewedBy": "Codex Sprint 54 ATS line review",
+      "reviewedOn": "2026-07-28",
+      "evidence": "The independently executable deployed method inspects every Sampling Feature's featureType, optional validTime, present sampledFeature link, and links-member parentSystem, sampleOf, datastreams, or controlstreams associations without requiring absent optional associations."
     }
   ]
 }

@@ -637,36 +637,68 @@
     "classIdentifier" : "/conf/property",
     "target" : "/req/property/canonical-url",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyCanonicalUrlReturns200()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#everyPropertyHasCanonicalUrl()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/property/canonical-url",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#everyPropertyHasCanonicalUrl()",
+      "reviewedBy" : "Codex Sprint 53 ATS line review",
+      "reviewedOn" : "2026-07-28",
+      "evidence" : "The independently executable deployed TestNG method selects every exact itemType=sosa:Property collection, traverses every safely parsed application/sml+json items page through the reviewed API Common helper, and inspects every item. Every canonical occurrence must remain on the IUT origin under api_root/properties/{id}; a representation-compatible occurrence must return HTTP 200 and equal the collection item after canonical links are removed. Expected media and comparability limitations are aggregated while later inspectable failures remain failures."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/property/resources-endpoint",
     "classIdentifier" : "/conf/property",
     "target" : "/req/property/resources-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertiesCollectionReturns200()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyResourcesEndpointIsValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/property/resources-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyResourcesEndpointIsValid()",
+      "reviewedBy" : "Codex Sprint 53 ATS line review",
+      "reviewedOn" : "2026-07-28",
+      "evidence" : "The independently executable deployed TestNG method invokes the endpoint-parameterized released resources procedure against /properties, requires HTTP 200, gates every page by actual application/sml+json media before parsing, traverses bounded same-origin pagination, and validates every page against the released SensorML Property collection schema graph. HTTP 404 and invalid supported content fail; unsupported actual media explicitly SKIPs."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/property/canonical-endpoint",
     "classIdentifier" : "/conf/property",
     "target" : "/req/property/canonical-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyItemHasIdType()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#canonicalPropertiesEndpointIsValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/property/canonical-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#canonicalPropertiesEndpointIsValid()",
+      "reviewedBy" : "Codex Sprint 53 ATS line review",
+      "reviewedOn" : "2026-07-28",
+      "evidence" : "The independently executable deployed TestNG method supplies the fixed api_root/properties URL to the released endpoint-parameterized resources procedure and independently retrieves, actual-media-gates, paginates, and validates the Property collection without depending on another Property TestNG method."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/property/collections",
     "classIdentifier" : "/conf/property",
     "target" : "/req/property/collections",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyCollectionsAreValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/property/collections",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyCollectionsAreValid()",
+      "reviewedBy" : "Codex Sprint 53 ATS line review",
+      "reviewedOn" : "2026-07-28",
+      "evidence" : "The independently executable deployed TestNG method retrieves /collections, requires at least one exact itemType=sosa:Property entry with a nonempty id, and traverses every selected items endpoint through the reviewed API Common helper. Every safely parsed application/sml+json page is validated against the released SensorML Property collection schema before pagination advances; expected media limitations aggregate without masking later metadata, HTTP, pagination, or schema failures."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/id-list-schema",
@@ -2461,17 +2493,17 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 35,
+    "exact" : 39,
     "helper" : 2,
-    "candidate" : 133,
-    "unmapped" : 70,
+    "candidate" : 130,
+    "unmapped" : 69,
     "byPart" : {
       "1" : {
         "total" : 110,
-        "exact" : 35,
+        "exact" : 39,
         "helper" : 2,
-        "candidate" : 32,
-        "unmapped" : 41
+        "candidate" : 29,
+        "unmapped" : 40
       },
       "2" : {
         "total" : 130,
@@ -2540,10 +2572,10 @@
       },
       "1:/conf/property" : {
         "total" : 4,
-        "exact" : 0,
+        "exact" : 4,
         "helper" : 0,
-        "candidate" : 3,
-        "unmapped" : 1
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "1:/conf/advanced-filtering" : {
         "total" : 25,

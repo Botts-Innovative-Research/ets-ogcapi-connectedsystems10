@@ -82,8 +82,7 @@ public class VerifyTestNGSuiteDependency {
 	private static final String SAMPLINGFEATURES_GROUP = "samplingfeatures";
 
 	/**
-	 * Sprint 7 S-ETS-07-03 — PropertyDefinitions group (sibling of all the above; depends
-	 * on SystemFeatures).
+	 * Sprint 53 S-ETS-53-01 - released Property Definitions inherits API Common directly.
 	 */
 	private static final String PROPERTYDEFINITIONS_GROUP = "propertydefinitions";
 
@@ -859,17 +858,15 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 7 S-ETS-07-03 — PropertyDefinitions group =====
-	// Mirrors the SamplingFeatures patterns above.
+	// ===== Sprint 53 S-ETS-53-01 - released Property Definitions procedures =====
 
 	/**
-	 * Sprint 7 S-ETS-07-03 (REQ-ETS-PART1-008): the canonical testng.xml SHALL declare
-	 * {@code <group name="propertydefinitions" depends-on="systemfeatures"/>} so the
-	 * PropertyDefinitions conformance class participates in the two-level dependency
-	 * cascade (PropertyDefinitions → SystemFeatures → Core).
+	 * REQ-ETS-PART1-008; SCENARIO-ETS-PART1-008-RELEASED-DEPENDENCY-CASCADE-001. The
+	 * canonical testng.xml SHALL declare
+	 * {@code <group name="propertydefinitions" depends-on="part1apicommon"/>}.
 	 */
 	@org.junit.Test
-	public void testPropertyDefinitionsGroupDependsOnSystemFeatures() throws Exception {
+	public void testPropertyDefinitionsGroupDependsOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -880,21 +877,21 @@ public class VerifyTestNGSuiteDependency {
 				String dependsOn = deps.get(PROPERTYDEFINITIONS_GROUP);
 				assertNotNull("group '" + PROPERTYDEFINITIONS_GROUP + "' has null depends-on attribute", dependsOn);
 				assertTrue("group '" + PROPERTYDEFINITIONS_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+						+ PART1_API_COMMON_GROUP + "'", dependsOn.contains(PART1_API_COMMON_GROUP));
+				assertFalse("group '" + PROPERTYDEFINITIONS_GROUP + "' must not depend on historical SystemFeatures",
+						dependsOn.contains(SYSTEMFEATURES_GROUP));
 				foundDependency = true;
 				break;
 			}
 		}
-		assertTrue(
-				"testng.xml does not declare <group name=\"" + PROPERTYDEFINITIONS_GROUP + "\" depends-on=\""
-						+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 7 S-ETS-07-03 + ADR-010 v3 amendment.",
-				foundDependency);
+		assertTrue("testng.xml does not declare <group name=\"" + PROPERTYDEFINITIONS_GROUP + "\" depends-on=\""
+				+ PART1_API_COMMON_GROUP + "\"/> - see Sprint 53 S-ETS-53-01.", foundDependency);
 	}
 
 	/**
-	 * Sprint 7 S-ETS-07-03: every PropertyDefinitions @Test method SHALL carry
+	 * Sprint 53 S-ETS-53-01: every PropertyDefinitions @Test method SHALL carry
 	 * {@code groups = "propertydefinitions"} so the
-	 * {@code <group name="propertydefinitions" depends-on="systemfeatures"/>} declaration
+	 * {@code <group name="propertydefinitions" depends-on="part1apicommon"/>} declaration
 	 * has tagged methods to resolve against.
 	 */
 	@org.junit.Test
@@ -922,17 +919,15 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 7 S-ETS-07-03: PropertyDefinitions classes MUST be co-located in the SAME
-	 * {@code <test>} block as SystemFeatures so the two-level group-dependency cascade
-	 * can resolve within scope.
+	 * Sprint 53 S-ETS-53-01: PropertyDefinitions classes MUST be co-located in the SAME
+	 * {@code <test>} block as Part 1 API Common.
 	 */
 	@org.junit.Test
-	public void testPropertyDefinitionsCoLocatedWithSystemFeatures() throws Exception {
+	public void testPropertyDefinitionsCoLocatedWithPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> systemFeaturesClassNames = new HashSet<>();
-		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
-			systemFeaturesClassNames.add(c.getName());
-		}
+		Set<String> apiCommonClassNames = Set
+			.of(org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests.class
+				.getName());
 		Set<String> propertyDefinitionsClassNames = new HashSet<>();
 		for (Class<?> c : PROPERTYDEFINITIONS_CLASSES) {
 			propertyDefinitionsClassNames.add(c.getName());
@@ -944,18 +939,18 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasAllApiCommon = xtClasses.containsAll(apiCommonClassNames);
 			boolean hasAnyPropertyDefinitions = !java.util.Collections.disjoint(xtClasses,
 					propertyDefinitionsClassNames);
-			if (hasAllSystemFeatures && hasAnyPropertyDefinitions) {
+			if (hasAllApiCommon && hasAnyPropertyDefinitions) {
 				coAlloc = true;
 				break;
 			}
 		}
-		assertTrue("SystemFeatures (" + systemFeaturesClassNames + ") and PropertyDefinitions ("
-				+ propertyDefinitionsClassNames
-				+ ") must be declared in the SAME <test> block of testng.xml so the two-level group dependency "
-				+ "(PropertyDefinitions → SystemFeatures → Core) resolves within scope. See Sprint 7 S-ETS-07-03.",
+		assertTrue(
+				"Part1ApiCommon (" + apiCommonClassNames + ") and PropertyDefinitions (" + propertyDefinitionsClassNames
+						+ ") must be declared in the SAME <test> block of testng.xml so direct API Common inheritance "
+						+ "resolves within scope. See Sprint 53 S-ETS-53-01.",
 				coAlloc);
 	}
 

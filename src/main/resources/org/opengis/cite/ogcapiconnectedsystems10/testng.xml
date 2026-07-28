@@ -180,7 +180,7 @@
         <group name="procedures" depends-on="part1apicommon"/>
         <group name="deployments" depends-on="part1apicommon"/>
         <group name="samplingfeatures" depends-on="systemfeatures"/>
-        <group name="propertydefinitions" depends-on="systemfeatures"/>
+        <group name="propertydefinitions" depends-on="part1apicommon"/>
         <group name="subdeployments" depends-on="deployments"/>
         <group name="geojson" depends-on="systemfeatures"/>
         <group name="sensorml" depends-on="systemfeatures"/>

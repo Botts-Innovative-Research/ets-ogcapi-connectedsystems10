@@ -56,6 +56,8 @@ public final class AdvancedFilteringSupport {
 
 	private static final int MAX_REFERENCE_READS = 64;
 
+	private static final int MAX_REFERENCE_DEPTH = 12;
+
 	private static final Set<String> RESERVED_PROPERTIES = Set.of("id", "type", "geometry", "bbox", "links",
 			"properties", "featuretype", "uid", "uniqueid", "name", "label", "description", "definition", "validtime",
 			"baseproperty", "objecttype", "position", "location");
@@ -115,7 +117,14 @@ public final class AdvancedFilteringSupport {
 				continue;
 			}
 			assertIdentifierQuery(type, candidate.get(), localId(candidate.get()).orElseThrow(), requirement);
-			assertIdentifierQuery(type, candidate.get(), uid(candidate.get()).orElseThrow(), requirement);
+			String candidateUid = uid(candidate.get()).orElseThrow();
+			assertIdentifierQuery(type, candidate.get(), candidateUid, requirement);
+			Optional<String> prefix = uidPrefix(candidateUid);
+			if (prefix.isEmpty()) {
+				inspection.limit(type.path + " UID cannot supply a valid non-empty shorter prefix: " + candidateUid);
+				continue;
+			}
+			assertIdentifierQuery(type, candidate.get(), prefix.get() + "*", requirement);
 			inspection.exercised();
 		}
 		inspection.finish();
@@ -295,8 +304,7 @@ public final class AdvancedFilteringSupport {
 	}
 
 	/**
-	 * Implements `/req/advanced-filtering/combined-filters` with an ID and keyword
-	 * conjunction for every supported canonical endpoint.
+	 * Implements `/req/advanced-filtering/combined-filters`.
 	 * @param requirement released target URI.
 	 */
 	public void combinedFilters(String requirement) {
@@ -307,21 +315,46 @@ public final class AdvancedFilteringSupport {
 			if (seed.isEmpty()) {
 				continue;
 			}
-			Optional<Map<String, Object>> candidate = seed.get()
-				.items()
-				.stream()
-				.filter(item -> localId(item).isPresent() && keyword(item).isPresent())
-				.findFirst();
-			if (candidate.isEmpty()) {
-				inspection.limit(type.path + " has no resource carrying both local ID and keyword evidence");
+			Map<String, Object> candidate = null;
+			List<FilterPredicate> predicates = List.of();
+			for (Map<String, Object> item : seed.get().items()) {
+				List<FilterPredicate> available = combinedPredicates(type, item, requirement);
+				if (available.size() >= 3) {
+					candidate = item;
+					predicates = available;
+					break;
+				}
+			}
+			if (candidate == null) {
+				inspection.limit(type.path
+						+ " has no resource carrying evidence for at least three filters and two distinct combinations");
 				continue;
 			}
-			String id = localId(candidate.get()).orElseThrow();
-			String q = keyword(candidate.get()).orElseThrow();
-			TraversalResult filtered = requiredQuery(type, Map.of("id", id, "q", q), requirement);
-			assertNonEmpty(filtered, type, "id+q", id + "," + q, requirement);
-			assertEvery(filtered.items(), item -> hasIdentifier(item, id) && containsPlainText(item, q), type, "id+q",
-					id + "," + q, requirement);
+			int combinations = 0;
+			for (int left = 0; left < predicates.size(); left++) {
+				for (int right = left + 1; right < predicates.size(); right++) {
+					FilterPredicate first = predicates.get(left);
+					FilterPredicate second = predicates.get(right);
+					if (first.parameter.equals(second.parameter)) {
+						continue;
+					}
+					Map<String, String> query = new LinkedHashMap<>();
+					query.put(first.parameter, first.value);
+					query.put(second.parameter, second.value);
+					TraversalResult filtered = requiredQuery(type, query, requirement);
+					validateEndpoint(type, filtered, requirement);
+					String label = first.parameter + "+" + second.parameter;
+					String values = first.value + "," + second.value;
+					assertNonEmpty(filtered, type, label, values, requirement);
+					assertEvery(filtered.items(), item -> first.matches.test(item) && second.matches.test(item), type,
+							label, values, requirement);
+					combinations++;
+				}
+			}
+			if (combinations < 2) {
+				inspection.limit(type.path + " supplied fewer than two independently evidenced filter combinations");
+				continue;
+			}
 			inspection.exercised();
 		}
 		inspection.finish();
@@ -338,27 +371,31 @@ public final class AdvancedFilteringSupport {
 			warn(recommendation, "canonical properties endpoint is unsupported");
 			return;
 		}
-		Optional<Map<String, Object>> candidate = properties.get()
-			.items()
-			.stream()
-			.filter(item -> localId(item).isPresent() && scalarProperty(item, "baseProperty").isPresent())
-			.findFirst();
-		if (candidate.isEmpty()) {
-			warn(recommendation, "no Property carries both local ID and baseProperty evidence");
-			return;
-		}
-		String propertyId = localId(candidate.get()).orElseThrow();
-		String baseProperty = scalarProperty(candidate.get(), "baseProperty").orElseThrow();
-		for (ResourceType type : ResourceType.values()) {
-			String parameter = type == ResourceType.PROPERTIES ? "baseProperty" : "observedProperty";
-			Optional<TraversalResult> direct = recommendedQuery(type, Map.of(parameter, propertyId), recommendation);
-			Optional<TraversalResult> transitive = recommendedQuery(type, Map.of(parameter, baseProperty),
-					recommendation);
-			if (direct.isPresent() && transitive.isPresent()
-					&& !containsAllResources(transitive.get().items(), direct.get().items())) {
-				warn(recommendation, type.path + " does not include every direct-property result when queried by "
-						+ "the transitive base property");
+		int eligible = 0;
+		for (Map<String, Object> property : properties.get().items()) {
+			Optional<String> propertyId = localId(property);
+			Optional<String> baseProperty = scalarProperty(property, "baseProperty");
+			if (propertyId.isEmpty() || baseProperty.isEmpty()) {
+				warn(recommendation, stableId(property)
+						+ " lacks local ID or baseProperty evidence for the indirect-property check");
+				continue;
 			}
+			eligible++;
+			for (ResourceType type : ResourceType.values()) {
+				String parameter = type == ResourceType.PROPERTIES ? "baseProperty" : "observedProperty";
+				Optional<TraversalResult> direct = recommendedQuery(type, Map.of(parameter, propertyId.get()),
+						recommendation);
+				Optional<TraversalResult> transitive = recommendedQuery(type, Map.of(parameter, baseProperty.get()),
+						recommendation);
+				if (direct.isPresent() && transitive.isPresent()
+						&& !containsAllResources(transitive.get().items(), direct.get().items())) {
+					warn(recommendation, type.path + " does not include every direct-property result for "
+							+ propertyId.get() + " when queried by its transitive base property");
+				}
+			}
+		}
+		if (eligible == 0) {
+			warn(recommendation, "no Property carries both local ID and baseProperty evidence");
 		}
 	}
 
@@ -373,47 +410,45 @@ public final class AdvancedFilteringSupport {
 			warn(recommendation, "canonical samplingFeatures endpoint is unsupported");
 			return;
 		}
-		Map<String, Object> candidate = null;
-		Identifiers parents = null;
-		Identifiers ultimate = null;
+		int eligible = 0;
 		for (Map<String, Object> item : samplingFeatures.get().items()) {
 			Identifiers parentIds = relationIdentifiers(ResourceType.SAMPLING_FEATURES, item, Relation.SAMPLE_OF,
 					recommendation);
 			Identifiers ultimateIds = relationIdentifiers(ResourceType.SAMPLING_FEATURES, item,
 					Relation.SAMPLED_FEATURE, recommendation);
-			if (localId(item).isPresent() && !parentIds.all().isEmpty() && !ultimateIds.all().isEmpty()) {
-				candidate = item;
-				parents = parentIds;
-				ultimate = ultimateIds;
-				break;
+			Optional<String> sfId = localId(item);
+			if (sfId.isEmpty() || parentIds.all().isEmpty() || ultimateIds.all().isEmpty()) {
+				warn(recommendation, stableId(item)
+						+ " lacks local ID, sampleOf, or sampledFeature evidence for transitive queries");
+				continue;
+			}
+			eligible++;
+			String parentId = parentIds.all().iterator().next();
+			String ultimateId = ultimateIds.all().iterator().next();
+			Optional<TraversalResult> parentSet = recommendedQuery(ResourceType.SAMPLING_FEATURES,
+					Map.of("foi", parentId), recommendation);
+			Optional<TraversalResult> ultimateSet = recommendedQuery(ResourceType.SAMPLING_FEATURES,
+					Map.of("foi", ultimateId), recommendation);
+			if (parentSet.isPresent() && !containsResource(parentSet.get().items(), sfId.get())) {
+				warn(recommendation, "samplingFeatures?foi=<parent> omits " + sfId.get());
+			}
+			if (ultimateSet.isPresent() && !containsResource(ultimateSet.get().items(), sfId.get())) {
+				warn(recommendation, "samplingFeatures?foi=<ultimate> omits " + sfId.get());
+			}
+			for (ResourceType type : List.of(ResourceType.SYSTEMS, ResourceType.DEPLOYMENTS)) {
+				Optional<TraversalResult> direct = recommendedQuery(type, Map.of("foi", sfId.get()), recommendation);
+				Optional<TraversalResult> parent = recommendedQuery(type, Map.of("foi", parentId), recommendation);
+				Optional<TraversalResult> ultimateResult = recommendedQuery(type, Map.of("foi", ultimateId),
+						recommendation);
+				warnUnlessContains(type, ultimateResult, direct, "ultimate feature", "sampling feature",
+						recommendation);
+				warnUnlessContains(type, ultimateResult, parent, "ultimate feature", "parent feature", recommendation);
+				warnUnlessContains(type, parent, direct, "parent feature", "sampling feature", recommendation);
 			}
 		}
-		if (candidate == null) {
+		if (eligible == 0) {
 			warn(recommendation,
 					"no Sampling Feature carries local ID, sampleOf, and sampledFeature evidence for transitive queries");
-			return;
-		}
-		String sfId = localId(candidate).orElseThrow();
-		String parentId = parents.all().iterator().next();
-		String ultimateId = ultimate.all().iterator().next();
-		Optional<TraversalResult> parentSet = recommendedQuery(ResourceType.SAMPLING_FEATURES, Map.of("foi", parentId),
-				recommendation);
-		Optional<TraversalResult> ultimateSet = recommendedQuery(ResourceType.SAMPLING_FEATURES,
-				Map.of("foi", ultimateId), recommendation);
-		if (parentSet.isPresent() && !containsResource(parentSet.get().items(), sfId)) {
-			warn(recommendation, "samplingFeatures?foi=<parent> omits " + sfId);
-		}
-		if (ultimateSet.isPresent() && !containsResource(ultimateSet.get().items(), sfId)) {
-			warn(recommendation, "samplingFeatures?foi=<ultimate> omits " + sfId);
-		}
-		for (ResourceType type : List.of(ResourceType.SYSTEMS, ResourceType.DEPLOYMENTS)) {
-			Optional<TraversalResult> direct = recommendedQuery(type, Map.of("foi", sfId), recommendation);
-			Optional<TraversalResult> parent = recommendedQuery(type, Map.of("foi", parentId), recommendation);
-			Optional<TraversalResult> ultimateResult = recommendedQuery(type, Map.of("foi", ultimateId),
-					recommendation);
-			warnUnlessContains(type, ultimateResult, direct, "ultimate feature", "sampling feature", recommendation);
-			warnUnlessContains(type, ultimateResult, parent, "ultimate feature", "parent feature", recommendation);
-			warnUnlessContains(type, parent, direct, "parent feature", "sampling feature", recommendation);
 		}
 	}
 
@@ -485,11 +520,71 @@ public final class AdvancedFilteringSupport {
 			String requirement) {
 		TraversalResult filtered = requiredQuery(type, Map.of("id", identifier), requirement);
 		assertNonEmpty(filtered, type, "id", identifier, requirement);
-		assertEvery(filtered.items(), item -> hasIdentifier(item, identifier), type, "id", identifier, requirement);
+		assertEvery(filtered.items(), item -> matchesIdentifier(item, identifier), type, "id", identifier, requirement);
 		if (!filtered.items().stream().anyMatch(item -> sameResource(item, candidate))) {
 			ETSAssert.failWithUri(requirement, type.path + "?id=" + identifier
 					+ " omitted the known matching seed resource " + stableId(candidate) + ".");
 		}
+	}
+
+	private List<FilterPredicate> combinedPredicates(ResourceType type, Map<String, Object> resource,
+			String requirement) {
+		List<FilterPredicate> predicates = new ArrayList<>();
+		localId(resource)
+			.ifPresent(value -> predicates.add(new FilterPredicate("id", value, item -> hasIdentifier(item, value))));
+		keyword(resource).ifPresent(
+				value -> predicates.add(new FilterPredicate("q", value, item -> containsPlainText(item, value))));
+		geometryQuery(resource).ifPresent(
+				value -> predicates.add(new FilterPredicate("geom", value, item -> resourceIntersects(item, value))));
+		switch (type) {
+			case SYSTEMS -> {
+				addRelationPredicate(predicates, type, resource, "parent", Relation.PARENT_SYSTEM, requirement);
+				addRelationPredicate(predicates, type, resource, "procedure", Relation.PROCEDURE, requirement);
+				addRelationPredicate(predicates, type, resource, "foi", Relation.FEATURE_OF_INTEREST, requirement);
+				addRelationPredicate(predicates, type, resource, "observedProperty", Relation.OBSERVED_PROPERTY,
+						requirement);
+				addRelationPredicate(predicates, type, resource, "controlledProperty", Relation.CONTROLLED_PROPERTY,
+						requirement);
+			}
+			case DEPLOYMENTS -> {
+				addRelationPredicate(predicates, type, resource, "parent", Relation.PARENT_DEPLOYMENT, requirement);
+				addRelationPredicate(predicates, type, resource, "system", Relation.DEPLOYED_SYSTEM, requirement);
+				addRelationPredicate(predicates, type, resource, "foi", Relation.FEATURE_OF_INTEREST, requirement);
+				addRelationPredicate(predicates, type, resource, "observedProperty", Relation.OBSERVED_PROPERTY,
+						requirement);
+				addRelationPredicate(predicates, type, resource, "controlledProperty", Relation.CONTROLLED_PROPERTY,
+						requirement);
+			}
+			case PROCEDURES -> {
+				addRelationPredicate(predicates, type, resource, "observedProperty", Relation.OBSERVED_PROPERTY,
+						requirement);
+				addRelationPredicate(predicates, type, resource, "controlledProperty", Relation.CONTROLLED_PROPERTY,
+						requirement);
+			}
+			case SAMPLING_FEATURES -> {
+				addRelationPredicate(predicates, type, resource, "foi", Relation.FEATURE_OF_INTEREST, requirement);
+				addRelationPredicate(predicates, type, resource, "observedProperty", Relation.OBSERVED_PROPERTY,
+						requirement);
+				addRelationPredicate(predicates, type, resource, "controlledProperty", Relation.CONTROLLED_PROPERTY,
+						requirement);
+			}
+			case PROPERTIES -> {
+				scalarProperty(resource, "objectType").ifPresent(value -> predicates.add(
+						new FilterPredicate("objectType", value, item -> hasPropertyValue(item, "objectType", value))));
+				addRelationPredicate(predicates, type, resource, "baseProperty", Relation.BASE_PROPERTY, requirement);
+			}
+		}
+		return List.copyOf(predicates);
+	}
+
+	private void addRelationPredicate(List<FilterPredicate> predicates, ResourceType type, Map<String, Object> resource,
+			String parameter, Relation relation, String requirement) {
+		Identifiers identifiers = relationIdentifiers(type, resource, relation, requirement);
+		Optional<String> selected = identifiers.local.stream()
+			.findFirst()
+			.or(() -> identifiers.global.stream().findFirst());
+		selected.ifPresent(value -> predicates.add(new FilterPredicate(parameter, value,
+				item -> relationIdentifiers(type, item, relation, requirement).all().contains(value))));
 	}
 
 	private void assertAssociationQuery(ResourceType owner, String parameter, Relation relation, String identifier,
@@ -591,19 +686,16 @@ public final class AdvancedFilteringSupport {
 		if (relation == Relation.OBSERVED_PROPERTY || relation == Relation.CONTROLLED_PROPERTY) {
 			enrichPropertyIdentifiers(result, requirement);
 		}
-		if (relation == Relation.BASE_PROPERTY || relation == Relation.SAMPLE_OF || relation == Relation.SAMPLED_FEATURE
-				|| relation == Relation.FEATURE_OF_INTEREST) {
-			followRecursiveRelations(result, relation, reads, requirement);
-		}
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	private void collectRelation(Object value, Set<String> aliases, boolean hrefIdentity, Identifiers result,
 			ReferenceReads reads, int depth, String requirement) {
-		if (value == null || depth > 12) {
+		if (value == null) {
 			return;
 		}
+		assertTraversalDepth(depth, requirement);
 		if (value instanceof Map<?, ?> raw) {
 			Map<String, Object> map = (Map<String, Object>) raw;
 			Object links = map.get("links");
@@ -614,7 +706,7 @@ public final class AdvancedFilteringSupport {
 					}
 					String rel = asString(link.get("rel"));
 					if (rel != null && aliasMatches(rel, aliases)) {
-						collectReference(link, hrefIdentity, result, reads, depth + 1, requirement);
+						collectReference(link, aliases, hrefIdentity, result, reads, depth + 1, requirement);
 					}
 				}
 			}
@@ -623,7 +715,7 @@ public final class AdvancedFilteringSupport {
 					continue;
 				}
 				if (aliasMatches(entry.getKey(), aliases)) {
-					collectReference(entry.getValue(), hrefIdentity, result, reads, depth + 1, requirement);
+					collectReference(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
 				}
 				else if (entry.getValue() instanceof Map<?, ?> || entry.getValue() instanceof Collection<?>) {
 					collectRelation(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
@@ -639,18 +731,19 @@ public final class AdvancedFilteringSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void collectReference(Object value, boolean hrefIdentity, Identifiers result, ReferenceReads reads,
-			int depth, String requirement) {
-		if (value == null || depth > 12) {
+	private void collectReference(Object value, Set<String> aliases, boolean hrefIdentity, Identifiers result,
+			ReferenceReads reads, int depth, String requirement) {
+		if (value == null) {
 			return;
 		}
+		assertTraversalDepth(depth, requirement);
 		if (value instanceof String string) {
-			addSemanticIdentifier(string, result);
+			collectStringReference(string, aliases, result, reads, requirement);
 			return;
 		}
 		if (value instanceof Collection<?> collection) {
 			for (Object item : collection) {
-				collectReference(item, hrefIdentity, result, reads, depth + 1, requirement);
+				collectReference(item, aliases, hrefIdentity, result, reads, depth + 1, requirement);
 			}
 			return;
 		}
@@ -662,98 +755,140 @@ public final class AdvancedFilteringSupport {
 		String href = asString(map.get("href"));
 		if (href != null) {
 			URI resolved = resolve(href);
-			lastPathToken(resolved).ifPresent(result.local::add);
-			if (hrefIdentity) {
-				result.global.add(resolved.toString());
-			}
-			readReference(resolved, result, reads, requirement);
+			readReference(resolved, aliases, hrefIdentity, result, reads, requirement);
 		}
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			String key = normalize(entry.getKey());
 			if (!"href".equals(entry.getKey()) && (entry.getValue() instanceof Map<?, ?>
 					|| entry.getValue() instanceof Collection<?>
 					|| Set.of("id", "uid", "uniqueid", "definition", "baseproperty", "objecttype").contains(key))) {
-				collectReference(entry.getValue(), hrefIdentity, result, reads, depth + 1, requirement);
+				collectReference(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
 			}
 		}
 	}
 
-	private void readReference(URI target, Identifiers result, ReferenceReads reads, String requirement) {
-		if (!sameOrigin(this.apiRoot, target) || !reads.visit(target)) {
+	private void collectStringReference(String value, Set<String> aliases, Identifiers result, ReferenceReads reads,
+			String requirement) {
+		if (!isAbsoluteUri(value)) {
+			result.local.add(value);
 			return;
 		}
-		Response response = given().accept("application/geo+json, application/sml+json, application/json")
-			.when()
-			.get(target)
-			.andReturn();
-		if (response.getStatusCode() != 200) {
-			return;
-		}
-		Map<String, Object> body = parseObject(response);
-		if (body == null) {
-			ETSAssert.failWithUri(requirement, target + " returned HTTP 200 but did not contain a JSON object.");
-		}
-		List<Map<String, Object>> items = collectionItems(body);
-		if (items.isEmpty()) {
-			addResourceIdentifiers(body, result);
+		URI target = resolve(value);
+		if ("http".equalsIgnoreCase(target.getScheme()) || "https".equalsIgnoreCase(target.getScheme())) {
+			readReference(target, aliases, true, result, reads, requirement);
 		}
 		else {
-			items.forEach(item -> addResourceIdentifiers(item, result));
+			result.global.add(value);
+		}
+	}
+
+	private void readReference(URI target, Set<String> aliases, boolean hrefIdentity, Identifiers result,
+			ReferenceReads reads, String requirement) {
+		if (!sameOrigin(this.apiRoot, target)) {
+			if (hrefIdentity) {
+				result.global.add(target.toString());
+			}
+			return;
+		}
+		if (!reads.enter(target, requirement)) {
+			return;
+		}
+		try {
+			Response response = given().accept("application/geo+json, application/sml+json, application/json")
+				.when()
+				.get(target)
+				.andReturn();
+			if (response.getStatusCode() != 200) {
+				if (hrefIdentity) {
+					result.global.add(target.toString());
+				}
+				return;
+			}
+			Map<String, Object> body = parseObject(response);
+			if (body == null) {
+				ETSAssert.failWithUri(requirement, target + " returned HTTP 200 but did not contain a JSON object.");
+			}
+			List<Map<String, Object>> items = collectionItems(body);
+			if (items.isEmpty()) {
+				addResourceIdentifiers(body, result);
+				if (hrefIdentity) {
+					collectRelation(body, aliases, true, result, reads, 0, requirement);
+				}
+			}
+			else {
+				for (Map<String, Object> item : items) {
+					addResourceIdentifiers(item, result);
+					if (hrefIdentity) {
+						collectRelation(item, aliases, true, result, reads, 0, requirement);
+					}
+				}
+			}
+		}
+		finally {
+			reads.leave(target);
 		}
 	}
 
 	private void collectDeployedSystemProperties(Map<String, Object> deployedSystem, Relation relation,
 			Identifiers result, ReferenceReads reads, String requirement) {
 		Set<URI> targets = new LinkedHashSet<>();
-		collectRelationTargets(deployedSystem, Set.of("system", "deployedsystem"), targets, 0);
+		collectRelationTargets(deployedSystem, Set.of("system", "deployedsystem"), targets, 0, requirement);
 		for (URI target : targets) {
-			if (!sameOrigin(this.apiRoot, target) || !reads.visit(target)) {
+			if (!sameOrigin(this.apiRoot, target) || !reads.enter(target, requirement)) {
 				continue;
 			}
-			Response response = given().accept("application/geo+json, application/sml+json, application/json")
-				.when()
-				.get(target)
-				.andReturn();
-			if (response.getStatusCode() != 200) {
-				continue;
+			try {
+				Response response = given().accept("application/geo+json, application/sml+json, application/json")
+					.when()
+					.get(target)
+					.andReturn();
+				if (response.getStatusCode() != 200) {
+					continue;
+				}
+				Map<String, Object> body = parseObject(response);
+				if (body == null) {
+					ETSAssert.failWithUri(requirement,
+							target + " returned HTTP 200 but did not contain a JSON System description.");
+				}
+				collectRelation(body, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
 			}
-			Map<String, Object> body = parseObject(response);
-			if (body == null) {
-				ETSAssert.failWithUri(requirement,
-						target + " returned HTTP 200 but did not contain a JSON System description.");
+			finally {
+				reads.leave(target);
 			}
-			collectRelation(body, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void collectRelationTargets(Object value, Set<String> aliases, Set<URI> targets, int depth) {
-		if (value == null || depth > 12) {
+	private void collectRelationTargets(Object value, Set<String> aliases, Set<URI> targets, int depth,
+			String requirement) {
+		if (value == null) {
 			return;
 		}
+		assertTraversalDepth(depth, requirement);
 		if (value instanceof Map<?, ?> raw) {
 			Map<String, Object> map = (Map<String, Object>) raw;
 			for (Map.Entry<String, Object> entry : map.entrySet()) {
 				if (aliasMatches(entry.getKey(), aliases)) {
-					collectHrefs(entry.getValue(), targets, depth + 1);
+					collectHrefs(entry.getValue(), targets, depth + 1, requirement);
 				}
 				else if (entry.getValue() instanceof Map<?, ?> || entry.getValue() instanceof Collection<?>) {
-					collectRelationTargets(entry.getValue(), aliases, targets, depth + 1);
+					collectRelationTargets(entry.getValue(), aliases, targets, depth + 1, requirement);
 				}
 			}
 		}
 		else if (value instanceof Collection<?> collection) {
 			for (Object item : collection) {
-				collectRelationTargets(item, aliases, targets, depth + 1);
+				collectRelationTargets(item, aliases, targets, depth + 1, requirement);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void collectHrefs(Object value, Set<URI> targets, int depth) {
-		if (value == null || depth > 12) {
+	private void collectHrefs(Object value, Set<URI> targets, int depth, String requirement) {
+		if (value == null) {
 			return;
 		}
+		assertTraversalDepth(depth, requirement);
 		if (value instanceof Map<?, ?> raw) {
 			Map<String, Object> map = (Map<String, Object>) raw;
 			String href = asString(map.get("href"));
@@ -761,12 +896,12 @@ public final class AdvancedFilteringSupport {
 				targets.add(resolve(href));
 			}
 			for (Object nested : map.values()) {
-				collectHrefs(nested, targets, depth + 1);
+				collectHrefs(nested, targets, depth + 1, requirement);
 			}
 		}
 		else if (value instanceof Collection<?> collection) {
 			for (Object item : collection) {
-				collectHrefs(item, targets, depth + 1);
+				collectHrefs(item, targets, depth + 1, requirement);
 			}
 		}
 	}
@@ -781,38 +916,6 @@ public final class AdvancedFilteringSupport {
 			if (propertyUid.isPresent() && identifiers.global.contains(propertyUid.get())) {
 				addResourceIdentifiers(property, identifiers);
 			}
-		}
-	}
-
-	private void followRecursiveRelations(Identifiers identifiers, Relation relation, ReferenceReads reads,
-			String requirement) {
-		Set<URI> followed = new LinkedHashSet<>();
-		while (followed.size() < MAX_REFERENCE_READS) {
-			Optional<URI> next = identifiers.global.stream()
-				.filter(AdvancedFilteringSupport::isAbsoluteUri)
-				.map(URI::create)
-				.filter(target -> sameOrigin(this.apiRoot, target))
-				.filter(target -> !followed.contains(target))
-				.findFirst();
-			if (next.isEmpty()) {
-				return;
-			}
-			URI target = next.get();
-			followed.add(target);
-			Response response = given().accept("application/geo+json, application/sml+json, application/json")
-				.when()
-				.get(target)
-				.andReturn();
-			if (response.getStatusCode() != 200) {
-				continue;
-			}
-			Map<String, Object> body = parseObject(response);
-			if (body == null) {
-				ETSAssert.failWithUri(requirement,
-						target + " returned HTTP 200 but did not contain a recursive association JSON object.");
-			}
-			addResourceIdentifiers(body, identifiers);
-			collectRelation(body, relation.aliases, relation.hrefIdentity, identifiers, reads, 0, requirement);
 		}
 	}
 
@@ -925,32 +1028,59 @@ public final class AdvancedFilteringSupport {
 		return Optional.empty();
 	}
 
+	private static Optional<String> uidPrefix(String value) {
+		if (!isAbsoluteUri(value)) {
+			return Optional.empty();
+		}
+		int schemeSeparator = value.indexOf(':');
+		if (schemeSeparator < 0 || value.length() <= schemeSeparator + 2) {
+			return Optional.empty();
+		}
+		int end = value.offsetByCodePoints(value.length(), -1);
+		String prefix = value.substring(0, end);
+		return isAbsoluteUri(prefix) ? Optional.of(prefix) : Optional.empty();
+	}
+
+	private static boolean matchesIdentifier(Map<String, Object> resource, String identifier) {
+		if (identifier == null || !identifier.endsWith("*")) {
+			return hasIdentifier(resource, identifier);
+		}
+		String prefix = identifier.substring(0, identifier.length() - 1);
+		return !prefix.isBlank() && uid(resource).filter(value -> value.startsWith(prefix)).isPresent();
+	}
+
 	private static List<String> plainTextStrings(Object value) {
 		List<String> strings = new ArrayList<>();
-		collectPlainTextStrings(value, strings, 0);
+		collectPlainTextStrings(value, strings);
 		return strings;
 	}
 
-	private static void collectPlainTextStrings(Object value, List<String> strings, int depth) {
-		if (value == null || depth > 12) {
+	private static void collectPlainTextStrings(Object value, List<String> strings) {
+		if (value == null) {
 			return;
 		}
-		if (value instanceof String string) {
-			strings.add(string);
-		}
-		else if (value instanceof Map<?, ?> map) {
+		if (value instanceof Map<?, ?> map) {
 			for (Map.Entry<?, ?> entry : map.entrySet()) {
 				String key = normalize(String.valueOf(entry.getKey()));
-				if (!Set
-					.of("id", "uid", "uniqueid", "type", "featuretype", "definition", "href", "rel", "geometry", "bbox",
-							"validtime", "baseproperty", "objecttype")
-					.contains(key)) {
-					collectPlainTextStrings(entry.getValue(), strings, depth + 1);
+				if (Set.of("name", "description", "label").contains(key)) {
+					collectTextValues(entry.getValue(), strings);
+				}
+				else if (entry.getValue() instanceof Map<?, ?> || entry.getValue() instanceof Collection<?>) {
+					collectPlainTextStrings(entry.getValue(), strings);
 				}
 			}
 		}
 		else if (value instanceof Collection<?> collection) {
-			collection.forEach(item -> collectPlainTextStrings(item, strings, depth + 1));
+			collection.forEach(item -> collectPlainTextStrings(item, strings));
+		}
+	}
+
+	private static void collectTextValues(Object value, List<String> strings) {
+		if (value instanceof String string) {
+			strings.add(string);
+		}
+		else if (value instanceof Collection<?> collection) {
+			collection.forEach(item -> collectTextValues(item, strings));
 		}
 	}
 
@@ -984,16 +1114,10 @@ public final class AdvancedFilteringSupport {
 		return stringValue(asMap(resource.get("properties")).get("uid"));
 	}
 
-	private static void addSemanticIdentifier(String value, Identifiers result) {
-		if (value == null || value.isBlank()) {
-			return;
-		}
-		if (isAbsoluteUri(value)) {
-			result.global.add(value);
-			lastPathToken(URI.create(value)).ifPresent(result.local::add);
-		}
-		else {
-			result.local.add(value);
+	private static void assertTraversalDepth(int depth, String requirement) {
+		if (depth > MAX_REFERENCE_DEPTH) {
+			ETSAssert.failWithUri(requirement,
+					"association traversal depth exceeded " + MAX_REFERENCE_DEPTH + " while collecting evidence.");
 		}
 	}
 
@@ -1071,16 +1195,6 @@ public final class AdvancedFilteringSupport {
 		catch (IllegalArgumentException ex) {
 			return URI.create("urn:invalid-reference:" + Integer.toHexString(href.hashCode()));
 		}
-	}
-
-	private static Optional<String> lastPathToken(URI uri) {
-		if (uri == null || uri.getPath() == null || uri.getPath().isBlank()) {
-			return Optional.empty();
-		}
-		String path = uri.getPath();
-		int end = path.endsWith("/") ? path.length() - 1 : path.length();
-		int slash = path.lastIndexOf('/', end - 1);
-		return end > slash + 1 ? Optional.of(path.substring(slash + 1, end)) : Optional.empty();
 	}
 
 	private static boolean aliasMatches(String value, Set<String> aliases) {
@@ -1229,6 +1343,9 @@ public final class AdvancedFilteringSupport {
 	private record PropertyValue(String name, String value) {
 	}
 
+	private record FilterPredicate(String parameter, String value, Predicate<Map<String, Object>> matches) {
+	}
+
 	private record Subresource(String path, Map<String, String> query, Set<String> aliases, boolean includeItems,
 			String accept) {
 	}
@@ -1251,8 +1368,26 @@ public final class AdvancedFilteringSupport {
 
 		private final Set<URI> visited = new LinkedHashSet<>();
 
-		private boolean visit(URI target) {
-			return this.visited.size() < MAX_REFERENCE_READS && this.visited.add(target);
+		private final Set<URI> active = new LinkedHashSet<>();
+
+		private boolean enter(URI target, String requirement) {
+			if (this.active.contains(target)) {
+				ETSAssert.failWithUri(requirement, "association reference cycle detected at " + target + ".");
+			}
+			if (this.visited.contains(target)) {
+				return false;
+			}
+			if (this.visited.size() >= MAX_REFERENCE_READS) {
+				ETSAssert.failWithUri(requirement,
+						"association reference-read limit of " + MAX_REFERENCE_READS + " exceeded at " + target + ".");
+			}
+			this.visited.add(target);
+			this.active.add(target);
+			return true;
+		}
+
+		private void leave(URI target) {
+			this.active.remove(target);
 		}
 
 	}

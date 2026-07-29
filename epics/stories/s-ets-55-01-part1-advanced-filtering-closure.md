@@ -44,16 +44,25 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   block the class.
 - [ ] Common ID and keyword predicates cover every declared canonical Part 1
   endpoint, including local IDs, UIDs, and UID prefixes.
+- [ ] UID-prefix queries derive a non-empty shorter prefix, retain the known
+  match, and reject non-prefix results on every page.
+- [ ] Keyword evidence is limited to `name`, `description`, or SensorML
+  `label`; unrelated scalar extensions cannot satisfy `q`.
 - [ ] Recommendation procedures emit visible warnings without converting
   recommendation non-support into conformance failure.
 - [ ] Geometry predicates use parsed JTS intersection, not response-shape
   smoke.
 - [ ] Every association procedure verifies local-ID and UID forms against
   procedure-specific relation evidence.
-- [ ] Combined filters prove logical AND semantics on every inspectable
-  canonical endpoint.
+- [ ] Same-origin resolved association targets supply their representation ID
+  and UID; path tokens and hrefs are not synthetic substitutes.
+- [ ] Combined filters prove logical AND semantics for at least two distinct,
+  independently evidenced combinations on every inspectable canonical
+  endpoint.
 - [ ] Indirect property and feature-of-interest recommendations evaluate
-  transitive result-set inclusion.
+  transitive result-set inclusion for every eligible resource.
+- [ ] Recursive association traversal fails explicitly on depth, cycle, or
+  reference-read limit exhaustion.
 - [ ] Every page is status/media gated before parsing and traversed through
   bounded same-origin pagination.
 - [ ] Known matching seeds cannot yield a vacuous empty-result PASS.

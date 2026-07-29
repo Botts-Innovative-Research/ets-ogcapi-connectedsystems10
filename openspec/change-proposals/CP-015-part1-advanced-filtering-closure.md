@@ -63,8 +63,11 @@ empty result.
 
 Common `id`, `q`, and combined-filter procedures SHALL process every canonical
 Part 1 resource endpoint whose owning conformance class is declared. ID
-coverage SHALL use local IDs and UIDs, including UID-prefix behavior.
-Keyword coverage SHALL use seed-derived human-readable text. Custom property,
+coverage SHALL use local IDs, UIDs, and a non-empty shorter UID prefix followed
+by `*`; every wildcard result UID SHALL begin with that prefix and the known
+seed SHALL be present across complete pagination. Keyword coverage SHALL use
+only seed-derived `name`, `description`, or SensorML-equivalent `label` text.
+Custom property,
 indirect property, and indirect feature-of-interest procedures target released
 recommendations and SHALL emit visible warnings rather than conformance
 failures when the recommendation is not implemented.
@@ -77,9 +80,20 @@ Association procedures SHALL derive local-ID and UID filters from actual
 relations, validate the filtered endpoint through the corresponding released
 resource representation boundary, and follow the procedure-specific
 associations. Same-origin HTTP traversal SHALL be bounded and cycle-safe.
+Successfully resolved targets SHALL supply their representation local ID and
+UID; path tokens and hrefs SHALL not be treated as synthetic replacements.
+Depth, cycle, and reference-read limit exhaustion SHALL fail explicitly.
 Cross-origin association targets SHALL not receive IUT credentials; when the
 released procedure permits unresolved targets to act as identifiers, their URI
 SHALL be used without dereference.
+
+Combined filtering SHALL exercise every independently evidenced pairwise
+combination and at least two distinct combinations per inspectable canonical
+endpoint, validating every constituent predicate.
+
+Indirect recommendations SHALL inspect every eligible Property and Sampling
+Feature, including later-page resources, and aggregate visible warnings rather
+than stopping after the first eligible seed.
 
 Mandatory evidence limitations SHALL aggregate only after all independently
 inspectable endpoints or resources have been processed. Assertion failures,

@@ -2824,6 +2824,22 @@ from existing resources and executes each filter
 requested predicate
 **AND** known matching evidence cannot yield an empty PASS.
 
+##### SCENARIO-ETS-PART1-009-RELEASED-UID-PREFIX-001 (CRITICAL)
+**GIVEN** a canonical resource has a non-empty UID from which a shorter prefix
+can be derived
+**WHEN** the ETS submits that prefix with a trailing `*`
+**THEN** the known resource is present and every result UID starts with the
+unstarred prefix
+**AND** empty-prefix probes, non-prefix results, and later-page non-prefix
+results cannot PASS.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-KEYWORD-SOURCE-001 (CRITICAL)
+**GIVEN** a canonical resource representation
+**WHEN** the ETS derives and verifies a `q` predicate
+**THEN** keyword evidence comes only from `name`, `description`, or the
+SensorML-equivalent `label`
+**AND** unrelated scalar extension properties cannot create a false PASS.
+
 ##### SCENARIO-ETS-PART1-009-RELEASED-GEOMETRY-001 (CRITICAL)
 **GIVEN** Systems, Deployments, or Sampling Features with usable GeoJSON
 geometry
@@ -2838,6 +2854,14 @@ controlled-property relation evidence
 **WHEN** the corresponding filter is executed with local IDs and UIDs
 **THEN** every returned System is validated through the System representation
 boundary and exposes the requested direct or recursively inherited relation.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PROVENANCE-001 (CRITICAL)
+**GIVEN** a same-origin association link whose path token and canonical href
+differ from the target representation's local ID and UID
+**WHEN** local-ID and UID repetitions are selected
+**THEN** the values come from the resolved target representation
+**AND** neither the path token nor canonical href is accepted as synthetic
+identifier evidence after successful resolution.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001 (CRITICAL)
 **GIVEN** Deployment parent, deployed-System, feature-of-interest,
@@ -2866,15 +2890,19 @@ bounded traversed relation graph establishes the requested predicate.
 requested recursive base relation or object type.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001 (CRITICAL)
-**GIVEN** at least two seed-derived filters available for a canonical endpoint
-**WHEN** they are submitted in one request
+**GIVEN** multiple seed-derived filters available for a canonical endpoint
+**WHEN** the ETS submits every independently evidenced pairwise combination
 **THEN** every returned item satisfies every supplied predicate
-**AND** the procedure cannot PASS from union semantics or an empty result.
+**AND** every canonical endpoint exercises at least two distinct combinations
+**AND** the procedure cannot PASS from union semantics, one hard-coded
+combination, or an empty result.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-INDIRECT-RECOMMENDATIONS-001 (NORMAL)
 **GIVEN** base-property or nested feature-of-interest relation evidence
 **WHEN** direct and transitive filter result sets are compared
 **THEN** transitive sets include their direct descendants
+**AND** every eligible Property and every eligible Sampling Feature is
+evaluated, including resources on later collection pages
 **AND** unsupported recommendation behavior emits a visible warning rather
 than a mandatory conformance failure.
 
@@ -2884,6 +2912,8 @@ than a mandatory conformance failure.
 **THEN** every page is status/media gated before parsing
 **AND** pagination and same-origin association traversal reject cycles,
 over-limit graphs, cross-origin credential forwarding, and later-page defects.
+Depth and reference-read limits SHALL fail explicitly rather than silently
+truncate relation evidence.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
 **GIVEN** one released procedure lacks seed evidence or SKIPs

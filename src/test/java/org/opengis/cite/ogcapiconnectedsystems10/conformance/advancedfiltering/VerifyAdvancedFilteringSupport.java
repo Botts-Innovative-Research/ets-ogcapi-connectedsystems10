@@ -21,6 +21,7 @@ public class VerifyAdvancedFilteringSupport {
 		assertTrue(AdvancedFilteringSupport.isValidIdList("system-1,system-2"));
 		assertTrue(AdvancedFilteringSupport.isValidIdList("urn:example:system:1,urn:example:system:2"));
 		assertTrue(AdvancedFilteringSupport.isValidIdList("urn:example:system:*"));
+		assertFalse(AdvancedFilteringSupport.isValidIdList("*"));
 		assertFalse(AdvancedFilteringSupport.isValidIdList(""));
 		assertFalse(AdvancedFilteringSupport.isValidIdList(","));
 		assertFalse(AdvancedFilteringSupport.isValidIdList("system-1,urn:example:system:1"));
@@ -44,6 +45,20 @@ public class VerifyAdvancedFilteringSupport {
 		assertTrue(AdvancedFilteringSupport.hasIdentifier(sensorMl, "urn:example:property:1"));
 		assertTrue(AdvancedFilteringSupport.containsPlainText(sensorMl, "temperature"));
 		assertTrue(AdvancedFilteringSupport.hasPropertyValue(sensorMl, "customCode", "alpha"));
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-KEYWORD-SOURCE-001.
+	 */
+	@Test
+	public void keywordPredicateIgnoresUnrelatedScalarExtensions() {
+		Map<String, Object> unrelated = Map.of("id", "system-1", "properties",
+				Map.of("uid", "urn:example:system:1", "customCode", "weather"));
+		Map<String, Object> described = Map.of("id", "system-2", "properties",
+				Map.of("description", "Weather observations"));
+
+		assertFalse(AdvancedFilteringSupport.containsPlainText(unrelated, "weather"));
+		assertTrue(AdvancedFilteringSupport.containsPlainText(described, "weather"));
 	}
 
 	/**

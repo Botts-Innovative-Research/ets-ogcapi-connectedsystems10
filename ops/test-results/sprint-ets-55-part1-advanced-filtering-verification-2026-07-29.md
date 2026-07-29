@@ -21,9 +21,9 @@ Released source: `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
 
 ## Verification
 
-- R3 test-first gate: expected `36/3/0/0`, then focused controlled HTTP
-  `36/0/0/0` after remediation.
-- Precommit full Docker Maven: `590/0/0/3`; the three skips are unchanged historical
+- R4 test-first gate: expected `40/4/0/0`, then focused controlled HTTP
+  `40/0/0/0` after remediation.
+- Precommit full Docker Maven: `594/0/0/3`; the three skips are unchanged historical
   harness fixtures.
 - ATS source reproduction: PASS at the pinned clean checkout.
 - Coverage: `240/76 exact/2 helper/115 candidate/47 unmapped`;
@@ -31,19 +31,15 @@ Released source: `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
 - Controlled HTTP executes all 25 positive procedures and key fail-closed
   UID-prefix, keyword, association, combination, pagination, traversal,
   isolation, dependency, and credential branches.
-- API Common sabotage: PASS. API Common setup and all four methods SKIP, then
-  Advanced Filtering setup and all 25 methods cascade-SKIP.
-- Credential integration and wire E2E: PASS with zero unmasked artifact hits,
-  33 masked events, and 33 intact synthetic transmissions.
-- Artifact hygiene: PASS with 169 IUT GETs, zero writes, and zero credential
-  leaks.
+- Superseded candidate `756d729` API Common sabotage, credential, and hygiene
+  gates passed. They must be repeated from the new exact candidate.
 
 ## TeamEngine E2E
 
-Candidate `085a81fdaa8fb2b823dc029532a1e9b41b8cd16c`, image
-`sha256:f1a6fed0a0a899a1f09f660ad7dbb947eed91823d6ae94176e06498ae24fc455`,
+Candidate `756d729828d08b88d43ce8ae0ff5f5dd2e5f13b7`, image
+`sha256:e6e7f7c7c853081b37970d69d3742d36baaa5a92d1f39ca46adb796535ec4bf1`,
 and all associated runtime and TeamEngine gates are superseded audit evidence
-after R3. A new candidate must repeat every exact gate. No OSH or TeamEngine
+after R4. A new candidate must repeat every exact gate. No OSH or TeamEngine
 source or binary was modified.
 
 ## Adversarial Review
@@ -54,14 +50,18 @@ combined predicate completeness, keyword boundaries, mapping/traceability,
 and exact-build provenance. R3 additionally found Deployment property wrapper
 and nested-href shortcuts, malformed-href synthetic identity, mapping
 overstatement, ignored evidence, and contract traceability. Requirement-linked
-R3 regressions move `36/3/0/0` to `36/0/0/0`; exact-candidate gates and fresh
-Raze remain pending.
+R4 found direct-relation suffix/nested-extension shortcuts and missing
+single-System validation after Deployment property dereference. Four
+requirement-linked regressions move `40/4/0/0` to `40/0/0/0`;
+exact-candidate and fresh Raze gates remain pending.
 
 ## Evidence Index
 
 Historical diagnostic evidence is under
 `ops/test-results/sprint-ets-55-part1-advanced-filtering-e2e-2026-07-29/`.
-Superseded exact candidate and current remediation evidence is under
+Superseded `085a81f` exact candidate and R3 remediation evidence is under
 `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r2-2026-07-29/`
 and includes R2/R3 regression evidence plus the superseded `085a81f` exact
-artifacts. A new SHA-prefixed evidence set will be added after commit.
+artifacts. Superseded `756d729` SHA-prefixed, checksum-manifested evidence and
+current R4 remediation logs are under
+`ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r3-2026-07-29/`.

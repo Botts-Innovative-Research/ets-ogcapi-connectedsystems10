@@ -1,7 +1,7 @@
 sprint: ets-55
 story: S-ETS-55-01
 title: Part 1 Advanced Filtering direct ATS closure
-status: REMEDIATION_PRECOMMIT_GREEN_R3
+status: R4_REMEDIATION_PRECOMMIT_GREEN
 triggered_by: "User instructed continuation of the accepted released-ATS sequence"
 requirements:
   - REQ-ETS-PART1-009
@@ -58,14 +58,14 @@ guardrails:
   - Do not import executable conformance-suite jars as libraries.
   - Do not treat recommendation warnings as mandatory requirement failures.
 verification:
-  test_first: PASS_36_3_0_0_TO_36_0_0_0
-  focused_maven: PRECOMMIT_PASS_36_0_0_0
-  full_maven: PRECOMMIT_PASS_590_0_0_3
+  test_first: PASS_40_4_0_0_TO_40_0_0_0
+  focused_maven: PRECOMMIT_PASS_40_0_0_0
+  full_maven: PRECOMMIT_PASS_594_0_0_3
   coverage_audit: PASS_240_76_2_115_47_ADVANCED_FILTERING_25_OF_25_EXACT
   local_osh_teamengine: PENDING_EXACT_CANDIDATE_RERUN
-  controlled_http: PRECOMMIT_PASS_36_0_0_0
+  controlled_http: PRECOMMIT_PASS_40_0_0_0
   exact_image: PENDING_EXACT_CANDIDATE_RERUN
   dependency_sabotage: PENDING_EXACT_CANDIDATE_RERUN
   credential_gates: PENDING_EXACT_CANDIDATE_RERUN
   artifact_hygiene: PENDING_EXACT_CANDIDATE_RERUN
-  raze: GAPS_FOUND_0_98_R3_REMEDIATED_RECHECK_PENDING
+  raze: GAPS_FOUND_0_99_R4_REMEDIATED_RECHECK_PENDING

@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-009`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: R3 remediation precommit green; exact-candidate gates pending
+**Status**: R4 remediation precommit green; exact-candidate gates pending
 
 ## Motivation
 
@@ -167,13 +167,12 @@ reference media/pagination, combined-predicate completeness, keyword
 provenance, mapping accuracy, scenario traceability, and exact committed-build
 provenance.
 
-R3 has a reproducible `36/3/0/0` red baseline, focused controlled-HTTP
-`36/0/0/0`, full precommit Docker Maven `590/0/0/3`, and a `20/20`
-scenario-anchor inventory. Deployment property evidence now follows only
-direct deployed-System targets; wrapper aliases, unrelated nested hrefs, and
-malformed hrefs cannot manufacture identity or predicate evidence. Four
-mapping descriptions and the sprint contract now match demonstrated behavior.
-Candidate `085a81fdaa` and all its exact gates are superseded audit evidence.
-A new committed candidate must rerun exact Maven, image/runtime,
+R4 has a reproducible `40/4/0/0` red baseline, focused controlled-HTTP
+`40/0/0/0`, full precommit Docker Maven `594/0/0/3`, and a `20/20`
+scenario-anchor inventory. Direct associations now accept exact recognized
+fields only at representation boundaries, and Deployment property
+dereferences must be non-collection System representations. Candidate
+`756d729` and all its exact gates are superseded audit evidence. A new
+committed candidate must rerun exact Maven, image/runtime,
 unmodified-local-OSH, sabotage, credential, no-mutation, immutability,
 artifact-hygiene, and fresh Raze gates without modifying OSH or TeamEngine.

@@ -2,10 +2,9 @@
 
 ## Status
 
-REMEDIATION PRECOMMIT GREEN - final Raze R3 reopened Deployment property
-target provenance, malformed-href identity, mapping honesty, evidence
-preservation, and contract traceability. Requirement-linked regressions now
-pass; exact-candidate and fresh Raze gates remain.
+R4 REMEDIATION PRECOMMIT GREEN - candidate `756d729` is superseded. Exact
+direct-relation boundaries and single-System dereference validation pass
+requirement-linked regressions; exact-candidate and fresh Raze gates remain.
 
 ## User Instruction
 
@@ -69,6 +68,11 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   and UID; wrapper IDs, path tokens, and hrefs are not synthetic substitutes.
 - [x] Procedure-specific deployed-System, features-of-interest, Datastream, and
   ControlStream paths cannot be replaced by root aliases.
+- [x] Direct relations accept only exact recognized fields at the
+  representation boundary; suffix aliases and nested extension aliases
+  cannot seed or validate predicates.
+- [x] Dereferenced deployed-System property targets must be one System
+  representation; collections and non-System objects contribute no evidence.
 - [x] Combined filters enumerate every applicable inherited, mandatory
   class-specific, and positively supported custom predicate, then prove every
   evidenced pair uses logical AND.
@@ -104,18 +108,22 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
 - Exactly 25 methods have reviewed exact mappings. Coverage is
   `240/76 exact/2 helper/115 candidate/47 unmapped`; Advanced Filtering is
   `25/25 exact`.
-- The R3 regression baseline is `36/3/0/0`; focused controlled HTTP is
-  `36/0/0/0`, precommit full Docker Maven is `590/0/0/3`, and scenario trace
+- The R4 regression baseline is `40/4/0/0`; focused controlled HTTP is
+  `40/0/0/0`, precommit full Docker Maven is `594/0/0/3`, and scenario trace
   remains `20/20` with no missing Java anchors.
 - Deployment property procedures now ignore wrapper aliases and unrelated
   nested hrefs, follow only direct deployed-System targets, and read the
   resolved System. Malformed hrefs contribute no identifier or invented URI.
 - Four mapping descriptions now state only demonstrated behavior, and owner
   applicability is explicit in the sprint contract.
-- Candidate `085a81fdaa8fb2b823dc029532a1e9b41b8cd16c` and its image/runtime,
-  TeamEngine, sabotage, credential, immutability, and hygiene results remain
-  preserved as superseded audit evidence. Every gate must be rerun from the
-  new committed candidate.
+- Exact field matching now scans only representation root and immediate
+  GeoJSON `properties` boundaries. Recognized relation containers retain
+  bounded depth/cycle/read protections.
+- Dereferenced Deployment property targets now reject collections and
+  non-System representations before collecting property evidence.
+- Candidate `756d729828d08b88d43ce8ae0ff5f5dd2e5f13b7` and its exact evidence
+  are preserved as superseded audit evidence. Every exact gate must rerun from
+  the new committed candidate.
 - No OSH or TeamEngine source or binary is modified, and no hosted CI is
   added.
 - Initial Raze found seven semantic gaps. Final Raze recheck
@@ -129,5 +137,8 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   become synthetic URNs, four mappings overstate behavior, ignored exact logs
   require force-add, and the contract omitted owner applicability. Candidate
   `085a81fdaa` is superseded audit evidence. The R3 red baseline is
-  `36/3/0/0`; remediation passes focused `36/0/0/0` and full Maven
-  `590/0/0/3`. Every exact gate and fresh Raze review must be rerun.
+  `36/3/0/0`; candidate `756d729` passed its exact gates but R4 returned
+  `GAPS_FOUND 0.99` for direct-relation boundary shortcuts and unvalidated
+  deployed-System target types. R4 regressions move `40/4/0/0` to focused
+  `40/0/0/0` and full Maven `594/0/0/3`. New exact gates and fresh Raze
+  remain.

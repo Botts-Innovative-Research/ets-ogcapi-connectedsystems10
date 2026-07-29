@@ -385,6 +385,70 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
 	 */
 	@Test
+	public void directRelationsRejectUnrelatedSuffixAliases() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNRELATED_SUFFIX_ALIAS)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::systemsFilterByParent);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "parent-shortcut"::equals));
+			assertEquals(0,
+					server.callsWithValue("/api/systems", "parent", "urn:example:system:parent-shortcut"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void directRelationsRejectNestedExtensionAliases() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.NESTED_EXTENSION_ALIAS)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::systemsFilterByParent);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "parent-shortcut"::equals));
+			assertEquals(0,
+					server.callsWithValue("/api/systems", "parent", "urn:example:system:parent-shortcut"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001;
+	 * SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001.
+	 */
+	@Test
+	public void deploymentPropertiesRejectNonSystemTarget() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.DEPLOYED_PROPERTY_NON_SYSTEM_TARGET)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::deploymentsFilterByObservedProperty);
+			assertTrue(server.calls("/api/systems/deployed-not-system") > 0);
+			assertEquals(0, server.callsWithValue("/api/deployments", "observedProperty", "property-target"::equals));
+			assertEquals(0, server.callsWithValue("/api/deployments", "observedProperty",
+					"urn:example:property:target"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001;
+	 * SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001.
+	 */
+	@Test
+	public void deploymentPropertiesRejectSystemCollectionTarget() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.DEPLOYED_PROPERTY_COLLECTION_TARGET)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::deploymentsFilterByObservedProperty);
+			assertTrue(server.calls("/api/systems/deployed-collection") > 0);
+			assertEquals(0, server.callsWithValue("/api/deployments", "observedProperty", "property-target"::equals));
+			assertEquals(0, server.callsWithValue("/api/deployments", "observedProperty",
+					"urn:example:property:target"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
 	public void rootAliasesCannotReplacePrescribedAssociationSubresources() throws Exception {
 		try (FixtureServer server = new FixtureServer(Mode.ROOT_ASSOCIATION_SHORTCUTS)) {
 			server.start();
@@ -547,9 +611,11 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		UNION_ADDITIONAL_CUSTOM_PROPERTY, UNION_LATER_RESOURCE_PREDICATE, WRONG_GEOMETRY, CROSS_ORIGIN_ASSOCIATION,
 		NO_ASSOCIATIONS, RESOLVED_TARGET_IDENTIFIERS, CONTRADICTORY_SYSTEM_FOI_WRAPPER,
 		CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER, DEPLOYED_PROPERTY_WRAPPER_SHORTCUT,
-		DEPLOYED_PROPERTY_NESTED_HREF_SHORTCUT, MALFORMED_ASSOCIATION_HREF, ROOT_ASSOCIATION_SHORTCUTS,
-		BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION, LATER_INDIRECT_RESOURCES,
-		OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404, ONLY_SYSTEM_DECLARED
+		DEPLOYED_PROPERTY_NESTED_HREF_SHORTCUT, DEPLOYED_PROPERTY_NON_SYSTEM_TARGET,
+		DEPLOYED_PROPERTY_COLLECTION_TARGET, MALFORMED_ASSOCIATION_HREF, UNRELATED_SUFFIX_ALIAS, NESTED_EXTENSION_ALIAS,
+		ROOT_ASSOCIATION_SHORTCUTS, BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION,
+		LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404,
+		ONLY_SYSTEM_DECLARED
 
 	}
 
@@ -654,6 +720,9 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				case "/api/systems/deployed-real" -> single(exchange, "systems", deployedSystemTarget());
 				case "/api/systems/deployed-clean" -> single(exchange, "systems", deployedSystemWithoutProperties());
 				case "/api/systems/deployed-bogus" -> single(exchange, "systems", deployedSystemWithBogusProperties());
+				case "/api/systems/deployed-not-system" -> single(exchange, "systems", nonSystemWithTargetProperties());
+				case "/api/systems/deployed-collection" ->
+					sendCollection(exchange, "systems", "[" + deployedSystemWithTargetProperties() + "]", null);
 				case "/api/procedures/procedure-1" -> single(exchange, "procedures", procedure());
 				case "/api/features/foi-1" -> single(exchange, "samplingFeatures", featureOfInterest());
 				case "/api/features/foi-real" -> single(exchange, "samplingFeatures", resolvedFeatureOfInterest());
@@ -874,6 +943,14 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				sendCollection(exchange, type, "[" + deployedPropertyNestedHrefShortcut() + "]", null);
 				return;
 			}
+			if (this.mode == Mode.DEPLOYED_PROPERTY_NON_SYSTEM_TARGET && "systems".equals(type)) {
+				sendCollection(exchange, type, "[" + deployedPropertyTarget("deployed-not-system") + "]", null);
+				return;
+			}
+			if (this.mode == Mode.DEPLOYED_PROPERTY_COLLECTION_TARGET && "systems".equals(type)) {
+				sendCollection(exchange, type, "[" + deployedPropertyTarget("deployed-collection") + "]", null);
+				return;
+			}
 			canonical(exchange, type, query);
 		}
 
@@ -937,12 +1014,24 @@ public class VerifyAdvancedFilteringHttpProcedures {
 						 "controlledProperties":[{"id":"property-local"}]
 						""";
 			}
+			if (this.mode == Mode.UNRELATED_SUFFIX_ALIAS) {
+				return """
+						,"unrelatedParent":{"id":"parent-shortcut",
+						 "uid":"urn:example:system:parent-shortcut"}
+						""";
+			}
+			if (this.mode == Mode.NESTED_EXTENSION_ALIAS) {
+				return """
+						,"metadata":{"parentSystem":{"id":"parent-shortcut",
+						 "uid":"urn:example:system:parent-shortcut"}}
+						""";
+			}
 			if (this.mode == Mode.OVER_DEPTH_RELATION) {
-				String relation = "\"parentSystem\":{\"id\":\"parent-1\",\"uid\":\"urn:example:system:parent\"}";
+				String relation = "{\"id\":\"parent-1\",\"uid\":\"urn:example:system:parent\"}";
 				for (int depth = 0; depth < 14; depth++) {
-					relation = "\"wrapper" + depth + "\":{" + relation + "}";
+					relation = "{\"items\":[" + relation + "]}";
 				}
-				return "," + relation;
+				return ",\"parentSystem\":" + relation;
 			}
 			URI parent = this.mode == Mode.CROSS_ORIGIN_ASSOCIATION ? this.externalTarget
 					: apiRoot().resolve("systems/parent-1");
@@ -1087,6 +1176,13 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					apiRoot().resolve("systems/deployed-bogus"));
 		}
 
+		private String deployedPropertyTarget(String target) {
+			return """
+					{"id":"deployment-wrapper","uid":"urn:example:deployment:wrapper",
+					 "system":{"href":"%s"}}
+					""".formatted(apiRoot().resolve("systems/" + target));
+		}
+
 		private String deployedSystemWithoutProperties() {
 			return """
 					{"type":"Feature","id":"deployed-clean","geometry":null,
@@ -1102,6 +1198,26 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "name":"Unrelated Deployed System",
 					 "observedProperties":[{"id":"property-nested"}],
 					 "controlledProperties":[{"id":"property-nested"}]}}
+					""";
+		}
+
+		private String deployedSystemWithTargetProperties() {
+			return """
+					{"type":"Feature","id":"deployed-target","geometry":null,
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:target",
+					 "name":"Target Deployed System",
+					 "observedProperties":[{"id":"property-target",
+					  "uid":"urn:example:property:target"}]}}
+					""";
+		}
+
+		private String nonSystemWithTargetProperties() {
+			return """
+					{"type":"Feature","id":"not-system","geometry":null,
+					 "properties":{"featureType":"sosa:Deployment","uid":"urn:example:deployment:not-system",
+					 "name":"Not a System",
+					 "observedProperties":[{"id":"property-target",
+					  "uid":"urn:example:property:target"}]}}
 					""";
 		}
 

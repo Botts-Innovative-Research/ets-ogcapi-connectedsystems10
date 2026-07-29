@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T11:40Z
+Last updated: 2026-07-29T12:30Z
 
 ## Current Sprint Evidence
 
@@ -10,17 +10,19 @@ Sprint 55 Part 1 Advanced Filtering direct ATS:
   mappings are reviewed exact.
 - Coverage is `240/76 exact/2 helper/115 candidate/47 unmapped`;
   `/conf/advanced-filtering` is `25/25 exact`.
-- R3 test-first evidence is `36/3/0/0`; focused controlled HTTP is
-  `36/0/0/0`, and precommit full Maven is `590/0/0/3`.
+- R4 test-first evidence is `40/4/0/0`; focused controlled HTTP is
+  `40/0/0/0`, and precommit full Maven is `594/0/0/3`.
 - Scenario trace is `20/20` with no missing literal Java anchors.
-- Candidate `085a81fdaa` and its exact image/runtime, local OSH, sabotage,
-  credential, immutability, and hygiene results are superseded audit evidence.
-- R3 Deployment traversal, malformed-href, mapping-honesty, and contract
-  findings have requirement-linked tests and fixes. Exact-candidate gates and
-  fresh Raze are pending.
+- R4 direct-field and deployed-System target-type findings have
+  requirement-linked regressions and fixes. Candidate `756d729` and its exact
+  runtime/E2E evidence are superseded audit evidence.
+- New exact-candidate runtime, local OSH, sabotage, credential, immutability,
+  hygiene, and fresh Raze gates are pending.
 - Verification summary:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-verification-2026-07-29.md`.
-- Superseded exact candidate and current remediation evidence:
+- Superseded `756d729` exact candidate and current R4 remediation evidence:
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r3-2026-07-29/`.
+- Superseded R2/R3 remediation evidence:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r2-2026-07-29/`.
 
 ---

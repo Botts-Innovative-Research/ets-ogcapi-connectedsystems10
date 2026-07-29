@@ -20,8 +20,8 @@ recommended work and final gate.
   became synthetic identities, four mappings overstated behavior, exact logs
   needed preservation, and the contract omitted owner applicability.
 - Added three requirement-linked regressions. The reproducible R3 red baseline
-  is `36/3/0/0`; focused controlled HTTP is `36/0/0/0`, precommit full Docker
-  Maven is `590/0/0/3`, and scenario trace remains `20/20`.
+  is `36/3/0/0`; exact focused controlled HTTP is `36/0/0/0`, exact full
+  Docker Maven is `590/0/0/3`, and scenario trace remains `20/20`.
 - Deployment property procedures now follow only direct deployed-System
   targets and read the resolved System. Wrapper aliases and unrelated nested
   hrefs cannot establish evidence; malformed hrefs contribute no identifier.
@@ -29,9 +29,31 @@ recommended work and final gate.
   sprint contract. Coverage remains `240/76/2/115/47`, with Advanced
   Filtering `25/25 exact`.
 - Candidate `085a81fdaa` and its exact gates are preserved as superseded audit
-  evidence. The new candidate must repeat exact Maven, image/runtime,
-  unmodified-local-OSH, sabotage, credential, immutability, hygiene, and fresh
-  Raze gates. No OSH or TeamEngine modification and no hosted CI.
+  evidence.
+- Sealed candidate `756d729` and built exact image
+  `sha256:e6e7f7c7c853...ec4bf1` with matching `Build-Revision`.
+- Exact focused/full Maven pass `36/0/0/0` and `590/0/0/3`. Runtime, released
+  source, SWE Common, collision, immutable-base, and context gates pass.
+- Unmodified local OSH TeamEngine is honestly `238/40/7/191`; the seven
+  established IUT failures remain visible and all 25 Advanced Filtering
+  methods SKIP at the missing declaration.
+- API Common sabotage is `238/2/10/226`; credential integration and wire E2E
+  pass. Hygiene records 169 IUT GETs, zero writes, and zero leaks.
+- Preserved every SHA-prefixed exact artifact under a checksum manifest and
+  started fresh Raze R4.
+- Fresh Raze R4 returned `GAPS_FOUND 0.99`: arbitrary suffix or nested
+  extension aliases could establish direct relation evidence, and
+  dereferenced Deployment property targets were not proven single Systems.
+- Added four requirement-linked regressions. The R4 red baseline is
+  `40/4/0/0`; focused controlled HTTP is `40/0/0/0`, and precommit full Maven
+  is `594/0/0/3`.
+- Direct relations now accept exact root/immediate-`properties` fields and
+  explicit relation-link URIs only. Reference containers remain bounded.
+- Deployment property dereferences now reject collections and non-System
+  representations before collecting properties.
+- Candidate `756d729` and its exact gates remain preserved as superseded audit
+  evidence. New exact gates and fresh Raze remain. No OSH or TeamEngine
+  modification and no hosted CI.
 
 ## 2026-07-29 - Part 1 Advanced Filtering implementation and technical gates
 

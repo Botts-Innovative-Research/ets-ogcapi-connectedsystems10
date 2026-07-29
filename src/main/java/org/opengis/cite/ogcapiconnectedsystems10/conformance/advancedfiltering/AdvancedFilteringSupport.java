@@ -63,6 +63,8 @@ public final class AdvancedFilteringSupport {
 			"properties", "featuretype", "uid", "uniqueid", "name", "label", "description", "definition", "validtime",
 			"baseproperty", "objecttype", "position", "location");
 
+	private static final Set<String> REFERENCE_CONTAINER_KEYS = Set.of("features", "items", "members", "relations");
+
 	private final URI apiRoot;
 
 	private Set<String> declarations;
@@ -762,7 +764,7 @@ public final class AdvancedFilteringSupport {
 		if (asString(item.get("href")) != null) {
 			return true;
 		}
-		return item.keySet().stream().anyMatch(key -> aliasMatches(key, aliases));
+		return item.keySet().stream().anyMatch(key -> fieldAliasMatches(key, aliases));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -774,34 +776,36 @@ public final class AdvancedFilteringSupport {
 		assertTraversalDepth(depth, requirement);
 		if (value instanceof Map<?, ?> raw) {
 			Map<String, Object> map = (Map<String, Object>) raw;
-			Object links = map.get("links");
-			if (links instanceof Collection<?> collection) {
-				for (Object linkValue : collection) {
-					if (!(linkValue instanceof Map<?, ?> link)) {
-						continue;
-					}
-					String rel = asString(link.get("rel"));
-					if (rel != null && aliasMatches(rel, aliases)) {
-						collectReference(link, aliases, hrefIdentity, result, reads, depth + 1, requirement);
-					}
-				}
-			}
-			for (Map.Entry<String, Object> entry : map.entrySet()) {
-				if ("links".equals(entry.getKey())) {
-					continue;
-				}
-				if (aliasMatches(entry.getKey(), aliases)) {
-					collectReference(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
-				}
-				else if (entry.getValue() instanceof Map<?, ?> || entry.getValue() instanceof Collection<?>) {
-					collectRelation(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
-				}
-			}
+			collectDirectRelationFields(map, aliases, hrefIdentity, result, reads, depth, requirement);
+			collectDirectRelationFields(asMap(map.get("properties")), aliases, hrefIdentity, result, reads, depth + 1,
+					requirement);
 			return;
 		}
 		if (value instanceof Collection<?> collection) {
 			for (Object item : collection) {
 				collectRelation(item, aliases, hrefIdentity, result, reads, depth + 1, requirement);
+			}
+		}
+	}
+
+	private void collectDirectRelationFields(Map<String, Object> fields, Set<String> aliases, boolean hrefIdentity,
+			Identifiers result, ReferenceReads reads, int depth, String requirement) {
+		assertTraversalDepth(depth, requirement);
+		Object links = fields.get("links");
+		if (links instanceof Collection<?> collection) {
+			for (Object linkValue : collection) {
+				if (!(linkValue instanceof Map<?, ?> link)) {
+					continue;
+				}
+				String rel = asString(link.get("rel"));
+				if (rel != null && relationAliasMatches(rel, aliases)) {
+					collectReference(link, aliases, hrefIdentity, result, reads, depth + 1, requirement);
+				}
+			}
+		}
+		for (Map.Entry<String, Object> entry : fields.entrySet()) {
+			if (!"links".equals(entry.getKey()) && fieldAliasMatches(entry.getKey(), aliases)) {
+				collectReference(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
 			}
 		}
 	}
@@ -836,9 +840,8 @@ public final class AdvancedFilteringSupport {
 		addResourceIdentifiers(map, result);
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			String key = normalize(entry.getKey());
-			if (!"href".equals(entry.getKey()) && (entry.getValue() instanceof Map<?, ?>
-					|| entry.getValue() instanceof Collection<?>
-					|| Set.of("id", "uid", "uniqueid", "definition", "baseproperty", "objecttype").contains(key))) {
+			if (REFERENCE_CONTAINER_KEYS.contains(key)
+					&& (entry.getValue() instanceof Map<?, ?> || entry.getValue() instanceof Collection<?>)) {
 				collectReference(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
 			}
 		}
@@ -952,6 +955,9 @@ public final class AdvancedFilteringSupport {
 					ETSAssert.failWithUri(requirement,
 							target + " returned HTTP 200 but did not contain a JSON System description.");
 				}
+				if (isCollectionDocument(body) || !isSystemRepresentation(body)) {
+					continue;
+				}
 				collectRelation(body, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
 			}
 			finally {
@@ -964,7 +970,7 @@ public final class AdvancedFilteringSupport {
 	private void collectDirectDeployedSystemTargets(Map<String, Object> wrapper, Relation relation, Identifiers result,
 			ReferenceReads reads, Set<URI> targets, String requirement) {
 		for (Map.Entry<String, Object> entry : wrapper.entrySet()) {
-			if (aliasMatches(entry.getKey(), Set.of("system", "deployedsystem"))) {
+			if (fieldAliasMatches(entry.getKey(), Set.of("system", "deployedsystem"))) {
 				collectDirectDeployedSystemTarget(entry.getValue(), relation, result, reads, targets, 0, requirement);
 			}
 		}
@@ -1372,13 +1378,31 @@ public final class AdvancedFilteringSupport {
 		}
 	}
 
-	private static boolean aliasMatches(String value, Set<String> aliases) {
+	private static boolean fieldAliasMatches(String value, Set<String> aliases) {
 		String normalized = normalize(value);
 		if (normalized.endsWith("link")) {
 			normalized = normalized.substring(0, normalized.length() - "link".length());
 		}
-		String candidate = normalized;
-		return aliases.stream().anyMatch(alias -> candidate.equals(alias) || candidate.endsWith(alias));
+		return aliases.contains(normalized);
+	}
+
+	private static boolean relationAliasMatches(String value, Set<String> aliases) {
+		if (fieldAliasMatches(value, aliases)) {
+			return true;
+		}
+		try {
+			URI relation = URI.create(value);
+			if (!relation.isAbsolute()) {
+				return false;
+			}
+			String path = relation.getPath();
+			int slash = path == null ? -1 : path.lastIndexOf('/');
+			String segment = slash >= 0 ? path.substring(slash + 1) : path;
+			return fieldAliasMatches(segment, aliases) || fieldAliasMatches(relation.getFragment(), aliases);
+		}
+		catch (IllegalArgumentException ex) {
+			return false;
+		}
 	}
 
 	private static String normalize(String value) {

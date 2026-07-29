@@ -1,39 +1,25 @@
 package org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering;
 
-import static io.restassured.RestAssured.given;
-
 import java.net.URI;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Predicate;
 
-import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringSupport.Relation;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringSupport.ResourceType;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests;
+import org.testng.IResultMap;
 import org.testng.ITestContext;
+import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import io.restassured.response.Response;
-
 /**
- * CS API Part 1 - AdvancedFiltering conformance subset tests
- * ({@code /conf/advanced-filtering}; OGC 23-001 Annex A).
- *
- * <p>
- * Implements the Sprint 11 systems/common-resource read-only subset of
- * <strong>REQ-ETS-PART1-009</strong>. This class deliberately does not close the full
- * AdvancedFiltering requirement class: full cross-resource association filters, full
- * spatial semantics, combined-filter truth tables, endpoint parity, Part 2 query
- * behavior, and mutation-side classes remain open for future sprints.
- * </p>
+ * Released OGC 23-001 `/conf/advanced-filtering` conformance procedures.
  */
 public class AdvancedFilteringTests {
 
-	static final String CONF_ADVANCED_FILTERING = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering";
-
-	static final String REQ_ADVANCED_FILTERING_CLASS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering";
+	static final String GROUP = "advancedfiltering";
 
 	static final String REQ_ID_LIST_SCHEMA = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/id-list-schema";
 
@@ -41,372 +27,357 @@ public class AdvancedFilteringTests {
 
 	static final String REQ_RESOURCE_BY_KEYWORD = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/resource-by-keyword";
 
+	static final String REC_RESOURCE_BY_PROPERTY = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/advanced-filtering/resource-by-property";
+
 	static final String REQ_FEATURE_BY_GEOM = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/feature-by-geom";
 
-	private URI iutUri;
+	static final String REQ_SYSTEM_BY_PARENT = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-parent";
 
-	private String base;
+	static final String REQ_SYSTEM_BY_PROCEDURE = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-procedure";
 
-	private Response conformanceResponse;
+	static final String REQ_SYSTEM_BY_FOI = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-foi";
 
-	private Map<String, Object> conformanceBody;
+	static final String REQ_SYSTEM_BY_OBSPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-obsprop";
 
-	private Map<String, Object> systemsSeedBody;
+	static final String REQ_SYSTEM_BY_CONTROLPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/system-by-controlprop";
 
-	private String selectedSystemId;
+	static final String REQ_DEPLOYMENT_BY_PARENT = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-parent";
 
-	private String selectedKeyword;
+	static final String REQ_DEPLOYMENT_BY_SYSTEM = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-system";
+
+	static final String REQ_DEPLOYMENT_BY_FOI = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-foi";
+
+	static final String REQ_DEPLOYMENT_BY_OBSPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-obsprop";
+
+	static final String REQ_DEPLOYMENT_BY_CONTROLPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/deployment-by-controlprop";
+
+	static final String REQ_PROCEDURE_BY_OBSPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/procedure-by-obsprop";
+
+	static final String REQ_PROCEDURE_BY_CONTROLPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/procedure-by-controlprop";
+
+	static final String REQ_SF_BY_FOI = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/sf-by-foi";
+
+	static final String REQ_SF_BY_OBSPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/sf-by-obsprop";
+
+	static final String REQ_SF_BY_CONTROLPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/sf-by-controlprop";
+
+	static final String REQ_PROP_BY_BASEPROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/prop-by-baseprop";
+
+	static final String REQ_PROP_BY_OBJECT = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/prop-by-object";
+
+	static final String REQ_COMBINED_FILTERS = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/advanced-filtering/combined-filters";
+
+	static final String REC_INDIRECT_PROP = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/advanced-filtering/indirect-prop";
+
+	static final String REC_INDIRECT_FOI = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/advanced-filtering/indirect-foi";
+
+	private static final String DATETIME_EVIDENCE_METHOD = "datetimeUsesValidTime";
+
+	private URI apiRoot;
 
 	/**
-	 * Fetches /conformance and read-only seed data once for all AdvancedFiltering subset
-	 * assertions.
-	 * @param testContext TestNG test context.
+	 * Loads only the immutable API root after inherited API Common prerequisites.
+	 * @param testContext active TestNG context.
 	 */
-	@BeforeClass
-	public void fetchAdvancedFilteringInputs(ITestContext testContext) {
-		Object iutAttr = testContext.getSuite().getAttribute(SuiteAttribute.IUT.getName());
-		if (!(iutAttr instanceof URI)) {
+	@BeforeClass(dependsOnGroups = "part1apicommon", alwaysRun = true)
+	public void fetchAdvancedFilteringArguments(ITestContext testContext) {
+		skipWhenPrerequisiteUnsatisfied(testContext);
+		Object iut = testContext.getSuite().getAttribute(SuiteAttribute.IUT.getName());
+		if (!(iut instanceof URI)) {
 			throw new SkipException("Suite attribute '" + SuiteAttribute.IUT.getName() + "' is missing or not a URI.");
 		}
-		this.iutUri = (URI) iutAttr;
-		String iutString = this.iutUri.toString();
-		this.base = iutString.endsWith("/") ? iutString : iutString + "/";
+		configure((URI) iut);
+	}
 
-		URI conformanceUri = URI.create(this.base + "conformance");
-		this.conformanceResponse = given().accept("application/json").when().get(conformanceUri).andReturn();
-		this.conformanceBody = parseBody(this.conformanceResponse);
-		if (!declaresAdvancedFilteringConformance()) {
-			throw new SkipException(CONF_ADVANCED_FILTERING
-					+ " - IUT does not declare the CS API AdvancedFiltering conformance class in /conformance. "
-					+ "Undeclared query-parameter behavior is not conformance PASS evidence.");
+	void configure(URI iut) {
+		if (iut == null || !iut.isAbsolute()) {
+			throw new IllegalArgumentException("IUT must be an absolute URI.");
 		}
-
-		Response systemsSeedResponse = given().accept("application/json")
-			.queryParam("limit", 1)
-			.when()
-			.get(URI.create(this.base + "systems"))
-			.andReturn();
-		ETSAssert.assertStatus(systemsSeedResponse, 200, REQ_ADVANCED_FILTERING_CLASS);
-		this.systemsSeedBody = parseBody(systemsSeedResponse);
-		this.selectedSystemId = systemId(firstItem(this.systemsSeedBody));
-		this.selectedKeyword = keywordFromSystem(firstItem(this.systemsSeedBody));
+		String value = iut.toString();
+		this.apiRoot = URI.create(value.endsWith("/") ? value : value + "/");
 	}
 
 	/**
-	 * SCENARIO-ETS-PART1-009-ADVFILTER-CONFORMANCE-DECLARED-001.
-	 */
-	@Test(description = "OGC-23-001 " + REQ_ADVANCED_FILTERING_CLASS
-			+ ": /conformance declares /conf/advanced-filtering (REQ-ETS-PART1-009, SCENARIO-ETS-PART1-009-ADVFILTER-CONFORMANCE-DECLARED-001)",
-			groups = "advancedfiltering")
-	@SuppressWarnings("unchecked")
-	public void advancedFilteringConformanceDeclared() {
-		ETSAssert.assertStatus(this.conformanceResponse, 200, REQ_ADVANCED_FILTERING_CLASS);
-		if (this.conformanceBody == null) {
-			ETSAssert.failWithUri(REQ_ADVANCED_FILTERING_CLASS,
-					"/conformance body did not parse as JSON. Content-Type was: "
-							+ this.conformanceResponse.getContentType());
-		}
-		ETSAssert.assertJsonObjectHas(this.conformanceBody, "conformsTo", List.class, REQ_ADVANCED_FILTERING_CLASS);
-		List<Object> conformsTo = (List<Object>) this.conformanceBody.get("conformsTo");
-		Predicate<Object> isAdvancedFiltering = CONF_ADVANCED_FILTERING::equals;
-		ETSAssert.assertJsonArrayContains(conformsTo, isAdvancedFiltering, CONF_ADVANCED_FILTERING,
-				REQ_ADVANCED_FILTERING_CLASS);
-	}
-
-	/**
-	 * SCENARIO-ETS-PART1-009-ADVFILTER-ID-LIST-SCHEMA-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ID-LIST-SCHEMA-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_ID_LIST_SCHEMA
-			+ ": local ID_List helper accepts homogeneous local-ID or UID lists and rejects empty, malformed, or mixed lists (REQ-ETS-PART1-009, SCENARIO-ETS-PART1-009-ADVFILTER-ID-LIST-SCHEMA-001)",
-			groups = "advancedfiltering")
-	public void advancedFilteringIdListSchema() {
-		assertIdListValid("0mqcvdnfoca0");
-		assertIdListValid("0mqcvdnfoca0,0ngu9lvstls0");
-		assertIdListValid("urn:osh:sensor:simweather:0123456879");
-		assertIdListValid("urn:osh:sensor:simweather:0123456879,urn:osh:sensor:simweather:9876543210");
-		assertIdListValid("urn:osh:sensor:simweather:*");
-		assertIdListInvalid("");
-		assertIdListInvalid(",");
-		assertIdListInvalid("0mqcvdnfoca0,urn:osh:sensor:simweather:0123456879");
-		assertIdListInvalid("urn:osh:sensor:bad value");
+			+ ": query parameters of type ID List use valid homogeneous comma-separated values", groups = GROUP,
+			alwaysRun = true)
+	public void idListSchemaIsValid() {
+		support().idListSchema(REQ_ID_LIST_SCHEMA);
 	}
 
 	/**
-	 * SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-ID-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-RESOURCE-BY-ID-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_RESOURCE_BY_ID
-			+ ": /systems?id=<seed-id> returns non-empty results and every result preserves the seed id (REQ-ETS-PART1-009, SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-ID-001)",
-			groups = "advancedfiltering")
-	public void systemsFilterById() {
-		if (this.selectedSystemId == null || this.selectedSystemId.isBlank()) {
-			throw new SkipException(
-					REQ_RESOURCE_BY_ID + " - /systems seed response did not include a System with a usable id.");
-		}
-		Response filteredResponse = given().accept("application/json")
-			.queryParam("id", this.selectedSystemId)
-			.when()
-			.get(URI.create(this.base + "systems"))
-			.andReturn();
-		ETSAssert.assertStatus(filteredResponse, 200, REQ_RESOURCE_BY_ID);
-		Map<String, Object> body = parseBody(filteredResponse);
-		if (body == null) {
-			ETSAssert.failWithUri(REQ_RESOURCE_BY_ID, "/systems?id=" + this.selectedSystemId
-					+ " body did not parse as JSON. Content-Type was: " + filteredResponse.getContentType());
-		}
-		List<Object> items = itemsArray(body, REQ_RESOURCE_BY_ID);
-		if (items.isEmpty()) {
-			ETSAssert.failWithUri(REQ_RESOURCE_BY_ID, "/systems?id=" + this.selectedSystemId
-					+ " returned an empty items array after the suite selected that id from a non-empty /systems seed response.");
-		}
-		for (Object item : items) {
-			String itemId = systemId(item);
-			if (!this.selectedSystemId.equals(itemId)) {
-				ETSAssert.failWithUri(REQ_RESOURCE_BY_ID,
-						"/systems?id=" + this.selectedSystemId + " returned item with id '" + itemId
-								+ "'. Only resources assigned the requested id belong in the result set.");
-			}
-		}
+			+ ": every supported canonical endpoint filters by local-ID lists and UID lists", groups = GROUP,
+			alwaysRun = true)
+	public void canonicalResourcesFilterById() {
+		support().resourceById(REQ_RESOURCE_BY_ID);
 	}
 
 	/**
-	 * SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-KEYWORD-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-RESOURCE-BY-KEYWORD-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_RESOURCE_BY_KEYWORD
-			+ ": /systems?q=<seed-keyword> returns non-empty results with keyword evidence in name or description (REQ-ETS-PART1-009, SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-KEYWORD-001)",
-			groups = "advancedfiltering")
-	public void systemsFilterByKeyword() {
-		if (this.selectedKeyword == null || this.selectedKeyword.isBlank()) {
-			throw new SkipException(REQ_RESOURCE_BY_KEYWORD
-					+ " - /systems seed response did not include a System name or description with a usable keyword.");
-		}
-		Response filteredResponse = given().accept("application/json")
-			.queryParam("q", this.selectedKeyword)
-			.when()
-			.get(URI.create(this.base + "systems"))
-			.andReturn();
-		ETSAssert.assertStatus(filteredResponse, 200, REQ_RESOURCE_BY_KEYWORD);
-		Map<String, Object> body = parseBody(filteredResponse);
-		if (body == null) {
-			ETSAssert.failWithUri(REQ_RESOURCE_BY_KEYWORD, "/systems?q=" + this.selectedKeyword
-					+ " body did not parse as JSON. Content-Type was: " + filteredResponse.getContentType());
-		}
-		List<Object> items = itemsArray(body, REQ_RESOURCE_BY_KEYWORD);
-		if (items.isEmpty()) {
-			ETSAssert.failWithUri(REQ_RESOURCE_BY_KEYWORD, "/systems?q=" + this.selectedKeyword
-					+ " returned an empty items array after the suite selected that keyword from a non-empty /systems seed response.");
-		}
-		for (Object item : items) {
-			if (!hasKeywordEvidence(item, this.selectedKeyword)) {
-				ETSAssert.failWithUri(REQ_RESOURCE_BY_KEYWORD, "/systems?q=" + this.selectedKeyword
-						+ " returned an item without the keyword in name or description: " + item);
-			}
-		}
+			+ ": every supported canonical endpoint returns only resources containing the selected keyword",
+			groups = GROUP, alwaysRun = true)
+	public void canonicalResourcesFilterByKeyword() {
+		support().resourceByKeyword(REQ_RESOURCE_BY_KEYWORD);
 	}
 
 	/**
-	 * SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-GEOM-SMOKE-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-RESOURCE-BY-PROPERTY-001.
+	 */
+	@Test(description = "OGC-23-001 " + REC_RESOURCE_BY_PROPERTY
+			+ ": assess custom scalar property filtering on every supported canonical endpoint", groups = GROUP,
+			alwaysRun = true)
+	public void canonicalResourcesFilterByProperty() {
+		support().resourceByProperty(REC_RESOURCE_BY_PROPERTY);
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-GEOMETRY-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_FEATURE_BY_GEOM
-			+ ": /systems?geom=<broad-WKT-polygon> returns HTTP 200 JSON collection shape; this is smoke, not full spatial-intersection conformance (REQ-ETS-PART1-009, SCENARIO-ETS-PART1-009-ADVFILTER-SYSTEM-GEOM-SMOKE-001)",
-			groups = "advancedfiltering")
-	public void systemsFilterByGeomSmoke() {
-		Response geomResponse = given().accept("application/json")
-			.queryParam("geom", "POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))")
-			.when()
-			.get(URI.create(this.base + "systems"))
-			.andReturn();
-		ETSAssert.assertStatus(geomResponse, 200, REQ_FEATURE_BY_GEOM);
-		Map<String, Object> body = parseBody(geomResponse);
-		if (body == null) {
-			ETSAssert.failWithUri(REQ_FEATURE_BY_GEOM,
-					"/systems?geom=<broad WKT polygon> body did not parse as JSON. Content-Type was: "
-							+ geomResponse.getContentType());
-		}
-		if (!body.containsKey("items") && !body.containsKey("features")) {
-			ETSAssert.failWithUri(REQ_FEATURE_BY_GEOM,
-					"/systems?geom=<broad WKT polygon> returned JSON without CS API 'items' or GeoJSON 'features'. Keys: "
-							+ body.keySet());
-		}
+			+ ": systems, deployments, and samplingFeatures geometry results intersect the WKT query", groups = GROUP,
+			alwaysRun = true)
+	public void featuresFilterByGeometry() {
+		support().featureByGeometry(REQ_FEATURE_BY_GEOM);
 	}
 
 	/**
-	 * SCENARIO-ETS-PART1-009-ADVFILTER-DEPENDENCY-SMOKE-001.
+	 * REQ-ETS-PART1-009; released System association-filter procedures.
 	 */
-	@Test(description = "OGC-23-001 " + REQ_ADVANCED_FILTERING_CLASS
-			+ ": AdvancedFiltering group runtime-cascade tracer for AdvancedFiltering -> SystemFeatures -> Core (REQ-ETS-PART1-009, SCENARIO-ETS-PART1-009-ADVFILTER-DEPENDENCY-SMOKE-001)",
-			groups = "advancedfiltering")
-	public void advancedFilteringDependencyCascadeRuntime() {
-		ETSAssert.assertJsonObjectHas(Map.of("dependencyChain", "advancedfiltering->systemfeatures->core"),
-				"dependencyChain", String.class, REQ_ADVANCED_FILTERING_CLASS);
+	@Test(description = "OGC-23-001 " + REQ_SYSTEM_BY_PARENT
+			+ ": System parent filters match parent System local IDs and UIDs", groups = GROUP, alwaysRun = true)
+	public void systemsFilterByParent() {
+		support().association(ResourceType.SYSTEMS, "parent", Relation.PARENT_SYSTEM, REQ_SYSTEM_BY_PARENT);
 	}
 
-	@SuppressWarnings("unchecked")
-	private boolean declaresAdvancedFilteringConformance() {
-		if (this.conformanceBody == null) {
-			return false;
-		}
-		Object conformsToObj = this.conformanceBody.get("conformsTo");
-		if (!(conformsToObj instanceof List)) {
-			return false;
-		}
-		return ((List<Object>) conformsToObj).contains(CONF_ADVANCED_FILTERING);
+	@Test(description = "OGC-23-001 " + REQ_SYSTEM_BY_PROCEDURE
+			+ ": System procedure filters match Procedure local IDs and UIDs", groups = GROUP, alwaysRun = true)
+	public void systemsFilterByProcedure() {
+		support().association(ResourceType.SYSTEMS, "procedure", Relation.PROCEDURE, REQ_SYSTEM_BY_PROCEDURE);
 	}
 
-	@SuppressWarnings("unchecked")
-	private Map<String, Object> parseBody(Response response) {
-		try {
-			return response.jsonPath().getMap("$");
+	@Test(description = "OGC-23-001 " + REQ_SYSTEM_BY_FOI
+			+ ": System feature-of-interest filters follow recursive sampling-feature associations", groups = GROUP,
+			alwaysRun = true)
+	public void systemsFilterByFeatureOfInterest() {
+		support().association(ResourceType.SYSTEMS, "foi", Relation.FEATURE_OF_INTEREST, REQ_SYSTEM_BY_FOI);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_SYSTEM_BY_OBSPROP
+			+ ": System observedProperty filters include recursively nested subsystem properties", groups = GROUP,
+			alwaysRun = true)
+	public void systemsFilterByObservedProperty() {
+		support().association(ResourceType.SYSTEMS, "observedProperty", Relation.OBSERVED_PROPERTY,
+				REQ_SYSTEM_BY_OBSPROP);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_SYSTEM_BY_CONTROLPROP
+			+ ": System controlledProperty filters include recursively nested subsystem properties", groups = GROUP,
+			alwaysRun = true)
+	public void systemsFilterByControlledProperty() {
+		support().association(ResourceType.SYSTEMS, "controlledProperty", Relation.CONTROLLED_PROPERTY,
+				REQ_SYSTEM_BY_CONTROLPROP);
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; released Deployment association-filter procedures.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_DEPLOYMENT_BY_PARENT
+			+ ": Deployment parent filters match parent Deployment local IDs and UIDs", groups = GROUP,
+			alwaysRun = true)
+	public void deploymentsFilterByParent() {
+		support().association(ResourceType.DEPLOYMENTS, "parent", Relation.PARENT_DEPLOYMENT, REQ_DEPLOYMENT_BY_PARENT);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_DEPLOYMENT_BY_SYSTEM
+			+ ": Deployment system filters match recursively deployed System local IDs and UIDs", groups = GROUP,
+			alwaysRun = true)
+	public void deploymentsFilterBySystem() {
+		support().association(ResourceType.DEPLOYMENTS, "system", Relation.DEPLOYED_SYSTEM, REQ_DEPLOYMENT_BY_SYSTEM);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_DEPLOYMENT_BY_FOI
+			+ ": Deployment feature-of-interest filters match associated Feature local IDs and UIDs", groups = GROUP,
+			alwaysRun = true)
+	public void deploymentsFilterByFeatureOfInterest() {
+		support().association(ResourceType.DEPLOYMENTS, "foi", Relation.FEATURE_OF_INTEREST, REQ_DEPLOYMENT_BY_FOI);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_DEPLOYMENT_BY_OBSPROP
+			+ ": Deployment observedProperty filters follow deployed Systems", groups = GROUP, alwaysRun = true)
+	public void deploymentsFilterByObservedProperty() {
+		support().association(ResourceType.DEPLOYMENTS, "observedProperty", Relation.OBSERVED_PROPERTY,
+				REQ_DEPLOYMENT_BY_OBSPROP);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_DEPLOYMENT_BY_CONTROLPROP
+			+ ": Deployment controlledProperty filters follow deployed Systems", groups = GROUP, alwaysRun = true)
+	public void deploymentsFilterByControlledProperty() {
+		support().association(ResourceType.DEPLOYMENTS, "controlledProperty", Relation.CONTROLLED_PROPERTY,
+				REQ_DEPLOYMENT_BY_CONTROLPROP);
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; released Procedure association-filter procedures.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_PROCEDURE_BY_OBSPROP
+			+ ": Procedure observedProperty filters match referenced Property local IDs and UIDs", groups = GROUP,
+			alwaysRun = true)
+	public void proceduresFilterByObservedProperty() {
+		support().association(ResourceType.PROCEDURES, "observedProperty", Relation.OBSERVED_PROPERTY,
+				REQ_PROCEDURE_BY_OBSPROP);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_PROCEDURE_BY_CONTROLPROP
+			+ ": Procedure controlledProperty filters match referenced Property local IDs and UIDs", groups = GROUP,
+			alwaysRun = true)
+	public void proceduresFilterByControlledProperty() {
+		support().association(ResourceType.PROCEDURES, "controlledProperty", Relation.CONTROLLED_PROPERTY,
+				REQ_PROCEDURE_BY_CONTROLPROP);
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; released Sampling Feature association-filter procedures.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_SF_BY_FOI
+			+ ": Sampling Feature foi filters follow recursive sampleOf associations", groups = GROUP, alwaysRun = true)
+	public void samplingFeaturesFilterByFeatureOfInterest() {
+		support().association(ResourceType.SAMPLING_FEATURES, "foi", Relation.FEATURE_OF_INTEREST, REQ_SF_BY_FOI);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_SF_BY_OBSPROP
+			+ ": Sampling Feature observedProperty filters follow datastream associations", groups = GROUP,
+			alwaysRun = true)
+	public void samplingFeaturesFilterByObservedProperty() {
+		support().association(ResourceType.SAMPLING_FEATURES, "observedProperty", Relation.OBSERVED_PROPERTY,
+				REQ_SF_BY_OBSPROP);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_SF_BY_CONTROLPROP
+			+ ": Sampling Feature controlledProperty filters follow controlstream associations", groups = GROUP,
+			alwaysRun = true)
+	public void samplingFeaturesFilterByControlledProperty() {
+		support().association(ResourceType.SAMPLING_FEATURES, "controlledProperty", Relation.CONTROLLED_PROPERTY,
+				REQ_SF_BY_CONTROLPROP);
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; released Property procedures.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_PROP_BY_BASEPROP
+			+ ": Property baseProperty filters follow recursive base-property associations", groups = GROUP,
+			alwaysRun = true)
+	public void propertiesFilterByBaseProperty() {
+		support().association(ResourceType.PROPERTIES, "baseProperty", Relation.BASE_PROPERTY, REQ_PROP_BY_BASEPROP);
+	}
+
+	@Test(description = "OGC-23-001 " + REQ_PROP_BY_OBJECT
+			+ ": Property objectType results contain only the selected object URI", groups = GROUP, alwaysRun = true)
+	public void propertiesFilterByObjectType() {
+		support().propertyByObjectType(REQ_PROP_BY_OBJECT);
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001.
+	 */
+	@Test(description = "OGC-23-001 " + REQ_COMBINED_FILTERS
+			+ ": combined canonical-resource filters apply logical AND", groups = GROUP, alwaysRun = true)
+	public void canonicalResourcesCombineFilters() {
+		support().combinedFilters(REQ_COMBINED_FILTERS);
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; released transitive recommendations.
+	 */
+	@Test(description = "OGC-23-001 " + REC_INDIRECT_PROP
+			+ ": assess transitive baseProperty filtering across canonical endpoints", groups = GROUP, alwaysRun = true)
+	public void indirectPropertyFiltersAreTransitive() {
+		support().indirectProperty(REC_INDIRECT_PROP);
+	}
+
+	@Test(description = "OGC-23-001 " + REC_INDIRECT_FOI + ": assess transitive sampledFeature and sampleOf filtering",
+			groups = GROUP, alwaysRun = true)
+	public void indirectFeatureOfInterestFiltersAreTransitive() {
+		support().indirectFeatureOfInterest(REC_INDIRECT_FOI);
+	}
+
+	private AdvancedFilteringSupport support() {
+		if (this.apiRoot == null) {
+			throw new IllegalStateException("Advanced Filtering API root was not configured.");
 		}
-		catch (Exception ex) {
+		return new AdvancedFilteringSupport(this.apiRoot);
+	}
+
+	private static void skipWhenPrerequisiteUnsatisfied(ITestContext testContext) {
+		String blocker = configurationBlocker(testContext.getFailedConfigurations(), "failed");
+		if (blocker == null) {
+			blocker = configurationBlocker(testContext.getSkippedConfigurations(), "skipped");
+		}
+		if (blocker == null) {
+			blocker = testBlocker(testContext.getFailedTests(), "failed", false);
+		}
+		if (blocker == null) {
+			blocker = testBlocker(testContext.getSkippedTests(), "skipped", true);
+		}
+		if (blocker != null) {
+			throw new SkipException(
+					"Advanced Filtering setup skipped before IUT access because prerequisite " + blocker + ".");
+		}
+	}
+
+	private static String configurationBlocker(IResultMap results, String status) {
+		if (results == null) {
 			return null;
 		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private Map<String, Object> firstItem(Map<String, Object> body) {
-		if (body == null) {
-			return null;
-		}
-		Object itemsObj = body.get("items");
-		if (!(itemsObj instanceof List)) {
-			return null;
-		}
-		List<?> items = (List<?>) itemsObj;
-		if (items.isEmpty() || !(items.get(0) instanceof Map)) {
-			return null;
-		}
-		return (Map<String, Object>) items.get(0);
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<Object> itemsArray(Map<String, Object> body, String requirementUri) {
-		ETSAssert.assertJsonObjectHas(body, "items", List.class, requirementUri);
-		return (List<Object>) body.get("items");
-	}
-
-	@SuppressWarnings("unchecked")
-	private String systemId(Object item) {
-		if (!(item instanceof Map)) {
-			return null;
-		}
-		return asString(((Map<String, Object>) item).get("id"));
-	}
-
-	@SuppressWarnings("unchecked")
-	private String keywordFromSystem(Map<String, Object> system) {
-		if (system == null) {
-			return null;
-		}
-		String text = firstNonBlank(asString(system.get("name")), asString(system.get("description")));
-		Object properties = system.get("properties");
-		if (text == null && properties instanceof Map) {
-			Map<String, Object> props = (Map<String, Object>) properties;
-			text = firstNonBlank(asString(props.get("name")), asString(props.get("description")));
-		}
-		return firstKeyword(text);
-	}
-
-	@SuppressWarnings("unchecked")
-	private boolean hasKeywordEvidence(Object item, String keyword) {
-		if (!(item instanceof Map) || keyword == null) {
-			return false;
-		}
-		Map<String, Object> obj = (Map<String, Object>) item;
-		String text = joinText(asString(obj.get("name")), asString(obj.get("description")));
-		Object properties = obj.get("properties");
-		if (properties instanceof Map) {
-			Map<String, Object> props = (Map<String, Object>) properties;
-			text = joinText(text, asString(props.get("name")), asString(props.get("description")));
-		}
-		return text.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT));
-	}
-
-	private boolean isValidIdList(String value) {
-		if (value == null || value.isBlank()) {
-			return false;
-		}
-		String[] tokens = value.split(",", -1);
-		boolean seenUid = false;
-		boolean seenLocalId = false;
-		for (String token : tokens) {
-			if (token.isBlank()) {
-				return false;
-			}
-			boolean uid = isUidToken(token);
-			if (!uid && token.contains(":")) {
-				return false;
-			}
-			seenUid = seenUid || uid;
-			seenLocalId = seenLocalId || !uid;
-			if (seenUid && seenLocalId) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean isUidToken(String token) {
-		if (token.endsWith("*")) {
-			token = token.substring(0, token.length() - 1);
-		}
-		try {
-			URI uri = URI.create(token);
-			return uri.getScheme() != null && token.indexOf(' ') < 0;
-		}
-		catch (IllegalArgumentException ex) {
-			return false;
-		}
-	}
-
-	private void assertIdListValid(String value) {
-		if (!isValidIdList(value)) {
-			ETSAssert.failWithUri(REQ_ID_LIST_SCHEMA, "Expected ID_List value to be valid: '" + value + "'.");
-		}
-	}
-
-	private void assertIdListInvalid(String value) {
-		if (isValidIdList(value)) {
-			ETSAssert.failWithUri(REQ_ID_LIST_SCHEMA, "Expected ID_List value to be invalid: '" + value + "'.");
-		}
-	}
-
-	private String firstKeyword(String text) {
-		if (text == null) {
-			return null;
-		}
-		String[] words = text.split("[^A-Za-z0-9]+");
-		for (String word : words) {
-			if (word.length() >= 4) {
-				return word;
+		for (ITestResult result : results.getAllResults()) {
+			if (result != null && result.getMethod() != null && isInheritedPrerequisite(result)) {
+				return "configuration " + result.getMethod().getMethodName() + " " + status;
 			}
 		}
 		return null;
 	}
 
-	private String firstNonBlank(String... values) {
-		for (String value : values) {
-			if (value != null && !value.isBlank()) {
-				return value;
+	private static String testBlocker(IResultMap results, String status, boolean allowDatetimeEvidenceLimitation) {
+		if (results == null) {
+			return null;
+		}
+		for (ITestResult result : results.getAllResults()) {
+			if (result == null || result.getMethod() == null || !isInheritedPrerequisite(result)) {
+				continue;
 			}
+			if (allowDatetimeEvidenceLimitation && DATETIME_EVIDENCE_METHOD.equals(result.getMethod().getMethodName())
+					&& result.getThrowable() instanceof SkipException
+					&& Part1ApiCommonTests.DATETIME_EVIDENCE_LIMITATION.equals(result.getThrowable().getMessage())) {
+				Reporter.log(Part1ApiCommonTests.DATETIME_EVIDENCE_LIMITATION
+						+ " Advanced Filtering direct procedures will execute, but inherited conformance remains incomplete.",
+						true);
+				continue;
+			}
+			return "method " + result.getMethod().getMethodName() + " " + status;
 		}
 		return null;
 	}
 
-	private String joinText(String... values) {
-		StringBuilder builder = new StringBuilder();
-		for (String value : values) {
-			if (value != null && !value.isBlank()) {
-				if (builder.length() > 0) {
-					builder.append(' ');
-				}
-				builder.append(value);
+	private static boolean isInheritedPrerequisite(ITestResult result) {
+		for (String group : result.getMethod().getGroups()) {
+			if ("core".equals(group) || "common".equals(group) || "part1apicommon".equals(group)) {
+				return true;
 			}
 		}
-		return builder.toString();
-	}
-
-	private String asString(Object value) {
-		return value instanceof String ? (String) value : null;
+		Class<?> realClass = result.getMethod().getRealClass();
+		if (realClass == null) {
+			return false;
+		}
+		String className = realClass.getName();
+		return realClass == Part1ApiCommonTests.class
+				|| className.startsWith("org.opengis.cite.ogcapiconnectedsystems10.conformance.core.")
+				|| className.startsWith("org.opengis.cite.ogcapiconnectedsystems10.conformance.common.");
 	}
 
 }

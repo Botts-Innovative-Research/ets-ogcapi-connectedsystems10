@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 219,
+  "suiteTestMethodCount" : 238,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -705,225 +705,425 @@
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/id-list-schema",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#advancedFilteringIdListSchema()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#idListSchemaIsValid()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/id-list-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#idListSchemaIsValid()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The independently executable deployed method exercises accepted homogeneous comma-separated local-ID and absolute-URI lists and rejects mixed, empty, whitespace, and malformed ID-list values before any IUT request."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/resource-by-id",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/resource-by-id",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterById()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesFilterById()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/resource-by-id",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesFilterById()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method independently discovers every supported canonical Part 1 resource endpoint, selects resources with local IDs and UIDs, issues local-ID and URI id-list GET queries, traverses all pages, and requires every returned resource and every known selected seed to match."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/resource-by-keyword",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/resource-by-keyword",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByKeyword()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesFilterByKeyword()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/resource-by-keyword",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesFilterByKeyword()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method selects non-structural text from canonical resources, executes q queries on every supported resource endpoint, traverses bounded pagination, and requires all returned resources plus the selected seed to contain the keyword."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/resource-by-property",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/rec/advanced-filtering/resource-by-property",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesFilterByProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/resource-by-property",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesFilterByProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The recommendation procedure locates scalar custom properties, sends their names and values as query parameters on each supported canonical endpoint, checks all returned resources and seed inclusion, and emits visible TestNG warnings when usable recommendation evidence is unavailable or unsupported."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/feature-by-geom",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/feature-by-geom",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByGeomSmoke()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#featuresFilterByGeometry()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/feature-by-geom",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#featuresFilterByGeometry()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method selects geometry-bearing Systems, Deployments, and Sampling Features, sends WKT geometry filters, traverses every response page, parses returned GeoJSON geometries with JTS, and requires actual spatial intersection and selected-seed inclusion."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/system-by-parent",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/system-by-parent",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByParent()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/system-by-parent",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByParent()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives System parent associations from representations and nested subsystem resources, queries parent with both local ID and UID where available, validates every returned System representation, and requires each result to carry the requested parent relation."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/system-by-procedure",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/system-by-procedure",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByProcedure()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/system-by-procedure",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByProcedure()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives Procedure references from System representations, queries procedure by local ID and UID where available, validates every returned System representation, and proves each result has the requested Procedure association."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/system-by-foi",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/system-by-foi",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByFeatureOfInterest()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/system-by-foi",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByFeatureOfInterest()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives direct and recursively followed Sampling Feature identities for Systems, queries foi using local and global identifiers, validates all returned System representations, and requires the requested Feature of Interest relation in each result."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/system-by-obsprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/system-by-obsprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByObservedProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/system-by-obsprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByObservedProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives observed Property definitions from System outputs and recursively nested subsystem evidence, queries observedProperty, validates every returned System representation, and requires the selected property identity in each result."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/system-by-controlprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/system-by-controlprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByControlledProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/system-by-controlprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByControlledProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives controlled Property definitions from System inputs and recursively nested subsystem evidence, queries controlledProperty, validates every returned System representation, and requires the selected property identity in each result."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/deployment-by-parent",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/deployment-by-parent",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByParent()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/deployment-by-parent",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByParent()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives parent Deployment identities, queries parent using local IDs and UIDs where available, validates every returned Deployment representation, and requires each result to carry the requested parent Deployment relation."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/deployment-by-system",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/deployment-by-system",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterBySystem()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/deployment-by-system",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterBySystem()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives recursively deployed System identities from Deployment representations and deployedSystems resources, queries system by local ID and UID, validates all returned Deployments, and proves the requested deployed-System relation."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/deployment-by-foi",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/deployment-by-foi",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByFeatureOfInterest()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/deployment-by-foi",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByFeatureOfInterest()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives direct and recursively followed Feature of Interest identities for Deployments, queries foi with local and global identifiers, validates every returned Deployment representation, and proves the requested association."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/deployment-by-obsprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/deployment-by-obsprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByObservedProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/deployment-by-obsprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByObservedProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method follows deployed Systems to derive observed Property identities, queries observedProperty, validates every returned Deployment representation, and requires each result's deployed-System closure to contain the requested property."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/deployment-by-controlprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/deployment-by-controlprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByControlledProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/deployment-by-controlprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByControlledProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method follows deployed Systems to derive controlled Property identities, queries controlledProperty, validates every returned Deployment representation, and requires each result's deployed-System closure to contain the requested property."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/procedure-by-obsprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/procedure-by-obsprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#proceduresFilterByObservedProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/procedure-by-obsprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#proceduresFilterByObservedProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives observed Property identities from Procedure outputs, enriches linked Property definitions with local and global identifiers, queries observedProperty, validates every returned Procedure representation, and proves the requested relation."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/procedure-by-controlprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/procedure-by-controlprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#proceduresFilterByControlledProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/procedure-by-controlprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#proceduresFilterByControlledProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives controlled Property identities from Procedure inputs, enriches linked Property definitions with local and global identifiers, queries controlledProperty, validates every returned Procedure representation, and proves the requested relation."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/sf-by-foi",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/sf-by-foi",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#samplingFeaturesFilterByFeatureOfInterest()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/sf-by-foi",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#samplingFeaturesFilterByFeatureOfInterest()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method follows recursive sampleOf and sampledFeature relations to derive Feature of Interest identities, queries foi, validates every returned Sampling Feature representation, and proves each requested association."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/sf-by-obsprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/sf-by-obsprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#samplingFeaturesFilterByObservedProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/sf-by-obsprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#samplingFeaturesFilterByObservedProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method follows Sampling Feature datastream associations to derive observed Property identities, queries observedProperty, validates every returned Sampling Feature representation, and proves the requested indirect relation."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/sf-by-controlprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/sf-by-controlprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#samplingFeaturesFilterByControlledProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/sf-by-controlprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#samplingFeaturesFilterByControlledProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method follows Sampling Feature controlstream associations to derive controlled Property identities, queries controlledProperty, validates every returned Sampling Feature representation, and proves the requested indirect relation."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/prop-by-baseprop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/prop-by-baseprop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#propertiesFilterByBaseProperty()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/prop-by-baseprop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#propertiesFilterByBaseProperty()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives recursively followed baseProperty identities, queries baseProperty using local and global identifiers, validates every returned Property representation, and requires the selected recursive base relation in each result."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/prop-by-object",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/prop-by-object",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#propertiesFilterByObjectType()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/prop-by-object",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#propertiesFilterByObjectType()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method derives Property objectType identities, queries objectType, validates every returned Property representation, and requires the selected object-type identity in every result."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/combined-filters",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/req/advanced-filtering/combined-filters",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesCombineFilters()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/combined-filters",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesCombineFilters()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The method selects a canonical resource with independent ID and keyword evidence, sends both filters together on every eligible endpoint, traverses all pages, and requires every result to satisfy both predicates; controlled coverage rejects union semantics."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/indirect-prop",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/rec/advanced-filtering/indirect-prop",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#indirectPropertyFiltersAreTransitive()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/indirect-prop",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#indirectPropertyFiltersAreTransitive()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The recommendation procedure evaluates transitive observed and controlled Property filtering across Systems, Deployments, Procedures, and Sampling Features, validates returned representations and complete relation evidence, and emits visible warnings rather than false conformance failures when recommendation evidence is unavailable."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/advanced-filtering/indirect-foi",
     "classIdentifier" : "/conf/advanced-filtering",
     "target" : "/rec/advanced-filtering/indirect-foi",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#indirectFeatureOfInterestFiltersAreTransitive()" ],
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/advanced-filtering/indirect-foi",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#indirectFeatureOfInterestFiltersAreTransitive()",
+      "reviewedBy" : "Codex Sprint 55 ATS line review",
+      "reviewedOn" : "2026-07-29",
+      "evidence" : "The recommendation procedure evaluates recursively indirect Feature of Interest filtering across Systems, Deployments, and Sampling Features, validates returned representations and transitive relation evidence, and emits visible warnings when recommendation evidence is unavailable."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/create-replace-delete/system",
@@ -2589,17 +2789,17 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 51,
+    "exact" : 76,
     "helper" : 2,
-    "candidate" : 119,
-    "unmapped" : 68,
+    "candidate" : 115,
+    "unmapped" : 47,
     "byPart" : {
       "1" : {
         "total" : 110,
-        "exact" : 51,
+        "exact" : 76,
         "helper" : 2,
-        "candidate" : 18,
-        "unmapped" : 39
+        "candidate" : 14,
+        "unmapped" : 18
       },
       "2" : {
         "total" : 130,
@@ -2675,10 +2875,10 @@
       },
       "1:/conf/advanced-filtering" : {
         "total" : 25,
-        "exact" : 0,
+        "exact" : 25,
         "helper" : 0,
-        "candidate" : 4,
-        "unmapped" : 21
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "1:/conf/create-replace-delete" : {
         "total" : 12,

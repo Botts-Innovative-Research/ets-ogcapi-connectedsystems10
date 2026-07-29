@@ -104,8 +104,7 @@ public class VerifyTestNGSuiteDependency {
 	private static final String SENSORML_GROUP = "sensorml";
 
 	/**
-	 * Sprint 11 S-ETS-11-01 — AdvancedFiltering systems/common-resource read-only subset
-	 * group (depends on SystemFeatures).
+	 * Sprint 55 S-ETS-55-01 - released Advanced Filtering inherits API Common directly.
 	 */
 	private static final String ADVANCEDFILTERING_GROUP = "advancedfiltering";
 
@@ -1239,19 +1238,14 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 11 S-ETS-11-01 — AdvancedFiltering group =====
-	// AdvancedFiltering systems/common-resource read-only subset depends on
-	// SystemFeatures
-	// because it validates /systems query behavior. This is intentionally a PARTIAL
-	// implementation of REQ-ETS-PART1-009.
+	// ===== Sprint 55 S-ETS-55-01 - Advanced Filtering released closure =====
 
 	/**
-	 * Sprint 11 S-ETS-11-01 (REQ-ETS-PART1-009): the canonical testng.xml SHALL declare
-	 * {@code <group name="advancedfiltering" depends-on="systemfeatures"/>} so
-	 * AdvancedFiltering tests cascade-SKIP when the SystemFeatures prerequisite fails.
+	 * Sprint 55 S-ETS-55-01 (REQ-ETS-PART1-009): the canonical testng.xml SHALL declare
+	 * {@code <group name="advancedfiltering" depends-on="part1apicommon"/>}.
 	 */
 	@org.junit.Test
-	public void testAdvancedFilteringGroupDependsOnSystemFeatures() throws Exception {
+	public void testAdvancedFilteringGroupDependsDirectlyOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -1262,15 +1256,15 @@ public class VerifyTestNGSuiteDependency {
 				String dependsOn = deps.get(ADVANCEDFILTERING_GROUP);
 				assertNotNull("group '" + ADVANCEDFILTERING_GROUP + "' has null depends-on attribute", dependsOn);
 				assertTrue("group '" + ADVANCEDFILTERING_GROUP + "' depends-on '" + dependsOn + "' missing '"
+						+ PART1_API_COMMON_GROUP + "'", dependsOn.contains(PART1_API_COMMON_GROUP));
+				assertFalse("group '" + ADVANCEDFILTERING_GROUP + "' must not depend directly on '"
 						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
 				foundDependency = true;
 				break;
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + ADVANCEDFILTERING_GROUP + "\" depends-on=\""
-				+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 11 S-ETS-11-01. The AdvancedFiltering "
-				+ "systems/common-resource read-only subset requires SystemFeatures as its direct prerequisite.",
-				foundDependency);
+				+ PART1_API_COMMON_GROUP + "\"/> - see Sprint 55 S-ETS-55-01.", foundDependency);
 	}
 
 	/**
@@ -1302,17 +1296,15 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 11 S-ETS-11-01: AdvancedFiltering classes MUST be co-located in the SAME
-	 * {@code <test>} block as SystemFeatures so the group-dependency cascade resolves
+	 * Sprint 55 S-ETS-55-01: AdvancedFiltering classes MUST be co-located in the SAME
+	 * {@code <test>} block as Part 1 API Common so the group-dependency cascade resolves
 	 * within TestNG's test-scoped dependency map.
 	 */
 	@org.junit.Test
-	public void testAdvancedFilteringCoLocatedWithSystemFeatures() throws Exception {
+	public void testAdvancedFilteringCoLocatedWithPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> systemFeaturesClassNames = new HashSet<>();
-		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
-			systemFeaturesClassNames.add(c.getName());
-		}
+		String apiCommonClassName = org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests.class
+			.getName();
 		Set<String> advancedFilteringClassNames = new HashSet<>();
 		for (Class<?> c : ADVANCEDFILTERING_CLASSES) {
 			advancedFilteringClassNames.add(c.getName());
@@ -1324,17 +1316,16 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasApiCommon = xtClasses.contains(apiCommonClassName);
 			boolean hasAnyAdvancedFiltering = !java.util.Collections.disjoint(xtClasses, advancedFilteringClassNames);
-			if (hasAllSystemFeatures && hasAnyAdvancedFiltering) {
+			if (hasApiCommon && hasAnyAdvancedFiltering) {
 				coAlloc = true;
 				break;
 			}
 		}
-		assertTrue("SystemFeatures (" + systemFeaturesClassNames + ") and AdvancedFiltering ("
-				+ advancedFilteringClassNames
-				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
-				+ "(AdvancedFiltering → SystemFeatures → Core) resolves within scope. See Sprint 11 S-ETS-11-01.",
+		assertTrue(
+				"Part1ApiCommon (" + apiCommonClassName + ") and AdvancedFiltering (" + advancedFilteringClassNames
+						+ ") must be declared in the SAME <test> block so the direct released dependency resolves.",
 				coAlloc);
 	}
 

@@ -526,7 +526,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesFilterByProperty()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The recommendation procedure locates scalar custom properties, sends their names and values as query parameters on each supported canonical endpoint, checks all returned resources and seed inclusion, and emits visible TestNG warnings when usable recommendation evidence is unavailable or unsupported."
+      "evidence": "The recommendation procedure locates scalar custom properties, sends their names and values as query parameters on each supported canonical endpoint, checks all returned resources, and emits visible TestNG warnings when usable recommendation evidence is unavailable or unsupported."
     },
     {
       "part": 1,
@@ -535,7 +535,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#featuresFilterByGeometry()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method selects geometry-bearing Systems, Deployments, and Sampling Features, sends WKT geometry filters, traverses every response page, parses returned GeoJSON geometries with JTS, and requires actual spatial intersection and selected-seed inclusion."
+      "evidence": "The method selects geometry-bearing Systems, Deployments, and Sampling Features, sends WKT geometry filters, traverses every response page, parses returned GeoJSON geometries with JTS, and requires actual spatial intersection."
     },
     {
       "part": 1,
@@ -544,7 +544,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByParent()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method derives System parent associations from representations and nested subsystem resources, queries parent with both local ID and UID where available, validates every returned System representation, and requires each result to carry the requested parent relation."
+      "evidence": "The method derives parent associations from System representations, queries parent with both local ID and UID where available, validates every returned System representation, and requires each result to carry the requested parent relation."
     },
     {
       "part": 1,
@@ -715,7 +715,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#indirectFeatureOfInterestFiltersAreTransitive()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The recommendation procedure evaluates recursively indirect Feature of Interest filtering across Systems, Deployments, and Sampling Features, validates returned representations and transitive relation evidence, and emits visible warnings when recommendation evidence is unavailable."
+      "evidence": "The recommendation procedure evaluates recursively indirect Feature of Interest filtering across Systems, Deployments, and Sampling Features, compares complete direct, parent, and ultimate result sets, and emits visible warnings when recommendation evidence is unavailable."
     }
   ]
 }

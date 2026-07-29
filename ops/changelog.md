@@ -15,15 +15,23 @@ recommended work and final gate.
   media, limits keyword labels to resource boundaries, and adds `featureType`,
   `datetime`, mandatory associations, and positively supported custom
   properties to combined filters.
-- The second reproducible final-Raze red baseline is `33/6/0/0`; focused
-  controlled HTTP is `33/0/0/0`, precommit full Docker Maven is `587/0/0/3`,
-  and scenario trace is `20/20`.
-- Prior candidate `29753ca85c` and image `sha256:709b5f664d8...23aa0` are
-  superseded audit evidence. Exact-candidate runtime, local OSH, dependency,
-  credential, no-mutation, immutability, and hygiene gates remain pending.
-- Reconciled remediation status across OpenSpec, architecture, traceability,
-  story, contract, epic, and operations records. No OSH or TeamEngine
-  source/binary modification and no hosted CI.
+- Fresh Raze R3 returned `GAPS_FOUND 0.98`: Deployment property procedures
+  could accept wrapper aliases or unrelated nested hrefs, malformed hrefs
+  became synthetic identities, four mappings overstated behavior, exact logs
+  needed preservation, and the contract omitted owner applicability.
+- Added three requirement-linked regressions. The reproducible R3 red baseline
+  is `36/3/0/0`; focused controlled HTTP is `36/0/0/0`, precommit full Docker
+  Maven is `590/0/0/3`, and scenario trace remains `20/20`.
+- Deployment property procedures now follow only direct deployed-System
+  targets and read the resolved System. Wrapper aliases and unrelated nested
+  hrefs cannot establish evidence; malformed hrefs contribute no identifier.
+- Corrected four mapping descriptions and added owner applicability to the
+  sprint contract. Coverage remains `240/76/2/115/47`, with Advanced
+  Filtering `25/25 exact`.
+- Candidate `085a81fdaa` and its exact gates are preserved as superseded audit
+  evidence. The new candidate must repeat exact Maven, image/runtime,
+  unmodified-local-OSH, sabotage, credential, immutability, hygiene, and fresh
+  Raze gates. No OSH or TeamEngine modification and no hosted CI.
 
 ## 2026-07-29 - Part 1 Advanced Filtering implementation and technical gates
 

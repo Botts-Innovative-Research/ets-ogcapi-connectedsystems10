@@ -21,9 +21,9 @@ Released source: `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
 
 ## Verification
 
-- Second final-Raze test-first gate: expected `33/6/0/0`, then focused
-  controlled HTTP `33/0/0/0` after remediation.
-- Precommit full Docker Maven: `587/0/0/3`; the three skips are unchanged historical
+- R3 test-first gate: expected `36/3/0/0`, then focused controlled HTTP
+  `36/0/0/0` after remediation.
+- Precommit full Docker Maven: `590/0/0/3`; the three skips are unchanged historical
   harness fixtures.
 - ATS source reproduction: PASS at the pinned clean checkout.
 - Coverage: `240/76 exact/2 helper/115 candidate/47 unmapped`;
@@ -40,27 +40,28 @@ Released source: `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
 
 ## TeamEngine E2E
 
-Candidate `29753ca85c` and image `sha256:709b5f664d8...23aa0` are superseded
-audit evidence after the second final-Raze remediation. Exact image,
-unmodified-local-OSH TeamEngine, no-mutation, hygiene, sabotage, credential,
-runtime, and immutability gates remain pending for the new committed
-candidate. No OSH or TeamEngine source or binary is modified.
+Candidate `085a81fdaa8fb2b823dc029532a1e9b41b8cd16c`, image
+`sha256:f1a6fed0a0a899a1f09f660ad7dbb947eed91823d6ae94176e06498ae24fc455`,
+and all associated runtime and TeamEngine gates are superseded audit evidence
+after R3. A new candidate must repeat every exact gate. No OSH or TeamEngine
+source or binary was modified.
 
 ## Adversarial Review
 
-Initial Raze reported seven required semantic findings. The first recheck
+Initial Raze reported seven required semantic findings. Later rechecks
 reopened wrapper identity, prescribed association paths, media/pagination,
 combined predicate completeness, keyword boundaries, mapping/traceability,
-and exact-build provenance. Requirement-linked regressions reproduce the
-semantic findings and the precommit implementation is green. Exact-candidate
-gates and a fresh final Raze review remain pending.
+and exact-build provenance. R3 additionally found Deployment property wrapper
+and nested-href shortcuts, malformed-href synthetic identity, mapping
+overstatement, ignored evidence, and contract traceability. Requirement-linked
+R3 regressions move `36/3/0/0` to `36/0/0/0`; exact-candidate gates and fresh
+Raze remain pending.
 
 ## Evidence Index
 
 Historical diagnostic evidence is under
 `ops/test-results/sprint-ets-55-part1-advanced-filtering-e2e-2026-07-29/`.
-Final candidate evidence is under
+Superseded exact candidate and current remediation evidence is under
 `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r2-2026-07-29/`
-and currently includes the second red baseline and precommit focused/full
-Maven logs. Exact-candidate artifacts will replace the superseded prior
-candidate evidence after commit.
+and includes R2/R3 regression evidence plus the superseded `085a81f` exact
+artifacts. A new SHA-prefixed evidence set will be added after commit.

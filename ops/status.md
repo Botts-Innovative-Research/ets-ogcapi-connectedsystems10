@@ -97,8 +97,8 @@ Read these first:
 
 ## Session Handoff - Part 1 Advanced Filtering Direct ATS
 
-S-ETS-55-01 remediation is precommit green under CP-015; exact-candidate gates
-and fresh final Raze review are pending.
+S-ETS-55-01 R3 remediation is precommit green under CP-015; exact-candidate
+gates and fresh final Raze review are pending.
 
 - Exactly 25 independent methods implement the 25 released procedures behind
   `AdvancedFilteringSupport`; all 25 mappings are reviewed exact.
@@ -106,16 +106,21 @@ and fresh final Raze review are pending.
   `/conf/advanced-filtering` is `25/25 exact`.
 - Released inheritance is direct API Common. API Common sabotage skips setup
   and all 25 methods before class-specific IUT access.
-- Second final-Raze regressions reproduce `33/6/0/0`; focused controlled HTTP
-  passes `33/0/0/0`, and full Docker Maven passes `587/0/0/3`, with three unchanged
-  historical harness skips.
+- R3 regressions reproduce `36/3/0/0`; focused controlled HTTP passes
+  `36/0/0/0`, and precommit full Docker Maven passes `590/0/0/3`, with three
+  unchanged historical harness skips.
 - Scenario trace is `20/20`; all released scenario IDs have literal Java
   anchors.
-- Prior candidate `29753ca85c` and image `sha256:709b5f664d8...23aa0` are
-  superseded audit evidence.
-- Next action: commit the remediation candidate; rerun exact focused/full,
+- Deployment property procedures now ignore wrapper aliases and unrelated
+  nested hrefs, follow only direct deployed-System targets, and read resolved
+  System properties. Malformed hrefs produce no identifier or invented URI.
+- Candidate `085a81fdaa` and its image/runtime, local OSH, sabotage,
+  credential, immutability, and hygiene results are preserved as superseded
+  audit evidence.
+- Next action: commit the R3 candidate; rerun exact focused/full Maven,
   image/runtime, unmodified-local-OSH, sabotage, credential, immutability,
-  hygiene, and source gates; obtain fresh Raze; reconcile, commit, and push.
+  hygiene, and source gates; obtain fresh Raze; reconcile and push Botts
+  `main`.
 
 ## Session Handoff - Part 1 GeoJSON Direct ATS
 

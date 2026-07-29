@@ -2714,8 +2714,9 @@ fail or SKIP as specified.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
 - **Priority**: MUST
-- **Status**: SPRINT_55_REMEDIATION_PRECOMMIT_GREEN (semantic and provenance
-  remediation complete; exact-candidate and fresh adversarial gates pending)
+- **Status**: SPRINT_55_REMEDIATION_PRECOMMIT_GREEN_R3 (R3 semantic and
+  provenance remediation complete; exact-candidate and fresh adversarial
+  gates pending)
 - **Historical increment**: by Sprint 11 Generator and gates (2026-05-05; story S-ETS-11-01; Quinn Gate 3.5 APPROVE_WITH_CONCERNS 0.90; Raze Gate 4 APPROVE_WITH_CONCERNS 0.90). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests` with 6 read-only @Tests. Verification: Java formatter via Docker Maven BUILD SUCCESS; Docker Maven `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results` reported `63 total / 48 passed / 0 failed / 15 skipped`. Independent Quinn/Raze gate smoke runs also reported `63 total / 48 passed / 0 failed / 15 skipped`. Current GeoRobotix does not declare `/conf/advanced-filtering`, so all 6 AdvancedFiltering @Tests SKIP with reason and no undeclared query behavior is counted as PASS.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc`. The OpenAPI fragment for `ID_List` exists at `api/part1/openapi/parameters/idListSchema.yaml`. The class identifier is `/req/advanced-filtering`, inherits `/req/api-common`, and lists query-parameter subrequirements for ID lists, common resource keyword/id filters, geometry filters, system/deployment/procedure/sampling-feature/property association filters, and combined filters.
 - **Sprint 11 coverage scope**: AdvancedFiltering systems/common-resource read-only subset with 6 @Tests: (1) IUT declares `/conf/advanced-filtering`, otherwise every AdvancedFiltering @Test SKIPs with reason; (2) ID-list schema validator helper accepts homogeneous non-empty local-ID lists and homogeneous non-empty UID lists while rejecting mixed local/UID lists and empty/malformed lists; (3) `/systems?id=<known-id>` returns HTTP 200 and a non-empty result set whose returned items all preserve the selected id when the conformance class is declared and a seed System id was selected; (4) `/systems?q=<known keyword>` returns HTTP 200 and a non-empty result set whose returned items include keyword evidence in `name` or `description` when declared and a seed keyword was selected from a System name/description; (5) `/systems?geom=<WKT>` is exercised with a broad WKT geometry and validated only for HTTP 200 + JSON response shape in this sprint; (6) TestNG dependency wiring and smoke no-regression. The sprint deliberately does not close all 24 listed advanced-filtering subrequirements.
@@ -2881,7 +2882,9 @@ canonical href differs from the target representation's local ID and UID
 **WHEN** local-ID and UID repetitions are selected
 **THEN** the values come from the resolved target representation
 **AND** neither wrapper identifiers, the path token, nor the canonical href is
-accepted as synthetic identifier evidence after successful resolution.
+accepted as synthetic identifier evidence after successful resolution
+**AND** a malformed href contributes no identifier and is never replaced by
+an invented URI.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001 (CRITICAL)
 **GIVEN** an association procedure prescribes a deployed-System,
@@ -2890,7 +2893,11 @@ features-of-interest, Datastream, or ControlStream traversal
 or extension descendants
 **THEN** those shortcuts cannot establish the predicate
 **AND** evidence is accepted only from the procedure-specific direct relation
-or prescribed subresource and target-description traversal.
+or prescribed subresource and target-description traversal
+**AND** Deployment observed-property and controlled-property evidence ignores
+wrapper properties and unrelated nested hrefs, follows only the direct
+deployed-System target, and reads properties from the resolved System
+description.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001 (CRITICAL)
 **GIVEN** Deployment parent, deployed-System, feature-of-interest,
@@ -2988,17 +2995,25 @@ Advanced Filtering conformance by the local OSH IUT
 
 The remediated implementation has 25 independent methods and coverage
 `240 total / 76 exact / 2 helper / 115 candidate / 47 unmapped`, with
-`/conf/advanced-filtering` at `25/25 exact`. Requirement-linked tests reproduce
-the second final-Raze findings at `33/6/0/0` and pass after remediation at
-`33/0/0/0`. Full precommit Docker Maven passes `587/0/0/3`; every one of the
+`/conf/advanced-filtering` at `25/25 exact`. R3 requirement-linked tests
+reproduce three semantic findings at `36/3/0/0` and pass after remediation at
+`36/0/0/0`. Full precommit Docker Maven passes `590/0/0/3`; every one of the
 20 scenario IDs has a literal Java anchor.
 
-Prior candidate `29753ca85c` and image `sha256:709b5f664d8...23aa0` are
-superseded audit evidence. The new exact committed candidate must rerun
-image/runtime, embedded SWE Common, dependency collision, TeamEngine base
-immutability, released-source, dependency sabotage, credential, no-mutation,
-artifact hygiene, and unmodified-local-OSH TeamEngine gates. Controlled HTTP
-provides positive semantics. Fresh final Raze follows those exact gates.
+R3 returned `GAPS_FOUND 0.98` for Deployment property wrapper shortcuts,
+synthetic malformed-href identities, mapping overstatement, evidence
+preservation, and contract traceability. Deployment properties now follow
+only direct deployed-System targets and read resolved System properties;
+wrapper aliases and unrelated nested hrefs cannot establish evidence.
+Malformed hrefs contribute no identity or invented URI. Mapping descriptions
+and the contract now match demonstrated behavior.
+
+Candidate `085a81fdaa8fb2b823dc029532a1e9b41b8cd16c` and its exact image,
+runtime, unmodified-local-OSH TeamEngine, sabotage, credential, no-mutation,
+immutability, and artifact-hygiene results are superseded audit evidence.
+Every invalidated exact gate and a fresh final Raze review must run from the
+new committed candidate. Controlled HTTP remains the positive semantic
+harness; no OSH or TeamEngine source or binary is modified.
 
 > Sprint 12 starts the mutation-side Part 1 work with Create/Replace/Delete, but it does not permit unguarded writes against the public GeoRobotix smoke target. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, so default smoke must prove declaration and non-mutating readiness while every lifecycle mutation assertion SKIPs unless an operator explicitly enables mutation tests against a dedicated mutable IUT.
 

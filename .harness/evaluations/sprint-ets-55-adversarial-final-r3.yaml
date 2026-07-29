@@ -1,0 +1,175 @@
+evaluation:
+  sprint: ets-55
+  story: S-ETS-55-01
+  role: Raze
+  review: final-gate-4-r3
+  verdict: GAPS_FOUND
+  confidence: 0.98
+  reviewed_scope:
+    implementation_candidate: 085a81fdaa8fb2b823dc029532a1e9b41b8cd16c
+    worktree: "Current uncommitted evidence and documentation reconciliation"
+    released_class: "All 25 OGC 23-001 /conf/advanced-filtering ATS procedures"
+    source:
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringTests.java
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/VerifyAdvancedFilteringHttpProcedures.java
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/released-ats-inventory.json
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    requirements_and_reconciliation:
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+      - openspec/change-proposals/CP-015-part1-advanced-filtering-closure.md
+      - epics/stories/s-ets-55-01-part1-advanced-filtering-closure.md
+      - _bmad/architecture.md
+      - _bmad/traceability.md
+      - .harness/contracts/sprint-ets-55.yaml
+    evidence_directory: ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r2-2026-07-29
+
+  findings:
+    - id: RAZE-S55-R3-DEPLOYED-SYSTEM-PATH-001
+      severity: HIGH
+      summary: "Deployment observedProperty and controlledProperty procedures can PASS from association-wrapper fields or unrelated nested hrefs without following the prescribed deployed-System target."
+      references:
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:732"
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:744"
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:918"
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:951"
+        - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/VerifyAdvancedFilteringHttpProcedures.java:341"
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:2886"
+      analysis: "For Deployment property relations, relationIdentifiers first applies collectRelation directly to each deployedSystems item. A wrapper-level observedProperty or controlledProperty therefore becomes predicate evidence before collectDeployedSystemProperties resolves the wrapper's System association. collectRelationTargets then recursively collects every href below a system-shaped value, so an unrelated nested link can also be read as a System target. The existing root-shortcut regression rejects aliases on the canonical Deployment representation but does not attack contradictory aliases or extra hrefs inside deployed-System wrappers. A non-conforming server can return the same wrapper on seed and filtered requests and satisfy the current oracle."
+      required_fix: "For Deployment observedProperty and controlledProperty, ignore property aliases on deployed-System wrappers. Extract only the deployed-System association target, resolve that target representation, and collect properties only from the resolved System. Do not recursively treat every nested href as a System target. Add fail-closed fixtures for a wrapper-level bogus property and an unrelated nested href."
+
+    - id: RAZE-S55-R3-INVALID-HREF-IDENTITY-001
+      severity: HIGH
+      summary: "A malformed association href is converted into an invented urn:invalid-reference value that can become global identifier evidence."
+      references:
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:827"
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:859"
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:1353"
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:2878"
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:2951"
+      analysis: "resolve catches an invalid href and fabricates an absolute URN. readReference treats that synthetic, cross-origin-looking URN as valid global identity whenever hrefIdentity is true. If another relation supplies local evidence and the server ignores the synthetic UID filter, recomputing the same synthetic identity on returned resources allows a false PASS. The contract permits the actual unresolved target URI where the ATS says so; it does not permit an invented URI for malformed input."
+      required_fix: "Preserve only syntactically valid unresolved target URIs. A malformed href must contribute no identifier and must never be replaced with a synthetic URN. Add a regression combining valid local relation evidence, a malformed href, and union or ignored-filter behavior."
+
+    - id: RAZE-S55-R3-MAPPING-HONESTY-001
+      severity: MEDIUM
+      summary: "Several reviewed exact-mapping evidence strings claim checks the implementation does not perform."
+      references:
+        - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json:529"
+        - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json:538"
+        - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json:547"
+        - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json:718"
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:191"
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:226"
+        - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/AdvancedFilteringSupport.java:439"
+      analysis: "The resource-by-property mapping claims seed inclusion, and the geometry mapping claims selected-seed inclusion, but neither procedure checks sameResource for its seed. The System parent mapping claims nested-subsystem discovery although PARENT_SYSTEM has no subresource traversal. The indirect-foi mapping claims returned-representation validation although recommendation queries use generic collection traversal and set comparisons without validateEndpoint. These extra claims are not needed by the corresponding ATS procedures, but they make the reviewed evidence inaccurate."
+      required_fix: "Reconcile each mapping evidence string to the behavior actually implemented, or add the claimed checks only where the released ATS requires them. Re-run the mapping and coverage verifier after reconciliation."
+
+    - id: RAZE-S55-R3-EVIDENCE-PRESERVATION-001
+      severity: MEDIUM
+      summary: "The exact focused, full-Maven, image, runtime, and container transcripts are ignored files and are not part of the current reconciliation status."
+      references:
+        - ".gitignore:27"
+        - "ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r2-2026-07-29/exact-085a81f-artifact-manifest.sha256:1"
+        - "ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r2-2026-07-29/final-candidate-verification.md:15"
+        - "epics/stories/s-ets-55-01-part1-advanced-filtering-closure.md:82"
+      analysis: "All sixteen entries in the exact manifest hash-check successfully in the current workspace, but the critical *.log transcripts are ignored by Git and do not appear in git status. A normal reconciliation commit would retain the manifest while dropping the artifacts it authenticates, despite the story and verification summary calling the gates archived."
+      required_fix: "Before reconciliation is committed, explicitly preserve every exact log named by exact-085a81f-artifact-manifest.sha256, using force-add or a non-ignored archival format. Re-run sha256sum -c against the staged evidence set."
+
+    - id: RAZE-S55-R3-CONTRACT-TRACE-001
+      severity: LOW
+      summary: "The Sprint 55 contract omits the new owner-applicability scenario while the spec, story, traceability row, and Java regression include it."
+      references:
+        - ".harness/contracts/sprint-ets-55.yaml:9"
+        - "epics/stories/s-ets-55-01-part1-advanced-filtering-closure.md:19"
+        - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:2835"
+        - "_bmad/traceability.md:42"
+        - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/advancedfiltering/VerifyAdvancedFilteringHttpProcedures.java:459"
+      analysis: "The contract lists nineteen released scenarios and skips SCENARIO-ETS-PART1-009-RELEASED-OWNER-APPLICABILITY-001. The other reconciliation artifacts list twenty. Literal Java anchoring is fixed, but cross-artifact scenario reconciliation is incomplete."
+      required_fix: "Add SCENARIO-ETS-PART1-009-RELEASED-OWNER-APPLICABILITY-001 to the Sprint 55 contract and keep the scenario inventory count consistent."
+
+  r2_finding_closure_matrix:
+    - id: RAZE-S55-R2-ASSOCIATION-TARGETS-001
+      status: PARTIAL
+      evidence: "System FOI and deployment-by-system contradictory-wrapper fixtures now select resolved target IDs and UIDs, but Deployment property procedures still accept wrapper-level aliases and recursively swept unrelated hrefs."
+      remaining_findings:
+        - RAZE-S55-R3-DEPLOYED-SYSTEM-PATH-001
+        - RAZE-S55-R3-INVALID-HREF-IDENTITY-001
+    - id: RAZE-S55-R2-COMBINED-INVENTORY-001
+      status: CLOSED
+      evidence: "combinedFilters iterates every seed item, addSupportedCustomPredicates iterates every scalar custom property, and the new later-resource and second-custom-property regressions prove those paths are requested. AND-result validation remains fail-closed."
+    - id: RAZE-S55-R2-DECLARED-APPLICABILITY-001
+      status: CLOSED
+      evidence: "Resource loops and owner-specific procedures gate on exact resource-class declarations. Controlled regressions cover a declared 404 endpoint and reachable undeclared endpoints."
+    - id: RAZE-S55-R2-EVIDENCE-001
+      status: CLOSED_IN_CURRENT_WORKSPACE
+      evidence: "Exact focused and full logs identify build revision 085a81fdaa; the image ID and deployed jar manifest match; the regenerated exact manifest verifies all sixteen files."
+      concern: "Critical exact transcripts remain Git-ignored and must be explicitly preserved by the reconciliation commit."
+    - id: RAZE-S55-R2-SCENARIO-TRACE-001
+      status: PARTIAL
+      evidence: "The five missing literal Java scenario anchors are present and exact Maven reports 20/20, but the contract still omits owner applicability."
+      remaining_findings:
+        - RAZE-S55-R3-CONTRACT-TRACE-001
+
+  evidence_assessment:
+    method_inventory:
+      verdict: VERIFIED
+      detail: "AdvancedFilteringTests exposes exactly 25 independent alwaysRun methods mapped one-for-one to the released targets."
+    focused_maven:
+      claim: "33/0/0/0"
+      verdict: VERIFIED_FROM_EXACT_LOG
+      provenance: "Build revision 085a81fdaa"
+    full_maven:
+      claim: "587/0/0/3"
+      verdict: VERIFIED_FROM_EXACT_LOG
+      provenance: "Build revision 085a81fdaa"
+    exact_image:
+      claim: sha256:f1a6fed0a0a899a1f09f660ad7dbb947eed91823d6ae94176e06498ae24fc455
+      verdict: VERIFIED
+      detail: "Local Docker image ID matches; deployed jar manifest reports Build-Revision 085a81fdaa."
+    local_osh_teamengine:
+      claim: "238/40/7/191"
+      verdict: VERIFIED_WITH_IUT_FAILURES
+      detail: "The XML contains seven failures, the documented method-for-method baseline, and exactly 25 Advanced Filtering SKIPs citing the missing declaration. These SKIPs are deployment and honesty evidence only, not positive Advanced Filtering conformance."
+    dependency_sabotage:
+      claim: "238/2/10/226"
+      verdict: VERIFIED_INTENTIONAL_FAILURE_RUN
+      detail: "All 25 Advanced Filtering methods skip behind the sabotaged API Common configuration."
+    artifact_hygiene:
+      claim: "169 IUT GETs, zero writes, zero leaks"
+      verdict: VERIFIED_FROM_REPORT
+    credential_wire:
+      claim: "0 unmasked / 33 masked / 33 intact transmissions"
+      verdict: VERIFIED_FROM_REPORT
+    runtime_and_immutability:
+      claim: PASS
+      verdict: VERIFIED_FROM_REPORT_AND_IMAGE_INSPECTION
+    artifact_manifest:
+      verdict: VERIFIED_IN_CURRENT_WORKSPACE
+      detail: "sha256sum -c passed for all sixteen exact artifacts."
+    reruns_performed_by_reviewer:
+      - "No Maven or TeamEngine gate was rerun; exact artifacts were inspected."
+      - "The local exact Docker image ID and deployed jar manifest were independently inspected."
+
+  required_fixes:
+    - RAZE-S55-R3-DEPLOYED-SYSTEM-PATH-001
+    - RAZE-S55-R3-INVALID-HREF-IDENTITY-001
+    - RAZE-S55-R3-MAPPING-HONESTY-001
+    - RAZE-S55-R3-EVIDENCE-PRESERVATION-001
+    - RAZE-S55-R3-CONTRACT-TRACE-001
+
+  gate:
+    status: BLOCKED
+    rationale: "Mandatory association procedures retain false-PASS paths, exact mapping prose remains inaccurate, and final evidence/trace reconciliation is incomplete."
+
+  duration:
+    started_utc: "2026-07-29T11:07:53Z"
+    ended_utc: "2026-07-29T11:21:32Z"
+    elapsed_seconds: 819
+  token_metadata:
+    available: false
+    reason: "Authoritative per-review token metadata was not exposed."
+  workspace_modification:
+    allowed_report_created: .harness/evaluations/sprint-ets-55-adversarial-final-r3.yaml
+    other_files_modified_by_reviewer: false

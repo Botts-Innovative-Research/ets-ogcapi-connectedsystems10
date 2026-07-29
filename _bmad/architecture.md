@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.40 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering final-remediation precommit verification)
+> Version: 2.0.40 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering R3 remediation precommit)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1390,13 +1390,11 @@ Recursive relation traversal fails explicitly on depth, active-cycle, or
 reference-read exhaustion, while indirect recommendations inspect every
 eligible resource across pagination.
 
-The second final-Raze remediation adds owner-class applicability, resolved
-association-target identity, all-seed predicate enumeration, all supported
-custom scalar predicates, and literal scenario anchors. Its test-first
-baseline is `33/6/0/0`; focused controlled HTTP passes `33/0/0/0` and full
-Docker Maven passes `587/0/0/3` before commit. Coverage remains
-`240/76 exact/2 helper/115 candidate/47 unmapped`. The prior candidate
-`29753ca85c` and image `sha256:709b5f664d8...23aa0` are superseded audit
-evidence. Exact-image, unmodified-local-OSH, runtime, dependency, credential,
-immutability, hygiene, and fresh Raze gates must be rerun from the new
-committed candidate.
+The R3 remediation further constrains Deployment property traversal to direct
+deployed-System targets, rejects wrapper and unrelated nested href shortcuts,
+and drops malformed references instead of inventing identities. Its
+test-first baseline is `36/3/0/0`; focused controlled HTTP passes `36/0/0/0`
+and full precommit Docker Maven passes `590/0/0/3`. Coverage remains
+`240/76 exact/2 helper/115 candidate/47 unmapped`. Candidate `085a81fdaa` and
+its exact gates are superseded audit evidence. A new committed candidate must
+repeat every exact gate before fresh final Raze.

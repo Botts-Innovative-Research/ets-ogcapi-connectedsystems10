@@ -2,9 +2,10 @@
 
 ## Status
 
-REMEDIATION IN PROGRESS - final Raze R2 reopened declaration applicability,
-association-target identity, complete combined-predicate inventory, evidence
-provenance, and scenario traceability.
+REMEDIATION PRECOMMIT GREEN - final Raze R3 reopened Deployment property
+target provenance, malformed-href identity, mapping honesty, evidence
+preservation, and contract traceability. Requirement-linked regressions now
+pass; exact-candidate and fresh Raze gates remain.
 
 ## User Instruction
 
@@ -103,13 +104,18 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
 - Exactly 25 methods have reviewed exact mappings. Coverage is
   `240/76 exact/2 helper/115 candidate/47 unmapped`; Advanced Filtering is
   `25/25 exact`.
-- The second final-Raze regression baseline is `33/6/0/0`; remediation and
-  focused controlled HTTP are `33/0/0/0`. Precommit full Docker Maven is
-  `587/0/0/3`, and scenario trace is `20/20` with no missing Java anchors.
-- Candidate `29753ca85c` and image `sha256:709b5f664d8...23aa0` are
-  superseded audit evidence. Exact-image, unmodified-local-OSH TeamEngine,
-  sabotage, credential, hygiene, immutability, and runtime gates must be rerun
-  from the new committed candidate.
+- The R3 regression baseline is `36/3/0/0`; focused controlled HTTP is
+  `36/0/0/0`, precommit full Docker Maven is `590/0/0/3`, and scenario trace
+  remains `20/20` with no missing Java anchors.
+- Deployment property procedures now ignore wrapper aliases and unrelated
+  nested hrefs, follow only direct deployed-System targets, and read the
+  resolved System. Malformed hrefs contribute no identifier or invented URI.
+- Four mapping descriptions now state only demonstrated behavior, and owner
+  applicability is explicit in the sprint contract.
+- Candidate `085a81fdaa8fb2b823dc029532a1e9b41b8cd16c` and its image/runtime,
+  TeamEngine, sabotage, credential, immutability, and hygiene results remain
+  preserved as superseded audit evidence. Every gate must be rerun from the
+  new committed candidate.
 - No OSH or TeamEngine source or binary is modified, and no hosted CI is
   added.
 - Initial Raze found seven semantic gaps. Final Raze recheck
@@ -117,5 +123,11 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   reference media/pagination, combined-predicate completeness, keyword
   provenance, mapping/scenario traceability, exact-build provenance, and
   honest positive-IUT wording. Those findings now have requirement-linked
-  regressions, implementation fixes, and reconciled mappings. Exact-candidate
-  gates and a fresh final Raze review remain pending.
+  regressions, implementation fixes, reconciled mappings, and exact-candidate
+  gates. R3 then returned `GAPS_FOUND 0.98`: Deployment property wrappers and
+  unrelated nested hrefs can still manufacture evidence, malformed hrefs can
+  become synthetic URNs, four mappings overstate behavior, ignored exact logs
+  require force-add, and the contract omitted owner applicability. Candidate
+  `085a81fdaa` is superseded audit evidence. The R3 red baseline is
+  `36/3/0/0`; remediation passes focused `36/0/0/0` and full Maven
+  `590/0/0/3`. Every exact gate and fresh Raze review must be rerun.

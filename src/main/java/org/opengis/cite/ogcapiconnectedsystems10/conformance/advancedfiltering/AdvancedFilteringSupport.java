@@ -741,10 +741,13 @@ public final class AdvancedFilteringSupport {
 							addResourceIdentifiers(item, result);
 						}
 					}
-					collectRelation(item, subresource.aliases, relation.hrefIdentity, result, reads, 0, requirement);
 					if (owner == ResourceType.DEPLOYMENTS
 							&& (relation == Relation.OBSERVED_PROPERTY || relation == Relation.CONTROLLED_PROPERTY)) {
 						collectDeployedSystemProperties(item, relation, result, reads, requirement);
+					}
+					else {
+						collectRelation(item, subresource.aliases, relation.hrefIdentity, result, reads, 0,
+								requirement);
 					}
 				}
 			}
@@ -826,8 +829,8 @@ public final class AdvancedFilteringSupport {
 		Map<String, Object> map = (Map<String, Object>) raw;
 		String href = asString(map.get("href"));
 		if (href != null) {
-			URI resolved = resolve(href);
-			readReference(resolved, aliases, hrefIdentity, result, reads, requirement);
+			resolveReference(href)
+				.ifPresent(resolved -> readReference(resolved, aliases, hrefIdentity, result, reads, requirement));
 			return;
 		}
 		addResourceIdentifiers(map, result);
@@ -847,7 +850,11 @@ public final class AdvancedFilteringSupport {
 			result.local.add(value);
 			return;
 		}
-		URI target = resolve(value);
+		Optional<URI> resolved = resolveReference(value);
+		if (resolved.isEmpty()) {
+			return;
+		}
+		URI target = resolved.get();
 		if ("http".equalsIgnoreCase(target.getScheme()) || "https".equalsIgnoreCase(target.getScheme())) {
 			readReference(target, aliases, hrefIdentity, result, reads, requirement);
 		}
@@ -917,8 +924,14 @@ public final class AdvancedFilteringSupport {
 
 	private void collectDeployedSystemProperties(Map<String, Object> deployedSystem, Relation relation,
 			Identifiers result, ReferenceReads reads, String requirement) {
+		if (isSystemRepresentation(deployedSystem)) {
+			collectRelation(deployedSystem, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
+			return;
+		}
 		Set<URI> targets = new LinkedHashSet<>();
-		collectRelationTargets(deployedSystem, Set.of("system", "deployedsystem"), targets, 0, requirement);
+		collectDirectDeployedSystemTargets(deployedSystem, relation, result, reads, targets, requirement);
+		collectDirectDeployedSystemTargets(asMap(deployedSystem.get("properties")), relation, result, reads, targets,
+				requirement);
 		for (URI target : targets) {
 			if (!sameOrigin(this.apiRoot, target) || !reads.enter(target, requirement)) {
 				continue;
@@ -948,51 +961,51 @@ public final class AdvancedFilteringSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void collectRelationTargets(Object value, Set<String> aliases, Set<URI> targets, int depth,
-			String requirement) {
-		if (value == null) {
-			return;
-		}
-		assertTraversalDepth(depth, requirement);
-		if (value instanceof Map<?, ?> raw) {
-			Map<String, Object> map = (Map<String, Object>) raw;
-			for (Map.Entry<String, Object> entry : map.entrySet()) {
-				if (aliasMatches(entry.getKey(), aliases)) {
-					collectHrefs(entry.getValue(), targets, depth + 1, requirement);
-				}
-				else if (entry.getValue() instanceof Map<?, ?> || entry.getValue() instanceof Collection<?>) {
-					collectRelationTargets(entry.getValue(), aliases, targets, depth + 1, requirement);
-				}
-			}
-		}
-		else if (value instanceof Collection<?> collection) {
-			for (Object item : collection) {
-				collectRelationTargets(item, aliases, targets, depth + 1, requirement);
+	private void collectDirectDeployedSystemTargets(Map<String, Object> wrapper, Relation relation, Identifiers result,
+			ReferenceReads reads, Set<URI> targets, String requirement) {
+		for (Map.Entry<String, Object> entry : wrapper.entrySet()) {
+			if (aliasMatches(entry.getKey(), Set.of("system", "deployedsystem"))) {
+				collectDirectDeployedSystemTarget(entry.getValue(), relation, result, reads, targets, 0, requirement);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void collectHrefs(Object value, Set<URI> targets, int depth, String requirement) {
+	private void collectDirectDeployedSystemTarget(Object value, Relation relation, Identifiers result,
+			ReferenceReads reads, Set<URI> targets, int depth, String requirement) {
 		if (value == null) {
 			return;
 		}
 		assertTraversalDepth(depth, requirement);
+		if (value instanceof String href) {
+			resolveReference(href).ifPresent(targets::add);
+			return;
+		}
 		if (value instanceof Map<?, ?> raw) {
 			Map<String, Object> map = (Map<String, Object>) raw;
+			if (isSystemRepresentation(map)) {
+				collectRelation(map, relation.aliases, relation.hrefIdentity, result, reads, depth + 1, requirement);
+				return;
+			}
 			String href = asString(map.get("href"));
 			if (href != null) {
-				targets.add(resolve(href));
+				resolveReference(href).ifPresent(targets::add);
 			}
-			for (Object nested : map.values()) {
-				collectHrefs(nested, targets, depth + 1, requirement);
-			}
+			return;
 		}
-		else if (value instanceof Collection<?> collection) {
+		if (value instanceof Collection<?> collection) {
 			for (Object item : collection) {
-				collectHrefs(item, targets, depth + 1, requirement);
+				collectDirectDeployedSystemTarget(item, relation, result, reads, targets, depth + 1, requirement);
 			}
 		}
+	}
+
+	private static boolean isSystemRepresentation(Map<String, Object> resource) {
+		String type = normalize(asString(resource.get("type")));
+		String featureType = scalarProperty(resource, "featureType").map(AdvancedFilteringSupport::normalize)
+			.orElse("");
+		return "feature".equals(type) && featureType.endsWith("system")
+				|| Set.of("physicalsystem", "system").contains(type);
 	}
 
 	private void enrichPropertyIdentifiers(Identifiers identifiers, String requirement) {
@@ -1350,12 +1363,12 @@ public final class AdvancedFilteringSupport {
 		return value instanceof Map<?, ?> ? (Map<String, Object>) value : Map.of();
 	}
 
-	private URI resolve(String href) {
+	private Optional<URI> resolveReference(String href) {
 		try {
-			return this.apiRoot.resolve(URI.create(href));
+			return Optional.of(this.apiRoot.resolve(URI.create(href)));
 		}
 		catch (IllegalArgumentException ex) {
-			return URI.create("urn:invalid-reference:" + Integer.toHexString(href.hashCode()));
+			return Optional.empty();
 		}
 	}
 

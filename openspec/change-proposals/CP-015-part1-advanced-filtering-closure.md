@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-009`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Remediation precommit green; exact-candidate gates pending
+**Status**: R3 remediation precommit green; exact-candidate gates pending
 
 ## Motivation
 
@@ -167,11 +167,13 @@ reference media/pagination, combined-predicate completeness, keyword
 provenance, mapping accuracy, scenario traceability, and exact committed-build
 provenance.
 
-The second final-Raze remediation has a reproducible `33/6/0/0` red baseline,
-focused controlled-HTTP `33/0/0/0`, full Docker Maven `587/0/0/3`, and a
-`20/20` scenario-anchor inventory. The prior candidate `29753ca85c` and image
-`sha256:709b5f664d8...23aa0` are superseded audit evidence. A new exact
-committed candidate must rerun image/runtime, unmodified-local-OSH,
-dependency-sabotage, credential, no-mutation, immutability, and
-artifact-hygiene gates before fresh final Raze. Controlled HTTP remains the
-positive semantic harness without modifying OSH or TeamEngine.
+R3 has a reproducible `36/3/0/0` red baseline, focused controlled-HTTP
+`36/0/0/0`, full precommit Docker Maven `590/0/0/3`, and a `20/20`
+scenario-anchor inventory. Deployment property evidence now follows only
+direct deployed-System targets; wrapper aliases, unrelated nested hrefs, and
+malformed hrefs cannot manufacture identity or predicate evidence. Four
+mapping descriptions and the sprint contract now match demonstrated behavior.
+Candidate `085a81fdaa` and all its exact gates are superseded audit evidence.
+A new committed candidate must rerun exact Maven, image/runtime,
+unmodified-local-OSH, sabotage, credential, no-mutation, immutability,
+artifact-hygiene, and fresh Raze gates without modifying OSH or TeamEngine.

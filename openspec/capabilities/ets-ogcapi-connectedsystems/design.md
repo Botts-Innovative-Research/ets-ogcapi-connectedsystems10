@@ -1952,13 +1952,14 @@ Final-Raze remediation discards resolved wrapper identifiers, rejects root
 alias shortcuts, gates and paginates association targets, limits keyword
 labels to resource boundaries, and includes inherited, mandatory, temporal,
 feature-type, and positively supported custom predicates in combined checks.
-The second remediation adds declaration-owner applicability, resolved
-association targets, all-seed combined-predicate enumeration, all supported
-custom scalar predicates, and literal scenario anchors. Its red baseline is
-`33/6/0/0`; focused controlled HTTP passes `33/0/0/0`, full precommit Maven
-passes `587/0/0/3`, and scenario trace is `20/20`. Prior candidate
-`29753ca85c` and image `sha256:709b5f664d8...23aa0` are superseded audit
-evidence. Exact candidate gates and fresh final Raze remain pending.
+R3 further constrains Deployment property traversal to direct deployed-System
+targets and drops malformed hrefs instead of creating synthetic identities.
+Wrapper properties and unrelated nested hrefs cannot establish evidence. Its
+red baseline is `36/3/0/0`; focused controlled HTTP passes `36/0/0/0`, full
+precommit Maven passes `590/0/0/3`, and scenario trace remains `20/20`.
+Candidate `085a81fdaa` and its exact gates are superseded audit evidence. A
+new committed candidate must repeat exact runtime, unmodified-local-OSH,
+dependency, credential, immutability, hygiene, and fresh Raze gates.
 
 ## Status
 

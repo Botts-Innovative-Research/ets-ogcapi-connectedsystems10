@@ -384,6 +384,8 @@
 
 | Agent | Tokens | Duration | Task |
 |-------|--------|----------|------|
+| Raze-Sprint55-Final-R3-Raman | unavailable from agent/tool metadata | 13m39s | Final Gate 4 review of candidate `085a81fdaa`. Verdict `GAPS_FOUND` 0.98 for Deployment property traversal shortcuts, malformed-href synthetic identity, mapping overstatement, ignored exact evidence, and missing owner-applicability contract trace; wrote `.harness/evaluations/sprint-ets-55-adversarial-final-r3.yaml`. |
+| Raze-Sprint55-Final-R2-Meitner | unavailable from agent/tool metadata | 16m57s | Final Gate 4 recheck of candidate `29753ca85c`. Verdict `GAPS_FOUND` 0.99 for association-target identity, incomplete combined enumeration, mapping overstatement, owner declaration applicability, stale exact provenance, and missing literal scenario anchors; wrote `.harness/evaluations/sprint-ets-55-adversarial-final-r2.yaml`. |
 | Raze-Sprint52-Recheck-Hubble | unavailable from agent/tool metadata | 9m49s | Focused Gate 4 recheck of `RAZE-S52-001` and `RAZE-S52-002`. Verdict `APPROVE` 0.99; both findings closed, no new findings, no required fixes; wrote `.harness/evaluations/sprint-ets-52-adversarial-recheck.yaml`. |
 | Raze-Sprint52-Initial-Hubble | unavailable from agent/tool metadata | 10m42s | Initial Gate 4 review of the released Sampling Features replacement. Verdict `GAPS_FOUND` 0.98 for omitted nested GeoJSON validation and early evidence-SKIP masking; wrote `.harness/evaluations/sprint-ets-52-adversarial-final.yaml`. |
 | Discovery-Sprint52-Zeno | unavailable from agent/tool metadata | unavailable from agent/tool metadata | Read-only Sprint 52 discovery across all 30 `_bmad` documents, OpenSpec rules, released `/conf/sf` source, and existing implementation context. |

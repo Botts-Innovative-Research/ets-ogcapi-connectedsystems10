@@ -335,6 +335,53 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001;
+	 * SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001.
+	 */
+	@Test
+	public void deploymentPropertiesIgnoreAssociationWrapperAliases() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.DEPLOYED_PROPERTY_WRAPPER_SHORTCUT)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::deploymentsFilterByObservedProperty);
+			assertEquals(0, server.callsWithValue("/api/deployments", "observedProperty", "property-wrapper"::equals));
+			assertEquals(0, server.callsWithValue("/api/deployments", "observedProperty",
+					"urn:example:property:wrapper"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001;
+	 * SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001.
+	 */
+	@Test
+	public void deploymentPropertiesIgnoreUnrelatedNestedSystemHrefs() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.DEPLOYED_PROPERTY_NESTED_HREF_SHORTCUT)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::deploymentsFilterByObservedProperty);
+			assertTrue(server.calls("/api/systems/deployed-clean") > 0);
+			assertEquals(0, server.calls("/api/systems/deployed-bogus"));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PROVENANCE-001.
+	 */
+	@Test
+	public void malformedAssociationHrefCannotBecomeSyntheticIdentity() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.MALFORMED_ASSOCIATION_HREF)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::systemsFilterByObservedProperty);
+
+			assertEquals(0, server.callsWithValue("/api/systems", "observedProperty", "property-local"::equals));
+			assertEquals(0, server.callsWithValue("/api/systems", "observedProperty",
+					value -> value.startsWith("urn:invalid-reference:")));
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
 	 */
 	@Test
@@ -499,9 +546,10 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		UNION_SECOND_COMBINATION, UNION_FEATURE_TYPE_KEYWORD, UNION_DATETIME_SYSTEM, UNION_CUSTOM_PROPERTY,
 		UNION_ADDITIONAL_CUSTOM_PROPERTY, UNION_LATER_RESOURCE_PREDICATE, WRONG_GEOMETRY, CROSS_ORIGIN_ASSOCIATION,
 		NO_ASSOCIATIONS, RESOLVED_TARGET_IDENTIFIERS, CONTRADICTORY_SYSTEM_FOI_WRAPPER,
-		CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER, ROOT_ASSOCIATION_SHORTCUTS, BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA,
-		PAGINATED_ASSOCIATION, LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION,
-		DECLARED_SYSTEM_404, ONLY_SYSTEM_DECLARED
+		CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER, DEPLOYED_PROPERTY_WRAPPER_SHORTCUT,
+		DEPLOYED_PROPERTY_NESTED_HREF_SHORTCUT, MALFORMED_ASSOCIATION_HREF, ROOT_ASSOCIATION_SHORTCUTS,
+		BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION, LATER_INDIRECT_RESOURCES,
+		OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404, ONLY_SYSTEM_DECLARED
 
 	}
 
@@ -604,6 +652,8 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				case "/api/systems/wrong-media-parent" -> send(exchange, 200, "text/plain", resolvedParentSystem());
 				case "/api/systems/parent-collection" -> associationCollection(exchange, query);
 				case "/api/systems/deployed-real" -> single(exchange, "systems", deployedSystemTarget());
+				case "/api/systems/deployed-clean" -> single(exchange, "systems", deployedSystemWithoutProperties());
+				case "/api/systems/deployed-bogus" -> single(exchange, "systems", deployedSystemWithBogusProperties());
 				case "/api/procedures/procedure-1" -> single(exchange, "procedures", procedure());
 				case "/api/features/foi-1" -> single(exchange, "samplingFeatures", featureOfInterest());
 				case "/api/features/foi-real" -> single(exchange, "samplingFeatures", resolvedFeatureOfInterest());
@@ -816,6 +866,14 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				sendCollection(exchange, type, "[" + deployedSystemWrapper() + "]", null);
 				return;
 			}
+			if (this.mode == Mode.DEPLOYED_PROPERTY_WRAPPER_SHORTCUT && "systems".equals(type)) {
+				sendCollection(exchange, type, "[" + deployedPropertyWrapperShortcut() + "]", null);
+				return;
+			}
+			if (this.mode == Mode.DEPLOYED_PROPERTY_NESTED_HREF_SHORTCUT && "systems".equals(type)) {
+				sendCollection(exchange, type, "[" + deployedPropertyNestedHrefShortcut() + "]", null);
+				return;
+			}
 			canonical(exchange, type, query);
 		}
 
@@ -869,6 +927,15 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			}
 			if (this.mode == Mode.PAGINATED_ASSOCIATION) {
 				return ",\"parentSystem\":{\"href\":\"" + apiRoot().resolve("systems/parent-collection") + "\"}";
+			}
+			if (this.mode == Mode.MALFORMED_ASSOCIATION_HREF) {
+				return """
+						,"parentSystem":{"id":"parent-1"},
+						 "procedure":{"id":"procedure-1"},
+						 "sampleOf":{"id":"foi-1"},
+						 "observedProperties":[{"id":"property-local"},{"href":"%%%"}],
+						 "controlledProperties":[{"id":"property-local"}]
+						""";
 			}
 			if (this.mode == Mode.OVER_DEPTH_RELATION) {
 				String relation = "\"parentSystem\":{\"id\":\"parent-1\",\"uid\":\"urn:example:system:parent\"}";
@@ -1001,6 +1068,41 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					{"id":"deployment-wrapper","uid":"urn:example:deployment:wrapper",
 					 "system":{"id":"system-wrapper","uid":"urn:example:system:wrapper","href":"%s"}}
 					""".formatted(apiRoot().resolve("systems/deployed-real"));
+		}
+
+		private String deployedPropertyWrapperShortcut() {
+			return """
+					{"id":"deployment-wrapper","uid":"urn:example:deployment:wrapper",
+					 "observedProperties":[{"id":"property-wrapper","uid":"urn:example:property:wrapper"}],
+					 "controlledProperties":[{"id":"property-wrapper","uid":"urn:example:property:wrapper"}],
+					 "system":{"href":"%s"}}
+					""".formatted(apiRoot().resolve("systems/deployed-clean"));
+		}
+
+		private String deployedPropertyNestedHrefShortcut() {
+			return """
+					{"id":"deployment-wrapper","uid":"urn:example:deployment:wrapper",
+					 "system":{"href":"%s","metadata":{"href":"%s"}}}
+					""".formatted(apiRoot().resolve("systems/deployed-clean"),
+					apiRoot().resolve("systems/deployed-bogus"));
+		}
+
+		private String deployedSystemWithoutProperties() {
+			return """
+					{"type":"Feature","id":"deployed-clean","geometry":null,
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:clean",
+					 "name":"Clean Deployed System"}}
+					""";
+		}
+
+		private String deployedSystemWithBogusProperties() {
+			return """
+					{"type":"Feature","id":"deployed-bogus","geometry":null,
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:bogus",
+					 "name":"Unrelated Deployed System",
+					 "observedProperties":[{"id":"property-nested"}],
+					 "controlledProperties":[{"id":"property-nested"}]}}
+					""";
 		}
 
 		private String property() {

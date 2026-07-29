@@ -153,6 +153,9 @@ recommended work and final gate.
   provenance finding, and reported no new findings.
 - No OSH or TeamEngine source or binary was modified, and no hosted CI was
   added.
+- Published implementation commit `fce4612` and final R8
+  evidence/reconciliation commit `4295c09` to Botts `main`, together with the
+  final session-metrics record.
 
 ## 2026-07-29 - Part 1 Advanced Filtering implementation and technical gates
 

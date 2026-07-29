@@ -159,8 +159,9 @@ no new findings.
   Candidate `756d729` also remains superseded audit evidence.
 - No OSH or TeamEngine source or binary was modified, and no hosted CI was
   added.
-- Next action: publish the final R8 evidence/reconciliation commit, then begin
-  the next spec-first released-ATS closure.
+- Implementation commit `fce4612` and R8 evidence/reconciliation commit
+  `4295c09` are published to Botts `main`.
+- Next action: begin the next spec-first released-ATS closure.
 
 ## Session Handoff - Part 1 GeoJSON Direct ATS
 

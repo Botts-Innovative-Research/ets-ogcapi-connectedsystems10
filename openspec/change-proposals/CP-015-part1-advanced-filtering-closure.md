@@ -9,8 +9,8 @@
 - `REQ-ETS-PART1-009`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: R5 remediation precommit green; new exact-candidate and fresh Raze
-gates pending
+**Status**: Raze R6 exact relation-vocabulary remediation implemented;
+new exact-candidate gates and fresh Raze pending
 
 ## Motivation
 
@@ -88,6 +88,10 @@ vocabulary without suffix matching: GeoJSON `links[].rel` values
 compact forms; GeoJSON `systemKind@link`; and SensorML `attachedTo` and
 `typeOf`. Unrelated URI schemes, field suffixes, and nested extension aliases
 SHALL NOT contribute evidence.
+GeoJSON relation links, GeoJSON property links, and SensorML members SHALL use
+separate exact vocabularies at their prescribed representation boundaries.
+Matching SHALL NOT lowercase, remove punctuation, strip a generic `Link`
+suffix, or accept broad `parent` and `procedure` aliases as substitutes.
 Successfully resolved targets SHALL supply their representation local ID and
 UID; link-wrapper IDs, path tokens, and hrefs SHALL not be treated as synthetic
 replacements. Procedures that prescribe deployed-System, features-of-interest,
@@ -212,5 +216,17 @@ vocabulary, applies exact media-aware System allowlists, honors failed
 representation validation, and corrects/regenerates keyword mapping evidence.
 Focused Maven passes `48/0/0/0`, full Maven passes `602/0/0/3`, and coverage
 remains `240/76/2/115/47` with Advanced Filtering `25/25 exact`. Candidate
-`060a8aa` remains superseded; a new committed exact candidate must repeat
-every exact gate and pass another fresh Raze review.
+`060a8aa` remains superseded. Exact candidate `f2a88d5` passes focused
+`48/0/0/0`, full Maven `602/0/0/3`, image/runtime, released-source,
+unmodified-local-OSH `238/40/7/191`, sabotage `238/2/10/226`, credential,
+immutability, and hygiene gates. Raze R6 returned `GAPS_FOUND 0.99` because
+the shared matcher still normalizes
+case and punctuation, strips a trailing `Link`, and accepts broad
+cross-representation aliases. Candidate `f2a88d5` and its exact evidence are
+superseded. The next candidate must reject `parentSystemLink`,
+`systemKindLink`, `ogc-rel:parentSystemLink`, punctuation/case near misses,
+`parent`, and `procedure` while preserving every exact released form, then
+repeat all exact gates and fresh adversarial review. Regression-first R6
+verification reproduces controlled HTTP `46/3/0/0`; separate exact,
+case-sensitive representation vocabularies move it to `46/0/0/0`, focused
+Maven to `51/0/0/0`, and full Docker Maven to `605/0/0/3`.

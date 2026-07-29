@@ -1,0 +1,163 @@
+evaluation:
+  sprint: "ets-55"
+  story: "S-ETS-55-01"
+  role: "Raze adversarial reviewer"
+  review_cycle: "final-r6"
+  reviewed_at_utc: "2026-07-29"
+  verdict: "GAPS_FOUND"
+  confidence: 0.99
+  gate_decision: "BLOCKED"
+
+scope:
+  implementation_candidate: "f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0"
+  candidate_parent: "060a8aa994d59f0adfa6bfa96fd5fb372b3d6743"
+  evidence_directory: "ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r6-2026-07-29/"
+  released_source_commit: "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2"
+  released_part: 1
+  released_class: "/conf/advanced-filtering"
+  released_procedure_count: 25
+  review_constraints:
+    - "No implementation, specification, story, contract, operations record, or existing evidence was modified."
+    - "Only this required evaluation report was created."
+    - "No expensive Maven, TeamEngine, image-build, or local-OSH gate was rerun because archived exact-candidate evidence was internally consistent and the blocking defect was reproducible by direct source analysis."
+    - "Lightweight source, released-standard, staged-blob, XML, container-image, URI-semantics, mapping, and documentation checks were independently performed."
+
+findings:
+  - id: "RAZE-S55-R6-EXACT-RELATION-VOCABULARY-001"
+    severity: "HIGH"
+    required: true
+    title: "Direct relation matching still admits non-canonical field and ogc-rel suffix aliases"
+    affected_procedures:
+      - "/conf/advanced-filtering/system-by-parent"
+      - "/conf/advanced-filtering/system-by-procedure"
+      - "/conf/advanced-filtering/deployment-by-parent"
+      - "/conf/advanced-filtering/sf-by-foi"
+      - "/conf/advanced-filtering/combined-filters"
+    evidence:
+      - "CP-015 lines 85-90 and SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001 require exact direct names and exact ogc-rel compact names, and explicitly prohibit field suffix matching."
+      - "AdvancedFilteringSupport.java:1387-1393 normalizes every field by lowercasing and deleting all non-alphanumerics, then unconditionally removes a trailing 'link' token before alias comparison."
+      - "Consequently, non-released fields such as parentSystemLink, parent-system-link, and systemKindLink match the canonical aliases parentsystem or systemkind."
+      - "AdvancedFilteringSupport.java:1395-1405 sends both a direct links[].rel value and an ogc-rel scheme-specific part through the same lossy field matcher. Thus ogc-rel:parentSystemLink and punctuation/case variants also match the canonical parentSystem relation."
+      - "AdvancedFilteringSupport.java:1506-1515 retains broad representation aliases including parent and procedure. A root or immediate GeoJSON properties field named parent can satisfy parentSystem or parentDeployment, and procedure can satisfy systemKind, although the released mappings prescribe links with exact relation names, properties/systemKind@link, SensorML attachedTo, or SensorML typeOf."
+      - "The R6 positive regressions prove ogc-rel:parentSystem, ogc-rel:parentDeployment, ogc-rel:sampleOf, systemKind@link, attachedTo, and typeOf. The negative regressions cover unrelatedParent, a nested parentSystem, custom:parentSystem, and custom:NotSystem, but do not cover an alias plus the stripped Link suffix or a near-miss ogc-rel scheme-specific part."
+      - "The pinned released Part 1 source lists exact link relation values ogc-rel:parentSystem, ogc-rel:parentDeployment, and ogc-rel:sampleOf; its representation tables map GeoJSON systemKind to properties/systemKind@link and SensorML systemKind/parentSystem to typeOf/attachedTo."
+    impact: "A response with a non-released direct field or relation can manufacture local-ID and UID association evidence, allowing a mandatory association or combined-filter procedure to PASS when the released representation does not carry the prescribed association."
+    required_fix: "Replace lossy shared alias normalization with representation-aware exact matching. Accept only the exact direct member names and exact relation values authorized for that representation and relation; do not remove a generic Link suffix. Add controlled regressions proving parentSystemLink, systemKindLink, ogc-rel:parentSystemLink, punctuation/case near-misses, and broad parent/procedure aliases cannot seed or validate predicates while the exact released forms still pass."
+
+r5_finding_dispositions:
+  - id: "RAZE-S55-R5-CANONICAL-RELATION-VOCABULARY-001"
+    disposition: "PARTIALLY_REMEDIATED_NOT_CLOSED"
+    confidence: 0.99
+    basis:
+      - "Candidate f2a88d5 restores the requested canonical ogc-rel, systemKind@link, attachedTo, and typeOf positive forms and rejects an unrelated URI scheme."
+      - "The shared matcher still strips a Link suffix, canonicalizes punctuation and case, and retains broad cross-representation aliases."
+      - "Carried forward as RAZE-S55-R6-EXACT-RELATION-VOCABULARY-001."
+
+  - id: "RAZE-S55-R5-DEPLOYED-SYSTEM-TYPE-GATE-001"
+    disposition: "CLOSED"
+    confidence: 0.99
+    basis:
+      - "SystemFeaturesSupport.isReleasedSystemRepresentation is media-aware."
+      - "GeoJSON requires type Feature plus one exact released SOSA System CURIE or URI."
+      - "SensorML requires one of PhysicalComponent, PhysicalSystem, SimpleProcess, or AggregateProcess plus an exact released System definition."
+      - "Controlled tests exercise all ten GeoJSON values and all four SensorML classes, and reject custom:NotSystem, sosa:Deployment, and collection targets."
+
+  - id: "RAZE-S55-R5-IGNORED-REPRESENTATION-VALIDATION-001"
+    disposition: "CLOSED"
+    confidence: 0.99
+    basis:
+      - "propertyByObjectType and combinedFilters now stop with an explicit SkipException when validateEndpoint returns false."
+      - "Controlled generic-JSON fixtures prove matching predicates cannot produce PASS after released endpoint validation rejects the representation."
+
+  - id: "RAZE-S55-R5-KEYWORD-MAPPING-OVERCLAIM-001"
+    disposition: "CLOSED"
+    confidence: 0.99
+    basis:
+      - "The reviewed mapping and generated coverage report now describe only the returned-resource keyword assertion."
+      - "Neither synchronized artifact claims selected-seed inclusion for resource-by-keyword."
+
+procedure_and_evidence_assessment:
+  released_inventory:
+    status: "VERIFIED"
+    detail: "The pinned Part 1 inventory has 25 Advanced Filtering procedures; the deployed class has 25 independent alwaysRun methods and the reviewed mapping has 25 distinct exact entries."
+  false_pass_and_skip_review:
+    status: "GAP_FOUND"
+    detail: "Exact local-OSH and sabotage SKIPs are honest, but RAZE-S55-R6-EXACT-RELATION-VOCABULARY-001 leaves a controlled-IUT false-PASS path."
+  deployed_system_type_allowlists:
+    status: "VERIFIED"
+    detail: "All released GeoJSON and SensorML System classes are accepted, while collections, non-System resources, and arbitrary System suffixes are rejected."
+  failed_representation_validation:
+    status: "VERIFIED_FAIL_CLOSED"
+    detail: "prop-by-object and combined-filters cannot accept predicates after endpoint representation validation returns false."
+  keyword_mapping:
+    status: "VERIFIED"
+    detail: "Reviewed and generated evidence no longer overclaims selected-seed inclusion."
+  dependency_causality:
+    status: "VERIFIED"
+    detail: "Sabotage XML is 238 total, 2 passed, 10 failed, and 226 skipped. Advanced Filtering setup and all 25 methods SKIP before Advanced Filtering IUT access when API Common is blocked."
+  local_osh_result_honesty:
+    status: "VERIFIED_HONEST_NONCONFORMANCE"
+    detail: "The raw local XML is 238 total, 40 passed, 7 failed, and 191 skipped. Its Advanced Filtering configuration passes and all 25 methods independently SKIP at the absent class declaration; no positive local-IUT conformance is claimed."
+  exact_build_provenance:
+    status: "VERIFIED"
+    detail: "The clean detached candidate is f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0. Image sha256:d7bdc60725409990ac8f79af10dbb9667006127be6313acc0d36cd6bc39e7f1b contains the suite JAR with Build-Revision f2a88d54e6."
+  no_osh_or_teamengine_modification:
+    status: "VERIFIED_FROM_EVIDENCE"
+    detail: "The immutability record reports clean OSH 4c87a65c9a967d52af9df476e65d7862c7673a15, its expected ConSys bundle hash, read-only /opt/osh, unchanged TeamEngine base image, and no source or binary modification."
+  hosted_ci:
+    status: "NOT_ADDED"
+    detail: "No hosted-CI artifact was introduced."
+  credentials:
+    status: "VERIFIED"
+    detail: "Integration and wire gates report zero unmasked artifact hits, 33 masked events, and 33 intact synthetic transmissions to the intended stub IUT."
+  get_only_hygiene:
+    status: "VERIFIED"
+    detail: "Artifact hygiene reports 174 recognized GET requests, 169 IUT GET requests, zero IUT writes, and zero credential leaks."
+  evidence_manifest_integrity:
+    status: "VERIFIED"
+    detail: "All 17 manifest payload hashes passed against the working files and independently against the staged Git blobs."
+  archived_test_results:
+    status: "VERIFIED_AS_ARCHIVED_NOT_RERUN"
+    detail:
+      - "R5 test-first reproduction: 42 tests, 3 failures, 4 errors, 0 skips."
+      - "Exact focused Maven: 48 tests, 0 failures, 0 errors, 0 skips."
+      - "Exact full Maven: 602 tests, 0 failures, 0 errors, 3 skips."
+      - "Released-source audit: PASS at 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2."
+      - "Coverage summary: 240 total, 76 exact, 2 helper, 115 candidate, 47 unmapped; Part 1 Advanced Filtering is structurally 25 of 25 exact."
+      - "Aggregate green gates do not exercise or resolve the exact-vocabulary false-PASS path."
+  spec_story_contract_traceability:
+    status: "STRUCTURALLY_RECONCILED_SEMANTIC_GAP"
+    detail: "The staged contract, spec, design, story, change proposal, architecture, traceability, status, changelog, test-results, and R6 summary consistently identify f2a88d5 and remain Raze-pending. Their exact-vocabulary assertion disagrees with the production matcher identified above."
+
+commands_and_evidence_inspected:
+  - "Read AGENTS.md, _bmad/agents/adversarial-reviewer.md, and .harness/prompts/adversarial.md before review."
+  - "Reviewed candidate diff 060a8aa994..f2a88d54, all changed production and focused-test code, AdvancedFilteringTests, testng.xml, structural tests, reviewed ATS mappings, and generated coverage."
+  - "Reviewed CP-015, capability spec/design, story, contract, architecture, traceability, epic, status, changelog, test-results, and staged R6 summary."
+  - "Compared relation and System-type behavior with the pinned released Part 1 link-relation and GeoJSON/SensorML mapping tables."
+  - "sha256sum -c exact-f2a88d5-artifact-manifest.sha256: all 17 payloads passed."
+  - "Independent git-index blob hashing: staged_manifest_entries=17, failures=0."
+  - "Parsed local-OSH and sabotage AdvancedFilteringTests class blocks, method statuses, skip reasons, and report totals."
+  - "Inspected focused/full Maven summaries, released-source audit, runtime, image-build, credential, hygiene, immutability, and Advanced Filtering E2E inventories."
+  - "Independently inspected the exact runtime image JAR manifest: Build-Revision f2a88d54e6."
+  - "No expensive gate was rerun."
+
+required_fixes:
+  count: 1
+  ids:
+    - "RAZE-S55-R6-EXACT-RELATION-VOCABULARY-001"
+  statement: "Candidate f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0 must not pass Gate 4 or close S-ETS-55-01 until exact representation-aware relation matching and adversarial near-miss regressions replace the lossy alias matcher."
+
+completion_justification: "The requested semantic, PASS/SKIP, dependency, provenance, immutability, E2E honesty, credential, GET-only hygiene, checksum, and documentation surfaces were reviewed. One source-level false-PASS path remains decisive despite otherwise consistent exact-candidate evidence."
+
+review_metrics:
+  started_at_utc: "2026-07-29T14:32:04Z"
+  completed_at_utc: "2026-07-29T14:38:28Z"
+  duration_seconds: 384
+  token_metadata:
+    available: false
+    detail: "Authoritative per-review token usage metadata was not exposed to this reviewer."
+
+reviewer_workspace_changes:
+  created:
+    - ".harness/evaluations/sprint-ets-55-adversarial-final-r6.yaml"
+  modified_other_files: false

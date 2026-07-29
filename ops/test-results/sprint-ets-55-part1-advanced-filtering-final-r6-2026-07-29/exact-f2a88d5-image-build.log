@@ -1,0 +1,130 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 6.23kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.6
+#2 DONE 0.3s
+
+#3 docker-image://docker.io/docker/dockerfile:1.6@sha256:ac85f380a63b13dfcefa89046420e1781752bab202122f8f50032edf31be0021
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45
+#4 DONE 0.0s
+
+#5 [internal] load metadata for docker.io/ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
+#5 DONE 0.2s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 881B done
+#6 DONE 0.0s
+
+#7 [stage-2 1/4] FROM docker.io/ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
+#7 DONE 0.0s
+
+#8 [builder 1/7] FROM docker.io/library/maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45
+#8 DONE 0.0s
+
+#9 [internal] load build context
+#9 transferring context: 10.21MB 0.1s done
+#9 DONE 0.1s
+
+#10 [builder 2/7] WORKDIR /build
+#10 CACHED
+
+#11 [builder 3/7] COPY pom.xml ./
+#11 CACHED
+
+#12 [builder 4/7] COPY scripts/bootstrap-swecommon30-validator.sh ./scripts/
+#12 CACHED
+
+#13 [builder 5/7] COPY .git ./.git
+#13 DONE 0.0s
+
+#14 [builder 6/7] COPY src ./src
+#14 DONE 0.0s
+
+#15 [builder 7/7] RUN --mount=type=cache,target=/root/.m2     bash scripts/bootstrap-swecommon30-validator.sh  && mvn -B -q clean package -DskipTests
+#15 5.541 Verified SWE Common validator source: https://github.com/opengeospatial/ets-swecommon30.git@3ba75ceabe57cea85f4a8513c59e0f90e386ba96
+#15 6.095 [INFO] Scanning for projects...
+#15 6.148 [INFO] ------------------------------------------------------------------------
+#15 6.148 [INFO] Reactor Build Order:
+#15 6.148 [INFO]
+#15 6.149 [INFO] SWE Common 3.0 Conformance Test Suite Parent                       [pom]
+#15 6.149 [INFO] SWE Common 3.0 Validation Module                                   [jar]
+#15 6.153 [INFO]
+#15 6.153 [INFO] ----------------< org.opengis.cite:swecommon30-parent >-----------------
+#15 6.153 [INFO] Building SWE Common 3.0 Conformance Test Suite Parent 0.1-SNAPSHOT [1/2]
+#15 6.153 [INFO]   from pom.xml
+#15 6.153 [INFO] --------------------------------[ pom ]---------------------------------
+#15 6.215 [INFO]
+#15 6.215 [INFO] --- site:3.5.1:jar (site-package) @ swecommon30-parent ---
+#15 6.616 [WARNING]  Parameter 'reportPlugins' is read-only, must not be used in configuration
+#15 6.624 [INFO] maven.site.skip = true: Skipping jar generation
+#15 6.624 [INFO]
+#15 6.624 [INFO] --- install:3.1.4:install (default-install) @ swecommon30-parent ---
+#15 6.645 [INFO] Installing /tmp/swecommon30-validator.6mvr53yM/pom.xml to /root/.m2/repository/org/opengis/cite/swecommon30-parent/0.1-SNAPSHOT/swecommon30-parent-0.1-SNAPSHOT.pom
+#15 6.653 [INFO]
+#15 6.653 [INFO] ---------------< org.opengis.cite:swecommon30-validator >---------------
+#15 6.653 [INFO] Building SWE Common 3.0 Validation Module 0.1-SNAPSHOT             [2/2]
+#15 6.653 [INFO]   from swecommon30-validator/pom.xml
+#15 6.653 [INFO] --------------------------------[ jar ]---------------------------------
+#15 6.692 [INFO]
+#15 6.692 [INFO] --- resources:3.4.0:resources (default-resources) @ swecommon30-validator ---
+#15 6.727 [INFO] Copying 106 resources from src/main/resources to target/classes
+#15 6.761 [INFO] skip non existing resourceDirectory /tmp/swecommon30-validator.6mvr53yM/swecommon30-validator/src/main/javadoc
+#15 6.761 [INFO]
+#15 6.761 [INFO] --- compiler:3.6.0:compile (default-compile) @ swecommon30-validator ---
+#15 6.810 [INFO] Changes detected - recompiling the module!
+#15 6.813 [INFO] Compiling 3 source files to /tmp/swecommon30-validator.6mvr53yM/swecommon30-validator/target/classes
+#15 7.103 [INFO]
+#15 7.103 [INFO] --- resources:3.4.0:testResources (default-testResources) @ swecommon30-validator ---
+#15 7.105 [INFO] skip non existing resourceDirectory /tmp/swecommon30-validator.6mvr53yM/swecommon30-validator/src/test/resources
+#15 7.105 [INFO]
+#15 7.105 [INFO] --- compiler:3.6.0:testCompile (default-testCompile) @ swecommon30-validator ---
+#15 7.108 [INFO] No sources to compile
+#15 7.108 [INFO]
+#15 7.108 [INFO] --- surefire:2.19.1:test (default-test) @ swecommon30-validator ---
+#15 7.150 [INFO] Tests are skipped.
+#15 7.150 [INFO]
+#15 7.150 [INFO] --- site:3.5.1:jar (site-package) @ swecommon30-validator ---
+#15 7.151 [WARNING]  Parameter 'reportPlugins' is read-only, must not be used in configuration
+#15 7.152 [INFO] maven.site.skip = true: Skipping jar generation
+#15 7.152 [INFO]
+#15 7.152 [INFO] --- jar:3.0.2:jar (default-jar) @ swecommon30-validator ---
+#15 7.214 [INFO] Building jar: /tmp/swecommon30-validator.6mvr53yM/swecommon30-validator/target/swecommon30-validator-0.1-SNAPSHOT.jar
+#15 7.238 [INFO]
+#15 7.238 [INFO] --- install:3.1.4:install (default-install) @ swecommon30-validator ---
+#15 7.238 [INFO] Installing /tmp/swecommon30-validator.6mvr53yM/swecommon30-validator/pom.xml to /root/.m2/repository/org/opengis/cite/swecommon30-validator/0.1-SNAPSHOT/swecommon30-validator-0.1-SNAPSHOT.pom
+#15 7.239 [INFO] Installing /tmp/swecommon30-validator.6mvr53yM/swecommon30-validator/target/swecommon30-validator-0.1-SNAPSHOT.jar to /root/.m2/repository/org/opengis/cite/swecommon30-validator/0.1-SNAPSHOT/swecommon30-validator-0.1-SNAPSHOT.jar
+#15 7.241 [INFO] ------------------------------------------------------------------------
+#15 7.241 [INFO] Reactor Summary for SWE Common 3.0 Conformance Test Suite Parent 0.1-SNAPSHOT:
+#15 7.241 [INFO]
+#15 7.241 [INFO] SWE Common 3.0 Conformance Test Suite Parent ....... SUCCESS [  0.500 s]
+#15 7.241 [INFO] SWE Common 3.0 Validation Module ................... SUCCESS [  0.588 s]
+#15 7.241 [INFO] ------------------------------------------------------------------------
+#15 7.241 [INFO] BUILD SUCCESS
+#15 7.241 [INFO] ------------------------------------------------------------------------
+#15 7.241 [INFO] Total time:  1.158 s
+#15 7.241 [INFO] Finished at: 2026-07-29T14:03:41Z
+#15 7.241 [INFO] ------------------------------------------------------------------------
+#15 DONE 27.9s
+
+#7 [stage-2 1/4] FROM docker.io/ogccite/teamengine-dev@sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c
+#7 CACHED
+
+#16 [stage-2 2/4] COPY --from=builder --chown=tomcat:tomcat /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT.jar /usr/local/tomcat/webapps/teamengine/WEB-INF/lib/
+#16 DONE 0.0s
+
+#17 [stage-2 3/4] COPY --from=builder --chown=tomcat:tomcat /build/target/ets-ogcapi-connectedsystems10-0.1-SNAPSHOT-ctl.zip /tmp/ets-ctl.zip
+#17 DONE 0.0s
+
+#18 [stage-2 4/4] RUN test ! -e /usr/local/tomcat/te_base/scripts/ogcapi-connectedsystems10  && mkdir /tmp/ets-ctl  && unzip -q /tmp/ets-ctl.zip -d /tmp/ets-ctl  && test -d /tmp/ets-ctl/ogcapi-connectedsystems10  && cp -R /tmp/ets-ctl/ogcapi-connectedsystems10 /usr/local/tomcat/te_base/scripts/  && rm -rf /tmp/ets-ctl /tmp/ets-ctl.zip
+#18 DONE 0.4s
+
+#19 exporting to image
+#19 exporting layers 0.0s done
+#19 writing image sha256:d7bdc60725409990ac8f79af10dbb9667006127be6313acc0d36cd6bc39e7f1b done
+#19 naming to docker.io/library/ets-ogcapi-connectedsystems10:sprint55-f2a88d5 done
+#19 DONE 0.1s

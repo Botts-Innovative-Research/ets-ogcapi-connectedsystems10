@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T13:53Z
+Last updated: 2026-07-29T15:03Z
 
 ## Current Sprint Evidence
 
@@ -10,18 +10,29 @@ Sprint 55 Part 1 Advanced Filtering direct ATS:
   mappings are reviewed exact.
 - Coverage is `240/76 exact/2 helper/115 candidate/47 unmapped`;
   `/conf/advanced-filtering` is `25/25 exact`.
-- R5 HTTP test-first evidence is `42/3/4/0`; focused controlled HTTP and
-  support tests are `48/0/0/0`, and precommit full Maven is `602/0/0/3`.
+- R6 test-first controlled HTTP is `46/3/0/0`; remediation is `46/0/0/0`,
+  focused Maven is `51/0/0/0`, and full Docker Maven is `605/0/0/3`.
 - Scenario trace is `20/20` with no missing literal Java anchors.
 - Raze R5 returned `GAPS_FOUND 0.99`; canonical relation vocabulary,
   media-aware System typing, failed representation validation, and keyword
   mapping evidence are remediated with requirement-linked tests.
-- Candidate `060a8aa` and its exact image/runtime, honest local OSH
-  `238/40/7/191`, sabotage `238/2/10/226`, credential, immutability, and
-  hygiene gates remain superseded audit evidence.
-- A new committed candidate must repeat every exact gate and fresh Raze.
+- Candidate `f2a88d5` exact image `sha256:d7bdc607254...e7f1b` passed runtime
+  and released-source audits before Raze R6 superseded the candidate.
+- Unmodified local OSH TeamEngine is honestly `238/40/7/191`; all 25 Advanced
+  Filtering methods SKIP at the absent declaration and are not positive
+  local-IUT conformance evidence.
+- API Common sabotage is `238/2/10/226`; credential, immutability, and hygiene
+  gates pass with 174 recognized GETs, 169 IUT GETs, zero writes, zero leaks,
+  zero unmasked credential hits, 33 masked events, and 33 intact
+  transmissions.
+- Raze R6 returned `GAPS_FOUND 0.99` for case/punctuation normalization,
+  trailing-`Link` stripping, and broad aliases. Separate exact,
+  case-sensitive representation vocabularies now close that path; a new
+  committed candidate, exact gates, and fresh Raze remain.
 - Verification summary:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-verification-2026-07-29.md`.
+- Superseded exact `f2a88d5` candidate evidence:
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r6-2026-07-29/`.
 - Superseded exact `060a8aa` candidate and current R5 remediation evidence:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r5-2026-07-29/`.
 - Superseded `756d729` exact candidate and current R4 remediation evidence:

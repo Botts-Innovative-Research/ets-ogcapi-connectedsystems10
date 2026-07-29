@@ -2,9 +2,9 @@
 
 ## Status
 
-R5 REMEDIATION PRECOMMIT GREEN - candidate `060a8aa` exact evidence is
-superseded. Four required semantic and mapping fixes pass focused and full
-precommit verification; new exact-candidate and fresh Raze gates remain.
+R6 EXACT RELATION REMEDIATION IMPLEMENTED; EXACT CANDIDATE PENDING -
+candidate `f2a88d5` is superseded, and the replacement matcher passes
+regression and precommit Maven gates.
 
 ## User Instruction
 
@@ -74,6 +74,9 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
 - [x] Canonical GeoJSON direct and `ogc-rel:` relation names, including
   `systemKind@link`, and SensorML `attachedTo`/`typeOf` mappings are accepted
   without reopening suffix or nested-extension shortcuts.
+- [x] GeoJSON relation links, GeoJSON property links, and SensorML members use
+  separate exact vocabularies; case, punctuation, trailing `Link`, `parent`,
+  and `procedure` near misses cannot create association evidence.
 - [x] Dereferenced deployed-System property targets accept every released
   GeoJSON/SensorML System class and reject collections, non-System objects,
   and arbitrary `*System` suffix types.
@@ -164,5 +167,15 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   keyword mapping overclaim. R5 HTTP regressions reproduce `42/3/4/0`;
   remediation passes focused `48/0/0/0`, full Maven `602/0/0/3`, and the
   regenerated `240/76/2/115/47` coverage report. Candidate `060a8aa` and its
-  gates remain superseded until a new committed candidate repeats every exact
-  gate and passes another fresh Raze review.
+  gates remain superseded. Exact candidate
+  `f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0` passes focused `48/0/0/0`,
+  full Maven `602/0/0/3`, image/runtime, released-source,
+  unmodified-local-OSH, sabotage, credential, immutability, and hygiene gates.
+  Raze R6 returned `GAPS_FOUND 0.99`: lossy relation normalization still
+  accepts trailing-`Link`, punctuation/case, and broad cross-representation
+  aliases. Candidate `f2a88d5` is superseded; a regression-first exact matcher,
+  new committed candidate, repeated exact gates, and another fresh Raze
+  review remain. The R6 regressions reproduce controlled HTTP `46/3/0/0`;
+  exact case-sensitive, representation-specific vocabularies move that suite
+  to `46/0/0/0`, focused Maven to `51/0/0/0`, and full Docker Maven to
+  `605/0/0/3`.

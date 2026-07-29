@@ -2714,10 +2714,9 @@ fail or SKIP as specified.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
 - **Priority**: MUST
-- **Status**: SPRINT_55_R5_REMEDIATION_PRECOMMIT_GREEN (candidate `060a8aa`
-  exact gates are superseded; all four R5 fixes pass focused and full
-  precommit verification; new exact-candidate and fresh adversarial gates
-  pending)
+- **Status**: SPRINT_55_R6_EXACT_RELATION_REMEDIATION_IMPLEMENTED_EXACT_CANDIDATE_PENDING
+  (R6 regressions move controlled HTTP from `46/3/0/0` to `46/0/0/0`;
+  exact-candidate E2E and fresh Raze remain)
 - **Historical increment**: by Sprint 11 Generator and gates (2026-05-05; story S-ETS-11-01; Quinn Gate 3.5 APPROVE_WITH_CONCERNS 0.90; Raze Gate 4 APPROVE_WITH_CONCERNS 0.90). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests` with 6 read-only @Tests. Verification: Java formatter via Docker Maven BUILD SUCCESS; Docker Maven `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results` reported `63 total / 48 passed / 0 failed / 15 skipped`. Independent Quinn/Raze gate smoke runs also reported `63 total / 48 passed / 0 failed / 15 skipped`. Current GeoRobotix does not declare `/conf/advanced-filtering`, so all 6 AdvancedFiltering @Tests SKIP with reason and no undeclared query behavior is counted as PASS.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc`. The OpenAPI fragment for `ID_List` exists at `api/part1/openapi/parameters/idListSchema.yaml`. The class identifier is `/req/advanced-filtering`, inherits `/req/api-common`, and lists query-parameter subrequirements for ID lists, common resource keyword/id filters, geometry filters, system/deployment/procedure/sampling-feature/property association filters, and combined filters.
 - **Sprint 11 coverage scope**: AdvancedFiltering systems/common-resource read-only subset with 6 @Tests: (1) IUT declares `/conf/advanced-filtering`, otherwise every AdvancedFiltering @Test SKIPs with reason; (2) ID-list schema validator helper accepts homogeneous non-empty local-ID lists and homogeneous non-empty UID lists while rejecting mixed local/UID lists and empty/malformed lists; (3) `/systems?id=<known-id>` returns HTTP 200 and a non-empty result set whose returned items all preserve the selected id when the conformance class is declared and a seed System id was selected; (4) `/systems?q=<known keyword>` returns HTTP 200 and a non-empty result set whose returned items include keyword evidence in `name` or `description` when declared and a seed keyword was selected from a System name/description; (5) `/systems?geom=<WKT>` is exercised with a broad WKT geometry and validated only for HTTP 200 + JSON response shape in this sprint; (6) TestNG dependency wiring and smoke no-regression. The sprint deliberately does not close all 24 listed advanced-filtering subrequirements.
@@ -2904,6 +2903,11 @@ cannot seed or validate a predicate
 `ogc-rel:` compact relation names, GeoJSON Procedure evidence accepts
 `systemKind@link`, and SensorML System evidence accepts `attachedTo` and
 `typeOf`
+**AND** GeoJSON relation links, GeoJSON property links, and SensorML members
+are matched against separate exact vocabularies at their prescribed
+representation boundaries
+**AND** case, punctuation, a trailing `Link` suffix, and broad `parent` or
+`procedure` aliases cannot be normalized into released association evidence
 **AND** unrelated URI schemes or merely suffix-matching relation values cannot
 seed or validate a predicate
 **AND** Deployment observed-property and controlled-property evidence ignores
@@ -3062,8 +3066,22 @@ selected-seed inclusion. Candidate `060a8aa` and its exact gates are now
 superseded audit evidence. R5 HTTP regressions reproduce `42/3/4/0`; focused
 remediation passes `48/0/0/0`, full Docker Maven passes `602/0/0/3`, and the
 regenerated coverage report remains `240/76/2/115/47` with Advanced Filtering
-`25/25 exact`. A new committed candidate must repeat every exact gate and pass
-another fresh Raze review.
+`25/25 exact`. Exact candidate `f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0`
+passes focused `48/0/0/0`, full Maven `602/0/0/3`, image/runtime,
+released-source, unmodified-local-OSH `238/40/7/191`, sabotage
+`238/2/10/226`, credential, immutability, and hygiene gates. Fresh Raze R6
+returned `GAPS_FOUND 0.99`: the shared relation matcher lowercases,
+removes punctuation, strips a trailing `Link`, and retains broad `parent` and
+`procedure` aliases. Consequently values such as `parentSystemLink`,
+`ogc-rel:parentSystemLink`, and punctuation/case variants can manufacture
+association evidence. Candidate `f2a88d5` and its exact gates are superseded;
+representation-aware exact matching now gives GeoJSON relation links,
+GeoJSON property links, SensorML members, and generic wrappers separate
+case-sensitive vocabularies. Trailing-`Link`, punctuation/case, `parent`, and
+`procedure` near misses are rejected. R6 controlled HTTP moves from
+`46/3/0/0` to `46/0/0/0`; focused Maven passes `51/0/0/0` and full Docker
+Maven passes `605/0/0/3`. A new committed candidate, repeated exact gates, and
+another fresh Raze review remain.
 
 > Sprint 12 starts the mutation-side Part 1 work with Create/Replace/Delete, but it does not permit unguarded writes against the public GeoRobotix smoke target. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, so default smoke must prove declaration and non-mutating readiness while every lifecycle mutation assertion SKIPs unless an operator explicitly enables mutation tests against a dedicated mutable IUT.
 

@@ -1963,7 +1963,18 @@ superseded audit evidence. Raze R5 found four additional relation-vocabulary,
 System-type, representation-validation, and mapping gaps, superseding
 `060a8aa`. R5 HTTP regressions reproduce `42/3/4/0`; media-aware canonical
 remediation passes focused `48/0/0/0`, full Maven `602/0/0/3`, and regenerated
-coverage `240/76/2/115/47`. New exact-candidate and fresh Raze gates remain.
+coverage `240/76/2/115/47`. Exact candidate `f2a88d5` passes focused
+`48/0/0/0`, full Maven `602/0/0/3`, image/runtime, released-source,
+unmodified-local-OSH `238/40/7/191`, sabotage `238/2/10/226`, credential,
+immutability, and hygiene gates. Raze R6 supersedes that candidate after
+finding that the shared relation matcher still strips a generic `Link` suffix,
+normalizes case/punctuation, and admits broad `parent`/`procedure` aliases.
+The replacement design gives GeoJSON relation links, GeoJSON property links,
+and SensorML root members separate exact vocabularies; no lossy normalization
+is permitted. R6 regression-first verification moves controlled HTTP from
+`46/3/0/0` to `46/0/0/0`; focused Maven passes `51/0/0/0` and full Docker
+Maven passes `605/0/0/3`. A new committed candidate must repeat every exact
+gate.
 
 ## Status
 

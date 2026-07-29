@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T13:53Z
+Last updated: 2026-07-29T15:03Z
 
 ## Fresh-Session Entry Point
 
@@ -97,9 +97,9 @@ Read these first:
 
 ## Session Handoff - Part 1 Advanced Filtering Direct ATS
 
-S-ETS-55-01 R5 remediation is precommit green under CP-015. Candidate
-`060a8aa` and its exact gates are superseded; a new exact candidate and fresh
-Raze remain.
+S-ETS-55-01 remains open under CP-015. Raze R6's exact relation-vocabulary
+finding is remediated and precommit gates pass; a new committed candidate and
+its exact E2E cycle remain.
 
 - Exactly 25 independent methods implement the 25 released procedures behind
   `AdvancedFilteringSupport`; all 25 mappings are reviewed exact.
@@ -107,33 +107,41 @@ Raze remain.
   `/conf/advanced-filtering` is `25/25 exact`.
 - Released inheritance is direct API Common. API Common sabotage skips setup
   and all 25 methods before class-specific IUT access.
-- R5 HTTP regressions reproduce `42/3/4/0`; focused controlled HTTP and
-  support tests pass `48/0/0/0`, and precommit full Docker Maven passes
-  `602/0/0/3`, with three unchanged historical harness skips.
+- R6 regressions reproduce controlled HTTP `46/3/0/0`; remediation passes
+  controlled HTTP `46/0/0/0`, focused Maven `51/0/0/0`, and full Docker Maven
+  `605/0/0/3`, with three unchanged historical harness skips.
 - Scenario trace is `20/20`; all released scenario IDs have literal Java
   anchors.
-- Direct relation evidence now accepts exact recognized fields only at the
-  resource root or immediate GeoJSON `properties` boundary. Suffix aliases
-  and nested extension aliases cannot seed or validate predicates.
+- The replacement matcher separates exact, case-sensitive GeoJSON
+  `links[].rel`, GeoJSON property, SensorML root-member, and generic-wrapper
+  vocabularies. Trailing-`Link`, punctuation/case, `parent`, and `procedure`
+  near misses no longer manufacture association evidence.
 - Deployment property dereferences now require a single System
   representation; collections and non-System objects contribute no evidence.
-- Canonical direct and `ogc-rel:` association vocabulary, GeoJSON
-  `systemKind@link`, and SensorML `attachedTo`/`typeOf` are accepted while
-  unrelated schemes, suffix aliases, and nested extensions remain rejected.
+- Exact canonical direct and `ogc-rel:` forms, GeoJSON `systemKind@link`, and
+  SensorML `attachedTo`/`typeOf` remain the required positive vocabulary.
 - Deployed-System targets use exact media-aware released System allowlists;
   property-object and combined-filter responses must pass released
   representation validation.
 - Keyword mapping now describes only the returned-resource assertion, and the
   synchronized coverage report is regenerated.
-- Candidate `060a8aa`, its exact image, honest local OSH `238/40/7/191`,
-  sabotage `238/2/10/226`, credential, immutability, and hygiene evidence are
-  preserved as superseded audit evidence under
+- Superseded candidate `f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0` builds exact image
+  `sha256:d7bdc607254...e7f1b` with matching `Build-Revision`.
+- Runtime and released-source audits pass. Unmodified local OSH TeamEngine is
+  honestly `238/40/7/191`; all 25 Advanced Filtering methods SKIP because the
+  IUT does not declare the class.
+- API Common sabotage is `238/2/10/226`; all 25 Advanced Filtering methods
+  cascade-SKIP. Credential gates report zero unmasked hits, 33 masked events,
+  and 33 intact transmissions.
+- Hygiene records 174 recognized GETs, 169 IUT GETs, zero writes, and zero
+  leaks. OSH remains clean at `4c87a65` with `/opt/osh` read-only.
+- Superseded checksum-manifested `f2a88d5` evidence and the R6 finding are under
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r6-2026-07-29/`.
+- Candidate `060a8aa` evidence is preserved as superseded audit evidence under
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r5-2026-07-29/`.
   Candidate `756d729` also remains superseded audit evidence.
-- Next action: commit the R5 remediation candidate; rerun exact focused/full,
-  image/runtime, unmodified-local-OSH, sabotage, credential, immutability,
-  hygiene, and source gates; obtain fresh Raze; reconcile and push Botts
-  `main`.
+- Next action: commit the replacement candidate, repeat every exact technical
+  and local-OSH TeamEngine gate from that SHA, and obtain fresh Raze approval.
 
 ## Session Handoff - Part 1 GeoJSON Direct ATS
 

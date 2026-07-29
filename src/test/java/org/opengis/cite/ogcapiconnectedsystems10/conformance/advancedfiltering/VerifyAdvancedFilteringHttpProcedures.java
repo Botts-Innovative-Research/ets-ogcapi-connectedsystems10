@@ -482,6 +482,51 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
 	 */
 	@Test
+	public void trailingLinkSuffixCannotCreateFieldAssociationEvidence() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.FIELD_LINK_SUFFIX_ALIASES)) {
+			server.start();
+			AdvancedFilteringTests tests = configured(server);
+
+			assertThrows(SkipException.class, tests::systemsFilterByParent);
+			assertThrows(SkipException.class, tests::systemsFilterByProcedure);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "parent-1"::equals));
+			assertEquals(0, server.callsWithValue("/api/systems", "procedure", "procedure-1"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void ogcRelCasePunctuationAndSuffixNearMissesAreRejected() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.OGC_REL_NEAR_MISSES)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::systemsFilterByParent);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "parent-1"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void broadParentAndProcedureAliasesAreRejected() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.BROAD_RELATION_ALIASES)) {
+			server.start();
+			AdvancedFilteringTests tests = configured(server);
+
+			assertThrows(SkipException.class, tests::systemsFilterByParent);
+			assertThrows(SkipException.class, tests::systemsFilterByProcedure);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "parent-1"::equals));
+			assertEquals(0, server.callsWithValue("/api/systems", "procedure", "procedure-1"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
 	public void releasedGeoJsonSystemKindLinkIsAccepted() throws Exception {
 		try (FixtureServer server = new FixtureServer(Mode.GEOJSON_SYSTEM_KIND_LINK)) {
 			server.start();
@@ -738,10 +783,11 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		DEPLOYED_PROPERTY_NESTED_HREF_SHORTCUT, DEPLOYED_PROPERTY_NON_SYSTEM_TARGET,
 		DEPLOYED_PROPERTY_COLLECTION_TARGET, MALFORMED_ASSOCIATION_HREF, UNRELATED_SUFFIX_ALIAS, NESTED_EXTENSION_ALIAS,
 		CANONICAL_OGC_RELATION, GEOJSON_SYSTEM_KIND_LINK, SENSORML_SYSTEM_ASSOCIATIONS, UNRELATED_RELATION_SCHEME,
-		DEPLOYED_PROPERTY_TYPED_SYSTEM_TARGET, DEPLOYED_PROPERTY_SUFFIX_SYSTEM_TARGET,
-		UNSUPPORTED_PROPERTY_FILTER_MEDIA, UNSUPPORTED_COMBINED_FILTER_MEDIA, ROOT_ASSOCIATION_SHORTCUTS,
-		BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION, LATER_INDIRECT_RESOURCES,
-		OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404, ONLY_SYSTEM_DECLARED
+		FIELD_LINK_SUFFIX_ALIASES, OGC_REL_NEAR_MISSES, BROAD_RELATION_ALIASES, DEPLOYED_PROPERTY_TYPED_SYSTEM_TARGET,
+		DEPLOYED_PROPERTY_SUFFIX_SYSTEM_TARGET, UNSUPPORTED_PROPERTY_FILTER_MEDIA, UNSUPPORTED_COMBINED_FILTER_MEDIA,
+		ROOT_ASSOCIATION_SHORTCUTS, BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION,
+		LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404,
+		ONLY_SYSTEM_DECLARED
 
 	}
 
@@ -1147,15 +1193,26 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			if (this.mode == Mode.UNRELATED_RELATION_SCHEME) {
 				return systemWithUnrelatedRelationScheme();
 			}
-			String associations = this.mode == Mode.NO_ASSOCIATIONS ? "" : systemAssociations();
+			if (this.mode == Mode.FIELD_LINK_SUFFIX_ALIASES) {
+				return systemWithFieldLinkSuffixAliases();
+			}
+			if (this.mode == Mode.OGC_REL_NEAR_MISSES) {
+				return systemWithOgcRelationNearMisses();
+			}
+			if (this.mode == Mode.BROAD_RELATION_ALIASES) {
+				return systemWithBroadRelationAliases();
+			}
+			String propertyAssociations = this.mode == Mode.NO_ASSOCIATIONS ? "" : systemPropertyAssociations();
+			String parentLink = this.mode == Mode.NO_ASSOCIATIONS ? "" : systemParentLink();
 			String additionalCustom = this.mode == Mode.UNION_ADDITIONAL_CUSTOM_PROPERTY ? ",\"secondaryCode\":\"beta\""
 					: "";
 			return """
 					{"type":"Feature","id":"system-1","geometry":{"type":"Point","coordinates":[-77,38]},
 					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:1",
 					 "name":"Weather Station","customCode":"alpha"%s%s},
-					 "links":[{"rel":"canonical","type":"application/geo+json","href":"%s"}]}
-					""".formatted(additionalCustom, associations, apiRoot().resolve("systems/system-1"));
+					 "links":[{"rel":"canonical","type":"application/geo+json","href":"%s"}%s]}
+					""".formatted(additionalCustom, propertyAssociations, apiRoot().resolve("systems/system-1"),
+					parentLink);
 		}
 
 		private String systemWithOgcRelation() {
@@ -1187,7 +1244,45 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "links":[
 					  {"rel":"canonical","type":"application/geo+json","href":"%s"},
 					  {"rel":"custom:parentSystem","type":"application/geo+json","href":"%s"}]}
-					""".formatted(apiRoot().resolve("systems/system-1"), apiRoot().resolve("systems/parent-1"));
+						""".formatted(apiRoot().resolve("systems/system-1"), apiRoot().resolve("systems/parent-1"));
+		}
+
+		private String systemWithFieldLinkSuffixAliases() {
+			return """
+					{"type":"Feature","id":"system-1","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:1",
+					 "name":"Weather Station",
+					 "parentSystemLink":{"href":"%s"},
+					 "systemKindLink":{"href":"%s"}},
+					 "links":[{"rel":"canonical","type":"application/geo+json","href":"%s"}]}
+					""".formatted(apiRoot().resolve("systems/parent-1"), apiRoot().resolve("procedures/procedure-1"),
+					apiRoot().resolve("systems/system-1"));
+		}
+
+		private String systemWithOgcRelationNearMisses() {
+			return """
+					{"type":"Feature","id":"system-1","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:1",
+					 "name":"Weather Station"},
+					 "links":[
+					  {"rel":"canonical","type":"application/geo+json","href":"%s"},
+					  {"rel":"ogc-rel:parentSystemLink","type":"application/geo+json","href":"%s"},
+					  {"rel":"ogc-rel:ParentSystem","type":"application/geo+json","href":"%s"},
+					  {"rel":"ogc-rel:parent-system","type":"application/geo+json","href":"%s"}]}
+					""".formatted(apiRoot().resolve("systems/system-1"), apiRoot().resolve("systems/parent-1"),
+					apiRoot().resolve("systems/parent-1"), apiRoot().resolve("systems/parent-1"));
+		}
+
+		private String systemWithBroadRelationAliases() {
+			return """
+					{"type":"Feature","id":"system-1","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:1",
+					 "name":"Weather Station",
+					 "parent":{"href":"%s"},
+					 "procedure":{"href":"%s"}},
+					 "links":[{"rel":"canonical","type":"application/geo+json","href":"%s"}]}
+					""".formatted(apiRoot().resolve("systems/parent-1"), apiRoot().resolve("procedures/procedure-1"),
+					apiRoot().resolve("systems/system-1"));
 		}
 
 		private String sensorMlSystem() {
@@ -1198,30 +1293,10 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					""".formatted(apiRoot().resolve("systems/parent-1"), apiRoot().resolve("procedures/procedure-1"));
 		}
 
-		private String systemAssociations() {
-			if (this.mode == Mode.RESOLVED_TARGET_IDENTIFIERS) {
-				return ",\"parentSystem\":{\"id\":\"wrapper-parent\","
-						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
-						+ apiRoot().resolve("systems/alias-parent") + "\"}";
-			}
-			if (this.mode == Mode.BROKEN_ASSOCIATION) {
-				return ",\"parentSystem\":{\"id\":\"wrapper-parent\","
-						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
-						+ apiRoot().resolve("systems/broken-parent") + "\"}";
-			}
-			if (this.mode == Mode.WRONG_ASSOCIATION_MEDIA) {
-				return ",\"parentSystem\":{\"id\":\"wrapper-parent\","
-						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
-						+ apiRoot().resolve("systems/wrong-media-parent") + "\"}";
-			}
-			if (this.mode == Mode.PAGINATED_ASSOCIATION) {
-				return ",\"parentSystem\":{\"href\":\"" + apiRoot().resolve("systems/parent-collection") + "\"}";
-			}
+		private String systemPropertyAssociations() {
 			if (this.mode == Mode.MALFORMED_ASSOCIATION_HREF) {
 				return """
-						,"parentSystem":{"id":"parent-1"},
-						 "procedure":{"id":"procedure-1"},
-						 "sampleOf":{"id":"foi-1"},
+						,"systemKind@link":{"id":"procedure-1"},
 						 "observedProperties":[{"id":"property-local"},{"href":"%%%"}],
 						 "controlledProperties":[{"id":"property-local"}]
 						""";
@@ -1239,22 +1314,51 @@ public class VerifyAdvancedFilteringHttpProcedures {
 						""";
 			}
 			if (this.mode == Mode.OVER_DEPTH_RELATION) {
+				return "";
+			}
+			return """
+					,"systemKind@link":{"id":"procedure-1","uid":"urn:example:procedure:1","href":"%s"},
+					 "observedProperties":[{"id":"property-1","uid":"urn:example:property:observed"}],
+					 "controlledProperties":[{"id":"property-1","uid":"urn:example:property:controlled"}]
+					""".formatted(apiRoot().resolve("procedures/procedure-1"));
+		}
+
+		private String systemParentLink() {
+			if (this.mode == Mode.RESOLVED_TARGET_IDENTIFIERS) {
+				return ",{\"rel\":\"parentSystem\",\"id\":\"wrapper-parent\","
+						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
+						+ apiRoot().resolve("systems/alias-parent") + "\"}";
+			}
+			if (this.mode == Mode.BROKEN_ASSOCIATION) {
+				return ",{\"rel\":\"parentSystem\",\"id\":\"wrapper-parent\","
+						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
+						+ apiRoot().resolve("systems/broken-parent") + "\"}";
+			}
+			if (this.mode == Mode.WRONG_ASSOCIATION_MEDIA) {
+				return ",{\"rel\":\"parentSystem\",\"id\":\"wrapper-parent\","
+						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
+						+ apiRoot().resolve("systems/wrong-media-parent") + "\"}";
+			}
+			if (this.mode == Mode.PAGINATED_ASSOCIATION) {
+				return ",{\"rel\":\"parentSystem\",\"href\":\"" + apiRoot().resolve("systems/parent-collection")
+						+ "\"}";
+			}
+			if (this.mode == Mode.MALFORMED_ASSOCIATION_HREF || this.mode == Mode.UNRELATED_SUFFIX_ALIAS
+					|| this.mode == Mode.NESTED_EXTENSION_ALIAS) {
+				return "";
+			}
+			if (this.mode == Mode.OVER_DEPTH_RELATION) {
 				String relation = "{\"id\":\"parent-1\",\"uid\":\"urn:example:system:parent\"}";
 				for (int depth = 0; depth < 14; depth++) {
 					relation = "{\"items\":[" + relation + "]}";
 				}
-				return ",\"parentSystem\":" + relation;
+				return ",{\"rel\":\"parentSystem\",\"items\":[" + relation + "]}";
 			}
 			URI parent = this.mode == Mode.CROSS_ORIGIN_ASSOCIATION ? this.externalTarget
 					: apiRoot().resolve("systems/parent-1");
 			return """
-					,"parentSystem":{"id":"parent-1","uid":"urn:example:system:parent","href":"%s"},
-					 "procedure":{"id":"procedure-1","uid":"urn:example:procedure:1","href":"%s"},
-					 "sampleOf":{"id":"foi-1","uid":"urn:example:foi:1","href":"%s"},
-					 "observedProperties":[{"id":"property-1","uid":"urn:example:property:observed"}],
-					 "controlledProperties":[{"id":"property-1","uid":"urn:example:property:controlled"}]
-					""".formatted(parent, apiRoot().resolve("procedures/procedure-1"),
-					apiRoot().resolve("features/foi-1"));
+					,{"rel":"parentSystem","id":"parent-1","uid":"urn:example:system:parent","href":"%s"}
+					""".formatted(parent);
 		}
 
 		private String parentSystem() {
@@ -1303,12 +1407,13 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "properties":{"featureType":"sosa:Deployment","uid":"urn:example:deployment:1",
 					 "name":"Field Deployment","validTime":["2026-01-01T00:00:00Z","2027-01-01T00:00:00Z"],
 					 "customCode":"alpha",
-					 "parentDeployment":{"id":"deployment-parent","uid":"urn:example:deployment:parent"},
 					 "deployedSystems":[{"id":"system-1","uid":"urn:example:system:1"}],
 					 "featuresOfInterest":[{"id":"foi-1","uid":"urn:example:foi:1"}],
 					 "observedProperties":[{"id":"property-1","uid":"urn:example:property:observed"}],
-					 "controlledProperties":[{"id":"property-1","uid":"urn:example:property:controlled"}]}}
-					""";
+					 "controlledProperties":[{"id":"property-1","uid":"urn:example:property:controlled"}]},
+					 "links":[{"rel":"parentDeployment","id":"deployment-parent",
+					  "uid":"urn:example:deployment:parent","href":"%s"}]}
+					""".formatted(apiRoot().resolve("deployments/deployment-parent"));
 		}
 
 		private String deploymentWithOgcRelation() {
@@ -1356,8 +1461,8 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				String target = this.mode == Mode.CYCLIC_RELATION ? "features/cycle-a" : "features/chain-0";
 				return """
 						{"type":"Feature","id":"sf-1","geometry":{"type":"Point","coordinates":[-77,38]},
-						 "properties":{"featureType":"sosa:Sample","uid":"urn:example:sf:1","name":"Weather Sample",
-						 "sampleOf":{"href":"%s"}}}
+						 "properties":{"featureType":"sosa:Sample","uid":"urn:example:sf:1","name":"Weather Sample"},
+						 "links":[{"rel":"sampleOf","href":"%s"}]}
 						""".formatted(apiRoot().resolve(target));
 			}
 			return """
@@ -1365,9 +1470,10 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "properties":{"featureType":"sosa:Sample","uid":"urn:example:sf:1","name":"Weather Sample",
 					 "customCode":"alpha",
 					 "sampledFeature@link":{"href":"%s","id":"foi-1","uid":"urn:example:foi:1"},
-					 "sampleOf":{"href":"%s","id":"parent-sf","uid":"urn:example:sf:parent"},
 					 "observedProperties":[{"id":"property-1","uid":"urn:example:property:observed"}],
-					 "controlledProperties":[{"id":"property-1","uid":"urn:example:property:controlled"}]}}
+					 "controlledProperties":[{"id":"property-1","uid":"urn:example:property:controlled"}]},
+					 "links":[{"rel":"sampleOf","href":"%s","id":"parent-sf",
+					  "uid":"urn:example:sf:parent"}]}
 						""".formatted(apiRoot().resolve("features/foi-1"), apiRoot().resolve("features/foi-1"));
 		}
 
@@ -1375,8 +1481,9 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			return """
 					{"type":"Feature","id":"sf-2","geometry":{"type":"Point","coordinates":[-77,38]},
 					 "properties":{"featureType":"sosa:Sample","uid":"urn:example:sf:2","name":"Second Weather Sample",
-					 "sampledFeature@link":{"href":"%s","id":"foi-2","uid":"urn:example:foi:2"},
-					 "sampleOf":{"href":"%s","id":"parent-sf-2","uid":"urn:example:sf:parent-2"}}}
+					 "sampledFeature@link":{"href":"%s","id":"foi-2","uid":"urn:example:foi:2"}},
+					 "links":[{"rel":"sampleOf","href":"%s","id":"parent-sf-2",
+					  "uid":"urn:example:sf:parent-2"}]}
 					""".formatted(apiRoot().resolve("features/foi-1"), apiRoot().resolve("features/foi-1"));
 		}
 
@@ -1393,8 +1500,9 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		private String samplingFeatureWrapper() {
 			return """
 					{"type":"Feature","id":"sf-wrapper","geometry":{"type":"Point","coordinates":[-77,38]},
-					 "properties":{"featureType":"sosa:Sample","uid":"urn:example:sf:wrapper",
-					 "sampleOf":{"id":"foi-wrapper","uid":"urn:example:foi:wrapper","href":"%s"}}}
+					 "properties":{"featureType":"sosa:Sample","uid":"urn:example:sf:wrapper"},
+					 "links":[{"rel":"sampleOf","id":"foi-wrapper",
+					  "uid":"urn:example:foi:wrapper","href":"%s"}]}
 					""".formatted(apiRoot().resolve("features/foi-real"));
 		}
 
@@ -1469,7 +1577,7 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				return """
 						{"type":"%s","id":"deployed-target","definition":"sosa:System",
 						 "uniqueId":"urn:example:system:target","label":"Target Deployed System",
-						 "observedProperties":[{"id":"property-target",
+						 "outputs":[{"id":"property-target",
 						  "uid":"urn:example:property:target"}]}
 						""".formatted(this.deployedSystemType);
 			}
@@ -1570,8 +1678,8 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			}
 			String body = """
 					{"type":"Feature","id":"%s","geometry":{"type":"Point","coordinates":[-77,38]},
-					 "properties":{"featureType":"sosa:Sample","uid":"urn:example:%s","name":"Relation Target",
-					 "sampleOf":{"href":"%s"}}}
+					 "properties":{"featureType":"sosa:Sample","uid":"urn:example:%s","name":"Relation Target"},
+					 "links":[{"rel":"sampleOf","href":"%s"}]}
 					""".formatted(token, token, apiRoot().resolve(next));
 			single(exchange, "samplingFeatures", body);
 		}

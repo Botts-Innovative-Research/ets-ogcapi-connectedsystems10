@@ -65,6 +65,9 @@ public final class AdvancedFilteringSupport {
 
 	private static final Set<String> REFERENCE_CONTAINER_KEYS = Set.of("features", "items", "members", "relations");
 
+	private static final Set<String> SENSORML_TYPES = Set.of("PhysicalComponent", "PhysicalSystem", "SimpleProcess",
+			"AggregateProcess");
+
 	private final URI apiRoot;
 
 	private Set<String> declarations;
@@ -726,7 +729,7 @@ public final class AdvancedFilteringSupport {
 		Identifiers result = new Identifiers();
 		ReferenceReads reads = new ReferenceReads();
 		if (relation.rootEvidenceAllowed(owner)) {
-			collectRelation(resource, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
+			collectRelation(resource, relation, result, reads, 0, requirement);
 		}
 		Optional<String> ownerId = localId(resource);
 		if (ownerId.isPresent()) {
@@ -739,10 +742,9 @@ public final class AdvancedFilteringSupport {
 				}
 				for (Map<String, Object> item : nested.get().items()) {
 					if (subresource.includeItems) {
-						if (isReferenceWrapper(item, subresource.aliases)) {
+						if (isReferenceWrapper(item, relation)) {
 							if (asString(item.get("href")) != null) {
-								collectReference(item, subresource.aliases, relation.hrefIdentity, result, reads, 0,
-										requirement);
+								collectReference(item, relation, result, reads, 0, requirement);
 							}
 						}
 						else {
@@ -754,8 +756,7 @@ public final class AdvancedFilteringSupport {
 						collectDeployedSystemProperties(item, relation, result, reads, requirement);
 					}
 					else {
-						collectRelation(item, subresource.aliases, relation.hrefIdentity, result, reads, 0,
-								requirement);
+						collectRelation(item, relation, result, reads, 0, requirement);
 					}
 				}
 			}
@@ -766,70 +767,83 @@ public final class AdvancedFilteringSupport {
 		return result;
 	}
 
-	private static boolean isReferenceWrapper(Map<String, Object> item, Set<String> aliases) {
+	private static boolean isReferenceWrapper(Map<String, Object> item, Relation relation) {
 		if (asString(item.get("href")) != null) {
 			return true;
 		}
-		return item.keySet().stream().anyMatch(key -> fieldAliasMatches(key, aliases));
+		Set<String> fields = relationRepresentation(item) == RelationRepresentation.SENSORML ? relation.sensorMlFields
+				: relation.genericFields;
+		return item.keySet().stream().anyMatch(fields::contains);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void collectRelation(Object value, Set<String> aliases, boolean hrefIdentity, Identifiers result,
-			ReferenceReads reads, int depth, String requirement) {
+	private void collectRelation(Object value, Relation relation, Identifiers result, ReferenceReads reads, int depth,
+			String requirement) {
 		if (value == null) {
 			return;
 		}
 		assertTraversalDepth(depth, requirement);
 		if (value instanceof Map<?, ?> raw) {
 			Map<String, Object> map = (Map<String, Object>) raw;
-			collectDirectRelationFields(map, aliases, hrefIdentity, result, reads, depth, requirement);
-			collectDirectRelationFields(asMap(map.get("properties")), aliases, hrefIdentity, result, reads, depth + 1,
-					requirement);
+			collectDirectRelationFields(map, relation, result, reads, depth, requirement);
 			return;
 		}
 		if (value instanceof Collection<?> collection) {
 			for (Object item : collection) {
-				collectRelation(item, aliases, hrefIdentity, result, reads, depth + 1, requirement);
+				collectRelation(item, relation, result, reads, depth + 1, requirement);
 			}
 		}
 	}
 
-	private void collectDirectRelationFields(Map<String, Object> fields, Set<String> aliases, boolean hrefIdentity,
-			Identifiers result, ReferenceReads reads, int depth, String requirement) {
+	private void collectDirectRelationFields(Map<String, Object> resource, Relation relation, Identifiers result,
+			ReferenceReads reads, int depth, String requirement) {
 		assertTraversalDepth(depth, requirement);
-		Object links = fields.get("links");
+		Object links = resource.get("links");
 		if (links instanceof Collection<?> collection) {
 			for (Object linkValue : collection) {
 				if (!(linkValue instanceof Map<?, ?> link)) {
 					continue;
 				}
 				String rel = asString(link.get("rel"));
-				if (rel != null && relationAliasMatches(rel, aliases)) {
-					collectReference(link, aliases, hrefIdentity, result, reads, depth + 1, requirement);
+				if (rel != null && relation.linkRelations.contains(rel)) {
+					collectReference(link, relation, result, reads, depth + 1, requirement);
 				}
 			}
 		}
-		for (Map.Entry<String, Object> entry : fields.entrySet()) {
-			if (!"links".equals(entry.getKey()) && fieldAliasMatches(entry.getKey(), aliases)) {
-				collectReference(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
+		RelationRepresentation representation = relationRepresentation(resource);
+		Set<String> directFields = representation == RelationRepresentation.SENSORML ? relation.sensorMlFields
+				: relation.genericFields;
+		collectExactRelationFields(resource, directFields, relation, result, reads, depth, requirement);
+		if (representation == RelationRepresentation.GEOJSON) {
+			collectExactRelationFields(asMap(resource.get("properties")), relation.geoJsonPropertyFields, relation,
+					result, reads, depth + 1, requirement);
+		}
+	}
+
+	private void collectExactRelationFields(Map<String, Object> fields, Set<String> names, Relation relation,
+			Identifiers result, ReferenceReads reads, int depth, String requirement) {
+		assertTraversalDepth(depth, requirement);
+		for (String name : names) {
+			if (fields.containsKey(name)) {
+				collectReference(fields.get(name), relation, result, reads, depth + 1, requirement);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void collectReference(Object value, Set<String> aliases, boolean hrefIdentity, Identifiers result,
-			ReferenceReads reads, int depth, String requirement) {
+	private void collectReference(Object value, Relation relation, Identifiers result, ReferenceReads reads, int depth,
+			String requirement) {
 		if (value == null) {
 			return;
 		}
 		assertTraversalDepth(depth, requirement);
 		if (value instanceof String string) {
-			collectStringReference(string, aliases, hrefIdentity, result, reads, requirement);
+			collectStringReference(string, relation, result, reads, requirement);
 			return;
 		}
 		if (value instanceof Collection<?> collection) {
 			for (Object item : collection) {
-				collectReference(item, aliases, hrefIdentity, result, reads, depth + 1, requirement);
+				collectReference(item, relation, result, reads, depth + 1, requirement);
 			}
 			return;
 		}
@@ -839,8 +853,7 @@ public final class AdvancedFilteringSupport {
 		Map<String, Object> map = (Map<String, Object>) raw;
 		String href = asString(map.get("href"));
 		if (href != null) {
-			resolveReference(href)
-				.ifPresent(resolved -> readReference(resolved, aliases, hrefIdentity, result, reads, requirement));
+			resolveReference(href).ifPresent(resolved -> readReference(resolved, relation, result, reads, requirement));
 			return;
 		}
 		addResourceIdentifiers(map, result);
@@ -848,13 +861,13 @@ public final class AdvancedFilteringSupport {
 			String key = normalize(entry.getKey());
 			if (REFERENCE_CONTAINER_KEYS.contains(key)
 					&& (entry.getValue() instanceof Map<?, ?> || entry.getValue() instanceof Collection<?>)) {
-				collectReference(entry.getValue(), aliases, hrefIdentity, result, reads, depth + 1, requirement);
+				collectReference(entry.getValue(), relation, result, reads, depth + 1, requirement);
 			}
 		}
 	}
 
-	private void collectStringReference(String value, Set<String> aliases, boolean hrefIdentity, Identifiers result,
-			ReferenceReads reads, String requirement) {
+	private void collectStringReference(String value, Relation relation, Identifiers result, ReferenceReads reads,
+			String requirement) {
 		if (!isAbsoluteUri(value)) {
 			result.local.add(value);
 			return;
@@ -865,17 +878,17 @@ public final class AdvancedFilteringSupport {
 		}
 		URI target = resolved.get();
 		if ("http".equalsIgnoreCase(target.getScheme()) || "https".equalsIgnoreCase(target.getScheme())) {
-			readReference(target, aliases, hrefIdentity, result, reads, requirement);
+			readReference(target, relation, result, reads, requirement);
 		}
 		else {
 			result.global.add(value);
 		}
 	}
 
-	private void readReference(URI target, Set<String> aliases, boolean hrefIdentity, Identifiers result,
-			ReferenceReads reads, String requirement) {
+	private void readReference(URI target, Relation relation, Identifiers result, ReferenceReads reads,
+			String requirement) {
 		if (!sameOrigin(this.apiRoot, target)) {
-			if (hrefIdentity) {
+			if (relation.hrefIdentity) {
 				result.global.add(target.toString());
 			}
 			return;
@@ -889,13 +902,13 @@ public final class AdvancedFilteringSupport {
 				.get(target)
 				.andReturn();
 			if (response.getStatusCode() != 200) {
-				if (hrefIdentity) {
+				if (relation.hrefIdentity) {
 					result.global.add(target.toString());
 				}
 				return;
 			}
 			if (!JSON_MEDIA.contains(responseMediaType(response))) {
-				if (hrefIdentity) {
+				if (relation.hrefIdentity) {
 					result.global.add(target.toString());
 				}
 				return;
@@ -910,12 +923,12 @@ public final class AdvancedFilteringSupport {
 						JSON_MEDIA);
 				if (traversal.isPresent()) {
 					for (Map<String, Object> item : traversal.get().items()) {
-						collectResolvedReferenceResource(item, aliases, hrefIdentity, result, reads, requirement);
+						collectResolvedReferenceResource(item, relation, result, reads, requirement);
 					}
 				}
 			}
 			else {
-				collectResolvedReferenceResource(body, aliases, hrefIdentity, result, reads, requirement);
+				collectResolvedReferenceResource(body, relation, result, reads, requirement);
 			}
 		}
 		finally {
@@ -923,18 +936,18 @@ public final class AdvancedFilteringSupport {
 		}
 	}
 
-	private void collectResolvedReferenceResource(Map<String, Object> resource, Set<String> aliases,
-			boolean hrefIdentity, Identifiers result, ReferenceReads reads, String requirement) {
+	private void collectResolvedReferenceResource(Map<String, Object> resource, Relation relation, Identifiers result,
+			ReferenceReads reads, String requirement) {
 		addResourceIdentifiers(resource, result);
-		if (hrefIdentity) {
-			collectRelation(resource, aliases, true, result, reads, 0, requirement);
+		if (relation.hrefIdentity) {
+			collectRelation(resource, relation, result, reads, 0, requirement);
 		}
 	}
 
 	private void collectDeployedSystemProperties(Map<String, Object> deployedSystem, Relation relation,
 			Identifiers result, ReferenceReads reads, String requirement) {
 		if (isSystemRepresentation(deployedSystem)) {
-			collectRelation(deployedSystem, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
+			collectRelation(deployedSystem, relation, result, reads, 0, requirement);
 			return;
 		}
 		Set<URI> targets = new LinkedHashSet<>();
@@ -964,7 +977,7 @@ public final class AdvancedFilteringSupport {
 				if (isCollectionDocument(body) || !isSystemRepresentation(body, responseMediaType(response))) {
 					continue;
 				}
-				collectRelation(body, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
+				collectRelation(body, relation, result, reads, 0, requirement);
 			}
 			finally {
 				reads.leave(target);
@@ -976,7 +989,7 @@ public final class AdvancedFilteringSupport {
 	private void collectDirectDeployedSystemTargets(Map<String, Object> wrapper, Relation relation, Identifiers result,
 			ReferenceReads reads, Set<URI> targets, String requirement) {
 		for (Map.Entry<String, Object> entry : wrapper.entrySet()) {
-			if (fieldAliasMatches(entry.getKey(), Set.of("system", "deployedsystem"))) {
+			if (Set.of("system", "deployedSystem").contains(entry.getKey())) {
 				collectDirectDeployedSystemTarget(entry.getValue(), relation, result, reads, targets, 0, requirement);
 			}
 		}
@@ -996,7 +1009,7 @@ public final class AdvancedFilteringSupport {
 		if (value instanceof Map<?, ?> raw) {
 			Map<String, Object> map = (Map<String, Object>) raw;
 			if (isSystemRepresentation(map)) {
-				collectRelation(map, relation.aliases, relation.hrefIdentity, result, reads, depth + 1, requirement);
+				collectRelation(map, relation, result, reads, depth + 1, requirement);
 				return;
 			}
 			String href = asString(map.get("href"));
@@ -1384,28 +1397,15 @@ public final class AdvancedFilteringSupport {
 		}
 	}
 
-	private static boolean fieldAliasMatches(String value, Set<String> aliases) {
-		String normalized = normalize(value);
-		if (normalized.endsWith("link")) {
-			normalized = normalized.substring(0, normalized.length() - "link".length());
+	private static RelationRepresentation relationRepresentation(Map<String, Object> resource) {
+		String type = asString(resource.get("type"));
+		if ("Feature".equals(type)) {
+			return RelationRepresentation.GEOJSON;
 		}
-		return aliases.contains(normalized);
-	}
-
-	private static boolean relationAliasMatches(String value, Set<String> aliases) {
-		if (fieldAliasMatches(value, aliases)) {
-			return true;
+		if (type != null && SENSORML_TYPES.contains(type)) {
+			return RelationRepresentation.SENSORML;
 		}
-		try {
-			URI relation = URI.create(value);
-			if (!relation.isAbsolute() || !relation.isOpaque() || !"ogc-rel".equalsIgnoreCase(relation.getScheme())) {
-				return false;
-			}
-			return fieldAliasMatches(relation.getSchemeSpecificPart(), aliases);
-		}
-		catch (IllegalArgumentException ex) {
-			return false;
-		}
+		return RelationRepresentation.GENERIC;
 	}
 
 	private static String normalize(String value) {
@@ -1503,52 +1503,67 @@ public final class AdvancedFilteringSupport {
 	 */
 	public enum Relation {
 
-		PARENT_SYSTEM(Set.of("attachedto", "parent", "parentsystem"), false),
-		PROCEDURE(Set.of("procedure", "systemkind", "typeof"), false),
-		FEATURE_OF_INTEREST(Set.of("foi", "featureofinterest", "featuresofinterest", "sampleof", "sampledfeature"),
-				true),
-		OBSERVED_PROPERTY(Set.of("observedproperty", "observedproperties", "output", "outputs"), true),
-		CONTROLLED_PROPERTY(Set.of("controlledproperty", "controlledproperties", "input", "inputs"), true),
-		PARENT_DEPLOYMENT(Set.of("parent", "parentdeployment"), false),
-		DEPLOYED_SYSTEM(Set.of("system", "deployedsystem", "deployedsystems"), false),
-		BASE_PROPERTY(Set.of("baseproperty"), true), SAMPLE_OF(Set.of("sampleof"), true),
-		SAMPLED_FEATURE(Set.of("sampledfeature"), true);
+		PARENT_SYSTEM(Set.of(), Set.of("attachedTo"), Set.of(), Set.of("parentSystem", "ogc-rel:parentSystem"), false),
+		PROCEDURE(Set.of("systemKind@link"), Set.of("typeOf"), Set.of(), Set.of(), false),
+		FEATURE_OF_INTEREST(Set.of("sampledFeature@link"), Set.of("sampledFeature"), Set.of("sampledFeature"),
+				Set.of("sampleOf", "ogc-rel:sampleOf"), true),
+		OBSERVED_PROPERTY(Set.of("observedProperty", "observedProperties"), Set.of("output", "outputs"),
+				Set.of("observedProperty", "observedProperties", "output", "outputs"), Set.of(), true),
+		CONTROLLED_PROPERTY(Set.of("controlledProperty", "controlledProperties"), Set.of("input", "inputs"),
+				Set.of("controlledProperty", "controlledProperties", "input", "inputs"), Set.of(), true),
+		PARENT_DEPLOYMENT(Set.of(), Set.of(), Set.of(), Set.of("parentDeployment", "ogc-rel:parentDeployment"), false),
+		DEPLOYED_SYSTEM(Set.of("deployedSystem", "deployedSystems"), Set.of("deployedSystem", "deployedSystems"),
+				Set.of("system", "deployedSystem", "deployedSystems"), Set.of(), false),
+		BASE_PROPERTY(Set.of(), Set.of("baseProperty"), Set.of("baseProperty"), Set.of(), true),
+		SAMPLE_OF(Set.of(), Set.of("sampleOf"), Set.of("sampleOf"), Set.of("sampleOf", "ogc-rel:sampleOf"), true),
+		SAMPLED_FEATURE(Set.of("sampledFeature@link"), Set.of("sampledFeature"), Set.of("sampledFeature"),
+				Set.of("sampledFeature", "ogc-rel:sampledFeature"), true);
 
-		private final Set<String> aliases;
+		private final Set<String> geoJsonPropertyFields;
+
+		private final Set<String> sensorMlFields;
+
+		private final Set<String> genericFields;
+
+		private final Set<String> linkRelations;
 
 		private final boolean hrefIdentity;
 
-		Relation(Set<String> aliases, boolean hrefIdentity) {
-			this.aliases = aliases;
+		Relation(Set<String> geoJsonPropertyFields, Set<String> sensorMlFields, Set<String> genericFields,
+				Set<String> linkRelations, boolean hrefIdentity) {
+			this.geoJsonPropertyFields = geoJsonPropertyFields;
+			this.sensorMlFields = sensorMlFields;
+			this.genericFields = genericFields;
+			this.linkRelations = linkRelations;
 			this.hrefIdentity = hrefIdentity;
 		}
 
 		private List<Subresource> subresources(ResourceType owner) {
 			if (this == FEATURE_OF_INTEREST && owner == ResourceType.SYSTEMS) {
-				return List.of(new Subresource("samplingFeatures", Map.of("recursive", "true"), this.aliases, false,
+				return List.of(new Subresource("samplingFeatures", Map.of("recursive", "true"), false,
 						"application/geo+json, application/json"));
 			}
 			if (this == FEATURE_OF_INTEREST && owner == ResourceType.DEPLOYMENTS) {
-				return List.of(new Subresource("featuresOfInterest", Map.of(), this.aliases, true,
+				return List.of(new Subresource("featuresOfInterest", Map.of(), true,
 						"application/geo+json, application/json"));
 			}
 			if ((this == OBSERVED_PROPERTY || this == CONTROLLED_PROPERTY) && owner == ResourceType.SYSTEMS) {
-				return List.of(new Subresource("subsystems", Map.of("recursive", "true"), this.aliases, false,
+				return List.of(new Subresource("subsystems", Map.of("recursive", "true"), false,
 						"application/geo+json, application/sml+json, application/json"));
 			}
 			if (this == DEPLOYED_SYSTEM && owner == ResourceType.DEPLOYMENTS) {
-				return List.of(new Subresource("deployedSystems", Map.of("recursive", "true"), this.aliases, true,
+				return List.of(new Subresource("deployedSystems", Map.of("recursive", "true"), true,
 						"application/geo+json, application/sml+json, application/json"));
 			}
 			if ((this == OBSERVED_PROPERTY || this == CONTROLLED_PROPERTY) && owner == ResourceType.DEPLOYMENTS) {
-				return List.of(new Subresource("deployedSystems", Map.of("recursive", "true"), this.aliases, false,
+				return List.of(new Subresource("deployedSystems", Map.of("recursive", "true"), false,
 						"application/geo+json, application/sml+json, application/json"));
 			}
 			if (this == OBSERVED_PROPERTY && owner == ResourceType.SAMPLING_FEATURES) {
-				return List.of(new Subresource("datastreams", Map.of(), this.aliases, false, "application/json"));
+				return List.of(new Subresource("datastreams", Map.of(), false, "application/json"));
 			}
 			if (this == CONTROLLED_PROPERTY && owner == ResourceType.SAMPLING_FEATURES) {
-				return List.of(new Subresource("controlstreams", Map.of(), this.aliases, false, "application/json"));
+				return List.of(new Subresource("controlstreams", Map.of(), false, "application/json"));
 			}
 			return List.of();
 		}
@@ -1577,8 +1592,13 @@ public final class AdvancedFilteringSupport {
 	private record TemporalBounds(Instant begin, Instant end) {
 	}
 
-	private record Subresource(String path, Map<String, String> query, Set<String> aliases, boolean includeItems,
-			String accept) {
+	private enum RelationRepresentation {
+
+		GEOJSON, SENSORML, GENERIC
+
+	}
+
+	private record Subresource(String path, Map<String, String> query, boolean includeItems, String accept) {
 	}
 
 	private static final class Identifiers {

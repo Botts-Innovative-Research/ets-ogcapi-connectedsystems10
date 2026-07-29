@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.42 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering R5 remediation precommit)
+> Version: 2.0.45 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering R6 exact matcher)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1403,5 +1403,14 @@ relation-vocabulary, complete/exclusive System-type, ignored
 representation-validation, and mapping-description gaps, superseding
 `060a8aa`. R5 HTTP regressions reproduce `42/3/4/0`; the corrected
 media-aware boundaries pass focused `48/0/0/0`, full Maven `602/0/0/3`, and
-regenerated coverage `240/76/2/115/47`. New exact-candidate and fresh Raze
-gates remain.
+regenerated coverage `240/76/2/115/47`. Exact candidate `f2a88d5` passes
+image/runtime, released-source, unmodified-local-OSH `238/40/7/191`, sabotage
+`238/2/10/226`, credential, immutability, and hygiene gates. Raze R6
+supersedes that candidate: direct association matching must use separate
+exact vocabularies for GeoJSON `links[].rel`, GeoJSON property links, and
+SensorML root members. Generic case/punctuation normalization, trailing
+`Link` stripping, and broad `parent`/`procedure` aliases are forbidden. A new
+candidate must repeat every exact gate and fresh Raze. Version 2.0.45
+implements the replacement matcher with separate case-sensitive
+representation vocabularies. Controlled HTTP moves from `46/3/0/0` to
+`46/0/0/0`; focused Maven is `51/0/0/0` and full Maven is `605/0/0/3`.

@@ -82,8 +82,36 @@ recommended work and final gate.
   `602/0/0/3`; coverage remains `240/76/2/115/47`, with Advanced Filtering
   `25/25 exact`.
 - Candidate `060a8aa` and all its exact evidence are preserved as superseded
-  audit evidence. New exact-candidate and fresh Raze gates remain. No OSH or
-  TeamEngine modification and no hosted CI.
+  audit evidence.
+- Sealed exact candidate `f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0`
+  and image `sha256:d7bdc607254...e7f1b` with matching
+  `Build-Revision: f2a88d54e6`.
+- Exact focused/full Maven pass `48/0/0/0` and `602/0/0/3`; released-source,
+  runtime, SWE Common, collision, immutable-base, and context gates pass.
+- Unmodified local OSH TeamEngine is honestly `238/40/7/191`; the seven
+  established IUT failures remain visible and all 25 Advanced Filtering
+  methods SKIP at the missing declaration.
+- API Common sabotage is `238/2/10/226`; all 25 methods cascade-SKIP.
+  Credential integration and wire E2E pass with zero unmasked artifact hits,
+  33 masked events, and 33 intact transmissions.
+- Hygiene records 174 recognized GETs, 169 IUT GETs, zero writes, and zero
+  leaks. OSH remains clean at `4c87a65` and `/opt/osh` remains read-only.
+- Preserved 17 exact artifacts under a verified SHA-256 manifest. Fresh final
+  Raze was then run. No OSH or TeamEngine modification and no hosted CI.
+- Raze R6 returned `GAPS_FOUND 0.99`: the shared relation matcher still
+  normalizes case/punctuation, strips a generic `Link` suffix, and accepts
+  broad `parent`/`procedure` aliases. Candidate `f2a88d5` and its exact gates
+  are now superseded audit evidence; regression-first representation-aware
+  exact matching and another complete candidate cycle remain.
+- Added three requirement-linked R6 regressions. Controlled HTTP reproduces
+  the finding as `46/3/0/0`.
+- Replaced lossy matching with separate exact, case-sensitive vocabularies for
+  GeoJSON link relations, GeoJSON property links, SensorML root members, and
+  generic association wrappers. Positive fixtures now use released encoding
+  paths.
+- Controlled HTTP passes `46/0/0/0`, focused Maven passes `51/0/0/0`, and the
+  clean full Docker Maven gate passes `605/0/0/3`. Exact committed-candidate
+  E2E and fresh Raze remain.
 
 ## 2026-07-29 - Part 1 Advanced Filtering implementation and technical gates
 

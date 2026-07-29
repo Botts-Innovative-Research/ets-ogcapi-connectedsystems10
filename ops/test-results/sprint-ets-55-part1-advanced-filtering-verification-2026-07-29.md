@@ -25,16 +25,17 @@ Released source: `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
   `40/0/0/0` after remediation.
 - R5 HTTP test-first gate: expected `42/3/4/0`, then focused controlled HTTP
   and support tests `48/0/0/0` after remediation.
-- Precommit full Docker Maven: `602/0/0/3`; the three skips are unchanged
-  historical harness fixtures.
+- Exact candidate `f2a88d5` focused Docker Maven: `48/0/0/0`.
+- Exact candidate `f2a88d5` full Docker Maven: `602/0/0/3`; the three skips
+  are unchanged historical harness fixtures.
 - ATS source reproduction: PASS at the pinned clean checkout.
 - Coverage: `240/76 exact/2 helper/115 candidate/47 unmapped`;
   `/conf/advanced-filtering` is `25/25 exact`.
 - Controlled HTTP executes all 25 positive procedures and key fail-closed
   UID-prefix, keyword, association, combination, pagination, traversal,
   isolation, dependency, and credential branches.
-- Candidate `060a8aa` runtime, source, API Common sabotage, credential,
-  immutability, and hygiene gates passed before Raze R5 superseded it.
+- Exact candidate `f2a88d5` runtime, source, API Common sabotage, credential,
+  immutability, and hygiene gates pass.
 
 ## TeamEngine E2E
 
@@ -65,7 +66,15 @@ candidate gate passed on `060a8aa`, but Raze R5 returned `GAPS_FOUND 0.99`
 for canonical relation vocabulary, System typing, ignored representation
 validation, and a mapping overclaim. R5 HTTP regressions reproduce
 `42/3/4/0`; remediation passes focused `48/0/0/0` and full Maven
-`602/0/0/3`. New exact-candidate and fresh Raze gates remain.
+`602/0/0/3`. Exact candidate `f2a88d5` repeats every technical and E2E gate;
+Raze R6 nevertheless returns `GAPS_FOUND 0.99` because lossy
+case/punctuation normalization, trailing-`Link` stripping, and broad aliases
+still admit non-released relation evidence. Candidate `f2a88d5` is
+superseded. R6 controlled HTTP reproduces `46/3/0/0`. Separate exact,
+case-sensitive GeoJSON-link, GeoJSON-property, SensorML-member, and
+generic-wrapper vocabularies move controlled HTTP to `46/0/0/0`, focused
+Maven to `51/0/0/0`, and full Docker Maven to `605/0/0/3`. A replacement
+exact-candidate cycle and fresh Raze remain.
 
 ## Evidence Index
 
@@ -80,3 +89,5 @@ current R4 remediation logs are under
 Superseded exact `060a8aa` SHA-prefixed, checksum-manifested evidence and R5
 remediation logs are under
 `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r5-2026-07-29/`.
+Exact `f2a88d5` SHA-prefixed, checksum-manifested evidence is under
+`ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r6-2026-07-29/`.

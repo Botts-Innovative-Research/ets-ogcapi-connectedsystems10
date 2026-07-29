@@ -1,6 +1,6 @@
 # Product Requirements Document — OGC API CS API TeamEngine ETS
 
-> Version: 2.4 | Status: Living Document | Last updated: 2026-07-29
+> Version: 2.5 | Status: Living Document | Last updated: 2026-07-29
 >
 > **Supersedes v1.1 (2026-03-31).** v1.1 framed the deliverable as a Next.js/TypeScript web application
 > for ad-hoc CS API conformance assessment. The user pivoted on 2026-04-27 to a certification-track
@@ -281,3 +281,4 @@ the matrix at the bottom of `_bmad/traceability.md` (v1.0 frozen section).
 | 2026-07-28 | 2.2.1 | Recorded twelve exact GeoJSON procedures, strict representation media gates, normalized 20-schema parity, direct API Common cascade, and honest unmodified-local-OSH E2E under existing FR-ETS-22/24/26. | CP-014 and Sprint 54 implementation |
 | 2026-07-29 | 2.3 | Planned 25 direct Advanced Filtering procedures, direct API Common inheritance, endpoint-wide seed-derived predicates, JTS geometry intersection, association traversal, combined-filter AND semantics, and recommendation warnings under existing FR-ETS-19/24/25. | CP-015 and Sprint 55 planning |
 | 2026-07-29 | 2.4 | Implemented all 25 released Advanced Filtering procedures. R4 remediation constrains direct associations to exact representation fields, rejects nested/suffix shortcuts, and requires dereferenced Deployment property targets to be single Systems; precommit tests pass while new exact-candidate and fresh Raze gates remain pending. | CP-015 and Sprint 55 implementation |
+| 2026-07-29 | 2.5 | Implemented Raze R6 remediation with separate exact GeoJSON-link, GeoJSON-property, SensorML-member, and generic-wrapper relation vocabularies. Regression and precommit gates pass; exact-candidate E2E and fresh Raze remain. | CP-015 and Sprint 55 R6 remediation |

@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.37 | Status: Living Document | Last reconciled: 2026-07-28 (Part 1 GeoJSON complete; Raze approved)
+> Version: 2.0.38 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering direct ATS planned)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1328,3 +1328,55 @@ test-first evidence, and baseline attribution are closed. The positive-IUT
 demand was rejected as an uncontracted requirement conflicting with honest
 media validation and the immutable-IUT boundary. Final Raze is `APPROVE` at
 confidence `0.99`, with no required fixes.
+
+## 34. Architecture v2.0.38 - Part 1 Advanced Filtering procedures (2026-07-29)
+
+`AdvancedFilteringTests` replaces six historical subset/tracer methods with
+exactly the 25 released `/conf/advanced-filtering` procedures. Setup retains
+only the normalized API root. Every method independently establishes the class
+declaration and acquires its own seed, filtered response, traversal, and
+predicate evidence.
+
+Released Annex A inheritance is direct API Common. The TestNG chain becomes
+`Core/Common -> Part 1 API Common -> Advanced Filtering`; System and sibling
+classes cannot block the class. A defensive setup gate recognizes only Core,
+Common, and Part 1 API Common outcomes.
+
+`AdvancedFilteringSupport` owns canonical endpoint discovery, homogeneous ID
+lists, seed selection, bounded same-origin pagination, actual-media gates,
+representation-validation dispatch, JTS geometry intersection, association
+resolution, combined-filter predicates, recommendation warnings, and
+transitive set comparisons. No filter method issues mutation.
+
+Mandatory procedures derive known-matching local IDs, UIDs, keywords,
+geometries, properties, or relations from the IUT. A known-match query must
+return a non-empty set and every returned resource must satisfy the predicate.
+Expected missing seed evidence aggregates after all independently inspectable
+resources have run. HTTP, media, schema, unsafe traversal, predicate, and
+later-page defects fail immediately.
+
+Association procedures validate filtered collections through the released
+System, Deployment, Procedure, Sampling Feature, or Property representation
+boundary before following procedure-specific relations. Same-origin traversal
+is bounded and cycle-safe. Cross-origin targets permitted as identifier
+evidence are not dereferenced with the IUT REST-Assured credential.
+
+The three recommendation procedures emit visible TestNG report warnings when
+unsupported. They do not turn recommendation non-support into conformance
+failure. Positive controlled HTTP fixtures still execute those procedures and
+prove their set semantics.
+
+Obvious released Annex prose errors are resolved against their target
+requirements: Deployment parent means parent Deployment;
+deployment-by-system repeats the `system` parameter for UIDs; and indirect
+Property checks use `/samplingFeatures` for Sampling Feature result sets.
+System property recursion follows normative subsystem semantics through
+advertised subsystem/component relations rather than requiring one
+non-standard literal path.
+
+Primary TeamEngine E2E uses unmodified local OSH, which does not declare Part 1
+Advanced Filtering. All 25 deployed methods must therefore appear exactly once
+and SKIP at declaration boundaries before filter access. Controlled read-only
+HTTP fixtures provide positive procedure evidence. OSH and TeamEngine source
+and binaries remain immutable, and project-operated hosted CI remains out of
+scope.

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T15:04Z
+Last updated: 2026-07-29T06:23Z
 
 ## Fresh-Session Entry Point
 
@@ -90,6 +90,38 @@ Read these first:
 - `.harness/evaluations/sprint-ets-54-adversarial-final.yaml`
 - `ops/test-results/sprint-ets-54-local-osh-baseline-2026-07-28.md`
 - `ops/test-results/sprint-ets-54-part1-geojson-verification-2026-07-28.md`
+- `openspec/change-proposals/CP-015-part1-advanced-filtering-closure.md`
+- `epics/stories/s-ets-55-01-part1-advanced-filtering-closure.md`
+- `.harness/contracts/sprint-ets-55.yaml`
+- `ops/test-results/sprint-ets-55-part1-advanced-filtering-baseline-2026-07-29.md`
+
+## Session Handoff - Part 1 Advanced Filtering Direct ATS
+
+S-ETS-55-01 is in progress under CP-015.
+
+- Pinned released Annex A defines 25 `/conf/advanced-filtering` procedures:
+  22 requirement targets and three recommendation targets.
+- Current class coverage is `0 exact / 4 candidate / 21 unmapped`; six
+  historical methods are being replaced.
+- Planned replacement has exactly 25 independent methods behind
+  `AdvancedFilteringSupport`.
+- Released inheritance changes from historical System to direct API Common;
+  Core and Common remain transitive.
+- Common filters cover every declared canonical Part 1 endpoint using
+  seed-derived local IDs, UIDs, UID prefixes, keywords, and custom properties.
+- Geometry uses parsed JTS intersection. Association procedures validate
+  resource representations and procedure-specific relation graphs.
+- Combined filtering requires logical AND and non-empty known-match results.
+  Three recommendation procedures report warning semantics.
+- Three released prose defects are resolved against their normative targets:
+  parent Deployment, `system` UID repetition, and `/samplingFeatures` indirect
+  property sets.
+- Unmodified local OSH does not declare the class. Primary TeamEngine E2E must
+  deploy all 25 methods as honest declaration-boundary SKIPs; controlled HTTP
+  supplies positive evidence.
+- No OSH or TeamEngine source or binary modification and no hosted CI.
+- Next action: write requirement-linked structural and controlled HTTP tests,
+  preserve the red gate, then implement all 25 procedures.
 
 ## Session Handoff - Part 1 GeoJSON Direct ATS
 

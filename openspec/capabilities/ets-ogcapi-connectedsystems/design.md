@@ -1867,6 +1867,76 @@ artifact-hygiene gates record zero writes and zero leaks. Final Raze review is
 `APPROVE` at confidence `0.99`; all four initial findings are closed and no
 required fixes remain.
 
+### Sprint 55: released Part 1 Advanced Filtering procedures
+
+Sprint 55 replaces the historical six-method subset with the 25 released Annex
+A procedures.
+
+```text
+AdvancedFilteringTests (25 independent procedures)
+          |
+          v
+AdvancedFilteringSupport
+  declaration and canonical endpoint selection
+  + seed-derived ID/UID/keyword/property queries
+  + bounded filtered traversal and representation validation
+  + JTS WKT/GeoJSON geometry intersection
+  + association graph and combined predicate evaluation
+  + transitive recommendation set comparisons
+          |
+          `--> Part1ApiCommonSupport bounded traversal
+```
+
+Class setup normalizes only the API root after direct Core, Common, and Part 1
+API Common prerequisite inspection. Each procedure uses `alwaysRun`, has no
+method dependency, and reacquires its own declaration and filter evidence.
+
+Mandatory query values come from resources visible at the same IUT. Common
+filters inspect each canonical Part 1 endpoint whose resource class is
+declared. Local-ID and UID lists are tested separately; ID coverage includes a
+UID-prefix query. Keyword values come from human-readable name or description
+members. A generated known match cannot produce an empty PASS.
+
+Geometry filtering requests GeoJSON Systems, Deployments, and Sampling
+Features with usable geometry. WKT query values and GeoJSON response
+geometries are parsed by JTS, and every returned feature must intersect the
+filter geometry.
+
+Association filters derive both local and URI identifiers from actual
+relations. Returned collection pages are validated through the matching
+released representation support before each resource's parent, procedure,
+feature-of-interest, observed-property, controlled-property, deployed-System,
+Datastream, ControlStream, base-property, or object-type evidence is checked.
+Pagination and association traversal are bounded, cycle-safe, and same-origin.
+Cross-origin relation targets are used only as permitted identifier evidence
+and never receive the IUT credential.
+
+Combined filtering uses at least two available seed-derived predicates for
+each canonical endpoint and requires logical AND semantics. The indirect
+property and feature-of-interest recommendations compare complete direct and
+transitive result sets. Custom-property and indirect recommendation
+non-support is logged as a warning rather than treated as a requirement
+failure.
+
+Expected missing seed evidence is retained at narrow endpoint/resource
+boundaries while later independent evidence is processed. Assertion failures,
+non-200 responses, invalid supported representations, unsafe traversal, empty
+known-match responses, predicate errors, and later-page defects escape as
+failures.
+
+The implementation follows the target requirement where released ATS prose has
+obvious editorial substitutions: parent Deployment instead of parent System,
+`system` instead of `foi` on the deployment UID repetition, and
+`samplingFeatures` instead of a repeated `systems` endpoint in indirect
+property checks. Normative recursive subsystem behavior is not coupled to a
+non-standard literal `/components` path.
+
+Primary TeamEngine E2E uses unmodified local OSH. Because the IUT does not
+declare Part 1 `/conf/advanced-filtering`, all 25 methods must deploy and SKIP
+before filter-specific access. Controlled HTTP supplies all positive
+procedures and fail-closed cases. No OSH or TeamEngine source or binary change
+and no hosted CI are permitted.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

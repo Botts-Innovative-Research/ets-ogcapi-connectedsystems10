@@ -1,0 +1,64 @@
+sprint: ets-55
+story: S-ETS-55-01
+title: Part 1 Advanced Filtering direct ATS closure
+status: IN_PROGRESS
+triggered_by: "User instructed continuation of the accepted released-ATS sequence"
+requirements:
+  - REQ-ETS-PART1-009
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-PART1-009-RELEASED-ID-LIST-001
+  - SCENARIO-ETS-PART1-009-RELEASED-COMMON-FILTERS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-GEOMETRY-001
+  - SCENARIO-ETS-PART1-009-RELEASED-SYSTEM-ASSOCIATIONS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-PROCEDURE-ASSOCIATIONS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-SF-ASSOCIATIONS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-PROPERTY-FILTERS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-INDIRECT-RECOMMENDATIONS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-MEDIA-PAGINATION-001
+  - SCENARIO-ETS-PART1-009-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-009-RELEASED-DEPENDENCY-CASCADE-001
+  - SCENARIO-ETS-PART1-009-RELEASED-DIRECT-HTTP-COVERAGE-001
+  - SCENARIO-ETS-PART1-009-RELEASED-E2E-EXECUTION-001
+success_criteria:
+  - Exactly 25 independent TestNG methods map the 25 released procedures.
+  - Each method acquires only its own evidence and uses alwaysRun.
+  - API Common failures cascade before Advanced Filtering IUT access.
+  - System and sibling configurations cannot block Advanced Filtering.
+  - Local-ID, UID, and UID-prefix ID filters cover every declared canonical endpoint.
+  - Keyword filters use seed-derived human-readable content.
+  - Recommendation non-support produces warnings rather than conformance failures.
+  - Geometry filters use parsed WKT and GeoJSON intersection.
+  - Association filters validate every returned resource through released representation boundaries.
+  - Mandatory known-match queries cannot pass with empty results.
+  - Combined filters prove every returned resource satisfies every supplied predicate.
+  - Indirect recommendation checks compare complete result sets transitively.
+  - Pagination is bounded, cycle-safe, and same-origin.
+  - Cross-origin association targets receive no IUT credential.
+  - Focused and full Maven verification completes.
+  - TeamEngine deploys every changed method against unmodified local OSH.
+  - Controlled HTTP covers all positive procedures and key fail-closed branches.
+  - Exact-image runtime, credential, dependency, and artifact-hygiene gates complete.
+  - All 25 ATS mappings are reviewed exact.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify SKIP as positive conformance evidence.
+  - Do not issue POST, PUT, PATCH, or DELETE.
+  - Do not import executable conformance-suite jars as libraries.
+  - Do not treat recommendation warnings as mandatory requirement failures.
+verification:
+  test_first: PENDING
+  focused_maven: PENDING
+  full_maven: PENDING
+  coverage_audit: PENDING
+  local_osh_teamengine: PENDING
+  controlled_http: PENDING
+  exact_image: PENDING
+  dependency_sabotage: PENDING
+  credential_gates: PENDING
+  artifact_hygiene: PENDING
+  raze: PENDING

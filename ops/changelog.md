@@ -2,6 +2,32 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-29 - Part 1 Advanced Filtering planning and baseline
+
+**Triggered by user instruction**: continue the accepted released-ATS
+completion sequence.
+
+- Audited pinned OGC 23-001 Annex A and confirmed 25 released
+  `/conf/advanced-filtering` procedures: 22 requirement targets and three
+  recommendation targets.
+- Confirmed the historical six-method class has zero exact mappings, four
+  candidates, 21 unmapped procedures, coupled setup evidence, System-only
+  filters, and geometry smoke instead of intersection semantics.
+- Added CP-015, S-ETS-55-01, its contract, fifteen exact scenarios, design,
+  architecture, traceability, epic, PRD, and local-IUT baseline before code.
+- Changed planned inheritance from historical System to direct API Common.
+- Defined `AdvancedFilteringSupport` for seed-derived predicates, bounded
+  traversal, representation validation, JTS geometry, association graphs,
+  combined AND semantics, recommendation warnings, and credential-safe
+  cross-origin identifiers.
+- Recorded normative resolutions for three released ATS editorial defects:
+  parent Deployment, repeated `system` UID query, and Sampling Feature endpoint
+  selection in indirect property checks.
+- Probed unmodified local OSH. It does not declare Part 1 Advanced Filtering;
+  primary E2E must therefore discover 25 declaration-boundary SKIPs without
+  filter access. Controlled read-only HTTP must provide positive evidence.
+- No OSH or TeamEngine source or binary modification; no hosted CI.
+
 ## 2026-07-28 - Part 1 GeoJSON implementation and technical gates
 
 **Triggered by user instruction**: execute the recommended next project step

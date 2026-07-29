@@ -34,6 +34,7 @@ capability.
 | S-ETS-53-01 | Replace Property Definitions approximations with all four released `/conf/property` procedures | Complete; 4/4 exact, Raze 0.98, no required fixes | REQ-ETS-PART1-008, REQ-ETS-COVERAGE-001, REQ-ETS-VALIDATOR-001 |
 | S-ETS-08-02 | Implement `/conf/subdeployment` suite — historical first 3-deep chain; current path is Subdeployments→Deployments→API Common/Core | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-005 |
 | S-ETS-11-01 | Implement `/conf/advanced-filtering` suite - declaration-gated systems/common-resource read-only subset | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-009 |
+| S-ETS-55-01 | Replace Advanced Filtering subset with all 25 released `/conf/advanced-filtering` procedures | In progress; spec and contract anchored | REQ-ETS-PART1-009, REQ-ETS-COVERAGE-001 |
 | S-ETS-12-01 | Implement `/conf/create-replace-delete` suite - safety-gated systems subset, no default public-IUT mutation | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-010 |
 | S-ETS-13-01 | Implement `/conf/update` suite - PATCH safety-gated systems subset, no default public-IUT mutation | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |
 | S-ETS-14-01 | Harden `/conf/update` positive mutable-IUT path - changed-field assertion and local OSH readiness truth | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |

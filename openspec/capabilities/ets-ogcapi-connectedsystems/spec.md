@@ -2714,7 +2714,7 @@ fail or SKIP as specified.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
+- **Status**: SPRINT_55_DIRECT_ATS_IN_PROGRESS
 - **Historical increment**: by Sprint 11 Generator and gates (2026-05-05; story S-ETS-11-01; Quinn Gate 3.5 APPROVE_WITH_CONCERNS 0.90; Raze Gate 4 APPROVE_WITH_CONCERNS 0.90). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests` with 6 read-only @Tests. Verification: Java formatter via Docker Maven BUILD SUCCESS; Docker Maven `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results` reported `63 total / 48 passed / 0 failed / 15 skipped`. Independent Quinn/Raze gate smoke runs also reported `63 total / 48 passed / 0 failed / 15 skipped`. Current GeoRobotix does not declare `/conf/advanced-filtering`, so all 6 AdvancedFiltering @Tests SKIP with reason and no undeclared query behavior is counted as PASS.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc`. The OpenAPI fragment for `ID_List` exists at `api/part1/openapi/parameters/idListSchema.yaml`. The class identifier is `/req/advanced-filtering`, inherits `/req/api-common`, and lists query-parameter subrequirements for ID lists, common resource keyword/id filters, geometry filters, system/deployment/procedure/sampling-feature/property association filters, and combined filters.
 - **Sprint 11 coverage scope**: AdvancedFiltering systems/common-resource read-only subset with 6 @Tests: (1) IUT declares `/conf/advanced-filtering`, otherwise every AdvancedFiltering @Test SKIPs with reason; (2) ID-list schema validator helper accepts homogeneous non-empty local-ID lists and homogeneous non-empty UID lists while rejecting mixed local/UID lists and empty/malformed lists; (3) `/systems?id=<known-id>` returns HTTP 200 and a non-empty result set whose returned items all preserve the selected id when the conformance class is declared and a seed System id was selected; (4) `/systems?q=<known keyword>` returns HTTP 200 and a non-empty result set whose returned items include keyword evidence in `name` or `description` when declared and a seed keyword was selected from a System name/description; (5) `/systems?geom=<WKT>` is exercised with a broad WKT geometry and validated only for HTTP 200 + JSON response shape in this sprint; (6) TestNG dependency wiring and smoke no-regression. The sprint deliberately does not close all 24 listed advanced-filtering subrequirements.
@@ -2783,6 +2783,133 @@ fail or SKIP as specified.
 **AND** total PASS+SKIP is at least 63 (Sprint 10 baseline 57 plus 6 AdvancedFiltering @Tests)
 **AND** AdvancedFiltering results SKIP-with-reason if `/conf/advanced-filtering` remains absent.
 *Maps to*: REQ-ETS-PART1-009.
+
+> Sprint 55 supersedes the six-method Sprint 11 approximation with all 25
+> released Annex A procedures. CP-015 records the exact boundary and the
+> normative resolution of three obvious released prose defects.
+
+#### Sprint 55 Direct ATS Requirement
+
+The ETS SHALL deploy exactly 25 independent `advancedfiltering` TestNG methods,
+one for each released `/conf/advanced-filtering` identifier. Class setup SHALL
+retain only the immutable normalized API root after direct Part 1 API Common
+prerequisites. Every method SHALL use `alwaysRun`, acquire its own declaration,
+seed, query, traversal, and predicate evidence, and issue only GET requests.
+
+Mandatory filter procedures SHALL derive known-matching values from the IUT,
+validate every returned item, and fail when a known match yields an empty
+filtered set. Missing mandatory seed evidence SHALL produce a precise aggregate
+SKIP only after all independently inspectable endpoints or resources have been
+processed. Recommendation procedures SHALL remain visible as warnings when
+unsupported and SHALL not convert recommendation non-support into a mandatory
+conformance failure.
+
+All filtered pages SHALL be status and actual-media gated before parsing,
+bounded, cycle-safe, and same-origin. Returned System, Deployment, Procedure,
+Sampling Feature, and Property association-filter collections SHALL be
+validated through their released representation boundaries. Cross-origin
+association targets SHALL never receive IUT credentials.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-ID-LIST-001 (CRITICAL)
+**GIVEN** the released `ID_List` procedure
+**WHEN** the ETS constructs local-ID, UID, and UID-prefix lists
+**THEN** it accepts only non-empty homogeneous comma-separated string values
+**AND** rejects malformed, empty, or mixed identifier-type lists.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-COMMON-FILTERS-001 (CRITICAL)
+**GIVEN** every canonical Part 1 resource endpoint whose class is declared
+**WHEN** the ETS derives `id`, UID, UID-prefix, `q`, or custom-property values
+from existing resources and executes each filter
+**THEN** every page returns HTTP 200 and every returned item satisfies the
+requested predicate
+**AND** known matching evidence cannot yield an empty PASS.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-GEOMETRY-001 (CRITICAL)
+**GIVEN** Systems, Deployments, or Sampling Features with usable GeoJSON
+geometry
+**WHEN** the ETS submits a valid WKT `geom` filter
+**THEN** every returned feature has geometry intersecting the parsed filter
+geometry according to JTS
+**AND** geometry-free features are rejected from the result.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-SYSTEM-ASSOCIATIONS-001 (CRITICAL)
+**GIVEN** System parent, Procedure, feature-of-interest, observed-property, or
+controlled-property relation evidence
+**WHEN** the corresponding filter is executed with local IDs and UIDs
+**THEN** every returned System is validated through the System representation
+boundary and exposes the requested direct or recursively inherited relation.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001 (CRITICAL)
+**GIVEN** Deployment parent, deployed-System, feature-of-interest,
+observed-property, or controlled-property relation evidence
+**WHEN** the corresponding filter is executed with local IDs and UIDs
+**THEN** every returned Deployment is representation-valid and its traversed
+associations establish the requested predicate.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-PROCEDURE-ASSOCIATIONS-001 (CRITICAL)
+**GIVEN** Procedure observed-property or controlled-property evidence
+**WHEN** the corresponding filter is executed with local IDs and UIDs
+**THEN** every returned Procedure is representation-valid and references one
+of the requested properties.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-SF-ASSOCIATIONS-001 (CRITICAL)
+**GIVEN** Sampling Feature sample-of, Datastream, or ControlStream relations
+**WHEN** feature-of-interest, observed-property, or controlled-property
+filters are executed
+**THEN** every returned Sampling Feature is representation-valid and its
+bounded traversed relation graph establishes the requested predicate.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-PROPERTY-FILTERS-001 (CRITICAL)
+**GIVEN** Property base-property and object-type evidence
+**WHEN** `baseProperty` and `objectType` filters are executed
+**THEN** every returned Property is representation-valid and matches the
+requested recursive base relation or object type.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001 (CRITICAL)
+**GIVEN** at least two seed-derived filters available for a canonical endpoint
+**WHEN** they are submitted in one request
+**THEN** every returned item satisfies every supplied predicate
+**AND** the procedure cannot PASS from union semantics or an empty result.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-INDIRECT-RECOMMENDATIONS-001 (NORMAL)
+**GIVEN** base-property or nested feature-of-interest relation evidence
+**WHEN** direct and transitive filter result sets are compared
+**THEN** transitive sets include their direct descendants
+**AND** unsupported recommendation behavior emits a visible warning rather
+than a mandatory conformance failure.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-MEDIA-PAGINATION-001 (CRITICAL)
+**GIVEN** a filtered collection has multiple pages or association links
+**WHEN** evidence is traversed
+**THEN** every page is status/media gated before parsing
+**AND** pagination and same-origin association traversal reject cycles,
+over-limit graphs, cross-origin credential forwarding, and later-page defects.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** one released procedure lacks seed evidence or SKIPs
+**WHEN** another procedure runs
+**THEN** it independently obtains its own evidence and remains executable
+**AND** class setup contains no response, seed, or parsed-body state.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-DEPENDENCY-CASCADE-001 (CRITICAL)
+**GIVEN** Advanced Filtering directly inherits Part 1 API Common
+**WHEN** API Common has a blocking failure or unexpected SKIP
+**THEN** every Advanced Filtering method SKIPs before class-specific IUT access
+**AND** System or sibling failures do not block Advanced Filtering.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled read-only declaring HTTP fixture
+**WHEN** all 25 released procedures execute
+**THEN** every positive path and key fail-closed branch is exercised
+**AND** the fixture records zero POST, PUT, PATCH, or DELETE requests.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** the exact Sprint 55 image and unmodified local OSH
+**WHEN** Dockerized TeamEngine runs the full suite
+**THEN** all 25 Advanced Filtering methods are discovered exactly once
+**AND** undeclared-class outcomes remain honest pre-filter SKIPs, not
+conformance passes
+**AND** no OSH or TeamEngine source or binary is modified.
 
 > Sprint 12 starts the mutation-side Part 1 work with Create/Replace/Delete, but it does not permit unguarded writes against the public GeoRobotix smoke target. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, so default smoke must prove declaration and non-mutating readiness while every lifecycle mutation assertion SKIPs unless an operator explicitly enables mutation tests against a dedicated mutable IUT.
 

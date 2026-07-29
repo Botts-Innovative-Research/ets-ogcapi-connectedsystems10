@@ -798,19 +798,21 @@ public final class AdvancedFilteringSupport {
 	private void collectDirectRelationFields(Map<String, Object> resource, Relation relation, Identifiers result,
 			ReferenceReads reads, int depth, String requirement) {
 		assertTraversalDepth(depth, requirement);
-		Object links = resource.get("links");
-		if (links instanceof Collection<?> collection) {
-			for (Object linkValue : collection) {
-				if (!(linkValue instanceof Map<?, ?> link)) {
-					continue;
-				}
-				String rel = asString(link.get("rel"));
-				if (rel != null && relation.linkRelations.contains(rel)) {
-					collectReference(link, relation, result, reads, depth + 1, requirement);
+		RelationRepresentation representation = relationRepresentation(resource);
+		if (representation == RelationRepresentation.GEOJSON) {
+			Object links = resource.get("links");
+			if (links instanceof Collection<?> collection) {
+				for (Object linkValue : collection) {
+					if (!(linkValue instanceof Map<?, ?> link)) {
+						continue;
+					}
+					String rel = asString(link.get("rel"));
+					if (rel != null && relation.linkRelations.contains(rel)) {
+						collectReference(link, relation, result, reads, depth + 1, requirement);
+					}
 				}
 			}
 		}
-		RelationRepresentation representation = relationRepresentation(resource);
 		Set<String> directFields = representation == RelationRepresentation.SENSORML ? relation.sensorMlFields
 				: relation.genericFields;
 		collectExactRelationFields(resource, directFields, relation, result, reads, depth, requirement);

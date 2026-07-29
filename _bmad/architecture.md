@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.45 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering R6 exact matcher)
+> Version: 2.0.46 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering R7 representation scoping)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1414,3 +1414,10 @@ candidate must repeat every exact gate and fresh Raze. Version 2.0.45
 implements the replacement matcher with separate case-sensitive
 representation vocabularies. Controlled HTTP moves from `46/3/0/0` to
 `46/0/0/0`; focused Maven is `51/0/0/0` and full Maven is `605/0/0/3`.
+Exact candidate `b5bc49b` passed every repeated gate, but Raze R7 found that
+link relations were still processed before representation dispatch, allowing
+SensorML to reuse GeoJSON `parentSystem` evidence. Version 2.0.46 scopes link
+relations to GeoJSON and leaves SensorML parent and Procedure evidence to
+exact `attachedTo` and `typeOf` members. Controlled regression-first
+verification moves from `48/2/0/0` to `48/0/0/0`; focused Maven is
+`53/0/0/0` and full Maven is `607/0/0/3`.

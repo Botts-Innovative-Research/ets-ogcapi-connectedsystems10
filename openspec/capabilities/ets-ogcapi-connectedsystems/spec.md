@@ -2714,9 +2714,8 @@ fail or SKIP as specified.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
 - **Priority**: MUST
-- **Status**: SPRINT_55_R6_EXACT_RELATION_REMEDIATION_IMPLEMENTED_EXACT_CANDIDATE_PENDING
-  (R6 regressions move controlled HTTP from `46/3/0/0` to `46/0/0/0`;
-  exact-candidate E2E and fresh Raze remain)
+- **Status**: SPRINT_55_R7_REPRESENTATION_SCOPED_RELATION_REMEDIATION_IMPLEMENTED_EXACT_CANDIDATE_PENDING
+  (controlled `48/0/0/0`, focused `53/0/0/0`, full Maven `607/0/0/3`)
 - **Historical increment**: by Sprint 11 Generator and gates (2026-05-05; story S-ETS-11-01; Quinn Gate 3.5 APPROVE_WITH_CONCERNS 0.90; Raze Gate 4 APPROVE_WITH_CONCERNS 0.90). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests` with 6 read-only @Tests. Verification: Java formatter via Docker Maven BUILD SUCCESS; Docker Maven `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results` reported `63 total / 48 passed / 0 failed / 15 skipped`. Independent Quinn/Raze gate smoke runs also reported `63 total / 48 passed / 0 failed / 15 skipped`. Current GeoRobotix does not declare `/conf/advanced-filtering`, so all 6 AdvancedFiltering @Tests SKIP with reason and no undeclared query behavior is counted as PASS.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc`. The OpenAPI fragment for `ID_List` exists at `api/part1/openapi/parameters/idListSchema.yaml`. The class identifier is `/req/advanced-filtering`, inherits `/req/api-common`, and lists query-parameter subrequirements for ID lists, common resource keyword/id filters, geometry filters, system/deployment/procedure/sampling-feature/property association filters, and combined filters.
 - **Sprint 11 coverage scope**: AdvancedFiltering systems/common-resource read-only subset with 6 @Tests: (1) IUT declares `/conf/advanced-filtering`, otherwise every AdvancedFiltering @Test SKIPs with reason; (2) ID-list schema validator helper accepts homogeneous non-empty local-ID lists and homogeneous non-empty UID lists while rejecting mixed local/UID lists and empty/malformed lists; (3) `/systems?id=<known-id>` returns HTTP 200 and a non-empty result set whose returned items all preserve the selected id when the conformance class is declared and a seed System id was selected; (4) `/systems?q=<known keyword>` returns HTTP 200 and a non-empty result set whose returned items include keyword evidence in `name` or `description` when declared and a seed keyword was selected from a System name/description; (5) `/systems?geom=<WKT>` is exercised with a broad WKT geometry and validated only for HTTP 200 + JSON response shape in this sprint; (6) TestNG dependency wiring and smoke no-regression. The sprint deliberately does not close all 24 listed advanced-filtering subrequirements.
@@ -2926,6 +2925,15 @@ System definition
 **AND** arbitrary types that merely end with `System` cannot contribute
 property evidence.
 
+##### SCENARIO-ETS-PART1-009-RELEASED-REPRESENTATION-SCOPED-RELATIONS-001 (CRITICAL)
+**GIVEN** a SensorML System whose generic `links` member contains
+`parentSystem` or `ogc-rel:parentSystem`
+**WHEN** the ETS derives parent filters or combined-filter predicates
+**THEN** those GeoJSON-only relations cannot create SensorML association
+evidence
+**AND** exact SensorML `attachedTo` remains valid parent evidence
+**AND** exact SensorML `typeOf` remains valid Procedure evidence.
+
 ##### SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001 (CRITICAL)
 **GIVEN** Deployment parent, deployed-System, feature-of-interest,
 observed-property, or controlled-property relation evidence
@@ -3081,7 +3089,16 @@ case-sensitive vocabularies. Trailing-`Link`, punctuation/case, `parent`, and
 `procedure` near misses are rejected. R6 controlled HTTP moves from
 `46/3/0/0` to `46/0/0/0`; focused Maven passes `51/0/0/0` and full Docker
 Maven passes `605/0/0/3`. A new committed candidate, repeated exact gates, and
-another fresh Raze review remain.
+another fresh Raze review remain. Exact candidate
+`b5bc49b2922e0a47b73225c2dabc0422ac7998f4` then passed every repeated
+technical and E2E gate, but Raze R7 returned `GAPS_FOUND 0.99`. Link relations
+are evaluated before representation dispatch, so a SensorML System can still
+reuse GeoJSON `parentSystem` or `ogc-rel:parentSystem` evidence instead of the
+released `attachedTo` mapping. Candidate `b5bc49b` is superseded; the
+representation-scoped relation scenario reproduces the defect at `48/2/0/0`.
+Link relations are now inspected only after GeoJSON dispatch. Controlled HTTP
+passes `48/0/0/0`, focused Maven passes `53/0/0/0`, and full Docker Maven
+passes `607/0/0/3`; new exact-candidate gates and fresh Raze remain.
 
 > Sprint 12 starts the mutation-side Part 1 work with Create/Replace/Delete, but it does not permit unguarded writes against the public GeoRobotix smoke target. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, so default smoke must prove declaration and non-mutating readiness while every lifecycle mutation assertion SKIPs unless an operator explicitly enables mutation tests against a dedicated mutable IUT.
 

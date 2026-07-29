@@ -524,6 +524,37 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-009;
+	 * SCENARIO-ETS-PART1-009-RELEASED-REPRESENTATION-SCOPED-RELATIONS-001.
+	 */
+	@Test
+	public void sensorMlGeoJsonParentLinksCannotSatisfySystemByParent() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.SENSORML_GEOJSON_PARENT_LINKS)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::systemsFilterByParent);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "parent-1"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009;
+	 * SCENARIO-ETS-PART1-009-RELEASED-REPRESENTATION-SCOPED-RELATIONS-001;
+	 * SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001.
+	 */
+	@Test
+	public void sensorMlGeoJsonParentLinksCannotSeedCombinedFilters() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.SENSORML_GEOJSON_PARENT_LINKS)) {
+			server.start();
+
+			configured(server).canonicalResourcesCombineFilters();
+
+			assertTrue(server.callsWithKeys("/api/systems", "id", "q") > 0);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", value -> true));
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
 	 */
 	@Test
@@ -782,12 +813,12 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER, DEPLOYED_PROPERTY_WRAPPER_SHORTCUT,
 		DEPLOYED_PROPERTY_NESTED_HREF_SHORTCUT, DEPLOYED_PROPERTY_NON_SYSTEM_TARGET,
 		DEPLOYED_PROPERTY_COLLECTION_TARGET, MALFORMED_ASSOCIATION_HREF, UNRELATED_SUFFIX_ALIAS, NESTED_EXTENSION_ALIAS,
-		CANONICAL_OGC_RELATION, GEOJSON_SYSTEM_KIND_LINK, SENSORML_SYSTEM_ASSOCIATIONS, UNRELATED_RELATION_SCHEME,
-		FIELD_LINK_SUFFIX_ALIASES, OGC_REL_NEAR_MISSES, BROAD_RELATION_ALIASES, DEPLOYED_PROPERTY_TYPED_SYSTEM_TARGET,
-		DEPLOYED_PROPERTY_SUFFIX_SYSTEM_TARGET, UNSUPPORTED_PROPERTY_FILTER_MEDIA, UNSUPPORTED_COMBINED_FILTER_MEDIA,
-		ROOT_ASSOCIATION_SHORTCUTS, BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION,
-		LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404,
-		ONLY_SYSTEM_DECLARED
+		CANONICAL_OGC_RELATION, GEOJSON_SYSTEM_KIND_LINK, SENSORML_SYSTEM_ASSOCIATIONS, SENSORML_GEOJSON_PARENT_LINKS,
+		UNRELATED_RELATION_SCHEME, FIELD_LINK_SUFFIX_ALIASES, OGC_REL_NEAR_MISSES, BROAD_RELATION_ALIASES,
+		DEPLOYED_PROPERTY_TYPED_SYSTEM_TARGET, DEPLOYED_PROPERTY_SUFFIX_SYSTEM_TARGET,
+		UNSUPPORTED_PROPERTY_FILTER_MEDIA, UNSUPPORTED_COMBINED_FILTER_MEDIA, ROOT_ASSOCIATION_SHORTCUTS,
+		BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION, LATER_INDIRECT_RESOURCES,
+		OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404, ONLY_SYSTEM_DECLARED
 
 	}
 
@@ -955,8 +986,11 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				send(exchange, 404, "application/json", "{}");
 				return;
 			}
-			if (this.mode == Mode.SENSORML_SYSTEM_ASSOCIATIONS && "systems".equals(type)) {
-				send(exchange, 200, "application/sml+json", "{\"items\":[" + sensorMlSystem() + "]}");
+			if ((this.mode == Mode.SENSORML_SYSTEM_ASSOCIATIONS || this.mode == Mode.SENSORML_GEOJSON_PARENT_LINKS)
+					&& "systems".equals(type)) {
+				String item = this.mode == Mode.SENSORML_GEOJSON_PARENT_LINKS ? sensorMlSystemWithGeoJsonParentLinks()
+						: sensorMlSystem();
+				send(exchange, 200, "application/sml+json", "{\"items\":[" + item + "]}");
 				return;
 			}
 			if (this.mode == Mode.UNSUPPORTED_PROPERTY_FILTER_MEDIA && "properties".equals(type)) {
@@ -1291,6 +1325,18 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "uniqueId":"urn:example:system:1","label":"Weather Station",
 					 "attachedTo":{"href":"%s"},"typeOf":{"href":"%s"}}
 					""".formatted(apiRoot().resolve("systems/parent-1"), apiRoot().resolve("procedures/procedure-1"));
+		}
+
+		private String sensorMlSystemWithGeoJsonParentLinks() {
+			return """
+					{"type":"PhysicalSystem","id":"system-1","definition":"sosa:System",
+					 "uniqueId":"urn:example:system:1","label":"Weather Station",
+					 "typeOf":{"href":"%s"},
+					 "links":[
+					  {"rel":"parentSystem","href":"%s"},
+					  {"rel":"ogc-rel:parentSystem","href":"%s"}]}
+					""".formatted(apiRoot().resolve("procedures/procedure-1"), apiRoot().resolve("systems/parent-1"),
+					apiRoot().resolve("systems/parent-1"));
 		}
 
 		private String systemPropertyAssociations() {

@@ -1,0 +1,99 @@
+evaluation:
+  sprint: "ets-55"
+  story: "S-ETS-55-01"
+  role: "Raze adversarial reviewer"
+  review_cycle: "final-r7"
+  reviewed_at_utc: "2026-07-29T15:46:54Z"
+  verdict: "GAPS_FOUND"
+  confidence: 0.99
+  gate_decision: "BLOCKED"
+
+scope:
+  candidate_commit: "b5bc49b2922e0a47b73225c2dabc0422ac7998f4"
+  candidate_parent: "f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0"
+  candidate_tree: "c77af12569ce5ddc0fb47dd17e34fb1df3ed34fb"
+  released_source_commit: "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2"
+  evidence_directory: "ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r7-2026-07-29/"
+  evidence_state: "force-staged in Git index"
+  manifest_entries: 17
+  manifest_sha256: "0f37ba8a0ff86d4b61b91b62b88c04e78347906c8e4fb7fc04e554375cc7df99"
+  manifest_git_blob: "618cc2eb8ada235a0da6e8089cee114d913a15a2"
+  exact_image: "sha256:b883633f236d2e51d63d0245ceab33ba286f22370cb409f7c83a36f3046aec42"
+  teamengine_base_image: "sha256:9d53016965c4cca0f4d8baec136ad11258dccc552e9a8c969a1a6f889336d90c"
+  deployed_build_revision: "b5bc49b292"
+  local_osh_commit: "4c87a65c9a967d52af9df476e65d7862c7673a15"
+  local_osh_image: "sha256:a0249ce15f22ae01620eee65e6737735b2b01a50f0a58b3c580f3d2a1dd21c7e"
+  review_constraints:
+    - "No files were modified by the reviewer."
+    - "The R7 evidence archive was force-staged during review."
+    - "No expensive gate was rerun because source and released-mapping analysis established a blocking false-PASS path."
+
+findings:
+  - id: "RAZE-S55-R7-REPRESENTATION-SCOPED-RELATIONS-001"
+    severity: "HIGH"
+    required: true
+    title: "Link relation vocabulary is still applied across representation boundaries"
+    affected_procedures:
+      - "/conf/advanced-filtering/system-by-parent"
+      - "/conf/advanced-filtering/combined-filters"
+    evidence:
+      - "AdvancedFilteringSupport.java:801-810 evaluates links[].rel against relation.linkRelations before representation dispatch at lines 813-819."
+      - "PARENT_SYSTEM globally accepts parentSystem and ogc-rel:parentSystem while also defining SensorML attachedTo."
+      - "Released SensorML mapping maps parentSystem exclusively to attachedTo; GeoJSON maps it to links."
+      - "VerifyEncodingRelationTypes.java already proves SensorML System links rel=parentSystem is GeoJSON-only and must be rejected."
+      - "The SensorML System collection schema permits generic links, so filtered endpoint schema validation does not close this path."
+      - "The three R7 regressions cover GeoJSON suffix, case, punctuation, and broad aliases, but no malformed cross-representation relation."
+    impact: "A valid SensorML System collection carrying parentSystem only in links can seed and validate local-ID and UID parent predicates, allowing PASS without the released attachedTo association mapping."
+    required_fix: "Scope linkRelations by representation and owner. SensorML System parent evidence must accept only exact attachedTo, while GeoJSON may accept exact parentSystem forms. Add controlled negative tests for SensorML links parentSystem and ogc-rel:parentSystem in both system-by-parent and combined-filters, retaining positive attachedTo coverage."
+
+  - id: "RAZE-S55-R7-RED-BASELINE-PROVENANCE-002"
+    severity: "LOW"
+    required: false
+    title: "The claimed 46/3/0/0 test-first baseline has no raw archived payload"
+    evidence:
+      - "final-candidate-verification.md claims the 46/3/0/0 baseline."
+      - "The 17-entry manifest contains green focused/full logs but no red-baseline log."
+    impact: "Test-first ordering cannot be independently reproduced from the R7 archive."
+    recommended_fix: "Archive the raw red run or label the count as an unarchived historical observation."
+
+prior_r6_disposition:
+  status: "NOT_FULLY_CLOSED"
+  closed_aspects:
+    - "Exact case-sensitive matching rejects tested parentSystemLink, systemKindLink, ogc-rel suffix/case/punctuation near misses, and broad parent/procedure fields."
+  remaining_aspect: "Representation-specific link vocabulary remains global, preserving a false-PASS path."
+
+verified_controls:
+  - "Staged-blob manifest verification: 17 entries, zero failures."
+  - "Focused Maven: 51 tests, 0 failures, 0 errors, 0 skips."
+  - "Full Maven: 605 tests, 0 failures, 0 errors, 3 skips."
+  - "Local OSH TeamEngine: 238 total, 40 passed, 7 failed, 191 skipped; Advanced Filtering configuration PASS and all 25 assertions SKIP at absent declaration."
+  - "Sabotage: 238/2/10/226; Advanced Filtering configuration and all 25 assertions dependency-SKIP."
+  - "Artifact hygiene: 169 IUT GETs, zero IUT writes, zero detected credential leaks."
+  - "Synthetic credential gates: zero unmasked artifact hits, 33 masked events, 33 intact wire transmissions."
+  - "Live image inspection confirms exact image ID and Build-Revision b5bc49b292."
+  - "OSH checkout is clean, zero commits ahead; ConSys jar hash and read-only /opt/osh mount match evidence."
+  - "Candidate introduces no OSH or TeamEngine source/base-binary changes and no hosted CI."
+
+documentation_assessment:
+  status: "SEMANTIC_GAP"
+  detail: "Spec, story, contract, traceability, architecture, status, changelog, and test summary consistently claim separate representation vocabularies, but the global links matcher contradicts that claim."
+
+residual_risks:
+  - "Local OSH supplies deployment and declaration-gate evidence only, not positive Advanced Filtering conformance."
+  - "Positive semantics remain controlled-fixture evidence and currently omit the decisive SensorML wrong-representation case."
+  - "No Sprint 55-specific handoff artifact was discoverable; state is carried by the contract and story."
+
+required_fixes:
+  count: 1
+  ids:
+    - "RAZE-S55-R7-REPRESENTATION-SCOPED-RELATIONS-001"
+
+review_metrics:
+  started_at_utc: "2026-07-29T15:35:14Z"
+  completed_at_utc: "2026-07-29T15:46:54Z"
+  duration_seconds: 700
+  token_metadata_available: false
+
+reviewer_workspace_changes:
+  modified_files: false
+  created_files: false

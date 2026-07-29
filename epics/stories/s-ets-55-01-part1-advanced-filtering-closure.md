@@ -2,9 +2,9 @@
 
 ## Status
 
-R6 EXACT RELATION REMEDIATION IMPLEMENTED; EXACT CANDIDATE PENDING -
-candidate `f2a88d5` is superseded, and the replacement matcher passes
-regression and precommit Maven gates.
+R7 REPRESENTATION-SCOPED RELATION REMEDIATION IMPLEMENTED; EXACT CANDIDATE
+PENDING - candidates `f2a88d5` and `b5bc49b` are superseded; controlled and
+full precommit gates pass.
 
 ## User Instruction
 
@@ -27,6 +27,7 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   - `SCENARIO-ETS-PART1-009-RELEASED-SYSTEM-ASSOCIATIONS-001`
   - `SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PROVENANCE-001`
   - `SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001`
+  - `SCENARIO-ETS-PART1-009-RELEASED-REPRESENTATION-SCOPED-RELATIONS-001`
   - `SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001`
   - `SCENARIO-ETS-PART1-009-RELEASED-PROCEDURE-ASSOCIATIONS-001`
   - `SCENARIO-ETS-PART1-009-RELEASED-SF-ASSOCIATIONS-001`
@@ -77,6 +78,9 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
 - [x] GeoJSON relation links, GeoJSON property links, and SensorML members use
   separate exact vocabularies; case, punctuation, trailing `Link`, `parent`,
   and `procedure` near misses cannot create association evidence.
+- [x] GeoJSON `links[].rel` values are ignored for SensorML association
+  evidence; SensorML System parent and Procedure mappings accept only
+  `attachedTo` and `typeOf`.
 - [x] Dereferenced deployed-System property targets accept every released
   GeoJSON/SensorML System class and reject collections, non-System objects,
   and arbitrary `*System` suffix types.
@@ -178,4 +182,10 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   review remain. The R6 regressions reproduce controlled HTTP `46/3/0/0`;
   exact case-sensitive, representation-specific vocabularies move that suite
   to `46/0/0/0`, focused Maven to `51/0/0/0`, and full Docker Maven to
-  `605/0/0/3`.
+  `605/0/0/3`. Exact candidate
+  `b5bc49b2922e0a47b73225c2dabc0422ac7998f4` passed every repeated technical
+  and E2E gate, but Raze R7 returned `GAPS_FOUND 0.99`: `links[].rel` is
+  evaluated before representation dispatch, so a SensorML System can still
+  reuse GeoJSON `parentSystem` evidence. Candidate `b5bc49b` is superseded.
+  The dedicated representation-scoping scenario, red regression, matcher
+  remediation, repeated exact gates, and fresh Raze review remain.

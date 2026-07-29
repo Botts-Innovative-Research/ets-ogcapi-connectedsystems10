@@ -112,6 +112,30 @@ recommended work and final gate.
 - Controlled HTTP passes `46/0/0/0`, focused Maven passes `51/0/0/0`, and the
   clean full Docker Maven gate passes `605/0/0/3`. Exact committed-candidate
   E2E and fresh Raze remain.
+- Sealed exact candidate `b5bc49b2922e0a47b73225c2dabc0422ac7998f4`
+  and image `sha256:b883633f236...aec42` with matching
+  `Build-Revision: b5bc49b292`.
+- Exact focused/full Maven pass `51/0/0/0` and `605/0/0/3`; released-source,
+  runtime, SWE Common, collision, immutable-base, and context gates pass.
+- Unmodified local OSH TeamEngine is honestly `238/40/7/191`; the seven
+  established IUT failures remain visible and all 25 Advanced Filtering
+  assertions SKIP at the missing declaration.
+- API Common sabotage is `238/2/10/226`. Credential gates report zero
+  unmasked artifact hits, 33 masked events, and 33 intact transmissions.
+  Hygiene records 169 IUT GETs, zero writes, and zero leaks.
+- Preserved 17 exact artifacts under a verified SHA-256 manifest.
+- Raze R7 returned `GAPS_FOUND 0.99`: GeoJSON `links[].rel` association
+  vocabulary was still evaluated before representation dispatch, allowing a
+  SensorML System to reuse `parentSystem` evidence. Candidate `b5bc49b` and
+  its exact gates are superseded audit evidence.
+- Added two requirement-linked R7 regressions covering direct
+  `system-by-parent` and combined-filter predicate construction. The raw red
+  baseline is `48/2/0/0`.
+- Link-relation inspection now occurs only after GeoJSON dispatch. Exact
+  SensorML `attachedTo` and `typeOf` member positives remain unchanged.
+- Controlled HTTP passes `48/0/0/0`, focused Maven passes `53/0/0/0`, and
+  full Docker Maven passes `607/0/0/3`. A new committed candidate, repeated
+  exact gates, and fresh Raze remain.
 
 ## 2026-07-29 - Part 1 Advanced Filtering implementation and technical gates
 

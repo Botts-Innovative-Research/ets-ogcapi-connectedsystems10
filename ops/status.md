@@ -97,9 +97,9 @@ Read these first:
 
 ## Session Handoff - Part 1 Advanced Filtering Direct ATS
 
-S-ETS-55-01 remains open under CP-015. Raze R6's exact relation-vocabulary
-finding is remediated and precommit gates pass; a new committed candidate and
-its exact E2E cycle remain.
+S-ETS-55-01 remains open under CP-015. Raze R7's cross-representation
+relation finding is remediated and precommit gates pass; a new committed
+candidate and its exact E2E cycle remain.
 
 - Exactly 25 independent methods implement the 25 released procedures behind
   `AdvancedFilteringSupport`; all 25 mappings are reviewed exact.
@@ -110,12 +110,18 @@ its exact E2E cycle remain.
 - R6 regressions reproduce controlled HTTP `46/3/0/0`; remediation passes
   controlled HTTP `46/0/0/0`, focused Maven `51/0/0/0`, and full Docker Maven
   `605/0/0/3`, with three unchanged historical harness skips.
-- Scenario trace is `20/20`; all released scenario IDs have literal Java
+- R7 regressions reproduce the SensorML false PASS at controlled HTTP
+  `48/2/0/0`; remediation passes controlled HTTP `48/0/0/0`, focused Maven
+  `53/0/0/0`, and full Docker Maven `607/0/0/3`.
+- Scenario trace is `21/21`; all released scenario IDs have literal Java
   anchors.
 - The replacement matcher separates exact, case-sensitive GeoJSON
   `links[].rel`, GeoJSON property, SensorML root-member, and generic-wrapper
   vocabularies. Trailing-`Link`, punctuation/case, `parent`, and `procedure`
   near misses no longer manufacture association evidence.
+- Link relations are inspected only for GeoJSON. SensorML System parent and
+  Procedure evidence remains limited to exact `attachedTo` and `typeOf`
+  members.
 - Deployment property dereferences now require a single System
   representation; collections and non-System objects contribute no evidence.
 - Exact canonical direct and `ogc-rel:` forms, GeoJSON `systemKind@link`, and
@@ -125,8 +131,8 @@ its exact E2E cycle remain.
   representation validation.
 - Keyword mapping now describes only the returned-resource assertion, and the
   synchronized coverage report is regenerated.
-- Superseded candidate `f2a88d54e643f9c91cfcc432f7d7bc403bfab6f0` builds exact image
-  `sha256:d7bdc607254...e7f1b` with matching `Build-Revision`.
+- Superseded candidate `b5bc49b2922e0a47b73225c2dabc0422ac7998f4` builds exact image
+  `sha256:b883633f236...aec42` with matching `Build-Revision`.
 - Runtime and released-source audits pass. Unmodified local OSH TeamEngine is
   honestly `238/40/7/191`; all 25 Advanced Filtering methods SKIP because the
   IUT does not declare the class.
@@ -135,7 +141,10 @@ its exact E2E cycle remain.
   and 33 intact transmissions.
 - Hygiene records 174 recognized GETs, 169 IUT GETs, zero writes, and zero
   leaks. OSH remains clean at `4c87a65` with `/opt/osh` read-only.
-- Superseded checksum-manifested `f2a88d5` evidence and the R6 finding are under
+- Superseded checksum-manifested `b5bc49b` evidence and the R7 finding are
+  under
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r7-2026-07-29/`.
+- Superseded `f2a88d5` evidence and the R6 finding remain under
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r6-2026-07-29/`.
 - Candidate `060a8aa` evidence is preserved as superseded audit evidence under
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r5-2026-07-29/`.

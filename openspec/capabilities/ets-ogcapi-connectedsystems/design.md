@@ -1974,7 +1974,14 @@ and SensorML root members separate exact vocabularies; no lossy normalization
 is permitted. R6 regression-first verification moves controlled HTTP from
 `46/3/0/0` to `46/0/0/0`; focused Maven passes `51/0/0/0` and full Docker
 Maven passes `605/0/0/3`. A new committed candidate must repeat every exact
-gate.
+gate. Candidate `b5bc49b` completed those gates, but Raze R7 found that
+`links[].rel` is still evaluated before representation dispatch. The
+replacement must inspect link relations only for GeoJSON and must derive
+SensorML System parent and Procedure associations only from exact
+`attachedTo` and `typeOf` members. Regression-first verification moves
+controlled HTTP from `48/2/0/0` to `48/0/0/0`; focused Maven passes
+`53/0/0/0` and full Docker Maven passes `607/0/0/3`. A new exact committed
+candidate must repeat every runtime and E2E gate.
 
 ## Status
 

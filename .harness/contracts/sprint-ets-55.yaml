@@ -1,7 +1,7 @@
 sprint: ets-55
 story: S-ETS-55-01
 title: Part 1 Advanced Filtering direct ATS closure
-status: R6_EXACT_RELATION_REMEDIATION_IMPLEMENTED_EXACT_CANDIDATE_PENDING
+status: R7_REPRESENTATION_SCOPED_RELATION_REMEDIATION_IMPLEMENTED_EXACT_CANDIDATE_PENDING
 triggered_by: "User instructed continuation of the accepted released-ATS sequence"
 requirements:
   - REQ-ETS-PART1-009
@@ -16,6 +16,7 @@ scenarios:
   - SCENARIO-ETS-PART1-009-RELEASED-SYSTEM-ASSOCIATIONS-001
   - SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PROVENANCE-001
   - SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001
+  - SCENARIO-ETS-PART1-009-RELEASED-REPRESENTATION-SCOPED-RELATIONS-001
   - SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001
   - SCENARIO-ETS-PART1-009-RELEASED-PROCEDURE-ASSOCIATIONS-001
   - SCENARIO-ETS-PART1-009-RELEASED-SF-ASSOCIATIONS-001
@@ -39,6 +40,7 @@ success_criteria:
   - Association filters validate every returned resource through released representation boundaries.
   - Procedure-specific association paths cannot be replaced by root aliases or wrapper identifiers.
   - Canonical GeoJSON direct and ogc-rel compact relation names, systemKind@link, and SensorML attachedTo/typeOf mappings remain accepted.
+  - GeoJSON links[].rel values cannot create SensorML association evidence; SensorML System parent and Procedure evidence uses only attachedTo and typeOf.
   - Every released GeoJSON and SensorML System class is accepted as a deployed-System target, while arbitrary suffix types are rejected.
   - Property object-type and combined-filter responses pass released representation validation before predicate evidence is accepted.
   - Keyword mapping evidence does not claim selected-seed inclusion.
@@ -62,14 +64,14 @@ guardrails:
   - Do not import executable conformance-suite jars as libraries.
   - Do not treat recommendation warnings as mandatory requirement failures.
 verification:
-  test_first: R6_HTTP_RED_46_3_0_0_TO_PASS_46_0_0_0
-  focused_maven: PRECOMMIT_PASS_51_0_0_0_EXACT_CANDIDATE_PENDING
-  full_maven: PRECOMMIT_PASS_605_0_0_3_EXACT_CANDIDATE_PENDING
+  test_first: R7_HTTP_RED_48_2_0_0_TO_PASS_48_0_0_0
+  focused_maven: PRECOMMIT_PASS_53_0_0_0_EXACT_CANDIDATE_PENDING
+  full_maven: PRECOMMIT_PASS_607_0_0_3_EXACT_CANDIDATE_PENDING
   coverage_audit: PASS_240_76_2_115_47_ADVANCED_FILTERING_25_OF_25_EXACT
-  local_osh_teamengine: SUPERSEDED_F2A88D5_HONEST_238_40_7_191_NEW_CANDIDATE_PENDING
-  controlled_http: PRECOMMIT_PASS_46_0_0_0_EXACT_CANDIDATE_PENDING
-  exact_image: SUPERSEDED_SHA256_D7BDC60725409990AC8F79AF10DBB9667006127BE6313ACC0D36CD6BC39E7F1B
-  dependency_sabotage: SUPERSEDED_F2A88D5_PASS_238_2_10_226_NEW_CANDIDATE_PENDING
-  credential_gates: SUPERSEDED_F2A88D5_PASS_ZERO_UNMASKED_33_MASKED_33_INTACT
-  artifact_hygiene: SUPERSEDED_F2A88D5_PASS_174_REQUESTS_169_IUT_GETS_ZERO_WRITES_ZERO_LEAKS
-  raze: R6_GAPS_FOUND_0_99_REMEDIATED_FRESH_REVIEW_PENDING
+  local_osh_teamengine: SUPERSEDED_B5BC49B_HONEST_238_40_7_191_NEW_CANDIDATE_PENDING
+  controlled_http: PRECOMMIT_PASS_48_0_0_0_EXACT_CANDIDATE_PENDING
+  exact_image: SUPERSEDED_SHA256_B883633F236D2E51D63D0245CEAB33BA286F22370CB409F7C83A36F3046AEC42
+  dependency_sabotage: SUPERSEDED_B5BC49B_PASS_238_2_10_226_NEW_CANDIDATE_PENDING
+  credential_gates: SUPERSEDED_B5BC49B_PASS_ZERO_UNMASKED_33_MASKED_33_INTACT
+  artifact_hygiene: SUPERSEDED_B5BC49B_PASS_174_REQUESTS_169_IUT_GETS_ZERO_WRITES_ZERO_LEAKS
+  raze: R7_GAPS_FOUND_0_99_REMEDIATED_FRESH_REVIEW_PENDING

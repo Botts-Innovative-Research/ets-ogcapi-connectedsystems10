@@ -12,7 +12,10 @@ Sprint 55 Part 1 Advanced Filtering direct ATS:
   `/conf/advanced-filtering` is `25/25 exact`.
 - R6 test-first controlled HTTP is `46/3/0/0`; remediation is `46/0/0/0`,
   focused Maven is `51/0/0/0`, and full Docker Maven is `605/0/0/3`.
-- Scenario trace is `20/20` with no missing literal Java anchors.
+- R7 test-first controlled HTTP is `48/2/0/0`; representation-scoped
+  remediation is `48/0/0/0`, focused Maven is `53/0/0/0`, and full Docker
+  Maven is `607/0/0/3`.
+- Scenario trace is `21/21` with no missing literal Java anchors.
 - Raze R5 returned `GAPS_FOUND 0.99`; canonical relation vocabulary,
   media-aware System typing, failed representation validation, and keyword
   mapping evidence are remediated with requirement-linked tests.
@@ -27,12 +30,18 @@ Sprint 55 Part 1 Advanced Filtering direct ATS:
   transmissions.
 - Raze R6 returned `GAPS_FOUND 0.99` for case/punctuation normalization,
   trailing-`Link` stripping, and broad aliases. Separate exact,
-  case-sensitive representation vocabularies now close that path; a new
-  committed candidate, exact gates, and fresh Raze remain.
+  case-sensitive vocabularies close that path.
+- Candidate `b5bc49b` exact image `sha256:b883633f236...aec42` passed every
+  technical and E2E gate, but Raze R7 returned `GAPS_FOUND 0.99` because
+  GeoJSON link relations were still processed for SensorML representations.
+  Link relations are now GeoJSON-only; a new committed candidate, exact
+  gates, and fresh Raze remain.
 - Verification summary:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-verification-2026-07-29.md`.
 - Superseded exact `f2a88d5` candidate evidence:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r6-2026-07-29/`.
+- Superseded exact `b5bc49b` candidate evidence:
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r7-2026-07-29/`.
 - Superseded exact `060a8aa` candidate and current R5 remediation evidence:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r5-2026-07-29/`.
 - Superseded `756d729` exact candidate and current R4 remediation evidence:

@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-009`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Raze R6 exact relation-vocabulary remediation implemented;
+**Status**: Raze R7 representation-scoped relation remediation implemented;
 new exact-candidate gates and fresh Raze pending
 
 ## Motivation
@@ -92,6 +92,10 @@ GeoJSON relation links, GeoJSON property links, and SensorML members SHALL use
 separate exact vocabularies at their prescribed representation boundaries.
 Matching SHALL NOT lowercase, remove punctuation, strip a generic `Link`
 suffix, or accept broad `parent` and `procedure` aliases as substitutes.
+GeoJSON `links[].rel` association vocabulary SHALL be considered only for a
+GeoJSON representation. A SensorML System SHALL NOT derive parent or Procedure
+association evidence from generic `links`; it SHALL use exact `attachedTo` and
+`typeOf` members respectively.
 Successfully resolved targets SHALL supply their representation local ID and
 UID; link-wrapper IDs, path tokens, and hrefs SHALL not be treated as synthetic
 replacements. Procedures that prescribe deployed-System, features-of-interest,
@@ -229,4 +233,13 @@ superseded. The next candidate must reject `parentSystemLink`,
 repeat all exact gates and fresh adversarial review. Regression-first R6
 verification reproduces controlled HTTP `46/3/0/0`; separate exact,
 case-sensitive representation vocabularies move it to `46/0/0/0`, focused
-Maven to `51/0/0/0`, and full Docker Maven to `605/0/0/3`.
+Maven to `51/0/0/0`, and full Docker Maven to `605/0/0/3`. Exact candidate
+`b5bc49b2922e0a47b73225c2dabc0422ac7998f4` passed every repeated gate, but
+Raze R7 returned `GAPS_FOUND 0.99`: link relations are still evaluated before
+representation dispatch, allowing SensorML to reuse GeoJSON association
+vocabulary. Candidate `b5bc49b` is superseded. The next candidate must prove
+that SensorML `parentSystem` and `ogc-rel:parentSystem` links cannot seed
+`system-by-parent` or combined-filter predicates while `attachedTo` remains
+accepted. The red controlled run is `48/2/0/0`; inspecting link relations only
+after GeoJSON dispatch moves controlled HTTP to `48/0/0/0`, focused Maven to
+`53/0/0/0`, and full Docker Maven to `607/0/0/3`.

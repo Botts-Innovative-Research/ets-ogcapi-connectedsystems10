@@ -97,8 +97,8 @@ Read these first:
 
 ## Session Handoff - Part 1 Advanced Filtering Direct ATS
 
-S-ETS-55-01 is technically verified under CP-015; final Raze recheck is
-pending.
+S-ETS-55-01 remediation is precommit green under CP-015; exact-candidate gates
+and fresh final Raze review are pending.
 
 - Exactly 25 independent methods implement the 25 released procedures behind
   `AdvancedFilteringSupport`; all 25 mappings are reviewed exact.
@@ -106,22 +106,16 @@ pending.
   `/conf/advanced-filtering` is `25/25 exact`.
 - Released inheritance is direct API Common. API Common sabotage skips setup
   and all 25 methods before class-specific IUT access.
-- Initial Raze found seven semantic gaps. Requirement-linked regressions
-  reproduced `20/7/0/0`; all fixes now pass `20/0/0/0`.
-- Focused Maven is `102/0/0/0`; full Docker Maven is `574/0/0/3`, with three
-  unchanged historical harness skips.
-- Exact image `sha256:c39a9c351200...f08ae` from `cf7fa82` passes runtime,
-  SWE Common adapter, collision, immutable-base, credential, and context
-  checks.
-- Primary unmodified local OSH TeamEngine is honestly `238/40/7/191`. The
-  seven failures match the established baseline. All 25 Advanced Filtering
-  methods SKIP at the absent declaration, and no filter query is issued.
-- Hygiene records 169 IUT GETs, zero writes, and zero leaks. Credential wire
-  E2E records 33 masked artifact events and 33 intact synthetic transmissions.
-- OSH is clean at `4c87a65`, its deployed bundle matches, and `/opt/osh` is
-  read-only. No OSH or TeamEngine source or binary modification; no hosted CI.
-- Next action: obtain final Raze recheck, close documentation statuses, then
-  commit and push Botts `main`.
+- Second final-Raze regressions reproduce `33/6/0/0`; focused controlled HTTP
+  passes `33/0/0/0`, and full Docker Maven passes `587/0/0/3`, with three unchanged
+  historical harness skips.
+- Scenario trace is `20/20`; all released scenario IDs have literal Java
+  anchors.
+- Prior candidate `29753ca85c` and image `sha256:709b5f664d8...23aa0` are
+  superseded audit evidence.
+- Next action: commit the remediation candidate; rerun exact focused/full,
+  image/runtime, unmodified-local-OSH, sabotage, credential, immutability,
+  hygiene, and source gates; obtain fresh Raze; reconcile, commit, and push.
 
 ## Session Handoff - Part 1 GeoJSON Direct ATS
 

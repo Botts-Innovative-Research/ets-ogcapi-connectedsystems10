@@ -65,6 +65,8 @@ public final class AdvancedFilteringSupport {
 
 	private final URI apiRoot;
 
+	private Set<String> declarations;
+
 	/**
 	 * Creates a new independent Advanced Filtering procedure engine.
 	 * @param apiRoot normalized absolute API root.
@@ -101,15 +103,14 @@ public final class AdvancedFilteringSupport {
 	 * @param requirement released target URI.
 	 */
 	public void resourceById(String requirement) {
-		requireDeclaration(requirement);
+		Set<String> declarations = requireDeclaration(requirement);
 		Inspection inspection = new Inspection(requirement);
 		for (ResourceType type : ResourceType.values()) {
-			Optional<TraversalResult> seed = read(type, Map.of(), requirement);
-			if (seed.isEmpty()) {
+			if (!type.isDeclaredBy(declarations)) {
 				continue;
 			}
-			Optional<Map<String, Object>> candidate = seed.get()
-				.items()
+			TraversalResult seed = requiredQuery(type, Map.of(), requirement);
+			Optional<Map<String, Object>> candidate = seed.items()
 				.stream()
 				.filter(item -> localId(item).isPresent() && uid(item).isPresent())
 				.findFirst();
@@ -136,15 +137,14 @@ public final class AdvancedFilteringSupport {
 	 * @param requirement released target URI.
 	 */
 	public void resourceByKeyword(String requirement) {
-		requireDeclaration(requirement);
+		Set<String> declarations = requireDeclaration(requirement);
 		Inspection inspection = new Inspection(requirement);
 		for (ResourceType type : ResourceType.values()) {
-			Optional<TraversalResult> seed = read(type, Map.of(), requirement);
-			if (seed.isEmpty()) {
+			if (!type.isDeclaredBy(declarations)) {
 				continue;
 			}
-			Optional<String> keyword = seed.get()
-				.items()
+			TraversalResult seed = requiredQuery(type, Map.of(), requirement);
+			Optional<String> keyword = seed.items()
 				.stream()
 				.map(AdvancedFilteringSupport::keyword)
 				.flatMap(Optional::stream)
@@ -167,18 +167,22 @@ public final class AdvancedFilteringSupport {
 	 * @param recommendation released recommendation URI.
 	 */
 	public void resourceByProperty(String recommendation) {
-		requireDeclaration(recommendation);
+		Set<String> declarations = requireDeclaration(recommendation);
 		int exercised = 0;
 		for (ResourceType type : ResourceType.values()) {
+			if (!type.isDeclaredBy(declarations)) {
+				continue;
+			}
 			Optional<TraversalResult> seed = read(type, Map.of(), recommendation);
 			if (seed.isEmpty()) {
+				warn(recommendation, type.path + " is declared but its canonical endpoint returned HTTP 404");
 				continue;
 			}
 			Optional<PropertyValue> property = seed.get()
 				.items()
 				.stream()
-				.map(AdvancedFilteringSupport::customProperty)
-				.flatMap(Optional::stream)
+				.map(AdvancedFilteringSupport::customProperties)
+				.flatMap(Collection::stream)
 				.findFirst();
 			if (property.isEmpty()) {
 				warn(recommendation, type.path + " exposes no scalar custom property suitable for a query");
@@ -212,16 +216,15 @@ public final class AdvancedFilteringSupport {
 	 * @param requirement released target URI.
 	 */
 	public void featureByGeometry(String requirement) {
-		requireDeclaration(requirement);
+		Set<String> declarations = requireDeclaration(requirement);
 		Inspection inspection = new Inspection(requirement);
 		for (ResourceType type : EnumSet.of(ResourceType.SYSTEMS, ResourceType.DEPLOYMENTS,
 				ResourceType.SAMPLING_FEATURES)) {
-			Optional<TraversalResult> seed = read(type, Map.of(), requirement);
-			if (seed.isEmpty()) {
+			if (!type.isDeclaredBy(declarations)) {
 				continue;
 			}
-			Optional<String> wkt = seed.get()
-				.items()
+			TraversalResult seed = requiredQuery(type, Map.of(), requirement);
+			Optional<String> wkt = seed.items()
 				.stream()
 				.map(AdvancedFilteringSupport::geometryQuery)
 				.flatMap(Optional::stream)
@@ -248,15 +251,16 @@ public final class AdvancedFilteringSupport {
 	 * @param requirement released target URI.
 	 */
 	public void association(ResourceType owner, String parameter, Relation relation, String requirement) {
-		requireDeclaration(requirement);
-		Optional<TraversalResult> seed = read(owner, Map.of(), requirement);
-		if (seed.isEmpty()) {
-			throw new SkipException(requirement + " - canonical " + owner.path + " endpoint is unsupported.");
+		Set<String> declarations = requireDeclaration(requirement);
+		if (!owner.isDeclaredBy(declarations)) {
+			throw new SkipException(
+					requirement + " - IUT does not declare the owning resource class " + owner.conformance + ".");
 		}
+		TraversalResult seed = requiredQuery(owner, Map.of(), requirement);
 		Map<String, Object> candidate = null;
 		Identifiers selected = null;
 		List<String> limitations = new ArrayList<>();
-		for (Map<String, Object> item : seed.get().items()) {
+		for (Map<String, Object> item : seed.items()) {
 			Identifiers identifiers = relationIdentifiers(owner, item, relation, requirement);
 			if (identifiers.local.isEmpty() || identifiers.global.isEmpty()) {
 				limitations.add(stableId(item) + " lacks " + (identifiers.local.isEmpty() ? "local-ID" : "UID")
@@ -281,13 +285,13 @@ public final class AdvancedFilteringSupport {
 	 * @param requirement released target URI.
 	 */
 	public void propertyByObjectType(String requirement) {
-		requireDeclaration(requirement);
-		Optional<TraversalResult> seed = read(ResourceType.PROPERTIES, Map.of(), requirement);
-		if (seed.isEmpty()) {
-			throw new SkipException(requirement + " - canonical properties endpoint is unsupported.");
+		Set<String> declarations = requireDeclaration(requirement);
+		if (!ResourceType.PROPERTIES.isDeclaredBy(declarations)) {
+			throw new SkipException(requirement + " - IUT does not declare the owning resource class "
+					+ ResourceType.PROPERTIES.conformance + ".");
 		}
-		Optional<String> objectType = seed.get()
-			.items()
+		TraversalResult seed = requiredQuery(ResourceType.PROPERTIES, Map.of(), requirement);
+		Optional<String> objectType = seed.items()
 			.stream()
 			.map(item -> scalarProperty(item, "objectType"))
 			.flatMap(Optional::stream)
@@ -309,47 +313,41 @@ public final class AdvancedFilteringSupport {
 	 * @param requirement released target URI.
 	 */
 	public void combinedFilters(String requirement) {
-		requireDeclaration(requirement);
+		Set<String> declarations = requireDeclaration(requirement);
 		Inspection inspection = new Inspection(requirement);
 		for (ResourceType type : ResourceType.values()) {
-			Optional<TraversalResult> seed = read(type, Map.of(), requirement);
-			if (seed.isEmpty()) {
+			if (!type.isDeclaredBy(declarations)) {
 				continue;
 			}
-			Map<String, Object> candidate = null;
-			List<FilterPredicate> predicates = List.of();
-			for (Map<String, Object> item : seed.get().items()) {
-				List<FilterPredicate> available = combinedPredicates(type, item, requirement);
-				if (available.size() >= 3) {
-					candidate = item;
-					predicates = available;
-					break;
-				}
-			}
-			if (candidate == null) {
-				inspection.limit(type.path
-						+ " has no resource carrying evidence for at least three filters and two distinct combinations");
-				continue;
-			}
+			TraversalResult seed = requiredQuery(type, Map.of(), requirement);
 			int combinations = 0;
-			for (int left = 0; left < predicates.size(); left++) {
-				for (int right = left + 1; right < predicates.size(); right++) {
-					FilterPredicate first = predicates.get(left);
-					FilterPredicate second = predicates.get(right);
-					if (first.parameter.equals(second.parameter)) {
-						continue;
+			Set<String> exercisedQueries = new LinkedHashSet<>();
+			for (Map<String, Object> item : seed.items()) {
+				List<FilterPredicate> available = combinedPredicates(type, item, requirement);
+				for (int left = 0; left < available.size(); left++) {
+					for (int right = left + 1; right < available.size(); right++) {
+						FilterPredicate first = available.get(left);
+						FilterPredicate second = available.get(right);
+						if (first.parameter.equals(second.parameter)) {
+							continue;
+						}
+						Map<String, String> query = new LinkedHashMap<>();
+						query.put(first.parameter, first.value);
+						query.put(second.parameter, second.value);
+						String signature = query.toString();
+						if (!exercisedQueries.add(signature)) {
+							continue;
+						}
+						TraversalResult filtered = requiredQuery(type, query, requirement);
+						validateEndpoint(type, filtered, requirement);
+						String label = first.parameter + "+" + second.parameter;
+						String values = first.value + "," + second.value;
+						assertNonEmpty(filtered, type, label, values, requirement);
+						assertEvery(filtered.items(),
+								result -> first.matches.test(result) && second.matches.test(result), type, label,
+								values, requirement);
+						combinations++;
 					}
-					Map<String, String> query = new LinkedHashMap<>();
-					query.put(first.parameter, first.value);
-					query.put(second.parameter, second.value);
-					TraversalResult filtered = requiredQuery(type, query, requirement);
-					validateEndpoint(type, filtered, requirement);
-					String label = first.parameter + "+" + second.parameter;
-					String values = first.value + "," + second.value;
-					assertNonEmpty(filtered, type, label, values, requirement);
-					assertEvery(filtered.items(), item -> first.matches.test(item) && second.matches.test(item), type,
-							label, values, requirement);
-					combinations++;
 				}
 			}
 			if (combinations < 2) {
@@ -366,7 +364,11 @@ public final class AdvancedFilteringSupport {
 	 * @param recommendation released recommendation URI.
 	 */
 	public void indirectProperty(String recommendation) {
-		requireDeclaration(recommendation);
+		Set<String> declarations = requireDeclaration(recommendation);
+		if (!ResourceType.PROPERTIES.isDeclaredBy(declarations)) {
+			warn(recommendation, "owning resource class " + ResourceType.PROPERTIES.conformance + " is not declared");
+			return;
+		}
 		Optional<TraversalResult> properties = read(ResourceType.PROPERTIES, Map.of(), recommendation);
 		if (properties.isEmpty()) {
 			warn(recommendation, "canonical properties endpoint is unsupported");
@@ -383,6 +385,9 @@ public final class AdvancedFilteringSupport {
 			}
 			eligible++;
 			for (ResourceType type : ResourceType.values()) {
+				if (!type.isDeclaredBy(declarations)) {
+					continue;
+				}
 				String parameter = type == ResourceType.PROPERTIES ? "baseProperty" : "observedProperty";
 				Optional<TraversalResult> direct = recommendedQuery(type, Map.of(parameter, propertyId.get()),
 						recommendation);
@@ -405,7 +410,12 @@ public final class AdvancedFilteringSupport {
 	 * @param recommendation released recommendation URI.
 	 */
 	public void indirectFeatureOfInterest(String recommendation) {
-		requireDeclaration(recommendation);
+		Set<String> declarations = requireDeclaration(recommendation);
+		if (!ResourceType.SAMPLING_FEATURES.isDeclaredBy(declarations)) {
+			warn(recommendation,
+					"owning resource class " + ResourceType.SAMPLING_FEATURES.conformance + " is not declared");
+			return;
+		}
 		Optional<TraversalResult> samplingFeatures = read(ResourceType.SAMPLING_FEATURES, Map.of(), recommendation);
 		if (samplingFeatures.isEmpty()) {
 			warn(recommendation, "canonical samplingFeatures endpoint is unsupported");
@@ -437,6 +447,9 @@ public final class AdvancedFilteringSupport {
 				warn(recommendation, "samplingFeatures?foi=<ultimate> omits " + sfId.get());
 			}
 			for (ResourceType type : List.of(ResourceType.SYSTEMS, ResourceType.DEPLOYMENTS)) {
+				if (!type.isDeclaredBy(declarations)) {
+					continue;
+				}
 				Optional<TraversalResult> direct = recommendedQuery(type, Map.of("foi", sfId.get()), recommendation);
 				Optional<TraversalResult> parent = recommendedQuery(type, Map.of("foi", parentId), recommendation);
 				Optional<TraversalResult> ultimateResult = recommendedQuery(type, Map.of("foi", ultimateId),
@@ -494,7 +507,15 @@ public final class AdvancedFilteringSupport {
 	}
 
 	static boolean hasPropertyValue(Map<String, Object> resource, String property, String expected) {
-		return scalarProperty(resource, property).filter(expected::equals).isPresent();
+		if (resource == null || property == null) {
+			return false;
+		}
+		Object direct = resource.get(property);
+		if (isScalar(direct) && expected.equals(String.valueOf(direct))) {
+			return true;
+		}
+		Object nested = asMap(resource.get("properties")).get(property);
+		return isScalar(nested) && expected.equals(String.valueOf(nested));
 	}
 
 	static boolean containsAllResources(List<Map<String, Object>> superset, List<Map<String, Object>> subset) {
@@ -579,28 +600,26 @@ public final class AdvancedFilteringSupport {
 				addRelationPredicate(predicates, type, resource, "baseProperty", Relation.BASE_PROPERTY, requirement);
 			}
 		}
-		addSupportedCustomPredicate(predicates, type, resource, requirement);
+		addSupportedCustomPredicates(predicates, type, resource, requirement);
 		return List.copyOf(predicates);
 	}
 
-	private void addSupportedCustomPredicate(List<FilterPredicate> predicates, ResourceType type,
+	private void addSupportedCustomPredicates(List<FilterPredicate> predicates, ResourceType type,
 			Map<String, Object> resource, String requirement) {
-		Optional<PropertyValue> property = customProperty(resource);
-		if (property.isEmpty()) {
-			return;
+		for (PropertyValue selected : customProperties(resource)) {
+			Optional<TraversalResult> filtered = recommendedQuery(type, Map.of(selected.name, selected.value),
+					requirement);
+			if (filtered.isEmpty() || filtered.get().items().isEmpty()
+					|| filtered.get()
+						.items()
+						.stream()
+						.anyMatch(item -> !hasPropertyValue(item, selected.name, selected.value))
+					|| filtered.get().items().stream().noneMatch(item -> sameResource(item, resource))) {
+				continue;
+			}
+			predicates.add(new FilterPredicate(selected.name, selected.value,
+					item -> hasPropertyValue(item, selected.name, selected.value)));
 		}
-		PropertyValue selected = property.get();
-		Optional<TraversalResult> filtered = recommendedQuery(type, Map.of(selected.name, selected.value), requirement);
-		if (filtered.isEmpty() || filtered.get().items().isEmpty()
-				|| filtered.get()
-					.items()
-					.stream()
-					.anyMatch(item -> !hasPropertyValue(item, selected.name, selected.value))
-				|| filtered.get().items().stream().noneMatch(item -> sameResource(item, resource))) {
-			return;
-		}
-		predicates.add(new FilterPredicate(selected.name, selected.value,
-				item -> hasPropertyValue(item, selected.name, selected.value)));
 	}
 
 	private void addRelationPredicate(List<FilterPredicate> predicates, ResourceType type, Map<String, Object> resource,
@@ -669,7 +688,10 @@ public final class AdvancedFilteringSupport {
 		return this.apiRoot.resolve(type.path);
 	}
 
-	private void requireDeclaration(String target) {
+	private Set<String> requireDeclaration(String target) {
+		if (this.declarations != null) {
+			return this.declarations;
+		}
 		Response response = given().accept("application/json")
 			.when()
 			.get(this.apiRoot.resolve("conformance"))
@@ -681,6 +703,14 @@ public final class AdvancedFilteringSupport {
 			throw new SkipException(target + " - IUT does not declare " + CONF_ADVANCED_FILTERING
 					+ "; undeclared filter behavior is not conformance PASS evidence.");
 		}
+		Set<String> declarations = new LinkedHashSet<>();
+		for (Object declaration : conformsTo) {
+			if (declaration instanceof String value) {
+				declarations.add(value);
+			}
+		}
+		this.declarations = Set.copyOf(declarations);
+		return this.declarations;
 	}
 
 	private Identifiers relationIdentifiers(ResourceType owner, Map<String, Object> resource, Relation relation,
@@ -701,7 +731,15 @@ public final class AdvancedFilteringSupport {
 				}
 				for (Map<String, Object> item : nested.get().items()) {
 					if (subresource.includeItems) {
-						addResourceIdentifiers(item, result);
+						if (isReferenceWrapper(item, subresource.aliases)) {
+							if (asString(item.get("href")) != null) {
+								collectReference(item, subresource.aliases, relation.hrefIdentity, result, reads, 0,
+										requirement);
+							}
+						}
+						else {
+							addResourceIdentifiers(item, result);
+						}
 					}
 					collectRelation(item, subresource.aliases, relation.hrefIdentity, result, reads, 0, requirement);
 					if (owner == ResourceType.DEPLOYMENTS
@@ -715,6 +753,13 @@ public final class AdvancedFilteringSupport {
 			enrichPropertyIdentifiers(result, requirement);
 		}
 		return result;
+	}
+
+	private static boolean isReferenceWrapper(Map<String, Object> item, Set<String> aliases) {
+		if (asString(item.get("href")) != null) {
+			return true;
+		}
+		return item.keySet().stream().anyMatch(key -> aliasMatches(key, aliases));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -951,6 +996,9 @@ public final class AdvancedFilteringSupport {
 	}
 
 	private void enrichPropertyIdentifiers(Identifiers identifiers, String requirement) {
+		if (!ResourceType.PROPERTIES.isDeclaredBy(requireDeclaration(requirement))) {
+			return;
+		}
 		Optional<TraversalResult> properties = read(ResourceType.PROPERTIES, Map.of(), requirement);
 		if (properties.isEmpty()) {
 			return;
@@ -1102,22 +1150,27 @@ public final class AdvancedFilteringSupport {
 		return geometry instanceof Map<?, ?> && intersects((Map<String, Object>) geometry, wkt);
 	}
 
-	private static Optional<PropertyValue> customProperty(Map<String, Object> resource) {
-		Optional<PropertyValue> nested = customPropertyInMap(asMap(resource.get("properties")));
-		return nested.isPresent() ? nested : customPropertyInMap(resource);
+	private static List<PropertyValue> customProperties(Map<String, Object> resource) {
+		Map<String, PropertyValue> properties = new LinkedHashMap<>();
+		collectCustomProperties(asMap(resource.get("properties")), properties);
+		collectCustomProperties(resource, properties);
+		return List.copyOf(properties.values());
 	}
 
-	private static Optional<PropertyValue> customPropertyInMap(Map<String, Object> values) {
+	private static void collectCustomProperties(Map<String, Object> values, Map<String, PropertyValue> properties) {
 		for (Map.Entry<String, Object> entry : values.entrySet()) {
 			if (RESERVED_PROPERTIES.contains(normalize(entry.getKey()))) {
 				continue;
 			}
-			if (entry.getValue() instanceof String || entry.getValue() instanceof Number
-					|| entry.getValue() instanceof Boolean) {
-				return Optional.of(new PropertyValue(entry.getKey(), String.valueOf(entry.getValue())));
+			if (isScalar(entry.getValue())) {
+				PropertyValue property = new PropertyValue(entry.getKey(), String.valueOf(entry.getValue()));
+				properties.putIfAbsent(normalize(property.name) + "\u0000" + property.value, property);
 			}
 		}
-		return Optional.empty();
+	}
+
+	private static boolean isScalar(Object value) {
+		return value instanceof String || value instanceof Number || value instanceof Boolean;
 	}
 
 	private static Optional<String> scalarProperty(Map<String, Object> resource, String property) {
@@ -1376,19 +1429,31 @@ public final class AdvancedFilteringSupport {
 	 */
 	public enum ResourceType {
 
-		SYSTEMS("systems", "application/geo+json, application/sml+json, application/json"),
-		DEPLOYMENTS("deployments", "application/geo+json, application/sml+json, application/json"),
-		PROCEDURES("procedures", "application/geo+json, application/sml+json, application/json"),
-		SAMPLING_FEATURES("samplingFeatures", "application/geo+json, application/sml+json, application/json"),
-		PROPERTIES("properties", "application/sml+json, application/json");
+		SYSTEMS("systems", "application/geo+json, application/sml+json, application/json",
+				"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system"),
+		DEPLOYMENTS("deployments", "application/geo+json, application/sml+json, application/json",
+				"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment"),
+		PROCEDURES("procedures", "application/geo+json, application/sml+json, application/json",
+				"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure"),
+		SAMPLING_FEATURES("samplingFeatures", "application/geo+json, application/sml+json, application/json",
+				"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf"),
+		PROPERTIES("properties", "application/sml+json, application/json",
+				"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property");
 
 		private final String path;
 
 		private final String accept;
 
-		ResourceType(String path, String accept) {
+		private final String conformance;
+
+		ResourceType(String path, String accept, String conformance) {
 			this.path = path;
 			this.accept = accept;
+			this.conformance = conformance;
+		}
+
+		private boolean isDeclaredBy(Set<String> declarations) {
+			return declarations.contains(this.conformance);
 		}
 
 	}
@@ -1419,7 +1484,7 @@ public final class AdvancedFilteringSupport {
 
 		private List<Subresource> subresources(ResourceType owner) {
 			if (this == FEATURE_OF_INTEREST && owner == ResourceType.SYSTEMS) {
-				return List.of(new Subresource("samplingFeatures", Map.of("recursive", "true"), this.aliases, true,
+				return List.of(new Subresource("samplingFeatures", Map.of("recursive", "true"), this.aliases, false,
 						"application/geo+json, application/json"));
 			}
 			if (this == FEATURE_OF_INTEREST && owner == ResourceType.DEPLOYMENTS) {

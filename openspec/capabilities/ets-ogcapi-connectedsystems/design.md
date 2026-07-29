@@ -1948,14 +1948,17 @@ before filter-specific access. Controlled HTTP supplies all positive
 procedures and fail-closed cases. No OSH or TeamEngine source or binary change
 and no hosted CI are permitted.
 
-The first exact candidate's verification is retained as diagnostic evidence.
-Final Raze recheck reopened link-wrapper identity, procedure-specific evidence
-paths, association media/pagination, complete predicate enumeration, keyword
-provenance, traceability, and exact committed-build provenance. The sprint is
-therefore in remediation; stale gate totals and image hashes are not completion
-evidence. Unmodified local OSH remains the mandatory honest deployment target
-even though it cannot provide positive Advanced Filtering conformance because
-it does not declare the class.
+Final-Raze remediation discards resolved wrapper identifiers, rejects root
+alias shortcuts, gates and paginates association targets, limits keyword
+labels to resource boundaries, and includes inherited, mandatory, temporal,
+feature-type, and positively supported custom predicates in combined checks.
+The second remediation adds declaration-owner applicability, resolved
+association targets, all-seed combined-predicate enumeration, all supported
+custom scalar predicates, and literal scenario anchors. Its red baseline is
+`33/6/0/0`; focused controlled HTTP passes `33/0/0/0`, full precommit Maven
+passes `587/0/0/3`, and scenario trace is `20/20`. Prior candidate
+`29753ca85c` and image `sha256:709b5f664d8...23aa0` are superseded audit
+evidence. Exact candidate gates and fresh final Raze remain pending.
 
 ## Status
 

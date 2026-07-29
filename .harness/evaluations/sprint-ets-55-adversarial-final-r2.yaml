@@ -1,0 +1,49 @@
+evaluation:
+  sprint: ets-55
+  story: S-ETS-55-01
+  role: Raze
+  agent: Meitner
+  agent_id: 019fad4a-e28d-7602-b252-330f3c7f6593
+  duration_seconds: 1017
+  tokens: unavailable
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  reviewed:
+    implementation_candidate: 29753ca85c5263022c82aa94c63267831d2ed281
+    focused_maven: "27/0/0/0"
+    full_maven: "581/0/0/3"
+    local_osh_teamengine: "238/40/7/191; Advanced Filtering 25 SKIP"
+    exact_image: sha256:709b5f664d8d8ea4941b836e58594b5868922e1737426575372818dfd3823aa0
+  prior_findings:
+    RAZE-S55-001: CLOSED
+    RAZE-S55-002: CLOSED
+    RAZE-S55-003: OPEN
+    RAZE-S55-004: OPEN
+    RAZE-S55-005: CLOSED
+    RAZE-S55-006: CLOSED
+    RAZE-S55-007: OPEN
+    RAZE-S55-R1-004: CLOSED
+    RAZE-S55-R1-005: CLOSED
+    RAZE-S55-R1-006: OPEN
+  findings:
+    - id: RAZE-S55-R2-ASSOCIATION-TARGETS-001
+      severity: HIGH
+      summary: System FOI and deployed-System paths still admit prescribed-subresource wrapper/resource IDs instead of only target Feature or System identities.
+      required_fix: Follow sampleOf and deployed-System targets and reject contradictory wrapper identities.
+    - id: RAZE-S55-R2-COMBINED-INVENTORY-001
+      severity: HIGH
+      summary: Combined filtering stops at the first qualifying resource and at the first custom scalar property, omitting later-resource predicates and valid pairs.
+      required_fix: Aggregate every independently evidenced predicate across all resources and every positively supported custom property before enumerating pairs.
+    - id: RAZE-S55-R2-DECLARED-APPLICABILITY-001
+      severity: HIGH
+      summary: Canonical endpoint applicability is not gated by the owning resource-class declaration; declared 404 endpoints can be silently skipped and undeclared reachable endpoints can be tested.
+      required_fix: Use conformance declarations to define applicable endpoints and regression-test declared 404 plus undeclared reachable behavior.
+    - id: RAZE-S55-R2-EVIDENCE-001
+      severity: MEDIUM
+      summary: Artifact manifest was stale and the focused log predated the exact implementation candidate.
+      required_fix: Rerun all exact gates from the final committed candidate and regenerate the artifact manifest.
+    - id: RAZE-S55-R2-SCENARIO-TRACE-001
+      severity: LOW
+      summary: Five grouped association/property scenario IDs lack literal Java test comments.
+      required_fix: Add literal scenario references and verify every Sprint 55 scenario is traceable from Java tests.
+  closure: BLOCKED

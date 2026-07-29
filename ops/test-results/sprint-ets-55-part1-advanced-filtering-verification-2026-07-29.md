@@ -21,10 +21,9 @@ Released source: `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
 
 ## Verification
 
-- Adversarial test-first gate: expected `20/7/0/0` failure, then
-  `20/0/0/0` after remediation.
-- Focused Docker Maven: `102/0/0/0`.
-- Full Docker Maven: `574/0/0/3`; the three skips are unchanged historical
+- Second final-Raze test-first gate: expected `33/6/0/0`, then focused
+  controlled HTTP `33/0/0/0` after remediation.
+- Precommit full Docker Maven: `587/0/0/3`; the three skips are unchanged historical
   harness fixtures.
 - ATS source reproduction: PASS at the pinned clean checkout.
 - Coverage: `240/76 exact/2 helper/115 candidate/47 unmapped`;
@@ -41,38 +40,27 @@ Released source: `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
 
 ## TeamEngine E2E
 
-Candidate commit:
-`cf7fa82745615f1c27ec8df57bd1d315db673955`
-
-Exact image:
-`sha256:c39a9c35120064e6be41eaf11c677f77566fd0203849dc0e498995e0b63f08ae`
-
-Dockerized TeamEngine executed the full suite against unmodified local OSH at
-`http://field-hub-osh-1:8081/sensorhub/api`. The honest result is
-`238 total / 40 passed / 7 failed / 191 skipped`. The seven failures match the
-established local-IUT baseline method-for-method. All 25 Advanced Filtering
-methods were discovered once and SKIP at the missing `/conf/advanced-filtering`
-declaration; these are not conformance passes and no filter query was issued.
-
-TeamEngine runtime, deployed SWE Common adapter, coordinate collision,
-immutable-base, and confidential-context checks pass. Local OSH remains clean
-at `4c87a65c9a967d52af9df476e65d7862c7673a15`, its deployed ConSys bundle
-matches that checkout, and `/opt/osh` is read-only. No OSH or TeamEngine source
-or binary was modified.
+Candidate `29753ca85c` and image `sha256:709b5f664d8...23aa0` are superseded
+audit evidence after the second final-Raze remediation. Exact image,
+unmodified-local-OSH TeamEngine, no-mutation, hygiene, sabotage, credential,
+runtime, and immutability gates remain pending for the new committed
+candidate. No OSH or TeamEngine source or binary is modified.
 
 ## Adversarial Review
 
-Initial Raze reported seven required semantic findings: incomplete UID-prefix
-execution, weak keyword provenance, synthetic association identifiers,
-single-combination validation, first-only indirect checks, and silent
-traversal truncation. Requirement-linked regressions reproduce all seven and
-the implementation closes them. Final Raze recheck is pending.
+Initial Raze reported seven required semantic findings. The first recheck
+reopened wrapper identity, prescribed association paths, media/pagination,
+combined predicate completeness, keyword boundaries, mapping/traceability,
+and exact-build provenance. Requirement-linked regressions reproduce the
+semantic findings and the precommit implementation is green. Exact-candidate
+gates and a fresh final Raze review remain pending.
 
 ## Evidence Index
 
-Evidence is under
+Historical diagnostic evidence is under
 `ops/test-results/sprint-ets-55-part1-advanced-filtering-e2e-2026-07-29/`.
-It includes the red/green adversarial regressions, focused/full Maven logs,
-ATS audit, exact local OSH XML/container log, outcome analysis, no-mutation and
-hygiene reports, runtime/immutability evidence, API Common sabotage XML/log,
-and both credential-gate reports.
+Final candidate evidence is under
+`ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r2-2026-07-29/`
+and currently includes the second red baseline and precommit focused/full
+Maven logs. Exact-candidate artifacts will replace the superseded prior
+candidate evidence after commit.

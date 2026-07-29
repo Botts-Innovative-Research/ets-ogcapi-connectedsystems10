@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.39 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering direct ATS technically verified)
+> Version: 2.0.40 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering final-remediation precommit verification)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1390,11 +1390,13 @@ Recursive relation traversal fails explicitly on depth, active-cycle, or
 reference-read exhaustion, while indirect recommendations inspect every
 eligible resource across pagination.
 
-The post-remediation candidate passes focused Maven `102/0/0/0`, full Maven
-`574/0/0/3`, and coverage
-`240/76 exact/2 helper/115 candidate/47 unmapped`. Exact image
-`sha256:c39a9c35120064e6be41eaf11c677f77566fd0203849dc0e498995e0b63f08ae`
-produces honest local OSH TeamEngine `238/40/7/191`; all 25 Advanced Filtering
-methods SKIP at the absent declaration, with zero filter queries. Runtime,
-base immutability, dependency sabotage, credential, and zero-write hygiene
-gates pass. Final Raze recheck is pending.
+The second final-Raze remediation adds owner-class applicability, resolved
+association-target identity, all-seed predicate enumeration, all supported
+custom scalar predicates, and literal scenario anchors. Its test-first
+baseline is `33/6/0/0`; focused controlled HTTP passes `33/0/0/0` and full
+Docker Maven passes `587/0/0/3` before commit. Coverage remains
+`240/76 exact/2 helper/115 candidate/47 unmapped`. The prior candidate
+`29753ca85c` and image `sha256:709b5f664d8...23aa0` are superseded audit
+evidence. Exact-image, unmodified-local-OSH, runtime, dependency, credential,
+immutability, hygiene, and fresh Raze gates must be rerun from the new
+committed candidate.

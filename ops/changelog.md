@@ -2,6 +2,29 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-29 - Part 1 Advanced Filtering final-Raze remediation
+
+**Triggered by user instruction**: continue continuously through the accepted
+recommended work and final gate.
+
+- Added requirement-linked regressions for resource-boundary keyword
+  provenance, resolved association identity, prescribed subresource paths,
+  actual-media/paginated references, and complete combined predicates.
+- Remediation discards wrapper identifiers after successful resolution,
+  rejects root alias shortcuts, follows every association page, gates actual
+  media, limits keyword labels to resource boundaries, and adds `featureType`,
+  `datetime`, mandatory associations, and positively supported custom
+  properties to combined filters.
+- The second reproducible final-Raze red baseline is `33/6/0/0`; focused
+  controlled HTTP is `33/0/0/0`, precommit full Docker Maven is `587/0/0/3`,
+  and scenario trace is `20/20`.
+- Prior candidate `29753ca85c` and image `sha256:709b5f664d8...23aa0` are
+  superseded audit evidence. Exact-candidate runtime, local OSH, dependency,
+  credential, no-mutation, immutability, and hygiene gates remain pending.
+- Reconciled remediation status across OpenSpec, architecture, traceability,
+  story, contract, epic, and operations records. No OSH or TeamEngine
+  source/binary modification and no hosted CI.
+
 ## 2026-07-29 - Part 1 Advanced Filtering implementation and technical gates
 
 **Triggered by user instruction**: execute the recommended next released-ATS

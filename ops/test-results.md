@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T08:25Z
+Last updated: 2026-07-29T10:45Z
 
 ## Current Sprint Evidence
 
@@ -10,25 +10,18 @@ Sprint 55 Part 1 Advanced Filtering direct ATS:
   mappings are reviewed exact.
 - Coverage is `240/76 exact/2 helper/115 candidate/47 unmapped`;
   `/conf/advanced-filtering` is `25/25 exact`.
-- Adversarial test-first evidence is `20/7/0/0` before remediation and
-  `20/0/0/0` after. Focused Maven is `102/0/0/0`; full Maven is
-  `574/0/0/3`.
-- Exact image `sha256:c39a9c351200...f08ae` passes runtime, deployed SWE
-  Common adapter, collision, immutable-base, and context-hygiene checks.
-- Primary unmodified local OSH TeamEngine is honestly `238/40/7/191`; the
-  seven failures match baseline, while all 25 Advanced Filtering methods SKIP
-  at the missing declaration.
-- API Common sabotage skips all 25 methods before class access. Controlled
-  HTTP covers every positive procedure and key fail-closed branch.
-- Credential gates pass with zero unmasked artifact hits, 33 masked events,
-  and 33 intact synthetic transmissions. Hygiene records 169 IUT GETs, zero
-  writes, and zero leaks.
-- OSH remains clean at `4c87a65` with `/opt/osh` read-only. No OSH or
-  TeamEngine modification.
-- Initial Raze's seven required findings have tests and fixes; final Raze
-  recheck is pending.
+- Second final-Raze test-first evidence is `33/6/0/0`; focused controlled HTTP
+  is `33/0/0/0`, and precommit full Maven is `587/0/0/3`.
+- Scenario trace is `20/20` with no missing literal Java anchors.
+- Prior candidate `29753ca85c`, image `sha256:709b5f664d8...23aa0`, local OSH,
+  sabotage, credential, runtime, immutability, and hygiene results are
+  superseded audit evidence. Those gates require an exact-candidate rerun.
+- Initial Raze and first recheck findings have tests, fixes, and reconciled
+  mappings; exact-candidate gates and fresh Raze are pending.
 - Verification summary:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-verification-2026-07-29.md`.
+- Remediation work evidence:
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r2-2026-07-29/`.
 
 ---
 

@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-009`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Remediation in progress after final adversarial recheck
+**Status**: Remediation precommit green; exact-candidate gates pending
 
 ## Motivation
 
@@ -165,7 +165,13 @@ diagnostics, not completion evidence. Final Raze recheck `GAPS_FOUND 0.99`
 reopened association identity provenance, procedure-specific traversal,
 reference media/pagination, combined-predicate completeness, keyword
 provenance, mapping accuracy, scenario traceability, and exact committed-build
-provenance. Remediation SHALL rerun all invalidated gates from a committed
-candidate. Unmodified local OSH still provides honest declaration-boundary E2E,
-not positive Advanced Filtering conformance; controlled HTTP remains the
+provenance.
+
+The second final-Raze remediation has a reproducible `33/6/0/0` red baseline,
+focused controlled-HTTP `33/0/0/0`, full Docker Maven `587/0/0/3`, and a
+`20/20` scenario-anchor inventory. The prior candidate `29753ca85c` and image
+`sha256:709b5f664d8...23aa0` are superseded audit evidence. A new exact
+committed candidate must rerun image/runtime, unmodified-local-OSH,
+dependency-sabotage, credential, no-mutation, immutability, and
+artifact-hygiene gates before fresh final Raze. Controlled HTTP remains the
 positive semantic harness without modifying OSH or TeamEngine.

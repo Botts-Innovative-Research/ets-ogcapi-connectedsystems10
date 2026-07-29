@@ -148,7 +148,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; released System association-filter procedures.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-SYSTEM-ASSOCIATIONS-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_SYSTEM_BY_PARENT
 			+ ": System parent filters match parent System local IDs and UIDs", groups = GROUP, alwaysRun = true)
@@ -186,7 +186,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; released Deployment association-filter procedures.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_DEPLOYMENT_BY_PARENT
 			+ ": Deployment parent filters match parent Deployment local IDs and UIDs", groups = GROUP,
@@ -224,7 +224,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; released Procedure association-filter procedures.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-PROCEDURE-ASSOCIATIONS-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_PROCEDURE_BY_OBSPROP
 			+ ": Procedure observedProperty filters match referenced Property local IDs and UIDs", groups = GROUP,
@@ -243,7 +243,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; released Sampling Feature association-filter procedures.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-SF-ASSOCIATIONS-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_SF_BY_FOI
 			+ ": Sampling Feature foi filters follow recursive sampleOf associations", groups = GROUP, alwaysRun = true)
@@ -268,7 +268,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; released Property procedures.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-PROPERTY-FILTERS-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_PROP_BY_BASEPROP
 			+ ": Property baseProperty filters follow recursive base-property associations", groups = GROUP,

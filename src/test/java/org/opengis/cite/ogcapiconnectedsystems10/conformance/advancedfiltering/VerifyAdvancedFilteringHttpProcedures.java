@@ -200,6 +200,32 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001.
+	 */
+	@Test
+	public void everySupportedCustomPropertyCombinationIsEnumerated() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNION_ADDITIONAL_CUSTOM_PROPERTY)) {
+			server.start();
+
+			assertThrows(AssertionError.class, configured(server)::canonicalResourcesCombineFilters);
+			assertTrue(server.callsWithKeys("/api/systems", "id", "secondaryCode") > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001.
+	 */
+	@Test
+	public void predicatesFromLaterResourcesAreEnumerated() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNION_LATER_RESOURCE_PREDICATE)) {
+			server.start();
+
+			assertThrows(AssertionError.class, configured(server)::canonicalResourcesCombineFilters);
+			assertTrue(server.callsWithKeys("/api/systems", "id", "laterCode") > 0);
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-GEOMETRY-001.
 	 */
 	@Test
@@ -268,6 +294,43 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			assertEquals(0, server.callsWithValue("/api/systems", "parent", "wrapper-parent"::equals));
 			assertEquals(0,
 					server.callsWithValue("/api/systems", "parent", "urn:example:system:wrapper-parent"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-SYSTEM-ASSOCIATIONS-001;
+	 * SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PROVENANCE-001.
+	 */
+	@Test
+	public void systemFoiUsesSampleOfTargetsNotSamplingFeatureIdentifiers() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.CONTRADICTORY_SYSTEM_FOI_WRAPPER)) {
+			server.start();
+
+			configured(server).systemsFilterByFeatureOfInterest();
+
+			assertTrue(server.callsWithValue("/api/systems", "foi", "foi-real"::equals) > 0);
+			assertTrue(server.callsWithValue("/api/systems", "foi", "urn:example:foi:real"::equals) > 0);
+			assertEquals(0, server.callsWithValue("/api/systems", "foi", "sf-wrapper"::equals));
+			assertEquals(0, server.callsWithValue("/api/systems", "foi", "urn:example:sf:wrapper"::equals));
+			assertEquals(0, server.callsWithValue("/api/systems", "foi", "foi-wrapper"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001;
+	 * SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PROVENANCE-001.
+	 */
+	@Test
+	public void deploymentSystemUsesResolvedTargetsNotAssociationWrapperIdentifiers() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER)) {
+			server.start();
+
+			configured(server).deploymentsFilterBySystem();
+
+			assertTrue(server.callsWithValue("/api/deployments", "system", "system-real"::equals) > 0);
+			assertTrue(server.callsWithValue("/api/deployments", "system", "urn:example:system:real"::equals) > 0);
+			assertEquals(0, server.callsWithValue("/api/deployments", "system", "deployment-wrapper"::equals));
+			assertEquals(0, server.callsWithValue("/api/deployments", "system", "system-wrapper"::equals));
 		}
 	}
 
@@ -393,6 +456,37 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-OWNER-APPLICABILITY-001.
+	 */
+	@Test
+	public void declaredCanonicalEndpointCannotBeSilentlyIgnoredWhenUnavailable() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.DECLARED_SYSTEM_404)) {
+			server.start();
+
+			assertThrows(AssertionError.class, configured(server)::canonicalResourcesFilterById);
+			assertTrue(server.calls("/api/systems") > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-OWNER-APPLICABILITY-001.
+	 */
+	@Test
+	public void reachableUndeclaredCanonicalEndpointsAreNotApplicable() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.ONLY_SYSTEM_DECLARED)) {
+			server.start();
+
+			configured(server).canonicalResourcesFilterById();
+
+			assertTrue(server.calls("/api/systems") > 0);
+			assertEquals(0, server.calls("/api/deployments"));
+			assertEquals(0, server.calls("/api/procedures"));
+			assertEquals(0, server.calls("/api/samplingFeatures"));
+			assertEquals(0, server.calls("/api/properties"));
+		}
+	}
+
 	private static AdvancedFilteringTests configured(FixtureServer server) {
 		AdvancedFilteringTests tests = new AdvancedFilteringTests();
 		tests.configure(server.apiRoot());
@@ -403,9 +497,11 @@ public class VerifyAdvancedFilteringHttpProcedures {
 
 		VALID, UNDECLARED, EMPTY_ID_RESULT, LATER_WRONG_ID, LATER_WRONG_UID_PREFIX, UNION_COMBINED,
 		UNION_SECOND_COMBINATION, UNION_FEATURE_TYPE_KEYWORD, UNION_DATETIME_SYSTEM, UNION_CUSTOM_PROPERTY,
-		WRONG_GEOMETRY, CROSS_ORIGIN_ASSOCIATION, NO_ASSOCIATIONS, RESOLVED_TARGET_IDENTIFIERS,
-		ROOT_ASSOCIATION_SHORTCUTS, BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION,
-		LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION
+		UNION_ADDITIONAL_CUSTOM_PROPERTY, UNION_LATER_RESOURCE_PREDICATE, WRONG_GEOMETRY, CROSS_ORIGIN_ASSOCIATION,
+		NO_ASSOCIATIONS, RESOLVED_TARGET_IDENTIFIERS, CONTRADICTORY_SYSTEM_FOI_WRAPPER,
+		CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER, ROOT_ASSOCIATION_SHORTCUTS, BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA,
+		PAGINATED_ASSOCIATION, LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION,
+		DECLARED_SYSTEM_404, ONLY_SYSTEM_DECLARED
 
 	}
 
@@ -495,7 +591,7 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				case "/api/samplingFeatures" -> canonical(exchange, "samplingFeatures", query);
 				case "/api/properties" -> canonical(exchange, "properties", query);
 				case "/api/systems/system-1/subsystems" -> canonical(exchange, "systems", query);
-				case "/api/systems/system-1/samplingFeatures" -> canonical(exchange, "samplingFeatures", query);
+				case "/api/systems/system-1/samplingFeatures" -> systemSamplingFeatures(exchange, query);
 				case "/api/deployments/deployment-1/deployedSystems" ->
 					prescribedSubresource(exchange, "systems", query);
 				case "/api/deployments/deployment-1/featuresOfInterest" ->
@@ -507,8 +603,10 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				case "/api/systems/broken-parent" -> send(exchange, 404, "application/json", "{}");
 				case "/api/systems/wrong-media-parent" -> send(exchange, 200, "text/plain", resolvedParentSystem());
 				case "/api/systems/parent-collection" -> associationCollection(exchange, query);
+				case "/api/systems/deployed-real" -> single(exchange, "systems", deployedSystemTarget());
 				case "/api/procedures/procedure-1" -> single(exchange, "procedures", procedure());
 				case "/api/features/foi-1" -> single(exchange, "samplingFeatures", featureOfInterest());
+				case "/api/features/foi-real" -> single(exchange, "samplingFeatures", resolvedFeatureOfInterest());
 				case "/api/properties/base-1" -> single(exchange, "properties", baseProperty("base-1"));
 				case "/api/properties/base-2" -> single(exchange, "properties", baseProperty("base-2"));
 				default -> {
@@ -528,13 +626,31 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		private void conformance(HttpExchange exchange) throws IOException {
 			String declaration = this.mode == Mode.UNDECLARED ? ""
 					: ",\"" + AdvancedFilteringSupport.CONF_ADVANCED_FILTERING + "\"";
+			String ownerDeclarations;
+			if (this.mode == Mode.ONLY_SYSTEM_DECLARED || this.mode == Mode.DECLARED_SYSTEM_404
+					|| this.mode == Mode.UNDECLARED) {
+				ownerDeclarations = ",\"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system\"";
+			}
+			else {
+				ownerDeclarations = """
+						,"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system"
+						,"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment"
+						,"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure"
+						,"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf"
+						,"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property"
+						""".replaceAll("\\s+", "");
+			}
 			send(exchange, 200, "application/json",
 					"{\"conformsTo\":[\"http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common\""
-							+ declaration + "]}");
+							+ declaration + ownerDeclarations + "]}");
 		}
 
 		private void canonical(HttpExchange exchange, String type, String query) throws IOException {
 			String id = queryValue(query, "id");
+			if (this.mode == Mode.DECLARED_SYSTEM_404 && "systems".equals(type)) {
+				send(exchange, 404, "application/json", "{}");
+				return;
+			}
 			if (this.mode == Mode.EMPTY_ID_RESULT && "systems".equals(type) && query != null && id != null) {
 				sendCollection(exchange, type, "[]", null);
 				return;
@@ -581,6 +697,38 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				sendCollection(exchange, type, "[" + system() + "," + otherSystem() + "]", null);
 				return;
 			}
+			if (this.mode == Mode.UNION_ADDITIONAL_CUSTOM_PROPERTY && "systems".equals(type)
+					&& queryValue(query, "id") != null && queryValue(query, "secondaryCode") != null) {
+				sendCollection(exchange, type, "[" + system() + "," + otherSystem() + "]", null);
+				return;
+			}
+			if (this.mode == Mode.UNION_LATER_RESOURCE_PREDICATE && "systems".equals(type) && query == null) {
+				sendCollection(exchange, type, "[" + system() + "," + laterCombinedSystem() + "]", null);
+				return;
+			}
+			if (this.mode == Mode.UNION_LATER_RESOURCE_PREDICATE && "systems".equals(type)
+					&& queryValue(query, "id") != null && queryValue(query, "laterCode") != null) {
+				sendCollection(exchange, type, "[" + laterCombinedSystem() + "," + system() + "]", null);
+				return;
+			}
+			if (this.mode == Mode.UNION_LATER_RESOURCE_PREDICATE && "systems".equals(type)
+					&& (queryValue(query, "laterCode") != null || "system-2".equals(queryValue(query, "id"))
+							|| "Later".equals(queryValue(query, "q")))) {
+				sendCollection(exchange, type, "[" + laterCombinedSystem() + "]", null);
+				return;
+			}
+			if (this.mode == Mode.CONTRADICTORY_SYSTEM_FOI_WRAPPER && "systems".equals(type)
+					&& queryValue(query, "foi") != null
+					&& !Set.of("foi-real", "urn:example:foi:real").contains(queryValue(query, "foi"))) {
+				sendCollection(exchange, type, "[]", null);
+				return;
+			}
+			if (this.mode == Mode.CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER && "deployments".equals(type)
+					&& queryValue(query, "system") != null
+					&& !Set.of("system-real", "urn:example:system:real").contains(queryValue(query, "system"))) {
+				sendCollection(exchange, type, "[]", null);
+				return;
+			}
 			if (this.mode == Mode.WRONG_GEOMETRY && "systems".equals(type) && query != null
 					&& query.startsWith("geom=")) {
 				sendCollection(exchange, type, "[" + otherSystem() + "]", null);
@@ -625,6 +773,14 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			sendCollection(exchange, type, "[" + item + "]", null);
 		}
 
+		private void systemSamplingFeatures(HttpExchange exchange, String query) throws IOException {
+			if (this.mode == Mode.CONTRADICTORY_SYSTEM_FOI_WRAPPER) {
+				sendCollection(exchange, "samplingFeatures", "[" + samplingFeatureWrapper() + "]", null);
+				return;
+			}
+			canonical(exchange, "samplingFeatures", query);
+		}
+
 		private void sendCollection(HttpExchange exchange, String type, String items, URI next) throws IOException {
 			if ("properties".equals(type)) {
 				send(exchange, 200, "application/sml+json", "{\"items\":" + items + links(next) + "}");
@@ -656,6 +812,10 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				send(exchange, 404, "application/json", "{}");
 				return;
 			}
+			if (this.mode == Mode.CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER && "systems".equals(type)) {
+				sendCollection(exchange, type, "[" + deployedSystemWrapper() + "]", null);
+				return;
+			}
 			canonical(exchange, type, query);
 		}
 
@@ -681,12 +841,14 @@ public class VerifyAdvancedFilteringHttpProcedures {
 
 		private String system() {
 			String associations = this.mode == Mode.NO_ASSOCIATIONS ? "" : systemAssociations();
+			String additionalCustom = this.mode == Mode.UNION_ADDITIONAL_CUSTOM_PROPERTY ? ",\"secondaryCode\":\"beta\""
+					: "";
 			return """
 					{"type":"Feature","id":"system-1","geometry":{"type":"Point","coordinates":[-77,38]},
 					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:1",
-					 "name":"Weather Station","customCode":"alpha"%s},
+					 "name":"Weather Station","customCode":"alpha"%s%s},
 					 "links":[{"rel":"canonical","type":"application/geo+json","href":"%s"}]}
-					""".formatted(associations, apiRoot().resolve("systems/system-1"));
+					""".formatted(additionalCustom, associations, apiRoot().resolve("systems/system-1"));
 		}
 
 		private String systemAssociations() {
@@ -746,6 +908,14 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			return """
 					{"type":"Feature","id":"system-2","geometry":{"type":"Point","coordinates":[0,0]},
 					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:2","name":"Other Sensor"}}
+					""";
+		}
+
+		private String laterCombinedSystem() {
+			return """
+					{"type":"Feature","id":"system-2","geometry":{"type":"Point","coordinates":[-76,39]},
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:2","name":"Later Sensor",
+					 "laterCode":"gamma"}}
 					""";
 		}
 
@@ -818,6 +988,21 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					""".formatted(apiRoot().resolve("features/foi-1"), apiRoot().resolve("features/foi-1"));
 		}
 
+		private String samplingFeatureWrapper() {
+			return """
+					{"type":"Feature","id":"sf-wrapper","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:Sample","uid":"urn:example:sf:wrapper",
+					 "sampleOf":{"id":"foi-wrapper","uid":"urn:example:foi:wrapper","href":"%s"}}}
+					""".formatted(apiRoot().resolve("features/foi-real"));
+		}
+
+		private String deployedSystemWrapper() {
+			return """
+					{"id":"deployment-wrapper","uid":"urn:example:deployment:wrapper",
+					 "system":{"id":"system-wrapper","uid":"urn:example:system:wrapper","href":"%s"}}
+					""".formatted(apiRoot().resolve("systems/deployed-real"));
+		}
+
 		private String property() {
 			return """
 					{"id":"property-1","uniqueId":"urn:example:property:1","label":"Weather Property",
@@ -839,6 +1024,22 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					{"type":"Feature","id":"foi-1","geometry":{"type":"Point","coordinates":[-77,38]},
 					 "properties":{"featureType":"sosa:FeatureOfInterest","uid":"urn:example:foi:1",
 					 "name":"Weather Feature"}}
+					""";
+		}
+
+		private String resolvedFeatureOfInterest() {
+			return """
+					{"type":"Feature","id":"foi-real","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:FeatureOfInterest","uid":"urn:example:foi:real",
+					 "name":"Resolved Feature"}}
+					""";
+		}
+
+		private String deployedSystemTarget() {
+			return """
+					{"type":"Feature","id":"system-real","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:real",
+					 "name":"Resolved Deployed System"}}
 					""";
 		}
 

@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T12:30Z
+Last updated: 2026-07-29T13:53Z
 
 ## Current Sprint Evidence
 
@@ -10,16 +10,20 @@ Sprint 55 Part 1 Advanced Filtering direct ATS:
   mappings are reviewed exact.
 - Coverage is `240/76 exact/2 helper/115 candidate/47 unmapped`;
   `/conf/advanced-filtering` is `25/25 exact`.
-- R4 test-first evidence is `40/4/0/0`; focused controlled HTTP is
-  `40/0/0/0`, and precommit full Maven is `594/0/0/3`.
+- R5 HTTP test-first evidence is `42/3/4/0`; focused controlled HTTP and
+  support tests are `48/0/0/0`, and precommit full Maven is `602/0/0/3`.
 - Scenario trace is `20/20` with no missing literal Java anchors.
-- R4 direct-field and deployed-System target-type findings have
-  requirement-linked regressions and fixes. Candidate `756d729` and its exact
-  runtime/E2E evidence are superseded audit evidence.
-- New exact-candidate runtime, local OSH, sabotage, credential, immutability,
-  hygiene, and fresh Raze gates are pending.
+- Raze R5 returned `GAPS_FOUND 0.99`; canonical relation vocabulary,
+  media-aware System typing, failed representation validation, and keyword
+  mapping evidence are remediated with requirement-linked tests.
+- Candidate `060a8aa` and its exact image/runtime, honest local OSH
+  `238/40/7/191`, sabotage `238/2/10/226`, credential, immutability, and
+  hygiene gates remain superseded audit evidence.
+- A new committed candidate must repeat every exact gate and fresh Raze.
 - Verification summary:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-verification-2026-07-29.md`.
+- Superseded exact `060a8aa` candidate and current R5 remediation evidence:
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r5-2026-07-29/`.
 - Superseded `756d729` exact candidate and current R4 remediation evidence:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r3-2026-07-29/`.
 - Superseded R2/R3 remediation evidence:

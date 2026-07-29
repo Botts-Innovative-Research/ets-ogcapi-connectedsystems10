@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.40 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering R4 remediation precommit)
+> Version: 2.0.42 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering R5 remediation precommit)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1393,8 +1393,15 @@ eligible resource across pagination.
 The R4 remediation constrains direct association discovery to exact recognized
 root or immediate GeoJSON `properties` fields and explicit relation-link URIs.
 It also requires dereferenced Deployment property targets to be single System
-representations. Its test-first baseline is `40/4/0/0`; focused controlled
-HTTP passes `40/0/0/0` and full precommit Docker Maven passes `594/0/0/3`.
-Coverage remains `240/76 exact/2 helper/115 candidate/47 unmapped`.
-Candidate `756d729` and its exact gates are superseded audit evidence. New
-exact and fresh Raze gates remain.
+representations. Its test-first baseline is `40/4/0/0`. Exact candidate
+`060a8aa` passes focused controlled HTTP `40/0/0/0`, full Docker Maven
+`594/0/0/3`, exact-image runtime, unmodified-local-OSH, sabotage, credential,
+immutability, hygiene, source, and `20/20` scenario-trace gates. Coverage
+remains `240/76 exact/2 helper/115 candidate/47 unmapped`. Candidate
+`756d729` remains superseded audit evidence. Raze R5 exposed canonical
+relation-vocabulary, complete/exclusive System-type, ignored
+representation-validation, and mapping-description gaps, superseding
+`060a8aa`. R5 HTTP regressions reproduce `42/3/4/0`; the corrected
+media-aware boundaries pass focused `48/0/0/0`, full Maven `602/0/0/3`, and
+regenerated coverage `240/76/2/115/47`. New exact-candidate and fresh Raze
+gates remain.

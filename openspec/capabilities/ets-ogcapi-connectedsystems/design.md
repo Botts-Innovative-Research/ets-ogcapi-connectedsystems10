@@ -1955,10 +1955,15 @@ feature-type, and positively supported custom predicates in combined checks.
 R4 constrains direct association discovery to exact recognized root or
 immediate GeoJSON `properties` fields and explicit relation-link URIs.
 Dereferenced Deployment property targets must be single System
-representations. Its red baseline is `40/4/0/0`; focused controlled HTTP
-passes `40/0/0/0`, full precommit Maven passes `594/0/0/3`, and scenario trace
-remains `20/20`. Candidate `756d729` and its exact gates are superseded audit
-evidence. New exact and fresh Raze gates remain.
+representations. Its red baseline is `40/4/0/0`; exact candidate `060a8aa`
+passes focused controlled HTTP `40/0/0/0`, full Maven `594/0/0/3`, exact-image
+runtime, unmodified-local-OSH, sabotage, credential, immutability, hygiene,
+source, and `20/20` scenario-trace gates. Candidate `756d729` remains
+superseded audit evidence. Raze R5 found four additional relation-vocabulary,
+System-type, representation-validation, and mapping gaps, superseding
+`060a8aa`. R5 HTTP regressions reproduce `42/3/4/0`; media-aware canonical
+remediation passes focused `48/0/0/0`, full Maven `602/0/0/3`, and regenerated
+coverage `240/76/2/115/47`. New exact-candidate and fresh Raze gates remain.
 
 ## Status
 

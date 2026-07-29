@@ -2714,9 +2714,10 @@ fail or SKIP as specified.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
 - **Priority**: MUST
-- **Status**: SPRINT_55_R4_REMEDIATION_PRECOMMIT_GREEN (direct-relation and
-  deployed-System target-type remediation complete; exact-candidate and fresh
-  adversarial gates pending)
+- **Status**: SPRINT_55_R5_REMEDIATION_PRECOMMIT_GREEN (candidate `060a8aa`
+  exact gates are superseded; all four R5 fixes pass focused and full
+  precommit verification; new exact-candidate and fresh adversarial gates
+  pending)
 - **Historical increment**: by Sprint 11 Generator and gates (2026-05-05; story S-ETS-11-01; Quinn Gate 3.5 APPROVE_WITH_CONCERNS 0.90; Raze Gate 4 APPROVE_WITH_CONCERNS 0.90). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests` with 6 read-only @Tests. Verification: Java formatter via Docker Maven BUILD SUCCESS; Docker Maven `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results` reported `63 total / 48 passed / 0 failed / 15 skipped`. Independent Quinn/Raze gate smoke runs also reported `63 total / 48 passed / 0 failed / 15 skipped`. Current GeoRobotix does not declare `/conf/advanced-filtering`, so all 6 AdvancedFiltering @Tests SKIP with reason and no undeclared query behavior is counted as PASS.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc`. The OpenAPI fragment for `ID_List` exists at `api/part1/openapi/parameters/idListSchema.yaml`. The class identifier is `/req/advanced-filtering`, inherits `/req/api-common`, and lists query-parameter subrequirements for ID lists, common resource keyword/id filters, geometry filters, system/deployment/procedure/sampling-feature/property association filters, and combined filters.
 - **Sprint 11 coverage scope**: AdvancedFiltering systems/common-resource read-only subset with 6 @Tests: (1) IUT declares `/conf/advanced-filtering`, otherwise every AdvancedFiltering @Test SKIPs with reason; (2) ID-list schema validator helper accepts homogeneous non-empty local-ID lists and homogeneous non-empty UID lists while rejecting mixed local/UID lists and empty/malformed lists; (3) `/systems?id=<known-id>` returns HTTP 200 and a non-empty result set whose returned items all preserve the selected id when the conformance class is declared and a seed System id was selected; (4) `/systems?q=<known keyword>` returns HTTP 200 and a non-empty result set whose returned items include keyword evidence in `name` or `description` when declared and a seed keyword was selected from a System name/description; (5) `/systems?geom=<WKT>` is exercised with a broad WKT geometry and validated only for HTTP 200 + JSON response shape in this sprint; (6) TestNG dependency wiring and smoke no-regression. The sprint deliberately does not close all 24 listed advanced-filtering subrequirements.
@@ -2858,6 +2859,8 @@ results cannot PASS.
 **THEN** keyword evidence comes only from `name`, `description`, or the
 SensorML-equivalent `label` at the resource root or immediate GeoJSON
 `properties` boundary
+**AND** every returned resource, but not necessarily the originally selected
+seed, contains the requested keyword
 **AND** link metadata, arbitrary extension descendants, association targets,
 and unrelated scalar extension properties cannot create a false PASS.
 
@@ -2897,13 +2900,27 @@ or prescribed subresource and target-description traversal
 **AND** direct representation fields use exact recognized association names;
 suffix aliases and matching names inside unrelated nested extension objects
 cannot seed or validate a predicate
+**AND** released GeoJSON `links[].rel` values use exact direct names or exact
+`ogc-rel:` compact relation names, GeoJSON Procedure evidence accepts
+`systemKind@link`, and SensorML System evidence accepts `attachedTo` and
+`typeOf`
+**AND** unrelated URI schemes or merely suffix-matching relation values cannot
+seed or validate a predicate
 **AND** Deployment observed-property and controlled-property evidence ignores
 wrapper properties and unrelated nested hrefs, follows only the direct
 deployed-System target, and reads properties from the resolved System
 description
 **AND** a dereferenced deployed-System target must be one single System
 representation; a collection or non-System object contributes no property
-evidence.
+evidence
+**AND** allowed GeoJSON System feature types are `sosa:System`,
+`sosa:Sensor`, `sosa:Actuator`, `sosa:Sampler`, and `sosa:Platform` in CURIE
+or full-URI form
+**AND** allowed SensorML System classes are `PhysicalComponent`,
+`PhysicalSystem`, `SimpleProcess`, and `AggregateProcess` with an allowed
+System definition
+**AND** arbitrary types that merely end with `System` cannot contribute
+property evidence.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001 (CRITICAL)
 **GIVEN** Deployment parent, deployed-System, feature-of-interest,
@@ -2941,7 +2958,10 @@ Advanced Filtering association filter, and any positively supported
 custom-property recommendation
 **AND** every canonical endpoint exercises at least two distinct combinations
 **AND** the procedure cannot PASS from union semantics, one hard-coded
-combination, or an empty result.
+combination, or an empty result
+**AND** every filtered collection passes its released media-specific
+representation validator before predicate evidence is accepted
+**AND** unsupported generic JSON with matching fields cannot PASS.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-INDIRECT-RECOMMENDATIONS-001 (NORMAL)
 **GIVEN** base-property or nested feature-of-interest relation evidence
@@ -3022,12 +3042,28 @@ relation-link URIs; recursive reference containers remain bounded. A
 dereferenced deployed-System target must be a non-collection System
 representation before its properties contribute evidence.
 
-Candidate `756d729828d08b88d43ce8ae0ff5f5dd2e5f13b7` and its image/runtime,
-unmodified-local-OSH, sabotage, credential, no-mutation, immutability, and
-artifact-hygiene gates are superseded audit evidence. Every exact gate and a
-fresh final Raze review must run from the new committed candidate. Controlled
-HTTP remains the positive semantic harness; no OSH or TeamEngine source or
-binary is modified.
+Candidate `060a8aa994d59f0adfa6bfa96fd5fb372b3d6743` passes exact focused
+controlled HTTP `40/0/0/0`, full Docker Maven `594/0/0/3`, released-source
+audit, runtime verification on image
+`sha256:a74b3cc8bfe71df11ef4cc13ef8ceb6c0b32e0cffc184e04f9f115c2f215f07e`,
+and the `20/20` scenario trace. Unmodified local OSH TeamEngine is honestly
+`238/40/7/191`; all 25 Advanced Filtering methods SKIP at the absent
+declaration, so this is deployment evidence rather than positive local-IUT
+conformance. API Common sabotage is `238/2/10/226`; credential,
+no-mutation, immutability, artifact-hygiene, and source gates pass. Candidate
+`756d729` remains superseded audit evidence. Controlled HTTP remains the
+positive semantic harness; no OSH or TeamEngine source or binary is modified.
+Fresh Raze R5 returned `GAPS_FOUND 0.99` with four required fixes. Canonical
+compact `ogc-rel:` values and `systemKind@link` were rejected; the
+deployed-System type gate rejected valid released classes and admitted
+arbitrary `*System` suffixes; `/prop-by-object` and `/combined-filters`
+ignored `validateEndpoint=false`; and the exact keyword mapping overstated
+selected-seed inclusion. Candidate `060a8aa` and its exact gates are now
+superseded audit evidence. R5 HTTP regressions reproduce `42/3/4/0`; focused
+remediation passes `48/0/0/0`, full Docker Maven passes `602/0/0/3`, and the
+regenerated coverage report remains `240/76/2/115/47` with Advanced Filtering
+`25/25 exact`. A new committed candidate must repeat every exact gate and pass
+another fresh Raze review.
 
 > Sprint 12 starts the mutation-side Part 1 work with Create/Replace/Delete, but it does not permit unguarded writes against the public GeoRobotix smoke target. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, so default smoke must prove declaration and non-mutating readiness while every lifecycle mutation assertion SKIPs unless an operator explicitly enables mutation tests against a dedicated mutable IUT.
 

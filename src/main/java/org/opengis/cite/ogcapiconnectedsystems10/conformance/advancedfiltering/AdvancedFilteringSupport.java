@@ -304,7 +304,10 @@ public final class AdvancedFilteringSupport {
 		}
 		TraversalResult filtered = requiredQuery(ResourceType.PROPERTIES, Map.of("objectType", objectType.get()),
 				requirement);
-		validateEndpoint(ResourceType.PROPERTIES, filtered, requirement);
+		if (!validateEndpoint(ResourceType.PROPERTIES, filtered, requirement)) {
+			throw new SkipException(requirement
+					+ " - properties returned an unsupported representation for the released resources-endpoint validation.");
+		}
 		assertNonEmpty(filtered, ResourceType.PROPERTIES, "objectType", objectType.get(), requirement);
 		assertEvery(filtered.items(), item -> hasPropertyValue(item, "objectType", objectType.get()),
 				ResourceType.PROPERTIES, "objectType", objectType.get(), requirement);
@@ -341,7 +344,10 @@ public final class AdvancedFilteringSupport {
 							continue;
 						}
 						TraversalResult filtered = requiredQuery(type, query, requirement);
-						validateEndpoint(type, filtered, requirement);
+						if (!validateEndpoint(type, filtered, requirement)) {
+							throw new SkipException(requirement + " - " + type.path
+									+ " returned an unsupported representation for the released resources-endpoint validation.");
+						}
 						String label = first.parameter + "+" + second.parameter;
 						String values = first.value + "," + second.value;
 						assertNonEmpty(filtered, type, label, values, requirement);
@@ -955,7 +961,7 @@ public final class AdvancedFilteringSupport {
 					ETSAssert.failWithUri(requirement,
 							target + " returned HTTP 200 but did not contain a JSON System description.");
 				}
-				if (isCollectionDocument(body) || !isSystemRepresentation(body)) {
+				if (isCollectionDocument(body) || !isSystemRepresentation(body, responseMediaType(response))) {
 					continue;
 				}
 				collectRelation(body, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
@@ -1007,11 +1013,11 @@ public final class AdvancedFilteringSupport {
 	}
 
 	private static boolean isSystemRepresentation(Map<String, Object> resource) {
-		String type = normalize(asString(resource.get("type")));
-		String featureType = scalarProperty(resource, "featureType").map(AdvancedFilteringSupport::normalize)
-			.orElse("");
-		return "feature".equals(type) && featureType.endsWith("system")
-				|| Set.of("physicalsystem", "system").contains(type);
+		return isSystemRepresentation(resource, "application/json");
+	}
+
+	private static boolean isSystemRepresentation(Map<String, Object> resource, String mediaType) {
+		return SystemFeaturesSupport.isReleasedSystemRepresentation(resource, mediaType);
 	}
 
 	private void enrichPropertyIdentifiers(Identifiers identifiers, String requirement) {
@@ -1392,13 +1398,10 @@ public final class AdvancedFilteringSupport {
 		}
 		try {
 			URI relation = URI.create(value);
-			if (!relation.isAbsolute()) {
+			if (!relation.isAbsolute() || !relation.isOpaque() || !"ogc-rel".equalsIgnoreCase(relation.getScheme())) {
 				return false;
 			}
-			String path = relation.getPath();
-			int slash = path == null ? -1 : path.lastIndexOf('/');
-			String segment = slash >= 0 ? path.substring(slash + 1) : path;
-			return fieldAliasMatches(segment, aliases) || fieldAliasMatches(relation.getFragment(), aliases);
+			return fieldAliasMatches(relation.getSchemeSpecificPart(), aliases);
 		}
 		catch (IllegalArgumentException ex) {
 			return false;
@@ -1500,7 +1503,8 @@ public final class AdvancedFilteringSupport {
 	 */
 	public enum Relation {
 
-		PARENT_SYSTEM(Set.of("parent", "parentsystem"), false), PROCEDURE(Set.of("procedure", "typeof"), false),
+		PARENT_SYSTEM(Set.of("attachedto", "parent", "parentsystem"), false),
+		PROCEDURE(Set.of("procedure", "systemkind", "typeof"), false),
 		FEATURE_OF_INTEREST(Set.of("foi", "featureofinterest", "featuresofinterest", "sampleof", "sampledfeature"),
 				true),
 		OBSERVED_PROPERTY(Set.of("observedproperty", "observedproperties", "output", "outputs"), true),

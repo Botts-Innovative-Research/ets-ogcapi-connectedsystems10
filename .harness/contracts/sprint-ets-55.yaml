@@ -1,7 +1,7 @@
 sprint: ets-55
 story: S-ETS-55-01
 title: Part 1 Advanced Filtering direct ATS closure
-status: R4_REMEDIATION_PRECOMMIT_GREEN
+status: R5_REMEDIATION_PRECOMMIT_GREEN
 triggered_by: "User instructed continuation of the accepted released-ATS sequence"
 requirements:
   - REQ-ETS-PART1-009
@@ -38,6 +38,10 @@ success_criteria:
   - Geometry filters use parsed WKT and GeoJSON intersection.
   - Association filters validate every returned resource through released representation boundaries.
   - Procedure-specific association paths cannot be replaced by root aliases or wrapper identifiers.
+  - Canonical GeoJSON direct and ogc-rel compact relation names, systemKind@link, and SensorML attachedTo/typeOf mappings remain accepted.
+  - Every released GeoJSON and SensorML System class is accepted as a deployed-System target, while arbitrary suffix types are rejected.
+  - Property object-type and combined-filter responses pass released representation validation before predicate evidence is accepted.
+  - Keyword mapping evidence does not claim selected-seed inclusion.
   - Mandatory known-match queries cannot pass with empty results.
   - Combined filters enumerate every applicable inherited, mandatory class-specific, and positively supported custom predicate.
   - Combined filters prove every returned resource satisfies every supplied predicate.
@@ -58,14 +62,14 @@ guardrails:
   - Do not import executable conformance-suite jars as libraries.
   - Do not treat recommendation warnings as mandatory requirement failures.
 verification:
-  test_first: PASS_40_4_0_0_TO_40_0_0_0
-  focused_maven: PRECOMMIT_PASS_40_0_0_0
-  full_maven: PRECOMMIT_PASS_594_0_0_3
+  test_first: R5_HTTP_RED_42_3_4_0_TO_FOCUSED_PASS_48_0_0_0
+  focused_maven: PRECOMMIT_PASS_48_0_0_0
+  full_maven: PRECOMMIT_PASS_602_0_0_3
   coverage_audit: PASS_240_76_2_115_47_ADVANCED_FILTERING_25_OF_25_EXACT
-  local_osh_teamengine: PENDING_EXACT_CANDIDATE_RERUN
-  controlled_http: PRECOMMIT_PASS_40_0_0_0
-  exact_image: PENDING_EXACT_CANDIDATE_RERUN
-  dependency_sabotage: PENDING_EXACT_CANDIDATE_RERUN
-  credential_gates: PENDING_EXACT_CANDIDATE_RERUN
-  artifact_hygiene: PENDING_EXACT_CANDIDATE_RERUN
-  raze: GAPS_FOUND_0_99_R4_REMEDIATED_RECHECK_PENDING
+  local_osh_teamengine: PENDING_NEW_EXACT_CANDIDATE
+  controlled_http: PRECOMMIT_PASS_48_0_0_0
+  exact_image: PENDING_NEW_EXACT_CANDIDATE
+  dependency_sabotage: PENDING_NEW_EXACT_CANDIDATE
+  credential_gates: PENDING_NEW_EXACT_CANDIDATE
+  artifact_hygiene: PENDING_NEW_EXACT_CANDIDATE
+  raze: GAPS_FOUND_0_99_R5_REMEDIATED_RECHECK_PENDING

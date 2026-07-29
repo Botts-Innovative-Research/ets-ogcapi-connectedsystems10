@@ -748,7 +748,7 @@
       "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesFilterByKeyword()",
       "reviewedBy" : "Codex Sprint 55 ATS line review",
       "reviewedOn" : "2026-07-29",
-      "evidence" : "The method selects non-structural text from canonical resources, executes q queries on every supported resource endpoint, traverses bounded pagination, and requires all returned resources plus the selected seed to contain the keyword."
+      "evidence" : "The method selects non-structural text from canonical resources, executes q queries on every supported resource endpoint, traverses bounded pagination, and requires every returned resource to contain the keyword."
     }
   }, {
     "part" : 1,

@@ -52,8 +52,38 @@ recommended work and final gate.
 - Deployment property dereferences now reject collections and non-System
   representations before collecting properties.
 - Candidate `756d729` and its exact gates remain preserved as superseded audit
-  evidence. New exact gates and fresh Raze remain. No OSH or TeamEngine
-  modification and no hosted CI.
+  evidence. At that checkpoint, new exact gates and fresh Raze remained. No
+  OSH or TeamEngine modification and no hosted CI.
+- Sealed exact candidate `060a8aa994d59f0adfa6bfa96fd5fb372b3d6743`
+  and image `sha256:a74b3cc8bfe...15f07e` with matching
+  `Build-Revision: 060a8aa994`.
+- Exact focused/full Maven pass `40/0/0/0` and `594/0/0/3`; released-source,
+  runtime, SWE Common, collision, immutable-base, and context gates pass.
+- Unmodified local OSH TeamEngine is honestly `238/40/7/191`; the seven
+  established IUT failures remain visible and all 25 Advanced Filtering
+  methods SKIP at the missing declaration.
+- API Common sabotage is `238/2/10/226`; all 25 methods cascade-SKIP.
+  Credential integration and wire E2E pass with zero unmasked artifact hits,
+  33 masked events, and 33 intact transmissions.
+- Hygiene records 174 recognized GETs, 169 IUT GETs, zero writes, and zero
+  leaks. OSH remains clean at `4c87a65` and `/opt/osh` remains read-only.
+- Preserved 17 exact artifacts under a verified SHA-256 manifest.
+- Fresh Raze R5 returned `GAPS_FOUND 0.99` with four required findings:
+  released canonical relation names were rejected; deployed-System typing was
+  incomplete and non-exclusive; two procedures ignored failed representation
+  validation; and the keyword mapping overstated selected-seed inclusion.
+- Added requirement-linked GeoJSON, SensorML, compact-URI, media-boundary, and
+  System-class regressions. R5 HTTP red is `42/3/4/0`; unrelated relation
+  schemes are also explicitly rejected.
+- Added exact canonical relation handling, reused the released media-aware
+  System representation allowlists, made failed endpoint validation
+  non-evidence, and corrected/regenerated keyword mapping evidence.
+- Focused remediation passes `48/0/0/0`; full precommit Docker Maven passes
+  `602/0/0/3`; coverage remains `240/76/2/115/47`, with Advanced Filtering
+  `25/25 exact`.
+- Candidate `060a8aa` and all its exact evidence are preserved as superseded
+  audit evidence. New exact-candidate and fresh Raze gates remain. No OSH or
+  TeamEngine modification and no hosted CI.
 
 ## 2026-07-29 - Part 1 Advanced Filtering implementation and technical gates
 

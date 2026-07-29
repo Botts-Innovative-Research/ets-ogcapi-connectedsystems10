@@ -449,6 +449,130 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
 	 */
 	@Test
+	public void releasedOgcRelCompactRelationIsAccepted() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.CANONICAL_OGC_RELATION)) {
+			server.start();
+			AdvancedFilteringTests tests = configured(server);
+
+			tests.systemsFilterByParent();
+			tests.deploymentsFilterByParent();
+			tests.samplingFeaturesFilterByFeatureOfInterest();
+
+			assertTrue(server.callsWithValue("/api/systems", "parent", "parent-1"::equals) > 0);
+			assertTrue(server.callsWithValue("/api/systems", "parent", "urn:example:system:parent"::equals) > 0);
+			assertTrue(server.callsWithValue("/api/deployments", "parent", "deployment-parent"::equals) > 0);
+			assertTrue(server.callsWithValue("/api/samplingFeatures", "foi", "foi-1"::equals) > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void unrelatedCompactRelationSchemeIsRejected() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNRELATED_RELATION_SCHEME)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::systemsFilterByParent);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "parent-1"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void releasedGeoJsonSystemKindLinkIsAccepted() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.GEOJSON_SYSTEM_KIND_LINK)) {
+			server.start();
+
+			configured(server).systemsFilterByProcedure();
+
+			assertTrue(server.callsWithValue("/api/systems", "procedure", "procedure-1"::equals) > 0);
+			assertTrue(server.callsWithValue("/api/systems", "procedure", "urn:example:procedure:1"::equals) > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void releasedSensorMlAssociationFieldsAreAccepted() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.SENSORML_SYSTEM_ASSOCIATIONS)) {
+			server.start();
+			AdvancedFilteringTests tests = configured(server);
+
+			tests.systemsFilterByParent();
+			tests.systemsFilterByProcedure();
+
+			assertTrue(server.callsWithValue("/api/systems", "parent", "parent-1"::equals) > 0);
+			assertTrue(server.callsWithValue("/api/systems", "procedure", "procedure-1"::equals) > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void everyReleasedSystemTargetTypeContributesPropertyEvidence() throws Exception {
+		String[] targetTypes = { "sosa:System", "sosa:Sensor", "sosa:Actuator", "sosa:Sampler", "sosa:Platform",
+				"http://www.w3.org/ns/sosa/System", "http://www.w3.org/ns/sosa/Sensor",
+				"http://www.w3.org/ns/sosa/Actuator", "http://www.w3.org/ns/sosa/Sampler",
+				"http://www.w3.org/ns/sosa/Platform", "PhysicalComponent", "PhysicalSystem", "SimpleProcess",
+				"AggregateProcess" };
+		for (String targetType : targetTypes) {
+			try (FixtureServer server = new FixtureServer(Mode.DEPLOYED_PROPERTY_TYPED_SYSTEM_TARGET, targetType)) {
+				server.start();
+
+				configured(server).deploymentsFilterByObservedProperty();
+
+				assertTrue(targetType,
+						server.callsWithValue("/api/deployments", "observedProperty", "property-target"::equals) > 0);
+			}
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void arbitrarySystemSuffixTargetIsRejected() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.DEPLOYED_PROPERTY_SUFFIX_SYSTEM_TARGET)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::deploymentsFilterByObservedProperty);
+			assertEquals(0, server.callsWithValue("/api/deployments", "observedProperty", "property-target"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-PROPERTY-FILTERS-001.
+	 */
+	@Test
+	public void propertyObjectTypeRejectsUnsupportedRepresentation() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNSUPPORTED_PROPERTY_FILTER_MEDIA)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::propertiesFilterByObjectType);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001.
+	 */
+	@Test
+	public void combinedFiltersRejectUnsupportedRepresentation() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNSUPPORTED_COMBINED_FILTER_MEDIA)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::canonicalResourcesCombineFilters);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
 	public void rootAliasesCannotReplacePrescribedAssociationSubresources() throws Exception {
 		try (FixtureServer server = new FixtureServer(Mode.ROOT_ASSOCIATION_SHORTCUTS)) {
 			server.start();
@@ -613,9 +737,11 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		CONTRADICTORY_DEPLOYED_SYSTEM_WRAPPER, DEPLOYED_PROPERTY_WRAPPER_SHORTCUT,
 		DEPLOYED_PROPERTY_NESTED_HREF_SHORTCUT, DEPLOYED_PROPERTY_NON_SYSTEM_TARGET,
 		DEPLOYED_PROPERTY_COLLECTION_TARGET, MALFORMED_ASSOCIATION_HREF, UNRELATED_SUFFIX_ALIAS, NESTED_EXTENSION_ALIAS,
-		ROOT_ASSOCIATION_SHORTCUTS, BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION,
-		LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404,
-		ONLY_SYSTEM_DECLARED
+		CANONICAL_OGC_RELATION, GEOJSON_SYSTEM_KIND_LINK, SENSORML_SYSTEM_ASSOCIATIONS, UNRELATED_RELATION_SCHEME,
+		DEPLOYED_PROPERTY_TYPED_SYSTEM_TARGET, DEPLOYED_PROPERTY_SUFFIX_SYSTEM_TARGET,
+		UNSUPPORTED_PROPERTY_FILTER_MEDIA, UNSUPPORTED_COMBINED_FILTER_MEDIA, ROOT_ASSOCIATION_SHORTCUTS,
+		BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION, LATER_INDIRECT_RESOURCES,
+		OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION, DECLARED_SYSTEM_404, ONLY_SYSTEM_DECLARED
 
 	}
 
@@ -625,6 +751,8 @@ public class VerifyAdvancedFilteringHttpProcedures {
 
 		private final Mode mode;
 
+		private final String deployedSystemType;
+
 		private final Map<String, AtomicInteger> calls = new ConcurrentHashMap<>();
 
 		private final AtomicInteger nonGetCalls = new AtomicInteger();
@@ -632,7 +760,12 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		private URI externalTarget;
 
 		private FixtureServer(Mode mode) throws IOException {
+			this(mode, null);
+		}
+
+		private FixtureServer(Mode mode, String deployedSystemType) throws IOException {
 			this.mode = mode;
+			this.deployedSystemType = deployedSystemType;
 			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
 			this.server.createContext("/api/", this::handle);
 		}
@@ -717,14 +850,20 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				case "/api/systems/broken-parent" -> send(exchange, 404, "application/json", "{}");
 				case "/api/systems/wrong-media-parent" -> send(exchange, 200, "text/plain", resolvedParentSystem());
 				case "/api/systems/parent-collection" -> associationCollection(exchange, query);
+				case "/api/deployments/deployment-parent" -> single(exchange, "deployments", parentDeployment());
 				case "/api/systems/deployed-real" -> single(exchange, "systems", deployedSystemTarget());
 				case "/api/systems/deployed-clean" -> single(exchange, "systems", deployedSystemWithoutProperties());
 				case "/api/systems/deployed-bogus" -> single(exchange, "systems", deployedSystemWithBogusProperties());
 				case "/api/systems/deployed-not-system" -> single(exchange, "systems", nonSystemWithTargetProperties());
 				case "/api/systems/deployed-collection" ->
 					sendCollection(exchange, "systems", "[" + deployedSystemWithTargetProperties() + "]", null);
+				case "/api/systems/deployed-typed" -> typedDeployedSystem(exchange);
+				case "/api/systems/deployed-suffix" ->
+					send(exchange, 200, "application/geo+json", suffixSystemWithTargetProperties());
 				case "/api/procedures/procedure-1" -> single(exchange, "procedures", procedure());
 				case "/api/features/foi-1" -> single(exchange, "samplingFeatures", featureOfInterest());
+				case "/api/features/ultimate-required" ->
+					single(exchange, "samplingFeatures", requiredUltimateFeature());
 				case "/api/features/foi-real" -> single(exchange, "samplingFeatures", resolvedFeatureOfInterest());
 				case "/api/properties/base-1" -> single(exchange, "properties", baseProperty("base-1"));
 				case "/api/properties/base-2" -> single(exchange, "properties", baseProperty("base-2"));
@@ -768,6 +907,18 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			String id = queryValue(query, "id");
 			if (this.mode == Mode.DECLARED_SYSTEM_404 && "systems".equals(type)) {
 				send(exchange, 404, "application/json", "{}");
+				return;
+			}
+			if (this.mode == Mode.SENSORML_SYSTEM_ASSOCIATIONS && "systems".equals(type)) {
+				send(exchange, 200, "application/sml+json", "{\"items\":[" + sensorMlSystem() + "]}");
+				return;
+			}
+			if (this.mode == Mode.UNSUPPORTED_PROPERTY_FILTER_MEDIA && "properties".equals(type)) {
+				sendGenericCollection(exchange, "[" + property() + "]");
+				return;
+			}
+			if (this.mode == Mode.UNSUPPORTED_COMBINED_FILTER_MEDIA && "systems".equals(type)) {
+				sendGenericCollection(exchange, "[" + system() + "]");
 				return;
 			}
 			if (this.mode == Mode.EMPTY_ID_RESULT && "systems".equals(type) && query != null && id != null) {
@@ -910,6 +1061,10 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			}
 		}
 
+		private void sendGenericCollection(HttpExchange exchange, String items) throws IOException {
+			send(exchange, 200, "application/json", "{\"items\":" + items + "}");
+		}
+
 		private String links(URI next) {
 			return next == null ? ""
 					: ",\"links\":[{\"rel\":\"next\",\"type\":\"application/geo+json\",\"href\":\"" + next + "\"}]";
@@ -951,6 +1106,14 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				sendCollection(exchange, type, "[" + deployedPropertyTarget("deployed-collection") + "]", null);
 				return;
 			}
+			if (this.mode == Mode.DEPLOYED_PROPERTY_TYPED_SYSTEM_TARGET && "systems".equals(type)) {
+				sendCollection(exchange, type, "[" + deployedPropertyTarget("deployed-typed") + "]", null);
+				return;
+			}
+			if (this.mode == Mode.DEPLOYED_PROPERTY_SUFFIX_SYSTEM_TARGET && "systems".equals(type)) {
+				sendCollection(exchange, type, "[" + deployedPropertyTarget("deployed-suffix") + "]", null);
+				return;
+			}
 			canonical(exchange, type, query);
 		}
 
@@ -975,6 +1138,15 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		}
 
 		private String system() {
+			if (this.mode == Mode.CANONICAL_OGC_RELATION) {
+				return systemWithOgcRelation();
+			}
+			if (this.mode == Mode.GEOJSON_SYSTEM_KIND_LINK) {
+				return systemWithKindLink();
+			}
+			if (this.mode == Mode.UNRELATED_RELATION_SCHEME) {
+				return systemWithUnrelatedRelationScheme();
+			}
 			String associations = this.mode == Mode.NO_ASSOCIATIONS ? "" : systemAssociations();
 			String additionalCustom = this.mode == Mode.UNION_ADDITIONAL_CUSTOM_PROPERTY ? ",\"secondaryCode\":\"beta\""
 					: "";
@@ -984,6 +1156,46 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "name":"Weather Station","customCode":"alpha"%s%s},
 					 "links":[{"rel":"canonical","type":"application/geo+json","href":"%s"}]}
 					""".formatted(additionalCustom, associations, apiRoot().resolve("systems/system-1"));
+		}
+
+		private String systemWithOgcRelation() {
+			return """
+					{"type":"Feature","id":"system-1","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:1",
+					 "name":"Weather Station","customCode":"alpha"},
+					 "links":[
+					  {"rel":"canonical","type":"application/geo+json","href":"%s"},
+					  {"rel":"ogc-rel:parentSystem","type":"application/geo+json","href":"%s"}]}
+					""".formatted(apiRoot().resolve("systems/system-1"), apiRoot().resolve("systems/parent-1"));
+		}
+
+		private String systemWithKindLink() {
+			return """
+					{"type":"Feature","id":"system-1","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:1",
+					 "name":"Weather Station","customCode":"alpha",
+					 "systemKind@link":{"href":"%s"}},
+					 "links":[{"rel":"canonical","type":"application/geo+json","href":"%s"}]}
+					""".formatted(apiRoot().resolve("procedures/procedure-1"), apiRoot().resolve("systems/system-1"));
+		}
+
+		private String systemWithUnrelatedRelationScheme() {
+			return """
+					{"type":"Feature","id":"system-1","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:System","uid":"urn:example:system:1",
+					 "name":"Weather Station","customCode":"alpha"},
+					 "links":[
+					  {"rel":"canonical","type":"application/geo+json","href":"%s"},
+					  {"rel":"custom:parentSystem","type":"application/geo+json","href":"%s"}]}
+					""".formatted(apiRoot().resolve("systems/system-1"), apiRoot().resolve("systems/parent-1"));
+		}
+
+		private String sensorMlSystem() {
+			return """
+					{"type":"PhysicalSystem","id":"system-1","definition":"sosa:System",
+					 "uniqueId":"urn:example:system:1","label":"Weather Station",
+					 "attachedTo":{"href":"%s"},"typeOf":{"href":"%s"}}
+					""".formatted(apiRoot().resolve("systems/parent-1"), apiRoot().resolve("procedures/procedure-1"));
 		}
 
 		private String systemAssociations() {
@@ -1083,6 +1295,9 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		}
 
 		private String deployment() {
+			if (this.mode == Mode.CANONICAL_OGC_RELATION) {
+				return deploymentWithOgcRelation();
+			}
 			return """
 					{"type":"Feature","id":"deployment-1","geometry":{"type":"Point","coordinates":[-77,38]},
 					 "properties":{"featureType":"sosa:Deployment","uid":"urn:example:deployment:1",
@@ -1093,6 +1308,24 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "featuresOfInterest":[{"id":"foi-1","uid":"urn:example:foi:1"}],
 					 "observedProperties":[{"id":"property-1","uid":"urn:example:property:observed"}],
 					 "controlledProperties":[{"id":"property-1","uid":"urn:example:property:controlled"}]}}
+					""";
+		}
+
+		private String deploymentWithOgcRelation() {
+			return """
+					{"type":"Feature","id":"deployment-1","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:Deployment","uid":"urn:example:deployment:1",
+					 "name":"Field Deployment",
+					 "validTime":["2026-01-01T00:00:00Z","2027-01-01T00:00:00Z"]},
+					 "links":[{"rel":"ogc-rel:parentDeployment","type":"application/geo+json","href":"%s"}]}
+					""".formatted(apiRoot().resolve("deployments/deployment-parent"));
+		}
+
+		private String parentDeployment() {
+			return """
+					{"type":"Feature","id":"deployment-parent","geometry":null,
+					 "properties":{"featureType":"sosa:Deployment",
+					 "uid":"urn:example:deployment:parent","name":"Parent Deployment"}}
 					""";
 		}
 
@@ -1116,6 +1349,9 @@ public class VerifyAdvancedFilteringHttpProcedures {
 		}
 
 		private String samplingFeature() {
+			if (this.mode == Mode.CANONICAL_OGC_RELATION) {
+				return samplingFeatureWithOgcRelation();
+			}
 			if (this.mode == Mode.CYCLIC_RELATION || this.mode == Mode.OVER_LIMIT_RELATION) {
 				String target = this.mode == Mode.CYCLIC_RELATION ? "features/cycle-a" : "features/chain-0";
 				return """
@@ -1142,6 +1378,16 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "sampledFeature@link":{"href":"%s","id":"foi-2","uid":"urn:example:foi:2"},
 					 "sampleOf":{"href":"%s","id":"parent-sf-2","uid":"urn:example:sf:parent-2"}}}
 					""".formatted(apiRoot().resolve("features/foi-1"), apiRoot().resolve("features/foi-1"));
+		}
+
+		private String samplingFeatureWithOgcRelation() {
+			return """
+					{"type":"Feature","id":"sf-1","geometry":{"type":"Point","coordinates":[-77,38]},
+					 "properties":{"featureType":"sosa:Sample","uid":"urn:example:sf:1",
+					 "name":"Weather Sample",
+					 "sampledFeature@link":{"href":"%s"}},
+					 "links":[{"rel":"ogc-rel:sampleOf","type":"application/geo+json","href":"%s"}]}
+					""".formatted(apiRoot().resolve("features/ultimate-required"), apiRoot().resolve("features/foi-1"));
 		}
 
 		private String samplingFeatureWrapper() {
@@ -1211,6 +1457,41 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					""";
 		}
 
+		private void typedDeployedSystem(HttpExchange exchange) throws IOException {
+			boolean sensorMl = Set.of("PhysicalComponent", "PhysicalSystem", "SimpleProcess", "AggregateProcess")
+				.contains(this.deployedSystemType);
+			send(exchange, 200, sensorMl ? "application/sml+json" : "application/geo+json",
+					typedSystemWithTargetProperties(sensorMl));
+		}
+
+		private String typedSystemWithTargetProperties(boolean sensorMl) {
+			if (sensorMl) {
+				return """
+						{"type":"%s","id":"deployed-target","definition":"sosa:System",
+						 "uniqueId":"urn:example:system:target","label":"Target Deployed System",
+						 "observedProperties":[{"id":"property-target",
+						  "uid":"urn:example:property:target"}]}
+						""".formatted(this.deployedSystemType);
+			}
+			return """
+					{"type":"Feature","id":"deployed-target","geometry":null,
+					 "properties":{"featureType":"%s","uid":"urn:example:system:target",
+					 "name":"Target Deployed System",
+					 "observedProperties":[{"id":"property-target",
+					  "uid":"urn:example:property:target"}]}}
+					""".formatted(this.deployedSystemType);
+		}
+
+		private String suffixSystemWithTargetProperties() {
+			return """
+					{"type":"Feature","id":"deployed-suffix","geometry":null,
+					 "properties":{"featureType":"custom:NotSystem","uid":"urn:example:system:suffix",
+					 "name":"Suffix Impostor",
+					 "observedProperties":[{"id":"property-target",
+					  "uid":"urn:example:property:target"}]}}
+					""";
+		}
+
 		private String nonSystemWithTargetProperties() {
 			return """
 					{"type":"Feature","id":"not-system","geometry":null,
@@ -1242,6 +1523,15 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					{"type":"Feature","id":"foi-1","geometry":{"type":"Point","coordinates":[-77,38]},
 					 "properties":{"featureType":"sosa:FeatureOfInterest","uid":"urn:example:foi:1",
 					 "name":"Weather Feature"}}
+					""";
+		}
+
+		private String requiredUltimateFeature() {
+			return """
+					{"type":"Feature","id":"ultimate-required","geometry":null,
+					 "properties":{"featureType":"sosa:FeatureOfInterest",
+					 "uid":"urn:example:foi:ultimate-required",
+					 "name":"Required Ultimate Feature"}}
 					""";
 		}
 

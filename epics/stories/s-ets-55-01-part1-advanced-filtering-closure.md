@@ -2,9 +2,9 @@
 
 ## Status
 
-R4 REMEDIATION PRECOMMIT GREEN - candidate `756d729` is superseded. Exact
-direct-relation boundaries and single-System dereference validation pass
-requirement-linked regressions; exact-candidate and fresh Raze gates remain.
+R5 REMEDIATION PRECOMMIT GREEN - candidate `060a8aa` exact evidence is
+superseded. Four required semantic and mapping fixes pass focused and full
+precommit verification; new exact-candidate and fresh Raze gates remain.
 
 ## User Instruction
 
@@ -71,8 +71,16 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
 - [x] Direct relations accept only exact recognized fields at the
   representation boundary; suffix aliases and nested extension aliases
   cannot seed or validate predicates.
-- [x] Dereferenced deployed-System property targets must be one System
-  representation; collections and non-System objects contribute no evidence.
+- [x] Canonical GeoJSON direct and `ogc-rel:` relation names, including
+  `systemKind@link`, and SensorML `attachedTo`/`typeOf` mappings are accepted
+  without reopening suffix or nested-extension shortcuts.
+- [x] Dereferenced deployed-System property targets accept every released
+  GeoJSON/SensorML System class and reject collections, non-System objects,
+  and arbitrary `*System` suffix types.
+- [x] Property object-type and combined-filter procedures reject unsupported
+  representations before accepting matching predicates.
+- [x] Keyword exact-mapping evidence describes returned-resource assertions
+  without claiming selected-seed inclusion.
 - [x] Combined filters enumerate every applicable inherited, mandatory
   class-specific, and positively supported custom predicate, then prove every
   evidenced pair uses logical AND.
@@ -121,9 +129,19 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   bounded depth/cycle/read protections.
 - Dereferenced Deployment property targets now reject collections and
   non-System representations before collecting property evidence.
-- Candidate `756d729828d08b88d43ce8ae0ff5f5dd2e5f13b7` and its exact evidence
-  are preserved as superseded audit evidence. Every exact gate must rerun from
-  the new committed candidate.
+- Superseded candidate `060a8aa994d59f0adfa6bfa96fd5fb372b3d6743`
+  passed exact focused
+  `40/0/0/0`, full Maven `594/0/0/3`, source, image/runtime,
+  unmodified-local-OSH, sabotage, credential, immutability, and hygiene gates.
+- Exact image
+  `sha256:a74b3cc8bfe71df11ef4cc13ef8ceb6c0b32e0cffc184e04f9f115c2f215f07e`
+  embeds `Build-Revision: 060a8aa994`.
+- Unmodified local OSH is honestly `238/40/7/191`; all 25 Advanced Filtering
+  methods SKIP at the absent declaration and do not claim positive IUT
+  conformance.
+- API Common sabotage is `238/2/10/226`; all 25 methods cascade-SKIP.
+- Candidate `756d729` and its exact evidence remain preserved as superseded
+  audit evidence.
 - No OSH or TeamEngine source or binary is modified, and no hosted CI is
   added.
 - Initial Raze found seven semantic gaps. Final Raze recheck
@@ -139,6 +157,12 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   `085a81fdaa` is superseded audit evidence. The R3 red baseline is
   `36/3/0/0`; candidate `756d729` passed its exact gates but R4 returned
   `GAPS_FOUND 0.99` for direct-relation boundary shortcuts and unvalidated
-  deployed-System target types. R4 regressions move `40/4/0/0` to focused
-  `40/0/0/0` and full Maven `594/0/0/3`. New exact gates and fresh Raze
-  remain.
+  deployed-System target types. R4 regressions move `40/4/0/0` to exact
+  focused `40/0/0/0` and full Maven `594/0/0/3`. R5 then returned
+  `GAPS_FOUND 0.99` for canonical relation vocabulary, complete/exclusive
+  deployed-System type validation, ignored endpoint-validation results, and a
+  keyword mapping overclaim. R5 HTTP regressions reproduce `42/3/4/0`;
+  remediation passes focused `48/0/0/0`, full Maven `602/0/0/3`, and the
+  regenerated `240/76/2/115/47` coverage report. Candidate `060a8aa` and its
+  gates remain superseded until a new committed candidate repeats every exact
+  gate and passes another fresh Raze review.

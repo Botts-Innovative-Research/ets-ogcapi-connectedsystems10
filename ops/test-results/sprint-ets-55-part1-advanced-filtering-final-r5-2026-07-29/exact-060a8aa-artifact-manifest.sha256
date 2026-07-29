@@ -1,0 +1,17 @@
+a1ba3ad514fe961c5edeff71b778d256a61ed682a97af5c5eaee3b24f2cd863e  ./exact-060a8aa-advanced-filtering-e2e.txt
+18e5cc2fce201b796cfc8337b8fcae3eb55c445c0c48a633804feb6cd3422a6c  ./exact-060a8aa-artifact-hygiene.json
+1e595d971d70ba6a225a734f61571b3f518d46cbb98539de1f45ca34ce836d05  ./exact-060a8aa-artifact-hygiene.txt
+26ab48080436875a60761a8306659cd30dba5514cb5ffd600f9a51c07481d2eb  ./exact-060a8aa-ats-audit.log
+ebb3735c2219151e4b5698eb9d7dd88008dd5e3af28d763e896fd198c9d3dc6e  ./exact-060a8aa-credential-e2e.txt
+63ee56a5b9f6e325f6b4260ca6c19edf3e2f0edad8fe1b562724b9a280c50815  ./exact-060a8aa-credential-integration.txt
+55d2aa0598e5f6ca5b3e722379018062976e9c8b19c8a5a040c62e957b5d872b  ./exact-060a8aa-focused.log
+2bb56fc3156342f91f2c1f8fe377fc48001f5b5565827bf187bfc6664a9f8be0  ./exact-060a8aa-full-maven.log
+a7803c9e027e6ab22e08b4b4d27e19fcf69816a1fd1abeb1648faefcff4f98fa  ./exact-060a8aa-image-build.log
+1418912118380494bc68b5a74f4e0acc3e6c094031c608f0e1aa3979ec645499  ./exact-060a8aa-immutability.txt
+3fd6ae6308f381370f15afb13667b46d91312284bef6499297e29a88056f8d14  ./exact-060a8aa-local-osh-console.log
+0e626c30ee5d8519608400bd91e4a411a176cd4ebe645b511f0b9bab9fed2779  ./exact-060a8aa-local-osh-container.log
+8ac115af6210e1316aabe1b566f95196e4501ab0b85958449ff32e7d59418ebd  ./exact-060a8aa-local-osh.xml
+750f0c45a132dd736da1905ce4aab1bd180822a827a08f2c958810e7b6a94d13  ./exact-060a8aa-runtime.log
+65a2c3f8ccceede33be218c2fec39f2c707eb6774afc41aad489d4067ae2e789  ./exact-060a8aa-sabotage-console.log
+65a2c3f8ccceede33be218c2fec39f2c707eb6774afc41aad489d4067ae2e789  ./exact-060a8aa-sabotage.log
+6fed33c21910f47ae956f53e1a077b3caf4f37640cb4c5cda1b6d28c397be939  ./exact-060a8aa-sabotage.xml

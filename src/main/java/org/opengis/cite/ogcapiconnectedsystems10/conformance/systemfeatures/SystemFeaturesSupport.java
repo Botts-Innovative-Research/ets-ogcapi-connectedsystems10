@@ -47,6 +47,9 @@ public final class SystemFeaturesSupport {
 			"http://www.w3.org/ns/sosa/Sampler", "http://www.w3.org/ns/sosa/Platform",
 			"http://www.w3.org/ns/sosa/System");
 
+	private static final Set<String> SENSORML_SYSTEM_CLASSES = Set.of("PhysicalComponent", "PhysicalSystem",
+			"SimpleProcess", "AggregateProcess");
+
 	private SystemFeaturesSupport() {
 	}
 
@@ -116,6 +119,37 @@ public final class SystemFeaturesSupport {
 
 	static boolean isAllowedSystemType(String systemType) {
 		return ALLOWED_SYSTEM_TYPES.contains(systemType);
+	}
+
+	/**
+	 * Determines whether one object has a released GeoJSON or SensorML System type.
+	 * @param system candidate object.
+	 * @param mediaType actual response media type, or {@code application/json} for
+	 * structurally detected embedded objects.
+	 * @return true only for released System representations.
+	 */
+	public static boolean isReleasedSystemRepresentation(Map<String, Object> system, String mediaType) {
+		if (system == null) {
+			return false;
+		}
+		String normalized = normalizeMediaType(mediaType);
+		if (GEOJSON.equals(normalized)) {
+			return isGeoJsonSystem(system);
+		}
+		if (SENSORML.equals(normalized)) {
+			return isSensorMlSystem(system);
+		}
+		return "application/json".equals(normalized) && (isGeoJsonSystem(system) || isSensorMlSystem(system));
+	}
+
+	private static boolean isGeoJsonSystem(Map<String, Object> system) {
+		return "Feature".equals(system.get("type"))
+				&& systemType(system, GEOJSON).filter(SystemFeaturesSupport::isAllowedSystemType).isPresent();
+	}
+
+	private static boolean isSensorMlSystem(Map<String, Object> system) {
+		return string(system.get("type")).filter(SENSORML_SYSTEM_CLASSES::contains).isPresent()
+				&& systemType(system, SENSORML).filter(SystemFeaturesSupport::isAllowedSystemType).isPresent();
 	}
 
 	static List<Map<String, Object>> selectSystemCollections(List<?> advertised) {

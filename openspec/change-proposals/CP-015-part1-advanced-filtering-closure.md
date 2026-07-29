@@ -9,7 +9,8 @@
 - `REQ-ETS-PART1-009`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: R4 remediation precommit green; exact-candidate gates pending
+**Status**: R5 remediation precommit green; new exact-candidate and fresh Raze
+gates pending
 
 ## Motivation
 
@@ -81,6 +82,12 @@ Association procedures SHALL derive local-ID and UID filters from actual
 relations, validate the filtered endpoint through the corresponding released
 resource representation boundary, and follow the procedure-specific
 associations. Same-origin HTTP traversal SHALL be bounded and cycle-safe.
+Direct relation discovery SHALL recognize the released representation
+vocabulary without suffix matching: GeoJSON `links[].rel` values
+`parentSystem`, `parentDeployment`, `sampleOf`, and their exact `ogc-rel:`
+compact forms; GeoJSON `systemKind@link`; and SensorML `attachedTo` and
+`typeOf`. Unrelated URI schemes, field suffixes, and nested extension aliases
+SHALL NOT contribute evidence.
 Successfully resolved targets SHALL supply their representation local ID and
 UID; link-wrapper IDs, path tokens, and hrefs SHALL not be treated as synthetic
 replacements. Procedures that prescribe deployed-System, features-of-interest,
@@ -111,6 +118,19 @@ Mandatory evidence limitations SHALL aggregate only after all independently
 inspectable endpoints or resources have been processed. Assertion failures,
 HTTP defects, invalid supported representations, unsafe traversal, wrong
 predicates, and later-page defects SHALL not be caught or downgraded.
+Every mandatory filtered collection SHALL pass its released media-specific
+representation validator before its predicates contribute evidence. An
+unsupported generic JSON representation SHALL not PASS
+`/prop-by-object` or `/combined-filters`, even when matching scalar fields are
+present.
+
+A dereferenced deployed-System target SHALL be one object and SHALL match a
+released System representation. GeoJSON permits only `Feature` objects whose
+`featureType` is one of `sosa:System`, `sosa:Sensor`, `sosa:Actuator`,
+`sosa:Sampler`, or `sosa:Platform` in CURIE or full-URI form. SensorML permits
+only `PhysicalComponent`, `PhysicalSystem`, `SimpleProcess`, or
+`AggregateProcess` with an allowed System definition. Suffix matching such as
+`custom:NotSystem` SHALL NOT establish System identity.
 
 ## Released Editorial Resolutions
 
@@ -167,12 +187,30 @@ reference media/pagination, combined-predicate completeness, keyword
 provenance, mapping accuracy, scenario traceability, and exact committed-build
 provenance.
 
-R4 has a reproducible `40/4/0/0` red baseline, focused controlled-HTTP
-`40/0/0/0`, full precommit Docker Maven `594/0/0/3`, and a `20/20`
-scenario-anchor inventory. Direct associations now accept exact recognized
-fields only at representation boundaries, and Deployment property
-dereferences must be non-collection System representations. Candidate
-`756d729` and all its exact gates are superseded audit evidence. A new
-committed candidate must rerun exact Maven, image/runtime,
-unmodified-local-OSH, sabotage, credential, no-mutation, immutability,
-artifact-hygiene, and fresh Raze gates without modifying OSH or TeamEngine.
+R4 has a reproducible `40/4/0/0` red baseline. Exact candidate
+`060a8aa994d59f0adfa6bfa96fd5fb372b3d6743` passes focused controlled HTTP
+`40/0/0/0`, full Docker Maven `594/0/0/3`, and the `20/20` scenario-anchor
+inventory. Direct associations accept exact recognized fields only at
+representation boundaries, and Deployment property dereferences must be
+non-collection System representations.
+
+The superseded exact image
+`sha256:a74b3cc8bfe71df11ef4cc13ef8ceb6c0b32e0cffc184e04f9f115c2f215f07e`
+passes runtime verification. Unmodified local OSH TeamEngine is honestly
+`238/40/7/191`; all 25 Advanced Filtering methods SKIP because the IUT does
+not declare the class. API Common sabotage is `238/2/10/226`; credential,
+no-mutation, immutability, artifact-hygiene, and source gates pass. Candidate
+`756d729` remains superseded audit evidence.
+
+Fresh Raze R5 returned `GAPS_FOUND 0.99`. It found that `ogc-rel:` opaque
+relations and `systemKind@link` were rejected, the deployed-System target type
+gate rejected valid released classes and admitted `custom:NotSystem`, two
+mandatory procedures ignored `validateEndpoint=false`, and the keyword exact
+mapping overstated selected-seed inclusion. R5 HTTP regressions reproduce
+`42/3/4/0`. The remediation accepts only released canonical relation
+vocabulary, applies exact media-aware System allowlists, honors failed
+representation validation, and corrects/regenerates keyword mapping evidence.
+Focused Maven passes `48/0/0/0`, full Maven passes `602/0/0/3`, and coverage
+remains `240/76/2/115/47` with Advanced Filtering `25/25 exact`. Candidate
+`060a8aa` remains superseded; a new committed exact candidate must repeat
+every exact gate and pass another fresh Raze review.

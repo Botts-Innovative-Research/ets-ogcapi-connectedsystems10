@@ -1,0 +1,447 @@
+29-Jul-2026 12:44:31.665 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/10.1.42
+29-Jul-2026 12:44:31.690 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 22:35:46 UTC
+29-Jul-2026 12:44:31.691 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 10.1.42.0
+29-Jul-2026 12:44:31.692 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+29-Jul-2026 12:44:31.693 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.17.0-1026-nvidia
+29-Jul-2026 12:44:31.693 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+29-Jul-2026 12:44:31.694 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /opt/java/openjdk
+29-Jul-2026 12:44:31.695 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.15+6
+29-Jul-2026 12:44:31.695 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+29-Jul-2026 12:44:31.697 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /usr/local/tomcat
+29-Jul-2026 12:44:31.698 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /usr/local/tomcat
+29-Jul-2026 12:44:31.767 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties
+29-Jul-2026 12:44:31.769 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+29-Jul-2026 12:44:31.769 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+29-Jul-2026 12:44:31.770 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx6144m
+29-Jul-2026 12:44:31.770 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -DTE_BASE=/usr/local/tomcat/te_base
+29-Jul-2026 12:44:31.771 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+29-Jul-2026 12:44:31.771 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+29-Jul-2026 12:44:31.772 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dsun.io.useCanonCaches=false
+29-Jul-2026 12:44:31.773 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+29-Jul-2026 12:44:31.773 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+29-Jul-2026 12:44:31.774 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+29-Jul-2026 12:44:31.775 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+29-Jul-2026 12:44:31.777 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+29-Jul-2026 12:44:31.777 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+29-Jul-2026 12:44:31.778 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+29-Jul-2026 12:44:31.778 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dlog4j2.formatMsgNoLookups=true
+29-Jul-2026 12:44:31.779 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/usr/local/tomcat
+29-Jul-2026 12:44:31.780 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/usr/local/tomcat
+29-Jul-2026 12:44:31.780 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/usr/local/tomcat/temp
+29-Jul-2026 12:44:31.802 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [2.0.9] using APR version [1.7.2].
+29-Jul-2026 12:44:31.855 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.0.13 30 Jan 2024]
+29-Jul-2026 12:44:33.494 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+29-Jul-2026 12:44:33.644 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [3358] milliseconds
+29-Jul-2026 12:44:33.857 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+29-Jul-2026 12:44:33.858 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/10.1.42]
+29-Jul-2026 12:44:33.906 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/usr/local/tomcat/webapps/teamengine]
+29-Jul-2026 12:48:00.051 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/usr/local/tomcat/webapps/teamengine] has finished in [206,139] ms
+29-Jul-2026 12:48:00.089 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+29-Jul-2026 12:48:00.148 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [206502] milliseconds
+[Fatal Error] entity-4955599971279181502.tmp:14:7: The element type "link" must be terminated by the matching end-tag "</link>".
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+log4j:WARN No appenders could be found for logger (org.apache.http.impl.conn.BasicClientConnectionManager).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=*/*
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/?f=json
+	Accept=*/*
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/properties
+	Accept=application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/observations?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/observations?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/observations?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/commands?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 JSON resource condition classes are declared for Datastream, ControlStream, and SystemEvent.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/observations?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systemEvents?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common JSON condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common Text condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=1
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=application/vnd.oai.openapi+json, application/json
+Part 2 SWE Common Binary condition classes are declared for Datastream, ControlStream, and CRD.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+IUT declares /conf/json; runtime binding checks still require parent schema and child JSON body evidence.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+REQ-ETS-PART2-013 first increment is read-only: it uses GET-only live evidence and does not seed DataStream, Observation, ControlStream, or Command fixtures.
+[WARNING] http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types - systems/040g UID 'urn:ets:local-osh:system:alpha' is valid but is not a UUID URN or a URN in the bundled IANA registered-namespace snapshot.
+[WARNING] http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types - deployments/040g UID 'urn:ets:local-osh:deployment:alpha' is valid but is not a UUID URN or a URN in the bundled IANA registered-namespace snapshot.
+[WARNING] http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types - procedures/040g UID 'urn:ets:local-osh:procedure:alpha' is valid but is not a UUID URN or a URN in the bundled IANA registered-namespace snapshot.
+[WARNING] http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types - samplingFeatures/040g UID 'urn:ets:local-osh:sampling-feature:alpha' is valid but is not a UUID URN or a URN in the bundled IANA registered-namespace snapshot.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. System direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/canonical-endpoint - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; endpoint procedure not executed for this representation.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/system/resources-endpoint - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; endpoint procedure not executed for this representation.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Procedure direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-endpoint - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/location - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/resources-endpoint - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Deployment direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-endpoint - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/resources-endpoint - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g/deployments
+	Accept=application/geo+json, application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Property Definitions direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/properties
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/canonical-endpoint - http://field-hub-osh-1:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/properties
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/resources-endpoint - http://field-hub-osh-1:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. GeoJSON direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping - http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/deployment-mappings - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/deployment-schema - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/deployments
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types - http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/procedure-mappings - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/procedures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/procedure-schema - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/sf-mappings - http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/sf-schema - http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-mappings - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-schema - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Advanced Filtering direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Subsystem direct procedures will execute despite documented inherited evidence limitation systemResourcesEndpointIsValid.
+Subsystem direct procedures will execute despite documented inherited evidence limitation datetimeUsesValidTime.
+Subsystem direct procedures will execute despite documented inherited evidence limitation mobileSystemLocationIsUpdated.
+Subsystem direct procedures will execute despite documented inherited evidence limitation canonicalSystemsEndpointIsValid.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-assoc - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems?recursive=false
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems?recursive=true
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/collection - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-search-subsystems - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/subsystem/recursive-search-systems - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Sampling Features direct procedures will execute despite documented inherited evidence limitation systemResourcesEndpointIsValid.
+Sampling Features direct procedures will execute despite documented inherited evidence limitation datetimeUsesValidTime.
+Sampling Features direct procedures will execute despite documented inherited evidence limitation mobileSystemLocationIsUpdated.
+Sampling Features direct procedures will execute despite documented inherited evidence limitation canonicalSystemsEndpointIsValid.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/canonical-endpoint - http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g/samplingFeatures
+	Accept=application/geo+json, application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/resources-endpoint - http://field-hub-osh-1:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems/040g?f=sml3
+	Accept=application/sml+json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/systems?limit=2
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://field-hub-osh-1:8081/sensorhub/api/conformance
+	Accept=application/json

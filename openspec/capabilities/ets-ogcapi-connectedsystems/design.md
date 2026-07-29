@@ -14,6 +14,14 @@
 > Part 2 Connected Systems coverage, canonical run arguments, and local OSH as
 > the primary development E2E target.
 
+> Sprint 56 addition (2026-07-29): CP-016 replaces the historical
+> Create/Replace/Delete subset with twelve direct released procedures.
+> `CreateReplaceDeleteSupport` centralizes inherited Features Part 4
+> transaction semantics and cleanup, while each TestNG method owns its
+> declarations, applicability, resources, and mutation gate. Positive writes
+> run only on the owned isolated local OSH workflow; the primary IUT remains
+> read-only and external OSH/TeamEngine artifacts remain immutable.
+
 ## Overview
 
 This design translates capability spec REQ-ETS-* into a concrete Java/TestNG component layout for the new repo `ets-ogcapi-connectedsystems10` (per ADR-003 — note: PRD §FR-ETS-01 and capability spec §REQ-ETS-SCAFFOLD-001 reference the older `ets-ogcapi-connectedsystems-1` artifactId; the ADR-003 form is authoritative and Sam will reconcile the spec strings at the next planning cycle).

@@ -716,6 +716,114 @@
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
       "evidence": "The recommendation procedure evaluates recursively indirect Feature of Interest filtering across Systems, Deployments, and Sampling Features, compares complete direct, parent, and ultimate result sets, and emits visible warnings when recommendation evidence is unavailable."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/system",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#systemsCreateReplaceDelete()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method checks direct declarations and mutation ownership, then executes the inherited OPTIONS, POST, Location, canonical GET, PUT, changed-content GET, DELETE, and deletion postconditions for every applicable declared GeoJSON and SensorML System representation."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/system-delete-cascade",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#systemDeleteCascade()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method creates both released dependency graphs, requires exact HTTP 409 without cascade, proves graph preservation, cascade-deletes nested resources, and verifies a surviving Deployment retains only the unrelated System association."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/subsystem",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#subsystemsCreate()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method creates an owned parent, executes inherited create behavior at its nested subsystems endpoint for every applicable declared System representation, and verifies canonical content before reverse-order cleanup."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/deployment",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#deploymentsCreateReplaceDelete()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method executes the complete inherited create, replace, and delete transaction with canonical content postconditions for every applicable declared GeoJSON and SensorML Deployment representation."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/subdeployment",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#subdeploymentsCreate()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method creates an owned parent Deployment, executes inherited create behavior at its nested subdeployments endpoint for every applicable declared Deployment representation, and verifies each canonical resource."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/procedure",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#proceduresCreateReplaceDelete()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method executes complete inherited create, replace, and delete behavior with changed canonical content and deletion postconditions for every applicable declared GeoJSON and SensorML Procedure representation."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/sampling-feature",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#samplingFeaturesCreateReplaceDelete()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method creates an owned parent System, POSTs each applicable declared Sampling Feature representation through the parent-scoped endpoint, and performs canonical replacement, changed-content, deletion, and cleanup checks."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/property",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#propertiesCreateReplaceDelete()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method executes complete inherited create, replace, and delete behavior for the declared SensorML Property representation, including submitted-content and synchronous deletion postconditions."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/create-in-collection",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#resourcesCreateInCustomCollections()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method discovers every advertised non-root collection for declared Part 1 resource types, creates each applicable declared representation through collections/{id}/items, and verifies equivalent submitted content at the canonical root URL."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/replace-in-collection",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#resourcesReplaceInCustomCollections()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method creates owned custom-collection resources for every applicable declared representation, replaces through each collection-item URL, and proves replacement content at the canonical root URL."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/delete-in-collection",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#resourcesDeleteInCustomCollections()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method tests both released propagation directions for every custom resource type and applicable representation: canonical root deletion removes the custom occurrence, while non-root deletion leaves the canonical resource available."
+    },
+    {
+      "part": 1,
+      "test": "/conf/create-replace-delete/add-to-collection",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests#resourcesAddToCustomCollections()",
+      "reviewedBy": "Codex Sprint 56 ATS line review",
+      "reviewedOn": "2026-07-29",
+      "evidence": "The independent method creates same-IUT canonical resources for every custom collection and applicable representation, POSTs one canonical URI per line as exact text/uri-list, and verifies equivalent collection-item representations."
     }
   ]
 }

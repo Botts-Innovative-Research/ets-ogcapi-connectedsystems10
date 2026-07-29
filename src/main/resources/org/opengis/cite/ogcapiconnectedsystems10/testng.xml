@@ -181,7 +181,7 @@
         <group name="geojson" depends-on="part1apicommon"/>
         <group name="sensorml" depends-on="systemfeatures"/>
         <group name="advancedfiltering" depends-on="part1apicommon"/>
-        <group name="createreplacedelete" depends-on="systemfeatures"/>
+        <group name="createreplacedelete" depends-on="part1apicommon"/>
         <group name="update" depends-on="createreplacedelete"/>
         <group name="part2apicommon" depends-on="core common"/>
         <group name="part2datastream" depends-on="core common"/>

@@ -1,0 +1,1097 @@
+package org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete;
+
+import java.net.URI;
+import java.net.URLEncoder;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+
+import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
+import org.opengis.cite.ogcapiconnectedsystems10.TestRunArg;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.EncodingMediatypeWrite;
+import org.testng.SkipException;
+
+import io.restassured.response.Response;
+
+/**
+ * Stateful, per-procedure support for the released Create/Replace/Delete ATS.
+ */
+public final class CreateReplaceDeleteSupport {
+
+	private static final String CONF_BASE = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/";
+
+	private static final String CONF_CREATE_REPLACE_DELETE = CONF_BASE + "create-replace-delete";
+
+	private static final String CONF_API_COMMON = CONF_BASE + "api-common";
+
+	private static final String CONF_FEATURES4_CREATE_REPLACE_DELETE = "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete";
+
+	private static final String REQ_BASE = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/";
+
+	static final String CONF_GEOJSON = CONF_BASE + "geojson";
+
+	static final String CONF_SENSORML = CONF_BASE + "sensorml";
+
+	private static final String GEOJSON = "application/geo+json";
+
+	private static final String SENSORML = "application/sml+json";
+
+	private static final String ENABLED = "true";
+
+	private static final String DEDICATED_POLICY = "dedicated-mutable-iut";
+
+	private static final ResourceKind SYSTEM = new ResourceKind("System", "systems", CONF_BASE + "system",
+			"sosa:System", false);
+
+	private static final ResourceKind DEPLOYMENT = new ResourceKind("Deployment", "deployments",
+			CONF_BASE + "deployment", "sosa:Deployment", false);
+
+	private static final ResourceKind PROCEDURE = new ResourceKind("Procedure", "procedures", CONF_BASE + "procedure",
+			"sosa:Procedure", false);
+
+	private static final ResourceKind SAMPLING_FEATURE = new ResourceKind("Sampling Feature", "samplingFeatures",
+			CONF_BASE + "sf", "sosa:Sample", false);
+
+	private static final ResourceKind PROPERTY = new ResourceKind("Property", "properties", CONF_BASE + "property",
+			"sosa:Property", true);
+
+	private static final List<ResourceKind> CUSTOM_KINDS = List.of(SYSTEM, PROCEDURE, DEPLOYMENT, SAMPLING_FEATURE,
+			PROPERTY);
+
+	private final URI apiRoot;
+
+	private final String mutationTestsEnabled;
+
+	private final String mutationIutPolicy;
+
+	/**
+	 * Creates isolated support for one independently executable procedure.
+	 * @param apiRoot normalized API root.
+	 * @param mutationTestsEnabled explicit mutation flag.
+	 * @param mutationIutPolicy explicit ownership policy.
+	 */
+	public CreateReplaceDeleteSupport(URI apiRoot, String mutationTestsEnabled, String mutationIutPolicy) {
+		if (apiRoot == null || !apiRoot.isAbsolute()) {
+			throw new IllegalArgumentException("apiRoot must be absolute");
+		}
+		String value = apiRoot.toString();
+		this.apiRoot = URI.create(value.endsWith("/") ? value : value + "/");
+		this.mutationTestsEnabled = mutationTestsEnabled;
+		this.mutationIutPolicy = mutationIutPolicy;
+	}
+
+	/**
+	 * Executes abstract test A.67.
+	 */
+	public void systemsCreateReplaceDelete() {
+		String requirement = REQ_BASE + "system";
+		Map<String, Object> conformance = prepare(requirement, SYSTEM.condition());
+		executeWithCleanup(requirement,
+				cleanup -> transactions(SYSTEM, this.apiRoot.resolve("systems"), conformance, requirement, cleanup));
+	}
+
+	/**
+	 * Executes abstract test A.68.
+	 */
+	public void systemDeleteCascade() {
+		String requirement = REQ_BASE + "system-delete-cascade";
+		Map<String, Object> conformance = prepare(requirement, SYSTEM.condition());
+		executeWithCleanup(requirement, cleanup -> {
+			String systemMediaType = preferredMediaType(SYSTEM, conformance, requirement);
+			String deploymentMediaType = preferredMediaType(DEPLOYMENT, conformance, requirement);
+			String parentUid = uid("cascade-parent");
+			OwnedResource parent = createOwned(this.apiRoot.resolve("systems"),
+					body(SYSTEM, systemMediaType, "parent", parentUid), systemMediaType, SYSTEM, requirement, cleanup,
+					true);
+			OwnedResource child = createOwned(childCollection(parent.uri(), "subsystems"),
+					body(SYSTEM, systemMediaType, "child", uid("cascade-child")), systemMediaType, SYSTEM, requirement,
+					cleanup, true);
+
+			assertDeleteConflict(parent.uri(), requirement);
+			assertAvailable(parent.uri(), requirement);
+			assertAvailable(child.uri(), requirement);
+			delete(parent, true, requirement);
+			assertGone(parent.uri(), requirement);
+			assertGone(child.uri(), requirement);
+
+			String targetUid = uid("cascade-target");
+			String survivorUid = uid("cascade-survivor");
+			OwnedResource target = createOwned(this.apiRoot.resolve("systems"),
+					body(SYSTEM, systemMediaType, "target", targetUid), systemMediaType, SYSTEM, requirement, cleanup,
+					true);
+			OwnedResource survivor = createOwned(this.apiRoot.resolve("systems"),
+					body(SYSTEM, systemMediaType, "survivor", survivorUid), systemMediaType, SYSTEM, requirement,
+					cleanup, true);
+			OwnedResource deployment = createOwned(this.apiRoot.resolve("deployments"),
+					body(DEPLOYMENT, deploymentMediaType, "association", uid("cascade-deployment"),
+							List.of(targetUid, survivorUid)),
+					deploymentMediaType, DEPLOYMENT, requirement, cleanup, false);
+
+			assertDeleteConflict(target.uri(), requirement);
+			assertAvailable(target.uri(), requirement);
+			assertAvailable(survivor.uri(), requirement);
+			assertAvailable(deployment.uri(), requirement);
+			delete(target, true, requirement);
+
+			Map<String, Object> remainingDeployment = getJson(deployment.uri(), deploymentMediaType, 200, requirement);
+			if (containsString(remainingDeployment, targetUid) || containsString(remainingDeployment, target.uri())) {
+				ETSAssert.failWithUri(requirement,
+						"surviving Deployment still references the cascade-deleted System " + target.uri() + ".");
+			}
+			if (!containsString(remainingDeployment, survivorUid)
+					&& !containsString(remainingDeployment, survivor.uri())) {
+				ETSAssert.failWithUri(requirement,
+						"surviving Deployment lost the unrelated System association " + survivor.uri() + ".");
+			}
+			assertGone(target.uri(), requirement);
+			assertAvailable(survivor.uri(), requirement);
+		});
+	}
+
+	/**
+	 * Executes abstract test A.69.
+	 */
+	public void subsystemsCreate() {
+		String requirement = REQ_BASE + "subsystem";
+		Map<String, Object> conformance = prepare(requirement, CONF_BASE + "subsystem");
+		executeWithCleanup(requirement, cleanup -> {
+			String parentMediaType = preferredMediaType(SYSTEM, conformance, requirement);
+			OwnedResource parent = createOwned(this.apiRoot.resolve("systems"),
+					body(SYSTEM, parentMediaType, "subsystem-parent", uid("subsystem-parent")), parentMediaType, SYSTEM,
+					requirement, cleanup, true);
+			for (String mediaType : supportedMediaTypes(SYSTEM.path(), conformance, requirement)) {
+				Map<String, Object> child = body(SYSTEM, mediaType, "subsystem", uid("subsystem"));
+				createOnly(childCollection(parent.uri(), "subsystems"), child, mediaType, SYSTEM, requirement, cleanup,
+						true);
+			}
+		});
+	}
+
+	/**
+	 * Executes abstract test A.70.
+	 */
+	public void deploymentsCreateReplaceDelete() {
+		String requirement = REQ_BASE + "deployment";
+		Map<String, Object> conformance = prepare(requirement, DEPLOYMENT.condition());
+		executeWithCleanup(requirement, cleanup -> transactions(DEPLOYMENT, this.apiRoot.resolve("deployments"),
+				conformance, requirement, cleanup));
+	}
+
+	/**
+	 * Executes abstract test A.71.
+	 */
+	public void subdeploymentsCreate() {
+		String requirement = REQ_BASE + "subdeployment";
+		Map<String, Object> conformance = prepare(requirement, CONF_BASE + "subdeployment");
+		executeWithCleanup(requirement, cleanup -> {
+			String parentMediaType = preferredMediaType(DEPLOYMENT, conformance, requirement);
+			OwnedResource parent = createOwned(this.apiRoot.resolve("deployments"),
+					body(DEPLOYMENT, parentMediaType, "subdeployment-parent", uid("subdeployment-parent")),
+					parentMediaType, DEPLOYMENT, requirement, cleanup, false);
+			for (String mediaType : supportedMediaTypes(DEPLOYMENT.path(), conformance, requirement)) {
+				Map<String, Object> child = body(DEPLOYMENT, mediaType, "subdeployment", uid("subdeployment"));
+				createOnly(childCollection(parent.uri(), "subdeployments"), child, mediaType, DEPLOYMENT, requirement,
+						cleanup, false);
+			}
+		});
+	}
+
+	/**
+	 * Executes abstract test A.72.
+	 */
+	public void proceduresCreateReplaceDelete() {
+		String requirement = REQ_BASE + "procedure";
+		Map<String, Object> conformance = prepare(requirement, PROCEDURE.condition());
+		executeWithCleanup(requirement, cleanup -> transactions(PROCEDURE, this.apiRoot.resolve("procedures"),
+				conformance, requirement, cleanup));
+	}
+
+	/**
+	 * Executes abstract test A.73.
+	 */
+	public void samplingFeaturesCreateReplaceDelete() {
+		String requirement = REQ_BASE + "sampling-feature";
+		Map<String, Object> conformance = prepare(requirement, SAMPLING_FEATURE.condition());
+		executeWithCleanup(requirement, cleanup -> {
+			String parentMediaType = preferredMediaType(SYSTEM, conformance, requirement);
+			OwnedResource parent = createOwned(this.apiRoot.resolve("systems"),
+					body(SYSTEM, parentMediaType, "sampling-parent", uid("sampling-parent")), parentMediaType, SYSTEM,
+					requirement, cleanup, true);
+			for (String mediaType : supportedMediaTypes(SAMPLING_FEATURE.path(), conformance, requirement)) {
+				String samplingUid = uid("sampling-feature");
+				transaction(SAMPLING_FEATURE, childCollection(parent.uri(), "samplingFeatures"),
+						body(SAMPLING_FEATURE, mediaType, "create", samplingUid),
+						identity -> body(SAMPLING_FEATURE, mediaType, "replace", identity), mediaType, requirement,
+						cleanup);
+			}
+		});
+	}
+
+	/**
+	 * Executes abstract test A.74.
+	 */
+	public void propertiesCreateReplaceDelete() {
+		String requirement = REQ_BASE + "property";
+		Map<String, Object> conformance = prepare(requirement, PROPERTY.condition());
+		executeWithCleanup(requirement, cleanup -> transactions(PROPERTY, this.apiRoot.resolve("properties"),
+				conformance, requirement, cleanup));
+	}
+
+	/**
+	 * Executes abstract test A.75.
+	 */
+	public void resourcesCreateInCustomCollections() {
+		String requirement = REQ_BASE + "create-in-collection";
+		List<CustomCollection> collections = prepareCustomCollections(requirement);
+		executeWithCleanup(requirement, cleanup -> {
+			for (CustomCollection collection : collections) {
+				for (String mediaType : collection.mediaTypes()) {
+					String resourceUid = uid("custom-create-" + collection.kind().path());
+					Map<String, Object> body = body(collection.kind(), mediaType, "create", resourceUid);
+					OwnedResource created = createOwned(collection.itemsUri(), body, mediaType, collection.kind(),
+							requirement, cleanup, collection.kind() == SYSTEM);
+					URI canonical = canonicalUri(collection.kind(), created.uri());
+					cleanup.push("canonical custom-created resource " + canonical,
+							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
+					assertSubmittedContent(body, getJson(canonical, mediaType, 200, requirement), requirement);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Executes abstract test A.76.
+	 */
+	public void resourcesReplaceInCustomCollections() {
+		String requirement = REQ_BASE + "replace-in-collection";
+		List<CustomCollection> collections = prepareCustomCollections(requirement);
+		executeWithCleanup(requirement, cleanup -> {
+			for (CustomCollection collection : collections) {
+				for (String mediaType : collection.mediaTypes()) {
+					String resourceUid = uid("custom-replace-" + collection.kind().path());
+					Map<String, Object> create = body(collection.kind(), mediaType, "create", resourceUid);
+					OwnedResource created = createOwned(collection.itemsUri(), create, mediaType, collection.kind(),
+							requirement, cleanup, collection.kind() == SYSTEM);
+					String id = lastPathSegment(created.uri(), requirement);
+					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
+					Map<String, Object> replacement = body(collection.kind(), mediaType, "replace", resourceUid);
+					assertOptions(collectionItem, List.of("PUT"), requirement);
+					Response put = request(mediaType, replacement).put(collectionItem).andReturn();
+					assertStatusIn(put, List.of(200, 204), requirement, "PUT " + collectionItem);
+					URI canonical = canonicalUri(collection.kind(), created.uri());
+					cleanup.push("canonical custom-created resource " + canonical,
+							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
+					assertSubmittedContent(replacement, getJson(canonical, mediaType, 200, requirement), requirement);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Executes abstract test A.77.
+	 */
+	public void resourcesDeleteInCustomCollections() {
+		String requirement = REQ_BASE + "delete-in-collection";
+		List<CustomCollection> collections = prepareCustomCollections(requirement);
+		executeWithCleanup(requirement, cleanup -> {
+			for (CustomCollection collection : collections) {
+				for (String mediaType : collection.mediaTypes()) {
+					Map<String, Object> rootDeleteBody = body(collection.kind(), mediaType, "root-delete",
+							uid("custom-root-delete"));
+					OwnedResource rootDelete = createOwned(collection.itemsUri(), rootDeleteBody, mediaType,
+							collection.kind(), requirement, cleanup, collection.kind() == SYSTEM);
+					String rootDeleteId = lastPathSegment(rootDelete.uri(), requirement);
+					URI rootDeleteItem = childCollection(collection.itemsUri(), encoded(rootDeleteId));
+					URI rootDeleteCanonical = canonicalUri(collection.kind(), rootDelete.uri());
+					cleanup.push("canonical custom-created resource " + rootDeleteCanonical,
+							() -> cleanupDelete(rootDeleteCanonical, collection.kind() == SYSTEM, requirement));
+					delete(new OwnedResource(rootDeleteCanonical, collection.kind() == SYSTEM),
+							collection.kind() == SYSTEM, requirement);
+					assertGone(rootDeleteCanonical, requirement);
+					assertGone(rootDeleteItem, requirement);
+
+					Map<String, Object> occurrenceBody = body(collection.kind(), mediaType, "occurrence-delete",
+							uid("custom-occurrence-delete"));
+					OwnedResource occurrence = createOwned(collection.itemsUri(), occurrenceBody, mediaType,
+							collection.kind(), requirement, cleanup, collection.kind() == SYSTEM);
+					String occurrenceId = lastPathSegment(occurrence.uri(), requirement);
+					URI collectionItem = childCollection(collection.itemsUri(), encoded(occurrenceId));
+					assertOptions(collectionItem, List.of("DELETE"), requirement);
+					Response delete = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+						.accept(mediaType)
+						.delete(collectionItem)
+						.andReturn();
+					assertStatusIn(delete, List.of(200, 202, 204), requirement, "DELETE " + collectionItem);
+					URI canonical = canonicalUri(collection.kind(), occurrence.uri());
+					cleanup.push("canonical custom-created resource " + canonical,
+							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
+					assertAvailable(canonical, requirement);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Executes abstract test A.78.
+	 */
+	public void resourcesAddToCustomCollections() {
+		String requirement = REQ_BASE + "add-to-collection";
+		List<CustomCollection> collections = prepareCustomCollections(requirement);
+		executeWithCleanup(requirement, cleanup -> {
+			for (CustomCollection collection : collections) {
+				for (String mediaType : collection.mediaTypes()) {
+					Map<String, Object> body = body(collection.kind(), mediaType, "add", uid("custom-add"));
+					OwnedResource canonical = createOwned(this.apiRoot.resolve(collection.kind().path()), body,
+							mediaType, collection.kind(), requirement, cleanup, collection.kind() == SYSTEM);
+					Response add = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+						.accept("application/json")
+						.contentType("text/uri-list")
+						.body(canonical.uri() + "\n")
+						.post(collection.itemsUri())
+						.andReturn();
+					assertStatusIn(add, List.of(200, 201, 204), requirement,
+							"POST text/uri-list " + collection.itemsUri());
+					String id = lastPathSegment(canonical.uri(), requirement);
+					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
+					Map<String, Object> expected = getJson(canonical.uri(), mediaType, 200, requirement);
+					Map<String, Object> actual = getJson(collectionItem, mediaType, 200, requirement);
+					assertSubmittedContent(expected, actual, requirement);
+					cleanup.push("custom collection occurrence " + collectionItem,
+							() -> cleanupDelete(collectionItem, false, requirement));
+				}
+			}
+		});
+	}
+
+	private Map<String, Object> prepare(String requirement, String condition) {
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json")
+			.get(this.apiRoot.resolve("conformance"))
+			.andReturn();
+		ETSAssert.assertStatus(response, 200, requirement);
+		Map<String, Object> body = parseBody(response, requirement, "GET /conformance");
+		requireDeclaration(body, CONF_CREATE_REPLACE_DELETE, requirement,
+				"IUT does not declare the Part 1 Create/Replace/Delete conformance class.");
+		requireDeclaration(body, CONF_API_COMMON, requirement,
+				"IUT does not declare the direct Part 1 API Common prerequisite.");
+		requireDeclaration(body, CONF_FEATURES4_CREATE_REPLACE_DELETE, requirement,
+				"IUT does not declare the inherited OGC API Features Part 4 prerequisite.");
+		requireDeclaration(body, condition, requirement,
+				"conditional resource conformance class is not declared; this procedure is not applicable.");
+		ensureMutationAllowed(this.apiRoot, this.mutationTestsEnabled, this.mutationIutPolicy, requirement);
+		return body;
+	}
+
+	private List<CustomCollection> prepareCustomCollections(String requirement) {
+		Map<String, Object> conformance = prepare(requirement, CONF_API_COMMON);
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json")
+			.get(this.apiRoot.resolve("collections"))
+			.andReturn();
+		ETSAssert.assertStatus(response, 200, requirement);
+		Map<String, Object> body = parseBody(response, requirement, "GET /collections");
+		Object advertised = body.get("collections");
+		if (!(advertised instanceof List)) {
+			ETSAssert.failWithUri(requirement, "/collections is missing its collections array.");
+		}
+		List<CustomCollection> result = new ArrayList<>();
+		for (Object value : (List<?>) advertised) {
+			if (!(value instanceof Map)) {
+				ETSAssert.failWithUri(requirement, "/collections contains a non-object collection entry.");
+			}
+			@SuppressWarnings("unchecked")
+			Map<String, Object> collection = (Map<String, Object>) value;
+			String id = string(collection.get("id"));
+			if (id == null) {
+				ETSAssert.failWithUri(requirement, "advertised collection is missing a non-empty string id.");
+			}
+			if (!isCustomCollection(id)) {
+				continue;
+			}
+			for (ResourceKind kind : CUSTOM_KINDS) {
+				if (declares(conformance, kind.condition()) && kind.matches(collection)) {
+					result.add(new CustomCollection(kind, id,
+							this.apiRoot.resolve("collections/" + encoded(id) + "/items"),
+							supportedMediaTypes(kind.path(), conformance, requirement)));
+				}
+			}
+		}
+		if (result.isEmpty()) {
+			throw new SkipException(requirement
+					+ " - the IUT advertises no non-root collection for a declared System, Procedure, Deployment, Sampling Feature, or Property type; no custom-collection evidence exists.");
+		}
+		return List.copyOf(result);
+	}
+
+	private void transactions(ResourceKind kind, URI collection, Map<String, Object> conformance, String requirement,
+			CleanupStack cleanup) {
+		for (String mediaType : supportedMediaTypes(kind.path(), conformance, requirement)) {
+			String identity = uid(kind.path());
+			transaction(kind, collection, body(kind, mediaType, "create", identity),
+					stableIdentity -> body(kind, mediaType, "replace", stableIdentity), mediaType, requirement,
+					cleanup);
+		}
+	}
+
+	private void transaction(ResourceKind kind, URI collection, Map<String, Object> createBody,
+			BodyFactory replacementFactory, String mediaType, String requirement, CleanupStack cleanup) {
+		assertOptions(collection, List.of("POST"), requirement);
+		OwnedResource resource = createOwned(collection, createBody, mediaType, kind, requirement, cleanup,
+				kind == SYSTEM);
+		Map<String, Object> created = getJson(resource.uri(), mediaType, 200, requirement);
+		assertSubmittedContent(createBody, created, requirement);
+
+		assertOptions(resource.uri(), List.of("PUT", "DELETE"), requirement);
+		String identity = resourceIdentity(createBody, requirement);
+		Map<String, Object> replacement = replacementFactory.create(identity);
+		Response replace = request(mediaType, replacement).put(resource.uri()).andReturn();
+		assertStatusIn(replace, List.of(200, 204), requirement, "PUT " + resource.uri());
+
+		Map<String, Object> replaced = getJson(resource.uri(), mediaType, 200, requirement);
+		assertSubmittedContent(replacement, replaced, requirement);
+		if (Objects.equals(createBody, replacement)) {
+			ETSAssert.failWithUri(requirement, "replacement fixture did not change representation content.");
+		}
+
+		delete(resource, false, requirement);
+		assertGone(resource.uri(), requirement);
+	}
+
+	private OwnedResource createOnly(URI collection, Map<String, Object> body, String mediaType, ResourceKind kind,
+			String requirement, CleanupStack cleanup, boolean cascadeCleanup) {
+		assertOptions(collection, List.of("POST"), requirement);
+		OwnedResource created = createOwned(collection, body, mediaType, kind, requirement, cleanup, cascadeCleanup);
+		assertSubmittedContent(body, getJson(created.uri(), mediaType, 200, requirement), requirement);
+		return created;
+	}
+
+	private OwnedResource createOwned(URI collection, Map<String, Object> body, String mediaType, ResourceKind kind,
+			String requirement, CleanupStack cleanup, boolean cascadeCleanup) {
+		Response response = request(mediaType, body).post(collection).andReturn();
+		ETSAssert.assertStatus(response, 201, requirement);
+		URI fallbackUri = fallbackCreatedResourceUri(response, kind);
+		if (fallbackUri != null) {
+			cleanup.push("created resource fallback " + fallbackUri,
+					() -> cleanupDelete(fallbackUri, cascadeCleanup, requirement));
+		}
+		String location = response.getHeader("Location");
+		if (location == null || location.isBlank()) {
+			ETSAssert.failWithUri(requirement, "POST " + collection + " returned HTTP 201 without Location.");
+		}
+		URI resourceUri = resolveCreatedResourceUri(this.apiRoot, location, requirement);
+		OwnedResource owned = new OwnedResource(resourceUri, cascadeCleanup);
+		if (!resourceUri.equals(fallbackUri)) {
+			cleanup.push("created resource " + resourceUri,
+					() -> cleanupDelete(resourceUri, cascadeCleanup, requirement));
+		}
+		return owned;
+	}
+
+	private URI fallbackCreatedResourceUri(Response response, ResourceKind kind) {
+		try {
+			String id = string(response.jsonPath().getString("id"));
+			return id == null ? null : this.apiRoot.resolve(kind.path() + "/" + encoded(id));
+		}
+		catch (RuntimeException ex) {
+			return null;
+		}
+	}
+
+	private io.restassured.specification.RequestSpecification request(String mediaType, Map<String, Object> body) {
+		return EncodingMediatypeWrite.givenWithoutDefaultCharset().accept(mediaType).contentType(mediaType).body(body);
+	}
+
+	private void assertOptions(URI uri, List<String> expectedMethods, String requirement) {
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset().accept("*/*").options(uri).andReturn();
+		ETSAssert.assertStatus(response, 200, requirement);
+		String allow = response.getHeader("Allow");
+		List<String> advertised = allow == null ? List.of()
+				: Arrays.stream(allow.split(","))
+					.map(String::trim)
+					.map(value -> value.toUpperCase(Locale.ROOT))
+					.toList();
+		for (String method : expectedMethods) {
+			if (!advertised.contains(method)) {
+				ETSAssert.failWithUri(requirement,
+						"OPTIONS " + uri + " must advertise " + method + " in Allow; received " + allow + ".");
+			}
+		}
+	}
+
+	private void assertDeleteConflict(URI system, String requirement) {
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json")
+			.queryParam("cascade", false)
+			.delete(system)
+			.andReturn();
+		ETSAssert.assertStatus(response, 409, requirement);
+	}
+
+	private void delete(OwnedResource resource, boolean cascade, String requirement) {
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json")
+			.queryParam("cascade", cascade)
+			.delete(resource.uri())
+			.andReturn();
+		assertStatusIn(response, List.of(200, 202, 204), requirement, "DELETE " + resource.uri());
+		if (response.getStatusCode() == 202) {
+			awaitGone(resource.uri(), requirement);
+		}
+	}
+
+	private void cleanupDelete(URI resource, boolean cascade, String requirement) {
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json")
+			.queryParam("cascade", cascade)
+			.delete(resource)
+			.andReturn();
+		assertStatusIn(response, List.of(200, 202, 204, 404), requirement, "cleanup DELETE " + resource);
+		if (response.getStatusCode() == 202) {
+			awaitGone(resource, requirement);
+		}
+	}
+
+	private void awaitGone(URI resource, String requirement) {
+		for (int attempt = 0; attempt < 20; attempt++) {
+			Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+				.accept("application/json")
+				.get(resource)
+				.andReturn();
+			if (response.getStatusCode() == 404) {
+				return;
+			}
+			try {
+				Thread.sleep(100L);
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+				ETSAssert.failWithUri(requirement, "interrupted while waiting for deletion of " + resource + ".");
+			}
+		}
+		ETSAssert.failWithUri(requirement, resource + " remained available after asynchronous DELETE.");
+	}
+
+	private void assertAvailable(URI resource, String requirement) {
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json")
+			.get(resource)
+			.andReturn();
+		ETSAssert.assertStatus(response, 200, requirement);
+	}
+
+	private void assertGone(URI resource, String requirement) {
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json")
+			.get(resource)
+			.andReturn();
+		ETSAssert.assertStatus(response, 404, requirement);
+	}
+
+	private Map<String, Object> getJson(URI resource, String mediaType, int status, String requirement) {
+		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept(mediaType)
+			.get(resource)
+			.andReturn();
+		ETSAssert.assertStatus(response, status, requirement);
+		return parseBody(response, requirement, "GET " + resource);
+	}
+
+	private Map<String, Object> parseBody(Response response, String requirement, String operation) {
+		try {
+			Map<String, Object> body = response.jsonPath().getMap("$");
+			if (body == null) {
+				ETSAssert.failWithUri(requirement, operation + " did not return a JSON object.");
+			}
+			return body;
+		}
+		catch (RuntimeException ex) {
+			ETSAssert.failWithUri(requirement, operation + " did not return parseable JSON: " + ex.getMessage() + ".");
+			return Map.of();
+		}
+	}
+
+	private void requireDeclaration(Map<String, Object> body, String conformanceClass, String requirement,
+			String reason) {
+		if (!declares(body, conformanceClass)) {
+			throw new SkipException(requirement + " - " + reason + " Missing exact URI " + conformanceClass
+					+ ". No POST, PUT, or DELETE request was issued.");
+		}
+	}
+
+	private static boolean declares(Map<String, Object> body, String conformanceClass) {
+		Object value = body.get("conformsTo");
+		return value instanceof List && ((List<?>) value).contains(conformanceClass);
+	}
+
+	static List<String> supportedMediaTypes(String resourcePath, Map<String, Object> conformance, String requirement) {
+		List<String> mediaTypes = new ArrayList<>();
+		boolean featureResource = "systems".equals(resourcePath) || "deployments".equals(resourcePath)
+				|| "procedures".equals(resourcePath) || "samplingFeatures".equals(resourcePath);
+		boolean sensorMlResource = "systems".equals(resourcePath) || "deployments".equals(resourcePath)
+				|| "procedures".equals(resourcePath) || "properties".equals(resourcePath);
+		if (featureResource && declares(conformance, CONF_GEOJSON)) {
+			mediaTypes.add(GEOJSON);
+		}
+		if (sensorMlResource && declares(conformance, CONF_SENSORML)) {
+			mediaTypes.add(SENSORML);
+		}
+		if (mediaTypes.isEmpty()) {
+			throw new SkipException(requirement + " - no applicable declared GeoJSON or SensorML representation is "
+					+ "available for " + resourcePath + "; no write request was issued.");
+		}
+		return List.copyOf(mediaTypes);
+	}
+
+	private static String preferredMediaType(ResourceKind kind, Map<String, Object> conformance, String requirement) {
+		List<String> supported = supportedMediaTypes(kind.path(), conformance, requirement);
+		if (kind == DEPLOYMENT && supported.contains(SENSORML)) {
+			return SENSORML;
+		}
+		return supported.get(0);
+	}
+
+	private void executeWithCleanup(String requirement, Procedure procedure) {
+		CleanupStack cleanup = new CleanupStack(requirement);
+		Throwable primary = null;
+		try {
+			procedure.run(cleanup);
+		}
+		catch (Throwable thrown) {
+			primary = thrown;
+		}
+		Throwable result = cleanup.close(primary);
+		if (result instanceof Error) {
+			throw (Error) result;
+		}
+		if (result instanceof RuntimeException) {
+			throw (RuntimeException) result;
+		}
+		if (result != null) {
+			throw new IllegalStateException(result);
+		}
+	}
+
+	/**
+	 * Enforces the explicit ownership gate before any write.
+	 * @param apiRoot API root.
+	 * @param enabled mutation flag.
+	 * @param policy ownership policy.
+	 * @param requirement owning requirement.
+	 */
+	static void ensureMutationAllowed(URI apiRoot, String enabled, String policy, String requirement) {
+		if (!ENABLED.equals(enabled) || !DEDICATED_POLICY.equals(policy)) {
+			throw new SkipException(requirement + " - mutation procedures are disabled. Set "
+					+ TestRunArg.MUTATION_TESTS_ENABLED + "=true and " + TestRunArg.MUTATION_IUT_POLICY + "="
+					+ DEDICATED_POLICY + ". No POST, PUT, or DELETE request was issued.");
+		}
+		String host = apiRoot.getHost();
+		if ("api.georobotix.io".equalsIgnoreCase(host)) {
+			throw new SkipException(requirement
+					+ " - the known shared public GeoRobotix IUT is hard-denied for mutation. No POST, PUT, or DELETE request was issued.");
+		}
+	}
+
+	/**
+	 * Resolves a Location value and rejects credential-bearing cross-origin follow-up
+	 * requests.
+	 * @param apiRoot normalized API root.
+	 * @param location Location value.
+	 * @param requirement owning requirement.
+	 * @return same-origin absolute URI.
+	 */
+	static URI resolveCreatedResourceUri(URI apiRoot, String location, String requirement) {
+		URI supplied;
+		try {
+			supplied = URI.create(location);
+		}
+		catch (IllegalArgumentException ex) {
+			ETSAssert.failWithUri(requirement, "POST returned an invalid Location value: " + location + ".");
+			return apiRoot;
+		}
+		URI resolved;
+		if (supplied.isAbsolute()) {
+			resolved = supplied;
+		}
+		else if (location.startsWith("/")) {
+			String rootPath = apiRoot.getPath();
+			boolean containsRoot = rootPath != null && !rootPath.isBlank() && !"/".equals(rootPath)
+					&& (location.equals(stripTrailingSlash(rootPath))
+							|| location.startsWith(stripTrailingSlash(rootPath) + "/"));
+			resolved = containsRoot ? apiRoot.resolve(location) : apiRoot.resolve(location.substring(1));
+		}
+		else {
+			resolved = apiRoot.resolve(location);
+		}
+		if (!sameOrigin(apiRoot, resolved)) {
+			ETSAssert.failWithUri(requirement,
+					"refusing cross-origin Location from " + apiRoot + " to " + resolved + ".");
+		}
+		return resolved;
+	}
+
+	/**
+	 * Compares submitted JSON recursively while allowing server-managed extra members.
+	 * @param submitted submitted representation.
+	 * @param received dereferenced representation.
+	 * @param requirement owning requirement.
+	 */
+	static void assertSubmittedContent(Object submitted, Object received, String requirement) {
+		assertSubmittedContent(submitted, received, "$", requirement);
+	}
+
+	private static void assertSubmittedContent(Object submitted, Object received, String path, String requirement) {
+		if (submitted instanceof Map) {
+			if (!(received instanceof Map)) {
+				ETSAssert.failWithUri(requirement, path + " must remain a JSON object.");
+			}
+			Map<?, ?> receivedMap = (Map<?, ?>) received;
+			for (Map.Entry<?, ?> entry : ((Map<?, ?>) submitted).entrySet()) {
+				String key = String.valueOf(entry.getKey());
+				if (!receivedMap.containsKey(key)) {
+					ETSAssert.failWithUri(requirement, path + "." + key + " is missing from the returned resource.");
+				}
+				assertSubmittedContent(entry.getValue(), receivedMap.get(key), path + "." + key, requirement);
+			}
+			return;
+		}
+		if (submitted instanceof List) {
+			if (!(received instanceof List)) {
+				ETSAssert.failWithUri(requirement, path + " must remain a JSON array.");
+			}
+			List<?> expected = (List<?>) submitted;
+			List<?> actual = (List<?>) received;
+			if (expected.size() != actual.size()) {
+				ETSAssert.failWithUri(requirement,
+						path + " array size changed from " + expected.size() + " to " + actual.size() + ".");
+			}
+			for (int index = 0; index < expected.size(); index++) {
+				assertSubmittedContent(expected.get(index), actual.get(index), path + "[" + index + "]", requirement);
+			}
+			return;
+		}
+		boolean equal = submitted instanceof Number && received instanceof Number
+				? new BigDecimal(submitted.toString()).compareTo(new BigDecimal(received.toString())) == 0
+				: Objects.equals(submitted, received);
+		if (!equal) {
+			ETSAssert.failWithUri(requirement,
+					path + " changed from " + String.valueOf(submitted) + " to " + String.valueOf(received) + ".");
+		}
+	}
+
+	/**
+	 * Builds a valid temporary GeoJSON System.
+	 * @param phase phase marker.
+	 * @param uid stable UID.
+	 * @return representation.
+	 */
+	public static Map<String, Object> systemBody(String phase, String uid) {
+		Map<String, Object> properties = new LinkedHashMap<>();
+		properties.put("uid", uid);
+		properties.put("featureType", "http://www.w3.org/ns/sosa/System");
+		properties.put("name", "ETS Create/Replace/Delete System " + phase);
+		properties.put("description", "Temporary System owned by the ETS at " + Instant.now() + ".");
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("type", "Feature");
+		body.put("geometry", Map.of("type", "Point", "coordinates", List.of(-77.0365, 38.8977)));
+		body.put("properties", properties);
+		return body;
+	}
+
+	private static Map<String, Object> sensorMlSystemBody(String phase, String uid) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("type", "PhysicalSystem");
+		body.put("uniqueId", uid);
+		body.put("label", "ETS Create/Replace/Delete System " + phase);
+		body.put("description", "Temporary System owned by the ETS.");
+		return body;
+	}
+
+	private static Map<String, Object> sensorMlDeploymentBody(String phase, String uid, List<String> systemUids) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("type", "Deployment");
+		body.put("uniqueId", uid);
+		body.put("label", "ETS Create/Replace/Delete Deployment " + phase);
+		body.put("description", "Temporary Deployment owned by the ETS.");
+		body.put("validTime", List.of("2026-01-01T00:00:00Z", "2027-01-01T00:00:00Z"));
+		if (!systemUids.isEmpty()) {
+			List<Map<String, Object>> deployed = new ArrayList<>();
+			for (int index = 0; index < systemUids.size(); index++) {
+				deployed.add(Map.of("name", "system-" + index, "system", Map.of("href", systemUids.get(index))));
+			}
+			body.put("deployedSystems", deployed);
+		}
+		return body;
+	}
+
+	private static Map<String, Object> geoJsonDeploymentBody(String phase, String uid, List<String> systemUids) {
+		Map<String, Object> properties = new LinkedHashMap<>();
+		properties.put("uid", uid);
+		properties.put("featureType", "http://www.w3.org/ns/sosa/Deployment");
+		properties.put("name", "ETS Create/Replace/Delete Deployment " + phase);
+		properties.put("description", "Temporary Deployment owned by the ETS.");
+		properties.put("validTime", List.of("2026-01-01T00:00:00Z", "2027-01-01T00:00:00Z"));
+		if (!systemUids.isEmpty()) {
+			properties.put("deployedSystems@link",
+					systemUids.stream().map(systemUid -> Map.of("href", systemUid, "uid", systemUid)).toList());
+		}
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("type", "Feature");
+		body.put("geometry", null);
+		body.put("properties", properties);
+		return body;
+	}
+
+	private static Map<String, Object> geoJsonProcedureBody(String phase, String uid) {
+		Map<String, Object> properties = new LinkedHashMap<>();
+		properties.put("uid", uid);
+		properties.put("featureType", "http://www.w3.org/ns/sosa/Procedure");
+		properties.put("name", "ETS Create/Replace/Delete Procedure " + phase);
+		properties.put("description", "Temporary Procedure owned by the ETS.");
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("type", "Feature");
+		body.put("geometry", null);
+		body.put("properties", properties);
+		return body;
+	}
+
+	private static Map<String, Object> sensorMlProcedureBody(String phase, String uid) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("type", "SimpleProcess");
+		body.put("definition", "http://www.w3.org/ns/sosa/Procedure");
+		body.put("uniqueId", uid);
+		body.put("label", "ETS Create/Replace/Delete Procedure " + phase);
+		body.put("description", "Temporary Procedure owned by the ETS.");
+		return body;
+	}
+
+	private static Map<String, Object> samplingFeatureBody(String phase, String uid) {
+		Map<String, Object> properties = new LinkedHashMap<>();
+		properties.put("uid", uid);
+		properties.put("featureType", "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint");
+		properties.put("name", "ETS Create/Replace/Delete Sampling Feature " + phase);
+		properties.put("description", "Temporary Sampling Feature owned by the ETS.");
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("type", "Feature");
+		body.put("geometry", Map.of("type", "Point", "coordinates", List.of(-77.037, 38.898)));
+		body.put("properties", properties);
+		return body;
+	}
+
+	private static Map<String, Object> propertyBody(String phase, String uid) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("uniqueId", uid);
+		body.put("label", "ETS Create/Replace/Delete Property " + phase);
+		body.put("description", "Temporary Property owned by the ETS.");
+		body.put("baseProperty", "https://qudt.org/vocab/quantitykind/Temperature");
+		return body;
+	}
+
+	private static Map<String, Object> body(ResourceKind kind, String mediaType, String phase, String uid) {
+		return body(kind, mediaType, phase, uid, List.of());
+	}
+
+	private static Map<String, Object> body(ResourceKind kind, String mediaType, String phase, String uid,
+			List<String> systemUids) {
+		if (kind == SYSTEM) {
+			return SENSORML.equals(mediaType) ? sensorMlSystemBody(phase, uid) : systemBody(phase, uid);
+		}
+		if (kind == DEPLOYMENT) {
+			return SENSORML.equals(mediaType) ? sensorMlDeploymentBody(phase, uid, systemUids)
+					: geoJsonDeploymentBody(phase, uid, systemUids);
+		}
+		if (kind == PROCEDURE) {
+			return SENSORML.equals(mediaType) ? sensorMlProcedureBody(phase, uid) : geoJsonProcedureBody(phase, uid);
+		}
+		if (kind == SAMPLING_FEATURE) {
+			return samplingFeatureBody(phase, uid);
+		}
+		return propertyBody(phase, uid);
+	}
+
+	private static String resourceIdentity(Map<String, Object> body, String requirement) {
+		String direct = string(body.get("uniqueId"));
+		if (direct != null) {
+			return direct;
+		}
+		Object properties = body.get("properties");
+		if (properties instanceof Map) {
+			String uid = string(((Map<?, ?>) properties).get("uid"));
+			if (uid != null) {
+				return uid;
+			}
+		}
+		ETSAssert.failWithUri(requirement, "submitted representation does not expose uid or uniqueId.");
+		return "";
+	}
+
+	private URI canonicalUri(ResourceKind kind, URI location) {
+		String id = lastPathSegment(location, REQ_BASE + "create-in-collection");
+		return this.apiRoot.resolve(kind.path() + "/" + encoded(id));
+	}
+
+	private static URI childCollection(URI parent, String childName) {
+		return URI.create(stripTrailingSlash(parent.toString()) + "/" + childName);
+	}
+
+	private static boolean containsString(Object value, Object expected) {
+		if (value instanceof Map) {
+			return ((Map<?, ?>) value).values().stream().anyMatch(item -> containsString(item, expected));
+		}
+		if (value instanceof List) {
+			return ((List<?>) value).stream().anyMatch(item -> containsString(item, expected));
+		}
+		return expected != null && Objects.equals(String.valueOf(expected), value);
+	}
+
+	private static String uid(String scope) {
+		return "urn:ets:ogcapi-connectedsystems10:crd:" + scope + ":" + UUID.randomUUID();
+	}
+
+	private static String lastPathSegment(URI uri, String requirement) {
+		String path = uri.getPath();
+		int slash = path == null ? -1 : path.lastIndexOf('/');
+		String id = slash >= 0 ? path.substring(slash + 1) : path;
+		if (id == null || id.isBlank()) {
+			ETSAssert.failWithUri(requirement, "resource URI has no local identifier: " + uri + ".");
+		}
+		return id;
+	}
+
+	private static String encoded(String value) {
+		return URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20");
+	}
+
+	private static String string(Object value) {
+		return value instanceof String && !((String) value).isBlank() ? (String) value : null;
+	}
+
+	private static boolean isCustomCollection(String id) {
+		String normalized = id.toLowerCase(Locale.ROOT);
+		return !normalized.startsWith("all_") && !normalized.equals("systems") && !normalized.equals("deployments")
+				&& !normalized.equals("procedures") && !normalized.equals("samplingfeatures")
+				&& !normalized.equals("properties") && !normalized.equals("fois");
+	}
+
+	private static String stripTrailingSlash(String value) {
+		return value != null && value.endsWith("/") ? value.substring(0, value.length() - 1) : value;
+	}
+
+	private static boolean sameOrigin(URI left, URI right) {
+		return left.getScheme() != null && right.getScheme() != null
+				&& left.getScheme().equalsIgnoreCase(right.getScheme()) && left.getHost() != null
+				&& right.getHost() != null && left.getHost().equalsIgnoreCase(right.getHost())
+				&& effectivePort(left) == effectivePort(right);
+	}
+
+	private static int effectivePort(URI uri) {
+		if (uri.getPort() >= 0) {
+			return uri.getPort();
+		}
+		return "https".equalsIgnoreCase(uri.getScheme()) ? 443 : 80;
+	}
+
+	private static void assertStatusIn(Response response, List<Integer> expected, String requirement,
+			String operation) {
+		if (!expected.contains(response.getStatusCode())) {
+			ETSAssert.failWithUri(requirement,
+					operation + " expected HTTP status in " + expected + ", got " + response.getStatusCode() + ".");
+		}
+	}
+
+	/**
+	 * Reverse-order cleanup aggregator.
+	 */
+	static final class CleanupStack {
+
+		private final String requirement;
+
+		private final Deque<CleanupAction> actions = new ArrayDeque<>();
+
+		CleanupStack(String requirement) {
+			this.requirement = requirement;
+		}
+
+		void push(String label, ThrowingAction action) {
+			this.actions.push(new CleanupAction(label, action));
+		}
+
+		Throwable close(Throwable primary) {
+			List<AssertionError> failures = new ArrayList<>();
+			while (!this.actions.isEmpty()) {
+				CleanupAction cleanup = this.actions.pop();
+				try {
+					cleanup.action().run();
+				}
+				catch (Throwable thrown) {
+					AssertionError failure = new AssertionError(
+							this.requirement + " - cleanup failed for " + cleanup.label() + ": " + thrown.getMessage());
+					failure.initCause(thrown);
+					failures.add(failure);
+				}
+			}
+			if (primary != null) {
+				failures.forEach(primary::addSuppressed);
+				return primary;
+			}
+			if (failures.isEmpty()) {
+				return null;
+			}
+			AssertionError aggregate = new AssertionError(
+					this.requirement + " - one or more owned-resource cleanup operations failed.");
+			failures.forEach(aggregate::addSuppressed);
+			return aggregate;
+		}
+
+	}
+
+	private record ResourceKind(String name, String path, String condition, String featureType, boolean property) {
+
+		boolean matches(Map<String, Object> collection) {
+			return this.property ? this.featureType.equals(collection.get("itemType"))
+					: "feature".equals(collection.get("itemType"))
+							&& this.featureType.equals(collection.get("featureType"));
+		}
+
+	}
+
+	private record CustomCollection(ResourceKind kind, String id, URI itemsUri, List<String> mediaTypes) {
+	}
+
+	private record OwnedResource(URI uri, boolean cascadeCleanup) {
+	}
+
+	private record CleanupAction(String label, ThrowingAction action) {
+	}
+
+	@FunctionalInterface
+	private interface Procedure {
+
+		void run(CleanupStack cleanup);
+
+	}
+
+	@FunctionalInterface
+	private interface BodyFactory {
+
+		Map<String, Object> create(String identity);
+
+	}
+
+	@FunctionalInterface
+	interface ThrowingAction {
+
+		void run() throws Throwable;
+
+	}
+
+}

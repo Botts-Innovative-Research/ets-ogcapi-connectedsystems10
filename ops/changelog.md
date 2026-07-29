@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-29 - Sprint 56 Create/Replace/Delete planning
+
+**Triggered by user instruction**: continue the accepted released-ATS
+completion sequence.
+
+- Audited all twelve released OGC 23-001 Create/Replace/Delete procedures,
+  their normative requirements, and the referenced OGC API Features Part 4
+  transaction contract.
+- Confirmed the historical implementation has six methods, one candidate
+  mapping, eleven unmapped procedures, and only one guarded System lifecycle.
+- Confirmed the Sprint 44 owned isolated OSH workflow supplies explicit
+  mutation gates, ephemeral state, cleanup, primary-state fingerprints, and
+  clean-primary verification without modifying OSH or TeamEngine.
+- Added CP-016, S-ETS-56-01, the Sprint 56 contract, requirement/scenario
+  deltas, design, architecture, epic, traceability, and status baseline before
+  implementation.
+
 ## 2026-07-29 - Part 1 Advanced Filtering final-Raze remediation
 
 **Triggered by user instruction**: continue continuously through the accepted

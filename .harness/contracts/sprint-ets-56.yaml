@@ -1,0 +1,62 @@
+sprint: ets-56
+story: S-ETS-56-01
+title: Part 1 Create/Replace/Delete direct ATS closure
+status: IN_PROGRESS
+triggered_by: "User instructed continuation of the accepted released-ATS sequence"
+requirements:
+  - REQ-ETS-PART1-010
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-PART1-010-RELEASED-PROCEDURES-001
+  - SCENARIO-ETS-PART1-010-DIRECT-PREREQUISITES-001
+  - SCENARIO-ETS-PART1-010-MUTATION-SAFETY-001
+  - SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001
+  - SCENARIO-ETS-PART1-010-REPRESENTATION-CLOSURE-001
+  - SCENARIO-ETS-PART1-010-CASCADE-001
+  - SCENARIO-ETS-PART1-010-NESTED-CANONICAL-001
+  - SCENARIO-ETS-PART1-010-CUSTOM-CREATE-001
+  - SCENARIO-ETS-PART1-010-CUSTOM-REPLACE-001
+  - SCENARIO-ETS-PART1-010-CUSTOM-DELETE-001
+  - SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-001
+  - SCENARIO-ETS-PART1-010-CLEANUP-001
+  - SCENARIO-ETS-PART1-010-DIRECT-HTTP-COVERAGE-001
+  - SCENARIO-ETS-PART1-010-E2E-ISOLATION-001
+success_criteria:
+  - Exactly twelve independent TestNG methods map the released procedures.
+  - Every procedure checks exact declarations, applicable conditions, and mutation safety before writes.
+  - API Common is the only direct local TestNG prerequisite.
+  - OPTIONS, POST, Location, canonical GET, PUT, replacement GET, DELETE, and deletion postconditions are verified.
+  - Every applicable declared resource representation is exercised.
+  - Both released cascade graphs and exact HTTP 409 refusal semantics are verified.
+  - Nested creation is verified at canonical URLs.
+  - Every advertised applicable custom collection is exercised.
+  - Root and non-root delete propagation remain distinct.
+  - text/uri-list uses same-IUT canonical URLs or UIDs and verifies collection representations.
+  - Cleanup is reverse-order, failure-visible, and runs after assertion failures.
+  - Default primary local OSH smoke has zero writes.
+  - Owned isolated local OSH mutation E2E records honest outcomes and cleanup.
+  - Primary OSH state remains unchanged and clean-primary smoke passes.
+  - Focused/full Maven, coverage, exact-image, dependency, credential, immutability, and hygiene gates complete.
+  - All twelve ATS mappings are reviewed exact.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not mutate a public or primary shared IUT.
+  - Do not classify OPTIONS or status-only evidence as lifecycle conformance.
+  - Do not import executable conformance-suite jars as libraries.
+  - Do not hide cleanup failures or conformance failures from local OSH.
+verification:
+  released_source_commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+  inherited_features4_source_commit: ea42aa1de6d8cbb53c526f41e1f66c1887fe71d4
+  test_first: PENDING
+  focused_maven: PENDING
+  full_maven: PENDING
+  coverage_audit: PENDING
+  primary_local_osh: PENDING
+  isolated_mutable_local_osh: PENDING
+  exact_image: PENDING
+  dependency_sabotage: PENDING
+  credential_gates: PENDING
+  artifact_hygiene: PENDING
+  raze: PENDING

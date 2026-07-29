@@ -3111,7 +3111,27 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
 
 #### REQ-ETS-PART1-010: Create/Replace/Delete Conformance Class (`/conf/create-replace-delete`) (Sprint 12 target)
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
+- **Status**: IN_PROGRESS_RELEASED_ATS_CLOSURE (Sprint 56)
+- **Sprint 56 accepted closure**: Replace the historical six-method Systems
+  subset with exactly twelve independent methods matching the released
+  `v1.0.0` Annex A procedures. Every procedure SHALL check the exact Part 1
+  declaration, direct API Common prerequisite, inherited OGC API Features Part
+  4 Create/Replace/Delete declaration, applicable resource-class condition,
+  and the explicit dedicated-mutable-IUT gate before writes. A reusable
+  transaction helper SHALL verify OPTIONS, POST 201 plus Location, canonical
+  GET content, PUT 200/204 plus changed-content GET, DELETE 200/202/204, and
+  synchronous deletion postconditions at every prescribed endpoint and for
+  every applicable declared representation. The class SHALL also verify both
+  released System cascade graphs, canonical availability after nested create,
+  custom-collection create/replace/root-versus-non-root delete propagation,
+  and `text/uri-list` association behavior. Procedures SHALL own and clean
+  their resources independently; cleanup failures remain visible.
+- **Released source authority**: OGC 23-001 Annex A at tag `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`. The referenced OGC API Features
+  Part 4 draft transaction semantics are reproduced from tag
+  `part4-1.0.0-draft.1`, commit
+  `ea42aa1de6d8cbb53c526f41e1f66c1887fe71d4`. CP-016 is authoritative for the
+  Sprint 56 delta.
 - **Historical increment**: by Sprint 12 Generator (2026-05-05; story S-ETS-12-01). Implemented outcome is declaration, non-mutating method-advertisement readiness, TestNG wiring, explicit mutation opt-in plumbing, public GeoRobotix hard-denial, default-smoke safety, service-relative `Location` handling for OSH-style `/systems/{id}` responses, and a guarded lifecycle path for dedicated mutable IUTs. Full create/replace/delete lifecycle conformance remains OPEN for the overall requirement class because deployment/procedure/sampling-feature/property CRUD, cascade behavior, custom collections, `text/uri-list`, and `/conf/update` remain out of scope.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/crud/requirements_class_crd.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_16_requirements_class_create_replace_delete.adoc`. The class identifier is `/req/create-replace-delete`, inherits `/req/api-common` and OGC API Features Part 4 Create/Replace/Delete, and lists subrequirements for systems, system delete cascade, subsystems, deployments, subdeployments, procedures, sampling features, properties, collection propagation, and adding resources to collections by `text/uri-list`.
 - **Sprint 12 coverage scope**: Create/Replace/Delete safety-gated systems subset with 6 planned @Tests: (1) IUT declares `/conf/create-replace-delete`; (2) default mutation safety gate is active unless suite parameter `mutation-tests-enabled=true` is supplied together with `mutation-iut-policy=dedicated-mutable-iut`; (3) `OPTIONS /systems` is recorded as an ETS readiness precondition for POST advertisement without issuing POST; (4) `OPTIONS /systems/{id}` is recorded as an ETS readiness precondition for PUT/DELETE advertisement without issuing PUT/DELETE; (5) systems lifecycle create/replace/delete test SKIPs by default with reason and, only when explicitly enabled against a dedicated mutable IUT that is not a known shared public GeoRobotix URL, performs POST/PUT/DELETE with best-effort cleanup; (6) TestNG dependency wiring and smoke no-regression. OPTIONS readiness PASS does not satisfy `/req/create-replace-delete/system`; lifecycle conformance remains SKIP by default until POST/PUT/DELETE run against a dedicated mutable IUT. The sprint deliberately does not close deployment/procedure/sampling-feature/property CRUD, cascade delete semantics, collection propagation, `text/uri-list`, or update/PATCH.
@@ -3280,6 +3300,119 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
 **AND** total PASS+SKIP increases by the number of new Create/Replace/Delete @Tests
 **AND** default smoke logs contain zero IUT-bound POST, PUT, or DELETE request-log entries from the Create/Replace/Delete suite, using recognized REST Assured `Request: METHOD URI` or adjacent `Request method:` / `Request URI:` entries filtered to the IUT base URL.
 *Maps to*: REQ-ETS-PART1-010.
+
+### Acceptance Scenarios for Sprint 56
+
+#### SCENARIO-ETS-PART1-010-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** released OGC 23-001 Annex A defines twelve
+`/conf/create-replace-delete` procedures
+**WHEN** the deployed TestNG class is inspected
+**THEN** exactly twelve independently executable `alwaysRun` methods exist
+**AND** each method identifies exactly one released target and has no
+method-to-method dependency.
+
+#### SCENARIO-ETS-PART1-010-DIRECT-PREREQUISITES-001 (CRITICAL)
+**GIVEN** the released class directly inherits Part 1 API Common and OGC API
+Features Part 4 Create/Replace/Delete
+**WHEN** a procedure starts
+**THEN** it checks those exact prerequisites and its own applicable resource
+condition
+**AND** System or another sibling resource configuration cannot block the
+entire class.
+
+#### SCENARIO-ETS-PART1-010-MUTATION-SAFETY-001 (CRITICAL)
+**GIVEN** either explicit mutation parameter is absent, the target is a known
+shared public IUT, or the target is the clean primary local OSH
+**WHEN** any released procedure reaches its first write
+**THEN** it SKIPs before POST, PUT, or DELETE
+**AND** default TeamEngine evidence contains zero IUT-bound writes.
+
+#### SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001 (CRITICAL)
+**GIVEN** an applicable mutable resource endpoint and supported representation
+**WHEN** the reusable transaction procedure executes
+**THEN** OPTIONS is HTTP 200 and advertises the relevant method, POST is HTTP
+201 with usable Location, canonical GET preserves submitted content, PUT is
+HTTP 200 or 204 and a later GET proves replacement content, and DELETE is HTTP
+200, 202, or 204 with a verified synchronous postcondition
+**AND** status-only or OPTIONS-only evidence cannot PASS the lifecycle.
+
+#### SCENARIO-ETS-PART1-010-REPRESENTATION-CLOSURE-001 (CRITICAL)
+**GIVEN** the IUT declares an encoding applicable to a released resource type
+**WHEN** its direct or nested transaction procedure runs
+**THEN** each applicable declared representation is exercised with its exact
+Content-Type and Accept media type
+**AND** server-added identifiers and links do not excuse a changed or missing
+submitted field.
+
+#### SCENARIO-ETS-PART1-010-CASCADE-001 (CRITICAL)
+**GIVEN** one temporary System has nested resources and another is one of
+multiple Systems referenced by a temporary Deployment
+**WHEN** each graph is deleted first with `cascade=false` and then with
+`cascade=true`
+**THEN** the false request returns exactly HTTP 409 and leaves the graph intact
+**AND** the true request removes the target System and required nested
+resources
+**AND** the Deployment graph remains while removing only the deleted System
+reference.
+
+#### SCENARIO-ETS-PART1-010-NESTED-CANONICAL-001 (CRITICAL)
+**GIVEN** a subsystem, subdeployment, or Sampling Feature is created through
+its prescribed parent-scoped endpoint
+**WHEN** the server returns its canonical Location
+**THEN** canonical GET is HTTP 200 and preserves submitted content
+**AND** replacement and deletion use the released canonical endpoint where
+required.
+
+#### SCENARIO-ETS-PART1-010-CUSTOM-CREATE-001 (CRITICAL)
+**GIVEN** the IUT advertises an applicable custom collection
+**WHEN** a resource is created through `/collections/{colId}/items`
+**THEN** its returned canonical URL is readable from the corresponding root
+collection with equivalent submitted content.
+
+#### SCENARIO-ETS-PART1-010-CUSTOM-REPLACE-001 (CRITICAL)
+**GIVEN** a temporary resource is present in an advertised applicable custom
+collection
+**WHEN** it is replaced through `/collections/{colId}/items/{id}`
+**THEN** canonical GET proves the replacement content.
+
+#### SCENARIO-ETS-PART1-010-CUSTOM-DELETE-001 (CRITICAL)
+**GIVEN** a temporary resource is present in both root and non-root collections
+**WHEN** it is deleted from the root
+**THEN** all collection occurrences disappear
+**AND WHEN** a separate resource is deleted only from the non-root collection
+**THEN** its canonical root representation remains readable.
+
+#### SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-001 (CRITICAL)
+**GIVEN** same-IUT canonical resources compatible with an advertised custom
+collection
+**WHEN** their canonical URLs or UIDs are POSTed one-per-line with
+`Content-Type: text/uri-list`
+**THEN** each collection-item URL is HTTP 200 and equivalent to the canonical
+representation.
+
+#### SCENARIO-ETS-PART1-010-CLEANUP-001 (CRITICAL)
+**GIVEN** a released procedure creates one or more resources
+**WHEN** it passes, fails, or skips after creation
+**THEN** cleanup runs in reverse ownership order
+**AND** cleanup failures are reported rather than hidden by an earlier
+assertion.
+
+#### SCENARIO-ETS-PART1-010-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled stateful HTTP endpoint implements the released behavior
+**WHEN** all twelve direct Java methods execute
+**THEN** every positive procedure completes
+**AND** focused regressions reject wrong cascade status, missing Location,
+unchanged replacement content, incorrect collection propagation, and hidden
+cleanup failure.
+
+#### SCENARIO-ETS-PART1-010-E2E-ISOLATION-001 (CRITICAL)
+**GIVEN** the exact committed candidate and the Sprint 44 owned isolated local
+OSH workflow
+**WHEN** mutation-enabled TeamEngine E2E runs
+**THEN** all twelve methods deploy and produce honest PASS, FAIL, or SKIP
+outcomes
+**AND** owned state is cleaned, the primary OSH fingerprint remains unchanged,
+and subsequent clean-primary TeamEngine smoke passes with zero writes.
 
 > Sprint 9 starts the remaining encoding classes with GeoJSON only. This is intentionally narrower than the v1.0 web-app story that paired GeoJSON + SensorML: GeoJSON is read-only, declared by GeoRobotix, and reuses existing Feature/FeatureCollection validation patterns, while SensorML has broader SensorML 3.0 schema inheritance and remains deferred.
 

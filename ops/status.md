@@ -1,6 +1,23 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T16:39Z
+Last updated: 2026-07-29T22:46Z
+
+## Sprint 56 In Progress - Part 1 Create/Replace/Delete
+
+- User instruction: continue the accepted released-ATS completion sequence.
+- CP-016, S-ETS-56-01, the sprint contract, capability scenarios, design,
+  architecture, epic, and traceability define the exact closure before code.
+- Released baseline: twelve procedures, currently `0 exact / 1 candidate / 11
+  unmapped`.
+- Scope: replace the six-method Systems subset with twelve independent,
+  safety-gated procedures covering inherited transaction semantics, both
+  cascade graphs, nested canonical resources, and custom collections.
+- Verification target: default zero-write primary OSH smoke plus owned isolated
+  mutation E2E, cleanup, unchanged primary-state proof, and clean-primary smoke.
+- External OSH and TeamEngine source/binaries remain immutable; hosted CI and
+  executable-suite imports remain out of scope.
+- Next: capture structural and controlled-HTTP red tests, implement the reusable
+  transaction support, then run exact-candidate gates and fresh Raze.
 
 ## Fresh-Session Entry Point
 

@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.47 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering exact R8 closure)
+> Version: 2.0.48 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Create/Replace/Delete closure design)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1426,3 +1426,45 @@ focused `53/0/0/0`, full Maven `607/0/0/3`, honest unmodified-local-OSH
 `238/40/7/191`, sabotage `238/2/10/226`, zero writes/leaks, and immutable
 external dependencies. Fresh Raze R8 is `APPROVE 0.99` with both prior
 findings closed and no new findings.
+
+## 35. Architecture v2.0.48 - Part 1 Create/Replace/Delete procedures (2026-07-29)
+
+`CreateReplaceDeleteTests` replaces six historical subset/readiness methods
+with exactly the twelve released `/conf/create-replace-delete` procedures.
+Setup retains only the normalized API root and explicit mutation arguments.
+Each method independently checks the Part 1 class declaration, inherited
+Features Part 4 declaration, its resource condition, and the dedicated mutable
+IUT policy before writes.
+
+Released direct inheritance is API Common. The TestNG chain becomes
+`Core/Common -> Part 1 API Common -> Create/Replace/Delete`; System and sibling
+resource classes do not block the class. Per-procedure condition checks retain
+the released applicability of System, Subsystem, Deployment, Subdeployment,
+Procedure, Sampling Feature, and Property operations.
+
+`CreateReplaceDeleteSupport` owns exact OPTIONS and Allow handling, supported
+representation selection, POST/Location/canonical-GET behavior, PUT plus
+changed-content proof, DELETE postconditions, service-relative URI resolution,
+custom-collection discovery, submitted-content comparison, graph assertions,
+and reverse-order cleanup. Server-added `id` and `links` members are tolerated;
+submitted fields and values are not.
+
+The cascade procedure creates both released graph shapes. Nested-resource
+refusal requires exact HTTP 409 before cascade deletion. Deployment-association
+deletion preserves the Deployment and unrelated System while removing the
+deleted System reference. Nested create procedures verify the canonical
+resource after parent-scoped POST.
+
+Custom-collection procedures inspect all advertised applicable resource types.
+They distinguish canonical root deletion from non-root membership deletion,
+verify propagation through canonical GET, and use exact `text/uri-list` for
+adding existing resources. Absence of an applicable custom collection is an
+evidence SKIP; advertised but defective behavior is not downgraded.
+
+Default and primary local runs remain read-only. Positive mutation execution
+uses the Sprint 44 owned isolated OSH state, explicit two-parameter gate,
+cleanup, primary-state fingerprint comparison, and subsequent clean-primary
+smoke. Local OSH conformance failures remain visible because external OSH and
+TeamEngine source and binaries are immutable under ADR-012. No executable
+Features, SWE Common, or SensorML ETS jar is used as a library, and no hosted
+CI is introduced.

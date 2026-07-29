@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T15:03Z
+Last updated: 2026-07-29T16:39Z
 
 ## Current Sprint Evidence
 
@@ -34,8 +34,17 @@ Sprint 55 Part 1 Advanced Filtering direct ATS:
 - Candidate `b5bc49b` exact image `sha256:b883633f236...aec42` passed every
   technical and E2E gate, but Raze R7 returned `GAPS_FOUND 0.99` because
   GeoJSON link relations were still processed for SensorML representations.
-  Link relations are now GeoJSON-only; a new committed candidate, exact
-  gates, and fresh Raze remain.
+- Final candidate `fce461288e99167bab6f391085493784da42cc58` scopes link
+  relations to GeoJSON and builds image `sha256:ed03d1f943d...402a79` with
+  `Build-Revision: fce461288e`. Exact focused/full Maven pass `53/0/0/0` and
+  `607/0/0/3`; released-source, runtime, local OSH, sabotage, credential,
+  immutability, and hygiene gates all complete.
+- Fresh Raze R8 is `APPROVE 0.99`, closes both prior findings, and reports no
+  new findings.
+- Final R8 evidence:
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r8-2026-07-29/`.
+- Raze report:
+  `.harness/evaluations/sprint-ets-55-adversarial-final-r8.yaml`.
 - Verification summary:
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-verification-2026-07-29.md`.
 - Superseded exact `f2a88d5` candidate evidence:

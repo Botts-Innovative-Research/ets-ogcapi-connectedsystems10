@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T15:03Z
+Last updated: 2026-07-29T16:39Z
 
 ## Fresh-Session Entry Point
 
@@ -94,12 +94,15 @@ Read these first:
 - `epics/stories/s-ets-55-01-part1-advanced-filtering-closure.md`
 - `.harness/contracts/sprint-ets-55.yaml`
 - `ops/test-results/sprint-ets-55-part1-advanced-filtering-baseline-2026-07-29.md`
+- `.harness/evaluations/sprint-ets-55-adversarial-final-r8.yaml`
+- `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r8-2026-07-29/`
 
 ## Session Handoff - Part 1 Advanced Filtering Direct ATS
 
-S-ETS-55-01 remains open under CP-015. Raze R7's cross-representation
-relation finding is remediated and precommit gates pass; a new committed
-candidate and its exact E2E cycle remain.
+S-ETS-55-01 is complete under CP-015. Exact candidate
+`fce461288e99167bab6f391085493784da42cc58` passes every technical and E2E
+gate. Fresh Raze R8 is `APPROVE 0.99`, closes both prior findings, and reports
+no new findings.
 
 - Exactly 25 independent methods implement the 25 released procedures behind
   `AdvancedFilteringSupport`; all 25 mappings are reviewed exact.
@@ -131,8 +134,8 @@ candidate and its exact E2E cycle remain.
   representation validation.
 - Keyword mapping now describes only the returned-resource assertion, and the
   synchronized coverage report is regenerated.
-- Superseded candidate `b5bc49b2922e0a47b73225c2dabc0422ac7998f4` builds exact image
-  `sha256:b883633f236...aec42` with matching `Build-Revision`.
+- Final candidate `fce461288e99167bab6f391085493784da42cc58` builds exact image
+  `sha256:ed03d1f943d...402a79` with `Build-Revision: fce461288e`.
 - Runtime and released-source audits pass. Unmodified local OSH TeamEngine is
   honestly `238/40/7/191`; all 25 Advanced Filtering methods SKIP because the
   IUT does not declare the class.
@@ -141,6 +144,11 @@ candidate and its exact E2E cycle remain.
   and 33 intact transmissions.
 - Hygiene records 174 recognized GETs, 169 IUT GETs, zero writes, and zero
   leaks. OSH remains clean at `4c87a65` with `/opt/osh` read-only.
+- Final checksum-manifested R8 evidence is under
+  `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r8-2026-07-29/`;
+  all 17 manifest entries verify.
+- Fresh Raze R8 evidence is
+  `.harness/evaluations/sprint-ets-55-adversarial-final-r8.yaml`.
 - Superseded checksum-manifested `b5bc49b` evidence and the R7 finding are
   under
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r7-2026-07-29/`.
@@ -149,8 +157,10 @@ candidate and its exact E2E cycle remain.
 - Candidate `060a8aa` evidence is preserved as superseded audit evidence under
   `ops/test-results/sprint-ets-55-part1-advanced-filtering-final-r5-2026-07-29/`.
   Candidate `756d729` also remains superseded audit evidence.
-- Next action: commit the replacement candidate, repeat every exact technical
-  and local-OSH TeamEngine gate from that SHA, and obtain fresh Raze approval.
+- No OSH or TeamEngine source or binary was modified, and no hosted CI was
+  added.
+- Next action: publish the final R8 evidence/reconciliation commit, then begin
+  the next spec-first released-ATS closure.
 
 ## Session Handoff - Part 1 GeoJSON Direct ATS
 

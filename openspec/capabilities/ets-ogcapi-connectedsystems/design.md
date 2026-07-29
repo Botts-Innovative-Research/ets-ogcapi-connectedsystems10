@@ -1981,7 +1981,13 @@ SensorML System parent and Procedure associations only from exact
 `attachedTo` and `typeOf` members. Regression-first verification moves
 controlled HTTP from `48/2/0/0` to `48/0/0/0`; focused Maven passes
 `53/0/0/0` and full Docker Maven passes `607/0/0/3`. A new exact committed
-candidate must repeat every runtime and E2E gate.
+candidate must repeat every runtime and E2E gate. Candidate
+`fce461288e99167bab6f391085493784da42cc58` completed that cycle with exact
+image
+`sha256:ed03d1f943da442d8c13bdfc5c140b08c1e9155a57f3f10696925a2a0a402a79`,
+honest unmodified-local-OSH `238/40/7/191`, sabotage `238/2/10/226`, zero IUT
+writes or credential leaks, and immutable external dependencies. Fresh Raze
+R8 is `APPROVE 0.99` with both prior findings closed and no new findings.
 
 ## Status
 

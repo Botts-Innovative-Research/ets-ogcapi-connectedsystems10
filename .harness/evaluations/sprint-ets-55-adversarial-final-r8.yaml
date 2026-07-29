@@ -1,0 +1,92 @@
+review_id: sprint-ets-55-adversarial-final-r8
+verdict: APPROVE
+confidence: 0.99
+candidate_commit: fce461288e99167bab6f391085493784da42cc58
+prior_finding_closure:
+  - id: ADV-R7-001
+    status: CLOSED
+    basis: >-
+      GeoJSON link relations are now evaluated only after exact GeoJSON
+      dispatch. Exact SensorML classes use root attachedTo/typeOf fields;
+      forbidden parentSystem links cannot satisfy system-by-parent or seed
+      combined filters.
+  - id: RAZE-S55-R7-RED-BASELINE-PROVENANCE-002
+    status: CLOSED
+    basis: >-
+      The archived pre-fix log records 48 tests with exactly 2 expected
+      regression failures before candidate commit time.
+findings: []
+verification_checked:
+  - >-
+    Reviewed b5bc49b..fce4612 and surrounding relation extraction, predicate
+    validation, fixtures, and released representation validators.
+  - >-
+    Exact relation matching rejects case, punctuation, suffix, broad-alias,
+    nested-field, and unrelated-scheme bypasses.
+  - >-
+    SensorML arrays recurse only beneath recognized exact fields; generic
+    links are ignored wholesale.
+  - >-
+    OpenSpec scenario, story, contract, traceability, implementation, and two
+    test comments are aligned; all 21 contracted scenarios have Java anchors.
+  - >-
+    Released source independently confirms GeoJSON links/systemKind@link and
+    SensorML attachedTo/typeOf mappings.
+  - "Test-first red verified: 48/2/0/0."
+  - "Focused Maven verified: 53/0/0/0."
+  - "Full Maven verified: 607/0/0/3 with BUILD SUCCESS."
+  - >-
+    Released ATS inventory reproduced from
+    8e03b236a049849f2ccc24b4fd9fdce5ff69bed2.
+  - >-
+    Candidate image verified as
+    sha256:ed03d1f943da442d8c13bdfc5c140b08c1e9155a57f3f10696925a2a0a402a79
+    with Build-Revision fce461288e.
+  - >-
+    Deployed AdvancedFilteringSupport class hash exactly matches the candidate
+    workspace compilation.
+  - >-
+    Local OSH XML verified: 238/40/7/191, exactly seven documented failures,
+    one Advanced Filtering configuration PASS, and 25 missing-declaration
+    SKIPs.
+  - >-
+    Sabotage XML verified: 238/2/10/226; Advanced Filtering configuration and
+    all 25 assertions SKIP.
+  - >-
+    Credential evidence reports 0 unmasked, 33 masked, and 33 intact wire
+    transmissions.
+  - >-
+    Artifact hygiene verified: 174 requests, 169 IUT GETs, zero IUT writes,
+    and zero detected credential leaks.
+  - >-
+    Manifest has 17 valid entries; staged and worktree artifact hashes match.
+  - >-
+    Live OSH inspection confirms clean 4c87a65 checkout, 0/3 ahead/behind,
+    exact ConSys jar hash, read-only /opt/osh, and writable /state only.
+  - >-
+    No candidate or staged changes modify hosted CI, OSH, TeamEngine base
+    files, Docker topology, or build dependencies.
+  - >-
+    No unsupported completion claim found; local OSH failures and
+    declaration-gated limits are reported honestly.
+residual_risks:
+  - >-
+    Local OSH does not declare advanced-filtering; positive semantics remain
+    controlled-fixture evidence rather than positive real-IUT conformance.
+  - R8 evidence remains staged rather than committed.
+  - >-
+    Spec, story, contract, and traceability conservatively retain
+    exact-candidate and fresh-Raze pending status and require post-review
+    reconciliation.
+scope_constraints:
+  assessment: PASS
+  read_only: true
+  reviewer_workspace_changes: false
+  expensive_gate_rerun: false
+  basis: >-
+    Raw artifact inspection, pinned-source reproduction, live read-only
+    provenance checks, and deployed-class hash comparison were sufficient.
+started_at_utc: "2026-07-29T16:30:07Z"
+completed_at_utc: "2026-07-29T16:38:42Z"
+duration_seconds: 515
+token_usage: null

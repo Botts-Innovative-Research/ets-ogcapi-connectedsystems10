@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.46 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering R7 representation scoping)
+> Version: 2.0.47 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering exact R8 closure)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1419,5 +1419,10 @@ link relations were still processed before representation dispatch, allowing
 SensorML to reuse GeoJSON `parentSystem` evidence. Version 2.0.46 scopes link
 relations to GeoJSON and leaves SensorML parent and Procedure evidence to
 exact `attachedTo` and `typeOf` members. Controlled regression-first
-verification moves from `48/2/0/0` to `48/0/0/0`; focused Maven is
-`53/0/0/0` and full Maven is `607/0/0/3`.
+verification moves from `48/2/0/0` to `48/0/0/0`. Version 2.0.47 records exact
+candidate `fce461288e99167bab6f391085493784da42cc58`, image
+`sha256:ed03d1f943da442d8c13bdfc5c140b08c1e9155a57f3f10696925a2a0a402a79`,
+focused `53/0/0/0`, full Maven `607/0/0/3`, honest unmodified-local-OSH
+`238/40/7/191`, sabotage `238/2/10/226`, zero writes/leaks, and immutable
+external dependencies. Fresh Raze R8 is `APPROVE 0.99` with both prior
+findings closed and no new findings.

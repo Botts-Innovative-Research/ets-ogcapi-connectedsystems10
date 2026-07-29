@@ -9,8 +9,7 @@
 - `REQ-ETS-PART1-009`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Raze R7 representation-scoped relation remediation implemented;
-new exact-candidate gates and fresh Raze pending
+**Status**: Complete; 25/25 released ATS exact; Raze R8 approved
 
 ## Motivation
 
@@ -243,3 +242,10 @@ that SensorML `parentSystem` and `ogc-rel:parentSystem` links cannot seed
 accepted. The red controlled run is `48/2/0/0`; inspecting link relations only
 after GeoJSON dispatch moves controlled HTTP to `48/0/0/0`, focused Maven to
 `53/0/0/0`, and full Docker Maven to `607/0/0/3`.
+Exact candidate `fce461288e99167bab6f391085493784da42cc58` passes every
+repeated technical and E2E gate. Its image is
+`sha256:ed03d1f943da442d8c13bdfc5c140b08c1e9155a57f3f10696925a2a0a402a79`;
+unmodified-local-OSH TeamEngine is honestly `238/40/7/191`, core sabotage is
+`238/2/10/226`, and credential, hygiene, immutability, released-source, and
+runtime gates pass. Fresh Raze R8 is `APPROVE 0.99`, closes both prior
+findings, and reports no new findings.

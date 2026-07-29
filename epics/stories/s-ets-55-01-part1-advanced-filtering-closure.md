@@ -2,9 +2,9 @@
 
 ## Status
 
-R7 REPRESENTATION-SCOPED RELATION REMEDIATION IMPLEMENTED; EXACT CANDIDATE
-PENDING - candidates `f2a88d5` and `b5bc49b` are superseded; controlled and
-full precommit gates pass.
+COMPLETE - candidate `fce461288e99167bab6f391085493784da42cc58` passed every
+exact technical and E2E gate. Fresh Raze R8 is `APPROVE 0.99` with no
+findings.
 
 ## User Instruction
 
@@ -100,12 +100,12 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
 - [x] Known matching seeds cannot yield a vacuous empty-result PASS.
 - [x] Cross-origin association targets never receive IUT credentials.
 - [x] All 25 methods have accurate reviewed exact ATS mappings.
-- [ ] Focused/full Maven, coverage audit, local OSH TeamEngine E2E, controlled
+- [x] Focused/full Maven, coverage audit, local OSH TeamEngine E2E, controlled
   HTTP, exact-image runtime, dependency, credential, and artifact-hygiene gates
   are archived from the final exact committed candidate.
 - [x] Local OSH's undeclared class remains visible and is not repaired through
   OSH or TeamEngine changes.
-- [ ] Raze reports no unresolved required findings.
+- [x] Raze reports no unresolved required findings.
 
 ## Baseline
 
@@ -188,4 +188,11 @@ all 25 released OGC 23-001 `/conf/advanced-filtering` procedures.
   evaluated before representation dispatch, so a SensorML System can still
   reuse GeoJSON `parentSystem` evidence. Candidate `b5bc49b` is superseded.
   The dedicated representation-scoping scenario, red regression, matcher
-  remediation, repeated exact gates, and fresh Raze review remain.
+  remediation, repeated exact gates, and fresh Raze review were completed by
+  exact candidate `fce461288e99167bab6f391085493784da42cc58`. Focused Maven is
+  `53/0/0/0`, full Maven is `607/0/0/3`, the exact image is
+  `sha256:ed03d1f943da442d8c13bdfc5c140b08c1e9155a57f3f10696925a2a0a402a79`,
+  unmodified-local-OSH TeamEngine remains honestly `238/40/7/191`, sabotage
+  is `238/2/10/226`, and credential/hygiene gates report zero leaks and zero
+  IUT writes. Fresh Raze R8 is `APPROVE 0.99`; both prior findings are closed
+  and no new findings remain.

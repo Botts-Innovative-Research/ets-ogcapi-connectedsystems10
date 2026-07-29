@@ -2,6 +2,37 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-29 - Part 1 Advanced Filtering implementation and technical gates
+
+**Triggered by user instruction**: execute the recommended next released-ATS
+step continuously.
+
+- Replaced six historical approximations with exactly 25 independent released
+  `/conf/advanced-filtering` procedures and direct API Common inheritance.
+- Added endpoint-wide local-ID, UID, UID-prefix, keyword, custom-property,
+  geometry, association, combined-filter, and transitive recommendation
+  semantics with bounded same-origin GET-only traversal.
+- Promoted all 25 mappings to exact. Coverage is
+  `240/76 exact/2 helper/115 candidate/47 unmapped`.
+- Initial Raze found seven semantic gaps. Added requirement-linked regressions
+  for complete wildcard pagination, human-readable keyword provenance,
+  representation-derived association IDs, multiple combined predicates, all
+  eligible indirect resources, and explicit traversal depth/cycle/read limits.
+  The red gate was `20/7/0/0`; remediation is `20/0/0/0`.
+- Final focused Maven is `102/0/0/0`; full Docker Maven is `574/0/0/3`.
+- Built exact image `sha256:c39a9c351200...f08ae` from `cf7fa82` and ran
+  Dockerized TeamEngine against unmodified local OSH. Honest E2E is
+  `238/40/7/191`; the seven failures match baseline and all 25 Advanced
+  Filtering methods SKIP at the missing declaration.
+- API Common sabotage, runtime/base immutability, credential integration/wire,
+  no-mutation, and artifact hygiene pass. Primary hygiene records 169 GETs,
+  zero writes, and zero leaks.
+- OSH remains clean at `4c87a65` with `/opt/osh` read-only. No OSH or
+  TeamEngine source or binary was modified, and no hosted CI was added.
+- Reconciled OpenSpec, story, contract, architecture, PRD, traceability, epic,
+  status, changelog, known issues, and verification evidence. Final Raze
+  recheck remains pending.
+
 ## 2026-07-29 - Part 1 Advanced Filtering planning and baseline
 
 **Triggered by user instruction**: continue the accepted released-ATS

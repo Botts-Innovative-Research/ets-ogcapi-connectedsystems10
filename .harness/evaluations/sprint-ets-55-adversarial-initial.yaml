@@ -1,0 +1,58 @@
+sprint: ets-55
+story: S-ETS-55-01
+reviewer_role: Raze
+agent_id: 019facc5-7653-7f93-ac8c-d4b8ab09ee62
+reviewed_at: 2026-07-29
+duration_seconds: 400
+token_metadata: unavailable
+verdict: GAPS_FOUND
+confidence: 0.97
+scope:
+  - released Advanced Filtering procedure semantics
+  - false PASS and false SKIP behavior
+  - pagination and relation traversal
+  - reviewed exact mappings
+findings:
+  - id: RAZE-S55-001
+    severity: HIGH
+    title: UID-prefix behavior was not executed
+    status_at_review: OPEN
+    required_fix: Execute a shorter non-empty UID prefix with a wildcard, require the known match, and reject non-prefix results across pagination.
+  - id: RAZE-S55-002
+    severity: HIGH
+    title: Indirect recommendations inspected only the first eligible resource
+    status_at_review: OPEN
+    required_fix: Evaluate every eligible Property and Sampling Feature, including later-page candidates.
+  - id: RAZE-S55-003
+    severity: HIGH
+    title: Association path and href values acted as synthetic identifiers
+    status_at_review: OPEN
+    required_fix: Use IDs and UIDs from successfully resolved target representations; do not substitute path tokens or href strings.
+  - id: RAZE-S55-004
+    severity: HIGH
+    title: Combined filtering exercised only id plus q
+    status_at_review: OPEN
+    required_fix: Execute every independently evidenced predicate pair and at least two distinct combinations per inspectable endpoint.
+  - id: RAZE-S55-005
+    severity: MEDIUM
+    title: Keyword evidence accepted arbitrary scalar properties
+    status_at_review: OPEN
+    required_fix: Limit q evidence to name, description, or SensorML label.
+  - id: RAZE-S55-006
+    severity: MEDIUM
+    title: Relation traversal limits silently truncated evidence
+    status_at_review: OPEN
+    required_fix: Fail explicitly on depth, active-cycle, or reference-read exhaustion.
+  - id: RAZE-S55-007
+    severity: MEDIUM
+    title: Exact mappings overstated the incomplete semantics
+    status_at_review: OPEN
+    required_fix: Retain exact status only after the six semantic findings have requirement-linked regressions and verified fixes.
+required_fixes:
+  - RAZE-S55-001
+  - RAZE-S55-002
+  - RAZE-S55-003
+  - RAZE-S55-004
+  - RAZE-S55-005
+  - RAZE-S55-006
+  - RAZE-S55-007

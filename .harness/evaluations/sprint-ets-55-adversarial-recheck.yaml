@@ -1,0 +1,49 @@
+evaluation:
+  sprint: ets-55
+  story: S-ETS-55-01
+  role: Raze
+  agent: Hypatia
+  agent_id: 019facff-f78f-7f23-8669-560fb8cc4656
+  started_utc: 2026-07-29T08:31:35Z
+  ended_utc: 2026-07-29T08:44:57Z
+  duration_seconds: 802
+  tokens: unavailable
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  reproduced:
+    focused_maven: "26 tests / 0 failures / 0 errors / 0 skipped"
+    exact_commit: cf7fa82745615f1c27ec8df57bd1d315db673955
+    exact_image: sha256:c39a9c35120064e6be41eaf11c677f77566fd0203849dc0e498995e0b63f08ae
+  prior_findings:
+    RAZE-S55-001: CLOSED
+    RAZE-S55-002: CLOSED
+    RAZE-S55-003: PARTIAL
+    RAZE-S55-004: PARTIAL
+    RAZE-S55-005: CLOSED_WITH_NEW_PROVENANCE_CONCERN
+    RAZE-S55-006: CLOSED
+    RAZE-S55-007: OPEN
+  findings:
+    - id: RAZE-S55-R1-001
+      severity: HIGH
+      summary: Link-wrapper IDs survive successful resolution, generic root aliases bypass prescribed association paths, and reference retrieval lacks actual-media and pagination gates.
+      required_fix: Discard wrapper identities after resolution, enforce procedure-specific evidence routes, and regression-test contradictory wrappers, broken/wrong-media targets, and paginated references.
+    - id: RAZE-S55-R1-002
+      severity: HIGH
+      summary: Combined predicates omit applicable custom-property, featureType, and temporal filters.
+      required_fix: Enumerate every independently evidenced applicable predicate and test featureType+q, datetime+system, and supported custom-property combinations.
+    - id: RAZE-S55-R1-003
+      severity: HIGH
+      summary: Exact mapping prose overstates combined and indirect-property behavior.
+      required_fix: Reconcile mapping evidence with implementation and the released observedProperty-only indirect procedure.
+    - id: RAZE-S55-R1-004
+      severity: MEDIUM
+      summary: Recursive keyword scanning accepts labels from arbitrary link and extension descendants.
+      required_fix: Restrict keyword provenance to resource representation boundaries and add nested-label rejection.
+    - id: RAZE-S55-R1-005
+      severity: MEDIUM
+      summary: Unmodified local OSH provides honest declaration-boundary SKIPs but no positive full-stack Advanced Filtering conformance.
+      required_fix: Keep positive-IUT status explicit; do not report controlled HTTP as full-stack IUT conformance or modify OSH/TeamEngine.
+    - id: RAZE-S55-R1-006
+      severity: LOW
+      summary: Java comments reference scenario IDs absent from the capability spec, and Maven build-number provenance predates the exact candidate.
+      required_fix: Reconcile scenario references and rerun final Maven evidence from an exact clean committed candidate.

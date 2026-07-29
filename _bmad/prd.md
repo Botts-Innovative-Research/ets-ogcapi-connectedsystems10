@@ -1,6 +1,6 @@
 # Product Requirements Document — OGC API CS API TeamEngine ETS
 
-> Version: 2.3 | Status: Living Document | Last updated: 2026-07-29
+> Version: 2.4 | Status: Living Document | Last updated: 2026-07-29
 >
 > **Supersedes v1.1 (2026-03-31).** v1.1 framed the deliverable as a Next.js/TypeScript web application
 > for ad-hoc CS API conformance assessment. The user pivoted on 2026-04-27 to a certification-track
@@ -280,3 +280,4 @@ the matrix at the bottom of `_bmad/traceability.md` (v1.0 frozen section).
 | 2026-07-28 | 2.2 | Planned twelve direct GeoJSON procedures, non-mutating JSON/YAML OpenAPI media inspection, complete released schema/mapping coverage, direct API Common inheritance, and pinned clean-checkout parity under existing FR-ETS-22/24/26. | CP-014 and Sprint 54 planning |
 | 2026-07-28 | 2.2.1 | Recorded twelve exact GeoJSON procedures, strict representation media gates, normalized 20-schema parity, direct API Common cascade, and honest unmodified-local-OSH E2E under existing FR-ETS-22/24/26. | CP-014 and Sprint 54 implementation |
 | 2026-07-29 | 2.3 | Planned 25 direct Advanced Filtering procedures, direct API Common inheritance, endpoint-wide seed-derived predicates, JTS geometry intersection, association traversal, combined-filter AND semantics, and recommendation warnings under existing FR-ETS-19/24/25. | CP-015 and Sprint 55 planning |
+| 2026-07-29 | 2.4 | Implemented and technically verified all 25 released Advanced Filtering procedures, including fail-closed UID-prefix pagination, keyword and association provenance, pairwise combined predicates, complete indirect recommendation evaluation, and explicit traversal limits. Final Raze recheck remains pending. | CP-015 and Sprint 55 implementation |

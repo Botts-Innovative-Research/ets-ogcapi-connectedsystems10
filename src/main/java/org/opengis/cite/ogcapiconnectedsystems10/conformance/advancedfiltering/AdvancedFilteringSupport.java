@@ -5,6 +5,7 @@ import static io.restassured.RestAssured.given;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -534,6 +535,10 @@ public final class AdvancedFilteringSupport {
 			.ifPresent(value -> predicates.add(new FilterPredicate("id", value, item -> hasIdentifier(item, value))));
 		keyword(resource).ifPresent(
 				value -> predicates.add(new FilterPredicate("q", value, item -> containsPlainText(item, value))));
+		scalarProperty(resource, "featureType").ifPresent(value -> predicates
+			.add(new FilterPredicate("featureType", value, item -> hasPropertyValue(item, "featureType", value))));
+		temporalFilter(resource).ifPresent(filter -> predicates
+			.add(new FilterPredicate("datetime", filter.parameter, item -> temporalIntersects(item, filter))));
 		geometryQuery(resource).ifPresent(
 				value -> predicates.add(new FilterPredicate("geom", value, item -> resourceIntersects(item, value))));
 		switch (type) {
@@ -574,7 +579,28 @@ public final class AdvancedFilteringSupport {
 				addRelationPredicate(predicates, type, resource, "baseProperty", Relation.BASE_PROPERTY, requirement);
 			}
 		}
+		addSupportedCustomPredicate(predicates, type, resource, requirement);
 		return List.copyOf(predicates);
+	}
+
+	private void addSupportedCustomPredicate(List<FilterPredicate> predicates, ResourceType type,
+			Map<String, Object> resource, String requirement) {
+		Optional<PropertyValue> property = customProperty(resource);
+		if (property.isEmpty()) {
+			return;
+		}
+		PropertyValue selected = property.get();
+		Optional<TraversalResult> filtered = recommendedQuery(type, Map.of(selected.name, selected.value), requirement);
+		if (filtered.isEmpty() || filtered.get().items().isEmpty()
+				|| filtered.get()
+					.items()
+					.stream()
+					.anyMatch(item -> !hasPropertyValue(item, selected.name, selected.value))
+				|| filtered.get().items().stream().noneMatch(item -> sameResource(item, resource))) {
+			return;
+		}
+		predicates.add(new FilterPredicate(selected.name, selected.value,
+				item -> hasPropertyValue(item, selected.name, selected.value)));
 	}
 
 	private void addRelationPredicate(List<FilterPredicate> predicates, ResourceType type, Map<String, Object> resource,
@@ -661,7 +687,9 @@ public final class AdvancedFilteringSupport {
 			String requirement) {
 		Identifiers result = new Identifiers();
 		ReferenceReads reads = new ReferenceReads();
-		collectRelation(resource, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
+		if (relation.rootEvidenceAllowed(owner)) {
+			collectRelation(resource, relation.aliases, relation.hrefIdentity, result, reads, 0, requirement);
+		}
 		Optional<String> ownerId = localId(resource);
 		if (ownerId.isPresent()) {
 			for (Subresource subresource : relation.subresources(owner)) {
@@ -738,7 +766,7 @@ public final class AdvancedFilteringSupport {
 		}
 		assertTraversalDepth(depth, requirement);
 		if (value instanceof String string) {
-			collectStringReference(string, aliases, result, reads, requirement);
+			collectStringReference(string, aliases, hrefIdentity, result, reads, requirement);
 			return;
 		}
 		if (value instanceof Collection<?> collection) {
@@ -751,12 +779,13 @@ public final class AdvancedFilteringSupport {
 			return;
 		}
 		Map<String, Object> map = (Map<String, Object>) raw;
-		addResourceIdentifiers(map, result);
 		String href = asString(map.get("href"));
 		if (href != null) {
 			URI resolved = resolve(href);
 			readReference(resolved, aliases, hrefIdentity, result, reads, requirement);
+			return;
 		}
+		addResourceIdentifiers(map, result);
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			String key = normalize(entry.getKey());
 			if (!"href".equals(entry.getKey()) && (entry.getValue() instanceof Map<?, ?>
@@ -767,15 +796,15 @@ public final class AdvancedFilteringSupport {
 		}
 	}
 
-	private void collectStringReference(String value, Set<String> aliases, Identifiers result, ReferenceReads reads,
-			String requirement) {
+	private void collectStringReference(String value, Set<String> aliases, boolean hrefIdentity, Identifiers result,
+			ReferenceReads reads, String requirement) {
 		if (!isAbsoluteUri(value)) {
 			result.local.add(value);
 			return;
 		}
 		URI target = resolve(value);
 		if ("http".equalsIgnoreCase(target.getScheme()) || "https".equalsIgnoreCase(target.getScheme())) {
-			readReference(target, aliases, true, result, reads, requirement);
+			readReference(target, aliases, hrefIdentity, result, reads, requirement);
 		}
 		else {
 			result.global.add(value);
@@ -804,28 +833,40 @@ public final class AdvancedFilteringSupport {
 				}
 				return;
 			}
+			if (!JSON_MEDIA.contains(responseMediaType(response))) {
+				if (hrefIdentity) {
+					result.global.add(target.toString());
+				}
+				return;
+			}
 			Map<String, Object> body = parseObject(response);
 			if (body == null) {
 				ETSAssert.failWithUri(requirement, target + " returned HTTP 200 but did not contain a JSON object.");
 			}
-			List<Map<String, Object>> items = collectionItems(body);
-			if (items.isEmpty()) {
-				addResourceIdentifiers(body, result);
-				if (hrefIdentity) {
-					collectRelation(body, aliases, true, result, reads, 0, requirement);
+			if (isCollectionDocument(body)) {
+				Optional<TraversalResult> traversal = Part1ApiCommonSupport.resourcesAtEndpoint(target,
+						"application/geo+json, application/sml+json, application/json", Map.of(), requirement,
+						JSON_MEDIA);
+				if (traversal.isPresent()) {
+					for (Map<String, Object> item : traversal.get().items()) {
+						collectResolvedReferenceResource(item, aliases, hrefIdentity, result, reads, requirement);
+					}
 				}
 			}
 			else {
-				for (Map<String, Object> item : items) {
-					addResourceIdentifiers(item, result);
-					if (hrefIdentity) {
-						collectRelation(item, aliases, true, result, reads, 0, requirement);
-					}
-				}
+				collectResolvedReferenceResource(body, aliases, hrefIdentity, result, reads, requirement);
 			}
 		}
 		finally {
 			reads.leave(target);
+		}
+	}
+
+	private void collectResolvedReferenceResource(Map<String, Object> resource, Set<String> aliases,
+			boolean hrefIdentity, Identifiers result, ReferenceReads reads, String requirement) {
+		addResourceIdentifiers(resource, result);
+		if (hrefIdentity) {
+			collectRelation(resource, aliases, true, result, reads, 0, requirement);
 		}
 	}
 
@@ -843,6 +884,9 @@ public final class AdvancedFilteringSupport {
 					.get(target)
 					.andReturn();
 				if (response.getStatusCode() != 200) {
+					continue;
+				}
+				if (!JSON_MEDIA.contains(responseMediaType(response))) {
 					continue;
 				}
 				Map<String, Object> body = parseObject(response);
@@ -973,6 +1017,82 @@ public final class AdvancedFilteringSupport {
 		}
 	}
 
+	private static Optional<TemporalFilter> temporalFilter(Map<String, Object> resource) {
+		Object validTime = validTime(resource);
+		if (validTime == null) {
+			return Optional.empty();
+		}
+		Instant sampledAt = Instant.now();
+		try {
+			if (validTime instanceof String) {
+				Instant instant = parseTemporalBound(validTime, sampledAt);
+				return Optional.of(new TemporalFilter(instant.toString(), instant, instant, sampledAt));
+			}
+			TemporalBounds bounds = temporalBounds(validTime, sampledAt);
+			if (bounds == null || bounds.begin == null && bounds.end == null) {
+				return Optional.empty();
+			}
+			String begin = bounds.begin == null ? ".." : bounds.begin.toString();
+			String end = bounds.end == null ? ".." : bounds.end.toString();
+			return Optional.of(new TemporalFilter(begin + "/" + end, bounds.begin, bounds.end, sampledAt));
+		}
+		catch (IllegalArgumentException ex) {
+			return Optional.empty();
+		}
+	}
+
+	private static boolean temporalIntersects(Map<String, Object> resource, TemporalFilter filter) {
+		Object validTime = validTime(resource);
+		if (validTime == null) {
+			return true;
+		}
+		try {
+			TemporalBounds bounds = temporalBounds(validTime, filter.sampledAt);
+			return bounds != null && (bounds.end == null || filter.begin == null || !bounds.end.isBefore(filter.begin))
+					&& (filter.end == null || bounds.begin == null || !filter.end.isBefore(bounds.begin));
+		}
+		catch (IllegalArgumentException ex) {
+			return false;
+		}
+	}
+
+	private static TemporalBounds temporalBounds(Object validTime, Instant sampledAt) {
+		if (validTime instanceof String) {
+			Instant instant = parseTemporalBound(validTime, sampledAt);
+			return new TemporalBounds(instant, instant);
+		}
+		if (!(validTime instanceof List<?> interval) || interval.size() != 2) {
+			throw new IllegalArgumentException("validTime must be an ISO instant or a two-bound interval");
+		}
+		Instant begin = parseOptionalTemporalBound(interval.get(0), sampledAt);
+		Instant end = parseOptionalTemporalBound(interval.get(1), sampledAt);
+		if (begin != null && end != null && end.isBefore(begin)) {
+			throw new IllegalArgumentException("validTime end precedes its begin");
+		}
+		return new TemporalBounds(begin, end);
+	}
+
+	private static Instant parseOptionalTemporalBound(Object value, Instant sampledAt) {
+		return value == null ? null : parseTemporalBound(value, sampledAt);
+	}
+
+	private static Instant parseTemporalBound(Object value, Instant sampledAt) {
+		if (!(value instanceof String string) || string.isBlank()) {
+			throw new IllegalArgumentException("Temporal bound must be an ISO-8601 string or null");
+		}
+		return "now".equals(string) ? sampledAt : Instant.parse(string);
+	}
+
+	private static Object validTime(Map<String, Object> resource) {
+		if (resource == null) {
+			return null;
+		}
+		if (resource.containsKey("validTime")) {
+			return resource.get("validTime");
+		}
+		return asMap(resource.get("properties")).get("validTime");
+	}
+
 	@SuppressWarnings("unchecked")
 	private static boolean resourceIntersects(Map<String, Object> resource, String wkt) {
 		Object geometry = resource.get("geometry");
@@ -1049,29 +1169,18 @@ public final class AdvancedFilteringSupport {
 		return !prefix.isBlank() && uid(resource).filter(value -> value.startsWith(prefix)).isPresent();
 	}
 
-	private static List<String> plainTextStrings(Object value) {
+	private static List<String> plainTextStrings(Map<String, Object> resource) {
 		List<String> strings = new ArrayList<>();
-		collectPlainTextStrings(value, strings);
+		collectPlainTextProperties(resource, strings);
+		collectPlainTextProperties(asMap(resource == null ? null : resource.get("properties")), strings);
 		return strings;
 	}
 
-	private static void collectPlainTextStrings(Object value, List<String> strings) {
-		if (value == null) {
-			return;
-		}
-		if (value instanceof Map<?, ?> map) {
-			for (Map.Entry<?, ?> entry : map.entrySet()) {
-				String key = normalize(String.valueOf(entry.getKey()));
-				if (Set.of("name", "description", "label").contains(key)) {
-					collectTextValues(entry.getValue(), strings);
-				}
-				else if (entry.getValue() instanceof Map<?, ?> || entry.getValue() instanceof Collection<?>) {
-					collectPlainTextStrings(entry.getValue(), strings);
-				}
+	private static void collectPlainTextProperties(Map<String, Object> values, List<String> strings) {
+		for (Map.Entry<String, Object> entry : values.entrySet()) {
+			if (Set.of("name", "description", "label").contains(normalize(entry.getKey()))) {
+				collectTextValues(entry.getValue(), strings);
 			}
-		}
-		else if (value instanceof Collection<?> collection) {
-			collection.forEach(item -> collectPlainTextStrings(item, strings));
 		}
 	}
 
@@ -1155,24 +1264,6 @@ public final class AdvancedFilteringSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static List<Map<String, Object>> collectionItems(Map<String, Object> body) {
-		Object value = body.get("items");
-		if (!(value instanceof List<?>)) {
-			value = body.get("features");
-		}
-		if (!(value instanceof List<?> list)) {
-			return List.of();
-		}
-		List<Map<String, Object>> items = new ArrayList<>();
-		for (Object item : list) {
-			if (item instanceof Map<?, ?> map) {
-				items.add((Map<String, Object>) map);
-			}
-		}
-		return List.copyOf(items);
-	}
-
-	@SuppressWarnings("unchecked")
 	private static Map<String, Object> parseObject(Response response) {
 		try {
 			Object value = response.jsonPath().get("$");
@@ -1181,6 +1272,24 @@ public final class AdvancedFilteringSupport {
 		catch (RuntimeException ex) {
 			return null;
 		}
+	}
+
+	private static String responseMediaType(Response response) {
+		String contentType = response.getContentType();
+		return contentType == null || contentType.isBlank() ? ""
+				: contentType.split(";", 2)[0].trim().toLowerCase(Locale.ROOT);
+	}
+
+	private static boolean isCollectionDocument(Map<String, Object> body) {
+		if (body.get("items") instanceof List<?> || body.get("features") instanceof List<?>
+				|| "FeatureCollection".equals(body.get("type"))) {
+			return true;
+		}
+		Object links = body.get("links");
+		return links instanceof Collection<?> collection && collection.stream()
+			.filter(Map.class::isInstance)
+			.map(Map.class::cast)
+			.anyMatch(link -> "next".equals(link.get("rel")));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1338,12 +1447,28 @@ public final class AdvancedFilteringSupport {
 			return List.of();
 		}
 
+		private boolean rootEvidenceAllowed(ResourceType owner) {
+			if (owner == ResourceType.DEPLOYMENTS && this != PARENT_DEPLOYMENT) {
+				return false;
+			}
+			if (owner == ResourceType.SYSTEMS && this == FEATURE_OF_INTEREST) {
+				return false;
+			}
+			return owner != ResourceType.SAMPLING_FEATURES || this != OBSERVED_PROPERTY && this != CONTROLLED_PROPERTY;
+		}
+
 	}
 
 	private record PropertyValue(String name, String value) {
 	}
 
 	private record FilterPredicate(String parameter, String value, Predicate<Map<String, Object>> matches) {
+	}
+
+	private record TemporalFilter(String parameter, Instant begin, Instant end, Instant sampledAt) {
+	}
+
+	private record TemporalBounds(Instant begin, Instant end) {
 	}
 
 	private record Subresource(String path, Map<String, String> query, Set<String> aliases, boolean includeItems,

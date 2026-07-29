@@ -562,7 +562,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#systemsFilterByFeatureOfInterest()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method derives direct and recursively followed Sampling Feature identities for Systems, queries foi using local and global identifiers, validates all returned System representations, and requires the requested Feature of Interest relation in each result."
+      "evidence": "The method derives Feature of Interest identities only through each System's prescribed recursive samplingFeatures subresource, queries foi using local and global identifiers, validates all returned System representations, and replays the same prescribed route to prove every result."
     },
     {
       "part": 1,
@@ -598,7 +598,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterBySystem()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method derives recursively deployed System identities from Deployment representations and deployedSystems resources, queries system by local ID and UID, validates all returned Deployments, and proves the requested deployed-System relation."
+      "evidence": "The method derives recursively deployed System identities through each Deployment's prescribed deployedSystems subresource, queries system by local ID and UID, validates all returned Deployments, and replays that route to prove the requested deployed-System relation."
     },
     {
       "part": 1,
@@ -607,7 +607,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByFeatureOfInterest()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method derives direct and recursively followed Feature of Interest identities for Deployments, queries foi with local and global identifiers, validates every returned Deployment representation, and proves the requested association."
+      "evidence": "The method derives Feature of Interest identities through each Deployment's prescribed featuresOfInterest subresource, queries foi with local and global identifiers, validates every returned Deployment representation, and replays that route to prove the requested association."
     },
     {
       "part": 1,
@@ -616,7 +616,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByObservedProperty()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method follows deployed Systems to derive observed Property identities, queries observedProperty, validates every returned Deployment representation, and requires each result's deployed-System closure to contain the requested property."
+      "evidence": "The method traverses each Deployment's prescribed deployedSystems subresource and referenced System descriptions to derive observed Property identities, queries observedProperty, validates every returned Deployment representation, and replays that route for every result."
     },
     {
       "part": 1,
@@ -625,7 +625,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#deploymentsFilterByControlledProperty()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method follows deployed Systems to derive controlled Property identities, queries controlledProperty, validates every returned Deployment representation, and requires each result's deployed-System closure to contain the requested property."
+      "evidence": "The method traverses each Deployment's prescribed deployedSystems subresource and referenced System descriptions to derive controlled Property identities, queries controlledProperty, validates every returned Deployment representation, and replays that route for every result."
     },
     {
       "part": 1,
@@ -661,7 +661,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#samplingFeaturesFilterByObservedProperty()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method follows Sampling Feature datastream associations to derive observed Property identities, queries observedProperty, validates every returned Sampling Feature representation, and proves the requested indirect relation."
+      "evidence": "The method derives observed Property identities only through each Sampling Feature's prescribed Datastream subresource, queries observedProperty, validates every returned Sampling Feature representation, and replays that route to prove the requested indirect relation."
     },
     {
       "part": 1,
@@ -670,7 +670,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#samplingFeaturesFilterByControlledProperty()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method follows Sampling Feature controlstream associations to derive controlled Property identities, queries controlledProperty, validates every returned Sampling Feature representation, and proves the requested indirect relation."
+      "evidence": "The method derives controlled Property identities only through each Sampling Feature's prescribed ControlStream subresource, queries controlledProperty, validates every returned Sampling Feature representation, and replays that route to prove the requested indirect relation."
     },
     {
       "part": 1,
@@ -697,7 +697,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#canonicalResourcesCombineFilters()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The method selects a canonical resource with independent ID and keyword evidence, sends both filters together on every eligible endpoint, traverses all pages, and requires every result to satisfy both predicates; controlled coverage rejects union semantics."
+      "evidence": "For each inspectable canonical endpoint, the method inventories every independently evidenced applicable id, q, featureType, datetime, geometry, mandatory association, objectType/baseProperty, and positively supported custom-property predicate; it executes every distinct pair, traverses every page, and requires every result to satisfy both predicates, with controlled coverage rejecting union semantics."
     },
     {
       "part": 1,
@@ -706,7 +706,7 @@
       "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests#indirectPropertyFiltersAreTransitive()",
       "reviewedBy": "Codex Sprint 55 ATS line review",
       "reviewedOn": "2026-07-29",
-      "evidence": "The recommendation procedure evaluates transitive observed and controlled Property filtering across Systems, Deployments, Procedures, and Sampling Features, validates returned representations and complete relation evidence, and emits visible warnings rather than false conformance failures when recommendation evidence is unavailable."
+      "evidence": "The recommendation procedure evaluates transitive observedProperty filtering across Systems, Deployments, Procedures, and Sampling Features and baseProperty filtering across Properties, inspects every eligible resource on every page, and emits visible warnings rather than mandatory failures when recommendation evidence is unavailable."
     },
     {
       "part": 1,

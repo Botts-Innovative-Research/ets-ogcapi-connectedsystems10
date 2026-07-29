@@ -1911,8 +1911,19 @@ Pagination and association traversal are bounded, cycle-safe, and same-origin.
 Cross-origin relation targets are used only as permitted identifier evidence
 and never receive the IUT credential.
 
-Combined filtering uses at least two available seed-derived predicates for
-each canonical endpoint and requires logical AND semantics. The indirect
+The evidence router distinguishes direct representation relations from
+procedure-prescribed subresources. Deployment System/FOI/property predicates
+must traverse `deployedSystems` or `featuresOfInterest`; Sampling Feature
+property predicates must traverse Datastream or ControlStream subresources.
+Equivalent root aliases and extension descendants do not substitute for those
+paths. A same-origin link wrapper contributes no ID or UID after resolution;
+the resolved target representation controls. Association collections use the
+same actual-media and bounded-pagination gate as canonical collections.
+
+Combined filtering inventories applicable inherited `id`, `q`, `featureType`,
+`datetime`, and geometry predicates, mandatory class-specific association
+predicates, and positively supported custom-property predicates. It executes
+every independently evidenced pair and requires logical AND semantics. The indirect
 property and feature-of-interest recommendations compare complete direct and
 transitive result sets. Custom-property and indirect recommendation
 non-support is logged as a warning rather than treated as a requirement
@@ -1936,6 +1947,15 @@ declare Part 1 `/conf/advanced-filtering`, all 25 methods must deploy and SKIP
 before filter-specific access. Controlled HTTP supplies all positive
 procedures and fail-closed cases. No OSH or TeamEngine source or binary change
 and no hosted CI are permitted.
+
+The first exact candidate's verification is retained as diagnostic evidence.
+Final Raze recheck reopened link-wrapper identity, procedure-specific evidence
+paths, association media/pagination, complete predicate enumeration, keyword
+provenance, traceability, and exact committed-build provenance. The sprint is
+therefore in remediation; stale gate totals and image hashes are not completion
+evidence. Unmodified local OSH remains the mandatory honest deployment target
+even though it cannot provide positive Advanced Filtering conformance because
+it does not declare the class.
 
 ## Status
 

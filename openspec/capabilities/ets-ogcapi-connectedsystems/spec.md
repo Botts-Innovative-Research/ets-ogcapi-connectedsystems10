@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.2 | Status: Active ETS implementation | Last updated: 2026-07-28
+> Version: 1.3 | Status: Active ETS implementation | Last updated: 2026-07-29
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -2714,13 +2714,21 @@ fail or SKIP as specified.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
 - **Priority**: MUST
-- **Status**: SPRINT_55_DIRECT_ATS_IN_PROGRESS
+- **Status**: SPRINT_55_REMEDIATION_IN_PROGRESS (final adversarial recheck
+  reopened semantic and provenance gates)
 - **Historical increment**: by Sprint 11 Generator and gates (2026-05-05; story S-ETS-11-01; Quinn Gate 3.5 APPROVE_WITH_CONCERNS 0.90; Raze Gate 4 APPROVE_WITH_CONCERNS 0.90). Implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.advancedfiltering.AdvancedFilteringTests` with 6 read-only @Tests. Verification: Java formatter via Docker Maven BUILD SUCCESS; Docker Maven `bash scripts/mvn-test-via-docker.sh` BUILD SUCCESS, `98 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-11-generator-smoke` with external `SMOKE_OUTPUT_DIR=/tmp/sprint-ets-11-generator-smoke-results` reported `63 total / 48 passed / 0 failed / 15 skipped`. Independent Quinn/Raze gate smoke runs also reported `63 total / 48 passed / 0 failed / 15 skipped`. Current GeoRobotix does not declare `/conf/advanced-filtering`, so all 6 AdvancedFiltering @Tests SKIP with reason and no undeclared query behavior is counted as PASS.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/query/requirements_class_advanced_filtering.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_15_requirements_class_advanced_filtering.adoc`. The OpenAPI fragment for `ID_List` exists at `api/part1/openapi/parameters/idListSchema.yaml`. The class identifier is `/req/advanced-filtering`, inherits `/req/api-common`, and lists query-parameter subrequirements for ID lists, common resource keyword/id filters, geometry filters, system/deployment/procedure/sampling-feature/property association filters, and combined filters.
 - **Sprint 11 coverage scope**: AdvancedFiltering systems/common-resource read-only subset with 6 @Tests: (1) IUT declares `/conf/advanced-filtering`, otherwise every AdvancedFiltering @Test SKIPs with reason; (2) ID-list schema validator helper accepts homogeneous non-empty local-ID lists and homogeneous non-empty UID lists while rejecting mixed local/UID lists and empty/malformed lists; (3) `/systems?id=<known-id>` returns HTTP 200 and a non-empty result set whose returned items all preserve the selected id when the conformance class is declared and a seed System id was selected; (4) `/systems?q=<known keyword>` returns HTTP 200 and a non-empty result set whose returned items include keyword evidence in `name` or `description` when declared and a seed keyword was selected from a System name/description; (5) `/systems?geom=<WKT>` is exercised with a broad WKT geometry and validated only for HTTP 200 + JSON response shape in this sprint; (6) TestNG dependency wiring and smoke no-regression. The sprint deliberately does not close all 24 listed advanced-filtering subrequirements.
 - **ID_List examples for Sprint 11 helper**: Based on upstream `idListSchema.yaml` and clause 15 text, valid examples include `0mqcvdnfoca0`, `0mqcvdnfoca0,0ngu9lvstls0`, `urn:osh:sensor:simweather:0123456879`, `urn:osh:sensor:simweather:0123456879,urn:osh:sensor:simweather:9876543210`, and the resource-by-id UID-prefix query value `urn:osh:sensor:simweather:*`. Invalid examples include an empty value, `,`, `0mqcvdnfoca0,urn:osh:sensor:simweather:0123456879`, and `urn:osh:sensor:bad value`. This is a local schema-helper test only; it does not prove every endpoint's query semantics.
-- **Dependency wiring**: AdvancedFiltering depends on SystemFeatures via `<group name="advancedfiltering" depends-on="systemfeatures"/>`; the planned tests exercise System resources first and must cascade-SKIP when SystemFeatures fails.
-- **Open subrequirements after Sprint 11**: Deployment/procedure/sampling-feature/property association filters, system-by-parent/procedure/foi/observedProperty/controlledProperty semantic result validation, full geometry intersection correctness, combined filter truth-table validation, collection-wide all-resource endpoint parity, and any Part 2 query requirements remain OPEN unless separately planned.
+- **Historical dependency wiring**: Sprint 11 depended on SystemFeatures via
+  `<group name="advancedfiltering" depends-on="systemfeatures"/>`. Sprint 55
+  supersedes that wiring with direct `part1apicommon` inheritance; System and
+  sibling groups cannot block the released class.
+- **Historical open subrequirements after Sprint 11**: the listed Part 1
+  deployment/procedure/sampling-feature/property associations, recursive
+  System associations, geometry intersection, combined filters, and
+  endpoint-wide common filters are closed by Sprint 55. Part 2 query
+  requirements remain separate under `REQ-ETS-PART2-006`.
 - **IUT-state policy**: If the IUT does not declare `/conf/advanced-filtering`, every AdvancedFiltering @Test SKIPs with reason. Query parameters that appear to work on GeoRobotix without a declaration are planning evidence only and MUST NOT be reported as conformance PASS.
 - **Maps to**: PRD FR-ETS-19.
 
@@ -2837,8 +2845,10 @@ results cannot PASS.
 **GIVEN** a canonical resource representation
 **WHEN** the ETS derives and verifies a `q` predicate
 **THEN** keyword evidence comes only from `name`, `description`, or the
-SensorML-equivalent `label`
-**AND** unrelated scalar extension properties cannot create a false PASS.
+SensorML-equivalent `label` at the resource root or immediate GeoJSON
+`properties` boundary
+**AND** link metadata, arbitrary extension descendants, association targets,
+and unrelated scalar extension properties cannot create a false PASS.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-GEOMETRY-001 (CRITICAL)
 **GIVEN** Systems, Deployments, or Sampling Features with usable GeoJSON
@@ -2856,12 +2866,21 @@ controlled-property relation evidence
 boundary and exposes the requested direct or recursively inherited relation.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PROVENANCE-001 (CRITICAL)
-**GIVEN** a same-origin association link whose path token and canonical href
-differ from the target representation's local ID and UID
+**GIVEN** a same-origin association wrapper whose own ID, UID, path token, or
+canonical href differs from the target representation's local ID and UID
 **WHEN** local-ID and UID repetitions are selected
 **THEN** the values come from the resolved target representation
-**AND** neither the path token nor canonical href is accepted as synthetic
-identifier evidence after successful resolution.
+**AND** neither wrapper identifiers, the path token, nor the canonical href is
+accepted as synthetic identifier evidence after successful resolution.
+
+##### SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001 (CRITICAL)
+**GIVEN** an association procedure prescribes a deployed-System,
+features-of-interest, Datastream, or ControlStream traversal
+**WHEN** equivalent-looking identifiers appear only in unrelated root aliases
+or extension descendants
+**THEN** those shortcuts cannot establish the predicate
+**AND** evidence is accepted only from the procedure-specific direct relation
+or prescribed subresource and target-description traversal.
 
 ##### SCENARIO-ETS-PART1-009-RELEASED-DEPLOYMENT-ASSOCIATIONS-001 (CRITICAL)
 **GIVEN** Deployment parent, deployed-System, feature-of-interest,
@@ -2893,6 +2912,10 @@ requested recursive base relation or object type.
 **GIVEN** multiple seed-derived filters available for a canonical endpoint
 **WHEN** the ETS submits every independently evidenced pairwise combination
 **THEN** every returned item satisfies every supplied predicate
+**AND** the predicate inventory includes applicable inherited `id`, `q`,
+`featureType`, `datetime`, and geometry filters, every applicable mandatory
+Advanced Filtering association filter, and any positively supported
+custom-property recommendation
 **AND** every canonical endpoint exercises at least two distinct combinations
 **AND** the procedure cannot PASS from union semantics, one hard-coded
 combination, or an empty result.
@@ -2901,6 +2924,9 @@ combination, or an empty result.
 **GIVEN** base-property or nested feature-of-interest relation evidence
 **WHEN** direct and transitive filter result sets are compared
 **THEN** transitive sets include their direct descendants
+**AND** the released indirect-property procedure uses `observedProperty` for
+Systems, Deployments, Procedures, and Sampling Features and `baseProperty` for
+Properties, without inventing a controlled-property repetition
 **AND** every eligible Property and every eligible Sampling Feature is
 evaluated, including resources on later collection pages
 **AND** unsupported recommendation behavior emits a visible warning rather
@@ -2910,6 +2936,11 @@ than a mandatory conformance failure.
 **GIVEN** a filtered collection has multiple pages or association links
 **WHEN** evidence is traversed
 **THEN** every page is status/media gated before parsing
+**AND** successfully resolved same-origin association collections contribute
+all target representations across pagination
+**AND** broken or unsupported-media association targets contribute only their
+target URI where the released ATS explicitly permits unresolved target
+identity, never wrapper IDs or parsed unsupported content
 **AND** pagination and same-origin association traversal reject cycles,
 over-limit graphs, cross-origin credential forwarding, and later-page defects.
 Depth and reference-read limits SHALL fail explicitly rather than silently
@@ -2939,7 +2970,26 @@ truncate relation evidence.
 **THEN** all 25 Advanced Filtering methods are discovered exactly once
 **AND** undeclared-class outcomes remain honest pre-filter SKIPs, not
 conformance passes
+**AND** this honest deployment evidence is not described as positive
+Advanced Filtering conformance by the local OSH IUT
 **AND** no OSH or TeamEngine source or binary is modified.
+
+##### Sprint 55 Implementation Evidence
+
+The first exact candidate implemented 25 independent methods and produced
+coverage `240 total / 76 exact / 2 helper / 115 candidate / 47 unmapped`, with
+`/conf/advanced-filtering` at `25/25 exact`. Its focused/full, exact-image,
+controlled-HTTP, unmodified-local-OSH, dependency, credential, immutability,
+and hygiene evidence remains diagnostic only.
+
+Final Raze recheck `GAPS_FOUND 0.99` reopened exact status because relation
+wrappers and unrelated root aliases could manufacture association evidence,
+reference retrieval did not gate actual media or traverse pages, combined
+predicates omitted inherited and supported filters, keyword labels were
+recursively overbroad, mapping prose exceeded implementation, and Maven
+build-number provenance preceded the exact candidate commit. Those findings
+must be closed and every invalidated gate rerun from an exact committed
+candidate before this implementation evidence can be marked complete.
 
 > Sprint 12 starts the mutation-side Part 1 work with Create/Replace/Delete, but it does not permit unguarded writes against the public GeoRobotix smoke target. GeoRobotix declares `/conf/create-replace-delete` and advertises POST/PUT/DELETE via OPTIONS, so default smoke must prove declaration and non-mutating readiness while every lifecycle mutation assertion SKIPs unless an operator explicitly enables mutation tests against a dedicated mutable IUT.
 

@@ -1,0 +1,5 @@
+advanced_filtering_methods=25
+advanced_filtering_skipped=25
+advanced_filtering_not_skipped=0
+advanced_filtering_configs=1
+advanced_filtering_configs_skipped=1

@@ -98,7 +98,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ID-LIST-SCHEMA-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ID-LIST-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_ID_LIST_SCHEMA
 			+ ": query parameters of type ID List use valid homogeneous comma-separated values", groups = GROUP,
@@ -108,7 +108,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-RESOURCE-BY-ID-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMMON-FILTERS-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_RESOURCE_BY_ID
 			+ ": every supported canonical endpoint filters by local-ID lists and UID lists", groups = GROUP,
@@ -118,7 +118,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-RESOURCE-BY-KEYWORD-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMMON-FILTERS-001.
 	 */
 	@Test(description = "OGC-23-001 " + REQ_RESOURCE_BY_KEYWORD
 			+ ": every supported canonical endpoint returns only resources containing the selected keyword",
@@ -128,7 +128,7 @@ public class AdvancedFilteringTests {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-RESOURCE-BY-PROPERTY-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMMON-FILTERS-001.
 	 */
 	@Test(description = "OGC-23-001 " + REC_RESOURCE_BY_PROPERTY
 			+ ": assess custom scalar property filtering on every supported canonical endpoint", groups = GROUP,

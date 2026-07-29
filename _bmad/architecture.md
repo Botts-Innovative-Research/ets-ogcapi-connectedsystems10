@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.38 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering direct ATS planned)
+> Version: 2.0.39 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Advanced Filtering direct ATS technically verified)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1380,3 +1380,21 @@ and SKIP at declaration boundaries before filter access. Controlled read-only
 HTTP fixtures provide positive procedure evidence. OSH and TeamEngine source
 and binaries remain immutable, and project-operated hosted CI remains out of
 scope.
+
+Implementation reconciliation adds three fail-closed boundaries identified by
+adversarial review. Identifier provenance comes from successfully resolved
+target representations, not relation path tokens or href strings. Predicate
+coverage includes complete UID-prefix pagination and every evidenced pairwise
+combination, with at least two distinct combinations per inspectable endpoint.
+Recursive relation traversal fails explicitly on depth, active-cycle, or
+reference-read exhaustion, while indirect recommendations inspect every
+eligible resource across pagination.
+
+The post-remediation candidate passes focused Maven `102/0/0/0`, full Maven
+`574/0/0/3`, and coverage
+`240/76 exact/2 helper/115 candidate/47 unmapped`. Exact image
+`sha256:c39a9c35120064e6be41eaf11c677f77566fd0203849dc0e498995e0b63f08ae`
+produces honest local OSH TeamEngine `238/40/7/191`; all 25 Advanced Filtering
+methods SKIP at the absent declaration, with zero filter queries. Runtime,
+base immutability, dependency sabotage, credential, and zero-write hygiene
+gates pass. Final Raze recheck is pending.

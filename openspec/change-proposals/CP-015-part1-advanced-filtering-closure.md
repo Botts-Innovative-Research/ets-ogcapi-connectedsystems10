@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-009`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Approved for implementation
+**Status**: Remediation in progress after final adversarial recheck
 
 ## Motivation
 
@@ -66,8 +66,9 @@ Part 1 resource endpoint whose owning conformance class is declared. ID
 coverage SHALL use local IDs, UIDs, and a non-empty shorter UID prefix followed
 by `*`; every wildcard result UID SHALL begin with that prefix and the known
 seed SHALL be present across complete pagination. Keyword coverage SHALL use
-only seed-derived `name`, `description`, or SensorML-equivalent `label` text.
-Custom property,
+only seed-derived `name`, `description`, or SensorML-equivalent `label` text at
+the resource root or immediate GeoJSON `properties` boundary. Link metadata
+and arbitrary extension descendants SHALL not supply keyword evidence. Custom property,
 indirect property, and indirect feature-of-interest procedures target released
 recommendations and SHALL emit visible warnings rather than conformance
 failures when the recommendation is not implemented.
@@ -81,7 +82,13 @@ relations, validate the filtered endpoint through the corresponding released
 resource representation boundary, and follow the procedure-specific
 associations. Same-origin HTTP traversal SHALL be bounded and cycle-safe.
 Successfully resolved targets SHALL supply their representation local ID and
-UID; path tokens and hrefs SHALL not be treated as synthetic replacements.
+UID; link-wrapper IDs, path tokens, and hrefs SHALL not be treated as synthetic
+replacements. Procedures that prescribe deployed-System, features-of-interest,
+Datastream, or ControlStream subresource traversal SHALL not be satisfied by
+equivalent root aliases. Association collection targets SHALL be actual-media
+gated and fully paginated. Broken or unsupported-media targets may contribute
+only their target URI where the released procedure explicitly permits
+unresolved target identity.
 Depth, cycle, and reference-read limit exhaustion SHALL fail explicitly.
 Cross-origin association targets SHALL not receive IUT credentials; when the
 released procedure permits unresolved targets to act as identifiers, their URI
@@ -89,11 +96,16 @@ SHALL be used without dereference.
 
 Combined filtering SHALL exercise every independently evidenced pairwise
 combination and at least two distinct combinations per inspectable canonical
-endpoint, validating every constituent predicate.
+endpoint, validating every constituent predicate. Its inventory SHALL include
+applicable inherited `id`, `q`, `featureType`, `datetime`, and geometry
+predicates, all applicable mandatory class-specific predicates, and any
+positively supported custom-property recommendation.
 
 Indirect recommendations SHALL inspect every eligible Property and Sampling
 Feature, including later-page resources, and aggregate visible warnings rather
-than stopping after the first eligible seed.
+than stopping after the first eligible seed. The released indirect-property
+procedure uses `observedProperty` outside Properties and `baseProperty` for
+Properties; it does not define a controlled-property repetition.
 
 Mandatory evidence limitations SHALL aggregate only after all independently
 inspectable endpoints or resources have been processed. Assertion failures,
@@ -145,3 +157,15 @@ HTTP coverage proves every positive procedure and key fail-closed branch, API
 Common sabotage proves pre-IUT dependency behavior, exact-image runtime and
 credential/artifact-hygiene gates complete, and Raze reports no unresolved
 required findings.
+
+## Implementation Reconciliation
+
+The first exact candidate and its verification evidence are retained as
+diagnostics, not completion evidence. Final Raze recheck `GAPS_FOUND 0.99`
+reopened association identity provenance, procedure-specific traversal,
+reference media/pagination, combined-predicate completeness, keyword
+provenance, mapping accuracy, scenario traceability, and exact committed-build
+provenance. Remediation SHALL rerun all invalidated gates from a committed
+candidate. Unmodified local OSH still provides honest declaration-boundary E2E,
+not positive Advanced Filtering conformance; controlled HTTP remains the
+positive semantic harness without modifying OSH or TeamEngine.

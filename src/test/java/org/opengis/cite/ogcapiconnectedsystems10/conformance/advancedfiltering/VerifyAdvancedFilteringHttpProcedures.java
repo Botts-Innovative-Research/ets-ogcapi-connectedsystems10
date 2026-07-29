@@ -77,11 +77,14 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				assertTrue(endpoint + " did not receive a UID-prefix query",
 						server.callsWithValue(endpoint, "id", value -> value.endsWith("*")) > 0);
 			}
+			assertTrue(server.callsWithKeys("/api/systems", "q", "featureType") > 0);
+			assertTrue(server.callsWithKeys("/api/systems", "id", "customCode") > 0);
+			assertTrue(server.callsWithKeys("/api/deployments", "datetime", "system") > 0);
 		}
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-DECLARATION-GATE-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-E2E-EXECUTION-001.
 	 */
 	@Test
 	public void undeclaredClassSkipsBeforeCanonicalResourceAccess() throws Exception {
@@ -95,7 +98,7 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-KNOWN-MATCH-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMMON-FILTERS-001.
 	 */
 	@Test
 	public void emptyKnownMatchIdResultFailsClosed() throws Exception {
@@ -107,7 +110,7 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-PAGINATION-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-MEDIA-PAGINATION-001.
 	 */
 	@Test
 	public void nonmatchingResourceOnLaterPageCannotBeHidden() throws Exception {
@@ -158,6 +161,45 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001.
+	 */
+	@Test
+	public void inheritedFeatureTypeKeywordCombinationCannotBeIgnored() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNION_FEATURE_TYPE_KEYWORD)) {
+			server.start();
+
+			assertThrows(AssertionError.class, configured(server)::canonicalResourcesCombineFilters);
+			assertTrue(server.callsWithKeys("/api/systems", "featureType", "q") > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001.
+	 */
+	@Test
+	public void inheritedDatetimeAssociationCombinationCannotBeIgnored() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNION_DATETIME_SYSTEM)) {
+			server.start();
+
+			assertThrows(AssertionError.class, configured(server)::canonicalResourcesCombineFilters);
+			assertTrue(server.callsWithKeys("/api/deployments", "datetime", "system") > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMBINED-FILTERS-001.
+	 */
+	@Test
+	public void supportedCustomPropertyCombinationCannotBeIgnored() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.UNION_CUSTOM_PROPERTY)) {
+			server.start();
+
+			assertThrows(AssertionError.class, configured(server)::canonicalResourcesCombineFilters);
+			assertTrue(server.callsWithKeys("/api/systems", "id", "customCode") > 0);
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-GEOMETRY-001.
 	 */
 	@Test
@@ -170,7 +212,7 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-CREDENTIAL-BOUNDARY-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-MEDIA-PAGINATION-001.
 	 */
 	@Test
 	public void crossOriginAssociationDoesNotReceiveIutCredential() throws Exception {
@@ -184,7 +226,7 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				.addHeader("Authorization", "Bearer synthetic-secret")
 				.build();
 			try {
-				configured(server).systemsFilterByParent();
+				assertThrows(SkipException.class, configured(server)::systemsFilterByParent);
 			}
 			finally {
 				RestAssured.requestSpecification = original;
@@ -223,6 +265,69 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			assertTrue(server.callsWithValue("/api/systems", "parent", "parent-real"::equals) > 0);
 			assertTrue(server.callsWithValue("/api/systems", "parent", "urn:example:system:parent-real"::equals) > 0);
 			assertEquals(0, server.callsWithValue("/api/systems", "parent", "alias-parent"::equals));
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "wrapper-parent"::equals));
+			assertEquals(0,
+					server.callsWithValue("/api/systems", "parent", "urn:example:system:wrapper-parent"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PATHS-001.
+	 */
+	@Test
+	public void rootAliasesCannotReplacePrescribedAssociationSubresources() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.ROOT_ASSOCIATION_SHORTCUTS)) {
+			server.start();
+			AdvancedFilteringTests tests = configured(server);
+
+			assertThrows(SkipException.class, tests::deploymentsFilterBySystem);
+			assertThrows(SkipException.class, tests::deploymentsFilterByFeatureOfInterest);
+			assertThrows(SkipException.class, tests::deploymentsFilterByObservedProperty);
+			assertThrows(SkipException.class, tests::deploymentsFilterByControlledProperty);
+			assertThrows(SkipException.class, tests::samplingFeaturesFilterByObservedProperty);
+			assertThrows(SkipException.class, tests::samplingFeaturesFilterByControlledProperty);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ASSOCIATION-PROVENANCE-001.
+	 */
+	@Test
+	public void brokenAssociationCannotFallBackToWrapperIdentifiers() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.BROKEN_ASSOCIATION)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::systemsFilterByParent);
+			assertEquals(0, server.callsWithValue("/api/systems", "parent", "wrapper-parent"::equals));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-MEDIA-PAGINATION-001.
+	 */
+	@Test
+	public void unsupportedAssociationMediaCannotBeParsedAsIdentityEvidence() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.WRONG_ASSOCIATION_MEDIA)) {
+			server.start();
+
+			assertThrows(SkipException.class, configured(server)::systemsFilterByParent);
+			assertTrue(server.calls("/api/systems/wrong-media-parent") > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-MEDIA-PAGINATION-001.
+	 */
+	@Test
+	public void associationCollectionsTraverseEveryPage() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.PAGINATED_ASSOCIATION)) {
+			server.start();
+
+			configured(server).systemsFilterByParent();
+
+			assertTrue(server.calls("/api/systems/parent-collection?page=2") > 0);
+			assertTrue(server.callsWithValue("/api/systems", "parent", "parent-real"::equals) > 0);
+			assertTrue(server.callsWithValue("/api/systems", "parent", "urn:example:system:parent-real"::equals) > 0);
 		}
 	}
 
@@ -297,8 +402,10 @@ public class VerifyAdvancedFilteringHttpProcedures {
 	private enum Mode {
 
 		VALID, UNDECLARED, EMPTY_ID_RESULT, LATER_WRONG_ID, LATER_WRONG_UID_PREFIX, UNION_COMBINED,
-		UNION_SECOND_COMBINATION, WRONG_GEOMETRY, CROSS_ORIGIN_ASSOCIATION, NO_ASSOCIATIONS,
-		RESOLVED_TARGET_IDENTIFIERS, LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION
+		UNION_SECOND_COMBINATION, UNION_FEATURE_TYPE_KEYWORD, UNION_DATETIME_SYSTEM, UNION_CUSTOM_PROPERTY,
+		WRONG_GEOMETRY, CROSS_ORIGIN_ASSOCIATION, NO_ASSOCIATIONS, RESOLVED_TARGET_IDENTIFIERS,
+		ROOT_ASSOCIATION_SHORTCUTS, BROKEN_ASSOCIATION, WRONG_ASSOCIATION_MEDIA, PAGINATED_ASSOCIATION,
+		LATER_INDIRECT_RESOURCES, OVER_DEPTH_RELATION, CYCLIC_RELATION, OVER_LIMIT_RELATION
 
 	}
 
@@ -389,13 +496,17 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				case "/api/properties" -> canonical(exchange, "properties", query);
 				case "/api/systems/system-1/subsystems" -> canonical(exchange, "systems", query);
 				case "/api/systems/system-1/samplingFeatures" -> canonical(exchange, "samplingFeatures", query);
-				case "/api/deployments/deployment-1/deployedSystems" -> canonical(exchange, "systems", query);
+				case "/api/deployments/deployment-1/deployedSystems" ->
+					prescribedSubresource(exchange, "systems", query);
 				case "/api/deployments/deployment-1/featuresOfInterest" ->
-					canonical(exchange, "samplingFeatures", query);
-				case "/api/samplingFeatures/sf-1/datastreams" -> stream(exchange, true);
-				case "/api/samplingFeatures/sf-1/controlstreams" -> stream(exchange, false);
+					prescribedSubresource(exchange, "samplingFeatures", query);
+				case "/api/samplingFeatures/sf-1/datastreams" -> prescribedStream(exchange, true);
+				case "/api/samplingFeatures/sf-1/controlstreams" -> prescribedStream(exchange, false);
 				case "/api/systems/parent-1" -> single(exchange, "systems", parentSystem());
 				case "/api/systems/alias-parent" -> single(exchange, "systems", resolvedParentSystem());
+				case "/api/systems/broken-parent" -> send(exchange, 404, "application/json", "{}");
+				case "/api/systems/wrong-media-parent" -> send(exchange, 200, "text/plain", resolvedParentSystem());
+				case "/api/systems/parent-collection" -> associationCollection(exchange, query);
 				case "/api/procedures/procedure-1" -> single(exchange, "procedures", procedure());
 				case "/api/features/foi-1" -> single(exchange, "samplingFeatures", featureOfInterest());
 				case "/api/properties/base-1" -> single(exchange, "properties", baseProperty("base-1"));
@@ -455,6 +566,21 @@ public class VerifyAdvancedFilteringHttpProcedures {
 				sendCollection(exchange, type, "[" + system() + "," + otherSystem() + "]", null);
 				return;
 			}
+			if (this.mode == Mode.UNION_FEATURE_TYPE_KEYWORD && "systems".equals(type)
+					&& queryValue(query, "featureType") != null && queryValue(query, "q") != null) {
+				sendCollection(exchange, type, "[" + system() + "," + otherSystem() + "]", null);
+				return;
+			}
+			if (this.mode == Mode.UNION_DATETIME_SYSTEM && "deployments".equals(type)
+					&& queryValue(query, "datetime") != null && queryValue(query, "system") != null) {
+				sendCollection(exchange, type, "[" + deployment() + "," + otherDeployment() + "]", null);
+				return;
+			}
+			if (this.mode == Mode.UNION_CUSTOM_PROPERTY && "systems".equals(type) && queryValue(query, "id") != null
+					&& queryValue(query, "customCode") != null) {
+				sendCollection(exchange, type, "[" + system() + "," + otherSystem() + "]", null);
+				return;
+			}
 			if (this.mode == Mode.WRONG_GEOMETRY && "systems".equals(type) && query != null
 					&& query.startsWith("geom=")) {
 				sendCollection(exchange, type, "[" + otherSystem() + "]", null);
@@ -462,6 +588,11 @@ public class VerifyAdvancedFilteringHttpProcedures {
 			}
 			if (this.mode == Mode.RESOLVED_TARGET_IDENTIFIERS && "systems".equals(type)
 					&& queryValue(query, "parent") != null
+					&& !Set.of("parent-real", "urn:example:system:parent-real").contains(queryValue(query, "parent"))) {
+				sendCollection(exchange, type, "[]", null);
+				return;
+			}
+			if (this.mode == Mode.PAGINATED_ASSOCIATION && "systems".equals(type) && queryValue(query, "parent") != null
 					&& !Set.of("parent-real", "urn:example:system:parent-real").contains(queryValue(query, "parent"))) {
 				sendCollection(exchange, type, "[]", null);
 				return;
@@ -520,6 +651,34 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					+ "\":[{\"id\":\"property-1\",\"uid\":\"" + value + "\"}]}]}");
 		}
 
+		private void prescribedSubresource(HttpExchange exchange, String type, String query) throws IOException {
+			if (this.mode == Mode.ROOT_ASSOCIATION_SHORTCUTS) {
+				send(exchange, 404, "application/json", "{}");
+				return;
+			}
+			canonical(exchange, type, query);
+		}
+
+		private void prescribedStream(HttpExchange exchange, boolean observed) throws IOException {
+			if (this.mode == Mode.ROOT_ASSOCIATION_SHORTCUTS) {
+				send(exchange, 404, "application/json", "{}");
+				return;
+			}
+			stream(exchange, observed);
+		}
+
+		private void associationCollection(HttpExchange exchange, String query) throws IOException {
+			if (this.mode != Mode.PAGINATED_ASSOCIATION) {
+				send(exchange, 404, "application/json", "{}");
+				return;
+			}
+			if ("page=2".equals(query)) {
+				sendCollection(exchange, "systems", "[" + resolvedParentSystem() + "]", null);
+				return;
+			}
+			sendCollection(exchange, "systems", "[]", apiRoot().resolve("systems/parent-collection?page=2"));
+		}
+
 		private String system() {
 			String associations = this.mode == Mode.NO_ASSOCIATIONS ? "" : systemAssociations();
 			return """
@@ -532,7 +691,22 @@ public class VerifyAdvancedFilteringHttpProcedures {
 
 		private String systemAssociations() {
 			if (this.mode == Mode.RESOLVED_TARGET_IDENTIFIERS) {
-				return ",\"parentSystem\":{\"href\":\"" + apiRoot().resolve("systems/alias-parent") + "\"}";
+				return ",\"parentSystem\":{\"id\":\"wrapper-parent\","
+						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
+						+ apiRoot().resolve("systems/alias-parent") + "\"}";
+			}
+			if (this.mode == Mode.BROKEN_ASSOCIATION) {
+				return ",\"parentSystem\":{\"id\":\"wrapper-parent\","
+						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
+						+ apiRoot().resolve("systems/broken-parent") + "\"}";
+			}
+			if (this.mode == Mode.WRONG_ASSOCIATION_MEDIA) {
+				return ",\"parentSystem\":{\"id\":\"wrapper-parent\","
+						+ "\"uid\":\"urn:example:system:wrapper-parent\",\"href\":\""
+						+ apiRoot().resolve("systems/wrong-media-parent") + "\"}";
+			}
+			if (this.mode == Mode.PAGINATED_ASSOCIATION) {
+				return ",\"parentSystem\":{\"href\":\"" + apiRoot().resolve("systems/parent-collection") + "\"}";
 			}
 			if (this.mode == Mode.OVER_DEPTH_RELATION) {
 				String relation = "\"parentSystem\":{\"id\":\"parent-1\",\"uid\":\"urn:example:system:parent\"}";
@@ -593,6 +767,15 @@ public class VerifyAdvancedFilteringHttpProcedures {
 					 "featuresOfInterest":[{"id":"foi-1","uid":"urn:example:foi:1"}],
 					 "observedProperties":[{"id":"property-1","uid":"urn:example:property:observed"}],
 					 "controlledProperties":[{"id":"property-1","uid":"urn:example:property:controlled"}]}}
+					""";
+		}
+
+		private String otherDeployment() {
+			return """
+					{"type":"Feature","id":"deployment-2","geometry":{"type":"Point","coordinates":[0,0]},
+					 "properties":{"featureType":"sosa:Deployment","uid":"urn:example:deployment:2",
+					 "name":"Other Deployment","validTime":["2030-01-01T00:00:00Z","2031-01-01T00:00:00Z"],
+					 "deployedSystems":[{"id":"system-2","uid":"urn:example:system:2"}]}}
 					""";
 		}
 

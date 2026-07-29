@@ -14,7 +14,7 @@ import org.junit.Test;
 public class VerifyAdvancedFilteringSupport {
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ID-LIST-SCHEMA-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-ID-LIST-001.
 	 */
 	@Test
 	public void idListRejectsEmptyMixedAndMalformedValues() {
@@ -29,7 +29,7 @@ public class VerifyAdvancedFilteringSupport {
 	}
 
 	/**
-	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-RESOURCE-PREDICATES-001.
+	 * REQ-ETS-PART1-009; SCENARIO-ETS-PART1-009-RELEASED-COMMON-FILTERS-001.
 	 */
 	@Test
 	public void resourcePredicatesReadGeoJsonAndSensorMlShapes() {
@@ -54,10 +54,14 @@ public class VerifyAdvancedFilteringSupport {
 	public void keywordPredicateIgnoresUnrelatedScalarExtensions() {
 		Map<String, Object> unrelated = Map.of("id", "system-1", "properties",
 				Map.of("uid", "urn:example:system:1", "customCode", "weather"));
+		Map<String, Object> nestedLabels = Map.of("id", "system-2", "properties",
+				Map.of("extensions", Map.of("label", "Weather Extension")), "links",
+				List.of(Map.of("rel", "alternate", "label", "Weather Link")));
 		Map<String, Object> described = Map.of("id", "system-2", "properties",
 				Map.of("description", "Weather observations"));
 
 		assertFalse(AdvancedFilteringSupport.containsPlainText(unrelated, "weather"));
+		assertFalse(AdvancedFilteringSupport.containsPlainText(nestedLabels, "weather"));
 		assertTrue(AdvancedFilteringSupport.containsPlainText(described, "weather"));
 	}
 

@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T06:23Z
+Last updated: 2026-07-29T08:25Z
 
 ## Fresh-Session Entry Point
 
@@ -97,31 +97,31 @@ Read these first:
 
 ## Session Handoff - Part 1 Advanced Filtering Direct ATS
 
-S-ETS-55-01 is in progress under CP-015.
+S-ETS-55-01 is technically verified under CP-015; final Raze recheck is
+pending.
 
-- Pinned released Annex A defines 25 `/conf/advanced-filtering` procedures:
-  22 requirement targets and three recommendation targets.
-- Current class coverage is `0 exact / 4 candidate / 21 unmapped`; six
-  historical methods are being replaced.
-- Planned replacement has exactly 25 independent methods behind
-  `AdvancedFilteringSupport`.
-- Released inheritance changes from historical System to direct API Common;
-  Core and Common remain transitive.
-- Common filters cover every declared canonical Part 1 endpoint using
-  seed-derived local IDs, UIDs, UID prefixes, keywords, and custom properties.
-- Geometry uses parsed JTS intersection. Association procedures validate
-  resource representations and procedure-specific relation graphs.
-- Combined filtering requires logical AND and non-empty known-match results.
-  Three recommendation procedures report warning semantics.
-- Three released prose defects are resolved against their normative targets:
-  parent Deployment, `system` UID repetition, and `/samplingFeatures` indirect
-  property sets.
-- Unmodified local OSH does not declare the class. Primary TeamEngine E2E must
-  deploy all 25 methods as honest declaration-boundary SKIPs; controlled HTTP
-  supplies positive evidence.
-- No OSH or TeamEngine source or binary modification and no hosted CI.
-- Next action: write requirement-linked structural and controlled HTTP tests,
-  preserve the red gate, then implement all 25 procedures.
+- Exactly 25 independent methods implement the 25 released procedures behind
+  `AdvancedFilteringSupport`; all 25 mappings are reviewed exact.
+- Coverage is `240/76 exact/2 helper/115 candidate/47 unmapped`;
+  `/conf/advanced-filtering` is `25/25 exact`.
+- Released inheritance is direct API Common. API Common sabotage skips setup
+  and all 25 methods before class-specific IUT access.
+- Initial Raze found seven semantic gaps. Requirement-linked regressions
+  reproduced `20/7/0/0`; all fixes now pass `20/0/0/0`.
+- Focused Maven is `102/0/0/0`; full Docker Maven is `574/0/0/3`, with three
+  unchanged historical harness skips.
+- Exact image `sha256:c39a9c351200...f08ae` from `cf7fa82` passes runtime,
+  SWE Common adapter, collision, immutable-base, credential, and context
+  checks.
+- Primary unmodified local OSH TeamEngine is honestly `238/40/7/191`. The
+  seven failures match the established baseline. All 25 Advanced Filtering
+  methods SKIP at the absent declaration, and no filter query is issued.
+- Hygiene records 169 IUT GETs, zero writes, and zero leaks. Credential wire
+  E2E records 33 masked artifact events and 33 intact synthetic transmissions.
+- OSH is clean at `4c87a65`, its deployed bundle matches, and `/opt/osh` is
+  read-only. No OSH or TeamEngine source or binary modification; no hosted CI.
+- Next action: obtain final Raze recheck, close documentation statuses, then
+  commit and push Botts `main`.
 
 ## Session Handoff - Part 1 GeoJSON Direct ATS
 

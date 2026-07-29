@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-28T15:04Z
+Last updated: 2026-07-29T08:25Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,10 +14,10 @@ Last updated: 2026-07-28T15:04Z
 
 ## Active Issues
 
-- Sprint 54 closes both LOW Sprint 53 hardening concerns. Property schema
-  parity now fails closed on wrong-commit or dirty source checkouts, and
-  Property-specific controlled HTTP regressions cover pagination and
-  continuation after later collection or item limitations.
+- Local OSH does not declare Part 1 `/conf/advanced-filtering`. Sprint 55
+  therefore records all 25 exact procedures as honest declaration-boundary
+  SKIPs in primary E2E; controlled read-only HTTP supplies positive procedure
+  evidence. Do not patch OSH or weaken the declaration gate.
 - Local OSH declares Part 1 `/conf/property`, but `/properties` returns
   `application/json` with empty `items` even when SensorML is requested, and
   `/collections` advertises no `itemType=sosa:Property` collection. Sprint 53

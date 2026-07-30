@@ -1,14 +1,14 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T20:07Z
+Last updated: 2026-07-30T20:34Z
 
-## Sprint 57 In Progress - Part 1 Update
+## Sprint 57 In Progress - Part 1 Update (External PATCH Evidence Blocked)
 
 - User instruction: publish the completed stock-OSH prerequisite audit and
   start Sprint 57.
 - Audit commit `ce0cc1c` is published on Botts `main`.
 - CP-017, S-ETS-57-01, the Sprint 57 contract, OpenSpec scenarios, design,
-  architecture v2.0.56, epic, and traceability define and reconcile the exact
+  architecture v2.0.57, epic, and traceability define and reconcile the exact
   five released `/conf/update` procedures.
 - Released source is OGC 23-001 tag `v1.0.0`, commit `8e03b236...`; inherited
   operation source is Features Part 4 draft tag `part4-1.0.0-draft.1`, commit
@@ -63,8 +63,11 @@ Last updated: 2026-07-30T20:07Z
 - No OSH or TeamEngine source/binary changes and no hosted CI are in scope.
 - Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence. Both prior
   HIGH findings are CLOSED and no implementation defect remains. Its sole
-  MEDIUM concern requires exact-evidence reconciliation; this follow-up binds
-  all results to `40cc703`. Focused recheck is pending.
+  MEDIUM concern required exact-evidence reconciliation; the follow-up binds
+  all results to `40cc703`.
+- Focused Raze recheck returns `APPROVE_WITH_CONCERNS` at confidence `0.98`,
+  closes the MEDIUM concern, and requires no fixes. Its two LOW observations
+  about version/editorial wording and nested-manifest indexing are corrected.
 - Positive PATCH E2E remains externally blocked, so all five mappings remain
   candidate.
 - Replacement exact evidence is archived under

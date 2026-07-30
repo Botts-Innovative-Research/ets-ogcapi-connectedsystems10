@@ -11,7 +11,7 @@ ee40a98c1ff622666ad571a29c2994fc17bb6006e5e8ae5678ffea76862312b8  ./exact-runtim
 7b9987d8171a73739a03f31228118c1af77a61333b4a5499ba27b6ffae70ca81  ./exact-sabotage.stdout.log
 61211d355373e1c18787ab8baec685ccefd950aa332b8576f648af137534e936  ./exact-teamengine-jar-guard.log
 931f8adb015f7659b12caeece3cf3b306e274a73305c48ae9b5c030bbbd1a351  ./exact-uri-drift-self-test.log
-46bed0386e5a0c7510df76242608e34fa37c06de5dc99a8521d93e297714b59f  ./final-candidate-verification.md
+8ae95777e7d076bcf00ba037ec1c1772bc7c2eb7a54a25f246ee7d85d7886da0  ./final-candidate-verification.md
 1b3a7c65b98c014a7d201bf0d098b6b529d1b9ca24d43393b7b909e4e09370f9  ./local-osh-workflow/artifact-manifest.sha256
 a07c2c0bfe85f2b0356b338b99bbc65fc44d349e942de0b568fcec7a092090a0  ./local-osh-workflow/clean-primary-failures.json
 25703b355af8c2a1ad3a9fffedb314aa4b50cfb7ada9964fea200bcd85310adb  ./local-osh-workflow/clean-primary-hygiene.json
@@ -50,6 +50,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./local-osh-wo
 5f709757c437dcc9214879ee3f0cea3c463d451d516628f80867a04c21a23978  ./local-osh-workflow/source-files.sha256
 7b9987d8171a73739a03f31228118c1af77a61333b4a5499ba27b6ffae70ca81  ./sabotage/sprint-ets-03-dependency-skip-sabotage-2026-07-30T194247Z.log
 2ca8aede9f830404c4900830889e59aaaa7af4a213e03d61897ced0d91c96650  ./sabotage/sprint-ets-03-dependency-skip-sabotage-2026-07-30T194247Z.xml
+b5f58c44f17be0b612af12212ded5979af73a994ff60d8628e503386649434b2  ./test-first/SHA256SUMS
 63979f135a27bbcff270691319b4c82a154d6fbfdffb74ab5cc24bb115514ae7  ./test-first/complete-update-green.txt
 4c65ddc86da6d53e77c6da49d413eb3dfe76dc2e1201289bba66465501ee63a4  ./test-first/final-raze-behavioral-red.txt
 7a7db1df400bdea464ade4b15729ea2e385dceab19adb39bf578e14f3ed6d0d3  ./test-first/final-raze-focused-green.txt

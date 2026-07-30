@@ -2,7 +2,7 @@
 
 ## Status
 
-IN PROGRESS - EXACT CANDIDATE; FOCUSED RAZE RECHECK AND POSITIVE PATCH E2E PENDING
+IN PROGRESS - EXACT CANDIDATE; REVIEW COMPLETE; POSITIVE PATCH E2E EXTERNALLY BLOCKED
 
 ## User Instruction
 
@@ -79,7 +79,7 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
   unauthorized IUT writes.
 - [ ] Positive isolated real-IUT PATCH evidence executes before mappings are
   promoted from candidate to reviewed exact.
-- [ ] Raze reports no unresolved required findings.
+- [x] Raze reports no unresolved required findings.
 
 ## Baseline
 
@@ -156,5 +156,8 @@ methods causal-SKIP on API Common datetime before writes. Fresh Raze returns
 and finds no implementation defect. Its sole MEDIUM concern requires binding
 exact evidence to `40cc703`; this follow-up reconciles the story, contract,
 handoff, traceability, OpenSpec, architecture, epic, and operational records.
-A focused Raze recheck and positive isolated PATCH lifecycle evidence remain
-pending; mappings stay candidate.
+Focused Raze recheck returns `APPROVE_WITH_CONCERNS` at confidence `0.98`,
+closes the MEDIUM reconciliation concern, and requires no fixes. Its two LOW
+editorial/manifest observations are corrected in the final reconciliation.
+Positive isolated PATCH lifecycle evidence remains externally blocked;
+mappings stay candidate.

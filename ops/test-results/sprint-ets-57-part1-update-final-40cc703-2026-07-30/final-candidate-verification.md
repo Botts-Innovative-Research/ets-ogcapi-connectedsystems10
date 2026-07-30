@@ -59,8 +59,10 @@ Fresh Raze returned `APPROVE_WITH_CONCERNS` with high confidence. Both prior
 HIGH findings are CLOSED and no implementation defect remains. Its sole MEDIUM
 concern requires binding this exact evidence to `40cc703` in the repository
 story, contract, handoff, traceability, and operational documents. This
-evidence/reconciliation follow-up performs that required fix; a focused Raze
-recheck remains pending.
+evidence/reconciliation follow-up performs that required fix. Focused Raze
+recheck returned `APPROVE_WITH_CONCERNS` at confidence `0.98`, closed the
+MEDIUM concern, and required no fixes. Its two LOW editorial and
+nested-manifest observations are corrected in the final reconciliation.
 
 ## Verdict
 

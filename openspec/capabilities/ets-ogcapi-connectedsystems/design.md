@@ -59,11 +59,12 @@
 > `sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`.
 > Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence, closes both
 > prior HIGH findings, and finds no implementation defect. Its sole MEDIUM
-> exact-evidence reconciliation concern is addressed by the follow-up; focused
-> recheck remains pending.
+> exact-evidence reconciliation concern is addressed by the follow-up. Focused
+> Raze recheck returns `APPROVE_WITH_CONCERNS` at confidence `0.98`, closes the
+> concern, and requires no fixes.
 > Local OSH remains a causal-SKIP E2E target because API Common datetime
-> evidence is unavailable; mappings remain candidate pending both remediation
-> review and positive PATCH lifecycle evidence.
+> evidence is unavailable; mappings remain candidate pending positive PATCH
+> lifecycle evidence.
 
 > Sprint 41 supersession note (2026-07-21): the TeamEngine 5.5/5.6.x
 > deployment guidance in the Sprint 1 and Sprint 2 sections below is historical

@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-011`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; exact replacement `40cc703` awaits focused Raze recheck and positive PATCH E2E
+**Status**: Accepted; exact replacement `40cc703` reviewed with no required fixes; positive PATCH E2E externally blocked
 
 ## Motivation
 
@@ -186,4 +186,6 @@ Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence, closes both
 prior HIGH findings, and finds no implementation defect. Its sole MEDIUM
 concern requires this follow-up to bind the exact evidence to `40cc703` across
 the story, contract, handoff, traceability, OpenSpec, architecture, epic, and
-operational documents. A focused recheck remains pending.
+operational documents. Focused Raze recheck returns
+`APPROVE_WITH_CONCERNS` at confidence `0.98`, closes that concern, and requires
+no fixes. Positive PATCH E2E remains externally blocked.

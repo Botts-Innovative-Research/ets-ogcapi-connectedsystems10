@@ -3350,8 +3350,9 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   both prior HIGH findings and identifies no implementation defect. Its sole
   MEDIUM concern is exact-evidence reconciliation; the follow-up binds all
   exact results to `40cc703` while preserving candidate mappings, non-green
-  local-OSH totals, and the external positive-PATCH limitation. A focused
-  recheck remains pending.
+  local-OSH totals, and the external positive-PATCH limitation. Focused Raze
+  recheck returns `APPROVE_WITH_CONCERNS` at confidence `0.98`, closes the
+  MEDIUM concern, and requires no fixes.
 - **Maps to**: PRD FR-ETS-21.
 
 ### Acceptance Scenarios for Sprint 57

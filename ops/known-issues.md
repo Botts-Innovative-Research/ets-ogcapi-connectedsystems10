@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T20:07Z
+Last updated: 2026-07-30T20:34Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -20,9 +20,9 @@ Last updated: 2026-07-30T20:07Z
   fixture and canonical-first/custom-delayed cleanup defects. Exact replacement
   `40cc703` passes complete Update `30/0/0/0`, full Maven `687/0/0/3`, and
   every exact technical/local-OSH honesty gate. Fresh Raze closes both prior
-  HIGH findings and finds no implementation defect; its sole MEDIUM
-  exact-evidence reconciliation concern is addressed, with focused recheck
-  pending.
+  HIGH findings and finds no implementation defect; focused Raze recheck
+  `APPROVE_WITH_CONCERNS 0.98` closes its sole MEDIUM exact-evidence
+  reconciliation concern and requires no fixes.
   Unmodified local OSH
   has no usable API Common datetime evidence and omits the exact inherited
   declarations, so all five methods causal-SKIP before writes in both

@@ -1682,7 +1682,8 @@ runtime, immutable-base, dependency, credential, and hygiene gates. Image
 runs against unmodified local OSH with populated `244/54/35/155` and clean
 primary `244/40/7/197`; all 363 IUT requests are GETs, primary state is
 unchanged, and all five Update methods dependency-SKIP before writes. Fresh
-Fresh Raze `APPROVE_WITH_CONCERNS` closes both prior HIGH findings and finds no
+Raze `APPROVE_WITH_CONCERNS` closes both prior HIGH findings and finds no
 implementation defect. Its sole MEDIUM exact-evidence reconciliation concern
-is addressed by the follow-up. Focused Raze recheck and positive PATCH E2E
-remain the only candidate gates.
+is addressed by the follow-up. Focused Raze recheck returns
+`APPROVE_WITH_CONCERNS` at confidence `0.98`, closes that concern, and requires
+no fixes. Positive PATCH E2E remains the only candidate gate.

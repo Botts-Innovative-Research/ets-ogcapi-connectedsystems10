@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T20:07Z
+Last updated: 2026-07-30T20:34Z
 
 ## Current Sprint Evidence
 
@@ -58,10 +58,10 @@ Sprint 57 Part 1 Update direct ATS:
   conforming dedicated mutable IUT provides positive completed PATCH evidence.
   No OSH or TeamEngine source/binary changes were made.
 - Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence, closes both
-  prior HIGH findings, and finds no implementation defect. Its sole MEDIUM
-  exact-evidence reconciliation concern is addressed in the follow-up; focused
-  recheck remains pending. Positive PATCH evidence remains externally blocked,
-  so all five mappings remain candidate.
+  prior HIGH findings, and finds no implementation defect. Focused Raze recheck
+  returns `APPROVE_WITH_CONCERNS` at confidence `0.98`, closes the sole MEDIUM
+  exact-evidence reconciliation concern, and requires no fixes. Positive PATCH
+  evidence remains externally blocked, so all five mappings remain candidate.
 - Exact replacement evidence:
   `ops/test-results/sprint-ets-57-part1-update-final-40cc703-2026-07-30/`.
 - Superseded `c4b6030` evidence:

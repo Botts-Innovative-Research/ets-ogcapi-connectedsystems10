@@ -1,8 +1,8 @@
 sprint57_part1_update_handoff:
-  timestamp: "2026-07-30T20:07:06Z"
+  timestamp: "2026-07-30T20:34:00Z"
   sprint: ets-57
   story: S-ETS-57-01
-  status: IN_PROGRESS_FOCUSED_RAZE_RECHECK_PENDING
+  status: IN_PROGRESS_EXTERNAL_PATCH_EVIDENCE_BLOCKED
   user_instruction: "Push and start Sprint 57."
   candidate:
     commit: 40cc7039da26a39424f1ffa7626b7b6926a50f0a
@@ -21,7 +21,7 @@ sprint57_part1_update_handoff:
     full_maven: "PASS exact detached candidate 687/0/0/3"
     source_runtime_security: "PASS released ATS, coverage, exact-image runtime, SWE adapter, immutable base, sabotage, credentials, and hygiene"
     local_osh: "HONEST FAIL exact populated 244/54/35/155; clean primary 244/40/7/197; provisioning/cleanup PASS; primary unchanged; 363 GET and zero writes"
-    raze: "APPROVE_WITH_CONCERNS high; both prior HIGH findings closed; sole MEDIUM documentation reconciliation addressed in follow-up"
+    raze: "APPROVE_WITH_CONCERNS 0.98; prior HIGH findings and MEDIUM reconciliation concern closed; no required fixes"
   blocker:
     - "Unmodified local OSH lacks usable API Common datetime evidence and exact inherited declarations."
     - "All five Update methods causal-SKIP before writes; positive completed PATCH E2E is still required for reviewed-exact promotion."
@@ -30,9 +30,8 @@ sprint57_part1_update_handoff:
     - "Do not add hosted CI."
     - "Do not promote candidate mappings from local prerequisite-SKIP evidence."
   next_action:
-    - "Obtain a focused fresh Raze recheck of the exact-evidence reconciliation."
     - "Preserve candidate state until a conforming dedicated mutable IUT or future unmodified upstream OSH release supports the required prerequisites and PATCH lifecycle."
-    - "After replacement Raze and reconciliation are published, continue to the next unblocked released-ATS closure rather than weakening this external gate."
+    - "After this reviewed candidate and reconciliation are published, continue to the next unblocked released-ATS closure rather than weakening this external gate."
 
 sprint42_swecommon_adapter_implementation_handoff:
   timestamp: "2026-07-22T08:44:29Z"

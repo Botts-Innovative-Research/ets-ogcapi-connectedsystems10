@@ -14,7 +14,7 @@ start Sprint 57.
 - Corrected the historical dependency misconception: `/req/update` inherits
   Create/Replace/Delete, while released `/conf/update` directly inherits API
   Common and exact `ogcapi-4` Update.
-- Added CP-017, S-ETS-57-01, the Sprint 57 contract, eleven OpenSpec scenarios,
+- Added CP-017, S-ETS-57-01, the Sprint 57 contract, thirteen OpenSpec scenarios,
   design and architecture v2.0.55, epic, traceability, and operational status.
 - Locked five independent procedures, canonical and paginated custom
   endpoints, explicit patch-format negotiation, completed partial-update and
@@ -80,8 +80,12 @@ start Sprint 57.
   HIGH findings are CLOSED and no implementation defect remains. Its sole
   MEDIUM concern requires binding the exact evidence to `40cc703`; the
   follow-up reconciles all required specifications and operational records.
-- Focused Raze recheck and positive completed PATCH E2E remain pending; all
-  five mappings remain candidate.
+- Focused Raze recheck returned `APPROVE_WITH_CONCERNS` at confidence `0.98`,
+  closed the MEDIUM exact-candidate reconciliation concern, and required no
+  fixes. Corrected its two LOW observations: architecture/editorial wording and
+  root-manifest inclusion of the nested test-first manifest.
+- Positive completed PATCH E2E remains externally blocked; all five mappings
+  remain candidate.
 
 ## 2026-07-30 - Stock OSH prerequisite feasibility audit
 

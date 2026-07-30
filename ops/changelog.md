@@ -24,6 +24,51 @@ start Sprint 57.
   reusable Sprint 56 ownership/schema/deadline boundaries in `5m51s` using an
   estimated `22,000` tokens.
 
+## 2026-07-30 - Sprint 57 Update implementation and replacement gate
+
+**Triggered by user instruction**: push and start Sprint 57.
+
+- Replaced the historical Update declaration/readiness/System subset with five
+  independent released procedures for System, Deployment, Procedure, Sampling
+  Feature, and Property, directly dependent on Part 1 API Common.
+- Added canonical and paginated custom-collection execution, exact declaration
+  and applicability gates, merge-patch/JSON-patch negotiation, stable identity,
+  changed-field, preserved-sentinel, conflicting-id, and completed propagation
+  assertions.
+- Added owned schema-valid fixture acquisition, ambiguous-commit identity
+  rediscovery, one monotonic operation deadline, immediate identity
+  revalidation, reverse-order cleanup, and disappearance proof.
+- Remediated three adversarial review rounds. The final six regressions cover
+  GeoJSON `features`, independent canonical/custom route failures, and
+  accepted 201/202 fixture responses without a safe usable target. Behavioral
+  red was `28/6/0/0`; corrected controlled HTTP is `28/0/0/0`.
+- Superseded exact detached candidate
+  `c4b6030b6931863ccda484f2f2d3468cb045d79f` passes Docker Maven
+  `685/0/0/3`, released ATS/coverage audits, exact-image TeamEngine runtime,
+  deployed SWE Common adapter, base immutability, sabotage, credential, and
+  hygiene gates. Image:
+  `sha256:6861fefdab9c3150ffe2c9732af73e6274a011d4e10e2b4c48088a4bb291c6cb`.
+- Exact local OSH E2E preserves populated `244/54/35/155` and clean-primary
+  `244/40/7/197` failures. Provisioning and cleanup pass, primary state is
+  unchanged, and all 363 IUT requests are GETs. API Common datetime causes all
+  five Update methods to dependency-SKIP before writes.
+- Reconciled CP-017, OpenSpec, design, architecture, story, contract,
+  traceability, epic, operational handoff, known issues, and test results.
+  Sprint 57 remains in progress and all five mappings remain candidate pending
+  positive isolated real-IUT PATCH evidence.
+- No OSH or TeamEngine source/binary changes and no hosted CI were introduced.
+- Final Raze `GAPS_FOUND 0.98` then superseded `c4b6030`: Sampling Feature
+  fixture creation depended on the optional root endpoint, and canonical-first
+  visibility could terminate ambiguous cleanup before delayed custom
+  propagation.
+- Added two requirement-linked regressions. Raw red is `2/2/0/0`; corrected
+  focused tests are `2/0/0/0`, complete Update is `30/0/0/0`, and replacement
+  precommit Docker Maven is `687/0/0/3`.
+- The replacement owns a parent System, creates Sampling Features through the
+  required System-scoped child endpoint, cleans child before parent, and keeps
+  canonical plus custom identity polling active through the bounded deadline.
+  Replacement exact-candidate gates and fresh Raze remain pending.
+
 ## 2026-07-30 - Stock OSH prerequisite feasibility audit
 
 **Triggered by user question**: determine whether a real or simulated

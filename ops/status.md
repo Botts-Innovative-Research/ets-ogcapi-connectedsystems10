@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T16:30Z
+Last updated: 2026-07-30T19:25Z
 
 ## Sprint 57 In Progress - Part 1 Update
 
@@ -8,27 +8,52 @@ Last updated: 2026-07-30T16:30Z
   start Sprint 57.
 - Audit commit `ce0cc1c` is published on Botts `main`.
 - CP-017, S-ETS-57-01, the Sprint 57 contract, OpenSpec scenarios, design,
-  architecture v2.0.55, epic, and traceability now define the exact five
-  released `/conf/update` procedures before implementation.
+  architecture v2.0.56, epic, and traceability define and reconcile the exact
+  five released `/conf/update` procedures.
 - Released source is OGC 23-001 tag `v1.0.0`, commit `8e03b236...`; inherited
   operation source is Features Part 4 draft tag `part4-1.0.0-draft.1`, commit
   `ea42aa1...`.
 - The released requirements class inherits Create/Replace/Delete, but Annex A
   directly inherits API Common and exact `ogcapi-4` Update. Sprint 57 corrects
   the historical TestNG dependency to direct API Common.
-- Baseline coverage is `0 exact / 1 candidate / 4 unmapped`. The historical
-  System path guesses `application/json`, rejects HTTP 202, omits custom
-  collections and four resource types, and performs unverified cleanup.
-- The locked implementation requires canonical plus bounded-paginated custom
-  endpoint execution, `Accept-Patch`/OpenAPI format negotiation, every
-  advertised implemented JSON Merge Patch or JSON Patch format, changed and
-  preserved field evidence, ignored conflicting `id`, bounded queued polling,
-  and identity-safe cleanup.
+- Candidate `c4b6030b6931863ccda484f2f2d3468cb045d79f` first replaced the
+  historical subset with five independent methods and direct API Common
+  dependency. Coverage is now `0 exact / 5 candidate / 0 unmapped`.
+- The implementation executes canonical plus bounded-paginated custom
+  endpoints, negotiates `Accept-Patch`/OpenAPI formats, exercises every
+  advertised implemented JSON Merge Patch or JSON Patch format, proves changed
+  and preserved fields plus ignored conflicting `id`, bounds queued polling,
+  and identity-safely cleans ambiguous owned resources.
+- Three Raze rounds superseded `b9143a4`, `cbfa070`, and `9e839e1`. Candidate
+  `c4b6030` then passed its exact gates but final Raze `GAPS_FOUND 0.98`
+  superseded it: Sampling Feature fixtures used the optional root endpoint,
+  and ambiguous cleanup could stop after canonical visibility before delayed
+  custom propagation. The earlier
+  remediation adds GeoJSON `features` rediscovery, independent discovery and
+  cleanup routes with aggregated failures, and inconclusive SKIP for accepted
+  fixture responses without a safe usable owned target. The replacement also
+  owns a parent System before System-scoped Sampling Feature creation and
+  polls both identity views through the bounded cleanup deadline.
+- Final-Raze remediation reproduces both defects at `2/2/0/0`, then passes
+  focused `2/0/0/0`, complete Update `30/0/0/0`, and full precommit Docker
+  Maven `687/0/0/3`. Replacement exact-candidate gates remain pending.
+- Superseded `c4b6030` image
+  `sha256:6861fefdab9c3150ffe2c9732af73e6274a011d4e10e2b4c48088a4bb291c6cb`
+  passed released-source/coverage, TeamEngine 6 runtime and immutable-base,
+  deployed SWE Common adapter, dependency sabotage, credential, and artifact
+  hygiene gates; those results cannot qualify the replacement.
+- Superseded `c4b6030` local OSH E2E was honestly non-green: populated
+  `244/54/35/155`, clean primary `244/40/7/197`. Provisioning and cleanup
+  pass, primary state is unchanged, and all 363 recorded IUT requests are
+  GETs. API Common datetime SKIPs and causally skips all five Update methods
+  before mutation.
 - Stock unmodified OSH cannot provide positive Update evidence because its API
-  Common and exact inherited declarations are absent. Local OSH TeamEngine E2E
-  remains mandatory honest causal-SKIP and zero-unauthorized-write evidence;
-  mappings remain candidate until a conforming mutable IUT executes PATCH.
+  Common datetime evidence and exact inherited declarations are absent.
+  Mappings remain candidate and Sprint 57 remains in progress until a
+  conforming dedicated mutable IUT executes positive PATCH lifecycle evidence.
 - No OSH or TeamEngine source/binary changes and no hosted CI are in scope.
+- Superseded exact evidence is archived under
+  `ops/test-results/sprint-ets-57-part1-update-final-c4b6030-2026-07-30/`.
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 

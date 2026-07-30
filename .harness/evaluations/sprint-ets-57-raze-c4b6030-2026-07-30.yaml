@@ -1,0 +1,32 @@
+sprint: ets-57
+candidate: c4b6030b6931863ccda484f2f2d3468cb045d79f
+reviewer: Raze
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.98
+duration_seconds: 646
+token_metadata: unavailable
+findings:
+  - id: sampling-feature-parent-owned-fixture
+    severity: HIGH
+    status: OPEN
+    summary: The canonical Sampling Feature procedure POSTed to optional root /samplingFeatures instead of the required System-scoped creation endpoint.
+    required: Create and own a parent System, create the Sampling Feature through /systems/{systemId}/samplingFeatures, and clean child before parent.
+  - id: canonical-first-custom-delayed-cleanup
+    severity: HIGH
+    status: OPEN
+    summary: Ambiguous custom cleanup stopped when either canonical or occurrence identity appeared, allowing a later custom occurrence to escape.
+    required: Continue independent canonical and custom identity polling through the bounded deadline until both appear or the deadline expires, then attempt all safe cleanup routes.
+  - id: reconciliation-overstatement
+    severity: MEDIUM
+    status: OPEN
+    summary: The story and CP described c4b6030 as technically verified despite the two candidate-scoped implementation defects.
+    required: Mark c4b6030 superseded, remediate test-first, repeat exact gates, and reconcile only the replacement candidate.
+external_blocker:
+  status: OPEN
+  summary: Positive real-IUT PATCH E2E remains unavailable because unmodified local OSH does not satisfy the exact released prerequisites.
+notes:
+  - Local OSH populated 244/54/35/155 and clean-primary 244/40/7/197 runs remain honest non-green evidence with zero writes.
+  - The external OSH prerequisite blocker is distinct from the two implementation defects.
+  - TestNG dependencies fail closed and primary OSH state remained unchanged.
+  - Candidate c4b6030 is superseded pending test-first remediation.

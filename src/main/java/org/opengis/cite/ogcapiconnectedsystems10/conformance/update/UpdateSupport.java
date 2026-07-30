@@ -186,7 +186,10 @@ public final class UpdateSupport {
 		List<CustomEndpoint> customEndpoints = customEndpoints(kind, requirement);
 		executeWithCleanup(requirement, cleanup -> {
 			for (String mediaType : mediaTypes) {
-				updateOwned(kind, this.apiRoot.resolve(kind.path()), null, mediaType, definition, requirement, cleanup);
+				URI createEndpoint = kind == SAMPLING_FEATURE
+						? samplingFeatureCreateEndpoint(mediaType, requirement, cleanup)
+						: this.apiRoot.resolve(kind.path());
+				updateOwned(kind, createEndpoint, null, mediaType, definition, requirement, cleanup);
 			}
 			for (CustomEndpoint endpoint : customEndpoints) {
 				for (String mediaType : mediaTypes) {
@@ -215,6 +218,25 @@ public final class UpdateSupport {
 
 	private void updateOwned(ResourceKind kind, URI createEndpoint, CustomEndpoint custom, String mediaType,
 			ApiDefinition definition, String requirement, CleanupStack cleanup) {
+		OwnedFixture fixture = acquireOwned(kind, createEndpoint, custom, mediaType, requirement, cleanup);
+		ResourceUris uris = fixture.uris();
+		String identity = fixture.identity();
+		ResourceBaselines baselines = observeBaselines(kind, uris, mediaType, identity, requirement);
+
+		for (String patchMediaType : patchMediaTypes(uris.updateTarget(), definition, requirement)) {
+			exercisePatch(kind, uris, mediaType, patchMediaType, baselines, identity, requirement);
+			baselines = observeBaselines(kind, uris, mediaType, identity, requirement);
+		}
+	}
+
+	private URI samplingFeatureCreateEndpoint(String mediaType, String requirement, CleanupStack cleanup) {
+		OwnedFixture parent = acquireOwned(SYSTEM, this.apiRoot.resolve(SYSTEM.path()), null, mediaType, requirement,
+				cleanup);
+		return child(parent.uris().canonical(), "samplingFeatures");
+	}
+
+	private OwnedFixture acquireOwned(ResourceKind kind, URI createEndpoint, CustomEndpoint custom, String mediaType,
+			String requirement, CleanupStack cleanup) {
 		String identity = uid(kind.path());
 		Map<String, Object> createBody = CreateReplaceDeleteSupport.generatedBody(kind.path(), mediaType,
 				"update-create", identity);
@@ -245,12 +267,7 @@ public final class UpdateSupport {
 		ResourceUris uris = createdUris(kind, createEndpoint, custom, create, target, requirement);
 		target.canonical = uris.canonical();
 		target.occurrence = uris.occurrence();
-		ResourceBaselines baselines = observeBaselines(kind, uris, mediaType, identity, requirement);
-
-		for (String patchMediaType : patchMediaTypes(uris.updateTarget(), definition, requirement)) {
-			exercisePatch(kind, uris, mediaType, patchMediaType, baselines, identity, requirement);
-			baselines = observeBaselines(kind, uris, mediaType, identity, requirement);
-		}
+		return new OwnedFixture(identity, uris);
 	}
 
 	private ResourceBaselines observeBaselines(ResourceKind kind, ResourceUris uris, String mediaType, String identity,
@@ -730,7 +747,7 @@ public final class UpdateSupport {
 					}
 				}
 				return target.customItems == null ? canonical[0] != null
-						: canonical[0] != null || occurrence[0] != null;
+						: canonical[0] != null && occurrence[0] != null;
 			}, requirement, "owned fixture cleanup discovery");
 			if (canonical[0] == null && canonicalFailure[0] != null) {
 				failures.add(canonicalFailure[0]);
@@ -1163,6 +1180,9 @@ public final class UpdateSupport {
 	}
 
 	private record ResourceUris(URI canonical, URI occurrence, URI updateTarget) {
+	}
+
+	private record OwnedFixture(String identity, ResourceUris uris) {
 	}
 
 	private record ResourceBaselines(Observation canonical, Observation occurrence) {

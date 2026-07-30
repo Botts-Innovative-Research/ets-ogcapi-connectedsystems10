@@ -1,8 +1,62 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T07:04Z
+Last updated: 2026-07-30T19:25Z
 
 ## Current Sprint Evidence
+
+Sprint 57 Part 1 Update direct ATS:
+
+- Superseded exact candidate:
+  `c4b6030b6931863ccda484f2f2d3468cb045d79f`; image
+  `sha256:6861fefdab9c3150ffe2c9732af73e6274a011d4e10e2b4c48088a4bb291c6cb`.
+- Released sources: OGC 23-001 `v1.0.0` commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`; inherited Features Part 4
+  `part4-1.0.0-draft.1` commit
+  `ea42aa1de6d8cbb53c526f41e1f66c1887fe71d4`.
+- Implementation: five independent procedures with direct causal API Common
+  dependency, exact Connected Systems and `ogcapi-4` declarations, canonical
+  and custom paths, PATCH negotiation, completed partial-update evidence,
+  bounded queued polling, and identity-safe cleanup.
+- Test-first final remediation: behavioral red `28/6/0/0`; corrected
+  controlled HTTP `28/0/0/0`. Exact detached full Docker Maven:
+  `685 tests / 0 failures / 0 errors / 3 skipped`, BUILD SUCCESS.
+- Coverage: `240 total / 76 exact / 2 helper / 130 candidate / 32 unmapped`;
+  Update is `5 / 0 / 0 / 5 / 0`.
+- Released-source parity, ATS/URI/hygiene/jar-guard self-tests,
+  exact-image TeamEngine runtime, deployed SWE Common adapter, added-jar
+  collision guard, TeamEngine-owned base immutability, and build-context
+  hygiene: PASS.
+- Dependency sabotage: `244 total / 2 passed / 10 intentionally failed /
+  232 skipped`; parser verdict PASS for API Common setup/tests, and the
+  archived XML confirms all Update procedures also cascade to SKIP.
+- Credential integration: zero literal credential hits. Credential wire E2E:
+  zero unmasked artifact hits, 31 masked container hits, and 31 intact
+  synthetic wire transmissions.
+- Exact isolated populated OSH: `244 total / 54 passed / 35 failed /
+  155 skipped`, GET=196.
+- Exact clean primary OSH: `244 total / 40 passed / 7 failed / 197 skipped`,
+  GET=167.
+- Both OSH conformance runs remain non-green and the workflow exits `1`.
+  Provisioning and owned cleanup pass, primary state is unchanged, and
+  artifact hygiene finds zero writes and zero credential leaks.
+- Part 1 API Common is `4 PASS / 1 SKIP`; missing positive datetime evidence
+  causal-SKIPs all five Update methods before POST/PATCH/DELETE. This is honest
+  real-protocol dependency evidence, not positive Update evidence.
+- Final Raze `GAPS_FOUND 0.98` superseded `c4b6030`: canonical Sampling
+  Feature acquisition incorrectly used the optional root collection, and
+  ambiguous cleanup could stop at canonical visibility before a delayed
+  custom occurrence appeared.
+- Requirement-linked tests reproduced both defects at `2/2/0/0`. The
+  replacement owns a parent System, creates the child at
+  `/systems/{id}/samplingFeatures`, and polls both identity views through the
+  bounded cleanup deadline. Focused tests pass `2/0/0/0`, complete Update
+  passes `30/0/0/0`, and full precommit Docker Maven passes `687/0/0/3`.
+  Replacement exact-image and local-OSH gates remain pending.
+- The five mappings stay candidate and Sprint 57 stays in progress until a
+  conforming dedicated mutable IUT provides positive completed PATCH evidence.
+  No OSH or TeamEngine source/binary changes were made.
+- Superseded exact evidence:
+  `ops/test-results/sprint-ets-57-part1-update-final-c4b6030-2026-07-30/`.
 
 Sprint 56 Part 1 Create/Replace/Delete direct ATS:
 

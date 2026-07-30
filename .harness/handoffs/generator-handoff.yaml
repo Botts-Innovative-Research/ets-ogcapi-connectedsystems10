@@ -1,3 +1,38 @@
+sprint57_part1_update_handoff:
+  timestamp: "2026-07-30T19:25:11Z"
+  sprint: ets-57
+  story: S-ETS-57-01
+  status: IN_PROGRESS_REPLACEMENT_EXACT_GATES_PENDING
+  user_instruction: "Push and start Sprint 57."
+  candidate:
+    commit: PENDING_REPLACEMENT_COMMIT
+    supersedes: c4b6030b6931863ccda484f2f2d3468cb045d79f
+    image: PENDING_REPLACEMENT_EXACT_BUILD
+    coverage: "Update 5 total / 0 exact / 0 helper / 5 candidate / 0 unmapped"
+  implementation:
+    - "Exactly five independent released Part 1 Update procedures depend directly on API Common."
+    - "Canonical and applicable custom endpoints execute negotiated JSON Merge Patch and JSON Patch with completed changed/preserved/identity evidence."
+    - "Owned fixture acquisition, one monotonic deadline, ambiguous-commit rediscovery, identity revalidation, and reverse cleanup are fail-closed."
+    - "Final remediation accepts GeoJSON features plus JSON/SensorML items, keeps discovery routes independent, aggregates route failures, and SKIPs accepted responses without a safe owned target."
+    - "Final Raze remediation creates Sampling Features through an owned parent System and polls both canonical and delayed custom identity views before cleanup."
+  verification:
+    earlier_test_first: "PASS red 28/6/0/0; green 28/0/0/0"
+    final_raze_test_first: "PASS red 2/2/0/0; focused green 2/0/0/0; complete Update green 30/0/0/0"
+    full_maven: "PASS replacement precommit 687/0/0/3"
+    source_runtime_security: "PENDING replacement exact candidate"
+    local_osh: "PENDING replacement exact candidate; superseded c4 evidence was populated 244/54/35/155 and clean primary 244/40/7/197 with zero writes"
+  blocker:
+    - "Unmodified local OSH lacks usable API Common datetime evidence and exact inherited declarations."
+    - "All five Update methods causal-SKIP before writes; positive completed PATCH E2E is still required for reviewed-exact promotion."
+  constraints:
+    - "Do not modify OSH or TeamEngine source code or binaries."
+    - "Do not add hosted CI."
+    - "Do not promote candidate mappings from local prerequisite-SKIP evidence."
+  next_action:
+    - "Commit the replacement, rerun every exact technical and local-OSH gate from that immutable candidate, and obtain a fresh Raze verdict."
+    - "Preserve candidate state until a conforming dedicated mutable IUT or future unmodified upstream OSH release supports the required prerequisites and PATCH lifecycle."
+    - "After replacement Raze and reconciliation are published, continue to the next unblocked released-ATS closure rather than weakening this external gate."
+
 sprint42_swecommon_adapter_implementation_handoff:
   timestamp: "2026-07-22T08:44:29Z"
   sprint: ets-42

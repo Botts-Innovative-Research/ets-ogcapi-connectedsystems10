@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-011`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; candidate `b9143a4` superseded by Raze remediation
+**Status**: Accepted; candidate `c4b6030` superseded by final Raze remediation
 
 ## Motivation
 
@@ -137,3 +137,33 @@ the five mappings to reviewed exact.
 Candidate `cbfa070` is superseded by Raze `GAPS_FOUND 0.98`; delayed/custom-only
 ambiguous commit cleanup, independent cleanup-route attempts, and
 endpoint-specific sentinel baselines remain normative for the next candidate.
+
+Candidate `9e839e1` is superseded by Raze `GAPS_FOUND 0.97`; the replacement
+parses GeoJSON `features` and JSON/SensorML `items`, attempts canonical and
+custom discovery independently, aggregates unresolved route failures after
+all safe cleanup, and treats accepted fixture responses without a usable safe
+owned target as inconclusive SKIP-before-PATCH.
+
+Exact detached candidate
+`c4b6030b6931863ccda484f2f2d3468cb045d79f` passes Docker Maven
+`685/0/0/3`, controlled HTTP `28/0/0/0`, released-source, coverage,
+exact-image/runtime, dependency, credential, immutable-base, and hygiene
+gates. Local OSH E2E is populated `244/54/35/155` and clean primary
+`244/40/7/197`; both runs preserve their genuine IUT failures, all five Update
+procedures causal-SKIP through API Common datetime, and 363 recorded IUT
+requests are GETs. The mappings remain candidate until positive PATCH executes
+against a conforming dedicated mutable IUT.
+
+Candidate `c4b6030` is superseded by final Raze `GAPS_FOUND 0.98`. Canonical
+Sampling Feature fixture acquisition SHALL first create and own a parent System
+and SHALL POST the Sampling Feature through
+`/systems/{systemId}/samplingFeatures`; direct root `/samplingFeatures` POST
+support is not required and cannot be a fixture prerequisite. Child cleanup
+SHALL precede parent cleanup.
+
+When a custom fixture POST is ambiguous, canonical-first visibility SHALL NOT
+end discovery before the custom occurrence view has also been polled. Canonical
+and custom identity views SHALL continue independently through the shared
+bounded discovery deadline until both are found or the deadline expires.
+Afterward, every safely discovered or derived route SHALL still be attempted,
+and failures SHALL remain aggregated.

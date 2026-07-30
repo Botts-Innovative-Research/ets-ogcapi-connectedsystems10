@@ -41,6 +41,18 @@
 > failures while cleaning through another safe view. Accepted 201/202 responses
 > without a usable safe owned target remain inconclusive SKIP-before-PATCH
 > outcomes after bounded rediscovery.
+> Candidate `c4b6030b6931863ccda484f2f2d3468cb045d79f` passes controlled
+> HTTP `28/0/0/0`, full Docker Maven `685/0/0/3`, exact-image TeamEngine
+> runtime/base immutability, source, dependency, credential, and hygiene gates,
+> but final Raze `GAPS_FOUND 0.98` supersedes it. Canonical Sampling Feature
+> acquisition must create an owned parent System, POST through
+> `/systems/{systemId}/samplingFeatures`, and clean child before parent.
+> Ambiguous custom cleanup must continue polling canonical and custom identity
+> views independently until both appear or the shared deadline expires;
+> canonical-first visibility cannot terminate custom-occurrence discovery.
+> Local OSH remains a causal-SKIP E2E target because API Common datetime
+> evidence is unavailable; mappings remain candidate pending both remediation
+> and positive PATCH lifecycle evidence.
 
 > Sprint 41 supersession note (2026-07-21): the TeamEngine 5.5/5.6.x
 > deployment guidance in the Sprint 1 and Sprint 2 sections below is historical

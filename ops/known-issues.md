@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T13:32Z
+Last updated: 2026-07-30T19:25Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,6 +14,19 @@ Last updated: 2026-07-30T13:32Z
 
 ## Active Issues
 
+- Sprint 57 implements all five released Part 1 Update procedures, but exact
+  candidate `c4b6030` is superseded by final Raze `GAPS_FOUND 0.98`.
+  Requirement-linked replacement regressions close its root Sampling Feature
+  fixture and canonical-first/custom-delayed cleanup defects; focused and full
+  precommit Maven pass, while replacement exact gates remain pending.
+  Unmodified local OSH
+  has no usable API Common datetime evidence and omits the exact inherited
+  declarations, so all five methods causal-SKIP before writes in both
+  populated `244/54/35/155` and clean-primary `244/40/7/197` runs. This is
+  valid dependency/no-write evidence, not positive PATCH conformance. Keep the
+  five mappings candidate until another conforming dedicated mutable IUT or a
+  future unmodified upstream OSH release supplies completed PATCH lifecycle
+  evidence. Do not modify OSH or TeamEngine and do not weaken the gates.
 - Sprint 56 Part 1 Create/Replace/Delete positive mutation E2E remains open.
   Candidate `0023d5b` is separately superseded by Raze `GAPS_FOUND 0.99`;
   exact remediation candidate `1a6c5ec` also passes its technical gates but is

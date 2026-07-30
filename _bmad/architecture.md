@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.55 | Status: Living Document | Last reconciled: 2026-07-30 (Part 1 Update direct procedures)
+> Version: 2.0.56 | Status: Living Document | Last reconciled: 2026-07-30 (Sprint 57 exact candidate)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1660,3 +1660,16 @@ visibility may be delayed or route-local. Failure on one cleanup route does not
 suppress another independently safe route; failures are aggregated after all
 attempts. Canonical and custom occurrence mutation evidence compares untouched
 fields with endpoint-specific pre-update baselines.
+
+Raze `GAPS_FOUND 0.97` supersedes candidate `9e839e1`. Released GeoJSON
+`features` and JSON/SensorML `items` both participate in rediscovery, each
+identity view executes independently, and accepted responses without a usable
+safe target remain inconclusive before PATCH.
+
+Final Raze `GAPS_FOUND 0.98` supersedes candidate `c4b6030`. Sampling Feature
+fixture ownership is a two-resource graph: create and own a parent System,
+create the child through `/systems/{systemId}/samplingFeatures`, and let the
+LIFO cleanup stack delete child before parent. Ambiguous custom creation keeps
+canonical and occurrence identity polling active through one shared deadline
+until both are visible or the budget expires. Finding one view does not turn a
+single 404 on the other view into completed cleanup.

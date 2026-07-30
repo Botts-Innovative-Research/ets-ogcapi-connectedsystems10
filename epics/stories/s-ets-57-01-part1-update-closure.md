@@ -2,7 +2,7 @@
 
 ## Status
 
-IN PROGRESS
+IN PROGRESS - C4B6030 SUPERSEDED; FINAL RAZE REMEDIATION
 
 ## User Instruction
 
@@ -34,43 +34,44 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
 
 - [x] CP-017, this story, contract, capability scenarios, design,
   architecture, traceability, and epic define the increment before code.
-- [ ] Exactly five independent TestNG methods map the five released
+- [x] Exactly five independent TestNG methods map the five released
   procedures without `alwaysRun`.
-- [ ] API Common is the only direct TestNG prerequisite; a failed prerequisite
+- [x] API Common is the only direct TestNG prerequisite; a failed prerequisite
   skips all five methods before IUT access.
-- [ ] Every procedure checks exact declarations, applicability, and mutation
+- [x] Every procedure checks exact declarations, applicability, and mutation
   ownership before writes.
-- [ ] The exact released `ogcapi-4` inheritance URI is required and the
+- [x] The exact released `ogcapi-4` inheritance URI is required and the
   `ogcapi-features-4` near-match is rejected.
 - [ ] Canonical and every advertised applicable custom item endpoint are
   discovered with bounded same-origin pagination and exercised for System,
   Deployment, Procedure, Sampling Feature, and Property.
-- [ ] OPTIONS requires HTTP 200 plus PATCH in `Allow`.
-- [ ] Every implemented JSON Merge Patch and JSON Patch format advertised by
+- [x] OPTIONS requires HTTP 200 plus PATCH in `Allow`.
+- [x] Every implemented JSON Merge Patch and JSON Patch format advertised by
   `Accept-Patch` or exact OpenAPI metadata is exercised; ordinary resource
   media types are not treated as patch documents.
-- [ ] HTTP 200/202/204 are handled, but PASS requires GET evidence that the
+- [x] HTTP 200/202/204 are handled, but PASS requires GET evidence that the
   intended field changed, an untouched sentinel and external identity were
   preserved, and a conflicting submitted `id` was ignored.
-- [ ] Custom endpoint PASS requires canonical and occurrence propagation in
+- [x] Custom endpoint PASS requires canonical and occurrence propagation in
   two consecutive complete observations using each endpoint's own pre-update
   sentinel baseline.
-- [ ] Queued updates use one bounded monotonic deadline for every required
+- [x] Queued updates use one bounded monotonic deadline for every required
   postcondition, request timeout, and sleep.
-- [ ] Owned schema-valid fixtures are cleaned in reverse order after every
+- [x] Owned schema-valid fixtures are cleaned in reverse order after every
   outcome; ambiguous POST polls canonical and custom identity views, and
   destructive cleanup requires current same-origin identity plus disappearance
   proof.
-- [ ] Delayed and custom-only ambiguous commits are cleaned, one route failure
+- [ ] Delayed, canonical-first/custom-delayed, and custom-only ambiguous
+  commits are cleaned, one route failure
   does not suppress remaining safe cleanup, and route failures are aggregated.
-- [ ] Rediscovery accepts released GeoJSON `features` and JSON/SensorML
+- [x] Rediscovery accepts released GeoJSON `features` and JSON/SensorML
   `items`; independently safe discovery views still execute when another view
   fails.
-- [ ] HTTP 201/202 responses without a usable safe owned target SKIP before
+- [x] HTTP 201/202 responses without a usable safe owned target SKIP before
   PATCH after bounded identity rediscovery and cleanup.
-- [ ] Fixture acquisition denial or unusable response SKIPs before PATCH rather
+- [x] Fixture acquisition denial or unusable response SKIPs before PATCH rather
   than failing Update conformance.
-- [ ] Custom applicability accepts only exact compact/canonical SOSA types,
+- [x] Custom applicability accepts only exact compact/canonical SOSA types,
   and repeated `Allow` fields are combined.
 - [ ] Focused/full Maven, coverage, released-source, exact-image runtime,
   dependency, credential, immutable-base, and artifact-hygiene gates complete.
@@ -113,3 +114,30 @@ The second remediation reproduced all four added cases at `22/4/0/0`, then
 passed controlled HTTP `22/0/0/0`, the complete Update surface `28/0/0/0`, and
 clean Docker Maven `679/0/0/3`. Released-source inventory, coverage audit,
 audit self-tests, formatting, and TeamEngine jar guard pass precommit.
+
+Raze `GAPS_FOUND 0.97` superseded candidate `9e839e1`: GeoJSON identity
+rediscovery ignored `features`, one failing discovery route suppressed another
+safe route, and accepted 201/202 fixture responses without a usable owned
+target failed rather than becoming inconclusive. Six requirement-linked tests
+reproduced those defects at `28/6/0/0`; after correcting the implementation
+and two test-oracle expectations, controlled HTTP passes `28/0/0/0`.
+
+Exact detached candidate
+`c4b6030b6931863ccda484f2f2d3468cb045d79f` passes full Docker Maven
+`685/0/0/3`, released-source and coverage audits, exact-image TeamEngine 6
+runtime and base immutability, dependency sabotage, both credential gates, and
+artifact hygiene. Its image is
+`sha256:6861fefdab9c3150ffe2c9732af73e6274a011d4e10e2b4c48088a4bb291c6cb`.
+Local OSH E2E remains honestly non-green: populated `244/54/35/155`, clean
+primary `244/40/7/197`, provisioning and cleanup PASS, primary state unchanged,
+and 363 GET requests with zero writes. API Common datetime SKIPs, causally
+skipping all five Update procedures before mutation. The five mappings remain
+candidate pending positive isolated real-IUT PATCH evidence.
+
+Final Raze `GAPS_FOUND 0.98` supersedes `c4b6030`. The replacement must create
+canonical Sampling Feature fixtures through an owned parent System's required
+`/systems/{systemId}/samplingFeatures` endpoint and clean child before parent.
+It must also continue independent canonical and custom identity polling through
+the bounded cleanup deadline when canonical visibility precedes delayed custom
+propagation. Replacement red/green, exact gates, local OSH E2E, and fresh Raze
+remain pending.

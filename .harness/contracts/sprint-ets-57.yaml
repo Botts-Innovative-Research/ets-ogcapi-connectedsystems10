@@ -1,7 +1,7 @@
 sprint: ets-57
 story: S-ETS-57-01
 title: Part 1 Update direct ATS closure
-status: IN_PROGRESS
+status: IN_PROGRESS_FINAL_RAZE_REMEDIATION
 triggered_by: "User instructed push and start Sprint 57"
 requirements:
   - REQ-ETS-PART1-011
@@ -34,8 +34,10 @@ success_criteria:
   - Canonical and custom occurrence evidence uses each endpoint's own pre-update sentinel baseline.
   - Queued work is bounded by one monotonic deadline.
   - Fixture acquisition denial or unusable response is an inconclusive SKIP before PATCH.
+  - Canonical Sampling Feature acquisition owns a parent System and uses the required System-scoped child endpoint.
   - Every dispatched POST is rediscovered by bounded canonical and custom identity polling after ambiguous failure.
   - Delayed and custom-only committed resources are cleaned.
+  - Canonical-first and custom-delayed ambiguous commits keep both identity views under bounded polling and are cleaned.
   - Released GeoJSON features and JSON or SensorML items collection members are both eligible for identity rediscovery.
   - Failure of one discovery view does not suppress another independently safe discovery or cleanup route.
   - HTTP 201 or 202 without a usable safe owned target is an inconclusive SKIP before PATCH after bounded rediscovery.
@@ -58,15 +60,16 @@ guardrails:
   - Do not guess application/json as a patch-document media type.
 verification:
   released_source: PASS_8E03B236A049849F2CCC24B4FD9FDCE5FF69BED2
-  test_first: PASS_RED_22_4_0_0_GREEN_22_0_0_0
-  focused_maven: PASS_28_0_0_0
-  full_maven: PASS_679_0_0_3
+  test_first: PASS_FINAL_RAZE_RED_2_2_0_0_GREEN_2_0_0_0
+  focused_maven: PASS_COMPLETE_UPDATE_30_0_0_0
+  full_maven: PASS_REPLACEMENT_PRECOMMIT_687_0_0_3
   coverage_audit: PASS_240_76_2_130_32
-  controlled_http: PASS_22_0_0_0
-  exact_image: PENDING
-  dependency_sabotage: PENDING
-  local_osh_teamengine: PENDING
-  credential_gates: PENDING
-  immutable_base: PENDING
-  artifact_hygiene: PENDING
-  raze: GAPS_FOUND_0_98_CBFA070_SUPERSEDED
+  controlled_http: PASS_28_0_0_0
+  exact_image: SUPERSEDED_C4B6030
+  dependency_sabotage: SUPERSEDED_C4B6030_PASS_244_2_10_INTENTIONAL_232
+  local_osh_teamengine: SUPERSEDED_C4B6030_POPULATED_244_54_35_155_CLEAN_244_40_7_197_ZERO_WRITES
+  credential_gates: SUPERSEDED_C4B6030_PASS_ZERO_UNMASKED_31_MASKED_31_WIRE
+  immutable_base: SUPERSEDED_C4B6030_PASS
+  artifact_hygiene: SUPERSEDED_C4B6030_PASS_ZERO_WRITES_ZERO_LEAKS
+  positive_patch_e2e: BLOCKED_EXTERNAL_CONFORMING_MUTABLE_IUT_REQUIRED
+  raze: GAPS_FOUND_0_98_C4B6030_SUPERSEDED

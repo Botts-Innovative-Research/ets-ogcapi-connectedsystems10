@@ -3241,7 +3241,7 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
 
 #### REQ-ETS-PART1-011: Update Conformance Class (`/conf/update`) (Sprint 13)
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
+- **Status**: IN_PROGRESS_POSITIVE_MUTATION_E2E_BLOCKED
 - **Historical increment**: by Sprint 13 Generator (2026-05-06; story S-ETS-13-01). Implemented declaration-gated `/conf/update`, PATCH mutation safety gate, non-mutating `OPTIONS /systems/{id}` readiness, default lifecycle SKIP-before-PATCH, hard-denial for public GeoRobotix, TestNG dependency on Create/Replace/Delete, and default-smoke no-PATCH evidence. Full Update conformance remains OPEN for deployment/procedure/sampling-feature/property PATCH, Feature Collection update paths, Part 2 update, optimistic locking, and PATCH media-type matrix.
 - **OGC source verified**: OGC API - Connected Systems Part 1 Clause 17, Requirements Class "Update" `/req/update`, Conformance Class A.11 `/conf/update`. The upstream requirement class source is `api/part1/standard/requirements/crud/update/requirements_class_update.adoc` at `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`; the explanatory clause is `api/part1/standard/sections/clause_17_requirements_class_update.adoc`. The class prerequisite is `/req/create-replace-delete` plus OGC API Features Part 4 `/req/update`. Normative statements are `/req/update/system`, `/req/update/deployment`, `/req/update/procedure`, `/req/update/sampling-feature`, and `/req/update/property`. OGC Part 1 ATS A.79-A.83 also lists Feature Collection item update paths under `/collections/{collectionId}/items/{id}` for systems, deployments, procedures, sampling features, and properties; Sprint 13 explicitly defers those collection item PATCH paths.
 - **Sprint 13 coverage scope**: Update safety-gated systems subset with 5 @Tests: (1) IUT declares `/conf/update`, otherwise Update tests SKIP with reason; (2) default mutation safety gate is active unless suite parameter `mutation-tests-enabled=true` is supplied together with `mutation-iut-policy=dedicated-mutable-iut`; (3) `OPTIONS /systems/{id}` is recorded as an ETS readiness precondition for PATCH advertisement without issuing PATCH; (4) systems PATCH lifecycle test SKIPs by default with reason and, only when explicitly enabled against a dedicated mutable IUT that declares `/conf/update`, advertises PATCH, and is not a known shared public GeoRobotix URL, performs PATCH with best-effort cleanup; (5) TestNG dependency wiring and smoke no-regression. OPTIONS readiness PASS does not satisfy `/req/update/system`; lifecycle conformance remains SKIP by default until PATCH runs against a dedicated mutable IUT.
@@ -3303,6 +3303,35 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   canonical SOSA types. All repeated `Allow` fields are evaluated. Synchronous
   and queued custom propagation SHALL remain jointly complete for two
   consecutive observations.
+- **Sprint 57 implementation evidence**: Candidate `cbfa070` was superseded by
+  Raze `GAPS_FOUND 0.98` for delayed/custom-only ambiguous commit cleanup,
+  independent route attempts, and endpoint-specific sentinel baselines.
+  Candidate `9e839e1` was superseded by Raze `GAPS_FOUND 0.97` for GeoJSON
+  `features` discovery, route-failure suppression, and unsafe accepted fixture
+  responses. Six final requirement-linked regressions reproduced those defects
+  at `28/6/0/0`; controlled HTTP now passes `28/0/0/0`.
+- **Sprint 57 exact candidate evidence**: Detached candidate
+  `c4b6030b6931863ccda484f2f2d3468cb045d79f` passes Docker Maven
+  `685/0/0/3`, released ATS and coverage audits, image/runtime, deployed SWE
+  Common adapter, dependency sabotage, credential, TeamEngine immutable-base,
+  and artifact-hygiene gates. Exact image
+  `sha256:6861fefdab9c3150ffe2c9732af73e6274a011d4e10e2b4c48088a4bb291c6cb`
+  runs against unmodified local OSH with populated `244/54/35/155` and clean
+  primary `244/40/7/197`. Provisioning and cleanup pass, primary state is
+  unchanged, and all 363 IUT requests are GETs. API Common datetime SKIPs,
+  causally skipping all five Update procedures before writes. This verifies
+  implementation and E2E honesty but is not positive PATCH evidence; all five
+  mappings remain candidate.
+- **Sprint 57 final Raze remediation**: Candidate `c4b6030` is superseded by
+  Raze `GAPS_FOUND 0.98`. Canonical Sampling Feature fixture acquisition SHALL
+  own a parent System and POST through the required
+  `/systems/{systemId}/samplingFeatures` endpoint; optional root
+  `/samplingFeatures` creation cannot gate Update evidence. Reverse cleanup
+  SHALL delete the Sampling Feature before its parent System. For an ambiguous
+  custom POST, canonical-first visibility SHALL NOT end identity discovery:
+  canonical and custom views SHALL continue independently through the shared
+  bounded deadline until both are visible or time expires. Safe discovered or
+  derived routes SHALL then be cleaned with aggregated failures.
 - **Maps to**: PRD FR-ETS-21.
 
 ### Acceptance Scenarios for Sprint 57
@@ -3398,6 +3427,8 @@ resources
 **AND** failure on one safe cleanup route does not suppress attempts on the
 remaining safe routes
 **AND** all cleanup-route failures are reported after those attempts
+**AND** canonical-first visibility does not stop bounded polling for a delayed
+custom occurrence
 **AND** cleanup failure remains visible and overrides inconclusive SKIP.
 *Maps to*: REQ-ETS-PART1-011.
 
@@ -3406,14 +3437,17 @@ remaining safe routes
 **WHEN** its owned fixture POST is denied or returns an unusable or ambiguous
 response
 **THEN** the Update procedure becomes inconclusive and SKIPs before PATCH
+**AND** canonical Sampling Feature acquisition first owns a parent System and
+uses `/systems/{systemId}/samplingFeatures`, never optional root creation
+**AND** reverse cleanup removes the Sampling Feature before its parent System
 **AND** every dispatched POST is followed by bounded polling of both canonical
 and applicable custom collection identity views
 **AND** identity polling reads released GeoJSON `features` collections as well
 as JSON or SensorML `items` collections
 **AND** failure of one discovery view cannot suppress polling, derivation, or
 cleanup through another independently safe view
-**AND** delayed, canonical-only, custom-only, or jointly visible committed
-resources are cleaned despite the response failure.
+**AND** delayed canonical-first/custom-later, canonical-only, custom-only, or
+jointly visible committed resources are cleaned despite the response failure.
 *Maps to*: REQ-ETS-PART1-011.
 
 #### SCENARIO-ETS-PART1-011-DIRECT-HTTP-COVERAGE-001 (CRITICAL)

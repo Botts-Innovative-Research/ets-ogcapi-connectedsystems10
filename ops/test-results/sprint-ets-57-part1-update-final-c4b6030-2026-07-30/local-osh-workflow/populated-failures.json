@@ -1,0 +1,212 @@
+[
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections: advertised Property collections use released metadata and schemas",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections \u2014 http://ets-csapi-populated-osh-20260730T185023Z-7d189dd53eb2:8081/sensorhub/api/collections does not advertise a collection with itemType=sosa:Property.",
+    "name": "propertyCollectionsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/collections: advertised Sampling Feature collections use released metadata and schemas",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/collections \u2014 http://ets-csapi-populated-osh-20260730T185023Z-7d189dd53eb2:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Sample.",
+    "name": "samplingFeatureCollectionsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/cmdschema-schema: selected ControlStream Command Schema validates as SWE Common Binary metadata with BinaryEncoding (REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-012-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/cmdschema-schema \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSchemaSweBinaryValidWhenControlStreamCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/cmdschema-mapping: Command Schema mapping requires canonical IssueTime Time component evidence when issue-time mapping is present (REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-SCHEMA-MAPPING-TIME-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/cmdschema-mapping \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/command-encoding: Command SWE Common Binary encoding requires parent schema, candidate Command, and encoding-validator evidence before PASS (REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-012-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/command-encoding \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSweBinaryEncodingRequiresParentSchemaAndCandidateEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/obsschema-schema: selected Datastream Observation Schema validates as SWE Common Binary metadata with BinaryEncoding (REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-012-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/obsschema-schema \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSchemaSweBinaryValidWhenDatastreamCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/obsschema-mapping: Observation Schema mapping requires canonical Time definition evidence from retrieved SWE Common recordSchema (REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-SCHEMA-MAPPING-TIME-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/obsschema-mapping \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSchemaSweMappingRequiresTimeComponentEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/observation-encoding: Observation SWE Common Binary encoding requires parent schema, candidate Observation, and encoding-validator evidence before PASS (REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-012-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/observation-encoding \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSweBinaryEncodingRequiresParentSchemaAndCandidateEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/command-constraints: Command parameters constraints require parent ControlStream schema and candidate Command evidence before PASS (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-OBSERVATION-COMMAND-CONSTRAINTS-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/command-constraints \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandConstraintsRequireParentSchemaAndCandidateEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/command-schema: Command collection and candidate Command validate against Annex A.9 schemas when candidate evidence exists (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001, SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-009-UNAVAILABLE-ENDPOINT-HONESTY-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/command-schema \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandJsonSchemasValidateWhenCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandresult-constraints: CommandResult inline data constraints require parent ControlStream schema and candidate CommandResult evidence before PASS (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-OBSERVATION-COMMAND-CONSTRAINTS-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandresult-constraints \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandResultConstraintsRequireParentSchemaAndCandidateEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandresult-schema: CommandResult collection and candidate validate against Annex A.9 schemas when candidate evidence exists (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001, SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandresult-schema \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandResultJsonSchemasValidateWhenCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandschema-schema: selected ControlStream command schema validates as application/json schema metadata (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001, SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandschema-schema \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSchemaJsonValidWhenControlStreamCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandstatus-schema: CommandStatus collection and candidate validate against Annex A.9 schemas when candidate evidence exists (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001, SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/commandstatus-schema \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandStatusJsonSchemasValidateWhenCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/controlstream-schema: /controlstreams JSON collection and candidate ControlStream validate against Annex A.9 schemas (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001, SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-009-UNAVAILABLE-ENDPOINT-HONESTY-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/controlstream-schema \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "controlStreamJsonSchemasValidateAgainstAnnexA9"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/datastream-schema: /datastreams JSON collection and candidate DataStream validate against Annex A.9 schemas (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001, SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-009-UNAVAILABLE-ENDPOINT-HONESTY-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/datastream-schema \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "datastreamJsonSchemasValidateAgainstAnnexA9"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/observation-constraints: Observation result/parameters constraints require parent Datastream schema and candidate Observation evidence before PASS (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-OBSERVATION-COMMAND-CONSTRAINTS-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/observation-constraints \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationConstraintsRequireParentSchemaAndCandidateEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/obsschema-schema: selected Datastream observation schema validates as application/json schema metadata (REQ-ETS-PART2-009, SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001, SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/json/obsschema-schema \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSchemaJsonValidWhenDatastreamCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url: every advertised Procedure resolves to equivalent canonical content",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url \u2014 http://ets-csapi-populated-osh-20260730T185023Z-7d189dd53eb2:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+    "name": "everyProcedureHasCanonicalUrl"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections: advertised Procedure collections use released metadata, types, and schemas",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections \u2014 http://ets-csapi-populated-osh-20260730T185023Z-7d189dd53eb2:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+    "name": "procedureCollectionsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/cmdschema-schema: selected ControlStream Command Schema validates as SWE Common JSON metadata with JSONEncoding (REQ-ETS-PART2-010, SCENARIO-ETS-PART2-010-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-010-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/cmdschema-schema \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSchemaSweJsonValidWhenControlStreamCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/cmdschema-mapping: Command Schema mapping requires canonical IssueTime Time component evidence when issue-time mapping is present (REQ-ETS-PART2-010, SCENARIO-ETS-PART2-010-SCHEMA-MAPPING-TIME-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/cmdschema-mapping \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/command-encoding: Command SWE Common JSON encoding requires parent schema, candidate Command, and encoding-validator evidence before PASS (REQ-ETS-PART2-010, SCENARIO-ETS-PART2-010-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-010-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/command-encoding \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSweJsonEncodingRequiresParentSchemaAndCandidateEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/obsschema-schema: selected Datastream Observation Schema validates as SWE Common JSON metadata with JSONEncoding (REQ-ETS-PART2-010, SCENARIO-ETS-PART2-010-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-010-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/obsschema-schema \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSchemaSweJsonValidWhenDatastreamCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/obsschema-mapping: Observation Schema mapping requires canonical Time definition evidence from retrieved SWE Common recordSchema (REQ-ETS-PART2-010, SCENARIO-ETS-PART2-010-SCHEMA-MAPPING-TIME-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/obsschema-mapping \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSchemaSweMappingRequiresTimeComponentEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/observation-encoding: Observation SWE Common JSON encoding requires parent schema, candidate Observation, and encoding-validator evidence before PASS (REQ-ETS-PART2-010, SCENARIO-ETS-PART2-010-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-010-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-json/observation-encoding \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSweJsonEncodingRequiresParentSchemaAndCandidateEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections: advertised Deployment collections use released metadata and schemas",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections \u2014 http://ets-csapi-populated-osh-20260730T185023Z-7d189dd53eb2:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+    "name": "deploymentCollectionsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system: every System's Deployment endpoint references its owning System",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system \u2014 expected HTTP 200, got 400",
+    "name": "deploymentsReferencedFromSystemsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url: every advertised Deployment resolves to equivalent canonical content",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url \u2014 http://ets-csapi-populated-osh-20260730T185023Z-7d189dd53eb2:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+    "name": "everyDeploymentHasCanonicalUrl"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/cmdschema-mapping: Command Schema mapping requires canonical IssueTime Time component evidence when issue-time mapping is present (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/cmdschema-mapping \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/cmdschema-schema: selected ControlStream Command Schema validates as SWE Common Text metadata with TextEncoding (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/cmdschema-schema \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSchemaSweTextValidWhenControlStreamCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/command-encoding: Command SWE Common Text encoding requires parent schema, candidate Command, and encoding-validator evidence before PASS (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/command-encoding \u2014 /controlstreams failed schema validation against controlStreamCollection.json: $.items[0]: required property 'issueTime' not found; $.items[0]: required property 'executionTime' not found; $.items[0]: required property 'live' not found; $.items[0]: required property 'async' not found",
+    "name": "commandSweTextEncodingRequiresParentSchemaAndCandidateEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/obsschema-mapping: Observation Schema mapping requires canonical Time definition evidence from retrieved SWE Common recordSchema (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/obsschema-mapping \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSchemaSweMappingRequiresTimeComponentEvidence"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/obsschema-schema: selected Datastream Observation Schema validates as SWE Common Text metadata with TextEncoding (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/obsschema-schema \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSchemaSweTextValidWhenDatastreamCandidateAvailable"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests",
+    "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/observation-encoding: Observation SWE Common Text encoding requires parent schema, candidate Observation, and encoding-validator evidence before PASS (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/observation-encoding \u2014 /datastreams failed schema validation against dataStreamCollection.json: $.items[0]: required property 'live' not found",
+    "name": "observationSweTextEncodingRequiresParentSchemaAndCandidateEvidence"
+  }
+]

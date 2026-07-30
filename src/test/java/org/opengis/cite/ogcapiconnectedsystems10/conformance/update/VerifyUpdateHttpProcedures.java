@@ -431,6 +431,42 @@ public class VerifyUpdateHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void samplingFeatureFixtureUsesRequiredSystemScopedCreation() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.rejectRootSamplingFeatureCreate = true;
+
+			try {
+				fixture.support().samplingFeaturesUpdate();
+			}
+			catch (SkipException ex) {
+				throw new AssertionError("required System-scoped Sampling Feature creation was not used", ex);
+			}
+
+			assertEquals(0, fixture.rootSamplingFeatureCreateCalls.get());
+			assertTrue(fixture.systemScopedSamplingFeatureCreateCalls.get() > 0);
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-CLEANUP-001;
+	 * SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void canonicalFirstCustomDelayedAmbiguousCommitIsDiscoveredAndCleaned() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.canonicalFirstCustomDelayedCreate = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			TimeUnit.MILLISECONDS.sleep(100);
+			assertEquals(fixture.resourcePaths(), 0, fixture.liveResources());
+		}
+	}
+
 	private static final class Fixture implements AutoCloseable {
 
 		private static final ObjectMapper JSON = new ObjectMapper();
@@ -465,6 +501,10 @@ public class VerifyUpdateHttpProcedures {
 		private final AtomicInteger finalPatchReads = new AtomicInteger();
 
 		private final AtomicInteger changedIdentityDeleteCalls = new AtomicInteger();
+
+		private final AtomicInteger rootSamplingFeatureCreateCalls = new AtomicInteger();
+
+		private final AtomicInteger systemScopedSamplingFeatureCreateCalls = new AtomicInteger();
 
 		private volatile String acceptPatch = "application/merge-patch+json, application/json-patch+json";
 
@@ -515,6 +555,10 @@ public class VerifyUpdateHttpProcedures {
 		private volatile boolean missingCreateLocation;
 
 		private volatile boolean crossOriginCreateLocation;
+
+		private volatile boolean rejectRootSamplingFeatureCreate;
+
+		private volatile boolean canonicalFirstCustomDelayedCreate;
 
 		private volatile boolean cleanupIdentityChanged;
 
@@ -677,6 +721,16 @@ public class VerifyUpdateHttpProcedures {
 		}
 
 		private void create(HttpExchange exchange, String path) throws IOException {
+			if ("/api/samplingFeatures".equals(path)) {
+				this.rootSamplingFeatureCreateCalls.incrementAndGet();
+				if (this.rejectRootSamplingFeatureCreate) {
+					send(exchange, 405, "application/json", Map.of("error", "root creation is not supported"));
+					return;
+				}
+			}
+			if (path.matches("/api/systems/[^/]+/samplingFeatures")) {
+				this.systemScopedSamplingFeatureCreateCalls.incrementAndGet();
+			}
 			if (this.denyCreate) {
 				send(exchange, 403, "application/json", Map.of("error", "fixture creation denied"));
 				return;
@@ -690,6 +744,17 @@ public class VerifyUpdateHttpProcedures {
 			String canonical = "/api/" + kind + "/" + id;
 			Map<String, Object> body = objectBody(exchange);
 			body.put("id", id);
+			if (this.canonicalFirstCustomDelayedCreate && path.startsWith("/api/collections/")) {
+				String occurrence = path + "/" + id;
+				this.resources.put(canonical, body);
+				this.originalResources.put(canonical, copy(body));
+				this.scheduler.schedule(() -> {
+					this.resources.put(occurrence, copy(body));
+					this.originalResources.put(occurrence, copy(body));
+				}, 25, TimeUnit.MILLISECONDS);
+				send(exchange, 500, "application/json", Map.of("error", "delayed custom propagation"));
+				return;
+			}
 			if (this.ambiguousCustomOnlyCreate && path.startsWith("/api/collections/")) {
 				String occurrence = path + "/" + id;
 				this.resources.put(occurrence, body);
@@ -899,6 +964,9 @@ public class VerifyUpdateHttpProcedures {
 		}
 
 		private String collectionKind(String path) {
+			if (path.matches("/api/systems/[^/]+/samplingFeatures")) {
+				return "samplingFeatures";
+			}
 			for (String kind : KINDS) {
 				if (("/api/" + kind).equals(path) || ("/api/collections/custom-" + kind + "/items").equals(path)) {
 					return kind;

@@ -86,6 +86,9 @@ start Sprint 57.
   root-manifest inclusion of the nested test-first manifest.
 - Positive completed PATCH E2E remains externally blocked; all five mappings
   remain candidate.
+- Published the seven-commit Sprint 57 chain from `b9143a4` through `7f60ddc`
+  to Botts `main` and verified the remote head at
+  `7f60ddca149f2f78448929eb4de5da2d750a5864`.
 
 ## 2026-07-30 - Stock OSH prerequisite feasibility audit
 

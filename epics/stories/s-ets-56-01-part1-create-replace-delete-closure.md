@@ -86,8 +86,12 @@ safety-gated implementations of all twelve released OGC 23-001
 - [x] A queued URI-list `Location` inside the target item namespace is
   verified and cleaned, while an asynchronous status `Location` is never
   dereferenced or deleted.
+- [x] Queued occurrence cleanup deletes a computed or returned item only after
+  submitted-content proof and never deletes a mismatched direct `Location`.
+- [x] Compound queued mutation postconditions are jointly true in one polling
+  observation, so transient reversion or reappearance cannot PASS.
 - [x] Generic non-System DELETE omits the System-specific cascade parameter.
-- [ ] Focused/full Maven, coverage audit, exact-image runtime, dependency,
+- [x] Focused/full Maven, coverage audit, exact-image runtime, dependency,
   credential, immutable-base, and artifact-hygiene gates complete.
 - [x] Default primary local OSH TeamEngine E2E has zero writes.
 - [ ] Owned isolated local OSH TeamEngine E2E executes mutation paths, records
@@ -179,12 +183,33 @@ Test-first verification first failed compilation at the injected-clock
 constructor, then reproduced `30/4/0/0`. A first green attempt exposed and was
 aborted for an unbounded no-request-budget loop. The corrected direct HTTP
 suite passes `31/0/0/0`, focused aggregate passes `48/0/0/0`, and full Docker
-Maven passes `650/0/0/3` precommit. The
+Maven passes `650/0/0/3`. Exact candidate
+`8aa92d4da33aeb3b1c545378c0a68cb84a565ccb` repeats those Maven gates and
+passes released-source, schema-parity, image/runtime, immutable-base,
+dependency sabotage, credential, and hygiene gates. Its image is
+`sha256:3865aca8a80b5a23fd94531705e0228db5e71c7b2ef65cbc596f83f9c0145d7a`
+with `Build-Revision: 8aa92d4da3`. The
 implementation floors timeout conversion, refuses every request boundary
 without a whole-millisecond budget, awaits and pre-registers custom setup
 occurrences, and classifies queued URI-list Locations by the direct target
-item namespace. A new committed candidate must repeat every exact technical,
-runtime, E2E, credential, immutability, hygiene, and Raze gate.
+item namespace.
+
+Exact local OSH remains populated `244/54/35/155` and clean primary
+`244/40/7/197`; provisioning and cleanup pass, primary state is unchanged,
+and 365 IUT requests are GETs with zero writes. Core sabotage is
+`244/2/10/232`; all twelve substantive CRD methods causally SKIP. Credential
+and hygiene gates report zero leaks. Raze returned `GAPS_FOUND 0.97` on
+`8aa92d4`: unverified occurrence cleanup could delete a mismatched direct
+Location, compound postconditions could compose transient states, and the
+exact checkout/archive lacked final hygiene proof.
+
+The replacement uses bounded submitted-content proof before occurrence DELETE
+and requires two consecutive joint observations of every compound
+postcondition. Four requirement-linked regressions were added; behavioral red
+was `35/2/0/0`, corrected direct HTTP is `35/0/0/0`, focused aggregate is
+`52/0/0/0`, and full clean-cache Docker Maven is `654/0/0/3` precommit. A
+clean replacement exact candidate, sealed umbrella manifest, and fresh Raze
+recheck remain pending.
 
 These controlled gates do not supply positive real-IUT mutation evidence, so
 the story and all twelve mappings remain IN PROGRESS/candidate.

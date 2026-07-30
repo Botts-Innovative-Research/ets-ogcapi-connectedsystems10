@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T03:57Z
+Last updated: 2026-07-30T05:12Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -19,8 +19,14 @@ Last updated: 2026-07-30T03:57Z
   exact remediation candidate `1a6c5ec` also passes its technical gates but is
   superseded by Raze `GAPS_FOUND 0.98`. Deadline requester boundaries, queued
   custom setup occurrences, and queued URI-list Location classification are
-  remediated at direct HTTP `31/0/0/0`, focused aggregate `48/0/0/0`, and full
-  Maven `650/0/0/3` precommit. A new exact candidate and fresh Raze remain
+  remediated by exact candidate
+  `8aa92d4da33aeb3b1c545378c0a68cb84a565ccb`, which passes direct HTTP
+  `31/0/0/0`, focused aggregate `48/0/0/0`, full Maven `650/0/0/3`, and all
+  exact technical, local-OSH, sabotage, credential, immutability, and hygiene
+  gates, but Raze `GAPS_FOUND 0.97` supersedes it. Identity-safe occurrence
+  cleanup and joint compound polling now pass direct HTTP `35/0/0/0`, focused
+  aggregate `52/0/0/0`, and full clean-cache Docker Maven `654/0/0/3`
+  precommit. A clean replacement exact candidate and fresh Raze recheck remain
   pending.
   The unmodified local OSH API Common result is `4 PASS / 1 SKIP` because no
   advertised collection supplies positive datetime evidence. Causal TestNG

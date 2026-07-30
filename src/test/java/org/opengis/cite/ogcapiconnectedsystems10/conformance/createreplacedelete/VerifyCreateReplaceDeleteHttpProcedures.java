@@ -585,6 +585,81 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-LATE-CLEANUP-001.
+	 */
+	@Test
+	public void queuedMismatchedOccurrenceLocationIsNeverDeleted() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.singleCustomCollection = true;
+			fixture.queuedWrites = true;
+			fixture.queuedUriListMismatchedOccurrenceLocation = true;
+			fixture.seedUnrelatedSystem();
+			fixture.seedUnrelatedOccurrence();
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 10L)::resourcesAddToCustomCollections);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertTrue("mismatched direct Location was deleted", fixture.hasUnrelatedOccurrence());
+			assertEquals("mismatched direct Location received DELETE", 0, fixture.returnedLocationDeletes.get());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001.
+	 */
+	@Test
+	public void queuedCustomReplaceRejectsTransientDisjointPostconditions() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.singleCustomCollection = true;
+			fixture.queuedWrites = true;
+			fixture.transientCustomReplacement = true;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(120L, 10L)::resourcesReplaceInCustomCollections);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001.
+	 */
+	@Test
+	public void queuedCustomDeleteRejectsTransientOccurrenceReappearance() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.singleCustomCollection = true;
+			fixture.queuedWrites = true;
+			fixture.transientCustomDeletion = true;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(120L, 10L)::resourcesDeleteInCustomCollections);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001.
+	 */
+	@Test
+	public void queuedCascadeRejectsTransientTargetReappearance() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.queuedWrites = true;
+			fixture.transientCascadeReappearance = true;
+
+			SkipException error = assertThrows(SkipException.class, fixture.support(120L, 10L)::systemDeleteCascade);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
 	private static void restoreProperty(String name, String value) {
 		if (value == null) {
 			System.clearProperty(name);
@@ -648,6 +723,12 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private final AtomicInteger asyncStatusRequests = new AtomicInteger();
 
+		private final AtomicInteger transientReplacementAliasGets = new AtomicInteger();
+
+		private final AtomicInteger transientDeletionGoneGets = new AtomicInteger();
+
+		private final AtomicInteger transientCascadeGoneGets = new AtomicInteger();
+
 		private volatile boolean omitLocation;
 
 		private volatile boolean omitUriListLocation;
@@ -685,6 +766,28 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		private volatile boolean queuedUriListOccurrenceLocation;
 
 		private volatile boolean queuedUriListStatusLocation;
+
+		private volatile boolean queuedUriListMismatchedOccurrenceLocation;
+
+		private volatile boolean transientCustomReplacement;
+
+		private volatile boolean transientCustomDeletion;
+
+		private volatile boolean transientCascadeReappearance;
+
+		private volatile String transientReplacementAlias;
+
+		private volatile Map<String, Object> transientReplacementBody;
+
+		private volatile Map<String, Object> transientOriginalBody;
+
+		private volatile String transientDeletedAlias;
+
+		private volatile String transientDeletedCanonical;
+
+		private volatile String transientCascadePath;
+
+		private volatile Resource transientCascadeResource;
 
 		private volatile AtomicLong deadlineClockToExpire;
 
@@ -763,6 +866,14 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 					CreateReplaceDeleteSupport.systemBody("unrelated", "urn:ets:unrelated"));
 			body.put("id", "unrelated");
 			this.resources.put("/api/systems/unrelated", new Resource("systems", body, null));
+		}
+
+		void seedUnrelatedOccurrence() {
+			this.aliases.put("/api/collections/custom_systems/items/returned-unrelated", "/api/systems/unrelated");
+		}
+
+		boolean hasUnrelatedOccurrence() {
+			return this.aliases.containsKey("/api/collections/custom_systems/items/returned-unrelated");
 		}
 
 		@Override
@@ -845,6 +956,9 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 						returnedAlias = path + "/returned-" + last(canonical);
 						pendingAliases.put(returnedAlias, canonical);
 						exchange.getResponseHeaders().set("Location", returnedAlias);
+					}
+					else if (this.queuedUriListMismatchedOccurrenceLocation) {
+						exchange.getResponseHeaders().set("Location", path + "/returned-unrelated");
 					}
 					else if (this.queuedUriListStatusLocation) {
 						exchange.getResponseHeaders().set("Location", "/api/jobs/uri-list-1");
@@ -936,10 +1050,26 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				resource = this.deletedResources.get(canonical);
 			}
 			if (resource == null) {
+				if (this.transientCustomDeletion && path.equals(this.transientDeletedAlias)
+						&& this.transientDeletionGoneGets.getAndIncrement() == 0) {
+					this.aliases.put(path, this.transientDeletedCanonical);
+					respond(exchange, 404, "");
+					return;
+				}
+				if (this.transientCascadeReappearance && path.equals(this.transientCascadePath)
+						&& this.transientCascadeGoneGets.getAndIncrement() == 0) {
+					this.resources.put(path, this.transientCascadeResource);
+					respond(exchange, 404, "");
+					return;
+				}
 				respond(exchange, 404, "");
 				return;
 			}
 			Map<String, Object> responseBody = resource.body();
+			if (this.transientCustomReplacement && path.equals(this.transientReplacementAlias)) {
+				responseBody = this.transientReplacementAliasGets.getAndIncrement() == 0 ? this.transientReplacementBody
+						: this.transientOriginalBody;
+			}
 			if (this.omitAssociationOnPreDeleteGet && "deployments".equals(resource.root())
 					&& this.deploymentGets.incrementAndGet() > 1) {
 				responseBody = deepCopy(responseBody);
@@ -969,6 +1099,11 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			}
 			if (this.queuedWrites) {
 				this.queuedPuts.incrementAndGet();
+				if (this.transientCustomReplacement && path.startsWith("/api/collections/")) {
+					this.transientReplacementAlias = path;
+					this.transientReplacementBody = bodyWithId(replacement, last(canonical));
+					this.transientOriginalBody = deepCopy(current.body());
+				}
 				this.scheduler.schedule(
 						() -> this.resources.put(canonical, new Resource(current.root(),
 								bodyWithId(replacement, last(canonical)), current.parent())),
@@ -991,6 +1126,10 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				}
 				if (this.queuedWrites) {
 					this.queuedDeletes.incrementAndGet();
+					if (this.transientCustomDeletion) {
+						this.transientDeletedAlias = path;
+						this.transientDeletedCanonical = this.aliases.get(path);
+					}
 					this.scheduler.schedule(() -> this.aliases.remove(path), 40L, TimeUnit.MILLISECONDS);
 					respond(exchange, 202, "");
 					return;
@@ -1031,6 +1170,10 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private void removeResource(String path, Resource resource, boolean cascade) {
 			if ("systems".equals(resource.root()) && cascade) {
+				if (this.transientCascadeReappearance && this.transientCascadePath == null) {
+					this.transientCascadePath = path;
+					this.transientCascadeResource = resource;
+				}
 				if (this.cascadePropagationDelayMillis > 0L) {
 					this.scheduler.schedule(() -> removeSystemDependencies(path, uid(resource.body())),
 							this.cascadePropagationDelayMillis, TimeUnit.MILLISECONDS);

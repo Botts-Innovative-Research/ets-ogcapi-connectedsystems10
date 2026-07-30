@@ -1,0 +1,64 @@
+sprint: ets-56
+candidate: 8aa92d4da33aeb3b1c545378c0a68cb84a565ccb
+reviewer: Raze
+agent_id: 019fb155-6313-73a2-b93c-fd6e3e60f99d
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.97
+findings:
+  - id: queued-occurrence-cleanup-identity
+    severity: HIGH
+    status_at_review: OPEN
+    remediation_status: PLANNED
+    summary: A queued direct occurrence Location was registered for cleanup before content verification, and cleanup deleted it after proving only availability.
+    risk: A mismatched Location that identifies an existing unrelated collection item can cause an inconclusive primary result followed by destructive deletion of that unrelated item.
+    remediation: Require the expected submitted representation on every queued occurrence cleanup target and delete only after GET proves that identity and content; add a direct-Location mismatch non-deletion regression.
+  - id: queued-compound-transient-state
+    severity: MEDIUM
+    status_at_review: OPEN
+    remediation_status: PLANNED
+    summary: Several compound postconditions were polled sequentially, so an early condition could become true transiently and revert before the final condition became true.
+    affected_paths:
+      - queued custom replacement propagation
+      - queued custom occurrence deletion and canonical survival
+      - queued cascade graph deletion and surviving-association state
+    remediation: Poll every postcondition for one queued mutation as a joint state under its single deadline and add transient reversion and reappearance regressions.
+  - id: exact-evidence-seal
+    severity: LOW
+    status_at_review: OPEN
+    remediation_status: PLANNED
+    summary: The detached exact-candidate checkout acquired an untracked Python bytecode file and the evidence root lacked an umbrella checksum manifest.
+    remediation: Supersede the candidate, run exact gates from a clean detached checkout with Python bytecode disabled, assert the checkout remains clean, and seal the complete evidence archive with one manifest.
+prior_findings:
+  requester_boundary_hard_deadline: CLOSED
+  cleanup_overrides_inconclusive_skip: CLOSED
+  queued_custom_setup_occurrence: CLOSED
+  queued_uri_list_location_classification: PARTIALLY_REMEDIATED_OPEN
+  queued_compound_postconditions: PARTIALLY_REMEDIATED_OPEN
+  queued_uri_list_cleanup: PARTIALLY_REMEDIATED_OPEN
+  cp_016_status_semantics: CLOSED
+external_blocker:
+  status: OPEN
+  severity: HIGH
+  summary: Positive real-IUT mutation E2E remains unavailable because unmodified local OSH does not satisfy API Common datetime evidence or the exact inherited declarations.
+  disposition: This keeps mappings candidate and Sprint 56 open; it does not justify weakening the ETS or modifying OSH or TeamEngine.
+evidence:
+  exact_focused_maven: "48 tests / 0 failures / 0 errors / 0 skipped"
+  exact_direct_http: "31 tests / 0 failures / 0 errors / 0 skipped"
+  exact_full_maven: "650 tests / 0 failures / 0 errors / 3 skipped"
+  exact_populated_e2e: "244 total / 54 passed / 35 failed / 155 skipped"
+  exact_clean_primary_e2e: "244 total / 40 passed / 7 failed / 197 skipped"
+  exact_sabotage: "244 total / 2 passed / 10 failed / 232 skipped"
+  exact_image: "sha256:3865aca8a80b5a23fd94531705e0228db5e71c7b2ef65cbc596f83f9c0145d7a"
+  teamengine_iut_traffic: "365 GET / 0 writes"
+scope:
+  osh_source_or_binary_changes: false
+  teamengine_source_or_binary_changes: false
+  hosted_ci_changes: false
+  credential_disclosure: false
+runtime:
+  started_at: "2026-07-30T04:43:19Z"
+  ended_at: "2026-07-30T04:50:47Z"
+  duration_seconds: 448
+  elapsed: "00:07:28"
+  token_usage: null

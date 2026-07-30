@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.51 | Status: Living Document | Last reconciled: 2026-07-30 (CRD requester and occurrence hardening)
+> Version: 2.0.53 | Status: Living Document | Last reconciled: 2026-07-30 (CRD identity-safe joint polling remediation)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1544,3 +1544,46 @@ aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`
 precommit. A new committed candidate must rerun every exact
 technical, runtime, E2E, credential, immutability, hygiene, and adversarial
 gate.
+
+### 35.2 Architecture v2.0.52 - exact remediation candidate
+
+Committed candidate `8aa92d4da33aeb3b1c545378c0a68cb84a565ccb` passes exact
+focused Maven `48/0/0/0`, including direct HTTP `31/0/0/0`, and full Docker
+Maven `650/0/0/3`. Its immutable image is
+`sha256:3865aca8a80b5a23fd94531705e0228db5e71c7b2ef65cbc596f83f9c0145d7a`
+with `Build-Revision: 8aa92d4da3`. Released-source, schema-parity, runtime,
+dependency sabotage, credential, immutable-base, and artifact-hygiene gates
+pass.
+
+Exact real-IUT evidence remains honestly populated `244/54/35/155` and clean
+primary `244/40/7/197`. Provisioning and cleanup pass, primary state is
+unchanged, and all 365 IUT requests are GETs. The unmodified OSH checkout is
+clean and zero commits ahead of reviewed upstream. API Common datetime still
+SKIPs, causally skipping all twelve substantive Create/Replace/Delete methods
+before writes. The implementation architecture is exact-candidate verified;
+the mappings and story remain candidate/IN PROGRESS because positive mutation
+E2E is absent. Fresh Raze review is pending.
+
+### 35.3 Architecture v2.0.53 - identity-safe joint polling
+
+Raze returned `GAPS_FOUND 0.97` on `8aa92d4`, superseding the candidate despite
+its passing technical gates. A queued computed or returned collection
+occurrence is not owned merely because it is available. Its cleanup target
+retains the expected submitted representation, and DELETE is authorized only
+after a bounded GET proves that content. An existing mismatched direct
+collection-item Location remains untouched.
+
+Every queued mutation with multiple postconditions uses one compound polling
+function and one monotonic deadline. Each polling iteration observes all
+required canonical, occurrence, deletion, cascade, and survival conditions;
+positive evidence requires all conditions true in two consecutive iterations.
+Transient
+replacement, disappearance, cascade, or reappearance states cannot be composed
+across different iterations into a false PASS.
+
+The replacement exact gate must run from a clean detached checkout with Python
+bytecode disabled, assert the checkout remains clean, and seal the complete
+evidence archive with an umbrella checksum manifest before final Raze review.
+Behavioral red is `35/2/0/0`; corrected direct HTTP is `35/0/0/0`, focused
+aggregate is `52/0/0/0`, and full clean-cache Docker Maven is `654/0/0/3`
+precommit.

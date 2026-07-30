@@ -9,8 +9,9 @@
 - `REQ-ETS-PART1-010`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; Raze remediation passes precommit gates, new exact
-candidate and positive mutation E2E pending
+**Status**: Accepted; identity-safe joint-polling remediation passes precommit
+gates, replacement exact candidate, fresh Raze, and positive mutation E2E
+pending
 
 ## Motivation
 
@@ -115,18 +116,27 @@ HTTP 202, and verify equivalent representations through both returned and
 computed collection-item URLs. Every required custom/canonical propagation,
 cascade, surviving-association, and URI-list occurrence postcondition for one
 queued operation SHALL be polled under that operation's single deadline.
+Positive compound evidence SHALL require every postcondition to be true in the
+same polling observation. A transient replacement, disappearance, or cascade
+state that reverts before the remaining postconditions become true SHALL not
+PASS.
 Queued custom creation used as replace or delete setup SHALL await the custom
 occurrence before the later write and SHALL pre-register occurrence cleanup so
 late propagation cannot leak an alias.
 Identity-safe occurrence cleanup SHALL be registered before URI-list POST so
-late materialization after an inconclusive timeout is still removed. If the
-IUT exposes no applicable custom collection, the affected procedure SHALL SKIP
+late materialization after an inconclusive timeout is still removed. Cleanup
+SHALL delete a computed or returned occurrence only after bounded GET proves
+the submitted identity and content; availability alone or a mismatched direct
+Location SHALL leave the item untouched. If the IUT exposes no applicable
+custom collection, the affected procedure SHALL SKIP
 with a precise no-evidence reason; malformed advertised endpoints, unsupported
 declared methods, or incorrect propagation SHALL fail.
 
 For queued `text/uri-list`, a supplied Location within the target
 collection-item namespace SHALL be treated as a returned occurrence, verified,
-and independently cleaned. A supplied Location outside that namespace SHALL be
+and independently cleaned only after submitted-content proof. A mismatched
+direct occurrence Location SHALL never be deleted. A supplied Location outside
+that namespace SHALL be
 treated as an asynchronous status URI and SHALL not be dereferenced or used as
 a destructive cleanup target.
 

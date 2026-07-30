@@ -1,0 +1,22 @@
+VERDICT=PASS_TECHNICAL_GATES
+candidate=8aa92d4da33aeb3b1c545378c0a68cb84a565ccb
+focused=48/0/0/0
+directHttp=31/0/0/0
+full=650/0/0/3
+image=sha256:3865aca8a80b5a23fd94531705e0228db5e71c7b2ef65cbc596f83f9c0145d7a
+buildRevision=8aa92d4da3
+releasedAts=PASS
+geoJsonParity=PASS
+propertyParity=PASS
+runtimeImmutability=PASS
+populated=244/54/35/155
+cleanPrimary=244/40/7/197
+provisioning=PASS
+cleanup=PASS
+primaryStateUnchanged=true
+iutRequests=365 GET, 0 writes
+sabotage=244/2/10/232; substantiveCRD=12 SKIP
+credentials=0 unmasked artifacts, 32 masked logs, 32 intact wire transmissions
+artifactHygiene=PASS
+raze=PENDING
+positiveMutationEvidence=ABSENT_EXTERNAL_IUT_PREREQUISITE

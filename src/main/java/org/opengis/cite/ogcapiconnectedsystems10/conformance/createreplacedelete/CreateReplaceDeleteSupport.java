@@ -186,8 +186,9 @@ public final class CreateReplaceDeleteSupport {
 				assertGone(child.uri(), requirement);
 			}
 			else {
-				awaitGoneOrSkip(child.uri(), parentDelete, requirement,
-						"queued cascade DELETE of child " + child.uri());
+				awaitCompoundOrSkip(parentDelete, requirement, "queued cascade DELETE of " + parent.uri(),
+						() -> gone(parent.uri(), parentDelete, requirement),
+						() -> gone(child.uri(), parentDelete, requirement));
 			}
 
 			String targetUid = uid("cascade-target");
@@ -334,9 +335,8 @@ public final class CreateReplaceDeleteSupport {
 					URI canonical = canonicalUri(collection.kind(), created.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + canonical,
 							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
-					registerAndVerifyOccurrence(collectionItem, mediaType, body, created, requirement, cleanup);
-					verifySubmittedContent(canonical, mediaType, body, created.deadline(), requirement,
-							"queued canonical custom-collection creation at " + canonical);
+					registerAndVerifyOccurrence(collectionItem, canonical, mediaType, body, created, requirement,
+							cleanup);
 				}
 			}
 		});
@@ -360,7 +360,8 @@ public final class CreateReplaceDeleteSupport {
 					URI canonical = canonicalUri(collection.kind(), created.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + canonical,
 							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
-					registerAndVerifyOccurrence(collectionItem, mediaType, create, created, requirement, cleanup);
+					registerAndVerifyOccurrence(collectionItem, canonical, mediaType, create, created, requirement,
+							cleanup);
 					Map<String, Object> replacement = body(collection.kind(), mediaType, "replace", resourceUid);
 					assertOptions(collectionItem, List.of("PUT"), requirement);
 					Response put = request(mediaType, replacement, collection.kind(), requirement).put(collectionItem)
@@ -368,10 +369,11 @@ public final class CreateReplaceDeleteSupport {
 					assertStatusIn(put, List.of(200, 202, 204), requirement, "PUT " + collectionItem);
 					if (put.getStatusCode() == 202) {
 						AsyncDeadline deadline = new AsyncDeadline();
-						awaitSubmittedContentOrSkip(collectionItem, mediaType, replacement, deadline, requirement,
-								"queued PUT " + collectionItem);
-						awaitSubmittedContentOrSkip(canonical, mediaType, replacement, deadline, requirement,
-								"queued canonical propagation after PUT " + collectionItem);
+						awaitCompoundOrSkip(deadline, requirement, "queued PUT propagation for " + collectionItem,
+								() -> submittedContentAvailable(collectionItem, mediaType, replacement, deadline,
+										requirement),
+								() -> submittedContentAvailable(canonical, mediaType, replacement, deadline,
+										requirement));
 					}
 					else {
 						assertSubmittedContent(replacement, getJson(collectionItem, mediaType, 200, requirement),
@@ -402,8 +404,8 @@ public final class CreateReplaceDeleteSupport {
 					URI rootDeleteCanonical = canonicalUri(collection.kind(), rootDelete.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + rootDeleteCanonical,
 							() -> cleanupDelete(rootDeleteCanonical, collection.kind() == SYSTEM, requirement));
-					registerAndVerifyOccurrence(rootDeleteItem, mediaType, rootDeleteBody, rootDelete, requirement,
-							cleanup);
+					registerAndVerifyOccurrence(rootDeleteItem, rootDeleteCanonical, mediaType, rootDeleteBody,
+							rootDelete, requirement, cleanup);
 					AsyncDeadline rootDeleteDeadline = delete(
 							new OwnedResource(rootDeleteCanonical, collection.kind() == SYSTEM, null),
 							collection.kind() == SYSTEM, requirement);
@@ -411,8 +413,10 @@ public final class CreateReplaceDeleteSupport {
 						assertGone(rootDeleteItem, requirement);
 					}
 					else {
-						awaitGoneOrSkip(rootDeleteItem, rootDeleteDeadline, requirement,
-								"queued custom root DELETE propagation to " + rootDeleteItem);
+						awaitCompoundOrSkip(rootDeleteDeadline, requirement,
+								"queued custom root DELETE propagation to " + rootDeleteItem,
+								() -> gone(rootDeleteCanonical, rootDeleteDeadline, requirement),
+								() -> gone(rootDeleteItem, rootDeleteDeadline, requirement));
 					}
 
 					Map<String, Object> occurrenceBody = body(collection.kind(), mediaType, "occurrence-delete",
@@ -424,8 +428,8 @@ public final class CreateReplaceDeleteSupport {
 					URI canonical = canonicalUri(collection.kind(), occurrence.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + canonical,
 							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
-					registerAndVerifyOccurrence(collectionItem, mediaType, occurrenceBody, occurrence, requirement,
-							cleanup);
+					registerAndVerifyOccurrence(collectionItem, canonical, mediaType, occurrenceBody, occurrence,
+							requirement, cleanup);
 					assertOptions(collectionItem, List.of("DELETE"), requirement);
 					Response delete = EncodingMediatypeWrite.givenWithoutDefaultCharset()
 						.accept(mediaType)
@@ -434,9 +438,9 @@ public final class CreateReplaceDeleteSupport {
 					assertStatusIn(delete, List.of(200, 202, 204), requirement, "DELETE " + collectionItem);
 					if (delete.getStatusCode() == 202) {
 						AsyncDeadline deadline = new AsyncDeadline();
-						awaitGoneOrSkip(collectionItem, deadline, requirement, "queued DELETE " + collectionItem);
-						awaitAvailableOrSkip(canonical, deadline, requirement,
-								"canonical survival after queued occurrence DELETE " + collectionItem);
+						awaitCompoundOrSkip(deadline, requirement, "queued DELETE " + collectionItem,
+								() -> gone(collectionItem, deadline, requirement),
+								() -> available(canonical, deadline, requirement));
 					}
 					else {
 						assertGone(collectionItem, requirement);
@@ -464,10 +468,11 @@ public final class CreateReplaceDeleteSupport {
 					assertOptions(collection.itemsUri(), List.of("POST"), requirement);
 					String id = lastPathSegment(canonical.uri(), requirement);
 					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
-					OccurrenceCleanupTarget occurrence = new OccurrenceCleanupTarget(collectionItem, false);
+					Map<String, Object> expected = getJson(canonical.uri(), mediaType, 200, requirement);
+					OccurrenceCleanupTarget occurrence = new OccurrenceCleanupTarget(collectionItem, false, mediaType,
+							expected);
 					cleanup.push("custom collection occurrence " + collectionItem,
 							() -> cleanupOccurrence(occurrence, requirement));
-					Map<String, Object> expected = getJson(canonical.uri(), mediaType, 200, requirement);
 					Response add = EncodingMediatypeWrite.givenWithoutDefaultCharset()
 						.accept("application/json")
 						.contentType("text/uri-list")
@@ -480,7 +485,6 @@ public final class CreateReplaceDeleteSupport {
 						ETSAssert.failWithUri(requirement,
 								"POST text/uri-list " + collection.itemsUri() + " returned HTTP 201 without Location.");
 					}
-					occurrence.queued = add.getStatusCode() == 202;
 					URI returnedItem = collectionItem;
 					if (location != null && !location.isBlank()) {
 						URI suppliedLocation = resolveCreatedResourceUri(this.apiRoot, location, requirement);
@@ -494,21 +498,22 @@ public final class CreateReplaceDeleteSupport {
 					}
 					OccurrenceCleanupTarget returnedOccurrence = null;
 					if (!returnedItem.equals(collectionItem)) {
-						returnedOccurrence = new OccurrenceCleanupTarget(returnedItem, false);
-						returnedOccurrence.queued = add.getStatusCode() == 202;
+						returnedOccurrence = new OccurrenceCleanupTarget(returnedItem, false, mediaType, expected);
 						OccurrenceCleanupTarget cleanupTarget = returnedOccurrence;
 						cleanup.push("returned custom collection occurrence " + returnedItem,
 								() -> cleanupOccurrence(cleanupTarget, requirement));
 					}
 					if (add.getStatusCode() == 202) {
 						AsyncDeadline deadline = new AsyncDeadline();
-						awaitSubmittedContentOrSkip(collectionItem, mediaType, expected, deadline, requirement,
-								"queued POST text/uri-list " + collection.itemsUri());
-						occurrence.queued = false;
+						OccurrenceCleanupTarget returnedTarget = returnedOccurrence;
+						awaitCompoundOrSkip(deadline, requirement, "queued POST text/uri-list " + collection.itemsUri(),
+								() -> submittedContentAvailable(collectionItem, mediaType, expected, deadline,
+										requirement),
+								() -> returnedTarget == null || submittedContentAvailable(returnedTarget.uri, mediaType,
+										expected, deadline, requirement));
+						occurrence.verified = true;
 						if (returnedOccurrence != null) {
-							awaitSubmittedContentOrSkip(returnedOccurrence.uri, mediaType, expected, deadline,
-									requirement, "queued POST text/uri-list Location " + returnedOccurrence.uri);
-							returnedOccurrence.queued = false;
+							returnedOccurrence.verified = true;
 						}
 					}
 					else {
@@ -516,6 +521,10 @@ public final class CreateReplaceDeleteSupport {
 						assertSubmittedContent(expected, returned, requirement);
 						Map<String, Object> actual = getJson(collectionItem, mediaType, 200, requirement);
 						assertSubmittedContent(expected, actual, requirement);
+						occurrence.verified = true;
+						if (returnedOccurrence != null) {
+							returnedOccurrence.verified = true;
+						}
 					}
 				}
 			}
@@ -662,14 +671,22 @@ public final class CreateReplaceDeleteSupport {
 		return new OwnedResource(resourceUri, cascadeCleanup, null);
 	}
 
-	private void registerAndVerifyOccurrence(URI occurrence, String mediaType, Map<String, Object> submitted,
-			OwnedResource created, String requirement, CleanupStack cleanup) {
-		OccurrenceCleanupTarget target = new OccurrenceCleanupTarget(occurrence, false);
-		target.queued = created.deadline() != null;
+	private void registerAndVerifyOccurrence(URI occurrence, URI canonical, String mediaType,
+			Map<String, Object> submitted, OwnedResource created, String requirement, CleanupStack cleanup) {
+		OccurrenceCleanupTarget target = new OccurrenceCleanupTarget(occurrence, false, mediaType, submitted);
 		cleanup.push("custom collection occurrence " + occurrence, () -> cleanupOccurrence(target, requirement));
-		verifySubmittedContent(occurrence, mediaType, submitted, created.deadline(), requirement,
-				"queued custom-collection creation at " + occurrence);
-		target.queued = false;
+		target.verified = occurrence.equals(created.uri());
+		if (created.deadline() == null) {
+			assertSubmittedContent(submitted, getJson(occurrence, mediaType, 200, requirement), requirement);
+			assertSubmittedContent(submitted, getJson(canonical, mediaType, 200, requirement), requirement);
+		}
+		else {
+			AsyncDeadline deadline = created.deadline();
+			awaitCompoundOrSkip(deadline, requirement, "queued custom-collection creation at " + occurrence,
+					() -> submittedContentAvailable(occurrence, mediaType, submitted, deadline, requirement),
+					() -> submittedContentAvailable(canonical, mediaType, submitted, deadline, requirement));
+		}
+		target.verified = true;
 	}
 
 	private io.restassured.specification.RequestSpecification request(String mediaType, Map<String, Object> body,
@@ -780,10 +797,10 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private void cleanupOccurrence(OccurrenceCleanupTarget target, String requirement) {
-		if (target.queued) {
+		if (!target.verified) {
 			AsyncDeadline deadline = new AsyncDeadline(cleanupTimeoutMillis(), cleanupPollMillis());
-			if (!pollUntil(deadline, () -> available(target.uri, deadline, requirement), requirement,
-					"late custom-collection occurrence " + target.uri)) {
+			if (!pollUntil(deadline, () -> submittedContentAvailable(target.uri, target.mediaType, target.submitted,
+					deadline, requirement), requirement, "late custom-collection occurrence " + target.uri)) {
 				return;
 			}
 		}
@@ -884,14 +901,9 @@ public final class CreateReplaceDeleteSupport {
 
 	private void awaitSubmittedContentOrSkip(URI resource, String mediaType, Map<String, Object> submitted,
 			AsyncDeadline deadline, String requirement, String operation) {
-		boolean completed = pollUntil(deadline, () -> {
-			Response response = pollingGet(resource, mediaType, Map.of(), deadline);
-			if (response.getStatusCode() == 404) {
-				return false;
-			}
-			ETSAssert.assertStatus(response, 200, requirement);
-			return submittedContentMatches(submitted, parseBody(response, requirement, "GET " + resource));
-		}, requirement, operation);
+		boolean completed = pollUntil(deadline,
+				() -> submittedContentAvailable(resource, mediaType, submitted, deadline, requirement), requirement,
+				operation);
 		if (!completed) {
 			throw inconclusive(requirement, operation);
 		}
@@ -914,16 +926,7 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private boolean awaitGone(URI resource, AsyncDeadline deadline, String requirement) {
-		return pollUntil(deadline, () -> {
-			Response response = pollingGet(resource, "application/json", Map.of(), deadline);
-			if (response.getStatusCode() == 404) {
-				return true;
-			}
-			if (response.getStatusCode() != 200) {
-				ETSAssert.assertStatus(response, 200, requirement);
-			}
-			return false;
-		}, requirement, "deletion of " + resource);
+		return pollUntil(deadline, () -> gone(resource, deadline, requirement), requirement, "deletion of " + resource);
 	}
 
 	private void awaitAvailableOrSkip(URI resource, AsyncDeadline deadline, String requirement, String operation) {
@@ -941,20 +944,56 @@ public final class CreateReplaceDeleteSupport {
 		return true;
 	}
 
+	private boolean gone(URI resource, AsyncDeadline deadline, String requirement) {
+		Response response = pollingGet(resource, "application/json", Map.of(), deadline);
+		if (response.getStatusCode() == 404) {
+			return true;
+		}
+		ETSAssert.assertStatus(response, 200, requirement);
+		return false;
+	}
+
+	private boolean submittedContentAvailable(URI resource, String mediaType, Map<String, Object> submitted,
+			AsyncDeadline deadline, String requirement) {
+		Response response = pollingGet(resource, mediaType, Map.of(), deadline);
+		if (response.getStatusCode() == 404) {
+			return false;
+		}
+		ETSAssert.assertStatus(response, 200, requirement);
+		return submittedContentMatches(submitted, parseBody(response, requirement, "GET " + resource));
+	}
+
 	private void awaitCascadePostconditionsOrSkip(URI deployment, String deploymentMediaType, String deletedUid,
 			URI deleted, String survivorUid, URI survivor, AsyncDeadline deadline, String requirement) {
+		awaitCompoundOrSkip(deadline, requirement, "queued cascade graph propagation for " + deleted,
+				() -> gone(deleted, deadline, requirement), () -> {
+					Response deploymentResponse = pollingGet(deployment, deploymentMediaType, Map.of(), deadline);
+					if (deploymentResponse.getStatusCode() != 200) {
+						return false;
+					}
+					Map<String, Object> body = parseBody(deploymentResponse, requirement, "GET " + deployment);
+					return !containsString(body, deletedUid) && !containsString(body, deleted)
+							&& (containsString(body, survivorUid) || containsString(body, survivor));
+				}, () -> available(survivor, deadline, requirement));
+	}
+
+	private void awaitCompoundOrSkip(AsyncDeadline deadline, String requirement, String operation,
+			BooleanSupplier... conditions) {
+		boolean[] previousComplete = { false };
 		boolean complete = pollUntil(deadline, () -> {
-			Response deploymentResponse = pollingGet(deployment, deploymentMediaType, Map.of(), deadline);
-			if (deploymentResponse.getStatusCode() != 200) {
-				return false;
+			boolean currentComplete = true;
+			for (BooleanSupplier condition : conditions) {
+				if (!deadline.canStartRequest()) {
+					return false;
+				}
+				currentComplete = condition.getAsBoolean() && currentComplete;
 			}
-			Map<String, Object> body = parseBody(deploymentResponse, requirement, "GET " + deployment);
-			return !containsString(body, deletedUid) && !containsString(body, deleted)
-					&& (containsString(body, survivorUid) || containsString(body, survivor))
-					&& available(survivor, deadline, requirement);
-		}, requirement, "queued cascade graph propagation for " + deleted);
+			boolean stable = currentComplete && previousComplete[0];
+			previousComplete[0] = currentComplete;
+			return stable;
+		}, requirement, operation);
 		if (!complete) {
-			throw inconclusive(requirement, "queued cascade graph propagation for " + deleted);
+			throw inconclusive(requirement, operation);
 		}
 	}
 
@@ -1737,11 +1776,17 @@ public final class CreateReplaceDeleteSupport {
 
 		private final boolean cascade;
 
-		private boolean queued;
+		private final String mediaType;
 
-		private OccurrenceCleanupTarget(URI uri, boolean cascade) {
+		private final Map<String, Object> submitted;
+
+		private boolean verified;
+
+		private OccurrenceCleanupTarget(URI uri, boolean cascade, String mediaType, Map<String, Object> submitted) {
 			this.uri = uri;
 			this.cascade = cascade;
+			this.mediaType = mediaType;
+			this.submitted = submitted;
 		}
 
 	}

@@ -53,9 +53,21 @@
 > without a whole-millisecond budget, pre-registers and awaits queued custom
 > setup occurrences before replace/delete, and treats only direct target
 > collection item Locations as queued URI-list occurrences. Status Locations
-> are never dereferenced or deleted. Direct HTTP passes `31/0/0/0`, focused
-> aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`
-> precommit; a new exact candidate is pending.
+> are never dereferenced or deleted. Exact candidate
+> `8aa92d4da33aeb3b1c545378c0a68cb84a565ccb` passes direct HTTP `31/0/0/0`,
+> focused aggregate `48/0/0/0`, full Docker Maven `650/0/0/3`, and all
+> released-source, parity, exact-image/runtime, local-OSH, sabotage,
+> credential, immutability, and hygiene gates. Raze `GAPS_FOUND 0.97`
+> supersedes it: cleanup could delete a mismatched direct occurrence Location,
+> and sequential compound polling could accept transient states. The
+> replacement stores expected submitted content on each occurrence cleanup
+> target and authorizes DELETE only after bounded matching GET. One polling
+> iteration evaluates every required postcondition for a compound queued
+> mutation, and positive evidence requires two consecutive observations with
+> all conditions true together. Behavioral red was `35/2/0/0`; corrected
+> direct HTTP is `35/0/0/0`, focused aggregate is `52/0/0/0`, and full
+> clean-cache Docker Maven is `654/0/0/3` precommit. A clean replacement exact
+> candidate and fresh Raze recheck are pending.
 > Positive real-IUT mutation evidence remains blocked by unmodified local OSH
 > prerequisites.
 

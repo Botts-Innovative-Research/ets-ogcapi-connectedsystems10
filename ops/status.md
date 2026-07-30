@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T03:57Z
+Last updated: 2026-07-30T05:12Z
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 
@@ -46,11 +46,26 @@ Last updated: 2026-07-30T03:57Z
   failed at the injected-clock constructor, then behavior reproduced
   `30/4/0/0`. A first green attempt was aborted after exposing an unbounded
   sub-millisecond poll. Corrected direct HTTP passes `31/0/0/0`, focused
-  aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`
-  precommit.
-- Next: commit the replacement candidate, repeat every exact technical,
-  image/runtime, isolated/primary E2E, sabotage, credential, immutability, and
-  hygiene gate, then obtain fresh Raze review. Positive closure still requires
+  aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`.
+- Exact candidate `8aa92d4da33aeb3b1c545378c0a68cb84a565ccb` repeats those
+  Maven gates and passes released-source, schema-parity, exact image/runtime,
+  dependency sabotage, credential, immutable-base, and artifact-hygiene
+  gates. Image
+  `sha256:3865aca8a80b5a23fd94531705e0228db5e71c7b2ef65cbc596f83f9c0145d7a`
+  embeds `Build-Revision: 8aa92d4da3`.
+- Exact local OSH remains populated `244/54/35/155` and clean primary
+  `244/40/7/197`; provisioning and cleanup pass, primary state is unchanged,
+  and all 365 IUT requests are GETs. Evidence is archived under
+  `ops/test-results/sprint-ets-56-part1-create-replace-delete-final-8aa92d4-2026-07-30/`.
+- Raze returned `GAPS_FOUND 0.97` on `8aa92d4`. The replacement requires
+  bounded submitted-content proof before deleting a queued occurrence and two
+  consecutive joint observations before accepting compound postconditions.
+  Four regressions produced behavioral red `35/2/0/0`; corrected direct HTTP
+  passes `35/0/0/0`, focused aggregate passes `52/0/0/0`, and full clean-cache
+  Docker Maven passes `654/0/0/3` precommit.
+- Next: commit and verify a clean replacement exact candidate, seal its
+  umbrella evidence manifest, and obtain fresh Raze review. Positive closure
+  still requires
   a dedicated mutable IUT satisfying API Common and exact inherited
   declarations; do not weaken the suite or patch OSH.
 

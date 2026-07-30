@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T03:57Z
+Last updated: 2026-07-30T05:12Z
 
 ## Current Sprint Evidence
 
@@ -58,10 +58,23 @@ Sprint 56 Part 1 Create/Replace/Delete direct ATS:
   Location non-use. Test-first compilation failed at the clock constructor,
   behavioral red was `30/4/0/0`, and an initial green attempt was aborted for
   an unbounded no-request-budget loop. Corrected direct HTTP is `31/0/0/0`,
-  focused aggregate is `48/0/0/0`, and full Docker Maven is `650/0/0/3`
-  precommit.
-- Verdict: remediation passes precommit gates. A new committed candidate,
-  complete exact gate rerun, and fresh Raze are pending. Positive real-IUT
+  focused aggregate is `48/0/0/0`, and full Docker Maven is `650/0/0/3`.
+- Exact candidate `8aa92d4da33aeb3b1c545378c0a68cb84a565ccb` repeats those
+  Maven gates. Exact image
+  `sha256:3865aca8a80b5a23fd94531705e0228db5e71c7b2ef65cbc596f83f9c0145d7a`
+  embeds `Build-Revision: 8aa92d4da3`; released ATS, both schema parity
+  graphs, runtime immutability, local-OSH, sabotage, credential, and hygiene
+  gates pass. Exact evidence is archived under
+  `sprint-ets-56-part1-create-replace-delete-final-8aa92d4-2026-07-30`.
+- Raze `GAPS_FOUND 0.97` supersedes `8aa92d4` because occurrence cleanup could
+  delete a mismatched direct Location, compound polling could compose
+  transient states, and exact evidence lacked checkout/archive hygiene proof.
+  Four requirement-linked regressions produced behavioral red `35/2/0/0`.
+  Corrected direct HTTP passes `35/0/0/0`, focused aggregate passes
+  `52/0/0/0`, and full clean-cache Docker Maven passes `654/0/0/3` precommit.
+- Verdict: remediation passes precommit gates; clean replacement exact
+  candidate verification, umbrella manifest, and fresh Raze are pending.
+  Positive real-IUT
   mutation E2E remains open; mappings stay candidate and Sprint 56 stays IN
   PROGRESS.
 

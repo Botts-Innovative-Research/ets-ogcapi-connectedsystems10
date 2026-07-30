@@ -3187,9 +3187,16 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   incomplete queued custom replace/delete setup, and discarded queued
   URI-list occurrence Locations. Six requirement-linked regressions reproduce
   those paths. The corrected direct HTTP suite passes `31/0/0/0`, focused
-  aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`
-  precommit. A new committed candidate must
-  repeat every exact gate and receive fresh Raze review.
+  aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`.
+  Exact committed candidate
+  `8aa92d4da33aeb3b1c545378c0a68cb84a565ccb` repeats those gates and passes
+  released-source, schema-parity, image/runtime, local-OSH, dependency,
+  credential, immutable-base, and artifact-hygiene verification. Raze
+  `GAPS_FOUND 0.97` supersedes it. Identity-safe occurrence cleanup and joint
+  compound polling remediation records behavioral red `35/2/0/0`, then passes
+  direct HTTP `35/0/0/0`, focused aggregate `52/0/0/0`, and full clean-cache
+  Docker Maven `654/0/0/3` precommit. A clean replacement exact candidate,
+  sealed umbrella manifest, and fresh Raze recheck remain pending.
   The class coverage inventory is
   intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
   Unmodified local OSH reports Part 1 API Common `4 PASS / 1 SKIP`, so causal
@@ -3513,6 +3520,10 @@ resource
 a verified alias Location so a surviving canonical resource cannot be hidden
 **AND** accepted queued creation is polled by submitted identity during both
 positive verification and cleanup
+**AND** queued occurrence cleanup SHALL delete a returned or computed
+collection item only after a bounded GET proves the submitted identity and
+content; mere availability, a mismatched representation, or an unverified
+direct `Location` SHALL never authorize DELETE
 **AND** cleanup failures override an accepted-but-inconclusive SKIP and are
 reported rather than hidden by an earlier outcome.
 
@@ -3534,6 +3545,10 @@ postconditions
 **WHEN** propagation completes in stages
 **THEN** every required canonical, custom, cascade, and surviving-association
 postcondition is polled under the same operation deadline
+**AND** all postconditions for one mutation SHALL be true in the same polling
+observation before positive evidence is reported
+**AND** an early custom replacement, disappearance, or cascade state that
+reverts before the remaining postconditions become true SHALL not PASS
 **AND** a queued custom create used as replace/delete setup awaits and
 pre-registers cleanup for its collection occurrence before the later write
 **AND** no single early postcondition can cause a false PASS or false FAIL.
@@ -3551,6 +3566,8 @@ after its positive-evidence deadline
 late association
 **AND** a supplied HTTP 202 Location inside the target collection-item
 namespace is separately verified and cleaned as an occurrence
+**AND** cleanup of that returned occurrence requires submitted-content proof
+and leaves an existing mismatched direct collection item untouched
 **AND** a supplied HTTP 202 Location outside that namespace is treated only as
 an asynchronous status URI and is never dereferenced or destructively cleaned
 **AND** the canonical resource remains governed by its separate ownership

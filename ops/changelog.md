@@ -138,6 +138,36 @@ completion sequence.
 - Corrected direct HTTP passes `31/0/0/0`, focused aggregate passes
   `48/0/0/0`, and full Docker Maven passes `650/0/0/3` precommit. A new exact
   candidate, complete exact gate rerun, and fresh Raze remain pending.
+- Sealed exact remediation candidate
+  `8aa92d4da33aeb3b1c545378c0a68cb84a565ccb`. Exact focused/full Maven pass
+  `48/0/0/0` and `650/0/0/3`; exact image
+  `sha256:3865aca8a80b5a23fd94531705e0228db5e71c7b2ef65cbc596f83f9c0145d7a`
+  embeds `Build-Revision: 8aa92d4da3`.
+- Released ATS, GeoJSON and Property schema parity, TeamEngine
+  runtime/immutable-base, core sabotage, credential integration/wire, and
+  artifact-hygiene gates pass.
+- Exact local OSH remains honestly populated `244/54/35/155` and clean primary
+  `244/40/7/197`; provisioning and cleanup pass, primary state is unchanged,
+  and all 365 IUT requests are GETs. OSH remains clean and zero commits ahead
+  of reviewed upstream.
+- Archived exact evidence under
+  `ops/test-results/sprint-ets-56-part1-create-replace-delete-final-8aa92d4-2026-07-30/`.
+  Positive mutation E2E remains externally blocked.
+- Raze review of `8aa92d4` returned `GAPS_FOUND 0.97`: queued occurrence
+  cleanup could delete a mismatched direct Location, sequential compound
+  polling could compose transient states, and the exact evidence archive
+  lacked final checkout/umbrella-manifest hygiene.
+- Added four requirement-linked regressions for mismatched occurrence
+  Locations and transient replacement, occurrence-deletion, and cascade
+  states. Behavioral red was `35/2/0/0`.
+- Queued occurrence cleanup now requires bounded submitted-content proof
+  before DELETE. Compound mutation polling now evaluates every postcondition
+  jointly and requires two consecutive complete observations. Synchronous POST
+  Location proof is retained when that Location is the custom occurrence.
+- Corrected direct HTTP passes `35/0/0/0`, focused aggregate passes
+  `52/0/0/0`, and mandatory full clean-cache Docker Maven passes
+  `654/0/0/3` precommit. A clean replacement exact candidate, umbrella
+  manifest, and fresh Raze recheck remain pending.
 
 ## 2026-07-29 - Part 1 Advanced Filtering final-Raze remediation
 

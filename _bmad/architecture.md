@@ -1653,3 +1653,10 @@ SOSA types, and repeated `Allow` fields are combined. Synchronous and queued
 custom propagation require two consecutive joint observations. Cleanup
 revalidates current identity immediately before DELETE and proves disappearance
 after every accepted DELETE status; status alone cannot complete cleanup.
+
+Raze `GAPS_FOUND 0.98` supersedes candidate `cbfa070`. Ambiguous POST cleanup
+polls both canonical and applicable custom collection identity views because
+visibility may be delayed or route-local. Failure on one cleanup route does not
+suppress another independently safe route; failures are aggregated after all
+attempts. Canonical and custom occurrence mutation evidence compares untouched
+fields with endpoint-specific pre-update baselines.

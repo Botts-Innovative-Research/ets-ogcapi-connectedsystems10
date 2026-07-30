@@ -31,10 +31,13 @@ success_criteria:
   - HTTP 200, 202, and 204 require completed representation evidence.
   - Changed-field, preserved-sentinel, stable-identity, and ignored-id behavior are proven.
   - Custom occurrence and canonical propagation remain jointly true for two consecutive complete observations.
+  - Canonical and custom occurrence evidence uses each endpoint's own pre-update sentinel baseline.
   - Queued work is bounded by one monotonic deadline.
   - Fixture acquisition denial or unusable response is an inconclusive SKIP before PATCH.
-  - Every dispatched POST is rediscovered by identity after ambiguous failure.
+  - Every dispatched POST is rediscovered by bounded canonical and custom identity polling after ambiguous failure.
+  - Delayed and custom-only committed resources are cleaned.
   - Owned resources are identity-revalidated and disappearance-proven in reverse-order cleanup.
+  - Failure on one cleanup route does not suppress remaining safe cleanup routes.
   - Only exact compact or canonical SOSA collection types authorize custom writes.
   - Repeated Allow fields are combined before PATCH readiness is decided.
   - Controlled HTTP covers every positive procedure and key fail-closed branch.
@@ -51,16 +54,16 @@ guardrails:
   - Do not import executable conformance-suite jars as libraries.
   - Do not guess application/json as a patch-document media type.
 verification:
-  released_source: PENDING
-  test_first: PENDING
-  focused_maven: PENDING
-  full_maven: PENDING
-  coverage_audit: PENDING
-  controlled_http: PENDING
+  released_source: PASS_8E03B236A049849F2CCC24B4FD9FDCE5FF69BED2
+  test_first: PASS_RED_22_4_0_0_GREEN_22_0_0_0
+  focused_maven: PASS_28_0_0_0
+  full_maven: PASS_679_0_0_3
+  coverage_audit: PASS_240_76_2_130_32
+  controlled_http: PASS_22_0_0_0
   exact_image: PENDING
   dependency_sabotage: PENDING
   local_osh_teamengine: PENDING
   credential_gates: PENDING
   immutable_base: PENDING
   artifact_hygiene: PENDING
-  raze: GAPS_FOUND_0_99_B9143A4_SUPERSEDED
+  raze: GAPS_FOUND_0_98_CBFA070_SUPERSEDED

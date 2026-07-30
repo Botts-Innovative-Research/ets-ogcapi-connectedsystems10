@@ -72,7 +72,8 @@ custom collection endpoint, the canonical and collection-item
 representations SHALL expose the same completed update in one observation.
 Completed evidence for synchronous and queued PATCH SHALL remain jointly true
 for two consecutive complete observations; transient or reverting states SHALL
-not PASS.
+not PASS. Canonical and custom occurrence evidence SHALL compare each
+endpoint's untouched sentinel with that endpoint's own pre-update baseline.
 
 HTTP 202 SHALL start one monotonic deadline shared by every required
 postcondition. Deadline checks SHALL precede requests, each connect/read
@@ -85,13 +86,17 @@ that procedure. Fixture POST inability is not Update nonconformance: denial or
 an unusable response SHALL produce an inconclusive SKIP before PATCH. Because
 a failing, disconnected, or timed-out POST may still commit, identity
 rediscovery SHALL run after every dispatched POST, including ambiguous
-responses. Cleanup SHALL be registered by submitted identity before creation,
-run in reverse ownership order after PASS, FAIL, or inconclusive SKIP,
-immediately revalidate current identity before DELETE, and delete only an
-identity-verified same-origin resource. Every successful DELETE status SHALL be
-followed by bounded disappearance proof. Missing, cross-origin, or mismatched
-Location metadata SHALL not authorize destructive follow-up. Cleanup failure
-SHALL remain visible and SHALL override an accepted-but-inconclusive SKIP.
+responses. That rediscovery SHALL poll both canonical and applicable custom
+collection identity views through a bounded deadline so delayed and route-local
+commits are cleaned. Cleanup SHALL be registered by submitted identity before
+creation, run in reverse ownership order after PASS, FAIL, or inconclusive
+SKIP, immediately revalidate current identity before DELETE, and delete only an
+identity-verified same-origin resource. Every independently safe cleanup route
+SHALL be attempted even when another route fails, and failures SHALL be
+aggregated after all attempts. Every successful DELETE status SHALL be followed
+by bounded disappearance proof. Missing, cross-origin, or mismatched Location
+metadata SHALL not authorize destructive follow-up. Cleanup failure SHALL
+remain visible and SHALL override an accepted-but-inconclusive SKIP.
 
 ## Architecture
 
@@ -123,3 +128,7 @@ TeamEngine E2E records honest outcomes and zero unauthorized writes, and fresh
 Raze review has no unresolved required finding. A local OSH prerequisite SKIP
 is valid E2E evidence but does not provide positive PATCH evidence or upgrade
 the five mappings to reviewed exact.
+
+Candidate `cbfa070` is superseded by Raze `GAPS_FOUND 0.98`; delayed/custom-only
+ambiguous commit cleanup, independent cleanup-route attempts, and
+endpoint-specific sentinel baselines remain normative for the next candidate.

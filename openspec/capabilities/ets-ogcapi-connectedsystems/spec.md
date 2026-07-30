@@ -3366,7 +3366,9 @@ corresponding procedure patches its owned collection item
 **THEN** both the custom item and canonical resource expose the completed
 partial update in the same observation
 **AND** the completed state remains jointly true for two consecutive complete
-observations.
+observations
+**AND** each endpoint preserves the untouched sentinel from its own pre-update
+representation.
 *Maps to*: REQ-ETS-PART1-011.
 
 #### SCENARIO-ETS-PART1-011-APPLICABILITY-EXACT-001 (CRITICAL)
@@ -3393,6 +3395,9 @@ timeout, and sleep
 resources
 **AND** identity is revalidated immediately before DELETE
 **AND** every accepted DELETE status is followed by bounded disappearance proof
+**AND** failure on one safe cleanup route does not suppress attempts on the
+remaining safe routes
+**AND** all cleanup-route failures are reported after those attempts
 **AND** cleanup failure remains visible and overrides inconclusive SKIP.
 *Maps to*: REQ-ETS-PART1-011.
 
@@ -3401,8 +3406,10 @@ resources
 **WHEN** its owned fixture POST is denied or returns an unusable or ambiguous
 response
 **THEN** the Update procedure becomes inconclusive and SKIPs before PATCH
-**AND** every dispatched POST is followed by bounded identity rediscovery so a
-committed resource is cleaned despite the response failure.
+**AND** every dispatched POST is followed by bounded polling of both canonical
+and applicable custom collection identity views
+**AND** delayed, canonical-only, custom-only, or jointly visible committed
+resources are cleaned despite the response failure.
 *Maps to*: REQ-ETS-PART1-011.
 
 #### SCENARIO-ETS-PART1-011-DIRECT-HTTP-COVERAGE-001 (CRITICAL)

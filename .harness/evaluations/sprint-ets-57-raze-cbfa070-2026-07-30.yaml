@@ -1,0 +1,36 @@
+sprint: ets-57
+candidate: cbfa070
+reviewer: Raze
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.98
+duration_seconds: 685
+estimated_main_review_tokens: 95000
+independent_subreview:
+  input_tokens: 1364326
+  cached_input_tokens: 1201792
+  output_tokens: 11044
+findings:
+  - id: delayed-or-custom-only-ambiguous-post
+    severity: HIGH
+    status: OPEN
+    summary: Ambiguous POST cleanup scanned the canonical collection only once and could miss delayed visibility or custom-only commits.
+    required: Poll both canonical and applicable custom collection identity views within a bounded deadline before concluding no owned fixture committed.
+  - id: cleanup-route-suppression
+    severity: HIGH
+    status: OPEN
+    summary: Failure cleaning a custom occurrence prevented the canonical cleanup attempt for the same owned fixture.
+    required: Attempt every independently safe cleanup route and aggregate failures after all attempts.
+  - id: occurrence-sentinel-baseline
+    severity: MEDIUM
+    status: OPEN
+    summary: Custom occurrence postconditions compared its sentinel to the canonical baseline instead of its own pre-update baseline.
+    required: Preserve and apply endpoint-specific baselines for canonical and custom occurrence evidence.
+external_blocker:
+  status: OPEN
+  summary: Positive real-IUT mutation E2E remains unavailable because unmodified local OSH does not satisfy the exact released prerequisites.
+notes:
+  - Six prior lifecycle findings were closed.
+  - Candidate mappings correctly remain candidate-only.
+  - No OSH or TeamEngine modification, hosted CI, executable suite import, or credential disclosure was found.
+  - Candidate cbfa070 is superseded pending test-first remediation.

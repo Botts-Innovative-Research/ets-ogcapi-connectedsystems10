@@ -53,12 +53,16 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
   intended field changed, an untouched sentinel and external identity were
   preserved, and a conflicting submitted `id` was ignored.
 - [ ] Custom endpoint PASS requires canonical and occurrence propagation in
-  two consecutive complete observations.
+  two consecutive complete observations using each endpoint's own pre-update
+  sentinel baseline.
 - [ ] Queued updates use one bounded monotonic deadline for every required
   postcondition, request timeout, and sleep.
 - [ ] Owned schema-valid fixtures are cleaned in reverse order after every
-  outcome; ambiguous POST is rediscovered, and destructive cleanup requires
-  current same-origin identity plus disappearance proof.
+  outcome; ambiguous POST polls canonical and custom identity views, and
+  destructive cleanup requires current same-origin identity plus disappearance
+  proof.
+- [ ] Delayed and custom-only ambiguous commits are cleaned, one route failure
+  does not suppress remaining safe cleanup, and route failures are aggregated.
 - [ ] Fixture acquisition denial or unusable response SKIPs before PATCH rather
   than failing Update conformance.
 - [ ] Custom applicability accepts only exact compact/canonical SOSA types,
@@ -92,3 +96,15 @@ Candidate `b9143a4` passed focused `93/0/0/0` and full clean Maven
 covers fixture verdicts, ambiguous POST cleanup, synchronous DELETE
 postconditions, immediate ownership revalidation, exact collection types,
 stable synchronous custom propagation, and repeated `Allow` fields.
+
+Candidate `cbfa070` passed the remediated focused HTTP suite `18/0/0/0`, the
+complete Update suite `24/0/0/0`, and clean Maven `675/0/0/3`. Exact-image,
+dependency-sabotage, and both credential gates also passed. Raze
+`GAPS_FOUND 0.98` supersedes it because delayed/custom-only ambiguous commits,
+independent cleanup-route attempts, and endpoint-specific sentinel baselines
+still require test-first closure.
+
+The second remediation reproduced all four added cases at `22/4/0/0`, then
+passed controlled HTTP `22/0/0/0`, the complete Update surface `28/0/0/0`, and
+clean Docker Maven `679/0/0/3`. Released-source inventory, coverage audit,
+audit self-tests, formatting, and TeamEngine jar guard pass precommit.

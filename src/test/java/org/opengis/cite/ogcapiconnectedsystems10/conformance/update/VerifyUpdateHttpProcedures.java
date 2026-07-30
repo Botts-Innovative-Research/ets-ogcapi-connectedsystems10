@@ -292,6 +292,60 @@ public class VerifyUpdateHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void delayedAmbiguousFixtureCommitIsDiscoveredAndCleaned() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.delayedAmbiguousCreate = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			TimeUnit.MILLISECONDS.sleep(100);
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void customOnlyAmbiguousFixtureCommitIsDiscoveredAndCleaned() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.ambiguousCustomOnlyCreate = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-CLEANUP-001.
+	 */
+	@Test
+	public void occurrenceCleanupFailureDoesNotSuppressCanonicalCleanup() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.ignoreOccurrenceDelete = true;
+
+			assertThrows(AssertionError.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-CUSTOM-COLLECTIONS-001.
+	 */
+	@Test
+	public void occurrenceUsesItsOwnSentinelBaseline() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.distinctOccurrenceSentinel = true;
+
+			fixture.support().systemsUpdate();
+
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
 	private static final class Fixture implements AutoCloseable {
 
 		private static final ObjectMapper JSON = new ObjectMapper();
@@ -355,6 +409,14 @@ public class VerifyUpdateHttpProcedures {
 
 		private volatile boolean repeatedAllow;
 
+		private volatile boolean delayedAmbiguousCreate;
+
+		private volatile boolean ambiguousCustomOnlyCreate;
+
+		private volatile boolean ignoreOccurrenceDelete;
+
+		private volatile boolean distinctOccurrenceSentinel;
+
 		private volatile boolean cleanupIdentityChanged;
 
 		private volatile String changedIdentityCanonical;
@@ -414,6 +476,9 @@ public class VerifyUpdateHttpProcedures {
 				}
 				else if ("GET".equals(method) && isCanonicalCollection(path)) {
 					canonicalCollection(exchange, path);
+				}
+				else if ("GET".equals(method) && isCustomCollection(path)) {
+					customCollection(exchange, path);
 				}
 				else if ("GET".equals(method) && canonicalPath(path) != null) {
 					resource(exchange, path);
@@ -518,6 +583,21 @@ public class VerifyUpdateHttpProcedures {
 			String canonical = "/api/" + kind + "/" + id;
 			Map<String, Object> body = objectBody(exchange);
 			body.put("id", id);
+			if (this.ambiguousCustomOnlyCreate && path.startsWith("/api/collections/")) {
+				String occurrence = path + "/" + id;
+				this.resources.put(occurrence, body);
+				this.originalResources.put(occurrence, copy(body));
+				send(exchange, 500, "application/json", Map.of("error", "custom response unavailable"));
+				return;
+			}
+			if (this.delayedAmbiguousCreate && !path.startsWith("/api/collections/")) {
+				this.scheduler.schedule(() -> {
+					this.resources.put(canonical, body);
+					this.originalResources.put(canonical, copy(body));
+				}, 25, TimeUnit.MILLISECONDS);
+				send(exchange, 500, "application/json", Map.of("error", "delayed response unavailable"));
+				return;
+			}
 			this.resources.put(canonical, body);
 			this.originalResources.put(canonical, copy(body));
 			String location = canonical;
@@ -534,6 +614,15 @@ public class VerifyUpdateHttpProcedures {
 		}
 
 		private void canonicalCollection(HttpExchange exchange, String path) throws IOException {
+			List<Map<String, Object>> items = this.resources.entrySet()
+				.stream()
+				.filter(entry -> entry.getKey().startsWith(path + "/"))
+				.map(entry -> copy(entry.getValue()))
+				.toList();
+			send(exchange, 200, "application/json", Map.of("items", items));
+		}
+
+		private void customCollection(HttpExchange exchange, String path) throws IOException {
 			List<Map<String, Object>> items = this.resources.entrySet()
 				.stream()
 				.filter(entry -> entry.getKey().startsWith(path + "/"))
@@ -562,6 +651,16 @@ public class VerifyUpdateHttpProcedures {
 				this.changedIdentityCanonical = canonical;
 			}
 			Map<String, Object> response = copy(body);
+			if (this.distinctOccurrenceSentinel && path.startsWith("/api/collections/")) {
+				if (response.containsKey("properties")) {
+					@SuppressWarnings("unchecked")
+					Map<String, Object> properties = (Map<String, Object>) response.get("properties");
+					properties.put("name", "Custom occurrence sentinel");
+				}
+				else {
+					response.put("label", "Custom occurrence sentinel");
+				}
+			}
 			send(exchange, 200, mediaType(response), response);
 			if (this.revertAfterCustomRead && path.startsWith("/api/collections/") && this.jsonPatchCalls.get() > 0) {
 				this.resources.put(canonical, copy(this.originalResources.get(canonical)));
@@ -659,6 +758,10 @@ public class VerifyUpdateHttpProcedures {
 				send(exchange, 204, null, null);
 				return;
 			}
+			if (this.ignoreOccurrenceDelete && path.startsWith("/api/collections/")) {
+				send(exchange, 204, null, null);
+				return;
+			}
 			if (this.aliases.containsKey(path)) {
 				this.aliases.remove(path);
 			}
@@ -683,10 +786,17 @@ public class VerifyUpdateHttpProcedures {
 			return KINDS.stream().anyMatch(kind -> ("/api/" + kind).equals(path));
 		}
 
+		private boolean isCustomCollection(String path) {
+			return KINDS.stream().anyMatch(kind -> ("/api/collections/custom-" + kind + "/items").equals(path));
+		}
+
 		private String canonicalPath(String path) {
 			String alias = this.aliases.get(path);
 			if (alias != null) {
 				return alias;
+			}
+			if (this.resources.containsKey(path)) {
+				return path;
 			}
 			for (String kind : KINDS) {
 				if (path.matches("/api/" + kind + "/[^/]+")) {

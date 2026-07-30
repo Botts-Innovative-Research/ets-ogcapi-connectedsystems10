@@ -246,17 +246,24 @@ public final class UpdateSupport {
 		ResourceUris uris = createdUris(kind, createEndpoint, custom, create, target, requirement);
 		target.canonical = uris.canonical();
 		target.occurrence = uris.occurrence();
-		Observation baseline = observe(kind, uris.canonical(), mediaType, requirement, null);
-		assertIdentity(baseline.body(), identity, uris.canonical(), requirement);
-		if (uris.occurrence() != null) {
-			Observation occurrence = observe(kind, uris.occurrence(), mediaType, requirement, null);
-			assertIdentity(occurrence.body(), identity, uris.occurrence(), requirement);
-		}
+		ResourceBaselines baselines = observeBaselines(kind, uris, mediaType, identity, requirement);
 
 		for (String patchMediaType : patchMediaTypes(uris.updateTarget(), definition, requirement)) {
-			exercisePatch(kind, uris, mediaType, patchMediaType, baseline, identity, requirement);
-			baseline = observe(kind, uris.canonical(), mediaType, requirement, null);
+			exercisePatch(kind, uris, mediaType, patchMediaType, baselines, identity, requirement);
+			baselines = observeBaselines(kind, uris, mediaType, identity, requirement);
 		}
+	}
+
+	private ResourceBaselines observeBaselines(ResourceKind kind, ResourceUris uris, String mediaType, String identity,
+			String requirement) {
+		Observation canonical = observe(kind, uris.canonical(), mediaType, requirement, null);
+		assertIdentity(canonical.body(), identity, uris.canonical(), requirement);
+		Observation occurrence = null;
+		if (uris.occurrence() != null) {
+			occurrence = observe(kind, uris.occurrence(), mediaType, requirement, null);
+			assertIdentity(occurrence.body(), identity, uris.occurrence(), requirement);
+		}
+		return new ResourceBaselines(canonical, occurrence);
 	}
 
 	private ResourceUris createdUris(ResourceKind kind, URI createEndpoint, CustomEndpoint custom, Response create,
@@ -297,7 +304,7 @@ public final class UpdateSupport {
 	}
 
 	private void exercisePatch(ResourceKind kind, ResourceUris uris, String representationMediaType,
-			String patchMediaType, Observation baseline, String identity, String requirement) {
+			String patchMediaType, ResourceBaselines baselines, String identity, String requirement) {
 		String changed = "ETS Update " + patchMediaType + " " + UUID.randomUUID();
 		String conflictId = "ets-conflicting-id-" + UUID.randomUUID();
 		Object patch = patchDocument(kind, representationMediaType, patchMediaType, changed, conflictId);
@@ -313,7 +320,7 @@ public final class UpdateSupport {
 			Deadline deadline = new Deadline();
 			int[] consecutiveObservations = { 0 };
 			boolean observed = pollUntil(deadline, () -> {
-				if (updateObserved(kind, uris, representationMediaType, baseline, identity, changed, conflictId,
+				if (updateObserved(kind, uris, representationMediaType, baselines, identity, changed, conflictId,
 						requirement, deadline)) {
 					consecutiveObservations[0]++;
 				}
@@ -328,16 +335,16 @@ public final class UpdateSupport {
 			}
 			return;
 		}
-		assertCompleteObservation(kind, uris, representationMediaType, baseline, identity, changed, conflictId,
+		assertCompleteObservation(kind, uris, representationMediaType, baselines, identity, changed, conflictId,
 				requirement, null);
-		assertCompleteObservation(kind, uris, representationMediaType, baseline, identity, changed, conflictId,
+		assertCompleteObservation(kind, uris, representationMediaType, baselines, identity, changed, conflictId,
 				requirement, null);
 	}
 
-	private boolean updateObserved(ResourceKind kind, ResourceUris uris, String mediaType, Observation baseline,
+	private boolean updateObserved(ResourceKind kind, ResourceUris uris, String mediaType, ResourceBaselines baselines,
 			String identity, String changed, String conflictId, String requirement, Deadline deadline) {
 		try {
-			assertCompleteObservation(kind, uris, mediaType, baseline, identity, changed, conflictId, requirement,
+			assertCompleteObservation(kind, uris, mediaType, baselines, identity, changed, conflictId, requirement,
 					deadline);
 			return !deadline.expired();
 		}
@@ -346,13 +353,14 @@ public final class UpdateSupport {
 		}
 	}
 
-	private void assertCompleteObservation(ResourceKind kind, ResourceUris uris, String mediaType, Observation baseline,
-			String identity, String changed, String conflictId, String requirement, Deadline deadline) {
-		assertUpdated(kind, uris.canonical(), mediaType, baseline, identity, changed, conflictId, requirement,
-				deadline);
+	private void assertCompleteObservation(ResourceKind kind, ResourceUris uris, String mediaType,
+			ResourceBaselines baselines, String identity, String changed, String conflictId, String requirement,
+			Deadline deadline) {
+		assertUpdated(kind, uris.canonical(), mediaType, baselines.canonical(), identity, changed, conflictId,
+				requirement, deadline);
 		if (uris.occurrence() != null) {
-			assertUpdated(kind, uris.occurrence(), mediaType, baseline, identity, changed, conflictId, requirement,
-					deadline);
+			assertUpdated(kind, uris.occurrence(), mediaType, baselines.occurrence(), identity, changed, conflictId,
+					requirement, deadline);
 		}
 	}
 
@@ -606,12 +614,24 @@ public final class UpdateSupport {
 
 	private Optional<URI> discoverOwned(ResourceKind kind, String identity, String mediaType, String requirement,
 			Deadline deadline) {
-		URI current = this.apiRoot.resolve(kind.path());
+		URI endpoint = this.apiRoot.resolve(kind.path());
+		return discoverOwnedAt(endpoint, endpoint, kind.name(), identity, mediaType, requirement, deadline);
+	}
+
+	private Optional<URI> discoverOwnedOccurrence(ResourceKind kind, URI items, String identity, String mediaType,
+			String requirement, Deadline deadline) {
+		return discoverOwnedAt(items, items, kind.name() + " custom occurrence", identity, mediaType, requirement,
+				deadline);
+	}
+
+	private Optional<URI> discoverOwnedAt(URI collection, URI resourceBase, String label, String identity,
+			String mediaType, String requirement, Deadline deadline) {
+		URI current = collection;
 		Set<URI> visited = new HashSet<>();
 		for (int page = 0; current != null; page++) {
 			if (page >= MAX_DISCOVERY_PAGES || !sameOrigin(this.apiRoot, current) || !visited.add(current)) {
 				ETSAssert.failWithUri(requirement,
-						kind.path() + " ownership discovery exceeded bounds or encountered unsafe pagination.");
+						label + " ownership discovery exceeded bounds or encountered unsafe pagination.");
 			}
 			Response response = deadline == null ? get(current, mediaType) : pollingGet(current, mediaType, deadline);
 			if (response.getStatusCode() == 404) {
@@ -631,9 +651,9 @@ public final class UpdateSupport {
 						String id = string(item.get("id"));
 						if (id == null) {
 							ETSAssert.failWithUri(requirement,
-									"owned " + kind.name() + " listing entry is missing its local id.");
+									"owned " + label + " listing entry is missing its local id.");
 						}
-						return Optional.of(this.apiRoot.resolve(kind.path() + "/" + encoded(id)));
+						return Optional.of(child(resourceBase, encoded(id)));
 					}
 				}
 			}
@@ -658,27 +678,59 @@ public final class UpdateSupport {
 		if (!target.postDispatched) {
 			return;
 		}
-		URI canonical = target.canonical;
-		if (canonical == null) {
+		URI[] canonical = { target.canonical };
+		URI[] occurrence = { target.occurrence };
+		if (canonical[0] == null || target.customItems != null && occurrence[0] == null) {
 			Deadline discoveryDeadline = new Deadline();
-			canonical = discoverOwned(target.kind, target.identity, target.mediaType, requirement, discoveryDeadline)
-				.orElse(null);
+			pollUntil(discoveryDeadline, () -> {
+				if (canonical[0] == null) {
+					canonical[0] = discoverOwned(target.kind, target.identity, target.mediaType, requirement,
+							discoveryDeadline)
+						.orElse(null);
+				}
+				if (target.customItems != null && occurrence[0] == null) {
+					occurrence[0] = discoverOwnedOccurrence(target.kind, target.customItems, target.identity,
+							target.mediaType, requirement, discoveryDeadline)
+						.orElse(null);
+				}
+				return canonical[0] != null && (target.customItems == null || occurrence[0] != null);
+			}, requirement, "owned fixture cleanup discovery");
 		}
-		if (canonical == null) {
+		if (canonical[0] == null && occurrence[0] == null) {
 			if (!target.accepted) {
 				return;
 			}
 			ETSAssert.failWithUri(requirement, "accepted " + target.kind.name() + " identity " + target.identity
 					+ " could not be rediscovered for cleanup.");
 		}
-		URI occurrence = target.occurrence;
-		if (occurrence == null && target.customItems != null) {
-			occurrence = child(target.customItems, encoded(lastPathSegment(canonical, requirement)));
+		if (canonical[0] == null) {
+			canonical[0] = this.apiRoot
+				.resolve(target.kind.path() + "/" + encoded(lastPathSegment(occurrence[0], requirement)));
 		}
-		if (occurrence != null && !occurrence.equals(canonical)) {
-			cleanupDelete(occurrence, false, target.identity, target.mediaType, requirement);
+		if (occurrence[0] == null && target.customItems != null) {
+			occurrence[0] = child(target.customItems, encoded(lastPathSegment(canonical[0], requirement)));
 		}
-		cleanupDelete(canonical, target.kind == SYSTEM, target.identity, target.mediaType, requirement);
+		List<Throwable> failures = new ArrayList<>();
+		if (occurrence[0] != null && !occurrence[0].equals(canonical[0])) {
+			tryCleanupDelete(occurrence[0], false, target, requirement, failures);
+		}
+		tryCleanupDelete(canonical[0], target.kind == SYSTEM, target, requirement, failures);
+		if (!failures.isEmpty()) {
+			AssertionError aggregate = new AssertionError(
+					requirement + " - one or more owned-resource cleanup routes failed.");
+			failures.forEach(aggregate::addSuppressed);
+			throw aggregate;
+		}
+	}
+
+	private void tryCleanupDelete(URI resource, boolean cascade, CleanupTarget target, String requirement,
+			List<Throwable> failures) {
+		try {
+			cleanupDelete(resource, cascade, target.identity, target.mediaType, requirement);
+		}
+		catch (Throwable thrown) {
+			failures.add(thrown);
+		}
 	}
 
 	private void cleanupDelete(URI resource, boolean cascade, String identity, String mediaType, String requirement) {
@@ -1066,6 +1118,9 @@ public final class UpdateSupport {
 	}
 
 	private record ResourceUris(URI canonical, URI occurrence, URI updateTarget) {
+	}
+
+	private record ResourceBaselines(Observation canonical, Observation occurrence) {
 	}
 
 	private record Observation(Map<String, Object> body, Object sentinel) {

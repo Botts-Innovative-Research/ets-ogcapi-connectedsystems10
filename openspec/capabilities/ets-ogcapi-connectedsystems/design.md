@@ -29,6 +29,12 @@
 > Synchronous and queued custom propagation require two consecutive joint
 > observations. Cleanup revalidates identity immediately before DELETE and
 > proves disappearance after every accepted DELETE status.
+> Raze `GAPS_FOUND 0.98` supersedes candidate `cbfa070`. Ambiguous POST
+> cleanup polls canonical and applicable custom identity views through one
+> deadline, including delayed and route-local commits. Canonical and occurrence
+> cleanup routes are attempted independently, with failures aggregated after
+> every safe attempt. Canonical and occurrence postconditions retain separate
+> pre-update sentinel baselines.
 
 > Sprint 41 supersession note (2026-07-21): the TeamEngine 5.5/5.6.x
 > deployment guidance in the Sprint 1 and Sprint 2 sections below is historical

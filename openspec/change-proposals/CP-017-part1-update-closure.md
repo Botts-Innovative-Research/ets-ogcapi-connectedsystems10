@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-011`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; Sprint 57 implementation in progress
+**Status**: Accepted; candidate `b9143a4` superseded by Raze remediation
 
 ## Motivation
 
@@ -48,8 +48,10 @@ dependency on the Create/Replace/Delete group.
 Each procedure SHALL execute the inherited Update contract at the canonical
 resource endpoint and every advertised applicable non-root collection item
 endpoint. Collection discovery SHALL use bounded, cycle-safe, same-origin
-pagination and actual JSON media gating. OPTIONS SHALL return HTTP 200 and
-advertise PATCH in `Allow`.
+pagination and actual JSON media gating. Applicability SHALL accept only the
+exact compact or canonical SOSA resource type, never an unrelated namespace
+that happens to share a local-name suffix. OPTIONS SHALL return HTTP 200 and
+advertise PATCH across all received `Allow` header fields.
 Because the inherited Features Part 4 draft does not mandate one patch
 encoding, the ETS SHALL negotiate a patch document it implements. It SHALL
 support JSON Merge Patch and JSON Patch for the JSON representations used by
@@ -67,8 +69,10 @@ or 204. Positive evidence requires a canonical GET showing the intended field
 changed, an unpatched sentinel and stable external identity preserved, and the
 submitted different `id` ignored. A status code alone SHALL not PASS. For a
 custom collection endpoint, the canonical and collection-item
-representations SHALL expose the same completed update in one polling
-observation.
+representations SHALL expose the same completed update in one observation.
+Completed evidence for synchronous and queued PATCH SHALL remain jointly true
+for two consecutive complete observations; transient or reverting states SHALL
+not PASS.
 
 HTTP 202 SHALL start one monotonic deadline shared by every required
 postcondition. Deadline checks SHALL precede requests, each connect/read
@@ -77,12 +81,17 @@ late success SHALL not count, and interruption SHALL fail visibly while
 preserving interrupt state.
 
 Every procedure SHALL acquire only schema-valid temporary resources owned by
-that procedure. Cleanup SHALL be registered by submitted identity before
-creation, run in reverse ownership order after PASS, FAIL, or inconclusive
-SKIP, and delete only an identity-verified same-origin resource. Missing,
-cross-origin, or mismatched Location metadata SHALL not authorize destructive
-follow-up. Cleanup failure SHALL remain visible and SHALL override an
-accepted-but-inconclusive SKIP.
+that procedure. Fixture POST inability is not Update nonconformance: denial or
+an unusable response SHALL produce an inconclusive SKIP before PATCH. Because
+a failing, disconnected, or timed-out POST may still commit, identity
+rediscovery SHALL run after every dispatched POST, including ambiguous
+responses. Cleanup SHALL be registered by submitted identity before creation,
+run in reverse ownership order after PASS, FAIL, or inconclusive SKIP,
+immediately revalidate current identity before DELETE, and delete only an
+identity-verified same-origin resource. Every successful DELETE status SHALL be
+followed by bounded disappearance proof. Missing, cross-origin, or mismatched
+Location metadata SHALL not authorize destructive follow-up. Cleanup failure
+SHALL remain visible and SHALL override an accepted-but-inconclusive SKIP.
 
 ## Architecture
 

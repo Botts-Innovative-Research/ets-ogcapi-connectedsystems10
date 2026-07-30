@@ -1643,3 +1643,13 @@ before deletion. Cleanup failure remains visible and overrides inconclusive
 SKIP. OSH and TeamEngine remain unchanged under ADR-012, and no executable
 Features, SWE Common, or SensorML suite jar is imported. Mappings remain
 candidate until positive real-IUT PATCH E2E executes.
+
+Raze `GAPS_FOUND 0.99` supersedes candidate `b9143a4`. Fixture POST denial or
+an unusable response is an inconclusive Update SKIP, not an Update failure.
+Every dispatched POST nevertheless triggers bounded identity rediscovery
+because an error response or disconnected client may hide a committed
+resource. Collection applicability accepts only exact compact or canonical
+SOSA types, and repeated `Allow` fields are combined. Synchronous and queued
+custom propagation require two consecutive joint observations. Cleanup
+revalidates current identity immediately before DELETE and proves disappearance
+after every accepted DELETE status; status alone cannot complete cleanup.

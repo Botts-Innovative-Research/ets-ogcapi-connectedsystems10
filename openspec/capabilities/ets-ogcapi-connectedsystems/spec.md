@@ -3293,6 +3293,16 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   destructive follow-up. Mappings remain candidate until positive real-IUT
   PATCH E2E executes; an honest local OSH prerequisite SKIP is mandatory
   runtime evidence but cannot promote the mappings.
+- **Sprint 57 Raze remediation**: Candidate `b9143a4` is superseded by Raze
+  `GAPS_FOUND 0.99`. Fixture POST denial or unusable response is inconclusive
+  Update evidence and SHALL SKIP before PATCH, while every dispatched POST
+  remains an ambiguous ownership event requiring bounded identity
+  rediscovery. Cleanup SHALL revalidate current identity immediately before
+  DELETE and prove disappearance after every accepted synchronous or queued
+  DELETE status. Custom collection applicability accepts only exact compact or
+  canonical SOSA types. All repeated `Allow` fields are evaluated. Synchronous
+  and queued custom propagation SHALL remain jointly complete for two
+  consecutive observations.
 - **Maps to**: PRD FR-ETS-21.
 
 ### Acceptance Scenarios for Sprint 57
@@ -3354,7 +3364,18 @@ advertised by `Accept-Patch` or exact OpenAPI PATCH request-body metadata
 **WHEN** bounded cycle-safe same-origin pagination discovers it and the
 corresponding procedure patches its owned collection item
 **THEN** both the custom item and canonical resource expose the completed
-partial update in the same polling observation.
+partial update in the same observation
+**AND** the completed state remains jointly true for two consecutive complete
+observations.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-APPLICABILITY-EXACT-001 (CRITICAL)
+**GIVEN** a non-root collection advertises an item or feature type
+**WHEN** the Update procedure evaluates collection applicability
+**THEN** only the exact compact or canonical SOSA type for that procedure is
+accepted
+**AND** an unrelated namespace sharing the same local-name suffix receives no
+write.
 *Maps to*: REQ-ETS-PART1-011.
 
 #### SCENARIO-ETS-PART1-011-ASYNC-DEADLINE-001 (CRITICAL)
@@ -3370,7 +3391,18 @@ timeout, and sleep
 **WHEN** it passes, fails, or becomes inconclusive
 **THEN** reverse-order cleanup removes only same-origin identity-verified owned
 resources
+**AND** identity is revalidated immediately before DELETE
+**AND** every accepted DELETE status is followed by bounded disappearance proof
 **AND** cleanup failure remains visible and overrides inconclusive SKIP.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001 (CRITICAL)
+**GIVEN** a procedure has passed declaration, condition, and mutation gates
+**WHEN** its owned fixture POST is denied or returns an unusable or ambiguous
+response
+**THEN** the Update procedure becomes inconclusive and SKIPs before PATCH
+**AND** every dispatched POST is followed by bounded identity rediscovery so a
+committed resource is cleaned despite the response failure.
 *Maps to*: REQ-ETS-PART1-011.
 
 #### SCENARIO-ETS-PART1-011-DIRECT-HTTP-COVERAGE-001 (CRITICAL)

@@ -23,8 +23,10 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
   - `SCENARIO-ETS-PART1-011-PATCH-NEGOTIATION-001`
   - `SCENARIO-ETS-PART1-011-PARTIAL-UPDATE-001`
   - `SCENARIO-ETS-PART1-011-CUSTOM-COLLECTIONS-001`
+  - `SCENARIO-ETS-PART1-011-APPLICABILITY-EXACT-001`
   - `SCENARIO-ETS-PART1-011-ASYNC-DEADLINE-001`
   - `SCENARIO-ETS-PART1-011-CLEANUP-001`
+  - `SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001`
   - `SCENARIO-ETS-PART1-011-DIRECT-HTTP-COVERAGE-001`
   - `SCENARIO-ETS-PART1-011-E2E-ISOLATION-001`
 
@@ -51,11 +53,16 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
   intended field changed, an untouched sentinel and external identity were
   preserved, and a conflicting submitted `id` was ignored.
 - [ ] Custom endpoint PASS requires canonical and occurrence propagation in
-  one completed observation.
+  two consecutive complete observations.
 - [ ] Queued updates use one bounded monotonic deadline for every required
   postcondition, request timeout, and sleep.
 - [ ] Owned schema-valid fixtures are cleaned in reverse order after every
-  outcome, and destructive cleanup requires same-origin identity proof.
+  outcome; ambiguous POST is rediscovered, and destructive cleanup requires
+  current same-origin identity plus disappearance proof.
+- [ ] Fixture acquisition denial or unusable response SKIPs before PATCH rather
+  than failing Update conformance.
+- [ ] Custom applicability accepts only exact compact/canonical SOSA types,
+  and repeated `Allow` fields are combined.
 - [ ] Focused/full Maven, coverage, released-source, exact-image runtime,
   dependency, credential, immutable-base, and artifact-hygiene gates complete.
 - [ ] Default local OSH TeamEngine E2E records honest Update outcomes and zero
@@ -80,4 +87,8 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
 
 ## Completion Evidence
 
-Pending implementation and verification.
+Candidate `b9143a4` passed focused `93/0/0/0` and full clean Maven
+`668/0/0/3`, but Raze `GAPS_FOUND 0.99` supersedes it. Required remediation
+covers fixture verdicts, ambiguous POST cleanup, synchronous DELETE
+postconditions, immediate ownership revalidation, exact collection types,
+stable synchronous custom propagation, and repeated `Allow` fields.

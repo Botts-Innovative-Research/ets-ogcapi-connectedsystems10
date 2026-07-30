@@ -222,13 +222,25 @@ public final class UpdateSupport {
 		CleanupTarget target = new CleanupTarget(kind, mediaType, identity, custom == null ? null : custom.items());
 		cleanup.push(kind.name() + " identity " + identity, () -> cleanup(target, requirement));
 
-		Response create = EncodingMediatypeWrite.givenWithoutDefaultCharset()
-			.accept(mediaType)
-			.contentType(mediaType)
-			.body(createBody)
-			.post(createEndpoint)
-			.andReturn();
-		assertStatusIn(create, List.of(201, 202), requirement, "POST " + createEndpoint);
+		Response create;
+		target.postDispatched = true;
+		try {
+			create = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+				.accept(mediaType)
+				.contentType(mediaType)
+				.body(createBody)
+				.post(createEndpoint)
+				.andReturn();
+		}
+		catch (RuntimeException ex) {
+			throw new SkipException(requirement + " - fixture POST " + createEndpoint
+					+ " returned no usable response; Update evidence is inconclusive and no PATCH request was issued.",
+					ex);
+		}
+		if (!List.of(201, 202).contains(create.getStatusCode())) {
+			throw new SkipException(requirement + " - fixture POST " + createEndpoint + " returned HTTP "
+					+ create.getStatusCode() + "; Update evidence is inconclusive and no PATCH request was issued.");
+		}
 		target.accepted = true;
 
 		ResourceUris uris = createdUris(kind, createEndpoint, custom, create, target, requirement);
@@ -316,27 +328,31 @@ public final class UpdateSupport {
 			}
 			return;
 		}
-		assertUpdated(kind, uris.canonical(), representationMediaType, baseline, identity, changed, conflictId,
+		assertCompleteObservation(kind, uris, representationMediaType, baseline, identity, changed, conflictId,
 				requirement, null);
-		if (uris.occurrence() != null) {
-			assertUpdated(kind, uris.occurrence(), representationMediaType, baseline, identity, changed, conflictId,
-					requirement, null);
-		}
+		assertCompleteObservation(kind, uris, representationMediaType, baseline, identity, changed, conflictId,
+				requirement, null);
 	}
 
 	private boolean updateObserved(ResourceKind kind, ResourceUris uris, String mediaType, Observation baseline,
 			String identity, String changed, String conflictId, String requirement, Deadline deadline) {
 		try {
-			assertUpdated(kind, uris.canonical(), mediaType, baseline, identity, changed, conflictId, requirement,
+			assertCompleteObservation(kind, uris, mediaType, baseline, identity, changed, conflictId, requirement,
 					deadline);
-			if (uris.occurrence() != null) {
-				assertUpdated(kind, uris.occurrence(), mediaType, baseline, identity, changed, conflictId, requirement,
-						deadline);
-			}
 			return !deadline.expired();
 		}
 		catch (AssertionError ex) {
 			return false;
+		}
+	}
+
+	private void assertCompleteObservation(ResourceKind kind, ResourceUris uris, String mediaType, Observation baseline,
+			String identity, String changed, String conflictId, String requirement, Deadline deadline) {
+		assertUpdated(kind, uris.canonical(), mediaType, baseline, identity, changed, conflictId, requirement,
+				deadline);
+		if (uris.occurrence() != null) {
+			assertUpdated(kind, uris.occurrence(), mediaType, baseline, identity, changed, conflictId, requirement,
+					deadline);
 		}
 	}
 
@@ -379,9 +395,10 @@ public final class UpdateSupport {
 			.options(resource)
 			.andReturn();
 		ETSAssert.assertStatus(options, 200, requirement);
-		if (!headerContainsToken(options.getHeader("Allow"), "PATCH")) {
-			ETSAssert.failWithUri(requirement, "OPTIONS " + resource + " did not advertise PATCH in Allow; received "
-					+ options.getHeader("Allow") + ".");
+		String allow = String.join(",", options.getHeaders().getValues("Allow"));
+		if (!headerContainsToken(allow, "PATCH")) {
+			ETSAssert.failWithUri(requirement,
+					"OPTIONS " + resource + " did not advertise PATCH in Allow; received " + allow + ".");
 		}
 		Set<String> openApi = openApiPatchMediaTypes(definition, resource);
 		String acceptPatch = String.join(",", options.getHeaders().getValues("Accept-Patch"));
@@ -638,7 +655,7 @@ public final class UpdateSupport {
 	}
 
 	private void cleanup(CleanupTarget target, String requirement) {
-		if (!target.accepted) {
+		if (!target.postDispatched) {
 			return;
 		}
 		URI canonical = target.canonical;
@@ -648,6 +665,9 @@ public final class UpdateSupport {
 				.orElse(null);
 		}
 		if (canonical == null) {
+			if (!target.accepted) {
+				return;
+			}
 			ETSAssert.failWithUri(requirement, "accepted " + target.kind.name() + " identity " + target.identity
 					+ " could not be rediscovered for cleanup.");
 		}
@@ -656,27 +676,34 @@ public final class UpdateSupport {
 			occurrence = child(target.customItems, encoded(lastPathSegment(canonical, requirement)));
 		}
 		if (occurrence != null && !occurrence.equals(canonical)) {
-			cleanupDelete(occurrence, false, requirement);
+			cleanupDelete(occurrence, false, target.identity, target.mediaType, requirement);
 		}
-		cleanupDelete(canonical, target.kind == SYSTEM, requirement);
+		cleanupDelete(canonical, target.kind == SYSTEM, target.identity, target.mediaType, requirement);
 	}
 
-	private void cleanupDelete(URI resource, boolean cascade, String requirement) {
+	private void cleanupDelete(URI resource, boolean cascade, String identity, String mediaType, String requirement) {
 		requireSameOrigin(resource, requirement);
 		Deadline deadline = new Deadline();
+		Response current = pollingGet(resource, mediaType, deadline);
+		if (current.getStatusCode() == 404) {
+			return;
+		}
+		ETSAssert.assertStatus(current, 200, requirement);
+		assertIdentity(parseJsonObject(current, resource, requirement), identity, resource, requirement);
 		RequestSpecification request = deadlineRequest(deadline).accept("application/json");
 		if (cascade) {
 			request.queryParam("cascade", true);
 		}
 		Response response = request.delete(resource).andReturn();
 		assertStatusIn(response, List.of(200, 202, 204, 404), requirement, "cleanup DELETE " + resource);
-		if (response.getStatusCode() == 202) {
-			if (!pollUntil(deadline, () -> {
-				Response get = pollingGet(resource, "application/json", deadline);
-				return get.getStatusCode() == 404;
-			}, requirement, "cleanup DELETE " + resource)) {
-				ETSAssert.failWithUri(requirement, resource + " remained available after cleanup DELETE.");
-			}
+		if (response.getStatusCode() == 404) {
+			return;
+		}
+		if (!pollUntil(deadline, () -> {
+			Response get = pollingGet(resource, mediaType, deadline);
+			return get.getStatusCode() == 404;
+		}, requirement, "cleanup DELETE " + resource)) {
+			ETSAssert.failWithUri(requirement, resource + " remained available after cleanup DELETE.");
 		}
 	}
 
@@ -1030,7 +1057,7 @@ public final class UpdateSupport {
 				return false;
 			}
 			String local = expected.substring(expected.indexOf(':') + 1);
-			return expected.equals(actual) || actual.endsWith("/" + local) || actual.endsWith("#" + local);
+			return expected.equals(actual) || ("http://www.w3.org/ns/sosa/" + local).equals(actual);
 		}
 
 	}
@@ -1055,6 +1082,8 @@ public final class UpdateSupport {
 		private final URI customItems;
 
 		private boolean accepted;
+
+		private boolean postDispatched;
 
 		private URI canonical;
 

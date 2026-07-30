@@ -1,0 +1,51 @@
+sprint: ets-57
+candidate: b9143a45aeef1677c29d92c0b61033e741ca338a
+reviewer: Raze
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.99
+duration_seconds: 462
+estimated_tokens: 16000
+findings:
+  - id: fixture-post-denial
+    severity: HIGH
+    status: OPEN
+    summary: A denied fixture POST produced a conformance failure although no PATCH evidence could be collected.
+    required: Treat unusable fixture acquisition as an inconclusive SKIP before PATCH while retaining cleanup.
+  - id: ambiguous-post-cleanup
+    severity: HIGH
+    status: OPEN
+    summary: Cleanup was armed only after HTTP 201 or 202, so a committed POST with an ambiguous response could leak the owned fixture.
+    required: Attempt bounded identity rediscovery after every dispatched POST and clean any matching owned resource.
+  - id: cleanup-disappearance
+    severity: HIGH
+    status: OPEN
+    summary: Cleanup proved disappearance only after HTTP 202 DELETE.
+    required: Prove bounded disappearance after every accepted DELETE status.
+  - id: cleanup-identity-preflight
+    severity: HIGH
+    status: OPEN
+    summary: Cleanup did not revalidate the expected external identity immediately before DELETE.
+    required: Refuse DELETE when the current resource identity differs from the submitted owned identity.
+  - id: collection-type-suffix
+    severity: HIGH
+    status: OPEN
+    summary: Collection applicability accepted any URI ending in the expected SOSA local name.
+    required: Accept only the exact compact or canonical SOSA type.
+  - id: synchronous-propagation-stability
+    severity: MEDIUM
+    status: OPEN
+    summary: Synchronous custom-collection propagation required only one sequential observation.
+    required: Require two consecutive complete joint canonical and custom observations.
+  - id: repeated-allow-fields
+    severity: MEDIUM
+    status: OPEN
+    summary: PATCH discovery inspected only one Allow field value.
+    required: Combine repeated Allow fields before token matching.
+external_blocker:
+  status: OPEN
+  summary: Positive real-IUT mutation E2E remains unavailable because unmodified local OSH does not satisfy the exact released prerequisites.
+notes:
+  - No OSH or TeamEngine source or binary modification was found.
+  - No hosted CI, imported external suite, or credential disclosure was found.
+  - Candidate b9143a4 is superseded pending test-first remediation.

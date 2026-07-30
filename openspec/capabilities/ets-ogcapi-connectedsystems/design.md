@@ -21,6 +21,14 @@
 > making Create/Replace/Delete a direct TestNG dependency. Positive writes use
 > owned isolated IUT state; OSH and TeamEngine remain immutable, and no
 > executable conformance-suite jar or hosted CI is introduced.
+> Raze `GAPS_FOUND 0.99` supersedes candidate `b9143a4`. Fixture POST denial
+> or unusable response is an inconclusive Update SKIP, not Update failure, but
+> every dispatched POST triggers bounded identity rediscovery because an
+> ambiguous response may still have committed. Collection applicability uses
+> exact compact/canonical SOSA types. Repeated `Allow` fields are combined.
+> Synchronous and queued custom propagation require two consecutive joint
+> observations. Cleanup revalidates identity immediately before DELETE and
+> proves disappearance after every accepted DELETE status.
 
 > Sprint 41 supersession note (2026-07-21): the TeamEngine 5.5/5.6.x
 > deployment guidance in the Sprint 1 and Sprint 2 sections below is historical

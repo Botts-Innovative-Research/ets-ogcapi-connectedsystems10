@@ -195,6 +195,103 @@ public class VerifyUpdateHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void deniedFixturePostSkipsBeforePatch() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.denyCreate = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.calls("PATCH"));
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void ambiguousFixturePostResponseStillCleansCommittedResource() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.ambiguousCreateResponse = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.calls("PATCH"));
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-CLEANUP-001.
+	 */
+	@Test
+	public void ignoredHttp204DeleteFailsCleanupProof() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.ignoreDelete = true;
+
+			assertThrows(AssertionError.class, fixture.support()::systemsUpdate);
+			assertTrue(fixture.liveResources() > 0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-CLEANUP-001.
+	 */
+	@Test
+	public void changedIdentityImmediatelyBeforeCleanupPreventsDelete() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.changeIdentityBeforeCleanup = true;
+
+			assertThrows(AssertionError.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.changedIdentityDeleteCalls.get());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-APPLICABILITY-EXACT-001.
+	 */
+	@Test
+	public void unrelatedTypeWithSystemSuffixReceivesNoCustomWrite() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.unrelatedSystemType = true;
+
+			fixture.support().systemsUpdate();
+
+			assertEquals(4, fixture.calls("PATCH"));
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-CUSTOM-COLLECTIONS-001.
+	 */
+	@Test
+	public void transientSynchronousCustomPropagationCannotPass() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.revertAfterCustomRead = true;
+
+			assertThrows(AssertionError.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-PATCH-NEGOTIATION-001.
+	 */
+	@Test
+	public void repeatedAllowFieldsAreCombinedForPatchDiscovery() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.repeatedAllow = true;
+
+			fixture.support().systemsUpdate();
+
+			assertTrue(fixture.calls("PATCH") > 0);
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
 	private static final class Fixture implements AutoCloseable {
 
 		private static final ObjectMapper JSON = new ObjectMapper();
@@ -210,6 +307,8 @@ public class VerifyUpdateHttpProcedures {
 
 		private final Map<String, String> aliases = new ConcurrentHashMap<>();
 
+		private final Map<String, Map<String, Object>> originalResources = new ConcurrentHashMap<>();
+
 		private final Map<String, AtomicInteger> methodCalls = new ConcurrentHashMap<>();
 
 		private final AtomicInteger ids = new AtomicInteger();
@@ -224,6 +323,10 @@ public class VerifyUpdateHttpProcedures {
 
 		private final AtomicInteger acceptedConflictingIds = new AtomicInteger();
 
+		private final AtomicInteger finalPatchReads = new AtomicInteger();
+
+		private final AtomicInteger changedIdentityDeleteCalls = new AtomicInteger();
+
 		private volatile String acceptPatch = "application/merge-patch+json, application/json-patch+json";
 
 		private volatile boolean openApiPatch;
@@ -237,6 +340,24 @@ public class VerifyUpdateHttpProcedures {
 		private volatile boolean acceptConflictingId;
 
 		private volatile boolean queuedPatch;
+
+		private volatile boolean denyCreate;
+
+		private volatile boolean ambiguousCreateResponse;
+
+		private volatile boolean ignoreDelete;
+
+		private volatile boolean changeIdentityBeforeCleanup;
+
+		private volatile boolean unrelatedSystemType;
+
+		private volatile boolean revertAfterCustomRead;
+
+		private volatile boolean repeatedAllow;
+
+		private volatile boolean cleanupIdentityChanged;
+
+		private volatile String changedIdentityCanonical;
 
 		private volatile int patchStatus = 204;
 
@@ -377,7 +498,7 @@ public class VerifyUpdateHttpProcedures {
 			else {
 				result.put("itemType", "feature");
 				result.put("featureType", switch (kind) {
-					case "systems" -> "sosa:System";
+					case "systems" -> this.unrelatedSystemType ? "https://example.test/vocab/System" : "sosa:System";
 					case "deployments" -> "sosa:Deployment";
 					case "procedures" -> "sosa:Procedure";
 					default -> "sosa:Sample";
@@ -388,16 +509,25 @@ public class VerifyUpdateHttpProcedures {
 		}
 
 		private void create(HttpExchange exchange, String path) throws IOException {
+			if (this.denyCreate) {
+				send(exchange, 403, "application/json", Map.of("error", "fixture creation denied"));
+				return;
+			}
 			String kind = collectionKind(path);
 			String id = Integer.toString(this.ids.incrementAndGet());
 			String canonical = "/api/" + kind + "/" + id;
 			Map<String, Object> body = objectBody(exchange);
 			body.put("id", id);
 			this.resources.put(canonical, body);
+			this.originalResources.put(canonical, copy(body));
 			String location = canonical;
 			if (path.startsWith("/api/collections/")) {
 				location = path + "/" + id;
 				this.aliases.put(location, canonical);
+			}
+			if (this.ambiguousCreateResponse) {
+				send(exchange, 500, "application/json", Map.of("error", "response unavailable"));
+				return;
 			}
 			exchange.getResponseHeaders().set("Location", location);
 			send(exchange, 201, "application/json", Map.of("id", id));
@@ -413,16 +543,39 @@ public class VerifyUpdateHttpProcedures {
 		}
 
 		private void resource(HttpExchange exchange, String path) throws IOException {
-			Map<String, Object> body = this.resources.get(canonicalPath(path));
+			String canonical = canonicalPath(path);
+			Map<String, Object> body = this.resources.get(canonical);
 			if (body == null) {
 				send(exchange, 404, "application/json", Map.of("error", "not found"));
 				return;
 			}
-			send(exchange, 200, mediaType(body), body);
+			if (this.changeIdentityBeforeCleanup && !this.cleanupIdentityChanged && calls("PATCH") >= 8
+					&& this.finalPatchReads.incrementAndGet() > 5) {
+				body.put("uniqueId", "urn:changed-before-cleanup");
+				Object properties = body.get("properties");
+				if (properties instanceof Map<?, ?> values) {
+					@SuppressWarnings("unchecked")
+					Map<String, Object> mutable = (Map<String, Object>) values;
+					mutable.put("uid", "urn:changed-before-cleanup");
+				}
+				this.cleanupIdentityChanged = true;
+				this.changedIdentityCanonical = canonical;
+			}
+			Map<String, Object> response = copy(body);
+			send(exchange, 200, mediaType(response), response);
+			if (this.revertAfterCustomRead && path.startsWith("/api/collections/") && this.jsonPatchCalls.get() > 0) {
+				this.resources.put(canonical, copy(this.originalResources.get(canonical)));
+			}
 		}
 
 		private void options(HttpExchange exchange) throws IOException {
-			exchange.getResponseHeaders().set("Allow", "GET, PATCH, DELETE, OPTIONS");
+			if (this.repeatedAllow) {
+				exchange.getResponseHeaders().add("Allow", "GET");
+				exchange.getResponseHeaders().add("Allow", "PATCH, DELETE, OPTIONS");
+			}
+			else {
+				exchange.getResponseHeaders().set("Allow", "GET, PATCH, DELETE, OPTIONS");
+			}
 			if (this.acceptPatch != null) {
 				exchange.getResponseHeaders().set("Accept-Patch", this.acceptPatch);
 			}
@@ -499,11 +652,19 @@ public class VerifyUpdateHttpProcedures {
 		}
 
 		private void delete(HttpExchange exchange, String path) throws IOException {
+			if (canonicalPath(path) != null && canonicalPath(path).equals(this.changedIdentityCanonical)) {
+				this.changedIdentityDeleteCalls.incrementAndGet();
+			}
+			if (this.ignoreDelete) {
+				send(exchange, 204, null, null);
+				return;
+			}
 			if (this.aliases.containsKey(path)) {
 				this.aliases.remove(path);
 			}
 			else {
 				this.resources.remove(path);
+				this.originalResources.remove(path);
 				this.aliases.entrySet().removeIf(entry -> path.equals(entry.getValue()));
 			}
 			send(exchange, 204, null, null);

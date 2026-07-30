@@ -41,13 +41,19 @@ TestNG method for each released procedure:
 - `/add-to-collection`.
 
 Every procedure SHALL establish the exact Part 1 class declaration, direct API
-Common prerequisite, inherited OGC API Features Part 4 Create/Replace/Delete
-declaration, applicable resource-class condition, and explicit mutation safety
-gate before issuing POST, PUT, or DELETE. The gate requires
+Common prerequisite, exact released Annex A
+`http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`
+inheritance declaration, applicable resource-class condition, and explicit
+mutation safety gate before issuing POST, PUT, or DELETE. The similarly named
+`ogcapi-features-4` URI SHALL NOT satisfy that exact inheritance check. The
+gate requires
 `mutation-tests-enabled=true` and
 `mutation-iut-policy=dedicated-mutable-iut`; known shared public GeoRobotix
-targets remain hard denied. Each procedure SHALL use `alwaysRun`, acquire only
-its own mutable resources, and clean up resources it created.
+targets remain hard denied. The twelve procedures SHALL have no sibling-method
+dependencies, but SHALL preserve the causal TestNG dependency on API Common:
+neither class setup nor procedure methods may use `alwaysRun` to bypass a
+failed prerequisite. Each procedure SHALL acquire only its own mutable
+resources and clean up resources it created.
 
 The reusable transaction procedure SHALL execute the inherited Features Part 4
 contract at each prescribed resources and resource endpoint: OPTIONS returns
@@ -60,37 +66,54 @@ a complete replacement with the same resource identity and returns HTTP 200 or
 unavailable. A response status alone SHALL NOT establish representation,
 replacement, or deletion behavior. The procedure SHALL exercise each
 applicable representation declared by the IUT and implemented by the resource
-class.
+class. Every ETS-generated request representation SHALL validate against its
+bundled released single-resource schema before the write is issued.
+
+Generic resource deletion SHALL not send the System-specific `cascade` query
+parameter. The helper may send `cascade=true` only for owned System cleanup or
+the explicit cascade procedure, and `cascade=false` only for the explicit
+conflict assertion. HTTP 202 remains accepted for DELETE because the pinned
+Features Part 4 requirement explicitly permits asynchronous deletion; the ETS
+still waits for the required completed postcondition.
 
 The cascade procedure SHALL create its own dependency graphs. For a System
 with nested resources, `DELETE ?cascade=false` SHALL return HTTP 409 and leave
 the graph intact; `DELETE ?cascade=true` SHALL remove the System and its nested
 resources. For a System referenced by a Deployment that also references
-another System, the false request SHALL return 409, the true request SHALL
-delete only the target System, and the surviving Deployment SHALL remain while
-no longer referencing the deleted System.
+another System, a pre-delete GET SHALL prove both references are present, the
+false request SHALL return 409, the true request SHALL delete only the target
+System, and the surviving Deployment SHALL remain while no longer referencing
+the deleted System.
 
 Subsystem and subdeployment procedures SHALL create through their prescribed
-nested endpoints and verify the created resource at its canonical URL with
-equivalent submitted content. Sampling Feature creation SHALL use the
-System-scoped endpoint and replacement/deletion SHALL use the canonical
-Sampling Feature endpoint.
+nested endpoints, derive the root canonical endpoint from the returned local
+identifier, and verify the created resource there with equivalent submitted
+content. A nested `Location` SHALL NOT substitute for root canonical evidence.
+Sampling Feature creation SHALL use the System-scoped endpoint and
+replacement/deletion SHALL use the canonical Sampling Feature endpoint.
 
 Custom-collection procedures SHALL inspect all advertised collections for the
 five released resource types: System, Procedure, Deployment, Sampling Feature,
-and Property. Create through a collection SHALL appear at the canonical root.
-Replace through a collection SHALL change the canonical representation. Delete
-from a root collection SHALL remove every collection occurrence; delete from a
-non-root collection SHALL leave the canonical resource. Adding existing
-resources SHALL POST `text/uri-list`, one same-IUT canonical URL or UID per
-line, and verify equivalent representations through collection-item URLs. If
-the IUT exposes no applicable custom collection, the affected procedure SHALL
-SKIP with a precise no-evidence reason; malformed advertised endpoints,
-unsupported declared methods, or incorrect propagation SHALL fail.
+and Property. Create through a collection SHALL appear at both the custom item
+and canonical root. Replace through a collection SHALL change both
+representations. Delete from a root collection SHALL remove every collection
+occurrence; delete from a non-root collection SHALL remove that occurrence
+while leaving the canonical resource. Adding existing resources SHALL verify
+OPTIONS advertises POST, then POST `text/uri-list`, one same-IUT canonical URL
+or UID per line, require HTTP 201 and a same-origin usable Location, and verify
+equivalent representations through both returned and computed collection-item
+URLs. If the IUT exposes no applicable custom collection, the affected
+procedure SHALL SKIP with a precise no-evidence reason; malformed advertised
+endpoints, unsupported declared methods, or incorrect propagation SHALL fail.
 
 Cleanup SHALL run in reverse ownership order after both pass and failure. A
 cleanup failure SHALL remain visible and SHALL not be hidden by an earlier
-assertion. Credentials SHALL never be sent cross-origin.
+assertion. A response Location SHALL become a destructive cleanup target only
+after dereference proves the submitted UID or URI identity. Missing,
+cross-origin, or incorrect Location metadata SHALL trigger same-origin root
+discovery by the submitted identity; cleanup SHALL delete only resources whose
+representation proves that identity. Credentials SHALL never be sent
+cross-origin.
 
 ## Architecture
 
@@ -117,12 +140,13 @@ Project-operated hosted CI remains out of scope.
 
 ## Verification Boundary
 
-Sprint 56 closes only when all twelve procedures have reviewed exact mappings;
-focused and full Docker Maven checks pass; controlled HTTP executes every
-positive procedure and key fail-closed branch; the exact committed candidate
-passes TeamEngine runtime, dependency, credential, immutable-base, and
-artifact-hygiene gates; default primary local OSH smoke records zero writes;
-an owned isolated local OSH run executes the mutation paths and records honest
-conformance outcomes, cleanup, primary-state immutability, and a subsequent
-clean-primary smoke; and fresh Raze review has no unresolved required finding.
-
+Mappings remain candidate until focused and full Docker Maven checks pass;
+controlled HTTP executes every positive procedure and key fail-closed branch;
+the exact committed candidate passes TeamEngine runtime, dependency,
+credential, immutable-base, and artifact-hygiene gates; default primary local
+OSH smoke records zero writes; an owned isolated real IUT run executes the
+mutation paths and records honest positive conformance outcomes, cleanup,
+primary-state immutability, and a subsequent clean-primary smoke; and fresh
+Raze review has no unresolved required finding. A local OSH prerequisite SKIP
+because it omits the exact inherited URI is honest E2E evidence, but does not
+upgrade the twelve mappings to reviewed exact or complete this closure.

@@ -21,6 +21,17 @@
 > declarations, applicability, resources, and mutation gate. Positive writes
 > run only on the owned isolated local OSH workflow; the primary IUT remains
 > read-only and external OSH/TeamEngine artifacts remain immutable.
+> The support requires the exact released Annex A `ogcapi-4` inheritance URI,
+> validates every generated GeoJSON/SensorML write fixture against the bundled
+> released schema, and derives root canonical endpoints after nested creates
+> rather than treating a nested `Location` as canonical evidence. TestNG group
+> dependency remains causal: the procedures do not use `alwaysRun`. Cleanup
+> treats a returned Location as destructive only after a GET proves the
+> submitted identity; missing or incorrect metadata falls back to root
+> discovery by that identity. Generic resource deletion omits `cascade`, while
+> explicit System graph checks own `cascade=false|true`. Custom-collection
+> checks prove both custom and canonical representations, and URI-list
+> association requires OPTIONS, HTTP 201, Location, and dereference evidence.
 
 ## Overview
 

@@ -1,0 +1,218 @@
+review:
+  reviewer: Raze
+  role: fresh_adversarial_reviewer
+  sprint: ets-56
+  story: S-ETS-56-01
+  baseline: 6ae62e11017bb1c6e2fd86ad4fe21e0b012ce428
+  candidate: a486f1f262e7bbb861686e529fafe6f7dba2878f
+  released_source:
+    path: /tmp/ogcapi-connected-systems-v1.0.0
+    commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
+  inherited_features4_source:
+    path: /tmp/ogcapi-features-part4
+    commit: ea42aa1de6d8cbb53c526f41e1f66c1887fe71d4
+  verdict: GAPS_FOUND
+  confidence: 0.99
+  implementation_approval: BLOCKED
+
+scope:
+  - Released Part 1 /conf/create-replace-delete procedures A.67-A.78.
+  - Direct API Common dependency and independent TestNG execution.
+  - Inherited Features Part 4 OPTIONS, POST, PUT, and DELETE behavior.
+  - Mutation ownership, Location handling, reverse cleanup, and origin controls.
+  - GeoJSON and SensorML write fixtures and representation coverage.
+  - Cascade graphs, nested canonical resources, and custom collections.
+  - Reviewed mappings, OpenSpec/BMAD/story/contract alignment, Maven evidence, and exact-candidate TeamEngine E2E.
+
+evidence_summary:
+  full_maven:
+    result: PASS
+    totals: "623 total / 0 failed / 0 errors / 3 skipped"
+    evidence: ops/test-results/sprint-ets-56-full-maven-2026-07-29.log
+  populated_e2e:
+    result: FAIL
+    totals: "244 total / 54 passed / 35 failed / 155 skipped"
+    request_methods:
+      GET: 209
+    crd_result: "12/12 SKIP before mutation because exact Part 1 /conf/api-common is undeclared"
+  clean_primary_e2e:
+    result: FAIL
+    totals: "244 total / 40 passed / 7 failed / 197 skipped"
+    request_methods:
+      GET: 180
+  isolation:
+    provisioning: PASS
+    cleanup: PASS
+    primary_state_unchanged: true
+    osh_source_clean: true
+    osh_source_ahead_of_upstream: 0
+  credentials:
+    supplied_in_e2e: false
+    literal_leak_scan: "No credential literal or Authorization value found in supplied E2E artifacts."
+    credential_bearing_gate: NOT_EVIDENCED
+
+osh_prerequisite_skip_assessment:
+  skip_behavior: CORRECT
+  reason: "The released class directly inherits Part 1 API Common. SKIP with the exact missing URI and zero writes is honest."
+  approval_effect: BLOCKING
+  explanation: "The SKIP is not an implementation defect, but all twelve procedures consequently lack positive execution against a real OGC API Connected Systems IUT. The sprint contract requires owned mutation E2E, and AGENTS.md forbids substituting the controlled mock server. With OSH and TeamEngine modification out of scope, approval requires an independently conformant, dedicated mutable IUT or the sprint remains explicitly incomplete."
+
+findings:
+  - id: RAZE-ETS-56-001
+    severity: CRITICAL
+    title: "alwaysRun defeats the declared API Common dependency"
+    problem: "All twelve procedures and the dependent BeforeClass use alwaysRun=true. TestNG 7.9 executes an alwaysRun child after its dependency group fails, so the XML dependency does not block these mutation procedures. The per-procedure prepare check proves only that /conf/api-common is declared, not that the inherited API Common tests passed."
+    evidence:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java:32"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteTests.java:47"
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:184"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:383"
+      - "Reproduction with project TestNG 7.9.0: a failing base group plus an alwaysRun dependent group produced 1 PASS, 1 FAIL, 0 SKIP and CHILD_RAN=true."
+    impact: "A CRD method can mutate and report PASS even when its inherited API Common implementation failed."
+    required_fix:
+      - "Add a tested runtime prerequisite-result gate that rejects failed or unexpected skipped API Common results before any procedure writes."
+      - "Reconcile the alwaysRun/independence requirement so sibling CRD outcomes remain independent without bypassing inherited-class failure."
+      - "Run a causal API Common sabotage gate proving all twelve methods SKIP before CRD-specific IUT access and before writes."
+
+  - id: RAZE-ETS-56-002
+    severity: CRITICAL
+    title: "Location cleanup can delete an unowned resource and can leak an owned resource"
+    problem: "createOwned registers any same-origin Location for cleanup before proving that the dereferenced resource has the submitted UID. A defective IUT can return the URL of a pre-existing resource; the assertion may later fail, but cleanup will delete that unrelated resource. Conversely, HTTP 201 without Location and without a response id registers no cleanup action, although the server may have created the submitted UID."
+    evidence:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:478"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:482"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:487"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:491"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:500"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/VerifyCreateReplaceDeleteHttpProcedures.java:80"
+    impact: "The ETS can destroy seed data it did not create or leave an owned resource behind after a required failure."
+    required_fix:
+      - "Track the submitted UID as the ownership key and prove Location identity before registering destructive cleanup for that URI."
+      - "Provide UID-based discovery and cleanup when Location and response id are absent, or otherwise guarantee no orphan remains."
+      - "Add regressions for a wrong same-origin Location and a 201 response with neither Location nor id."
+
+  - id: RAZE-ETS-56-003
+    severity: HIGH
+    title: "Generated write fixtures violate released schemas"
+    problem: "SensorML System and Deployment bodies omit required definition. The GeoJSON Sampling Feature body omits required sampledFeature@link. Candidate tests only verify that the permissive fixture server accepts these maps; they never validate every generated body against the vendored released schemas before dispatch."
+    evidence:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:810"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:819"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:877"
+      - "src/main/resources/schemas/connected-systems-1/sensorml/system.json:30"
+      - "src/main/resources/schemas/connected-systems-1/sensorml/deployment.json:17"
+      - "src/main/resources/schemas/connected-systems-1/geojson/samplingFeature.json:13"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/VerifyCreateReplaceDeleteHttpProcedures.java:278"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/VerifyCreateReplaceDeleteSupport.java:140"
+    impact: "A conforming IUT may correctly reject the request, causing false FAIL, while the controlled test remains green."
+    required_fix:
+      - "Correct all fixtures and validate every generated GeoJSON and SensorML body against the exact vendored resource schema before issuing POST or PUT."
+      - "Add fixture-schema tests for every resource kind, representation, phase, and cascade association form."
+
+  - id: RAZE-ETS-56-004
+    severity: HIGH
+    title: "Inherited DELETE behavior is both over-permissive and sent to the wrong endpoint shape"
+    problem: "The generic transaction and cleanup helpers append cascade=false to Deployment, Procedure, Sampling Feature, Property, and custom-item DELETE requests even though cascade is a System-specific parameter. They also accept HTTP 202, while the pinned Features Part 4 DELETE response requirement permits 200 or 204."
+    evidence:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:466"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:540"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:552"
+      - "openspec/change-proposals/CP-016-part1-create-replace-delete-closure.md:58"
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:3122"
+      - "/tmp/ogcapi-features-part4/extensions/transactions/create-replace-update-delete/standard/requirements/create-replace-delete/delete/REQ_response.adoc:5"
+    impact: "Unknown cascade parameters can false-fail compliant endpoints, while HTTP 202 can false-pass a response outside the inherited requirement."
+    required_fix:
+      - "Issue plain DELETE for inherited lifecycle and non-System cleanup; add cascade only in the System cascade procedure or owned System cleanup that needs it."
+      - "Restrict conformance success to 200 or 204 and reconcile CP-016/spec/tests."
+
+  - id: RAZE-ETS-56-005
+    severity: HIGH
+    title: "Custom-collection procedures omit inherited lifecycle assertions"
+    problem: "Create does not always dereference the returned Location when it differs from the canonical root. Non-root delete never proves the collection item is gone. text/uri-list add does not OPTIONS-check POST, accepts 200/204, and requires no Location even though the released procedure says to follow the inherited CREATE operation. The controlled fixture returns 204 for text/uri-list and the aggregate test treats it as PASS."
+    evidence:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:253"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:303"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:329"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:334"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:347"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:362"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/VerifyCreateReplaceDeleteHttpProcedures.java:278"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/VerifyCreateReplaceDeleteHttpProcedures.java:290"
+      - "/tmp/ogcapi-connected-systems-v1.0.0/api/part1/standard/sections/annex-abstract-test-suite.adoc:1511"
+      - "/tmp/ogcapi-connected-systems-v1.0.0/api/part1/standard/sections/annex-abstract-test-suite.adoc:1546"
+      - "/tmp/ogcapi-connected-systems-v1.0.0/api/part1/standard/sections/annex-abstract-test-suite.adoc:1562"
+    impact: "No-op membership deletion and nonconforming add responses can PASS."
+    required_fix:
+      - "Apply complete inherited endpoint checks to custom create/replace/delete/add, then apply the additional canonical propagation checks."
+      - "Require the collection item to be unavailable after non-root delete while the canonical resource remains available."
+      - "Add negative fixtures for retained membership, stale collection-item replacement, missing Location, and 200/204 text/uri-list responses."
+
+  - id: RAZE-ETS-56-006
+    severity: HIGH
+    title: "Cascade tests do not prove the graph they claim to delete"
+    problem: "The nested child is checked only through the Location URI; if Location is nested, a surviving canonical System is undetected. The Deployment is not inspected before cascade=false to prove that it initially references both target and survivor. A server that rejects every cascade=false request and never stored the target association can satisfy the current postconditions."
+    evidence:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:113"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:116"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:123"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:135"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:140"
+      - "/tmp/ogcapi-connected-systems-v1.0.0/api/part1/standard/sections/annex-abstract-test-suite.adoc:1394"
+      - "/tmp/ogcapi-connected-systems-v1.0.0/api/part1/standard/sections/annex-abstract-test-suite.adoc:1400"
+    impact: "The exact mapping can PASS without proving either required initial graph or complete canonical deletion."
+    required_fix:
+      - "Resolve and verify the nested resource's canonical URI before deletion and prove it is gone afterward."
+      - "Before cascade=false, retrieve the Deployment and prove both target and survivor associations are present."
+      - "Add negative regressions for a surviving canonical child and an omitted pre-delete target association."
+
+  - id: RAZE-ETS-56-007
+    severity: HIGH
+    title: "Mandatory real-IUT mutation E2E did not execute"
+    problem: "The isolated OSH run provisioned and cleaned successfully, but every CRD method skipped on the exact inherited /conf/api-common prerequisite. The populated and clean-primary workflows both report FAIL, and request accounting is GET-only. This does not satisfy the contract's owned mutation E2E or clean-primary-pass criteria."
+    evidence:
+      - ".harness/contracts/sprint-ets-56.yaml:37"
+      - ".harness/contracts/sprint-ets-56.yaml:38"
+      - "/tmp/sprint-ets-56-candidate-a486f1f.oaXFoU/e2e/run-summary.json:305"
+      - "/tmp/sprint-ets-56-candidate-a486f1f.oaXFoU/e2e/run-summary.json:307"
+      - "/tmp/sprint-ets-56-candidate-a486f1f.oaXFoU/e2e/run-summary.json:311"
+      - "/tmp/sprint-ets-56-candidate-a486f1f.oaXFoU/e2e/run-summary.json:319"
+      - "/tmp/sprint-ets-56-candidate-a486f1f.oaXFoU/e2e/populated-results/s-ets-01-03-teamengine-smoke-2026-07-29.xml:1429"
+      - "/tmp/sprint-ets-56-candidate-a486f1f.oaXFoU/e2e/populated-results/s-ets-01-03-teamengine-smoke-2026-07-29.xml:1540"
+      - "/tmp/sprint-ets-56-candidate-a486f1f.oaXFoU/e2e/populated-results/s-ets-01-03-teamengine-smoke-2026-07-29.xml:1543"
+    impact: "Controlled mock HTTP proves helper behavior only; it cannot approve the mutation implementation under the repository's mandatory E2E policy."
+    required_fix:
+      - "After implementation fixes, run the exact committed candidate against a separate, unmodified, dedicated mutable IUT that declares the exact inherited classes."
+      - "Do not modify OSH or TeamEngine and do not relabel these honest SKIPs as positive evidence."
+      - "Keep Sprint 56 incomplete if no suitable IUT is available."
+
+  - id: RAZE-ETS-56-008
+    severity: MEDIUM
+    title: "Custom discovery and exact mappings overstate coverage"
+    problem: "The spec and mapping claim every advertised applicable non-root collection, but isCustomCollection silently excludes every id beginning with all_ and several literal ids without normative metadata proving they are root collections. All twelve mappings are already marked exact despite the defects above."
+    evidence:
+      - ".harness/contracts/sprint-ets-56.yaml:32"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:418"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/createreplacedelete/CreateReplaceDeleteSupport.java:978"
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json:722"
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json:799"
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json:821"
+    impact: "A valid custom collection can be skipped and the generated coverage report reports closure that the implementation has not earned."
+    required_fix:
+      - "Replace id-name heuristics with a normative root/non-root determination or exercise every matching advertised /collections entry."
+      - "Downgrade affected mappings and regenerate coverage until all required findings are closed and re-reviewed."
+
+required_gate_repetition:
+  - Focused controlled HTTP tests with adversarial negative cases.
+  - Full Docker Maven from the exact committed source.
+  - Released ATS and vendored-schema provenance/parity checks.
+  - API Common causal sabotage proving zero CRD writes.
+  - Credential-bearing redirect/origin and artifact leak gates.
+  - Exact-image TeamEngine runtime.
+  - Positive dedicated mutable-IUT E2E, cleanup, primary-state immutability, and honest clean-primary no-regression.
+  - Fresh Raze review of the replacement candidate.
+
+notes:
+  - "The candidate correctly contains twelve independent procedure methods and honestly SKIPs the supplied OSH prerequisite mismatch."
+  - "The supplied E2E artifacts show provisioning PASS, cleanup PASS, unchanged primary state, unmodified upstream-derived OSH, and no CRD writes."
+  - "Candidate a486f1f remains unpushed at review time."
+  - "Concurrent uncommitted remediation observed during review was intentionally excluded; this report evaluates immutable candidate a486f1f only."

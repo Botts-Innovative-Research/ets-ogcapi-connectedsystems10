@@ -1,23 +1,25 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T22:46Z
+Last updated: 2026-07-30T00:31Z
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 
 - User instruction: continue the accepted released-ATS completion sequence.
-- CP-016, S-ETS-56-01, the sprint contract, capability scenarios, design,
-  architecture, epic, and traceability define the exact closure before code.
-- Released baseline: twelve procedures, currently `0 exact / 1 candidate / 11
-  unmapped`.
-- Scope: replace the six-method Systems subset with twelve independent,
-  safety-gated procedures covering inherited transaction semantics, both
-  cascade graphs, nested canonical resources, and custom collections.
-- Verification target: default zero-write primary OSH smoke plus owned isolated
-  mutation E2E, cleanup, unchanged primary-state proof, and clean-primary smoke.
+- Implementation now replaces the historical six-method Systems subset with
+  all twelve independent released procedures.
+- Causal API Common dependencies, schema-valid write fixtures, identity-safe
+  cleanup, both cascade graphs, nested canonical resources, and complete
+  custom-collection behavior have controlled HTTP coverage.
+- Docker Maven reports `630 tests / 0 failures / 0 errors / 3 skipped`.
+- Coverage is intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
+- Initial local OSH E2E proves supported provisioning, cleanup, unchanged
+  primary state, and honest prerequisite SKIPs with zero writes. Unmodified OSH
+  does not declare the exact released inherited `ogcapi-4` URI, so this is not
+  positive mutation evidence.
 - External OSH and TeamEngine source/binaries remain immutable; hosted CI and
   executable-suite imports remain out of scope.
-- Next: capture structural and controlled-HTTP red tests, implement the reusable
-  transaction support, then run exact-candidate gates and fresh Raze.
+- Next: seal the replacement candidate, repeat exact-candidate runtime and E2E
+  gates, run fresh Raze, reconcile the honest open blocker, then push.
 
 ## Fresh-Session Entry Point
 

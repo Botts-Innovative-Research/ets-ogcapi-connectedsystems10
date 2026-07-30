@@ -45,11 +45,13 @@ public class VerifyCreateReplaceDeleteReleasedSuite {
 			org.testng.annotations.Test annotation = method.getAnnotation(org.testng.annotations.Test.class);
 			assertTrue(method + " must use createreplacedelete group",
 					Arrays.asList(annotation.groups()).contains("createreplacedelete"));
-			assertTrue(method + " must remain independently executable", annotation.alwaysRun());
+			assertFalse(method + " must preserve the causal group prerequisite", annotation.alwaysRun());
 			assertEquals(method + " must identify exactly one released target", 1,
 					TARGETS.stream().filter(annotation.description()::endsWith).count());
 			assertEquals(method + " must not depend on another Create/Replace/Delete method", 0,
 					annotation.dependsOnMethods().length);
+			assertEquals(method + " must depend directly on API Common", List.of("part1apicommon"),
+					Arrays.asList(annotation.dependsOnGroups()));
 		}
 	}
 
@@ -63,7 +65,7 @@ public class VerifyCreateReplaceDeleteReleasedSuite {
 		org.testng.annotations.BeforeClass annotation = setup.getAnnotation(org.testng.annotations.BeforeClass.class);
 
 		assertNotNull(annotation);
-		assertTrue(annotation.alwaysRun());
+		assertFalse(annotation.alwaysRun());
 		assertTrue(Arrays.asList(annotation.dependsOnGroups()).contains("part1apicommon"));
 		assertFalse(Arrays.stream(CreateReplaceDeleteTests.class.getDeclaredFields())
 			.anyMatch(field -> field.getName().toLowerCase().contains("response")

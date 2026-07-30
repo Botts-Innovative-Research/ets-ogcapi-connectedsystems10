@@ -19,6 +19,7 @@ safety-gated implementations of all twelve released OGC 23-001
 - Scenarios:
   - `SCENARIO-ETS-PART1-010-RELEASED-PROCEDURES-001`
   - `SCENARIO-ETS-PART1-010-DIRECT-PREREQUISITES-001`
+  - `SCENARIO-ETS-PART1-010-DEPENDENCY-CAUSAL-001`
   - `SCENARIO-ETS-PART1-010-MUTATION-SAFETY-001`
   - `SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001`
   - `SCENARIO-ETS-PART1-010-REPRESENTATION-CLOSURE-001`
@@ -36,33 +37,47 @@ safety-gated implementations of all twelve released OGC 23-001
 
 - [x] CP-016, this story, contract, capability scenarios, design,
   architecture, traceability, and epic define the increment before code.
-- [ ] Exactly twelve independent TestNG methods map the twelve released
-  procedures.
-- [ ] Every method checks its own declarations, condition, and mutation gate
+- [x] Exactly twelve independent TestNG methods map the twelve released
+  procedures without `alwaysRun`.
+- [x] A failed API Common TestNG prerequisite skips all twelve methods before
+  IUT access while passing prerequisites leave sibling methods independent.
+- [x] Every method checks its own declarations, condition, and mutation gate
   before writes.
-- [ ] API Common is the only direct local TestNG prerequisite.
-- [ ] The generic transaction helper verifies OPTIONS, POST, Location,
+- [x] The exact released Annex A `ogcapi-4` inheritance URI is required; the
+  `ogcapi-features-4` near-match is rejected.
+- [x] API Common is the only direct local TestNG prerequisite.
+- [x] The generic transaction helper verifies OPTIONS, POST, Location,
   canonical GET, PUT, changed representation, DELETE, and deletion
   postconditions.
-- [ ] Applicable declared resource representations are exercised without
+- [x] Applicable declared resource representations are exercised without
   importing another executable ETS jar.
-- [ ] Both released System cascade graphs are tested with exact 409 and
-  postcondition semantics.
-- [ ] Subsystem, subdeployment, and Sampling Feature nested creation is
-  verified through canonical resources.
-- [ ] Custom-collection create, replace, root/non-root delete propagation, and
-  `text/uri-list` behavior cover every advertised applicable resource type.
-- [ ] No-evidence custom-collection outcomes SKIP; malformed or incorrect
+- [x] Every generated request fixture passes bundled released schema
+  validation before write.
+- [x] Both released System cascade graphs are tested with exact 409 and
+  postcondition semantics, including proof that both Deployment references
+  existed before deletion.
+- [x] Subsystem, subdeployment, and Sampling Feature nested creation is
+  verified through derived root canonical resources even when Location is
+  nested.
+- [x] Custom-collection create, replace, root/non-root delete propagation, and
+  `text/uri-list` behavior cover every advertised applicable resource type,
+  both custom and canonical URLs, OPTIONS, HTTP 201, and Location dereference.
+- [x] No-evidence custom-collection outcomes SKIP; malformed or incorrect
   advertised behavior fails.
-- [ ] Owned resources are cleaned in reverse order after pass and failure, and
+- [x] Owned resources are cleaned in reverse order after pass and failure, and
   cleanup failures remain visible.
+- [x] Cleanup dereferences and identity-verifies returned Location before
+  destructive use; missing or unrelated Location falls back to root discovery
+  by identity without deleting unrelated resources.
+- [x] Generic non-System DELETE omits the System-specific cascade parameter.
 - [ ] Focused/full Maven, coverage audit, exact-image runtime, dependency,
   credential, immutable-base, and artifact-hygiene gates complete.
 - [ ] Default primary local OSH TeamEngine E2E has zero writes.
 - [ ] Owned isolated local OSH TeamEngine E2E executes mutation paths, records
   honest conformance outcomes, cleans up, proves primary state unchanged, and
   is followed by clean-primary smoke.
-- [ ] All twelve mappings are reviewed exact.
+- [ ] All twelve mappings are reviewed exact only after positive mutation E2E
+  executes; until then they remain candidate.
 - [ ] Raze reports no unresolved required findings.
 
 ## Baseline
@@ -80,5 +95,18 @@ safety-gated implementations of all twelve released OGC 23-001
 
 ## Completion Evidence
 
-Pending implementation and gates.
+Implementation and controlled verification are complete. Docker Maven reports
+`630 tests / 0 failures / 0 errors / 3 skipped`; all twelve procedures execute
+through the controlled HTTP harness, including causal prerequisite sabotage,
+schema-valid request fixtures, wrong or missing Location cleanup, cascade
+preconditions, nested canonical URLs, and custom-collection negative cases.
+Coverage is honestly `0 exact / 0 helper / 12 candidate / 0 unmapped` for this
+class.
 
+The initial exact-candidate local OSH run established provisioning and cleanup
+PASS with unchanged primary state, but all twelve procedures SKIPPED before
+writes because unmodified OSH omits the exact released inherited URI
+`http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`.
+That is correct prerequisite behavior, not positive mutation E2E. Exact
+candidate gates and fresh Raze review remain pending; the story stays IN
+PROGRESS and mappings remain candidate.

@@ -55,6 +55,7 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			assertTrue("DELETE count: " + fixture.calls("DELETE"), fixture.calls("DELETE") >= 30);
 			assertTrue("URI-list POST count: " + fixture.uriListPosts(), fixture.uriListPosts() >= 5);
 			assertTrue("cascade conflict count: " + fixture.cascadeConflicts(), fixture.cascadeConflicts() >= 2);
+			assertEquals("non-System DELETE must omit cascade", 0, fixture.nonSystemCascadeParameters());
 			assertTrue(fixture.writeCalls("application/geo+json") > 0);
 			assertTrue(fixture.writeCalls("application/sml+json") > 0);
 		}
@@ -74,6 +75,19 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-DIRECT-PREREQUISITES-001.
+	 */
+	@Test
+	public void featuresPart4NearMatchCannotSatisfyReleasedInheritance() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.nearMatchInheritanceOnly = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsCreateReplaceDelete);
+			assertEquals(0, fixture.writeCalls());
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
 	 */
 	@Test
@@ -85,6 +99,23 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 			assertTrue(error.getMessage().contains("without Location"));
 			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CLEANUP-001.
+	 */
+	@Test
+	public void unrelatedLocationIsNotDeletedAndSubmittedIdentityIsDiscoveredForCleanup() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.seedUnrelatedSystem();
+			fixture.wrongLocation = true;
+
+			AssertionError error = assertThrows(AssertionError.class, fixture.support()::systemsCreateReplaceDelete);
+
+			assertTrue(error.getMessage().contains("instead of submitted identity"));
+			assertTrue(fixture.hasResource("/api/systems/unrelated"));
+			assertEquals(1, fixture.liveCanonicalResources());
 		}
 	}
 
@@ -116,6 +147,21 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CASCADE-001.
+	 */
+	@Test
+	public void missingInitialDeploymentAssociationFailsBeforeCascadeDelete() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.omitAssociationOnPreDeleteGet = true;
+
+			AssertionError error = assertThrows(AssertionError.class, fixture.support()::systemDeleteCascade);
+
+			assertTrue(error.getMessage().contains("pre-delete Deployment"));
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-DELETE-001.
 	 */
 	@Test
@@ -124,6 +170,35 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			fixture.retainAliasesOnCanonicalDelete = true;
 
 			assertThrows(AssertionError.class, fixture.support()::resourcesDeleteInCustomCollections);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-001.
+	 */
+	@Test
+	public void uriListAssociationRequiresLocationAndCleansOwnedResources() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.omitUriListLocation = true;
+
+			AssertionError error = assertThrows(AssertionError.class,
+					fixture.support()::resourcesAddToCustomCollections);
+
+			assertTrue(error.getMessage().contains("without Location"));
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-NESTED-CANONICAL-001.
+	 */
+	@Test
+	public void nestedLocationCannotSubstituteForRootCanonicalResource() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.nestedLocationWithoutCanonical = true;
+
+			assertThrows(AssertionError.class, fixture.support()::subsystemsCreate);
+			assertEquals(0, fixture.liveCanonicalResources());
 		}
 	}
 
@@ -151,13 +226,27 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private final AtomicInteger cascadeConflicts = new AtomicInteger();
 
+		private final AtomicInteger nonSystemCascadeParameters = new AtomicInteger();
+
+		private final AtomicInteger deploymentGets = new AtomicInteger();
+
 		private volatile boolean omitLocation;
+
+		private volatile boolean omitUriListLocation;
+
+		private volatile boolean wrongLocation;
 
 		private volatile boolean ignorePut;
 
 		private volatile boolean wrongConflictStatus;
 
 		private volatile boolean retainAliasesOnCanonicalDelete;
+
+		private volatile boolean nearMatchInheritanceOnly;
+
+		private volatile boolean nestedLocationWithoutCanonical;
+
+		private volatile boolean omitAssociationOnPreDeleteGet;
 
 		Fixture() throws IOException {
 			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
@@ -195,8 +284,23 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			return this.cascadeConflicts.get();
 		}
 
+		int nonSystemCascadeParameters() {
+			return this.nonSystemCascadeParameters.get();
+		}
+
 		int liveCanonicalResources() {
 			return this.resources.size();
+		}
+
+		boolean hasResource(String path) {
+			return this.resources.containsKey(path);
+		}
+
+		void seedUnrelatedSystem() {
+			Map<String, Object> body = new LinkedHashMap<>(
+					CreateReplaceDeleteSupport.systemBody("unrelated", "urn:ets:unrelated"));
+			body.put("id", "unrelated");
+			this.resources.put("/api/systems/unrelated", new Resource("systems", body, null));
 		}
 
 		@Override
@@ -250,14 +354,26 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			if (contentType != null && contentType.startsWith("text/uri-list")) {
 				countWriteMediaType(contentType);
 				this.uriListPosts.incrementAndGet();
+				String firstAlias = null;
 				for (String line : requestText(exchange).lines().toList()) {
 					if (line.isBlank()) {
 						continue;
 					}
 					String canonical = URI.create(line).getPath();
-					this.aliases.put(path + "/" + last(canonical), canonical);
+					String alias = path + "/" + last(canonical);
+					this.aliases.put(alias, canonical);
+					if (firstAlias == null) {
+						firstAlias = alias;
+					}
 				}
-				respond(exchange, 204, "");
+				if (firstAlias == null) {
+					json(exchange, 400, Map.of("error", "empty URI list"));
+					return;
+				}
+				if (!this.omitUriListLocation) {
+					exchange.getResponseHeaders().set("Location", firstAlias);
+				}
+				json(exchange, 201, Map.of("id", last(firstAlias)));
 				return;
 			}
 
@@ -267,19 +383,26 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			String root = rootFor(path, body);
 			String canonical = "/api/" + root + "/" + id;
 			String parent = parentFor(path);
-			this.resources.put(canonical, new Resource(root, body, parent));
+			boolean nestedOnly = this.nestedLocationWithoutCanonical && parent != null;
+			String stored = nestedOnly ? path + "/" + id : canonical;
+			this.resources.put(stored, new Resource(root, bodyWithId(body, id), parent));
 			if (path.startsWith("/api/collections/")) {
 				this.aliases.put(path + "/" + id, canonical);
 			}
 			if (this.omitLocation) {
-				json(exchange, 201, Map.of("id", id));
+				json(exchange, 201, Map.of());
 				return;
 			}
-			exchange.getResponseHeaders().set("Location", canonical);
+			exchange.getResponseHeaders()
+				.set("Location", this.wrongLocation ? "/api/systems/unrelated" : nestedOnly ? stored : canonical);
 			json(exchange, 201, Map.of("id", id));
 		}
 
 		private void get(HttpExchange exchange, String path) throws IOException {
+			if (path.matches("/api/(systems|deployments|procedures|samplingFeatures|properties)")) {
+				collection(exchange, path.substring("/api/".length()));
+				return;
+			}
 			String canonical = this.aliases.getOrDefault(path, path);
 			Resource resource = this.resources.get(canonical);
 			if (resource == null && this.retainAliasesOnCanonicalDelete && this.aliases.containsKey(path)) {
@@ -289,7 +412,13 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				respond(exchange, 404, "");
 				return;
 			}
-			json(exchange, 200, resource.body());
+			Map<String, Object> responseBody = resource.body();
+			if (this.omitAssociationOnPreDeleteGet && "deployments".equals(resource.root())
+					&& this.deploymentGets.incrementAndGet() > 1) {
+				responseBody = deepCopy(responseBody);
+				removeFirstDeploymentReference(responseBody);
+			}
+			json(exchange, 200, responseBody);
 		}
 
 		private void put(HttpExchange exchange, String path) throws IOException {
@@ -302,7 +431,8 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			}
 			Map<String, Object> replacement = requestJson(exchange);
 			if (!this.ignorePut) {
-				this.resources.put(canonical, new Resource(current.root(), replacement, current.parent()));
+				this.resources.put(canonical,
+						new Resource(current.root(), bodyWithId(replacement, last(canonical)), current.parent()));
 			}
 			respond(exchange, 204, "");
 		}
@@ -319,6 +449,9 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				return;
 			}
 			boolean cascade = "true".equals(query(exchange, "cascade"));
+			if (!"systems".equals(resource.root()) && query(exchange, "cascade") != null) {
+				this.nonSystemCascadeParameters.incrementAndGet();
+			}
 			if ("systems".equals(resource.root()) && !cascade && hasSystemDependency(path, resource)) {
 				this.cascadeConflicts.incrementAndGet();
 				respond(exchange, this.wrongConflictStatus ? 400 : 409, "");
@@ -393,10 +526,31 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			}
 		}
 
+		@SuppressWarnings("unchecked")
+		private void removeFirstDeploymentReference(Map<String, Object> deployment) {
+			Object deployed = deployment.get("deployedSystems");
+			if (deployed instanceof List && !((List<?>) deployed).isEmpty()) {
+				deployment.put("deployedSystems",
+						new ArrayList<>(((List<Object>) deployed).subList(1, ((List<?>) deployed).size())));
+			}
+			Object properties = deployment.get("properties");
+			if (properties instanceof Map) {
+				Map<String, Object> deploymentProperties = (Map<String, Object>) properties;
+				Object links = deploymentProperties.get("deployedSystems@link");
+				if (links instanceof List && !((List<?>) links).isEmpty()) {
+					deploymentProperties.put("deployedSystems@link",
+							new ArrayList<>(((List<Object>) links).subList(1, ((List<?>) links).size())));
+				}
+			}
+		}
+
 		private String conformance() throws IOException {
 			List<String> values = new ArrayList<>();
 			values.add(CONF_BASE + "create-replace-delete");
 			values.add(CONF_BASE + "api-common");
+			if (!this.nearMatchInheritanceOnly) {
+				values.add("http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete");
+			}
 			values.add("http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete");
 			values.add(CONF_BASE + "system");
 			values.add(CONF_BASE + "subsystem");
@@ -412,12 +566,31 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private String collections() throws IOException {
 			List<Map<String, Object>> values = List.of(
+					Map.of("id", "systems", "itemType", "feature", "featureType", "sosa:System"),
 					Map.of("id", "custom_systems", "itemType", "feature", "featureType", "sosa:System"),
 					Map.of("id", "custom_procedures", "itemType", "feature", "featureType", "sosa:Procedure"),
 					Map.of("id", "custom_deployments", "itemType", "feature", "featureType", "sosa:Deployment"),
 					Map.of("id", "custom_sampling", "itemType", "feature", "featureType", "sosa:Sample"),
 					Map.of("id", "custom_properties", "itemType", "sosa:Property"));
 			return JSON.writeValueAsString(Map.of("collections", values));
+		}
+
+		private void collection(HttpExchange exchange, String root) throws IOException {
+			List<Map<String, Object>> values = this.resources.entrySet()
+				.stream()
+				.filter(entry -> entry.getKey().matches("/api/" + root + "/[^/]+"))
+				.map(entry -> deepCopy(entry.getValue().body()))
+				.toList();
+			String accept = exchange.getRequestHeaders().getFirst("Accept");
+			if (accept != null && accept.contains("application/geo+json")) {
+				json(exchange, 200, Map.of("type", "FeatureCollection", "features", values), "application/geo+json");
+			}
+			else if (accept != null && accept.contains("application/sml+json")) {
+				json(exchange, 200, Map.of("items", values), "application/sml+json");
+			}
+			else {
+				json(exchange, 200, Map.of("items", values));
+			}
 		}
 
 		private String rootFor(String path, Map<String, Object> body) {
@@ -508,12 +681,22 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			});
 		}
 
+		private Map<String, Object> bodyWithId(Map<String, Object> value, String id) {
+			Map<String, Object> result = deepCopy(value);
+			result.put("id", id);
+			return result;
+		}
+
 		private String last(String path) {
 			return path.substring(path.lastIndexOf('/') + 1);
 		}
 
 		private void json(HttpExchange exchange, int status, Object value) throws IOException {
-			exchange.getResponseHeaders().set("Content-Type", "application/json");
+			json(exchange, status, value, "application/json");
+		}
+
+		private void json(HttpExchange exchange, int status, Object value, String contentType) throws IOException {
+			exchange.getResponseHeaders().set("Content-Type", contentType);
 			respond(exchange, status, value instanceof String ? (String) value : JSON.writeValueAsString(value));
 		}
 

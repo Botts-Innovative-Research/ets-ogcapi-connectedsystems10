@@ -14,11 +14,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SchemaLocation;
+import com.networknt.schema.SchemaValidatorsConfig;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.TestRunArg;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.EncodingMediatypeWrite;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport.TraversalResult;
 import org.testng.SkipException;
 
 import io.restassured.response.Response;
@@ -34,7 +46,7 @@ public final class CreateReplaceDeleteSupport {
 
 	private static final String CONF_API_COMMON = CONF_BASE + "api-common";
 
-	private static final String CONF_FEATURES4_CREATE_REPLACE_DELETE = "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete";
+	private static final String CONF_INHERITED_CREATE_REPLACE_DELETE = "http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete";
 
 	private static final String REQ_BASE = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/create-replace-delete/";
 
@@ -49,6 +61,15 @@ public final class CreateReplaceDeleteSupport {
 	private static final String ENABLED = "true";
 
 	private static final String DEDICATED_POLICY = "dedicated-mutable-iut";
+
+	private static final String LOCAL_SCHEMA_PREFIX = "https://csapi-compliance.local/schemas/";
+
+	private static final ObjectMapper JSON = new ObjectMapper();
+
+	private static final JsonSchemaFactory SCHEMA_FACTORY = JsonSchemaFactory.getInstance(
+			SpecVersion.VersionFlag.V202012,
+			builder -> builder.schemaMappers(mappers -> mappers.mapPrefix(LOCAL_SCHEMA_PREFIX, "classpath:schemas/")
+				.mapPrefix("https://geojson.org/schema/", "classpath:schemas/external/geojson.org/schema/")));
 
 	private static final ResourceKind SYSTEM = new ResourceKind("System", "systems", CONF_BASE + "system",
 			"sosa:System", false);
@@ -110,12 +131,13 @@ public final class CreateReplaceDeleteSupport {
 			String systemMediaType = preferredMediaType(SYSTEM, conformance, requirement);
 			String deploymentMediaType = preferredMediaType(DEPLOYMENT, conformance, requirement);
 			String parentUid = uid("cascade-parent");
-			OwnedResource parent = createOwned(this.apiRoot.resolve("systems"),
-					body(SYSTEM, systemMediaType, "parent", parentUid), systemMediaType, SYSTEM, requirement, cleanup,
-					true);
-			OwnedResource child = createOwned(childCollection(parent.uri(), "subsystems"),
+			OwnedResource parent = canonicalOwned(
+					createOwned(this.apiRoot.resolve("systems"), body(SYSTEM, systemMediaType, "parent", parentUid),
+							systemMediaType, SYSTEM, requirement, cleanup, true),
+					SYSTEM, requirement, cleanup);
+			OwnedResource child = canonicalOwned(createOwned(childCollection(parent.uri(), "subsystems"),
 					body(SYSTEM, systemMediaType, "child", uid("cascade-child")), systemMediaType, SYSTEM, requirement,
-					cleanup, true);
+					cleanup, true), SYSTEM, requirement, cleanup);
 
 			assertDeleteConflict(parent.uri(), requirement);
 			assertAvailable(parent.uri(), requirement);
@@ -126,17 +148,22 @@ public final class CreateReplaceDeleteSupport {
 
 			String targetUid = uid("cascade-target");
 			String survivorUid = uid("cascade-survivor");
-			OwnedResource target = createOwned(this.apiRoot.resolve("systems"),
-					body(SYSTEM, systemMediaType, "target", targetUid), systemMediaType, SYSTEM, requirement, cleanup,
-					true);
-			OwnedResource survivor = createOwned(this.apiRoot.resolve("systems"),
-					body(SYSTEM, systemMediaType, "survivor", survivorUid), systemMediaType, SYSTEM, requirement,
-					cleanup, true);
-			OwnedResource deployment = createOwned(this.apiRoot.resolve("deployments"),
+			OwnedResource target = canonicalOwned(
+					createOwned(this.apiRoot.resolve("systems"), body(SYSTEM, systemMediaType, "target", targetUid),
+							systemMediaType, SYSTEM, requirement, cleanup, true),
+					SYSTEM, requirement, cleanup);
+			OwnedResource survivor = canonicalOwned(
+					createOwned(this.apiRoot.resolve("systems"), body(SYSTEM, systemMediaType, "survivor", survivorUid),
+							systemMediaType, SYSTEM, requirement, cleanup, true),
+					SYSTEM, requirement, cleanup);
+			OwnedResource deployment = canonicalOwned(createOwned(this.apiRoot.resolve("deployments"),
 					body(DEPLOYMENT, deploymentMediaType, "association", uid("cascade-deployment"),
 							List.of(targetUid, survivorUid)),
-					deploymentMediaType, DEPLOYMENT, requirement, cleanup, false);
+					deploymentMediaType, DEPLOYMENT, requirement, cleanup, false), DEPLOYMENT, requirement, cleanup);
 
+			Map<String, Object> initialDeployment = getJson(deployment.uri(), deploymentMediaType, 200, requirement);
+			assertContainsAssociation(initialDeployment, targetUid, target.uri(), "target", requirement);
+			assertContainsAssociation(initialDeployment, survivorUid, survivor.uri(), "survivor", requirement);
 			assertDeleteConflict(target.uri(), requirement);
 			assertAvailable(target.uri(), requirement);
 			assertAvailable(survivor.uri(), requirement);
@@ -166,9 +193,9 @@ public final class CreateReplaceDeleteSupport {
 		Map<String, Object> conformance = prepare(requirement, CONF_BASE + "subsystem");
 		executeWithCleanup(requirement, cleanup -> {
 			String parentMediaType = preferredMediaType(SYSTEM, conformance, requirement);
-			OwnedResource parent = createOwned(this.apiRoot.resolve("systems"),
+			OwnedResource parent = canonicalOwned(createOwned(this.apiRoot.resolve("systems"),
 					body(SYSTEM, parentMediaType, "subsystem-parent", uid("subsystem-parent")), parentMediaType, SYSTEM,
-					requirement, cleanup, true);
+					requirement, cleanup, true), SYSTEM, requirement, cleanup);
 			for (String mediaType : supportedMediaTypes(SYSTEM.path(), conformance, requirement)) {
 				Map<String, Object> child = body(SYSTEM, mediaType, "subsystem", uid("subsystem"));
 				createOnly(childCollection(parent.uri(), "subsystems"), child, mediaType, SYSTEM, requirement, cleanup,
@@ -195,9 +222,11 @@ public final class CreateReplaceDeleteSupport {
 		Map<String, Object> conformance = prepare(requirement, CONF_BASE + "subdeployment");
 		executeWithCleanup(requirement, cleanup -> {
 			String parentMediaType = preferredMediaType(DEPLOYMENT, conformance, requirement);
-			OwnedResource parent = createOwned(this.apiRoot.resolve("deployments"),
-					body(DEPLOYMENT, parentMediaType, "subdeployment-parent", uid("subdeployment-parent")),
-					parentMediaType, DEPLOYMENT, requirement, cleanup, false);
+			OwnedResource parent = canonicalOwned(
+					createOwned(this.apiRoot.resolve("deployments"),
+							body(DEPLOYMENT, parentMediaType, "subdeployment-parent", uid("subdeployment-parent")),
+							parentMediaType, DEPLOYMENT, requirement, cleanup, false),
+					DEPLOYMENT, requirement, cleanup);
 			for (String mediaType : supportedMediaTypes(DEPLOYMENT.path(), conformance, requirement)) {
 				Map<String, Object> child = body(DEPLOYMENT, mediaType, "subdeployment", uid("subdeployment"));
 				createOnly(childCollection(parent.uri(), "subdeployments"), child, mediaType, DEPLOYMENT, requirement,
@@ -224,9 +253,9 @@ public final class CreateReplaceDeleteSupport {
 		Map<String, Object> conformance = prepare(requirement, SAMPLING_FEATURE.condition());
 		executeWithCleanup(requirement, cleanup -> {
 			String parentMediaType = preferredMediaType(SYSTEM, conformance, requirement);
-			OwnedResource parent = createOwned(this.apiRoot.resolve("systems"),
+			OwnedResource parent = canonicalOwned(createOwned(this.apiRoot.resolve("systems"),
 					body(SYSTEM, parentMediaType, "sampling-parent", uid("sampling-parent")), parentMediaType, SYSTEM,
-					requirement, cleanup, true);
+					requirement, cleanup, true), SYSTEM, requirement, cleanup);
 			for (String mediaType : supportedMediaTypes(SAMPLING_FEATURE.path(), conformance, requirement)) {
 				String samplingUid = uid("sampling-feature");
 				transaction(SAMPLING_FEATURE, childCollection(parent.uri(), "samplingFeatures"),
@@ -260,7 +289,10 @@ public final class CreateReplaceDeleteSupport {
 					Map<String, Object> body = body(collection.kind(), mediaType, "create", resourceUid);
 					OwnedResource created = createOwned(collection.itemsUri(), body, mediaType, collection.kind(),
 							requirement, cleanup, collection.kind() == SYSTEM);
-					URI canonical = canonicalUri(collection.kind(), created.uri());
+					String id = lastPathSegment(created.uri(), requirement);
+					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
+					assertSubmittedContent(body, getJson(collectionItem, mediaType, 200, requirement), requirement);
+					URI canonical = canonicalUri(collection.kind(), created.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + canonical,
 							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
 					assertSubmittedContent(body, getJson(canonical, mediaType, 200, requirement), requirement);
@@ -286,9 +318,12 @@ public final class CreateReplaceDeleteSupport {
 					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
 					Map<String, Object> replacement = body(collection.kind(), mediaType, "replace", resourceUid);
 					assertOptions(collectionItem, List.of("PUT"), requirement);
-					Response put = request(mediaType, replacement).put(collectionItem).andReturn();
+					Response put = request(mediaType, replacement, collection.kind(), requirement).put(collectionItem)
+						.andReturn();
 					assertStatusIn(put, List.of(200, 204), requirement, "PUT " + collectionItem);
-					URI canonical = canonicalUri(collection.kind(), created.uri());
+					assertSubmittedContent(replacement, getJson(collectionItem, mediaType, 200, requirement),
+							requirement);
+					URI canonical = canonicalUri(collection.kind(), created.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + canonical,
 							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
 					assertSubmittedContent(replacement, getJson(canonical, mediaType, 200, requirement), requirement);
@@ -312,7 +347,7 @@ public final class CreateReplaceDeleteSupport {
 							collection.kind(), requirement, cleanup, collection.kind() == SYSTEM);
 					String rootDeleteId = lastPathSegment(rootDelete.uri(), requirement);
 					URI rootDeleteItem = childCollection(collection.itemsUri(), encoded(rootDeleteId));
-					URI rootDeleteCanonical = canonicalUri(collection.kind(), rootDelete.uri());
+					URI rootDeleteCanonical = canonicalUri(collection.kind(), rootDelete.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + rootDeleteCanonical,
 							() -> cleanupDelete(rootDeleteCanonical, collection.kind() == SYSTEM, requirement));
 					delete(new OwnedResource(rootDeleteCanonical, collection.kind() == SYSTEM),
@@ -332,9 +367,13 @@ public final class CreateReplaceDeleteSupport {
 						.delete(collectionItem)
 						.andReturn();
 					assertStatusIn(delete, List.of(200, 202, 204), requirement, "DELETE " + collectionItem);
-					URI canonical = canonicalUri(collection.kind(), occurrence.uri());
+					if (delete.getStatusCode() == 202) {
+						awaitGone(collectionItem, requirement);
+					}
+					URI canonical = canonicalUri(collection.kind(), occurrence.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + canonical,
 							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
+					assertGone(collectionItem, requirement);
 					assertAvailable(canonical, requirement);
 				}
 			}
@@ -351,21 +390,35 @@ public final class CreateReplaceDeleteSupport {
 			for (CustomCollection collection : collections) {
 				for (String mediaType : collection.mediaTypes()) {
 					Map<String, Object> body = body(collection.kind(), mediaType, "add", uid("custom-add"));
-					OwnedResource canonical = createOwned(this.apiRoot.resolve(collection.kind().path()), body,
-							mediaType, collection.kind(), requirement, cleanup, collection.kind() == SYSTEM);
+					OwnedResource canonical = canonicalOwned(
+							createOwned(this.apiRoot.resolve(collection.kind().path()), body, mediaType,
+									collection.kind(), requirement, cleanup, collection.kind() == SYSTEM),
+							collection.kind(), requirement, cleanup);
+					assertOptions(collection.itemsUri(), List.of("POST"), requirement);
 					Response add = EncodingMediatypeWrite.givenWithoutDefaultCharset()
 						.accept("application/json")
 						.contentType("text/uri-list")
 						.body(canonical.uri() + "\n")
 						.post(collection.itemsUri())
 						.andReturn();
-					assertStatusIn(add, List.of(200, 201, 204), requirement,
-							"POST text/uri-list " + collection.itemsUri());
+					ETSAssert.assertStatus(add, 201, requirement);
+					String location = add.getHeader("Location");
+					if (location == null || location.isBlank()) {
+						ETSAssert.failWithUri(requirement,
+								"POST text/uri-list " + collection.itemsUri() + " returned HTTP 201 without Location.");
+					}
+					URI returnedItem = resolveCreatedResourceUri(this.apiRoot, location, requirement);
 					String id = lastPathSegment(canonical.uri(), requirement);
 					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
 					Map<String, Object> expected = getJson(canonical.uri(), mediaType, 200, requirement);
+					Map<String, Object> returned = getJson(returnedItem, mediaType, 200, requirement);
+					assertSubmittedContent(expected, returned, requirement);
 					Map<String, Object> actual = getJson(collectionItem, mediaType, 200, requirement);
 					assertSubmittedContent(expected, actual, requirement);
+					if (!returnedItem.equals(collectionItem)) {
+						cleanup.push("returned custom collection occurrence " + returnedItem,
+								() -> cleanupDelete(returnedItem, false, requirement));
+					}
 					cleanup.push("custom collection occurrence " + collectionItem,
 							() -> cleanupDelete(collectionItem, false, requirement));
 				}
@@ -384,7 +437,7 @@ public final class CreateReplaceDeleteSupport {
 				"IUT does not declare the Part 1 Create/Replace/Delete conformance class.");
 		requireDeclaration(body, CONF_API_COMMON, requirement,
 				"IUT does not declare the direct Part 1 API Common prerequisite.");
-		requireDeclaration(body, CONF_FEATURES4_CREATE_REPLACE_DELETE, requirement,
+		requireDeclaration(body, CONF_INHERITED_CREATE_REPLACE_DELETE, requirement,
 				"IUT does not declare the inherited OGC API Features Part 4 prerequisite.");
 		requireDeclaration(body, condition, requirement,
 				"conditional resource conformance class is not declared; this procedure is not applicable.");
@@ -415,9 +468,6 @@ public final class CreateReplaceDeleteSupport {
 			if (id == null) {
 				ETSAssert.failWithUri(requirement, "advertised collection is missing a non-empty string id.");
 			}
-			if (!isCustomCollection(id)) {
-				continue;
-			}
 			for (ResourceKind kind : CUSTOM_KINDS) {
 				if (declares(conformance, kind.condition()) && kind.matches(collection)) {
 					result.add(new CustomCollection(kind, id,
@@ -446,15 +496,16 @@ public final class CreateReplaceDeleteSupport {
 	private void transaction(ResourceKind kind, URI collection, Map<String, Object> createBody,
 			BodyFactory replacementFactory, String mediaType, String requirement, CleanupStack cleanup) {
 		assertOptions(collection, List.of("POST"), requirement);
-		OwnedResource resource = createOwned(collection, createBody, mediaType, kind, requirement, cleanup,
-				kind == SYSTEM);
+		OwnedResource resource = canonicalOwned(
+				createOwned(collection, createBody, mediaType, kind, requirement, cleanup, kind == SYSTEM), kind,
+				requirement, cleanup);
 		Map<String, Object> created = getJson(resource.uri(), mediaType, 200, requirement);
 		assertSubmittedContent(createBody, created, requirement);
 
 		assertOptions(resource.uri(), List.of("PUT", "DELETE"), requirement);
 		String identity = resourceIdentity(createBody, requirement);
 		Map<String, Object> replacement = replacementFactory.create(identity);
-		Response replace = request(mediaType, replacement).put(resource.uri()).andReturn();
+		Response replace = request(mediaType, replacement, kind, requirement).put(resource.uri()).andReturn();
 		assertStatusIn(replace, List.of(200, 204), requirement, "PUT " + resource.uri());
 
 		Map<String, Object> replaced = getJson(resource.uri(), mediaType, 200, requirement);
@@ -470,45 +521,83 @@ public final class CreateReplaceDeleteSupport {
 	private OwnedResource createOnly(URI collection, Map<String, Object> body, String mediaType, ResourceKind kind,
 			String requirement, CleanupStack cleanup, boolean cascadeCleanup) {
 		assertOptions(collection, List.of("POST"), requirement);
-		OwnedResource created = createOwned(collection, body, mediaType, kind, requirement, cleanup, cascadeCleanup);
+		OwnedResource created = canonicalOwned(
+				createOwned(collection, body, mediaType, kind, requirement, cleanup, cascadeCleanup), kind, requirement,
+				cleanup);
 		assertSubmittedContent(body, getJson(created.uri(), mediaType, 200, requirement), requirement);
 		return created;
 	}
 
 	private OwnedResource createOwned(URI collection, Map<String, Object> body, String mediaType, ResourceKind kind,
 			String requirement, CleanupStack cleanup, boolean cascadeCleanup) {
-		Response response = request(mediaType, body).post(collection).andReturn();
+		io.restassured.specification.RequestSpecification create = request(mediaType, body, kind, requirement);
+		String identity = resourceIdentity(body, requirement);
+		OwnedCleanupTarget cleanupTarget = new OwnedCleanupTarget(kind, mediaType, identity, cascadeCleanup);
+		cleanup.push("created " + kind.name() + " identity " + identity,
+				() -> cleanupOwned(cleanupTarget, requirement));
+		Response response = create.post(collection).andReturn();
 		ETSAssert.assertStatus(response, 201, requirement);
-		URI fallbackUri = fallbackCreatedResourceUri(response, kind);
-		if (fallbackUri != null) {
-			cleanup.push("created resource fallback " + fallbackUri,
-					() -> cleanupDelete(fallbackUri, cascadeCleanup, requirement));
-		}
 		String location = response.getHeader("Location");
 		if (location == null || location.isBlank()) {
 			ETSAssert.failWithUri(requirement, "POST " + collection + " returned HTTP 201 without Location.");
 		}
 		URI resourceUri = resolveCreatedResourceUri(this.apiRoot, location, requirement);
-		OwnedResource owned = new OwnedResource(resourceUri, cascadeCleanup);
-		if (!resourceUri.equals(fallbackUri)) {
-			cleanup.push("created resource " + resourceUri,
-					() -> cleanupDelete(resourceUri, cascadeCleanup, requirement));
-		}
-		return owned;
+		Map<String, Object> returned = getJson(resourceUri, mediaType, 200, requirement);
+		assertResourceIdentity(returned, identity, resourceUri, requirement);
+		assertSubmittedContent(body, returned, requirement);
+		cleanupTarget.setVerifiedUri(resourceUri);
+		return new OwnedResource(resourceUri, cascadeCleanup);
 	}
 
-	private URI fallbackCreatedResourceUri(Response response, ResourceKind kind) {
+	private io.restassured.specification.RequestSpecification request(String mediaType, Map<String, Object> body,
+			ResourceKind kind, String requirement) {
+		validateGeneratedBody(body, kind.path(), mediaType, requirement);
+		return EncodingMediatypeWrite.givenWithoutDefaultCharset().accept(mediaType).contentType(mediaType).body(body);
+	}
+
+	static void validateGeneratedBody(Map<String, Object> body, String resourcePath, String mediaType,
+			String requirement) {
+		String schema = generatedBodySchema(resourcePath, mediaType);
+		if (schema == null) {
+			ETSAssert.failWithUri(requirement,
+					"no released schema is mapped for generated " + resourcePath + " body with " + mediaType + ".");
+		}
 		try {
-			String id = string(response.jsonPath().getString("id"));
-			return id == null ? null : this.apiRoot.resolve(kind.path() + "/" + encoded(id));
+			JsonSchema jsonSchema = SCHEMA_FACTORY.getSchema(SchemaLocation.of(schema), schemaConfig());
+			Set<ValidationMessage> errors = jsonSchema.validate(JSON.valueToTree(body));
+			if (!errors.isEmpty()) {
+				String joined = errors.stream()
+					.limit(8)
+					.map(ValidationMessage::getMessage)
+					.collect(Collectors.joining("; "));
+				ETSAssert.failWithUri(requirement,
+						"generated " + resourcePath + " write body failed the released schema: " + joined);
+			}
 		}
 		catch (RuntimeException ex) {
-			return null;
+			ETSAssert.failWithUri(requirement,
+					"generated " + resourcePath + " write body could not be validated against the released schema "
+							+ schema + ": " + ex.getMessage() + ".");
 		}
 	}
 
-	private io.restassured.specification.RequestSpecification request(String mediaType, Map<String, Object> body) {
-		return EncodingMediatypeWrite.givenWithoutDefaultCharset().accept(mediaType).contentType(mediaType).body(body);
+	private static String generatedBodySchema(String resourcePath, String mediaType) {
+		if (GEOJSON.equals(mediaType)
+				&& Set.of("systems", "deployments", "procedures", "samplingFeatures").contains(resourcePath)) {
+			String name = "samplingFeatures".equals(resourcePath) ? "samplingFeature" : singular(resourcePath);
+			return LOCAL_SCHEMA_PREFIX + "connected-systems-1/geojson/" + name + ".json";
+		}
+		if (SENSORML.equals(mediaType)
+				&& Set.of("systems", "deployments", "procedures", "properties").contains(resourcePath)) {
+			return LOCAL_SCHEMA_PREFIX + "connected-systems-1/sensorml/" + singular(resourcePath) + ".json";
+		}
+		return null;
+	}
+
+	private static SchemaValidatorsConfig schemaConfig() {
+		SchemaValidatorsConfig config = new SchemaValidatorsConfig();
+		config.setFormatAssertionsEnabled(true);
+		return config;
 	}
 
 	private void assertOptions(URI uri, List<String> expectedMethods, String requirement) {
@@ -538,11 +627,12 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private void delete(OwnedResource resource, boolean cascade, String requirement) {
-		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
-			.accept("application/json")
-			.queryParam("cascade", cascade)
-			.delete(resource.uri())
-			.andReturn();
+		io.restassured.specification.RequestSpecification request = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json");
+		if (cascade) {
+			request.queryParam("cascade", true);
+		}
+		Response response = request.delete(resource.uri()).andReturn();
 		assertStatusIn(response, List.of(200, 202, 204), requirement, "DELETE " + resource.uri());
 		if (response.getStatusCode() == 202) {
 			awaitGone(resource.uri(), requirement);
@@ -550,14 +640,52 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private void cleanupDelete(URI resource, boolean cascade, String requirement) {
-		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
-			.accept("application/json")
-			.queryParam("cascade", cascade)
-			.delete(resource)
-			.andReturn();
+		io.restassured.specification.RequestSpecification request = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.accept("application/json");
+		if (cascade) {
+			request.queryParam("cascade", true);
+		}
+		Response response = request.delete(resource).andReturn();
 		assertStatusIn(response, List.of(200, 202, 204, 404), requirement, "cleanup DELETE " + resource);
 		if (response.getStatusCode() == 202) {
 			awaitGone(resource, requirement);
+		}
+	}
+
+	private void cleanupOwned(OwnedCleanupTarget target, String requirement) {
+		if (target.verifiedUri != null) {
+			cleanupDelete(target.verifiedUri, target.cascade, requirement);
+			return;
+		}
+		URI rootCollection = this.apiRoot.resolve(target.kind.path());
+		Optional<TraversalResult> traversal = Part1ApiCommonSupport.resourcesAtEndpoint(rootCollection,
+				target.mediaType, Map.of(), requirement);
+		if (traversal.isEmpty()) {
+			return;
+		}
+		List<URI> matches = new ArrayList<>();
+		for (Map<String, Object> item : traversal.get().items()) {
+			if (!target.identity.equals(optionalResourceIdentity(item))) {
+				continue;
+			}
+			String id = string(item.get("id"));
+			if (id == null) {
+				ETSAssert.failWithUri(requirement, "cleanup discovery found " + target.kind.name() + " identity "
+						+ target.identity + " without a local id; refusing an unverified DELETE.");
+			}
+			URI candidate = this.apiRoot.resolve(target.kind.path() + "/" + encoded(id));
+			Map<String, Object> representation = getJson(candidate, target.mediaType, 200, requirement);
+			if (target.identity.equals(optionalResourceIdentity(representation))) {
+				matches.add(candidate);
+			}
+		}
+		if (matches.size() > 1) {
+			ETSAssert.failWithUri(requirement,
+					"cleanup discovery found multiple " + target.kind.name() + " resources with submitted identity "
+							+ target.identity + "; refusing ambiguous DELETE operations.");
+		}
+		if (!matches.isEmpty()) {
+			cleanupDelete(matches.get(0), target.cascade, requirement);
 		}
 	}
 
@@ -595,6 +723,14 @@ public final class CreateReplaceDeleteSupport {
 			.get(resource)
 			.andReturn();
 		ETSAssert.assertStatus(response, 404, requirement);
+	}
+
+	private static void assertContainsAssociation(Map<String, Object> deployment, String uid, URI resource,
+			String label, String requirement) {
+		if (!containsString(deployment, uid) && !containsString(deployment, resource)) {
+			ETSAssert.failWithUri(requirement, "pre-delete Deployment does not reference the " + label + " System "
+					+ resource + "; cascade behavior cannot be assessed.");
+		}
 	}
 
 	private Map<String, Object> getJson(URI resource, String mediaType, int status, String requirement) {
@@ -810,6 +946,7 @@ public final class CreateReplaceDeleteSupport {
 	private static Map<String, Object> sensorMlSystemBody(String phase, String uid) {
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("type", "PhysicalSystem");
+		body.put("definition", "http://www.w3.org/ns/sosa/System");
 		body.put("uniqueId", uid);
 		body.put("label", "ETS Create/Replace/Delete System " + phase);
 		body.put("description", "Temporary System owned by the ETS.");
@@ -819,6 +956,7 @@ public final class CreateReplaceDeleteSupport {
 	private static Map<String, Object> sensorMlDeploymentBody(String phase, String uid, List<String> systemUids) {
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("type", "Deployment");
+		body.put("definition", "http://www.w3.org/ns/sosa/Deployment");
 		body.put("uniqueId", uid);
 		body.put("label", "ETS Create/Replace/Delete Deployment " + phase);
 		body.put("description", "Temporary Deployment owned by the ETS.");
@@ -880,6 +1018,8 @@ public final class CreateReplaceDeleteSupport {
 		properties.put("featureType", "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint");
 		properties.put("name", "ETS Create/Replace/Delete Sampling Feature " + phase);
 		properties.put("description", "Temporary Sampling Feature owned by the ETS.");
+		properties.put("sampledFeature@link",
+				Map.of("href", "http://sweetontology.net/realm/Atmosphere", "title", "Ambient Air"));
 		Map<String, Object> body = new LinkedHashMap<>();
 		body.put("type", "Feature");
 		body.put("geometry", Map.of("type", "Point", "coordinates", List.of(-77.037, 38.898)));
@@ -919,24 +1059,52 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private static String resourceIdentity(Map<String, Object> body, String requirement) {
-		String direct = string(body.get("uniqueId"));
-		if (direct != null) {
-			return direct;
-		}
-		Object properties = body.get("properties");
-		if (properties instanceof Map) {
-			String uid = string(((Map<?, ?>) properties).get("uid"));
-			if (uid != null) {
-				return uid;
-			}
+		String identity = optionalResourceIdentity(body);
+		if (identity != null) {
+			return identity;
 		}
 		ETSAssert.failWithUri(requirement, "submitted representation does not expose uid or uniqueId.");
 		return "";
 	}
 
-	private URI canonicalUri(ResourceKind kind, URI location) {
-		String id = lastPathSegment(location, REQ_BASE + "create-in-collection");
+	private static String optionalResourceIdentity(Map<String, Object> body) {
+		String direct = string(body.get("uniqueId"));
+		if (direct != null) {
+			return direct;
+		}
+		Object properties = body.get("properties");
+		return properties instanceof Map ? string(((Map<?, ?>) properties).get("uid")) : null;
+	}
+
+	private static void assertResourceIdentity(Map<String, Object> body, String expected, URI resource,
+			String requirement) {
+		String actual = optionalResourceIdentity(body);
+		if (!expected.equals(actual)) {
+			ETSAssert.failWithUri(requirement, "POST Location " + resource + " resolved to identity " + actual
+					+ " instead of submitted identity " + expected + "; refusing destructive cleanup at that URI.");
+		}
+	}
+
+	private OwnedResource canonicalOwned(OwnedResource created, ResourceKind kind, String requirement,
+			CleanupStack cleanup) {
+		URI canonical = canonicalUri(kind, created.uri(), requirement);
+		if (!canonical.equals(created.uri())) {
+			cleanup.push("canonical created resource " + canonical,
+					() -> cleanupDelete(canonical, created.cascadeCleanup(), requirement));
+		}
+		return new OwnedResource(canonical, created.cascadeCleanup());
+	}
+
+	private URI canonicalUri(ResourceKind kind, URI location, String requirement) {
+		String id = lastPathSegment(location, requirement);
 		return this.apiRoot.resolve(kind.path() + "/" + encoded(id));
+	}
+
+	private static String singular(String resourcePath) {
+		if ("properties".equals(resourcePath)) {
+			return "property";
+		}
+		return resourcePath.substring(0, resourcePath.length() - 1);
 	}
 
 	private static URI childCollection(URI parent, String childName) {
@@ -973,13 +1141,6 @@ public final class CreateReplaceDeleteSupport {
 
 	private static String string(Object value) {
 		return value instanceof String && !((String) value).isBlank() ? (String) value : null;
-	}
-
-	private static boolean isCustomCollection(String id) {
-		String normalized = id.toLowerCase(Locale.ROOT);
-		return !normalized.startsWith("all_") && !normalized.equals("systems") && !normalized.equals("deployments")
-				&& !normalized.equals("procedures") && !normalized.equals("samplingfeatures")
-				&& !normalized.equals("properties") && !normalized.equals("fois");
 	}
 
 	private static String stripTrailingSlash(String value) {
@@ -1068,6 +1229,31 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private record OwnedResource(URI uri, boolean cascadeCleanup) {
+	}
+
+	private static final class OwnedCleanupTarget {
+
+		private final ResourceKind kind;
+
+		private final String mediaType;
+
+		private final String identity;
+
+		private final boolean cascade;
+
+		private URI verifiedUri;
+
+		private OwnedCleanupTarget(ResourceKind kind, String mediaType, String identity, boolean cascade) {
+			this.kind = kind;
+			this.mediaType = mediaType;
+			this.identity = identity;
+			this.cascade = cascade;
+		}
+
+		private void setVerifiedUri(URI verifiedUri) {
+			this.verifiedUri = verifiedUri;
+		}
+
 	}
 
 	private record CleanupAction(String label, ThrowingAction action) {

@@ -29,7 +29,7 @@ public class CreateReplaceDeleteTests {
 	 * condition, safety, HTTP, and cleanup work.
 	 * @param testContext current TestNG context.
 	 */
-	@BeforeClass(alwaysRun = true, dependsOnGroups = "part1apicommon")
+	@BeforeClass(dependsOnGroups = "part1apicommon")
 	public void fetchCreateReplaceDeleteArguments(ITestContext testContext) {
 		Object iut = testContext.getSuite().getAttribute(SuiteAttribute.IUT.getName());
 		if (!(iut instanceof URI)) {
@@ -44,7 +44,7 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "system", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "system", groups = GROUP, dependsOnGroups = "part1apicommon")
 	public void systemsCreateReplaceDelete() {
 		support().systemsCreateReplaceDelete();
 	}
@@ -52,7 +52,8 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CASCADE-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "system-delete-cascade", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "system-delete-cascade", groups = GROUP,
+			dependsOnGroups = "part1apicommon")
 	public void systemDeleteCascade() {
 		support().systemDeleteCascade();
 	}
@@ -60,7 +61,7 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-NESTED-CANONICAL-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "subsystem", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "subsystem", groups = GROUP, dependsOnGroups = "part1apicommon")
 	public void subsystemsCreate() {
 		support().subsystemsCreate();
 	}
@@ -68,7 +69,7 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "deployment", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "deployment", groups = GROUP, dependsOnGroups = "part1apicommon")
 	public void deploymentsCreateReplaceDelete() {
 		support().deploymentsCreateReplaceDelete();
 	}
@@ -76,7 +77,7 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-NESTED-CANONICAL-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "subdeployment", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "subdeployment", groups = GROUP, dependsOnGroups = "part1apicommon")
 	public void subdeploymentsCreate() {
 		support().subdeploymentsCreate();
 	}
@@ -84,7 +85,7 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "procedure", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "procedure", groups = GROUP, dependsOnGroups = "part1apicommon")
 	public void proceduresCreateReplaceDelete() {
 		support().proceduresCreateReplaceDelete();
 	}
@@ -92,7 +93,7 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-NESTED-CANONICAL-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "sampling-feature", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "sampling-feature", groups = GROUP, dependsOnGroups = "part1apicommon")
 	public void samplingFeaturesCreateReplaceDelete() {
 		support().samplingFeaturesCreateReplaceDelete();
 	}
@@ -100,7 +101,7 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "property", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "property", groups = GROUP, dependsOnGroups = "part1apicommon")
 	public void propertiesCreateReplaceDelete() {
 		support().propertiesCreateReplaceDelete();
 	}
@@ -108,7 +109,8 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-CREATE-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "create-in-collection", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "create-in-collection", groups = GROUP,
+			dependsOnGroups = "part1apicommon")
 	public void resourcesCreateInCustomCollections() {
 		support().resourcesCreateInCustomCollections();
 	}
@@ -116,7 +118,8 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-REPLACE-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "replace-in-collection", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "replace-in-collection", groups = GROUP,
+			dependsOnGroups = "part1apicommon")
 	public void resourcesReplaceInCustomCollections() {
 		support().resourcesReplaceInCustomCollections();
 	}
@@ -124,7 +127,8 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-DELETE-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "delete-in-collection", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "delete-in-collection", groups = GROUP,
+			dependsOnGroups = "part1apicommon")
 	public void resourcesDeleteInCustomCollections() {
 		support().resourcesDeleteInCustomCollections();
 	}
@@ -132,7 +136,7 @@ public class CreateReplaceDeleteTests {
 	/**
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-001.
 	 */
-	@Test(description = "OGC-23-001 " + REQ + "add-to-collection", groups = GROUP, alwaysRun = true)
+	@Test(description = "OGC-23-001 " + REQ + "add-to-collection", groups = GROUP, dependsOnGroups = "part1apicommon")
 	public void resourcesAddToCustomCollections() {
 		support().resourcesAddToCustomCollections();
 	}

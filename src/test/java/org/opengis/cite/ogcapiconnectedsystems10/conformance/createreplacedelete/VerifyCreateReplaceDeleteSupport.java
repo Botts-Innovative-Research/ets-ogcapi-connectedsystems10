@@ -153,4 +153,19 @@ public class VerifyCreateReplaceDeleteSupport {
 				CreateReplaceDeleteSupport.supportedMediaTypes("properties", both, REQUIREMENT));
 	}
 
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-REPRESENTATION-CLOSURE-001.
+	 */
+	@Test
+	public void generatedWriteBodiesAreValidatedBeforeDispatch() {
+		Map<String, Object> invalidSensorMlSystem = Map.of("type", "PhysicalSystem", "uniqueId",
+				"urn:ets:test:invalid");
+
+		AssertionError error = assertThrows(AssertionError.class, () -> CreateReplaceDeleteSupport
+			.validateGeneratedBody(invalidSensorMlSystem, "systems", "application/sml+json", REQUIREMENT));
+
+		assertTrue(error.getMessage().startsWith(REQUIREMENT));
+		assertTrue(error.getMessage().contains("released"));
+	}
+
 }

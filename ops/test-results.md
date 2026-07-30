@@ -1,8 +1,32 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-29T16:39Z
+Last updated: 2026-07-30T00:31Z
 
 ## Current Sprint Evidence
+
+Sprint 56 Part 1 Create/Replace/Delete direct ATS:
+
+- Released sources: OGC 23-001 `v1.0.0` commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`; inherited Features Part 4
+  `part4-1.0.0-draft.1` commit
+  `ea42aa1de6d8cbb53c526f41e1f66c1887fe71d4`.
+- Implementation: twelve independent procedures with causal API Common
+  dependency, exact `ogcapi-4` inheritance, schema-validated writes,
+  identity-safe cleanup, cascade graph preconditions, root canonical nested
+  checks, and complete custom-collection lifecycle assertions.
+- Docker Maven after final source edits: BUILD SUCCESS, `630 total / 0
+  failures / 0 errors / 3 skipped`.
+- Coverage inventory: overall `240 total / 76 exact / 2 helper / 126 candidate
+  / 36 unmapped`; Create/Replace/Delete `12 / 0 / 0 / 12 / 0`.
+- Initial candidate local OSH E2E: populated `244 total / 54 passed / 35 failed
+  / 155 skipped`; clean primary `244 / 40 / 7 / 197`. Provisioning and cleanup
+  passed, primary state was unchanged, and no CRD write occurred.
+- All twelve procedures correctly SKIPPED because unmodified OSH omits
+  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`.
+  OSH's similarly named Features Part 4 URI is not the released prerequisite.
+- Verdict: implementation and controlled HTTP are verified; positive real-IUT
+  mutation E2E is not established. Mappings remain candidate and Sprint 56 is
+  IN PROGRESS. Exact replacement-candidate E2E and fresh Raze are pending.
 
 Sprint 55 Part 1 Advanced Filtering direct ATS:
 

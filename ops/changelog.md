@@ -97,6 +97,47 @@ completion sequence.
   occurrence cleanup is pre-registered and polls late materialization.
 - Remediation passes direct controlled HTTP `25/0/0/0` and full Docker Maven
   `644/0/0/3` precommit. Replacement exact gates and fresh Raze are pending.
+- Sealed remediation candidate
+  `1a6c5ec30f76e120a0e2cd676f472699141213ca` and exact image
+  `sha256:6939ef2ea40ff42328d4ff972b691dd4ba1c6a59855fe913d175b09f9555c1da`
+  with `Build-Revision: 1a6c5ec30f`.
+- Exact focused/full Docker Maven pass `42/0/0/0` and `644/0/0/3`. Released
+  ATS, GeoJSON and Property schema parity, TeamEngine runtime/base
+  immutability, dependency sabotage, credential integration/wire, and artifact
+  hygiene pass.
+- Exact real-IUT TeamEngine E2E remains honestly non-green: populated OSH is
+  `244/54/35/155`; clean primary is `244/40/7/197`. Provisioning and cleanup
+  pass, primary state is unchanged, and 365 IUT requests are GETs with zero
+  writes.
+- Core sabotage is `244/2/10/232`, with all twelve substantive CRD procedures
+  causally skipped. Credential evidence has zero unmasked artifact hits, 32
+  masked events, and 32 intact synthetic wire transmissions.
+- Archived exact evidence under
+  `ops/test-results/sprint-ets-56-part1-create-replace-delete-final-1a6c5ec-2026-07-30/`.
+  Positive mutation E2E remains externally blocked.
+- Fresh Raze on `1a6c5ec` returned `GAPS_FOUND 0.98`: nested API Common
+  requester boundaries could overrun the operation deadline, queued custom
+  replace/delete setup could write before occurrence propagation and leak late
+  aliases, and distinct queued URI-list occurrence Locations were discarded.
+- Archived the Raze report at
+  `.harness/evaluations/sprint-ets-56-raze-1a6c5ec-2026-07-30.yaml`, marked
+  `1a6c5ec` superseded, and added a verified 40-entry checksum manifest to its
+  exact evidence bundle.
+- Added six requirement-linked regressions. The first red failed compilation
+  at the injected-clock constructor; after clock-only plumbing, behavioral red
+  was `30/4/0/0`. A first green run was aborted after exposing an unbounded
+  sub-millisecond poll.
+- Injected the monotonic clock, floor request timeouts to remaining whole
+  milliseconds, and refuse first-page, pagination-page, and candidate requests
+  with no whole-millisecond budget.
+- Queued custom replace/delete setup now pre-registers cleanup and awaits each
+  occurrence under the original POST deadline before the later write.
+  Queued URI-list Locations are occurrences only when they are direct target
+  collection items; asynchronous status Locations are never dereferenced or
+  deleted.
+- Corrected direct HTTP passes `31/0/0/0`, focused aggregate passes
+  `48/0/0/0`, and full Docker Maven passes `650/0/0/3` precommit. A new exact
+  candidate, complete exact gate rerun, and fresh Raze remain pending.
 
 ## 2026-07-29 - Part 1 Advanced Filtering final-Raze remediation
 

@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T02:48Z
+Last updated: 2026-07-30T03:57Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -16,8 +16,12 @@ Last updated: 2026-07-30T02:48Z
 
 - Sprint 56 Part 1 Create/Replace/Delete positive mutation E2E remains open.
   Candidate `0023d5b` is separately superseded by Raze `GAPS_FOUND 0.99`;
-  local hard-deadline remediation passes direct HTTP `25/0/0/0` and full
-  Docker Maven `644/0/0/3` precommit, with replacement exact gates pending.
+  exact remediation candidate `1a6c5ec` also passes its technical gates but is
+  superseded by Raze `GAPS_FOUND 0.98`. Deadline requester boundaries, queued
+  custom setup occurrences, and queued URI-list Location classification are
+  remediated at direct HTTP `31/0/0/0`, focused aggregate `48/0/0/0`, and full
+  Maven `650/0/0/3` precommit. A new exact candidate and fresh Raze remain
+  pending.
   The unmodified local OSH API Common result is `4 PASS / 1 SKIP` because no
   advertised collection supplies positive datetime evidence. Causal TestNG
   inheritance therefore dependency-SKIPs all twelve CRD methods before their

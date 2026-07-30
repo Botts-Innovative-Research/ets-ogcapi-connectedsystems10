@@ -3111,7 +3111,7 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
 
 #### REQ-ETS-PART1-010: Create/Replace/Delete Conformance Class (`/conf/create-replace-delete`) (Sprint 12 target)
 - **Priority**: MUST
-- **Status**: IN_PROGRESS_RELEASED_ATS_CLOSURE (Sprint 56)
+- **Status**: IN_PROGRESS_POSITIVE_MUTATION_E2E_BLOCKED (Sprint 56)
 - **Sprint 56 accepted closure**: Replace the historical six-method Systems
   subset with exactly twelve independent methods matching the released
   `v1.0.0` Annex A procedures. Every procedure SHALL check the exact Part 1
@@ -3173,10 +3173,23 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   immutable-base, and artifact-hygiene gates with image
   `sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`.
   Raze returned `GAPS_FOUND 0.99`, superseding that candidate. Seven
-  test-first hard-deadline, compound-postcondition, cleanup-precedence, and
-  late URI-list cleanup regressions now pass direct HTTP `25/0/0/0`; full
-  Docker Maven passes `644/0/0/3` precommit. Replacement exact gates and fresh
-  Raze remain pending.
+  requirement-linked hard-deadline, compound-postcondition,
+  cleanup-precedence, interruption, and late URI-list cleanup regressions now
+  pass direct HTTP `25/0/0/0`; the initial red run was `25/6/0/0`, with the
+  interruption regression tightened during implementation. Exact candidate
+  `1a6c5ec30f76e120a0e2cd676f472699141213ca` passes focused `42/0/0/0`,
+  full Docker Maven `644/0/0/3`, released-source, schema-parity, image/runtime,
+  dependency, credential, immutable-base, and artifact-hygiene gates. Its image
+  is
+  `sha256:6939ef2ea40ff42328d4ff972b691dd4ba1c6a59855fe913d175b09f9555c1da`
+  with `Build-Revision: 1a6c5ec30f`. Raze returned `GAPS_FOUND 0.98`,
+  superseding it for unguarded pagination/candidate request boundaries,
+  incomplete queued custom replace/delete setup, and discarded queued
+  URI-list occurrence Locations. Six requirement-linked regressions reproduce
+  those paths. The corrected direct HTTP suite passes `31/0/0/0`, focused
+  aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`
+  precommit. A new committed candidate must
+  repeat every exact gate and receive fresh Raze review.
   The class coverage inventory is
   intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
   Unmodified local OSH reports Part 1 API Common `4 PASS / 1 SKIP`, so causal
@@ -3185,7 +3198,8 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   `/conf/create-replace-delete`. OSH also omits the exact Connected Systems API
   Common and
   inherited `ogcapi-4` declarations. Positive real-IUT mutation E2E therefore
-  remains open, and this requirement remains IN PROGRESS.
+  remains open, and this requirement remains
+  IN_PROGRESS_POSITIVE_MUTATION_E2E_BLOCKED.
 - **Historical increment**: by Sprint 12 Generator (2026-05-05; story S-ETS-12-01). Implemented outcome is declaration, non-mutating method-advertisement readiness, TestNG wiring, explicit mutation opt-in plumbing, public GeoRobotix hard-denial, default-smoke safety, service-relative `Location` handling for OSH-style `/systems/{id}` responses, and a guarded lifecycle path for dedicated mutable IUTs. Full create/replace/delete lifecycle conformance remains OPEN for the overall requirement class because deployment/procedure/sampling-feature/property CRUD, cascade behavior, custom collections, `text/uri-list`, and `/conf/update` remain out of scope.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/crud/requirements_class_crd.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_16_requirements_class_create_replace_delete.adoc`. The class identifier is `/req/create-replace-delete`, inherits `/req/api-common` and OGC API Features Part 4 Create/Replace/Delete, and lists subrequirements for systems, system delete cascade, subsystems, deployments, subdeployments, procedures, sampling features, properties, collection propagation, and adding resources to collections by `text/uri-list`.
 - **Sprint 12 coverage scope**: Create/Replace/Delete safety-gated systems subset with 6 planned @Tests: (1) IUT declares `/conf/create-replace-delete`; (2) default mutation safety gate is active unless suite parameter `mutation-tests-enabled=true` is supplied together with `mutation-iut-policy=dedicated-mutable-iut`; (3) `OPTIONS /systems` is recorded as an ETS readiness precondition for POST advertisement without issuing POST; (4) `OPTIONS /systems/{id}` is recorded as an ETS readiness precondition for PUT/DELETE advertisement without issuing PUT/DELETE; (5) systems lifecycle create/replace/delete test SKIPs by default with reason and, only when explicitly enabled against a dedicated mutable IUT that is not a known shared public GeoRobotix URL, performs POST/PUT/DELETE with best-effort cleanup; (6) TestNG dependency wiring and smoke no-regression. OPTIONS readiness PASS does not satisfy `/req/create-replace-delete/system`; lifecycle conformance remains SKIP by default until POST/PUT/DELETE run against a dedicated mutable IUT. The sprint deliberately does not close deployment/procedure/sampling-feature/property CRUD, cascade delete semantics, collection propagation, `text/uri-list`, or update/PATCH.
@@ -3507,7 +3521,10 @@ reported rather than hidden by an earlier outcome.
 **WHEN** a postcondition blocks, appears after expiry, the polling interval
 exceeds remaining time, or the waiting thread is interrupted
 **THEN** one monotonic deadline caps every HTTP connect/read timeout and sleep
-**AND** no probe begins after expiry
+**AND** the deadline is checked at every first-page, pagination-page, and
+candidate-resource requester boundary
+**AND** a request timeout is never rounded beyond the remaining whole
+millisecond and no probe begins when less than one millisecond remains
 **AND** late success does not become positive evidence
 **AND** interruption fails visibly while preserving interrupt status.
 
@@ -3517,6 +3534,8 @@ postconditions
 **WHEN** propagation completes in stages
 **THEN** every required canonical, custom, cascade, and surviving-association
 postcondition is polled under the same operation deadline
+**AND** a queued custom create used as replace/delete setup awaits and
+pre-registers cleanup for its collection occurrence before the later write
 **AND** no single early postcondition can cause a false PASS or false FAIL.
 
 #### SCENARIO-ETS-PART1-010-INCONCLUSIVE-CLEANUP-001 (CRITICAL)
@@ -3530,6 +3549,10 @@ after its positive-evidence deadline
 **WHEN** procedure cleanup runs
 **THEN** pre-registered identity-safe occurrence cleanup polls and removes the
 late association
+**AND** a supplied HTTP 202 Location inside the target collection-item
+namespace is separately verified and cleaned as an occurrence
+**AND** a supplied HTTP 202 Location outside that namespace is treated only as
+an asynchronous status URI and is never dereferenced or destructively cleaned
 **AND** the canonical resource remains governed by its separate ownership
 cleanup.
 

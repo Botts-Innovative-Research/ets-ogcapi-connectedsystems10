@@ -1,0 +1,16 @@
+{
+  "allowedNormalization": [
+    "expected local resolver $id",
+    "equivalent relative-to-absolute local $ref"
+  ],
+  "entrySchemas": [
+    "connected-systems-1/sensorml/property.json",
+    "connected-systems-1/sensorml/propertyArray.json",
+    "connected-systems-1/sensorml/propertyCollection.json"
+  ],
+  "graphMismatches": [],
+  "semanticMismatches": [],
+  "sourceCommit": "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
+  "status": "PASS",
+  "transitiveSchemaCount": 53
+}

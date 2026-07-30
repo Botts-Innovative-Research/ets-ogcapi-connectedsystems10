@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.49 | Status: Living Document | Last reconciled: 2026-07-30 (hard queued-operation deadlines and cleanup precedence)
+> Version: 2.0.51 | Status: Living Document | Last reconciled: 2026-07-30 (CRD requester and occurrence hardening)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1504,6 +1504,43 @@ one monotonic deadline across every probe, HTTP timeout, capped sleep, and
 compound cascade/custom postcondition; late success is rejected and
 interruption fails visibly. Cleanup failure overrides an inconclusive SKIP,
 and URI-list occurrence cleanup is registered before POST and polls for late
-materialization. Seven focused regressions pass direct controlled HTTP
-`25/0/0/0`; full Docker Maven passes `644/0/0/3` precommit. Exact replacement
-candidate gates and fresh Raze remain pending.
+materialization.
+
+Version 2.0.50 seals exact candidate
+`1a6c5ec30f76e120a0e2cd676f472699141213ca`. Focused Maven passes
+`42/0/0/0`, including direct controlled HTTP `25/0/0/0`; full Docker Maven is
+`644/0/0/3`. Its immutable TeamEngine image is
+`sha256:6939ef2ea40ff42328d4ff972b691dd4ba1c6a59855fe913d175b09f9555c1da`
+with `Build-Revision: 1a6c5ec30f`. Released-source, schema-parity, runtime,
+dependency sabotage, credential, immutable-base, and artifact-hygiene gates
+pass. Populated and clean-primary local OSH remain honestly
+`244/54/35/155` and `244/40/7/197`; provisioning and cleanup pass, primary
+state is unchanged, and all 365 IUT requests are GETs. Positive mutation
+evidence remains blocked by unmodified IUT prerequisites. The following Raze
+review supersedes this candidate.
+
+### 35.1 Architecture v2.0.51 - requester and occurrence boundaries
+
+Raze returned `GAPS_FOUND 0.98` on `1a6c5ec`, superseding it despite passing
+technical gates. A queued operation now checks the same injected monotonic
+clock at each first-page, pagination-page, and candidate-resource requester
+boundary. HTTP timeouts use only the remaining whole milliseconds; no request
+starts with a sub-millisecond budget, and the poll loop terminates when no
+request budget remains.
+
+Every custom-collection POST-derived occurrence is cleanup-registered before
+verification. Queued replace and delete setup must observe that occurrence
+under the original POST deadline before issuing the later write. For queued
+`text/uri-list`, a same-origin Location is an occurrence only when it is a
+direct member of the target collection-item namespace. That occurrence is
+separately verified and cleaned; other Locations are asynchronous status
+resources and are never dereferenced or deleted.
+
+Six controlled regressions cover these boundaries. Compilation first failed at
+the injected-clock constructor, the behavioral red was `30/4/0/0`, and an
+initial green attempt exposed an unbounded sub-millisecond poll and was
+aborted. The corrected direct HTTP suite passes `31/0/0/0`, the focused
+aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`
+precommit. A new committed candidate must rerun every exact
+technical, runtime, E2E, credential, immutability, hygiene, and adversarial
+gate.

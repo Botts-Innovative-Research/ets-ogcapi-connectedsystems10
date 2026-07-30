@@ -45,6 +45,19 @@
 > checks prove both custom and canonical representations, and URI-list
 > association requires OPTIONS, HTTP 201 plus Location or queued HTTP 202, and
 > observed dereference evidence.
+> Exact candidate `1a6c5ec30f76e120a0e2cd676f472699141213ca` passes focused
+> `42/0/0/0`, full Docker Maven `644/0/0/3`, exact-image/runtime, dependency,
+> credential, immutability, and hygiene gates, but Raze `GAPS_FOUND 0.98`
+> supersedes it. The remediation injects the monotonic clock for deterministic
+> deadline tests, refuses first-page, pagination, and candidate requests
+> without a whole-millisecond budget, pre-registers and awaits queued custom
+> setup occurrences before replace/delete, and treats only direct target
+> collection item Locations as queued URI-list occurrences. Status Locations
+> are never dereferenced or deleted. Direct HTTP passes `31/0/0/0`, focused
+> aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`
+> precommit; a new exact candidate is pending.
+> Positive real-IUT mutation evidence remains blocked by unmodified local OSH
+> prerequisites.
 
 ## Overview
 

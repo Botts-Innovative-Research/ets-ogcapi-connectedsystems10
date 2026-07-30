@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T02:48Z
+Last updated: 2026-07-30T03:57Z
 
 ## Current Sprint Evidence
 
@@ -18,16 +18,16 @@ Sprint 56 Part 1 Create/Replace/Delete direct ATS:
   polling probes/sleeps, hidden cleanup failure, incomplete queued compound
   postconditions, late URI-list cleanup registration, and stale CP-016 status
   semantics.
-- Seven test-first remediations pass direct controlled HTTP `25/0/0/0`; full
-  Docker Maven passes `644/0/0/3` precommit. Exact remediation gates are
-  pending.
+- Seven requirement-linked remediations pass direct controlled HTTP
+  `25/0/0/0`; the initial red run was `25/6/0/0`, with the interruption case
+  tightened during implementation.
 - Coverage inventory: overall `240 total / 76 exact / 2 helper / 126 candidate
   / 36 unmapped`; Create/Replace/Delete `12 / 0 / 0 / 12 / 0`.
-- Superseded candidate
-  `0023d5b492dff8b5dbeff6c201c257f970b8947a` passed exact focused
-  `35/0/0/0` and full Maven `637/0/0/3`. Its image is
-  `sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`
-  with `Build-Revision: 0023d5b492`; released-source, schema-parity, runtime,
+- Superseded exact remediation candidate
+  `1a6c5ec30f76e120a0e2cd676f472699141213ca` passes focused `42/0/0/0` and
+  full Maven `644/0/0/3`. Its image is
+  `sha256:6939ef2ea40ff42328d4ff972b691dd4ba1c6a59855fe913d175b09f9555c1da`
+  with `Build-Revision: 1a6c5ec30f`; released-source, schema-parity, runtime,
   immutable-base, dependency, credential, and hygiene gates pass.
 - Superseded candidate `f6e3587` focused Maven was `28/0/0/0`; exact full Maven was
   `630/0/0/3`. Image `sha256:f498e3d0...e88a2` passes runtime and immutable
@@ -46,9 +46,24 @@ Sprint 56 Part 1 Create/Replace/Delete direct ATS:
   under `sprint-ets-56-part1-create-replace-delete-f6e3587-superseded-2026-07-30`.
 - Superseded exact evidence is archived under
   `sprint-ets-56-part1-create-replace-delete-final-0023d5b-2026-07-30`.
-- Verdict: hard-deadline remediation is verified precommit. Replacement exact
-  gates, fresh Raze, and positive real-IUT mutation E2E remain open. Mappings
-  remain candidate and Sprint 56 is IN PROGRESS.
+- Superseded exact remediation evidence is archived with a verified checksum
+  manifest under
+  `sprint-ets-56-part1-create-replace-delete-final-1a6c5ec-2026-07-30`.
+- Raze returned `GAPS_FOUND 0.98` on `1a6c5ec` for requester-boundary deadline
+  overruns, unawaited/unregistered queued custom replace/delete setup
+  occurrences, and discarded distinct queued URI-list occurrence Locations.
+- Six new controlled regressions cover deadline expiry between pages,
+  sub-millisecond no-request handling, delayed custom replace/delete setup,
+  distinct queued occurrence Location verification/cleanup, and status
+  Location non-use. Test-first compilation failed at the clock constructor,
+  behavioral red was `30/4/0/0`, and an initial green attempt was aborted for
+  an unbounded no-request-budget loop. Corrected direct HTTP is `31/0/0/0`,
+  focused aggregate is `48/0/0/0`, and full Docker Maven is `650/0/0/3`
+  precommit.
+- Verdict: remediation passes precommit gates. A new committed candidate,
+  complete exact gate rerun, and fresh Raze are pending. Positive real-IUT
+  mutation E2E remains open; mappings stay candidate and Sprint 56 stays IN
+  PROGRESS.
 
 Sprint 55 Part 1 Advanced Filtering direct ATS:
 

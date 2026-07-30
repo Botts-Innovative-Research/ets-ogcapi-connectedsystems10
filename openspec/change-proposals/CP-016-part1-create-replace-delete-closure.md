@@ -9,7 +9,8 @@
 - `REQ-ETS-PART1-010`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; adversarial remediation implemented, exact verification pending
+**Status**: Accepted; Raze remediation passes precommit gates, new exact
+candidate and positive mutation E2E pending
 
 ## Motivation
 
@@ -69,6 +70,10 @@ monotonic operation deadline shared by every required postcondition. Deadline
 checks SHALL precede probes, each HTTP connect/read timeout and sleep SHALL be
 capped to the remaining deadline, interruption SHALL fail visibly, and a
 postcondition first observed after expiry SHALL not count as positive evidence.
+Every first-page, pagination-page, and candidate-resource requester boundary
+SHALL recheck that deadline. A remaining sub-millisecond budget SHALL expire
+without a request; conversion to an integer HTTP timeout SHALL not round beyond
+the remaining whole milliseconds.
 The procedure SHALL exercise each applicable representation declared by the
 IUT and implemented by the resource class. Every ETS-generated request
 representation SHALL validate against its bundled released single-resource
@@ -110,11 +115,20 @@ HTTP 202, and verify equivalent representations through both returned and
 computed collection-item URLs. Every required custom/canonical propagation,
 cascade, surviving-association, and URI-list occurrence postcondition for one
 queued operation SHALL be polled under that operation's single deadline.
+Queued custom creation used as replace or delete setup SHALL await the custom
+occurrence before the later write and SHALL pre-register occurrence cleanup so
+late propagation cannot leak an alias.
 Identity-safe occurrence cleanup SHALL be registered before URI-list POST so
 late materialization after an inconclusive timeout is still removed. If the
 IUT exposes no applicable custom collection, the affected procedure SHALL SKIP
 with a precise no-evidence reason; malformed advertised endpoints, unsupported
 declared methods, or incorrect propagation SHALL fail.
+
+For queued `text/uri-list`, a supplied Location within the target
+collection-item namespace SHALL be treated as a returned occurrence, verified,
+and independently cleaned. A supplied Location outside that namespace SHALL be
+treated as an asynchronous status URI and SHALL not be dereferenced or used as
+a destructive cleanup target.
 
 Cleanup SHALL run in reverse ownership order after pass, failure, or
 accepted-but-inconclusive SKIP. A cleanup failure SHALL become the reported

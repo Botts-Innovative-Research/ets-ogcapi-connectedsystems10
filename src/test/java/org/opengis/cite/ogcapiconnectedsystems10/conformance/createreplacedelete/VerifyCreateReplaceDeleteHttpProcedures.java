@@ -18,7 +18,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.LongSupplier;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -470,6 +472,119 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-DEADLINE-001.
+	 */
+	@Test
+	public void paginationRequesterCannotStartAfterDeadline() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			AtomicLong clock = new AtomicLong();
+			fixture.queuedWrites = true;
+			fixture.paginateNextCollectionDiscovery = true;
+			fixture.deadlineClockToExpire = clock;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 10L, clock::get)::systemsCreateReplaceDelete);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals("expired pagination request was issued", 0, fixture.secondCollectionPageGets.get());
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-DEADLINE-001.
+	 */
+	@Test
+	public void paginationRequesterCannotRoundSubMillisecondBudgetUpward() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			AtomicLong clock = new AtomicLong();
+			fixture.queuedWrites = true;
+			fixture.paginateNextCollectionDiscovery = true;
+			fixture.deadlineClockToExpire = clock;
+			fixture.deadlineClockAfterFirstPageNanos = TimeUnit.MILLISECONDS.toNanos(80L) - 1L;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 10L, clock::get)::systemsCreateReplaceDelete);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals("sub-millisecond pagination request was issued", 0, fixture.secondCollectionPageGets.get());
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001.
+	 */
+	@Test
+	public void queuedCustomReplaceAwaitsAndCleansSetupOccurrence() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.singleCustomCollection = true;
+			fixture.queuedWrites = true;
+			fixture.customPropagationDelayMillis = 180L;
+
+			fixture.support(2_000L, 10L).resourcesReplaceInCustomCollections();
+
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001.
+	 */
+	@Test
+	public void queuedCustomDeleteAwaitsAndCleansSetupOccurrence() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.singleCustomCollection = true;
+			fixture.queuedWrites = true;
+			fixture.customPropagationDelayMillis = 180L;
+
+			fixture.support(2_000L, 10L).resourcesDeleteInCustomCollections();
+
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-LATE-CLEANUP-001.
+	 */
+	@Test
+	public void queuedUriListOccurrenceLocationIsVerifiedAndCleaned() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.singleCustomCollection = true;
+			fixture.queuedWrites = true;
+			fixture.queuedUriListOccurrenceLocation = true;
+
+			fixture.support(2_000L, 10L).resourcesAddToCustomCollections();
+
+			assertTrue("returned occurrence Location was not verified", fixture.returnedLocationGets.get() >= 1);
+			assertTrue("returned occurrence Location was not cleaned", fixture.returnedLocationDeletes.get() >= 1);
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-LATE-CLEANUP-001.
+	 */
+	@Test
+	public void queuedUriListStatusLocationIsNotDereferencedOrDeleted() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.singleCustomCollection = true;
+			fixture.queuedWrites = true;
+			fixture.queuedUriListStatusLocation = true;
+
+			fixture.support(2_000L, 10L).resourcesAddToCustomCollections();
+
+			assertEquals("asynchronous status Location was used as an occurrence", 0,
+					fixture.asyncStatusRequests.get());
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+		}
+	}
+
 	private static void restoreProperty(String name, String value) {
 		if (value == null) {
 			System.clearProperty(name);
@@ -525,6 +640,14 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private final AtomicInteger blockedCollectionGets = new AtomicInteger();
 
+		private final AtomicInteger secondCollectionPageGets = new AtomicInteger();
+
+		private final AtomicInteger returnedLocationGets = new AtomicInteger();
+
+		private final AtomicInteger returnedLocationDeletes = new AtomicInteger();
+
+		private final AtomicInteger asyncStatusRequests = new AtomicInteger();
+
 		private volatile boolean omitLocation;
 
 		private volatile boolean omitUriListLocation;
@@ -555,6 +678,18 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private volatile boolean corruptCustomAliasAfterFirstGet;
 
+		private volatile boolean singleCustomCollection;
+
+		private volatile boolean paginateNextCollectionDiscovery;
+
+		private volatile boolean queuedUriListOccurrenceLocation;
+
+		private volatile boolean queuedUriListStatusLocation;
+
+		private volatile AtomicLong deadlineClockToExpire;
+
+		private volatile long deadlineClockAfterFirstPageNanos = TimeUnit.MILLISECONDS.toNanos(81L);
+
 		private volatile long queuedWriteDelayMillis = 40L;
 
 		private volatile long cascadePropagationDelayMillis;
@@ -582,6 +717,11 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		CreateReplaceDeleteSupport support(long asyncTimeoutMillis, long asyncPollMillis) {
 			return new CreateReplaceDeleteSupport(apiRoot(), "true", "dedicated-mutable-iut", asyncTimeoutMillis,
 					asyncPollMillis);
+		}
+
+		CreateReplaceDeleteSupport support(long asyncTimeoutMillis, long asyncPollMillis, LongSupplier nanoTime) {
+			return new CreateReplaceDeleteSupport(apiRoot(), "true", "dedicated-mutable-iut", asyncTimeoutMillis,
+					asyncPollMillis, nanoTime);
 		}
 
 		int calls(String method) {
@@ -635,6 +775,9 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			String method = exchange.getRequestMethod();
 			this.methods.computeIfAbsent(method, ignored -> new AtomicInteger()).incrementAndGet();
 			String path = exchange.getRequestURI().getPath();
+			if (path.startsWith("/api/jobs/")) {
+				this.asyncStatusRequests.incrementAndGet();
+			}
 			try {
 				if ("/api/conformance".equals(path)) {
 					json(exchange, 200, conformance());
@@ -696,6 +839,16 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				}
 				if (this.queuedWrites) {
 					this.queuedUriListPosts.incrementAndGet();
+					String returnedAlias = null;
+					if (this.queuedUriListOccurrenceLocation) {
+						String canonical = pendingAliases.get(firstAlias);
+						returnedAlias = path + "/returned-" + last(canonical);
+						pendingAliases.put(returnedAlias, canonical);
+						exchange.getResponseHeaders().set("Location", returnedAlias);
+					}
+					else if (this.queuedUriListStatusLocation) {
+						exchange.getResponseHeaders().set("Location", "/api/jobs/uri-list-1");
+					}
 					this.scheduler.schedule(() -> this.aliases.putAll(pendingAliases),
 							this.uriListPropagationDelayMillis, TimeUnit.MILLISECONDS);
 					json(exchange, 202, Map.of());
@@ -755,6 +908,19 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private void get(HttpExchange exchange, String path) throws IOException {
 			if (path.matches("/api/(systems|deployments|procedures|samplingFeatures|properties)")) {
+				if ("2".equals(query(exchange, "page"))) {
+					this.secondCollectionPageGets.incrementAndGet();
+					collection(exchange, path.substring("/api/".length()));
+					return;
+				}
+				if (this.paginateNextCollectionDiscovery) {
+					this.paginateNextCollectionDiscovery = false;
+					collection(exchange, path.substring("/api/".length()), true);
+					if (this.deadlineClockToExpire != null) {
+						this.deadlineClockToExpire.set(this.deadlineClockAfterFirstPageNanos);
+					}
+					return;
+				}
 				if (this.blockFirstCollectionGetMillis > 0L && this.blockedCollectionGets.getAndIncrement() == 0) {
 					sleep(this.blockFirstCollectionGetMillis);
 				}
@@ -762,6 +928,9 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				return;
 			}
 			String canonical = this.aliases.getOrDefault(path, path);
+			if (path.contains("/returned-")) {
+				this.returnedLocationGets.incrementAndGet();
+			}
 			Resource resource = this.resources.get(canonical);
 			if (resource == null && this.retainAliasesOnCanonicalDelete && this.aliases.containsKey(path)) {
 				resource = this.deletedResources.get(canonical);
@@ -817,6 +986,9 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		private void delete(HttpExchange exchange, String path) throws IOException {
 			if (this.aliases.containsKey(path)) {
 				this.aliasDeletes.incrementAndGet();
+				if (path.contains("/returned-")) {
+					this.returnedLocationDeletes.incrementAndGet();
+				}
 				if (this.queuedWrites) {
 					this.queuedDeletes.incrementAndGet();
 					this.scheduler.schedule(() -> this.aliases.remove(path), 40L, TimeUnit.MILLISECONDS);
@@ -988,24 +1160,35 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 					Map.of("id", "custom_deployments", "itemType", "feature", "featureType", "sosa:Deployment"),
 					Map.of("id", "custom_sampling", "itemType", "feature", "featureType", "sosa:Sample"),
 					Map.of("id", "custom_properties", "itemType", "sosa:Property"));
+			if (this.singleCustomCollection) {
+				values = values.subList(0, 2);
+			}
 			return JSON.writeValueAsString(Map.of("collections", values));
 		}
 
 		private void collection(HttpExchange exchange, String root) throws IOException {
+			collection(exchange, root, false);
+		}
+
+		private void collection(HttpExchange exchange, String root, boolean nextPage) throws IOException {
 			List<Map<String, Object>> values = this.resources.entrySet()
 				.stream()
 				.filter(entry -> entry.getKey().matches("/api/" + root + "/[^/]+"))
 				.map(entry -> deepCopy(entry.getValue().body()))
 				.toList();
+			List<Map<String, String>> links = nextPage
+					? List.of(Map.of("rel", "next", "href", apiRoot().resolve(root + "?page=2").toString()))
+					: List.of();
 			String accept = exchange.getRequestHeaders().getFirst("Accept");
 			if (accept != null && accept.contains("application/geo+json")) {
-				json(exchange, 200, Map.of("type", "FeatureCollection", "features", values), "application/geo+json");
+				json(exchange, 200, Map.of("type", "FeatureCollection", "features", values, "links", links),
+						"application/geo+json");
 			}
 			else if (accept != null && accept.contains("application/sml+json")) {
-				json(exchange, 200, Map.of("items", values), "application/sml+json");
+				json(exchange, 200, Map.of("items", values, "links", links), "application/sml+json");
 			}
 			else {
-				json(exchange, 200, Map.of("items", values));
+				json(exchange, 200, Map.of("items", values, "links", links));
 			}
 		}
 

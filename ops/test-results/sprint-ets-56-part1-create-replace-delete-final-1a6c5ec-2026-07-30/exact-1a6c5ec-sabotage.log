@@ -1,0 +1,60 @@
+[sabotage-test 03:12:01] sabotage mode: --target=core
+[sabotage-test 03:12:01] step 1/5 — launching HTTP-500 stub server on ephemeral port
+[sabotage-test 03:12:01]   stub server listening on port 32899 (pid 1702979)
+[sabotage-test 03:12:01] step 2/5 — running smoke against sabotage stub URL: http://host.docker.internal:32899
+[sabotage-test 03:12:01]   (Core landing-page @Test expected to FAIL; SystemFeatures @Tests expected to SKIP via depends-on=core)
+[smoke-test 03:12:01] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 03:12:01] step 2/8 — docker build ets-ogcapi-connectedsystems10:s56-1a6c5ec (BuildKit 1)
+[smoke-test 03:12:02]   FINAL_IMAGE_ID=sha256:6939ef2ea40ff42328d4ff972b691dd4ba1c6a59855fe913d175b09f9555c1da
+[smoke-test 03:12:02] step 3/8 — docker run on host port 8081
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+[smoke-test 03:12:02] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 03:15:45]   healthcheck PASS at 03:15:45
+[smoke-test 03:15:45] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 03:15:47]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'OGC API - Connected Systems 1.0 Conformance Test Suite')
+[smoke-test 03:15:47] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=http://host.docker.internal:32899
+[smoke-test 03:16:18] step 7/8 — validating TestNG report → <exact-run>/e2e/sabotage-work/core-smoke-results-2026-07-30T031201Z/s-ets-01-03-teamengine-smoke-2026-07-30.xml
+[smoke-test 03:16:18]   TestNG: total=244 passed=2 failed=10 skipped=232
+[smoke-test FATAL] TestNG report has failed=10 (>0); see <exact-run>/e2e/sabotage-work/core-smoke-results-2026-07-30T031201Z/s-ets-01-03-teamengine-smoke-2026-07-30.xml
+[sabotage-test 03:16:19]   smoke exited non-zero (EXPECTED — Core FAILs against sabotage stub)
+[sabotage-test 03:16:19]   TestNG report captured to <exact-run>/e2e/sabotage/sprint-ets-03-dependency-skip-sabotage-2026-07-30T031201Z.xml
+[sabotage-test 03:16:19] step 3/5 — parsing TestNG report; asserting cascading-SKIP semantics
+Core @Test methods seen: 12
+  Core  PASS      landingPageReturnsJson
+  Core  FAIL      landingPageReturnsHttp200
+  Core  FAIL      landingPageHasLinks
+  Core  SKIP      landingPageDoesNotRequireSelfRel
+  Core  SKIP      landingPageHasApiDefinitionLink
+  Core  SKIP      landingPageHasConformanceLink
+  Core  FAIL      apiDefinitionResourceReturnsContent
+  Core  FAIL      conformanceResourceShapeIsObject
+  Core  FAIL      conformancePageReturnsHttp200
+  Core  PASS      conformancePageReturnsJson
+  Core  FAIL      conformancePageHasConformsToArray
+  Core  SKIP      conformancePageDeclaresCsCore
+API Common @Test methods seen: 4
+  API   SKIP      datetimeUsesValidTime
+  API   SKIP      resourceIdsAreUniqueWithinEachType
+  API   SKIP      resourceUidsAreValidAndGloballyUnique
+  API   SKIP      resourceUidTypesFollowRecommendation
+API Common configuration methods seen: 1
+  CFG   SKIP      fetchApiCommonResources
+SystemFeatures @Test methods seen: 6
+  SF    SKIP      canonicalSystemsEndpointIsValid
+  SF    SKIP      everySystemHasCanonicalUrl
+  SF    SKIP      mobileSystemLocationIsUpdated
+  SF    SKIP      systemCollectionsAreValid
+  SF    SKIP      systemLocationsFollowRecommendation
+  SF    SKIP      systemResourcesEndpointIsValid
+
+Core failures: 6
+API Common NOT skipped (should be 0): 0
+API Common config NOT skipped (should be 0): 0
+SF skipped:    6
+SF NOT skipped (should be 0): 0
+VERDICT: PASS — Core FAILed; API Common setup and @Tests SKIPped; all SystemFeatures @Tests SKIPped
+[sabotage-test 03:16:19] step 4/5 — VERDICT: PASS (cascading-SKIP wiring verified end-to-end)
+[sabotage-test 03:16:19] step 5/5 — archiving evidence + cleaning up
+[sabotage-test 03:16:19]   report: <exact-run>/e2e/sabotage/sprint-ets-03-dependency-skip-sabotage-2026-07-30T031201Z.xml
+[sabotage-test 03:16:19]   log:    <exact-run>/e2e/sabotage/sprint-ets-03-dependency-skip-sabotage-2026-07-30T031201Z.log
+[sabotage-test 03:16:19] SABOTAGE PASS: API Common setup/@Tests and SystemFeatures @Tests cascade-SKIPped when Core failed

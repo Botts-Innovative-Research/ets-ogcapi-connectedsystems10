@@ -1,0 +1,88 @@
+{
+  "containerLogs": [
+    {
+      "iutMethodCounts": {
+        "GET": 197
+      },
+      "iutWriteCount": 0,
+      "iutWrites": [],
+      "methodCounts": {
+        "GET": 202
+      },
+      "path": "<exact-run>/e2e/populated-results/s-ets-01-03-teamengine-container-2026-07-30.log",
+      "recognizedIutRequestLogs": 197,
+      "recognizedRequestLogs": 202
+    },
+    {
+      "iutMethodCounts": {
+        "GET": 168
+      },
+      "iutWriteCount": 0,
+      "iutWrites": [],
+      "methodCounts": {
+        "GET": 173
+      },
+      "path": "<exact-run>/e2e/clean-primary-results/s-ets-01-03-teamengine-container-2026-07-30.log",
+      "recognizedIutRequestLogs": 168,
+      "recognizedRequestLogs": 173
+    }
+  ],
+  "credentialScan": {
+    "explicitSecretInputsProvided": 0,
+    "explicitSecretInputsScanned": 0,
+    "explicitSecretValueHits": 0,
+    "filesScanned": 6,
+    "filesWithHits": [],
+    "genericBasicCredentialPatternHits": 0,
+    "shortSecretInputsIgnored": 0,
+    "unmaskedAuthorizationHeaderHits": 0
+  },
+  "failures": [],
+  "generatedAt": "2026-07-30T03:22:57Z",
+  "policy": {
+    "failOnCredentialLeak": true,
+    "iutPrefixes": [
+      "http://ets-csapi-populated-osh-20260730T030145Z-5aa6ef052f81:8081/sensorhub/api",
+      "http://field-hub-osh-1:8081/sensorhub/api"
+    ],
+    "requireZeroIutWrites": true
+  },
+  "requirements": [
+    "REQ-ETS-CLEANUP-020"
+  ],
+  "scenarios": [
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-HYGIENE-SUMMARY-001",
+    "SCENARIO-ETS-CLEANUP-ARTIFACT-CREDENTIAL-SCAN-001"
+  ],
+  "testngReports": [
+    {
+      "methodStatusCounts": {
+        "FAIL": 35,
+        "PASS": 83,
+        "SKIP": 157
+      },
+      "path": "<exact-run>/e2e/populated-results/s-ets-01-03-teamengine-smoke-2026-07-30.xml",
+      "totals": {
+        "failed": 35,
+        "passed": 54,
+        "skipped": 155,
+        "total": 244
+      }
+    },
+    {
+      "methodStatusCounts": {
+        "FAIL": 7,
+        "PASS": 69,
+        "SKIP": 199
+      },
+      "path": "<exact-run>/e2e/clean-primary-results/s-ets-01-03-teamengine-smoke-2026-07-30.xml",
+      "totals": {
+        "failed": 7,
+        "passed": 40,
+        "skipped": 197,
+        "total": 244
+      }
+    }
+  ],
+  "verdict": "PASS"
+}

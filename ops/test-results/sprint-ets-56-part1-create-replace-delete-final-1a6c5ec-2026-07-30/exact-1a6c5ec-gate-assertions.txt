@@ -1,0 +1,12 @@
+VERDICT=PASS
+candidate=1a6c5ec30f76e120a0e2cd676f472699141213ca
+focused=42/0/0/0
+full=644/0/0/3
+image=sha256:6939ef2ea40ff42328d4ff972b691dd4ba1c6a59855fe913d175b09f9555c1da
+populated=244/54/35/155
+cleanPrimary=244/40/7/197
+provisioning=PASS cleanup=PASS primaryStateUnchanged=true
+iutRequests=365 GET, 0 writes
+sabotage=244/2/10/232; substantiveCRD=12 SKIP
+credentials=0 unmasked artifacts, 32 masked logs, 32 intact wire transmissions
+positiveMutationEvidence=ABSENT_EXTERNAL_IUT_PREREQUISITE

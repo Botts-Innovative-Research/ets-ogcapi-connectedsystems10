@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T02:48Z
+Last updated: 2026-07-30T03:57Z
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 
@@ -16,15 +16,16 @@ Last updated: 2026-07-30T02:48Z
 - Raze returned `GAPS_FOUND 0.99` on `0023d5b`: hard deadline, cleanup
   precedence, compound propagation, URI-list cleanup registration, and CP-016
   semantics required remediation. That exact candidate is superseded.
-- Seven test-first remediations pass direct controlled HTTP `25/0/0/0`; full
-  Docker Maven passes `644/0/0/3` precommit.
+- Seven requirement-linked remediations pass direct controlled HTTP
+  `25/0/0/0`; the initial red run was `25/6/0/0`, with the interruption case
+  tightened during implementation.
 - Coverage is intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
-- Superseded candidate
-  `0023d5b492dff8b5dbeff6c201c257f970b8947a` passed exact focused/full Maven,
-  released-source, schema-parity, image/runtime, dependency, credential,
-  immutable-base, and hygiene gates. Image
-  `sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`
-  embeds `Build-Revision: 0023d5b492`.
+- Superseded exact remediation candidate
+  `1a6c5ec30f76e120a0e2cd676f472699141213ca` passes focused `42/0/0/0`, full
+  Docker Maven `644/0/0/3`, released-source, schema-parity, image/runtime,
+  dependency sabotage, credential, immutable-base, and hygiene gates. Image
+  `sha256:6939ef2ea40ff42328d4ff972b691dd4ba1c6a59855fe913d175b09f9555c1da`
+  embeds `Build-Revision: 1a6c5ec30f`.
 - Exact local OSH E2E is honestly populated `244/54/35/155` and clean primary
   `244/40/7/197`. Provisioning and cleanup pass, primary state is unchanged,
   and TeamEngine issued 365 IUT GETs with zero writes.
@@ -34,10 +35,24 @@ Last updated: 2026-07-30T02:48Z
   mutation evidence exists.
 - External OSH and TeamEngine source/binaries remain immutable; hosted CI and
   executable-suite imports remain out of scope.
-- Next: seal and repeat every exact gate for the remediation candidate, then
-  run fresh Raze and publication reconciliation. Technical closure
-  then depends on a dedicated mutable IUT that satisfies API Common and exact
-  inherited declarations; do not weaken the suite or patch OSH.
+- Exact artifacts are archived under
+  `ops/test-results/sprint-ets-56-part1-create-replace-delete-final-1a6c5ec-2026-07-30/`.
+- Raze returned `GAPS_FOUND 0.98` on `1a6c5ec`: pagination/candidate request
+  boundaries could overrun the deadline, queued custom replace/delete setup
+  did not await or cleanup-register its occurrence, and a distinct queued
+  URI-list occurrence Location was discarded. The candidate is superseded;
+  its evidence bundle now has a verified umbrella checksum manifest.
+- Six requirement-linked regressions close those paths. Test-first compilation
+  failed at the injected-clock constructor, then behavior reproduced
+  `30/4/0/0`. A first green attempt was aborted after exposing an unbounded
+  sub-millisecond poll. Corrected direct HTTP passes `31/0/0/0`, focused
+  aggregate passes `48/0/0/0`, and full Docker Maven passes `650/0/0/3`
+  precommit.
+- Next: commit the replacement candidate, repeat every exact technical,
+  image/runtime, isolated/primary E2E, sabotage, credential, immutability, and
+  hygiene gate, then obtain fresh Raze review. Positive closure still requires
+  a dedicated mutable IUT satisfying API Common and exact inherited
+  declarations; do not weaken the suite or patch OSH.
 
 ## Fresh-Session Entry Point
 
@@ -1794,12 +1809,14 @@ Gate Results:
 
 ## Next Action
 
-1. Complete Sprint 50 final integrity checks, commit, and push to Botts `main`.
-2. Begin the released Part 1 Subdeployment closure increment.
+1. Obtain an independent dedicated mutable IUT with positive API Common
+   datetime evidence and exact inherited `ogcapi-4` declaration, then rerun the
+   Sprint 56 positive mutation gate.
+2. If that external IUT remains unavailable, begin the released Part 1 Update
+   closure while retaining all twelve Sprint 56 mappings as candidate.
 3. Continue remaining released Part 1 classes before Part 2 closure.
 
 ## Dirty Worktree Notes
 
-Current dirty worktree contains Sprint 50 specifications, implementation,
-tests, generated coverage, runtime evidence, and reconciliation. It contains no
-OSH or TeamEngine source or binary changes.
+Current dirty worktree contains Sprint 56 exact evidence and reconciliation.
+It contains no OSH or TeamEngine source or binary changes.

@@ -1,0 +1,60 @@
+sprint: ets-56
+candidate: 1a6c5ec30f76e120a0e2cd676f472699141213ca
+reviewer: Raze
+agent_id: 019fb10e-7d59-7951-8350-e0396a524d6a
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.98
+findings:
+  - id: requester-boundary-hard-deadline
+    severity: HIGH
+    status_at_review: OPEN
+    remediation_status: IMPLEMENTED_PRECOMMIT
+    summary: API Common pagination and candidate requests could begin after expiry, while request timeouts forced a one-millisecond minimum and rounded the remaining duration upward.
+    remediation: Inject the monotonic clock, refuse every requester boundary without a whole-millisecond budget, floor HTTP timeouts, and add pagination-expiry and sub-millisecond regressions.
+  - id: queued-custom-setup-occurrence
+    severity: HIGH
+    status_at_review: OPEN
+    remediation_status: IMPLEMENTED_PRECOMMIT
+    summary: Queued custom replace and delete setup returned after canonical discovery without awaiting or cleanup-registering the custom occurrence, permitting false 404 failures and late alias leakage.
+    remediation: Register occurrence cleanup immediately after deriving the item URI and await the occurrence under the original POST deadline before any later PUT or DELETE.
+  - id: queued-uri-list-location-classification
+    severity: MEDIUM
+    status_at_review: OPEN
+    remediation_status: IMPLEMENTED_PRECOMMIT
+    summary: A distinct Location supplied with HTTP 202 was discarded, so a returned occurrence could escape verification and cleanup.
+    remediation: Resolve same-origin Location values, treat only direct members of the target collection item namespace as occurrences, and never dereference or delete an asynchronous status URI.
+prior_findings:
+  hard_operation_deadline: PARTIALLY_REMEDIATED_OPEN
+  cleanup_overrides_inconclusive_skip: CLOSED
+  queued_compound_postconditions: PARTIALLY_REMEDIATED_OPEN
+  queued_uri_list_cleanup: PARTIALLY_REMEDIATED_OPEN
+  cp_016_status_semantics: CLOSED
+non_blocking_concerns:
+  - Sequential compound checks do not revalidate earlier transient states.
+  - Final story and evidence wording required reconciliation after review.
+  - The exact technical evidence directory lacked an umbrella cryptographic manifest.
+external_blocker:
+  status: OPEN
+  severity: HIGH
+  summary: Positive real-IUT mutation E2E remains unavailable because unmodified local OSH does not satisfy API Common datetime evidence or the exact inherited declarations.
+  disposition: This keeps mappings candidate and Sprint 56 open; it does not justify weakening the ETS or modifying OSH or TeamEngine.
+evidence:
+  exact_focused_maven: "42 tests / 0 failures / 0 errors / 0 skipped"
+  exact_full_maven: "644 tests / 0 failures / 0 errors / 3 skipped"
+  exact_populated_e2e: "244 total / 54 passed / 35 failed / 155 skipped"
+  exact_clean_primary_e2e: "244 total / 40 passed / 7 failed / 197 skipped"
+  exact_sabotage: "244 total / 2 passed / 10 failed / 232 skipped"
+  exact_image: "sha256:6939ef2ea40ff42328d4ff972b691dd4ba1c6a59855fe913d175b09f9555c1da"
+  teamengine_iut_traffic: "365 GET / 0 writes"
+scope:
+  osh_source_or_binary_changes: false
+  teamengine_source_or_binary_changes: false
+  hosted_ci_changes: false
+  credential_disclosure: false
+runtime:
+  started_at: "2026-07-30T03:25:52Z"
+  ended_at: "2026-07-30T03:35:56Z"
+  duration_seconds: 604
+  elapsed: "00:10:04"
+  token_usage: null

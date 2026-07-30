@@ -3120,10 +3120,16 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`,
   applicable resource-class condition,
   and the explicit dedicated-mutable-IUT gate before writes. A reusable
-  transaction helper SHALL verify OPTIONS, POST 201 plus Location, canonical
-  GET content, PUT 200/204 plus changed-content GET, DELETE 200/202/204, and
-  synchronous deletion postconditions at every prescribed endpoint and for
-  every applicable declared representation. The class SHALL also verify both
+  transaction helper SHALL verify OPTIONS; POST 201 plus Location or queued
+  POST 202; canonical GET content; PUT 200/204 or queued PUT 202 plus
+  changed-content GET; DELETE 200/204 or queued DELETE 202; and observed
+  deletion postconditions at every prescribed endpoint and for every
+  applicable declared representation. HTTP 202 SHALL be treated as accepted
+  but not positive lifecycle evidence until the required postcondition is
+  observed through bounded, configurable polling. A queued operation whose
+  postcondition is not observed within that bound SHALL SKIP as inconclusive,
+  while cleanup still performs bounded identity discovery and reports any
+  failure. The class SHALL also verify both
   released System cascade graphs, canonical availability after nested create,
   custom-collection create/replace/root-versus-non-root delete propagation,
   and `text/uri-list` association behavior. Procedures SHALL own and clean
@@ -3132,7 +3138,9 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   `alwaysRun` to bypass a failed API Common prerequisite. A write response
   location SHALL become a destructive cleanup target only after dereference
   proves the submitted resource identity; absent or incorrect locations SHALL
-  fall back to same-origin root discovery by that identity.
+  fall back to same-origin root discovery by that identity. Deleting a
+  verified noncanonical Location SHALL never terminate cleanup: root identity
+  discovery SHALL still remove any surviving canonical resource.
 - **Released source authority**: OGC 23-001 Annex A at tag `v1.0.0`, commit
   `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`. The referenced OGC API Features
   Part 4 draft transaction semantics are reproduced from tag
@@ -3146,18 +3154,32 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   identity-safe cleanup, both cascade graphs, nested canonical verification,
   and complete custom-collection propagation checks. Controlled HTTP includes
   prerequisite sabotage and fail-closed Location, cascade, and custom
-  collection cases. Docker Maven reports `630 tests / 0 failures / 0 errors /
-  3 skipped`. The class coverage inventory is intentionally `0 exact / 0
-  helper / 12 candidate / 0 unmapped`: unmodified local OSH omits the exact
-  inherited `ogcapi-4` declaration, so all twelve procedures correctly SKIP
-  before writes and positive real-IUT mutation E2E remains open. This
-  requirement therefore remains IN PROGRESS.
+  collection cases. Candidate `f6e3587` passed exact focused `28/0/0/0`, full
+  Maven `630/0/0/3`, released-source, schema-parity, runtime, dependency,
+  credential, immutable-base, and hygiene gates, but is superseded after Raze
+  found incomplete queued-response semantics and a custom-alias cleanup hole.
+  The replacement accepts HTTP 202 only with bounded observed postconditions,
+  SKIPs timeout as accepted-but-inconclusive, and continues canonical root
+  identity cleanup after alias deletion. Delayed/stalled 202 and alias-leak
+  focused CRD passes `35/0/0/0`, including queued/alias/property HTTP
+  regressions `18/0/0/0`; full Docker Maven is `637/0/0/3`.
+  Replacement exact gates are pending. The class coverage inventory is
+  intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
+  Unmodified local OSH reports Part 1 API Common `4 PASS / 1 SKIP`, so causal
+  inheritance dependency-SKIPs all twelve procedures before their declaration
+  checks and writes. OSH also omits the exact Connected Systems API Common and
+  inherited `ogcapi-4` declarations. Positive real-IUT mutation E2E therefore
+  remains open, and this requirement remains IN PROGRESS.
 - **Historical increment**: by Sprint 12 Generator (2026-05-05; story S-ETS-12-01). Implemented outcome is declaration, non-mutating method-advertisement readiness, TestNG wiring, explicit mutation opt-in plumbing, public GeoRobotix hard-denial, default-smoke safety, service-relative `Location` handling for OSH-style `/systems/{id}` responses, and a guarded lifecycle path for dedicated mutable IUTs. Full create/replace/delete lifecycle conformance remains OPEN for the overall requirement class because deployment/procedure/sampling-feature/property CRUD, cascade behavior, custom collections, `text/uri-list`, and `/conf/update` remain out of scope.
 - **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/crud/requirements_class_crd.adoc`; explanatory clause exists at `api/part1/standard/sections/clause_16_requirements_class_create_replace_delete.adoc`. The class identifier is `/req/create-replace-delete`, inherits `/req/api-common` and OGC API Features Part 4 Create/Replace/Delete, and lists subrequirements for systems, system delete cascade, subsystems, deployments, subdeployments, procedures, sampling features, properties, collection propagation, and adding resources to collections by `text/uri-list`.
 - **Sprint 12 coverage scope**: Create/Replace/Delete safety-gated systems subset with 6 planned @Tests: (1) IUT declares `/conf/create-replace-delete`; (2) default mutation safety gate is active unless suite parameter `mutation-tests-enabled=true` is supplied together with `mutation-iut-policy=dedicated-mutable-iut`; (3) `OPTIONS /systems` is recorded as an ETS readiness precondition for POST advertisement without issuing POST; (4) `OPTIONS /systems/{id}` is recorded as an ETS readiness precondition for PUT/DELETE advertisement without issuing PUT/DELETE; (5) systems lifecycle create/replace/delete test SKIPs by default with reason and, only when explicitly enabled against a dedicated mutable IUT that is not a known shared public GeoRobotix URL, performs POST/PUT/DELETE with best-effort cleanup; (6) TestNG dependency wiring and smoke no-regression. OPTIONS readiness PASS does not satisfy `/req/create-replace-delete/system`; lifecycle conformance remains SKIP by default until POST/PUT/DELETE run against a dedicated mutable IUT. The sprint deliberately does not close deployment/procedure/sampling-feature/property CRUD, cascade delete semantics, collection propagation, `text/uri-list`, or update/PATCH.
 - **Mutation safety policy**: Mutating HTTP methods MUST NOT run during default GeoRobotix smoke even though GeoRobotix currently declares `/conf/create-replace-delete` and advertises `Allow: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS` on `/systems` and `/systems/{id}`. Generator MUST introduce explicit opt-in parameters and a hard safety gate before any POST/PUT/DELETE request is issued. The parameter path is in scope end-to-end: `TestRunArg`, `SuiteAttribute`, `SuiteFixtureListener`, optional `TestNGController` validation/acceptance, CTL controls, and optional smoke-script env forwarding (`SMOKE_MUTATION_TESTS_ENABLED`, `SMOKE_MUTATION_IUT_POLICY`). Even when both opt-in parameters are present, the implementation MUST hard-deny mutation against known shared public GeoRobotix URLs, including `https://api.georobotix.io/ogc/t18/api`. Default smoke MUST report lifecycle mutation assertions as SKIP-with-reason, not PASS.
 - **No-mutation smoke oracle**: Default smoke no-mutation proof MUST inspect IUT-bound REST Assured request-log entries, not naive process-wide method strings. The oracle parses current `Request: METHOD URI` entries and the older adjacent `Request method:` / `Request URI:` pair format, filters to URIs starting with the IUT base URL, requires at least one recognized IUT-bound request entry, and requires zero POST/PUT/DELETE entries for GeoRobotix. The TeamEngine control-plane POST that starts the suite run is excluded from this oracle because its URI is not IUT-bound.
-- **Dependency wiring**: Create/Replace/Delete depends on SystemFeatures via `<group name="createreplacedelete" depends-on="systemfeatures"/>`; the Sprint 12 systems subset requires canonical System resource availability before method-advertisement or lifecycle checks.
+- **Historical dependency wiring (superseded by Sprint 56)**: Sprint 12
+  configured Create/Replace/Delete after SystemFeatures for its Systems-only
+  subset. Sprint 56 replaces that relationship: API Common is the sole direct
+  TestNG prerequisite, and each released procedure evaluates its own resource
+  declaration and evidence.
 - **Open subrequirements after Sprint 12**: System delete cascade, subsystem creation, deployment/subdeployment/procedure/sampling-feature/property create/replace/delete, custom collection propagation, adding resources to collections by `text/uri-list`, and all `/conf/update` PATCH behavior remain OPEN unless separately planned.
 - **Generator evidence**: Docker Maven `105 tests / 0 failures / 0 errors / 3 skipped`; TeamEngine smoke from `/tmp/sprint-ets-12-generator-smoke-current-r3` against GeoRobotix `69 total / 52 passed / 0 failed / 17 skipped`; CreateReplaceDelete runtime outcome is 4 PASS and 2 SKIP-by-safety-gate; integrated smoke log oracle reported zero IUT-bound POST/PUT/DELETE entries after recognizing 40 IUT-bound request log entries.
 - **Local mutable-IUT follow-up evidence**: Local OpenSensorHub 2.0-beta2 at `http://localhost:8081/sensorhub/api`, reached by TeamEngine over Docker network `field-hub_default` as `http://field-hub-osh-1:8081/sensorhub/api`, declares `/conf/create-replace-delete` and permits admin-authenticated transactions. Probe `r4` (`/tmp/ets-csapi-osh-mutable-smoke-r4`) produced real CRD PASS evidence for `systemsCreateReplaceDeleteLifecycle`: POST `/systems`, PUT `/systems/0410`, and DELETE `/systems/0410` all succeeded after the ETS preserved the created System `uid` across replacement and resolved `Location: /systems/0410` against the IUT service base. Follow-up on 2026-05-06 updated the local OSH `proxyBaseUrl` to `http://field-hub-osh-1:8081`, seeded synthetic System/Procedure/Deployment/SamplingFeature resources from `ops/local-osh-seed-fixtures.json`, set the System `featureType` to `http://www.w3.org/ns/sosa/System` so SensorML `?f=sml3` resolves locally, and reran TeamEngine smoke from `/tmp/ets-csapi-osh-full-health-r3`: `69 total / 50 passed / 0 failed / 19 skipped`. Skips remain expected for undeclared or unpopulated out-of-scope surfaces such as AdvancedFiltering, GeoJSON feature-collection fallback, properties, subsystems, and subdeployments. Raze full-health review found and the same turn fixed two false-confidence gaps: smoke stdout now prints exact parsed totals instead of `${total}/${total}`, and the local OSH seed payloads are versioned. The local OSH evidence upgrades the maintained mutable-IUT health target from CRD-only PASS to full smoke failed=0, but the overall REQ remains PARTIAL for non-system CRUD and unimplemented CRD subrequirements.
@@ -3363,10 +3385,17 @@ shared public IUT, or the target is the clean primary local OSH
 #### SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001 (CRITICAL)
 **GIVEN** an applicable mutable resource endpoint and supported representation
 **WHEN** the reusable transaction procedure executes
-**THEN** OPTIONS is HTTP 200 and advertises the relevant method, POST is HTTP
-201 with usable Location, canonical GET preserves submitted content, PUT is
-HTTP 200 or 204 and a later GET proves replacement content, and DELETE is HTTP
-200, 202, or 204 with a verified synchronous postcondition
+**THEN** OPTIONS is HTTP 200 and advertises the relevant method
+**AND** POST is HTTP 201 with usable Location or HTTP 202, with canonical GET
+proving submitted content
+**AND** PUT is HTTP 200, 202, or 204, with a later GET proving replacement
+content
+**AND** DELETE is HTTP 200, 202, or 204, with a later GET proving absence
+**AND** a 202 response starts bounded polling configured by ETS runtime
+properties and is accepted-but-inconclusive until the required postcondition
+is observed
+**AND** timeout without a postcondition SKIPs rather than reporting a positive
+lifecycle result
 **AND** generic non-System DELETE requests omit the System-specific `cascade`
 query parameter
 **AND** status-only or OPTIONS-only evidence cannot PASS the lifecycle.
@@ -3428,8 +3457,10 @@ representation remains readable.
 collection
 **WHEN** their canonical URLs or UIDs are POSTed one-per-line with
 `Content-Type: text/uri-list`
-**THEN** collection OPTIONS advertises POST, association POST returns HTTP 201
-with a same-origin usable Location, and that Location is readable
+**THEN** collection OPTIONS advertises POST, and association POST returns HTTP
+201 with a same-origin usable Location or queued HTTP 202
+**AND** a 202 response is positive only after bounded polling observes the
+returned or computed collection occurrence
 **AND** each computed collection-item URL is HTTP 200 and equivalent to the
 canonical representation.
 
@@ -3442,6 +3473,10 @@ proves the submitted UID or URI identity
 **AND** missing or incorrect Location metadata triggers same-origin root
 discovery and cleanup by submitted identity without deleting an unrelated
 resource
+**AND** cleanup continues with bounded root identity discovery after deleting
+a verified alias Location so a surviving canonical resource cannot be hidden
+**AND** accepted queued creation is polled by submitted identity during both
+positive verification and cleanup
 **AND** cleanup failures are reported rather than hidden by an earlier
 assertion.
 
@@ -3452,7 +3487,8 @@ assertion.
 **AND** focused regressions reject failed prerequisite entry, wrong cascade
 status, absent initial cascade associations, missing or unrelated Location,
 unchanged replacement content, incorrect collection propagation, generic
-non-System cascade parameters, incomplete URI-list responses, and hidden
+non-System cascade parameters, incomplete URI-list responses, queued
+POST/PUT/DELETE postconditions, alias-Location canonical leakage, and hidden
 cleanup failure.
 
 #### SCENARIO-ETS-PART1-010-E2E-ISOLATION-001 (CRITICAL)

@@ -27,15 +27,16 @@ success_criteria:
   - Failed API Common prerequisite skips all twelve methods before IUT access.
   - Every procedure checks exact declarations, applicable conditions, and mutation safety before writes.
   - API Common is the only direct local TestNG prerequisite.
-  - OPTIONS, POST, Location, canonical GET, PUT, replacement GET, DELETE, and deletion postconditions are verified.
+  - Immediate and queued POST, PUT, and DELETE are accepted only when bounded configurable polling observes each required postcondition.
   - Every applicable declared resource representation is exercised.
   - Both released cascade graphs, pre-delete associations, and exact HTTP 409 refusal semantics are verified.
   - Nested creation is verified at canonical URLs.
   - Every advertised applicable custom collection is exercised.
   - Root and non-root delete propagation remain distinct.
-  - text/uri-list verifies OPTIONS, HTTP 201, Location, and returned and computed collection representations.
+  - text/uri-list verifies OPTIONS, HTTP 201 plus Location or queued HTTP 202, and returned and computed collection representations.
   - Cleanup is reverse-order, failure-visible, and runs after assertion failures.
-  - Cleanup identity-verifies Location before destructive use and safely discovers missing or incorrect locations.
+  - Cleanup identity-verifies Location before destructive use and performs root identity discovery after deleting an alias Location.
+  - Accepted-but-inconclusive queued operations SKIP without being counted as positive lifecycle evidence, while cleanup failures remain visible.
   - Generic non-System DELETE omits the cascade query parameter.
   - Default primary local OSH smoke has zero writes.
   - Owned isolated local OSH mutation E2E records honest outcomes and cleanup.
@@ -54,13 +55,13 @@ verification:
   released_source_commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
   inherited_features4_source_commit: ea42aa1de6d8cbb53c526f41e1f66c1887fe71d4
   test_first: PASS
-  focused_maven: PASS
-  full_maven: "PASS: 630 total / 0 failures / 0 errors / 3 skipped"
+  focused_maven: "PASS_PRECOMMIT: CRD 35/0/0/0; queued/alias HTTP 18/0/0/0"
+  full_maven: "PASS_PRECOMMIT: 637 total / 0 failures / 0 errors / 3 skipped"
   coverage_audit: "PASS: 0 exact / 0 helper / 12 candidate / 0 unmapped"
-  primary_local_osh: PENDING
-  isolated_mutable_local_osh: "BLOCKED: exact inherited URI absent; 12 honest prerequisite SKIPs and zero writes"
-  exact_image: PENDING
-  dependency_sabotage: PASS
-  credential_gates: PENDING
-  artifact_hygiene: PENDING
+  primary_local_osh: PENDING_REPLACEMENT_CANDIDATE
+  isolated_mutable_local_osh: PENDING_REPLACEMENT_CANDIDATE
+  exact_image: PENDING_REPLACEMENT_CANDIDATE
+  dependency_sabotage: PENDING_REPLACEMENT_CANDIDATE
+  credential_gates: PENDING_REPLACEMENT_CANDIDATE
+  artifact_hygiene: PENDING_REPLACEMENT_CANDIDATE
   raze: PENDING

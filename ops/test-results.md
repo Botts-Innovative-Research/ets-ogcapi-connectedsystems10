@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T00:31Z
+Last updated: 2026-07-30T01:27Z
 
 ## Current Sprint Evidence
 
@@ -14,19 +14,30 @@ Sprint 56 Part 1 Create/Replace/Delete direct ATS:
   dependency, exact `ogcapi-4` inheritance, schema-validated writes,
   identity-safe cleanup, cascade graph preconditions, root canonical nested
   checks, and complete custom-collection lifecycle assertions.
-- Docker Maven after final source edits: BUILD SUCCESS, `630 total / 0
+- Docker Maven after queued-response remediation: BUILD SUCCESS, `637 total / 0
   failures / 0 errors / 3 skipped`.
+- Focused CRD verification is `35/0/0/0`; delayed/stalled 202, alias-cleanup,
+  and deployment-property HTTP verification is `18/0/0/0`.
 - Coverage inventory: overall `240 total / 76 exact / 2 helper / 126 candidate
   / 36 unmapped`; Create/Replace/Delete `12 / 0 / 0 / 12 / 0`.
-- Initial candidate local OSH E2E: populated `244 total / 54 passed / 35 failed
-  / 155 skipped`; clean primary `244 / 40 / 7 / 197`. Provisioning and cleanup
-  passed, primary state was unchanged, and no CRD write occurred.
-- All twelve procedures correctly SKIPPED because unmodified OSH omits
-  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`.
-  OSH's similarly named Features Part 4 URI is not the released prerequisite.
-- Verdict: implementation and controlled HTTP are verified; positive real-IUT
-  mutation E2E is not established. Mappings remain candidate and Sprint 56 is
-  IN PROGRESS. Exact replacement-candidate E2E and fresh Raze are pending.
+- Superseded candidate `f6e3587` focused Maven was `28/0/0/0`; exact full Maven was
+  `630/0/0/3`. Image `sha256:f498e3d0...e88a2` passes runtime and immutable
+  TeamEngine base verification.
+- Exact candidate local OSH E2E: populated `244 total / 54 passed / 35 failed /
+  155 skipped`; clean primary `244 / 40 / 7 / 197`. Provisioning and cleanup
+  passed, primary state was unchanged, and TeamEngine issued zero IUT writes.
+- Part 1 API Common is `4 PASS / 1 SKIP`; causal inheritance therefore makes
+  all twelve procedures dependency-SKIP before declaration checks. OSH also
+  omits exact Connected Systems API Common and `ogcapi-4` declarations.
+- Core sabotage is `244/2/10/232` and all twelve CRD methods SKIP. Credential
+  wire E2E is zero unmasked hits, 32 masked events, and 32 intact synthetic
+  transmissions. Hygiene is 365 IUT GETs, zero writes, and zero leaks.
+- Raze returned `GAPS_FOUND 0.98` on `f6e3587`; its exact evidence is retained
+  under `sprint-ets-56-part1-create-replace-delete-f6e3587-superseded-2026-07-30`.
+- Verdict: corrective implementation and controlled HTTP are verified;
+  replacement exact-image/E2E gates, fresh Raze, and positive real-IUT
+  mutation E2E remain open. Mappings remain candidate and Sprint 56 is IN
+  PROGRESS.
 
 Sprint 55 Part 1 Advanced Filtering direct ATS:
 

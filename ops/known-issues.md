@@ -15,14 +15,17 @@ Last updated: 2026-07-30T00:31Z
 ## Active Issues
 
 - Sprint 56 Part 1 Create/Replace/Delete positive mutation E2E remains open.
-  The unmodified local OSH IUT does not declare the exact released inherited
-  URI `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`;
-  it advertises a similarly named Features Part 4 URI that cannot satisfy the
-  released Annex A prerequisite. All twelve procedures therefore correctly
-  SKIP before writes. OSH and TeamEngine modifications are out of scope, so
-  closure requires an independent dedicated mutable IUT with the exact
-  declaration. Controlled HTTP verifies the implementation but cannot replace
-  mandatory real-protocol E2E, and all twelve mappings remain candidate.
+  The unmodified local OSH API Common result is `4 PASS / 1 SKIP` because no
+  advertised collection supplies positive datetime evidence. Causal TestNG
+  inheritance therefore dependency-SKIPs all twelve CRD methods before their
+  own declaration checks or writes. OSH also omits the exact Connected Systems
+  API Common and released inherited
+  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`
+  declarations; its similarly named Features Part 4 URI is insufficient. OSH
+  and TeamEngine modifications are out of scope, so closure requires an
+  independent dedicated mutable IUT satisfying those prerequisites.
+  Controlled HTTP cannot replace mandatory real-protocol E2E, and all twelve
+  mappings remain candidate.
 - Local OSH does not declare Part 1 `/conf/advanced-filtering`. Sprint 55
   therefore records all 25 exact procedures as honest declaration-boundary
   SKIPs in primary E2E; controlled read-only HTTP supplies positive procedure

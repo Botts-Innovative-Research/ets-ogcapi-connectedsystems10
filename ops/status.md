@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T00:31Z
+Last updated: 2026-07-30T01:27Z
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 
@@ -10,16 +10,25 @@ Last updated: 2026-07-30T00:31Z
 - Causal API Common dependencies, schema-valid write fixtures, identity-safe
   cleanup, both cascade graphs, nested canonical resources, and complete
   custom-collection behavior have controlled HTTP coverage.
-- Docker Maven reports `630 tests / 0 failures / 0 errors / 3 skipped`.
+- Queued HTTP 202 POST/PUT/DELETE and URI-list operations now require bounded
+  observed postconditions; timeout SKIPs as accepted-but-inconclusive.
+- Verified alias cleanup continues through canonical root identity discovery.
+- Focused CRD reports `35/0/0/0`, including queued/alias/property HTTP
+  `18/0/0/0`; full Docker Maven reports `637/0/0/3`.
 - Coverage is intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
-- Initial local OSH E2E proves supported provisioning, cleanup, unchanged
-  primary state, and honest prerequisite SKIPs with zero writes. Unmodified OSH
-  does not declare the exact released inherited `ogcapi-4` URI, so this is not
-  positive mutation evidence.
+- Superseded `f6e3587` passed focused `28/0/0/0`, full Maven `630/0/0/3`,
+  released-source, schema-parity, image/runtime, dependency, credential,
+  immutable-base, and hygiene gates.
+- Exact local OSH E2E is populated `244/54/35/155` and clean primary
+  `244/40/7/197`. Provisioning and cleanup pass, primary state is unchanged,
+  and TeamEngine issued zero IUT writes.
+- API Common is `4 PASS / 1 SKIP`, causally dependency-skipping all twelve CRD
+  procedures. OSH also omits exact Connected Systems API Common and `ogcapi-4`
+  declarations, so no positive mutation evidence exists.
 - External OSH and TeamEngine source/binaries remain immutable; hosted CI and
   executable-suite imports remain out of scope.
-- Next: seal the replacement candidate, repeat exact-candidate runtime and E2E
-  gates, run fresh Raze, reconcile the honest open blocker, then push.
+- Next: seal the replacement candidate, repeat exact gates, run fresh Raze,
+  reconcile the external positive-E2E blocker, then commit and push.
 
 ## Fresh-Session Entry Point
 

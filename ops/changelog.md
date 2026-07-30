@@ -42,6 +42,32 @@ completion sequence.
   primary state, but all twelve procedures correctly skipped before writes
   because unmodified OSH omits the exact inherited `ogcapi-4` declaration.
   This is honest E2E evidence, not positive mutation closure.
+- Sealed exact candidate `f6e3587fabad6a18f08cac6a038a0dad719035aa`
+  and image `sha256:f498e3d0a8f...e88a2`.
+- Exact focused/full Maven pass `28/0/0/0` and `630/0/0/3`; released ATS,
+  schema parity, runtime, immutable-base, dependency, credential, and hygiene
+  gates pass.
+- Exact populated OSH is `244/54/35/155`; clean primary is `244/40/7/197`.
+  Provisioning and cleanup pass, primary state is unchanged, and 365 recorded
+  IUT requests are GETs with zero writes.
+- Corrected the E2E diagnosis after causal dependency remediation: API Common
+  is `4 PASS / 1 SKIP`, so all twelve CRD procedures dependency-SKIP before
+  their declaration checks. OSH also omits exact Connected Systems API Common
+  and `ogcapi-4` declarations. Positive mutation closure remains externally
+  blocked without weakening the ETS or modifying OSH.
+- Fresh Raze on `f6e3587` returned `GAPS_FOUND 0.98`: queued POST/PUT were
+  rejected, queued DELETE used a fixed deadline, and verified custom alias
+  cleanup could leave its canonical resource.
+- Specified accepted-but-inconclusive 202 semantics with deployment-configured
+  bounded polling. Creation, replacement, deletion, and URI-list association
+  become positive only after their postconditions are observed.
+- Cleanup now continues root identity discovery after deleting a verified
+  alias and performs a second bounded window for unmaterialized queued create.
+- Added delayed and stalled 202 regressions, a custom alias failure-path leak
+  regression, and deployment-property validation. Focused CRD is `35/0/0/0`,
+  including targeted HTTP `18/0/0/0`; full Docker Maven is `637/0/0/3`.
+- Marked `f6e3587` and its exact evidence superseded. Replacement exact gates
+  and fresh Raze remain pending.
 
 ## 2026-07-29 - Part 1 Advanced Filtering final-Raze remediation
 

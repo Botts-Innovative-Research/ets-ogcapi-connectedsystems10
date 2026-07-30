@@ -14,7 +14,7 @@
 > Part 2 Connected Systems coverage, canonical run arguments, and local OSH as
 > the primary development E2E target.
 
-> Sprint 56 addition (2026-07-29): CP-016 replaces the historical
+> Sprint 56 addition (reconciled 2026-07-30): CP-016 replaces the historical
 > Create/Replace/Delete subset with twelve direct released procedures.
 > `CreateReplaceDeleteSupport` centralizes inherited Features Part 4
 > transaction semantics and cleanup, while each TestNG method owns its
@@ -28,10 +28,17 @@
 > dependency remains causal: the procedures do not use `alwaysRun`. Cleanup
 > treats a returned Location as destructive only after a GET proves the
 > submitted identity; missing or incorrect metadata falls back to root
-> discovery by that identity. Generic resource deletion omits `cascade`, while
+> discovery by that identity, and deleting a verified alias is followed by
+> canonical root identity discovery. HTTP 202 POST, PUT, DELETE, and URI-list
+> association responses start bounded polling; they remain
+> accepted-but-inconclusive until the submitted content, replacement content,
+> deletion, or collection occurrence is observed. Timeout and polling interval
+> are deployment-configurable JVM properties. Generic resource deletion omits
+> `cascade`, while
 > explicit System graph checks own `cascade=false|true`. Custom-collection
 > checks prove both custom and canonical representations, and URI-list
-> association requires OPTIONS, HTTP 201, Location, and dereference evidence.
+> association requires OPTIONS, HTTP 201 plus Location or queued HTTP 202, and
+> observed dereference evidence.
 
 ## Overview
 

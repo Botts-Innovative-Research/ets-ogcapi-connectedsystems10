@@ -80,8 +80,9 @@
        exactly the 25 released Annex A procedures and inherits /conf/api-common
        directly. Every alwaysRun procedure independently reacquires declaration,
        seed, filtered, association, pagination, and representation evidence. -->
-  <!-- Sprint 12 S-ETS-12-01 (REQ-ETS-PART1-010): CreateReplaceDelete group added as a
-       systems-only safety-gated subset. CreateReplaceDelete depends-on
+  <!-- Historical Sprint 12 S-ETS-12-01 (REQ-ETS-PART1-010), superseded by
+       Sprint 56: CreateReplaceDelete was added as a systems-only safety-gated
+       subset and then depended on
        "systemfeatures" because it validates /systems mutation behavior and must
        cascade-SKIP if SystemFeatures fails. POST/PUT/DELETE are guarded by explicit
        mutation-tests-enabled=true plus mutation-iut-policy=dedicated-mutable-iut; the

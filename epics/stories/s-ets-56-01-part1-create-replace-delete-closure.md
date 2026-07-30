@@ -46,9 +46,9 @@ safety-gated implementations of all twelve released OGC 23-001
 - [x] The exact released Annex A `ogcapi-4` inheritance URI is required; the
   `ogcapi-features-4` near-match is rejected.
 - [x] API Common is the only direct local TestNG prerequisite.
-- [x] The generic transaction helper verifies OPTIONS, POST, Location,
-  canonical GET, PUT, changed representation, DELETE, and deletion
-  postconditions.
+- [x] The generic transaction helper accepts immediate and queued
+  POST/PUT/DELETE responses, but reports positive lifecycle evidence only after
+  bounded, configurable polling observes the required postcondition.
 - [x] Applicable declared resource representations are exercised without
   importing another executable ETS jar.
 - [x] Every generated request fixture passes bundled released schema
@@ -68,7 +68,8 @@ safety-gated implementations of all twelve released OGC 23-001
   cleanup failures remain visible.
 - [x] Cleanup dereferences and identity-verifies returned Location before
   destructive use; missing or unrelated Location falls back to root discovery
-  by identity without deleting unrelated resources.
+  by identity without deleting unrelated resources; deleting a verified alias
+  is followed by root identity discovery.
 - [x] Generic non-System DELETE omits the System-specific cascade parameter.
 - [ ] Focused/full Maven, coverage audit, exact-image runtime, dependency,
   credential, immutable-base, and artifact-hygiene gates complete.
@@ -95,18 +96,24 @@ safety-gated implementations of all twelve released OGC 23-001
 
 ## Completion Evidence
 
-Implementation and controlled verification are complete. Docker Maven reports
-`630 tests / 0 failures / 0 errors / 3 skipped`; all twelve procedures execute
-through the controlled HTTP harness, including causal prerequisite sabotage,
-schema-valid request fixtures, wrong or missing Location cleanup, cascade
-preconditions, nested canonical URLs, and custom-collection negative cases.
-Coverage is honestly `0 exact / 0 helper / 12 candidate / 0 unmapped` for this
-class.
+Candidate `f6e3587` is superseded after Raze found incomplete queued-response
+semantics and an alias-Location cleanup gap. It passed focused `28/0/0/0`,
+full Docker Maven `630/0/0/3`, released
+source, schema parity, image/runtime, dependency, credential, immutable-base,
+and artifact-hygiene gates. All twelve procedures execute through the
+controlled HTTP harness, including schema-valid fixtures, identity-safe
+cleanup, cascade preconditions, nested canonical URLs, and custom-collection
+negative cases. Coverage is honestly `0 exact / 0 helper / 12 candidate / 0
+unmapped` for this class.
 
-The initial exact-candidate local OSH run established provisioning and cleanup
-PASS with unchanged primary state, but all twelve procedures SKIPPED before
-writes because unmodified OSH omits the exact released inherited URI
-`http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`.
-That is correct prerequisite behavior, not positive mutation E2E. Exact
-candidate gates and fresh Raze review remain pending; the story stays IN
-PROGRESS and mappings remain candidate.
+Exact-candidate local OSH E2E is populated `244/54/35/155` and clean primary
+`244/40/7/197`. Provisioning and cleanup pass, primary state is unchanged, and
+TeamEngine logs contain zero IUT writes. Part 1 API Common is `4 PASS / 1
+SKIP`; causal inheritance therefore makes all twelve procedures dependency-
+SKIP before CRD declaration checks. OSH additionally omits the exact Connected
+Systems API Common and inherited `ogcapi-4` declarations. This is correct
+fail-closed behavior, not positive mutation E2E. Corrective focused CRD passes
+`35/0/0/0`, including delayed/stalled 202, alias-leak, and deployment-property
+regressions at `18/0/0/0`; full Docker Maven is `637/0/0/3`. Replacement exact
+gates and fresh Raze remain pending; the story stays IN PROGRESS and mappings
+remain candidate.

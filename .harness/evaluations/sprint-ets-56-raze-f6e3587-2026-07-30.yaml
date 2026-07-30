@@ -1,0 +1,39 @@
+sprint: ets-56
+candidate: f6e3587fabad6a18f08cac6a038a0dad719035aa
+reviewer: Raze
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.98
+findings:
+  - id: queued-write-semantics
+    severity: HIGH
+    status: OPEN
+    summary: POST and PUT rejected normative queued HTTP 202 responses, while DELETE imposed a fixed two-second completion deadline.
+    required: Define bounded configurable polling, distinguish accepted-but-inconclusive operations from positive evidence, preserve cleanup, and regress POST/PUT/DELETE 202.
+  - id: custom-alias-location-cleanup
+    severity: HIGH
+    status: OPEN
+    summary: Cleanup returned after deleting a verified custom alias Location and could leave the canonical resource behind.
+    required: Continue root identity discovery after alias deletion and prove failure-path cleanup leaves no canonical resource.
+  - id: superseded-documentation
+    severity: LOW
+    status: OPEN
+    summary: Historical SystemFeatures dependency text and exact-gate state required reconciliation.
+  - id: review-clone-bytecode
+    severity: LOW
+    status: OPEN
+    summary: The detached review clone contained generated scripts/__pycache__ output.
+external_blocker:
+  status: OPEN
+  summary: Positive real-IUT mutation E2E remains unavailable because unmodified local OSH does not satisfy the exact released prerequisites.
+evidence:
+  docker_maven: "630 tests / 0 failures / 0 errors / 3 skipped"
+  exact_populated_e2e: "244 total / 54 passed / 35 failed / 155 skipped"
+  exact_clean_primary_e2e: "244 total / 40 passed / 7 failed / 197 skipped"
+  coverage: "0 exact / 0 helper / 12 candidate / 0 unmapped"
+notes:
+  - Initial finding 001 closed.
+  - Initial finding 002 partial because alias cleanup remained open.
+  - Initial findings 003, 005, 006, and 008 closed.
+  - Initial finding 004 closed with correction that HTTP 202 DELETE is normative.
+  - Initial finding 007 remains an external positive-E2E blocker.

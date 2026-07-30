@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.48 | Status: Living Document | Last reconciled: 2026-07-29 (Part 1 Create/Replace/Delete closure design)
+> Version: 2.0.49 | Status: Living Document | Last reconciled: 2026-07-30 (queued mutation postconditions and alias cleanup)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1446,8 +1446,21 @@ Procedure, Sampling Feature, and Property operations.
 representation selection, POST/Location/canonical-GET behavior, PUT plus
 changed-content proof, DELETE postconditions, service-relative URI resolution,
 custom-collection discovery, submitted-content comparison, graph assertions,
-and reverse-order cleanup. Server-added `id` and `links` members are tolerated;
+and reverse-order cleanup. Immediate POST 201, PUT 200/204, and DELETE 200/204
+remain strict. Queued HTTP 202 responses are accepted only after bounded
+polling observes creation content, replacement content, or deletion. A timeout
+is an accepted-but-inconclusive SKIP, never positive lifecycle evidence.
+Deployments may configure
+`org.opengis.cite.ogcapiconnectedsystems10.crd.asyncTimeoutMillis` and
+`org.opengis.cite.ogcapiconnectedsystems10.crd.asyncPollMillis`; defaults are
+10,000 ms and 100 ms. Server-added `id` and `links` members are tolerated;
 submitted fields and values are not.
+
+Cleanup registers submitted identity before POST. A verified Location can be
+deleted only after identity and content dereference, but its deletion never
+ends ownership cleanup: root identity discovery also removes a canonical
+resource hidden behind a custom alias. Queued creation that has not yet
+materialized receives a second bounded discovery window during cleanup.
 
 The cascade procedure creates both released graph shapes. Nested-resource
 refusal requires exact HTTP 409 before cascade deletion. Deployment-association
@@ -1468,3 +1481,12 @@ smoke. Local OSH conformance failures remain visible because external OSH and
 TeamEngine source and binaries are immutable under ADR-012. No executable
 Features, SWE Common, or SensorML ETS jar is used as a library, and no hosted
 CI is introduced.
+
+Candidate `f6e3587` and its exact gates are superseded audit evidence. Raze
+found that it rejected normative queued POST/PUT and imposed a fixed DELETE
+wait, while verified custom aliases could bypass canonical cleanup. The
+replacement implementation adds delayed and stalled POST/PUT/DELETE 202
+regressions, queued URI-list association coverage, and an alias failure-path
+leak regression and deployment-property validation. Precommit focused CRD is
+`35/0/0/0`, including queued/alias HTTP `18/0/0/0`; full Docker Maven is
+`637/0/0/3`. Replacement exact-image and E2E gates remain required.

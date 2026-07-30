@@ -13,6 +13,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -202,6 +205,139 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
+	 */
+	@Test
+	public void queuedCreateReplaceDeleteWaitForObservedPostconditions() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.queuedWrites = true;
+
+			fixture.support(2_000L, 10L).systemsCreateReplaceDelete();
+
+			assertTrue(fixture.queuedPosts.get() >= 2);
+			assertTrue(fixture.queuedPuts.get() >= 2);
+			assertTrue(fixture.queuedDeletes.get() >= 2);
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-001.
+	 */
+	@Test
+	public void queuedUriListAssociationWaitsForComputedOccurrence() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.queuedWrites = true;
+
+			fixture.support(2_000L, 10L).resourcesAddToCustomCollections();
+
+			assertTrue(fixture.queuedUriListPosts.get() >= 5);
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
+	 */
+	@Test
+	public void queuedCreateWithoutObservedPostconditionSkipsAndCleans() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.stallQueuedCreate = true;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 10L)::systemsCreateReplaceDelete);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
+	 */
+	@Test
+	public void queuedReplaceWithoutObservedPostconditionSkipsAndCleans() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.stallQueuedPut = true;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 10L)::systemsCreateReplaceDelete);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
+	 */
+	@Test
+	public void queuedDeleteWithoutObservedPostconditionSkipsAndCleanupRetries() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.stallFirstQueuedDelete = true;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 10L)::systemsCreateReplaceDelete);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertTrue(fixture.calls("DELETE") >= 2);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CLEANUP-001.
+	 */
+	@Test
+	public void verifiedCustomAliasCleanupStillRemovesCanonicalResource() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.customAliasLocation = true;
+			fixture.corruptCustomAliasAfterFirstGet = true;
+
+			assertThrows(AssertionError.class, fixture.support()::resourcesCreateInCustomCollections);
+
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertTrue(fixture.aliasDeletes.get() >= 1);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INHERITED-TRANSACTION-001.
+	 */
+	@Test
+	public void asynchronousPollingPropertiesRejectInvalidValues() throws Exception {
+		String timeoutProperty = "org.opengis.cite.ogcapiconnectedsystems10.crd.asyncTimeoutMillis";
+		String pollProperty = "org.opengis.cite.ogcapiconnectedsystems10.crd.asyncPollMillis";
+		String previousTimeout = System.getProperty(timeoutProperty);
+		String previousPoll = System.getProperty(pollProperty);
+		try (Fixture fixture = new Fixture()) {
+			System.setProperty(timeoutProperty, "0");
+			IllegalArgumentException timeoutError = assertThrows(IllegalArgumentException.class,
+					() -> new CreateReplaceDeleteSupport(fixture.apiRoot(), "true", "dedicated-mutable-iut"));
+			assertTrue(timeoutError.getMessage().contains(timeoutProperty));
+
+			System.clearProperty(timeoutProperty);
+			System.setProperty(pollProperty, "not-a-number");
+			IllegalArgumentException pollError = assertThrows(IllegalArgumentException.class,
+					() -> new CreateReplaceDeleteSupport(fixture.apiRoot(), "true", "dedicated-mutable-iut"));
+			assertTrue(pollError.getMessage().contains(pollProperty));
+		}
+		finally {
+			restoreProperty(timeoutProperty, previousTimeout);
+			restoreProperty(pollProperty, previousPoll);
+		}
+	}
+
+	private static void restoreProperty(String name, String value) {
+		if (value == null) {
+			System.clearProperty(name);
+		}
+		else {
+			System.setProperty(name, value);
+		}
+	}
+
 	private static final class Fixture implements AutoCloseable {
 
 		private static final ObjectMapper JSON = new ObjectMapper();
@@ -209,6 +345,8 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		private static final String CONF_BASE = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/";
 
 		private final HttpServer server;
+
+		private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
 		private final Map<String, Resource> resources = new ConcurrentHashMap<>();
 
@@ -230,6 +368,20 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private final AtomicInteger deploymentGets = new AtomicInteger();
 
+		private final AtomicInteger queuedPosts = new AtomicInteger();
+
+		private final AtomicInteger queuedPuts = new AtomicInteger();
+
+		private final AtomicInteger queuedDeletes = new AtomicInteger();
+
+		private final AtomicInteger queuedUriListPosts = new AtomicInteger();
+
+		private final AtomicInteger stalledDeleteResponses = new AtomicInteger();
+
+		private final AtomicInteger customAliasGets = new AtomicInteger();
+
+		private final AtomicInteger aliasDeletes = new AtomicInteger();
+
 		private volatile boolean omitLocation;
 
 		private volatile boolean omitUriListLocation;
@@ -248,6 +400,18 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private volatile boolean omitAssociationOnPreDeleteGet;
 
+		private volatile boolean queuedWrites;
+
+		private volatile boolean stallQueuedCreate;
+
+		private volatile boolean stallQueuedPut;
+
+		private volatile boolean stallFirstQueuedDelete;
+
+		private volatile boolean customAliasLocation;
+
+		private volatile boolean corruptCustomAliasAfterFirstGet;
+
 		Fixture() throws IOException {
 			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
 			this.server.createContext("/api", this::handle);
@@ -260,6 +424,11 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		CreateReplaceDeleteSupport support() {
 			return new CreateReplaceDeleteSupport(apiRoot(), "true", "dedicated-mutable-iut");
+		}
+
+		CreateReplaceDeleteSupport support(long asyncTimeoutMillis, long asyncPollMillis) {
+			return new CreateReplaceDeleteSupport(apiRoot(), "true", "dedicated-mutable-iut", asyncTimeoutMillis,
+					asyncPollMillis);
 		}
 
 		int calls(String method) {
@@ -306,6 +475,7 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		@Override
 		public void close() {
 			this.server.stop(0);
+			this.scheduler.shutdownNow();
 		}
 
 		private void handle(HttpExchange exchange) throws IOException {
@@ -355,13 +525,14 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				countWriteMediaType(contentType);
 				this.uriListPosts.incrementAndGet();
 				String firstAlias = null;
+				Map<String, String> pendingAliases = new LinkedHashMap<>();
 				for (String line : requestText(exchange).lines().toList()) {
 					if (line.isBlank()) {
 						continue;
 					}
 					String canonical = URI.create(line).getPath();
 					String alias = path + "/" + last(canonical);
-					this.aliases.put(alias, canonical);
+					pendingAliases.put(alias, canonical);
 					if (firstAlias == null) {
 						firstAlias = alias;
 					}
@@ -370,6 +541,13 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 					json(exchange, 400, Map.of("error", "empty URI list"));
 					return;
 				}
+				if (this.queuedWrites) {
+					this.queuedUriListPosts.incrementAndGet();
+					this.scheduler.schedule(() -> this.aliases.putAll(pendingAliases), 40L, TimeUnit.MILLISECONDS);
+					json(exchange, 202, Map.of());
+					return;
+				}
+				this.aliases.putAll(pendingAliases);
 				if (!this.omitUriListLocation) {
 					exchange.getResponseHeaders().set("Location", firstAlias);
 				}
@@ -385,16 +563,33 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			String parent = parentFor(path);
 			boolean nestedOnly = this.nestedLocationWithoutCanonical && parent != null;
 			String stored = nestedOnly ? path + "/" + id : canonical;
-			this.resources.put(stored, new Resource(root, bodyWithId(body, id), parent));
-			if (path.startsWith("/api/collections/")) {
-				this.aliases.put(path + "/" + id, canonical);
+			Runnable materialize = () -> {
+				this.resources.put(stored, new Resource(root, bodyWithId(body, id), parent));
+				if (path.startsWith("/api/collections/")) {
+					this.aliases.put(path + "/" + id, canonical);
+				}
+			};
+			if (this.stallQueuedCreate) {
+				this.queuedPosts.incrementAndGet();
+				json(exchange, 202, Map.of());
+				return;
 			}
+			if (this.queuedWrites) {
+				this.queuedPosts.incrementAndGet();
+				this.scheduler.schedule(materialize, 40L, TimeUnit.MILLISECONDS);
+				json(exchange, 202, Map.of());
+				return;
+			}
+			materialize.run();
 			if (this.omitLocation) {
 				json(exchange, 201, Map.of());
 				return;
 			}
 			exchange.getResponseHeaders()
-				.set("Location", this.wrongLocation ? "/api/systems/unrelated" : nestedOnly ? stored : canonical);
+				.set("Location",
+						this.wrongLocation ? "/api/systems/unrelated"
+								: this.customAliasLocation && path.startsWith("/api/collections/") ? path + "/" + id
+										: nestedOnly ? stored : canonical);
 			json(exchange, 201, Map.of("id", id));
 		}
 
@@ -418,6 +613,11 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				responseBody = deepCopy(responseBody);
 				removeFirstDeploymentReference(responseBody);
 			}
+			if (this.corruptCustomAliasAfterFirstGet && path.startsWith("/api/collections/")
+					&& this.customAliasGets.incrementAndGet() > 1) {
+				responseBody = deepCopy(responseBody);
+				corruptSubmittedContent(responseBody);
+			}
 			json(exchange, 200, responseBody);
 		}
 
@@ -430,6 +630,20 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				return;
 			}
 			Map<String, Object> replacement = requestJson(exchange);
+			if (this.stallQueuedPut) {
+				this.queuedPuts.incrementAndGet();
+				respond(exchange, 202, "");
+				return;
+			}
+			if (this.queuedWrites) {
+				this.queuedPuts.incrementAndGet();
+				this.scheduler.schedule(
+						() -> this.resources.put(canonical, new Resource(current.root(),
+								bodyWithId(replacement, last(canonical)), current.parent())),
+						40L, TimeUnit.MILLISECONDS);
+				respond(exchange, 202, "");
+				return;
+			}
 			if (!this.ignorePut) {
 				this.resources.put(canonical,
 						new Resource(current.root(), bodyWithId(replacement, last(canonical)), current.parent()));
@@ -439,6 +653,13 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private void delete(HttpExchange exchange, String path) throws IOException {
 			if (this.aliases.containsKey(path)) {
+				this.aliasDeletes.incrementAndGet();
+				if (this.queuedWrites) {
+					this.queuedDeletes.incrementAndGet();
+					this.scheduler.schedule(() -> this.aliases.remove(path), 40L, TimeUnit.MILLISECONDS);
+					respond(exchange, 202, "");
+					return;
+				}
 				this.aliases.remove(path);
 				respond(exchange, 204, "");
 				return;
@@ -457,6 +678,22 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				respond(exchange, this.wrongConflictStatus ? 400 : 409, "");
 				return;
 			}
+			if (this.stallFirstQueuedDelete && this.stalledDeleteResponses.getAndIncrement() == 0) {
+				this.queuedDeletes.incrementAndGet();
+				respond(exchange, 202, "");
+				return;
+			}
+			if (this.queuedWrites) {
+				this.queuedDeletes.incrementAndGet();
+				this.scheduler.schedule(() -> removeResource(path, resource, cascade), 40L, TimeUnit.MILLISECONDS);
+				respond(exchange, 202, "");
+				return;
+			}
+			removeResource(path, resource, cascade);
+			respond(exchange, 204, "");
+		}
+
+		private void removeResource(String path, Resource resource, boolean cascade) {
 			if ("systems".equals(resource.root()) && cascade) {
 				removeSystemDependencies(path, uid(resource.body()));
 			}
@@ -467,7 +704,16 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			if (!this.retainAliasesOnCanonicalDelete) {
 				this.aliases.entrySet().removeIf(entry -> path.equals(entry.getValue()));
 			}
-			respond(exchange, 204, "");
+		}
+
+		@SuppressWarnings("unchecked")
+		private void corruptSubmittedContent(Map<String, Object> body) {
+			Object properties = body.get("properties");
+			if (properties instanceof Map) {
+				((Map<String, Object>) properties).put("name", "corrupted after initial alias verification");
+				return;
+			}
+			body.put("label", "corrupted after initial alias verification");
 		}
 
 		private void countWriteMediaType(String contentType) {

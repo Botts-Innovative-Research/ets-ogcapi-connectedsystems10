@@ -3408,6 +3408,10 @@ response
 **THEN** the Update procedure becomes inconclusive and SKIPs before PATCH
 **AND** every dispatched POST is followed by bounded polling of both canonical
 and applicable custom collection identity views
+**AND** identity polling reads released GeoJSON `features` collections as well
+as JSON or SensorML `items` collections
+**AND** failure of one discovery view cannot suppress polling, derivation, or
+cleanup through another independently safe view
 **AND** delayed, canonical-only, custom-only, or jointly visible committed
 resources are cleaned despite the response failure.
 *Maps to*: REQ-ETS-PART1-011.

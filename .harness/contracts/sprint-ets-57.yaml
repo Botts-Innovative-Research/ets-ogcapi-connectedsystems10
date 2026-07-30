@@ -36,6 +36,9 @@ success_criteria:
   - Fixture acquisition denial or unusable response is an inconclusive SKIP before PATCH.
   - Every dispatched POST is rediscovered by bounded canonical and custom identity polling after ambiguous failure.
   - Delayed and custom-only committed resources are cleaned.
+  - Released GeoJSON features and JSON or SensorML items collection members are both eligible for identity rediscovery.
+  - Failure of one discovery view does not suppress another independently safe discovery or cleanup route.
+  - HTTP 201 or 202 without a usable safe owned target is an inconclusive SKIP before PATCH after bounded rediscovery.
   - Owned resources are identity-revalidated and disappearance-proven in reverse-order cleanup.
   - Failure on one cleanup route does not suppress remaining safe cleanup routes.
   - Only exact compact or canonical SOSA collection types authorize custom writes.

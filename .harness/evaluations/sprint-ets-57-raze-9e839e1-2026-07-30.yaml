@@ -1,0 +1,42 @@
+sprint: ets-57
+candidate: 9e839e134a216adc3370d0f7a0595744f827f6ca
+reviewer: Raze
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.97
+duration_seconds: 633
+independent_subreview:
+  duration_seconds: 463
+  input_tokens: 3853151
+  cached_input_tokens: 3601280
+  output_tokens: 24155
+  reasoning_tokens: 12802
+findings:
+  - id: geojson-fixture-rediscovery
+    severity: HIGH
+    status: OPEN
+    summary: Ownership rediscovery inspected items only, while released GeoJSON collections expose members under features.
+    required: Parse both released GeoJSON features and JSON or SensorML items during canonical and custom identity discovery.
+  - id: discovery-route-suppression
+    severity: HIGH
+    status: OPEN
+    summary: An exception from canonical or custom identity discovery could suppress the other independently safe discovery route.
+    required: Attempt both discovery routes independently, preserve unresolved failures, and continue safe derived cleanup.
+  - id: accepted-unusable-fixture-response
+    severity: HIGH
+    status: OPEN
+    summary: HTTP 201 without usable Location, unsafe Location, and HTTP 202 without a discoverable resource failed instead of becoming inconclusive before PATCH.
+    required: SKIP unusable accepted fixture responses before PATCH after bounded rediscovery and cleanup.
+  - id: reconciliation-and-immutable-evidence
+    severity: MEDIUM
+    status: OPEN
+    summary: Candidate evidence and Sprint state had not yet been reconciled or committed.
+    required: Reconcile specs, story, traceability, operations, exact gates, and immutable evidence after implementation remediation.
+external_blocker:
+  status: OPEN
+  summary: Positive real-IUT PATCH E2E remains unavailable because unmodified local OSH does not satisfy the exact released prerequisites.
+notes:
+  - Maven was 679/0/0/3 and controlled Update HTTP was 22/0/0/0, but neither exposed the three implementation defects.
+  - Local OSH populated 244/54/35/155 and clean-primary 244/40/7/197 runs issued zero IUT writes; all five Update procedures dependency-skipped through API Common.
+  - Clean-primary failures are known unrelated OSH metadata and reference limitations.
+  - Candidate 9e839e1 is superseded pending test-first remediation.

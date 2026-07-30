@@ -35,6 +35,12 @@
 > cleanup routes are attempted independently, with failures aggregated after
 > every safe attempt. Canonical and occurrence postconditions retain separate
 > pre-update sentinel baselines.
+> Raze `GAPS_FOUND 0.97` supersedes candidate `9e839e1`. Identity discovery
+> parses released GeoJSON `features` and JSON or SensorML `items`, attempts
+> canonical and custom views independently, and preserves unresolved route
+> failures while cleaning through another safe view. Accepted 201/202 responses
+> without a usable safe owned target remain inconclusive SKIP-before-PATCH
+> outcomes after bounded rediscovery.
 
 > Sprint 41 supersession note (2026-07-21): the TeamEngine 5.5/5.6.x
 > deployment guidance in the Sprint 1 and Sprint 2 sections below is historical

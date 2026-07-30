@@ -241,7 +241,6 @@ public final class UpdateSupport {
 			throw new SkipException(requirement + " - fixture POST " + createEndpoint + " returned HTTP "
 					+ create.getStatusCode() + "; Update evidence is inconclusive and no PATCH request was issued.");
 		}
-		target.accepted = true;
 
 		ResourceUris uris = createdUris(kind, createEndpoint, custom, create, target, requirement);
 		target.canonical = uris.canonical();
@@ -272,25 +271,39 @@ public final class UpdateSupport {
 			Deadline deadline = new Deadline();
 			Optional<URI> canonical = awaitOwned(kind, target.identity, target.mediaType, deadline, requirement);
 			if (canonical.isEmpty()) {
-				ETSAssert.failWithUri(requirement,
-						"accepted POST " + createEndpoint + " did not expose the owned resource before the deadline.");
+				throw new SkipException(requirement + " - accepted POST " + createEndpoint
+						+ " did not expose a usable owned resource before the deadline; Update evidence is "
+						+ "inconclusive and no PATCH request was issued.");
 			}
 			URI resource = canonical.orElseThrow();
+			target.canonical = resource;
 			URI occurrence = custom == null ? null
 					: child(custom.items(), encoded(lastPathSegment(resource, requirement)));
 			if (occurrence != null
 					&& !awaitAvailable(occurrence, target.mediaType, target.identity, deadline, requirement)) {
-				ETSAssert.failWithUri(requirement, "accepted POST " + createEndpoint
-						+ " did not expose its collection occurrence before the deadline.");
+				throw new SkipException(requirement + " - accepted POST " + createEndpoint
+						+ " did not expose a usable owned collection occurrence before the deadline; Update "
+						+ "evidence is inconclusive and no PATCH request was issued.");
 			}
+			target.occurrence = occurrence;
 			return new ResourceUris(resource, occurrence, occurrence == null ? resource : occurrence);
 		}
 
 		String location = create.getHeader("Location");
 		if (location == null || location.isBlank()) {
-			ETSAssert.failWithUri(requirement, "POST " + createEndpoint + " returned HTTP 201 without Location.");
+			throw new SkipException(requirement + " - fixture POST " + createEndpoint
+					+ " returned HTTP 201 without a usable Location; Update evidence is inconclusive and no PATCH "
+					+ "request was issued.");
 		}
-		URI supplied = CreateReplaceDeleteSupport.resolveCreatedResourceUri(this.apiRoot, location, requirement);
+		URI supplied;
+		try {
+			supplied = CreateReplaceDeleteSupport.resolveCreatedResourceUri(this.apiRoot, location, requirement);
+		}
+		catch (AssertionError | IllegalArgumentException ex) {
+			throw new SkipException(requirement + " - fixture POST " + createEndpoint
+					+ " returned an unsafe or unusable Location; Update evidence is inconclusive and no PATCH "
+					+ "request was issued.", ex);
+		}
 		String id = lastPathSegment(supplied, requirement);
 		URI canonical = this.apiRoot.resolve(kind.path() + "/" + encoded(id));
 		Map<String, Object> canonicalBody = getJson(canonical, target.mediaType, requirement, null);
@@ -639,11 +652,11 @@ public final class UpdateSupport {
 			}
 			ETSAssert.assertStatus(response, 200, requirement);
 			Map<String, Object> body = parseJsonObject(response, current, requirement);
-			Object items = body.get("items");
-			if (!(items instanceof List<?>)) {
-				ETSAssert.failWithUri(requirement, current + " response is missing an items array.");
+			Object members = body.containsKey("features") ? body.get("features") : body.get("items");
+			if (!(members instanceof List<?>)) {
+				ETSAssert.failWithUri(requirement, current + " response is missing a features or items array.");
 			}
-			for (Object value : (List<?>) items) {
+			for (Object value : (List<?>) members) {
 				if (value instanceof Map<?, ?> raw) {
 					@SuppressWarnings("unchecked")
 					Map<String, Object> item = (Map<String, Object>) raw;
@@ -680,28 +693,57 @@ public final class UpdateSupport {
 		}
 		URI[] canonical = { target.canonical };
 		URI[] occurrence = { target.occurrence };
+		List<Throwable> failures = new ArrayList<>();
 		if (canonical[0] == null || target.customItems != null && occurrence[0] == null) {
 			Deadline discoveryDeadline = new Deadline();
+			Throwable[] canonicalFailure = { null };
+			Throwable[] occurrenceFailure = { null };
 			pollUntil(discoveryDeadline, () -> {
 				if (canonical[0] == null) {
-					canonical[0] = discoverOwned(target.kind, target.identity, target.mediaType, requirement,
-							discoveryDeadline)
-						.orElse(null);
+					try {
+						canonical[0] = discoverOwned(target.kind, target.identity, target.mediaType, requirement,
+								discoveryDeadline)
+							.orElse(null);
+						if (canonical[0] != null) {
+							canonicalFailure[0] = null;
+						}
+					}
+					catch (AssertionError | RuntimeException ex) {
+						if (!causedByTimeout(ex)) {
+							canonicalFailure[0] = ex;
+						}
+					}
 				}
 				if (target.customItems != null && occurrence[0] == null) {
-					occurrence[0] = discoverOwnedOccurrence(target.kind, target.customItems, target.identity,
-							target.mediaType, requirement, discoveryDeadline)
-						.orElse(null);
+					try {
+						occurrence[0] = discoverOwnedOccurrence(target.kind, target.customItems, target.identity,
+								target.mediaType, requirement, discoveryDeadline)
+							.orElse(null);
+						if (occurrence[0] != null) {
+							occurrenceFailure[0] = null;
+						}
+					}
+					catch (AssertionError | RuntimeException ex) {
+						if (!causedByTimeout(ex)) {
+							occurrenceFailure[0] = ex;
+						}
+					}
 				}
-				return canonical[0] != null && (target.customItems == null || occurrence[0] != null);
+				return target.customItems == null ? canonical[0] != null
+						: canonical[0] != null || occurrence[0] != null;
 			}, requirement, "owned fixture cleanup discovery");
+			if (canonical[0] == null && canonicalFailure[0] != null) {
+				failures.add(canonicalFailure[0]);
+			}
+			if (target.customItems != null && occurrence[0] == null && occurrenceFailure[0] != null) {
+				failures.add(occurrenceFailure[0]);
+			}
 		}
 		if (canonical[0] == null && occurrence[0] == null) {
-			if (!target.accepted) {
+			if (failures.isEmpty()) {
 				return;
 			}
-			ETSAssert.failWithUri(requirement, "accepted " + target.kind.name() + " identity " + target.identity
-					+ " could not be rediscovered for cleanup.");
+			throw cleanupFailures(requirement, failures);
 		}
 		if (canonical[0] == null) {
 			canonical[0] = this.apiRoot
@@ -710,17 +752,20 @@ public final class UpdateSupport {
 		if (occurrence[0] == null && target.customItems != null) {
 			occurrence[0] = child(target.customItems, encoded(lastPathSegment(canonical[0], requirement)));
 		}
-		List<Throwable> failures = new ArrayList<>();
 		if (occurrence[0] != null && !occurrence[0].equals(canonical[0])) {
 			tryCleanupDelete(occurrence[0], false, target, requirement, failures);
 		}
 		tryCleanupDelete(canonical[0], target.kind == SYSTEM, target, requirement, failures);
 		if (!failures.isEmpty()) {
-			AssertionError aggregate = new AssertionError(
-					requirement + " - one or more owned-resource cleanup routes failed.");
-			failures.forEach(aggregate::addSuppressed);
-			throw aggregate;
+			throw cleanupFailures(requirement, failures);
 		}
+	}
+
+	private static AssertionError cleanupFailures(String requirement, List<Throwable> failures) {
+		AssertionError aggregate = new AssertionError(
+				requirement + " - one or more owned-resource discovery or cleanup routes failed.");
+		failures.forEach(aggregate::addSuppressed);
+		return aggregate;
 	}
 
 	private void tryCleanupDelete(URI resource, boolean cascade, CleanupTarget target, String requirement,
@@ -1135,8 +1180,6 @@ public final class UpdateSupport {
 		private final String identity;
 
 		private final URI customItems;
-
-		private boolean accepted;
 
 		private boolean postDispatched;
 

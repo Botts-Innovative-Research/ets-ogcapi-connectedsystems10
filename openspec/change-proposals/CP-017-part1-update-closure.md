@@ -88,15 +88,20 @@ a failing, disconnected, or timed-out POST may still commit, identity
 rediscovery SHALL run after every dispatched POST, including ambiguous
 responses. That rediscovery SHALL poll both canonical and applicable custom
 collection identity views through a bounded deadline so delayed and route-local
-commits are cleaned. Cleanup SHALL be registered by submitted identity before
-creation, run in reverse ownership order after PASS, FAIL, or inconclusive
-SKIP, immediately revalidate current identity before DELETE, and delete only an
-identity-verified same-origin resource. Every independently safe cleanup route
-SHALL be attempted even when another route fails, and failures SHALL be
-aggregated after all attempts. Every successful DELETE status SHALL be followed
-by bounded disappearance proof. Missing, cross-origin, or mismatched Location
-metadata SHALL not authorize destructive follow-up. Cleanup failure SHALL
-remain visible and SHALL override an accepted-but-inconclusive SKIP.
+commits are cleaned. Discovery SHALL recognize released GeoJSON collection
+members under `features` as well as JSON or SensorML members under `items`.
+HTTP 201 without a usable Location, an unsafe Location, or HTTP 202 without a
+discoverable owned resource SHALL remain an inconclusive SKIP before PATCH
+after bounded identity rediscovery. Cleanup SHALL be registered by submitted
+identity before creation, run in reverse ownership order after PASS, FAIL, or
+inconclusive SKIP, immediately revalidate current identity before DELETE, and
+delete only an identity-verified same-origin resource. Every independently safe
+discovery and cleanup route SHALL be attempted even when another route fails,
+and failures SHALL be aggregated after all attempts. Every successful DELETE
+status SHALL be followed by bounded disappearance proof. Missing, cross-origin,
+or mismatched Location metadata SHALL not authorize destructive follow-up.
+Cleanup failure SHALL remain visible and SHALL override an
+accepted-but-inconclusive SKIP.
 
 ## Architecture
 

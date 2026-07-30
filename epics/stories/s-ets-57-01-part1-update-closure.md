@@ -63,6 +63,11 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
   proof.
 - [ ] Delayed and custom-only ambiguous commits are cleaned, one route failure
   does not suppress remaining safe cleanup, and route failures are aggregated.
+- [ ] Rediscovery accepts released GeoJSON `features` and JSON/SensorML
+  `items`; independently safe discovery views still execute when another view
+  fails.
+- [ ] HTTP 201/202 responses without a usable safe owned target SKIP before
+  PATCH after bounded identity rediscovery and cleanup.
 - [ ] Fixture acquisition denial or unusable response SKIPs before PATCH rather
   than failing Update conformance.
 - [ ] Custom applicability accepts only exact compact/canonical SOSA types,

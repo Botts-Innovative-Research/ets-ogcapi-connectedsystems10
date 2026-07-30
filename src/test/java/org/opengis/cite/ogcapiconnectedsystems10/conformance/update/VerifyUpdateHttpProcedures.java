@@ -346,6 +346,91 @@ public class VerifyUpdateHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void geoJsonFeaturesCollectionSupportsAmbiguousRediscovery() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.geoJsonFeatureCollections = true;
+			fixture.ambiguousCreateResponse = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.calls("PATCH"));
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-CLEANUP-001.
+	 */
+	@Test
+	public void canonicalDiscoveryFailureDoesNotSuppressCustomCleanup() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.ambiguousCustomOnlyCreate = true;
+			fixture.failCanonicalDiscovery = true;
+
+			assertThrows(AssertionError.class, fixture.support()::systemsUpdate);
+			assertEquals(fixture.resourcePaths(), 0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-CLEANUP-001.
+	 */
+	@Test
+	public void customDiscoveryFailureDoesNotSuppressCanonicalCleanup() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.ambiguousCustomCreateResponse = true;
+			fixture.failCustomDiscovery = true;
+
+			assertThrows(AssertionError.class, fixture.support()::systemsUpdate);
+			assertEquals(fixture.resourcePaths(), 0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void accepted202WithoutOwnedResourceSkipsBeforePatch() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.acceptedCreateWithoutCommit = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.calls("PATCH"));
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void http201WithoutLocationSkipsBeforePatchAndCleans() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.missingCreateLocation = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.calls("PATCH"));
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-FIXTURE-ACQUISITION-001.
+	 */
+	@Test
+	public void crossOriginCreateLocationSkipsBeforePatchAndCleans() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.crossOriginCreateLocation = true;
+
+			assertThrows(SkipException.class, fixture.support()::systemsUpdate);
+			assertEquals(0, fixture.calls("PATCH"));
+			assertEquals(0, fixture.liveResources());
+		}
+	}
+
 	private static final class Fixture implements AutoCloseable {
 
 		private static final ObjectMapper JSON = new ObjectMapper();
@@ -413,9 +498,23 @@ public class VerifyUpdateHttpProcedures {
 
 		private volatile boolean ambiguousCustomOnlyCreate;
 
+		private volatile boolean ambiguousCustomCreateResponse;
+
 		private volatile boolean ignoreOccurrenceDelete;
 
 		private volatile boolean distinctOccurrenceSentinel;
+
+		private volatile boolean geoJsonFeatureCollections;
+
+		private volatile boolean failCanonicalDiscovery;
+
+		private volatile boolean failCustomDiscovery;
+
+		private volatile boolean acceptedCreateWithoutCommit;
+
+		private volatile boolean missingCreateLocation;
+
+		private volatile boolean crossOriginCreateLocation;
 
 		private volatile boolean cleanupIdentityChanged;
 
@@ -452,6 +551,10 @@ public class VerifyUpdateHttpProcedures {
 
 		private int liveResources() {
 			return this.resources.size();
+		}
+
+		private String resourcePaths() {
+			return this.resources.keySet().toString();
 		}
 
 		private void handle(HttpExchange exchange) throws IOException {
@@ -578,6 +681,10 @@ public class VerifyUpdateHttpProcedures {
 				send(exchange, 403, "application/json", Map.of("error", "fixture creation denied"));
 				return;
 			}
+			if (this.acceptedCreateWithoutCommit) {
+				send(exchange, 202, "application/json", Map.of());
+				return;
+			}
 			String kind = collectionKind(path);
 			String id = Integer.toString(this.ids.incrementAndGet());
 			String canonical = "/api/" + kind + "/" + id;
@@ -605,30 +712,48 @@ public class VerifyUpdateHttpProcedures {
 				location = path + "/" + id;
 				this.aliases.put(location, canonical);
 			}
-			if (this.ambiguousCreateResponse) {
+			if (this.ambiguousCreateResponse
+					|| this.ambiguousCustomCreateResponse && path.startsWith("/api/collections/")) {
 				send(exchange, 500, "application/json", Map.of("error", "response unavailable"));
 				return;
 			}
-			exchange.getResponseHeaders().set("Location", location);
+			if (this.crossOriginCreateLocation) {
+				exchange.getResponseHeaders().set("Location", "https://other.test/api/" + kind + "/" + id);
+			}
+			else if (!this.missingCreateLocation) {
+				exchange.getResponseHeaders().set("Location", location);
+			}
 			send(exchange, 201, "application/json", Map.of("id", id));
 		}
 
 		private void canonicalCollection(HttpExchange exchange, String path) throws IOException {
+			if (this.failCanonicalDiscovery) {
+				send(exchange, 500, "application/json", Map.of("error", "canonical discovery unavailable"));
+				return;
+			}
 			List<Map<String, Object>> items = this.resources.entrySet()
 				.stream()
 				.filter(entry -> entry.getKey().startsWith(path + "/"))
 				.map(entry -> copy(entry.getValue()))
 				.toList();
-			send(exchange, 200, "application/json", Map.of("items", items));
+			String member = this.geoJsonFeatureCollections ? "features" : "items";
+			String contentType = this.geoJsonFeatureCollections ? "application/geo+json" : "application/json";
+			send(exchange, 200, contentType, Map.of(member, items));
 		}
 
 		private void customCollection(HttpExchange exchange, String path) throws IOException {
+			if (this.failCustomDiscovery) {
+				send(exchange, 500, "application/json", Map.of("error", "custom discovery unavailable"));
+				return;
+			}
 			List<Map<String, Object>> items = this.resources.entrySet()
 				.stream()
 				.filter(entry -> entry.getKey().startsWith(path + "/"))
 				.map(entry -> copy(entry.getValue()))
 				.toList();
-			send(exchange, 200, "application/json", Map.of("items", items));
+			String member = this.geoJsonFeatureCollections ? "features" : "items";
+			String contentType = this.geoJsonFeatureCollections ? "application/geo+json" : "application/json";
+			send(exchange, 200, contentType, Map.of(member, items));
 		}
 
 		private void resource(HttpExchange exchange, String path) throws IOException {

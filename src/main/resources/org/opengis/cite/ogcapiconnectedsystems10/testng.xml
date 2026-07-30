@@ -87,13 +87,11 @@
        cascade-SKIP if SystemFeatures fails. POST/PUT/DELETE are guarded by explicit
        mutation-tests-enabled=true plus mutation-iut-policy=dedicated-mutable-iut; the
        known public GeoRobotix IUT is hard-denied even if both parameters are set. -->
-  <!-- Sprint 13 S-ETS-13-01 (REQ-ETS-PART1-011): Update group added as a
-       systems-only PATCH safety-gated subset. Update depends-on
-       "createreplacedelete" because OGC Part 1 Update requires Create/Replace/Delete
-       and OGC API Features Part 4 Update. PATCH is guarded by the same explicit
-       mutation-tests-enabled=true plus mutation-iut-policy=dedicated-mutable-iut
-       controls; the known public GeoRobotix IUT is hard-denied even if both parameters
-       are set. -->
+  <!-- Sprint 57 S-ETS-57-01 (REQ-ETS-PART1-011): Update implements the five
+       released Annex A procedures. Annex A directly inherits Part 1 API Common;
+       Create/Replace/Delete supplies owned fixtures but is not a sibling TestNG
+       prerequisite. Every procedure independently gates exact declarations,
+       mutation ownership, PATCH negotiation, postconditions, and cleanup. -->
   <!-- Sprint 20 S-ETS-20-01 (REQ-ETS-PART2-001): Part 2 API Common group added as a
        read-only declaration-gated subset. It depends-on "core common" because Part 2
        API Common builds on the CS API Part 1 API Common requirements class and OGC API
@@ -183,7 +181,7 @@
         <group name="sensorml" depends-on="systemfeatures"/>
         <group name="advancedfiltering" depends-on="part1apicommon"/>
         <group name="createreplacedelete" depends-on="part1apicommon"/>
-        <group name="update" depends-on="createreplacedelete"/>
+        <group name="update" depends-on="part1apicommon"/>
         <group name="part2apicommon" depends-on="core common"/>
         <group name="part2datastream" depends-on="core common"/>
         <group name="part2controlstream" depends-on="core common"/>

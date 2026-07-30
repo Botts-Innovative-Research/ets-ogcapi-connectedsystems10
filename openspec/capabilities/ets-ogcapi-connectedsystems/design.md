@@ -6,6 +6,22 @@
 **Status**: Approved (Sprint 1)
 **Authoritative ADRs**: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005 (in `_bmad/adrs/`)
 
+> Sprint 57 addition (2026-07-30): CP-017 replaces the historical Update
+> declaration/readiness/System subset with exactly five released procedures.
+> `UpdateTests` retains immutable run arguments and depends directly on Part 1
+> API Common. `UpdateSupport` owns exact declaration and condition gates,
+> procedure-owned fixture acquisition, OPTIONS/OpenAPI PATCH negotiation,
+> bounded paginated custom discovery, canonical and advertised custom item execution, completed partial-update assertions,
+> bounded HTTP 202 polling, and reverse-order identity-safe cleanup. It accepts
+> JSON Merge Patch and JSON Patch documents, never guesses a resource
+> representation media type as a patch format, and requires changed-field,
+> preserved-sentinel, stable-external-identity, and ignored-conflicting-id
+> evidence. Custom updates prove canonical and occurrence propagation together.
+> Fixture POST/DELETE reuse the Sprint 56 ownership and schema contract without
+> making Create/Replace/Delete a direct TestNG dependency. Positive writes use
+> owned isolated IUT state; OSH and TeamEngine remain immutable, and no
+> executable conformance-suite jar or hosted CI is introduced.
+
 > Sprint 41 supersession note (2026-07-21): the TeamEngine 5.5/5.6.x
 > deployment guidance in the Sprint 1 and Sprint 2 sections below is historical
 > baseline context only. The forward runtime contract is ADR-011 plus

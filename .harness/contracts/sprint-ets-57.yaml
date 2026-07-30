@@ -1,0 +1,60 @@
+sprint: ets-57
+story: S-ETS-57-01
+title: Part 1 Update direct ATS closure
+status: IN_PROGRESS
+triggered_by: "User instructed push and start Sprint 57"
+requirements:
+  - REQ-ETS-PART1-011
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-PART1-011-RELEASED-PROCEDURES-001
+  - SCENARIO-ETS-PART1-011-DIRECT-PREREQUISITES-001
+  - SCENARIO-ETS-PART1-011-DEPENDENCY-CAUSAL-001
+  - SCENARIO-ETS-PART1-011-MUTATION-SAFETY-001
+  - SCENARIO-ETS-PART1-011-PATCH-NEGOTIATION-001
+  - SCENARIO-ETS-PART1-011-PARTIAL-UPDATE-001
+  - SCENARIO-ETS-PART1-011-CUSTOM-COLLECTIONS-001
+  - SCENARIO-ETS-PART1-011-ASYNC-DEADLINE-001
+  - SCENARIO-ETS-PART1-011-CLEANUP-001
+  - SCENARIO-ETS-PART1-011-DIRECT-HTTP-COVERAGE-001
+  - SCENARIO-ETS-PART1-011-E2E-ISOLATION-001
+success_criteria:
+  - Exactly five independent TestNG methods map the five released procedures.
+  - API Common is the only direct TestNG prerequisite and no method uses alwaysRun.
+  - Every method checks exact declarations, condition, and mutation ownership before writes.
+  - The exact ogcapi-4 Update inheritance URI is required and near-matches are rejected.
+  - Canonical and every advertised applicable custom item endpoint are discovered with bounded same-origin pagination and exercised.
+  - OPTIONS returns 200 and advertises PATCH.
+  - Every implemented JSON Merge Patch and JSON Patch format advertised by Accept-Patch or exact OpenAPI metadata is exercised without treating resource media types as patch documents.
+  - HTTP 200, 202, and 204 require completed representation evidence.
+  - Changed-field, preserved-sentinel, stable-identity, and ignored-id behavior are proven.
+  - Custom occurrence and canonical propagation are observed together.
+  - Queued work is bounded by one monotonic deadline.
+  - Owned resources are identity-safely cleaned in reverse order after every outcome.
+  - Controlled HTTP covers every positive procedure and key fail-closed branch.
+  - Focused and full Docker Maven verification complete.
+  - TeamEngine executes the candidate against unmodified local OSH.
+  - Released-source, exact-image runtime, dependency, credential, immutable-base, and hygiene gates complete.
+  - Positive real-IUT PATCH evidence is required before exact mapping promotion.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not classify prerequisite or no-patch-format SKIP as positive conformance evidence.
+  - Do not mutate a shared public IUT.
+  - Do not import executable conformance-suite jars as libraries.
+  - Do not guess application/json as a patch-document media type.
+verification:
+  released_source: PENDING
+  test_first: PENDING
+  focused_maven: PENDING
+  full_maven: PENDING
+  coverage_audit: PENDING
+  controlled_http: PENDING
+  exact_image: PENDING
+  dependency_sabotage: PENDING
+  local_osh_teamengine: PENDING
+  credential_gates: PENDING
+  immutable_base: PENDING
+  artifact_hygiene: PENDING
+  raze: PENDING

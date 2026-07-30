@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 56 Create/Replace/Delete positive E2E open | Last updated: 2026-07-30
+> Status: Active - Sprint 57 Update direct closure in progress | Last updated: 2026-07-30
 
 ## Goal
 Implement the 13 released OGC 23-001 conformance classes and all 110 Annex A
@@ -39,6 +39,7 @@ capability.
 | S-ETS-56-01 | Replace Create/Replace/Delete subset with all 12 released safety-gated procedures | In progress; exact candidate `a2ce547` passes all technical/E2E gates; Raze `APPROVE_WITH_CONCERNS 0.99` has no required fixes; positive mutation E2E remains externally blocked and mappings stay candidate | REQ-ETS-PART1-010, REQ-ETS-COVERAGE-001 |
 | S-ETS-13-01 | Implement `/conf/update` suite - PATCH safety-gated systems subset, no default public-IUT mutation | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |
 | S-ETS-14-01 | Harden `/conf/update` positive mutable-IUT path - changed-field assertion and local OSH readiness truth | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |
+| S-ETS-57-01 | Replace Update subset with all 5 released safety-gated procedures | In progress; spec-first Sprint 57 artifacts accepted, implementation and exact gates pending | REQ-ETS-PART1-011, REQ-ETS-COVERAGE-001 |
 | S-ETS-09-01 | Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012 |
 | S-ETS-15-01 | Expand `/conf/geojson` non-system read-only schema/mapping checks for deployments, procedures, and sampling features | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012 |
 | S-ETS-54-01 | Replace GeoJSON approximations with all twelve released `/conf/geojson` procedures and close Sprint 53 hardening carryovers | Complete; 12/12 exact; Raze approved | REQ-ETS-PART1-012, REQ-ETS-COVERAGE-001 |

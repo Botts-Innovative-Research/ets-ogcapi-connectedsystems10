@@ -1239,7 +1239,7 @@
     "target" : "/req/update/system",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#systemResourceOptionsPatchReadinessPrecondition()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#systemsPatchLifecycleOptIn()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#systemsUpdate()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1247,8 +1247,8 @@
     "classIdentifier" : "/conf/update",
     "target" : "/req/update/deployment",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#deploymentsUpdate()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1256,8 +1256,8 @@
     "classIdentifier" : "/conf/update",
     "target" : "/req/update/procedure",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#proceduresUpdate()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1265,8 +1265,8 @@
     "classIdentifier" : "/conf/update",
     "target" : "/req/update/sampling-feature",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#samplingFeaturesUpdate()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1274,8 +1274,8 @@
     "classIdentifier" : "/conf/update",
     "target" : "/req/update/property",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests#propertiesUpdate()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -2791,15 +2791,15 @@
     "total" : 240,
     "exact" : 76,
     "helper" : 2,
-    "candidate" : 126,
-    "unmapped" : 36,
+    "candidate" : 130,
+    "unmapped" : 32,
     "byPart" : {
       "1" : {
         "total" : 110,
         "exact" : 76,
         "helper" : 2,
-        "candidate" : 25,
-        "unmapped" : 7
+        "candidate" : 29,
+        "unmapped" : 3
       },
       "2" : {
         "total" : 130,
@@ -2891,8 +2891,8 @@
         "total" : 5,
         "exact" : 0,
         "helper" : 0,
-        "candidate" : 1,
-        "unmapped" : 4
+        "candidate" : 5,
+        "unmapped" : 0
       },
       "1:/conf/geojson" : {
         "total" : 12,

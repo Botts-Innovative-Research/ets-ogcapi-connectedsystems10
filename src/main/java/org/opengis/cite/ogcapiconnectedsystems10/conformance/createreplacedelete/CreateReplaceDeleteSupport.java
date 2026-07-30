@@ -697,7 +697,7 @@ public final class CreateReplaceDeleteSupport {
 		return EncodingMediatypeWrite.givenWithoutDefaultCharset().accept(mediaType).contentType(mediaType).body(body);
 	}
 
-	static void validateGeneratedBody(Map<String, Object> body, String resourcePath, String mediaType,
+	public static void validateGeneratedBody(Map<String, Object> body, String resourcePath, String mediaType,
 			String requirement) {
 		String schema = generatedBodySchema(resourcePath, mediaType);
 		if (schema == null) {
@@ -1219,7 +1219,7 @@ public final class CreateReplaceDeleteSupport {
 	 * @param policy ownership policy.
 	 * @param requirement owning requirement.
 	 */
-	static void ensureMutationAllowed(URI apiRoot, String enabled, String policy, String requirement) {
+	public static void ensureMutationAllowed(URI apiRoot, String enabled, String policy, String requirement) {
 		if (!ENABLED.equals(enabled) || !DEDICATED_POLICY.equals(policy)) {
 			throw new SkipException(requirement + " - mutation procedures are disabled. Set "
 					+ TestRunArg.MUTATION_TESTS_ENABLED + "=true and " + TestRunArg.MUTATION_IUT_POLICY + "="
@@ -1240,7 +1240,7 @@ public final class CreateReplaceDeleteSupport {
 	 * @param requirement owning requirement.
 	 * @return same-origin absolute URI.
 	 */
-	static URI resolveCreatedResourceUri(URI apiRoot, String location, String requirement) {
+	public static URI resolveCreatedResourceUri(URI apiRoot, String location, String requirement) {
 		URI resolved = resolveLocationReference(apiRoot, location, requirement);
 		if (!sameOrigin(apiRoot, resolved)) {
 			ETSAssert.failWithUri(requirement,
@@ -1386,6 +1386,26 @@ public final class CreateReplaceDeleteSupport {
 		body.put("geometry", Map.of("type", "Point", "coordinates", List.of(-77.0365, 38.8977)));
 		body.put("properties", properties);
 		return body;
+	}
+
+	/**
+	 * Builds a schema-valid temporary representation for a released root resource.
+	 * @param resourcePath canonical collection path.
+	 * @param mediaType declared write representation.
+	 * @param phase phase marker.
+	 * @param uid stable external identity.
+	 * @return mutable JSON representation.
+	 */
+	public static Map<String, Object> generatedBody(String resourcePath, String mediaType, String phase, String uid) {
+		ResourceKind kind = switch (resourcePath) {
+			case "systems" -> SYSTEM;
+			case "deployments" -> DEPLOYMENT;
+			case "procedures" -> PROCEDURE;
+			case "samplingFeatures" -> SAMPLING_FEATURE;
+			case "properties" -> PROPERTY;
+			default -> throw new IllegalArgumentException("unsupported canonical resource path: " + resourcePath);
+		};
+		return body(kind, mediaType, phase, uid);
 	}
 
 	private static Map<String, Object> sensorMlSystemBody(String phase, String uid) {

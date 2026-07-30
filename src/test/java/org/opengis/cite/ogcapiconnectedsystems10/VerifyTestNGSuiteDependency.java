@@ -1416,18 +1416,16 @@ public class VerifyTestNGSuiteDependency {
 				+ createReplaceDeleteClassNames + ") must be declared in the SAME <test> block.", coAlloc);
 	}
 
-	// ===== Sprint 13 S-ETS-13-01 — Update group =====
-	// Update/PATCH systems subset depends on CreateReplaceDelete because OGC Part 1
-	// Update requires /req/create-replace-delete. This is intentionally a PARTIAL
-	// implementation of REQ-ETS-PART1-011.
+	// ===== Sprint 57 S-ETS-57-01 — Update group =====
+	// Released Annex A directly inherits API Common. Create/Replace/Delete is a
+	// requirements-class inheritance and fixture capability, not a sibling TestNG
+	// prerequisite.
 
 	/**
-	 * Sprint 13 S-ETS-13-01 (REQ-ETS-PART1-011): the canonical testng.xml SHALL declare
-	 * {@code <group name="update" depends-on="createreplacedelete"/>} so Update tests
-	 * cascade-SKIP when the CreateReplaceDelete prerequisite fails or skips.
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-DEPENDENCY-CAUSAL-001.
 	 */
 	@org.junit.Test
-	public void testUpdateGroupDependsOnCreateReplaceDelete() throws Exception {
+	public void testUpdateGroupDependsOnlyOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -1437,23 +1435,19 @@ public class VerifyTestNGSuiteDependency {
 			if (deps != null && deps.containsKey(UPDATE_GROUP)) {
 				String dependsOn = deps.get(UPDATE_GROUP);
 				assertNotNull("group '" + UPDATE_GROUP + "' has null depends-on attribute", dependsOn);
-				assertTrue("group '" + UPDATE_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ CREATE_REPLACE_DELETE_GROUP + "'", dependsOn.contains(CREATE_REPLACE_DELETE_GROUP));
+				assertEquals("group '" + UPDATE_GROUP + "' has the wrong direct prerequisite", PART1_API_COMMON_GROUP,
+						dependsOn);
 				foundDependency = true;
 				break;
 			}
 		}
-		assertTrue(
-				"testng.xml does not declare <group name=\"" + UPDATE_GROUP + "\" depends-on=\""
-						+ CREATE_REPLACE_DELETE_GROUP + "\"/> — see Sprint 13 S-ETS-13-01. The Update "
-						+ "systems safety-gated subset requires CreateReplaceDelete as its direct prerequisite.",
-				foundDependency);
+		assertTrue("testng.xml does not declare <group name=\"" + UPDATE_GROUP + "\" depends-on=\""
+				+ PART1_API_COMMON_GROUP + "\"/> — see Sprint 57 S-ETS-57-01.", foundDependency);
 	}
 
 	/**
-	 * Sprint 13 S-ETS-13-01: every Update @Test method SHALL carry
-	 * {@code groups = "update"} so the suite-level dependency declaration has tagged
-	 * methods to resolve against.
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-RELEASED-PROCEDURES-001. Every Update
+	 * {@code @Test} method SHALL carry {@code groups = "update"}.
 	 */
 	@org.junit.Test
 	public void testEveryUpdateTestMethodCarriesUpdateGroup() {
@@ -1477,17 +1471,13 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 13 S-ETS-13-01: Update classes MUST be co-located in the SAME {@code <test>}
-	 * block as CreateReplaceDelete so the group-dependency cascade resolves within
-	 * TestNG's test-scoped dependency map.
+	 * REQ-ETS-PART1-011; SCENARIO-ETS-PART1-011-DEPENDENCY-CAUSAL-001.
 	 */
 	@org.junit.Test
-	public void testUpdateCoLocatedWithCreateReplaceDelete() throws Exception {
+	public void testUpdateCoLocatedWithPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> createReplaceDeleteClassNames = new HashSet<>();
-		for (Class<?> c : CREATE_REPLACE_DELETE_CLASSES) {
-			createReplaceDeleteClassNames.add(c.getName());
-		}
+		String apiCommonClassName = org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests.class
+			.getName();
 		Set<String> updateClassNames = new HashSet<>();
 		for (Class<?> c : UPDATE_CLASSES) {
 			updateClassNames.add(c.getName());
@@ -1499,17 +1489,17 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllCreateReplaceDelete = xtClasses.containsAll(createReplaceDeleteClassNames);
+			boolean hasApiCommon = xtClasses.contains(apiCommonClassName);
 			boolean hasAnyUpdate = !java.util.Collections.disjoint(xtClasses, updateClassNames);
-			if (hasAllCreateReplaceDelete && hasAnyUpdate) {
+			if (hasApiCommon && hasAnyUpdate) {
 				coAlloc = true;
 				break;
 			}
 		}
-		assertTrue("CreateReplaceDelete (" + createReplaceDeleteClassNames + ") and Update (" + updateClassNames
+		assertTrue("Part1ApiCommon (" + apiCommonClassName + ") and Update (" + updateClassNames
 				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
-				+ "(Update → CreateReplaceDelete → SystemFeatures → Core) resolves within scope. "
-				+ "See Sprint 13 S-ETS-13-01.", coAlloc);
+				+ "(Update -> Part1ApiCommon -> Core/Common) resolves within scope. " + "See Sprint 57 S-ETS-57-01.",
+				coAlloc);
 	}
 
 	// ===== Sprint 20 S-ETS-20-01 — Part 2 API Common group =====

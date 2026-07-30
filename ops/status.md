@@ -1,6 +1,34 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T13:32Z
+Last updated: 2026-07-30T16:30Z
+
+## Sprint 57 In Progress - Part 1 Update
+
+- User instruction: publish the completed stock-OSH prerequisite audit and
+  start Sprint 57.
+- Audit commit `ce0cc1c` is published on Botts `main`.
+- CP-017, S-ETS-57-01, the Sprint 57 contract, OpenSpec scenarios, design,
+  architecture v2.0.55, epic, and traceability now define the exact five
+  released `/conf/update` procedures before implementation.
+- Released source is OGC 23-001 tag `v1.0.0`, commit `8e03b236...`; inherited
+  operation source is Features Part 4 draft tag `part4-1.0.0-draft.1`, commit
+  `ea42aa1...`.
+- The released requirements class inherits Create/Replace/Delete, but Annex A
+  directly inherits API Common and exact `ogcapi-4` Update. Sprint 57 corrects
+  the historical TestNG dependency to direct API Common.
+- Baseline coverage is `0 exact / 1 candidate / 4 unmapped`. The historical
+  System path guesses `application/json`, rejects HTTP 202, omits custom
+  collections and four resource types, and performs unverified cleanup.
+- The locked implementation requires canonical plus bounded-paginated custom
+  endpoint execution, `Accept-Patch`/OpenAPI format negotiation, every
+  advertised implemented JSON Merge Patch or JSON Patch format, changed and
+  preserved field evidence, ignored conflicting `id`, bounded queued polling,
+  and identity-safe cleanup.
+- Stock unmodified OSH cannot provide positive Update evidence because its API
+  Common and exact inherited declarations are absent. Local OSH TeamEngine E2E
+  remains mandatory honest causal-SKIP and zero-unauthorized-write evidence;
+  mappings remain candidate until a conforming mutable IUT executes PATCH.
+- No OSH or TeamEngine source/binary changes and no hosted CI are in scope.
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 

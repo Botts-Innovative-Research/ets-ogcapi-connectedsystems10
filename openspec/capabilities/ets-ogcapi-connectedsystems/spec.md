@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.3 | Status: Active ETS implementation | Last updated: 2026-07-29
+> Version: 1.3 | Status: Active ETS implementation | Last updated: 2026-07-30
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -3252,7 +3252,144 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
 - **Generator verification evidence**: Docker Maven `bash scripts/mvn-test-via-docker.sh` completed BUILD SUCCESS with `113 tests / 0 failures / 0 errors / 3 skipped`; Maven log archived at `ops/test-results/sprint-ets-13-maven-2026-05-06.log`. TeamEngine default smoke against GeoRobotix reported `74 total / 52 passed / 0 failed / 22 skipped` with 41 recognized IUT-bound request-log entries and zero IUT-bound POST/PUT/DELETE/PATCH entries. Because Update depends on Create/Replace/Delete and the default CRD mutation gate skips, the Update configuration method records missing `/conf/update`, while the five Update @Tests are dependency-skipped through `createreplacedelete`; no PATCH is issued.
 - **Sprint 14 hardening evidence**: `S-ETS-14-01` keeps REQ-ETS-PART1-011 PARTIAL and strengthens only the guarded systems PATCH path. Positive PATCH lifecycle evidence now requires a GET after PATCH and an assertion that the intended changed field, initially `properties.name`, changed to the expected value. A PATCH status code alone is not conformance evidence. Missing `OPTIONS Allow: PATCH` follows an explicit verdict matrix: absent `/conf/update`, missing mutation opt-in, public IUT hard-denial, no candidate resource, or inconclusive OPTIONS are SKIP-before-PATCH states; declared `/conf/update` plus successful `OPTIONS /systems/{id}` whose `Allow` omits PATCH FAILs the readiness assertion for `/req/update/system`, while the lifecycle test still SKIPs before PATCH because the precondition failed; declared `/conf/update` plus explicit mutation opt-in plus `Allow: PATCH` may run the guarded lifecycle. Docker Maven reported `117 tests / 0 failures / 0 errors / 3 skipped`; default TeamEngine smoke against GeoRobotix reported `74 total / 52 passed / 0 failed / 22 skipped` and zero IUT-bound POST/PUT/DELETE/PATCH across 41 recognized IUT-bound request-log entries. Local OSH remains a dedicated mutable CRD fixture, but current Generator evidence shows `/conformance` returned HTTP 401 and `OPTIONS /systems/040g` does not advertise PATCH; Sprint 14 does not claim local OSH positive Update support.
 - **Open subrequirements after Sprint 13**: Deployment, procedure, sampling-feature, and property PATCH; Feature Collection update paths under `/collections/{collectionId}/items/{id}`; Part 2 `/conf/update`; optimistic locking; and PATCH media-type matrix, including JSON Patch, merge patch, and content negotiation, remain OPEN unless separately planned.
+- **Sprint 57 supersession (CP-017)**: Sprint 57 replaces the historical five
+  mixed declaration/readiness/lifecycle methods with exactly the five released
+  `/conf/update/{system,deployment,procedure,sampling-feature,property}`
+  procedures from OGC 23-001 tag `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`. Each procedure owns canonical
+  and advertised applicable custom collection endpoints, exact declaration and
+  condition checks, patch-document negotiation, a schema-valid temporary
+  resource, completed-update proof, and identity-safe cleanup.
+- **Sprint 57 inheritance correction**: The released requirements class
+  `/req/update` inherits `/req/create-replace-delete`, but released Annex A
+  `/conf/update` directly inherits `/conf/api-common` and
+  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/update`. Therefore Update's
+  direct TestNG dependency is Part 1 API Common, not the sibling
+  Create/Replace/Delete group. POST and DELETE remain fixture ownership
+  operations. The exact `ogcapi-4` URI is required; the
+  `ogcapi-features-4` near-match is not accepted.
+- **Sprint 57 inherited operation contract**: The pinned Features Part 4 draft
+  tag `part4-1.0.0-draft.1`, commit
+  `ea42aa1de6d8cbb53c526f41e1f66c1887fe71d4`, requires PATCH support,
+  OPTIONS advertisement, a partial-change document, ignored submitted resource
+  identifier, and HTTP 200/202/204 behavior, while explicitly declining to
+  mandate one patch encoding. The ETS negotiates implemented JSON Merge Patch
+  or JSON Patch from `Accept-Patch` or the exact OpenAPI PATCH request-body
+  content and exercises every advertised implemented format. It does not treat `application/json`,
+  `application/geo+json`, or `application/sml+json` as patch-document media
+  types. No negotiable implemented format is a precise no-evidence SKIP.
+- **Sprint 57 positive evidence**: PASS requires a follow-up canonical GET
+  proving the intended field changed, an unpatched sentinel and external
+  identity remained stable, and the deliberately conflicting submitted `id`
+  was ignored. Custom item PATCH additionally requires canonical and occurrence
+  propagation in one observation. HTTP 202 uses one monotonic deadline for all
+  required postconditions, request timeouts, and sleeps; status alone, late
+  success, or accumulated observations do not PASS.
+- **Sprint 57 ownership and completion**: Every write remains behind
+  `mutation-tests-enabled=true` and
+  `mutation-iut-policy=dedicated-mutable-iut`, with known shared public targets
+  denied. Cleanup is registered by identity before creation, runs in reverse
+  order after every outcome, and requires same-origin identity proof before
+  destructive follow-up. Mappings remain candidate until positive real-IUT
+  PATCH E2E executes; an honest local OSH prerequisite SKIP is mandatory
+  runtime evidence but cannot promote the mappings.
 - **Maps to**: PRD FR-ETS-21.
+
+### Acceptance Scenarios for Sprint 57
+
+#### SCENARIO-ETS-PART1-011-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** released OGC 23-001 Annex A defines five `/conf/update` procedures
+**WHEN** TestNG loads `UpdateTests`
+**THEN** exactly five independent methods map System, Deployment, Procedure,
+Sampling Feature, and Property
+**AND** no declaration, readiness, or dependency tracer method is counted as a
+released procedure.
+*Maps to*: REQ-ETS-PART1-011, REQ-ETS-COVERAGE-001.
+
+#### SCENARIO-ETS-PART1-011-DIRECT-PREREQUISITES-001 (CRITICAL)
+**GIVEN** an Update procedure begins
+**WHEN** it reads `/conformance`
+**THEN** it requires Part 1 `/conf/update`, direct `/conf/api-common`, exact
+`http://www.opengis.net/spec/ogcapi-4/1.0/conf/update`, and its resource
+condition
+**AND** `ogcapi-features-4` or Create/Replace/Delete declaration alone cannot
+satisfy those checks.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-DEPENDENCY-CAUSAL-001 (CRITICAL)
+**GIVEN** the Part 1 API Common TestNG prerequisite fails or unexpectedly skips
+**WHEN** the Update group is scheduled
+**THEN** all five procedures dependency-SKIP before IUT access
+**AND** System or Create/Replace/Delete group outcomes cannot block them.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-MUTATION-SAFETY-001 (CRITICAL)
+**GIVEN** either mutation opt-in value is absent or the IUT is a known shared
+public target
+**WHEN** any Update procedure starts
+**THEN** it SKIPs before POST, PATCH, or DELETE
+**AND** reports the denied ownership precondition.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-PATCH-NEGOTIATION-001 (CRITICAL)
+**GIVEN** an owned JSON resource and a successful OPTIONS response
+**WHEN** the ETS evaluates Update support
+**THEN** `Allow` contains PATCH
+**AND** the ETS uses every implemented JSON Merge Patch or JSON Patch format
+advertised by `Accept-Patch` or exact OpenAPI PATCH request-body metadata
+**OR** it SKIPs precisely when no implemented patch format can be negotiated
+**AND** it never guesses an ordinary resource media type.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-PARTIAL-UPDATE-001 (CRITICAL)
+**GIVEN** a schema-valid owned resource with a stable identity and sentinel
+**WHEN** PATCH returns HTTP 200, 202, or 204
+**THEN** canonical GET evidence proves the requested field changed
+**AND** the sentinel and external identity remain unchanged
+**AND** a conflicting `id` in the patch document was ignored.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-CUSTOM-COLLECTIONS-001 (CRITICAL)
+**GIVEN** the IUT advertises an applicable non-root collection
+**WHEN** bounded cycle-safe same-origin pagination discovers it and the
+corresponding procedure patches its owned collection item
+**THEN** both the custom item and canonical resource expose the completed
+partial update in the same polling observation.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-ASYNC-DEADLINE-001 (CRITICAL)
+**GIVEN** PATCH returns HTTP 202
+**WHEN** the ETS polls completed-update postconditions
+**THEN** one monotonic deadline bounds every required observation, request
+timeout, and sleep
+**AND** late success or interrupted polling cannot PASS.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-CLEANUP-001 (CRITICAL)
+**GIVEN** a procedure acquires temporary resources
+**WHEN** it passes, fails, or becomes inconclusive
+**THEN** reverse-order cleanup removes only same-origin identity-verified owned
+resources
+**AND** cleanup failure remains visible and overrides inconclusive SKIP.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled stateful HTTP IUT implements the negotiated operation
+**WHEN** the five support procedures execute
+**THEN** every canonical and advertised custom path runs through OPTIONS,
+owned acquisition, PATCH, completed representation proof, and cleanup
+**AND** malformed declarations, formats, responses, and postconditions fail or
+skip closed as specified.
+*Maps to*: REQ-ETS-PART1-011.
+
+#### SCENARIO-ETS-PART1-011-E2E-ISOLATION-001 (CRITICAL)
+**GIVEN** the exact committed candidate runs through Dockerized TeamEngine
+against unmodified local OSH
+**WHEN** the IUT lacks an inherited prerequisite or Update declaration
+**THEN** the result records an honest causal SKIP and zero unauthorized writes
+**AND** positive isolated PATCH evidence remains required before exact mapping
+promotion.
+*Maps to*: REQ-ETS-PART1-011, REQ-ETS-COVERAGE-001.
 
 ### Acceptance Scenarios for Sprint 13
 

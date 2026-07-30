@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.54 | Status: Living Document | Last reconciled: 2026-07-30 (CRD queued status URI classification)
+> Version: 2.0.55 | Status: Living Document | Last reconciled: 2026-07-30 (Part 1 Update direct procedures)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1602,3 +1602,44 @@ including an absolute cross-origin URI, is status-only: it is not dereferenced,
 is never registered for cleanup, and does not block polling of the computed
 same-origin occurrence. Synchronous HTTP 201 resource Locations retain strict
 same-origin enforcement.
+
+## 36. Architecture v2.0.55 - Part 1 Update direct procedures (2026-07-30)
+
+`UpdateTests` replaces five mixed declaration, readiness, System-lifecycle, and
+dependency-tracer methods with exactly the five released `/conf/update`
+procedures. Each method owns its System, Deployment, Procedure, Sampling
+Feature, or Property evidence and depends directly on Part 1 API Common without
+`alwaysRun`.
+
+The released requirements class inherits Create/Replace/Delete, but released
+Annex A directly inherits API Common and
+`http://www.opengis.net/spec/ogcapi-4/1.0/conf/update`. TestNG therefore uses
+`Core/Common -> Part 1 API Common -> Update`; fixture POST and DELETE do not
+make the sibling Create/Replace/Delete group a runtime prerequisite. Every
+procedure separately requires the Part 1 Update declaration, exact inherited
+URI, applicable resource class, and dedicated-mutable-IUT gate before writes.
+
+`UpdateSupport` discovers applicable representations and non-root collections
+through bounded cycle-safe same-origin pagination,
+creates schema-valid owned resources, checks OPTIONS and `Allow: PATCH`,
+negotiates every implemented JSON Merge Patch or JSON Patch format advertised
+by `Accept-Patch` or exact OpenAPI request-body metadata, executes PATCH at canonical and
+custom item endpoints, and proves completed partial updates. Positive evidence
+requires the requested field changed, an untouched sentinel and external
+identity remained stable, and a conflicting submitted representation `id` was
+ignored. Custom updates prove canonical and occurrence propagation together.
+
+The inherited Features Part 4 draft does not mandate a patch encoding.
+Ordinary JSON, GeoJSON, and SensorML resource media types are not patch
+documents. If no implemented format can be negotiated, the procedure reports
+precise no-evidence SKIP. HTTP 200, 202, and 204 are valid statuses, but status
+alone never passes. Queued work uses one monotonic deadline for all
+postconditions, request timeouts, and sleeps; late or interrupted polling fails
+closed.
+
+Cleanup is registered by submitted identity before creation, executes in
+reverse order after every outcome, and requires same-origin identity proof
+before deletion. Cleanup failure remains visible and overrides inconclusive
+SKIP. OSH and TeamEngine remain unchanged under ADR-012, and no executable
+Features, SWE Common, or SensorML suite jar is imported. Mappings remain
+candidate until positive real-IUT PATCH E2E executes.

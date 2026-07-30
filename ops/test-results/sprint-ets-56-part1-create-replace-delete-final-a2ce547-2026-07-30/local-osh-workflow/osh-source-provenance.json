@@ -1,0 +1,13 @@
+{
+  "ahead": 0,
+  "behind": 3,
+  "clean": true,
+  "conSysBundleBuildNumber": "4c87a65",
+  "conSysJar": "/home/nh/docker/sensorhub-driver-fabric/include/osh-core/build/install/osh-core/lib/sensorhub-service-consys-2.0.1.jar",
+  "headCommit": "4c87a65c9a967d52af9df476e65d7862c7673a15",
+  "headIsUpstreamAncestor": true,
+  "installManifest": "installed-files.sha256",
+  "origin": "https://github.com/opensensorhub/osh-core.git",
+  "upstreamCommit": "ce8dd961c3f4dfdd739e5e2c78d42d8f62eb99bd",
+  "upstreamRef": "origin/master"
+}

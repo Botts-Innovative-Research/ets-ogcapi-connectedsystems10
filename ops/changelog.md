@@ -187,6 +187,27 @@ completion sequence.
   same-origin occurrence classification, while synchronous HTTP 201 remains
   strict; corrected direct HTTP passes `36/0/0/0`, focused Maven `53/0/0/0`,
   and full clean-cache Docker Maven `655/0/0/3` precommit.
+- Committed exact candidate
+  `a2ce5478e25542a766025a2a5fde246fc2d5f8d6`. A clean detached clone repeats
+  direct/focused/full Maven `36/0/0/0`, `53/0/0/0`, and `655/0/0/3`.
+- Released ATS, GeoJSON parity `8 entry / 20 transitive / 0 mismatches`,
+  Property parity `3 / 53 / 0`, deployed SWE adapter/runtime, TeamEngine
+  immutable-base, and exact image gates pass. Image
+  `sha256:3e805b4227eda61d5b92bf01ecf83576ad0eca5ed9490eddc73f92c05e6ba9bb`
+  embeds `Build-Revision: a2ce5478e2`.
+- Exact local OSH remains populated `244/54/35/155` and clean primary
+  `244/40/7/197`; provisioning and cleanup pass, primary state is unchanged,
+  all 365 IUT requests are GET, and all twelve CRD methods dependency-SKIP.
+- Core sabotage `244/2/10/232`, credential integration/wire, and artifact
+  hygiene pass. The raw `1/1/0/0` regression log is sealed in a 71-file
+  pre-review root manifest; the nested 31-file local-OSH manifest also
+  verifies. Fresh Raze
+  recheck returns `APPROVE_WITH_CONCERNS 0.99`, closes every prior finding,
+  and identifies no candidate-scoped required fix. Its sole concern is the
+  external positive-mutation blocker, so Sprint 56 and all twelve mappings
+  remain open. A final 72-file root manifest additionally seals the Raze
+  report. Raze's focused post-review seal check independently verifies root
+  `72/72` and nested `31/31` with no required finding.
 
 ## 2026-07-29 - Part 1 Advanced Filtering final-Raze remediation
 

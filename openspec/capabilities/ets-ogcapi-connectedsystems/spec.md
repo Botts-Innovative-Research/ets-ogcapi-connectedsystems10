@@ -3203,8 +3203,15 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   regression records `1/1/0/0`; parsing before same-origin occurrence
   classification corrects it without external requests. Precommit verification
   passes direct HTTP `36/0/0/0`, focused aggregate `53/0/0/0`, and full
-  clean-cache Docker Maven `655/0/0/3`. A clean replacement exact candidate,
-  raw-red evidence seal, and fresh Raze recheck remain pending.
+  clean-cache Docker Maven `655/0/0/3`. Exact candidate
+  `a2ce5478e25542a766025a2a5fde246fc2d5f8d6` repeats those gates; embeds
+  `Build-Revision: a2ce5478e2`; and passes released-source, both parity graphs,
+  image/runtime, immutable-base, local-OSH, sabotage, credential, and artifact
+  hygiene verification. Its pre-review root 71-file and nested 31-file
+  manifests verify; the final 72-file root manifest also seals the review.
+  Fresh Raze returns `APPROVE_WITH_CONCERNS 0.99`, closes every prior finding,
+  and has no candidate-scoped required fix. Positive mutation E2E remains its
+  sole external completion concern.
   The class coverage inventory is
   intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
   Unmodified local OSH reports Part 1 API Common `4 PASS / 1 SKIP`, so causal

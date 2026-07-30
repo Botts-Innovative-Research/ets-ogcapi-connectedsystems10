@@ -1,0 +1,72 @@
+REPORT populated-results
+org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests
+  deploymentsCreateReplaceDelete=SKIP
+  proceduresCreateReplaceDelete=SKIP
+  propertiesCreateReplaceDelete=SKIP
+  resourcesAddToCustomCollections=SKIP
+  resourcesCreateInCustomCollections=SKIP
+  resourcesDeleteInCustomCollections=SKIP
+  resourcesReplaceInCustomCollections=SKIP
+  samplingFeaturesCreateReplaceDelete=SKIP
+  subdeploymentsCreate=SKIP
+  subsystemsCreate=SKIP
+  systemDeleteCascade=SKIP
+  systemsCreateReplaceDelete=SKIP
+org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests
+  datetimeUsesValidTime=SKIP
+  resourceIdsAreUniqueWithinEachType=PASS
+  resourceUidsAreValidAndGloballyUnique=PASS
+  resourceUidTypesFollowRecommendation=PASS
+org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests
+  part2ApiCommonConformanceDeclared=SKIP
+  part2ApiCommonDependencyRuntime=SKIP
+  part2ApiCommonResourceCollectionsReadable=SKIP
+  part2ApiCommonResourceTerminology=SKIP
+REPORT clean-primary-results
+org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests
+  deploymentsCreateReplaceDelete=SKIP
+  proceduresCreateReplaceDelete=SKIP
+  propertiesCreateReplaceDelete=SKIP
+  resourcesAddToCustomCollections=SKIP
+  resourcesCreateInCustomCollections=SKIP
+  resourcesDeleteInCustomCollections=SKIP
+  resourcesReplaceInCustomCollections=SKIP
+  samplingFeaturesCreateReplaceDelete=SKIP
+  subdeploymentsCreate=SKIP
+  subsystemsCreate=SKIP
+  systemDeleteCascade=SKIP
+  systemsCreateReplaceDelete=SKIP
+org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests
+  datetimeUsesValidTime=SKIP
+  resourceIdsAreUniqueWithinEachType=PASS
+  resourceUidsAreValidAndGloballyUnique=PASS
+  resourceUidTypesFollowRecommendation=PASS
+org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests
+  part2ApiCommonConformanceDeclared=SKIP
+  part2ApiCommonDependencyRuntime=SKIP
+  part2ApiCommonResourceCollectionsReadable=SKIP
+  part2ApiCommonResourceTerminology=SKIP
+REPORT core-sabotage
+org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests
+  deploymentsCreateReplaceDelete=SKIP
+  proceduresCreateReplaceDelete=SKIP
+  propertiesCreateReplaceDelete=SKIP
+  resourcesAddToCustomCollections=SKIP
+  resourcesCreateInCustomCollections=SKIP
+  resourcesDeleteInCustomCollections=SKIP
+  resourcesReplaceInCustomCollections=SKIP
+  samplingFeaturesCreateReplaceDelete=SKIP
+  subdeploymentsCreate=SKIP
+  subsystemsCreate=SKIP
+  systemDeleteCascade=SKIP
+  systemsCreateReplaceDelete=SKIP
+org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests
+  datetimeUsesValidTime=SKIP
+  resourceIdsAreUniqueWithinEachType=SKIP
+  resourceUidsAreValidAndGloballyUnique=SKIP
+  resourceUidTypesFollowRecommendation=SKIP
+org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests
+  part2ApiCommonConformanceDeclared=SKIP
+  part2ApiCommonDependencyRuntime=SKIP
+  part2ApiCommonResourceCollectionsReadable=SKIP
+  part2ApiCommonResourceTerminology=SKIP

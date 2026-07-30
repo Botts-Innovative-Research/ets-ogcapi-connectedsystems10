@@ -1,0 +1,66 @@
+sprint: ets-56
+candidate: a2ce5478e25542a766025a2a5fde246fc2d5f8d6
+reviewer: Raze
+agent_id: 019fb195-42da-7ec0-b3c5-65ef7ee8dd5f
+reviewed_at: "2026-07-30"
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.99
+required_fixes: []
+concerns:
+  - id: positive-mutation-e2e
+    severity: HIGH
+    scope: EXTERNAL_COMPLETION_BLOCKER
+    summary: Positive real-IUT mutation evidence remains absent because unmodified local OSH does not satisfy the inherited prerequisites.
+    disposition: Keep the story IN PROGRESS and all twelve mappings candidate; do not weaken the ETS or modify OSH or TeamEngine.
+prior_findings:
+  queued_cross_origin_status_location: CLOSED
+  raw_test_first_evidence: CLOSED
+  queued_occurrence_cleanup_identity: CLOSED
+  queued_compound_transient_state: CLOSED
+  exact_checkout_hygiene: CLOSED
+  umbrella_evidence_seal: CLOSED
+evidence:
+  test_first: "1 test / 1 expected failure / 0 errors / 0 skipped; raw log sealed"
+  exact_focused_maven: "53 tests / 0 failures / 0 errors / 0 skipped"
+  exact_direct_http: "36 tests / 0 failures / 0 errors / 0 skipped"
+  exact_full_maven: "655 tests / 0 failures / 0 errors / 3 skipped"
+  exact_populated_e2e: "244 total / 54 passed / 35 failed / 155 skipped"
+  exact_clean_primary_e2e: "244 total / 40 passed / 7 failed / 197 skipped"
+  exact_sabotage: "244 total / 2 passed / 10 failed / 232 skipped"
+  exact_image: "sha256:3e805b4227eda61d5b92bf01ecf83576ad0eca5ed9490eddc73f92c05e6ba9bb"
+  teamengine_iut_traffic: "365 GET / 0 writes"
+  umbrella_manifest: "PASS: 71/71 files before review report inclusion"
+  nested_local_osh_manifest: "PASS: 31/31 files"
+post_review_seal_check:
+  verdict: PASS
+  root_manifest: "72/72 valid and complete; includes this review and final-candidate-verification.md"
+  nested_local_osh_manifest: "31/31 valid and complete"
+  required_fixes: []
+  runtime:
+    started_at: "2026-07-30T07:02:49Z"
+    ended_at: "2026-07-30T07:03:32Z"
+    duration_seconds: 43
+    token_usage:
+      input: 582943
+      cached_input: 578816
+      output: 798
+      reasoning_output: 105
+      total: 583741
+scope:
+  candidate_technical_gate: PASS
+  story_completion_gate: BLOCKED_EXTERNAL
+  osh_source_or_binary_changes: false
+  teamengine_source_or_binary_changes: false
+  hosted_ci_changes: false
+  credential_disclosure: false
+runtime:
+  started_at: "2026-07-30T06:50:29Z"
+  ended_at: "2026-07-30T06:59:38Z"
+  duration_seconds: 549
+  elapsed: "00:09:09"
+  token_usage:
+    input: 6063371
+    cached_input: 5858560
+    output: 15517
+    reasoning_output: 4696
+    total: 6078888

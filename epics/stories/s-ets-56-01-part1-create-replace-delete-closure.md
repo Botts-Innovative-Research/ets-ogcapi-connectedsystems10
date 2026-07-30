@@ -101,7 +101,7 @@ safety-gated implementations of all twelve released OGC 23-001
   is followed by clean-primary smoke.
 - [ ] All twelve mappings are reviewed exact only after positive mutation E2E
   executes; until then they remain candidate.
-- [ ] Raze reports no unresolved required findings.
+- [x] Raze reports no unresolved required findings.
 
 ## Baseline
 
@@ -219,7 +219,17 @@ that defect at `1/1/0/0`; URI parsing before same-origin occurrence
 classification corrects it without dereference or cleanup, and precommit
 verification passes direct HTTP `36/0/0/0`, focused aggregate `53/0/0/0`, and
 full clean-cache Docker Maven `655/0/0/3`. A clean replacement exact candidate
-with the raw red log and fresh Raze recheck remain pending.
+`a2ce5478e25542a766025a2a5fde246fc2d5f8d6` repeats those exact gates. Its
+image is
+`sha256:3e805b4227eda61d5b92bf01ecf83576ad0eca5ed9490eddc73f92c05e6ba9bb`
+with `Build-Revision: a2ce5478e2`. Released-source, both parity graphs,
+runtime/immutable-base, populated and clean-primary local OSH, sabotage,
+credential, and artifact-hygiene gates pass; its 71-file root manifest and
+31-file nested workflow manifest verify before review. The final 72-file root
+manifest also seals the Raze report. Fresh Raze returns
+`APPROVE_WITH_CONCERNS 0.99` with all prior findings closed and no
+candidate-scoped required fixes. Its sole concern is the external positive
+mutation E2E blocker.
 
 These controlled gates do not supply positive real-IUT mutation evidence, so
 the story and all twelve mappings remain IN PROGRESS/candidate.

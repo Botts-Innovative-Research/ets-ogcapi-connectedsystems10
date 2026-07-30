@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T06:16Z
+Last updated: 2026-07-30T07:04Z
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 
@@ -73,9 +73,20 @@ Last updated: 2026-07-30T06:16Z
   status URIs receive no request and computed-occurrence polling continues.
   Direct HTTP passes `36/0/0/0`, focused Maven passes `53/0/0/0`, and full
   clean-cache Docker Maven passes `655/0/0/3` precommit.
-- Next: commit and verify a clean replacement exact candidate, preserve the raw
-  red log, seal its umbrella evidence manifest, and obtain fresh Raze review.
-  Positive closure still requires
+- Exact candidate `a2ce5478e25542a766025a2a5fde246fc2d5f8d6` passes direct
+  HTTP `36/0/0/0`, focused Maven `53/0/0/0`, and full clean-cache Maven
+  `655/0/0/3`. Image
+  `sha256:3e805b4227eda61d5b92bf01ecf83576ad0eca5ed9490eddc73f92c05e6ba9bb`
+  embeds `Build-Revision: a2ce5478e2`.
+- Released ATS, both parity graphs, validator/runtime, immutable-base,
+  populated/clean-primary local OSH, sabotage, credential, and artifact
+  hygiene gates pass. The pre-review 71-file root and nested 31-file manifests
+  verify; the final 72-file root manifest also seals the Raze report and raw
+  red log.
+- Fresh Raze returns `APPROVE_WITH_CONCERNS 0.99`, closes every prior finding,
+  and identifies no candidate-scoped required fix. Its only concern is the
+  external positive-mutation completion blocker.
+- Positive closure still requires
   a dedicated mutable IUT satisfying API Common and exact inherited
   declarations; do not weaken the suite or patch OSH.
 

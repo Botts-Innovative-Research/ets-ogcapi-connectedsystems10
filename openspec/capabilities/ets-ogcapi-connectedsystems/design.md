@@ -74,8 +74,12 @@
 > The requirement-linked red is `1/1/0/0`. Parsing the queued Location before
 > same-origin occurrence classification closes the defect; only a same-origin
 > direct child can become an occurrence. Precommit verification is direct HTTP
-> `36/0/0/0`, focused `53/0/0/0`, and full Maven `655/0/0/3`. Replacement
-> exact gates and a fresh Raze recheck remain pending.
+> `36/0/0/0`, focused `53/0/0/0`, and full Maven `655/0/0/3`. Exact candidate
+> `a2ce5478e25542a766025a2a5fde246fc2d5f8d6` repeats those gates and passes
+> all exact source, parity, image/runtime, local-OSH, sabotage, credential,
+> immutable-base, and hygiene checks. Fresh Raze returns
+> `APPROVE_WITH_CONCERNS 0.99`, closes every prior finding, and requires no
+> candidate fix. Its concern is solely the external positive-mutation blocker.
 > Positive real-IUT mutation evidence remains blocked by unmodified local OSH
 > prerequisites.
 

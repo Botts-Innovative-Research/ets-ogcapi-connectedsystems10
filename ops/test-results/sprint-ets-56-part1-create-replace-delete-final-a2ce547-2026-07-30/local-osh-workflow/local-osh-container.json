@@ -1,0 +1,254 @@
+{
+  "AppArmorProfile": "docker-default",
+  "Args": [
+    "java",
+    "-Xmx512m",
+    "-Dlogback.configurationFile=/opt/osh/logback.xml",
+    "-cp",
+    "/opt/osh/lib/*",
+    "org.sensorhub.impl.SensorHub",
+    "/state/config.json"
+  ],
+  "Config": {
+    "AttachStderr": false,
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "Cmd": [
+      "java",
+      "-Xmx512m",
+      "-Dlogback.configurationFile=/opt/osh/logback.xml",
+      "-cp",
+      "/opt/osh/lib/*",
+      "org.sensorhub.impl.SensorHub",
+      "/state/config.json"
+    ],
+    "Domainname": "",
+    "Entrypoint": [
+      "/usr/local/bin/mvn-entrypoint.sh"
+    ],
+    "Env": [
+      "HOME=/state",
+      "PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "JAVA_HOME=/opt/java/openjdk",
+      "LANG=en_US.UTF-8",
+      "LANGUAGE=en_US:en",
+      "LC_ALL=en_US.UTF-8",
+      "JAVA_VERSION=jdk-17.0.19+10",
+      "MAVEN_HOME=/usr/share/maven",
+      "MAVEN_CONFIG=/root/.m2"
+    ],
+    "ExposedPorts": {
+      "8081/tcp": {}
+    },
+    "Hostname": "da790ed86050",
+    "Image": "maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45",
+    "Labels": {
+      "org.opencontainers.image.description": "Apache Maven is a software project management and comprehension tool. Based on the concept of a project object model (POM), Maven can manage a project's build, reporting and documentation from a central piece of information.",
+      "org.opencontainers.image.source": "https://github.com/carlossg/docker-maven",
+      "org.opencontainers.image.title": "Apache Maven",
+      "org.opencontainers.image.url": "https://github.com/carlossg/docker-maven",
+      "org.opencontainers.image.version": "24.04",
+      "org.opengeospatial.ets.csapi.role": "populated-osh",
+      "org.opengeospatial.ets.csapi.run-id": "20260730T062725Z-52df99a6fd9e"
+    },
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Tty": false,
+    "User": "1000:1000",
+    "Volumes": null,
+    "WorkingDir": "/state"
+  },
+  "Created": "2026-07-30T06:27:25.172435494Z",
+  "Driver": "overlay2",
+  "ExecIDs": null,
+  "GraphDriver": {
+    "Data": {
+      "ID": "da790ed86050178e4fd8d20fa4360c63ce0e0c5be05ff88b3ef8f75c1c238f5e",
+      "LowerDir": "/var/lib/docker/overlay2/795a4a22ddedc87f6e70306a124b62c22451020c505cc790fe1730578dc3c97d-init/diff:/var/lib/docker/overlay2/e18886b4110f77e7a6abc61a7c72c7a7d827b4b6975dc23f3ce5c9ec42218cd4/diff:/var/lib/docker/overlay2/7db073128c3c23f105dc3bf93b5f204d164b7b5191b93516e21158160897294f/diff:/var/lib/docker/overlay2/9c2e7d1142ede7f4071084f0279e73970f5138248fffa5e9909c5e72f806f3e7/diff:/var/lib/docker/overlay2/5cbe0183c874cdfb70a1f7dcc828e90265071b4ae614ca8aa3aab10692a21182/diff:/var/lib/docker/overlay2/c3777cd8e848a9624cfdc72f18f9f137facc4754143d4c83ab565b82a8eead4a/diff:/var/lib/docker/overlay2/12cfa92442f92cf5cb39bd0cebf093310441662e77c555cf6d732aa589d64b98/diff:/var/lib/docker/overlay2/99c0661ad287cdbea3865b9594479c2e36fb1e1f4caf4e76f67743602589df14/diff:/var/lib/docker/overlay2/2ee99b512e5ebd1a50b941142adab413428d129f94f5aea290932db2fb0e0ac6/diff:/var/lib/docker/overlay2/7bf16bc95f560399bddb3c62ac748d62539238101cc2bb6e089c6a9de2ebee32/diff:/var/lib/docker/overlay2/6ed0df0c7e97040c3e9637a3a587e3cb5db408f55bc1b94fdaa3e6af541d39d3/diff",
+      "MergedDir": "/var/lib/docker/overlay2/795a4a22ddedc87f6e70306a124b62c22451020c505cc790fe1730578dc3c97d/merged",
+      "UpperDir": "/var/lib/docker/overlay2/795a4a22ddedc87f6e70306a124b62c22451020c505cc790fe1730578dc3c97d/diff",
+      "WorkDir": "/var/lib/docker/overlay2/795a4a22ddedc87f6e70306a124b62c22451020c505cc790fe1730578dc3c97d/work"
+    },
+    "Name": "overlay2"
+  },
+  "HostConfig": {
+    "AutoRemove": false,
+    "Binds": [
+      "/home/nh/docker/sensorhub-driver-fabric/include/osh-core/build/install/osh-core:/opt/osh:ro",
+      "/tmp/ets-csapi-populated-osh-state.w718fll_:/state"
+    ],
+    "BlkioDeviceReadBps": [],
+    "BlkioDeviceReadIOps": [],
+    "BlkioDeviceWriteBps": [],
+    "BlkioDeviceWriteIOps": [],
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": [],
+    "CapAdd": null,
+    "CapDrop": null,
+    "Cgroup": "",
+    "CgroupParent": "",
+    "CgroupnsMode": "private",
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "ContainerIDFile": "",
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpuShares": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "Devices": [],
+    "Dns": null,
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IOMaximumBandwidth": 0,
+    "IOMaximumIOps": 0,
+    "IpcMode": "private",
+    "Isolation": "",
+    "Links": null,
+    "LogConfig": {
+      "Config": {},
+      "Type": "json-file"
+    },
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "Memory": 0,
+    "MemoryReservation": 0,
+    "MemorySwap": 0,
+    "MemorySwappiness": null,
+    "NanoCpus": 0,
+    "NetworkMode": "field-hub_default",
+    "OomKillDisable": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "PidsLimit": null,
+    "PortBindings": {
+      "8081/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": ""
+        }
+      ]
+    },
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ],
+    "ReadonlyRootfs": false,
+    "RestartPolicy": {
+      "MaximumRetryCount": 0,
+      "Name": "no"
+    },
+    "Runtime": "runc",
+    "SecurityOpt": null,
+    "ShmSize": 67108864,
+    "UTSMode": "",
+    "Ulimits": [],
+    "UsernsMode": "",
+    "VolumeDriver": "",
+    "VolumesFrom": null
+  },
+  "HostnamePath": "/var/lib/docker/containers/da790ed86050178e4fd8d20fa4360c63ce0e0c5be05ff88b3ef8f75c1c238f5e/hostname",
+  "HostsPath": "/var/lib/docker/containers/da790ed86050178e4fd8d20fa4360c63ce0e0c5be05ff88b3ef8f75c1c238f5e/hosts",
+  "Id": "da790ed86050178e4fd8d20fa4360c63ce0e0c5be05ff88b3ef8f75c1c238f5e",
+  "Image": "sha256:a0249ce15f22ae01620eee65e6737735b2b01a50f0a58b3c580f3d2a1dd21c7e",
+  "LogPath": "/var/lib/docker/containers/da790ed86050178e4fd8d20fa4360c63ce0e0c5be05ff88b3ef8f75c1c238f5e/da790ed86050178e4fd8d20fa4360c63ce0e0c5be05ff88b3ef8f75c1c238f5e-json.log",
+  "MountLabel": "",
+  "Mounts": [
+    {
+      "Destination": "/opt/osh",
+      "Mode": "ro",
+      "Propagation": "rprivate",
+      "RW": false,
+      "Source": "/home/nh/docker/sensorhub-driver-fabric/include/osh-core/build/install/osh-core",
+      "Type": "bind"
+    },
+    {
+      "Destination": "/state",
+      "Mode": "",
+      "Propagation": "rprivate",
+      "RW": true,
+      "Source": "/tmp/ets-csapi-populated-osh-state.w718fll_",
+      "Type": "bind"
+    }
+  ],
+  "Name": "/ets-csapi-populated-osh-20260730T062725Z-52df99a6fd9e",
+  "NetworkSettings": {
+    "Networks": {
+      "field-hub_default": {
+        "Aliases": null,
+        "DNSNames": [
+          "ets-csapi-populated-osh-20260730T062725Z-52df99a6fd9e",
+          "da790ed86050"
+        ],
+        "DriverOpts": null,
+        "EndpointID": "81bf0dcca53211654213fbf7a92c0b46448b635017e4d1ad8c63bded1d72f590",
+        "Gateway": "172.18.0.1",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "GwPriority": 0,
+        "IPAMConfig": null,
+        "IPAddress": "172.18.0.3",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "Links": null,
+        "MacAddress": "3a:e7:b9:1b:33:2a",
+        "NetworkID": "b3576df2451ca0b644c596a07e6258a9b172b763534eafee8837d96ca5714bed"
+      }
+    },
+    "Ports": {
+      "8081/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "1033"
+        }
+      ]
+    },
+    "SandboxID": "bbb0939aa2291dce5d97ab55d9cdd4097bd0df1f73a023bcbba2eeda0c62696e",
+    "SandboxKey": "/var/run/docker/netns/bbb0939aa229"
+  },
+  "Path": "/usr/local/bin/mvn-entrypoint.sh",
+  "Platform": "linux",
+  "ProcessLabel": "",
+  "ResolvConfPath": "/var/lib/docker/containers/da790ed86050178e4fd8d20fa4360c63ce0e0c5be05ff88b3ef8f75c1c238f5e/resolv.conf",
+  "RestartCount": 0,
+  "State": {
+    "Dead": false,
+    "Error": "",
+    "ExitCode": 0,
+    "FinishedAt": "0001-01-01T00:00:00Z",
+    "OOMKilled": false,
+    "Paused": false,
+    "Pid": 1937705,
+    "Restarting": false,
+    "Running": true,
+    "StartedAt": "2026-07-30T06:27:25.186049811Z",
+    "Status": "running"
+  }
+}

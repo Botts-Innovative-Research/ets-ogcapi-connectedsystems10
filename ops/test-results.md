@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T06:16Z
+Last updated: 2026-07-30T07:04Z
 
 ## Current Sprint Evidence
 
@@ -84,8 +84,20 @@ Sprint 56 Part 1 Create/Replace/Delete direct ATS:
 - The latest requirement-linked test records red `1/1/0/0`; corrected direct
   HTTP passes `36/0/0/0`, focused Maven `53/0/0/0`, and full clean-cache Docker
   Maven `655/0/0/3`. The replacement exact archive will preserve the raw red.
-- Verdict: remediation passes precommit gates; clean replacement exact
-  candidate verification and fresh Raze are pending. Positive real-IUT
+- Exact candidate `a2ce5478e25542a766025a2a5fde246fc2d5f8d6` passes direct
+  HTTP `36/0/0/0`, focused Maven `53/0/0/0`, and full clean-cache Maven
+  `655/0/0/3`. Exact image
+  `sha256:3e805b4227eda61d5b92bf01ecf83576ad0eca5ed9490eddc73f92c05e6ba9bb`
+  embeds `Build-Revision: a2ce5478e2`.
+- Released ATS, GeoJSON parity `8/20/0`, Property parity `3/53/0`,
+  validator/runtime, immutable-base, local-OSH, sabotage, credential, and
+  hygiene gates pass. Populated OSH is `244/54/35/155`; clean primary is
+  `244/40/7/197`; provisioning/cleanup pass, state is unchanged, and all 365
+  IUT requests are GETs. The pre-review 71-file root and nested 31-file
+  manifests verify; the final 72-file root manifest also seals the Raze report.
+- Fresh Raze returns `APPROVE_WITH_CONCERNS 0.99`; every prior finding is
+  closed and there are no candidate-scoped required fixes.
+- Verdict: exact technical/E2E gates and Gate 4 pass. Positive real-IUT
   mutation E2E remains open; mappings stay candidate and Sprint 56 stays IN
   PROGRESS.
 

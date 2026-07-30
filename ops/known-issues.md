@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T06:16Z
+Last updated: 2026-07-30T07:04Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -29,9 +29,13 @@ Last updated: 2026-07-30T06:16Z
   classification and missing raw-red evidence. The requirement-linked
   regression records `1/1/0/0`; corrected direct HTTP passes `36/0/0/0`,
   focused aggregate `53/0/0/0`, and full clean-cache Docker Maven
-  `655/0/0/3` precommit without requesting the cross-origin URI. A clean
-  replacement exact candidate with raw-red evidence and fresh Raze recheck
-  remain pending.
+  `655/0/0/3` without requesting the cross-origin URI. Exact candidate
+  `a2ce5478e25542a766025a2a5fde246fc2d5f8d6` repeats those gates and all
+  source, parity, image/runtime, immutable-base, local-OSH, sabotage,
+  credential, and hygiene gates; raw-red and recursive manifest evidence are
+  sealed. Fresh Raze `APPROVE_WITH_CONCERNS 0.99` closes every prior finding
+  and has no candidate-scoped required fix. Its sole concern is this external
+  positive-mutation blocker.
   The unmodified local OSH API Common result is `4 PASS / 1 SKIP` because no
   advertised collection supplies positive datetime evidence. Causal TestNG
   inheritance therefore dependency-SKIPs all twelve CRD methods before their

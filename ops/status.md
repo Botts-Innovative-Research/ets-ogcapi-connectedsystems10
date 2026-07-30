@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T07:04Z
+Last updated: 2026-07-30T13:32Z
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 
@@ -33,6 +33,15 @@ Last updated: 2026-07-30T07:04Z
   procedures even though OSH advertises Part 1 CRD. OSH omits exact Connected
   Systems API Common and inherited `ogcapi-4` declarations, so no positive
   mutation evidence exists.
+- A driver-only feasibility audit against the deployed OSH source
+  `4c87a65c9a967d52af9df476e65d7862c7673a15` and upstream `master`
+  `235c0eabf24b6d6137b499b4402943d2794b70e6` confirms that data population
+  cannot clear these prerequisites. The ConSys service conformance set is
+  hard-coded rather than configured; its fixed `/collections` metadata has no
+  temporal extent; and feature handlers bind temporal filtering only to
+  `validTime`, leaving the required `datetime` query parameter unparsed and
+  ignored. A driver may provide feature `validTime`, but cannot change those
+  API-service surfaces.
 - External OSH and TeamEngine source/binaries remain immutable; hosted CI and
   executable-suite imports remain out of scope.
 - Exact artifacts are archived under
@@ -1846,8 +1855,10 @@ Gate Results:
 ## Next Action
 
 1. Obtain an independent dedicated mutable IUT with positive API Common
-   datetime evidence and exact inherited `ogcapi-4` declaration, then rerun the
-   Sprint 56 positive mutation gate.
+   datetime evidence and exact inherited `ogcapi-4` declaration, or consume a
+   future upstream OSH release that implements both API-service surfaces, then
+   rerun the Sprint 56 positive mutation gate. Do not spend project effort on
+   driver-only configuration as a closure path.
 2. If that external IUT remains unavailable, begin the released Part 1 Update
    closure while retaining all twelve Sprint 56 mappings as candidate.
 3. Continue remaining released Part 1 classes before Part 2 closure.

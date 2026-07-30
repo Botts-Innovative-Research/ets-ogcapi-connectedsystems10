@@ -2,6 +2,33 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-30 - Stock OSH prerequisite feasibility audit
+
+**Triggered by user question**: determine whether a real or simulated
+data-producing OSH driver can clear the Sprint 56 API Common datetime and exact
+inherited-declaration blockers without OSH source changes.
+
+- Compared the exact ETS prerequisites, deployed unmodified OSH source
+  `4c87a65`, and current upstream `master` `235c0ea`.
+- Confirmed a suitable driver can contribute feature `validTime` data, but
+  cannot make stock OSH advertise temporal extents from `/collections` or
+  bind the required `datetime` query parameter; stock feature handlers leave
+  it unparsed and ignored. Those surfaces are owned by the ConSys API service.
+- Confirmed the ConSys `/conformance` values are a hard-coded service set with
+  no configuration field. Stock OSH omits Connected Systems `/conf/api-common`
+  and exact inherited `ogcapi-4`, while advertising only the near-match
+  `ogcapi-features-4` URI.
+- Reclassified driver-only configuration as a non-viable closure path. Sprint
+  56 positive mutation closure requires a different conforming mutable IUT or
+  a future upstream OSH release implementing these service-level behaviors.
+  A response-rewriting proxy would be a separate IUT component and cannot
+  establish conformance by changing declarations alone.
+- Raze independently reproduced the source and live read-only findings. Its
+  initial `APPROVE_WITH_CONCERNS 0.99` had one substantive LOW wording concern;
+  after the docs distinguished ignored `datetime` from a rejected parameter,
+  its focused recheck returned `APPROVE 0.99` with no remaining findings.
+  Reviews ran `4m58s` and `19s`; token metadata was unavailable.
+
 ## 2026-07-29 - Sprint 56 Create/Replace/Delete planning
 
 **Triggered by user instruction**: continue the accepted released-ATS

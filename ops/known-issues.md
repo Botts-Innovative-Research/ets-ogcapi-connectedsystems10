@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T07:04Z
+Last updated: 2026-07-30T13:32Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -44,8 +44,15 @@ Last updated: 2026-07-30T07:04Z
   Common and released inherited
   `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`
   declarations; its similarly named Features Part 4 URI is insufficient. OSH
-  and TeamEngine modifications are out of scope, so closure requires an
-  independent dedicated mutable IUT satisfying those prerequisites.
+  and TeamEngine modifications are out of scope. A 2026-07-30 feasibility
+  audit confirms that an existing real or simulated driver cannot fill these
+  gaps: the current and upstream ConSys service hard-code the conformance
+  declaration set, instantiate fixed collection metadata without temporal
+  extents, and bind temporal filtering only to `validTime`; `datetime` is
+  unparsed and ignored. A driver can supply valid-time feature data, but it
+  cannot configure these API-service behaviors. Closure therefore requires an
+  independent dedicated mutable IUT or a future unmodified upstream OSH
+  release that implements the required surfaces.
   Controlled HTTP cannot replace mandatory real-protocol E2E, and all twelve
   mappings remain candidate.
 - Local OSH does not declare Part 1 `/conf/advanced-filtering`. Sprint 55

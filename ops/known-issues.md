@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T00:31Z
+Last updated: 2026-07-30T02:48Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -15,11 +15,15 @@ Last updated: 2026-07-30T00:31Z
 ## Active Issues
 
 - Sprint 56 Part 1 Create/Replace/Delete positive mutation E2E remains open.
+  Candidate `0023d5b` is separately superseded by Raze `GAPS_FOUND 0.99`;
+  local hard-deadline remediation passes direct HTTP `25/0/0/0` and full
+  Docker Maven `644/0/0/3` precommit, with replacement exact gates pending.
   The unmodified local OSH API Common result is `4 PASS / 1 SKIP` because no
   advertised collection supplies positive datetime evidence. Causal TestNG
   inheritance therefore dependency-SKIPs all twelve CRD methods before their
-  own declaration checks or writes. OSH also omits the exact Connected Systems
-  API Common and released inherited
+  own declaration checks or writes, despite OSH advertising Part 1
+  `/conf/create-replace-delete`. OSH also omits the exact Connected Systems API
+  Common and released inherited
   `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`
   declarations; its similarly named Features Part 4 URI is insufficient. OSH
   and TeamEngine modifications are out of scope, so closure requires an

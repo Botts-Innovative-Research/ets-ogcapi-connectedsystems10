@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.49 | Status: Living Document | Last reconciled: 2026-07-30 (queued mutation postconditions and alias cleanup)
+> Version: 2.0.49 | Status: Living Document | Last reconciled: 2026-07-30 (hard queued-operation deadlines and cleanup precedence)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1427,7 +1427,7 @@ focused `53/0/0/0`, full Maven `607/0/0/3`, honest unmodified-local-OSH
 external dependencies. Fresh Raze R8 is `APPROVE 0.99` with both prior
 findings closed and no new findings.
 
-## 35. Architecture v2.0.48 - Part 1 Create/Replace/Delete procedures (2026-07-29)
+## 35. Architecture v2.0.49 - Part 1 Create/Replace/Delete procedures (2026-07-30)
 
 `CreateReplaceDeleteTests` replaces six historical subset/readiness methods
 with exactly the twelve released `/conf/create-replace-delete` procedures.
@@ -1489,4 +1489,21 @@ replacement implementation adds delayed and stalled POST/PUT/DELETE 202
 regressions, queued URI-list association coverage, and an alias failure-path
 leak regression and deployment-property validation. Precommit focused CRD is
 `35/0/0/0`, including queued/alias HTTP `18/0/0/0`; full Docker Maven is
-`637/0/0/3`. Replacement exact-image and E2E gates remain required.
+`637/0/0/3`. Replacement candidate
+`0023d5b492dff8b5dbeff6c201c257f970b8947a` passes exact released-source,
+schema-parity, image/runtime, dependency, credential, immutable-base, and
+artifact-hygiene gates. Its immutable TeamEngine image is
+`sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`
+with `Build-Revision: 0023d5b492`. Real local OSH E2E remains fail-closed:
+all twelve procedures dependency-SKIP because API Common lacks positive
+datetime evidence, so positive mutation evidence remains required.
+
+Raze review of `0023d5b` returned `GAPS_FOUND 0.99`, superseding that candidate
+despite its passing exact gates. Version 2.0.49 makes each queued response own
+one monotonic deadline across every probe, HTTP timeout, capped sleep, and
+compound cascade/custom postcondition; late success is rejected and
+interruption fails visibly. Cleanup failure overrides an inconclusive SKIP,
+and URI-list occurrence cleanup is registered before POST and polls for late
+materialization. Seven focused regressions pass direct controlled HTTP
+`25/0/0/0`; full Docker Maven passes `644/0/0/3` precommit. Exact replacement
+candidate gates and fresh Raze remain pending.

@@ -2,6 +2,7 @@ package org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelet
 
 import java.net.URI;
 import java.net.URLEncoder;
+import java.net.SocketTimeoutException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -36,6 +37,9 @@ import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Par
 import org.testng.SkipException;
 
 import io.restassured.response.Response;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.specification.RequestSpecification;
 
 /**
  * Stateful, per-procedure support for the released Create/Replace/Delete ATS.
@@ -168,9 +172,14 @@ public final class CreateReplaceDeleteSupport {
 			assertDeleteConflict(parent.uri(), requirement);
 			assertAvailable(parent.uri(), requirement);
 			assertAvailable(child.uri(), requirement);
-			delete(parent, true, requirement);
-			assertGone(parent.uri(), requirement);
-			assertGone(child.uri(), requirement);
+			AsyncDeadline parentDelete = delete(parent, true, requirement);
+			if (parentDelete == null) {
+				assertGone(child.uri(), requirement);
+			}
+			else {
+				awaitGoneOrSkip(child.uri(), parentDelete, requirement,
+						"queued cascade DELETE of child " + child.uri());
+			}
 
 			String targetUid = uid("cascade-target");
 			String survivorUid = uid("cascade-survivor");
@@ -194,20 +203,16 @@ public final class CreateReplaceDeleteSupport {
 			assertAvailable(target.uri(), requirement);
 			assertAvailable(survivor.uri(), requirement);
 			assertAvailable(deployment.uri(), requirement);
-			delete(target, true, requirement);
-
-			Map<String, Object> remainingDeployment = getJson(deployment.uri(), deploymentMediaType, 200, requirement);
-			if (containsString(remainingDeployment, targetUid) || containsString(remainingDeployment, target.uri())) {
-				ETSAssert.failWithUri(requirement,
-						"surviving Deployment still references the cascade-deleted System " + target.uri() + ".");
+			AsyncDeadline targetDelete = delete(target, true, requirement);
+			if (targetDelete == null) {
+				assertDeploymentAfterCascade(deployment.uri(), deploymentMediaType, targetUid, target.uri(),
+						survivorUid, survivor.uri(), requirement);
+				assertAvailable(survivor.uri(), requirement);
 			}
-			if (!containsString(remainingDeployment, survivorUid)
-					&& !containsString(remainingDeployment, survivor.uri())) {
-				ETSAssert.failWithUri(requirement,
-						"surviving Deployment lost the unrelated System association " + survivor.uri() + ".");
+			else {
+				awaitCascadePostconditionsOrSkip(deployment.uri(), deploymentMediaType, targetUid, target.uri(),
+						survivorUid, survivor.uri(), targetDelete, requirement);
 			}
-			assertGone(target.uri(), requirement);
-			assertAvailable(survivor.uri(), requirement);
 		});
 	}
 
@@ -317,11 +322,13 @@ public final class CreateReplaceDeleteSupport {
 							requirement, cleanup, collection.kind() == SYSTEM);
 					String id = lastPathSegment(created.uri(), requirement);
 					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
-					assertSubmittedContent(body, getJson(collectionItem, mediaType, 200, requirement), requirement);
 					URI canonical = canonicalUri(collection.kind(), created.uri(), requirement);
+					verifySubmittedContent(collectionItem, mediaType, body, created.deadline(), requirement,
+							"queued custom-collection creation at " + collectionItem);
+					verifySubmittedContent(canonical, mediaType, body, created.deadline(), requirement,
+							"queued canonical custom-collection creation at " + canonical);
 					cleanup.push("canonical custom-created resource " + canonical,
 							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
-					assertSubmittedContent(body, getJson(canonical, mediaType, 200, requirement), requirement);
 				}
 			}
 		});
@@ -342,23 +349,27 @@ public final class CreateReplaceDeleteSupport {
 							requirement, cleanup, collection.kind() == SYSTEM);
 					String id = lastPathSegment(created.uri(), requirement);
 					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
+					URI canonical = canonicalUri(collection.kind(), created.uri(), requirement);
+					cleanup.push("canonical custom-created resource " + canonical,
+							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
 					Map<String, Object> replacement = body(collection.kind(), mediaType, "replace", resourceUid);
 					assertOptions(collectionItem, List.of("PUT"), requirement);
 					Response put = request(mediaType, replacement, collection.kind(), requirement).put(collectionItem)
 						.andReturn();
 					assertStatusIn(put, List.of(200, 202, 204), requirement, "PUT " + collectionItem);
 					if (put.getStatusCode() == 202) {
-						awaitSubmittedContentOrSkip(collectionItem, mediaType, replacement, requirement,
+						AsyncDeadline deadline = new AsyncDeadline();
+						awaitSubmittedContentOrSkip(collectionItem, mediaType, replacement, deadline, requirement,
 								"queued PUT " + collectionItem);
+						awaitSubmittedContentOrSkip(canonical, mediaType, replacement, deadline, requirement,
+								"queued canonical propagation after PUT " + collectionItem);
 					}
 					else {
 						assertSubmittedContent(replacement, getJson(collectionItem, mediaType, 200, requirement),
 								requirement);
+						assertSubmittedContent(replacement, getJson(canonical, mediaType, 200, requirement),
+								requirement);
 					}
-					URI canonical = canonicalUri(collection.kind(), created.uri(), requirement);
-					cleanup.push("canonical custom-created resource " + canonical,
-							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
-					assertSubmittedContent(replacement, getJson(canonical, mediaType, 200, requirement), requirement);
 				}
 			}
 		});
@@ -382,10 +393,16 @@ public final class CreateReplaceDeleteSupport {
 					URI rootDeleteCanonical = canonicalUri(collection.kind(), rootDelete.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + rootDeleteCanonical,
 							() -> cleanupDelete(rootDeleteCanonical, collection.kind() == SYSTEM, requirement));
-					delete(new OwnedResource(rootDeleteCanonical, collection.kind() == SYSTEM),
+					AsyncDeadline rootDeleteDeadline = delete(
+							new OwnedResource(rootDeleteCanonical, collection.kind() == SYSTEM, null),
 							collection.kind() == SYSTEM, requirement);
-					assertGone(rootDeleteCanonical, requirement);
-					assertGone(rootDeleteItem, requirement);
+					if (rootDeleteDeadline == null) {
+						assertGone(rootDeleteItem, requirement);
+					}
+					else {
+						awaitGoneOrSkip(rootDeleteItem, rootDeleteDeadline, requirement,
+								"queued custom root DELETE propagation to " + rootDeleteItem);
+					}
 
 					Map<String, Object> occurrenceBody = body(collection.kind(), mediaType, "occurrence-delete",
 							uid("custom-occurrence-delete"));
@@ -399,14 +416,19 @@ public final class CreateReplaceDeleteSupport {
 						.delete(collectionItem)
 						.andReturn();
 					assertStatusIn(delete, List.of(200, 202, 204), requirement, "DELETE " + collectionItem);
-					if (delete.getStatusCode() == 202) {
-						awaitGoneOrSkip(collectionItem, requirement, "queued DELETE " + collectionItem);
-					}
 					URI canonical = canonicalUri(collection.kind(), occurrence.uri(), requirement);
 					cleanup.push("canonical custom-created resource " + canonical,
 							() -> cleanupDelete(canonical, collection.kind() == SYSTEM, requirement));
-					assertGone(collectionItem, requirement);
-					assertAvailable(canonical, requirement);
+					if (delete.getStatusCode() == 202) {
+						AsyncDeadline deadline = new AsyncDeadline();
+						awaitGoneOrSkip(collectionItem, deadline, requirement, "queued DELETE " + collectionItem);
+						awaitAvailableOrSkip(canonical, deadline, requirement,
+								"canonical survival after queued occurrence DELETE " + collectionItem);
+					}
+					else {
+						assertGone(collectionItem, requirement);
+						assertAvailable(canonical, requirement);
+					}
 				}
 			}
 		});
@@ -427,6 +449,12 @@ public final class CreateReplaceDeleteSupport {
 									collection.kind(), requirement, cleanup, collection.kind() == SYSTEM),
 							collection.kind(), requirement, cleanup);
 					assertOptions(collection.itemsUri(), List.of("POST"), requirement);
+					String id = lastPathSegment(canonical.uri(), requirement);
+					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
+					OccurrenceCleanupTarget occurrence = new OccurrenceCleanupTarget(collectionItem, false);
+					cleanup.push("custom collection occurrence " + collectionItem,
+							() -> cleanupOccurrence(occurrence, requirement));
+					Map<String, Object> expected = getJson(canonical.uri(), mediaType, 200, requirement);
 					Response add = EncodingMediatypeWrite.givenWithoutDefaultCharset()
 						.accept("application/json")
 						.contentType("text/uri-list")
@@ -439,16 +467,21 @@ public final class CreateReplaceDeleteSupport {
 						ETSAssert.failWithUri(requirement,
 								"POST text/uri-list " + collection.itemsUri() + " returned HTTP 201 without Location.");
 					}
-					String id = lastPathSegment(canonical.uri(), requirement);
-					URI collectionItem = childCollection(collection.itemsUri(), encoded(id));
-					Map<String, Object> expected = getJson(canonical.uri(), mediaType, 200, requirement);
+					occurrence.queued = add.getStatusCode() == 202;
 					URI returnedItem = add.getStatusCode() == 202 || location == null || location.isBlank()
 							? collectionItem : resolveCreatedResourceUri(this.apiRoot, location, requirement);
+					if (!returnedItem.equals(collectionItem)) {
+						OccurrenceCleanupTarget returnedOccurrence = new OccurrenceCleanupTarget(returnedItem, false);
+						returnedOccurrence.queued = add.getStatusCode() == 202;
+						cleanup.push("returned custom collection occurrence " + returnedItem,
+								() -> cleanupOccurrence(returnedOccurrence, requirement));
+					}
 					if (add.getStatusCode() == 202) {
-						awaitSubmittedContentOrSkip(collectionItem, mediaType, expected, requirement,
+						AsyncDeadline deadline = new AsyncDeadline();
+						awaitSubmittedContentOrSkip(collectionItem, mediaType, expected, deadline, requirement,
 								"queued POST text/uri-list " + collection.itemsUri());
 						if (!returnedItem.equals(collectionItem)) {
-							awaitSubmittedContentOrSkip(returnedItem, mediaType, expected, requirement,
+							awaitSubmittedContentOrSkip(returnedItem, mediaType, expected, deadline, requirement,
 									"queued POST text/uri-list Location " + returnedItem);
 						}
 					}
@@ -458,12 +491,6 @@ public final class CreateReplaceDeleteSupport {
 						Map<String, Object> actual = getJson(collectionItem, mediaType, 200, requirement);
 						assertSubmittedContent(expected, actual, requirement);
 					}
-					if (!returnedItem.equals(collectionItem)) {
-						cleanup.push("returned custom collection occurrence " + returnedItem,
-								() -> cleanupDelete(returnedItem, false, requirement));
-					}
-					cleanup.push("custom collection occurrence " + collectionItem,
-							() -> cleanupDelete(collectionItem, false, requirement));
 				}
 			}
 		});
@@ -542,8 +569,8 @@ public final class CreateReplaceDeleteSupport {
 		OwnedResource resource = canonicalOwned(
 				createOwned(collection, createBody, mediaType, kind, requirement, cleanup, kind == SYSTEM), kind,
 				requirement, cleanup);
-		Map<String, Object> created = getJson(resource.uri(), mediaType, 200, requirement);
-		assertSubmittedContent(createBody, created, requirement);
+		verifySubmittedContent(resource.uri(), mediaType, createBody, resource.deadline(), requirement,
+				"queued canonical creation at " + resource.uri());
 
 		assertOptions(resource.uri(), List.of("PUT", "DELETE"), requirement);
 		String identity = resourceIdentity(createBody, requirement);
@@ -552,7 +579,7 @@ public final class CreateReplaceDeleteSupport {
 		assertStatusIn(replace, List.of(200, 202, 204), requirement, "PUT " + resource.uri());
 
 		if (replace.getStatusCode() == 202) {
-			awaitSubmittedContentOrSkip(resource.uri(), mediaType, replacement, requirement,
+			awaitSubmittedContentOrSkip(resource.uri(), mediaType, replacement, new AsyncDeadline(), requirement,
 					"queued PUT " + resource.uri());
 		}
 		else {
@@ -564,7 +591,6 @@ public final class CreateReplaceDeleteSupport {
 		}
 
 		delete(resource, false, requirement);
-		assertGone(resource.uri(), requirement);
 	}
 
 	private OwnedResource createOnly(URI collection, Map<String, Object> body, String mediaType, ResourceKind kind,
@@ -573,7 +599,8 @@ public final class CreateReplaceDeleteSupport {
 		OwnedResource created = canonicalOwned(
 				createOwned(collection, body, mediaType, kind, requirement, cleanup, cascadeCleanup), kind, requirement,
 				cleanup);
-		assertSubmittedContent(body, getJson(created.uri(), mediaType, 200, requirement), requirement);
+		verifySubmittedContent(created.uri(), mediaType, body, created.deadline(), requirement,
+				"queued canonical creation at " + created.uri());
 		return created;
 	}
 
@@ -592,20 +619,21 @@ public final class CreateReplaceDeleteSupport {
 		}
 		if (response.getStatusCode() == 202) {
 			cleanupTarget.queued = true;
-			Optional<URI> completed = awaitCreatedResource(cleanupTarget, body, requirement);
+			AsyncDeadline deadline = new AsyncDeadline();
+			Optional<URI> completed = awaitCreatedResource(cleanupTarget, body, deadline, requirement);
 			if (completed.isEmpty()) {
 				throw inconclusive(requirement, "POST " + collection);
 			}
 			URI resourceUri = completed.get();
 			cleanupTarget.setVerifiedUri(resourceUri);
-			return new OwnedResource(resourceUri, cascadeCleanup);
+			return new OwnedResource(resourceUri, cascadeCleanup, deadline);
 		}
 		URI resourceUri = resolveCreatedResourceUri(this.apiRoot, location, requirement);
 		Map<String, Object> returned = getJson(resourceUri, mediaType, 200, requirement);
 		assertResourceIdentity(returned, identity, resourceUri, requirement);
 		assertSubmittedContent(body, returned, requirement);
 		cleanupTarget.setVerifiedUri(resourceUri);
-		return new OwnedResource(resourceUri, cascadeCleanup);
+		return new OwnedResource(resourceUri, cascadeCleanup, null);
 	}
 
 	private io.restassured.specification.RequestSpecification request(String mediaType, Map<String, Object> body,
@@ -685,31 +713,45 @@ public final class CreateReplaceDeleteSupport {
 		ETSAssert.assertStatus(response, 409, requirement);
 	}
 
-	private void delete(OwnedResource resource, boolean cascade, String requirement) {
-		io.restassured.specification.RequestSpecification request = EncodingMediatypeWrite.givenWithoutDefaultCharset()
-			.accept("application/json");
+	private AsyncDeadline delete(OwnedResource resource, boolean cascade, String requirement) {
+		RequestSpecification request = EncodingMediatypeWrite.givenWithoutDefaultCharset().accept("application/json");
 		if (cascade) {
 			request.queryParam("cascade", true);
 		}
 		Response response = request.delete(resource.uri()).andReturn();
 		assertStatusIn(response, List.of(200, 202, 204), requirement, "DELETE " + resource.uri());
 		if (response.getStatusCode() == 202) {
-			awaitGoneOrSkip(resource.uri(), requirement, "queued DELETE " + resource.uri());
+			AsyncDeadline deadline = new AsyncDeadline();
+			awaitGoneOrSkip(resource.uri(), deadline, requirement, "queued DELETE " + resource.uri());
+			return deadline;
 		}
+		assertGone(resource.uri(), requirement);
+		return null;
 	}
 
 	private void cleanupDelete(URI resource, boolean cascade, String requirement) {
-		io.restassured.specification.RequestSpecification request = EncodingMediatypeWrite.givenWithoutDefaultCharset()
-			.accept("application/json");
+		RequestSpecification request = EncodingMediatypeWrite.givenWithoutDefaultCharset().accept("application/json");
 		if (cascade) {
 			request.queryParam("cascade", true);
 		}
 		Response response = request.delete(resource).andReturn();
 		assertStatusIn(response, List.of(200, 202, 204, 404), requirement, "cleanup DELETE " + resource);
-		if (response.getStatusCode() == 202 && !awaitGone(resource, requirement)) {
+		AsyncDeadline deadline = new AsyncDeadline(cleanupTimeoutMillis(), cleanupPollMillis());
+		if (response.getStatusCode() == 202 && !awaitGone(resource, deadline, requirement)) {
 			ETSAssert.failWithUri(requirement,
 					resource + " remained available after the bounded asynchronous cleanup DELETE.");
 		}
+	}
+
+	private void cleanupOccurrence(OccurrenceCleanupTarget target, String requirement) {
+		if (target.queued) {
+			AsyncDeadline deadline = new AsyncDeadline(cleanupTimeoutMillis(), cleanupPollMillis());
+			if (!pollUntil(deadline, () -> available(target.uri, deadline, requirement), requirement,
+					"late custom-collection occurrence " + target.uri)) {
+				return;
+			}
+		}
+		cleanupDelete(target.uri, target.cascade, requirement);
 	}
 
 	private void cleanupOwned(OwnedCleanupTarget target, String requirement) {
@@ -724,9 +766,16 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private Optional<URI> discoverOwned(OwnedCleanupTarget target, String requirement) {
+		return discoverOwned(target, null, requirement);
+	}
+
+	private Optional<URI> discoverOwned(OwnedCleanupTarget target, AsyncDeadline deadline, String requirement) {
 		URI rootCollection = this.apiRoot.resolve(target.kind.path());
-		Optional<TraversalResult> traversal = Part1ApiCommonSupport.resourcesAtEndpoint(rootCollection,
-				target.mediaType, Map.of(), requirement);
+		Optional<TraversalResult> traversal = deadline == null
+				? Part1ApiCommonSupport.resourcesAtEndpoint(rootCollection, target.mediaType, Map.of(), requirement)
+				: Part1ApiCommonSupport.resourcesAtEndpoint(rootCollection, target.mediaType, Map.of(), requirement,
+						Set.of(), ignored -> {
+						}, (uri, accept, query) -> pollingGet(uri, accept, query, deadline));
 		if (traversal.isEmpty()) {
 			return Optional.empty();
 		}
@@ -741,7 +790,13 @@ public final class CreateReplaceDeleteSupport {
 						+ target.identity + " without a local id; refusing an unverified DELETE.");
 			}
 			URI candidate = this.apiRoot.resolve(target.kind.path() + "/" + encoded(id));
-			Map<String, Object> representation = getJson(candidate, target.mediaType, 200, requirement);
+			Response response = deadline == null ? get(candidate, target.mediaType)
+					: pollingGet(candidate, target.mediaType, Map.of(), deadline);
+			if (response.getStatusCode() == 404) {
+				continue;
+			}
+			ETSAssert.assertStatus(response, 200, requirement);
+			Map<String, Object> representation = parseBody(response, requirement, "GET " + candidate);
 			if (target.identity.equals(optionalResourceIdentity(representation))) {
 				matches.add(candidate);
 			}
@@ -756,8 +811,9 @@ public final class CreateReplaceDeleteSupport {
 
 	private Optional<URI> awaitOwnedDiscovery(OwnedCleanupTarget target, String requirement) {
 		URI[] result = new URI[1];
-		pollUntil(() -> {
-			Optional<URI> discovered = discoverOwned(target, requirement);
+		AsyncDeadline deadline = new AsyncDeadline(cleanupTimeoutMillis(), cleanupPollMillis());
+		pollUntil(deadline, () -> {
+			Optional<URI> discovered = discoverOwned(target, deadline, requirement);
 			result[0] = discovered.orElse(null);
 			return result[0] != null;
 		}, requirement, "identity discovery for " + target.identity);
@@ -765,12 +821,12 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private Optional<URI> awaitCreatedResource(OwnedCleanupTarget target, Map<String, Object> submitted,
-			String requirement) {
+			AsyncDeadline deadline, String requirement) {
 		URI[] result = new URI[1];
-		pollUntil(() -> {
-			Optional<URI> discovered = discoverOwned(target, requirement);
-			if (discovered.isPresent()
-					&& resourceMatches(discovered.get(), target.mediaType, target.identity, submitted, requirement)) {
+		pollUntil(deadline, () -> {
+			Optional<URI> discovered = discoverOwned(target, deadline, requirement);
+			if (discovered.isPresent() && resourceMatches(discovered.get(), target.mediaType, target.identity,
+					submitted, deadline, requirement)) {
 				result[0] = discovered.get();
 				return true;
 			}
@@ -780,11 +836,8 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private boolean resourceMatches(URI resource, String mediaType, String identity, Map<String, Object> submitted,
-			String requirement) {
-		Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
-			.accept(mediaType)
-			.get(resource)
-			.andReturn();
+			AsyncDeadline deadline, String requirement) {
+		Response response = pollingGet(resource, mediaType, Map.of(), deadline);
 		if (response.getStatusCode() == 404) {
 			return false;
 		}
@@ -794,12 +847,9 @@ public final class CreateReplaceDeleteSupport {
 	}
 
 	private void awaitSubmittedContentOrSkip(URI resource, String mediaType, Map<String, Object> submitted,
-			String requirement, String operation) {
-		boolean completed = pollUntil(() -> {
-			Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
-				.accept(mediaType)
-				.get(resource)
-				.andReturn();
+			AsyncDeadline deadline, String requirement, String operation) {
+		boolean completed = pollUntil(deadline, () -> {
+			Response response = pollingGet(resource, mediaType, Map.of(), deadline);
 			if (response.getStatusCode() == 404) {
 				return false;
 			}
@@ -811,18 +861,25 @@ public final class CreateReplaceDeleteSupport {
 		}
 	}
 
-	private void awaitGoneOrSkip(URI resource, String requirement, String operation) {
-		if (!awaitGone(resource, requirement)) {
+	private void verifySubmittedContent(URI resource, String mediaType, Map<String, Object> submitted,
+			AsyncDeadline deadline, String requirement, String operation) {
+		if (deadline == null) {
+			assertSubmittedContent(submitted, getJson(resource, mediaType, 200, requirement), requirement);
+		}
+		else {
+			awaitSubmittedContentOrSkip(resource, mediaType, submitted, deadline, requirement, operation);
+		}
+	}
+
+	private void awaitGoneOrSkip(URI resource, AsyncDeadline deadline, String requirement, String operation) {
+		if (!awaitGone(resource, deadline, requirement)) {
 			throw inconclusive(requirement, operation);
 		}
 	}
 
-	private boolean awaitGone(URI resource, String requirement) {
-		return pollUntil(() -> {
-			Response response = EncodingMediatypeWrite.givenWithoutDefaultCharset()
-				.accept("application/json")
-				.get(resource)
-				.andReturn();
+	private boolean awaitGone(URI resource, AsyncDeadline deadline, String requirement) {
+		return pollUntil(deadline, () -> {
+			Response response = pollingGet(resource, "application/json", Map.of(), deadline);
 			if (response.getStatusCode() == 404) {
 				return true;
 			}
@@ -833,25 +890,133 @@ public final class CreateReplaceDeleteSupport {
 		}, requirement, "deletion of " + resource);
 	}
 
-	private boolean pollUntil(BooleanSupplier condition, String requirement, String operation) {
-		long started = System.nanoTime();
-		long timeoutNanos = TimeUnit.MILLISECONDS.toNanos(this.asyncTimeoutMillis);
-		do {
-			if (condition.getAsBoolean()) {
+	private void awaitAvailableOrSkip(URI resource, AsyncDeadline deadline, String requirement, String operation) {
+		if (!pollUntil(deadline, () -> available(resource, deadline, requirement), requirement, operation)) {
+			throw inconclusive(requirement, operation);
+		}
+	}
+
+	private boolean available(URI resource, AsyncDeadline deadline, String requirement) {
+		Response response = pollingGet(resource, "application/json", Map.of(), deadline);
+		if (response.getStatusCode() == 404) {
+			return false;
+		}
+		ETSAssert.assertStatus(response, 200, requirement);
+		return true;
+	}
+
+	private void awaitCascadePostconditionsOrSkip(URI deployment, String deploymentMediaType, String deletedUid,
+			URI deleted, String survivorUid, URI survivor, AsyncDeadline deadline, String requirement) {
+		boolean complete = pollUntil(deadline, () -> {
+			Response deploymentResponse = pollingGet(deployment, deploymentMediaType, Map.of(), deadline);
+			if (deploymentResponse.getStatusCode() != 200) {
+				return false;
+			}
+			Map<String, Object> body = parseBody(deploymentResponse, requirement, "GET " + deployment);
+			return !containsString(body, deletedUid) && !containsString(body, deleted)
+					&& (containsString(body, survivorUid) || containsString(body, survivor))
+					&& available(survivor, deadline, requirement);
+		}, requirement, "queued cascade graph propagation for " + deleted);
+		if (!complete) {
+			throw inconclusive(requirement, "queued cascade graph propagation for " + deleted);
+		}
+	}
+
+	private void assertDeploymentAfterCascade(URI deployment, String deploymentMediaType, String deletedUid,
+			URI deleted, String survivorUid, URI survivor, String requirement) {
+		Map<String, Object> remaining = getJson(deployment, deploymentMediaType, 200, requirement);
+		if (containsString(remaining, deletedUid) || containsString(remaining, deleted)) {
+			ETSAssert.failWithUri(requirement,
+					"surviving Deployment still references the cascade-deleted System " + deleted + ".");
+		}
+		if (!containsString(remaining, survivorUid) && !containsString(remaining, survivor)) {
+			ETSAssert.failWithUri(requirement,
+					"surviving Deployment lost the unrelated System association " + survivor + ".");
+		}
+	}
+
+	private boolean pollUntil(AsyncDeadline deadline, BooleanSupplier condition, String requirement, String operation) {
+		while (true) {
+			failIfInterrupted(requirement, operation);
+			if (deadline.expired()) {
+				return false;
+			}
+			boolean satisfied;
+			try {
+				satisfied = condition.getAsBoolean();
+			}
+			catch (Throwable ex) {
+				if (!causedByTimeout(ex)) {
+					if (ex instanceof Error) {
+						throw (Error) ex;
+					}
+					if (ex instanceof RuntimeException) {
+						throw (RuntimeException) ex;
+					}
+					throw new IllegalStateException(ex);
+				}
+				satisfied = false;
+			}
+			failIfInterrupted(requirement, operation);
+			if (deadline.expired()) {
+				return false;
+			}
+			if (satisfied) {
 				return true;
 			}
-			if (System.nanoTime() - started >= timeoutNanos) {
+			long sleepNanos = deadline.sleepNanos();
+			if (sleepNanos <= 0) {
 				return false;
 			}
 			try {
-				Thread.sleep(this.asyncPollMillis);
+				TimeUnit.NANOSECONDS.sleep(sleepNanos);
 			}
 			catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
 				ETSAssert.failWithUri(requirement, "interrupted while waiting for " + operation + ".");
 			}
 		}
-		while (true);
+	}
+
+	private Response pollingGet(URI uri, String accept, Map<String, String> query, AsyncDeadline deadline) {
+		int timeoutMillis = deadline.requestTimeoutMillis();
+		HttpClientConfig httpClient = HttpClientConfig.httpClientConfig()
+			.setParam("http.connection.timeout", timeoutMillis)
+			.setParam("http.socket.timeout", timeoutMillis)
+			.setParam("http.connection-manager.timeout", (long) timeoutMillis);
+		RestAssuredConfig config = RestAssuredConfig.config().httpClient(httpClient);
+		RequestSpecification request = EncodingMediatypeWrite.givenWithoutDefaultCharset()
+			.config(config)
+			.accept(accept);
+		query.forEach(request::queryParam);
+		return request.get(uri).andReturn();
+	}
+
+	private static Response get(URI uri, String accept) {
+		return EncodingMediatypeWrite.givenWithoutDefaultCharset().accept(accept).get(uri).andReturn();
+	}
+
+	private static boolean causedByTimeout(Throwable thrown) {
+		for (Throwable cause = thrown; cause != null; cause = cause.getCause()) {
+			if (cause instanceof SocketTimeoutException || cause.getClass().getSimpleName().contains("Timeout")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static void failIfInterrupted(String requirement, String operation) {
+		if (Thread.currentThread().isInterrupted()) {
+			ETSAssert.failWithUri(requirement, "interrupted while waiting for " + operation + ".");
+		}
+	}
+
+	private long cleanupTimeoutMillis() {
+		return this.asyncTimeoutMillis > Long.MAX_VALUE / 2L ? Long.MAX_VALUE : this.asyncTimeoutMillis * 2L;
+	}
+
+	private long cleanupPollMillis() {
+		return Math.min(this.asyncPollMillis, 25L);
 	}
 
 	private static SkipException inconclusive(String requirement, String operation) {
@@ -1274,7 +1439,7 @@ public final class CreateReplaceDeleteSupport {
 			cleanup.push("canonical created resource " + canonical,
 					() -> cleanupDelete(canonical, created.cascadeCleanup(), requirement));
 		}
-		return new OwnedResource(canonical, created.cascadeCleanup());
+		return new OwnedResource(canonical, created.cascadeCleanup(), created.deadline());
 	}
 
 	private URI canonicalUri(ResourceKind kind, URI location, String requirement) {
@@ -1400,6 +1565,13 @@ public final class CreateReplaceDeleteSupport {
 				}
 			}
 			if (primary != null) {
+				if (primary instanceof SkipException && !failures.isEmpty()) {
+					AssertionError aggregate = new AssertionError(this.requirement
+							+ " - accepted operation was inconclusive and owned-resource cleanup failed.");
+					aggregate.addSuppressed(primary);
+					failures.forEach(aggregate::addSuppressed);
+					return aggregate;
+				}
 				failures.forEach(primary::addSuppressed);
 				return primary;
 			}
@@ -1427,7 +1599,48 @@ public final class CreateReplaceDeleteSupport {
 	private record CustomCollection(ResourceKind kind, String id, URI itemsUri, List<String> mediaTypes) {
 	}
 
-	private record OwnedResource(URI uri, boolean cascadeCleanup) {
+	private record OwnedResource(URI uri, boolean cascadeCleanup, AsyncDeadline deadline) {
+	}
+
+	private final class AsyncDeadline {
+
+		private static final long MINIMUM_REQUEST_SLICE_MILLIS = 250L;
+
+		private final long startedNanos = System.nanoTime();
+
+		private final long timeoutNanos;
+
+		private final long pollNanos;
+
+		private AsyncDeadline() {
+			this(CreateReplaceDeleteSupport.this.asyncTimeoutMillis, CreateReplaceDeleteSupport.this.asyncPollMillis);
+		}
+
+		private AsyncDeadline(long timeoutMillis, long pollMillis) {
+			this.timeoutNanos = TimeUnit.MILLISECONDS.toNanos(timeoutMillis);
+			this.pollNanos = TimeUnit.MILLISECONDS.toNanos(pollMillis);
+		}
+
+		private long remainingNanos() {
+			return this.timeoutNanos - (System.nanoTime() - this.startedNanos);
+		}
+
+		private boolean expired() {
+			return remainingNanos() <= 0;
+		}
+
+		private long sleepNanos() {
+			return Math.min(remainingNanos(), this.pollNanos);
+		}
+
+		private int requestTimeoutMillis() {
+			long remaining = remainingNanos();
+			long remainingMillis = Math.max(1L,
+					(remaining + TimeUnit.MILLISECONDS.toNanos(1L) - 1L) / TimeUnit.MILLISECONDS.toNanos(1L));
+			long slice = Math.max(TimeUnit.NANOSECONDS.toMillis(this.pollNanos), MINIMUM_REQUEST_SLICE_MILLIS);
+			return (int) Math.min(Integer.MAX_VALUE, Math.min(remainingMillis, slice));
+		}
+
 	}
 
 	private static final class OwnedCleanupTarget {
@@ -1453,6 +1666,21 @@ public final class CreateReplaceDeleteSupport {
 
 		private void setVerifiedUri(URI verifiedUri) {
 			this.verifiedUri = verifiedUri;
+		}
+
+	}
+
+	private static final class OccurrenceCleanupTarget {
+
+		private final URI uri;
+
+		private final boolean cascade;
+
+		private boolean queued;
+
+		private OccurrenceCleanupTarget(URI uri, boolean cascade) {
+			this.uri = uri;
+			this.cascade = cascade;
 		}
 
 	}

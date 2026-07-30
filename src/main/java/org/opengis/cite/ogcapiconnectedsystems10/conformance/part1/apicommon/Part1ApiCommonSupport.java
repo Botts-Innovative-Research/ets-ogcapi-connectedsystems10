@@ -124,6 +124,25 @@ public final class Part1ApiCommonSupport {
 	 */
 	public static Optional<TraversalResult> resourcesAtEndpoint(URI endpoint, String accept, Map<String, String> query,
 			String requirement, Set<String> supportedMediaTypes, Consumer<PageDocument> pageObserver) {
+		return resourcesAtEndpoint(endpoint, accept, query, requirement, supportedMediaTypes, pageObserver,
+				Part1ApiCommonSupport::get);
+	}
+
+	/**
+	 * Traverses an arbitrary read-only collection endpoint using a caller-supplied
+	 * requester.
+	 * @param endpoint absolute collection endpoint.
+	 * @param accept HTTP Accept value.
+	 * @param query immutable query parameters for the first page.
+	 * @param requirement requirement URI owning the request.
+	 * @param supportedMediaTypes allowed actual response media types.
+	 * @param pageObserver callback invoked after safe parsing and before the next page.
+	 * @param requester request boundary used for every page.
+	 * @return traversal evidence, or empty when the endpoint returns HTTP 404.
+	 */
+	public static Optional<TraversalResult> resourcesAtEndpoint(URI endpoint, String accept, Map<String, String> query,
+			String requirement, Set<String> supportedMediaTypes, Consumer<PageDocument> pageObserver,
+			Requester requester) {
 		if (endpoint == null || !endpoint.isAbsolute()) {
 			throw new IllegalArgumentException("endpoint must be an absolute URI");
 		}
@@ -136,17 +155,20 @@ public final class Part1ApiCommonSupport {
 		if (pageObserver == null) {
 			throw new IllegalArgumentException("pageObserver must not be null");
 		}
+		if (requester == null) {
+			throw new IllegalArgumentException("requester must not be null");
+		}
 		Set<String> mediaTypes = normalizedMediaTypes(supportedMediaTypes);
 		Map<String, String> parameters = query == null ? Map.of() : Map.copyOf(query);
-		Response first = get(endpoint, accept, parameters);
+		Response first = requester.get(endpoint, accept, parameters);
 		if (first == null) {
 			ETSAssert.failWithUri(requirement, endpoint + " returned no HTTP response.");
 		}
 		if (first.getStatusCode() == 404) {
 			return Optional.empty();
 		}
-		return Optional.of(traverse(endpoint, accept, parameters, Part1ApiCommonSupport::get, first, requirement,
-				mediaTypes, pageObserver));
+		return Optional
+			.of(traverse(endpoint, accept, parameters, requester, first, requirement, mediaTypes, pageObserver));
 	}
 
 	static Optional<TraversalResult> canonicalResourcesDetailed(URI apiRoot, String resourceType, Requester requester) {
@@ -759,7 +781,7 @@ public final class Part1ApiCommonSupport {
 	}
 
 	@FunctionalInterface
-	interface Requester {
+	public interface Requester {
 
 		Response get(URI uri, String accept, Map<String, String> query);
 

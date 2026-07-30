@@ -1,0 +1,3 @@
+Build-Revision: 0023d5b492
+Implementation-Title: OGC API - Connected Systems 1.0 Conformance Test S
+Implementation-Version: 0.1-SNAPSHOT

@@ -1,6 +1,6 @@
 # Epic ETS-02: CS API Part 1 Conformance Classes
 
-> Status: Active - Sprint 56 Create/Replace/Delete exact closure in progress | Last updated: 2026-07-29
+> Status: Active - Sprint 56 Create/Replace/Delete positive E2E open | Last updated: 2026-07-30
 
 ## Goal
 Implement the 13 released OGC 23-001 conformance classes and all 110 Annex A
@@ -36,7 +36,7 @@ capability.
 | S-ETS-11-01 | Implement `/conf/advanced-filtering` suite - declaration-gated systems/common-resource read-only subset | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-009 |
 | S-ETS-55-01 | Replace Advanced Filtering subset with all 25 released `/conf/advanced-filtering` procedures | Complete; 25/25 exact, candidate `fce4612`, Raze R8 `APPROVE 0.99` | REQ-ETS-PART1-009, REQ-ETS-COVERAGE-001 |
 | S-ETS-12-01 | Implement `/conf/create-replace-delete` suite - safety-gated systems subset, no default public-IUT mutation | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-010 |
-| S-ETS-56-01 | Replace Create/Replace/Delete subset with all 12 released safety-gated procedures | In progress; spec-first baseline complete | REQ-ETS-PART1-010, REQ-ETS-COVERAGE-001 |
+| S-ETS-56-01 | Replace Create/Replace/Delete subset with all 12 released safety-gated procedures | In progress; `0023d5b` superseded by Raze, hard-deadline remediation verified precommit, positive mutation E2E open | REQ-ETS-PART1-010, REQ-ETS-COVERAGE-001 |
 | S-ETS-13-01 | Implement `/conf/update` suite - PATCH safety-gated systems subset, no default public-IUT mutation | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |
 | S-ETS-14-01 | Harden `/conf/update` positive mutable-IUT path - changed-field assertion and local OSH readiness truth | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-011 |
 | S-ETS-09-01 | Implement `/conf/geojson` encoding suite — read-only subset, depends on SystemFeatures | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART1-012 |

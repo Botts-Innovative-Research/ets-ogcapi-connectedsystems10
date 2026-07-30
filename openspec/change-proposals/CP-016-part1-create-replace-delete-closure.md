@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-010`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; implementation pending
+**Status**: Accepted; adversarial remediation implemented, exact verification pending
 
 ## Motivation
 
@@ -58,16 +58,21 @@ resources and clean up resources it created.
 The reusable transaction procedure SHALL execute the inherited Features Part 4
 contract at each prescribed resources and resource endpoint: OPTIONS returns
 HTTP 200 with the applicable method in `Allow`; POST sends a supported
-representation and returns HTTP 201 with a usable `Location`; canonical GET
-returns HTTP 200 and preserves the submitted representation content; PUT sends
-a complete replacement with the same resource identity and returns HTTP 200 or
-204; a subsequent GET proves replacement content; DELETE returns HTTP 200,
-202, or 204; and a completed synchronous deletion makes the canonical resource
-unavailable. A response status alone SHALL NOT establish representation,
-replacement, or deletion behavior. The procedure SHALL exercise each
-applicable representation declared by the IUT and implemented by the resource
-class. Every ETS-generated request representation SHALL validate against its
-bundled released single-resource schema before the write is issued.
+representation and returns HTTP 201 with a usable `Location` or HTTP 202;
+canonical GET returns HTTP 200 and preserves the submitted representation
+content; PUT sends a complete replacement with the same resource identity and
+returns HTTP 200, 202, or 204; a subsequent GET proves replacement content;
+DELETE returns HTTP 200, 202, or 204; and a later GET proves the canonical
+resource unavailable. A response status alone SHALL NOT establish
+representation, replacement, or deletion behavior. HTTP 202 SHALL start one
+monotonic operation deadline shared by every required postcondition. Deadline
+checks SHALL precede probes, each HTTP connect/read timeout and sleep SHALL be
+capped to the remaining deadline, interruption SHALL fail visibly, and a
+postcondition first observed after expiry SHALL not count as positive evidence.
+The procedure SHALL exercise each applicable representation declared by the
+IUT and implemented by the resource class. Every ETS-generated request
+representation SHALL validate against its bundled released single-resource
+schema before the write is issued.
 
 Generic resource deletion SHALL not send the System-specific `cascade` query
 parameter. The helper may send `cascade=true` only for owned System cleanup or
@@ -100,14 +105,20 @@ representations. Delete from a root collection SHALL remove every collection
 occurrence; delete from a non-root collection SHALL remove that occurrence
 while leaving the canonical resource. Adding existing resources SHALL verify
 OPTIONS advertises POST, then POST `text/uri-list`, one same-IUT canonical URL
-or UID per line, require HTTP 201 and a same-origin usable Location, and verify
-equivalent representations through both returned and computed collection-item
-URLs. If the IUT exposes no applicable custom collection, the affected
-procedure SHALL SKIP with a precise no-evidence reason; malformed advertised
-endpoints, unsupported declared methods, or incorrect propagation SHALL fail.
+or UID per line, require HTTP 201 and a same-origin usable Location or queued
+HTTP 202, and verify equivalent representations through both returned and
+computed collection-item URLs. Every required custom/canonical propagation,
+cascade, surviving-association, and URI-list occurrence postcondition for one
+queued operation SHALL be polled under that operation's single deadline.
+Identity-safe occurrence cleanup SHALL be registered before URI-list POST so
+late materialization after an inconclusive timeout is still removed. If the
+IUT exposes no applicable custom collection, the affected procedure SHALL SKIP
+with a precise no-evidence reason; malformed advertised endpoints, unsupported
+declared methods, or incorrect propagation SHALL fail.
 
-Cleanup SHALL run in reverse ownership order after both pass and failure. A
-cleanup failure SHALL remain visible and SHALL not be hidden by an earlier
+Cleanup SHALL run in reverse ownership order after pass, failure, or
+accepted-but-inconclusive SKIP. A cleanup failure SHALL become the reported
+failure when the primary outcome is SKIP and SHALL not be hidden by an earlier
 assertion. A response Location SHALL become a destructive cleanup target only
 after dereference proves the submitted UID or URI identity. Missing,
 cross-origin, or incorrect Location metadata SHALL trigger same-origin root

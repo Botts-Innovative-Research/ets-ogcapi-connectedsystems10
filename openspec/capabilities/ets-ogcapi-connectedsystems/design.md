@@ -33,7 +33,13 @@
 > association responses start bounded polling; they remain
 > accepted-but-inconclusive until the submitted content, replacement content,
 > deletion, or collection occurrence is observed. Timeout and polling interval
-> are deployment-configurable JVM properties. Generic resource deletion omits
+> are deployment-configurable JVM properties. Each queued response creates one
+> monotonic deadline shared by all of that operation's required postconditions;
+> expiry is checked before probes, HTTP connect/read timeouts and sleeps are
+> capped to remaining time, and interruption fails visibly. Compound cascade
+> and custom-collection propagation uses the same deadline. URI-list occurrence
+> cleanup is registered before POST to catch late materialization, and cleanup
+> failure overrides an inconclusive SKIP. Generic resource deletion omits
 > `cascade`, while
 > explicit System graph checks own `cascade=false|true`. Custom-collection
 > checks prove both custom and canonical representations, and URI-list

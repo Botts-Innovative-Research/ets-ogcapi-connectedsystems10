@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T01:27Z
+Last updated: 2026-07-30T02:48Z
 
 ## Current Sprint Evidence
 
@@ -14,12 +14,21 @@ Sprint 56 Part 1 Create/Replace/Delete direct ATS:
   dependency, exact `ogcapi-4` inheritance, schema-validated writes,
   identity-safe cleanup, cascade graph preconditions, root canonical nested
   checks, and complete custom-collection lifecycle assertions.
-- Docker Maven after queued-response remediation: BUILD SUCCESS, `637 total / 0
-  failures / 0 errors / 3 skipped`.
-- Focused CRD verification is `35/0/0/0`; delayed/stalled 202, alias-cleanup,
-  and deployment-property HTTP verification is `18/0/0/0`.
+- Raze returned `GAPS_FOUND 0.99` on `0023d5b`, superseding it for uncapped
+  polling probes/sleeps, hidden cleanup failure, incomplete queued compound
+  postconditions, late URI-list cleanup registration, and stale CP-016 status
+  semantics.
+- Seven test-first remediations pass direct controlled HTTP `25/0/0/0`; full
+  Docker Maven passes `644/0/0/3` precommit. Exact remediation gates are
+  pending.
 - Coverage inventory: overall `240 total / 76 exact / 2 helper / 126 candidate
   / 36 unmapped`; Create/Replace/Delete `12 / 0 / 0 / 12 / 0`.
+- Superseded candidate
+  `0023d5b492dff8b5dbeff6c201c257f970b8947a` passed exact focused
+  `35/0/0/0` and full Maven `637/0/0/3`. Its image is
+  `sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`
+  with `Build-Revision: 0023d5b492`; released-source, schema-parity, runtime,
+  immutable-base, dependency, credential, and hygiene gates pass.
 - Superseded candidate `f6e3587` focused Maven was `28/0/0/0`; exact full Maven was
   `630/0/0/3`. Image `sha256:f498e3d0...e88a2` passes runtime and immutable
   TeamEngine base verification.
@@ -27,17 +36,19 @@ Sprint 56 Part 1 Create/Replace/Delete direct ATS:
   155 skipped`; clean primary `244 / 40 / 7 / 197`. Provisioning and cleanup
   passed, primary state was unchanged, and TeamEngine issued zero IUT writes.
 - Part 1 API Common is `4 PASS / 1 SKIP`; causal inheritance therefore makes
-  all twelve procedures dependency-SKIP before declaration checks. OSH also
-  omits exact Connected Systems API Common and `ogcapi-4` declarations.
+  all twelve procedures dependency-SKIP before declaration checks, although
+  OSH advertises Part 1 `/conf/create-replace-delete`. OSH omits exact
+  Connected Systems API Common and inherited `ogcapi-4` declarations.
 - Core sabotage is `244/2/10/232` and all twelve CRD methods SKIP. Credential
   wire E2E is zero unmasked hits, 32 masked events, and 32 intact synthetic
   transmissions. Hygiene is 365 IUT GETs, zero writes, and zero leaks.
 - Raze returned `GAPS_FOUND 0.98` on `f6e3587`; its exact evidence is retained
   under `sprint-ets-56-part1-create-replace-delete-f6e3587-superseded-2026-07-30`.
-- Verdict: corrective implementation and controlled HTTP are verified;
-  replacement exact-image/E2E gates, fresh Raze, and positive real-IUT
-  mutation E2E remain open. Mappings remain candidate and Sprint 56 is IN
-  PROGRESS.
+- Superseded exact evidence is archived under
+  `sprint-ets-56-part1-create-replace-delete-final-0023d5b-2026-07-30`.
+- Verdict: hard-deadline remediation is verified precommit. Replacement exact
+  gates, fresh Raze, and positive real-IUT mutation E2E remain open. Mappings
+  remain candidate and Sprint 56 is IN PROGRESS.
 
 Sprint 55 Part 1 Advanced Filtering direct ATS:
 

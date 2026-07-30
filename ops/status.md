@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T01:27Z
+Last updated: 2026-07-30T02:48Z
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 
@@ -13,22 +13,31 @@ Last updated: 2026-07-30T01:27Z
 - Queued HTTP 202 POST/PUT/DELETE and URI-list operations now require bounded
   observed postconditions; timeout SKIPs as accepted-but-inconclusive.
 - Verified alias cleanup continues through canonical root identity discovery.
-- Focused CRD reports `35/0/0/0`, including queued/alias/property HTTP
-  `18/0/0/0`; full Docker Maven reports `637/0/0/3`.
+- Raze returned `GAPS_FOUND 0.99` on `0023d5b`: hard deadline, cleanup
+  precedence, compound propagation, URI-list cleanup registration, and CP-016
+  semantics required remediation. That exact candidate is superseded.
+- Seven test-first remediations pass direct controlled HTTP `25/0/0/0`; full
+  Docker Maven passes `644/0/0/3` precommit.
 - Coverage is intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
-- Superseded `f6e3587` passed focused `28/0/0/0`, full Maven `630/0/0/3`,
+- Superseded candidate
+  `0023d5b492dff8b5dbeff6c201c257f970b8947a` passed exact focused/full Maven,
   released-source, schema-parity, image/runtime, dependency, credential,
-  immutable-base, and hygiene gates.
-- Exact local OSH E2E is populated `244/54/35/155` and clean primary
+  immutable-base, and hygiene gates. Image
+  `sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`
+  embeds `Build-Revision: 0023d5b492`.
+- Exact local OSH E2E is honestly populated `244/54/35/155` and clean primary
   `244/40/7/197`. Provisioning and cleanup pass, primary state is unchanged,
-  and TeamEngine issued zero IUT writes.
+  and TeamEngine issued 365 IUT GETs with zero writes.
 - API Common is `4 PASS / 1 SKIP`, causally dependency-skipping all twelve CRD
-  procedures. OSH also omits exact Connected Systems API Common and `ogcapi-4`
-  declarations, so no positive mutation evidence exists.
+  procedures even though OSH advertises Part 1 CRD. OSH omits exact Connected
+  Systems API Common and inherited `ogcapi-4` declarations, so no positive
+  mutation evidence exists.
 - External OSH and TeamEngine source/binaries remain immutable; hosted CI and
   executable-suite imports remain out of scope.
-- Next: seal the replacement candidate, repeat exact gates, run fresh Raze,
-  reconcile the external positive-E2E blocker, then commit and push.
+- Next: seal and repeat every exact gate for the remediation candidate, then
+  run fresh Raze and publication reconciliation. Technical closure
+  then depends on a dedicated mutable IUT that satisfies API Common and exact
+  inherited declarations; do not weaken the suite or patch OSH.
 
 ## Fresh-Session Entry Point
 

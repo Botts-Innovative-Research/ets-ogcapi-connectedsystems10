@@ -3126,10 +3126,15 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   deletion postconditions at every prescribed endpoint and for every
   applicable declared representation. HTTP 202 SHALL be treated as accepted
   but not positive lifecycle evidence until the required postcondition is
-  observed through bounded, configurable polling. A queued operation whose
+  observed through bounded, configurable polling. One monotonic deadline SHALL
+  govern all required postconditions of one queued operation; deadline checks
+  SHALL precede probes, HTTP connect/read timeouts and sleeps SHALL be capped
+  to remaining time, interruption SHALL fail visibly, and late success after
+  expiry SHALL not count. A queued operation whose
   postcondition is not observed within that bound SHALL SKIP as inconclusive,
   while cleanup still performs bounded identity discovery and reports any
-  failure. The class SHALL also verify both
+  failure as FAIL rather than allowing the primary SKIP to hide it. The class
+  SHALL also verify both
   released System cascade graphs, canonical availability after nested create,
   custom-collection create/replace/root-versus-non-root delete propagation,
   and `text/uri-list` association behavior. Procedures SHALL own and clean
@@ -3162,12 +3167,23 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   SKIPs timeout as accepted-but-inconclusive, and continues canonical root
   identity cleanup after alias deletion. Delayed/stalled 202 and alias-leak
   focused CRD passes `35/0/0/0`, including queued/alias/property HTTP
-  regressions `18/0/0/0`; full Docker Maven is `637/0/0/3`.
-  Replacement exact gates are pending. The class coverage inventory is
+  regressions `18/0/0/0`; full Docker Maven is `637/0/0/3`. Replacement
+  candidate `0023d5b492dff8b5dbeff6c201c257f970b8947a` passed exact
+  released-source, schema-parity, image/runtime, dependency, credential,
+  immutable-base, and artifact-hygiene gates with image
+  `sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`.
+  Raze returned `GAPS_FOUND 0.99`, superseding that candidate. Seven
+  test-first hard-deadline, compound-postcondition, cleanup-precedence, and
+  late URI-list cleanup regressions now pass direct HTTP `25/0/0/0`; full
+  Docker Maven passes `644/0/0/3` precommit. Replacement exact gates and fresh
+  Raze remain pending.
+  The class coverage inventory is
   intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
   Unmodified local OSH reports Part 1 API Common `4 PASS / 1 SKIP`, so causal
   inheritance dependency-SKIPs all twelve procedures before their declaration
-  checks and writes. OSH also omits the exact Connected Systems API Common and
+  checks and writes, even though it advertises Part 1
+  `/conf/create-replace-delete`. OSH also omits the exact Connected Systems API
+  Common and
   inherited `ogcapi-4` declarations. Positive real-IUT mutation E2E therefore
   remains open, and this requirement remains IN PROGRESS.
 - **Historical increment**: by Sprint 12 Generator (2026-05-05; story S-ETS-12-01). Implemented outcome is declaration, non-mutating method-advertisement readiness, TestNG wiring, explicit mutation opt-in plumbing, public GeoRobotix hard-denial, default-smoke safety, service-relative `Location` handling for OSH-style `/systems/{id}` responses, and a guarded lifecycle path for dedicated mutable IUTs. Full create/replace/delete lifecycle conformance remains OPEN for the overall requirement class because deployment/procedure/sampling-feature/property CRUD, cascade behavior, custom collections, `text/uri-list`, and `/conf/update` remain out of scope.
@@ -3396,6 +3412,9 @@ properties and is accepted-but-inconclusive until the required postcondition
 is observed
 **AND** timeout without a postcondition SKIPs rather than reporting a positive
 lifecycle result
+**AND** one monotonic deadline covers every postcondition of one queued
+operation, checks expiry before each probe, caps HTTP and sleep time to the
+remaining bound, rejects late success, and fails visibly on interruption
 **AND** generic non-System DELETE requests omit the System-specific `cascade`
 query parameter
 **AND** status-only or OPTIONS-only evidence cannot PASS the lifecycle.
@@ -3462,7 +3481,10 @@ collection
 **AND** a 202 response is positive only after bounded polling observes the
 returned or computed collection occurrence
 **AND** each computed collection-item URL is HTTP 200 and equivalent to the
-canonical representation.
+canonical representation
+**AND** identity-safe occurrence cleanup is registered before POST so a
+late-materializing accepted association is removed after an inconclusive
+timeout.
 
 #### SCENARIO-ETS-PART1-010-CLEANUP-001 (CRITICAL)
 **GIVEN** a released procedure creates one or more resources
@@ -3477,8 +3499,39 @@ resource
 a verified alias Location so a surviving canonical resource cannot be hidden
 **AND** accepted queued creation is polled by submitted identity during both
 positive verification and cleanup
-**AND** cleanup failures are reported rather than hidden by an earlier
-assertion.
+**AND** cleanup failures override an accepted-but-inconclusive SKIP and are
+reported rather than hidden by an earlier outcome.
+
+#### SCENARIO-ETS-PART1-010-ASYNC-DEADLINE-001 (CRITICAL)
+**GIVEN** a queued operation and positive timeout and polling properties
+**WHEN** a postcondition blocks, appears after expiry, the polling interval
+exceeds remaining time, or the waiting thread is interrupted
+**THEN** one monotonic deadline caps every HTTP connect/read timeout and sleep
+**AND** no probe begins after expiry
+**AND** late success does not become positive evidence
+**AND** interruption fails visibly while preserving interrupt status.
+
+#### SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001 (CRITICAL)
+**GIVEN** a queued cascade or custom-collection mutation has multiple required
+postconditions
+**WHEN** propagation completes in stages
+**THEN** every required canonical, custom, cascade, and surviving-association
+postcondition is polled under the same operation deadline
+**AND** no single early postcondition can cause a false PASS or false FAIL.
+
+#### SCENARIO-ETS-PART1-010-INCONCLUSIVE-CLEANUP-001 (CRITICAL)
+**GIVEN** a queued operation times out as accepted-but-inconclusive
+**WHEN** owned-resource cleanup also fails
+**THEN** the cleanup failure overrides the SKIP and the TestNG outcome is FAIL.
+
+#### SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-LATE-CLEANUP-001 (CRITICAL)
+**GIVEN** a queued `text/uri-list` association is accepted but materializes
+after its positive-evidence deadline
+**WHEN** procedure cleanup runs
+**THEN** pre-registered identity-safe occurrence cleanup polls and removes the
+late association
+**AND** the canonical resource remains governed by its separate ownership
+cleanup.
 
 #### SCENARIO-ETS-PART1-010-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
 **GIVEN** a controlled stateful HTTP endpoint implements the released behavior
@@ -3488,8 +3541,9 @@ assertion.
 status, absent initial cascade associations, missing or unrelated Location,
 unchanged replacement content, incorrect collection propagation, generic
 non-System cascade parameters, incomplete URI-list responses, queued
-POST/PUT/DELETE postconditions, alias-Location canonical leakage, and hidden
-cleanup failure.
+POST/PUT/DELETE postconditions, hard deadline/interrupt behavior, compound
+propagation, late URI-list materialization, alias-Location canonical leakage,
+and hidden cleanup failure.
 
 #### SCENARIO-ETS-PART1-010-E2E-ISOLATION-001 (CRITICAL)
 **GIVEN** the exact committed candidate and the Sprint 44 owned isolated local

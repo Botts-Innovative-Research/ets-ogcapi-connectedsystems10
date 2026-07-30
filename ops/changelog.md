@@ -68,6 +68,35 @@ completion sequence.
   including targeted HTTP `18/0/0/0`; full Docker Maven is `637/0/0/3`.
 - Marked `f6e3587` and its exact evidence superseded. Replacement exact gates
   and fresh Raze remain pending.
+- Sealed replacement candidate
+  `0023d5b492dff8b5dbeff6c201c257f970b8947a` and image
+  `sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`
+  with manifest `Build-Revision: 0023d5b492`.
+- Exact focused/full Maven pass `35/0/0/0` and `637/0/0/3`. Released ATS,
+  GeoJSON and Property schema parity, TeamEngine runtime/immutability,
+  dependency sabotage, credential integration/wire, and artifact hygiene all
+  pass.
+- Exact real-IUT TeamEngine E2E remains honestly non-green: populated OSH is
+  `244/54/35/155`; clean primary is `244/40/7/197`. Provisioning and cleanup
+  pass, primary state is unchanged, and 365 IUT requests are GETs with zero
+  writes.
+- Confirmed OSH advertises Part 1 CRD. All twelve mutation methods still
+  dependency-SKIP because Part 1 API Common datetime lacks positive evidence;
+  mappings remain candidate pending positive mutation E2E.
+- Archived the exact-candidate gate artifacts under
+  `ops/test-results/sprint-ets-56-part1-create-replace-delete-final-0023d5b-2026-07-30/`.
+- Raze review of `0023d5b` returned `GAPS_FOUND 0.99`: polling lacked a hard
+  wall-clock bound, cleanup failures could be hidden by inconclusive SKIP,
+  compound queued postconditions were incomplete, URI-list cleanup was
+  registered too late, and CP-016 retained stale response semantics.
+- Added seven test-first regressions and implemented one monotonic
+  queued-operation deadline across probes, HTTP timeouts, capped sleeps, and
+  compound postconditions; interruption fails visibly and late success is
+  rejected.
+- Cleanup failure now overrides inconclusive SKIP, and queued URI-list
+  occurrence cleanup is pre-registered and polls late materialization.
+- Remediation passes direct controlled HTTP `25/0/0/0` and full Docker Maven
+  `644/0/0/3` precommit. Replacement exact gates and fresh Raze are pending.
 
 ## 2026-07-29 - Part 1 Advanced Filtering final-Raze remediation
 

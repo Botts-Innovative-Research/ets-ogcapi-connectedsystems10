@@ -1,0 +1,7 @@
+verdict=PASS
+testngReports=2
+containerLogs=2
+credentialFilesScanned=6
+explicitSecretInputsProvided=0
+credentialLeaks=0
+iutWriteCount=0

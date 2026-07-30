@@ -30,6 +30,10 @@ safety-gated implementations of all twelve released OGC 23-001
   - `SCENARIO-ETS-PART1-010-CUSTOM-DELETE-001`
   - `SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-001`
   - `SCENARIO-ETS-PART1-010-CLEANUP-001`
+  - `SCENARIO-ETS-PART1-010-ASYNC-DEADLINE-001`
+  - `SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001`
+  - `SCENARIO-ETS-PART1-010-INCONCLUSIVE-CLEANUP-001`
+  - `SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-LATE-CLEANUP-001`
   - `SCENARIO-ETS-PART1-010-DIRECT-HTTP-COVERAGE-001`
   - `SCENARIO-ETS-PART1-010-E2E-ISOLATION-001`
 
@@ -49,6 +53,9 @@ safety-gated implementations of all twelve released OGC 23-001
 - [x] The generic transaction helper accepts immediate and queued
   POST/PUT/DELETE responses, but reports positive lifecycle evidence only after
   bounded, configurable polling observes the required postcondition.
+- [x] Each queued operation uses one monotonic deadline for every compound
+  postcondition, HTTP timeout, capped sleep, late-success rejection, and
+  interruption check.
 - [x] Applicable declared resource representations are exercised without
   importing another executable ETS jar.
 - [x] Every generated request fixture passes bundled released schema
@@ -70,10 +77,12 @@ safety-gated implementations of all twelve released OGC 23-001
   destructive use; missing or unrelated Location falls back to root discovery
   by identity without deleting unrelated resources; deleting a verified alias
   is followed by root identity discovery.
+- [x] Cleanup failure overrides accepted-but-inconclusive SKIP, and URI-list
+  occurrence cleanup is registered before POST to remove late materialization.
 - [x] Generic non-System DELETE omits the System-specific cascade parameter.
-- [ ] Focused/full Maven, coverage audit, exact-image runtime, dependency,
+- [x] Focused/full Maven, coverage audit, exact-image runtime, dependency,
   credential, immutable-base, and artifact-hygiene gates complete.
-- [ ] Default primary local OSH TeamEngine E2E has zero writes.
+- [x] Default primary local OSH TeamEngine E2E has zero writes.
 - [ ] Owned isolated local OSH TeamEngine E2E executes mutation paths, records
   honest conformance outcomes, cleans up, proves primary state unchanged, and
   is followed by clean-primary smoke.
@@ -106,14 +115,31 @@ cleanup, cascade preconditions, nested canonical URLs, and custom-collection
 negative cases. Coverage is honestly `0 exact / 0 helper / 12 candidate / 0
 unmapped` for this class.
 
+Candidate
+`0023d5b492dff8b5dbeff6c201c257f970b8947a` passes exact focused
+`35/0/0/0`, full Docker Maven `637/0/0/3`, released-source, schema-parity,
+image/runtime, dependency, credential, immutable-base, and artifact-hygiene
+gates. Its image is
+`sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744`
+with manifest `Build-Revision: 0023d5b492`, but is superseded after Raze
+returned `GAPS_FOUND 0.99`.
+
 Exact-candidate local OSH E2E is populated `244/54/35/155` and clean primary
 `244/40/7/197`. Provisioning and cleanup pass, primary state is unchanged, and
-TeamEngine logs contain zero IUT writes. Part 1 API Common is `4 PASS / 1
+TeamEngine logs contain 365 IUT GETs and zero IUT writes. The IUT advertises
+Part 1 `/conf/create-replace-delete`, but Part 1 API Common is `4 PASS / 1
 SKIP`; causal inheritance therefore makes all twelve procedures dependency-
 SKIP before CRD declaration checks. OSH additionally omits the exact Connected
-Systems API Common and inherited `ogcapi-4` declarations. This is correct
-fail-closed behavior, not positive mutation E2E. Corrective focused CRD passes
-`35/0/0/0`, including delayed/stalled 202, alias-leak, and deployment-property
-regressions at `18/0/0/0`; full Docker Maven is `637/0/0/3`. Replacement exact
-gates and fresh Raze remain pending; the story stays IN PROGRESS and mappings
-remain candidate.
+Systems API Common and inherited `ogcapi-4` declarations; its
+`ogcapi-features-4` declaration is only a near-match. This is correct
+fail-closed behavior, not positive mutation E2E. The story stays IN PROGRESS
+and mappings remain candidate.
+
+Raze review of `0023d5b` returned `GAPS_FOUND 0.99`: polling was not a hard
+wall-clock bound, cleanup failure could be hidden by an inconclusive SKIP,
+compound queued postconditions were incomplete, URI-list cleanup was
+registered too late, and CP-016 retained stale synchronous status semantics.
+The test-first remediation adds seven focused regressions. Direct controlled
+HTTP now passes `25/0/0/0`, and full Docker Maven passes `644/0/0/3`
+precommit. A replacement exact candidate and fresh Raze recheck remain
+pending.

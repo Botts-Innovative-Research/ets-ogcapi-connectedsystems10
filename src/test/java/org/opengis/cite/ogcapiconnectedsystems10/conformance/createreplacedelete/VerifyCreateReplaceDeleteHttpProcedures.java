@@ -16,7 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -329,6 +331,145 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		}
 	}
 
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-DEADLINE-001.
+	 */
+	@Test
+	public void pollIntervalLongerThanTimeoutCannotAcceptLateSuccess() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.queuedWrites = true;
+			fixture.queuedWriteDelayMillis = 120L;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 500L)::systemsCreateReplaceDelete);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-DEADLINE-001.
+	 */
+	@Test
+	public void blockingPollingGetCannotOutliveOperationDeadline() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.stallQueuedCreate = true;
+			fixture.blockFirstCollectionGetMillis = 500L;
+			long started = System.nanoTime();
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 10L)::systemsCreateReplaceDelete);
+			long elapsedMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertTrue("HTTP probe exceeded deadline: " + elapsedMillis + "ms", elapsedMillis < 350L);
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-DEADLINE-001.
+	 */
+	@Test
+	public void interruptedPollingFailsAndPreservesInterruptStatus() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.stallQueuedCreate = true;
+			fixture.blockFirstCollectionGetMillis = 5_000L;
+			AtomicReference<Throwable> result = new AtomicReference<>();
+			AtomicBoolean interrupted = new AtomicBoolean();
+			Thread worker = new Thread(() -> {
+				try {
+					fixture.support(5_000L, 100L).systemsCreateReplaceDelete();
+				}
+				catch (Throwable thrown) {
+					result.set(thrown);
+					interrupted.set(Thread.currentThread().isInterrupted());
+				}
+			});
+			worker.start();
+			long waitUntil = System.nanoTime() + TimeUnit.SECONDS.toNanos(2L);
+			while (fixture.blockedCollectionGets.get() == 0 && System.nanoTime() < waitUntil) {
+				Thread.sleep(5L);
+			}
+
+			worker.interrupt();
+			worker.join(2_000L);
+
+			assertTrue("polling worker did not terminate", !worker.isAlive());
+			assertTrue("interruption must fail the procedure", result.get() instanceof AssertionError);
+			assertTrue(result.get().getMessage().contains("interrupted"));
+			assertTrue("interrupt status was not preserved", interrupted.get());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-INCONCLUSIVE-CLEANUP-001.
+	 */
+	@Test
+	public void cleanupFailureOverridesInconclusiveSkip() {
+		CreateReplaceDeleteSupport.CleanupStack cleanup = new CreateReplaceDeleteSupport.CleanupStack(
+				"http://example.test/req");
+		cleanup.push("forced cleanup failure", () -> {
+			throw new IllegalStateException("cleanup exploded");
+		});
+
+		Throwable result = cleanup.close(new SkipException("accepted-but-inconclusive"));
+
+		assertTrue(result instanceof AssertionError);
+		assertTrue(result.getMessage().contains("cleanup"));
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001.
+	 */
+	@Test
+	public void queuedCascadeWaitsForAllGraphPostconditions() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.queuedWrites = true;
+			fixture.cascadePropagationDelayMillis = 180L;
+
+			fixture.support(2_000L, 10L).systemDeleteCascade();
+
+			assertEquals(0, fixture.liveCanonicalResources());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-ASYNC-COMPOUND-001.
+	 */
+	@Test
+	public void queuedCustomCreateWaitsForCollectionPropagation() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.queuedWrites = true;
+			fixture.customPropagationDelayMillis = 180L;
+
+			fixture.support(2_000L, 10L).resourcesCreateInCustomCollections();
+
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-LATE-CLEANUP-001.
+	 */
+	@Test
+	public void lateQueuedUriListAssociationIsRemovedDuringCleanup() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.queuedWrites = true;
+			fixture.uriListPropagationDelayMillis = 120L;
+
+			SkipException error = assertThrows(SkipException.class,
+					fixture.support(80L, 10L)::resourcesAddToCustomCollections);
+
+			assertTrue(error.getMessage().contains("accepted-but-inconclusive"));
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+			assertTrue(fixture.aliasDeletes.get() >= 1);
+		}
+	}
+
 	private static void restoreProperty(String name, String value) {
 		if (value == null) {
 			System.clearProperty(name);
@@ -382,6 +523,8 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private final AtomicInteger aliasDeletes = new AtomicInteger();
 
+		private final AtomicInteger blockedCollectionGets = new AtomicInteger();
+
 		private volatile boolean omitLocation;
 
 		private volatile boolean omitUriListLocation;
@@ -411,6 +554,16 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		private volatile boolean customAliasLocation;
 
 		private volatile boolean corruptCustomAliasAfterFirstGet;
+
+		private volatile long queuedWriteDelayMillis = 40L;
+
+		private volatile long cascadePropagationDelayMillis;
+
+		private volatile long customPropagationDelayMillis;
+
+		private volatile long uriListPropagationDelayMillis = 40L;
+
+		private volatile long blockFirstCollectionGetMillis;
 
 		Fixture() throws IOException {
 			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
@@ -543,7 +696,8 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				}
 				if (this.queuedWrites) {
 					this.queuedUriListPosts.incrementAndGet();
-					this.scheduler.schedule(() -> this.aliases.putAll(pendingAliases), 40L, TimeUnit.MILLISECONDS);
+					this.scheduler.schedule(() -> this.aliases.putAll(pendingAliases),
+							this.uriListPropagationDelayMillis, TimeUnit.MILLISECONDS);
 					json(exchange, 202, Map.of());
 					return;
 				}
@@ -566,7 +720,13 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			Runnable materialize = () -> {
 				this.resources.put(stored, new Resource(root, bodyWithId(body, id), parent));
 				if (path.startsWith("/api/collections/")) {
-					this.aliases.put(path + "/" + id, canonical);
+					if (this.customPropagationDelayMillis > 0L) {
+						this.scheduler.schedule(() -> this.aliases.put(path + "/" + id, canonical),
+								this.customPropagationDelayMillis, TimeUnit.MILLISECONDS);
+					}
+					else {
+						this.aliases.put(path + "/" + id, canonical);
+					}
 				}
 			};
 			if (this.stallQueuedCreate) {
@@ -576,7 +736,7 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			}
 			if (this.queuedWrites) {
 				this.queuedPosts.incrementAndGet();
-				this.scheduler.schedule(materialize, 40L, TimeUnit.MILLISECONDS);
+				this.scheduler.schedule(materialize, this.queuedWriteDelayMillis, TimeUnit.MILLISECONDS);
 				json(exchange, 202, Map.of());
 				return;
 			}
@@ -595,6 +755,9 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private void get(HttpExchange exchange, String path) throws IOException {
 			if (path.matches("/api/(systems|deployments|procedures|samplingFeatures|properties)")) {
+				if (this.blockFirstCollectionGetMillis > 0L && this.blockedCollectionGets.getAndIncrement() == 0) {
+					sleep(this.blockFirstCollectionGetMillis);
+				}
 				collection(exchange, path.substring("/api/".length()));
 				return;
 			}
@@ -640,7 +803,7 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				this.scheduler.schedule(
 						() -> this.resources.put(canonical, new Resource(current.root(),
 								bodyWithId(replacement, last(canonical)), current.parent())),
-						40L, TimeUnit.MILLISECONDS);
+						this.queuedWriteDelayMillis, TimeUnit.MILLISECONDS);
 				respond(exchange, 202, "");
 				return;
 			}
@@ -685,7 +848,8 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			}
 			if (this.queuedWrites) {
 				this.queuedDeletes.incrementAndGet();
-				this.scheduler.schedule(() -> removeResource(path, resource, cascade), 40L, TimeUnit.MILLISECONDS);
+				this.scheduler.schedule(() -> removeResource(path, resource, cascade), this.queuedWriteDelayMillis,
+						TimeUnit.MILLISECONDS);
 				respond(exchange, 202, "");
 				return;
 			}
@@ -695,7 +859,13 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private void removeResource(String path, Resource resource, boolean cascade) {
 			if ("systems".equals(resource.root()) && cascade) {
-				removeSystemDependencies(path, uid(resource.body()));
+				if (this.cascadePropagationDelayMillis > 0L) {
+					this.scheduler.schedule(() -> removeSystemDependencies(path, uid(resource.body())),
+							this.cascadePropagationDelayMillis, TimeUnit.MILLISECONDS);
+				}
+				else {
+					removeSystemDependencies(path, uid(resource.body()));
+				}
 			}
 			if (this.retainAliasesOnCanonicalDelete) {
 				this.deletedResources.put(path, resource);
@@ -911,6 +1081,15 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 				}
 			}
 			return null;
+		}
+
+		private void sleep(long millis) {
+			try {
+				Thread.sleep(millis);
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
 		}
 
 		private Map<String, Object> requestJson(HttpExchange exchange) throws IOException {

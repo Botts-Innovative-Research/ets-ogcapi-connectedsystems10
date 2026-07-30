@@ -1,0 +1,56 @@
+sprint: ets-56
+candidate: 0023d5b492dff8b5dbeff6c201c257f970b8947a
+reviewer: Raze
+agent_id: 019fb0c7-b9d3-7901-adc6-0bdaa6a300f5
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.99
+findings:
+  - id: queued-operation-hard-deadline
+    severity: HIGH
+    status_at_review: OPEN
+    remediation_status: IMPLEMENTED_PRECOMMIT
+    summary: Polling checked the timeout only before a probe, did not cap HTTP or sleep duration, and had no explicit interruption behavior.
+    remediation: Use one monotonic deadline, cap connect/read/sleep duration to remaining time, reject post-expiry success, preserve interruption, and add focused regressions.
+  - id: inconclusive-cleanup-failure
+    severity: HIGH
+    status_at_review: OPEN
+    remediation_status: IMPLEMENTED_PRECOMMIT
+    summary: A primary SkipException could hide a later owned-resource cleanup failure.
+    remediation: Promote cleanup failure to the reported FAIL when the primary outcome is accepted-but-inconclusive.
+  - id: queued-compound-postconditions
+    severity: HIGH
+    status_at_review: OPEN
+    remediation_status: IMPLEMENTED_PRECOMMIT
+    summary: Queued cascade and custom-collection procedures did not poll every required graph and canonical propagation postcondition.
+    remediation: Poll every compound postcondition under the same queued-operation deadline.
+  - id: queued-uri-list-cleanup-registration
+    severity: HIGH
+    status_at_review: OPEN
+    remediation_status: IMPLEMENTED_PRECOMMIT
+    summary: URI-list occurrence cleanup was registered only after positive verification, allowing late materialization to escape cleanup.
+    remediation: Register the computed occurrence before POST and poll bounded cleanup for computed or returned queued occurrences.
+  - id: cp-016-queued-status-contract
+    severity: MEDIUM
+    status_at_review: OPEN
+    remediation_status: IMPLEMENTED_PRECOMMIT
+    summary: CP-016 still described synchronous POST/PUT response semantics despite the accepted queued-operation design.
+    remediation: Reconcile CP-016 with normative HTTP 202 handling and the hard-deadline contract.
+external_blocker:
+  status: OPEN
+  severity: HIGH
+  summary: Positive real-IUT mutation E2E remains unavailable because unmodified local OSH does not satisfy API Common datetime evidence or the exact inherited declarations.
+  disposition: This limits positive conformance closure and keeps mappings candidate; it does not justify weakening the ETS or modifying OSH or TeamEngine.
+residual_risks:
+  - The detached review clone contained generated Python bytecode and must be replaced by a clean exact-candidate clone.
+  - Controlled HTTP coverage cannot substitute for positive mutation execution against a conforming real IUT.
+evidence:
+  exact_focused_maven: "35 tests / 0 failures / 0 errors / 0 skipped"
+  exact_full_maven: "637 tests / 0 failures / 0 errors / 3 skipped"
+  exact_populated_e2e: "244 total / 54 passed / 35 failed / 155 skipped"
+  exact_clean_primary_e2e: "244 total / 40 passed / 7 failed / 197 skipped"
+  exact_image: "sha256:4764227eda6ab91d5895df7bce74d440b0c95842127a0514debd67b857ed0744"
+runtime:
+  duration_seconds: 602
+  elapsed: "00:10:02"
+  token_usage: null

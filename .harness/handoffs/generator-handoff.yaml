@@ -1,13 +1,13 @@
 sprint57_part1_update_handoff:
-  timestamp: "2026-07-30T19:25:11Z"
+  timestamp: "2026-07-30T20:07:06Z"
   sprint: ets-57
   story: S-ETS-57-01
-  status: IN_PROGRESS_REPLACEMENT_EXACT_GATES_PENDING
+  status: IN_PROGRESS_FOCUSED_RAZE_RECHECK_PENDING
   user_instruction: "Push and start Sprint 57."
   candidate:
-    commit: PENDING_REPLACEMENT_COMMIT
+    commit: 40cc7039da26a39424f1ffa7626b7b6926a50f0a
     supersedes: c4b6030b6931863ccda484f2f2d3468cb045d79f
-    image: PENDING_REPLACEMENT_EXACT_BUILD
+    image: sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d
     coverage: "Update 5 total / 0 exact / 0 helper / 5 candidate / 0 unmapped"
   implementation:
     - "Exactly five independent released Part 1 Update procedures depend directly on API Common."
@@ -18,9 +18,10 @@ sprint57_part1_update_handoff:
   verification:
     earlier_test_first: "PASS red 28/6/0/0; green 28/0/0/0"
     final_raze_test_first: "PASS red 2/2/0/0; focused green 2/0/0/0; complete Update green 30/0/0/0"
-    full_maven: "PASS replacement precommit 687/0/0/3"
-    source_runtime_security: "PENDING replacement exact candidate"
-    local_osh: "PENDING replacement exact candidate; superseded c4 evidence was populated 244/54/35/155 and clean primary 244/40/7/197 with zero writes"
+    full_maven: "PASS exact detached candidate 687/0/0/3"
+    source_runtime_security: "PASS released ATS, coverage, exact-image runtime, SWE adapter, immutable base, sabotage, credentials, and hygiene"
+    local_osh: "HONEST FAIL exact populated 244/54/35/155; clean primary 244/40/7/197; provisioning/cleanup PASS; primary unchanged; 363 GET and zero writes"
+    raze: "APPROVE_WITH_CONCERNS high; both prior HIGH findings closed; sole MEDIUM documentation reconciliation addressed in follow-up"
   blocker:
     - "Unmodified local OSH lacks usable API Common datetime evidence and exact inherited declarations."
     - "All five Update methods causal-SKIP before writes; positive completed PATCH E2E is still required for reviewed-exact promotion."
@@ -29,7 +30,7 @@ sprint57_part1_update_handoff:
     - "Do not add hosted CI."
     - "Do not promote candidate mappings from local prerequisite-SKIP evidence."
   next_action:
-    - "Commit the replacement, rerun every exact technical and local-OSH gate from that immutable candidate, and obtain a fresh Raze verdict."
+    - "Obtain a focused fresh Raze recheck of the exact-evidence reconciliation."
     - "Preserve candidate state until a conforming dedicated mutable IUT or future unmodified upstream OSH release supports the required prerequisites and PATCH lifecycle."
     - "After replacement Raze and reconciliation are published, continue to the next unblocked released-ATS closure rather than weakening this external gate."
 

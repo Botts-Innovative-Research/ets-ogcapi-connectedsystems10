@@ -1,14 +1,14 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T19:25Z
+Last updated: 2026-07-30T20:07Z
 
 ## Current Sprint Evidence
 
 Sprint 57 Part 1 Update direct ATS:
 
-- Superseded exact candidate:
-  `c4b6030b6931863ccda484f2f2d3468cb045d79f`; image
-  `sha256:6861fefdab9c3150ffe2c9732af73e6274a011d4e10e2b4c48088a4bb291c6cb`.
+- Exact replacement candidate:
+  `40cc7039da26a39424f1ffa7626b7b6926a50f0a`; image
+  `sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`.
 - Released sources: OGC 23-001 `v1.0.0` commit
   `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`; inherited Features Part 4
   `part4-1.0.0-draft.1` commit
@@ -17,9 +17,11 @@ Sprint 57 Part 1 Update direct ATS:
   dependency, exact Connected Systems and `ogcapi-4` declarations, canonical
   and custom paths, PATCH negotiation, completed partial-update evidence,
   bounded queued polling, and identity-safe cleanup.
-- Test-first final remediation: behavioral red `28/6/0/0`; corrected
-  controlled HTTP `28/0/0/0`. Exact detached full Docker Maven:
-  `685 tests / 0 failures / 0 errors / 3 skipped`, BUILD SUCCESS.
+- Earlier test-first remediation: behavioral red `28/6/0/0`; corrected
+  controlled HTTP `28/0/0/0`. Final-Raze replacement: behavioral red
+  `2/2/0/0`, corrected focused `2/0/0/0`, and complete Update `30/0/0/0`.
+  Exact detached full Docker Maven:
+  `687 tests / 0 failures / 0 errors / 3 skipped`, BUILD SUCCESS.
 - Coverage: `240 total / 76 exact / 2 helper / 130 candidate / 32 unmapped`;
   Update is `5 / 0 / 0 / 5 / 0`.
 - Released-source parity, ATS/URI/hygiene/jar-guard self-tests,
@@ -51,11 +53,18 @@ Sprint 57 Part 1 Update direct ATS:
   `/systems/{id}/samplingFeatures`, and polls both identity views through the
   bounded cleanup deadline. Focused tests pass `2/0/0/0`, complete Update
   passes `30/0/0/0`, and full precommit Docker Maven passes `687/0/0/3`.
-  Replacement exact-image and local-OSH gates remain pending.
+  Replacement exact-image and local-OSH gates pass as recorded above.
 - The five mappings stay candidate and Sprint 57 stays in progress until a
   conforming dedicated mutable IUT provides positive completed PATCH evidence.
   No OSH or TeamEngine source/binary changes were made.
-- Superseded exact evidence:
+- Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence, closes both
+  prior HIGH findings, and finds no implementation defect. Its sole MEDIUM
+  exact-evidence reconciliation concern is addressed in the follow-up; focused
+  recheck remains pending. Positive PATCH evidence remains externally blocked,
+  so all five mappings remain candidate.
+- Exact replacement evidence:
+  `ops/test-results/sprint-ets-57-part1-update-final-40cc703-2026-07-30/`.
+- Superseded `c4b6030` evidence:
   `ops/test-results/sprint-ets-57-part1-update-final-c4b6030-2026-07-30/`.
 
 Sprint 56 Part 1 Create/Replace/Delete direct ATS:

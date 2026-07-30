@@ -9,7 +9,7 @@
 - `REQ-ETS-PART1-011`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; candidate `c4b6030` superseded by final Raze remediation
+**Status**: Accepted; exact replacement `40cc703` awaits focused Raze recheck and positive PATCH E2E
 
 ## Motivation
 
@@ -167,3 +167,23 @@ and custom identity views SHALL continue independently through the shared
 bounded discovery deadline until both are found or the deadline expires.
 Afterward, every safely discovered or derived route SHALL still be attempted,
 and failures SHALL remain aggregated.
+
+Exact detached replacement
+`40cc7039da26a39424f1ffa7626b7b6926a50f0a` reproduces both final-Raze
+findings at `2/2/0/0`, then passes corrected focused `2/0/0/0`, complete Update
+`30/0/0/0`, and full Docker Maven `687/0/0/3`. Released-source, coverage,
+exact-image runtime, deployed SWE Common adapter, dependency sabotage,
+credential, TeamEngine immutable-base, and artifact-hygiene gates pass. Image
+`sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`
+runs against unmodified local OSH with populated `244/54/35/155` and clean
+primary `244/40/7/197`; provisioning and cleanup pass, primary state is
+unchanged, and all 363 IUT requests are GETs. API Common datetime causally
+skips all five Update procedures before writes. At gate capture, fresh Raze
+had not yet run; positive isolated PATCH evidence remains pending and all
+mappings remain candidate.
+
+Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence, closes both
+prior HIGH findings, and finds no implementation defect. Its sole MEDIUM
+concern requires this follow-up to bind the exact evidence to `40cc703` across
+the story, contract, handoff, traceability, OpenSpec, architecture, epic, and
+operational documents. A focused recheck remains pending.

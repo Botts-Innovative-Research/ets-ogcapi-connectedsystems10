@@ -1,0 +1,44 @@
+[
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections: advertised Property collections use released metadata and schemas",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with itemType=sosa:Property.",
+    "name": "propertyCollectionsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.samplingfeatures.SamplingFeaturesTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/collections: advertised Sampling Feature collections use released metadata and schemas",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sf/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Sample.",
+    "name": "samplingFeatureCollectionsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url: every advertised Procedure resolves to equivalent canonical content",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+    "name": "everyProcedureHasCanonicalUrl"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections: advertised Procedure collections use released metadata, types, and schemas",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+    "name": "procedureCollectionsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections: advertised Deployment collections use released metadata and schemas",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+    "name": "deploymentCollectionsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system: every System's Deployment endpoint references its owning System",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system \u2014 expected HTTP 200, got 400",
+    "name": "deploymentsReferencedFromSystemsAreValid"
+  },
+  {
+    "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+    "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url: every advertised Deployment resolves to equivalent canonical content",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+    "name": "everyDeploymentHasCanonicalUrl"
+  }
+]

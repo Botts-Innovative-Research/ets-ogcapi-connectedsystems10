@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.56 | Status: Living Document | Last reconciled: 2026-07-30 (Sprint 57 exact candidate)
+> Version: 2.0.57 | Status: Living Document | Last reconciled: 2026-07-30 (Sprint 57 replacement exact candidate)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1673,3 +1673,16 @@ LIFO cleanup stack delete child before parent. Ambiguous custom creation keeps
 canonical and occurrence identity polling active through one shared deadline
 until both are visible or the budget expires. Finding one view does not turn a
 single 404 on the other view into completed cleanup.
+
+Exact replacement `40cc7039da26a39424f1ffa7626b7b6926a50f0a` implements that
+graph and both-view polling contract. It passes complete Update controlled HTTP
+`30/0/0/0`, detached Docker Maven `687/0/0/3`, released-source, exact-image
+runtime, immutable-base, dependency, credential, and hygiene gates. Image
+`sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`
+runs against unmodified local OSH with populated `244/54/35/155` and clean
+primary `244/40/7/197`; all 363 IUT requests are GETs, primary state is
+unchanged, and all five Update methods dependency-SKIP before writes. Fresh
+Fresh Raze `APPROVE_WITH_CONCERNS` closes both prior HIGH findings and finds no
+implementation defect. Its sole MEDIUM exact-evidence reconciliation concern
+is addressed by the follow-up. Focused Raze recheck and positive PATCH E2E
+remain the only candidate gates.

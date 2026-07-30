@@ -3332,6 +3332,26 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   canonical and custom views SHALL continue independently through the shared
   bounded deadline until both are visible or time expires. Safe discovered or
   derived routes SHALL then be cleaned with aggregated failures.
+- **Sprint 57 exact replacement evidence**: Detached candidate
+  `40cc7039da26a39424f1ffa7626b7b6926a50f0a` reproduces both final-Raze
+  defects at `2/2/0/0`, then passes focused `2/0/0/0`, complete Update
+  `30/0/0/0`, and full Docker Maven `687/0/0/3`. Released-source, coverage,
+  exact-image runtime, deployed SWE Common adapter, dependency sabotage,
+  credential, TeamEngine immutable-base, and artifact-hygiene gates pass.
+  Exact image
+  `sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`
+  runs against unmodified local OSH with populated `244/54/35/155` and clean
+  primary `244/40/7/197`; provisioning and cleanup pass, primary state is
+  unchanged, and 363 IUT requests are GETs with zero writes. API Common
+  datetime causally skips all five Update procedures before writes. At gate
+  capture, fresh Raze had not yet run; positive PATCH lifecycle evidence
+  remains pending and all five mappings remain candidate.
+- **Sprint 57 fresh Raze**: `APPROVE_WITH_CONCERNS` at high confidence closes
+  both prior HIGH findings and identifies no implementation defect. Its sole
+  MEDIUM concern is exact-evidence reconciliation; the follow-up binds all
+  exact results to `40cc703` while preserving candidate mappings, non-green
+  local-OSH totals, and the external positive-PATCH limitation. A focused
+  recheck remains pending.
 - **Maps to**: PRD FR-ETS-21.
 
 ### Acceptance Scenarios for Sprint 57

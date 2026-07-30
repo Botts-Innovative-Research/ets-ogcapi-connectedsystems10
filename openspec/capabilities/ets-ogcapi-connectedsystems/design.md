@@ -50,9 +50,20 @@
 > Ambiguous custom cleanup must continue polling canonical and custom identity
 > views independently until both appear or the shared deadline expires;
 > canonical-first visibility cannot terminate custom-occurrence discovery.
+> Exact replacement `40cc7039da26a39424f1ffa7626b7b6926a50f0a` implements both
+> findings and passes complete Update `30/0/0/0`, detached Docker Maven
+> `687/0/0/3`, exact image/runtime/base/dependency/credential/hygiene gates,
+> and honest unmodified-local-OSH populated `244/54/35/155` plus clean
+> `244/40/7/197` with 363 GETs, zero writes, and unchanged primary state.
+> Image:
+> `sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`.
+> Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence, closes both
+> prior HIGH findings, and finds no implementation defect. Its sole MEDIUM
+> exact-evidence reconciliation concern is addressed by the follow-up; focused
+> recheck remains pending.
 > Local OSH remains a causal-SKIP E2E target because API Common datetime
 > evidence is unavailable; mappings remain candidate pending both remediation
-> and positive PATCH lifecycle evidence.
+> review and positive PATCH lifecycle evidence.
 
 > Sprint 41 supersession note (2026-07-21): the TeamEngine 5.5/5.6.x
 > deployment guidance in the Sprint 1 and Sprint 2 sections below is historical

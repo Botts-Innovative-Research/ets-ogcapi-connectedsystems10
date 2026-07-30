@@ -2,7 +2,7 @@
 
 ## Status
 
-IN PROGRESS - C4B6030 SUPERSEDED; FINAL RAZE REMEDIATION
+IN PROGRESS - EXACT CANDIDATE; FOCUSED RAZE RECHECK AND POSITIVE PATCH E2E PENDING
 
 ## User Instruction
 
@@ -42,7 +42,7 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
   ownership before writes.
 - [x] The exact released `ogcapi-4` inheritance URI is required and the
   `ogcapi-features-4` near-match is rejected.
-- [ ] Canonical and every advertised applicable custom item endpoint are
+- [x] Canonical and every advertised applicable custom item endpoint are
   discovered with bounded same-origin pagination and exercised for System,
   Deployment, Procedure, Sampling Feature, and Property.
 - [x] OPTIONS requires HTTP 200 plus PATCH in `Allow`.
@@ -61,7 +61,7 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
   outcome; ambiguous POST polls canonical and custom identity views, and
   destructive cleanup requires current same-origin identity plus disappearance
   proof.
-- [ ] Delayed, canonical-first/custom-delayed, and custom-only ambiguous
+- [x] Delayed, canonical-first/custom-delayed, and custom-only ambiguous
   commits are cleaned, one route failure
   does not suppress remaining safe cleanup, and route failures are aggregated.
 - [x] Rediscovery accepts released GeoJSON `features` and JSON/SensorML
@@ -73,9 +73,9 @@ implementations of all five released OGC 23-001 `/conf/update` procedures.
   than failing Update conformance.
 - [x] Custom applicability accepts only exact compact/canonical SOSA types,
   and repeated `Allow` fields are combined.
-- [ ] Focused/full Maven, coverage, released-source, exact-image runtime,
+- [x] Focused/full Maven, coverage, released-source, exact-image runtime,
   dependency, credential, immutable-base, and artifact-hygiene gates complete.
-- [ ] Default local OSH TeamEngine E2E records honest Update outcomes and zero
+- [x] Default local OSH TeamEngine E2E records honest Update outcomes and zero
   unauthorized IUT writes.
 - [ ] Positive isolated real-IUT PATCH evidence executes before mappings are
   promoted from candidate to reviewed exact.
@@ -139,5 +139,22 @@ canonical Sampling Feature fixtures through an owned parent System's required
 `/systems/{systemId}/samplingFeatures` endpoint and clean child before parent.
 It must also continue independent canonical and custom identity polling through
 the bounded cleanup deadline when canonical visibility precedes delayed custom
-propagation. Replacement red/green, exact gates, local OSH E2E, and fresh Raze
-remain pending.
+propagation. Replacement tests reproduce both defects at `2/2/0/0`; corrected
+focused tests pass `2/0/0/0` and complete Update passes `30/0/0/0`.
+
+Exact detached replacement
+`40cc7039da26a39424f1ffa7626b7b6926a50f0a` passes full Docker Maven
+`687/0/0/3`, released-source and coverage audits, exact-image TeamEngine 6
+runtime and base immutability, dependency sabotage, both credential gates, and
+artifact hygiene. Exact image
+`sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`
+runs against unmodified local OSH with populated `244/54/35/155` and clean
+primary `244/40/7/197`. Provisioning and cleanup pass, primary state is
+unchanged, and 363 IUT requests are GETs with zero writes. All five Update
+methods causal-SKIP on API Common datetime before writes. Fresh Raze returns
+`APPROVE_WITH_CONCERNS` with high confidence, closes both prior HIGH findings,
+and finds no implementation defect. Its sole MEDIUM concern requires binding
+exact evidence to `40cc703`; this follow-up reconciles the story, contract,
+handoff, traceability, OpenSpec, architecture, epic, and operational records.
+A focused Raze recheck and positive isolated PATCH lifecycle evidence remain
+pending; mappings stay candidate.

@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T19:25Z
+Last updated: 2026-07-30T20:07Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -17,8 +17,12 @@ Last updated: 2026-07-30T19:25Z
 - Sprint 57 implements all five released Part 1 Update procedures, but exact
   candidate `c4b6030` is superseded by final Raze `GAPS_FOUND 0.98`.
   Requirement-linked replacement regressions close its root Sampling Feature
-  fixture and canonical-first/custom-delayed cleanup defects; focused and full
-  precommit Maven pass, while replacement exact gates remain pending.
+  fixture and canonical-first/custom-delayed cleanup defects. Exact replacement
+  `40cc703` passes complete Update `30/0/0/0`, full Maven `687/0/0/3`, and
+  every exact technical/local-OSH honesty gate. Fresh Raze closes both prior
+  HIGH findings and finds no implementation defect; its sole MEDIUM
+  exact-evidence reconciliation concern is addressed, with focused recheck
+  pending.
   Unmodified local OSH
   has no usable API Common datetime evidence and omits the exact inherited
   declarations, so all five methods causal-SKIP before writes in both

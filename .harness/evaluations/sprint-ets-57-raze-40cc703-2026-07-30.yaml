@@ -1,0 +1,53 @@
+review:
+  role: Red Team / Raze
+  verdict: APPROVE_WITH_CONCERNS
+  confidence: high
+  candidate: 40cc7039da26a39424f1ffa7626b7b6926a50f0a
+  baseline: c4b6030b6931863ccda484f2f2d3468cb045d79f
+  mode: read-only
+  started_utc: "2026-07-30T20:08:20Z"
+  completed_utc: "2026-07-30T20:19:20Z"
+prior_high_findings:
+  - id: sampling-feature-owned-parent
+    disposition: CLOSED
+    evidence:
+      - UpdateSupport acquires an owned System and creates the Sampling Feature through /systems/{id}/samplingFeatures.
+      - CleanupStack is LIFO, so the child registered after the parent is deleted first.
+      - The regression rejects root Sampling Feature creation and proves nested creation plus zero surviving resources.
+      - Focused red fails against prior behavior; focused green passes 2/0/0/0.
+  - id: canonical-first-custom-delayed-cleanup
+    disposition: CLOSED
+    evidence:
+      - Canonical and custom occurrence discovery poll independently through one bounded deadline.
+      - Polling completes successfully only after both views are found.
+      - Cleanup deletes the custom occurrence before the canonical resource and revalidates ownership.
+      - The delayed-occurrence regression fails red through leakage and passes green with zero surviving state.
+findings:
+  - severity: MEDIUM
+    id: exact-candidate-evidence-not-reconciled
+    classification: candidate governance defect; not an implementation defect
+    status: OPEN_AT_REVIEW
+    detail: Committed story, contract, handoff, traceability, and ops records still described c4b6030 evidence or replacement verification as pending.
+    impact: Sprint traceability would misidentify the reviewed artifact.
+required_fixes:
+  - Bind exact Maven, image, sabotage, credential, and local-OSH results to 40cc703 in a follow-up reconciliation commit.
+  - Update story, contract, handoff, traceability, and ops status without promoting the five Update mappings.
+  - Preserve honest non-green local-OSH totals and the external positive-PATCH limitation.
+evidence_checks:
+  released_ats: PASS; exact five Update tests, direct API Common dependency, canonical/custom coverage, and nested Sampling Feature creation agree with pinned OGC 23-001.
+  source_spec_tests: PASS; no behavioral mismatch or false PASS/SKIP path found.
+  patch_negotiation: PASS; Allow, Accept-Patch/OpenAPI intersection, supported patch formats, mutation evidence, identity stability, and HTTP 202 polling are bounded.
+  ownership_cleanup: PASS; same-origin checks, identity revalidation, LIFO cleanup, and cleanup-failure escalation prevent unsafe deletion or hidden leakage.
+  maven: PASS; 687 tests, 0 failures, 0 errors, 3 skips; build number identifies 40cc7039da.
+  image: "PASS; sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d"
+  sabotage: PASS; 244 total, 2 passed, 10 intentionally failed, 232 skipped; all five Update methods dependency-SKIP.
+  credentials: PASS; 0 unmasked artifacts, 31 masked container observations, 31 intact synthetic wire observations.
+  local_osh: PASS as honest evidence; populated 244/54/35/155, clean 244/40/7/197, provisioning and cleanup PASS, primary unchanged, 363 GET and zero writes.
+  repository_integrity: PASS; detached exact commit and clean review worktree.
+review_output_correction:
+  note: The reviewer prose transposed sabotage pass/fail/skip labels. This archived report uses the authoritative TestNG totals from the reviewed XML and sabotage parser.
+external_limitation:
+  classification: not a candidate defect
+  status: BLOCKED
+  detail: Positive PATCH E2E is unavailable because local OSH lacks API Common datetime evidence; all five Update methods dependency-SKIP before writes.
+  disposition: Keep all five mappings candidate until a conforming real IUT supplies positive completed PATCH evidence.

@@ -67,7 +67,21 @@ start Sprint 57.
 - The replacement owns a parent System, creates Sampling Features through the
   required System-scoped child endpoint, cleans child before parent, and keeps
   canonical plus custom identity polling active through the bounded deadline.
-  Replacement exact-candidate gates and fresh Raze remain pending.
+  Exact detached candidate `40cc7039da26a39424f1ffa7626b7b6926a50f0a`
+  passes Docker Maven `687/0/0/3`, source/coverage/self-tests, exact-image
+  TeamEngine runtime and immutable-base, dependency sabotage, both credential
+  gates, and artifact hygiene. Image:
+  `sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`.
+- Exact local OSH remains honestly non-green at populated `244/54/35/155` and
+  clean primary `244/40/7/197`; provisioning and cleanup pass, primary state
+  is unchanged, and all 363 requests are GETs with zero writes or credential
+  leaks. All five Update procedures dependency-SKIP on API Common datetime.
+- Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence. Both prior
+  HIGH findings are CLOSED and no implementation defect remains. Its sole
+  MEDIUM concern requires binding the exact evidence to `40cc703`; the
+  follow-up reconciles all required specifications and operational records.
+- Focused Raze recheck and positive completed PATCH E2E remain pending; all
+  five mappings remain candidate.
 
 ## 2026-07-30 - Stock OSH prerequisite feasibility audit
 

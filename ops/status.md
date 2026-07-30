@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T19:25Z
+Last updated: 2026-07-30T20:07Z
 
 ## Sprint 57 In Progress - Part 1 Update
 
@@ -35,8 +35,17 @@ Last updated: 2026-07-30T19:25Z
   owns a parent System before System-scoped Sampling Feature creation and
   polls both identity views through the bounded cleanup deadline.
 - Final-Raze remediation reproduces both defects at `2/2/0/0`, then passes
-  focused `2/0/0/0`, complete Update `30/0/0/0`, and full precommit Docker
-  Maven `687/0/0/3`. Replacement exact-candidate gates remain pending.
+  focused `2/0/0/0` and complete Update `30/0/0/0`.
+- Exact replacement `40cc7039da26a39424f1ffa7626b7b6926a50f0a` passes detached
+  Docker Maven `687/0/0/3`, released-source/coverage, TeamEngine 6 runtime and
+  immutable-base, deployed SWE Common adapter, dependency sabotage,
+  credential, and artifact-hygiene gates. Image:
+  `sha256:8184ad80b160e0854afcf22d5fa996de835bd886c31930bae150a1bb4cb7ee9d`.
+- Exact replacement local OSH E2E remains honestly non-green: populated
+  `244/54/35/155`, clean primary `244/40/7/197`. Provisioning and cleanup
+  pass, primary state is unchanged, and all 363 IUT requests are GETs with
+  zero writes or credential leaks. API Common datetime causally skips all five
+  Update methods before mutation.
 - Superseded `c4b6030` image
   `sha256:6861fefdab9c3150ffe2c9732af73e6274a011d4e10e2b4c48088a4bb291c6cb`
   passed released-source/coverage, TeamEngine 6 runtime and immutable-base,
@@ -52,6 +61,14 @@ Last updated: 2026-07-30T19:25Z
   Mappings remain candidate and Sprint 57 remains in progress until a
   conforming dedicated mutable IUT executes positive PATCH lifecycle evidence.
 - No OSH or TeamEngine source/binary changes and no hosted CI are in scope.
+- Fresh Raze returns `APPROVE_WITH_CONCERNS` with high confidence. Both prior
+  HIGH findings are CLOSED and no implementation defect remains. Its sole
+  MEDIUM concern requires exact-evidence reconciliation; this follow-up binds
+  all results to `40cc703`. Focused recheck is pending.
+- Positive PATCH E2E remains externally blocked, so all five mappings remain
+  candidate.
+- Replacement exact evidence is archived under
+  `ops/test-results/sprint-ets-57-part1-update-final-40cc703-2026-07-30/`.
 - Superseded exact evidence is archived under
   `ops/test-results/sprint-ets-57-part1-update-final-c4b6030-2026-07-30/`.
 

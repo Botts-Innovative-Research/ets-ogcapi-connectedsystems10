@@ -49,6 +49,7 @@ success_criteria:
   - Cleanup failure overrides an accepted-but-inconclusive SKIP.
   - URI-list occurrence cleanup is registered before POST and removes late materialization.
   - Queued URI-list Location distinguishes collection occurrences from asynchronous status resources.
+  - A valid absolute cross-origin HTTP 202 Location is status-only; it receives no GET or DELETE while computed-occurrence polling proceeds.
   - Generic non-System DELETE omits the cascade query parameter.
   - Default primary local OSH smoke has zero writes.
   - Owned isolated local OSH mutation E2E records honest outcomes and cleanup.
@@ -66,18 +67,19 @@ guardrails:
 verification:
   released_source_commit: 8e03b236a049849f2ccc24b4fd9fdce5ff69bed2
   inherited_features4_source_commit: ea42aa1de6d8cbb53c526f41e1f66c1887fe71d4
-  test_first: "PASS: behavioral red 35 total / 2 failures / 0 errors / 0 skipped"
-  focused_maven: "PASS_PRECOMMIT: 52 total / 0 failures / 0 errors / 0 skipped; direct HTTP 35 / 0 / 0 / 0"
-  full_maven: "PASS_PRECOMMIT: 654 total / 0 failures / 0 errors / 3 skipped"
+  test_first: "PASS: latest cross-origin behavioral red 1 total / 1 failure / 0 errors / 0 skipped; prior identity/compound red 35 / 2 / 0 / 0"
+  focused_maven: "PASS_PRECOMMIT: 53 total / 0 failures / 0 errors / 0 skipped; direct HTTP 36 / 0 / 0 / 0"
+  full_maven: "PASS_PRECOMMIT: 655 total / 0 failures / 0 errors / 3 skipped"
   coverage_audit: "PASS: 0 exact / 0 helper / 12 candidate / 0 unmapped"
   superseded_candidate_commit: 0023d5b492dff8b5dbeff6c201c257f970b8947a
   superseded_remediation_candidate_commit: 1a6c5ec30f76e120a0e2cd676f472699141213ca
   superseded_identity_remediation_candidate_commit: 8aa92d4da33aeb3b1c545378c0a68cb84a565ccb
+  superseded_joint_polling_candidate_commit: 700c697e59eb2a03d3a41a37ec9a745cd1aa3583
   next_remediation_candidate_commit: PENDING
   primary_local_osh: "FAIL_CONFORMANCE: 244 total / 40 passed / 7 failed / 197 skipped; 168 GET / 0 writes; state unchanged"
   isolated_mutable_local_osh: "NO_POSITIVE_MUTATION_EVIDENCE: provisioning and cleanup PASS; 244 total / 54 passed / 35 failed / 155 skipped; all 12 CRD methods dependency-SKIP"
-  exact_image: "SUPERSEDED_PASS: sha256:3865aca8a80b5a23fd94531705e0228db5e71c7b2ef65cbc596f83f9c0145d7a; Build-Revision 8aa92d4da3"
+  exact_image: "SUPERSEDED_PASS: sha256:5d9c0b9d1d12cf68aaf83e2aec512ecc5abed2fdd9df9568078776443af658f7; Build-Revision 700c697e59"
   dependency_sabotage: "PASS: intentional 244 total / 2 passed / 10 failed / 232 skipped; all 12 CRD methods causal dependency-SKIP"
   credential_gates: "PASS: zero literal/unmasked artifact hits; 32 masked events; 32 intact synthetic wire transmissions"
   artifact_hygiene: "PASS: 365 IUT GETs / 0 IUT writes / 0 credential leaks"
-  raze: "GAPS_FOUND 0.97 on superseded 8aa92d4; identity-safe queued occurrence cleanup and joint compound polling pass precommit regression gates; clean replacement exact checkout, umbrella manifest, and fresh recheck pending"
+  raze: "GAPS_FOUND 0.98 on superseded 700c697; cross-origin queued status classification now passes requirement-linked red/green precommit verification, raw red is preserved for the replacement exact archive, and a fresh exact recheck remains pending"

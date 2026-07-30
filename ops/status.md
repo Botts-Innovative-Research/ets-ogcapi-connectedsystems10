@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T05:12Z
+Last updated: 2026-07-30T06:16Z
 
 ## Sprint 56 In Progress - Part 1 Create/Replace/Delete
 
@@ -63,9 +63,19 @@ Last updated: 2026-07-30T05:12Z
   Four regressions produced behavioral red `35/2/0/0`; corrected direct HTTP
   passes `35/0/0/0`, focused aggregate passes `52/0/0/0`, and full clean-cache
   Docker Maven passes `654/0/0/3` precommit.
-- Next: commit and verify a clean replacement exact candidate, seal its
-  umbrella evidence manifest, and obtain fresh Raze review. Positive closure
-  still requires
+- Exact candidate `700c697e59eb2a03d3a41a37ec9a745cd1aa3583`
+  closes the identity, joint-polling, checkout, and umbrella-manifest findings
+  and passes all technical/E2E gates, but Raze `GAPS_FOUND 0.98` supersedes it:
+  an absolute cross-origin HTTP 202 status Location failed before status
+  classification, and the raw behavioral-red log was absent.
+- The new requirement-linked regression records `1/1/0/0`. Queued Location
+  parsing now precedes same-origin occurrence classification; cross-origin
+  status URIs receive no request and computed-occurrence polling continues.
+  Direct HTTP passes `36/0/0/0`, focused Maven passes `53/0/0/0`, and full
+  clean-cache Docker Maven passes `655/0/0/3` precommit.
+- Next: commit and verify a clean replacement exact candidate, preserve the raw
+  red log, seal its umbrella evidence manifest, and obtain fresh Raze review.
+  Positive closure still requires
   a dedicated mutable IUT satisfying API Common and exact inherited
   declarations; do not weaken the suite or patch OSH.
 

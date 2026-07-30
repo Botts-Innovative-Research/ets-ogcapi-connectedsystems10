@@ -9,9 +9,9 @@
 - `REQ-ETS-PART1-010`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; identity-safe joint-polling remediation passes precommit
-gates, replacement exact candidate, fresh Raze, and positive mutation E2E
-pending
+**Status**: Accepted; queued cross-origin status classification remediation
+passes precommit gates, replacement exact candidate, fresh Raze, and positive
+mutation E2E pending
 
 ## Motivation
 
@@ -138,7 +138,9 @@ and independently cleaned only after submitted-content proof. A mismatched
 direct occurrence Location SHALL never be deleted. A supplied Location outside
 that namespace SHALL be
 treated as an asynchronous status URI and SHALL not be dereferenced or used as
-a destructive cleanup target.
+a destructive cleanup target. This includes a syntactically valid absolute
+cross-origin HTTP 202 Location: the ETS SHALL issue no GET or DELETE to that
+URI and SHALL continue polling the computed same-origin occurrence.
 
 Cleanup SHALL run in reverse ownership order after pass, failure, or
 accepted-but-inconclusive SKIP. A cleanup failure SHALL become the reported

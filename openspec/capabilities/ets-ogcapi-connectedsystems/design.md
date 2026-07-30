@@ -67,7 +67,15 @@
 > all conditions true together. Behavioral red was `35/2/0/0`; corrected
 > direct HTTP is `35/0/0/0`, focused aggregate is `52/0/0/0`, and full
 > clean-cache Docker Maven is `654/0/0/3` precommit. A clean replacement exact
-> candidate and fresh Raze recheck are pending.
+> candidate and fresh Raze recheck are pending. Raze `GAPS_FOUND 0.98` on
+> exact candidate `700c697`: its technical gates and prior remediations pass,
+> but HTTP 202 handling must parse and classify an absolute cross-origin status
+> Location without issuing a request or failing the computed-occurrence path.
+> The requirement-linked red is `1/1/0/0`. Parsing the queued Location before
+> same-origin occurrence classification closes the defect; only a same-origin
+> direct child can become an occurrence. Precommit verification is direct HTTP
+> `36/0/0/0`, focused `53/0/0/0`, and full Maven `655/0/0/3`. Replacement
+> exact gates and a fresh Raze recheck remain pending.
 > Positive real-IUT mutation evidence remains blocked by unmodified local OSH
 > prerequisites.
 

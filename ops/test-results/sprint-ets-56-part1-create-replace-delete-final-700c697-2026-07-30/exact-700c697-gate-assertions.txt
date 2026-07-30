@@ -1,0 +1,22 @@
+VERDICT=PASS_TECHNICAL_GATES
+candidate=700c697e59eb2a03d3a41a37ec9a745cd1aa3583
+focused=52/0/0/0
+directHttp=35/0/0/0
+full=654/0/0/3
+image=sha256:5d9c0b9d1d12cf68aaf83e2aec512ecc5abed2fdd9df9568078776443af658f7
+buildRevision=700c697e59
+releasedAts=PASS
+geoJsonParity=PASS; entrySchemas=8; transitiveSchemas=20; mismatches=0
+propertyParity=PASS; entrySchemas=3; transitiveSchemas=53; mismatches=0
+runtimeImmutability=PASS
+populated=244/54/35/155
+cleanPrimary=244/40/7/197
+provisioning=PASS
+cleanup=PASS
+primaryStateUnchanged=true
+iutRequests=365 GET, 0 writes
+sabotage=244/2/10/232; substantiveCRD=12 SKIP
+credentials=0 unmasked artifacts, 32 masked logs, 32 intact wire transmissions
+artifactHygiene=PASS
+exactCheckout=clean; pycachePaths=0
+positiveMutationEvidence=ABSENT_EXTERNAL_IUT_PREREQUISITE

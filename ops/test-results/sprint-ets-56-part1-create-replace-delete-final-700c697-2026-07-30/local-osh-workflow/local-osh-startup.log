@@ -1,0 +1,32 @@
+Can not write to /root/.m2/copy_reference_file.log. Wrong volume permissions? Carrying on ...
+2026-07-30 05:25:43.119 INFO  SensorHub [main] - *****************************************
+2026-07-30 05:25:43.120 INFO  SensorHub [main] - Starting SensorHub...
+2026-07-30 05:25:43.121 INFO  SensorHub [main] - Version: 2.0.1
+2026-07-30 05:25:43.122 INFO  SensorHub [main] - Build number: 4c87a65
+2026-07-30 05:25:43.122 INFO  SensorHub [main] - JDK version: OpenJDK 64-Bit Server VM, 17.0.19+10, Eclipse Adoptium
+2026-07-30 05:25:43.122 INFO  SensorHub [main] - OS type: Linux, aarch64
+2026-07-30 05:25:43.122 INFO  SensorHub [main] - CPU cores: 20
+2026-07-30 05:25:43.123 INFO  SensorHub [main] - CommonPool parallelism: 19
+2026-07-30 05:25:43.177 INFO  DefaultDatabaseRegistry [main] - Registering database SystemDriverDatabase with ID 0
+2026-07-30 05:25:43.178 INFO  ModuleRegistry [main] - Loading modules...
+2026-07-30 05:25:43.190 INFO  ModuleRegistry [main] - Starting datastore connectors
+2026-07-30 05:25:43.193 INFO  ModuleRegistry [ModuleRegistry-1] - Initializing module 'Sprint 42 Observation Database' [s42-obs-database]
+2026-07-30 05:25:43.207 INFO  ModuleRegistry [ModuleRegistry-1] - Module 'Sprint 42 Observation Database' [s42-obs-database] initialized
+2026-07-30 05:25:43.208 INFO  ModuleRegistry [ModuleRegistry-1] - Starting module 'Sprint 42 Observation Database' [s42-obs-database]
+2026-07-30 05:25:43.265 INFO  DefaultDatabaseRegistry [ModuleRegistry-1] - Registering database MVObsSystemDatabase with ID 1
+2026-07-30 05:25:43.266 INFO  ModuleRegistry [ModuleRegistry-1] - Module 'Sprint 42 Observation Database' [s42-obs-database] started
+2026-07-30 05:25:43.266 INFO  ModuleRegistry [main] - All datastores ready. Starting all other modules
+2026-07-30 05:25:43.266 INFO  ModuleRegistry [ModuleRegistry-1] - Initializing module 'Sprint 42 HTTP Server' [s42-http-server]
+2026-07-30 05:25:43.267 INFO  ModuleRegistry [ModuleRegistry-2] - Initializing module 'Sprint 42 Connected Systems API' [s42-consys-api]
+2026-07-30 05:25:43.271 INFO  ModuleRegistry [ModuleRegistry-1] - Module 'Sprint 42 HTTP Server' [s42-http-server] initialized
+2026-07-30 05:25:43.271 INFO  ModuleRegistry [ModuleRegistry-1] - Starting module 'Sprint 42 HTTP Server' [s42-http-server]
+2026-07-30 05:25:43.274 INFO  ModuleRegistry [ModuleRegistry-2] - Module 'Sprint 42 Connected Systems API' [s42-consys-api] initialized
+2026-07-30 05:25:43.275 INFO  ModuleRegistry [ModuleRegistry-2] - Starting module 'Sprint 42 Connected Systems API' [s42-consys-api]
+2026-07-30 05:25:43.298 INFO  HttpServer:149f6e8c [ModuleRegistry-1] - Static resources root is /
+2026-07-30 05:25:43.302 INFO  HttpServer:149f6e8c [ModuleRegistry-1] - Servlets root is /sensorhub
+2026-07-30 05:25:43.336 INFO  HttpServer:149f6e8c [ModuleRegistry-1] - HTTP server started on port 8081
+2026-07-30 05:25:43.336 INFO  ModuleRegistry [ModuleRegistry-1] - Module 'Sprint 42 HTTP Server' [s42-http-server] started
+2026-07-30 05:25:43.361 INFO  ModuleRegistry [ModuleRegistry-1] - Module 'Sprint 42 Connected Systems API' [s42-consys-api] started
+2026-07-30 05:25:44.980 INFO  ConSysApiService:934a4474 [qtp223444483-44] - GET /sensorhub/api (from ip=172.18.0.1, user=anonymous)
+mkdir: cannot create directory ‘/root’: Permission denied
+SLF4J(I): Connected with provider of type [ch.qos.logback.classic.spi.LogbackServiceProvider]

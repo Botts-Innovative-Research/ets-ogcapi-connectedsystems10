@@ -1,0 +1,57 @@
+sprint: ets-56
+candidate: 700c697e59eb2a03d3a41a37ec9a745cd1aa3583
+reviewer: Raze
+agent_id: 019fb195-42da-7ec0-b3c5-65ef7ee8dd5f
+reviewed_at: "2026-07-30"
+verdict: GAPS_FOUND
+confidence: 0.98
+findings:
+  - id: queued-cross-origin-status-location
+    severity: MEDIUM
+    status_at_review: OPEN
+    remediation_status: PLANNED
+    summary: HTTP 202 URI-list Location handling enforced same-origin before occurrence-versus-status classification.
+    risk: A valid absolute cross-origin asynchronous status URI caused a false failure even though the computed collection occurrence could become available.
+    remediation: Parse queued Location without same-origin failure, classify only same-origin direct collection items as occurrences, ignore every other valid URI as a status URI, and add a zero-request cross-origin regression.
+  - id: raw-test-first-evidence
+    severity: LOW
+    status_at_review: OPEN
+    remediation_status: PLANNED
+    summary: The sealed candidate archive documented behavioral red 35/2/0/0 but did not include its raw execution log.
+    remediation: Seal the next requirement-linked behavioral-red output in the replacement candidate evidence root.
+prior_findings:
+  queued_occurrence_cleanup_identity: CLOSED
+  queued_compound_transient_state: CLOSED
+  exact_checkout_hygiene: CLOSED
+  umbrella_evidence_seal: CLOSED
+external_blocker:
+  status: OPEN
+  severity: HIGH
+  summary: Positive real-IUT mutation E2E remains unavailable because unmodified local OSH does not satisfy API Common datetime evidence or the exact inherited declarations.
+  disposition: This keeps mappings candidate and Sprint 56 open; it does not justify weakening the ETS or modifying OSH or TeamEngine.
+evidence:
+  exact_focused_maven: "52 tests / 0 failures / 0 errors / 0 skipped"
+  exact_direct_http: "35 tests / 0 failures / 0 errors / 0 skipped"
+  exact_full_maven: "654 tests / 0 failures / 0 errors / 3 skipped"
+  exact_populated_e2e: "244 total / 54 passed / 35 failed / 155 skipped"
+  exact_clean_primary_e2e: "244 total / 40 passed / 7 failed / 197 skipped"
+  exact_sabotage: "244 total / 2 passed / 10 failed / 232 skipped"
+  exact_image: "sha256:5d9c0b9d1d12cf68aaf83e2aec512ecc5abed2fdd9df9568078776443af658f7"
+  teamengine_iut_traffic: "365 GET / 0 writes"
+  umbrella_manifest: "PASS: 69/69 files"
+scope:
+  osh_source_or_binary_changes: false
+  teamengine_source_or_binary_changes: false
+  hosted_ci_changes: false
+  credential_disclosure: false
+runtime:
+  started_at: "2026-07-30T05:53:04Z"
+  ended_at: "2026-07-30T06:03:44Z"
+  duration_seconds: 640
+  elapsed: "00:10:40"
+  token_usage:
+    input: 8086655
+    cached_input: 7836160
+    output: 20699
+    reasoning_output: 10812
+    total: 8107354

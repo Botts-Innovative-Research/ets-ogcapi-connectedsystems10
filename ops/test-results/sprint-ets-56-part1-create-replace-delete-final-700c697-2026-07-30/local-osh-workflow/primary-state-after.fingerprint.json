@@ -1,0 +1,38 @@
+{
+  "command": [
+    "java",
+    "-Xmx512m",
+    "-Dlogback.configurationFile=/opt/osh/logback.xml",
+    "-cp",
+    "/opt/osh/lib/*",
+    "org.sensorhub.impl.SensorHub",
+    "/state/config.json"
+  ],
+  "configImage": "maven:3.9-eclipse-temurin-17",
+  "containerId": "8a5c8aff9dcf011c71a8d30b84edfbb6042bedf395c493e35258b6c646571703",
+  "entrypoint": [
+    "/usr/local/bin/mvn-entrypoint.sh"
+  ],
+  "imageId": "sha256:a0249ce15f22ae01620eee65e6737735b2b01a50f0a58b3c580f3d2a1dd21c7e",
+  "name": "/field-hub-osh-1",
+  "networks": [
+    "field-hub_default"
+  ],
+  "oshMount": {
+    "destination": "/opt/osh",
+    "rw": false,
+    "source": "/home/nh/docker/sensorhub-driver-fabric/include/osh-core/build/install/osh-core",
+    "type": "bind"
+  },
+  "running": true,
+  "safeConfigHash": "33e2b826526aeb143459f8517ccfbd53df1be84e5391f9cc334bce3aeacf8f63",
+  "stateMount": {
+    "destination": "/state",
+    "rw": true,
+    "source": "/home/nh/docker/ets-ogcapi-connectedsystems10-local-osh/state",
+    "type": "bind"
+  },
+  "status": "running",
+  "user": "",
+  "workingDir": "/state"
+}

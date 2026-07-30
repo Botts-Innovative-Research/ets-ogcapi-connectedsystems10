@@ -86,6 +86,8 @@ safety-gated implementations of all twelve released OGC 23-001
 - [x] A queued URI-list `Location` inside the target item namespace is
   verified and cleaned, while an asynchronous status `Location` is never
   dereferenced or deleted.
+- [x] A valid absolute cross-origin HTTP 202 status `Location` receives no GET
+  or DELETE and does not block computed-occurrence polling.
 - [x] Queued occurrence cleanup deletes a computed or returned item only after
   submitted-content proof and never deletes a mismatched direct `Location`.
 - [x] Compound queued mutation postconditions are jointly true in one polling
@@ -208,8 +210,16 @@ and requires two consecutive joint observations of every compound
 postcondition. Four requirement-linked regressions were added; behavioral red
 was `35/2/0/0`, corrected direct HTTP is `35/0/0/0`, focused aggregate is
 `52/0/0/0`, and full clean-cache Docker Maven is `654/0/0/3` precommit. A
-clean replacement exact candidate, sealed umbrella manifest, and fresh Raze
-recheck remain pending.
+clean exact candidate `700c697e59eb2a03d3a41a37ec9a745cd1aa3583`
+repeats those gates and all exact technical/E2E gates, but Raze
+`GAPS_FOUND 0.98` supersedes it: an absolute cross-origin HTTP 202 status
+Location failed before status classification, and the raw behavioral-red log
+was absent from the archive. The new requirement-linked regression reproduces
+that defect at `1/1/0/0`; URI parsing before same-origin occurrence
+classification corrects it without dereference or cleanup, and precommit
+verification passes direct HTTP `36/0/0/0`, focused aggregate `53/0/0/0`, and
+full clean-cache Docker Maven `655/0/0/3`. A clean replacement exact candidate
+with the raw red log and fresh Raze recheck remain pending.
 
 These controlled gates do not supply positive real-IUT mutation evidence, so
 the story and all twelve mappings remain IN PROGRESS/candidate.

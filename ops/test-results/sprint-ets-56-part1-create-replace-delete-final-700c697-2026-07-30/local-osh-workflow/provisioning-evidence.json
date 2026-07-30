@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-30T05:25:45Z",
+  "target": {
+    "scheme": "http",
+    "host": "127.0.0.1",
+    "port": 1032,
+    "path": "/sensorhub/api",
+    "loopbackOnly": true
+  },
+  "ownership": {
+    "runId": "20260730T052542Z-6b751cbf242f",
+    "containerId": "879312e9ac65af797149410293234e7321049ce70c76e808453bfa4dd1b779d0",
+    "containerName": "ets-csapi-populated-osh-20260730T052542Z-6b751cbf242f",
+    "stateSource": "/tmp/ets-csapi-populated-osh-state.bgaf4eyb"
+  },
+  "provisioningReady": true,
+  "resourceIds": {
+    "system": "040g",
+    "procedure": "040g",
+    "deployment": "040g",
+    "samplingFeature": "040g",
+    "dataStream": "040g",
+    "observation": "040tjg5bqc30000000",
+    "controlStream": "040g"
+  },
+  "requestMethodCounts": {
+    "POST": 7,
+    "GET": 10
+  },
+  "schemaEvidence": {
+    "dataStream": {
+      "status": 200,
+      "contentType": "application/json",
+      "fieldNames": [
+        "temperature"
+      ]
+    },
+    "controlStream": {
+      "status": 200,
+      "contentType": "application/json",
+      "fieldNames": [
+        "setpoint"
+      ]
+    }
+  },
+  "observationEvidence": {
+    "status": 200,
+    "contentType": "application/json",
+    "itemCount": 1,
+    "associatedDataStreamId": "040g"
+  },
+  "credentialSupplied": false,
+  "errors": []
+}

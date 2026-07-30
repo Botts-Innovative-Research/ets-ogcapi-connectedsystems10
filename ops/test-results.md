@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T05:12Z
+Last updated: 2026-07-30T06:16Z
 
 ## Current Sprint Evidence
 
@@ -72,9 +72,20 @@ Sprint 56 Part 1 Create/Replace/Delete direct ATS:
   Four requirement-linked regressions produced behavioral red `35/2/0/0`.
   Corrected direct HTTP passes `35/0/0/0`, focused aggregate passes
   `52/0/0/0`, and full clean-cache Docker Maven passes `654/0/0/3` precommit.
+- Exact candidate `700c697e59eb2a03d3a41a37ec9a745cd1aa3583` passes focused
+  `52/0/0/0`, full Maven `654/0/0/3`, exact image/runtime, released-source,
+  both parity graphs, local-OSH, sabotage, credential, immutable-base, and
+  hygiene gates. Its image is
+  `sha256:5d9c0b9d1d12cf68aaf83e2aec512ecc5abed2fdd9df9568078776443af658f7`
+  with `Build-Revision: 700c697e59`; the recursive archive manifest verifies.
+- Raze `GAPS_FOUND 0.98` supersedes `700c697`. Prior required findings are
+  closed, but an absolute cross-origin HTTP 202 status Location falsely failed
+  before classification and raw behavioral-red output was not archived.
+- The latest requirement-linked test records red `1/1/0/0`; corrected direct
+  HTTP passes `36/0/0/0`, focused Maven `53/0/0/0`, and full clean-cache Docker
+  Maven `655/0/0/3`. The replacement exact archive will preserve the raw red.
 - Verdict: remediation passes precommit gates; clean replacement exact
-  candidate verification, umbrella manifest, and fresh Raze are pending.
-  Positive real-IUT
+  candidate verification and fresh Raze are pending. Positive real-IUT
   mutation E2E remains open; mappings stay candidate and Sprint 56 stays IN
   PROGRESS.
 

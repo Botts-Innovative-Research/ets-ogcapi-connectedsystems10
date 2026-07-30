@@ -1,0 +1,4 @@
+candidate=700c697e59
+head=700c697e59eb2a03d3a41a37ec9a745cd1aa3583
+statusPorcelainLines=0
+pycachePaths=0

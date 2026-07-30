@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T05:12Z
+Last updated: 2026-07-30T06:16Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -24,10 +24,14 @@ Last updated: 2026-07-30T05:12Z
   `31/0/0/0`, focused aggregate `48/0/0/0`, full Maven `650/0/0/3`, and all
   exact technical, local-OSH, sabotage, credential, immutability, and hygiene
   gates, but Raze `GAPS_FOUND 0.97` supersedes it. Identity-safe occurrence
-  cleanup and joint compound polling now pass direct HTTP `35/0/0/0`, focused
-  aggregate `52/0/0/0`, and full clean-cache Docker Maven `654/0/0/3`
-  precommit. A clean replacement exact candidate and fresh Raze recheck remain
-  pending.
+  cleanup and joint compound polling pass exact candidate `700c697`, but Raze
+  `GAPS_FOUND 0.98` supersedes it for cross-origin queued status
+  classification and missing raw-red evidence. The requirement-linked
+  regression records `1/1/0/0`; corrected direct HTTP passes `36/0/0/0`,
+  focused aggregate `53/0/0/0`, and full clean-cache Docker Maven
+  `655/0/0/3` precommit without requesting the cross-origin URI. A clean
+  replacement exact candidate with raw-red evidence and fresh Raze recheck
+  remain pending.
   The unmodified local OSH API Common result is `4 PASS / 1 SKIP` because no
   advertised collection supplies positive datetime evidence. Causal TestNG
   inheritance therefore dependency-SKIPs all twelve CRD methods before their

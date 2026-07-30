@@ -487,7 +487,9 @@ public final class CreateReplaceDeleteSupport {
 					}
 					URI returnedItem = collectionItem;
 					if (location != null && !location.isBlank()) {
-						URI suppliedLocation = resolveCreatedResourceUri(this.apiRoot, location, requirement);
+						URI suppliedLocation = add.getStatusCode() == 202
+								? resolveLocationReference(this.apiRoot, location, requirement)
+								: resolveCreatedResourceUri(this.apiRoot, location, requirement);
 						if (isDirectCollectionItem(collection.itemsUri(), suppliedLocation)) {
 							returnedItem = suppliedLocation;
 						}
@@ -1239,6 +1241,15 @@ public final class CreateReplaceDeleteSupport {
 	 * @return same-origin absolute URI.
 	 */
 	static URI resolveCreatedResourceUri(URI apiRoot, String location, String requirement) {
+		URI resolved = resolveLocationReference(apiRoot, location, requirement);
+		if (!sameOrigin(apiRoot, resolved)) {
+			ETSAssert.failWithUri(requirement,
+					"refusing cross-origin Location from " + apiRoot + " to " + resolved + ".");
+		}
+		return resolved;
+	}
+
+	private static URI resolveLocationReference(URI apiRoot, String location, String requirement) {
 		URI supplied;
 		try {
 			supplied = URI.create(location);
@@ -1260,10 +1271,6 @@ public final class CreateReplaceDeleteSupport {
 		}
 		else {
 			resolved = apiRoot.resolve(location);
-		}
-		if (!sameOrigin(apiRoot, resolved)) {
-			ETSAssert.failWithUri(requirement,
-					"refusing cross-origin Location from " + apiRoot + " to " + resolved + ".");
 		}
 		return resolved;
 	}

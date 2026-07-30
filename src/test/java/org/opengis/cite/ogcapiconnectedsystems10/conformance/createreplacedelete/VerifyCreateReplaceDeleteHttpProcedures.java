@@ -589,6 +589,25 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-LATE-CLEANUP-001.
 	 */
 	@Test
+	public void queuedCrossOriginStatusLocationIsNeverDereferencedOrDeleted() throws Exception {
+		try (Fixture fixture = new Fixture()) {
+			fixture.singleCustomCollection = true;
+			fixture.queuedWrites = true;
+			fixture.queuedUriListCrossOriginStatusLocation = true;
+
+			fixture.support(2_000L, 10L).resourcesAddToCustomCollections();
+
+			assertEquals("cross-origin status Location received an HTTP request", 0,
+					fixture.crossOriginStatusRequests.get());
+			assertEquals(0, fixture.liveCanonicalResources());
+			assertEquals(0, fixture.aliases.size());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-010; SCENARIO-ETS-PART1-010-CUSTOM-URI-LIST-LATE-CLEANUP-001.
+	 */
+	@Test
 	public void queuedMismatchedOccurrenceLocationIsNeverDeleted() throws Exception {
 		try (Fixture fixture = new Fixture()) {
 			fixture.singleCustomCollection = true;
@@ -677,6 +696,8 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private final HttpServer server;
 
+		private final HttpServer crossOriginStatusServer;
+
 		private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
 		private final Map<String, Resource> resources = new ConcurrentHashMap<>();
@@ -723,6 +744,8 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private final AtomicInteger asyncStatusRequests = new AtomicInteger();
 
+		private final AtomicInteger crossOriginStatusRequests = new AtomicInteger();
+
 		private final AtomicInteger transientReplacementAliasGets = new AtomicInteger();
 
 		private final AtomicInteger transientDeletionGoneGets = new AtomicInteger();
@@ -767,6 +790,8 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 
 		private volatile boolean queuedUriListStatusLocation;
 
+		private volatile boolean queuedUriListCrossOriginStatusLocation;
+
 		private volatile boolean queuedUriListMismatchedOccurrenceLocation;
 
 		private volatile boolean transientCustomReplacement;
@@ -807,6 +832,12 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
 			this.server.createContext("/api", this::handle);
 			this.server.start();
+			this.crossOriginStatusServer = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+			this.crossOriginStatusServer.createContext("/", exchange -> {
+				this.crossOriginStatusRequests.incrementAndGet();
+				respond(exchange, 500, "");
+			});
+			this.crossOriginStatusServer.start();
 		}
 
 		URI apiRoot() {
@@ -879,6 +910,7 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 		@Override
 		public void close() {
 			this.server.stop(0);
+			this.crossOriginStatusServer.stop(0);
 			this.scheduler.shutdownNow();
 		}
 
@@ -962,6 +994,11 @@ public class VerifyCreateReplaceDeleteHttpProcedures {
 					}
 					else if (this.queuedUriListStatusLocation) {
 						exchange.getResponseHeaders().set("Location", "/api/jobs/uri-list-1");
+					}
+					else if (this.queuedUriListCrossOriginStatusLocation) {
+						exchange.getResponseHeaders()
+							.set("Location", "http://127.0.0.1:" + this.crossOriginStatusServer.getAddress().getPort()
+									+ "/jobs/uri-list-1");
 					}
 					this.scheduler.schedule(() -> this.aliases.putAll(pendingAliases),
 							this.uriListPropagationDelayMillis, TimeUnit.MILLISECONDS);

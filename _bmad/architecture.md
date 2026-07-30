@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.53 | Status: Living Document | Last reconciled: 2026-07-30 (CRD identity-safe joint polling remediation)
+> Version: 2.0.54 | Status: Living Document | Last reconciled: 2026-07-30 (CRD queued status URI classification)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1587,3 +1587,18 @@ evidence archive with an umbrella checksum manifest before final Raze review.
 Behavioral red is `35/2/0/0`; corrected direct HTTP is `35/0/0/0`, focused
 aggregate is `52/0/0/0`, and full clean-cache Docker Maven is `654/0/0/3`
 precommit.
+
+### 35.4 Architecture v2.0.54 - queued status URI classification
+
+Raze `GAPS_FOUND 0.98` supersedes exact candidate `700c697`. Its prior cleanup
+identity, compound-polling, clean-checkout, and umbrella-manifest findings are
+closed. The remaining implementation gap is classification order for an HTTP
+202 URI-list Location.
+
+The queued path first parses the Location as a URI reference without
+credential-bearing follow-up. Only a same-origin direct child of the target
+collection items URI becomes an occurrence candidate. Every other valid URI,
+including an absolute cross-origin URI, is status-only: it is not dereferenced,
+is never registered for cleanup, and does not block polling of the computed
+same-origin occurrence. Synchronous HTTP 201 resource Locations retain strict
+same-origin enforcement.

@@ -168,6 +168,25 @@ completion sequence.
   `52/0/0/0`, and mandatory full clean-cache Docker Maven passes
   `654/0/0/3` precommit. A clean replacement exact candidate, umbrella
   manifest, and fresh Raze recheck remain pending.
+- Sealed exact candidate `700c697e59eb2a03d3a41a37ec9a745cd1aa3583`.
+  Exact focused/full Maven pass `52/0/0/0` and `654/0/0/3`; released-source,
+  GeoJSON/Property parity, image/runtime, immutable-base, local-OSH, sabotage,
+  credential, and hygiene gates pass. Its image is
+  `sha256:5d9c0b9d1d12cf68aaf83e2aec512ecc5abed2fdd9df9568078776443af658f7`
+  with `Build-Revision: 700c697e59`.
+- Exact local OSH remains populated `244/54/35/155` and clean primary
+  `244/40/7/197`; provisioning and cleanup pass, state is unchanged, and 365
+  IUT requests are GETs with zero writes. The evidence archive has a recursive
+  checksum manifest.
+- Fresh Raze `GAPS_FOUND 0.98` closes the prior identity, joint-polling,
+  checkout, and umbrella-manifest findings but supersedes `700c697`: an
+  absolute cross-origin HTTP 202 status Location failed before occurrence
+  versus status classification, and raw behavioral-red output was missing.
+- Added a requirement-linked cross-origin zero-request regression. Test-first
+  execution records `1/1/0/0`. Queued Location parsing now precedes
+  same-origin occurrence classification, while synchronous HTTP 201 remains
+  strict; corrected direct HTTP passes `36/0/0/0`, focused Maven `53/0/0/0`,
+  and full clean-cache Docker Maven `655/0/0/3` precommit.
 
 ## 2026-07-29 - Part 1 Advanced Filtering final-Raze remediation
 

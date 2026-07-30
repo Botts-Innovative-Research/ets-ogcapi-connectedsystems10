@@ -3195,8 +3195,16 @@ pass released-source, runtime, unmodified-local-OSH `238/40/7/191`, sabotage
   `GAPS_FOUND 0.97` supersedes it. Identity-safe occurrence cleanup and joint
   compound polling remediation records behavioral red `35/2/0/0`, then passes
   direct HTTP `35/0/0/0`, focused aggregate `52/0/0/0`, and full clean-cache
-  Docker Maven `654/0/0/3` precommit. A clean replacement exact candidate,
-  sealed umbrella manifest, and fresh Raze recheck remain pending.
+  Docker Maven `654/0/0/3` precommit. Exact candidate
+  `700c697e59eb2a03d3a41a37ec9a745cd1aa3583` repeats those technical and E2E
+  gates, but Raze `GAPS_FOUND 0.98` supersedes it because an absolute
+  cross-origin HTTP 202 status Location failed before status classification
+  and the raw red log was not sealed. The requirement-linked cross-origin
+  regression records `1/1/0/0`; parsing before same-origin occurrence
+  classification corrects it without external requests. Precommit verification
+  passes direct HTTP `36/0/0/0`, focused aggregate `53/0/0/0`, and full
+  clean-cache Docker Maven `655/0/0/3`. A clean replacement exact candidate,
+  raw-red evidence seal, and fresh Raze recheck remain pending.
   The class coverage inventory is
   intentionally `0 exact / 0 helper / 12 candidate / 0 unmapped`.
   Unmodified local OSH reports Part 1 API Common `4 PASS / 1 SKIP`, so causal
@@ -3570,6 +3578,9 @@ namespace is separately verified and cleaned as an occurrence
 and leaves an existing mismatched direct collection item untouched
 **AND** a supplied HTTP 202 Location outside that namespace is treated only as
 an asynchronous status URI and is never dereferenced or destructively cleaned
+**AND** this status-only treatment includes a syntactically valid absolute
+cross-origin Location, which receives no GET or DELETE while the computed
+same-origin occurrence is polled
 **AND** the canonical resource remains governed by its separate ownership
 cleanup.
 

@@ -501,6 +501,13 @@ public class SensorMlTests {
 			requireApiDefinitionMedia(response.getContentType(), source, requirement);
 			return response.asString();
 		}
+		String scheme = source.getScheme() == null ? "" : source.getScheme().toLowerCase(Locale.ROOT);
+		if (!Set.of("http", "https").contains(scheme) || source.getHost() == null || source.getHost().isBlank()
+				|| source.getUserInfo() != null || source.getFragment() != null) {
+			ETSAssert.failWithUri(requirement,
+					"Cross-origin advertised service description must be an HTTP(S) URI with a host, no userinfo, and no fragment: "
+							+ source);
+		}
 		HttpRequest request = HttpRequest.newBuilder(source)
 			.timeout(Duration.ofSeconds(30))
 			.header("Accept", "application/vnd.oai.openapi, application/yaml, application/json, */*")
@@ -508,7 +515,7 @@ public class SensorMlTests {
 			.build();
 		try {
 			HttpResponse<String> response = HttpClient.newBuilder()
-				.followRedirects(HttpClient.Redirect.NORMAL)
+				.followRedirects(HttpClient.Redirect.NEVER)
 				.build()
 				.send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() != 200) {

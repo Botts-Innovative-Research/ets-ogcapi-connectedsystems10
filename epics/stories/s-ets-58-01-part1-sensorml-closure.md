@@ -41,7 +41,9 @@ validator adapter over pinned released schemas.
 - [ ] Exactly fifteen independent TestNG methods map the released procedures.
 - [ ] Part 1 API Common is the only direct TestNG prerequisite.
 - [ ] API metadata procedures parse OpenAPI 3.0/3.1 JSON/YAML, resolve relative
-  operation references from the advertised URI, and issue no writes.
+  operation references from the advertised URI, preserve bounded recursive
+  schema reference graphs, enforce scheme/origin/redirect/cycle/depth/read/body
+  bounds, and issue no writes.
 - [ ] The final TeamEngine image executes the isolated OpenAPI 3.1 parser
   closure from the ETS jar without adding or replacing TeamEngine-owned jars.
 - [ ] Four independent schema procedures validate complete single and

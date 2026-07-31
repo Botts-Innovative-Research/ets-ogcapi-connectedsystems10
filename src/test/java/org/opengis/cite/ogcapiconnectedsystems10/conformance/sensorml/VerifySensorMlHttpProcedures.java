@@ -158,6 +158,35 @@ public class VerifySensorMlHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void crossOriginServiceDescriptionRedirectIsRejected() throws Exception {
+		HttpServer definition = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+		definition.createContext("/openapi.json",
+				exchange -> FixtureServer.send(exchange, 200, "application/json", FixtureServer.openApiDefinition()));
+		definition.start();
+		HttpServer redirect = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+		redirect.createContext("/openapi.json", exchange -> {
+			exchange.getResponseHeaders()
+				.set("Location", "http://127.0.0.1:" + definition.getAddress().getPort() + "/openapi.json");
+			exchange.sendResponseHeaders(302, -1);
+			exchange.close();
+		});
+		redirect.start();
+		URI advertised = URI.create("http://127.0.0.1:" + redirect.getAddress().getPort() + "/openapi.json");
+		try (FixtureServer server = new FixtureServer(Mode.VALID, null, advertised)) {
+			server.start();
+
+			assertThrows(AssertionError.class, configured(server)::sensorMlMediaTypeReadIsAdvertised);
+		}
+		finally {
+			redirect.stop(0);
+			definition.stop(0);
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-RESOURCE-MAPPINGS-001.
 	 */
 	@Test
@@ -276,6 +305,8 @@ public class VerifySensorMlHttpProcedures {
 
 		private final URI associationTarget;
 
+		private final URI serviceDescriptionTarget;
+
 		private final Map<String, AtomicInteger> calls = new ConcurrentHashMap<>();
 
 		private final Map<String, String> authorizations = new ConcurrentHashMap<>();
@@ -283,12 +314,17 @@ public class VerifySensorMlHttpProcedures {
 		private final AtomicInteger nonGetCalls = new AtomicInteger();
 
 		private FixtureServer(Mode mode) throws IOException {
-			this(mode, null);
+			this(mode, null, null);
 		}
 
 		private FixtureServer(Mode mode, URI associationTarget) throws IOException {
+			this(mode, associationTarget, null);
+		}
+
+		private FixtureServer(Mode mode, URI associationTarget, URI serviceDescriptionTarget) throws IOException {
 			this.mode = mode;
 			this.associationTarget = associationTarget;
+			this.serviceDescriptionTarget = serviceDescriptionTarget;
 			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
 			this.server.createContext("/api/", this::handle);
 		}
@@ -385,7 +421,9 @@ public class VerifySensorMlHttpProcedures {
 		private void landing(HttpExchange exchange) throws IOException {
 			send(exchange, 200, "application/json",
 					"{\"links\":[{\"rel\":\"service-desc\",\"type\":\"application/vnd.oai.openapi\"," + "\"href\":\""
-							+ apiRoot().resolve("openapi.json") + "\"}]}");
+							+ (this.serviceDescriptionTarget == null ? apiRoot().resolve("openapi.json")
+									: this.serviceDescriptionTarget)
+							+ "\"}]}");
 		}
 
 		private void conformance(HttpExchange exchange) throws IOException {

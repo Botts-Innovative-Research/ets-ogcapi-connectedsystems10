@@ -1,9 +1,20 @@
 package org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20,6 +31,9 @@ import org.opengis.cite.ogcapiconnectedsystems10.validation.sensorml.SensorMlVal
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
@@ -44,6 +58,11 @@ public final class SensorMlSupport {
 	private static final String GEOJSON_MEDIA_TYPE = "application/geo+json";
 
 	private static final ObjectMapper JSON = new ObjectMapper();
+
+	private static final ObjectMapper YAML = new ObjectMapper(new YAMLFactory());
+
+	private static final Set<String> OPERATION_NAMES = Set.of("get", "put", "post", "delete", "options", "head",
+			"patch", "trace");
 
 	private static final ConnectedSystemsSensorMlValidatorAdapter VALIDATOR = new ConnectedSystemsSensorMlValidatorAdapter();
 
@@ -265,19 +284,28 @@ public final class SensorMlSupport {
 			ETSAssert.failWithUri(requirement, "API definition content and absolute source URI are required.");
 		}
 		try {
+			JsonNode parsed = YAML.readTree(content);
+			if (!(parsed instanceof ObjectNode root)) {
+				ETSAssert.failWithUri(requirement, source + " is not an OpenAPI object.");
+				return null;
+			}
+			new OperationReferenceResolver(source, root).resolve();
 			ParseOptions options = new ParseOptions();
-			options.setResolve(true);
-			options.setResolveFully(true);
-			options.setSafelyResolveURL(true);
-			options.setRemoteRefAllowList(List.of(parserSourceAllowPattern(source, requirement)));
-			SwaggerParseResult result = new OpenAPIV3Parser().readContents(content, List.of(), options,
-					source.toString());
+			options.setResolve(false);
+			options.setResolveFully(false);
+			SwaggerParseResult result = new OpenAPIV3Parser().readContents(JSON.writeValueAsString(root), List.of(),
+					options, source.toString());
 			OpenAPI model = result.getOpenAPI();
 			if (model == null || model.getPaths() == null) {
 				ETSAssert.failWithUri(requirement, source + " did not parse as an OpenAPI 3 definition with paths"
 						+ parserDiagnostics(result) + ".");
 			}
 			return new ApiDefinition(source, model, result.getMessages());
+		}
+		catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+			ETSAssert.failWithUri(requirement, source + " OpenAPI operation-reference resolution was interrupted.");
+			return null;
 		}
 		catch (Exception ex) {
 			ETSAssert.failWithUri(requirement,
@@ -286,16 +314,244 @@ public final class SensorMlSupport {
 		}
 	}
 
-	private static String parserSourceAllowPattern(URI source, String requirement) {
-		String scheme = source.getScheme() == null ? "" : source.getScheme().toLowerCase(Locale.ROOT);
-		String host = source.getHost();
-		if (!Set.of("http", "https").contains(scheme) || host == null || host.isBlank() || host.contains(":")
-				|| source.getUserInfo() != null) {
-			ETSAssert.failWithUri(requirement,
-					"API definition source must be an HTTP(S) URI with a supported host and no userinfo: " + source);
+	private static final class OperationReferenceResolver {
+
+		private static final int MAX_DEPTH = 8;
+
+		private static final int MAX_READS = 64;
+
+		private static final int MAX_BODY_BYTES = 2 * 1024 * 1024;
+
+		private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
+
+		private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(15);
+
+		private final URI source;
+
+		private final URI sourceDocument;
+
+		private final ObjectNode root;
+
+		private final HttpClient client;
+
+		private final Map<URI, JsonNode> documents = new HashMap<>();
+
+		private final Set<URI> active = new HashSet<>();
+
+		private int reads;
+
+		private OperationReferenceResolver(URI source, ObjectNode root) throws IOException, URISyntaxException {
+			this.source = source;
+			this.sourceDocument = withoutFragment(source);
+			this.root = root;
+			validateSource(source);
+			this.documents.put(this.sourceDocument, root);
+			this.client = HttpClient.newBuilder()
+				.connectTimeout(CONNECT_TIMEOUT)
+				.followRedirects(HttpClient.Redirect.NEVER)
+				.build();
 		}
-		int port = source.getPort() >= 0 ? source.getPort() : "https".equals(scheme) ? 443 : 80;
-		return host + ":" + port;
+
+		private void resolve() throws IOException, InterruptedException, URISyntaxException {
+			JsonNode pathsValue = this.root.get("paths");
+			if (!(pathsValue instanceof ObjectNode paths)) {
+				return;
+			}
+			List<String> names = new ArrayList<>();
+			paths.fieldNames().forEachRemaining(names::add);
+			for (String name : names) {
+				if (!isMediaOperationPath(name)) {
+					continue;
+				}
+				JsonNode value = paths.get(name);
+				if (!(value instanceof ObjectNode pathObject)) {
+					continue;
+				}
+				ResolvedObject resolved = resolveObject(pathObject, this.sourceDocument, 0);
+				paths.set(name, resolved.value());
+				resolveParameters(resolved.value().get("parameters"), resolved.document(), 1);
+				for (String operationName : OPERATION_NAMES) {
+					JsonNode operation = resolved.value().get(operationName);
+					if (operation instanceof ObjectNode operationObject) {
+						resolveOperation(operationObject, resolved.document(), 1);
+					}
+				}
+			}
+		}
+
+		private boolean isMediaOperationPath(String path) {
+			String normalized = normalizedTemplate(path);
+			for (ResourceType resourceType : ResourceType.values()) {
+				if (normalized.endsWith(normalizedTemplate(resourceType.collectionApiPath()))
+						|| normalized.endsWith(normalizedTemplate(resourceType.itemApiPath()))) {
+					return true;
+				}
+			}
+			return normalized.endsWith(normalizedTemplate("/collections/{collectionId}/items"));
+		}
+
+		private void resolveOperation(ObjectNode operation, URI document, int depth)
+				throws IOException, InterruptedException, URISyntaxException {
+			resolveParameters(operation.get("parameters"), document, depth);
+			JsonNode requestBody = operation.get("requestBody");
+			if (requestBody instanceof ObjectNode requestObject) {
+				operation.set("requestBody", resolveObject(requestObject, document, depth).value());
+			}
+			JsonNode responsesValue = operation.get("responses");
+			if (responsesValue instanceof ObjectNode responses) {
+				List<String> names = new ArrayList<>();
+				responses.fieldNames().forEachRemaining(names::add);
+				for (String name : names) {
+					JsonNode response = responses.get(name);
+					if (response instanceof ObjectNode responseObject) {
+						responses.set(name, resolveObject(responseObject, document, depth).value());
+					}
+				}
+			}
+		}
+
+		private void resolveParameters(JsonNode parametersValue, URI document, int depth)
+				throws IOException, InterruptedException, URISyntaxException {
+			if (!(parametersValue instanceof ArrayNode parameters)) {
+				return;
+			}
+			for (int index = 0; index < parameters.size(); index++) {
+				JsonNode parameter = parameters.get(index);
+				if (parameter instanceof ObjectNode parameterObject) {
+					parameters.set(index, resolveObject(parameterObject, document, depth).value());
+				}
+			}
+		}
+
+		private ResolvedObject resolveObject(ObjectNode object, URI document, int depth)
+				throws IOException, InterruptedException, URISyntaxException {
+			JsonNode referenceValue = object.get("$ref");
+			if (referenceValue == null) {
+				return new ResolvedObject(object, document);
+			}
+			if (!referenceValue.isTextual() || referenceValue.asText().isBlank()) {
+				throw new IOException("Operation metadata contains an empty or non-string $ref.");
+			}
+			if (depth >= MAX_DEPTH) {
+				throw new IOException("Operation reference depth exceeds " + MAX_DEPTH + ".");
+			}
+			if (++this.reads > MAX_READS) {
+				throw new IOException("Operation reference count exceeds " + MAX_READS + ".");
+			}
+
+			URI target = document.resolve(referenceValue.asText()).normalize();
+			validateTarget(target);
+			if (!this.active.add(target)) {
+				throw new IOException("Cyclic operation reference: " + target);
+			}
+			try {
+				URI targetDocument = withoutFragment(target);
+				JsonNode targetRoot = document(targetDocument);
+				JsonNode selected = selectFragment(targetRoot, target);
+				if (!(selected instanceof ObjectNode selectedObject)) {
+					throw new IOException("Operation reference does not select an object: " + target);
+				}
+				ResolvedObject resolved = resolveObject(selectedObject.deepCopy(), targetDocument, depth + 1);
+				ObjectNode merged = resolved.value();
+				Iterator<Map.Entry<String, JsonNode>> siblings = object.fields();
+				while (siblings.hasNext()) {
+					Map.Entry<String, JsonNode> sibling = siblings.next();
+					if (!"$ref".equals(sibling.getKey())) {
+						merged.set(sibling.getKey(), sibling.getValue().deepCopy());
+					}
+				}
+				return new ResolvedObject(merged, resolved.document());
+			}
+			finally {
+				this.active.remove(target);
+			}
+		}
+
+		private JsonNode document(URI target) throws IOException, InterruptedException {
+			JsonNode cached = this.documents.get(target);
+			if (cached != null) {
+				return cached;
+			}
+			HttpRequest request = HttpRequest.newBuilder(target)
+				.timeout(REQUEST_TIMEOUT)
+				.header("Accept", "application/yaml, application/json, text/yaml, */*")
+				.GET()
+				.build();
+			HttpResponse<InputStream> response = this.client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+			try (InputStream body = response.body()) {
+				if (response.statusCode() != 200) {
+					throw new IOException("Operation reference returned HTTP " + response.statusCode() + ": " + target);
+				}
+				byte[] bytes = body.readNBytes(MAX_BODY_BYTES + 1);
+				if (bytes.length > MAX_BODY_BYTES) {
+					throw new IOException("Operation reference exceeds " + MAX_BODY_BYTES + " bytes: " + target);
+				}
+				JsonNode parsed = YAML.readTree(new String(bytes, StandardCharsets.UTF_8));
+				if (parsed == null) {
+					throw new IOException("Operation reference is empty: " + target);
+				}
+				this.documents.put(target, parsed);
+				return parsed;
+			}
+		}
+
+		private JsonNode selectFragment(JsonNode document, URI target) throws IOException {
+			String fragment = target.getFragment();
+			if (fragment == null || fragment.isEmpty()) {
+				return document;
+			}
+			if (!fragment.startsWith("/")) {
+				throw new IOException("Operation reference fragment is not a JSON Pointer: " + target);
+			}
+			JsonNode selected = document.at(fragment);
+			if (selected.isMissingNode()) {
+				throw new IOException("Operation reference JSON Pointer does not exist: " + target);
+			}
+			return selected;
+		}
+
+		private void validateSource(URI value) throws IOException {
+			String scheme = normalizedScheme(value);
+			if (!Set.of("http", "https").contains(scheme) || value.getHost() == null || value.getHost().isBlank()
+					|| value.getUserInfo() != null || value.getFragment() != null) {
+				throw new IOException(
+						"API definition source must be an HTTP(S) URI with a host, no userinfo, and no fragment: "
+								+ value);
+			}
+		}
+
+		private void validateTarget(URI target) throws IOException {
+			String scheme = normalizedScheme(target);
+			if (!Set.of("http", "https").contains(scheme) || target.getHost() == null || target.getUserInfo() != null) {
+				throw new IOException("Operation reference must be an HTTP(S) URI with no userinfo: " + target);
+			}
+			if (!target.getHost().equalsIgnoreCase(this.source.getHost())
+					|| effectivePort(target) != effectivePort(this.source)) {
+				throw new IOException(
+						"Operation reference must retain the advertised description host and effective port: "
+								+ target);
+			}
+		}
+
+		private static String normalizedScheme(URI value) {
+			return value.getScheme() == null ? "" : value.getScheme().toLowerCase(Locale.ROOT);
+		}
+
+		private static int effectivePort(URI value) {
+			if (value.getPort() >= 0) {
+				return value.getPort();
+			}
+			return "https".equals(normalizedScheme(value)) ? 443 : 80;
+		}
+
+		private static URI withoutFragment(URI value) throws URISyntaxException {
+			return new URI(value.getScheme(), value.getUserInfo(), value.getHost(), value.getPort(), value.getPath(),
+					value.getQuery(), null);
+		}
+
+		private record ResolvedObject(ObjectNode value, URI document) {
+		}
+
 	}
 
 	/**

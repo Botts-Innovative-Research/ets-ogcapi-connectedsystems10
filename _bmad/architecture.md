@@ -1738,7 +1738,9 @@ Systems mappings do not change.
 Media advertisement is read-only OpenAPI inspection. The SensorML boundary
 accepts OpenAPI 3.0 and 3.1 JSON/YAML and resolves relative path-item,
 response, and request-body references from the advertised description URI;
-the legacy Kaizen 3.0-only model is not used for this boundary. Parser
+the legacy Kaizen 3.0-only model is not used for this boundary. Resolution
+preserves recursive component schema references instead of fully inlining the
+released cyclic graph, bounding TeamEngine memory and execution time. Parser
 diagnostics fail closed when no usable model or required operation reference
 is produced. Canonical representation procedures establish HTTP 200 and actual
 `application/sml+json` before parsing. Manual procedures process all available
@@ -1748,13 +1750,19 @@ Invalid supported content, schema failures, unsafe pagination, malformed
 present mappings, incompatible classes, wrong ids, and invalid association
 relations fail.
 
-Parser HTTP fetches use Swagger's safe URL resolver. Only the advertised
-description host at its effective port is allowlisted for private-address
-relative references; unrelated loopback, private, link-local, and restricted
-HTTP targets remain denied before retrieval.
+An ETS-owned bounded resolver fetches only path-item, response, request-body,
+and parameter references before Swagger model conversion. It allows only
+HTTP(S) references on the advertised description host at its effective port,
+follows no redirects, recognizes only JSON Pointer fragments, and enforces
+cycle, depth, read-count, and body-size limits. `file:`, `classpath:`,
+userinfo, unrelated hosts, and private-target pivots fail before retrieval.
+Component schema references remain untouched.
 
-Swagger parser, core, model, annotations, and safe-reference-resolver packages
-are shaded into an ETS-private namespace in the single deployed suite jar.
+Cross-origin advertised service descriptions are retrieved without IUT
+credentials and without redirects.
+
+Swagger parser, core, model, annotations, and transitive runtime packages are
+shaded into an ETS-private namespace in the single deployed suite jar.
 Jackson Java-time support is included at the parser line's base-compatible
 version. Runtime verification rejects missing or unrelocated parser classes and
 executes an OpenAPI 3.1 reference parse from the final image; no parser jar is

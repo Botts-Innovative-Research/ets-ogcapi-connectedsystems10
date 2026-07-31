@@ -4196,12 +4196,15 @@ relation is present.
 **GIVEN** a JSON or YAML OpenAPI service description
 **WHEN** the read and write procedures execute
 **THEN** OpenAPI 3.0 and 3.1 documents are parsed, including relative path-item, response, and request-body references resolved from the advertised service-description URI
+**AND** resolution SHALL preserve referenced schema graphs instead of fully inlining recursive component schemas, so a cyclic released schema graph remains bounded during TeamEngine execution
 **AND** parser warnings do not hide a missing model, unresolved required operation reference, or malformed definition
-**AND** external HTTP references use safe URL resolution, allowing a private address only for the advertised description's exact host and port while rejecting unrelated private or restricted targets
+**AND** an ETS-owned bounded resolver fetches only path-item, response, request-body, and parameter references required by these procedures
+**AND** external references allow HTTP(S) on only the advertised description's exact host and effective port, reject redirects, `file:`, `classpath:`, userinfo, fragments outside JSON Pointer syntax, unrelated hosts, private-target pivots, cycles, oversize bodies, excessive depth, and excessive reads
 **AND** read media is advertised on every declared canonical SensorML collection and advertised custom items operation
 **AND** write media is advertised on at least one canonical POST or PUT
 **AND** only explicit 2xx or `2XX` responses count as successful-response evidence
 **AND** an advertised malformed, inaccessible, or unsupported-media service description fails instead of being discarded as no evidence
+**AND** cross-origin service-description retrieval is credential-free and rejects redirects
 **AND** the deployed ETS jar contains the isolated OpenAPI parser, model, and runtime support needed to execute the same OpenAPI 3.1 reference path under TeamEngine without adding or replacing a TeamEngine-owned jar
 **AND** neither procedure issues a mutation request.
 *Maps to*: REQ-ETS-PART1-013.

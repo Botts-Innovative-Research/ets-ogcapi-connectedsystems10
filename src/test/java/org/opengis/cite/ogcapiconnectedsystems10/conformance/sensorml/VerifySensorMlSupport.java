@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.swagger.v3.oas.models.media.Schema;
 import org.junit.Test;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlSupport.ApiDefinition;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlSupport.ResourceType;
@@ -81,11 +82,69 @@ public class VerifySensorMlSupport {
 				    $ref: http://127.0.0.1:9/private.yaml
 				""";
 
+		assertThrows(AssertionError.class, () -> SensorMlSupport.parseApiDefinition(definition,
+				URI.create("https://example.test/openapi.yaml"), REQUIREMENT));
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void nonHttpOperationReferenceFailsBeforeParserResolution() {
+		String definition = """
+				openapi: 3.1.0
+				info:
+				  title: unsafe reference
+				  version: "1"
+				paths:
+				  /systems:
+				    $ref: file:///definitely-not-readable-by-the-ets.yaml
+				""";
+
+		assertThrows(AssertionError.class, () -> SensorMlSupport.parseApiDefinition(definition,
+				URI.create("https://example.test/openapi.yaml"), REQUIREMENT));
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void recursiveComponentSchemaRemainsAReference() {
+		String definition = """
+				openapi: 3.1.0
+				info:
+				  title: recursive schema
+				  version: "1"
+				components:
+				  schemas:
+				    Node:
+				      type: object
+				      properties:
+				        next:
+				          $ref: '#/components/schemas/Node'
+				paths:
+				  /systems:
+				    get:
+				      responses:
+				        "200":
+				          description: ok
+				          content:
+				            application/sml+json:
+				              schema:
+				                $ref: '#/components/schemas/Node'
+				""";
+
 		ApiDefinition parsed = SensorMlSupport.parseApiDefinition(definition,
 				URI.create("https://example.test/openapi.yaml"), REQUIREMENT);
-		assertTrue(parsed.diagnostics().toString().contains("IP is restricted"));
-		assertThrows(AssertionError.class, () -> SensorMlSupport.assertReadMediaAdvertisements(parsed,
-				Set.of(ResourceType.SYSTEM), false, REQUIREMENT));
+
+		Schema<?> next = (Schema<?>) parsed.model()
+			.getComponents()
+			.getSchemas()
+			.get("Node")
+			.getProperties()
+			.get("next");
+		assertEquals("#/components/schemas/Node", next.get$ref());
+		assertTrue(parsed.diagnostics().toString(), parsed.diagnostics().isEmpty());
 	}
 
 	/**

@@ -995,6 +995,168 @@
       "reviewedBy": "Codex Sprint 60 ATS line review",
       "reviewedOn": "2026-07-31",
       "evidence": "The independent released procedure requires exact /conf/datastream declaration, selects every /collections entry whose itemType is exactly Observation, follows its supported rel=items link with Part 1 collection-items traversal, and validates collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/sf-ref-from-controlstream",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamSamplingFeaturesAreAvailableFromControlStream()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, skips before any ControlStream endpoint access unless the Part 1 /conf/sf condition class is declared, then obtains every ControlStream and validates each /controlstreams/{id}/samplingFeatures endpoint with the released Sampling Features resources-endpoint procedure over bounded read-only pagination."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/foi-ref-from-controlstream",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamFeaturesOfInterestAreAvailableFromControlStream()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, obtains every ControlStream through canonical-resources to evaluate the Requirement 17 conditions, skips before nested FOI endpoint access unless ControlStream representations evidence a locally hosted featureOfInterest association, and when applicable checks each /controlstreams/{id}/featuresOfInterest endpoint with HTTP 200 bounded pagination plus generic GeoJSON FeatureCollection validation when returned."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/canonical-url",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamCanonicalResourceReadable()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, iterates every exact itemType=ControlStream collection, requires each item to advertise exactly one same-origin rel=canonical link, dereferences it read-only, validates the singleton ControlStream schema, and compares content after canonical links are removed."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/resources-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamsCollectionReadable()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration and validates the canonical /controlstreams endpoint over bounded read-only pagination against the released ControlStream collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/canonical-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamsCanonicalEndpointExposesControlStreamItems()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration and applies the released ControlStream resources-endpoint validation to the canonical /controlstreams endpoint, including collection and item JSON schema validation."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/ref-from-system",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#systemScopedControlStreamsReadableWhenSystemReferencePresent()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, skips before any System or nested endpoint access unless the Part 1 /conf/system condition class is declared, then obtains every System through canonical-resources and validates each /systems/{id}/controlstreams sub-resource over bounded read-only pagination against the released ControlStream collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/ref-from-deployment",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#deploymentScopedControlStreamsReadableWhenDeploymentReferencePresent()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, skips before any Deployment endpoint access unless the Part 1 /conf/deployment condition class is declared, then obtains deployments with local ControlStream association evidence and validates each applicable /deployments/{id}/controlstreams sub-resource over bounded read-only pagination against the released ControlStream schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/collections",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamCollectionsAreTaggedWithItemType()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, selects every /collections entry whose itemType is exactly ControlStream, follows its supported rel=items link with Part 1 collection-items traversal, and validates collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/schema-op",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamSchemaReadable()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, obtains every ControlStream through canonical-resources, extracts every advertised Command format, and GETs /controlstreams/{id}/schema?cmdFormat={format} read-only requiring HTTP 200 and the released CommandSchema JSON shape."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/cmd-canonical-url",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandCanonicalResourceReadableWhenCollectionPopulated()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, iterates every exact itemType=Command collection, requires each item to advertise exactly one same-origin rel=canonical link, dereferences it read-only, validates the singleton Command schema, compares content after canonical links are removed, and SKIPs without positive evidence when no populated Command collection exists."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/cmd-resources-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#controlStreamScopedCommandsReadable()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, obtains every ControlStream through canonical-resources, and validates each /controlstreams/{id}/commands sub-resource over bounded read-only pagination against the released Command collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/cmd-canonical-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandsCanonicalEndpointReadable()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration and validates the canonical /commands endpoint over bounded read-only pagination against the released Command collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/cmd-ref-from-controlstream",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandsReferenceSelectedControlStreamWhenNestedCollectionPopulated()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, validates every /controlstreams/{id}/commands endpoint against the released schemas, and for every populated nested Command item requires explicit ControlStream parent reference evidence, producing a SKIP rather than positive evidence when all nested Command collections are empty."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/cmd-collections",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandCollectionsAreTaggedWithItemType()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, selects every /collections entry whose itemType is exactly Command, follows its supported rel=items link with Part 1 collection-items traversal, and validates collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/status-resources-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandStatusResourcesEndpointReadable()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, selects a real Command from the canonical /commands endpoint, and validates /commands/{cmdId}/status over bounded read-only pagination against the released CommandStatus collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/command-status-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandStatusEndpointReadableForEveryCommand()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, obtains every Command from the canonical /commands endpoint, validates each /commands/{cmdId}/status response against the released CommandStatus schemas, and requires returned status items to reference the selected Command."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/result-resources-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandResultResourcesEndpointReadable()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, selects a real Command from the canonical /commands endpoint, and validates /commands/{cmdId}/result over bounded read-only pagination against the released CommandResult collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/controlstream/command-result-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests#commandResultEndpointReadableForEveryCommand()",
+      "reviewedBy": "Codex Sprint 61 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/controlstream declaration, obtains every Command from the canonical /commands endpoint, validates each /commands/{cmdId}/result response against the released CommandResult schemas, and requires returned result items to reference the selected Command."
     }
   ]
 }

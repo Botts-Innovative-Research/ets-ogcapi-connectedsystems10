@@ -1,8 +1,47 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T12:09Z
+Last updated: 2026-07-31T14:43Z
 
 ## Current Sprint Evidence
+
+Sprint 61 Part 2 Control Streams and Commands released ATS:
+
+- Trigger: user instructed "Continue."
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/controlstream`.
+- Implementation: exactly eighteen TestNG methods, one per released Control
+  Streams and Commands Annex A.3 target; direct
+  `part2controlstream -> part2apicommon` dependency; immutable setup; released
+  ControlStream, Command, CommandStatus, and CommandResult schema validation;
+  exact `itemType` collection traversal; advertised canonical-link evidence;
+  all-format `cmdFormat` schema-op checks; condition-gated Sampling Feature,
+  FOI, System, Deployment, and nested Command association checks; no mutation.
+- Focused test-first red: `88 tests / 3 failures / 6 errors / 0 skipped`.
+  Final corrected focused verification: `88/0/0/0`.
+- Released ATS coverage update: `1/0/0/0`; coverage audit: `23/0/0/0`.
+  Overall coverage is `240 total / 125 exact / 2 helper / 99 candidate /
+  14 unmapped`; Part 2 is `130 total / 34 exact / 0 helper / 82 candidate /
+  14 unmapped`; Part 2 ControlStream is
+  `18 exact / 0 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS.
+- Full Docker Maven: `758 tests / 0 failures / 0 errors / 3 skipped`.
+- Local OSH TeamEngine smoke exited nonzero honestly at
+  `254 total / 36 passed / 21 failed / 197 skipped`. Part 2 API Common setup
+  and all eighteen ControlStream methods SKIP because local OSH does not
+  declare the Part 2 `/conf/api-common` prerequisite.
+- No-mutation oracle: `recognized_iut_request_logs=186`; request-line method
+  count is `GET=192`, zero POST/PUT/PATCH/DELETE/OPTIONS.
+- Final evidence:
+  `ops/test-results/sprint-ets-61-part2-controlstream-final-2026-07-31/`;
+  durable tracked files are `s-ets-01-03-teamengine-smoke-2026-07-31.xml`,
+  `s-ets-01-03-teamengine-container-2026-07-31.txt`,
+  `no-mutation-oracle.txt`, and `request-method-counts.txt`.
+- No OSH or TeamEngine source/binary changes, hosted CI, or IUT mutation were
+  introduced.
+- Raze: initial `GAPS_FOUND 0.93` for ignored `.log` evidence and premature
+  completion/push wording; gapfix added tracked `.txt` evidence and reconciled
+  docs; recheck returned `APPROVE 0.96` with no required fixes.
 
 Sprint 60 Part 2 Datastreams and Observations released ATS:
 

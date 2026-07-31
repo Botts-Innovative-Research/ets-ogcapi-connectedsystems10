@@ -1,0 +1,93 @@
+verdict: GAPS_FOUND
+confidence: 0.93
+reviewer: Raze
+role: "Red Team / Adversarial Reviewer"
+reviewed_at_utc: "2026-07-31T14:47:44Z"
+repository: "/home/nh/docker/ets-ogcapi-connectedsystems10"
+subject: "Sprint 61 OGC 23-002 Part 2 /conf/controlstream exact released ATS closure"
+implementation_changes_made_by_reviewer: false
+reviewed_scope:
+  included:
+    - "Current uncommitted Sprint 61 Java/TestNG implementation for Part2ControlStreamTests and Part2ControlStreamSupport."
+    - "TestNG dependency wiring for part2controlstream and structural regression tests."
+    - "Reviewed ATS mappings and regenerated coverage report for 2:/conf/controlstream."
+    - "OpenSpec, story, contract, traceability, architecture, ops status, changelog, known-issues, and test-results reconciliation."
+    - "Existing local OSH TeamEngine smoke artifacts under ops/test-results/sprint-ets-61-part2-controlstream-final-2026-07-31/."
+    - "Existing no-mutation and request-method-count artifacts supplied for this review."
+  excluded:
+    - "Implementation edits."
+    - "Expensive Docker/Maven/TeamEngine reruns; existing artifacts were sufficient to identify the blocking gaps."
+summary:
+  overall: "The Sprint 61 code and ATS mapping shape look substantially correct, but the work is not ready to report complete because key no-mutation/raw E2E evidence is ignored by git and the story/contract currently overclaim completion/push state."
+  code_assessment: "No implementation-level false PASS/SKIP blocker found in the reviewed code. The methods require exact /conf/controlstream declaration, depend causally on part2apicommon, reject empty Command reference evidence, dereference advertised canonical links, and validate released endpoint schemas."
+  release_gate: "Do not report Sprint 61 complete or push as final until the required fixes below are addressed and the final status is reconciled."
+findings:
+  - id: RAZE-S61-001
+    severity: HIGH
+    title: "No-mutation and raw E2E log evidence is ignored by git"
+    impact: "A normal commit/push would preserve the TeamEngine XML but drop the no-mutation oracle, request-method counts, and raw container log evidence that the docs cite. That weakens the mandatory E2E/no-mutation audit trail and creates a false durability claim."
+    evidence:
+      - ".gitignore:27 ignores '*.log'."
+      - "git check-ignore reports no-mutation-oracle.log, request-method-counts.log, and s-ets-01-03-teamengine-container-2026-07-31.log ignored by .gitignore:27."
+      - "git status --ignored shows the Sprint 61 directory untracked, while those three log files are hidden as ignored files."
+      - "ops/status.md:41-44 and ops/test-results.md cite the Sprint 61 evidence directory for no-mutation/request-log evidence."
+      - "Existing artifact values reviewed: no-mutation-oracle.log has recognized_iut_request_logs=186; request-method-counts.log has GET=192 and POST/PUT/PATCH/DELETE/OPTIONS=0."
+    required_fix: "Make the Sprint 61 no-mutation and request-log evidence durable before final completion: either force-add the relevant .log files intentionally, or rename/copy them to tracked artifact extensions and update docs to point at the tracked files. Re-run git status/check-ignore for the evidence directory before committing."
+  - id: RAZE-S61-002
+    severity: MEDIUM
+    title: "Story and contract overstate completion, Raze, and push state"
+    impact: "The sprint documents contradict each other and the worktree reality. A reader could believe the sprint was already Raze-cleared and pushed before this review was written."
+    evidence:
+      - "epics/stories/s-ets-61-01-part2-controlstream-closure.md:3 says Status: Done."
+      - "epics/stories/s-ets-61-01-part2-controlstream-closure.md:74 marks Raze review complete with no unresolved required fixes."
+      - "epics/stories/s-ets-61-01-part2-controlstream-closure.md:75 marks 'Commit is pushed to Botts main' checked."
+      - ".harness/contracts/sprint-ets-61.yaml:4 says status: COMPLETE while line 35 still says raze: PENDING_FINAL_REVIEW."
+      - "ops/status.md:45-46 correctly says Raze final review is pending and must be resolved before final completion is reported."
+      - "git status shows the Sprint 61 work remains uncommitted; no current push evidence exists for this uncommitted work."
+    required_fix: "Reconcile the story, contract, epic/status/test-results, and final metrics after this report. Do not leave a checked push/completion claim until the commit is actually created and pushed."
+evidence:
+  ats_mapping:
+    status: "Looks correct for reviewed exact closure."
+    details:
+      - "reviewed-ats-mappings.json:1000-1160 contains eighteen Part 2 /conf/controlstream entries, all kind=exact, with Sprint 61 implementation methods."
+      - "ops/ats-coverage-report.json:3317-3322 reports 2:/conf/controlstream total=18 exact=18 helper=0 candidate=0 unmapped=0."
+      - "No missing or extra released Annex A.3 target was found in the reviewed mapping set."
+  testng_dependency:
+    status: "Looks correct."
+    details:
+      - "testng.xml:184-186 wires part2apicommon -> part1apicommon, part2datastream -> part2apicommon, and part2controlstream -> part2apicommon."
+      - "Part2ControlStreamTests.java:96 uses @BeforeClass(dependsOnGroups='part2apicommon', alwaysRun=true)."
+      - "The local OSH XML shows every Part2ControlStream method SKIPping through prerequisite method part2ApiCommonResourceCollectionsAreReadable skipped."
+  false_pass_skip_review:
+    status: "No blocking code defect found."
+    details:
+      - "Part2ControlStreamTests.java:118-390 exposes the eighteen reviewed methods and ties each description to a released /req/controlstream target."
+      - "The implementation rejects empty per-resource evidence for schema-op and nested Command reference assertions with SKIP rather than PASS."
+      - "Command status/result endpoints use /commands/{cmdId}/status and /commands/{cmdId}/result and require command@id reference evidence when items are returned."
+      - "Canonical resource checks use advertised same-origin rel=canonical links rather than guessed /controlstreams/{id} or /controls/{id} aliases."
+  verification_artifacts_reviewed:
+    focused_red: "88/3/6/0, supplied and documented."
+    corrected_focused: "88/0/0/0, supplied and documented."
+    coverage_update: "1/0/0/0, supplied and documented."
+    coverage_audit: "23/0/0/0, supplied and documented."
+    full_maven: "758/0/0/3, supplied and documented; do not phrase as all tests pass because three tests skipped."
+    local_osh_teamengine: "XML root reports total=254 passed=36 failed=21 skipped=197."
+    controlstream_e2e_behavior: "All eighteen Part2ControlStreamTests methods SKIP through part2apicommon on local OSH because Part 2 /conf/api-common is undeclared."
+    no_mutation: "Recognized IUT request logs=186; method counts GET=192, POST/PUT/PATCH/DELETE/OPTIONS=0, but those log artifacts are currently ignored by git."
+  worktree_pollution:
+    status: "Mostly scoped, with one artifact-durability issue."
+    details:
+      - "Changed source/docs paths are Sprint 61 scoped plus ops/metrics.md."
+      - "Untracked paths are expected Sprint 61 CP/story/contract/evidence/support class paths."
+      - "Ignored Sprint 61 .log evidence is the blocking pollution/durability concern."
+required_fixes:
+  - "RAZE-S61-001: track or rename/copy the Sprint 61 no-mutation oracle, request-method counts, and raw TeamEngine container log evidence so it survives commit/push."
+  - "RAZE-S61-002: reconcile premature Done/COMPLETE/Raze/push claims after this review and before final completion reporting."
+concerns:
+  - "The local OSH smoke is honestly non-green and exercises the new ControlStream methods only as causal prerequisite SKIPs. That is acceptable only if final reporting keeps the limitation explicit."
+  - "No expensive gates were rerun by Raze; this review relied on existing artifacts and lightweight inspection as requested."
+release_recommendation:
+  completion_claim_allowed: false
+  push_allowed_after_required_fixes: true
+  implementation_code_change_required: false
+  mapping_promotion_allowed_after_required_fixes: true

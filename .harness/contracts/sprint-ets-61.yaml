@@ -1,0 +1,35 @@
+sprint: ets-61
+story: S-ETS-61-01
+title: Part 2 Control Streams and Commands released ATS closure
+status: COMPLETE
+date: 2026-07-31
+requirement: REQ-ETS-PART2-003
+scope:
+  include:
+    - OGC 23-002 /conf/controlstream eighteen released procedures
+    - direct TestNG dependency on part2apicommon
+    - read-only ControlStream, Command, CommandStatus, CommandResult, System, Deployment, SamplingFeature, FOI, and /collections probes
+    - all-resource traversal, exact itemType selection, canonical-link equivalence, endpoint JSON schema validation, all-format schema-op checks, and condition-gated SKIPs
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - IUT mutation
+    - Command Feasibility
+    - OSH or TeamEngine source or binary changes
+success_criteria:
+  - id: part2_controlstream_eighteen_methods
+    description: Part2ControlStreamTests exposes exactly eighteen TestNG methods, one per released ATS target.
+  - id: part2_controlstream_direct_prerequisite
+    description: testng.xml declares part2controlstream depends-on part2apicommon.
+  - id: part2_controlstream_exact_coverage
+    description: coverage report shows 18 exact mappings and no candidates/unmapped tests for 2:/conf/controlstream.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: "PASS - historical gap reproduced at 88/3/6/0"
+  focused: "PASS - 88/0/0/0"
+  coverage: "PASS - update 1/0/0/0; audit 23/0/0/0; 2:/conf/controlstream 18 exact / 0 candidate / 0 unmapped"
+  formatter: "PASS - spring-javaformat:apply BUILD SUCCESS"
+  full_maven: "PASS_WITH_SKIPS - 758/0/0/3"
+  e2e_local_osh: "NON_GREEN_HONEST - TeamEngine reached local OSH, 254/36/21/197; Part2ControlStreamTests 18 SKIP through part2apicommon"
+  no_mutation: "PASS - recognized_iut_request_logs=186; GET=192; POST/PUT/PATCH/DELETE/OPTIONS=0"
+  raze: "APPROVE 0.96 - recheck closed durable evidence and premature completion/push findings; no required fixes"

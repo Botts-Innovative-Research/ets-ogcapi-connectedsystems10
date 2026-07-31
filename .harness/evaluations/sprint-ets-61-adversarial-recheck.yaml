@@ -1,0 +1,53 @@
+verdict: APPROVE
+confidence: 0.96
+reviewer: Raze
+role: "Red Team / Adversarial Reviewer"
+reviewed_at_utc: "2026-07-31T14:55:41Z"
+repository: "/home/nh/docker/ets-ogcapi-connectedsystems10"
+subject: "Sprint 61 Raze gapfix recheck for Part 2 /conf/controlstream exact released ATS closure"
+implementation_changes_made_by_reviewer: false
+reviewed_scope:
+  - "Rechecked only prior RAZE-S61-001 durable E2E/no-mutation evidence gap."
+  - "Rechecked only prior RAZE-S61-002 premature story/contract Raze completion and push-state claims."
+  - "Rechecked final reconciliation after the approved gapfix changed story status to Done, contract status to COMPLETE, and Raze completion to checked while leaving push unchecked."
+  - "Did not rerun Maven, Docker, or TeamEngine; existing artifacts and git metadata were sufficient."
+findings: []
+evidence:
+  RAZE-S61-001:
+    status: CLOSED
+    summary: "Durable unignored .txt/.xml Sprint 61 E2E and no-mutation artifacts now exist beside the ignored .log originals."
+    artifacts:
+      - "ops/test-results/sprint-ets-61-part2-controlstream-final-2026-07-31/s-ets-01-03-teamengine-smoke-2026-07-31.xml"
+      - "ops/test-results/sprint-ets-61-part2-controlstream-final-2026-07-31/s-ets-01-03-teamengine-container-2026-07-31.txt"
+      - "ops/test-results/sprint-ets-61-part2-controlstream-final-2026-07-31/no-mutation-oracle.txt"
+      - "ops/test-results/sprint-ets-61-part2-controlstream-final-2026-07-31/request-method-counts.txt"
+    git_ignore_check: "git check-ignore -v against the .txt/.xml artifacts produced no output, so the durable artifacts are not ignored."
+    git_visibility: "git ls-files --others --exclude-standard lists the four durable .txt/.xml artifacts as commit-visible untracked files."
+    retained_ignored_originals:
+      status: "acceptable"
+      detail: "The original .log files remain ignored by the repository-wide *.log rule, but equivalent durable .txt artifacts now carry the cited raw/no-mutation evidence."
+    artifact_values:
+      teamengine_xml_root: "total=254 passed=36 failed=21 skipped=197"
+      no_mutation_oracle: "recognized_iut_request_logs=186"
+      method_counts: "GET=192, POST=0, PUT=0, PATCH=0, DELETE=0, OPTIONS=0"
+  RAZE-S61-002:
+    status: CLOSED
+    summary: "Current story and contract completion language is not a premature overclaim after the approved Raze gapfix because the remaining publication step is explicitly left unchecked."
+    story_evidence:
+      - "epics/stories/s-ets-61-01-part2-controlstream-closure.md status is Done after this APPROVE recheck."
+      - "Definition of Done marks Raze review complete with no unresolved required fixes."
+      - "Definition of Done leaves 'Commit is pushed to Botts main' unchecked, so publication is not claimed before the actual push."
+      - "The story names the durable tracked .xml/.txt evidence artifacts explicitly."
+    contract_evidence:
+      - ".harness/contracts/sprint-ets-61.yaml status is COMPLETE after the approved gapfix recheck."
+      - "Contract verification records Raze as APPROVE 0.96 with no required fixes."
+      - "The contract does not claim the work has been pushed."
+    grep_check: "Search found the only push-completion phrase in scope as the unchecked story DoD item. No checked or contract-level pushed-to-Botts claim is present."
+required_fixes: []
+concerns:
+  - "The durable .txt/.xml artifacts are untracked until the final Sprint 61 commit is created; they are not ignored and will be picked up by normal git add."
+  - "Final reporting must still keep the local OSH TeamEngine run honest: it is non-green at 254/36/21/197 with ControlStream methods SKIPping through part2apicommon."
+release_recommendation:
+  completion_claim_allowed_after_final_reconciliation: true
+  push_allowed_after_final_reconciliation: true
+  implementation_code_change_required: false

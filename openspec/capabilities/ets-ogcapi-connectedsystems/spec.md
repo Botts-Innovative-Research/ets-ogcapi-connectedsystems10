@@ -974,71 +974,145 @@ sub-resource endpoints
 
 #### REQ-ETS-PART2-003: Part 2 Control Streams & Commands Conformance Suite
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
-- **Historical increment**: (Sprint 22 Generator 2026-05-08; story S-ETS-22-01)
-- **Description**: The ETS provides a TestNG suite class for OGC 23-002 Requirements Class "Control Streams & Commands" using official identifiers `/req/controlstream` and `/conf/controlstream`. Sprint 22 implements the first read-only, declaration-gated subset covering ControlStream endpoint availability, ControlStream resource shape, ControlStream schema sub-resources, selected System-scoped ControlStream sub-resource access, and ControlStream-scoped Command endpoint availability without mutating the IUT.
-- **OGC source verified**: OGC 23-002 official published HTML at `https://docs.ogc.org/is/23-002/23-002.html`, Clause 10 "Requirements Class Control Streams & Commands", checked 2026-05-07. The requirements class identifier is `/req/controlstream`; conformance class is `/conf/controlstream`; prerequisite is Requirements Class 1 `/req/api-common`. Normative statements include `/req/controlstream/sf-ref-from-controlstream`, `/req/controlstream/foi-ref-from-controlstream`, `/req/controlstream/canonical-url`, `/req/controlstream/resources-endpoint`, `/req/controlstream/canonical-endpoint`, `/req/controlstream/ref-from-system`, `/req/controlstream/ref-from-deployment`, `/req/controlstream/collections`, `/req/controlstream/schema-op`, `/req/controlstream/cmd-canonical-url`, `/req/controlstream/cmd-resources-endpoint`, `/req/controlstream/cmd-canonical-endpoint`, `/req/controlstream/cmd-ref-from-controlstream`, `/req/controlstream/cmd-collections`, `/req/controlstream/status-resources-endpoint`, `/req/controlstream/command-status-endpoint`, `/req/controlstream/result-resources-endpoint`, and `/req/controlstream/command-result-endpoint`.
-- **Dependency policy**: Sprint 22 SHALL keep `/req/api-common` prerequisite visibility explicit. Because GeoRobotix declares `/conf/controlstream` but not `/conf/api-common`, Generator MAY evaluate clearly scoped ControlStream endpoint assertions when `/conf/controlstream` is declared, but SHALL NOT report full `/conf/controlstream` class closure while the `/req/api-common` prerequisite is absent or cannot be established. The missing prerequisite must remain a visible SKIP/prerequisite-incomplete outcome, and ControlStream evidence SHALL NOT imply API Common PASS.
-- **GeoRobotix planning probe**: `/conformance` declares `/conf/controlstream` but not `/conf/api-common`. `GET /controlstreams?limit=2`, `GET /controlstreams/{id}`, `GET /controlstreams/{id}/schema`, `GET /controlstreams/{id}/commands?limit=2`, and `GET /systems/{systemId}/controlstreams?limit=2` returned HTTP 200 JSON for selected read-only probes. The selected ControlStream exposes `system@id`, `inputName`, `controlledProperties`, and `formats`; its schema exposes `commandFormat` and `parametersSchema`. The nested commands response for that ControlStream was empty with `items` only. `GET /commands?limit=2` and `GET /controls/{id}` returned HTTP 400 on the current GeoRobotix IUT, so Sprint 22 Generator must not PASS global Command endpoint or `/controls/{id}` canonical URL assertions from `/controlstreams/{id}` alias evidence.
-- **Scope guard**: Sprint 22 is a partial read-only subset. It SHALL NOT implement Command creation, feasibility POST, command status/result dereferencing, SWE Common encoding validation, Part 2 Create/Replace/Delete, Part 2 Update, or full command-body validation against the ControlStream schema. Empty ControlStream-scoped Command collections are endpoint evidence only, not `/req/controlstream/cmd-ref-from-controlstream` PASS evidence.
-- **Implementation evidence**: `Part2ControlStreamTests` implements declaration-gated read-only checks for `/conformance`, `/controlstreams`, `/controlstreams/{id}`, `/controlstreams/{id}/schema`, `/controlstreams/{id}/commands`, `/commands` availability when provided, `/controls/{id}` canonical URL evidence when provided, nested Command reference evidence when populated, and bounded `/systems/{systemId}/controlstreams`. `VerifyPart2ControlStreamTests` and `VerifyTestNGSuiteDependency` add helper and TestNG structural regressions. Maven via Docker reported `167 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix TeamEngine smoke reported `115 total / 71 passed / 0 failed / 44 skipped` with zero IUT-bound POST/PUT/DELETE/PATCH entries. On GeoRobotix, seven ControlStream tests PASS and four SKIP honestly for missing `/conf/api-common`, `/controls/{id}` HTTP 400, `/commands` HTTP 400, and empty nested Command reference evidence.
+- **Status**: IMPLEMENTED_RELEASED_ATS_EXACT (Sprint 61 replaces the Sprint 22
+  partial/unreviewed subset)
+- **Historical increment**: Sprint 22 Generator 2026-05-08 remains preserved as
+  partial evidence only; Sprint 61 supersedes it for reviewed ATS mapping.
+- **Description**: The ETS SHALL implement exactly the eighteen released OGC
+  23-002 Annex A.3 `/conf/controlstream` procedures:
+  `/sf-ref-from-controlstream`, `/foi-ref-from-controlstream`,
+  `/canonical-url`, `/resources-endpoint`, `/canonical-endpoint`,
+  `/ref-from-system`, `/ref-from-deployment`, `/collections`, `/schema-op`,
+  `/cmd-canonical-url`, `/cmd-resources-endpoint`,
+  `/cmd-canonical-endpoint`, `/cmd-ref-from-controlstream`,
+  `/cmd-collections`, `/status-resources-endpoint`,
+  `/command-status-endpoint`, `/result-resources-endpoint`, and
+  `/command-result-endpoint`. Each procedure SHALL have one independently
+  executable TestNG method whose description cites its canonical target URI and
+  `REQ-ETS-PART2-003`. Standalone declaration/prerequisite tracer methods from
+  the historical subset SHALL NOT be deployed as reviewed ATS procedures.
+- **OGC source verified**: OGC 23-002 official published HTML at
+  `https://docs.ogc.org/is/23-002/23-002.html`, Clause 10 and Annex A.3,
+  checked 2026-07-31. The requirements class identifier is
+  `/req/controlstream`; conformance class is `/conf/controlstream`;
+  prerequisite is Requirements Class 1 `/req/api-common`. Annex A.3 also
+  specifies nested Command endpoints at `/controlstreams/{csId}/commands`,
+  CommandStatus endpoints at `/commands/{cmdId}/status`, and CommandResult
+  endpoints at `/commands/{cmdId}/result`.
+- **Dependency policy**: `part2controlstream` SHALL depend directly on
+  `part2apicommon`. The Sprint 22 scoped-execution exception is superseded now
+  that Sprint 59 implemented the Part 2 API Common released ATS. If Part 2 API
+  Common is absent, skipped, or failed, ControlStream setup SHALL skip before
+  ControlStream IUT access and SHALL NOT convert scoped endpoint evidence into
+  full `/conf/controlstream` closure.
+- **Read-only scope guard**: Sprint 61 SHALL issue only GET requests. It SHALL
+  NOT create Commands, issue feasibility POSTs, mutate ControlStreams, or claim
+  semantic Command parameter/result validation beyond the released resource
+  endpoint and schema procedures. Empty ControlStream, Command, CommandStatus,
+  or CommandResult collections SHALL SKIP resource-specific child checks with
+  precise data-availability reasons rather than producing vacuous PASS.
+- **Implementation evidence**: Sprint 61 implements exactly eighteen
+  `Part2ControlStreamTests` procedures with direct `part2apicommon` inheritance,
+  immutable setup, released ControlStream/Command/CommandStatus/CommandResult
+  schema validation, exact `itemType` collection traversal, advertised
+  canonical-link evidence, all-format `cmdFormat` schema-op checks, and
+  condition-gated read-only nested endpoints. Reviewed coverage is
+  `2:/conf/controlstream = 18 exact / 0 candidate / 0 unmapped`; overall
+  coverage is `240 total / 125 exact / 2 helper / 99 candidate / 14 unmapped`.
+  Focused red captured the historical gap at `88/3/6/0`, corrected focused
+  verification passed `88/0/0/0`, coverage update passed `1/0/0/0`, full
+  coverage audit passed `23/0/0/0`, and full Docker Maven passed
+  `758/0/0/3`. Mandatory local OSH TeamEngine reached the real unmodified IUT
+  and exited honestly non-green at `254 total / 36 passed / 21 failed /
+  197 skipped`; all eighteen ControlStream methods SKIP through
+  `part2apicommon` because local OSH does not declare Part 2 `/conf/api-common`.
+  The no-mutation oracle recognized 186 IUT request logs; the captured log has
+  `GET=192` and zero POST/PUT/PATCH/DELETE/OPTIONS.
 - **Maps to**: PRD FR-ETS-32.
 
-##### Acceptance Scenarios for Sprint 22
+##### Acceptance Scenarios for Sprint 61
 
-#### SCENARIO-ETS-PART2-003-CONTROLSTREAM-CONFORMANCE-DECLARED-001 (CRITICAL)
-**GIVEN** the ETS is evaluating OGC 23-002 Control Streams & Commands
-**WHEN** it reads `/conformance`
-**THEN** `/conf/controlstream` is required before producing ControlStream conformance PASS evidence
-**AND** `/conf/api-common` remains a separate prerequisite judgment, not something inferred from ControlStream behavior.
+#### SCENARIO-ETS-PART2-003-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** the reviewed OGC 23-002 Annex A.3 inventory
+**WHEN** the deployed ControlStream TestNG class is inspected
+**THEN** it SHALL expose exactly eighteen `@Test` methods, one per released
+`/conf/controlstream` target
+**AND** each method SHALL be independently executable, read-only, grouped as
+`part2controlstream`, and mapped to exactly one released requirement URI.
 
-#### SCENARIO-ETS-PART2-003-CONTROLSTREAM-COLLECTION-READONLY-001 (CRITICAL)
-**GIVEN** `/req/controlstream/resources-endpoint` and `/req/controlstream/canonical-endpoint`
-**WHEN** the ETS issues `GET {api_root}/controlstreams`
-**THEN** the response is HTTP 200 JSON with an `items` array
-**AND** the test records the canonical requirement URI in its `@Test` description.
+#### SCENARIO-ETS-PART2-003-DIRECT-PREREQUISITE-001 (CRITICAL)
+**GIVEN** `/req/controlstream` directly inherits Part 2 `/req/api-common`
+**WHEN** `part2apicommon` is absent, skipped, or failed
+**THEN** `part2controlstream` SHALL skip before ControlStream IUT access
+**AND** scoped endpoint success SHALL NOT imply API Common PASS evidence.
 
-#### SCENARIO-ETS-PART2-003-CONTROLSTREAM-ITEM-READONLY-001 (CRITICAL)
-**GIVEN** a ControlStream identifier selected from the collection
-**WHEN** the ETS reads an available ControlStream resource
-**THEN** the response is HTTP 200 JSON for the same ControlStream resource
-**AND** the resource exposes enough ControlStream-specific shape to avoid passing on a generic JSON object.
+#### SCENARIO-ETS-PART2-003-ASSOCIATION-SUBRESOURCES-001 (CRITICAL)
+**GIVEN** ControlStream association procedures for Sampling Features,
+Features of Interest, Systems, Deployments, and nested Commands
+**WHEN** the applicable prerequisite or association evidence exists
+**THEN** the ETS SHALL validate each required nested endpoint using bounded
+same-origin traversal and the appropriate JSON or GeoJSON schema
+**AND** missing conditions or empty parent resources SHALL SKIP before nested
+subresource access rather than producing false PASS or noisy downstream
+failures.
 
-#### SCENARIO-ETS-PART2-003-CONTROLSTREAM-SCHEMA-ENDPOINT-001 (CRITICAL)
+#### SCENARIO-ETS-PART2-003-RELEASED-ENDPOINT-SCHEMAS-001 (CRITICAL)
+**GIVEN** released ControlStream, Command, CommandStatus, and CommandResult
+resources endpoints
+**WHEN** the ETS retrieves canonical, nested, or collection item endpoints
+**THEN** every supported `application/json` page SHALL validate against the
+corresponding bundled collection and item schema
+**AND** unsupported media SHALL warn and skip the owning procedure rather than
+being parsed as JSON.
+
+#### SCENARIO-ETS-PART2-003-CANONICAL-LINK-EVIDENCE-001 (CRITICAL)
+**GIVEN** ControlStream and Command canonical URL procedures
+**WHEN** a resource is retrieved through any non-canonical collection endpoint
+**THEN** the ETS SHALL require an advertised same-origin `rel=canonical` link,
+dereference it, validate the singleton resource schema, and compare content
+after removing canonical links
+**AND** synthesized `/controlstreams/{id}`, `/controls/{id}`, or
+`/commands/{id}` guesses SHALL NOT replace advertised canonical evidence.
+
+#### SCENARIO-ETS-PART2-003-COLLECTION-TAGGING-001 (CRITICAL)
+**GIVEN** the released ControlStream and Command `/collections` procedures
+**WHEN** `/collections` advertises selected ControlStream or Command
+collections
+**THEN** ControlStream collections SHALL be tagged as `itemType=ControlStream`
+**AND** Command collections SHALL be tagged as `itemType=Command`
+**AND** absence of relevant collection metadata SHALL be reported honestly.
+
+#### SCENARIO-ETS-PART2-003-SCHEMA-OP-FORMATS-001 (CRITICAL)
 **GIVEN** `/req/controlstream/schema-op`
-**WHEN** the ETS issues `GET {api_root}/controlstreams/{id}/schema`
-**THEN** the response is HTTP 200 JSON with ControlStream command schema evidence such as `commandFormat` and `parametersSchema`.
+**WHEN** a ControlStream advertises one or more Command formats
+**THEN** the ETS SHALL request `/controlstreams/{id}/schema?cmdFormat={format}`
+for every advertised format and validate the response against the bundled
+Command Schema representation
+**AND** no advertised format SHALL be collapsed to one unparameterized schema
+GET.
 
-#### SCENARIO-ETS-PART2-003-COMMAND-ENDPOINTS-READONLY-001 (CRITICAL)
-**GIVEN** `/req/controlstream/cmd-resources-endpoint` and `/req/controlstream/cmd-ref-from-controlstream`
-**WHEN** the ETS reads Command endpoints in the first Sprint 22 subset
-**THEN** the ControlStream-scoped Command collection response is HTTP 200 JSON with an `items` array
-**AND** an empty ControlStream-scoped Command collection is not treated as endpoint-availability failure by itself
-**AND** `/commands` returning non-200 is not converted into PASS evidence.
+#### SCENARIO-ETS-PART2-003-STATUS-RESULT-ENDPOINTS-001 (CRITICAL)
+**GIVEN** released CommandStatus and CommandResult endpoint procedures
+**WHEN** Command resources are available
+**THEN** the ETS SHALL validate `/commands/{cmdId}/status` and
+`/commands/{cmdId}/result` as CommandStatus and CommandResult resources
+endpoints for every applicable Command
+**AND** empty Command collections SHALL SKIP those child checks with precise
+data-availability reasons.
 
-#### SCENARIO-ETS-PART2-003-COMMAND-REFERENCE-EVIDENCE-001 (CRITICAL)
-**GIVEN** `/req/controlstream/cmd-ref-from-controlstream`
-**WHEN** the ETS evaluates ControlStream-to-Command reference behavior
-**THEN** PASS requires at least one nested Command item or link with evidence that the Command is associated to the selected ControlStream
-**AND** an empty ControlStream-scoped Command collection SKIPs the reference assertion with a precise empty-IUT-state reason.
+#### SCENARIO-ETS-PART2-003-EXACT-MAPPING-001 (CRITICAL)
+**GIVEN** the reviewed ATS mapping file and generated coverage report
+**WHEN** Sprint 61 coverage gates run
+**THEN** `2:/conf/controlstream` reports `18 exact / 0 candidate / 0 unmapped`
+**AND** the overall exact count increases by eighteen without changing the
+released inventory.
 
-#### SCENARIO-ETS-PART2-003-SYSTEM-REFERENCE-READONLY-001 (NORMAL)
-**GIVEN** `/req/controlstream/ref-from-system` and a ControlStream resource with `system@id`
-**WHEN** the ETS issues `GET {api_root}/systems/{systemId}/controlstreams`
-**THEN** the response is HTTP 200 JSON with an `items` array
-**AND** the selected ControlStream is found when the IUT returns it in the current page, otherwise the check remains bounded and non-mutating.
-
-#### SCENARIO-ETS-PART2-003-CANONICAL-URL-ALIAS-HONESTY-001 (CRITICAL)
-**GIVEN** OGC 23-002 `/req/controlstream/canonical-url` cites canonical ControlStream URL form `{api_root}/controls/{id}`
-**WHEN** the IUT serves `/controlstreams/{id}` but `GET /controls/{id}` returns non-200
-**THEN** the ETS must not PASS `/req/controlstream/canonical-url` from `/controlstreams/{id}` alias evidence alone.
-
-#### SCENARIO-ETS-PART2-003-DEPENDENCY-SKIP-001 (CRITICAL)
-**GIVEN** ControlStream has prerequisite `/req/api-common`
-**WHEN** the prerequisite class cannot be established for the IUT
-**THEN** the ETS must not convert ControlStream endpoint success into API Common PASS evidence
-**AND** it must not report full `/conf/controlstream` class closure
-**AND** any prerequisite-dependent assertion SKIPs with a precise reason rather than failing downstream noisily.
+#### SCENARIO-ETS-PART2-003-SMOKE-NO-MUTATION-001 (CRITICAL)
+**GIVEN** the mandatory local OSH TeamEngine E2E gate
+**WHEN** Sprint 61 ControlStream procedures run against the unmodified local
+OSH IUT
+**THEN** the outcome is documented with concrete pass/fail/skip totals
+**AND** IUT-bound request logs contain zero POST, PUT, PATCH, or DELETE.
 
 #### REQ-ETS-PART2-004: Part 2 Command Feasibility Conformance Suite
 - **Priority**: MUST.
@@ -5664,7 +5738,7 @@ descendant groups SKIP.
 - REQ-ETS-TEAMENGINE-002..005 (Dockerfile, docker-compose, smoke-test.sh, container-load verification) → S-ETS-01-03 (final Sprint 1 story).
 - REQ-ETS-PART1-001..013 (per-class detail beyond Core) — drafted as placeholders; per-assertion FRs and SCENARIOs to be expanded in sprints 2..N.
 - REQ-ETS-PART2-002 (Datastreams & Observations) — implemented released ATS in Sprint 60; `2:/conf/datastream` is `14 exact / 0 candidate / 0 unmapped`.
-- REQ-ETS-PART2-003 (Control Streams & Commands) — partially implemented in Sprint 22 read-only subset.
+- REQ-ETS-PART2-003 (Control Streams & Commands) — implemented released ATS in Sprint 61; `2:/conf/controlstream` is `18 exact / 0 candidate / 0 unmapped`.
 - REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
 - REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.
 - REQ-ETS-PART2-006: partially implemented by Sprint 25 Advanced Filtering Generator.

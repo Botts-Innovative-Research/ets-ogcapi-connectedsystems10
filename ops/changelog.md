@@ -2,6 +2,49 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-31 - Sprint 61 Part 2 Control Streams and Commands released ATS closure
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-021, S-ETS-61-01, and the Sprint 61 contract for exact OGC 23-002
+  Part 2 `/conf/controlstream` closure.
+- Replaced the historical Sprint 22 ControlStream subset with exactly eighteen
+  released Control Streams and Commands procedure methods.
+- Removed non-ATS declaration/prerequisite tracer methods from the deployed
+  ControlStream class and changed `part2controlstream` TestNG inheritance to
+  `part2apicommon`.
+- Implemented released read-only traversal and validation for ControlStream,
+  Command, CommandStatus, CommandResult, System, Deployment, Sampling Feature,
+  FOI, and `/collections` procedures: every applicable canonical endpoint,
+  nested endpoint, and exact `itemType` collection is exercised; canonical
+  links are dereferenced and compared; endpoints validate JSON collection/item
+  schemas; every advertised `cmdFormat` is checked; and conditional association
+  procedures SKIP before nested access unless their prerequisites or
+  association evidence exist.
+- Added requirement-linked structural and semantic regressions for exact
+  eighteen-method closure, direct dependency wiring, immutable setup,
+  cache-free runtime shape, ControlStream/Command/Status/Result schema helpers,
+  canonical-link equivalence, exact `itemType` selection, local id enumeration,
+  all-format command schema extraction, and child status/result shape rejection.
+- Promoted all eighteen released mappings to reviewed exact and regenerated
+  coverage: `240 total / 125 exact / 2 helper / 99 candidate / 14 unmapped`,
+  with Part 2 ControlStream `18 exact / 0 candidate / 0 unmapped`.
+- Verification: focused red `88/3/6/0`, final focused `88/0/0/0`, coverage
+  update `1/0/0/0`, coverage audit `23/0/0/0`, full Docker Maven
+  `758/0/0/3`, and local OSH TeamEngine `254/36/21/197` with all eighteen
+  ControlStream methods SKIPping honestly because local OSH does not declare
+  Part 2 `/conf/api-common`.
+- No-mutation oracle recognized 186 local-OSH IUT request logs; the container
+  log contains 192 GET request lines and zero POST/PUT/PATCH/DELETE/OPTIONS.
+  Final tracked evidence:
+  `ops/test-results/sprint-ets-61-part2-controlstream-final-2026-07-31/s-ets-01-03-teamengine-smoke-2026-07-31.xml`,
+  `.../s-ets-01-03-teamengine-container-2026-07-31.txt`,
+  `.../no-mutation-oracle.txt`, and `.../request-method-counts.txt`.
+- Raze initial review returned `GAPS_FOUND 0.93` for ignored `.log` evidence
+  and premature completion/push wording. The gapfix added tracked `.txt`
+  evidence files, reconciled the docs, and Raze recheck returned
+  `APPROVE 0.96` with no required fixes.
+
 ## 2026-07-31 - Sprint 60 Part 2 Datastreams and Observations released ATS closure
 
 **Triggered by user instruction**: "Do Sprint 60."

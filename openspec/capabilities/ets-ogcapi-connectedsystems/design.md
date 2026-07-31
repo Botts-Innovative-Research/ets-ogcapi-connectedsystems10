@@ -6,6 +6,22 @@
 **Status**: Approved (Sprint 1)
 **Authoritative ADRs**: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005 (in `_bmad/adrs/`)
 
+> Sprint 61 addition (2026-07-31): CP-021 replaces the historical Part 2
+> Control Streams and Commands subset with exactly eighteen released OGC
+> 23-002 Annex A.3 procedures. `Part2ControlStreamTests` depends directly on
+> `part2apicommon`, keeps only immutable setup state, and skips before
+> ControlStream IUT access when Part 2 API Common is not established. The
+> implementation stays read-only and validates ControlStream, Command,
+> CommandStatus, and CommandResult endpoints against the bundled released JSON
+> schemas; traverses exact `itemType=ControlStream` and `itemType=Command`
+> collections; dereferences advertised same-origin canonical links instead of
+> synthesizing `/controls/{id}` or `/commands/{id}` URLs; checks every
+> advertised `cmdFormat`; and condition-gates Sampling Feature, Feature of
+> Interest, System, Deployment, and nested Command procedures before child
+> endpoint access. Coverage is `18/18 exact`; unmodified local OSH E2E remains
+> honestly non-green because OSH does not declare Part 2 `/conf/api-common`, so
+> all eighteen ControlStream methods prerequisite-SKIP there.
+
 > Sprint 60 addition (2026-07-31): CP-020 replaces the historical Part 2
 > Datastreams and Observations subset with exactly fourteen released OGC
 > 23-002 Annex A.2 procedures. `Part2DatastreamTests` depends directly on

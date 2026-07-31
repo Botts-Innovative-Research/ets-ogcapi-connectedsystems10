@@ -1,6 +1,60 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T12:09Z
+Last updated: 2026-07-31T14:43Z
+
+## Sprint 61 Complete - Part 2 Control Streams and Commands Released ATS
+
+- User instruction: "Continue."
+- CP-021 and S-ETS-61-01 close the OGC 23-002 Part 2
+  `/conf/controlstream` class as exactly eighteen released Annex A.3
+  procedures.
+- `Part2ControlStreamTests` now exposes one independent TestNG method per
+  released target, removes standalone declaration/prerequisite tracer methods,
+  keeps only immutable setup arguments, and skips before ControlStream IUT
+  access when `part2apicommon` is not established.
+- The final implementation exercises exact ControlStream, Command,
+  CommandStatus, and CommandResult endpoints; validates released JSON
+  collection/item schemas; checks exact `itemType=ControlStream` and
+  `itemType=Command` `/collections` entries; dereferences advertised
+  same-origin canonical links rather than synthesizing canonical URLs; checks
+  every advertised `cmdFormat`; and condition-gates Sampling Feature,
+  FeatureOfInterest, System, Deployment, and nested Command association
+  procedures before child endpoint access.
+- `testng.xml` now declares `part2controlstream` depends directly on
+  `part2apicommon`.
+- Reviewed coverage is now `240 total / 125 exact / 2 helper / 99 candidate /
+  14 unmapped`; Part 2 is `130 total / 34 exact / 0 helper / 82 candidate /
+  14 unmapped`; `2:/conf/controlstream` is
+  `18 exact / 0 candidate / 0 unmapped`.
+- Focused test-first evidence reproduced the historical gap at
+  `88 tests / 3 failures / 6 errors / 0 skipped`; final focused verification
+  passed `88/0/0/0`.
+- Formatter passed; coverage update passed `1/0/0/0`; coverage audit passed
+  `23/0/0/0`; full Docker Maven completed
+  `758 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke reached TeamEngine and the unmodified
+  local OSH IUT, then exited honestly non-green at
+  `254 total / 36 passed / 21 failed / 197 skipped`. Part 2 API Common and all
+  eighteen ControlStream procedures SKIP because local OSH does not declare
+  the Part 2 `/conf/api-common` prerequisite; the failures are existing local
+  OSH interoperability/conformance gaps outside Sprint 61.
+- No-mutation oracle recognized 186 local-OSH IUT request logs. The container
+  log has 192 `GET` request lines and zero POST/PUT/PATCH/DELETE/OPTIONS.
+  Tracked evidence:
+  `ops/test-results/sprint-ets-61-part2-controlstream-final-2026-07-31/s-ets-01-03-teamengine-smoke-2026-07-31.xml`,
+  `.../s-ets-01-03-teamengine-container-2026-07-31.txt`,
+  `.../no-mutation-oracle.txt`, and `.../request-method-counts.txt`.
+- Raze initial review found two bookkeeping gaps: ignored `.log` evidence and
+  premature completion/push wording. The gapfix added durable tracked `.txt`
+  artifacts and reconciled the docs; Raze recheck returned `APPROVE 0.96` with
+  no required fixes.
+
+## Next Recommended Work
+
+- After Sprint 61 is pushed, the next highest-value Part 2 exact closure is OGC
+  23-002 `/conf/feasibility`: five released procedures currently have
+  candidate mappings and zero unmapped procedures, making it the smallest
+  remaining exact-closure class.
 
 ## Sprint 60 Complete - Part 2 Datastreams and Observations Released ATS
 
@@ -46,14 +100,6 @@ Last updated: 2026-07-31T12:09Z
   overvalidation, stale-evidence, conditional-gating, mixed Sampling Feature
   evidence, and generic FOI `application/json` validation issues. Final Raze
   recheck returned `PASS` with high confidence and no required fixes.
-
-## Next Recommended Work
-
-- After Sprint 60 is pushed, the next highest-value Part 2 closure is the
-  sibling OGC 23-002 `/conf/controlstream` exact released ATS class: eighteen
-  released procedures are still historical partial/unreviewed, including
-  ControlStream, Command, CommandStatus, and CommandResult resource endpoints
-  and collection tagging.
 
 ## Sprint 59 Complete - Part 2 API Common Released ATS
 

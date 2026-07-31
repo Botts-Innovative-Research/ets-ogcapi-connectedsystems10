@@ -101,11 +101,12 @@
        Common directly because OGC 23-002 /req/datastream lists /req/api-common as
        a prerequisite; every direct procedure remains independently runtime-gated
        for the Datastream declaration and conditional resource evidence. -->
-  <!-- Sprint 22 S-ETS-22-01 (REQ-ETS-PART2-003): Part 2 ControlStream group added as a
-       read-only declaration-gated subset. It depends-on "core common" rather than
-       "part2apicommon" so an IUT that declares /conf/controlstream but omits
-       /conf/api-common can still produce scoped endpoint evidence while full
-       /conf/controlstream closure remains prerequisite-incomplete. -->
+  <!-- Sprint 61 S-ETS-61-01 (REQ-ETS-PART2-003): Part 2 ControlStream now
+       implements the eighteen released Annex A procedures exactly. It inherits
+       Part 2 API Common directly because OGC 23-002 /req/controlstream lists
+       /req/api-common as a prerequisite; every direct procedure remains
+       independently runtime-gated for the ControlStream declaration and
+       conditional resource evidence. -->
   <!-- Sprint 23 S-ETS-23-01 (REQ-ETS-PART2-004): Part 2 Feasibility group added as a
        declaration-gated, no-public-POST subset. It depends on "core common" for
        structural consistency; runtime checks keep /req/controlstream prerequisite
@@ -182,7 +183,7 @@
         <group name="update" depends-on="part1apicommon"/>
         <group name="part2apicommon" depends-on="part1apicommon"/>
         <group name="part2datastream" depends-on="part2apicommon"/>
-        <group name="part2controlstream" depends-on="core common"/>
+        <group name="part2controlstream" depends-on="part2apicommon"/>
         <group name="part2feasibility" depends-on="core common"/>
         <group name="part2systemevent" depends-on="core common systemfeatures"/>
         <group name="part2advancedfiltering" depends-on="core common systemfeatures"/>

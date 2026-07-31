@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlSupport;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlSupport.ResourceType;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlOpenApiSecurityRuntimeProbe;
 
 /**
  * Verifies that the deployed jar can execute its isolated OpenAPI 3.1 parser.
@@ -18,7 +19,7 @@ public final class SensorMlOpenApiRuntimeProbe {
 	 * Executes an OpenAPI 3.1 bounded-reference parse from the runtime classpath.
 	 * @param args ignored.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		StringBuilder parameters = new StringBuilder();
 		for (int index = 0; index < 80; index++) {
 			parameters.append("        - $ref: '#/components/parameters/id'\n");
@@ -60,7 +61,8 @@ public final class SensorMlOpenApiRuntimeProbe {
 		if (parsed.model().getPaths().get("/systems").getGet().getParameters().size() != 80) {
 			throw new IllegalStateException("OpenAPI runtime probe lost cached parameter references.");
 		}
-		System.out.println("PASS: deployed SensorML OpenAPI 3.1 parser executed");
+		SensorMlOpenApiSecurityRuntimeProbe.run();
+		System.out.println("PASS: deployed SensorML OpenAPI 3.1 parser and external-fetch security probes executed");
 	}
 
 }

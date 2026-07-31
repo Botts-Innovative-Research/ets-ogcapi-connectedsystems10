@@ -15,6 +15,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
@@ -304,11 +310,19 @@ public final class SensorMlSupport {
 	 */
 	public static ApiDefinition parseApiDefinition(String content, URI source, String requirement,
 			ReferenceLoader referenceLoader) {
+		return parseApiDefinition(content, source, requirement, referenceLoader, Duration.ofSeconds(60));
+	}
+
+	static ApiDefinition parseApiDefinition(String content, URI source, String requirement,
+			ReferenceLoader referenceLoader, Duration resolutionTimeout) {
 		if (content == null || content.isBlank() || source == null || !source.isAbsolute()) {
 			ETSAssert.failWithUri(requirement, "API definition content and absolute source URI are required.");
 		}
 		if (referenceLoader == null) {
 			ETSAssert.failWithUri(requirement, "An operation-reference loader is required.");
+		}
+		if (resolutionTimeout == null || resolutionTimeout.isZero() || resolutionTimeout.isNegative()) {
+			ETSAssert.failWithUri(requirement, "A positive operation-reference resolution timeout is required.");
 		}
 		try {
 			JsonNode parsed = YAML.readTree(content);
@@ -316,7 +330,10 @@ public final class SensorMlSupport {
 				ETSAssert.failWithUri(requirement, source + " is not an OpenAPI object.");
 				return null;
 			}
-			new OperationReferenceResolver(source, root, referenceLoader).resolve();
+			try (OperationReferenceResolver resolver = new OperationReferenceResolver(source, root, referenceLoader,
+					resolutionTimeout)) {
+				resolver.resolve();
+			}
 			ParseOptions options = new ParseOptions();
 			options.setResolve(false);
 			options.setResolveFully(false);
@@ -341,7 +358,7 @@ public final class SensorMlSupport {
 		}
 	}
 
-	private static final class OperationReferenceResolver {
+	private static final class OperationReferenceResolver implements AutoCloseable {
 
 		private static final int MAX_DEPTH = 8;
 
@@ -350,8 +367,6 @@ public final class SensorMlSupport {
 		private static final int MAX_NETWORK_READS = 64;
 
 		private static final int MAX_BODY_BYTES = 2 * 1024 * 1024;
-
-		private static final Duration RESOLUTION_TIMEOUT = Duration.ofSeconds(60);
 
 		private final URI source;
 
@@ -367,17 +382,27 @@ public final class SensorMlSupport {
 
 		private final long deadlineNanos;
 
+		private final Duration resolutionTimeout;
+
+		private final ExecutorService loaderExecutor;
+
 		private int traversals;
 
 		private int networkReads;
 
-		private OperationReferenceResolver(URI source, ObjectNode root, ReferenceLoader referenceLoader)
-				throws IOException, URISyntaxException {
+		private OperationReferenceResolver(URI source, ObjectNode root, ReferenceLoader referenceLoader,
+				Duration resolutionTimeout) throws IOException, URISyntaxException {
 			this.source = source;
 			this.sourceDocument = withoutFragment(source);
 			this.root = root;
 			this.referenceLoader = referenceLoader;
-			this.deadlineNanos = System.nanoTime() + RESOLUTION_TIMEOUT.toNanos();
+			this.resolutionTimeout = resolutionTimeout;
+			this.deadlineNanos = System.nanoTime() + resolutionTimeout.toNanos();
+			this.loaderExecutor = Executors.newSingleThreadExecutor(task -> {
+				Thread thread = new Thread(task, "sensorml-openapi-reference-loader");
+				thread.setDaemon(true);
+				return thread;
+			});
 			validateSource(source);
 			this.documents.put(this.sourceDocument, root);
 		}
@@ -507,7 +532,7 @@ public final class SensorMlSupport {
 			if (++this.networkReads > MAX_NETWORK_READS) {
 				throw new IOException("Unique operation-reference document count exceeds " + MAX_NETWORK_READS + ".");
 			}
-			String content = this.referenceLoader.load(target);
+			String content = loadBeforeDeadline(target);
 			checkDeadline();
 			if (content == null || content.isBlank()) {
 				throw new IOException("Operation reference is empty: " + target);
@@ -521,6 +546,41 @@ public final class SensorMlSupport {
 			}
 			this.documents.put(target, parsed);
 			return parsed;
+		}
+
+		private String loadBeforeDeadline(URI target) throws IOException, InterruptedException {
+			long remainingNanos = this.deadlineNanos - System.nanoTime();
+			if (remainingNanos <= 0) {
+				throw deadlineExceeded();
+			}
+			Future<String> load = this.loaderExecutor.submit(() -> this.referenceLoader.load(target));
+			try {
+				return load.get(remainingNanos, TimeUnit.NANOSECONDS);
+			}
+			catch (TimeoutException ex) {
+				load.cancel(true);
+				throw deadlineExceeded();
+			}
+			catch (InterruptedException ex) {
+				load.cancel(true);
+				throw ex;
+			}
+			catch (ExecutionException ex) {
+				Throwable cause = ex.getCause();
+				if (cause instanceof IOException ioException) {
+					throw ioException;
+				}
+				if (cause instanceof InterruptedException interruptedException) {
+					throw interruptedException;
+				}
+				if (cause instanceof RuntimeException runtimeException) {
+					throw runtimeException;
+				}
+				if (cause instanceof Error error) {
+					throw error;
+				}
+				throw new IOException("Operation-reference loader failed for " + target + ".", cause);
+			}
 		}
 
 		private JsonNode selectFragment(JsonNode document, URI target) throws IOException {
@@ -562,9 +622,18 @@ public final class SensorMlSupport {
 
 		private void checkDeadline() throws IOException {
 			if (System.nanoTime() > this.deadlineNanos) {
-				throw new IOException(
-						"Operation-reference resolution exceeds " + RESOLUTION_TIMEOUT.toSeconds() + " seconds.");
+				throw deadlineExceeded();
 			}
+		}
+
+		private IOException deadlineExceeded() {
+			return new IOException(
+					"Operation-reference resolution exceeds " + this.resolutionTimeout.toMillis() + " milliseconds.");
+		}
+
+		@Override
+		public void close() {
+			this.loaderExecutor.shutdownNow();
 		}
 
 		private static String normalizedScheme(URI value) {

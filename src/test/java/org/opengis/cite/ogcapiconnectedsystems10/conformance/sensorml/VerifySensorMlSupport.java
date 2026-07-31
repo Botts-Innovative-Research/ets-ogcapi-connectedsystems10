@@ -8,10 +8,14 @@ import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.swagger.v3.oas.models.media.Schema;
 import org.junit.Test;
@@ -207,6 +211,42 @@ public class VerifySensorMlSupport {
 			.get("next");
 		assertEquals("#/components/schemas/Node", next.get$ref());
 		assertTrue(parsed.diagnostics().toString(), parsed.diagnostics().isEmpty());
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void blockingReferenceLoadCannotExceedGlobalDeadline() {
+		String definition = operationReferenceDefinition("references/system.yaml");
+		AtomicBoolean interrupted = new AtomicBoolean();
+		CountDownLatch interruptionObserved = new CountDownLatch(1);
+		long started = System.nanoTime();
+
+		assertThrows(AssertionError.class, () -> SensorMlSupport.parseApiDefinition(definition,
+				URI.create("https://example.test/openapi.yaml"), REQUIREMENT, target -> {
+					try {
+						Thread.sleep(10_000);
+					}
+					catch (InterruptedException ex) {
+						interrupted.set(true);
+						interruptionObserved.countDown();
+						throw ex;
+					}
+					return "get: {}\n";
+				}, Duration.ofMillis(100)));
+
+		try {
+			assertTrue("Blocking loader was not interrupted when the graph deadline expired.",
+					interruptionObserved.await(1, TimeUnit.SECONDS));
+		}
+		catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+			throw new AssertionError("Interrupted while awaiting loader cancellation.", ex);
+		}
+		assertTrue(interrupted.get());
+		assertTrue("Blocking loader exceeded the caller-visible deadline.",
+				Duration.ofNanos(System.nanoTime() - started).compareTo(Duration.ofSeconds(2)) < 0);
 	}
 
 	private static String operationReferenceDefinition(String reference) {

@@ -7,7 +7,9 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
@@ -32,23 +34,86 @@ final class SensorMlHttpFetcher {
 	private SensorMlHttpFetcher() {
 	}
 
-	static FetchResult fetch(URI target, URI allowedOrigin, boolean allowRestrictedAddresses, String authorization)
-			throws IOException {
-		validateTarget(target, allowedOrigin);
-		InetAddress[] addresses = InetAddress.getAllByName(target.getHost());
-		if (addresses.length == 0) {
-			throw new IOException("Advertised API-definition host resolved to no addresses: " + target.getHost());
-		}
-		if (!allowRestrictedAddresses) {
-			for (InetAddress address : addresses) {
-				if (isRestricted(address)) {
-					throw new IOException(
-							"Cross-origin API-definition host resolved to a restricted address: " + target.getHost());
-				}
-			}
+	@FunctionalInterface
+	interface AddressResolver {
+
+		InetAddress[] resolve(String host) throws UnknownHostException;
+
+	}
+
+	static final class PinnedTransport {
+
+		private final Origin iutOrigin;
+
+		private final AddressResolver addressResolver;
+
+		private final Map<Origin, InetAddress[]> pins = new HashMap<>();
+
+		PinnedTransport(URI iutOrigin) throws IOException {
+			this(iutOrigin, InetAddress::getAllByName);
 		}
 
-		InetAddress[] pinned = Arrays.copyOf(addresses, addresses.length);
+		PinnedTransport(URI iutOrigin, AddressResolver addressResolver) throws IOException {
+			if (addressResolver == null) {
+				throw new IOException("API-definition address resolver is required.");
+			}
+			validateOrigin(iutOrigin);
+			this.iutOrigin = Origin.from(iutOrigin);
+			this.addressResolver = addressResolver;
+			this.pins.put(this.iutOrigin, resolve(iutOrigin, true));
+		}
+
+		FetchResult fetch(URI target, URI allowedOrigin, boolean allowRestrictedAddresses, String authorization)
+				throws IOException {
+			validateTarget(target, allowedOrigin);
+			Origin origin = Origin.from(allowedOrigin);
+			boolean exactIutOrigin = origin.equals(this.iutOrigin);
+			if (allowRestrictedAddresses && !exactIutOrigin) {
+				throw new IOException("Restricted API-definition addresses are allowed only for the exact IUT origin.");
+			}
+			if (authorization != null && !authorization.isBlank() && !exactIutOrigin) {
+				throw new IOException("IUT credentials cannot be sent to a cross-origin API definition.");
+			}
+			InetAddress[] pinned = addresses(origin, allowedOrigin, allowRestrictedAddresses);
+			return fetchPinned(target, pinned, authorization);
+		}
+
+		private synchronized InetAddress[] addresses(Origin origin, URI allowedOrigin, boolean allowRestrictedAddresses)
+				throws IOException {
+			InetAddress[] pinned = this.pins.get(origin);
+			if (pinned == null) {
+				pinned = resolve(allowedOrigin, allowRestrictedAddresses);
+				this.pins.put(origin, pinned);
+			}
+			else if (!allowRestrictedAddresses) {
+				rejectRestricted(allowedOrigin.getHost(), pinned);
+			}
+			return Arrays.copyOf(pinned, pinned.length);
+		}
+
+		private InetAddress[] resolve(URI origin, boolean allowRestrictedAddresses) throws IOException {
+			InetAddress[] addresses = this.addressResolver.resolve(origin.getHost());
+			if (addresses == null || addresses.length == 0) {
+				throw new IOException("Advertised API-definition host resolved to no addresses: " + origin.getHost());
+			}
+			InetAddress[] resolved = Arrays.copyOf(addresses, addresses.length);
+			if (!allowRestrictedAddresses) {
+				rejectRestricted(origin.getHost(), resolved);
+			}
+			return resolved;
+		}
+
+	}
+
+	private static void rejectRestricted(String host, InetAddress[] addresses) throws IOException {
+		for (InetAddress address : addresses) {
+			if (isRestricted(address)) {
+				throw new IOException("Cross-origin API-definition host resolved to a restricted address: " + host);
+			}
+		}
+	}
+
+	private static FetchResult fetchPinned(URI target, InetAddress[] pinned, String authorization) throws IOException {
 		DnsResolver resolver = host -> {
 			if (!host.equalsIgnoreCase(target.getHost())) {
 				throw new UnknownHostException("Unapproved API-definition host: " + host);
@@ -91,6 +156,13 @@ final class SensorMlHttpFetcher {
 					return new FetchResult(new String(bytes, StandardCharsets.UTF_8), contentType);
 				}
 			}
+		}
+	}
+
+	private static void validateOrigin(URI origin) throws IOException {
+		if (origin == null || !origin.isAbsolute() || !Set.of("http", "https").contains(normalizedScheme(origin))
+				|| origin.getHost() == null || origin.getHost().isBlank() || origin.getUserInfo() != null) {
+			throw new IOException("IUT origin must be an absolute HTTP(S) URI with a host and no userinfo.");
 		}
 	}
 
@@ -169,6 +241,14 @@ final class SensorMlHttpFetcher {
 	}
 
 	record FetchResult(String content, String contentType) {
+	}
+
+	private record Origin(String scheme, String host, int port) {
+
+		private static Origin from(URI value) {
+			return new Origin(normalizedScheme(value), value.getHost().toLowerCase(Locale.ROOT), effectivePort(value));
+		}
+
 	}
 
 }

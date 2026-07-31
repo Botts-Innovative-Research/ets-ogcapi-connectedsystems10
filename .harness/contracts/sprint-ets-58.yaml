@@ -27,6 +27,9 @@ success_criteria:
   - Exactly fifteen independent TestNG methods map the released procedures.
   - Part 1 API Common is the only direct TestNG prerequisite.
   - API definition media procedures parse JSON or YAML and issue no mutations.
+  - The exact IUT origin is pinned before landing-page access; each cross-origin description graph reuses one validated public address set.
+  - Blocking DNS, HTTP, or body work is interruptibly bounded by the global operation-reference deadline.
+  - Exact-image runtime probes exercise external references, pin reuse, redirects, size limits, credential policy, and deadline cancellation.
   - Four schema procedures validate complete canonical single and collection documents.
   - SensorML schema validation enters through an ETS-owned backend-neutral adapter.
   - Adapter diagnostics are immutable and deterministic; operational failures remain distinct.

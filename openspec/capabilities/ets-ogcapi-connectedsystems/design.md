@@ -2176,10 +2176,11 @@ Write media requires SensorML request content on at least one canonical
 collection POST or canonical item PUT. Both procedures are read-only.
 
 Root `service-desc` bodies and external reference documents are streamed through
-decoded-body limits. Same-IUT descriptions and their exact-origin references
-receive the configured IUT credential. Cross-origin descriptions and references
-remain credential-free, reject redirects and restricted resolved addresses, and
-use the validated, pinned address set for the connection.
+decoded-body limits. SensorML setup resolves and pins the exact IUT-origin
+address set before the landing-page request; every later credential-bearing
+description and reference request reuses that set. Each cross-origin advertised
+description graph resolves one non-restricted address set, reuses it for the
+root and every reference, remains credential-free, and rejects redirects.
 
 An ETS-owned operation-reference resolver runs before model conversion and
 fetches only path-item, response, request-body, and parameter references. It
@@ -2188,13 +2189,18 @@ depth/traversal/unique-network-read/body/time limits, cycle detection, and JSON
 Pointer fragments. Cached-document references consume traversal budget without
 consuming the unique network-read budget. It rejects `file:`, `classpath:`,
 userinfo, unrelated hosts, and private-target pivots. Component schema graphs
-are never fetched or inlined.
+are never fetched or inlined. Each blocking loader call is interruptibly
+awaited only for the remaining monotonic resolution budget, so DNS, connect,
+response, or slow decoded-body work cannot exceed the caller-visible global
+deadline.
 
 The TeamEngine artifact shades the parser, core, model, annotations, YAML
 support, and transitive runtime into an ETS-private namespace. Its Jackson
 Java-time support is included at the parser line's TeamEngine-compatible
 Jackson version. No separate parser jar enters `WEB-INF/lib`, and the runtime
-gate executes an OpenAPI 3.1 parse from the deployed artifact.
+gate executes an OpenAPI 3.1 parse plus deployed external-fetch security probes
+for address-pin reuse, credential policy, redirects, decoded-body size, and
+deadline cancellation from the deployed artifact.
 
 Schema procedures independently request complete System, Deployment,
 Procedure, and Property canonical collections and one canonical item using

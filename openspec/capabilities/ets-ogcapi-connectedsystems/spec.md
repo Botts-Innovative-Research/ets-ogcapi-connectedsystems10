@@ -4207,8 +4207,11 @@ relation is present.
 **AND** only explicit 2xx or `2XX` responses count as successful-response evidence
 **AND** an advertised malformed, inaccessible, or unsupported-media service description fails instead of being discarded as no evidence
 **AND** same-origin service descriptions and their exact-origin references receive the configured IUT credential when present
-**AND** cross-origin service-description retrieval and reference resolution are credential-free, reject redirects and restricted resolved addresses, and pin the validated address set for each connection
+**AND** the exact-IUT-origin address set is resolved and pinned during SensorML setup before landing-page retrieval, then reused for every credential-bearing service-description and reference request
+**AND** cross-origin service-description retrieval and reference resolution are credential-free, reject redirects and restricted resolved addresses, and pin one validated address set per advertised origin for the complete description graph
+**AND** blocking DNS, connect, response, and decoded-body work cannot keep operation-reference resolution active beyond its monotonic global deadline
 **AND** the deployed ETS jar contains the isolated OpenAPI parser, model, and runtime support needed to execute the same OpenAPI 3.1 reference path under TeamEngine without adding or replacing a TeamEngine-owned jar
+**AND** exact-image runtime verification exercises external reference fetching, address-pin reuse, redirect rejection, decoded-body rejection, credential policy, and deadline cancellation from the deployed artifact
 **AND** neither procedure issues a mutation request.
 *Maps to*: REQ-ETS-PART1-013.
 

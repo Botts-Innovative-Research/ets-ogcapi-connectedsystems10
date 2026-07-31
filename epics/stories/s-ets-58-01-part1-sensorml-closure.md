@@ -43,11 +43,14 @@ validator adapter over pinned released schemas.
 - [ ] API metadata procedures parse OpenAPI 3.0/3.1 JSON/YAML, resolve relative
   operation references from the advertised URI, preserve bounded recursive
   schema reference graphs, enforce scheme/origin/redirect/cycle/depth/traversal/
-  unique-read/body/time bounds, stream root descriptions, pin validated public
-  cross-origin addresses, forward credentials only to exact-IUT-origin
-  descriptions and references, and issue no writes.
+  unique-read/body/time bounds, stream root descriptions, pin the IUT origin
+  before landing-page access, pin one validated public address set for each
+  cross-origin graph, forward credentials only to exact-IUT-origin descriptions
+  and references, interrupt blocking loads at the global deadline, and issue no
+  writes.
 - [ ] The final TeamEngine image executes the isolated OpenAPI 3.1 parser
-  closure from the ETS jar without adding or replacing TeamEngine-owned jars.
+  closure and external-fetch security probes from the ETS jar without adding
+  or replacing TeamEngine-owned jars.
 - [ ] Four independent schema procedures validate complete single and
   collection SensorML documents through the ETS-owned adapter.
 - [ ] The adapter exposes immutable deterministic diagnostics, separates

@@ -84,12 +84,7 @@ public class SensorMlTests {
 
 	private String authCredential;
 
-	private ApiDefinitionTransport apiDefinitionTransport = (target, origin, allowRestrictedAddresses,
-			authorization) -> {
-		SensorMlHttpFetcher.FetchResult result = SensorMlHttpFetcher.fetch(target, origin, allowRestrictedAddresses,
-				authorization);
-		return new ApiDocument(result.content(), result.contentType());
-	};
+	private ApiDefinitionTransport apiDefinitionTransport;
 
 	/**
 	 * Loads only the immutable API root after inherited API Common prerequisites.
@@ -110,20 +105,37 @@ public class SensorMlTests {
 	}
 
 	void configure(URI iut, String credential) {
-		configure(iut, credential, this.apiDefinitionTransport);
+		URI root = normalizedApiRoot(iut);
+		try {
+			SensorMlHttpFetcher.PinnedTransport transport = new SensorMlHttpFetcher.PinnedTransport(root);
+			configure(root, credential, (target, origin, allowRestrictedAddresses, authorization) -> {
+				SensorMlHttpFetcher.FetchResult result = transport.fetch(target, origin, allowRestrictedAddresses,
+						authorization);
+				return new ApiDocument(result.content(), result.contentType());
+			});
+		}
+		catch (IOException ex) {
+			throw new IllegalStateException(
+					"Unable to pin the IUT origin for API-definition retrieval: " + ex.getMessage(), ex);
+		}
 	}
 
 	void configure(URI iut, String credential, ApiDefinitionTransport transport) {
-		if (iut == null || !iut.isAbsolute()) {
-			throw new IllegalArgumentException("IUT must be an absolute URI.");
-		}
+		URI root = normalizedApiRoot(iut);
 		if (transport == null) {
 			throw new IllegalArgumentException("API-definition transport is required.");
 		}
-		String value = iut.toString();
-		this.apiRoot = URI.create(value.endsWith("/") ? value : value + "/");
+		this.apiRoot = root;
 		this.authCredential = credential == null || credential.isBlank() ? null : credential;
 		this.apiDefinitionTransport = transport;
+	}
+
+	private static URI normalizedApiRoot(URI iut) {
+		if (iut == null || !iut.isAbsolute()) {
+			throw new IllegalArgumentException("IUT must be an absolute URI.");
+		}
+		String value = iut.toString();
+		return URI.create(value.endsWith("/") ? value : value + "/");
 	}
 
 	/**

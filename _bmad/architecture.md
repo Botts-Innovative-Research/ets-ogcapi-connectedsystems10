@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.57 | Status: Living Document | Last reconciled: 2026-07-30 (Sprint 57 replacement exact candidate)
+> Version: 2.0.59 | Status: Living Document | Last reconciled: 2026-07-31 (Sprint 58 resolver-security remediation)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -1760,10 +1760,20 @@ budget. `file:`, `classpath:`, userinfo, unrelated hosts, and private-target
 pivots fail before retrieval. Component schema references remain untouched.
 
 Root descriptions are streamed through the same decoded-body limit. Same-IUT
-descriptions and references may receive the configured IUT credential.
-Cross-origin advertised descriptions and references are retrieved without IUT
-credentials, without redirects, and only after their non-restricted resolved
-address set is pinned for the connection.
+origin addresses are resolved and pinned during SensorML setup before landing
+page access. Credential-bearing descriptions and references reuse that initial
+pin rather than resolving independently. Each cross-origin advertised origin
+is resolved once, rejected if any address is restricted, and pinned for its
+complete credential-free description graph. Redirects remain disabled.
+
+The resolver executes each blocking reference load on an interruptible daemon
+worker and awaits it only for the remaining monotonic graph deadline. A stalled
+DNS lookup, connect, response, or slow decoded-body read therefore cannot keep
+the calling TestNG procedure active after the global budget expires. The
+deployed runtime probe exercises external root/reference retrieval, same-origin
+pin reuse, credential receipt, restricted-origin rejection, redirect rejection,
+decoded-body rejection, and deadline cancellation in addition to OpenAPI 3.1
+recursive-graph preservation.
 
 Swagger parser, core, model, annotations, and transitive runtime packages are
 shaded into an ETS-private namespace in the single deployed suite jar.

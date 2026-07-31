@@ -1487,135 +1487,255 @@
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/mediatype-read",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeReadIsAdvertised()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/mediatype-read",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeReadIsAdvertised()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent read-media procedure parses the advertised OpenAPI JSON or YAML definition through the bounded resolver and requires every declared canonical or custom SensorML collection GET to advertise application/sml+json in an explicit successful response."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/mediatype-write",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/mediatype-write",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeWriteIsAdvertised()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/mediatype-write",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeWriteIsAdvertised()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent write-media procedure performs read-only OpenAPI inspection and requires at least one canonical POST or PUT operation to advertise application/sml+json in a request body; it issues no mutation request."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/relation-types",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/relation-types",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlAssociationRelationTypesAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/relation-types",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlAssociationRelationTypesAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent relation procedure traverses every available System, Deployment, Procedure, and Property SensorML resource and requires each non-generic links-member association to use the exact resource-specific ogc-rel name from the released mapping tables."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/resource-id",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/resource-id",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlResourceIdsMatchCanonicalUrls()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/resource-id",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlResourceIdsMatchCanonicalUrls()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent resource-id procedure traverses every available canonical SensorML resource and requires each document id to equal the identifier selected from its canonical resource URL."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/feature-attribute-mapping",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/feature-attribute-mapping",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlCommonFeatureAttributesAreMapped()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/feature-attribute-mapping",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlCommonFeatureAttributesAreMapped()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent common-mapping procedure inspects every available canonical SensorML resource, requiring present uniqueId values to be absolute URIs and present label and description values to be strings."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/system-schema",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/system-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlSchemasAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/system-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlSchemasAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent System schema procedure validates complete canonical System collection and single-resource SensorML documents against the pinned released schemas through ConnectedSystemsSensorMlValidatorAdapter."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/system-sml-class",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/system-sml-class",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlClassesAreCompatible()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/system-sml-class",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlClassesAreCompatible()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent System class procedure inspects every available SensorML System and requires its physical or process class to be compatible with the released System asset semantics."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/system-mappings",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/system-mappings",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlMappingsAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/system-mappings",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlMappingsAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent System mapping procedure inspects every available SensorML System, validates present released attributes, AssetType values, geometry or Pose mappings, and dereferenced association targets against their exact resource schemas."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/deployment-schema",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/deployment-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlSchemasAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/deployment-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlSchemasAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent Deployment schema procedure validates complete canonical Deployment collection and single-resource SensorML documents against the pinned released schemas through ConnectedSystemsSensorMlValidatorAdapter."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/deployment-mappings",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/deployment-mappings",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlMappingsAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/deployment-mappings",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlMappingsAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent Deployment mapping procedure inspects every available SensorML Deployment, validates present released attributes, geometry or Pose mappings, and dereferenced association targets against their exact resource or collection schemas."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/procedure-schema",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/procedure-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlSchemasAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/procedure-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlSchemasAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent Procedure schema procedure validates complete canonical Procedure collection and single-resource SensorML documents against the pinned released schemas through ConnectedSystemsSensorMlValidatorAdapter."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/procedure-sml-class",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/procedure-sml-class",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlClassesAreCompatible()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/procedure-sml-class",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlClassesAreCompatible()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent Procedure class procedure inspects every available SensorML Procedure, requires a compatible physical or process class, and rejects any Procedure description containing position."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/procedure-mappings",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/procedure-mappings",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlMappingsAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/procedure-mappings",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlMappingsAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent Procedure mapping procedure inspects every available SensorML Procedure, validates present released attributes, and dereferences implementing-System associations using the exact expected resource schema and credential policy."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/property-schema",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/property-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlSchemasAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/property-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlSchemasAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent Property schema procedure validates complete canonical Property collection and single-resource SensorML documents against the pinned released schemas through ConnectedSystemsSensorMlValidatorAdapter."
+    }
   }, {
     "part" : 1,
     "identifier" : "/conf/sensorml/property-mappings",
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/property-mappings",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlMappingsAreValid()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 1,
+      "test" : "/conf/sensorml/property-mappings",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlMappingsAreValid()",
+      "reviewedBy" : "Codex Sprint 58 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent Property mapping procedure inspects every available SensorML Property, validates present released attributes and baseProperty associations, and validates dereferenced targets against the exact Property schema."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/api-common/resources",
@@ -2789,16 +2909,16 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 76,
+    "exact" : 91,
     "helper" : 2,
-    "candidate" : 133,
+    "candidate" : 118,
     "unmapped" : 29,
     "byPart" : {
       "1" : {
         "total" : 110,
-        "exact" : 76,
+        "exact" : 91,
         "helper" : 2,
-        "candidate" : 32,
+        "candidate" : 17,
         "unmapped" : 0
       },
       "2" : {
@@ -2903,9 +3023,9 @@
       },
       "1:/conf/sensorml" : {
         "total" : 15,
-        "exact" : 0,
+        "exact" : 15,
         "helper" : 0,
-        "candidate" : 15,
+        "candidate" : 0,
         "unmapped" : 0
       },
       "2:/conf/api-common" : {

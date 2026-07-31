@@ -1,0 +1,34 @@
+sprint: ets-59
+story: S-ETS-59-01
+title: Part 2 API Common released ATS closure
+status: DONE
+date: 2026-07-31
+requirement: REQ-ETS-PART2-001
+scope:
+  include:
+    - OGC 23-002 /conf/api-common/resources
+    - OGC 23-002 /conf/api-common/resource-collection
+    - direct TestNG dependency on part1apicommon
+    - read-only same-origin collection probes
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - Part 2 sibling conformance classes
+    - IUT mutation
+    - TeamEngine or OSH runtime changes
+success_criteria:
+  - id: part2_api_common_two_methods
+    description: Part2ApiCommonTests exposes exactly two TestNG methods, one per released ATS target.
+  - id: part2_api_common_direct_prerequisite
+    description: testng.xml declares part2apicommon depends-on part1apicommon.
+  - id: part2_api_common_exact_coverage
+    description: coverage report shows 2 exact mappings and no candidates/unmapped tests for 2:/conf/api-common.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: PASS_RED_88_6_1_0_GREEN_88_0_0_0
+  focused_maven: PASS_88_0_0_0
+  coverage_audit: PASS_23_0_0_0_PART2_API_COMMON_2_EXACT_0_CANDIDATE_0_UNMAPPED
+  full_maven: PASS_735_0_0_3
+  local_osh_teamengine: HONEST_NON_GREEN_244_41_21_182_PART2_API_COMMON_DECLARATION_SKIP
+  no_mutation: PASS_194_IUT_REQUEST_LOGS_ZERO_WRITES
+  raze: APPROVE_WITH_CONCERNS_0_95_NO_REQUIRED_FIXES_LOW_RAW_MAVEN_STDOUT_ARCHIVAL_CONCERN

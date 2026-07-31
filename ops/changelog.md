@@ -2,6 +2,40 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-31 - Sprint 59 Part 2 API Common released ATS closure
+
+**Triggered by user instruction**: key added; push, then continue with the next
+item.
+
+- Pushed recovery/key commit `e847899` to Botts `main` after the user added
+  the deploy key, verified the remote SHA, and kept `.repo-keys/` ignored.
+- Added CP-019, S-ETS-59-01, and the Sprint 59 contract for exact OGC 23-002
+  Part 2 `/conf/api-common` closure.
+- Replaced the historical four-method Part 2 API Common subset with exactly two
+  released procedure methods and direct `part2apicommon -> part1apicommon`
+  TestNG wiring.
+- Preserved per-procedure exact `/conf/api-common` declaration honesty,
+  same-origin advertised-link-only read probes, and no synthesized `/commands`
+  or mutation behavior.
+- Added requirement-linked structural and runtime regressions for method count,
+  suite dependency, immutable setup, inherited prerequisite cascade, tolerated
+  Part 1 API Common datetime evidence limitation, and cross-origin collection
+  rejection.
+- Promoted the two released mappings to reviewed exact and regenerated
+  coverage: `240 total / 93 exact / 2 helper / 116 candidate / 29 unmapped`,
+  with Part 2 API Common `2 exact / 0 candidate / 0 unmapped`.
+- Verification: focused red `88/6/1/0`, corrected focused `88/0/0/0`,
+  coverage audit `23/0/0/0`, full Docker Maven `735/0/0/3`, and local OSH
+  TeamEngine `244/41/21/182` with both Part 2 API Common methods SKIPping
+  honestly because local OSH does not declare `/conf/api-common`.
+- No-mutation oracle recognized 194 local-OSH IUT request logs and zero writes.
+  Evidence:
+  `ops/test-results/sprint-ets-59-part2-api-common-2026-07-31/`.
+- Raze wrote
+  `.harness/evaluations/sprint-ets-59-raze-part2-api-common-2026-07-31.yaml`
+  with `APPROVE_WITH_CONCERNS 0.95`, no required fixes, and one LOW raw-Maven
+  stdout archival concern.
+
 ## 2026-07-31 - Repository push deploy key generated
 
 **Triggered by user instruction**: generate a key for repository push access

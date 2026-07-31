@@ -6,6 +6,20 @@
 **Status**: Approved (Sprint 1)
 **Authoritative ADRs**: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005 (in `_bmad/adrs/`)
 
+> Sprint 59 addition (2026-07-31): CP-019 replaces the historical Part 2 API
+> Common subset with exactly two released OGC 23-002 procedures:
+> `/conf/api-common/resources` and `/conf/api-common/resource-collection`.
+> `Part2ApiCommonTests` keeps only immutable setup state, depends directly on
+> Part 1 API Common through `part2apicommon -> part1apicommon`, performs exact
+> `/conf/api-common` declaration checks inside each procedure, and probes only
+> same-origin landing-page-advertised collection links with read-only GET
+> `limit=1`. The documented Part 1 API Common datetime evidence limitation is
+> tolerated so direct Part 2 API Common evidence remains visible, but any other
+> inherited prerequisite failure skips before Part 2 IUT access. Coverage is
+> `2/2 exact`; unmodified local OSH E2E remains honestly non-green because OSH
+> does not declare Part 2 API Common and retains unrelated existing
+> interoperability failures.
+
 > Sprint 57 addition (2026-07-30): CP-017 replaces the historical Update
 > declaration/readiness/System subset with exactly five released procedures.
 > `UpdateTests` retains immutable run arguments and depends directly on Part 1

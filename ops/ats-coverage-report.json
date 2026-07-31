@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 246,
+  "suiteTestMethodCount" : 244,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -1742,18 +1742,34 @@
     "classIdentifier" : "/conf/api-common",
     "target" : "/req/api-common/resources",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourceTerminology()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourcesAreDiscoverable()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/api-common/resources",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourcesAreDiscoverable()",
+      "reviewedBy" : "Codex Sprint 59 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released resources procedure requires exact Part 2 /conf/api-common declaration, fetches the landing page read-only, requires a links array, and accepts only advertised same-origin Part 2 collection links without synthesizing endpoints."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/api-common/resource-collection",
     "classIdentifier" : "/conf/api-common",
     "target" : "/req/api-common/resource-collection",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourceCollectionsReadable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourceCollectionsAreReadable()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/api-common/resource-collection",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourceCollectionsAreReadable()",
+      "reviewedBy" : "Codex Sprint 59 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released resource-collection procedure requires exact Part 2 /conf/api-common declaration, discovers only advertised same-origin Part 2 collection links, and issues bounded read-only GET requests with limit=1, requiring HTTP 200 JSON objects with items[] and links[]."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/sf-ref-from-datastream",
@@ -2909,9 +2925,9 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 91,
+    "exact" : 93,
     "helper" : 2,
-    "candidate" : 118,
+    "candidate" : 116,
     "unmapped" : 29,
     "byPart" : {
       "1" : {
@@ -2923,9 +2939,9 @@
       },
       "2" : {
         "total" : 130,
-        "exact" : 0,
+        "exact" : 2,
         "helper" : 0,
-        "candidate" : 101,
+        "candidate" : 99,
         "unmapped" : 29
       }
     },
@@ -3030,9 +3046,9 @@
       },
       "2:/conf/api-common" : {
         "total" : 2,
-        "exact" : 0,
+        "exact" : 2,
         "helper" : 0,
-        "candidate" : 2,
+        "candidate" : 0,
         "unmapped" : 0
       },
       "2:/conf/datastream" : {

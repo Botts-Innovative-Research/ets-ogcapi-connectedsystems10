@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests;
+import org.testng.IResultMap;
 import org.testng.ITestContext;
+import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
@@ -44,106 +46,78 @@ public class Part2ApiCommonTests {
 
 	static final String REQ_RESOURCE_COLLECTION = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common/resource-collection";
 
+	private static final String DATETIME_EVIDENCE_METHOD = "datetimeUsesValidTime";
+
 	private static final Set<String> PART2_COLLECTION_TOKENS = Set.of("datastreams", "observations", "controlstreams",
 			"commands", "systemevents");
 
-	private URI iutUri;
-
-	private URI baseUri;
-
-	private Response landingResponse;
-
-	private Map<String, Object> landingBody;
-
-	private Response conformanceResponse;
-
-	private Map<String, Object> conformanceBody;
+	private URI apiRoot;
 
 	/**
-	 * Fetches the read-only landing page and /conformance documents once. Collection
-	 * probes run only after the IUT declares /conf/api-common.
+	 * Loads only immutable suite arguments after inherited API Common prerequisites.
 	 * @param testContext TestNG test context.
 	 */
-	@BeforeClass
+	@BeforeClass(dependsOnGroups = "part1apicommon", alwaysRun = true)
 	public void fetchPart2ApiCommonInputs(ITestContext testContext) {
+		skipWhenPrerequisiteUnsatisfied(testContext);
 		Object iutAttr = testContext.getSuite().getAttribute(SuiteAttribute.IUT.getName());
 		if (!(iutAttr instanceof URI)) {
 			throw new SkipException("Suite attribute '" + SuiteAttribute.IUT.getName() + "' is missing or not a URI.");
 		}
-		this.iutUri = (URI) iutAttr;
-		String iutString = this.iutUri.toString();
-		this.baseUri = URI.create(iutString.endsWith("/") ? iutString : iutString + "/");
+		configure((URI) iutAttr);
+	}
 
-		this.landingResponse = given().accept("application/json").when().get(this.iutUri).andReturn();
-		this.landingBody = parseBody(this.landingResponse);
-
-		this.conformanceResponse = given().accept("application/json")
-			.when()
-			.get(this.baseUri.resolve("conformance"))
-			.andReturn();
-		this.conformanceBody = parseBody(this.conformanceResponse);
+	void configure(URI iut) {
+		if (iut == null || !iut.isAbsolute()) {
+			throw new IllegalArgumentException("IUT must be an absolute URI.");
+		}
+		String iutString = iut.toString();
+		this.apiRoot = URI.create(iutString.endsWith("/") ? iutString : iutString + "/");
 	}
 
 	/**
-	 * SCENARIO-ETS-PART2-001-API-COMMON-CONFORMANCE-DECLARED-001.
-	 */
-	@Test(description = "OGC-23-002 " + REQ_API_COMMON
-			+ ": /conformance declares /conf/api-common before Part 2 API Common assertions run (REQ-ETS-PART2-001, SCENARIO-ETS-PART2-001-API-COMMON-CONFORMANCE-DECLARED-001)",
-			groups = GROUP)
-	@SuppressWarnings("unchecked")
-	public void part2ApiCommonConformanceDeclared() {
-		ETSAssert.assertStatus(this.conformanceResponse, 200, REQ_API_COMMON);
-		if (this.conformanceBody == null) {
-			ETSAssert.failWithUri(REQ_API_COMMON, "/conformance body did not parse as JSON. Content-Type was: "
-					+ this.conformanceResponse.getContentType());
-		}
-		ETSAssert.assertJsonObjectHas(this.conformanceBody, "conformsTo", List.class, REQ_API_COMMON);
-		List<Object> conformsTo = (List<Object>) this.conformanceBody.get("conformsTo");
-		Predicate<Object> isPart2ApiCommon = CONF_PART2_API_COMMON::equals;
-		if (!conformsTo.stream().anyMatch(isPart2ApiCommon)) {
-			throw new SkipException(CONF_PART2_API_COMMON
-					+ " - IUT does not declare the CS API Part 2 API Common conformance class in /conformance. "
-					+ "Undeclared Part 2 API Common behavior is not conformance PASS evidence.");
-		}
-	}
-
-	/**
-	 * SCENARIO-ETS-PART2-001-RESOURCE-TERMINOLOGY-001.
+	 * REQ-ETS-PART2-001; SCENARIO-ETS-PART2-001-RELEASED-RESOURCES-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_RESOURCES
-			+ ": landing-page Part 2 collection links use Connected Systems resource collection terminology (REQ-ETS-PART2-001, SCENARIO-ETS-PART2-001-RESOURCE-TERMINOLOGY-001)",
-			groups = GROUP)
-	public void part2ApiCommonResourceTerminology() {
-		skipIfPart2ApiCommonUndeclared();
-		ETSAssert.assertStatus(this.landingResponse, 200, REQ_RESOURCES);
-		if (this.landingBody == null) {
-			ETSAssert.failWithUri(REQ_RESOURCES, "landing page body did not parse as JSON. Content-Type was: "
-					+ this.landingResponse.getContentType());
+			+ ": landing page advertises same-origin Part 2 resource collection links (REQ-ETS-PART2-001, SCENARIO-ETS-PART2-001-RELEASED-RESOURCES-001)",
+			groups = GROUP, alwaysRun = true)
+	public void part2ApiCommonResourcesAreDiscoverable() {
+		requirePart2ApiCommonDeclaration(REQ_RESOURCES);
+		Response landingResponse = given().accept("application/json").when().get(this.apiRoot).andReturn();
+		ETSAssert.assertStatus(landingResponse, 200, REQ_RESOURCES);
+		Map<String, Object> landingBody = parseBody(landingResponse);
+		if (landingBody == null) {
+			ETSAssert.failWithUri(REQ_RESOURCES,
+					"landing page body did not parse as JSON. Content-Type was: " + landingResponse.getContentType());
 		}
-		ETSAssert.assertJsonObjectHas(this.landingBody, "links", List.class, REQ_RESOURCES);
-		List<URI> collectionUris = discoverPart2CollectionUris(this.landingBody, this.baseUri);
+		ETSAssert.assertJsonObjectHas(landingBody, "links", List.class, REQ_RESOURCES);
+		List<URI> collectionUris = discoverPart2CollectionUris(landingBody, this.apiRoot);
 		if (collectionUris.isEmpty()) {
 			throw new SkipException(REQ_RESOURCES
-					+ " - landing page did not advertise any discoverable Part 2 resource collection links.");
+					+ " - landing page did not advertise any same-origin Part 2 resource collection links.");
 		}
+		Reporter.log("Discovered Part 2 resource collection links: " + collectionUris, true);
 	}
 
 	/**
-	 * SCENARIO-ETS-PART2-001-RESOURCE-COLLECTION-READONLY-001.
+	 * REQ-ETS-PART2-001; SCENARIO-ETS-PART2-001-RELEASED-RESOURCE-COLLECTION-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_RESOURCE_COLLECTION
-			+ ": discoverable Part 2 resource collections are readable JSON objects with items and links arrays (REQ-ETS-PART2-001, SCENARIO-ETS-PART2-001-RESOURCE-COLLECTION-READONLY-001)",
-			groups = GROUP)
-	public void part2ApiCommonResourceCollectionsReadable() {
-		skipIfPart2ApiCommonUndeclared();
-		if (this.landingBody == null) {
-			ETSAssert.failWithUri(REQ_RESOURCE_COLLECTION, "landing page body did not parse as JSON. Content-Type was: "
-					+ this.landingResponse.getContentType());
+			+ ": advertised Part 2 resource collections are readable JSON objects with items and links arrays (REQ-ETS-PART2-001, SCENARIO-ETS-PART2-001-RELEASED-RESOURCE-COLLECTION-001)",
+			groups = GROUP, alwaysRun = true)
+	public void part2ApiCommonResourceCollectionsAreReadable() {
+		requirePart2ApiCommonDeclaration(REQ_RESOURCE_COLLECTION);
+		Response landingResponse = given().accept("application/json").when().get(this.apiRoot).andReturn();
+		ETSAssert.assertStatus(landingResponse, 200, REQ_RESOURCE_COLLECTION);
+		Map<String, Object> landingBody = parseBody(landingResponse);
+		if (landingBody == null) {
+			ETSAssert.failWithUri(REQ_RESOURCE_COLLECTION,
+					"landing page body did not parse as JSON. Content-Type was: " + landingResponse.getContentType());
 		}
-		List<URI> collectionUris = discoverPart2CollectionUris(this.landingBody, this.baseUri);
+		List<URI> collectionUris = discoverPart2CollectionUris(landingBody, this.apiRoot);
 		if (collectionUris.isEmpty()) {
 			throw new SkipException(REQ_RESOURCE_COLLECTION
-					+ " - landing page did not advertise any discoverable Part 2 resource collection links.");
+					+ " - landing page did not advertise any same-origin Part 2 resource collection links.");
 		}
 		for (URI collectionUri : collectionUris) {
 			Response response = given().accept("application/json")
@@ -161,21 +135,22 @@ public class Part2ApiCommonTests {
 		}
 	}
 
-	/**
-	 * SCENARIO-ETS-PART2-001-DEPENDENCY-SKIP-001.
-	 */
-	@Test(description = "OGC-23-002 " + REQ_API_COMMON
-			+ ": Part 2 API Common tests are dependency-scoped to Core and Common and skip when /conf/api-common is undeclared (REQ-ETS-PART2-001, SCENARIO-ETS-PART2-001-DEPENDENCY-SKIP-001)",
-			groups = GROUP)
-	public void part2ApiCommonDependencyRuntime() {
-		skipIfPart2ApiCommonUndeclared();
-		Reporter.log("Part 2 API Common group reached runtime after Core/Common prerequisites resolved.", true);
-	}
-
-	private void skipIfPart2ApiCommonUndeclared() {
-		if (!declaresConformance(this.conformanceBody, CONF_PART2_API_COMMON)) {
+	private void requirePart2ApiCommonDeclaration(String requirement) {
+		Response conformanceResponse = given().accept("application/json")
+			.when()
+			.get(this.apiRoot.resolve("conformance"))
+			.andReturn();
+		ETSAssert.assertStatus(conformanceResponse, 200, requirement);
+		Map<String, Object> conformanceBody = parseBody(conformanceResponse);
+		if (conformanceBody == null) {
+			ETSAssert.failWithUri(requirement, "/conformance body did not parse as JSON. Content-Type was: "
+					+ conformanceResponse.getContentType());
+		}
+		ETSAssert.assertJsonObjectHas(conformanceBody, "conformsTo", List.class, requirement);
+		if (!declaresConformance(conformanceBody, CONF_PART2_API_COMMON)) {
 			throw new SkipException(CONF_PART2_API_COMMON
-					+ " - IUT does not declare the CS API Part 2 API Common conformance class in /conformance.");
+					+ " - IUT does not declare the CS API Part 2 API Common conformance class in /conformance. "
+					+ "Undeclared Part 2 API Common behavior is not conformance PASS evidence.");
 		}
 	}
 
@@ -216,7 +191,10 @@ public class Part2ApiCommonTests {
 			String rel = asLowerString(linkMap.get("rel"));
 			String path = pathToken((String) href);
 			if (PART2_COLLECTION_TOKENS.contains(rel) || PART2_COLLECTION_TOKENS.contains(path)) {
-				discovered.add(baseUri.resolve((String) href));
+				URI resolved = baseUri.resolve((String) href);
+				if (isSameOrigin(baseUri, resolved)) {
+					discovered.add(resolved);
+				}
 			}
 		}
 		return new ArrayList<>(discovered);
@@ -254,6 +232,87 @@ public class Part2ApiCommonTests {
 
 	private static String asLowerString(Object value) {
 		return value instanceof String ? ((String) value).toLowerCase(Locale.ROOT) : "";
+	}
+
+	private static boolean isSameOrigin(URI expected, URI actual) {
+		return expected != null && actual != null && expected.getScheme() != null && actual.getScheme() != null
+				&& expected.getHost() != null && actual.getHost() != null
+				&& expected.getScheme().equalsIgnoreCase(actual.getScheme())
+				&& expected.getHost().equalsIgnoreCase(actual.getHost())
+				&& effectivePort(expected) == effectivePort(actual);
+	}
+
+	private static int effectivePort(URI uri) {
+		if (uri.getPort() >= 0) {
+			return uri.getPort();
+		}
+		return "https".equalsIgnoreCase(uri.getScheme()) ? 443 : 80;
+	}
+
+	private static void skipWhenPrerequisiteUnsatisfied(ITestContext testContext) {
+		String blocker = configurationBlocker(testContext.getFailedConfigurations(), "failed");
+		if (blocker == null) {
+			blocker = configurationBlocker(testContext.getSkippedConfigurations(), "skipped");
+		}
+		if (blocker == null) {
+			blocker = testBlocker(testContext.getFailedTests(), "failed", false);
+		}
+		if (blocker == null) {
+			blocker = testBlocker(testContext.getSkippedTests(), "skipped", true);
+		}
+		if (blocker != null) {
+			throw new SkipException(
+					"Part 2 API Common setup skipped before IUT access because prerequisite " + blocker + ".");
+		}
+	}
+
+	private static String configurationBlocker(IResultMap results, String status) {
+		if (results == null) {
+			return null;
+		}
+		for (ITestResult result : results.getAllResults()) {
+			if (result != null && result.getMethod() != null && isInheritedPrerequisite(result)) {
+				return "configuration " + result.getMethod().getMethodName() + " " + status;
+			}
+		}
+		return null;
+	}
+
+	private static String testBlocker(IResultMap results, String status, boolean allowDatetimeEvidenceLimitation) {
+		if (results == null) {
+			return null;
+		}
+		for (ITestResult result : results.getAllResults()) {
+			if (result == null || result.getMethod() == null || !isInheritedPrerequisite(result)) {
+				continue;
+			}
+			if (allowDatetimeEvidenceLimitation && DATETIME_EVIDENCE_METHOD.equals(result.getMethod().getMethodName())
+					&& result.getThrowable() instanceof SkipException
+					&& Part1ApiCommonTests.DATETIME_EVIDENCE_LIMITATION.equals(result.getThrowable().getMessage())) {
+				Reporter.log(Part1ApiCommonTests.DATETIME_EVIDENCE_LIMITATION
+						+ " Part 2 API Common direct procedures will execute, but inherited conformance remains incomplete.",
+						true);
+				continue;
+			}
+			return "method " + result.getMethod().getMethodName() + " " + status;
+		}
+		return null;
+	}
+
+	private static boolean isInheritedPrerequisite(ITestResult result) {
+		for (String group : result.getMethod().getGroups()) {
+			if ("core".equals(group) || "common".equals(group) || "part1apicommon".equals(group)) {
+				return true;
+			}
+		}
+		Class<?> realClass = result.getMethod().getRealClass();
+		if (realClass == null) {
+			return false;
+		}
+		String className = realClass.getName();
+		return realClass == Part1ApiCommonTests.class
+				|| className.startsWith("org.opengis.cite.ogcapiconnectedsystems10.conformance.core.")
+				|| className.startsWith("org.opengis.cite.ogcapiconnectedsystems10.conformance.common.");
 	}
 
 	@SuppressWarnings("unchecked")

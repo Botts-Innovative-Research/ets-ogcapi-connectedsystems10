@@ -1,0 +1,105 @@
+evaluation:
+  role: "Red Team / Raze"
+  date: "2026-07-31"
+  subject: "Sprint 59 Part 2 API Common released ATS closure"
+  verdict: "APPROVE_WITH_CONCERNS"
+  confidence: 0.95
+  reviewer_instruction: "Act as Raze for the current uncommitted Sprint 59 closure; do not make code changes."
+  code_changes_made: false
+  report_path: ".harness/evaluations/sprint-ets-59-raze-part2-api-common-2026-07-31.yaml"
+
+reviewed_scope:
+  repository: "/home/nh/docker/ets-ogcapi-connectedsystems10"
+  change_set:
+    - "OpenSpec capability spec/design updates for REQ-ETS-PART2-001 and Sprint 59 scenarios."
+    - "CP-019 and S-ETS-59-01 Part 2 API Common closure documents."
+    - "Sprint 59 contract and BMAD architecture/traceability/status/changelog/test-results reconciliation."
+    - "Part2ApiCommonTests implementation and focused structural/runtime regressions."
+    - "testng.xml Part2ApiCommon group dependency and VerifyTestNGSuiteDependency lint changes."
+    - "reviewed-ats-mappings.json and regenerated ops/ats-coverage-report.json."
+    - "Archived local OSH TeamEngine XML/container/no-mutation evidence under ops/test-results/sprint-ets-59-part2-api-common-2026-07-31/."
+  out_of_scope:
+    - "Part 2 sibling conformance class promotion."
+    - "OSH or TeamEngine source/binary changes."
+    - "Any code edits by Raze."
+
+findings:
+  - id: "RAZE-S59-001"
+    severity: "LOW"
+    status: "CONCERN"
+    title: "Raw Maven stdout artifacts are not archived beside the Sprint 59 E2E artifacts."
+    evidence: "The Sprint 59 evidence directory contains exact-local-osh-container.log, exact-local-osh-no-mutation.txt, and exact-local-osh-smoke.xml. A focused filesystem search found no Sprint 59 focused/full/coverage Maven stdout logs under the repository or /tmp. The exact Maven totals are nevertheless recorded consistently in the story, contract, status, changelog, test-results, spec, and traceability."
+    risk: "Future reviewers can reopen the E2E/no-mutation artifacts directly, but must rely on the recorded docs/session capture for the Maven red/green/coverage/full totals."
+    required_fix: false
+    recommendation: "Before final repository closeout or external handoff, archive the focused red, corrected focused, coverage audit, and full Docker Maven stdout logs or explicitly label the totals as session-captured evidence."
+
+evidence:
+  maven:
+    focused_red: "88 tests / 6 failures / 1 error / 0 skipped"
+    corrected_focused: "88 tests / 0 failures / 0 errors / 0 skipped"
+    coverage_audit: "23 tests / 0 failures / 0 errors / 0 skipped"
+    full_docker_maven: "735 tests / 0 failures / 0 errors / 3 skipped"
+  teamengine_e2e:
+    artifact: "ops/test-results/sprint-ets-59-part2-api-common-2026-07-31/exact-local-osh-smoke.xml"
+    totals: "244 total / 41 passed / 21 failed / 182 skipped"
+    started_at: "2026-07-31T09:07:14 UTC"
+    finished_at: "2026-07-31T09:08:20 UTC"
+    iut: "http://field-hub-osh-1:8081/sensorhub/api"
+    part2_api_common_setup: "PASS"
+    part2_api_common_methods:
+      - name: "part2ApiCommonResourceCollectionsAreReadable"
+        status: "SKIP"
+        reason: "IUT does not declare http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common; undeclared behavior is not PASS evidence."
+      - name: "part2ApiCommonResourcesAreDiscoverable"
+        status: "SKIP"
+        reason: "IUT does not declare http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common; undeclared behavior is not PASS evidence."
+  no_mutation:
+    artifact: "ops/test-results/sprint-ets-59-part2-api-common-2026-07-31/exact-local-osh-no-mutation.txt"
+    recognized_iut_request_logs: 194
+    POST: 0
+    PUT: 0
+    PATCH: 0
+    DELETE: 0
+  released_ats_mapping:
+    inventory_entries:
+      - full_identifier: "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common/resources"
+        full_target: "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common/resources"
+      - full_identifier: "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common/resource-collection"
+        full_target: "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/api-common/resource-collection"
+    reviewed_mappings:
+      - test: "/conf/api-common/resources"
+        kind: "exact"
+        implementation: "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourcesAreDiscoverable()"
+      - test: "/conf/api-common/resource-collection"
+        kind: "exact"
+        implementation: "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourceCollectionsAreReadable()"
+    coverage_summary: "240 total / 93 exact / 2 helper / 116 candidate / 29 unmapped"
+    part2_api_common_coverage: "2 total / 2 exact / 0 helper / 0 candidate / 0 unmapped"
+    suite_test_method_count: 244
+  dependency_wiring:
+    testng_group: "part2apicommon"
+    direct_prerequisite: "part1apicommon"
+    xml_status: "testng.xml declares <group name=\"part2apicommon\" depends-on=\"part1apicommon\"/> in the same <test> block as Part1ApiCommonTests and Part2ApiCommonTests."
+    lint_status: "VerifyTestNGSuiteDependency asserts exact dependency text, rejects comma syntax, and asserts co-location."
+  false_pass_skip_review:
+    declaration_honesty: "Each direct method calls requirePart2ApiCommonDeclaration before landing-page or collection evidence and SKIPs missing /conf/api-common instead of counting sibling Part 2 declarations."
+    prerequisite_cascade: "BeforeClass depends on part1apicommon and a runtime gate skips on failed/skipped inherited prerequisites, except for the documented Part 1 datetime evidence limitation."
+    procedure_isolation: "Part2ApiCommonTests exposes exactly two @Test methods, one per released ATS target."
+    iut_safety: "Implementation issues GET-only probes and filters discovered collection links to same-origin advertised links."
+  documentation_consistency:
+    spec: "REQ-ETS-PART2-001 is IMPLEMENTED_RELEASED_ATS with Sprint 59 scenarios and exact evidence totals."
+    story_contract_status: "Story, contract, status, changelog, traceability, and test-results agree on totals and keep Raze pending until this report."
+    allowed_pending_raze_note: "The pre-review pending Raze labels are consistent with the user instruction and are not treated as defects."
+    stale_comment_note: "Two historical Sprint 20 comments remain in code/lint text, but they refer to the historical class lineage and do not contradict deployed behavior or coverage state."
+
+required_fixes: []
+
+release_gate:
+  completion_claim_allowed: true
+  mapping_promotion_allowed: true
+  e2e_claim_allowed: true
+  code_change_required: false
+  notes:
+    - "Do not claim the local OSH TeamEngine run passed; it is honestly non-green at 244/41/21/182."
+    - "Do claim the two Part 2 API Common methods SKIP honestly on the current local OSH because /conf/api-common is undeclared."
+    - "Final docs may replace pending Raze text with this APPROVE_WITH_CONCERNS verdict and keep the raw-Maven-log archival concern if not remediated."

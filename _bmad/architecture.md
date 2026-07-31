@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.60 | Status: Living Document | Last reconciled: 2026-07-31 (Sprint 58 final closure)
+> Version: 2.0.61 | Status: Living Document | Last reconciled: 2026-07-31 (Sprint 59 Part 2 API Common closure)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -8,6 +8,12 @@
 > **Authority**: this document binds the Generator (Dana). Where the PRD or capability spec
 > conflicts with an ADR or with this file's section, the ADR is authoritative for the decision
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
+
+> Sprint 59 reconciliation: the Part 2 API Common class is now a minimal
+> released-ATS closure: two TestNG methods, direct Part 1 API Common group
+> dependency, per-procedure `/conf/api-common` declaration honesty, and
+> same-origin read-only collection probes. It introduces no new runtime
+> component and no OSH/TeamEngine modification.
 
 ---
 

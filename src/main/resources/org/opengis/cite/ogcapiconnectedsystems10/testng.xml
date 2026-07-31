@@ -92,12 +92,10 @@
        Create/Replace/Delete supplies owned fixtures but is not a sibling TestNG
        prerequisite. Every procedure independently gates exact declarations,
        mutation ownership, PATCH negotiation, postconditions, and cleanup. -->
-  <!-- Sprint 20 S-ETS-20-01 (REQ-ETS-PART2-001): Part 2 API Common group added as a
-       read-only declaration-gated subset. It depends-on "core common" because Part 2
-       API Common builds on the CS API Part 1 API Common requirements class and OGC API
-       Common behavior already exercised by the Core/Common roots. GeoRobotix does not
-       currently declare /conf/api-common, so this group SKIPs honestly on the default
-       smoke IUT instead of treating undeclared Part 2 behavior as PASS evidence. -->
+  <!-- Sprint 59 S-ETS-59-01 (REQ-ETS-PART2-001): Part 2 API Common closes the two
+       released Annex A procedures and depends directly on "part1apicommon" because
+       OGC 23-002 /req/api-common inherits OGC 23-001 /req/api-common. Missing Part 2
+       /conf/api-common remains a runtime SKIP inside each direct procedure. -->
   <!-- Sprint 21 S-ETS-21-01 (REQ-ETS-PART2-002): Part 2 Datastream group added as a
        read-only declaration-gated subset. It depends-on "core common" rather than
        "part2apicommon" so an IUT that declares /conf/datastream but omits
@@ -182,7 +180,7 @@
         <group name="advancedfiltering" depends-on="part1apicommon"/>
         <group name="createreplacedelete" depends-on="part1apicommon"/>
         <group name="update" depends-on="part1apicommon"/>
-        <group name="part2apicommon" depends-on="core common"/>
+        <group name="part2apicommon" depends-on="part1apicommon"/>
         <group name="part2datastream" depends-on="core common"/>
         <group name="part2controlstream" depends-on="core common"/>
         <group name="part2feasibility" depends-on="core common"/>

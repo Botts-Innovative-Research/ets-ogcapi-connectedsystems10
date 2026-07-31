@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.3 | Status: Active ETS implementation | Last updated: 2026-07-30
+> Version: 1.3 | Status: Active ETS implementation | Last updated: 2026-07-31
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -794,45 +794,75 @@ SKIP as specified.
 
 #### REQ-ETS-PART2-001: Part 2 API Common Conformance Suite
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
+- **Status**: IMPLEMENTED_RELEASED_ATS (Sprint 59 CP-019; 2/2 exact mappings)
 - **Historical increment**: (Sprint 20 Generator 2026-05-07; story S-ETS-20-01)
-- **Description**: The ETS SHALL provide a TestNG suite class for OGC 23-002 Requirements Class "Common" using official identifiers `/req/api-common`, `/conf/api-common`, `/req/api-common/resources`, and `/req/api-common/resource-collection`. The implemented Sprint 20 subset is read-only, depends on Part 1 API Common/Core availability via TestNG group `part2apicommon`, and SKIPs with a precise reason when an IUT does not declare `/conf/api-common`.
+- **Closure increment**: (Sprint 59 CP-019; story S-ETS-59-01)
+- **Description**: The ETS SHALL provide a TestNG suite class for OGC 23-002 Requirements Class "Common" using official identifiers `/req/api-common`, `/conf/api-common`, `/req/api-common/resources`, and `/req/api-common/resource-collection`. Sprint 59 SHALL close the two released Part 2 API Common ATS procedures exactly. The deployed class SHALL contain one TestNG `@Test` per released procedure, SHALL depend directly on Part 1 API Common through `part2apicommon -> part1apicommon`, SHALL keep `/conf/api-common` declaration honesty inside each procedure, and SHALL SKIP with a precise reason when an IUT does not declare `/conf/api-common`.
 - **OGC source verified**: OGC 23-002 official published HTML at `https://docs.ogc.org/is/23-002/23-002.html`, Clause 8 "Requirements Class Common", checked 2026-05-07. The requirements class identifier is `/req/api-common`; conformance class is `/conf/api-common`; prerequisite is `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common`; normative statements are `/req/api-common/resources` and `/req/api-common/resource-collection`.
 - **Planning correction**: Frozen web-app artifacts that mention `dynamic-common` or `dynamic-json` are historical and MUST NOT be used for Java ETS `@Test` descriptions. Sprint 20 adopts OGC 23-002 identifiers.
 - **GeoRobotix planning probe**: `/conformance` declares several Part 2 classes (`/conf/datastream`, `/conf/controlstream`, `/conf/json`, `/conf/create-replace-delete`, `/conf/system-event`, `/conf/system-history`, and SWE Common encodings) but does not currently declare `/conf/api-common`. Landing page exposes `datastreams` and `observations` links. `GET /datastreams?limit=1`, `GET /observations?limit=1`, and `GET /controlstreams?limit=1` returned HTTP 200 JSON with `items` and `links`; `GET /commands?limit=1` returned HTTP 400 in current IUT state.
 - **Implementation evidence**: `Part2ApiCommonTests` checks exact `/conf/api-common` declaration, discovers only advertised Part 2 collection links, probes those links read-only with `limit=1`, and requires JSON collection objects with `items` and `links`. `VerifyPart2ApiCommonTests` prevents stale `dynamic-*` identifier drift and synthesized `/commands` assumptions. Maven post-Raze rerun reported `152 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke on 2026-05-07 reported `93 total / 55 passed / 0 failed / 38 skipped`; the Part 2 API Common subset SKIPPED because `/conf/api-common` is not declared.
+- **Sprint 59 implementation**: Replaced the historical four-method subset with exactly two released procedures: `/conf/api-common/resources` and `/conf/api-common/resource-collection`. Setup loads only immutable suite arguments and does not fetch the IUT when inherited prerequisites already failed, except that the documented Part 1 API Common datetime evidence limitation is tolerated so independently executable Part 2 API Common procedure evidence remains visible. Collection discovery remains landing-page-advertised, same-origin, bounded, and read-only.
+- **Sprint 59 verification evidence**: Focused test-first run reproduced the
+  historical gap at `88 tests / 6 failures / 1 error / 0 skipped`. Corrected
+  focused verification is `88/0/0/0`; coverage audit is `23/0/0/0`; full
+  Docker Maven is `735 tests / 0 failures / 0 errors / 3 skipped`. Coverage is
+  now `240 total / 93 exact / 2 helper / 116 candidate / 29 unmapped`, with
+  Part 2 API Common `2 exact / 0 candidate / 0 unmapped`. Local OSH TeamEngine
+  smoke executed the deployed suite against unmodified local OSH and exited
+  honestly non-green at `244 total / 41 passed / 21 failed / 182 skipped`; the
+  Part 2 API Common setup passed and both new methods SKIP because local OSH
+  does not declare Part 2 `/conf/api-common`. The no-mutation oracle recognized
+  194 local-OSH IUT request logs and zero POST/PUT/PATCH/DELETE. Raze returned
+  `APPROVE_WITH_CONCERNS 0.95` with no required fixes; its only concern is raw
+  Maven stdout archival, while the exact Maven totals are recorded consistently
+  in sprint documentation.
 - **Maps to**: PRD FR-ETS-30.
 
-##### Acceptance Scenarios for Sprint 20
+##### Acceptance Scenarios for Sprint 59
 
-#### SCENARIO-ETS-PART2-001-API-COMMON-CONFORMANCE-DECLARED-001 (CRITICAL)
+#### SCENARIO-ETS-PART2-001-RELEASED-RESOURCES-001 (CRITICAL)
 **GIVEN** the ETS is evaluating Part 2 API Common
-**WHEN** the suite reads `/conformance`
-**THEN** `/conf/api-common` is required for Part 2 API Common PASS evidence
-**AND** sibling Part 2 classes such as `/conf/datastream` or `/conf/json` do not imply `/conf/api-common`.
+**WHEN** `/conf/api-common/resources` executes
+**THEN** it SHALL require the IUT to declare Part 2 `/conf/api-common`
+**AND** it SHALL identify at least one advertised same-origin Part 2 resource
+collection link before producing PASS evidence.
 
-#### SCENARIO-ETS-PART2-001-RESOURCE-TERMINOLOGY-001 (CRITICAL)
-**GIVEN** OGC 23-002 `/req/api-common/resources`
-**WHEN** Generator implements Part 2 API Common checks
-**THEN** it interprets OGC API Features "feature" requirements using Part 2 "resource" terminology
-**AND** it records the canonical requirement URI in each `@Test` description.
-
-#### SCENARIO-ETS-PART2-001-RESOURCE-COLLECTION-READONLY-001 (CRITICAL)
+#### SCENARIO-ETS-PART2-001-RELEASED-RESOURCE-COLLECTION-001 (CRITICAL)
 **GIVEN** an IUT exposes Part 2 collection links or endpoints
-**WHEN** Generator performs the first read-only Part 2 collection checks
+**WHEN** `/conf/api-common/resource-collection` executes
 **THEN** each probed collection response must return HTTP 200 with a JSON object body containing collection members such as `items` and `links`
-**AND** endpoints not advertised or returning non-200 are not assumed available.
+**AND** the ETS SHALL only issue same-origin read-only GET requests to
+advertised collection links.
 
-#### SCENARIO-ETS-PART2-001-DEPENDENCY-SKIP-001 (CRITICAL)
+#### SCENARIO-ETS-PART2-001-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** the released Part 2 API Common ATS has two procedures
+**WHEN** the Java suite is inspected
+**THEN** `Part2ApiCommonTests` SHALL expose exactly two TestNG `@Test` methods
+**AND** each method SHALL map to exactly one released requirement target.
+
+#### SCENARIO-ETS-PART2-001-RELEASED-DEPENDENCY-CASCADE-001 (CRITICAL)
 **GIVEN** Part 2 API Common depends on Part 1 API Common/Core behavior
 **WHEN** a prerequisite class fails
-**THEN** the Part 2 API Common group SKIPs by dependency rather than producing noisy downstream failures.
+**THEN** the Part 2 API Common setup SHALL SKIP before IUT access
+**AND** `testng.xml` SHALL declare `part2apicommon` depends on
+`part1apicommon`.
 
-#### SCENARIO-ETS-PART2-001-GEOROBOTIX-DECLARATION-HONESTY-001 (CRITICAL)
+#### SCENARIO-ETS-PART2-001-RELEASED-DECLARATION-HONESTY-001 (CRITICAL)
 **GIVEN** current GeoRobotix declares Part 2 sibling classes but not `/conf/api-common`
 **WHEN** the Part 2 API Common conformance declaration assertion runs
 **THEN** it SKIPs with a reason tied to the missing `/conf/api-common`
 **AND** it must not claim Part 2 API Common conformance from sibling declarations alone.
+
+##### Historical Acceptance Scenarios for Sprint 20
+
+The following Sprint 20 scenarios documented the first read-only subset and are
+superseded by the Sprint 59 released ATS scenarios above for coverage status:
+`SCENARIO-ETS-PART2-001-API-COMMON-CONFORMANCE-DECLARED-001`,
+`SCENARIO-ETS-PART2-001-RESOURCE-TERMINOLOGY-001`,
+`SCENARIO-ETS-PART2-001-RESOURCE-COLLECTION-READONLY-001`,
+`SCENARIO-ETS-PART2-001-DEPENDENCY-SKIP-001`, and
+`SCENARIO-ETS-PART2-001-GEOROBOTIX-DECLARATION-HONESTY-001`.
 
 #### REQ-ETS-PART2-002: Part 2 Datastreams & Observations Conformance Suite
 - **Priority**: MUST

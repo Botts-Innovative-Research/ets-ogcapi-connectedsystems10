@@ -1,8 +1,40 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T08:21Z
+Last updated: 2026-07-31T09:23Z
 
 ## Current Sprint Evidence
+
+Sprint 59 Part 2 API Common released ATS:
+
+- Trigger: user added the deploy key, instructed pushing, then continuing with
+  the next item.
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/api-common`.
+- Implementation: exactly two TestNG methods,
+  `/conf/api-common/resources` and `/conf/api-common/resource-collection`;
+  direct `part2apicommon -> part1apicommon` dependency; per-procedure exact
+  `/conf/api-common` declaration honesty; same-origin advertised collection
+  probing; no synthesized endpoints or mutation.
+- Focused test-first red: `88 tests / 6 failures / 1 error / 0 skipped`.
+  Corrected focused verification: `88/0/0/0`.
+- Released ATS coverage audit: `23/0/0/0`; overall coverage is
+  `240 total / 93 exact / 2 helper / 116 candidate / 29 unmapped`; Part 2 API
+  Common is `2 exact / 0 candidate / 0 unmapped`.
+- Full Docker Maven: `735 tests / 0 failures / 0 errors / 3 skipped`.
+- Local OSH TeamEngine smoke exited nonzero honestly at
+  `244 total / 41 passed / 21 failed / 182 skipped`. `fetchPart2ApiCommonInputs`
+  passed, and both Part 2 API Common methods SKIP because local OSH does not
+  declare Part 2 `/conf/api-common`.
+- No-mutation oracle: `recognized_iut_request_logs=194`, zero
+  POST/PUT/PATCH/DELETE.
+- Evidence:
+  `ops/test-results/sprint-ets-59-part2-api-common-2026-07-31/`.
+- No OSH or TeamEngine source/binary changes, hosted CI, or IUT mutation were
+  introduced.
+- Raze: `APPROVE_WITH_CONCERNS 0.95`, no required fixes. Low concern only:
+  raw Maven stdout logs are not archived beside the E2E artifacts, but the
+  exact totals are recorded consistently in sprint documentation.
 
 Sprint 58 Part 1 SensorML direct ATS:
 

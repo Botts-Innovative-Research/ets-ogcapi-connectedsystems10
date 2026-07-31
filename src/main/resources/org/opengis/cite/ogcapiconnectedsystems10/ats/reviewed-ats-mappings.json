@@ -851,6 +851,24 @@
       "reviewedBy": "Codex Sprint 58 ATS line review",
       "reviewedOn": "2026-07-31",
       "evidence": "The independent Property mapping procedure inspects every available SensorML Property, validates present released attributes and baseProperty associations, and validates dereferenced targets against the exact Property schema."
+    },
+    {
+      "part": 2,
+      "test": "/conf/api-common/resources",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourcesAreDiscoverable()",
+      "reviewedBy": "Codex Sprint 59 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released resources procedure requires exact Part 2 /conf/api-common declaration, fetches the landing page read-only, requires a links array, and accepts only advertised same-origin Part 2 collection links without synthesizing endpoints."
+    },
+    {
+      "part": 2,
+      "test": "/conf/api-common/resource-collection",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests#part2ApiCommonResourceCollectionsAreReadable()",
+      "reviewedBy": "Codex Sprint 59 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released resource-collection procedure requires exact Part 2 /conf/api-common declaration, discovers only advertised same-origin Part 2 collection links, and issues bounded read-only GET requests with limit=1, requiring HTTP 200 JSON objects with items[] and links[]."
     }
   ]
 }

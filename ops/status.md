@@ -1,6 +1,41 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T08:21Z
+Last updated: 2026-07-31T09:23Z
+
+## Sprint 59 Complete - Part 2 API Common Released ATS
+
+- User instruction: after the deploy key was added, push, then continue with
+  the next item.
+- Pushed the previous recovery/key commit `e847899` to Botts `main`, verified
+  remote `main` matched the local SHA, and kept `.repo-keys/` ignored.
+- CP-019 and S-ETS-59-01 replace the historical four-method Part 2 API Common
+  subset with exactly two released OGC 23-002 procedures:
+  `/conf/api-common/resources` and `/conf/api-common/resource-collection`.
+- `part2apicommon` now depends directly on `part1apicommon`; setup keeps only
+  immutable suite arguments and skips before Part 2 IUT access on inherited
+  prerequisite failures other than the documented Part 1 API Common datetime
+  evidence limitation.
+- Runtime checks require exact Part 2 `/conf/api-common` declaration inside
+  each procedure and probe only same-origin landing-page-advertised collection
+  links with read-only `GET limit=1`.
+- Focused test-first evidence reproduced the historical gap at
+  `88 tests / 6 failures / 1 error / 0 skipped`; corrected focused
+  verification passed `88/0/0/0`.
+- Coverage audit passed `23/0/0/0`. Reviewed coverage is now
+  `240 total / 93 exact / 2 helper / 116 candidate / 29 unmapped`, and
+  Part 2 API Common is `2 exact / 0 candidate / 0 unmapped`.
+- Full Docker Maven passed `735 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke ran against the real unmodified local
+  OSH IUT and exited honestly non-green at `244 total / 41 passed / 21 failed /
+  182 skipped`. The Part 2 API Common setup passed; both direct methods SKIP
+  because local OSH does not declare Part 2 `/conf/api-common`. The remaining
+  failures match existing local OSH interoperability limitations.
+- No-mutation oracle recognized 194 local-OSH IUT request logs and zero
+  POST/PUT/PATCH/DELETE. Evidence:
+  `ops/test-results/sprint-ets-59-part2-api-common-2026-07-31/`.
+- Raze returned `APPROVE_WITH_CONCERNS 0.95` with no required fixes. Its sole
+  LOW concern is raw Maven stdout archival beside the E2E artifacts; the exact
+  Maven totals are recorded consistently in Sprint 59 docs and metrics.
 
 ## Codex Remote-Control Recovery - 2026-07-31
 

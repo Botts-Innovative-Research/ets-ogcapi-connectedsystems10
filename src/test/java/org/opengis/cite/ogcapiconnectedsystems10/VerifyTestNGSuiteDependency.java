@@ -121,8 +121,8 @@ public class VerifyTestNGSuiteDependency {
 	private static final String UPDATE_GROUP = "update";
 
 	/**
-	 * Sprint 20 S-ETS-20-01 — Part 2 API Common read-only subset group (depends on Core
-	 * and Common).
+	 * Sprint 59 S-ETS-59-01 — Part 2 API Common released ATS group (depends on Part 1 API
+	 * Common).
 	 */
 	private static final String PART2_API_COMMON_GROUP = "part2apicommon";
 
@@ -1494,18 +1494,17 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 20 S-ETS-20-01 — Part 2 API Common group =====
-	// Part 2 API Common depends on Core and Common because it checks the CS API Part 2
-	// API Common subset only after the foundational landing/conformance/common behavior
-	// is available. The runtime class remains declaration-gated on /conf/api-common.
+	// ===== Sprint 59 S-ETS-59-01 — Part 2 API Common group =====
+	// Part 2 API Common inherits Part 1 API Common directly. Core/Common remain in
+	// scope through the part1apicommon dependency chain.
 
 	/**
-	 * Sprint 20 S-ETS-20-01 (REQ-ETS-PART2-001): the canonical testng.xml SHALL declare
-	 * {@code <group name="part2apicommon" depends-on="core common"/>} so Part 2 API
-	 * Common tests cascade-SKIP when either foundational prerequisite fails.
+	 * REQ-ETS-PART2-001; SCENARIO-ETS-PART2-001-RELEASED-DEPENDENCY-CASCADE-001. The
+	 * canonical testng.xml SHALL declare
+	 * {@code <group name="part2apicommon" depends-on="part1apicommon"/>}.
 	 */
 	@org.junit.Test
-	public void testPart2ApiCommonGroupDependsOnCoreAndCommon() throws Exception {
+	public void testPart2ApiCommonGroupDependsOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -1519,18 +1518,14 @@ public class VerifyTestNGSuiteDependency {
 						"group '" + PART2_API_COMMON_GROUP + "' depends-on '" + dependsOn
 								+ "' uses comma syntax, which TestNG treats as a nonexistent single group at runtime",
 						dependsOn.contains(","));
-				Set<String> dependencyTokens = dependencyTokens(dependsOn);
-				assertTrue("group '" + PART2_API_COMMON_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ CORE_GROUP + "'", dependencyTokens.contains(CORE_GROUP));
-				assertTrue("group '" + PART2_API_COMMON_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ COMMON_GROUP + "'", dependencyTokens.contains(COMMON_GROUP));
+				assertEquals("group '" + PART2_API_COMMON_GROUP + "' has the wrong direct prerequisite",
+						PART1_API_COMMON_GROUP, dependsOn.trim());
 				foundDependency = true;
 				break;
 			}
 		}
-		assertTrue("testng.xml does not declare <group name=\"" + PART2_API_COMMON_GROUP
-				+ "\" depends-on=\"core common\"/> — see Sprint 20 S-ETS-20-01. The Part 2 API Common subset "
-				+ "requires Core and Common as prerequisites.", foundDependency);
+		assertTrue("testng.xml does not declare <group name=\"" + PART2_API_COMMON_GROUP + "\" depends-on=\""
+				+ PART1_API_COMMON_GROUP + "\"/> — see Sprint 59 S-ETS-59-01.", foundDependency);
 	}
 
 	/**
@@ -1562,21 +1557,18 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 20 S-ETS-20-01: Part 2 API Common classes MUST be co-located in the SAME
-	 * {@code <test>} block as Core and Common so both group dependencies resolve within
-	 * TestNG's test-scoped dependency map.
+	 * REQ-ETS-PART2-001; SCENARIO-ETS-PART2-001-RELEASED-DEPENDENCY-CASCADE-001. Part 2
+	 * API Common classes MUST be co-located in the SAME {@code <test>} block as Part 1
+	 * API Common so the group dependency resolves within TestNG's test-scoped dependency
+	 * map.
 	 */
 	@org.junit.Test
-	public void testPart2ApiCommonCoLocatedWithCoreAndCommon() throws Exception {
+	public void testPart2ApiCommonCoLocatedWithPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> coreClassNames = new HashSet<>();
-		for (Class<?> c : CORE_CLASSES) {
-			coreClassNames.add(c.getName());
-		}
-		Set<String> commonClassNames = new HashSet<>();
-		for (Class<?> c : COMMON_CLASSES) {
-			commonClassNames.add(c.getName());
-		}
+		Set<String> part1ApiCommonClassNames = new HashSet<>();
+		part1ApiCommonClassNames
+			.add(org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests.class
+				.getName());
 		Set<String> part2ApiCommonClassNames = new HashSet<>();
 		for (Class<?> c : PART2_API_COMMON_CLASSES) {
 			part2ApiCommonClassNames.add(c.getName());
@@ -1588,19 +1580,18 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllCore = xtClasses.containsAll(coreClassNames);
-			boolean hasAllCommon = xtClasses.containsAll(commonClassNames);
+			boolean hasAllPart1ApiCommon = xtClasses.containsAll(part1ApiCommonClassNames);
 			boolean hasAnyPart2ApiCommon = !java.util.Collections.disjoint(xtClasses, part2ApiCommonClassNames);
-			if (hasAllCore && hasAllCommon && hasAnyPart2ApiCommon) {
+			if (hasAllPart1ApiCommon && hasAnyPart2ApiCommon) {
 				coAlloc = true;
 				break;
 			}
 		}
 		assertTrue(
-				"Core (" + coreClassNames + "), Common (" + commonClassNames + "), and Part 2 API Common ("
+				"Part 1 API Common (" + part1ApiCommonClassNames + ") and Part 2 API Common ("
 						+ part2ApiCommonClassNames
 						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
-						+ "(Part2ApiCommon → Core + Common) resolves within scope. See Sprint 20 S-ETS-20-01.",
+						+ "(Part2ApiCommon -> Part1ApiCommon) resolves within scope. See Sprint 59 S-ETS-59-01.",
 				coAlloc);
 	}
 

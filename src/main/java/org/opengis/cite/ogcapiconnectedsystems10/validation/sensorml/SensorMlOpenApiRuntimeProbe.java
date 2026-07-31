@@ -62,7 +62,8 @@ public final class SensorMlOpenApiRuntimeProbe {
 			throw new IllegalStateException("OpenAPI runtime probe lost cached parameter references.");
 		}
 		SensorMlOpenApiSecurityRuntimeProbe.run();
-		System.out.println("PASS: deployed SensorML OpenAPI 3.1 parser executed; external-fetch security probes executed");
+		System.out
+			.println("PASS: deployed SensorML OpenAPI 3.1 parser executed; external-fetch security probes executed");
 	}
 
 }

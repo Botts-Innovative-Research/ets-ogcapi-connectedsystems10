@@ -414,9 +414,23 @@ verifier also invokes the adapter with valid and invalid components so shaded
 schema-resource lookup and relocated NetworkNT execute on TeamEngine's actual
 classpath.
 
-`ConnectedSystemsSensorMlValidatorAdapter` is deferred until FCU/OGC provide a reusable SensorML validator module. As of 2026-07-22, no public SensorML library is visible under `FCU-GIS-Luke`, and `opengeospatial/ets-sensorml30` is an ETS scaffold rather than a reusable module. The ETS must not import another TeamEngine ETS jar to obtain SensorML validation.
+`ConnectedSystemsSensorMlValidatorAdapter` now provides the stable ETS-owned
+boundary over a provisional local backend and the pinned released SensorML
+schema graph. As of 2026-07-30, no public reusable SensorML validator library
+is visible under `FCU-GIS-Luke`, and `opengeospatial/ets-sensorml30` is an
+executable ETS rather than a dependency module. The ETS must not import another
+TeamEngine ETS jar to obtain SensorML validation. A reproducible future
+FCU/OGC validator may replace the backend after parity and diagnostic-contract
+review without changing the TestNG or Connected Systems mapping layers.
 
-Replacement is incremental. First add adapter parity tests for current valid/invalid schema fixtures and dual-validate extracted `recordSchema` objects without changing existing PASS/SKIP behavior. Only after external-only parity, format assertions, and complete encoding support may local SWE validation be removed. SensorML full JSON Schema validation replaces the current minimal shape heuristics only after a reusable SensorML module exists. Connected Systems mapping assertions, relation-type checks, parent-child Observation/Command binding evidence, TestNG dependency wiring, and TeamEngine reporting remain in this ETS.
+SWE Common replacement is incremental. First add adapter parity tests for
+current valid/invalid schema fixtures and dual-validate extracted
+`recordSchema` objects without changing existing PASS/SKIP behavior. Only
+after external-only parity, format assertions, and complete encoding support
+may local SWE validation be removed. SensorML full JSON Schema validation is
+active through the provisional adapter. Connected Systems mapping assertions,
+relation-type checks, parent-child Observation/Command binding evidence,
+TestNG dependency wiring, and TeamEngine reporting remain in this ETS.
 
 Any implementation that adds validator dependencies must extend the TeamEngine 6 runtime verifier to catch duplicate NetworkNT, ITU, Jackson, SLF4J, Jakarta, TestNG, or TeamEngine jar families and must preserve the selected-payload rule from REQ-ETS-TEAMENGINE-007. The adapter must translate external validator return types such as NetworkNT `ValidationMessage` into ETS-owned diagnostics before test classes see them, so shaded/relocated runtime types do not leak into the conformance-test API.
 
@@ -2117,6 +2131,110 @@ image
 honest unmodified-local-OSH `238/40/7/191`, sabotage `238/2/10/226`, zero IUT
 writes or credential leaks, and immutable external dependencies. Fresh Raze
 R8 is `APPROVE 0.99` with both prior findings closed and no new findings.
+
+### Sprint 58: released Part 1 SensorML procedures
+
+Sprint 58 replaces the historical thirteen-method SensorML approximation with
+the fifteen released Annex A procedures and introduces the provisional
+SensorML adapter required by CP-018.
+
+```text
+SensorMlTests (15 independent procedures)
+          |
+          v
+SensorMlSupport
+  OpenAPI JSON/YAML operation inspection
+  + canonical resource selection and media gates
+  + resource id and complete mapping inspection
+  + class compatibility and exact relation tables
+          |
+          +--> Part1ApiCommonSupport bounded traversal
+          |
+          `--> ConnectedSystemsSensorMlValidatorAdapter
+                 |
+                 `--> pinned released schema backend
+```
+
+Class setup retains only the normalized API root after direct Core, Common,
+and Part 1 API Common prerequisite inspection. Every method uses `alwaysRun`,
+has no method dependency, and reacquires its own declarations and evidence.
+The known API Common datetime evidence limitation does not prevent direct
+SensorML procedures from executing, but other failed or skipped inherited
+prerequisites suppress all fifteen before SensorML-specific access.
+
+The media procedures discover `rel=service-desc` from the landing page and
+parse JSON or YAML OpenAPI. Read media checks successful GET response content
+for every declared canonical SensorML resource collection and the generic
+custom collection items path when custom collections are advertised. Write
+media requires SensorML request content on at least one canonical collection
+POST or canonical item PUT. Both procedures are read-only.
+
+Schema procedures independently request complete System, Deployment,
+Procedure, and Property canonical collections and one canonical item using
+`Accept: application/sml+json`. HTTP 200 and exact actual media are established
+before parsing. Complete documents enter
+`ConnectedSystemsSensorMlValidatorAdapter` with one of eight closed schema
+targets.
+
+The adapter API accepts Jackson trees and returns an immutable deterministic
+list of ETS-owned string diagnostics. TestNG, `ETSAssert`, requirement URIs,
+and verdict policy remain outside. Missing schema or validator configuration
+is an operational exception, not an IUT diagnostic. The provisional backend
+uses NetworkNT Draft 2020-12 validation with format assertions and the bundled
+released schema graph. This replaces historical homegrown shape validation
+now while keeping the backend replaceable by a future reproducible FCU/OGC
+library. The executable `ets-sensorml30` suite jar is never imported.
+
+Manual-inspection procedures traverse every available canonical SensorML
+resource through bounded, cycle-safe, same-origin pagination. Common mappings
+validate URI-valued `uniqueId` and optional string `label`/`description`.
+Resource-id compares each canonical document `id` with its selected endpoint
+identifier. Resource mappings enforce exact released JSON members, URI/CURIE
+values, time/location structures, weblinks, classifier semantics, deployed
+systems, and property URIs without making optional members mandatory.
+Each mapping procedure also validates its complete resource against the
+matching released single-resource schema, so a map-shaped but invalid GeoJSON
+geometry or SensorML Pose cannot pass independently of the schema procedure.
+Association hrefs are resolved against the canonical source URI. Same-origin
+targets remain constrained to the API root and may use the configured IUT
+credential. Absolute cross-origin HTTP(S) targets are permitted because
+Connected Systems resources may be distributed; they are dereferenced by a
+credential-free client with redirects disabled. Every response is validated
+against the exact expected SensorML or GeoJSON resource/collection schema, or
+the applicable Part 2 Datastream/ControlStream collection schema, before it
+counts as mapping evidence.
+AssetType accepts exact table labels, `cs:` CURIEs, and absolute URIs whose
+final path or fragment is an exact table label; other CURIE prefixes are not
+treated as bound.
+Relation inspection rejects every non-generic `links[].rel` outside the exact
+`ogc-rel:<association>` resource table.
+
+The SensorML mapping table is the directly applicable source for relation
+spelling. It specifies lowercase `controlstreams`, so the ETS requires
+`ogc-rel:controlstreams`; the conflicting general relation registry spelling
+`ogc-rel:controlStreams` is not substituted for this requirement.
+
+System class compatibility uses the released `cs:AssetType` classifier:
+Equipment and Human require `PhysicalComponent` or `PhysicalSystem`;
+Simulation and Process require `SimpleProcess` or `AggregateProcess`.
+Unknown or absent optional asset classification can establish only an allowed
+SensorML type, not a false compatibility claim. Procedure class compatibility
+uses released procedure semantics and requires no `position`; physical
+datasheets and human/process methodologies are judged only when machine-
+checkable evidence is available.
+
+Expected empty-resource limitations are retained at narrow resource boundaries
+while later types continue. Unsupported negotiated media, assertion failures,
+HTTP errors, invalid supported content, schema failures, unsafe pagination,
+wrong ids, and malformed present mappings are not caught or downgraded.
+
+The eight entry schemas and transitive references must pass
+resolver-normalized semantic parity against release tag `v1.0.0`, commit
+`8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`; dirty or wrong-commit source
+checkouts fail. Controlled read-only HTTP supplies positive coverage for all
+fifteen procedures and key negative branches. Primary TeamEngine E2E uses
+unmodified local OSH and permits honest media/evidence SKIPs, but no write or
+external source modification. Hosted CI remains out of scope.
 
 ## Status
 

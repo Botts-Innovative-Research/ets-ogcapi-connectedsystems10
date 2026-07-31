@@ -438,7 +438,10 @@ Cross-references **§14.6 SystemFeatures conformance class scope** (Sprint 2). A
 
 ## 17. Last reconciled
 
-**2026-07-22** — External SWE Common and SensorML validator architecture appended (§21). Adapter-first dependency boundary, homegrown-validation replacement path, upstream uncertainty, and runtime-closure gates reconciled. Re-reconcile required if >30 days stale per AGENTS.md.
+**2026-07-30** — Sprint 58 SensorML direct ATS architecture appended (§37).
+The provisional local schema backend supersedes §21's implementation deferral
+without weakening its adapter or executable-suite exclusion boundary.
+Re-reconcile required if >30 days stale per AGENTS.md.
 
 ## 18. Architecture v2.0.4 — Sprint 25 Part 2 taxonomy correction (2026-05-09)
 
@@ -1687,3 +1690,70 @@ implementation defect. Its sole MEDIUM exact-evidence reconciliation concern
 is addressed by the follow-up. Focused Raze recheck returns
 `APPROVE_WITH_CONCERNS` at confidence `0.98`, closes that concern, and requires
 no fixes. Positive PATCH E2E remains the only candidate gate.
+
+## 37. Architecture v2.0.58 - Part 1 SensorML direct procedures (2026-07-30)
+
+CP-018/S-ETS-58-01 replace the historical thirteen-method approximation with
+exactly the fifteen released `/conf/sensorml` procedures. This section
+supersedes only §21's SensorML implementation deferral. The adapter-first
+ownership boundary, prohibition on importing executable suite jars, and future
+upstream replacement path remain binding.
+
+The direct released group chain is:
+
+```text
+Core/Common -> Part 1 API Common -> SensorML
+```
+
+SensorML no longer depends directly on System Features. Resource-class
+conditions are checked inside the owning procedure. All fifteen methods are
+independent and `alwaysRun`; the known API Common datetime evidence limitation
+does not suppress them, while any other failed or skipped Core, Common, or API
+Common prerequisite skips setup before SensorML-specific IUT access.
+
+`SensorMlTests` owns procedure identity and verdict policy.
+`SensorMlSupport` owns API-definition media inspection, canonical resource
+typing, mapping and relation tables, class compatibility, URI/CURIE and
+temporal semantics, and complete bounded inspection.
+`Part1ApiCommonSupport` remains the traversal authority.
+
+`validation.sensorml.ConnectedSystemsSensorMlValidatorAdapter` is the only
+domain schema boundary. It accepts a Jackson tree and a closed enum selecting
+one of eight System, Deployment, Procedure, or Property single/collection
+schemas. It returns immutable sorted ETS-owned diagnostics and exposes no
+NetworkNT, TestNG, `ETSAssert`, requirement URI, or PASS/SKIP type. Missing
+resources and validator configuration failures propagate as operational
+exceptions instead of IUT diagnostics.
+
+The provisional backend uses the ETS-managed NetworkNT Draft 2020-12 runtime
+with format assertions and the already bundled released SensorML schema graph.
+The eight entry schemas and transitive references require resolver-normalized
+semantic parity with OGC 23-001 tag `v1.0.0`, commit
+`8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`; dirty or wrong-commit source
+checkouts fail. This replaces homegrown minimal-shape and duplicated schema
+validation now. A future reproducible FCU/OGC validator may replace only the
+backend after valid/invalid diagnostic parity; TestNG procedures and Connected
+Systems mappings do not change.
+
+Media advertisement is read-only OpenAPI inspection. Canonical representation
+procedures establish HTTP 200 and actual `application/sml+json` before parsing.
+Manual procedures process all available canonical resources and all safe
+pages. Expected empty-resource or unsupported-media limitations are aggregated
+without hiding later failures. Invalid supported content, schema failures,
+unsafe pagination, malformed present mappings, incompatible classes, wrong
+ids, and invalid association relations fail.
+
+Association links may resolve to distributed HTTP(S) services. Same-origin
+targets remain below the IUT API root and use the suite credential path.
+Cross-origin targets use a separate credential-free HTTP client with redirects
+disabled. A target counts only after its representation validates against the
+expected SensorML or GeoJSON resource/collection schema, or the applicable
+Datastream/ControlStream collection schema; path shape or an `items`/`features`
+member alone is insufficient.
+
+No `ets-sensorml30` or other executable conformance-suite jar is imported.
+OSH and TeamEngine source and binaries remain unchanged. Hosted CI and default
+IUT mutation remain out of scope. Exact mapping promotion requires controlled
+HTTP coverage of all fifteen procedures, focused/full Maven, schema parity,
+exact-image runtime, unmodified-local-OSH TeamEngine E2E with zero writes, and
+fresh Raze with no unresolved required finding.

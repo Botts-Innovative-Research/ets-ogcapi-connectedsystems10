@@ -178,7 +178,7 @@
         <group name="propertydefinitions" depends-on="part1apicommon"/>
         <group name="subdeployments" depends-on="deployments"/>
         <group name="geojson" depends-on="part1apicommon"/>
-        <group name="sensorml" depends-on="systemfeatures"/>
+        <group name="sensorml" depends-on="part1apicommon"/>
         <group name="advancedfiltering" depends-on="part1apicommon"/>
         <group name="createreplacedelete" depends-on="part1apicommon"/>
         <group name="update" depends-on="part1apicommon"/>

@@ -1,0 +1,70 @@
+sprint: ets-58
+story: S-ETS-58-01
+title: Part 1 SensorML direct ATS closure
+status: IN_PROGRESS
+triggered_by: "User instructed start the next step"
+requirements:
+  - REQ-ETS-PART1-013
+  - REQ-ETS-VALIDATOR-001
+  - REQ-ETS-COVERAGE-001
+scenarios:
+  - SCENARIO-ETS-PART1-013-RELEASED-PROCEDURES-001
+  - SCENARIO-ETS-PART1-013-DIRECT-PREREQUISITES-001
+  - SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001
+  - SCENARIO-ETS-PART1-013-VALIDATOR-ADAPTER-001
+  - SCENARIO-ETS-PART1-013-RELEASED-SCHEMAS-001
+  - SCENARIO-ETS-PART1-013-RELEASED-RESOURCE-ID-001
+  - SCENARIO-ETS-PART1-013-RELEASED-COMMON-MAPPINGS-001
+  - SCENARIO-ETS-PART1-013-RELEASED-RESOURCE-MAPPINGS-001
+  - SCENARIO-ETS-PART1-013-RELEASED-CLASS-COMPATIBILITY-001
+  - SCENARIO-ETS-PART1-013-RELEASED-RELATION-TYPES-001
+  - SCENARIO-ETS-PART1-013-RELEASED-MEDIA-GATE-001
+  - SCENARIO-ETS-PART1-013-RELEASED-PROCEDURE-ISOLATION-001
+  - SCENARIO-ETS-PART1-013-RELEASED-SCHEMA-PARITY-001
+  - SCENARIO-ETS-PART1-013-RELEASED-DIRECT-HTTP-COVERAGE-001
+  - SCENARIO-ETS-PART1-013-RELEASED-E2E-EXECUTION-001
+success_criteria:
+  - Exactly fifteen independent TestNG methods map the released procedures.
+  - Part 1 API Common is the only direct TestNG prerequisite.
+  - API definition media procedures parse JSON or YAML and issue no mutations.
+  - Four schema procedures validate complete canonical single and collection documents.
+  - SensorML schema validation enters through an ETS-owned backend-neutral adapter.
+  - Adapter diagnostics are immutable and deterministic; operational failures remain distinct.
+  - Canonical id and common feature mappings inspect every available SensorML resource.
+  - System, Deployment, Procedure, and Property mappings enforce the released tables.
+  - Mapping procedures independently validate mapped geometry/Pose schema semantics and validate dereferenced association targets against the exact required resource or collection schema.
+  - Same-origin association requests may use IUT credentials; cross-origin HTTP(S) association requests never carry them and never follow redirects.
+  - AssetType accepts released labels, approved cs CURIEs, and exact-label absolute URIs while rejecting unbound CURIE namespaces.
+  - System and Procedure SensorML class compatibility is enforced.
+  - Links-member associations use exact ogc-rel-prefixed resource-specific relation names.
+  - Advertised malformed API definitions and default-only response metadata fail rather than becoming absent-evidence skips.
+  - Unsupported actual media fails before parsing; supported invalid content fails.
+  - Pagination is bounded, cycle-safe, same-origin, and complete.
+  - Eight entry schemas and the transitive graph match pinned released source.
+  - Controlled HTTP covers all fifteen positive procedures, malformed metadata, wrong association resources and collections, cross-origin credential isolation, mapped geometry/Pose, unsafe/cyclic pagination, later-page media, omission, and no-evidence paths.
+  - Focused and full Docker Maven verification pass.
+  - Exact-image TeamEngine executes against unmodified local OSH with zero writes.
+  - Coverage mappings are regenerated and reviewed.
+  - Raze reports no unresolved required fixes.
+guardrails:
+  - Do not modify OSH or TeamEngine source code or binaries.
+  - Do not add hosted CI.
+  - Do not import the ets-sensorml30 executable suite jar.
+  - Do not mutate an IUT for media-advertisement evidence.
+  - Do not convert schema operational errors into IUT conformance diagnostics.
+  - Do not make absent optional mapping members mandatory.
+verification:
+  released_source: PENDING
+  test_first: PENDING
+  schema_parity: PENDING
+  focused_maven: PENDING
+  full_maven: PENDING
+  coverage_audit: PENDING
+  controlled_http: PENDING
+  exact_image: PENDING
+  dependency_sabotage: PENDING
+  local_osh_teamengine: PENDING
+  credential_gates: PENDING
+  immutable_base: PENDING
+  artifact_hygiene: PENDING
+  raze: PENDING

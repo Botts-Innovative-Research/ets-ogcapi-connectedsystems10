@@ -1742,10 +1742,10 @@ SKIP as specified.
 
 #### REQ-ETS-VALIDATOR-001: External SWE Common and SensorML Validator Integration
 - **Priority**: MUST before full SWE Common or SensorML validation closure.
-- **Status**: PARTIALLY_IMPLEMENTED overall; the SWE Common increment is IMPLEMENTED and SensorML is deferred. Both Jenkinsfiles pass Java 17/bootstrap/declared-profile coverage; exact multi-tuple self-test assertions pass; fresh Maven `312/0/0/3`, runtime verification, and local OSH E2E pass on image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9`; final Raze approved at `0.99` confidence with no required actions.
+- **Status**: PARTIALLY_IMPLEMENTED overall; the SWE Common increment is IMPLEMENTED and Sprint 58 is implementing the provisional SensorML adapter over the pinned released schema graph. Both Jenkinsfiles pass Java 17/bootstrap/declared-profile coverage; exact multi-tuple self-test assertions pass; fresh Maven `312/0/0/3`, runtime verification, and local OSH E2E pass on image `sha256:829a97414c07dd5763ed302e32b3178d301ca098bc9025f4b1f58b692ddad5f9`; final SWE Common Raze approved at `0.99` confidence with no required actions.
 - **Description**: The ETS SHALL prefer reusable OGC-owned SWE Common 3.0 and SensorML 3.0 validator modules over long-term homegrown domain-schema validation when those modules are available as reproducible artifacts or source-pinned prebuilds. External validators SHALL be consumed through a thin Connected Systems adapter layer. The adapter MAY delegate pure domain schema validation, but this ETS SHALL retain CS API endpoint discovery, candidate selection, `/conformance` and prerequisite gating, exact media-type evidence, Connected Systems-specific mapping assertions, TestNG pass/fail/skip policy, no-mutation safety, TeamEngine report integration, and TeamEngine 6 runtime packaging discipline.
 - **Upstream state on 2026-07-22**: `opengeospatial/ets-swecommon30` PR 10 exposes `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT` on branch `issue-9-swecommon-validation-module` at commit `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`, but the artifact is not published to Maven Central. No public SensorML validator module attributable to `FCU-GIS-Luke` was found; `opengeospatial/ets-sensorml30` is a public ETS scaffold at commit `d2b2a6308fdf48f113f7c7faed6712dc05e33130`, not a reusable validator dependency.
-- **Replacement boundary**: The first SWE implementation SHALL retain local Connected Systems wrapper-schema validation, extract each validated `recordSchema`, and pass that pure SWE component to `swecommon30-validator` through the adapter. Local format, encoding, media-type, mapping, binding, and PASS/SKIP assertions remain authoritative during this dual-validation stage. Local SWE validation SHALL be removed only after the external validator alone proves parity and supports required format assertions plus JSON, Text, and Binary encoding schemas. Future SensorML implementation SHALL replace minimal `SensorMlTests` shape checks with full SensorML 3.0 validation only after a reusable SensorML validator module is visible. The ETS SHALL NOT depend directly on another TeamEngine ETS jar such as `ets-swecommon30` or `ets-sensorml30` to obtain domain validation.
+- **Replacement boundary**: The first SWE implementation SHALL retain local Connected Systems wrapper-schema validation, extract each validated `recordSchema`, and pass that pure SWE component to `swecommon30-validator` through the adapter. Local format, encoding, media-type, mapping, binding, and PASS/SKIP assertions remain authoritative during this dual-validation stage. Local SWE validation SHALL be removed only after the external validator alone proves parity and supports required format assertions plus JSON, Text, and Binary encoding schemas. Sprint 58 SHALL replace minimal SensorML shape checks with full validation through `ConnectedSystemsSensorMlValidatorAdapter`. Until a reusable public FCU/OGC module exists, its provisional backend SHALL use the already pinned bundled SensorML schema graph with Draft 2020-12 format assertions. A later upstream module may replace only that backend after parity and diagnostic review. The ETS SHALL NOT depend directly on another TeamEngine ETS jar such as `ets-swecommon30` or `ets-sensorml30` to obtain domain validation.
 - **Rationale**: Reusing OGC-owned domain validators reduces duplicated schema logic and keeps SWE Common/SensorML semantics aligned across CITE suites, but importing another suite or unreviewed dependency closure could reintroduce TeamEngine classloader failures and false PASS behavior.
 - **Maps to**: PRD FR-ETS-23, FR-ETS-40, FR-ETS-41, FR-ETS-42, FR-ETS-54, NFR-ETS-11.
 
@@ -1804,6 +1804,14 @@ SKIP as specified.
 **WHEN** no public reusable SensorML validator module, branch, artifact coordinate, or API is discoverable
 **THEN** the ETS records the dependency as provisional and asks FCU/OGC for the exact source
 **AND** it SHALL NOT import `opengeospatial/ets-sensorml30` directly as a dependency while that project remains a TeamEngine ETS scaffold rather than a reusable validator module.
+
+#### SCENARIO-ETS-VALIDATOR-SENSORML-PROVISIONAL-ADAPTER-001 (CRITICAL)
+**GIVEN** no reusable public FCU/OGC SensorML validator module is available
+**WHEN** the released Connected Systems SensorML procedures require complete domain schema validation
+**THEN** the ETS invokes an ETS-owned adapter over the pinned bundled SensorML schema graph
+**AND** the adapter accepts a closed schema target and Jackson tree, returns immutable deterministic ETS-owned diagnostics, and exposes no TestNG or requirement-URI policy
+**AND** schema resource or configuration failures remain operational errors
+**AND** a future reusable validator can replace the provisional backend without changing TestNG procedures or Connected Systems mapping checks.
 
 #### SCENARIO-ETS-VALIDATOR-HOMEGROWN-REPLACEMENT-001 (NORMAL)
 **GIVEN** the ETS has local SWE Common schema helpers and minimal SensorML shape checks
@@ -4147,22 +4155,149 @@ relation is present.
 **AND** dedicated Property HTTP tests prove pagination and continuation after later item or collection limitations.
 *Maps to*: REQ-ETS-PART1-012, REQ-ETS-PART1-008, REQ-ETS-COVERAGE-001.
 
-> Sprint 10 targets SensorML as another read-only encoding increment. The sprint is intentionally PARTIAL for the SensorML requirement class: it proves conformance declaration, discovers a SensorML alternate representation for an existing System resource, fetches that representation, and checks a minimal SensorML system shape. It does not close write media type behavior, relation types, deployments/procedures/properties SensorML schema or mapping assertions, or full JSON Schema validation. Alternate-link fallback is evidence for this sprint subset only unless the fetched body proves SensorML JSON support and the fallback is documented in runtime output.
+> Sprints 10, 16, 17, 18, and 19 are historical approximation increments.
+> Sprint 58 replaces their combined method surface with the fifteen released
+> procedures and a provisional ETS-owned SensorML validator adapter.
 
-#### REQ-ETS-PART1-013: SensorML Encoding Conformance Class (`/conf/sensorml`) (Sprint 10 + Sprint 16 + Sprint 17 target)
+#### REQ-ETS-PART1-013: SensorML Encoding Conformance Class (`/conf/sensorml`) (Sprint 58 target)
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
+- **Status**: IN_PROGRESS - RELEASED ATS DIRECT REPLACEMENT
+- **Current increment**: CP-018 and S-ETS-58-01 replace the historical thirteen-method approximation with exactly fifteen direct released procedures. They add complete single/collection schema validation through the provisional ETS-owned SensorML adapter, exact API-definition media advertisement, canonical resource-id, complete common/resource mappings, class compatibility, relation semantics, direct API Common dependency, bounded all-resource traversal, schema parity, controlled HTTP, and mandatory unmodified-local-OSH TeamEngine E2E.
 - **Historical increment**: by Sprint 10 Generator, Sprint 16 Generator, Sprint 17 selected-resource relation-types Generator, Sprint 18 relation-types breadth Generator, and Sprint 19 mediatype-write safety-gated Generator (story S-ETS-10-01 gate-closed 2026-05-05; story S-ETS-16-01 Generator complete and Raze-approved 2026-05-06; story S-ETS-17-01 Generator complete 2026-05-07; story S-ETS-18-01 Generator complete 2026-05-07; story S-ETS-19-01 Generator complete 2026-05-07). Sprint 19 adds safety-gated `/req/sensorml/mediatype-write` checks with positive system-resource evidence against a dedicated local OSH mutable IUT. Sprint 18 added independent SensorML relation-types checks for selected System, Deployment, and Procedure representations. Sprint 10 implemented class `org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests` with 6 read-only @Tests. Sprint 16 extends it to 9 read-only @Tests with deployment/procedure/property SensorML schema/mapping checks while keeping the full REQ partial. Sprint 17 extends it to 10 read-only @Tests and adds shared helper coverage. Sprint 18 extends it to 12 read-only @Tests. Sprint 19 extends it to 13 @Tests with mutation-gated mediatype-write parsing evidence. Sprint 19 verification: formatter BUILD SUCCESS; Docker Maven BUILD SUCCESS, `144 tests / 0 failures / 0 errors / 3 skipped`, log `ops/test-results/sprint-ets-19-maven-r3-2026-05-07.log`; GeoRobotix TeamEngine smoke r3 reported `89 total / 55 passed / 0 failed / 34 skipped` with zero IUT-bound POST/PUT/DELETE/PATCH across 69 recognized request-log entries. Local OSH mutable-IUT smoke r3 reported `89 total / 52 passed / 4 failed / 33 skipped`; the SensorML mediatype-write test PASSed with exact `Content-Type=application/sml+json`, follow-up GET, and cleanup DELETE evidence. GeoRobotix runtime used explicit `application/sml+json` alternate links for deployment `https://api.georobotix.io/ogc/t18/api/deployments/16sp744ch58g?f=sml3`, procedure `https://api.georobotix.io/ogc/t18/api/procedures/164p7ed8l47g?f=sml3`, and system `https://api.georobotix.io/ogc/t18/api/systems/0mqcvdnfoca0?f=sml3`; CS API `items` wrappers and default Feature JSON are not counted as SensorML PASS.
-- **OGC source verified**: Upstream `opengeospatial/ogcapi-connected-systems` commit `3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f`. Requirement class file exists at `api/part1/standard/requirements/encoding/sensorml/requirements_class_sensorml.adoc`. The class identifier is `/req/sensorml`, inherits `/req/api-common` and SensorML 3.0 JSON requirement classes (`json-simple-process`, `json-physical-system`, `json-deployment`, `json-derived-property`), and lists 15 subrequirements: `mediatype-read`, `mediatype-write`, `relation-types`, `resource-id`, `feature-attribute-mapping`, `system-schema`, `system-sml-class`, `system-mappings`, `deployment-schema`, `deployment-mappings`, `procedure-schema`, `procedure-sml-class`, `procedure-mappings`, `property-schema`, and `property-mappings`.
+- **OGC source verified**: Released tag `v1.0.0`, commit `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`. The class identifier is `/req/sensorml`, inherits `/req/api-common` and SensorML 3.0 JSON requirement classes (`json-simple-process`, `json-physical-system`, `json-deployment`, `json-derived-property`), and lists 15 subrequirements: `mediatype-read`, `mediatype-write`, `relation-types`, `resource-id`, `feature-attribute-mapping`, `system-schema`, `system-sml-class`, `system-mappings`, `deployment-schema`, `deployment-mappings`, `procedure-schema`, `procedure-sml-class`, `procedure-mappings`, `property-schema`, and `property-mappings`.
 - **Sprint 10 coverage scope**: SensorML systems read-only subset with 6 @Tests: (1) IUT declares `/conf/sensorml`; (2) a System resource exposes or can be requested as a SensorML JSON representation; (3) the SensorML representation returns HTTP 200 with parseable JSON; (4) the representation has minimal SensorML identity/class shape such as `type` plus identifier/member structure sufficient for a non-schema sanity check; (5) the representation links or maps back to the canonical CS API System id/UID when present; (6) TestNG dependency wiring and smoke no-regression. The Generator MAY use the existing single-system `alternate` link with `type="application/sml+json"` and `?f=sml3` when content negotiation on `Accept: application/sml+json` returns default CS API JSON. Current GeoRobotix verification at planning time: `/conformance` declares `/conf/sensorml`; collection-level `GET /systems` with `Accept: application/sml+json` returns `Content-Type: application/json` with top-level `items`; single-system JSON exposes `alternate` links of type `application/sml+json` to `?f=sml3`.
 - **Sprint 16 implemented coverage scope**: SensorML deployment/procedure/property read-only subset. GeoRobotix runtime on 2026-05-06: `/conformance` declares `/conf/sensorml`, `/conf/deployment`, `/conf/procedure`, and `/conf/property`; deployment and procedure SensorML checks PASS through explicit item-level `application/sml+json` alternate links; property SensorML SKIPs honestly because `/properties` currently has an empty `items` array. Each resource check first gates on the matching resource conformance class (`/conf/deployment`, `/conf/procedure`, `/conf/property`) before fetching or judging resource-specific SensorML evidence. Procedure mapping requires non-identity process/procedure structure (`definition`, `inputs`, `outputs`, `parameters`, `characteristics`, or `capabilities`); `identifiers` alone is not enough. Sprint 16 does not claim samplingFeature SensorML coverage because upstream `/req/sensorml` lists property schema/mapping subrequirements, not sampling feature subrequirements.
-- **Dependency wiring**: SensorML depends on SystemFeatures via `<group name="sensorml" depends-on="systemfeatures"/>`. SensorML system encoding assertions are meaningful only after the canonical SystemFeatures resource layer is available.
-- **Open subrequirements after Sprint 19 Generator**: broader positive relation-types evidence where SensorML resources expose links-member associations, full SensorML 3.0 JSON Schema validation, non-system mutation-side encoding behavior, and positive property SensorML evidence against a populated IUT remain OPEN unless separately planned. S-ETS-42-01 adds the provisional architecture for replacing current minimal SensorML shape checks with a reusable SensorML validator module when FCU/OGC make that module available as a reproducible artifact; the public `opengeospatial/ets-sensorml30` suite jar is not accepted as a direct dependency boundary.
+- **Dependency wiring**: Sprint 58 changes the direct released chain to `<group name="sensorml" depends-on="part1apicommon"/>`. Resource-specific conditions remain inside their owning procedure. The historical System Features dependency is superseded.
+- **Open subrequirements before Sprint 58 implementation**: all fifteen remain candidate or unmapped until the direct replacement passes technical, controlled-HTTP, local-OSH E2E, and Raze gates. The public `opengeospatial/ets-sensorml30` suite jar is not an accepted dependency boundary.
 - **Sprint 17 implemented relation-types scope**: For associations encoded in a SensorML JSON `links` member, relation-types checks require `rel` to equal the association name valid for the selected resource type. If the selected SensorML representation has no association links in a `links` member, the assertion SKIPs with reason. Generic representation links and property-level mapping links are not relation-types PASS evidence. `EncodingRelationTypes` uses resource-specific links-member allowlists only where the OGC SensorML association table maps that association to `links`: System (`subsystems`, `samplingFeatures`, `deployments`, `procedures`, `datastreams`, `controlstreams`), Deployment (`parentDeployment`, `subdeployments`, `featuresOfInterest`, `samplingFeatures`, `datastreams`, `controlstreams`), and Procedure (`implementingSystems`). SensorML `parentSystem` maps to `attachedTo`, not `links`, and Sampling Features are outside the SensorML conformance class. The runtime SensorML assertion currently checks a selected System representation and SKIPs honestly on GeoRobotix because that representation has no top-level links-member association links.
 - **Sprint 18 implemented relation-types breadth scope**: `SensorMlTests` now has 12 read-only @Tests and evaluates relation-types independently for selected System, Deployment, and Procedure SensorML representations. Each assertion evaluates its selected SensorML representation independently and SKIPs when the representation has no links-member association links. GeoRobotix runtime on 2026-05-07 SKIPped all three SensorML relation-types checks because the fetched SensorML system, deployment, and procedure bodies expose no top-level `links` member.
 - **Sprint 19 implemented mediatype-write scope**: `SensorMlTests` now has 13 @Tests and adds `sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled`. The test checks write-side `Content-Type: application/sml+json` parsing behind the existing Sprint 12 mutation safety gate, requires `/conf/create-replace-delete`, hard-denies public GeoRobotix, and requires follow-up dereference evidence preserving the submitted UID. GeoRobotix declares `/conf/create-replace-delete` and `/conf/sensorml`, but it is a shared public IUT and was not mutated by default smoke. Local OSH mutable-IUT smoke r3 proved the positive system-resource path. OPTIONS readiness alone is not conformance evidence.
 - **IUT-state policy**: If the IUT does not declare `/conf/sensorml`, every SensorML @Test SKIPs with reason. If the IUT declares SensorML but only exposes a SensorML representation through an `alternate` link rather than direct `Accept: application/sml+json` negotiation, the sprint may PASS discovery/fetch checks through the alternate link and MUST record that fallback explicitly. A CS API `items` wrapper alone MUST NOT be counted as SensorML PASS.
 - **Maps to**: PRD FR-ETS-23.
+
+### Acceptance Scenarios for Sprint 58
+
+#### SCENARIO-ETS-PART1-013-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** released OGC 23-001 Annex A defines fifteen `/conf/sensorml` tests
+**WHEN** the shipped SensorML class is inspected
+**THEN** it contains exactly fifteen independently executable TestNG methods, one per released identifier
+**AND** no declaration-only, dependency-tracer, combined-schema/mapping, or mutation-lifecycle substitute remains.
+*Maps to*: REQ-ETS-PART1-013, REQ-ETS-COVERAGE-001.
+
+#### SCENARIO-ETS-PART1-013-DIRECT-PREREQUISITES-001 (CRITICAL)
+**GIVEN** SensorML inherits Part 1 API Common directly
+**WHEN** TestNG schedules the class
+**THEN** the group depends directly on `part1apicommon`
+**AND** a failed Core, Common, or API Common prerequisite skips all fifteen before SensorML-specific IUT access
+**AND** the documented API Common datetime evidence limitation alone does not suppress the direct procedures.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001 (CRITICAL)
+**GIVEN** a JSON or YAML OpenAPI service description
+**WHEN** the read and write procedures execute
+**THEN** read media is advertised on every declared canonical SensorML collection and advertised custom items operation
+**AND** write media is advertised on at least one canonical POST or PUT
+**AND** only explicit 2xx or `2XX` responses count as successful-response evidence
+**AND** an advertised malformed, inaccessible, or unsupported-media service description fails instead of being discarded as no evidence
+**AND** neither procedure issues a mutation request.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-VALIDATOR-ADAPTER-001 (CRITICAL)
+**GIVEN** a SensorML document and one of the eight released schema targets
+**WHEN** the provisional adapter validates it
+**THEN** valid content returns no diagnostics and invalid content returns immutable deterministic ETS-owned diagnostics
+**AND** NetworkNT types, TestNG, requirement URIs, and verdict policy do not cross the adapter API
+**AND** missing schema or configuration faults remain operational errors.
+*Maps to*: REQ-ETS-PART1-013, REQ-ETS-VALIDATOR-001.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-SCHEMAS-001 (CRITICAL)
+**GIVEN** actual `application/sml+json` canonical System, Deployment, Procedure, or Property resources
+**WHEN** the corresponding schema procedure executes
+**THEN** it validates complete collection and selected canonical single-resource documents against the released schemas through the adapter
+**AND** the four resource types remain independent procedures.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-RESOURCE-ID-001 (CRITICAL)
+**GIVEN** canonical SensorML resource representations
+**WHEN** resource-id executes
+**THEN** every document `id` exactly equals its selected canonical URL identifier
+**AND** a mismatch fails instead of SKIPping.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-COMMON-MAPPINGS-001 (CRITICAL)
+**GIVEN** available canonical SensorML resources
+**WHEN** common feature mappings execute
+**THEN** every present `uniqueId` is an absolute URI
+**AND** present `label` and `description` values are strings
+**AND** no first-item shortcut hides a later invalid resource.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-RESOURCE-MAPPINGS-001 (CRITICAL)
+**GIVEN** inspectable System, Deployment, Procedure, or Property SensorML resources
+**WHEN** the corresponding mapping procedure executes
+**THEN** every present released attribute and association is validated at its exact JSON member
+**AND** mapped GeoJSON geometry and SensorML Pose values validate against the pinned released schema graph
+**AND** each mapped association URI is an absolute or source-resolved HTTP(S) URI without userinfo or a fragment
+**AND** same-origin targets may use the configured IUT credential while cross-origin targets are dereferenced by a credential-free, non-redirecting client
+**AND** every returned association resource or collection validates against the exact expected SensorML, GeoJSON, Datastream, or ControlStream schema
+**AND** wrong resource types, wrong collections, credential-bearing cross-origin requests, redirects, and unresolved targets fail
+**AND** an AssetType value is an exact released label, an approved `cs:` CURIE, or an absolute URI whose final path or fragment is an exact released label
+**AND** unbound CURIE prefixes do not satisfy AssetType
+**AND** absent optional members remain optional
+**AND** every inspectable resource is processed.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-CLASS-COMPATIBILITY-001 (CRITICAL)
+**GIVEN** System and Procedure SensorML resources
+**WHEN** their SensorML class procedures execute
+**THEN** physical versus process classes are compatible with the released asset or procedure semantics
+**AND** Procedure descriptions contain no `position` member.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-RELATION-TYPES-001 (CRITICAL)
+**GIVEN** available SensorML `links` members
+**WHEN** relation-types executes across all four resource types
+**THEN** every non-generic association uses the exact `ogc-rel:<association>` name allowed by that resource mapping table
+**AND** the directly applicable SensorML table spelling `ogc-rel:controlstreams` is required despite the conflicting general registry spelling `ogc-rel:controlStreams`
+**AND** all resources are inspected before a no-association-evidence SKIP.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-MEDIA-GATE-001 (CRITICAL)
+**GIVEN** a canonical request uses `Accept: application/sml+json`
+**WHEN** actual media is unsupported
+**THEN** the procedure fails before parsing because the requested SensorML representation was not returned
+**AND** HTTP failures, invalid supported content, schema failures, and unsafe pagination fail visibly.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-PROCEDURE-ISOLATION-001 (CRITICAL)
+**GIVEN** one released SensorML procedure lacks optional runtime evidence
+**WHEN** the class executes
+**THEN** its SKIP does not suppress another released procedure
+**AND** setup retains no mutable response state.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-SCHEMA-PARITY-001 (CRITICAL)
+**GIVEN** the eight bundled SensorML entry schemas
+**WHEN** mappings are promoted
+**THEN** their resolver-normalized transitive graph is semantically equal to pinned release commit `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`
+**AND** a dirty or wrong-commit source checkout fails the gate.
+*Maps to*: REQ-ETS-PART1-013, REQ-ETS-COVERAGE-001.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-DIRECT-HTTP-COVERAGE-001 (CRITICAL)
+**GIVEN** a controlled read-only HTTP IUT
+**WHEN** all fifteen released procedures execute
+**THEN** every positive API-definition, schema, id, mapping, class, relation, and pagination path executes
+**AND** malformed service descriptions, default-only responses, bad association targets, malformed geometry or Pose, later-page unsupported media, pagination cycles, and cross-origin continuations fail
+**AND** omission and no-evidence branches SKIP only where the released procedure is genuinely inapplicable.
+*Maps to*: REQ-ETS-PART1-013.
+
+#### SCENARIO-ETS-PART1-013-RELEASED-E2E-EXECUTION-001 (CRITICAL)
+**GIVEN** the exact ETS image and unmodified primary local OSH
+**WHEN** Dockerized TeamEngine executes the complete suite
+**THEN** all fifteen methods deploy and execute or dependency-SKIP honestly
+**AND** no IUT mutation occurs
+**AND** no OSH or TeamEngine source or binary modification is used.
+*Maps to*: REQ-ETS-PART1-013.
 
 ### Acceptance Scenarios for Sprint 10
 

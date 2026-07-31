@@ -1,0 +1,29 @@
+evaluation:
+  role: "Red Team / Raze"
+  date: "2026-07-31"
+  subject: "Sprint 58 SensorML remediation re-review"
+  verdict: "APPROVE"
+  confidence: 0.98
+  agent_id: "019fb616-272b-7422-8db9-7295ccf0ced2"
+  duration: "2m38s"
+  tokens: "unavailable"
+  files_modified: false
+
+closed_finding:
+  id: "RAZE-S58-008"
+  severity: "HIGH"
+  summary: "Distributed association targets, credential isolation, and typed target validation"
+  evidence:
+    - "Distributed HTTP(S) targets are permitted while same-origin API-root path protections remain."
+    - "Cross-origin requests use a separate credential-free HttpClient with redirects disabled."
+    - "Returned representations dispatch to exact SensorML, GeoJSON, Datastream, or ControlStream schemas."
+    - "SensorML and GeoJSON collection items also receive resource-specific mapping validation."
+    - "Controlled tests prove cross-origin credential isolation and wrong resource/collection rejection."
+    - "OpenSpec, design, story, contract, and architecture match distributed-resource behavior."
+    - "Focused SensorML verification passes 23/0/0/0."
+
+required_fixes: []
+remaining_release_gates:
+  - "Run final exact-image runtime verification."
+  - "Run clean-clone TeamEngine E2E against unmodified local OSH with zero writes."
+  - "Promote and regenerate exact ATS mappings only after those gates pass."

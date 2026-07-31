@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 244,
+  "suiteTestMethodCount" : 246,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -1488,7 +1488,7 @@
     "target" : "/req/sensorml/mediatype-read",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeRead()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlRepresentationDiscoveredForSystem()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeReadIsAdvertised()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1497,7 +1497,7 @@
     "target" : "/req/sensorml/mediatype-write",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeWriteParsesSystemBodyWhenMutationEnabled()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeWriteIsAdvertised()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1506,7 +1506,7 @@
     "target" : "/req/sensorml/relation-types",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlDeploymentLinksMemberAssociationRelsUseResourceSpecificNames()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlLinksMemberAssociationRelsUseResourceSpecificNames()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlProcedureLinksMemberAssociationRelsUseResourceSpecificNames()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlAssociationRelationTypesAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1514,8 +1514,8 @@
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/resource-id",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlResourceIdsMatchCanonicalUrls()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1523,8 +1523,8 @@
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/feature-attribute-mapping",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlCommonFeatureAttributesAreMapped()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1532,8 +1532,8 @@
     "classIdentifier" : "/conf/sensorml",
     "target" : "/req/sensorml/system-schema",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlSchemasAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1542,7 +1542,7 @@
     "target" : "/req/sensorml/system-sml-class",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlSystemHasMinimalShape()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlClassesAreCompatible()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1551,7 +1551,7 @@
     "target" : "/req/sensorml/system-mappings",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlSystemPreservesIdentityMapping()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlMappingsAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1560,7 +1560,7 @@
     "target" : "/req/sensorml/deployment-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlHasSchemaAndMapping()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlSchemasAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1569,7 +1569,7 @@
     "target" : "/req/sensorml/deployment-mappings",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlHasSchemaAndMapping()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlMappingsAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1578,7 +1578,7 @@
     "target" : "/req/sensorml/procedure-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlHasSchemaAndMapping()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlSchemasAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1587,7 +1587,7 @@
     "target" : "/req/sensorml/procedure-sml-class",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlHasSchemaAndMapping()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlClassesAreCompatible()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1596,7 +1596,7 @@
     "target" : "/req/sensorml/procedure-mappings",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlHasSchemaAndMapping()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlMappingsAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1605,7 +1605,7 @@
     "target" : "/req/sensorml/property-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlHasSchemaAndMapping()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlSchemasAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 1,
@@ -1614,7 +1614,7 @@
     "target" : "/req/sensorml/property-mappings",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlHasSchemaAndMapping()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlMappingsAreValid()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2791,15 +2791,15 @@
     "total" : 240,
     "exact" : 76,
     "helper" : 2,
-    "candidate" : 130,
-    "unmapped" : 32,
+    "candidate" : 133,
+    "unmapped" : 29,
     "byPart" : {
       "1" : {
         "total" : 110,
         "exact" : 76,
         "helper" : 2,
-        "candidate" : 29,
-        "unmapped" : 3
+        "candidate" : 32,
+        "unmapped" : 0
       },
       "2" : {
         "total" : 130,
@@ -2905,8 +2905,8 @@
         "total" : 15,
         "exact" : 0,
         "helper" : 0,
-        "candidate" : 12,
-        "unmapped" : 3
+        "candidate" : 15,
+        "unmapped" : 0
       },
       "2:/conf/api-common" : {
         "total" : 2,

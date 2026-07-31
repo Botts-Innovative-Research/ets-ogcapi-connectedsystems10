@@ -1142,18 +1142,14 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 10 S-ETS-10-01 — SensorML group =====
-	// SensorML systems read-only subset depends on SystemFeatures because it validates
-	// system SensorML representations. This is intentionally a PARTIAL implementation of
-	// REQ-ETS-PART1-013.
+	// ===== Sprint 58 S-ETS-58-01 - released SensorML group =====
 
 	/**
-	 * Sprint 10 S-ETS-10-01 (REQ-ETS-PART1-013): the canonical testng.xml SHALL declare
-	 * {@code <group name="sensorml" depends-on="systemfeatures"/>} so SensorML tests
-	 * cascade-SKIP when the SystemFeatures prerequisite fails.
+	 * Sprint 58 S-ETS-58-01 (REQ-ETS-PART1-013): the canonical testng.xml SHALL declare
+	 * {@code <group name="sensorml" depends-on="part1apicommon"/>}.
 	 */
 	@org.junit.Test
-	public void testSensorMlGroupDependsOnSystemFeatures() throws Exception {
+	public void testSensorMlGroupDependsOnPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -1164,18 +1160,19 @@ public class VerifyTestNGSuiteDependency {
 				String dependsOn = deps.get(SENSORML_GROUP);
 				assertNotNull("group '" + SENSORML_GROUP + "' has null depends-on attribute", dependsOn);
 				assertTrue("group '" + SENSORML_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ SYSTEMFEATURES_GROUP + "'", dependsOn.contains(SYSTEMFEATURES_GROUP));
+						+ PART1_API_COMMON_GROUP + "'", dependsOn.contains(PART1_API_COMMON_GROUP));
+				assertFalse("group '" + SENSORML_GROUP + "' retains obsolete direct System Features prerequisite",
+						dependsOn.contains(SYSTEMFEATURES_GROUP));
 				foundDependency = true;
 				break;
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + SENSORML_GROUP + "\" depends-on=\""
-				+ SYSTEMFEATURES_GROUP + "\"/> — see Sprint 10 S-ETS-10-01. The SensorML systems read-only "
-				+ "subset requires SystemFeatures as its direct prerequisite.", foundDependency);
+				+ PART1_API_COMMON_GROUP + "\"/> - see Sprint 58 S-ETS-58-01.", foundDependency);
 	}
 
 	/**
-	 * Sprint 10 S-ETS-10-01: every SensorML @Test method SHALL carry
+	 * Sprint 58 S-ETS-58-01: every SensorML @Test method SHALL carry
 	 * {@code groups = "sensorml"} so the suite-level dependency declaration has tagged
 	 * methods to resolve against.
 	 */
@@ -1202,17 +1199,14 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 10 S-ETS-10-01: SensorML classes MUST be co-located in the SAME
-	 * {@code <test>} block as SystemFeatures so the group-dependency cascade resolves
-	 * within TestNG's test-scoped dependency map.
+	 * Sprint 58 S-ETS-58-01: SensorML classes MUST be co-located in the SAME
+	 * {@code <test>} block as Part 1 API Common.
 	 */
 	@org.junit.Test
-	public void testSensorMlCoLocatedWithSystemFeatures() throws Exception {
+	public void testSensorMlCoLocatedWithPart1ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> systemFeaturesClassNames = new HashSet<>();
-		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
-			systemFeaturesClassNames.add(c.getName());
-		}
+		String apiCommonClassName = org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonTests.class
+			.getName();
 		Set<String> sensorMlClassNames = new HashSet<>();
 		for (Class<?> c : SENSORML_CLASSES) {
 			sensorMlClassNames.add(c.getName());
@@ -1224,17 +1218,15 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
+			boolean hasApiCommon = xtClasses.contains(apiCommonClassName);
 			boolean hasAnySensorMl = !java.util.Collections.disjoint(xtClasses, sensorMlClassNames);
-			if (hasAllSystemFeatures && hasAnySensorMl) {
+			if (hasApiCommon && hasAnySensorMl) {
 				coAlloc = true;
 				break;
 			}
 		}
-		assertTrue(
-				"SystemFeatures (" + systemFeaturesClassNames + ") and SensorML (" + sensorMlClassNames
-						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
-						+ "(SensorML → SystemFeatures → Core) resolves within scope. See Sprint 10 S-ETS-10-01.",
+		assertTrue("Part 1 API Common and SensorML (" + sensorMlClassNames
+				+ ") must be declared in the SAME <test> block so SensorML -> API Common resolves. See Sprint 58 S-ETS-58-01.",
 				coAlloc);
 	}
 

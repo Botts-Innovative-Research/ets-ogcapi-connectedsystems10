@@ -208,6 +208,8 @@ public class VerifyTeamEngine6Packaging {
 		assertContains(runtimeVerifier, "swecommon30-validator-*.jar");
 		assertContains(runtimeVerifier, "SweValidatorRuntimeProbe");
 		assertContains(runtimeVerifier, "PASS: deployed SWE Common adapter executed valid and invalid components");
+		assertContains(runtimeVerifier, "SensorMlValidatorRuntimeProbe");
+		assertContains(runtimeVerifier, "PASS: deployed SensorML adapter executed valid and invalid documents");
 	}
 
 	/**

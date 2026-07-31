@@ -2,6 +2,32 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-31 - Sprint 58 SensorML planning
+
+**Triggered by user instruction**: start the next project step.
+
+- Reproduced all fifteen released OGC 23-001 SensorML procedures from tag
+  `v1.0.0`, commit `8e03b236...`, and audited the historical thirteen-method
+  approximation.
+- Confirmed the three unmapped procedures, combined methods, mutation-based
+  media substitute, minimal-shape validation, selected-item shortcuts, and
+  stale System Features dependency.
+- Added CP-018, S-ETS-58-01, the Sprint 58 contract, fifteen OpenSpec
+  scenarios, design, architecture v2.0.58, epic, traceability, and operational
+  handoff before implementation.
+- Selected an ETS-owned `ConnectedSystemsSensorMlValidatorAdapter` over the
+  already pinned released schema graph as the provisional backend. A future
+  reusable FCU/OGC module can replace the backend after parity review; the
+  executable `ets-sensorml30` suite jar remains excluded.
+- Locked exact fifteen-method coverage, direct API Common inheritance,
+  read-only OpenAPI media inspection, complete schema/id/mapping/class/relation
+  behavior, schema parity, controlled HTTP, unmodified local OSH TeamEngine
+  E2E, and mandatory fresh Raze.
+- Research agent Poincare independently confirmed the fifteen-procedure matrix,
+  exact `ogc-rel:` vocabulary, cross-origin alternate-link credential risk,
+  and resolver-normalized parity across 8 entry plus 63 transitive schemas with
+  zero mismatches. It ran `12m09s`; token metadata was unavailable.
+
 ## 2026-07-30 - Sprint 57 Update planning
 
 **Triggered by user instruction**: push the completed feasibility audit and

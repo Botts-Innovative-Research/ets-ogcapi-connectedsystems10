@@ -1,6 +1,35 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T20:36Z
+Last updated: 2026-07-31T02:10Z
+
+## Sprint 58 In Progress - Part 1 SensorML
+
+- User instruction: start the next recommended project step.
+- CP-018, S-ETS-58-01, the Sprint 58 contract, fifteen OpenSpec scenarios,
+  design, architecture v2.0.58, epic, and traceability define the direct
+  replacement before code.
+- Released source is OGC 23-001 tag `v1.0.0`, commit `8e03b236...`, with
+  fifteen `/conf/sensorml` procedures.
+- Baseline coverage is `0 exact / 0 helper / 12 candidate / 3 unmapped`; the
+  current thirteen-method class includes non-ATS methods, combines released
+  procedures, mutates for media advertisement, and depends on System Features
+  instead of direct API Common.
+- The target has exactly fifteen independent direct procedures, read-only
+  JSON/YAML OpenAPI media checks, complete canonical single/collection schema
+  validation, all-resource id/mapping/class/relation inspection, bounded
+  pagination, and actual-media-before-parse behavior.
+- `ConnectedSystemsSensorMlValidatorAdapter` will use the already pinned
+  released schema graph as a provisional backend with immutable deterministic
+  ETS-owned diagnostics and separate operational failures.
+- No public reusable FCU-GIS-Luke SensorML module is available. The
+  `opengeospatial/ets-sensorml30` executable TeamEngine suite jar remains
+  excluded; a future reusable module can replace only the adapter backend.
+- Verification remains pending: test-first regressions, controlled HTTP,
+  schema parity, focused/full Maven, coverage, exact image/runtime,
+  dependency/credential/immutability/hygiene, unmodified-local-OSH TeamEngine,
+  and fresh Raze.
+- No OSH or TeamEngine source/binary modifications, hosted CI, or default IUT
+  mutation are in scope.
 
 ## Sprint 57 In Progress - Part 1 Update (External PATCH Evidence Blocked)
 

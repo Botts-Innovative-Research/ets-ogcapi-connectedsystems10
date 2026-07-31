@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -476,6 +477,8 @@ public class VerifyUpdateHttpProcedures {
 
 		private final HttpServer server;
 
+		private final ExecutorService executor = Executors.newCachedThreadPool();
+
 		private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
 		private final Map<String, Map<String, Object>> resources = new ConcurrentHashMap<>();
@@ -569,7 +572,7 @@ public class VerifyUpdateHttpProcedures {
 		private Fixture() throws IOException {
 			this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
 			this.server.createContext("/api", this::handle);
-			this.server.setExecutor(Executors.newCachedThreadPool());
+			this.server.setExecutor(this.executor);
 			this.server.start();
 		}
 
@@ -1029,6 +1032,7 @@ public class VerifyUpdateHttpProcedures {
 		@Override
 		public void close() {
 			this.server.stop(0);
+			this.executor.shutdownNow();
 			this.scheduler.shutdownNow();
 		}
 

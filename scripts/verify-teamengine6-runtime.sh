@@ -146,6 +146,16 @@ grep -Fq "PASS: deployed SWE Common adapter executed valid and invalid component
   || fail "deployed SWE Common validator execution probe did not report success: $validator_execution_output"
 echo "$validator_execution_output"
 
+sensorml_execution_output="$(docker run --rm --entrypoint sh "$FINAL_IMAGE_REF" -c '
+  set -eu
+  lib=/usr/local/tomcat/webapps/teamengine/WEB-INF/lib
+  exec java -cp "$lib/*" \
+    org.opengis.cite.ogcapiconnectedsystems10.validation.sensorml.SensorMlValidatorRuntimeProbe
+' 2>&1)" || fail "deployed SensorML validator execution probe failed: $sensorml_execution_output"
+grep -Fq "PASS: deployed SensorML adapter executed valid and invalid documents" <<<"$sensorml_execution_output" \
+  || fail "deployed SensorML validator execution probe did not report success: $sensorml_execution_output"
+echo "$sensorml_execution_output"
+
 runtime_jar_inventory() {
   docker run --rm --entrypoint bash \
     -v "$REPO_ROOT/scripts/verify-added-jar-inventory.sh:/tmp/verify-added-jar-inventory.sh:ro" \

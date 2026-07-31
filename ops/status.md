@@ -1,6 +1,59 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T09:23Z
+Last updated: 2026-07-31T12:09Z
+
+## Sprint 60 Complete - Part 2 Datastreams and Observations Released ATS
+
+- User instruction: "Do Sprint 60."
+- CP-020 and S-ETS-60-01 close the OGC 23-002 Part 2
+  `/conf/datastream` class as exactly fourteen released Annex A.2 procedures.
+- `Part2DatastreamTests` now exposes one independent TestNG method per
+  released target, removes standalone declaration/prerequisite tracer methods,
+  keeps only immutable setup arguments, and skips before Datastream IUT access
+  when `part2apicommon` is not established.
+- The final implementation exercises every applicable canonical resource or exact
+  `itemType` collection, requires dereferenced `rel=canonical` equivalence,
+  validates DataStream and Observation endpoint/collection JSON schemas, and
+  checks every advertised Observation schema format for every DataStream. It
+  also gates conditional Datastream ATS procedures on declared/evidenced
+  Sampling Feature, FeatureOfInterest, System, and Deployment applicability
+  before nested subresource access. The final Raze gapfix additionally
+  requires mixed Sampling Feature endpoint evidence to SKIP when any DataStream
+  endpoint is unsupported and validates `application/json` FOI pages as GeoJSON
+  FeatureCollections instead of accepting them by media type alone.
+- `testng.xml` now declares `part2datastream` depends directly on
+  `part2apicommon`.
+- Reviewed coverage is now `240 total / 107 exact / 2 helper / 107 candidate /
+  24 unmapped`; Part 2 is `130 total / 16 exact / 0 helper / 90 candidate /
+  24 unmapped`; `2:/conf/datastream` is
+  `14 exact / 0 candidate / 0 unmapped`.
+- Focused test-first evidence reproduced the historical gap at
+  `85 tests / 3 failures / 2 errors / 0 skipped`; final focused
+  verification passed `96/0/0/0`.
+- Formatter passed; coverage audit passed `23/0/0/0`; full Docker Maven
+  completed `750 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke reached TeamEngine and the unmodified
+  local OSH IUT, then exited honestly non-green at
+  `247 total / 38 passed / 21 failed / 188 skipped`. Datastream setup and all
+  fourteen Datastream procedures SKIP because local OSH does not declare the
+  Part 2 `/conf/api-common` prerequisite; the failures are existing local OSH
+  interoperability/conformance gaps outside Datastream.
+- No-mutation oracle recognized 189 local-OSH IUT request logs. The container
+  log has 194 request lines, all `GET`, and zero POST/PUT/PATCH/DELETE.
+  Final evidence:
+  `ops/test-results/sprint-ets-60-part2-datastream-final-raze-2026-07-31/`.
+- Raze found and the implementation closed bounded approximation, FOI
+  overvalidation, stale-evidence, conditional-gating, mixed Sampling Feature
+  evidence, and generic FOI `application/json` validation issues. Final Raze
+  recheck returned `PASS` with high confidence and no required fixes.
+
+## Next Recommended Work
+
+- After Sprint 60 is pushed, the next highest-value Part 2 closure is the
+  sibling OGC 23-002 `/conf/controlstream` exact released ATS class: eighteen
+  released procedures are still historical partial/unreviewed, including
+  ControlStream, Command, CommandStatus, and CommandResult resource endpoints
+  and collection tagging.
 
 ## Sprint 59 Complete - Part 2 API Common Released ATS
 

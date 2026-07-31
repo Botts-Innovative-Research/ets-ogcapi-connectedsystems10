@@ -2,6 +2,52 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-31 - Sprint 60 Part 2 Datastreams and Observations released ATS closure
+
+**Triggered by user instruction**: "Do Sprint 60."
+
+- Added CP-020, S-ETS-60-01, and the Sprint 60 contract for exact OGC 23-002
+  Part 2 `/conf/datastream` closure.
+- Replaced the historical Sprint 21 Datastream subset with exactly fourteen
+  released Datastreams and Observations procedure methods.
+- Removed non-ATS declaration/prerequisite tracer methods from the deployed
+  Datastream class and changed `part2datastream` TestNG inheritance to
+  `part2apicommon`.
+- Implemented the released traversal semantics for Datastream, Observation,
+  System, Deployment, and `/collections` checks: every applicable canonical
+  resource or exact `itemType` collection is exercised, canonical links are
+  dereferenced and compared, endpoints validate JSON collection/item schemas,
+  FOI GeoJSON responses validate as generic GeoJSON FeatureCollections, and
+  schema-op iterates every advertised Observation format.
+- Added requirement-linked structural and semantic regressions for exact
+  fourteen-method closure, direct dependency wiring, immutable setup,
+  canonical-link equivalence, exact `itemType` selection, all-format schema-op
+  extraction, all-resource id enumeration, generic FOI validation, and
+  condition-gated SKIPs before nested Sampling Feature, FeatureOfInterest,
+  System, or Deployment subresource access. Final Raze follow-up regressions
+  cover mixed Sampling Feature endpoints where one DataStream has unsupported
+  media and FOI `application/json` responses that are not GeoJSON
+  FeatureCollections.
+- Promoted all fourteen released mappings to reviewed exact and regenerated
+  coverage: `240 total / 107 exact / 2 helper / 107 candidate / 24 unmapped`,
+  with Part 2 Datastream `14 exact / 0 candidate / 0 unmapped`.
+- Initial Raze returned `GAPS_FOUND 0.94` for bounded approximation gaps; later
+  focused rechecks found FOI overvalidation/stale evidence,
+  conditional-applicability, mixed Sampling Feature, and FOI `application/json`
+  validation issues. The final fixes replace those shortcuts with all-resource,
+  canonical-link, schema-validation, generic FOI, per-endpoint unsupported-media
+  SKIPs, and condition-gated semantics.
+- Verification: focused red `85/3/2/0`, final focused
+  `96/0/0/0`, coverage audit `23/0/0/0`, full Docker Maven `750/0/0/3`,
+  and local OSH TeamEngine `247/38/21/188` with all Datastream methods
+  SKIPping honestly because local OSH does not declare Part 2
+  `/conf/api-common`.
+- No-mutation oracle recognized 189 local-OSH IUT request logs; the container
+  log contains 194 request lines, all `GET`, and zero POST/PUT/PATCH/DELETE.
+  Final evidence:
+  `ops/test-results/sprint-ets-60-part2-datastream-final-raze-2026-07-31/`.
+- Final Raze recheck returned `PASS` with high confidence and no required fixes.
+
 ## 2026-07-31 - Sprint 59 Part 2 API Common released ATS closure
 
 **Triggered by user instruction**: key added; push, then continue with the next

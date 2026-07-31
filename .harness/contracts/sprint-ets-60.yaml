@@ -1,0 +1,36 @@
+sprint: ets-60
+story: S-ETS-60-01
+title: Part 2 Datastreams and Observations released ATS closure
+status: DONE
+date: 2026-07-31
+requirement: REQ-ETS-PART2-002
+scope:
+  include:
+    - OGC 23-002 /conf/datastream fourteen released procedures
+    - direct TestNG dependency on part2apicommon
+    - read-only Datastream, Observation, System, Deployment, and /collections probes
+    - all-resource traversal, exact itemType selection, canonical-link equivalence, schema validation, generic FOI GeoJSON validation, mixed Sampling Feature unsupported-media SKIPs, and condition-gating gap-fixes
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - IUT mutation
+    - Part 2 sibling conformance classes
+    - OSH or TeamEngine source or binary changes
+success_criteria:
+  - id: part2_datastream_fourteen_methods
+    description: Part2DatastreamTests exposes exactly fourteen TestNG methods, one per released ATS target.
+  - id: part2_datastream_direct_prerequisite
+    description: testng.xml declares part2datastream depends-on part2apicommon.
+  - id: part2_datastream_exact_coverage
+    description: coverage report shows 14 exact mappings and no candidates/unmapped tests for 2:/conf/datastream.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: "PASS: focused red reproduced historical gap at 85 tests / 3 failures / 2 errors / 0 skipped"
+  focused: "PASS: VerifyPart2DatastreamTests and VerifyTestNGSuiteDependency 96/0/0/0"
+  coverage: "PASS: VerifyReleasedAtsCoverage 23/0/0/0; 2:/conf/datastream 14 exact / 0 candidate / 0 unmapped"
+  formatter: "PASS: spring-javaformat:apply BUILD SUCCESS"
+  full_maven: "PASS WITH SKIPS: Docker Maven 750 tests / 0 failures / 0 errors / 3 skipped"
+  e2e_local_osh: "NON_GREEN_HONEST: TeamEngine local OSH 247 total / 38 passed / 21 failed / 188 skipped; Datastream skipped because Part 2 API Common prerequisite absent on local OSH"
+  no_mutation: "PASS: recognized_iut_request_logs=189; request-line methods GET=194 and zero POST/PUT/PATCH/DELETE"
+  raze_initial: "GAPS_FOUND 0.94: bounded approximation, synthesized canonical URL, partial schema-op, weak endpoint schema validation, and partial association traversal findings"
+  raze_recheck: "PASS: final Raze recheck found no required fixes after FOI, condition-gating, mixed Sampling Feature, and FOI application/json fixes"

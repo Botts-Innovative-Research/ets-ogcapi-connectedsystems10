@@ -1,0 +1,107 @@
+evaluation:
+  role: "Red Team / Raze"
+  date: "2026-07-31"
+  subject: "Sprint 60 Part 2 Datastreams and Observations released ATS closure"
+  verdict: "PASS"
+  confidence: "high"
+  reviewer_instruction: "Focused final recheck of the latest uncommitted Sprint 60 closure; do not modify files."
+  code_changes_made: false
+  report_path: ".harness/evaluations/sprint-ets-60-raze-part2-datastream-2026-07-31.yaml"
+
+reviewed_scope:
+  repository: "/home/nh/docker/ets-ogcapi-connectedsystems10"
+  change_set:
+    - "CP-020, S-ETS-60-01, Sprint 60 contract, OpenSpec, traceability, status, changelog, and test-results reconciliation."
+    - "Part2DatastreamTests exact fourteen-method implementation for OGC 23-002 Annex A.2 /conf/datastream."
+    - "Part2DatastreamSupport schema, canonical-link, Observation schema, Sampling Feature, and FeatureOfInterest helpers."
+    - "VerifyPart2DatastreamTests regressions and VerifyTestNGSuiteDependency dependency-lint updates."
+    - "reviewed-ats-mappings.json, regenerated ops/ats-coverage-report.json, and testng.xml part2datastream dependency."
+    - "Archived local OSH TeamEngine XML/container evidence under ops/test-results/sprint-ets-60-part2-datastream-final-raze-2026-07-31/."
+  out_of_scope:
+    - "Part 2 sibling conformance classes."
+    - "OSH or TeamEngine source/binary changes."
+    - "Any code edits by Raze."
+
+review_rounds:
+  - id: "initial"
+    verdict: "GAPS_FOUND"
+    confidence: 0.94
+    required_findings:
+      - "Bounded approximation shortcuts in canonical, collection, schema-op, endpoint schema, and association traversal evidence."
+      - "Synthesized canonical URLs instead of advertised canonical-link dereference."
+  - id: "foi_stale_evidence_recheck"
+    verdict: "GAPS_FOUND"
+    required_findings:
+      - "FeatureOfInterest checks used SamplingFeaturesSupport validation."
+      - "Documentation and mappings still overstated final evidence."
+  - id: "conditional_gates_recheck"
+    verdict: "GAPS_FOUND"
+    required_findings:
+      - "Conditional A.3/A.4/A.8/A.9 procedures were enforced unconditionally."
+  - id: "mixed_sampling_feature_foi_json_recheck"
+    verdict: "GAPS_FOUND"
+    started_at: "2026-07-31T11:48:39Z"
+    finished_at: "2026-07-31T11:53:20Z"
+    duration: "4m41s"
+    required_findings:
+      - "A.3 could false-PASS mixed Sampling Feature endpoint evidence when one DataStream endpoint validated and another used unsupported media."
+      - "A.4 could false-PASS application/json FOI bodies without GeoJSON FeatureCollection validation."
+  - id: "final_recheck"
+    verdict: "PASS"
+    confidence: "high"
+    finished_at: "2026-07-31T12:13:38Z"
+    required_findings: []
+    reviewer_summary: "No required fixes. Latest code closes mixed Sampling Feature false-PASS risk, validates FOI application/json as GeoJSON FeatureCollection, preserves A.3/A.4/A.8/A.9 conditional pre-access gates, and keeps documentation aligned with final evidence."
+
+final_evidence:
+  maven:
+    focused_red: "85 tests / 3 failures / 2 errors / 0 skipped"
+    corrected_focused: "96 tests / 0 failures / 0 errors / 0 skipped"
+    coverage_audit: "23 tests / 0 failures / 0 errors / 0 skipped"
+    full_docker_maven: "750 tests / 0 failures / 0 errors / 3 skipped"
+  teamengine_e2e:
+    artifact: "ops/test-results/sprint-ets-60-part2-datastream-final-raze-2026-07-31/s-ets-01-03-teamengine-smoke-2026-07-31.xml"
+    totals: "247 total / 38 passed / 21 failed / 188 skipped"
+    iut: "http://field-hub-osh-1:8081/sensorhub/api"
+    datastream_status: "Datastream setup and all fourteen Datastream procedures SKIP because local OSH does not declare Part 2 /conf/api-common."
+  no_mutation:
+    artifact: "ops/test-results/sprint-ets-60-part2-datastream-final-raze-2026-07-31/s-ets-01-03-teamengine-container-2026-07-31.log"
+    recognized_request_logs: 194
+    recognized_iut_request_logs: 189
+    GET: 194
+    POST: 0
+    PUT: 0
+    PATCH: 0
+    DELETE: 0
+  released_ats_mapping:
+    coverage_summary: "240 total / 107 exact / 2 helper / 107 candidate / 24 unmapped"
+    part2_datastream_coverage: "14 exact / 0 candidate / 0 unmapped"
+
+final_recheck_evidence:
+  sampling_feature_mixed_endpoint_skip:
+    implementation: "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java:462"
+    regression: "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/VerifyPart2DatastreamTests.java:261"
+  foi_application_json_feature_collection_validation:
+    implementation:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java:489"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamSupport.java:42"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamSupport.java:85"
+    regression: "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/VerifyPart2DatastreamTests.java:229"
+  conditional_pre_access_gates:
+    implementation:
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java:113"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java:126"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java:172"
+      - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamTests.java:188"
+
+required_fixes: []
+
+release_gate:
+  completion_claim_allowed: true
+  mapping_promotion_allowed: true
+  e2e_claim_allowed: true
+  code_change_required: false
+  notes:
+    - "Do not claim the local OSH TeamEngine run passed; it is honestly non-green at 247/38/21/188."
+    - "Do claim the fourteen Datastream methods SKIP honestly on the current local OSH because Part 2 /conf/api-common is undeclared."
+    - "Final docs may replace pending Raze text with PASS and no required fixes."

@@ -6,6 +6,27 @@
 **Status**: Approved (Sprint 1)
 **Authoritative ADRs**: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005 (in `_bmad/adrs/`)
 
+> Sprint 60 addition (2026-07-31): CP-020 replaces the historical Part 2
+> Datastreams and Observations subset with exactly fourteen released OGC
+> 23-002 Annex A.2 procedures. `Part2DatastreamTests` depends directly on
+> `part2apicommon`, keeps only immutable suite arguments in setup, skips before
+> Datastream IUT access when the inherited Part 2 API Common prerequisite is
+> not established, and performs only bounded read-only Datastream, Observation,
+> System, Deployment, and `/collections` probes. The post-Raze gap-fix removes
+> bounded approximation shortcuts: canonical-resource checks iterate every
+> applicable resource, collection checks select exact `itemType` values,
+> canonical URL checks dereference advertised `rel=canonical` links and compare
+> content with canonical links removed, endpoint checks validate DataStream and
+> Observation JSON schemas, FeatureOfInterest responses validate as generic
+> GeoJSON FeatureCollections including `application/json` pages, mixed Sampling
+> Feature evidence SKIPs when any DataStream endpoint uses unsupported media,
+> schema-op checks every advertised Observation format for every DataStream,
+> and conditional A.3/A.4/A.8/A.9 procedures skip
+> before nested IUT access unless their Part 1 or local-association conditions
+> are declared/evidenced. Coverage is `14/14 exact`; unmodified local OSH
+> E2E remains honestly non-green because OSH does not declare Part 2
+> `/conf/api-common`, so the Datastream class prerequisite-SKIPs there.
+
 > Sprint 59 addition (2026-07-31): CP-019 replaces the historical Part 2 API
 > Common subset with exactly two released OGC 23-002 procedures:
 > `/conf/api-common/resources` and `/conf/api-common/resource-collection`.

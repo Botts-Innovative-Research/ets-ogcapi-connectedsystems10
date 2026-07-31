@@ -1595,17 +1595,16 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 21 S-ETS-21-01 — Part 2 Datastream group =====
-	// Datastream depends on Core and Common, not Part2ApiCommon, so scoped endpoint
-	// evidence can run when /conf/datastream is declared but /conf/api-common is absent.
-	// Runtime checks still make full /conf/datastream closure prerequisite-incomplete.
+	// ===== Sprint 60 S-ETS-60-01 — Part 2 Datastream group =====
+	// Datastream depends on Part 2 API Common now that Sprint 59 closed the inherited
+	// /req/api-common released ATS procedures exactly.
 
 	/**
-	 * Sprint 21 S-ETS-21-01 (REQ-ETS-PART2-002): the canonical testng.xml SHALL declare
-	 * {@code <group name="part2datastream" depends-on="core common"/>}.
+	 * Sprint 60 S-ETS-60-01 (REQ-ETS-PART2-002): the canonical testng.xml SHALL declare
+	 * {@code <group name="part2datastream" depends-on="part2apicommon"/>}.
 	 */
 	@org.junit.Test
-	public void testPart2DatastreamGroupDependsOnCoreAndCommon() throws Exception {
+	public void testPart2DatastreamGroupDependsOnPart2ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -1620,19 +1619,14 @@ public class VerifyTestNGSuiteDependency {
 								+ "' uses comma syntax, which TestNG treats as a nonexistent single group at runtime",
 						dependsOn.contains(","));
 				Set<String> dependencyTokens = dependencyTokens(dependsOn);
-				assertTrue("group '" + PART2_DATASTREAM_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ CORE_GROUP + "'", dependencyTokens.contains(CORE_GROUP));
-				assertTrue("group '" + PART2_DATASTREAM_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ COMMON_GROUP + "'", dependencyTokens.contains(COMMON_GROUP));
-				assertFalse("group '" + PART2_DATASTREAM_GROUP
-						+ "' must not depend on part2apicommon; otherwise GeoRobotix /conf/datastream endpoint checks cascade-SKIP before scoped evidence can run",
-						dependencyTokens.contains(PART2_API_COMMON_GROUP));
+				assertEquals("group '" + PART2_DATASTREAM_GROUP + "' must inherit only through '"
+						+ PART2_API_COMMON_GROUP + "'", Set.of(PART2_API_COMMON_GROUP), dependencyTokens);
 				foundDependency = true;
 				break;
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + PART2_DATASTREAM_GROUP
-				+ "\" depends-on=\"core common\"/> — see Sprint 21 S-ETS-21-01.", foundDependency);
+				+ "\" depends-on=\"part2apicommon\"/> — see Sprint 60 S-ETS-60-01.", foundDependency);
 	}
 
 	/**
@@ -1663,19 +1657,15 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 21 S-ETS-21-01: Part 2 Datastream classes MUST be co-located in the SAME
-	 * {@code <test>} block as Core and Common.
+	 * Sprint 60 S-ETS-60-01: Part 2 Datastream classes MUST be co-located in the SAME
+	 * {@code <test>} block as Part 2 API Common.
 	 */
 	@org.junit.Test
-	public void testPart2DatastreamCoLocatedWithCoreAndCommon() throws Exception {
+	public void testPart2DatastreamCoLocatedWithPart2ApiCommon() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> coreClassNames = new HashSet<>();
-		for (Class<?> c : CORE_CLASSES) {
-			coreClassNames.add(c.getName());
-		}
-		Set<String> commonClassNames = new HashSet<>();
-		for (Class<?> c : COMMON_CLASSES) {
-			commonClassNames.add(c.getName());
+		Set<String> part2ApiCommonClassNames = new HashSet<>();
+		for (Class<?> c : PART2_API_COMMON_CLASSES) {
+			part2ApiCommonClassNames.add(c.getName());
 		}
 		Set<String> part2DatastreamClassNames = new HashSet<>();
 		for (Class<?> c : PART2_DATASTREAM_CLASSES) {
@@ -1688,19 +1678,18 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllCore = xtClasses.containsAll(coreClassNames);
-			boolean hasAllCommon = xtClasses.containsAll(commonClassNames);
+			boolean hasAllPart2ApiCommon = xtClasses.containsAll(part2ApiCommonClassNames);
 			boolean hasAnyPart2Datastream = !java.util.Collections.disjoint(xtClasses, part2DatastreamClassNames);
-			if (hasAllCore && hasAllCommon && hasAnyPart2Datastream) {
+			if (hasAllPart2ApiCommon && hasAnyPart2Datastream) {
 				coAlloc = true;
 				break;
 			}
 		}
 		assertTrue(
-				"Core (" + coreClassNames + "), Common (" + commonClassNames + "), and Part 2 Datastream ("
+				"Part 2 API Common (" + part2ApiCommonClassNames + ") and Part 2 Datastream ("
 						+ part2DatastreamClassNames
 						+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
-						+ "(Part2Datastream → Core + Common) resolves within scope. See Sprint 21 S-ETS-21-01.",
+						+ "(Part2Datastream -> Part2ApiCommon) resolves within scope. See Sprint 60 S-ETS-60-01.",
 				coAlloc);
 	}
 

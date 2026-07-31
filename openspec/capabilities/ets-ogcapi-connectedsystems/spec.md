@@ -866,13 +866,18 @@ superseded by the Sprint 59 released ATS scenarios above for coverage status:
 
 #### REQ-ETS-PART2-002: Part 2 Datastreams & Observations Conformance Suite
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
+- **Status**: IMPLEMENTED_RELEASED_ATS
 - **Historical increment**: (Sprint 21 Generator 2026-05-07; story S-ETS-21-01)
-- **Description**: The ETS SHALL provide a TestNG suite class for OGC 23-002 Requirements Class "Datastreams & Observations" using official identifiers `/req/datastream` and `/conf/datastream`. Sprint 21 is the first read-only, declaration-gated subset and SHALL cover canonical Datastream and Observation endpoint availability, Datastream item canonical access, Datastream schema sub-resources, selected System-scoped Datastream sub-resource access, and Datastream-scoped Observation sub-resource access without mutating the IUT.
-- **OGC source verified**: OGC 23-002 official published HTML at `https://docs.ogc.org/is/23-002/23-002.html`, Clause 9 "Requirements Class Datastreams & Observations", checked 2026-05-07. The requirements class identifier is `/req/datastream`; conformance class is `/conf/datastream`; prerequisite is Requirements Class 1 `/req/api-common`. Normative statements include `/req/datastream/canonical-url`, `/req/datastream/resources-endpoint`, `/req/datastream/canonical-endpoint`, `/req/datastream/ref-from-system`, `/req/datastream/collections`, `/req/datastream/schema-op`, `/req/datastream/obs-canonical-url`, `/req/datastream/obs-resources-endpoint`, `/req/datastream/obs-canonical-endpoint`, `/req/datastream/obs-ref-from-datastream`, and `/req/datastream/obs-collections`.
-- **Dependency policy**: Sprint 21 SHALL keep `/req/api-common` prerequisite visibility explicit. Because GeoRobotix declares `/conf/datastream` but not `/conf/api-common`, Generator MAY evaluate clearly scoped Datastream endpoint assertions when `/conf/datastream` is declared, but SHALL NOT report full `/conf/datastream` class closure while the `/req/api-common` prerequisite is absent or cannot be established. The missing prerequisite must remain a visible SKIP/prerequisite-incomplete outcome, and Datastream evidence SHALL NOT imply API Common PASS.
+- **Sprint 60 change**: CP-020 / S-ETS-60-01 replaced the historical subset with
+  exactly fourteen released OGC 23-002 Annex A.2 procedures, removed standalone
+  non-ATS tracer methods, and changed TestNG inheritance to the now-exact Part
+  2 API Common group.
+- **Description**: The ETS SHALL provide a TestNG suite class for OGC 23-002 Requirements Class "Datastreams & Observations" using official identifiers `/req/datastream` and `/conf/datastream`. Sprint 60 implements exactly the fourteen released Datastream and Observation procedures, gates through the Part 2 API Common prerequisite, follows every applicable canonical resource or exact `itemType` collection, dereferences advertised canonical links, validates endpoint and collection JSON schemas, validates FeatureOfInterest GeoJSON responses including `application/json` pages as generic GeoJSON FeatureCollections, checks every advertised Observation schema format for every DataStream, skips mixed Sampling Feature evidence when any endpoint cannot execute supported-media validation, gates conditional Sampling Feature, FeatureOfInterest, System, and Deployment procedures before nested IUT subresource access, and does not mutate the IUT.
+- **OGC source verified**: OGC 23-002 official published HTML at `https://docs.ogc.org/is/23-002/23-002.html`, Clause 9 "Requirements Class Datastreams & Observations", checked 2026-05-07 and rechecked from cached official HTML on 2026-07-31. The requirements class identifier is `/req/datastream`; conformance class is `/conf/datastream`; prerequisite is Requirements Class 1 `/req/api-common`. Normative statements include `/req/datastream/sf-ref-from-datastream`, `/req/datastream/foi-ref-from-datastream`, `/req/datastream/canonical-url`, `/req/datastream/resources-endpoint`, `/req/datastream/canonical-endpoint`, `/req/datastream/ref-from-system`, `/req/datastream/ref-from-deployment`, `/req/datastream/collections`, `/req/datastream/schema-op`, `/req/datastream/obs-canonical-url`, `/req/datastream/obs-resources-endpoint`, `/req/datastream/obs-canonical-endpoint`, `/req/datastream/obs-ref-from-datastream`, and `/req/datastream/obs-collections`.
+- **Dependency policy**: Sprint 60 SHALL keep `/req/api-common` prerequisite visibility explicit by wiring `part2datastream` directly to `part2apicommon`. The Datastream setup reads only immutable suite arguments before the inherited prerequisite gate. If the Part 2 API Common prerequisite is absent or skipped, the fourteen Datastream procedures SHALL SKIP before Datastream IUT access; Datastream endpoint behavior must never imply API Common PASS.
 - **GeoRobotix planning probe**: `/conformance` declares `/conf/datastream` but not `/conf/api-common`. `GET /datastreams?limit=2`, `GET /observations?limit=2`, `GET /datastreams/{id}`, `GET /datastreams/{id}/schema`, `GET /datastreams/{id}/observations?limit=2`, and `GET /systems/{systemId}/datastreams?limit=1` returned HTTP 200 JSON. The selected Datastream exposes `system@id`, `outputName`, `observedProperties`, `resultType`, `formats`, and an `observations` link. The nested observations response for that Datastream was empty with `items` only, so Generator may count it only as endpoint availability evidence. Any `/req/datastream/obs-ref-from-datastream` assertion must require at least one nested Observation item or link with Datastream reference evidence, or SKIP with a precise empty-IUT-state reason.
-- **Implementation evidence**: Sprint 21 adds `Part2DatastreamTests` and `part2datastream` TestNG group coverage for `/conf/datastream`, `/datastreams`, `/datastreams/{id}`, `/datastreams/{id}/schema`, `/observations`, `/observations/{id}`, `/datastreams/{id}/observations`, and bounded `/systems/{systemId}/datastreams`. The runtime prerequisite check SKIPs full closure when `/conf/api-common` is absent, while scoped read-only endpoint evidence can run under `/conf/datastream`. Formatter passed; Maven via Docker passed with `160 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix TeamEngine smoke passed with `104 total / 64 passed / 0 failed / 40 skipped` and zero IUT-bound mutating requests across 82 recognized IUT request-log entries.
+- **Implementation evidence**: Sprint 21 first added a scoped read-only subset. Sprint 60 supersedes that subset with `Part2DatastreamTests` exposing exactly fourteen independent released procedure methods, no standalone declaration/prerequisite tracer methods, no response/body cache fields, and direct `part2datastream -> part2apicommon` TestNG wiring. Initial Raze returned `GAPS_FOUND 0.94` for bounded approximation issues; follow-up Raze passes found FOI overvalidation/stale evidence, missing conditional-applicability gates, mixed Sampling Feature false-PASS risk, and FOI `application/json` schema-validation gaps. The final implementation closes those by all-resource traversal, exact collection selection, canonical-link dereference/equality, endpoint schema validation, generic FOI GeoJSON validation, all-format schema-op coverage, per-endpoint unsupported-media SKIPs, and pre-access condition gates. Focused test-first evidence reproduced the historical gap at `85 tests / 3 failures / 2 errors / 0 skipped`; corrected focused verification passed `96/0/0/0`. Formatter passed, the released coverage audit passed `23/0/0/0`, and full Docker Maven completed `750 tests / 0 failures / 0 errors / 3 skipped`.
+- **Sprint 60 E2E evidence**: Mandatory local OSH TeamEngine smoke reached the deployed TeamEngine stack and unmodified local OSH IUT, then exited honestly non-green at `247 total / 38 passed / 21 failed / 188 skipped`. The Datastream setup and all fourteen Datastream procedures SKIP because local OSH does not declare the Part 2 `/conf/api-common` prerequisite. The remaining failures are existing local OSH interoperability/conformance gaps outside Datastream. The no-mutation oracle recognized 189 local-OSH IUT request logs; the container log contains 194 request lines, all `GET`, with zero POST, PUT, PATCH, or DELETE. Final evidence is archived under `ops/test-results/sprint-ets-60-part2-datastream-final-raze-2026-07-31/`.
 - **Maps to**: PRD FR-ETS-31.
 
 ##### Acceptance Scenarios for Sprint 21
@@ -924,6 +929,48 @@ superseded by the Sprint 59 released ATS scenarios above for coverage status:
 **THEN** the ETS must not convert Datastream endpoint success into API Common PASS evidence
 **AND** it must not report full `/conf/datastream` class closure
 **AND** any prerequisite-dependent assertion SKIPs with a precise reason rather than failing downstream noisily.
+
+##### Acceptance Scenarios for Sprint 60
+
+#### SCENARIO-ETS-PART2-002-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** the released OGC 23-002 Annex A.2 `/conf/datastream` inventory
+**WHEN** the ETS Datastream class is compiled into the TestNG suite
+**THEN** it exposes exactly fourteen TestNG procedures
+**AND** each procedure maps to exactly one released `/req/datastream/*` target
+**AND** no standalone declaration or prerequisite tracer method is claimed as released ATS coverage.
+
+#### SCENARIO-ETS-PART2-002-DIRECT-PREREQUISITE-001 (CRITICAL)
+**GIVEN** `/req/datastream` has prerequisite `/req/api-common`
+**WHEN** the canonical TestNG suite declares dependency groups
+**THEN** `part2datastream` depends directly on `part2apicommon`
+**AND** Datastream setup performs no Datastream IUT requests before the inherited prerequisite gate.
+
+#### SCENARIO-ETS-PART2-002-ASSOCIATION-SUBRESOURCES-001 (CRITICAL)
+**GIVEN** the released association procedures for sampling features, features
+of interest, systems, deployments, and Observations
+**WHEN** the ETS evaluates a selected Datastream with corresponding association evidence
+**THEN** the associated resources are checked through bounded read-only
+sub-resource endpoints
+**AND** absent condition/evidence produces precise SKIP rather than false PASS.
+
+#### SCENARIO-ETS-PART2-002-COLLECTION-TAGGING-001 (CRITICAL)
+**GIVEN** the released Datastream and Observation `/collections` procedures
+**WHEN** `/collections` advertises selected Datastream or Observation collections
+**THEN** Datastream collections are tagged as `itemType=DataStream`
+**AND** Observation collections are tagged as `itemType=Observation`
+**AND** absence of relevant collection metadata is reported honestly.
+
+#### SCENARIO-ETS-PART2-002-EXACT-MAPPING-001 (CRITICAL)
+**GIVEN** the reviewed ATS mapping file and generated coverage report
+**WHEN** Sprint 60 coverage gates run
+**THEN** `2:/conf/datastream` reports `14 exact / 0 candidate / 0 unmapped`
+**AND** the overall exact count increases by fourteen without changing the released inventory.
+
+#### SCENARIO-ETS-PART2-002-SMOKE-NO-MUTATION-001 (CRITICAL)
+**GIVEN** the mandatory local OSH TeamEngine E2E gate
+**WHEN** Sprint 60 Datastream procedures run against the unmodified local OSH IUT
+**THEN** the outcome is documented with concrete pass/fail/skip totals
+**AND** IUT-bound request logs contain zero POST, PUT, PATCH, or DELETE.
 
 #### REQ-ETS-PART2-003: Part 2 Control Streams & Commands Conformance Suite
 - **Priority**: MUST
@@ -5616,7 +5663,7 @@ descendant groups SKIP.
 ### Deferred
 - REQ-ETS-TEAMENGINE-002..005 (Dockerfile, docker-compose, smoke-test.sh, container-load verification) → S-ETS-01-03 (final Sprint 1 story).
 - REQ-ETS-PART1-001..013 (per-class detail beyond Core) — drafted as placeholders; per-assertion FRs and SCENARIOs to be expanded in sprints 2..N.
-- REQ-ETS-PART2-002 (Datastreams & Observations) — partially implemented in Sprint 21 read-only subset.
+- REQ-ETS-PART2-002 (Datastreams & Observations) — implemented released ATS in Sprint 60; `2:/conf/datastream` is `14 exact / 0 candidate / 0 unmapped`.
 - REQ-ETS-PART2-003 (Control Streams & Commands) — partially implemented in Sprint 22 read-only subset.
 - REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
 - REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.

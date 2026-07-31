@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 244,
+  "suiteTestMethodCount" : 247,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -1776,126 +1776,238 @@
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/sf-ref-from-datastream",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamSamplingFeaturesAreAvailableFromDatastream()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/sf-ref-from-datastream",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamSamplingFeaturesAreAvailableFromDatastream()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, skips before any DataStream or nested endpoint access unless the Part 1 /conf/sf condition class is declared, then obtains every DataStream through the Part 1 API Common canonical-resources helper and validates each /datastreams/{id}/samplingFeatures endpoint with the released Sampling Features resources-endpoint procedure over bounded read-only pagination."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/foi-ref-from-datastream",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/foi-ref-from-datastream",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamFeaturesOfInterestAreAvailableFromDatastream()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/foi-ref-from-datastream",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamFeaturesOfInterestAreAvailableFromDatastream()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, obtains every DataStream through canonical-resources to evaluate the Requirement 4 conditions, skips before nested FOI endpoint access unless DataStream representations evidence a locally hosted featureOfInterest/featuresOfInterest association, and when applicable checks each /datastreams/{id}/featuresOfInterest endpoint with HTTP 200 bounded pagination plus generic GeoJSON FeatureCollection validation when the response is application/geo+json."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/canonical-url",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/canonical-url",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamCanonicalResourceReadable()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/canonical-url",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamCanonicalResourceReadable()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, iterates every exact itemType=DataStream collection, requires each item to advertise exactly one same-origin rel=canonical link, dereferences it read-only, validates the singleton DataStream schema, and compares content after canonical links are removed."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/resources-endpoint",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/resources-endpoint",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamsCollectionReadable()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/resources-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamsCollectionReadable()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration and validates the canonical /datastreams endpoint over bounded read-only pagination against the released DataStream collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/canonical-endpoint",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/canonical-endpoint",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamsCanonicalEndpointExposesDatastreamItems()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/canonical-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamsCanonicalEndpointExposesDatastreamItems()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration and applies the released DataStream resources-endpoint validation to the canonical /datastreams endpoint, including collection and item JSON schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/ref-from-system",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/ref-from-system",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#systemScopedDatastreamsReadableWhenSystemReferencePresent()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/ref-from-system",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#systemScopedDatastreamsReadableWhenSystemReferencePresent()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, skips before any System or nested endpoint access unless the Part 1 /conf/system condition class is declared, then obtains every System through canonical-resources and validates each /systems/{id}/datastreams sub-resource over bounded read-only pagination against the released DataStream collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/ref-from-deployment",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/ref-from-deployment",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#deploymentScopedDatastreamsReadableWhenDeploymentReferencePresent()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/ref-from-deployment",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#deploymentScopedDatastreamsReadableWhenDeploymentReferencePresent()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, skips before any Deployment or nested endpoint access unless the Part 1 /conf/deployment condition class is declared, then obtains every Deployment through canonical-resources and validates each /deployments/{id}/datastreams sub-resource over bounded read-only pagination against the released DataStream collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/collections",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/collections",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamCollectionsAreTaggedWithItemType()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/collections",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamCollectionsAreTaggedWithItemType()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, selects every /collections entry whose itemType is exactly DataStream, follows its supported rel=items link with Part 1 collection-items traversal, and validates collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/schema-op",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/schema-op",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#bindingClosureRequiresInspectableJsonEvidenceForFirstIncrement()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#observationBindingRequiresParentSchemaAndChildBodyEvidence()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamSchemaReadable()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/schema-op",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#datastreamSchemaReadable()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, obtains every DataStream through canonical-resources, extracts every advertised Observation format, and GETs /datastreams/{id}/schema?obsFormat={format} read-only requiring HTTP 200 and parseable JSON when JSON is returned."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/obs-canonical-url",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/obs-canonical-url",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationCanonicalResourceReadableWhenCollectionPopulated()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/obs-canonical-url",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationCanonicalResourceReadableWhenCollectionPopulated()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, iterates every exact itemType=Observation collection, requires each item to advertise exactly one same-origin rel=canonical link, dereferences it read-only, validates the singleton Observation schema, and compares content after canonical links are removed."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/obs-resources-endpoint",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/obs-resources-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationEndpointsReadable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationResourcesEndpointReadable()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/obs-resources-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationResourcesEndpointReadable()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration and validates the canonical /observations endpoint over bounded read-only pagination against the released Observation collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/obs-canonical-endpoint",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/obs-canonical-endpoint",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationsCanonicalEndpointReadable()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/obs-canonical-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationsCanonicalEndpointReadable()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration and applies the released Observation resources-endpoint validation to the canonical /observations endpoint, including collection and item JSON schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/obs-ref-from-datastream",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/obs-ref-from-datastream",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.binding.Part2ObservationCommandBindingTests#observationBindingRequiresParentSchemaAndChildBodyEvidence()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationsReferenceSelectedDatastreamWhenNestedCollectionPopulated()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/obs-ref-from-datastream",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationsReferenceSelectedDatastreamWhenNestedCollectionPopulated()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, obtains every DataStream through canonical-resources, and validates each /datastreams/{id}/observations sub-resource over bounded read-only pagination against the released Observation collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/datastream/obs-collections",
     "classIdentifier" : "/conf/datastream",
     "target" : "/req/datastream/obs-collections",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationCollectionsAreTaggedWithItemType()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/datastream/obs-collections",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.datastream.Part2DatastreamTests#observationCollectionsAreTaggedWithItemType()",
+      "reviewedBy" : "Codex Sprint 60 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/datastream declaration, selects every /collections entry whose itemType is exactly Observation, follows its supported rel=items link with Part 1 collection-items traversal, and validates collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/controlstream/sf-ref-from-controlstream",
@@ -2925,10 +3037,10 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 93,
+    "exact" : 107,
     "helper" : 2,
-    "candidate" : 116,
-    "unmapped" : 29,
+    "candidate" : 107,
+    "unmapped" : 24,
     "byPart" : {
       "1" : {
         "total" : 110,
@@ -2939,10 +3051,10 @@
       },
       "2" : {
         "total" : 130,
-        "exact" : 2,
+        "exact" : 16,
         "helper" : 0,
-        "candidate" : 99,
-        "unmapped" : 29
+        "candidate" : 90,
+        "unmapped" : 24
       }
     },
     "byClass" : {
@@ -3053,10 +3165,10 @@
       },
       "2:/conf/datastream" : {
         "total" : 14,
-        "exact" : 0,
+        "exact" : 14,
         "helper" : 0,
-        "candidate" : 9,
-        "unmapped" : 5
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "2:/conf/controlstream" : {
         "total" : 18,

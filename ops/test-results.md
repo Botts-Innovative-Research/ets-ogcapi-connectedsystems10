@@ -1,8 +1,46 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T09:23Z
+Last updated: 2026-07-31T12:09Z
 
 ## Current Sprint Evidence
+
+Sprint 60 Part 2 Datastreams and Observations released ATS:
+
+- Trigger: user instructed "Do Sprint 60."
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/datastream`.
+- Implementation: exactly fourteen TestNG methods, one per released
+  Datastreams and Observations Annex A.2 target; direct
+  `part2datastream -> part2apicommon` dependency; immutable setup;
+  all-resource canonical traversal, exact `itemType` collection traversal,
+  dereferenced canonical-link equivalence, endpoint/collection JSON schema
+  validation, all-format schema-op checks, generic GeoJSON validation for
+  FeatureOfInterest responses including `application/json` pages, mixed
+  Sampling Feature unsupported-media SKIPs, and exact condition gates before
+  nested Sampling Feature, FeatureOfInterest, System, or Deployment access; no
+  synthesized mutation.
+- Focused test-first red: `85 tests / 3 failures / 2 errors / 0 skipped`.
+  Final corrected focused verification: `96/0/0/0`.
+- Released ATS coverage audit: `23/0/0/0`; overall coverage is
+  `240 total / 107 exact / 2 helper / 107 candidate / 24 unmapped`; Part 2 is
+  `130 total / 16 exact / 0 helper / 90 candidate / 24 unmapped`; Part 2
+  Datastream is `14 exact / 0 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS.
+- Full Docker Maven: `750 tests / 0 failures / 0 errors / 3 skipped`.
+- Local OSH TeamEngine smoke exited nonzero honestly at
+  `247 total / 38 passed / 21 failed / 188 skipped`. Datastream setup and all
+  fourteen Datastream methods SKIP because local OSH does not declare the Part
+  2 `/conf/api-common` prerequisite.
+- No-mutation oracle: `recognized_iut_request_logs=189`; request-line method
+  count is `GET=194`, zero POST/PUT/PATCH/DELETE.
+- Final evidence:
+  `ops/test-results/sprint-ets-60-part2-datastream-final-raze-2026-07-31/`.
+- No OSH or TeamEngine source/binary changes, hosted CI, or IUT mutation were
+  introduced.
+- Raze: initial `GAPS_FOUND 0.94` and subsequent FOI, condition-gate, mixed
+  Sampling Feature, and FOI `application/json` findings have been addressed;
+  final recheck returned `PASS` with high confidence and no required fixes.
 
 Sprint 59 Part 2 API Common released ATS:
 

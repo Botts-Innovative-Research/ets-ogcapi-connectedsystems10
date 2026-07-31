@@ -9,7 +9,9 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -161,28 +163,127 @@ public class VerifySensorMlHttpProcedures {
 	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
 	 */
 	@Test
-	public void crossOriginServiceDescriptionRedirectIsRejected() throws Exception {
+	public void oversizedRootServiceDescriptionIsRejected() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.OVERSIZED_DEFINITION)) {
+			server.start();
+
+			AssertionError failure = assertThrows(AssertionError.class,
+					configured(server)::sensorMlMediaTypeReadIsAdvertised);
+
+			assertTrue(failure.getMessage(), failure.getMessage().contains("decoded bytes"));
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void crossOriginPrivateServiceDescriptionIsRejectedBeforeRetrieval() throws Exception {
+		AtomicInteger requests = new AtomicInteger();
 		HttpServer definition = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
-		definition.createContext("/openapi.json",
-				exchange -> FixtureServer.send(exchange, 200, "application/json", FixtureServer.openApiDefinition()));
-		definition.start();
-		HttpServer redirect = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
-		redirect.createContext("/openapi.json", exchange -> {
-			exchange.getResponseHeaders()
-				.set("Location", "http://127.0.0.1:" + definition.getAddress().getPort() + "/openapi.json");
-			exchange.sendResponseHeaders(302, -1);
-			exchange.close();
+		definition.createContext("/openapi.json", exchange -> {
+			requests.incrementAndGet();
+			FixtureServer.send(exchange, 200, "application/json", FixtureServer.openApiDefinition());
 		});
-		redirect.start();
-		URI advertised = URI.create("http://127.0.0.1:" + redirect.getAddress().getPort() + "/openapi.json");
+		definition.start();
+		URI advertised = URI.create("http://127.0.0.1:" + definition.getAddress().getPort() + "/openapi.json");
 		try (FixtureServer server = new FixtureServer(Mode.VALID, null, advertised)) {
 			server.start();
 
 			assertThrows(AssertionError.class, configured(server)::sensorMlMediaTypeReadIsAdvertised);
+			assertEquals(0, requests.get());
 		}
 		finally {
-			redirect.stop(0);
 			definition.stop(0);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void sameOriginOperationReferencesReceiveConfiguredCredential() throws Exception {
+		RequestSpecification original = RestAssured.requestSpecification;
+		String credential = "Bearer sensor-ml-reference-secret";
+		try (FixtureServer server = new FixtureServer(Mode.OPENAPI_31_REFERENCES)) {
+			server.start();
+			RestAssured.requestSpecification = new RequestSpecBuilder().addHeader("Authorization", credential).build();
+
+			configured(server, credential).sensorMlMediaTypeReadIsAdvertised();
+
+			assertEquals(credential, server.authorization("/api/openapi.json"));
+			assertEquals(credential, server.authorization("/api/openapi/paths/systems.yaml"));
+			assertEquals(credential, server.authorization("/api/openapi/responses/sml.yaml"));
+		}
+		finally {
+			RestAssured.requestSpecification = original;
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void crossOriginDescriptionAndReferencesDoNotReceiveIutCredential() throws Exception {
+		String credential = "Bearer must-not-leave-iut";
+		URI advertised = URI.create("https://docs.example.test/openapi.yaml");
+		List<URI> targets = new CopyOnWriteArrayList<>();
+		AtomicInteger credentialed = new AtomicInteger();
+		AtomicInteger restrictedAllowed = new AtomicInteger();
+		SensorMlTests.ApiDefinitionTransport transport = (target, origin, allowRestricted, authorization) -> {
+			targets.add(target);
+			if (authorization != null) {
+				credentialed.incrementAndGet();
+			}
+			if (allowRestricted) {
+				restrictedAllowed.incrementAndGet();
+			}
+			String path = target.getPath();
+			String body;
+			if (path.endsWith("/openapi.yaml")) {
+				body = FixtureServer.openApi31Definition();
+			}
+			else if (path.contains("/paths/")) {
+				body = FixtureServer.openApi31Path(path.endsWith("/systems.yaml"));
+			}
+			else if (path.endsWith("/responses/sml.yaml")) {
+				body = "description: ok\ncontent:\n  application/sml+json: {}\n";
+			}
+			else if (path.endsWith("/requests/sml.yaml")) {
+				body = "content:\n  application/sml+json:\n    schema:\n      type: object\n";
+			}
+			else if (path.endsWith("/parameters/datetime.yaml")) {
+				body = "name: datetime\nin: query\nschema:\n  type: string\n";
+			}
+			else {
+				throw new IOException("Unexpected transport target: " + target);
+			}
+			return new SensorMlTests.ApiDocument(body, "application/yaml");
+		};
+		try (FixtureServer server = new FixtureServer(Mode.VALID, null, advertised)) {
+			server.start();
+			SensorMlTests tests = new SensorMlTests();
+			tests.configure(server.apiRoot(), credential, transport);
+
+			tests.sensorMlMediaTypeReadIsAdvertised();
+			tests.sensorMlMediaTypeWriteIsAdvertised();
+
+			assertTrue(targets.size() > 5);
+			assertEquals(0, credentialed.get());
+			assertEquals(0, restrictedAllowed.get());
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void sameOriginServiceDescriptionRedirectIsRejected() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.REDIRECT_DEFINITION)) {
+			server.start();
+
+			assertThrows(AssertionError.class, configured(server)::sensorMlMediaTypeReadIsAdvertised);
+			assertEquals(0, server.calls("/api/openapi-final.json"));
 		}
 	}
 
@@ -284,8 +385,12 @@ public class VerifySensorMlHttpProcedures {
 	}
 
 	private static SensorMlTests configured(FixtureServer server) {
+		return configured(server, null);
+	}
+
+	private static SensorMlTests configured(FixtureServer server, String credential) {
 		SensorMlTests tests = new SensorMlTests();
-		tests.configure(server.apiRoot());
+		tests.configure(server.apiRoot(), credential);
 		return tests;
 	}
 
@@ -293,7 +398,8 @@ public class VerifySensorMlHttpProcedures {
 
 		VALID, JSON_MEDIA, LATER_INVALID_MAPPING, WRONG_ID, WRONG_RELATION, INVALID_SCHEMA, MALFORMED_DEFINITION,
 		BAD_ASSOCIATION_TARGET, MALFORMED_POSITION, CROSS_ORIGIN_NEXT, PAGINATION_CYCLE, LATER_UNSUPPORTED_MEDIA,
-		NO_ASSOCIATIONS, WRONG_ASSOCIATION_RESOURCE, WRONG_ASSOCIATION_COLLECTION, OPENAPI_31_REFERENCES
+		NO_ASSOCIATIONS, WRONG_ASSOCIATION_RESOURCE, WRONG_ASSOCIATION_COLLECTION, OPENAPI_31_REFERENCES,
+		OVERSIZED_DEFINITION, REDIRECT_DEFINITION
 
 	}
 
@@ -370,10 +476,8 @@ public class VerifySensorMlHttpProcedures {
 				case "/api/" -> landing(exchange);
 				case "/api/conformance" -> conformance(exchange);
 				case "/api/collections" -> send(exchange, 200, "application/json", "{\"collections\":[]}");
-				case "/api/openapi.json" -> send(exchange, 200,
-						this.mode == Mode.OPENAPI_31_REFERENCES ? "application/yaml" : "application/json",
-						this.mode == Mode.MALFORMED_DEFINITION ? "{not-json" : this.mode == Mode.OPENAPI_31_REFERENCES
-								? openApi31Definition() : openApiDefinition());
+				case "/api/openapi.json" -> apiDefinition(exchange);
+				case "/api/openapi-final.json" -> send(exchange, 200, "application/json", openApiDefinition());
 				case "/api/openapi/paths/systems.yaml" -> send(exchange, 200, "application/yaml", openApi31Path(true));
 				case "/api/openapi/paths/deployments.yaml", "/api/openapi/paths/procedures.yaml",
 						"/api/openapi/paths/properties.yaml" ->
@@ -406,6 +510,20 @@ public class VerifySensorMlHttpProcedures {
 				case "/api/distributed-resource" -> associationResource(exchange);
 				default -> send(exchange, 404, "application/json", "{}");
 			}
+		}
+
+		private void apiDefinition(HttpExchange exchange) throws IOException {
+			if (this.mode == Mode.REDIRECT_DEFINITION) {
+				exchange.getResponseHeaders().set("Location", apiRoot().resolve("openapi-final.json").toString());
+				exchange.sendResponseHeaders(302, -1);
+				exchange.close();
+				return;
+			}
+			send(exchange, 200, this.mode == Mode.OPENAPI_31_REFERENCES ? "application/yaml" : "application/json",
+					this.mode == Mode.MALFORMED_DEFINITION ? "{not-json"
+							: this.mode == Mode.OPENAPI_31_REFERENCES ? openApi31Definition()
+									: this.mode == Mode.OVERSIZED_DEFINITION
+											? openApiDefinition() + " ".repeat(2 * 1024 * 1024) : openApiDefinition());
 		}
 
 		private void associationCollection(HttpExchange exchange) throws IOException {

@@ -1,12 +1,8 @@
 package org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
@@ -179,6 +175,23 @@ public final class SensorMlSupport {
 		}
 	}
 
+	/**
+	 * Loads an already-authorized exact-origin operation-reference document.
+	 */
+	@FunctionalInterface
+	public interface ReferenceLoader {
+
+		/**
+		 * Loads one reference document.
+		 * @param target absolute document URI without a fragment.
+		 * @return JSON or YAML document content.
+		 * @throws IOException when retrieval or policy validation fails.
+		 * @throws InterruptedException when retrieval is interrupted.
+		 */
+		String load(URI target) throws IOException, InterruptedException;
+
+	}
+
 	enum AssociationTargetKind {
 
 		SYSTEM_RESOURCE(true, Set.of("systems"), ResourceType.SYSTEM, GeoJsonSupport.ResourceType.SYSTEM, null),
@@ -280,8 +293,22 @@ public final class SensorMlSupport {
 	 * Parses either JSON or YAML OpenAPI 3 content.
 	 */
 	public static ApiDefinition parseApiDefinition(String content, URI source, String requirement) {
+		return parseApiDefinition(content, source, requirement, target -> {
+			throw new IOException("External operation references require an explicit bounded loader: " + target);
+		});
+	}
+
+	/**
+	 * Parses either JSON or YAML OpenAPI 3 content with an explicit bounded
+	 * operation-reference loader.
+	 */
+	public static ApiDefinition parseApiDefinition(String content, URI source, String requirement,
+			ReferenceLoader referenceLoader) {
 		if (content == null || content.isBlank() || source == null || !source.isAbsolute()) {
 			ETSAssert.failWithUri(requirement, "API definition content and absolute source URI are required.");
+		}
+		if (referenceLoader == null) {
+			ETSAssert.failWithUri(requirement, "An operation-reference loader is required.");
 		}
 		try {
 			JsonNode parsed = YAML.readTree(content);
@@ -289,7 +316,7 @@ public final class SensorMlSupport {
 				ETSAssert.failWithUri(requirement, source + " is not an OpenAPI object.");
 				return null;
 			}
-			new OperationReferenceResolver(source, root).resolve();
+			new OperationReferenceResolver(source, root, referenceLoader).resolve();
 			ParseOptions options = new ParseOptions();
 			options.setResolve(false);
 			options.setResolveFully(false);
@@ -318,13 +345,13 @@ public final class SensorMlSupport {
 
 		private static final int MAX_DEPTH = 8;
 
-		private static final int MAX_READS = 64;
+		private static final int MAX_TRAVERSALS = 512;
+
+		private static final int MAX_NETWORK_READS = 64;
 
 		private static final int MAX_BODY_BYTES = 2 * 1024 * 1024;
 
-		private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
-
-		private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(15);
+		private static final Duration RESOLUTION_TIMEOUT = Duration.ofSeconds(60);
 
 		private final URI source;
 
@@ -332,24 +359,27 @@ public final class SensorMlSupport {
 
 		private final ObjectNode root;
 
-		private final HttpClient client;
+		private final ReferenceLoader referenceLoader;
 
 		private final Map<URI, JsonNode> documents = new HashMap<>();
 
 		private final Set<URI> active = new HashSet<>();
 
-		private int reads;
+		private final long deadlineNanos;
 
-		private OperationReferenceResolver(URI source, ObjectNode root) throws IOException, URISyntaxException {
+		private int traversals;
+
+		private int networkReads;
+
+		private OperationReferenceResolver(URI source, ObjectNode root, ReferenceLoader referenceLoader)
+				throws IOException, URISyntaxException {
 			this.source = source;
 			this.sourceDocument = withoutFragment(source);
 			this.root = root;
+			this.referenceLoader = referenceLoader;
+			this.deadlineNanos = System.nanoTime() + RESOLUTION_TIMEOUT.toNanos();
 			validateSource(source);
 			this.documents.put(this.sourceDocument, root);
-			this.client = HttpClient.newBuilder()
-				.connectTimeout(CONNECT_TIMEOUT)
-				.followRedirects(HttpClient.Redirect.NEVER)
-				.build();
 		}
 
 		private void resolve() throws IOException, InterruptedException, URISyntaxException {
@@ -435,8 +465,9 @@ public final class SensorMlSupport {
 			if (depth >= MAX_DEPTH) {
 				throw new IOException("Operation reference depth exceeds " + MAX_DEPTH + ".");
 			}
-			if (++this.reads > MAX_READS) {
-				throw new IOException("Operation reference count exceeds " + MAX_READS + ".");
+			checkDeadline();
+			if (++this.traversals > MAX_TRAVERSALS) {
+				throw new IOException("Operation reference traversal count exceeds " + MAX_TRAVERSALS + ".");
 			}
 
 			URI target = document.resolve(referenceValue.asText()).normalize();
@@ -472,27 +503,24 @@ public final class SensorMlSupport {
 			if (cached != null) {
 				return cached;
 			}
-			HttpRequest request = HttpRequest.newBuilder(target)
-				.timeout(REQUEST_TIMEOUT)
-				.header("Accept", "application/yaml, application/json, text/yaml, */*")
-				.GET()
-				.build();
-			HttpResponse<InputStream> response = this.client.send(request, HttpResponse.BodyHandlers.ofInputStream());
-			try (InputStream body = response.body()) {
-				if (response.statusCode() != 200) {
-					throw new IOException("Operation reference returned HTTP " + response.statusCode() + ": " + target);
-				}
-				byte[] bytes = body.readNBytes(MAX_BODY_BYTES + 1);
-				if (bytes.length > MAX_BODY_BYTES) {
-					throw new IOException("Operation reference exceeds " + MAX_BODY_BYTES + " bytes: " + target);
-				}
-				JsonNode parsed = YAML.readTree(new String(bytes, StandardCharsets.UTF_8));
-				if (parsed == null) {
-					throw new IOException("Operation reference is empty: " + target);
-				}
-				this.documents.put(target, parsed);
-				return parsed;
+			checkDeadline();
+			if (++this.networkReads > MAX_NETWORK_READS) {
+				throw new IOException("Unique operation-reference document count exceeds " + MAX_NETWORK_READS + ".");
 			}
+			String content = this.referenceLoader.load(target);
+			checkDeadline();
+			if (content == null || content.isBlank()) {
+				throw new IOException("Operation reference is empty: " + target);
+			}
+			if (content.getBytes(StandardCharsets.UTF_8).length > MAX_BODY_BYTES) {
+				throw new IOException("Operation reference exceeds " + MAX_BODY_BYTES + " decoded bytes: " + target);
+			}
+			JsonNode parsed = YAML.readTree(content);
+			if (parsed == null) {
+				throw new IOException("Operation reference is empty: " + target);
+			}
+			this.documents.put(target, parsed);
+			return parsed;
 		}
 
 		private JsonNode selectFragment(JsonNode document, URI target) throws IOException {
@@ -525,11 +553,17 @@ public final class SensorMlSupport {
 			if (!Set.of("http", "https").contains(scheme) || target.getHost() == null || target.getUserInfo() != null) {
 				throw new IOException("Operation reference must be an HTTP(S) URI with no userinfo: " + target);
 			}
-			if (!target.getHost().equalsIgnoreCase(this.source.getHost())
+			if (!scheme.equals(normalizedScheme(this.source))
+					|| !target.getHost().equalsIgnoreCase(this.source.getHost())
 					|| effectivePort(target) != effectivePort(this.source)) {
+				throw new IOException("Operation reference must retain the advertised description origin: " + target);
+			}
+		}
+
+		private void checkDeadline() throws IOException {
+			if (System.nanoTime() > this.deadlineNanos) {
 				throw new IOException(
-						"Operation reference must retain the advertised description host and effective port: "
-								+ target);
+						"Operation-reference resolution exceeds " + RESOLUTION_TIMEOUT.toSeconds() + " seconds.");
 			}
 		}
 

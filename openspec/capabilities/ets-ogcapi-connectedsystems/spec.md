@@ -4199,12 +4199,15 @@ relation is present.
 **AND** resolution SHALL preserve referenced schema graphs instead of fully inlining recursive component schemas, so a cyclic released schema graph remains bounded during TeamEngine execution
 **AND** parser warnings do not hide a missing model, unresolved required operation reference, or malformed definition
 **AND** an ETS-owned bounded resolver fetches only path-item, response, request-body, and parameter references required by these procedures
-**AND** external references allow HTTP(S) on only the advertised description's exact host and effective port, reject redirects, `file:`, `classpath:`, userinfo, fragments outside JSON Pointer syntax, unrelated hosts, private-target pivots, cycles, oversize bodies, excessive depth, and excessive reads
+**AND** root descriptions and external reference documents are streamed through decoded-body size limits
+**AND** external references allow HTTP(S) on only the advertised description's exact origin, reject redirects, `file:`, `classpath:`, userinfo, fragments outside JSON Pointer syntax, unrelated hosts, private-target pivots, cycles, oversize bodies, excessive depth, excessive traversal, excessive unique network reads, and excessive total resolution time
+**AND** repeated references to a cached document consume traversal budget but do not consume the unique network-read budget
 **AND** read media is advertised on every declared canonical SensorML collection and advertised custom items operation
 **AND** write media is advertised on at least one canonical POST or PUT
 **AND** only explicit 2xx or `2XX` responses count as successful-response evidence
 **AND** an advertised malformed, inaccessible, or unsupported-media service description fails instead of being discarded as no evidence
-**AND** cross-origin service-description retrieval is credential-free and rejects redirects
+**AND** same-origin service descriptions and their exact-origin references receive the configured IUT credential when present
+**AND** cross-origin service-description retrieval and reference resolution are credential-free, reject redirects and restricted resolved addresses, and pin the validated address set for each connection
 **AND** the deployed ETS jar contains the isolated OpenAPI parser, model, and runtime support needed to execute the same OpenAPI 3.1 reference path under TeamEngine without adding or replacing a TeamEngine-owned jar
 **AND** neither procedure issues a mutation request.
 *Maps to*: REQ-ETS-PART1-013.

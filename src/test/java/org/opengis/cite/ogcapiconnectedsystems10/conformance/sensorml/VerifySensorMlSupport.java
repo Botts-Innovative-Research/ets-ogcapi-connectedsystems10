@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +111,66 @@ public class VerifySensorMlSupport {
 	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
 	 */
 	@Test
+	public void readableFileAndClasspathOperationReferencesAreRejected() throws Exception {
+		Path readable = Files.createTempFile("sensorml-readable-reference-", ".yaml");
+		Files.writeString(readable, "get: {}\n");
+		try {
+			String fileDefinition = operationReferenceDefinition(readable.toUri().toString());
+			String classpathDefinition = operationReferenceDefinition("classpath:/atom-feed.xml");
+
+			assertThrows(AssertionError.class, () -> SensorMlSupport.parseApiDefinition(fileDefinition,
+					URI.create("https://example.test/openapi.yaml"), REQUIREMENT));
+			assertThrows(AssertionError.class, () -> SensorMlSupport.parseApiDefinition(classpathDefinition,
+					URI.create("https://example.test/openapi.yaml"), REQUIREMENT));
+		}
+		finally {
+			Files.deleteIfExists(readable);
+		}
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void repeatedCachedReferencesDoNotConsumeUniqueNetworkReadBudget() {
+		StringBuilder parameters = new StringBuilder();
+		for (int index = 0; index < 80; index++) {
+			parameters.append("        - $ref: '#/components/parameters/id'\n");
+		}
+		String definition = """
+				openapi: 3.1.0
+				info:
+				  title: cached reference fan-out
+				  version: "1"
+				components:
+				  parameters:
+				    id:
+				      name: id
+				      in: query
+				      schema:
+				        type: string
+				paths:
+				  /systems:
+				    get:
+				      parameters:
+				%s
+				      responses:
+				        "200":
+				          description: ok
+				          content:
+				            application/sml+json: {}
+				""".formatted(parameters);
+
+		ApiDefinition parsed = SensorMlSupport.parseApiDefinition(definition,
+				URI.create("https://example.test/openapi.yaml"), REQUIREMENT);
+
+		assertEquals(80, parsed.model().getPaths().get("/systems").getGet().getParameters().size());
+	}
+
+	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
 	public void recursiveComponentSchemaRemainsAReference() {
 		String definition = """
 				openapi: 3.1.0
@@ -145,6 +207,18 @@ public class VerifySensorMlSupport {
 			.get("next");
 		assertEquals("#/components/schemas/Node", next.get$ref());
 		assertTrue(parsed.diagnostics().toString(), parsed.diagnostics().isEmpty());
+	}
+
+	private static String operationReferenceDefinition(String reference) {
+		return """
+				openapi: 3.1.0
+				info:
+				  title: unsafe reference
+				  version: "1"
+				paths:
+				  /systems:
+				    $ref: '%s'
+				""".formatted(reference);
 	}
 
 	/**

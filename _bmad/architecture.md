@@ -1752,14 +1752,18 @@ relations fail.
 
 An ETS-owned bounded resolver fetches only path-item, response, request-body,
 and parameter references before Swagger model conversion. It allows only
-HTTP(S) references on the advertised description host at its effective port,
-follows no redirects, recognizes only JSON Pointer fragments, and enforces
-cycle, depth, read-count, and body-size limits. `file:`, `classpath:`,
-userinfo, unrelated hosts, and private-target pivots fail before retrieval.
-Component schema references remain untouched.
+HTTP(S) references on the advertised description's exact origin, follows no
+redirects, recognizes only JSON Pointer fragments, and independently enforces
+cycle, depth, traversal-count, unique-network-read, decoded-body-size, and total
+resolution-time limits. Cached references do not consume the network-read
+budget. `file:`, `classpath:`, userinfo, unrelated hosts, and private-target
+pivots fail before retrieval. Component schema references remain untouched.
 
-Cross-origin advertised service descriptions are retrieved without IUT
-credentials and without redirects.
+Root descriptions are streamed through the same decoded-body limit. Same-IUT
+descriptions and references may receive the configured IUT credential.
+Cross-origin advertised descriptions and references are retrieved without IUT
+credentials, without redirects, and only after their non-restricted resolved
+address set is pinned for the connection.
 
 Swagger parser, core, model, annotations, and transitive runtime packages are
 shaded into an ETS-private namespace in the single deployed suite jar.

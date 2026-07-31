@@ -2175,15 +2175,20 @@ generic custom collection items path when custom collections are advertised.
 Write media requires SensorML request content on at least one canonical
 collection POST or canonical item PUT. Both procedures are read-only.
 
-Cross-origin `service-desc` retrieval uses a credential-free client and rejects
-redirects before parsing or operation-reference resolution.
+Root `service-desc` bodies and external reference documents are streamed through
+decoded-body limits. Same-IUT descriptions and their exact-origin references
+receive the configured IUT credential. Cross-origin descriptions and references
+remain credential-free, reject redirects and restricted resolved addresses, and
+use the validated, pinned address set for the connection.
 
 An ETS-owned operation-reference resolver runs before model conversion and
 fetches only path-item, response, request-body, and parameter references. It
-uses an exact advertised-host/effective-port allowlist, no redirects, HTTP(S)
-only, bounded depth/read/body limits, cycle detection, and JSON Pointer
-fragments. It rejects `file:`, `classpath:`, userinfo, unrelated hosts, and
-private-target pivots. Component schema graphs are never fetched or inlined.
+uses an exact advertised-origin allowlist, no redirects, HTTP(S) only, bounded
+depth/traversal/unique-network-read/body/time limits, cycle detection, and JSON
+Pointer fragments. Cached-document references consume traversal budget without
+consuming the unique network-read budget. It rejects `file:`, `classpath:`,
+userinfo, unrelated hosts, and private-target pivots. Component schema graphs
+are never fetched or inlined.
 
 The TeamEngine artifact shades the parser, core, model, annotations, YAML
 support, and transitive runtime into an ETS-private namespace. Its Jackson

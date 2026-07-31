@@ -82,6 +82,15 @@ public class SensorMlTests {
 
 	private URI apiRoot;
 
+	private String authCredential;
+
+	private ApiDefinitionTransport apiDefinitionTransport = (target, origin, allowRestrictedAddresses,
+			authorization) -> {
+		SensorMlHttpFetcher.FetchResult result = SensorMlHttpFetcher.fetch(target, origin, allowRestrictedAddresses,
+				authorization);
+		return new ApiDocument(result.content(), result.contentType());
+	};
+
 	/**
 	 * Loads only the immutable API root after inherited API Common prerequisites.
 	 */
@@ -92,15 +101,29 @@ public class SensorMlTests {
 		if (!(iut instanceof URI)) {
 			throw new SkipException("Suite attribute '" + SuiteAttribute.IUT.getName() + "' is missing or not a URI.");
 		}
-		configure((URI) iut);
+		Object credential = testContext.getSuite().getAttribute(SuiteAttribute.AUTH_CREDENTIAL.getName());
+		configure((URI) iut, credential instanceof String ? (String) credential : null);
 	}
 
 	void configure(URI iut) {
+		configure(iut, null);
+	}
+
+	void configure(URI iut, String credential) {
+		configure(iut, credential, this.apiDefinitionTransport);
+	}
+
+	void configure(URI iut, String credential, ApiDefinitionTransport transport) {
 		if (iut == null || !iut.isAbsolute()) {
 			throw new IllegalArgumentException("IUT must be an absolute URI.");
 		}
+		if (transport == null) {
+			throw new IllegalArgumentException("API-definition transport is required.");
+		}
 		String value = iut.toString();
 		this.apiRoot = URI.create(value.endsWith("/") ? value : value + "/");
+		this.authCredential = credential == null || credential.isBlank() ? null : credential;
+		this.apiDefinitionTransport = transport;
 	}
 
 	/**
@@ -474,7 +497,11 @@ public class SensorMlTests {
 				throw new IllegalStateException("unreachable", ex);
 			}
 			String content = serviceDescription(source, requirement);
-			ApiDefinition definition = SensorMlSupport.parseApiDefinition(content, source, requirement);
+			boolean sameIutOrigin = sameOrigin(this.apiRoot, source);
+			ApiDefinition definition = SensorMlSupport.parseApiDefinition(content, source, requirement,
+					target -> this.apiDefinitionTransport
+						.fetch(target, source, sameIutOrigin, sameIutOrigin ? this.authCredential : null)
+						.content());
 			if (!definition.model().getPaths().keySet().stream().anyMatch(path -> path.contains("/systems"))) {
 				ETSAssert.failWithUri(requirement, source + " does not describe Part 1 canonical resources.");
 			}
@@ -487,55 +514,29 @@ public class SensorMlTests {
 	}
 
 	private String serviceDescription(URI source, String requirement) {
-		if (sameOrigin(this.apiRoot, source)) {
-			Response response = given().redirects()
-				.follow(false)
-				.accept("application/vnd.oai.openapi, application/yaml, application/json, */*")
-				.when()
-				.get(source)
-				.andReturn();
-			if (response.getStatusCode() != 200) {
-				ETSAssert.failWithUri(requirement,
-						source + " advertised service description returned HTTP " + response.getStatusCode() + ".");
-			}
-			requireApiDefinitionMedia(response.getContentType(), source, requirement);
-			return response.asString();
-		}
-		String scheme = source.getScheme() == null ? "" : source.getScheme().toLowerCase(Locale.ROOT);
-		if (!Set.of("http", "https").contains(scheme) || source.getHost() == null || source.getHost().isBlank()
-				|| source.getUserInfo() != null || source.getFragment() != null) {
-			ETSAssert.failWithUri(requirement,
-					"Cross-origin advertised service description must be an HTTP(S) URI with a host, no userinfo, and no fragment: "
-							+ source);
-		}
-		HttpRequest request = HttpRequest.newBuilder(source)
-			.timeout(Duration.ofSeconds(30))
-			.header("Accept", "application/vnd.oai.openapi, application/yaml, application/json, */*")
-			.GET()
-			.build();
+		boolean sameIutOrigin = sameOrigin(this.apiRoot, source);
 		try {
-			HttpResponse<String> response = HttpClient.newBuilder()
-				.followRedirects(HttpClient.Redirect.NEVER)
-				.build()
-				.send(request, HttpResponse.BodyHandlers.ofString());
-			if (response.statusCode() != 200) {
-				ETSAssert.failWithUri(requirement, "Cross-origin advertised service description " + source
-						+ " returned HTTP " + response.statusCode() + ".");
-			}
-			requireApiDefinitionMedia(response.headers().firstValue("Content-Type").orElse(""), source, requirement);
-			return response.body();
-		}
-		catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
-			ETSAssert.failWithUri(requirement,
-					"Cross-origin advertised service description " + source + " retrieval was interrupted.");
-			throw new IllegalStateException("unreachable", ex);
+			ApiDocument response = this.apiDefinitionTransport.fetch(source, source, sameIutOrigin,
+					sameIutOrigin ? this.authCredential : null);
+			requireApiDefinitionMedia(response.contentType(), source, requirement);
+			return response.content();
 		}
 		catch (IOException ex) {
-			ETSAssert.failWithUri(requirement, "Cross-origin advertised service description " + source
-					+ " could not be retrieved: " + ex.getMessage());
+			ETSAssert.failWithUri(requirement,
+					"Advertised service description " + source + " could not be retrieved: " + ex.getMessage());
 			throw new IllegalStateException("unreachable", ex);
 		}
+	}
+
+	@FunctionalInterface
+	interface ApiDefinitionTransport {
+
+		ApiDocument fetch(URI target, URI origin, boolean allowRestrictedAddresses, String authorization)
+				throws IOException;
+
+	}
+
+	record ApiDocument(String content, String contentType) {
 	}
 
 	private void verifyAssociationTarget(SensorMlSupport.AssociationTarget target, String requirement) {

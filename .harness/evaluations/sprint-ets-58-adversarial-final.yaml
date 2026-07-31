@@ -1,0 +1,36 @@
+evaluation:
+  role: "Red Team / Raze"
+  date: "2026-07-31"
+  subject: "Sprint 58 final SensorML security remediation and mapping promotion"
+  verdict: "APPROVED"
+  confidence: 0.99
+  agent_id: "019fb6f2-16ab-7740-8b9e-b607963dbed3"
+  duration: "unavailable"
+  tokens: "unavailable"
+  files_modified: false
+
+closed_findings:
+  - id: "RAZE-S58-009"
+    severity: "HIGH"
+    evidence: "The exact IUT origin resolves once at transport construction; Apache receives only pinned addresses and credentials are rejected for non-IUT origins."
+  - id: "RAZE-S58-010"
+    severity: "HIGH"
+    evidence: "Future.get is bounded by the remaining monotonic deadline and timeout/interruption cancels the daemon loader."
+  - id: "RAZE-S58-011"
+    severity: "MEDIUM"
+    evidence: "Raze independently executed the packaged external-fetch security probe from the exact candidate image and observed PASS."
+  - id: "RAZE-S58-012"
+    severity: "MEDIUM"
+    evidence: "Final reconciliation and exact evidence are archived with the completed story."
+
+scope:
+  osh_source_modified: false
+  teamengine_source_or_binary_modified: false
+  hosted_ci_added: false
+  executable_sensorml_suite_jar_imported: false
+
+required_fixes: []
+release_gate:
+  merge_ready: true
+  completion_claim_allowed: true
+  mapping_promotion_allowed: true

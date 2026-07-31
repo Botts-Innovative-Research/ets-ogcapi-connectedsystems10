@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T20:34Z
+Last updated: 2026-07-31T07:34Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,6 +14,16 @@ Last updated: 2026-07-30T20:34Z
 
 ## Active Issues
 
+- Sprint 58 completes all fifteen Part 1 SensorML procedures and promotes them
+  to reviewed exact mappings. The unmodified local OSH gate is intentionally
+  non-green at `246/41/21/184`: `mediatype-write` passes, while fourteen
+  SensorML procedures fail because canonical collection requests return
+  generic `application/json` or the advertised OpenAPI definition lacks
+  complete read-media evidence. This is an OSH interoperability/conformance
+  limitation, not an ETS implementation blocker. Controlled read-only HTTP,
+  complete schema parity, exact-image runtime/security probes, and final Raze
+  `APPROVED 0.99` supply the implementation evidence. Do not patch OSH or
+  weaken actual-media/OpenAPI requirements to make this run green.
 - Sprint 57 implements all five released Part 1 Update procedures, but exact
   candidate `c4b6030` is superseded by final Raze `GAPS_FOUND 0.98`.
   Requirement-linked replacement regressions close its root Sampling Feature
@@ -100,7 +110,10 @@ Last updated: 2026-07-30T20:34Z
   procedures honestly SKIP there. Controlled HTTP supplies positive procedure
   coverage; these fixtures and local-IUT SKIPs are not external conformance
   certification.
-- SensorML is PARTIAL-IMPLEMENTED only. Sprint 19 adds safety-gated `mediatype-write` coverage with positive system-resource evidence against a local OSH mutable IUT. Current GeoRobotix SensorML bodies have no top-level `links` member. The Sprint 26 local OSH seedfix repaired deployment/procedure `?f=sml3` HTTP 500 responses by adding `properties.featureType` to those seeded resources; however, generated OSH deployment SensorML still lacks non-empty `deployedSystems` mapping evidence, generated deployment/procedure SensorML bodies lack JSON `links` association evidence, and local OSH `/properties` remains unpopulated. Full SensorML remains open for broader positive relation-types evidence, full SensorML 3.0 JSON Schema validation, non-system mutation-side behavior, and positive property evidence against a populated IUT.
+- Historical Sprint 19/26 SensorML subset and seed evidence no longer defines
+  implementation status. Sprint 58 supplies complete released-procedure,
+  schema, controlled-HTTP, and exact-image closure. Older GeoRobotix and OSH
+  limitations remain useful interoperability context only.
 - Part 2 placeholder taxonomy was corrected during Sprint 25 planning and extended during Sprints 26, 27, 28, 29, 30, and 31. OpenSpec and epic ETS-03 now treat API Common as `REQ-ETS-PART2-001`, Datastreams & Observations as `REQ-ETS-PART2-002`, Control Streams & Commands as `REQ-ETS-PART2-003`, Command Feasibility as partial implemented `REQ-ETS-PART2-004`, System Events as partial implemented `REQ-ETS-PART2-005`, Advanced Filtering as partial implemented `REQ-ETS-PART2-006`, Create/Replace/Delete as partial implemented `REQ-ETS-PART2-007`, Update as partial implemented `REQ-ETS-PART2-008`, JSON Encoding as partial implemented `REQ-ETS-PART2-009`, SWE Common JSON Encoding as partial implemented `REQ-ETS-PART2-010`, SWE Common Text Encoding as partial implemented `REQ-ETS-PART2-011`, SWE Common Binary Encoding as partial implemented `REQ-ETS-PART2-012`, and remaining observation-binding placeholder as `REQ-ETS-PART2-013`. The former `/conf/system-history` placeholder is retired because OGC 23-002 Annex A does not define it; GeoRobotix's `/conf/system-history` declaration is treated as non-standard/vendor extension evidence only, and `systemhistory` is no longer treated as an OGC Part 2 collection discovery token.
 - GeoRobotix currently fails the Sprint 26 advisory public smoke with HTTP 500 responses on existing read endpoints. On 2026-05-22, direct probes returned HTTP 500 for `GET /systems/0mqcvdnfoca0`, `GET /datastreams?limit=1`, and `GET /observations?limit=2`; post-gapfix TeamEngine smoke failed `146 total / 27 passed / 5 failed / 114 skipped`. New Part 2 Create/Replace/Delete tests dependency-SKIP because `systemfeatures` does not finish successfully. This is not the accepted Sprint 26 E2E gate after the user accepted seeded local OSH as the IUT.
 - GeoRobotix declares `/conf/datastream` but not `/conf/api-common`, even though OGC 23-002 Clause 9 lists `/req/api-common` as a prerequisite. Sprint 21 implements a runtime SKIP for full `/conf/datastream` closure when `/conf/api-common` is absent; scoped endpoint PASS evidence must not be read as API Common PASS.

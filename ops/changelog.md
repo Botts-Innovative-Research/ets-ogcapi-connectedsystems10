@@ -28,6 +28,50 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
   and resolver-normalized parity across 8 entry plus 63 transitive schemas with
   zero mismatches. It ran `12m09s`; token metadata was unavailable.
 
+## 2026-07-31 - Sprint 58 SensorML implementation and gate closure
+
+**Triggered by user instruction**: start the next step.
+
+- Replaced the historical SensorML approximation with exactly fifteen
+  independent released procedures and direct Part 1 API Common dependency.
+- Added complete canonical System, Deployment, Procedure, and Property
+  single/collection schema validation through the provisional backend-neutral
+  `ConnectedSystemsSensorMlValidatorAdapter`.
+- Added all-resource id, common-attribute, resource-mapping, class,
+  relation-type, exact association-target, AssetType, geometry, and Pose
+  validation with bounded complete pagination and strict actual-media gates.
+- Added read-only OpenAPI 3.0/3.1 JSON/YAML media inspection with bounded
+  external operation-reference resolution. Resolver hardening pins the exact
+  IUT address before landing-page access, pins each credential-free
+  cross-origin graph once, rejects redirects/restricted targets/oversized
+  bodies, and interruptibly enforces one monotonic deadline.
+- Deployed runtime probes exercise the SensorML adapter, OpenAPI 3.1 parser,
+  external references, simulated DNS rebinding, credential boundaries,
+  redirect and body rejection, restricted origins, and deadline cancellation.
+- Raze first found arbitrary target, malformed-definition, AssetType,
+  controlled-HTTP, relation-spelling, DNS-rebinding, blocking-deadline, and
+  deployed-probe gaps. Requirement-linked tests and implementation close every
+  finding. Final implementation Raze is `APPROVED 0.99`. Reconciliation Raze
+  then found two stale baseline labels; focused recheck closed both at
+  `APPROVED 0.99`, with no required fixes.
+- Candidate `a593953d8d79d977649db3077696148e90ffb44a` passes focused
+  `37/0/0/0`, clean Docker Maven `729/0/0/3`, schema parity across 8 entry and
+  63 transitive schemas, exact-image runtime/base/dependency/security gates,
+  dependency sabotage, both credential gates, and artifact hygiene.
+- Exact image
+  `sha256:c0227ab3ef9d67a27d8d22a119979eda7615df10bbbc43c9e50a52daffdff093`
+  runs TeamEngine against unmodified local OSH at `246/41/21/184`. All fifteen
+  SensorML methods execute: one passes and fourteen fail honestly on generic
+  OSH collection media or incomplete advertised OpenAPI read-media evidence.
+  The no-mutation oracle recognizes 194 IUT requests and zero writes.
+- Promoted all fifteen mappings after technical, E2E, and Raze approval.
+  Coverage is now SensorML `15/15 exact`; overall
+  `240/91 exact/2 helper/118 candidate/29 unmapped`.
+- Reconciled CP-018, OpenSpec, design, architecture v2.0.60, story, contract,
+  traceability, epic, status, test results, known issues, evaluations, and
+  final evidence. No OSH or TeamEngine source/binary modification, executable
+  suite-jar import, hosted CI, or default IUT mutation was introduced.
+
 ## 2026-07-30 - Sprint 57 Update planning
 
 **Triggered by user instruction**: push the completed feasibility audit and

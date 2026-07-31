@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.59 | Status: Living Document | Last reconciled: 2026-07-31 (Sprint 58 resolver-security remediation)
+> Version: 2.0.60 | Status: Living Document | Last reconciled: 2026-07-31 (Sprint 58 final closure)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -613,8 +613,9 @@ parity, immutable-base checks, and primary local OSH E2E `211/69/0/142` with
 135 recognized requests and zero writes. The subsequent Raze recheck found that
 coordinate scanning still trusted jar filenames and that the shaded ETS jar
 collided with base NetworkNT message-bundle paths. S-ETS-41-01 and S-ETS-42-02
-therefore remain in progress. `REQ-ETS-VALIDATOR-001` also remains partial
-because SensorML is deferred pending a reusable FCU/OGC module.
+therefore remained in progress at that Sprint 42 checkpoint.
+`REQ-ETS-VALIDATOR-001` also remained partial then because SensorML was
+deferred pending a reusable FCU/OGC module; Sprint 58 supersedes that status.
 
 ### 21.6 Replacement recheck gap
 
@@ -647,9 +648,10 @@ local OSH E2E `211/69/0/142`. It is ready for final Raze.
 Final Raze recheck
 `.harness/evaluations/sprint-ets-42-final-raze-gapfix-adversarial-recheck-2026-07-22.yaml`
 returned `APPROVE` at `0.99` confidence with no required actions. S-ETS-41-01
-and the SWE Common S-ETS-42-02 increment are complete. The overall
-`REQ-ETS-VALIDATOR-001` remains partial because SensorML integration is deferred
-until FCU/OGC provides a reusable module.
+and the SWE Common S-ETS-42-02 increment are complete. At that Sprint 42 gate,
+the overall `REQ-ETS-VALIDATOR-001` remained partial because SensorML
+integration was deferred until FCU/OGC provided a reusable module. Sprint 58
+supersedes that status with the provisional SensorML adapter boundary.
 
 **2026-07-22** — v2.0.9 documents the external SWE Common/SensorML validator architecture and the plan to replace local schema validation through adapters once upstream artifacts are reproducible.
 

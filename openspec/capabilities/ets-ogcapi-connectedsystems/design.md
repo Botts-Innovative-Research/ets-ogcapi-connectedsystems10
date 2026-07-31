@@ -2269,6 +2269,19 @@ fifteen procedures and key negative branches. Primary TeamEngine E2E uses
 unmodified local OSH and permits honest media/evidence SKIPs, but no write or
 external source modification. Hosted CI remains out of scope.
 
+Sprint 58 closes on source candidate
+`a593953d8d79d977649db3077696148e90ffb44a` and exact E2E image
+`sha256:c0227ab3ef9d67a27d8d22a119979eda7615df10bbbc43c9e50a52daffdff093`.
+Focused SensorML verification is `37/0/0/0`, clean Docker Maven is
+`729/0/0/3`, and schema parity covers 8 entry plus 63 transitive schemas with
+zero mismatches. All fifteen methods execute against unmodified local OSH:
+`mediatype-write` passes while fourteen fail visibly on unsupported negotiated
+SensorML collection media or incomplete OpenAPI read-media evidence. The full
+run is `246/41/21/184`, with 194 recognized IUT requests and zero writes.
+Exact-image validator/security/runtime/immutability gates, dependency sabotage,
+both credential gates, and artifact hygiene pass. Coverage is 15/15 exact.
+Final Raze is `APPROVED 0.99` with no required fixes.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

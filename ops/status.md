@@ -1,35 +1,49 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T02:10Z
+Last updated: 2026-07-31T07:34Z
 
-## Sprint 58 In Progress - Part 1 SensorML
+## Sprint 58 Complete - Part 1 SensorML
 
 - User instruction: start the next recommended project step.
-- CP-018, S-ETS-58-01, the Sprint 58 contract, fifteen OpenSpec scenarios,
-  design, architecture v2.0.58, epic, and traceability define the direct
-  replacement before code.
-- Released source is OGC 23-001 tag `v1.0.0`, commit `8e03b236...`, with
-  fifteen `/conf/sensorml` procedures.
-- Baseline coverage is `0 exact / 0 helper / 12 candidate / 3 unmapped`; the
-  current thirteen-method class includes non-ATS methods, combines released
-  procedures, mutates for media advertisement, and depends on System Features
-  instead of direct API Common.
-- The target has exactly fifteen independent direct procedures, read-only
-  JSON/YAML OpenAPI media checks, complete canonical single/collection schema
-  validation, all-resource id/mapping/class/relation inspection, bounded
-  pagination, and actual-media-before-parse behavior.
-- `ConnectedSystemsSensorMlValidatorAdapter` will use the already pinned
-  released schema graph as a provisional backend with immutable deterministic
-  ETS-owned diagnostics and separate operational failures.
+- CP-018 and S-ETS-58-01 are DONE. Exactly fifteen independent released
+  procedures replace the historical approximation and depend directly on Part
+  1 API Common.
+- `ConnectedSystemsSensorMlValidatorAdapter` uses the pinned released schema
+  graph behind a backend-neutral API with immutable deterministic diagnostics
+  and separate operational failures.
+- Read-only OpenAPI 3.0/3.1 JSON/YAML inspection is bounded by origin/address
+  pinning, credential boundaries, redirect/body/traversal/read/depth limits,
+  and an interruptible monotonic deadline.
+- Candidate `a593953d8d79d977649db3077696148e90ffb44a` passes focused SensorML
+  `37/0/0/0`, clean Docker Maven `729/0/0/3`, and parity across 8 entry plus
+  63 transitive schemas with zero mismatches.
+- Exact E2E image
+  `sha256:c0227ab3ef9d67a27d8d22a119979eda7615df10bbbc43c9e50a52daffdff093`
+  passes both validator probes, OpenAPI 3.1 and external-fetch security probes,
+  dependency parity, TeamEngine base immutability, and confidential-history
+  hygiene.
+- Exact unmodified-local-OSH E2E is honestly `246/41/21/184`. All fifteen
+  SensorML methods execute: `mediatype-write` passes and fourteen fail visibly
+  because OSH returns generic `application/json` for requested SensorML
+  collections or its advertised OpenAPI lacks complete read-media evidence.
+- The no-mutation oracle recognizes 194 IUT requests and zero writes. Artifact
+  hygiene finds zero credential leaks. Credential integration and wire E2E
+  pass at `0 unmasked / 30 masked / 30 intact stub receipts`.
+- Core sabotage is `246/2/10/234`; API Common setup/tests and all fifteen
+  SensorML methods dependency-skip.
+- Reviewed coverage is `15/15 exact` for SensorML and
+  `240 total / 91 exact / 2 helper / 118 candidate / 29 unmapped` overall.
+- Final implementation Raze is `APPROVED 0.99`; prior DNS-rebinding,
+  blocking-deadline, and deployed-security-probe findings are closed.
+  Reconciliation Raze identified two stale baseline labels; the focused recheck
+  is `APPROVED 0.99` after both were corrected, with no required fixes.
 - No public reusable FCU-GIS-Luke SensorML module is available. The
   `opengeospatial/ets-sensorml30` executable TeamEngine suite jar remains
   excluded; a future reusable module can replace only the adapter backend.
-- Verification remains pending: test-first regressions, controlled HTTP,
-  schema parity, focused/full Maven, coverage, exact image/runtime,
-  dependency/credential/immutability/hygiene, unmodified-local-OSH TeamEngine,
-  and fresh Raze.
 - No OSH or TeamEngine source/binary modifications, hosted CI, or default IUT
-  mutation are in scope.
+  mutation were introduced.
+- Final evidence:
+  `ops/test-results/sprint-ets-58-part1-sensorml-final-a593953-2026-07-31/`.
 
 ## Sprint 57 In Progress - Part 1 Update (External PATCH Evidence Blocked)
 
@@ -875,10 +889,11 @@ and final Raze approval. S-ETS-41-01 is also complete.
   advisory GeoRobotix remained at `211/38/34/139`,
   `recognized_iut_request_logs=272`, and zero writes. Its schema paths did not
   reach the adapter, so it is regression evidence rather than runtime proof.
-- Primary replacement gate: PASS from a fresh `/tmp` clone synchronized to the
+- Sprint 42 primary replacement gate: PASS from a fresh `/tmp` clone synchronized to the
   worktree, `211/69/0/142`; 135 recognized IUT requests, zero writes, and zero
   startup errors. S-ETS-42-02 and S-ETS-41-01 are ready for fresh final Raze.
-  REQ-ETS-VALIDATOR-001 remains partial because SensorML is deferred.
+  At that checkpoint, REQ-ETS-VALIDATOR-001 remained partial because SensorML
+  was deferred; Sprint 58 supersedes that status.
 - Current evidence:
   `ops/test-results/sprint-ets-42-final-raze-gapfix-verification-2026-07-22.md`.
 - Final metadata Raze recheck:
@@ -892,11 +907,13 @@ and final Raze approval. S-ETS-41-01 is also complete.
   `.harness/evaluations/sprint-ets-42-swecommon-validator-adversarial-recheck-2026-07-22.yaml`
   returned `PASS_WITH_EXTERNAL_BLOCKER`, confidence `0.99`; that external
   blocker is now cleared by the primary local evidence.
-- SensorML remains deferred pending exact reusable FCU/OGC module coordinates.
+- At the Sprint 42 checkpoint, SensorML remained deferred pending exact reusable
+  FCU/OGC module coordinates. Sprint 58 now supplies the completed provisional
+  adapter boundary.
 - Remaining external follow-up: replace the source-pinned SWE Common SNAPSHOT
-  when a reusable non-SNAPSHOT artifact is published, and obtain exact reusable
-  SensorML module coordinates from FCU/OGC. No Sprint 41 or SWE Common story
-  implementation gate remains.
+  when a reusable non-SNAPSHOT artifact is published, and replace only the
+  SensorML adapter backend when exact reusable FCU/OGC module coordinates
+  become available. No Sprint 41, SWE Common, or Sprint 58 gate remains.
 
 ## Historical Pre-Gapfix Handoff — Sprint 41 Readiness Pass
 

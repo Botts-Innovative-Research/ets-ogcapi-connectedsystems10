@@ -1,8 +1,49 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-30T20:34Z
+Last updated: 2026-07-31T07:34Z
 
 ## Current Sprint Evidence
+
+Sprint 58 Part 1 SensorML direct ATS:
+
+- Exact source candidate:
+  `a593953d8d79d977649db3077696148e90ffb44a`; E2E image
+  `sha256:c0227ab3ef9d67a27d8d22a119979eda7615df10bbbc43c9e50a52daffdff093`.
+- Released source: OGC 23-001 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`.
+- Implementation: fifteen independent direct procedures, direct Part 1 API
+  Common dependency, bounded read-only OpenAPI JSON/YAML inspection, complete
+  canonical schema/id/mapping/class/relation validation, and the provisional
+  backend-neutral SensorML validator adapter.
+- Focused SensorML verification: `37 tests / 0 failures / 0 errors / 0
+  skipped`. Exact detached Docker Maven: `729 / 0 / 0 / 3`, BUILD SUCCESS.
+- Schema parity: 8 entry schemas and 63 transitive schemas, zero graph or
+  semantic mismatches.
+- Coverage gate: `23/0/0/0`; SensorML is `15 exact / 0 candidate /
+  0 unmapped`. Overall coverage is
+  `240 total / 91 exact / 2 helper / 118 candidate / 29 unmapped`.
+- Exact-image runtime passes the SWE Common adapter, SensorML adapter, OpenAPI
+  3.1 parser, external-reference security probe, tuple guard, dependency
+  parity, TeamEngine-owned base immutability, and confidential-history hygiene.
+- Exact unmodified-local-OSH TeamEngine exits nonzero honestly at
+  `246 total / 41 passed / 21 failed / 184 skipped`. All fifteen SensorML
+  methods execute. `mediatype-write` passes; fourteen fail because OSH returns
+  generic `application/json` for requested SensorML collections or its
+  advertised OpenAPI definition lacks complete read-media evidence.
+- No-mutation oracle: `recognized_iut_request_logs=194`, zero writes.
+  Artifact hygiene: PASS, zero credential leaks and zero IUT writes.
+- Credential integration: zero literal hits. Wire E2E: zero unmasked artifact
+  hits, 30 masked container hits, and 30 intact synthetic stub receipts.
+- Dependency sabotage: `246/2/10/234`; API Common setup/tests and all fifteen
+  SensorML methods dependency-skip after Core failure.
+- Final implementation Raze: `APPROVED`, confidence `0.99`, no required fixes.
+  Reconciliation Raze identified two stale baseline labels; focused recheck is
+  `APPROVED 0.99` after both were closed. Prior DNS-rebinding,
+  blocking-deadline, and deployed-security-probe findings are closed.
+- Evidence:
+  `ops/test-results/sprint-ets-58-part1-sensorml-final-a593953-2026-07-31/`.
+- No OSH or TeamEngine source/binary changes, hosted CI, executable SensorML
+  suite-jar dependency, or default IUT mutation were introduced.
 
 Sprint 57 Part 1 Update direct ATS:
 
@@ -720,8 +761,9 @@ Prior SWE Common validator adapter release-build and exact multi-tuple candidate
 - Final Raze gapfix recheck: `APPROVE`, confidence `0.99`, with no required
   actions; artifact
   `.harness/evaluations/sprint-ets-42-final-raze-gapfix-adversarial-recheck-2026-07-22.yaml`.
-- Gate status: S-ETS-41-01 and S-ETS-42-02 complete. Overall
-  REQ-ETS-VALIDATOR-001 remains partial because SensorML is deferred.
+- Sprint 42 gate status: S-ETS-41-01 and S-ETS-42-02 complete. At that
+  checkpoint, REQ-ETS-VALIDATOR-001 remained partial because SensorML was
+  deferred; Sprint 58 supersedes that status.
 
 External SWE Common/SensorML validator architecture research:
 

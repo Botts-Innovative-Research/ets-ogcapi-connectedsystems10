@@ -10,7 +10,7 @@
 - `REQ-ETS-VALIDATOR-001`
 - `REQ-ETS-COVERAGE-001`
 
-**Status**: Accepted; implementation in progress
+**Status**: Implemented and gate-closed
 
 ## Motivation
 
@@ -114,9 +114,10 @@ dependency, hosted CI, or default IUT mutation is permitted.
 
 ## Verification Boundary
 
-Mappings remain candidate until requirement-linked unit and controlled-HTTP
-tests cover all fifteen positive procedures and key fail-closed branches,
-focused and full Docker Maven verification pass, released-source and schema
-parity gates pass, the exact image executes through Dockerized TeamEngine
-against unmodified local OSH with zero writes, and fresh Raze review has no
-unresolved required finding.
+Mappings remained candidate until requirement-linked unit and controlled-HTTP
+tests covered all fifteen positive procedures and key fail-closed branches,
+focused and full Docker Maven verification passed, released-source and schema
+parity gates passed, the exact image executed through Dockerized TeamEngine
+against unmodified local OSH with zero writes, and fresh Raze review had no
+unresolved required finding. Candidate `a593953d8d79d977649db3077696148e90ffb44a`
+cleared those gates, so all fifteen mappings are now reviewed exact mappings.

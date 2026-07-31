@@ -1,7 +1,7 @@
 sprint: ets-58
 story: S-ETS-58-01
 title: Part 1 SensorML direct ATS closure
-status: IN_PROGRESS
+status: DONE
 triggered_by: "User instructed start the next step"
 requirements:
   - REQ-ETS-PART1-013
@@ -57,17 +57,17 @@ guardrails:
   - Do not convert schema operational errors into IUT conformance diagnostics.
   - Do not make absent optional mapping members mandatory.
 verification:
-  released_source: PENDING
-  test_first: PENDING
-  schema_parity: PENDING
-  focused_maven: PENDING
-  full_maven: PENDING
-  coverage_audit: PENDING
-  controlled_http: PENDING
-  exact_image: PENDING
-  dependency_sabotage: PENDING
-  local_osh_teamengine: PENDING
-  credential_gates: PENDING
-  immutable_base: PENDING
-  artifact_hygiene: PENDING
-  raze: PENDING
+  released_source: PASS
+  test_first: PASS
+  schema_parity: PASS
+  focused_maven: PASS
+  full_maven: PASS
+  coverage_audit: PASS
+  controlled_http: PASS
+  exact_image: PASS
+  dependency_sabotage: PASS
+  local_osh_teamengine: PASS_WITH_HONEST_IUT_FAILURES
+  credential_gates: PASS
+  immutable_base: PASS
+  artifact_hygiene: PASS
+  raze: PASS

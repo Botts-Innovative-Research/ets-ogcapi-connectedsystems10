@@ -1,0 +1,33 @@
+evaluation:
+  role: "Red Team / Raze"
+  date: "2026-07-31"
+  subject: "Sprint 58 SensorML resolver and deployed security review"
+  verdict: "GAPS_FOUND"
+  confidence: 0.98
+  agent_id: "019fb6c0-b838-7f63-826d-f4976981d04e"
+  duration: "16m29s"
+  tokens: "unavailable"
+  files_modified: false
+
+findings:
+  - id: "RAZE-S58-009"
+    severity: "HIGH"
+    title: "Same-origin description requests could re-resolve after the credential decision"
+    remediation: "SensorML setup now pins the exact IUT origin before landing-page access, and every credential-bearing description/reference request reuses that address set."
+  - id: "RAZE-S58-010"
+    severity: "HIGH"
+    title: "The operation-reference deadline was enforced only after blocking loaders returned"
+    remediation: "Each loader runs on an interruptible daemon executor and Future.get receives only the remaining monotonic deadline; timeout or interruption cancels the work."
+  - id: "RAZE-S58-011"
+    severity: "MEDIUM"
+    title: "The exact-image security probe covered only internal references"
+    remediation: "The deployed probe now exercises external references, pin reuse under simulated rebinding, redirects, decoded-body limits, credential policy, restricted origins, and deadline cancellation."
+  - id: "RAZE-S58-012"
+    severity: "MEDIUM"
+    title: "Sprint reconciliation was pending"
+    remediation: "Final OpenSpec, BMAD, story, contract, operational, evidence, and coverage reconciliation completed after exact gates."
+
+release_gate:
+  merge_ready: false
+  completion_claim_allowed: false
+  superseded_by: "sprint-ets-58-adversarial-final.yaml"

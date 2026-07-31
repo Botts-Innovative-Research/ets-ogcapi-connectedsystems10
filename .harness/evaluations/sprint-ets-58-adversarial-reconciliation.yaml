@@ -1,0 +1,33 @@
+evaluation:
+  role: "Red Team / Raze"
+  date: "2026-07-31"
+  subject: "Sprint 58 final documentation and evidence reconciliation"
+  verdict: "GAPS_FOUND"
+  confidence: 0.99
+  agent_id: "019fb720-08fa-7221-bb74-c692640feef2"
+  duration: "8m33s"
+  tokens: "unavailable"
+  files_modified: false
+
+findings:
+  - id: "RAZE-S58-013"
+    severity: "MEDIUM"
+    title: "Completed story presented the preimplementation SensorML state as current"
+    remediation: "The Baseline section now labels both the coverage and thirteen-method class as preimplementation facts and records the fifteen-method exact replacement."
+  - id: "RAZE-S58-014"
+    severity: "MEDIUM"
+    title: "Coverage traceability presented Sprint 45 baseline totals as current"
+    remediation: "The coverage row now labels the Sprint 45 baseline and records the generated current overall and Part 1 totals."
+
+implementation_assessment:
+  security_defects_found: false
+  exact_sensorml_mappings: 15
+  honest_local_osh_totals: "246/41/21/184"
+  osh_source_modified: false
+  teamengine_source_or_binary_modified: false
+
+release_gate:
+  merge_ready: false
+  completion_claim_allowed: false
+  pending: "Focused recheck of RAZE-S58-013 and RAZE-S58-014"
+  superseded_by: "sprint-ets-58-adversarial-reconciliation-recheck.yaml"

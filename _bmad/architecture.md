@@ -1735,13 +1735,30 @@ validation now. A future reproducible FCU/OGC validator may replace only the
 backend after valid/invalid diagnostic parity; TestNG procedures and Connected
 Systems mappings do not change.
 
-Media advertisement is read-only OpenAPI inspection. Canonical representation
-procedures establish HTTP 200 and actual `application/sml+json` before parsing.
-Manual procedures process all available canonical resources and all safe
-pages. Expected empty-resource or unsupported-media limitations are aggregated
-without hiding later failures. Invalid supported content, schema failures,
-unsafe pagination, malformed present mappings, incompatible classes, wrong
-ids, and invalid association relations fail.
+Media advertisement is read-only OpenAPI inspection. The SensorML boundary
+accepts OpenAPI 3.0 and 3.1 JSON/YAML and resolves relative path-item,
+response, and request-body references from the advertised description URI;
+the legacy Kaizen 3.0-only model is not used for this boundary. Parser
+diagnostics fail closed when no usable model or required operation reference
+is produced. Canonical representation procedures establish HTTP 200 and actual
+`application/sml+json` before parsing. Manual procedures process all available
+canonical resources and all safe pages. Expected empty-resource or
+unsupported-media limitations are aggregated without hiding later failures.
+Invalid supported content, schema failures, unsafe pagination, malformed
+present mappings, incompatible classes, wrong ids, and invalid association
+relations fail.
+
+Parser HTTP fetches use Swagger's safe URL resolver. Only the advertised
+description host at its effective port is allowlisted for private-address
+relative references; unrelated loopback, private, link-local, and restricted
+HTTP targets remain denied before retrieval.
+
+Swagger parser, core, model, annotations, and safe-reference-resolver packages
+are shaded into an ETS-private namespace in the single deployed suite jar.
+Jackson Java-time support is included at the parser line's base-compatible
+version. Runtime verification rejects missing or unrelocated parser classes and
+executes an OpenAPI 3.1 reference parse from the final image; no parser jar is
+added to or substituted within TeamEngine's dependency inventory.
 
 Association links may resolve to distributed HTTP(S) services. Same-origin
 targets remain below the IUT API root and use the suite credential path.

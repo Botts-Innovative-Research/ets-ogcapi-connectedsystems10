@@ -67,6 +67,28 @@ public class VerifySensorMlSupport {
 	}
 
 	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void externalReferenceCannotReachUnrelatedPrivateAddress() {
+		String definition = """
+				openapi: 3.1.0
+				info:
+				  title: unsafe reference
+				  version: "1"
+				paths:
+				  /systems:
+				    $ref: http://127.0.0.1:9/private.yaml
+				""";
+
+		ApiDefinition parsed = SensorMlSupport.parseApiDefinition(definition,
+				URI.create("https://example.test/openapi.yaml"), REQUIREMENT);
+		assertTrue(parsed.diagnostics().toString().contains("IP is restricted"));
+		assertThrows(AssertionError.class, () -> SensorMlSupport.assertReadMediaAdvertisements(parsed,
+				Set.of(ResourceType.SYSTEM), false, REQUIREMENT));
+	}
+
+	/**
 	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-RESOURCE-ID-001.
 	 */
 	@Test

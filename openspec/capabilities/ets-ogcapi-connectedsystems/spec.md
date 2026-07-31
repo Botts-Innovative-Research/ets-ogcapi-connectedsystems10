@@ -4195,10 +4195,14 @@ relation is present.
 #### SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001 (CRITICAL)
 **GIVEN** a JSON or YAML OpenAPI service description
 **WHEN** the read and write procedures execute
-**THEN** read media is advertised on every declared canonical SensorML collection and advertised custom items operation
+**THEN** OpenAPI 3.0 and 3.1 documents are parsed, including relative path-item, response, and request-body references resolved from the advertised service-description URI
+**AND** parser warnings do not hide a missing model, unresolved required operation reference, or malformed definition
+**AND** external HTTP references use safe URL resolution, allowing a private address only for the advertised description's exact host and port while rejecting unrelated private or restricted targets
+**AND** read media is advertised on every declared canonical SensorML collection and advertised custom items operation
 **AND** write media is advertised on at least one canonical POST or PUT
 **AND** only explicit 2xx or `2XX` responses count as successful-response evidence
 **AND** an advertised malformed, inaccessible, or unsupported-media service description fails instead of being discarded as no evidence
+**AND** the deployed ETS jar contains the isolated OpenAPI parser, model, and runtime support needed to execute the same OpenAPI 3.1 reference path under TeamEngine without adding or replacing a TeamEngine-owned jar
 **AND** neither procedure issues a mutation request.
 *Maps to*: REQ-ETS-PART1-013.
 

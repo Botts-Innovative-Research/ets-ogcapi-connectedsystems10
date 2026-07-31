@@ -2163,11 +2163,26 @@ SensorML procedures from executing, but other failed or skipped inherited
 prerequisites suppress all fifteen before SensorML-specific access.
 
 The media procedures discover `rel=service-desc` from the landing page and
-parse JSON or YAML OpenAPI. Read media checks successful GET response content
-for every declared canonical SensorML resource collection and the generic
-custom collection items path when custom collections are advertised. Write
-media requires SensorML request content on at least one canonical collection
-POST or canonical item PUT. Both procedures are read-only.
+parse JSON or YAML OpenAPI 3.0 or 3.1. The SensorML boundary uses a parser with
+native 3.1 support and resolves relative path-item, response, and request-body
+references against the exact advertised description URI. Parser diagnostics
+remain visible and unresolved required operation references cannot become
+absent evidence. Read media checks successful GET response content for every
+declared canonical SensorML resource collection and the generic custom
+collection items path when custom collections are advertised. Write media
+requires SensorML request content on at least one canonical collection POST or
+canonical item PUT. Both procedures are read-only.
+
+Parser HTTP reference resolution enables the bundled safe URL resolver. The
+advertised description's exact host and effective port are allowlisted so a
+local IUT can serve relative reference files; unrelated private, loopback,
+link-local, and restricted targets remain denied.
+
+The TeamEngine artifact shades the parser, core, model, annotations, and
+safe-reference resolver into an ETS-private namespace. Its Jackson Java-time
+support is included at the parser line's TeamEngine-compatible Jackson version.
+No separate parser jar enters `WEB-INF/lib`, and the runtime gate executes an
+OpenAPI 3.1 parse from the deployed artifact.
 
 Schema procedures independently request complete System, Deployment,
 Procedure, and Property canonical collections and one canonical item using

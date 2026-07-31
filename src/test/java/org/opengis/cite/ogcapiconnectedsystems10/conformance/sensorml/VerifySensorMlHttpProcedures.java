@@ -138,6 +138,26 @@ public class VerifySensorMlHttpProcedures {
 	}
 
 	/**
+	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void openApi31RelativeOperationReferencesAreResolvedReadOnly() throws Exception {
+		try (FixtureServer server = new FixtureServer(Mode.OPENAPI_31_REFERENCES)) {
+			server.start();
+			SensorMlTests tests = configured(server);
+
+			tests.sensorMlMediaTypeReadIsAdvertised();
+			tests.sensorMlMediaTypeWriteIsAdvertised();
+
+			assertTrue(server.calls("/api/openapi/paths/systems.yaml") >= 2);
+			assertTrue(server.calls("/api/openapi/responses/sml.yaml") >= 2);
+			assertTrue(server.calls("/api/openapi/requests/sml.yaml") >= 1);
+			assertTrue(server.calls("/api/openapi/parameters/datetime.yaml") >= 2);
+			assertEquals(0, server.nonGetCalls());
+		}
+	}
+
+	/**
 	 * REQ-ETS-PART1-013; SCENARIO-ETS-PART1-013-RELEASED-RESOURCE-MAPPINGS-001.
 	 */
 	@Test
@@ -244,7 +264,7 @@ public class VerifySensorMlHttpProcedures {
 
 		VALID, JSON_MEDIA, LATER_INVALID_MAPPING, WRONG_ID, WRONG_RELATION, INVALID_SCHEMA, MALFORMED_DEFINITION,
 		BAD_ASSOCIATION_TARGET, MALFORMED_POSITION, CROSS_ORIGIN_NEXT, PAGINATION_CYCLE, LATER_UNSUPPORTED_MEDIA,
-		NO_ASSOCIATIONS, WRONG_ASSOCIATION_RESOURCE, WRONG_ASSOCIATION_COLLECTION
+		NO_ASSOCIATIONS, WRONG_ASSOCIATION_RESOURCE, WRONG_ASSOCIATION_COLLECTION, OPENAPI_31_REFERENCES
 
 	}
 
@@ -314,8 +334,30 @@ public class VerifySensorMlHttpProcedures {
 				case "/api/" -> landing(exchange);
 				case "/api/conformance" -> conformance(exchange);
 				case "/api/collections" -> send(exchange, 200, "application/json", "{\"collections\":[]}");
-				case "/api/openapi.json" -> send(exchange, 200, "application/json",
-						this.mode == Mode.MALFORMED_DEFINITION ? "{not-json" : openApiDefinition());
+				case "/api/openapi.json" -> send(exchange, 200,
+						this.mode == Mode.OPENAPI_31_REFERENCES ? "application/yaml" : "application/json",
+						this.mode == Mode.MALFORMED_DEFINITION ? "{not-json" : this.mode == Mode.OPENAPI_31_REFERENCES
+								? openApi31Definition() : openApiDefinition());
+				case "/api/openapi/paths/systems.yaml" -> send(exchange, 200, "application/yaml", openApi31Path(true));
+				case "/api/openapi/paths/deployments.yaml", "/api/openapi/paths/procedures.yaml",
+						"/api/openapi/paths/properties.yaml" ->
+					send(exchange, 200, "application/yaml", openApi31Path(false));
+				case "/api/openapi/responses/sml.yaml" ->
+					send(exchange, 200, "application/yaml", "description: ok\ncontent:\n  application/sml+json: {}\n");
+				case "/api/openapi/requests/sml.yaml" -> send(exchange, 200, "application/yaml",
+						"content:\n  application/sml+json:\n    schema:\n      type: object\n");
+				case "/api/openapi/parameters/datetime.yaml" -> send(exchange, 200, "application/yaml", """
+						name: datetime
+						in: query
+						schema:
+						  type: string
+						examples:
+						  $ref: datetimeExamples.yaml
+						""");
+				case "/api/openapi/parameters/datetimeExamples.yaml" -> send(exchange, 200, "application/yaml", """
+						instant:
+						  value: "2026-07-30T00:00:00Z"
+						""");
 				case "/api/systems" -> collection(exchange, "system");
 				case "/api/deployments" -> collection(exchange, "deployment");
 				case "/api/procedures" -> collection(exchange, "procedure");
@@ -457,6 +499,44 @@ public class VerifySensorMlHttpProcedures {
 					  }
 					}
 					""";
+		}
+
+		private static String openApi31Definition() {
+			return """
+					openapi: 3.1.0
+					info:
+					  title: SensorML 3.1 fixture
+					  version: "1"
+					paths:
+					  /systems:
+					    $ref: openapi/paths/systems.yaml
+					  /deployments:
+					    $ref: openapi/paths/deployments.yaml
+					  /procedures:
+					    $ref: openapi/paths/procedures.yaml
+					  /properties:
+					    $ref: openapi/paths/properties.yaml
+					""";
+		}
+
+		private static String openApi31Path(boolean writable) {
+			String post = writable ? """
+					post:
+					  requestBody:
+					    $ref: ../requests/sml.yaml
+					  responses:
+					    "201":
+					      description: created
+					""" : "";
+			return """
+					get:
+					  parameters:
+					    - $ref: ../parameters/datetime.yaml
+					  responses:
+					    "200":
+					      $ref: ../responses/sml.yaml
+					%s
+					""".formatted(post);
 		}
 
 		private static void send(HttpExchange exchange, int status, String contentType, String body)

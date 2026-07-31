@@ -123,12 +123,18 @@ validator_payload_output="$(docker run --rm --entrypoint sh "$FINAL_IMAGE_REF" -
   printf "%s\n" "$entries" | grep -Fqx "org/opengis/cite/ogcapiconnectedsystems10/internal/networknt/schema/JsonSchema.class"
   printf "%s\n" "$entries" | grep -Fqx "org/opengis/cite/ogcapiconnectedsystems10/internal/networknt/schema/i18n/jsv-messages.properties"
   printf "%s\n" "$entries" | grep -Fqx "org/opengis/cite/ogcapiconnectedsystems10/internal/networknt/schema/i18n/jsv-messages_zh_CN.properties"
+  printf "%s\n" "$entries" | grep -Fqx "org/opengis/cite/ogcapiconnectedsystems10/internal/swagger/v3/parser/OpenAPIV3Parser.class"
+  printf "%s\n" "$entries" | grep -Fqx "org/opengis/cite/ogcapiconnectedsystems10/internal/swagger/v3/oas/models/OpenAPI.class"
+  printf "%s\n" "$entries" | grep -Fqx "com/fasterxml/jackson/datatype/jsr310/JavaTimeModule.class"
   if printf "%s\n" "$entries" | grep -Eq "^jsv-messages.*\\.properties$"; then
     exit 1
   fi
   unzip -p "$ets_jar" "org/opengis/cite/ogcapiconnectedsystems10/internal/networknt/schema/i18n/DefaultMessageSource\$Holder.class" \
     | grep -aFq "org.opengis.cite.ogcapiconnectedsystems10.internal.networknt.schema.i18n.jsv-messages"
   if printf "%s\n" "$entries" | grep -Fq "com/networknt/schema/"; then
+    exit 1
+  fi
+  if printf "%s\n" "$entries" | grep -Fq "io/swagger/"; then
     exit 1
   fi
   if printf "%s\n" "$entries" | grep -Fq "BaseJsonSchemaValidatorTest.class"; then
@@ -155,6 +161,16 @@ sensorml_execution_output="$(docker run --rm --entrypoint sh "$FINAL_IMAGE_REF" 
 grep -Fq "PASS: deployed SensorML adapter executed valid and invalid documents" <<<"$sensorml_execution_output" \
   || fail "deployed SensorML validator execution probe did not report success: $sensorml_execution_output"
 echo "$sensorml_execution_output"
+
+parser_execution_output="$(docker run --rm --entrypoint sh "$FINAL_IMAGE_REF" -c '
+  set -eu
+  lib=/usr/local/tomcat/webapps/teamengine/WEB-INF/lib
+  exec java -cp "$lib/*" \
+    org.opengis.cite.ogcapiconnectedsystems10.validation.sensorml.SensorMlOpenApiRuntimeProbe
+' 2>&1)" || fail "deployed SensorML OpenAPI parser execution probe failed: $parser_execution_output"
+grep -Fq "PASS: deployed SensorML OpenAPI 3.1 parser executed" <<<"$parser_execution_output" \
+  || fail "deployed SensorML OpenAPI parser probe did not report success: $parser_execution_output"
+echo "$parser_execution_output"
 
 runtime_jar_inventory() {
   docker run --rm --entrypoint bash \

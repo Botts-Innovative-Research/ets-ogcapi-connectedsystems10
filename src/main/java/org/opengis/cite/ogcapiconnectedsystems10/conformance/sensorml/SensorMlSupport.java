@@ -1,7 +1,6 @@
 package org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml;
 
 import java.net.URI;
-import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -25,12 +24,15 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
-import com.reprezen.kaizen.oasparser.OpenApi3Parser;
-import com.reprezen.kaizen.oasparser.model3.OpenApi3;
-import com.reprezen.kaizen.oasparser.model3.Operation;
-import com.reprezen.kaizen.oasparser.model3.Path;
-import com.reprezen.kaizen.oasparser.model3.RequestBody;
-import com.reprezen.kaizen.oasparser.model3.Response;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.parameters.RequestBody;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.parser.OpenAPIV3Parser;
+import io.swagger.v3.parser.core.models.ParseOptions;
+import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
 /**
  * Released SensorML schema, API-definition, class, and mapping assertions.
@@ -151,7 +153,11 @@ public final class SensorMlSupport {
 	 * @param source source URI.
 	 * @param model parsed OpenAPI model.
 	 */
-	public record ApiDefinition(URI source, OpenApi3 model) {
+	public record ApiDefinition(URI source, OpenAPI model, List<String> diagnostics) {
+
+		public ApiDefinition {
+			diagnostics = diagnostics == null ? List.of() : List.copyOf(diagnostics);
+		}
 	}
 
 	enum AssociationTargetKind {
@@ -259,20 +265,37 @@ public final class SensorMlSupport {
 			ETSAssert.failWithUri(requirement, "API definition content and absolute source URI are required.");
 		}
 		try {
-			URL sourceUrl = source.toURL();
-			String cacheKey = Integer.toUnsignedString(content.hashCode(), 16);
-			URL parseUrl = new URL(sourceUrl.toExternalForm().replaceFirst("#.*$", "") + "#ets-" + cacheKey);
-			OpenApi3 model = new OpenApi3Parser().parse(content, parseUrl, false);
+			ParseOptions options = new ParseOptions();
+			options.setResolve(true);
+			options.setResolveFully(true);
+			options.setSafelyResolveURL(true);
+			options.setRemoteRefAllowList(List.of(parserSourceAllowPattern(source, requirement)));
+			SwaggerParseResult result = new OpenAPIV3Parser().readContents(content, List.of(), options,
+					source.toString());
+			OpenAPI model = result.getOpenAPI();
 			if (model == null || model.getPaths() == null) {
-				ETSAssert.failWithUri(requirement, source + " did not parse as an OpenAPI 3 definition with paths.");
+				ETSAssert.failWithUri(requirement, source + " did not parse as an OpenAPI 3 definition with paths"
+						+ parserDiagnostics(result) + ".");
 			}
-			return new ApiDefinition(source, model);
+			return new ApiDefinition(source, model, result.getMessages());
 		}
 		catch (Exception ex) {
 			ETSAssert.failWithUri(requirement,
 					source + " could not be parsed as an OpenAPI 3 JSON/YAML definition: " + ex.getMessage());
 			return null;
 		}
+	}
+
+	private static String parserSourceAllowPattern(URI source, String requirement) {
+		String scheme = source.getScheme() == null ? "" : source.getScheme().toLowerCase(Locale.ROOT);
+		String host = source.getHost();
+		if (!Set.of("http", "https").contains(scheme) || host == null || host.isBlank() || host.contains(":")
+				|| source.getUserInfo() != null) {
+			ETSAssert.failWithUri(requirement,
+					"API definition source must be an HTTP(S) URI with a supported host and no userinfo: " + source);
+		}
+		int port = source.getPort() >= 0 ? source.getPort() : "https".equals(scheme) ? 443 : 80;
+		return host + ":" + port;
 	}
 
 	/**
@@ -296,11 +319,11 @@ public final class SensorMlSupport {
 	 */
 	public static void assertWriteMediaAdvertisement(ApiDefinition definition, String requirement) {
 		for (ResourceType resourceType : ResourceType.values()) {
-			Path collection = matchingPath(definition, resourceType.collectionApiPath());
+			PathItem collection = matchingPath(definition, resourceType.collectionApiPath());
 			if (hasRequestMedia(collection == null ? null : collection.getPost())) {
 				return;
 			}
-			Path item = matchingPath(definition, resourceType.itemApiPath());
+			PathItem item = matchingPath(definition, resourceType.itemApiPath());
 			if (hasRequestMedia(item == null ? null : item.getPut())) {
 				return;
 			}
@@ -561,7 +584,7 @@ public final class SensorMlSupport {
 	}
 
 	private static void assertResponseMedia(ApiDefinition definition, String expectedPath, String requirement) {
-		Path path = matchingPath(definition, expectedPath);
+		PathItem path = matchingPath(definition, expectedPath);
 		Operation get = path == null ? null : path.getGet();
 		boolean advertised = get != null && get.getResponses() != null
 				&& get.getResponses()
@@ -571,16 +594,16 @@ public final class SensorMlSupport {
 					.map(Map.Entry::getValue)
 					.anyMatch(SensorMlSupport::hasResponseMedia);
 		if (!advertised) {
-			ETSAssert.failWithUri(requirement,
-					definition.source() + " does not advertise application/sml+json for GET " + expectedPath + ".");
+			ETSAssert.failWithUri(requirement, definition.source() + " does not advertise application/sml+json for GET "
+					+ expectedPath + diagnosticSuffix(definition) + ".");
 		}
 	}
 
-	private static Path matchingPath(ApiDefinition definition, String expectedPath) {
+	private static PathItem matchingPath(ApiDefinition definition, String expectedPath) {
 		if (definition == null || definition.model() == null || definition.model().getPaths() == null) {
 			return null;
 		}
-		Path exact = definition.model().getPath(expectedPath);
+		PathItem exact = definition.model().getPaths().get(expectedPath);
 		if (exact != null) {
 			return exact;
 		}
@@ -784,13 +807,25 @@ public final class SensorMlSupport {
 		return schemeSpecific.substring(schemeSpecific.lastIndexOf(':') + 1);
 	}
 
-	private static boolean hasResponseMedia(Response response) {
-		return response != null && response.hasContentMediaType(MEDIA_TYPE);
+	private static boolean hasResponseMedia(ApiResponse response) {
+		Content content = response == null ? null : response.getContent();
+		return content != null && content.containsKey(MEDIA_TYPE);
 	}
 
 	private static boolean hasRequestMedia(Operation operation) {
 		RequestBody requestBody = operation == null ? null : operation.getRequestBody();
-		return requestBody != null && requestBody.hasContentMediaType(MEDIA_TYPE);
+		Content content = requestBody == null ? null : requestBody.getContent();
+		return content != null && content.containsKey(MEDIA_TYPE);
+	}
+
+	private static String parserDiagnostics(SwaggerParseResult result) {
+		List<String> diagnostics = result == null || result.getMessages() == null ? List.of() : result.getMessages();
+		return diagnostics.isEmpty() ? "" : ": " + String.join("; ", diagnostics.stream().limit(8).toList());
+	}
+
+	private static String diagnosticSuffix(ApiDefinition definition) {
+		return definition == null || definition.diagnostics().isEmpty() ? "" : " (parser diagnostics: "
+				+ String.join("; ", definition.diagnostics().stream().limit(8).toList()) + ")";
 	}
 
 	private static void assertOptionalString(Map<String, Object> document, String name, String requirement,

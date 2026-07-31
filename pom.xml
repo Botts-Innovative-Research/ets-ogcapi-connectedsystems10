@@ -56,6 +56,8 @@
     <teamengine.runtime.image.digest>sha256:981b71566d56434576843798ae8072db15be8478eb7dc724b051c2228460f43c</teamengine.runtime.image.digest>
     <!-- CP-002 source-pinned provisional artifact; bootstrap script verifies the source commit. -->
     <swecommon30.validator.version>0.1-SNAPSHOT</swecommon30.validator.version>
+    <!-- OpenAPI 3.1 parser line compatible with the ETS-managed Jackson 2.18 runtime. -->
+    <swagger.parser.version>2.1.25</swagger.parser.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.release>17</maven.compiler.release>
@@ -103,10 +105,17 @@
       <artifactId>rest-assured</artifactId>
     </dependency>
 
-    <!-- OpenAPI 3.0 + JSON Schema validation (Sprint 2+, available now for shared utilities) -->
+    <!-- Legacy OpenAPI 3.0 model retained by existing conformance classes. -->
     <dependency>
       <groupId>com.reprezen.kaizen</groupId>
       <artifactId>openapi-parser</artifactId>
+    </dependency>
+
+    <!-- OpenAPI 3.0/3.1 parsing and relative-reference resolution for SensorML ATS media procedures. -->
+    <dependency>
+      <groupId>io.swagger.parser.v3</groupId>
+      <artifactId>swagger-parser-v3</artifactId>
+      <version>${swagger.parser.version}</version>
     </dependency>
 
     <!-- JSON Schema draft 2020-12 validator for bundled Connected Systems schemas. -->
@@ -277,9 +286,9 @@
           </archive>
         </configuration>
       </plugin>
-      <!-- TeamEngine 6 already supplies an older NetworkNT validator in its webapp.
-           Relocate the ETS-required 1.5.x validator and its ITU time dependency into
-           the ETS jar so no split-version artifact is added to WEB-INF/lib. -->
+      <!-- TeamEngine 6 already supplies an older NetworkNT validator and does not
+           supply the OpenAPI 3.1 parser. Relocate both ETS-managed runtime closures
+           into the suite jar so no split-version artifact is added to WEB-INF/lib. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -297,6 +306,9 @@
                   <include>com.networknt:json-schema-validator</include>
                   <include>com.ethlo.time:itu</include>
                   <include>org.opengis.cite:swecommon30-validator</include>
+                  <include>io.swagger.parser.v3:*</include>
+                  <include>io.swagger.core.v3:*</include>
+                  <include>com.fasterxml.jackson.datatype:jackson-datatype-jsr310</include>
                 </includes>
               </artifactSet>
               <filters>
@@ -324,6 +336,27 @@
                     <exclude>META-INF/versions/**/module-info.class</exclude>
                   </excludes>
                 </filter>
+                <filter>
+                  <artifact>io.swagger.parser.v3:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/maven/**</exclude>
+                    <exclude>META-INF/versions/**/module-info.class</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>io.swagger.core.v3:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/maven/**</exclude>
+                    <exclude>META-INF/versions/**/module-info.class</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.fasterxml.jackson.datatype:jackson-datatype-jsr310</artifact>
+                  <excludes>
+                    <exclude>META-INF/maven/**</exclude>
+                    <exclude>META-INF/versions/**/module-info.class</exclude>
+                  </excludes>
+                </filter>
               </filters>
               <relocations>
                 <relocation>
@@ -337,6 +370,10 @@
                 <relocation>
                   <pattern>jsv-messages</pattern>
                   <shadedPattern>org.opengis.cite.ogcapiconnectedsystems10.internal.networknt.schema.i18n.jsv-messages</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>io.swagger</pattern>
+                  <shadedPattern>org.opengis.cite.ogcapiconnectedsystems10.internal.swagger</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

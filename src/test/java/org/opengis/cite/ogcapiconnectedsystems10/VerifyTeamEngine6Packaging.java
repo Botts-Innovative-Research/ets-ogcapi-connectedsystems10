@@ -213,6 +213,27 @@ public class VerifyTeamEngine6Packaging {
 	}
 
 	/**
+	 * REQ-ETS-PART1-013, REQ-ETS-TEAMENGINE-007;
+	 * SCENARIO-ETS-PART1-013-RELEASED-MEDIA-ADVERTISEMENT-001.
+	 */
+	@Test
+	public void sensorMlOpenApiParserUsesIsolatedRuntimeBoundary() {
+		assertContains(pom, "<include>io.swagger.parser.v3:*</include>");
+		assertContains(pom, "<include>io.swagger.core.v3:*</include>");
+		assertContains(pom, "<include>com.fasterxml.jackson.datatype:jackson-datatype-jsr310</include>");
+		assertContains(pom, "<pattern>io.swagger</pattern>");
+		assertContains(pom, "internal.swagger");
+
+		assertContains(runtimeVerifier, "internal/swagger/v3/parser/OpenAPIV3Parser.class");
+		assertContains(runtimeVerifier, "internal/swagger/v3/oas/models/OpenAPI.class");
+		assertContains(runtimeVerifier, "com/fasterxml/jackson/datatype/jsr310/JavaTimeModule.class");
+		assertContains(runtimeVerifier, "grep -Fq \"io/swagger/\"");
+		assertContains(runtimeVerifier,
+				"org.opengis.cite.ogcapiconnectedsystems10.validation.sensorml.SensorMlOpenApiRuntimeProbe");
+		assertContains(runtimeVerifier, "PASS: deployed SensorML OpenAPI 3.1 parser executed");
+	}
+
+	/**
 	 * REQ-ETS-TEAMENGINE-004, REQ-ETS-TEAMENGINE-007;
 	 * SCENARIO-ETS-TEAMENGINE-TE6-CONFIG-ALIGNMENT-001.
 	 */

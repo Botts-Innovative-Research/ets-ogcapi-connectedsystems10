@@ -1116,42 +1116,58 @@ OSH IUT
 
 #### REQ-ETS-PART2-004: Part 2 Command Feasibility Conformance Suite
 - **Priority**: MUST.
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
-- **Historical increment**: (Sprint 23 Generator)
-- **Description**: The ETS SHALL provide a TestNG suite for OGC 23-002 Clause 11 Requirements Class "Command Feasibility" using official identifiers `/req/feasibility` and `/conf/feasibility`, with prerequisite `/req/controlstream`. Sprint 23 targets a safety-gated Generator increment: exact conformance declaration detection, prerequisite honesty, feasibility endpoint/resource discovery, canonical URL/status/result/collection checks where evidence exists, and explicit non-mutating behavior against the default public smoke IUT.
-- **Scope guard**: Feasibility requests are initiated by creating a Command resource on the feasibility channel. Therefore, any IUT-bound feasibility POST is outside default public-smoke behavior and SHALL require an explicit safe/mutable-IUT opt-in before execution. When `/conf/feasibility` is absent, the suite SHALL SKIP before any feasibility POST. The suite SHALL NOT create regular Commands, exercise unrelated mutation classes, or infer feasibility conformance from `/conf/controlstream` alone.
+- **Status**: IMPLEMENTED_RELEASED_ATS_EXACT
+- **Historical increment**: Sprint 23 safety subset; Sprint 62 exact replacement.
+- **Description**: The ETS provides a TestNG suite for OGC 23-002 Clause 11 Requirements Class "Command Feasibility" using official identifiers `/req/feasibility` and `/conf/feasibility`, with prerequisite `/req/controlstream`. Sprint 62 replaces the historical safety subset with exactly the five released Annex A.4 procedures: `/conf/feasibility/canonical-url`, `/conf/feasibility/ref-from-controlstream`, `/conf/feasibility/status-endpoint`, `/conf/feasibility/result-endpoint`, and `/conf/feasibility/collections`.
+- **Scope guard**: Feasibility requests are initiated by creating a Command resource on the feasibility channel. Default Sprint 62 execution SHALL remain read-only and SHALL NOT issue IUT-bound feasibility POST, PUT, PATCH, or DELETE requests. The suite SHALL NOT correct released Annex A.4 copy-text inconsistencies by substituting unlisted endpoints; it SHALL document those inconsistencies and execute the released procedure text literally.
+- **Implementation evidence**: `Part2FeasibilityTests` now exposes exactly five TestNG procedures and `part2feasibility` depends directly on `part2controlstream`. Reviewed coverage reports `2:/conf/feasibility` as `5 exact / 0 candidate / 0 unmapped`; focused corrected verification passed `83/0/0/0`; coverage audit passed `23/0/0/0`; full Docker Maven passed with existing skips `760 tests / 0 failures / 0 errors / 3 skipped`. Mandatory local OSH TeamEngine smoke reported honest non-green `252 total / 36 passed / 21 failed / 195 skipped`; all five Feasibility procedures SKIP before Feasibility IUT access because `part2controlstream` setup skipped through the local OSH prerequisite chain. The no-mutation oracle recognized 184 local-OSH IUT request logs and zero writes.
 - **Maps to**: PRD FR-ETS-33.
 
-#### SCENARIO-ETS-PART2-004-FEASIBILITY-CONFORMANCE-DECLARED-001 (CRITICAL)
-**GIVEN** OGC 23-002 `/req/feasibility` maps to conformance class `/conf/feasibility`
-**WHEN** the IUT conformance document does not declare `/conf/feasibility`
-**THEN** the ETS SHALL SKIP Command Feasibility conformance assertions with a precise reason
-**AND** it SHALL NOT issue IUT-bound feasibility POST requests.
+#### SCENARIO-ETS-PART2-004-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** OGC 23-002 Annex A.4 lists exactly five `/conf/feasibility` abstract tests
+**WHEN** the deployed Feasibility TestNG class is inspected
+**THEN** it SHALL expose exactly five `@Test` methods, one per released procedure
+**AND** it SHALL NOT expose historical declaration, dependency, or safety tracer methods as separate deployed tests.
 
-#### SCENARIO-ETS-PART2-004-DEPENDENCY-SKIP-001 (CRITICAL)
-**GIVEN** Command Feasibility has prerequisite `/req/controlstream`
-**WHEN** the prerequisite class cannot be established for the IUT
-**THEN** the ETS SHALL NOT convert ControlStream endpoint success into full `/conf/feasibility` closure
-**AND** prerequisite-dependent assertions SHALL SKIP with a precise reason.
+#### SCENARIO-ETS-PART2-004-DIRECT-PREREQUISITE-001 (CRITICAL)
+**GIVEN** Annex A.4 lists `/conf/controlstream` as the direct prerequisite
+**WHEN** TestNG dependency wiring is inspected
+**THEN** `part2feasibility` SHALL depend directly on `part2controlstream`
+**AND** setup SHALL skip before Feasibility IUT access if the ControlStream prerequisite failed or skipped.
 
-#### SCENARIO-ETS-PART2-004-FEASIBILITY-ENDPOINT-SAFETY-001 (CRITICAL)
-**GIVEN** OGC 23-002 `/req/feasibility/ref-from-controlstream` identifies `{api_root}/controlstream/{csId}/feasibility`
-**WHEN** Generator implements endpoint checks
-**THEN** read-only GET probes MAY verify endpoint availability only after `/conf/feasibility` is declared
-**AND** the plural `/controlstreams/{csId}/feasibility` form SHALL be treated as diagnostic alias evidence only, not sufficient PASS evidence for the normative singular path
-**AND** IUT-bound feasibility creation POSTs SHALL require an explicit safe/mutable-IUT opt-in.
+#### SCENARIO-ETS-PART2-004-ANNEX-COPY-TEXT-001 (CRITICAL)
+**GIVEN** Annex A.4 copy text contains Command/Feasibility inconsistencies
+**WHEN** implementing exact released ATS coverage
+**THEN** the ETS SHALL preserve the released procedure behavior literally
+**AND** document that A.35 selects `itemType=Command`, A.36 delegates to the ControlStream Command endpoint procedure, and A.39 selects `itemType=Feasibility` while validating Command schema.
 
-#### SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001 (NORMAL)
-**GIVEN** a real Feasibility resource is available through declared `/conf/feasibility` evidence
-**WHEN** the ETS evaluates `/req/feasibility/canonical-url`, `/req/feasibility/status-endpoint`, and `/req/feasibility/result-endpoint`
-**THEN** it SHALL require actual Feasibility resource evidence before PASS
-**AND** it SHALL SKIP when the IUT exposes no Feasibility resources.
+#### SCENARIO-ETS-PART2-004-CANONICAL-COMMAND-COLLECTION-001 (NORMAL)
+**GIVEN** `/conf/feasibility/canonical-url` iterates collections advertised with `itemType=Command`
+**WHEN** supported collection items are retrieved
+**THEN** each item SHALL expose exactly one same-origin canonical link
+**AND** dereferencing the canonical link SHALL return schema-valid equivalent Command content after canonical links are removed.
 
-#### SCENARIO-ETS-PART2-004-FEASIBILITY-COLLECTIONS-001 (NORMAL)
-**GIVEN** `/req/feasibility/collections` is optional unless the server exposes Feasibility collections
-**WHEN** a collection has `itemType` equal to `Feasibility`
-**THEN** the ETS SHALL verify that `/collections/{collectionId}/items` behaves as a Command resources endpoint
-**AND** it SHALL NOT fail an IUT solely because no Feasibility collection is advertised.
+#### SCENARIO-ETS-PART2-004-CONTROLSTREAM-COMMAND-REFERENCE-001 (NORMAL)
+**GIVEN** `/conf/feasibility/ref-from-controlstream` retrieves all canonical ControlStream resources
+**WHEN** the ETS evaluates each ControlStream
+**THEN** it SHALL validate `{api_root}/controlstreams/{dsId}/commands` using the released `/conf/controlstream/cmd-resources-endpoint` behavior
+**AND** it SHALL NOT substitute an unlisted singular `/controlstream/{id}/feasibility` PASS condition for the released Annex A.4 method.
+
+#### SCENARIO-ETS-PART2-004-STATUS-RESULT-ENDPOINTS-001 (NORMAL)
+**GIVEN** canonical Feasibility resources are available
+**WHEN** `/conf/feasibility/status-endpoint` and `/conf/feasibility/result-endpoint` execute
+**THEN** every Feasibility resource SHALL expose schema-valid `/feasibility/{cmdId}/status` and `/feasibility/{cmdId}/result` endpoints using the released ControlStream status/result endpoint procedures.
+
+#### SCENARIO-ETS-PART2-004-COLLECTION-TAGGING-001 (NORMAL)
+**GIVEN** `/collections` advertises collections with `itemType=Feasibility`
+**WHEN** supported collection items are retrieved
+**THEN** each page SHALL be validated as a Command resources endpoint according to the released Annex A.4 collections procedure.
+
+#### SCENARIO-ETS-PART2-004-SMOKE-NO-MUTATION-001 (CRITICAL)
+**GIVEN** the mandatory local OSH TeamEngine E2E gate
+**WHEN** Sprint 62 Feasibility procedures run against the unmodified local OSH IUT
+**THEN** the outcome is documented with concrete pass/fail/skip totals
+**AND** IUT-bound request logs contain zero POST, PUT, PATCH, or DELETE.
 
 #### REQ-ETS-PART2-005: Part 2 System Events Conformance Suite
 - **Priority**: MUST.
@@ -5739,7 +5755,7 @@ descendant groups SKIP.
 - REQ-ETS-PART1-001..013 (per-class detail beyond Core) — drafted as placeholders; per-assertion FRs and SCENARIOs to be expanded in sprints 2..N.
 - REQ-ETS-PART2-002 (Datastreams & Observations) — implemented released ATS in Sprint 60; `2:/conf/datastream` is `14 exact / 0 candidate / 0 unmapped`.
 - REQ-ETS-PART2-003 (Control Streams & Commands) — implemented released ATS in Sprint 61; `2:/conf/controlstream` is `18 exact / 0 candidate / 0 unmapped`.
-- REQ-ETS-PART2-004 (Command Feasibility) — partially implemented in Sprint 23 safety-gated subset.
+- REQ-ETS-PART2-004 (Command Feasibility) — implemented released ATS exact in Sprint 62; `2:/conf/feasibility` is `5 exact / 0 candidate / 0 unmapped`.
 - REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.
 - REQ-ETS-PART2-006: partially implemented by Sprint 25 Advanced Filtering Generator.
 - REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - partially implemented by Sprint 26 Generator; seeded local OSH E2E is accepted after fixture repair, while GeoRobotix public smoke remains advisory and currently fails with public-IUT HTTP 500 responses outside the new Part 2 CRD tests.

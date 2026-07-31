@@ -1157,6 +1157,51 @@
       "reviewedBy": "Codex Sprint 61 ATS line review",
       "reviewedOn": "2026-07-31",
       "evidence": "The independent released procedure requires exact /conf/controlstream declaration, obtains every Command from the canonical /commands endpoint, validates each /commands/{cmdId}/result response against the released CommandResult schemas, and requires returned result items to reference the selected Command."
+    },
+    {
+      "part": 2,
+      "test": "/conf/feasibility/canonical-url",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCanonicalUrlFromCommandCollections()",
+      "reviewedBy": "Codex Sprint 62 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/feasibility declaration, preserves the Annex A.35 copy text by iterating every exact itemType=Command collection, requires each item to advertise exactly one same-origin rel=canonical link, dereferences it read-only, validates the singleton Command schema, and compares content after canonical links are removed."
+    },
+    {
+      "part": 2,
+      "test": "/conf/feasibility/ref-from-controlstream",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityReferenceFromControlStreamUsesReleasedCommandEndpoint()",
+      "reviewedBy": "Codex Sprint 62 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/feasibility declaration, enforces the direct /req/controlstream prerequisite, preserves Annex A.36 released text by validating /controlstreams/{dsId}/commands rather than an invented feasibility sub-resource, and applies the released Command collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/feasibility/status-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityStatusEndpointReadableForEveryFeasibility()",
+      "reviewedBy": "Codex Sprint 62 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/feasibility declaration, validates the canonical /feasibility endpoint as a Command collection per released schema reference, obtains every Feasibility resource, and validates each /feasibility/{id}/status endpoint against the released CommandStatus collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/feasibility/result-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityResultEndpointReadableForEveryFeasibility()",
+      "reviewedBy": "Codex Sprint 62 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/feasibility declaration, validates the canonical /feasibility endpoint as a Command collection per released schema reference, obtains every Feasibility resource, and validates each /feasibility/{id}/result endpoint against the released CommandResult collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/feasibility/collections",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCollectionsValidateCommandSchema()",
+      "reviewedBy": "Codex Sprint 62 ATS line review",
+      "reviewedOn": "2026-07-31",
+      "evidence": "The independent released procedure requires exact /conf/feasibility declaration, selects every /collections entry whose itemType is exactly Feasibility, follows its supported rel=items link with Part 1 collection-items traversal, and preserves Annex A.39 by validating collection and item JSON against the released Command schemas."
     }
   ]
 }

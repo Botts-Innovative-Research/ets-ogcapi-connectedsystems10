@@ -1,6 +1,52 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T14:43Z
+Last updated: 2026-07-31T16:34Z
+
+## Sprint 62 Complete - Part 2 Command Feasibility Released ATS
+
+- User instruction: "Continue."
+- CP-022 and S-ETS-62-01 close the OGC 23-002 Part 2
+  `/conf/feasibility` class as exactly five released Annex A.4 procedures.
+- `Part2FeasibilityTests` now exposes one independent TestNG method per
+  released target, removes the historical Sprint 23 declaration/prerequisite
+  tracer methods, depends directly on `part2controlstream`, and skips before
+  Feasibility IUT access when the ControlStream prerequisite setup is not
+  established.
+- The implementation preserves released Annex A.4 copy text literally: A.35
+  canonical URL evidence iterates `itemType=Command` collections, A.36 validates
+  `/controlstreams/{id}/commands`, and A.39 iterates `itemType=Feasibility`
+  collections while applying Command schemas.
+- Runtime checks remain read-only and validate Command, Feasibility,
+  CommandStatus, and CommandResult resources through the released ControlStream
+  schema helpers.
+- Reviewed coverage is now `240 total / 130 exact / 2 helper / 94 candidate /
+  14 unmapped`; Part 2 is `130 total / 39 exact / 0 helper / 77 candidate /
+  14 unmapped`; `2:/conf/feasibility` is
+  `5 exact / 0 candidate / 0 unmapped`.
+- Focused test-first evidence first exposed formatting drift and then the exact
+  compile red for missing helper methods; final focused verification passed
+  `83/0/0/0`.
+- Coverage update passed `1/0/0/0`; coverage audit passed `23/0/0/0`;
+  formatter passed; full Docker Maven completed
+  `760 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke reached TeamEngine and the unmodified
+  local OSH IUT, then exited honestly non-green at
+  `252 total / 36 passed / 21 failed / 195 skipped`. All five Feasibility
+  procedures SKIP before Feasibility IUT access because
+  `fetchPart2ControlStreamInputs` skipped through the local OSH prerequisite
+  chain; the 21 failures are existing local OSH SensorML/collection/deployment
+  gaps outside Sprint 62.
+- No-mutation oracle recognized 184 local-OSH IUT request logs. Method counts
+  are `GET=184`, zero POST/PUT/PATCH/DELETE. Tracked evidence:
+  `ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/`.
+- Smoke image: `sha256:f50858b23f3a8f3d73a337a39a89dba624ede57d2ad3497b1068235b8033f4d3`.
+  TeamEngine 6 runtime immutability verification passed. The local OSH
+  checkout mounted read-only at `/opt/osh` is clean at `4c87a65`, with
+  `sensorhub-service-consys-2.0.1.jar`.
+- Raze initial review found three documentation/provenance gaps and no
+  implementation-level false PASS/SKIP. The focused recheck returned
+  `APPROVE 0.96` with no required fixes.
+- Commit and push to Botts `main` are complete for Sprint 62.
 
 ## Sprint 61 Complete - Part 2 Control Streams and Commands Released ATS
 
@@ -51,10 +97,10 @@ Last updated: 2026-07-31T14:43Z
 
 ## Next Recommended Work
 
-- After Sprint 61 is pushed, the next highest-value Part 2 exact closure is OGC
-  23-002 `/conf/feasibility`: five released procedures currently have
-  candidate mappings and zero unmapped procedures, making it the smallest
-  remaining exact-closure class.
+- The next highest-value Part 2 exact closure is OGC 23-002
+  `/conf/system-event`: five released procedures remain, currently
+  `0 exact / 4 candidate / 1 unmapped`, and it directly follows Feasibility in
+  Annex A.5.
 
 ## Sprint 60 Complete - Part 2 Datastreams and Observations Released ATS
 

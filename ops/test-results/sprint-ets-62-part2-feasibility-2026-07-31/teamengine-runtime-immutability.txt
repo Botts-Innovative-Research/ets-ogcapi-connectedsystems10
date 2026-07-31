@@ -1,0 +1,18 @@
+Command:
+TEAMENGINE_FINAL_IMAGE=ets-ogcapi-connectedsystems10:smoke bash scripts/verify-teamengine6-runtime.sh
+
+Result:
+PASS: TeamEngine 6 provenance, coordinate-aware dependency parity, base-file immutability, runtime invariants, and confidential history/context hygiene.
+
+Base image:
+sha256:9d53016965c4cca0f4d8baec136ad11258dccc552e9a8c969a1a6f889336d90c
+
+Final smoke image:
+sha256:f50858b23f3a8f3d73a337a39a89dba624ede57d2ad3497b1068235b8033f4d3
+
+Notes:
+The verifier also reported PASS for deployed SWE Common adapter execution,
+SensorML adapter execution, SensorML OpenAPI parser/security probes, and added
+jar coordinate/functional-path guards. The linux/arm64 host emitted Docker
+platform warnings while running the pinned linux/amd64 TeamEngine image under
+registered emulation.

@@ -107,11 +107,11 @@
        /req/api-common as a prerequisite; every direct procedure remains
        independently runtime-gated for the ControlStream declaration and
        conditional resource evidence. -->
-  <!-- Sprint 23 S-ETS-23-01 (REQ-ETS-PART2-004): Part 2 Feasibility group added as a
-       declaration-gated, no-public-POST subset. It depends on "core common" for
-       structural consistency; runtime checks keep /req/controlstream prerequisite
-       honesty visible without depending on the part2controlstream group, so an
-       undeclared /conf/feasibility class SKIPs before any IUT-bound feasibility POST. -->
+  <!-- Sprint 62 S-ETS-62-01 (REQ-ETS-PART2-004): Part 2 Feasibility now implements
+       the five released Annex A procedures exactly. It inherits ControlStream
+       directly because OGC 23-002 /req/feasibility lists /req/controlstream as
+       a prerequisite; every direct procedure remains runtime-gated for the
+       Feasibility declaration and no IUT-bound feasibility mutation is issued. -->
   <!-- Sprint 24 S-ETS-24-01 (REQ-ETS-PART2-005): Part 2 System Events group added as
        a read-only declaration-gated subset. It depends on "core common systemfeatures"
        so Part 1 System availability is structurally present; runtime checks still keep
@@ -184,7 +184,7 @@
         <group name="part2apicommon" depends-on="part1apicommon"/>
         <group name="part2datastream" depends-on="part2apicommon"/>
         <group name="part2controlstream" depends-on="part2apicommon"/>
-        <group name="part2feasibility" depends-on="core common"/>
+        <group name="part2feasibility" depends-on="part2controlstream"/>
         <group name="part2systemevent" depends-on="core common systemfeatures"/>
         <group name="part2advancedfiltering" depends-on="core common systemfeatures"/>
         <group name="part2createreplacedelete" depends-on="core common systemfeatures"/>

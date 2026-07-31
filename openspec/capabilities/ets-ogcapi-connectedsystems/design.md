@@ -2333,6 +2333,32 @@ Exact-image validator/security/runtime/immutability gates, dependency sabotage,
 both credential gates, and artifact hygiene pass. Coverage is 15/15 exact.
 Final Raze is `APPROVED 0.99` with no required fixes.
 
+## Sprint 62 Part 2 Feasibility Exact Closure
+
+Command Feasibility does not introduce a separate schema family in the
+released ATS. Annex A.4 binds the five `/conf/feasibility` procedures to
+existing Command, CommandStatus, and CommandResult schema checks while retaining
+copy-text inconsistencies from the published document. The implementation
+therefore reuses public, read-only helpers from `Part2ControlStreamSupport`
+instead of duplicating schema traversal logic or inventing Feasibility-specific
+endpoint substitutes.
+
+`Part2FeasibilityTests` exposes exactly five deployed TestNG methods. Runtime
+setup inherits through `part2controlstream` and skips before Feasibility IUT
+access if the ControlStream prerequisite setup failed or skipped. A.35 iterates
+`itemType=Command` collections for canonical URL evidence, A.36 validates
+`/controlstreams/{id}/commands`, and A.39 iterates `itemType=Feasibility`
+collections while applying Command collection/item schemas. Status and result
+checks validate `/feasibility/{id}/status` and `/feasibility/{id}/result`
+through the released CommandStatus and CommandResult endpoint procedures.
+Default execution remains read-only and emits no Feasibility POST/PUT/PATCH or
+DELETE.
+
+Sprint 62 promotes `2:/conf/feasibility` to
+`5 exact / 0 candidate / 0 unmapped`. The local OSH E2E gate is honest
+non-green because the IUT prerequisite chain skips Part 2 ControlStream before
+Feasibility access, not because of a Feasibility implementation error.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

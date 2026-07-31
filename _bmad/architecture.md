@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.65 | Status: Living Document | Last reconciled: 2026-07-31 (Sprint 61 Part 2 ControlStream exact closure)
+> Version: 2.0.66 | Status: Living Document | Last reconciled: 2026-07-31 (Sprint 62 Part 2 Feasibility exact closure)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -8,6 +8,15 @@
 > **Authority**: this document binds the Generator (Dana). Where the PRD or capability spec
 > conflicts with an ADR or with this file's section, the ADR is authoritative for the decision
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
+
+> Sprint 62 reconciliation: Part 2 Command Feasibility is now exact released
+> ATS: five independent TestNG procedures, direct ControlStream group
+> dependency, literal Annex A.4 copy-text handling for Command collection,
+> ControlStream command-reference, and Feasibility collection schema behavior,
+> read-only Command/Feasibility/CommandStatus/CommandResult validation, exact
+> reviewed mappings, and prerequisite-gated SKIPs before Feasibility IUT
+> access. It introduces no new runtime component and no OSH/TeamEngine
+> modification.
 
 > Sprint 61 reconciliation: Part 2 Control Streams and Commands is now exact
 > released ATS: eighteen independent TestNG procedures, direct Part 2 API

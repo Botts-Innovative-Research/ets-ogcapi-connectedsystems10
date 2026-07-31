@@ -1,0 +1,192 @@
+verdict: APPROVE
+confidence: 0.96
+reviewer: Raze
+reviewed_at: "2026-07-31T16:31:25Z"
+review_mode: focused_recheck_only_no_docker_rerun_no_implementation_changes
+initial_review:
+  verdict: GAPS_FOUND
+  confidence: 0.93
+  reviewed_at: "2026-07-31T16:28:23Z"
+  required_fixes:
+    - RAZE-ETS62-DOC-001
+    - RAZE-ETS62-DOC-002
+    - RAZE-ETS62-DOC-003
+focused_recheck:
+  requested_at: "2026-07-31T16:30:51Z"
+  inspected_files:
+    - epics/stories/s-ets-62-01-part2-feasibility-closure.md
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    - _bmad/traceability.md
+  docker_rerun: false
+  implementation_changes: false
+  result: all_required_fixes_closed
+scope:
+  sprint: ets-62
+  story: S-ETS-62-01
+  requirement: REQ-ETS-PART2-004
+  target_conformance_class: /conf/feasibility
+  reviewed_files:
+    java_testng:
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamSupport.java
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/VerifyPart2FeasibilityTests.java
+    specs_docs:
+      - openspec/change-proposals/CP-022-part2-feasibility-closure.md
+      - epics/stories/s-ets-62-01-part2-feasibility-closure.md
+      - .harness/contracts/sprint-ets-62.yaml
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+      - _bmad/traceability.md
+      - epics/epic-ets-03-part2-classes.md
+      - ops/status.md
+      - ops/test-results.md
+      - ops/changelog.md
+      - ops/known-issues.md
+      - ops/metrics.md
+    coverage:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+      - ops/ats-coverage-report.json
+    e2e_artifacts:
+      - ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/local-osh-teamengine-smoke.xml
+      - ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/local-osh-teamengine-container-log.txt
+      - ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/no-mutation-oracle.txt
+      - ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/iut-request-method-counts.txt
+      - ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/teamengine-runtime-immutability.txt
+source_check:
+  official_source:
+    url: https://docs.ogc.org/is/23-002/23-002.html
+    relevant_lines: "3335-3390"
+  conclusion: >
+    Annex A.4 lists exactly five Feasibility tests, with /conf/controlstream as
+    prerequisite. The implementation follows the released copy text: A.35
+    itemType=Command canonical URL evidence, A.36 /controlstreams/{dsId}/commands,
+    A.37/A.38 /feasibility/{cmdId}/status and /result, and A.39 itemType=Feasibility
+    with Command schema validation.
+positive_evidence:
+  implementation_mapping:
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java:81
+      finding: canonical-url method maps to /req/feasibility/canonical-url and selects itemType=Command collections.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java:125
+      finding: ref-from-controlstream method validates /controlstreams/{id}/commands, not a substituted feasibility endpoint.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java:143
+      finding: status endpoint validates /feasibility/{id}/status with CommandStatus endpoint schema behavior.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java:158
+      finding: result endpoint validates /feasibility/{id}/result with CommandResult endpoint schema behavior.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java:173
+      finding: collections method selects itemType=Feasibility and validates with Command schemas as released.
+  dependency_and_skip_behavior:
+    - evidence: src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:187
+      finding: part2feasibility depends on part2controlstream.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/feasibility/Part2FeasibilityTests.java:59
+      finding: BeforeClass depends on part2controlstream and performs a defensive prerequisite-result check.
+    - evidence: ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/local-osh-teamengine-smoke.xml:2366
+      finding: Feasibility setup SKIP reason is before IUT access because fetchPart2ControlStreamInputs skipped.
+  coverage:
+    - evidence: ops/ats-coverage-report.json:2319
+      finding: /conf/feasibility/canonical-url is exact reviewed mapping.
+    - evidence: ops/ats-coverage-report.json:2336
+      finding: /conf/feasibility/ref-from-controlstream is exact reviewed mapping.
+    - evidence: ops/ats-coverage-report.json:2353
+      finding: /conf/feasibility/status-endpoint is exact reviewed mapping.
+    - evidence: ops/ats-coverage-report.json:2370
+      finding: /conf/feasibility/result-endpoint is exact reviewed mapping.
+    - evidence: ops/ats-coverage-report.json:2387
+      finding: /conf/feasibility/collections is exact reviewed mapping.
+    - evidence: ops/ats-coverage-report.json:3364
+      finding: 2:/conf/feasibility summary is 5 total, 5 exact, 0 candidate, 0 unmapped.
+  e2e_and_mutation:
+    - evidence: ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/local-osh-teamengine-smoke.xml:1
+      finding: "local OSH TeamEngine totals are honestly non-green: 252 total, 36 passed, 21 failed, 195 skipped."
+    - evidence: parsed local-osh-teamengine-smoke.xml
+      finding: all five Feasibility methods have status SKIP with the prerequisite skipped-before-IUT-access reason.
+    - evidence: ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/no-mutation-oracle.txt:1
+      finding: no-mutation oracle recognized 184 IUT-bound request logs.
+    - evidence: ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/iut-request-method-counts.txt:1
+      finding: IUT-bound request method count is GET only.
+    - evidence: parsed local-osh-teamengine-container-log.txt
+      finding: raw container log has 189 GET request lines total, 184 IUT-bound GETs, 5 external OGC OpenAPI GETs, and zero POST/PUT/PATCH/DELETE.
+    - evidence: ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/teamengine-runtime-immutability.txt:5
+      finding: TeamEngine 6 runtime immutability verification passed.
+findings:
+  - id: RAZE-ETS62-DOC-001
+    severity: MEDIUM
+    category: premature_completion_wording
+    status: CLOSED
+    summary: Story status says Done even though Raze review and push are still unchecked.
+    evidence:
+      - epics/stories/s-ets-62-01-part2-feasibility-closure.md:3 says "Status: Done".
+      - epics/stories/s-ets-62-01-part2-feasibility-closure.md:74 leaves Raze review unchecked.
+      - epics/stories/s-ets-62-01-part2-feasibility-closure.md:75 leaves push unchecked.
+      - .harness/contracts/sprint-ets-62.yaml:4 correctly says COMPLETE_PENDING_RAZE_AND_PUSH.
+    recheck_evidence:
+      - epics/stories/s-ets-62-01-part2-feasibility-closure.md:3 now says "Status: Implementation complete; pending Raze recheck and push".
+      - epics/stories/s-ets-62-01-part2-feasibility-closure.md:74 still leaves final Raze closure unchecked, which is now consistent with the pending status wording.
+      - epics/stories/s-ets-62-01-part2-feasibility-closure.md:75 still leaves push unchecked, which is now consistent with the pending status wording.
+    impact: >
+      The implementation may be technically ready, but the story header is already
+      recording completion before mandatory project gates are complete. This is
+      the same class of overclaiming that Raze caught in Sprint 61 and can cause
+      premature final status reporting.
+    required_fix: >
+      Change the story header to an explicit pending-gate state, such as
+      "Implementation complete; pending Raze/push", or leave it non-Done until
+      both checklist items are complete.
+    recheck_result: closed
+  - id: RAZE-ETS62-DOC-002
+    severity: LOW
+    category: stale_dependency_documentation
+    status: CLOSED
+    summary: TestNG dependency comments still describe the superseded Sprint 23 Feasibility policy.
+    evidence:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:110 still says Sprint 23.
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:111-114 still say part2feasibility depends on core/common and intentionally does not depend on part2controlstream.
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:187 now correctly declares part2feasibility depends-on part2controlstream.
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java:1831 still labels the group-tag assertion as Sprint 23.
+    recheck_evidence:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:110 now says Sprint 62 S-ETS-62-01 and REQ-ETS-PART2-004.
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:111-114 now describes the direct ControlStream prerequisite and no Feasibility mutation.
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:187 still correctly declares part2feasibility depends-on part2controlstream.
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java:1831 now references REQ-ETS-PART2-004 and SCENARIO-ETS-PART2-004-RELEASED-PROCEDURES-001.
+    impact: >
+      The executable dependency is correct, but the inline guidance contradicts
+      it. Future dependency edits could follow the stale comment and reintroduce
+      the false prerequisite policy.
+    required_fix: >
+      Update or remove the stale Sprint 23 comments so they describe the Sprint
+      62 direct part2controlstream dependency and released ATS rationale.
+    recheck_result: closed
+  - id: RAZE-ETS62-DOC-003
+    severity: LOW
+    category: reconciliation_drift
+    status: CLOSED
+    summary: Traceability header still reports Sprint 60 as the last update.
+    evidence:
+      - _bmad/traceability.md:3 says "Last updated: 2026-07-31 (Sprint 60 Part 2 Datastream exact closure)".
+      - _bmad/traceability.md:69 contains the new Sprint 62 Feasibility exact row.
+    recheck_evidence:
+      - _bmad/traceability.md:3 now says "Last updated: 2026-07-31 (Sprint 62 Part 2 Feasibility exact closure)".
+      - _bmad/traceability.md:69 still contains the Sprint 62 Feasibility exact row.
+    impact: >
+      The row-level traceability is updated, but the document-level status
+      advertises stale reconciliation provenance.
+    required_fix: >
+      Update the traceability header to Sprint 62 Part 2 Feasibility exact closure.
+    recheck_result: closed
+non_findings:
+  - id: RAZE-ETS62-NONFINDING-001
+    summary: No implementation-level false PASS found for the five Feasibility methods.
+  - id: RAZE-ETS62-NONFINDING-002
+    summary: No incorrect OGC Annex A.4 mapping found; the implementation follows the released copy text rather than the old Sprint 23 singular feasibility endpoint assumption.
+  - id: RAZE-ETS62-NONFINDING-003
+    summary: E2E evidence is honestly non-green and does not claim all tests pass.
+  - id: RAZE-ETS62-NONFINDING-004
+    summary: No IUT-bound mutation or credential leak was found in archived logs.
+required_fixes: []
+final_assessment: >
+  Focused recheck confirms RAZE-ETS62-DOC-001, RAZE-ETS62-DOC-002, and
+  RAZE-ETS62-DOC-003 are closed. No implementation files were changed and Docker
+  was not rerun. Sprint 62 has no unresolved Raze required fixes from this
+  report.

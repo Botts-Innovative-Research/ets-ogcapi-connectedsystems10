@@ -1,0 +1,36 @@
+sprint: ets-62
+story: S-ETS-62-01
+title: Part 2 Command Feasibility released ATS closure
+status: COMPLETE
+date: 2026-07-31
+requirement: REQ-ETS-PART2-004
+scope:
+  include:
+    - OGC 23-002 /conf/feasibility five released procedures
+    - direct TestNG dependency on part2controlstream
+    - read-only Command, Feasibility, CommandStatus, CommandResult, ControlStream, and /collections probes
+    - exact Annex A.4 copy-text behavior with documented inconsistencies
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - IUT mutation or feasibility POST creation
+    - endpoint substitutions that are not named by released Annex A.4 procedures
+    - OSH or TeamEngine source or binary changes
+success_criteria:
+  - id: part2_feasibility_five_methods
+    description: Part2FeasibilityTests exposes exactly five TestNG methods, one per released ATS target.
+  - id: part2_feasibility_direct_prerequisite
+    description: testng.xml declares part2feasibility depends-on part2controlstream.
+  - id: part2_feasibility_exact_coverage
+    description: coverage report shows 5 exact mappings and no candidates/unmapped tests for 2:/conf/feasibility.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: formatter_red_then_compile_red_missing_exact_helpers
+  focused: PASS_83_0_0_0
+  coverage: PASS_update_1_0_0_0_audit_23_0_0_0
+  formatter: PASS
+  full_maven: PASS_760_0_0_3
+  e2e_local_osh: HONEST_NON_GREEN_252_36_21_195
+  no_mutation: PASS_recognized_184_get_only_zero_writes
+  raze: APPROVE_0_96_NO_REQUIRED_FIXES
+  push: COMPLETE

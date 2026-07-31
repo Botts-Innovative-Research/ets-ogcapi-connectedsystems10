@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 254,
+  "suiteTestMethodCount" : 252,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -2320,45 +2320,85 @@
     "classIdentifier" : "/conf/feasibility",
     "target" : "/req/feasibility/canonical-url",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCanonicalResourceReadableWhenAvailable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCanonicalUrlFromCommandCollections()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/feasibility/canonical-url",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCanonicalUrlFromCommandCollections()",
+      "reviewedBy" : "Codex Sprint 62 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/feasibility declaration, preserves the Annex A.35 copy text by iterating every exact itemType=Command collection, requires each item to advertise exactly one same-origin rel=canonical link, dereferences it read-only, validates the singleton Command schema, and compares content after canonical links are removed."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/feasibility/ref-from-controlstream",
     "classIdentifier" : "/conf/feasibility",
     "target" : "/req/feasibility/ref-from-controlstream",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#controlStreamScopedFeasibilityEndpointUsesNormativeSingularPath()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityReferenceFromControlStreamUsesReleasedCommandEndpoint()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/feasibility/ref-from-controlstream",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityReferenceFromControlStreamUsesReleasedCommandEndpoint()",
+      "reviewedBy" : "Codex Sprint 62 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/feasibility declaration, enforces the direct /req/controlstream prerequisite, preserves Annex A.36 released text by validating /controlstreams/{dsId}/commands rather than an invented feasibility sub-resource, and applies the released Command collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/feasibility/status-endpoint",
     "classIdentifier" : "/conf/feasibility",
     "target" : "/req/feasibility/status-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityStatusEndpointReadableWhenResourceAvailable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityStatusEndpointReadableForEveryFeasibility()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/feasibility/status-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityStatusEndpointReadableForEveryFeasibility()",
+      "reviewedBy" : "Codex Sprint 62 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/feasibility declaration, validates the canonical /feasibility endpoint as a Command collection per released schema reference, obtains every Feasibility resource, and validates each /feasibility/{id}/status endpoint against the released CommandStatus collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/feasibility/result-endpoint",
     "classIdentifier" : "/conf/feasibility",
     "target" : "/req/feasibility/result-endpoint",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityResultEndpointReadableWhenResourceAvailable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityResultEndpointReadableForEveryFeasibility()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/feasibility/result-endpoint",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityResultEndpointReadableForEveryFeasibility()",
+      "reviewedBy" : "Codex Sprint 62 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/feasibility declaration, validates the canonical /feasibility endpoint as a Command collection per released schema reference, obtains every Feasibility resource, and validates each /feasibility/{id}/result endpoint against the released CommandResult collection and item JSON schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/feasibility/collections",
     "classIdentifier" : "/conf/feasibility",
     "target" : "/req/feasibility/collections",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCollectionsCheckedWhenAdvertised()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCollectionsValidateCommandSchema()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/feasibility/collections",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility.Part2FeasibilityTests#feasibilityCollectionsValidateCommandSchema()",
+      "reviewedBy" : "Codex Sprint 62 ATS line review",
+      "reviewedOn" : "2026-07-31",
+      "evidence" : "The independent released procedure requires exact /conf/feasibility declaration, selects every /collections entry whose itemType is exactly Feasibility, follows its supported rel=items link with Part 1 collection-items traversal, and preserves Annex A.39 by validating collection and item JSON against the released Command schemas."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/system-event/canonical-url",
@@ -3181,9 +3221,9 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 125,
+    "exact" : 130,
     "helper" : 2,
-    "candidate" : 99,
+    "candidate" : 94,
     "unmapped" : 14,
     "byPart" : {
       "1" : {
@@ -3195,9 +3235,9 @@
       },
       "2" : {
         "total" : 130,
-        "exact" : 34,
+        "exact" : 39,
         "helper" : 0,
-        "candidate" : 82,
+        "candidate" : 77,
         "unmapped" : 14
       }
     },
@@ -3323,9 +3363,9 @@
       },
       "2:/conf/feasibility" : {
         "total" : 5,
-        "exact" : 0,
+        "exact" : 5,
         "helper" : 0,
-        "candidate" : 5,
+        "candidate" : 0,
         "unmapped" : 0
       },
       "2:/conf/system-event" : {

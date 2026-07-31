@@ -3,14 +3,23 @@ package org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.feasibility;
 import static io.restassured.RestAssured.given;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport.PageDocument;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport.TraversalResult;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamSupport;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.controlstream.Part2ControlStreamTests;
+import org.testng.IResultMap;
 import org.testng.ITestContext;
-import org.testng.Reporter;
+import org.testng.ITestResult;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -18,16 +27,14 @@ import org.testng.annotations.Test;
 import io.restassured.response.Response;
 
 /**
- * CS API Part 2 - Command Feasibility safety-gated conformance subset
- * ({@code /conf/feasibility}; OGC 23-002 Annex A).
+ * CS API Part 2 - Command Feasibility conformance tests ({@code /conf/feasibility}; OGC
+ * 23-002 Annex A.4).
  */
 public class Part2FeasibilityTests {
 
 	static final String GROUP = "part2feasibility";
 
 	static final String CONF_FEASIBILITY = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility";
-
-	static final String CONF_CONTROLSTREAM = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream";
 
 	static final String REQ_FEASIBILITY = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/feasibility";
 
@@ -43,301 +50,284 @@ public class Part2FeasibilityTests {
 
 	private URI iutUri;
 
-	private URI baseUri;
-
-	private Response conformanceResponse;
-
-	private Map<String, Object> conformanceBody;
-
-	private Response controlStreamsResponse;
-
-	private Map<String, Object> controlStreamsBody;
+	private URI apiRoot;
 
 	/**
-	 * Fetches shared read-only inputs once. This class intentionally performs no POST,
-	 * PUT, PATCH, or DELETE requests.
+	 * Loads immutable suite arguments after the released ControlStream prerequisite.
 	 * @param testContext TestNG test context.
 	 */
-	@BeforeClass
+	@BeforeClass(dependsOnGroups = "part2controlstream", alwaysRun = true)
 	public void fetchPart2FeasibilityInputs(ITestContext testContext) {
+		skipWhenPrerequisiteUnsatisfied(testContext);
 		Object iutAttr = testContext.getSuite().getAttribute(SuiteAttribute.IUT.getName());
 		if (!(iutAttr instanceof URI)) {
 			throw new SkipException("Suite attribute '" + SuiteAttribute.IUT.getName() + "' is missing or not a URI.");
 		}
-		this.iutUri = (URI) iutAttr;
+		configure((URI) iutAttr);
+	}
+
+	void configure(URI iut) {
+		if (iut == null || !iut.isAbsolute()) {
+			throw new IllegalArgumentException("IUT must be an absolute URI.");
+		}
+		this.iutUri = iut;
 		String iutString = this.iutUri.toString();
-		this.baseUri = URI.create(iutString.endsWith("/") ? iutString : iutString + "/");
-
-		this.conformanceResponse = given().accept("application/json")
-			.when()
-			.get(this.baseUri.resolve("conformance"))
-			.andReturn();
-		this.conformanceBody = parseBody(this.conformanceResponse);
-
-		this.controlStreamsResponse = given().accept("application/json")
-			.queryParam("limit", 2)
-			.when()
-			.get(this.baseUri.resolve("controlstreams"))
-			.andReturn();
-		this.controlStreamsBody = parseBody(this.controlStreamsResponse);
+		this.apiRoot = URI.create(iutString.endsWith("/") ? iutString : iutString + "/");
 	}
 
 	/**
-	 * SCENARIO-ETS-PART2-004-FEASIBILITY-CONFORMANCE-DECLARED-001.
-	 */
-	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY
-			+ ": /conformance declares /conf/feasibility before Command Feasibility assertions run (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-FEASIBILITY-CONFORMANCE-DECLARED-001)",
-			groups = GROUP)
-	public void feasibilityConformanceDeclared() {
-		ETSAssert.assertStatus(this.conformanceResponse, 200, REQ_FEASIBILITY);
-		if (this.conformanceBody == null) {
-			ETSAssert.failWithUri(REQ_FEASIBILITY, "/conformance body did not parse as JSON. Content-Type was: "
-					+ this.conformanceResponse.getContentType());
-		}
-		ETSAssert.assertJsonObjectHas(this.conformanceBody, "conformsTo", List.class, REQ_FEASIBILITY);
-		if (!declaresConformance(this.conformanceBody, CONF_FEASIBILITY)) {
-			throw new SkipException(CONF_FEASIBILITY
-					+ " - IUT does not declare the CS API Part 2 Command Feasibility conformance class; no feasibility POST was issued.");
-		}
-	}
-
-	/**
-	 * SCENARIO-ETS-PART2-004-DEPENDENCY-SKIP-001.
-	 */
-	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY
-			+ ": full /conf/feasibility closure is prerequisite-incomplete when /conf/controlstream is absent (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-DEPENDENCY-SKIP-001)",
-			groups = GROUP)
-	public void feasibilityControlStreamPrerequisiteVisibleForFullClosure() {
-		skipIfFeasibilityUndeclared();
-		if (!declaresConformance(this.conformanceBody, CONF_CONTROLSTREAM)) {
-			throw new SkipException(CONF_CONTROLSTREAM
-					+ " - /req/feasibility lists /req/controlstream as a prerequisite. Feasibility endpoint checks cannot establish full /conf/feasibility closure without it.");
-		}
-		Reporter.log("IUT declares both /conf/feasibility and /conf/controlstream; full-class prerequisite is visible.",
-				true);
-	}
-
-	/**
-	 * SCENARIO-ETS-PART2-004-FEASIBILITY-ENDPOINT-SAFETY-001.
-	 */
-	@Test(description = "OGC-23-002 " + REQ_REF_FROM_CONTROLSTREAM
-			+ ": ControlStream-scoped Feasibility endpoint uses the normative singular /controlstream/{csId}/feasibility path without POSTing (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-FEASIBILITY-ENDPOINT-SAFETY-001)",
-			groups = GROUP)
-	public void controlStreamScopedFeasibilityEndpointUsesNormativeSingularPath() {
-		skipIfFeasibilityUndeclared();
-		String controlStreamId = requireString(selectedControlStream(), "id", REQ_REF_FROM_CONTROLSTREAM);
-		String path = normativeControlStreamFeasibilityPath(controlStreamId);
-		Response response = given().accept("application/json")
-			.queryParam("limit", 2)
-			.when()
-			.get(this.baseUri.resolve(path))
-			.andReturn();
-		ETSAssert.assertStatus(response, 200, REQ_REF_FROM_CONTROLSTREAM);
-		Map<String, Object> body = parseBody(response);
-		if (!hasItemsOnlyCollectionShape(body)) {
-			ETSAssert.failWithUri(REQ_REF_FROM_CONTROLSTREAM,
-					"/" + path + " did not expose a JSON object with an items[] array.");
-		}
-	}
-
-	/**
-	 * SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001.
+	 * REQ-ETS-PART2-004; SCENARIO-ETS-PART2-004-CANONICAL-COMMAND-COLLECTION-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_CANONICAL_URL
-			+ ": actual Feasibility resource is readable at /feasibility/{id} before canonical URL PASS (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001)",
-			groups = GROUP)
-	public void feasibilityCanonicalResourceReadableWhenAvailable() {
-		skipIfFeasibilityUndeclared();
-		String id = requireString(selectedFeasibilityResource(), "id", REQ_CANONICAL_URL);
-		Response response = given().accept("application/json")
-			.when()
-			.get(this.baseUri.resolve("feasibility/" + id))
-			.andReturn();
-		ETSAssert.assertStatus(response, 200, REQ_CANONICAL_URL);
-		Map<String, Object> body = parseBody(response);
-		if (!hasFeasibilityResourceShape(body)) {
-			ETSAssert.failWithUri(REQ_CANONICAL_URL,
-					"/feasibility/" + id + " did not expose Feasibility resource evidence.");
+			+ ": every released A.35 itemType=Command collection item dereferences its advertised canonical URL with equivalent Command content (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-CANONICAL-COMMAND-COLLECTION-001)",
+			groups = GROUP, alwaysRun = true)
+	public void feasibilityCanonicalUrlFromCommandCollections() {
+		requireFeasibilityDeclaration(REQ_CANONICAL_URL);
+		List<Map<String, Object>> collections = advertisedCollections("Command", REQ_CANONICAL_URL);
+		int supportedCollections = 0;
+		int inspectedItems = 0;
+		for (Map<String, Object> collection : collections) {
+			Optional<TraversalResult> evidence = Part1ApiCommonSupport.collectionItemsDetailed(this.apiRoot, collection,
+					Part2ControlStreamSupport.JSON_MEDIA);
+			if (evidence.isEmpty()) {
+				continue;
+			}
+			supportedCollections++;
+			TraversalResult traversal = evidence.orElseThrow();
+			URI endpoint = collectionItemsUri(collection, REQ_CANONICAL_URL);
+			Part2ControlStreamSupport.validateCommandEndpoint(endpoint, traversal.pages(), REQ_CANONICAL_URL);
+			for (PageDocument page : traversal.pages()) {
+				for (Map<String, Object> item : page.items()) {
+					inspectedItems++;
+					URI canonical = Part2ControlStreamSupport.canonicalUri(item, page.source(), this.apiRoot,
+							REQ_CANONICAL_URL);
+					Response response = given().accept(page.mediaType()).when().get(canonical).andReturn();
+					ETSAssert.assertStatus(response, 200, REQ_CANONICAL_URL);
+					Map<String, Object> canonicalBody = Part2ControlStreamSupport.parseObject(response, canonical,
+							REQ_CANONICAL_URL);
+					Part2ControlStreamSupport.validateCommandResource(canonicalBody, REQ_CANONICAL_URL,
+							canonical.toString());
+					JsonNode expected = Part2ControlStreamSupport.withoutCanonicalLinks(item);
+					JsonNode actual = Part2ControlStreamSupport.withoutCanonicalLinks(canonicalBody);
+					if (!expected.equals(actual)) {
+						ETSAssert.failWithUri(REQ_CANONICAL_URL, canonical
+								+ " content differs from its Command collection item after canonical links are removed.");
+					}
+				}
+			}
 		}
-		if (!id.equals(body.get("id"))) {
-			ETSAssert.failWithUri(REQ_CANONICAL_URL,
-					"/feasibility/" + id + " returned Feasibility id '" + body.get("id") + "'.");
+		skipIfNoSupportedEvidence("Command", supportedCollections, inspectedItems, REQ_CANONICAL_URL);
+	}
+
+	/**
+	 * REQ-ETS-PART2-004; SCENARIO-ETS-PART2-004-CONTROLSTREAM-COMMAND-REFERENCE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_REF_FROM_CONTROLSTREAM
+			+ ": every canonical ControlStream exposes the released A.36 /controlstreams/{dsId}/commands endpoint as schema-valid Command resources (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-CONTROLSTREAM-COMMAND-REFERENCE-001)",
+			groups = GROUP, alwaysRun = true)
+	public void feasibilityReferenceFromControlStreamUsesReleasedCommandEndpoint() {
+		requireFeasibilityDeclaration(REQ_REF_FROM_CONTROLSTREAM);
+		for (String controlStreamId : localIds(canonicalResources("controlstreams", REQ_REF_FROM_CONTROLSTREAM),
+				REQ_REF_FROM_CONTROLSTREAM)) {
+			URI endpoint = this.apiRoot.resolve(releasedControlStreamCommandPath(controlStreamId));
+			validateCommandEndpoint(endpoint, REQ_REF_FROM_CONTROLSTREAM);
 		}
 	}
 
 	/**
-	 * SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001.
+	 * REQ-ETS-PART2-004; SCENARIO-ETS-PART2-004-STATUS-RESULT-ENDPOINTS-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_STATUS_ENDPOINT
-			+ ": actual Feasibility resource exposes a readable /status endpoint when resource evidence exists (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001)",
-			groups = GROUP)
-	public void feasibilityStatusEndpointReadableWhenResourceAvailable() {
-		skipIfFeasibilityUndeclared();
-		String id = requireString(selectedFeasibilityResource(), "id", REQ_STATUS_ENDPOINT);
-		Response response = given().accept("application/json")
-			.queryParam("limit", 2)
-			.when()
-			.get(this.baseUri.resolve("feasibility/" + id + "/status"))
-			.andReturn();
-		assertItemsCollection(response, REQ_STATUS_ENDPOINT, "/feasibility/" + id + "/status");
+			+ ": every canonical Feasibility resource exposes a schema-valid /feasibility/{cmdId}/status endpoint (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-STATUS-RESULT-ENDPOINTS-001)",
+			groups = GROUP, alwaysRun = true)
+	public void feasibilityStatusEndpointReadableForEveryFeasibility() {
+		requireFeasibilityDeclaration(REQ_STATUS_ENDPOINT);
+		for (String feasibilityId : localIds(feasibilityResources(REQ_STATUS_ENDPOINT), REQ_STATUS_ENDPOINT)) {
+			URI endpoint = this.apiRoot
+				.resolve("feasibility/" + Part2ControlStreamSupport.encodePathToken(feasibilityId) + "/status");
+			validateCommandStatusEndpoint(endpoint, REQ_STATUS_ENDPOINT);
+		}
 	}
 
 	/**
-	 * SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001.
+	 * REQ-ETS-PART2-004; SCENARIO-ETS-PART2-004-STATUS-RESULT-ENDPOINTS-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_RESULT_ENDPOINT
-			+ ": actual Feasibility resource exposes a readable /result endpoint when resource evidence exists (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-FEASIBILITY-RESOURCE-CLOSURE-001)",
-			groups = GROUP)
-	public void feasibilityResultEndpointReadableWhenResourceAvailable() {
-		skipIfFeasibilityUndeclared();
-		String id = requireString(selectedFeasibilityResource(), "id", REQ_RESULT_ENDPOINT);
-		Response response = given().accept("application/json")
-			.queryParam("limit", 2)
-			.when()
-			.get(this.baseUri.resolve("feasibility/" + id + "/result"))
-			.andReturn();
-		assertItemsCollection(response, REQ_RESULT_ENDPOINT, "/feasibility/" + id + "/result");
+			+ ": every canonical Feasibility resource exposes a schema-valid /feasibility/{cmdId}/result endpoint (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-STATUS-RESULT-ENDPOINTS-001)",
+			groups = GROUP, alwaysRun = true)
+	public void feasibilityResultEndpointReadableForEveryFeasibility() {
+		requireFeasibilityDeclaration(REQ_RESULT_ENDPOINT);
+		for (String feasibilityId : localIds(feasibilityResources(REQ_RESULT_ENDPOINT), REQ_RESULT_ENDPOINT)) {
+			URI endpoint = this.apiRoot
+				.resolve("feasibility/" + Part2ControlStreamSupport.encodePathToken(feasibilityId) + "/result");
+			validateCommandResultEndpoint(endpoint, REQ_RESULT_ENDPOINT);
+		}
 	}
 
 	/**
-	 * SCENARIO-ETS-PART2-004-FEASIBILITY-COLLECTIONS-001.
+	 * REQ-ETS-PART2-004; SCENARIO-ETS-PART2-004-COLLECTION-TAGGING-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_COLLECTIONS
-			+ ": Feasibility collections are checked only when advertised with itemType=Feasibility (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-FEASIBILITY-COLLECTIONS-001)",
-			groups = GROUP)
-	public void feasibilityCollectionsCheckedWhenAdvertised() {
-		skipIfFeasibilityUndeclared();
-		Response collections = given().accept("application/json")
-			.queryParam("limit", 100)
-			.when()
-			.get(this.baseUri.resolve("collections"))
-			.andReturn();
-		if (collections.getStatusCode() != 200) {
-			throw new SkipException(REQ_COLLECTIONS + " - /collections returned HTTP " + collections.getStatusCode()
-					+ "; no Feasibility collection metadata is available.");
+			+ ": every advertised itemType=Feasibility collection retrieves schema-valid Command resources (REQ-ETS-PART2-004, SCENARIO-ETS-PART2-004-COLLECTION-TAGGING-001)",
+			groups = GROUP, alwaysRun = true)
+	public void feasibilityCollectionsValidateCommandSchema() {
+		requireFeasibilityDeclaration(REQ_COLLECTIONS);
+		List<Map<String, Object>> collections = advertisedCollections("Feasibility", REQ_COLLECTIONS);
+		int supportedCollections = 0;
+		for (Map<String, Object> collection : collections) {
+			Optional<TraversalResult> evidence = Part1ApiCommonSupport.collectionItemsDetailed(this.apiRoot, collection,
+					Part2ControlStreamSupport.JSON_MEDIA);
+			if (evidence.isEmpty()) {
+				continue;
+			}
+			supportedCollections++;
+			Part2ControlStreamSupport.validateCommandEndpoint(collectionItemsUri(collection, REQ_COLLECTIONS),
+					evidence.orElseThrow().pages(), REQ_COLLECTIONS);
 		}
-		Map<String, Object> body = parseBody(collections);
-		List<?> items = items(body);
-		Object feasibilityCollection = items.stream()
-			.filter(Part2FeasibilityTests::isFeasibilityCollection)
-			.findFirst()
-			.orElse(null);
-		if (!(feasibilityCollection instanceof Map)) {
-			throw new SkipException(
-					REQ_COLLECTIONS + " - /collections did not advertise a collection with itemType=Feasibility.");
+		if (supportedCollections == 0) {
+			throw new SkipException(REQ_COLLECTIONS
+					+ " - every advertised Feasibility collection lacked a supported rel=items application/json link.");
 		}
-		String collectionId = requireString(castMap(feasibilityCollection), "id", REQ_COLLECTIONS);
-		Response collectionItems = given().accept("application/json")
-			.queryParam("limit", 2)
-			.when()
-			.get(this.baseUri.resolve("collections/" + collectionId + "/items"))
-			.andReturn();
-		assertItemsCollection(collectionItems, REQ_COLLECTIONS, "/collections/" + collectionId + "/items");
 	}
 
 	static boolean declaresConformance(Map<String, Object> body, String conformanceUri) {
 		return Part2ApiCommonTests.declaresConformance(body, conformanceUri);
 	}
 
-	static String normativeControlStreamFeasibilityPath(String controlStreamId) {
-		return "controlstream/" + controlStreamId + "/feasibility";
+	static String releasedControlStreamCommandPath(String controlStreamId) {
+		return "controlstreams/" + Part2ControlStreamSupport.encodePathToken(controlStreamId) + "/commands";
 	}
 
-	static boolean hasFeasibilityResourceShape(Map<String, Object> body) {
-		if (body == null || !(body.get("id") instanceof String)) {
-			return false;
-		}
-		return body.containsKey("params") || body.containsKey("parameters") || body.containsKey("status")
-				|| body.containsKey("controlstream@id") || body.containsKey("controlStream@id")
-				|| body.containsKey("controlstream@link") || body.containsKey("controlStream@link")
-				|| body.get("links") instanceof List;
-	}
-
-	static boolean isFeasibilityCollection(Object item) {
-		return item instanceof Map && "Feasibility".equals(((Map<?, ?>) item).get("itemType"));
+	static boolean isCollectionWithItemType(Map<String, Object> collection, String itemType) {
+		return collection != null && itemType != null && itemType.equals(collection.get("itemType"));
 	}
 
 	static boolean hasItemsOnlyCollectionShape(Map<String, Object> body) {
 		return body != null && body.get("items") instanceof List;
 	}
 
-	private void skipIfFeasibilityUndeclared() {
-		if (!declaresConformance(this.conformanceBody, CONF_FEASIBILITY)) {
-			throw new SkipException(CONF_FEASIBILITY
-					+ " - IUT does not declare the CS API Part 2 Command Feasibility conformance class in /conformance; no feasibility POST was issued.");
-		}
-	}
-
-	private Map<String, Object> selectedControlStream() {
-		if (this.controlStreamsResponse.getStatusCode() != 200) {
-			throw new SkipException(REQ_REF_FROM_CONTROLSTREAM + " - /controlstreams returned HTTP "
-					+ this.controlStreamsResponse.getStatusCode()
-					+ "; no ControlStream is available for Feasibility endpoint checks.");
-		}
-		List<?> controlStreams = items(this.controlStreamsBody);
-		if (controlStreams.isEmpty()) {
-			throw new SkipException(REQ_REF_FROM_CONTROLSTREAM
-					+ " - /controlstreams returned an empty collection; no ControlStream is available for Feasibility endpoint checks.");
-		}
-		Object first = controlStreams.get(0);
-		if (!(first instanceof Map)) {
-			ETSAssert.failWithUri(REQ_REF_FROM_CONTROLSTREAM,
-					"/controlstreams first item was not a JSON object: " + first);
-		}
-		return castMap(first);
-	}
-
-	private Map<String, Object> selectedFeasibilityResource() {
+	private void requireFeasibilityDeclaration(String requirement) {
 		Response response = given().accept("application/json")
-			.queryParam("limit", 2)
 			.when()
-			.get(this.baseUri.resolve("feasibility"))
+			.get(this.apiRoot.resolve("conformance"))
 			.andReturn();
-		if (response.getStatusCode() != 200) {
-			throw new SkipException(REQ_CANONICAL_URL + " - /feasibility returned HTTP " + response.getStatusCode()
-					+ "; no Feasibility resource evidence is available.");
+		ETSAssert.assertStatus(response, 200, requirement);
+		Map<String, Object> parsed = Part2ControlStreamSupport.parseObject(response,
+				this.apiRoot.resolve("conformance"), requirement);
+		ETSAssert.assertJsonObjectHas(parsed, "conformsTo", List.class, requirement);
+		if (!declaresConformance(parsed, CONF_FEASIBILITY)) {
+			throw new SkipException(CONF_FEASIBILITY
+					+ " - IUT does not declare the CS API Part 2 Command Feasibility conformance class in /conformance; no feasibility mutation request was issued.");
 		}
-		Map<String, Object> body = parseBody(response);
-		List<?> feasibilityResources = items(body);
-		if (feasibilityResources.isEmpty()) {
-			throw new SkipException(REQ_CANONICAL_URL
-					+ " - /feasibility returned an empty collection; no Feasibility resource evidence is available.");
-		}
-		Object first = feasibilityResources.get(0);
-		if (!(first instanceof Map)) {
-			ETSAssert.failWithUri(REQ_CANONICAL_URL, "/feasibility first item was not a JSON object: " + first);
-		}
-		Map<String, Object> feasibility = castMap(first);
-		if (!hasFeasibilityResourceShape(feasibility)) {
-			ETSAssert.failWithUri(REQ_CANONICAL_URL,
-					"/feasibility first item did not expose Feasibility resource evidence.");
-		}
-		return feasibility;
 	}
 
-	private static List<?> items(Map<String, Object> body) {
-		if (body == null || !(body.get("items") instanceof List)) {
-			return List.of();
+	private TraversalResult canonicalResources(String resourceType, String requirement) {
+		Optional<TraversalResult> evidence = Part1ApiCommonSupport.canonicalResourcesDetailed(this.apiRoot,
+				resourceType);
+		if (evidence.isEmpty()) {
+			throw new SkipException(requirement + " - canonical /" + resourceType
+					+ " endpoint is unavailable; no released procedure evidence is available.");
 		}
-		return (List<?>) body.get("items");
+		TraversalResult traversal = evidence.orElseThrow();
+		if ("controlstreams".equals(resourceType)) {
+			Part2ControlStreamSupport.validateControlStreamEndpoint(this.apiRoot.resolve("controlstreams"),
+					traversal.pages(), requirement);
+		}
+		return traversal;
 	}
 
-	private static String requireString(Map<String, Object> body, String key, String reqUri) {
-		ETSAssert.assertJsonObjectHas(body, key, String.class, reqUri);
-		return (String) body.get(key);
+	private TraversalResult feasibilityResources(String requirement) {
+		TraversalResult traversal = canonicalResources("feasibility", requirement);
+		Part2ControlStreamSupport.validateCommandEndpoint(this.apiRoot.resolve("feasibility"), traversal.pages(),
+				requirement);
+		return traversal;
 	}
 
-	private static Map<String, Object> assertItemsCollection(Response response, String reqUri, String source) {
-		ETSAssert.assertStatus(response, 200, reqUri);
-		Map<String, Object> body = parseBody(response);
-		if (body == null) {
-			ETSAssert.failWithUri(reqUri,
-					source + " body did not parse as JSON. Content-Type was: " + response.getContentType());
+	private void validateCommandEndpoint(URI endpoint, String requirement) {
+		Optional<TraversalResult> evidence = Part1ApiCommonSupport.resourcesAtEndpoint(endpoint,
+				Part2ControlStreamSupport.JSON, Map.of(), requirement, Part2ControlStreamSupport.JSON_MEDIA);
+		if (evidence.isEmpty()) {
+			ETSAssert.failWithUri(requirement, endpoint + " returned HTTP 404.");
 		}
-		if (!hasItemsOnlyCollectionShape(body)) {
-			ETSAssert.failWithUri(reqUri, source + " did not expose a JSON object with an items[] array.");
+		Part2ControlStreamSupport.validateCommandEndpoint(endpoint, evidence.orElseThrow().pages(), requirement);
+	}
+
+	private void validateCommandStatusEndpoint(URI endpoint, String requirement) {
+		Optional<TraversalResult> evidence = Part1ApiCommonSupport.resourcesAtEndpoint(endpoint,
+				Part2ControlStreamSupport.JSON, Map.of(), requirement, Part2ControlStreamSupport.JSON_MEDIA);
+		if (evidence.isEmpty()) {
+			ETSAssert.failWithUri(requirement, endpoint + " returned HTTP 404.");
 		}
-		return body;
+		Part2ControlStreamSupport.validateCommandStatusEndpoint(endpoint, evidence.orElseThrow().pages(), requirement);
+	}
+
+	private void validateCommandResultEndpoint(URI endpoint, String requirement) {
+		Optional<TraversalResult> evidence = Part1ApiCommonSupport.resourcesAtEndpoint(endpoint,
+				Part2ControlStreamSupport.JSON, Map.of(), requirement, Part2ControlStreamSupport.JSON_MEDIA);
+		if (evidence.isEmpty()) {
+			ETSAssert.failWithUri(requirement, endpoint + " returned HTTP 404.");
+		}
+		Part2ControlStreamSupport.validateCommandResultEndpoint(endpoint, evidence.orElseThrow().pages(), requirement);
+	}
+
+	private List<Map<String, Object>> advertisedCollections(String itemType, String requirement) {
+		Response response = given().accept("application/json")
+			.when()
+			.get(this.apiRoot.resolve("collections"))
+			.andReturn();
+		ETSAssert.assertStatus(response, 200, requirement);
+		Map<String, Object> body = Part2ControlStreamSupport.parseObject(response, this.apiRoot.resolve("collections"),
+				requirement);
+		Object advertised = body.get("collections");
+		if (!(advertised instanceof List)) {
+			ETSAssert.failWithUri(requirement, "/collections response is missing a collections array.");
+		}
+		List<Map<String, Object>> typed = new ArrayList<>();
+		for (Object value : (List<?>) advertised) {
+			if (value instanceof Map) {
+				typed.add(castMap(value));
+			}
+		}
+		List<Map<String, Object>> selected = typed.stream()
+			.filter(collection -> isCollectionWithItemType(collection, itemType))
+			.toList();
+		if (selected.isEmpty()) {
+			throw new SkipException(requirement + " - /collections does not advertise itemType=" + itemType + ".");
+		}
+		return selected;
+	}
+
+	private URI collectionItemsUri(Map<String, Object> collection, String requirement) {
+		String id = requireString(collection, "id", requirement);
+		return this.apiRoot.resolve("collections/" + Part2ControlStreamSupport.encodePathToken(id) + "/items");
+	}
+
+	private static List<String> localIds(TraversalResult traversal, String requirement) {
+		List<String> ids = new ArrayList<>();
+		for (Map<String, Object> item : traversal.items()) {
+			ids.add(requireString(item, "id", requirement));
+		}
+		if (ids.isEmpty()) {
+			throw new SkipException(requirement + " - canonical resource collection is empty.");
+		}
+		return List.copyOf(ids);
+	}
+
+	private static String requireString(Map<String, Object> parsed, String key, String requirement) {
+		ETSAssert.assertJsonObjectHas(parsed, key, String.class, requirement);
+		return (String) parsed.get(key);
+	}
+
+	private static void skipIfNoSupportedEvidence(String itemType, int supportedCollections, int inspectedItems,
+			String requirement) {
+		if (supportedCollections == 0) {
+			throw new SkipException(requirement + " - every advertised " + itemType
+					+ " collection lacked a supported rel=items application/json link.");
+		}
+		if (inspectedItems == 0) {
+			throw new SkipException(requirement + " - supported " + itemType
+					+ " collections were empty; no canonical resource evidence is available.");
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -345,17 +335,54 @@ public class Part2FeasibilityTests {
 		return (Map<String, Object>) value;
 	}
 
-	@SuppressWarnings("unchecked")
-	private static Map<String, Object> parseBody(Response response) {
-		if (response == null || response.getBody() == null) {
+	private static void skipWhenPrerequisiteUnsatisfied(ITestContext testContext) {
+		String blocker = configurationBlocker(testContext.getFailedConfigurations(), "failed");
+		if (blocker == null) {
+			blocker = configurationBlocker(testContext.getSkippedConfigurations(), "skipped");
+		}
+		if (blocker == null) {
+			blocker = testBlocker(testContext.getFailedTests(), "failed");
+		}
+		if (blocker == null) {
+			blocker = testBlocker(testContext.getSkippedTests(), "skipped");
+		}
+		if (blocker != null) {
+			throw new SkipException(
+					"Part 2 Feasibility setup skipped before IUT access because prerequisite " + blocker + ".");
+		}
+	}
+
+	private static String configurationBlocker(IResultMap results, String status) {
+		if (results == null) {
 			return null;
 		}
-		try {
-			return response.jsonPath().getMap("$");
+		for (ITestResult result : results.getAllResults()) {
+			if (result != null && result.getMethod() != null && isControlStreamPrerequisite(result)) {
+				return "configuration " + result.getMethod().getMethodName() + " " + status;
+			}
 		}
-		catch (Exception ex) {
+		return null;
+	}
+
+	private static String testBlocker(IResultMap results, String status) {
+		if (results == null) {
 			return null;
 		}
+		for (ITestResult result : results.getAllResults()) {
+			if (result != null && result.getMethod() != null && isControlStreamPrerequisite(result)) {
+				return "method " + result.getMethod().getMethodName() + " " + status;
+			}
+		}
+		return null;
+	}
+
+	private static boolean isControlStreamPrerequisite(ITestResult result) {
+		for (String group : result.getMethod().getGroups()) {
+			if ("part2controlstream".equals(group)) {
+				return true;
+			}
+		}
+		return Part2ControlStreamTests.class.equals(result.getMethod().getRealClass());
 	}
 
 }

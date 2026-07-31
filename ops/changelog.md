@@ -2,6 +2,40 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-31 - Sprint 62 Part 2 Command Feasibility released ATS closure
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-022, S-ETS-62-01, and the Sprint 62 contract for exact OGC 23-002
+  Part 2 `/conf/feasibility` closure.
+- Replaced the historical Sprint 23 seven-method Feasibility subset with
+  exactly five released Annex A.4 procedure methods.
+- Removed non-ATS declaration/prerequisite/safety tracer methods from the
+  deployed Feasibility class and changed `part2feasibility` TestNG inheritance
+  to `part2controlstream`.
+- Implemented literal released Feasibility behavior: A.35 canonical evidence
+  over `itemType=Command` collections, A.36 validation of
+  `/controlstreams/{id}/commands`, A.37/A.38 Feasibility status/result endpoint
+  validation, and A.39 `itemType=Feasibility` collection validation through the
+  released Command schemas.
+- Promoted all five released mappings to reviewed exact and regenerated
+  coverage: `240 total / 130 exact / 2 helper / 94 candidate / 14 unmapped`,
+  with Part 2 Feasibility `5 exact / 0 candidate / 0 unmapped`.
+- Verification: focused red captured as formatting then missing-helper compile
+  failure, final focused `83/0/0/0`, coverage update `1/0/0/0`, coverage audit
+  `23/0/0/0`, full Docker Maven `760/0/0/3`, and local OSH TeamEngine
+  `252/36/21/195` with all five Feasibility methods SKIPping honestly because
+  the local OSH prerequisite chain skips before `part2controlstream`.
+- No-mutation oracle recognized 184 local-OSH IUT request logs; method counts
+  are `GET=184` and zero POST/PUT/PATCH/DELETE. Final tracked evidence:
+  `ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/`.
+- TeamEngine 6 runtime immutability verification passed for final smoke image
+  `sha256:f50858b23f3a8f3d73a337a39a89dba624ede57d2ad3497b1068235b8033f4d3`;
+  local OSH remained a clean external checkout at `4c87a65`.
+- Raze initial review returned `GAPS_FOUND 0.93` for documentation/provenance
+  gaps only; focused recheck returned `APPROVE 0.96` with no required fixes.
+- Sprint 62 commit/push reconciliation completed for Botts `main`.
+
 ## 2026-07-31 - Sprint 61 Part 2 Control Streams and Commands released ATS closure
 
 **Triggered by user instruction**: "Continue."

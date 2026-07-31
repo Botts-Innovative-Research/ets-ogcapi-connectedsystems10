@@ -31,13 +31,13 @@ import io.restassured.response.Response;
 /**
  * Exact released ATS support for OGC 23-002 Part 2 Control Streams and Commands.
  */
-final class Part2ControlStreamSupport {
+public final class Part2ControlStreamSupport {
 
-	static final String JSON = "application/json";
+	public static final String JSON = "application/json";
 
 	static final String GEOJSON = "application/geo+json";
 
-	static final Set<String> JSON_MEDIA = Set.of(JSON);
+	public static final Set<String> JSON_MEDIA = Set.of(JSON);
 
 	static final Set<String> FEATURE_OF_INTEREST_MEDIA = Set.of(GEOJSON, JSON);
 
@@ -74,21 +74,21 @@ final class Part2ControlStreamSupport {
 	private Part2ControlStreamSupport() {
 	}
 
-	static void validateControlStreamEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateControlStreamEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		validateJsonEndpoint(endpoint, pages, CONTROL_STREAM_COLLECTION_SCHEMA, CONTROL_STREAM_SCHEMA, "ControlStream",
 				requirement);
 	}
 
-	static void validateCommandEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateCommandEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		validateJsonEndpoint(endpoint, pages, COMMAND_COLLECTION_SCHEMA, COMMAND_SCHEMA, "Command", requirement);
 	}
 
-	static void validateCommandStatusEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateCommandStatusEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		validateJsonEndpoint(endpoint, pages, COMMAND_STATUS_COLLECTION_SCHEMA, COMMAND_STATUS_SCHEMA, "CommandStatus",
 				requirement);
 	}
 
-	static void validateCommandResultEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateCommandResultEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		validateJsonEndpoint(endpoint, pages, COMMAND_RESULT_COLLECTION_SCHEMA, COMMAND_RESULT_SCHEMA, "CommandResult",
 				requirement);
 	}
@@ -116,7 +116,7 @@ final class Part2ControlStreamSupport {
 		validateJsonValueAgainstSchema(body, CONTROL_STREAM_SCHEMA, requirement, source);
 	}
 
-	static void validateCommandResource(Map<String, Object> body, String requirement, String source) {
+	public static void validateCommandResource(Map<String, Object> body, String requirement, String source) {
 		validateJsonValueAgainstSchema(body, COMMAND_SCHEMA, requirement, source);
 	}
 
@@ -128,7 +128,8 @@ final class Part2ControlStreamSupport {
 		validateJsonValueAgainstSchema(body, COMMAND_RESULT_SCHEMA, requirement, source);
 	}
 
-	static List<Map<String, Object>> collectionsWithItemType(List<Map<String, Object>> collections, String itemType) {
+	public static List<Map<String, Object>> collectionsWithItemType(List<Map<String, Object>> collections,
+			String itemType) {
 		if (collections == null || itemType == null) {
 			return List.of();
 		}
@@ -157,7 +158,7 @@ final class Part2ControlStreamSupport {
 		return List.copyOf(ids);
 	}
 
-	static URI canonicalUri(Map<String, Object> resource, URI pageSource, URI apiRoot, String requirement) {
+	public static URI canonicalUri(Map<String, Object> resource, URI pageSource, URI apiRoot, String requirement) {
 		Object links = resource == null ? null : resource.get("links");
 		if (!(links instanceof List)) {
 			ETSAssert.failWithUri(requirement, pageSource + " item is missing a links array.");
@@ -209,7 +210,7 @@ final class Part2ControlStreamSupport {
 		return false;
 	}
 
-	static JsonNode withoutCanonicalLinks(Map<String, Object> resource) {
+	public static JsonNode withoutCanonicalLinks(Map<String, Object> resource) {
 		JsonNode copied = JSON_MAPPER.valueToTree(resource);
 		if (!(copied instanceof ObjectNode)) {
 			return copied;
@@ -270,7 +271,7 @@ final class Part2ControlStreamSupport {
 				requirement, source);
 	}
 
-	static Map<String, Object> parseObject(Response response, URI source, String requirement) {
+	public static Map<String, Object> parseObject(Response response, URI source, String requirement) {
 		try {
 			Map<String, Object> body = response.jsonPath().getMap("$");
 			if (body == null) {
@@ -285,7 +286,7 @@ final class Part2ControlStreamSupport {
 		}
 	}
 
-	static String encodePathToken(String value) {
+	public static String encodePathToken(String value) {
 		return URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20");
 	}
 

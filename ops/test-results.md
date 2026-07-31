@@ -1,8 +1,54 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T14:43Z
+Last updated: 2026-07-31T16:34Z
 
 ## Current Sprint Evidence
+
+Sprint 62 Part 2 Command Feasibility released ATS:
+
+- Trigger: user instructed "Continue."
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/feasibility`.
+- Implementation: exactly five TestNG methods, one per released Command
+  Feasibility Annex A.4 target; direct
+  `part2feasibility -> part2controlstream` dependency; literal Annex A.4 copy
+  text handling; released Command, CommandStatus, and CommandResult schema
+  validation; exact `itemType=Command` and `itemType=Feasibility` collection
+  traversal; advertised canonical-link evidence; no mutation.
+- Focused test-first red: formatter initially reported new-test formatting
+  violations; after formatting, the focused structural run failed at compile
+  time on missing `releasedControlStreamCommandPath(String)` and
+  `isCollectionWithItemType(Map,String)` helpers. Final corrected focused
+  verification: `83/0/0/0`.
+- Released ATS coverage update: `1/0/0/0`; coverage audit: `23/0/0/0`.
+  Overall coverage is `240 total / 130 exact / 2 helper / 94 candidate /
+  14 unmapped`; Part 2 is `130 total / 39 exact / 0 helper / 77 candidate /
+  14 unmapped`; Part 2 Feasibility is
+  `5 exact / 0 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS.
+- Full Docker Maven: `760 tests / 0 failures / 0 errors / 3 skipped`.
+- Local OSH TeamEngine smoke exited honestly non-green at
+  `252 total / 36 passed / 21 failed / 195 skipped`. All five Sprint 62
+  Feasibility methods SKIP with reason:
+  `Part 2 Feasibility setup skipped before IUT access because prerequisite configuration fetchPart2ControlStreamInputs skipped.`
+  The 21 failures are existing local OSH SensorML/Property/Sampling Feature/
+  Procedure/Deployment gaps outside Sprint 62.
+- No-mutation oracle: `recognized_iut_request_logs=184`; request method counts
+  are `GET=184`, zero POST/PUT/PATCH/DELETE.
+- Final evidence:
+  `ops/test-results/sprint-ets-62-part2-feasibility-2026-07-31/`; durable
+  tracked files are `local-osh-teamengine-smoke.xml`,
+  `local-osh-teamengine-container-log.txt`, `no-mutation-oracle.txt`, and
+  `iut-request-method-counts.txt`.
+- TeamEngine 6 runtime immutability verification passed for final smoke image
+  `sha256:f50858b23f3a8f3d73a337a39a89dba624ede57d2ad3497b1068235b8033f4d3`;
+  local OSH is clean at checkout `4c87a65` and mounted read-only at `/opt/osh`.
+- No OSH or TeamEngine source/binary changes, hosted CI, or IUT mutation were
+  introduced.
+- Raze: initial `GAPS_FOUND 0.93` for premature story completion wording,
+  stale TestNG dependency comments, and stale traceability header provenance;
+  focused recheck returned `APPROVE 0.96` with no required fixes.
 
 Sprint 61 Part 2 Control Streams and Commands released ATS:
 

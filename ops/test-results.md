@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T07:34Z
+Last updated: 2026-07-31T08:21Z
 
 ## Current Sprint Evidence
 
@@ -30,6 +30,13 @@ Sprint 58 Part 1 SensorML direct ATS:
   methods execute. `mediatype-write` passes; fourteen fail because OSH returns
   generic `application/json` for requested SensorML collections or its
   advertised OpenAPI definition lacks complete read-media evidence.
+- Remote-control recovery rerun on 2026-07-31 reached the same deployed
+  TeamEngine/local OSH path and exited nonzero at `246/41/21/184`, confirming
+  the current dirty docs-only recovery notes did not hide the known local OSH
+  SensorML limitation. The captured container log has 199 total request lines:
+  194 local-OSH IUT GETs and 5 external `opengeospatial.github.io` GETs, with
+  zero POST/PUT/PATCH/DELETE. Artifacts:
+  `/tmp/ets-ogcapi-connectedsystems10-remote-recovery-results/`.
 - No-mutation oracle: `recognized_iut_request_logs=194`, zero writes.
   Artifact hygiene: PASS, zero credential leaks and zero IUT writes.
 - Credential integration: zero literal hits. Wire E2E: zero unmasked artifact

@@ -1,0 +1,56 @@
+evaluation:
+  role: "Red Team / Raze"
+  date: "2026-07-31"
+  subject: "Codex remote-control recovery audit"
+  verdict: "GAPS_FOUND"
+  confidence: 0.93
+  agent_id: "019fb744-b632-70d0-b7c8-54b1339f9450"
+  duration: "2m37s"
+  tokens: "unavailable"
+  files_modified: false
+
+scope:
+  review_type: "read_only_recovery_review"
+  unreachable_host: "slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0"
+  reachable_thread: "019f880f-e6b8-7b63-9889-62ae0ce95d50"
+  reachable_thread_host: "slingshot:env_e_6a3a9eeb5f088326b2850f3d43e75ca2"
+  exact_local_commit: "9a2e73a"
+  smoke_artifacts: "/tmp/ets-ogcapi-connectedsystems10-remote-recovery-results/"
+
+required_findings:
+  - id: "RAZE-REMOTE-RECOVERY-001"
+    severity: "MEDIUM"
+    status: "OPEN_AT_REVIEW"
+    title: "Recovery E2E request-count wording overstates IUT traffic"
+    evidence: "Recovery docs said 199 IUT request lines, but the artifact has 199 total Request lines: 194 local-OSH IUT GETs and 5 external opengeospatial.github.io GETs."
+    required_fix: "Change recovery wording to 194 IUT request lines or 199 total request lines with the 194/5 split."
+  - id: "RAZE-REMOTE-RECOVERY-002"
+    severity: "LOW"
+    status: "OPEN_AT_REVIEW"
+    title: "Recovery metrics row is not completion-ready"
+    evidence: "ops/metrics.md left turn 376 End and Duration as TBD."
+    required_fix: "Fill the end timestamp and duration before final recovery closeout."
+
+checks:
+  - "Sprint 58 context is adequately captured in committed specs and ops docs."
+  - "The E2E rerun totals are honestly represented as non-green: 246 total, 41 passed, 21 failed, 184 skipped."
+  - "The decision not to kill codex app-server --remote-control or codex-code-mode-host is correct."
+  - "No required termination action remains from this session."
+
+post_review_status:
+  required_fixes_pending: false
+  termination_required: false
+
+focused_recheck:
+  verdict: "APPROVE"
+  confidence: 0.96
+  start_utc: "2026-07-31T08:27:28Z"
+  end_utc: "2026-07-31T08:27:57Z"
+  duration: "29s"
+  tokens: "unavailable"
+  required_fixes: []
+  closed_findings:
+    - "RAZE-REMOTE-RECOVERY-001"
+  notes:
+    - "Recovery docs now correctly distinguish 199 total request lines from 194 local-OSH IUT GETs plus 5 external opengeospatial.github.io GETs."
+    - "Turn 376 metrics TBD is expected until the final closeout timestamp is taken."

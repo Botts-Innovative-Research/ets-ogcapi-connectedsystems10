@@ -1,6 +1,48 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T07:34Z
+Last updated: 2026-07-31T08:21Z
+
+## Codex Remote-Control Recovery - 2026-07-31
+
+- User instruction: troubleshoot an unreachable Codex remote-control task for
+  this folder, preserve recoverable context in specifications, and terminate
+  only if unrecoverable.
+- The reachable thread for this folder,
+  `019f880f-e6b8-7b63-9889-62ae0ce95d50` on host
+  `slingshot:env_e_6a3a9eeb5f088326b2850f3d43e75ca2`, is idle and already
+  completed Sprint 58 locally through commit `9a2e73a` (`Close Sprint 58
+  SensorML ATS`).
+- Sprint 58 context is already durable in CP-018, the OpenSpec capability spec
+  and design, S-ETS-58-01, the sprint contract, `_bmad/architecture.md`,
+  `_bmad/traceability.md`, ops evidence, changelog, status, known issues, and
+  test-results. The final evidence directory is
+  `ops/test-results/sprint-ets-58-part1-sensorml-final-a593953-2026-07-31/`.
+- Codex thread listing still reports remote host
+  `slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0` as
+  `thread_list_unavailable`; no thread id or turn context from that host is
+  available from this connected session.
+- Exposed Codex thread tools allow list/read/send/fork/archive/pin/title, but
+  no task-specific cancel/terminate tool is exposed. The local
+  `codex app-server --remote-control` process and `codex-code-mode-host`
+  process own the live remote-control session and should not be killed as a
+  proxy for terminating the unavailable remote host.
+- Sprint 58 commit `9a2e73a` is local on `main`. Push to Botts remains blocked
+  by GitHub SSH authentication, as already recorded in the Sprint 58 metrics
+  row; recover by fixing GitHub credentials, then push `main`.
+- Recovery E2E rerun from this dirty docs-only worktree reached TeamEngine and
+  the documented local OSH IUT, then exited nonzero with the same known Sprint
+  58 profile: `246 total / 41 passed / 21 failed / 184 skipped`. The captured
+  container log has 199 total request lines: 194 local-OSH IUT GETs and 5
+  external `opengeospatial.github.io` GETs, with zero POST/PUT/PATCH/DELETE.
+  Artifacts:
+  `/tmp/ets-ogcapi-connectedsystems10-remote-recovery-results/`. No termination
+  action was taken because the recoverable folder task is idle and the only
+  remaining unreachable state is a remote host that cannot be safely targeted
+  from this session.
+- Recovery Raze first returned `GAPS_FOUND 0.93` for the request-count wording
+  and still-open metrics row. The request-count wording was corrected, and the
+  focused recheck returned `APPROVE 0.96` with no required fixes. Report:
+  `.harness/evaluations/codex-remote-recovery-adversarial-2026-07-31.yaml`.
 
 ## Sprint 58 Complete - Part 1 SensorML
 

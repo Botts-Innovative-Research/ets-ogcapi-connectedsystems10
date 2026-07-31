@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T07:34Z
+Last updated: 2026-07-31T08:21Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,6 +14,18 @@ Last updated: 2026-07-31T07:34Z
 
 ## Active Issues
 
+- Codex remote-control thread listing reports host
+  `slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0` as
+  `thread_list_unavailable`. The reachable task for this folder is idle and
+  completed Sprint 58 locally through `9a2e73a`; no recoverable thread id or
+  turn content is available for the unavailable host from this session. Do not
+  kill the shared local `codex app-server --remote-control` or
+  `codex-code-mode-host` as a substitute for task termination; they own the
+  active remote-control session. Exposed thread tools currently provide no
+  task-specific cancel/terminate operation. The recovery smoke rerun reached
+  TeamEngine/local OSH and reproduced the known Sprint 58 `246/41/21/184`
+  profile with 194 local-OSH IUT GETs and zero POST/PUT/PATCH/DELETE, so this
+  is not evidence of lost Sprint 58 product context or unsafe IUT mutation.
 - Sprint 58 completes all fifteen Part 1 SensorML procedures and promotes them
   to reviewed exact mappings. The unmodified local OSH gate is intentionally
   non-green at `246/41/21/184`: `mediatype-write` passes, while fourteen

@@ -30,6 +30,9 @@ Thumbs.db
 .env
 .env.local
 
+# Local SSH keys for repository access
+.repo-keys/
+
 # Ops test-result archives are committed evidence (S-ETS-01-03 smoke artifacts).
 !ops/test-results/*.log
 

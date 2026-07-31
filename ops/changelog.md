@@ -2,6 +2,55 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-07-31 - Repository push deploy key generated
+
+**Triggered by user instruction**: generate a key for repository push access
+and store it in `.gitignore`.
+
+- Added `.repo-keys/` to `.gitignore`.
+- Generated a new ED25519 keypair at
+  `.repo-keys/github-botts-ets-ogcapi-connectedsystems10_ed25519`.
+- Verified the private key is mode `0600` and both key files are ignored by
+  git. The public key is ready to add to the GitHub repository as a deploy key
+  with write access.
+- Set this repository's local `core.sshCommand` to use the generated private
+  key with `IdentitiesOnly=yes` after GitHub authorizes the public key.
+
+## 2026-07-31 - Codex remote-control recovery audit
+
+**Triggered by user instruction**: troubleshoot an unreachable Codex
+remote-control task for this folder, preserve recoverable context in
+specifications, and terminate the process if unrecoverable.
+
+- Queried Codex thread state for `/home/nh/docker/ets-ogcapi-connectedsystems10`.
+  The reachable historical thread
+  `019f880f-e6b8-7b63-9889-62ae0ce95d50` is idle and has completed Sprint 58
+  locally through commit `9a2e73a`.
+- Verified Sprint 58 context is preserved across CP-018, OpenSpec,
+  S-ETS-58-01, sprint contract, BMAD architecture/traceability, ops status,
+  changelog, test-results, known issues, Raze evaluations, and final evidence.
+- Captured the remaining unavailable remote host
+  `slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0` with
+  `thread_list_unavailable`; no thread id or turn content from that host is
+  available in this connected session.
+- Confirmed no exposed Codex tool can cancel/terminate a specific thread, and
+  that killing the shared local `codex app-server --remote-control` or
+  `codex-code-mode-host` would risk the live control session rather than safely
+  terminating the unavailable remote host.
+- Recorded that Sprint 58 is local-only at `9a2e73a`; push remains blocked by
+  GitHub SSH authentication until credentials are fixed.
+- Reran the documented local OSH TeamEngine smoke as a recovery gate. It
+  reached TeamEngine and the local OSH IUT, then exited nonzero at
+  `246/41/21/184`, matching the known Sprint 58 local OSH SensorML evidence
+  limitation. A strict method-prefix scan found 199 total request lines: 194
+  local-OSH IUT GETs and 5 external `opengeospatial.github.io` GETs, with zero
+  POST/PUT/PATCH/DELETE. Artifacts are under
+  `/tmp/ets-ogcapi-connectedsystems10-remote-recovery-results/`.
+- Raze recovery review first returned `GAPS_FOUND 0.93` for request-count
+  wording and the expected not-yet-final metrics row. After the wording fix,
+  focused Raze returned `APPROVE 0.96` with no required fixes. Report:
+  `.harness/evaluations/codex-remote-recovery-adversarial-2026-07-31.yaml`.
+
 ## 2026-07-31 - Sprint 58 SensorML planning
 
 **Triggered by user instruction**: start the next project step.

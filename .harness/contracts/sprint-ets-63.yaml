@@ -1,0 +1,36 @@
+sprint: ets-63
+story: S-ETS-63-01
+title: Part 2 System Events released ATS closure
+status: IMPLEMENTED_PENDING_PUSH
+date: 2026-08-01
+requirement: REQ-ETS-PART2-005
+scope:
+  include:
+    - OGC 23-002 /conf/system-event five released procedures
+    - direct TestNG dependency on part2apicommon and systemfeatures
+    - read-only SystemEvent, ControlStream, System, and /collections probes
+    - exact Annex A.5 copy-text behavior with documented inconsistencies
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - streaming or long-lived event subscriptions
+    - IUT mutation or SystemEvent lifecycle creation
+    - endpoint substitutions that are not named by released Annex A.5 procedures
+    - OSH or TeamEngine source or binary changes
+success_criteria:
+  - id: part2_system_event_five_methods
+    description: Part2SystemEventTests exposes exactly five TestNG methods, one per released ATS target.
+  - id: part2_system_event_direct_prerequisites
+    description: testng.xml declares part2systemevent depends-on part2apicommon and systemfeatures.
+  - id: part2_system_event_exact_coverage
+    description: coverage report shows 5 exact mappings and no candidates/unmapped tests for 2:/conf/system-event.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: PASS
+  focused: PASS_84_0_0_0
+  coverage: PASS_UPDATE_1_0_0_0_AUDIT_23_0_0_0
+  formatter: PASS
+  full_maven: PASS_763_0_0_3
+  e2e_local_osh: HONEST_NON_GREEN_251_36_21_194
+  no_mutation: PASS_GET_182_WRITES_0
+  raze: APPROVE_0_97_REQUIRED_FIXES_0

@@ -1,0 +1,71 @@
+verdict: APPROVE
+confidence: 0.97
+reviewer: Raze
+reviewed_at: "2026-08-01T06:48:56Z"
+review_mode: final_focused_recheck_only_no_docker_maven_teamengine_rerun_no_implementation_changes
+scope:
+  sprint: ets-63
+  finding: RAZE-ETS63-EVIDENCE-001
+  prior_report: .harness/evaluations/sprint-ets-63-adversarial-recheck.yaml
+  target_conformance_class: /conf/system-event
+finding_status:
+  id: RAZE-ETS63-EVIDENCE-001
+  severity: MEDIUM
+  category: unverified_maven_claims
+  previous_status: OPEN
+  status: CLOSED
+  result: closed
+  assessment: >
+    The durability gap is closed. The six Maven/formatter evidence files were
+    converted from ignored .log names to unignored .txt names, staged in git,
+    referenced by current Sprint 63 docs, and their contents substantiate the
+    claimed formatter, focused red, corrected focused, coverage update,
+    coverage audit, and full Maven totals.
+evidence_checked:
+  staged_evidence:
+    - path: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/formatter.txt
+      git_ls_files_stage: "100644 33f510251bb182be2f0b00b8ab889e2b44c4f73e 0"
+      check_ignore: not_ignored
+      content: BUILD SUCCESS, finished at 2026-08-01T06:35:50Z
+    - path: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/focused-red-reproduction.txt
+      git_ls_files_stage: "100644 3929f92bd5d94cc6295e51f07620e69e6ac7152f 0"
+      check_ignore: not_ignored
+      content: BUILD FAILURE with the intended compile red for missing releasedSystemScopedSystemEventsPath, isCollectionWithItemType, and Part2SystemEventSupport.
+    - path: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/focused-corrected.txt
+      git_ls_files_stage: "100644 b9be8bfaea8b16b1d19dda62081ab1739d793e87 0"
+      check_ignore: not_ignored
+      content: Tests run 84, Failures 0, Errors 0, Skipped 0; BUILD SUCCESS.
+    - path: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/coverage-update.txt
+      git_ls_files_stage: "100644 81dd55bc3a92f0a05e63c1aea53c5a76dd8a424f 0"
+      check_ignore: not_ignored
+      content: VerifyReleasedAtsCoverage update run Tests run 1, Failures 0, Errors 0, Skipped 0; BUILD SUCCESS.
+    - path: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/coverage-audit.txt
+      git_ls_files_stage: "100644 082aae7bb85279cb226323fa3c657851c878e4b6 0"
+      check_ignore: not_ignored
+      content: VerifyReleasedAtsCoverage audit Tests run 23, Failures 0, Errors 0, Skipped 0; BUILD SUCCESS.
+    - path: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/full-maven.txt
+      git_ls_files_stage: "100644 d7c6a860b4f05451c5e1f5e98af76548e7c4c4f6 0"
+      check_ignore: not_ignored
+      content: Tests run 763, Failures 0, Errors 0, Skipped 3; BUILD SUCCESS, finished at 2026-08-01T06:41:00Z.
+  commands:
+    - command: git check-ignore -v <six Sprint 63 .txt Maven evidence files>
+      result: no output, exit masked with true; none of the six .txt files are ignored.
+    - command: git ls-files --stage <six Sprint 63 .txt Maven evidence files>
+      result: all six .txt files are visible in the index as mode 100644 stage 0 entries.
+    - command: git diff --cached --name-status
+      result: all six .txt Maven evidence files are staged as added, along with the Sprint 63 E2E/no-mutation/runtime evidence files.
+  docs:
+    - epics/stories/s-ets-63-01-part2-system-event-closure.md references focused-red-reproduction.txt, focused-corrected.txt, coverage-update.txt, coverage-audit.txt, formatter.txt, and full-maven.txt.
+    - openspec/change-proposals/CP-023-part2-system-event-closure.md references all six .txt evidence files in the outcome evidence.
+    - ops/status.md references formatter.txt, focused-red-reproduction.txt, focused-corrected.txt, coverage-update.txt, coverage-audit.txt, and full-maven.txt.
+    - ops/test-results.md lists the six .txt evidence files as durable tracked files.
+    - ops/changelog.md states the logs were archived under the Sprint 63 evidence directory and that the prior missing durable Maven evidence gapfix was applied.
+commands_not_rerun:
+  - Docker
+  - Maven
+  - TeamEngine
+implementation_files_changed: false
+required_fixes: []
+final_assessment: >
+  RAZE-ETS63-EVIDENCE-001 is closed. No unresolved required fixes remain from
+  the Sprint 63 Raze reviews.

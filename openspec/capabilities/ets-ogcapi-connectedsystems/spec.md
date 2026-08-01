@@ -1171,48 +1171,109 @@ OSH IUT
 
 #### REQ-ETS-PART2-005: Part 2 System Events Conformance Suite
 - **Priority**: MUST.
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
-- **Historical increment**: (Sprint 24 Generator).
-- **Description**: The ETS SHALL provide a TestNG suite for OGC 23-002 Clause 12 Requirements Class "System Events" using official identifiers `/req/system-event` and `/conf/system-event`, with prerequisites `/req/api-common` and Part 1 `/req/system`. Sprint 24 targets a read-only Generator increment: exact conformance declaration detection, prerequisite honesty, canonical `/systemEvents` endpoint checks, system-scoped `/systems/{sysId}/events` endpoint checks, optional SystemEvent resource/canonical evidence, and optional `itemType=SystemEvent` collection checks.
-- **Scope guard**: The first System Events increment SHALL NOT implement streaming/SSE event consumption, System History, Advanced Filtering event-by-type, Part 2 JSON schema closure, or mutation classes. It SHALL NOT infer System Events conformance from sibling Part 2 declarations, and SHALL NOT treat Annex A.43's conflicting `/systems/{sysId}/systemEvents` endpoint string as Requirement 43 PASS evidence without a standards-backed rationale.
-- **Implementation evidence**: `Part2SystemEventTests` adds six read-only/default-safe checks for exact `/conf/system-event` declaration, prerequisite visibility, canonical `/systemEvents` endpoint evidence, normative `/systems/{sysId}/events` evidence, actual SystemEvent resource/canonical evidence, and optional `itemType=SystemEvent` collections. `VerifyPart2SystemEventTests` prevents stale `/req/systemevents`/`dynamic-*` identifier drift and Annex A.43 alias drift. Maven reported `183 tests / 0 failures / 0 errors / 3 skipped`; GeoRobotix smoke reported `128 total / 72 passed / 0 failed / 56 skipped`; System Events had 1 PASS for declaration and 5 SKIPs for missing `/conf/api-common`, `/systemEvents` HTTP 400, `/systems/{id}/events` streaming-only HTTP 400, no resource evidence, and no advertised `itemType=SystemEvent`.
+- **Status**: IMPLEMENTED_RELEASED_ATS_EXACT
+- **Historical increment**: Sprint 24 Generator implemented a useful read-only
+  subset. Sprint 63 supersedes it with exact released ATS closure.
+- **Description**: The ETS SHALL provide a TestNG suite for OGC 23-002 Clause
+  12 and Annex A.5 Requirements Class "System Events" using official
+  identifiers `/req/system-event` and `/conf/system-event`, with released
+  prerequisites `/req/api-common` and Part 1 `/req/system`. Sprint 63 SHALL
+  expose exactly the five released Annex A.5 procedures:
+  `/conf/system-event/canonical-url`,
+  `/conf/system-event/resources-endpoint`,
+  `/conf/system-event/canonical-endpoint`,
+  `/conf/system-event/ref-from-system`, and
+  `/conf/system-event/collections`.
+- **Scope guard**: The exact released ATS closure SHALL NOT implement
+  streaming/SSE event consumption, System History, Advanced Filtering
+  event-by-type, or mutation classes. It SHALL NOT infer System Events
+  conformance from sibling Part 2 declarations. It SHALL follow the released
+  Annex A.5 procedure copy text literally while documenting apparent
+  inconsistencies: A.40 says `ControlStream` / `itemType=ControlStream`, A.42
+  references a ControlStream resources-endpoint test label for the canonical
+  `/systemEvents` endpoint, and A.43 uses `/systems/{sysId}/systemEvents`
+  while Clause 12 Requirement 43 uses `/systems/{sysId}/events`.
+- **Implementation evidence**: Sprint 63 replaces the historical Sprint 24
+  subset with exactly five deployed Annex A.5 procedures in
+  `Part2SystemEventTests`, direct `part2systemevent -> part2apicommon
+  systemfeatures` TestNG inheritance, released SystemEvent
+  collection/item schema validation, literal Annex copy-text handling, and
+  reviewed exact mappings for all five `/conf/system-event` targets. Focused
+  test-first red captured missing helper compile failures after formatter
+  normalization; corrected focused verification passed `84/0/0/0`; coverage
+  update passed `1/0/0/0`; coverage audit passed `23/0/0/0`; full Docker
+  Maven completed `763/0/0/3`. Local OSH TeamEngine E2E is honest non-green at
+  `251/36/21/194`; all five System Events methods SKIP before SystemEvent IUT
+  access because prerequisite `canonicalSystemsEndpointIsValid` skipped. The
+  no-mutation oracle recognized 182 local-OSH IUT request logs, all GET.
 - **Maps to**: PRD FR-ETS-34.
 
-#### SCENARIO-ETS-PART2-005-SYSTEM-EVENT-CONFORMANCE-DECLARED-001 (CRITICAL)
-**GIVEN** OGC 23-002 `/req/system-event` maps to conformance class `/conf/system-event`
-**WHEN** the IUT conformance document does not declare `/conf/system-event`
-**THEN** the ETS SHALL SKIP System Events conformance assertions with a precise reason
-**AND** it SHALL NOT infer System Events support from sibling Part 2 declarations.
+#### SCENARIO-ETS-PART2-005-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** OGC 23-002 Annex A.5 lists exactly five `/conf/system-event` tests
+**WHEN** the deployed System Events class is inspected
+**THEN** it SHALL expose exactly one independent TestNG method for each released
+procedure
+**AND** it SHALL NOT expose standalone declaration, prerequisite, diagnostic,
+or safety-tracer methods outside Annex A.5.
 
-#### SCENARIO-ETS-PART2-005-DEPENDENCY-SKIP-001 (CRITICAL)
-**GIVEN** System Events has prerequisites `/req/api-common` and Part 1 `/req/system`
-**WHEN** the prerequisite classes cannot be established for the IUT
-**THEN** the ETS SHALL keep scoped endpoint evidence separate from full `/conf/system-event` closure
-**AND** prerequisite-dependent assertions SHALL SKIP with a precise reason.
+#### SCENARIO-ETS-PART2-005-DIRECT-PREREQUISITES-001 (CRITICAL)
+**GIVEN** Annex A.5 lists prerequisites `/conf/api-common` and Part 1 `/conf/system`
+**WHEN** `part2systemevent` is wired in `testng.xml`
+**THEN** it SHALL depend directly on `part2apicommon` and `systemfeatures`
+**AND** runtime setup SHALL SKIP before SystemEvent IUT access when either
+prerequisite has failed or skipped.
+
+#### SCENARIO-ETS-PART2-005-ANNEX-COPY-TEXT-001 (CRITICAL)
+**GIVEN** Annex A.5 contains copy text that diverges from Clause 12 wording
+**WHEN** the ETS maps released procedures
+**THEN** it SHALL preserve the released Annex A.5 procedure paths and selectors
+**AND** it SHALL document the divergence rather than silently substituting
+Clause 12 or historical Sprint 24 endpoints.
+
+#### SCENARIO-ETS-PART2-005-CANONICAL-CONTROLSTREAM-COLLECTION-001 (CRITICAL)
+**GIVEN** released test `/conf/system-event/canonical-url` selects
+`itemType=ControlStream` collections
+**WHEN** those collection items are retrieved
+**THEN** every item SHALL expose one same-origin canonical link
+**AND** the dereferenced resource SHALL return HTTP 200 with equivalent content
+after canonical links are removed.
+
+#### SCENARIO-ETS-PART2-005-RESOURCE-ENDPOINT-SCHEMA-001 (CRITICAL)
+**GIVEN** released test `/conf/system-event/resources-endpoint` validates a
+SystemEvent resources endpoint
+**WHEN** the endpoint returns `application/json`
+**THEN** the ETS SHALL validate the collection against
+`systemEventCollection.json` and every item against `systemEvent.json`
+**AND** unsupported media SHALL SKIP instead of producing shape-only PASS.
 
 #### SCENARIO-ETS-PART2-005-CANONICAL-ENDPOINT-001 (CRITICAL)
-**GIVEN** OGC 23-002 `/req/system-event/canonical-endpoint` identifies `{api_root}/systemEvents`
+**GIVEN** released test `/conf/system-event/canonical-endpoint` identifies
+`{api_root}/systemEvents`
 **WHEN** the IUT declares `/conf/system-event`
-**THEN** the ETS SHALL verify the canonical SystemEvent resources endpoint using read-only GET
-**AND** HTTP 400 or non-resource streaming-only responses SHALL NOT produce PASS.
+**THEN** the ETS SHALL validate `/systemEvents` as a SystemEvent resources
+endpoint
+**AND** HTTP 400 or streaming-only responses SHALL NOT produce PASS.
 
-#### SCENARIO-ETS-PART2-005-SYSTEM-REF-ENDPOINT-001 (CRITICAL)
-**GIVEN** OGC 23-002 Requirement 43 identifies `{api_root}/systems/{sysId}/events`
-**WHEN** the ETS checks System-scoped SystemEvent resources
-**THEN** it SHALL use `/systems/{sysId}/events` as the normative endpoint
-**AND** `/systems/{sysId}/systemEvents` SHALL be diagnostic alias evidence only unless a standards-backed correction is documented.
-
-#### SCENARIO-ETS-PART2-005-SYSTEM-EVENT-RESOURCE-CLOSURE-001 (NORMAL)
-**GIVEN** a real SystemEvent resource is available through declared `/conf/system-event` evidence
-**WHEN** the ETS evaluates `/req/system-event/canonical-url`
-**THEN** it SHALL require actual SystemEvent resource evidence before PASS
-**AND** it SHALL SKIP when the IUT exposes no SystemEvent resources.
+#### SCENARIO-ETS-PART2-005-SYSTEM-REFERENCE-001 (CRITICAL)
+**GIVEN** released test `/conf/system-event/ref-from-system` uses
+`{api_root}/systems/{sysId}/systemEvents`
+**WHEN** canonical System resources are available
+**THEN** the ETS SHALL validate each released A.43 nested endpoint as a
+SystemEvent resources endpoint
+**AND** the historical Sprint 24 `/systems/{sysId}/events` endpoint SHALL NOT
+be used for exact released ATS PASS evidence.
 
 #### SCENARIO-ETS-PART2-005-SYSTEM-EVENT-COLLECTIONS-001 (NORMAL)
 **GIVEN** `/req/system-event/collections` applies when the server exposes SystemEvent collections
 **WHEN** a collection has `itemType` equal to `SystemEvent`
 **THEN** the ETS SHALL verify that `/collections/{collectionId}/items` behaves as a System Event resources endpoint
 **AND** it SHALL NOT fail an IUT solely because no SystemEvent collection is advertised.
+
+#### SCENARIO-ETS-PART2-005-SMOKE-NO-MUTATION-001 (CRITICAL)
+**GIVEN** Sprint 63 System Events procedures are read-only
+**WHEN** they run against the unmodified local OSH IUT
+**THEN** the outcome SHALL be documented with concrete pass/fail/skip totals
+**AND** IUT-bound request logs SHALL contain zero POST, PUT, PATCH, or DELETE.
 
 #### REQ-ETS-PART2-006: Part 2 Advanced Filtering Conformance Suite
 - **Priority**: MUST
@@ -5756,7 +5817,8 @@ descendant groups SKIP.
 - REQ-ETS-PART2-002 (Datastreams & Observations) — implemented released ATS in Sprint 60; `2:/conf/datastream` is `14 exact / 0 candidate / 0 unmapped`.
 - REQ-ETS-PART2-003 (Control Streams & Commands) — implemented released ATS in Sprint 61; `2:/conf/controlstream` is `18 exact / 0 candidate / 0 unmapped`.
 - REQ-ETS-PART2-004 (Command Feasibility) — implemented released ATS exact in Sprint 62; `2:/conf/feasibility` is `5 exact / 0 candidate / 0 unmapped`.
-- REQ-ETS-PART2-005: partially implemented by Sprint 24 System Events Generator.
+- REQ-ETS-PART2-005 (System Events) — implemented released ATS exact in Sprint
+  63; `2:/conf/system-event` is `5 exact / 0 candidate / 0 unmapped`.
 - REQ-ETS-PART2-006: partially implemented by Sprint 25 Advanced Filtering Generator.
 - REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - partially implemented by Sprint 26 Generator; seeded local OSH E2E is accepted after fixture repair, while GeoRobotix public smoke remains advisory and currently fails with public-IUT HTTP 500 responses outside the new Part 2 CRD tests.
 - REQ-ETS-PART2-008 (Part 2 Update) - partially implemented by Sprint 27 Generator; positive PATCH lifecycle and concrete schema-rejection dispatch remain deferred.

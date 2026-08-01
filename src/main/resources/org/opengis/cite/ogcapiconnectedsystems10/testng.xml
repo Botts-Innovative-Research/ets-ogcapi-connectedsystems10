@@ -112,10 +112,12 @@
        directly because OGC 23-002 /req/feasibility lists /req/controlstream as
        a prerequisite; every direct procedure remains runtime-gated for the
        Feasibility declaration and no IUT-bound feasibility mutation is issued. -->
-  <!-- Sprint 24 S-ETS-24-01 (REQ-ETS-PART2-005): Part 2 System Events group added as
-       a read-only declaration-gated subset. It depends on "core common systemfeatures"
-       so Part 1 System availability is structurally present; runtime checks still keep
-       /req/api-common prerequisite honesty separate from scoped endpoint evidence. -->
+  <!-- Sprint 63 S-ETS-63-01 (REQ-ETS-PART2-005): Part 2 System Events now implements
+       the five released Annex A procedures exactly. It inherits Part 2 API Common and
+       Part 1 System directly because OGC 23-002 /req/system-event lists /req/api-common
+       and Part 1 /req/system as prerequisites; every direct procedure remains
+       runtime-gated for the System Events declaration and no streaming or mutation
+       request is issued. -->
   <!-- Sprint 25 S-ETS-25-01 (REQ-ETS-PART2-006): Part 2 Advanced Filtering group
        added as a read-only declaration-gated subset. It depends on
        "core common systemfeatures" rather than Part2ApiCommon, Part 1 AdvancedFiltering,
@@ -185,7 +187,7 @@
         <group name="part2datastream" depends-on="part2apicommon"/>
         <group name="part2controlstream" depends-on="part2apicommon"/>
         <group name="part2feasibility" depends-on="part2controlstream"/>
-        <group name="part2systemevent" depends-on="core common systemfeatures"/>
+        <group name="part2systemevent" depends-on="part2apicommon systemfeatures"/>
         <group name="part2advancedfiltering" depends-on="core common systemfeatures"/>
         <group name="part2createreplacedelete" depends-on="core common systemfeatures"/>
         <group name="part2update" depends-on="core common systemfeatures"/>

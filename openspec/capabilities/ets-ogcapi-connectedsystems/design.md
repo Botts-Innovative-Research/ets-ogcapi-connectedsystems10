@@ -2359,6 +2359,30 @@ Sprint 62 promotes `2:/conf/feasibility` to
 non-green because the IUT prerequisite chain skips Part 2 ControlStream before
 Feasibility access, not because of a Feasibility implementation error.
 
+## Sprint 63 Part 2 System Events Exact Closure
+
+System Events follows the released Annex A.5 procedure list literally, including
+the published copy-text inconsistencies. The deployed class exposes exactly five
+TestNG procedures for `/conf/system-event`: canonical URL, resources endpoint,
+canonical endpoint, system reference, and collections. Runtime setup inherits
+directly through Part 2 API Common and Part 1 System (`part2apicommon
+systemfeatures`) and skips before SystemEvent IUT access when either upstream
+group is not established.
+
+`Part2SystemEventSupport` provides the released JSON schema boundary for
+`systemEventCollection.json` and `systemEvent.json`, canonical-link
+dereference/equality, same-origin protection, and bounded read-only endpoint
+validation. A.40 preserves the released `itemType=ControlStream` collection
+selector, A.42 validates canonical `/systemEvents`, and A.43 validates
+`/systems/{sysId}/systemEvents`; the implementation does not substitute the
+historical Sprint 24 `/systems/{sysId}/events` path for exact ATS evidence.
+
+Sprint 63 promotes `2:/conf/system-event` to
+`5 exact / 0 candidate / 0 unmapped`. The local OSH E2E gate remains honest
+non-green because Part 1 System prerequisite evidence skips before SystemEvent
+access, while the implementation and coverage gates pass and no IUT mutation is
+emitted.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

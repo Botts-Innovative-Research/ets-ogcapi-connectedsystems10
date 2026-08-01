@@ -1,8 +1,61 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T16:34Z
+Last updated: 2026-08-01T06:50Z
 
 ## Current Sprint Evidence
+
+Sprint 63 Part 2 System Events released ATS:
+
+- Trigger: user instructed "Continue."
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/system-event`.
+- Implementation: exactly five TestNG methods, one per released System Events
+  Annex A.5 target; direct
+  `part2systemevent -> part2apicommon systemfeatures` dependency; literal
+  Annex A.5 copy text handling; released SystemEvent collection/item schema
+  validation; exact `itemType=ControlStream` and `itemType=SystemEvent`
+  collection traversal; advertised same-origin canonical-link evidence; no
+  mutation or streaming subscription.
+- Focused test-first red: formatter initially reported new-test formatting
+  violations; after formatting, the focused structural run failed at compile
+  time on missing Sprint 63 helper/support methods. Final corrected focused
+  verification: `84/0/0/0`. Logs:
+  `focused-red-reproduction.txt`, `formatter.txt`, and
+  `focused-corrected.txt`.
+- Released ATS coverage update: `1/0/0/0`; coverage audit: `23/0/0/0`.
+  Overall coverage is `240 total / 135 exact / 2 helper / 90 candidate /
+  13 unmapped`; Part 2 is `130 total / 44 exact / 0 helper / 73 candidate /
+  13 unmapped`; Part 2 System Events is
+  `5 exact / 0 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS (`formatter.txt`).
+- Full Docker Maven: `763 tests / 0 failures / 0 errors / 3 skipped`
+  (`full-maven.txt`).
+- Local OSH TeamEngine smoke exited honestly non-green at
+  `251 total / 36 passed / 21 failed / 194 skipped`. All five Sprint 63 System
+  Events methods SKIP with reason:
+  `Part 2 System Events setup skipped before IUT access because prerequisite method canonicalSystemsEndpointIsValid skipped.`
+  The 21 failures are existing local OSH SensorML/Deployment/Procedure/
+  Property/Sampling Feature gaps outside Sprint 63.
+- No-mutation oracle: `recognized_iut_request_logs=182`; request method counts
+  are `GET=182`, zero POST/PUT/PATCH/DELETE.
+- Final evidence:
+  `ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/`; durable
+  tracked files are `formatter.txt`, `focused-red-reproduction.txt`,
+  `focused-corrected.txt`, `coverage-update.txt`, `coverage-audit.txt`,
+  `full-maven.txt`, `local-osh-teamengine-smoke.xml`,
+  `local-osh-teamengine-container-log.txt`, `smoke-console.txt`,
+  `no-mutation-oracle.txt`, `iut-request-method-counts.txt`, and
+  `teamengine6-runtime-verification.txt`.
+- TeamEngine 6 runtime immutability verification passed for final smoke image
+  `sha256:fe0ae15f3f088bddae114aa7780bd507900f37c543b8294b2d4366a53b287c6e`;
+  local OSH is clean at checkout `4c87a65` and mounted read-only at `/opt/osh`.
+- No OSH or TeamEngine source/binary changes, hosted CI, streaming
+  subscriptions, or IUT mutation were introduced.
+- Raze initial review found documentation/evidence bookkeeping gaps only. The
+  first focused recheck closed the completion-wording gap and found ignored
+  `.log` Maven artifacts; the final focused recheck approved the tracked
+  `.txt` evidence at `APPROVE 0.97` with `required_fixes: []`.
 
 Sprint 62 Part 2 Command Feasibility released ATS:
 

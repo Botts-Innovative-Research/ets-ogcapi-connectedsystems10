@@ -2,6 +2,44 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-01 - Sprint 63 Part 2 System Events released ATS closure
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-023, S-ETS-63-01, and the Sprint 63 contract for exact OGC 23-002
+  Part 2 `/conf/system-event` closure.
+- Replaced the historical Sprint 24 six-method System Events subset with
+  exactly five released Annex A.5 procedure methods.
+- Removed non-ATS declaration/prerequisite helper methods from the deployed
+  System Events class and changed `part2systemevent` TestNG inheritance to
+  `part2apicommon systemfeatures`.
+- Implemented literal released System Events behavior: A.40 canonical evidence
+  over `itemType=ControlStream` collections, A.41/A.42 validation of
+  `/systemEvents`, A.43 validation of `/systems/{sysId}/systemEvents`, and
+  A.44 `itemType=SystemEvent` collection validation through the released
+  SystemEvent schemas.
+- Promoted all five released mappings to reviewed exact and regenerated
+  coverage: `240 total / 135 exact / 2 helper / 90 candidate / 13 unmapped`,
+  with Part 2 System Events `5 exact / 0 candidate / 0 unmapped`.
+- Verification logs archived under
+  `ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/`: focused
+  red captured as formatting then missing-helper compile failure, final
+  focused `84/0/0/0`, coverage update `1/0/0/0`, coverage audit `23/0/0/0`,
+  full Docker Maven `763/0/0/3`, and local OSH TeamEngine `251/36/21/194`
+  with all five System Events methods SKIPping honestly because the local OSH
+  Part 1 System prerequisite skips before `canonicalSystemsEndpointIsValid`.
+- No-mutation oracle recognized 182 local-OSH IUT request logs; method counts
+  are `GET=182` and zero POST/PUT/PATCH/DELETE. Final tracked evidence:
+  `ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/`.
+- TeamEngine 6 runtime immutability verification passed for final smoke image
+  `sha256:fe0ae15f3f088bddae114aa7780bd507900f37c543b8294b2d4366a53b287c6e`;
+  local OSH remained a clean external checkout at `4c87a65`.
+- Raze initial review returned `GAPS_FOUND 0.94` for premature completion
+  wording and missing durable Maven evidence. The first focused recheck closed
+  wording and found ignored `.log` evidence; the final focused recheck approved
+  the tracked `.txt` evidence at `APPROVE 0.97` with no required fixes.
+  Commit/push reconciliation is still pending.
+
 ## 2026-07-31 - Sprint 62 Part 2 Command Feasibility released ATS closure
 
 **Triggered by user instruction**: "Continue."

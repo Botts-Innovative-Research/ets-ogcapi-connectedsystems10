@@ -1,6 +1,59 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-07-31T16:34Z
+Last updated: 2026-08-01T06:50Z
+
+## Sprint 63 Raze Approved - Part 2 System Events Released ATS (Push Pending)
+
+- User instruction: "Continue."
+- CP-023 and S-ETS-63-01 close the OGC 23-002 Part 2
+  `/conf/system-event` class as exactly five released Annex A.5 procedures.
+- `Part2SystemEventTests` now exposes one independent TestNG method per
+  released target, removes the historical Sprint 24 declaration/prerequisite
+  helper tests, depends directly on `part2apicommon systemfeatures`, and skips
+  before SystemEvent IUT access when the Part 2 API Common or Part 1 System
+  prerequisite setup is not established.
+- The implementation preserves released Annex A.5 copy text literally: A.40
+  canonical URL evidence iterates `itemType=ControlStream` collections, A.42
+  validates canonical `/systemEvents`, and A.43 validates
+  `/systems/{sysId}/systemEvents` rather than the Clause 12
+  `/systems/{sysId}/events` spelling.
+- Runtime checks remain read-only and validate SystemEvent collection/item JSON
+  with `systemEventCollection.json` and `systemEvent.json`; canonical-link
+  checks require same-origin advertised links and content equivalence after
+  canonical links are removed.
+- Reviewed coverage is now `240 total / 135 exact / 2 helper / 90 candidate /
+  13 unmapped`; Part 2 is `130 total / 44 exact / 0 helper / 73 candidate /
+  13 unmapped`; `2:/conf/system-event` is
+  `5 exact / 0 candidate / 0 unmapped`.
+- Focused test-first evidence first exposed formatting drift and then the exact
+  compile red for missing Sprint 63 helpers. Archived logs now cover
+  `formatter.txt`, `focused-red-reproduction.txt`, and
+  `focused-corrected.txt`; final focused verification passed `84/0/0/0`.
+- Coverage update passed `1/0/0/0`; coverage audit passed `23/0/0/0`;
+  formatter passed; full Docker Maven completed
+  `763 tests / 0 failures / 0 errors / 3 skipped`. Durable Maven logs are
+  archived as `coverage-update.txt`, `coverage-audit.txt`, and
+  `full-maven.txt`.
+- Mandatory local OSH TeamEngine smoke reached TeamEngine and the unmodified
+  local OSH IUT, then exited honestly non-green at
+  `251 total / 36 passed / 21 failed / 194 skipped`. All five System Events
+  procedures SKIP before SystemEvent IUT access because
+  `canonicalSystemsEndpointIsValid` skipped; the 21 failures are existing local
+  OSH SensorML/Deployment/Procedure/Property/Sampling Feature gaps outside
+  Sprint 63.
+- No-mutation oracle recognized 182 local-OSH IUT request logs. Method counts
+  are `GET=182`, zero POST/PUT/PATCH/DELETE. Tracked evidence:
+  `ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/`.
+- Smoke image:
+  `sha256:fe0ae15f3f088bddae114aa7780bd507900f37c543b8294b2d4366a53b287c6e`.
+  TeamEngine 6 runtime immutability verification passed. The local OSH
+  checkout mounted read-only at `/opt/osh` is clean at `4c87a65`, with
+  `sensorhub-service-consys-2.0.1.jar`.
+- Raze initial review found two bookkeeping gaps only: premature completion
+  wording and missing durable Maven evidence. The first focused recheck closed
+  wording and found ignored `.log` artifacts; the final focused recheck
+  approved the tracked `.txt` evidence at `APPROVE 0.97` with no required
+  fixes. Commit/push is still pending.
 
 ## Sprint 62 Complete - Part 2 Command Feasibility Released ATS
 
@@ -98,9 +151,9 @@ Last updated: 2026-07-31T16:34Z
 ## Next Recommended Work
 
 - The next highest-value Part 2 exact closure is OGC 23-002
-  `/conf/system-event`: five released procedures remain, currently
-  `0 exact / 4 candidate / 1 unmapped`, and it directly follows Feasibility in
-  Annex A.5.
+  `/conf/advanced-filtering`: eighteen released procedures remain, currently
+  `0 exact / 13 candidate / 5 unmapped`, and it directly follows System Events
+  in Annex A.6.
 
 ## Sprint 60 Complete - Part 2 Datastreams and Observations Released ATS
 

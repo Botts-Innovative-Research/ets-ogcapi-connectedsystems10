@@ -1202,6 +1202,51 @@
       "reviewedBy": "Codex Sprint 62 ATS line review",
       "reviewedOn": "2026-07-31",
       "evidence": "The independent released procedure requires exact /conf/feasibility declaration, selects every /collections entry whose itemType is exactly Feasibility, follows its supported rel=items link with Part 1 collection-items traversal, and preserves Annex A.39 by validating collection and item JSON against the released Command schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/system-event/canonical-url",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemEventCanonicalUrlFromControlStreamCollections()",
+      "reviewedBy": "Codex Sprint 63 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure requires exact /conf/system-event declaration, preserves the Annex A.40 copy text by iterating every exact itemType=ControlStream collection, requires each item to advertise exactly one same-origin rel=canonical link, dereferences it read-only, validates the source ControlStream collection and item schemas, and compares content after canonical links are removed."
+    },
+    {
+      "part": 2,
+      "test": "/conf/system-event/resources-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemEventResourcesEndpointReadable()",
+      "reviewedBy": "Codex Sprint 63 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure requires exact /conf/system-event declaration and validates the canonical /systemEvents endpoint over bounded read-only pagination against the released SystemEvent collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/system-event/canonical-endpoint",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemEventsCanonicalEndpointReadable()",
+      "reviewedBy": "Codex Sprint 63 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure requires exact /conf/system-event declaration and applies the released SystemEvent resources-endpoint validation to the canonical /systemEvents endpoint, including collection and item JSON schema validation."
+    },
+    {
+      "part": 2,
+      "test": "/conf/system-event/ref-from-system",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemEventsReferenceFromSystemsUsesReleasedPath()",
+      "reviewedBy": "Codex Sprint 63 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure requires exact /conf/system-event declaration, enforces the direct Part 1 /conf/system prerequisite, preserves Annex A.43 by validating /systems/{sysId}/systemEvents, and applies the released SystemEvent collection and item JSON schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/system-event/collections",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.systemevent.Part2SystemEventTests#systemEventCollectionsValidateSystemEventSchema()",
+      "reviewedBy": "Codex Sprint 63 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure requires exact /conf/system-event declaration, selects every /collections entry whose itemType is exactly SystemEvent, follows its supported rel=items link with Part 1 collection-items traversal, and validates collection and item JSON against the released SystemEvent schemas."
     }
   ]
 }

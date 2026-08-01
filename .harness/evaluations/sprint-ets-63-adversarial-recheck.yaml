@@ -1,0 +1,86 @@
+verdict: GAPS_FOUND
+confidence: 0.90
+reviewer: Raze
+reviewed_at: "2026-08-01T06:45:06Z"
+review_mode: focused_recheck_only_no_docker_maven_teamengine_rerun_no_implementation_changes
+rechecked_findings:
+  - id: RAZE-ETS63-DOC-001
+    severity: MEDIUM
+    category: premature_completion_wording
+    status: CLOSED
+    result: closed
+    evidence_checked:
+      - epics/stories/s-ets-63-01-part2-system-event-closure.md:3 now says "Status: Implemented Pending Raze Recheck and Push".
+      - epics/stories/s-ets-63-01-part2-system-event-closure.md:71 keeps Raze unchecked.
+      - epics/stories/s-ets-63-01-part2-system-event-closure.md:72 keeps push unchecked.
+      - openspec/change-proposals/CP-023-part2-system-event-closure.md:3 now says "Implemented pending Raze recheck and push".
+      - epics/epic-ets-03-part2-classes.md:32 now says "Implemented pending Raze recheck and push".
+      - ops/status.md:5 now says "Sprint 63 Implemented ... (Raze Recheck/Push Pending)".
+      - ops/status.md:49 says focused Raze recheck and commit/push are still pending.
+      - ops/test-results.md:59-61 says focused Raze recheck remains pending.
+      - ops/changelog.md:36-39 says focused Raze recheck and commit/push reconciliation are still pending.
+      - .harness/contracts/sprint-ets-63.yaml:4 says IMPLEMENTED_PENDING_RAZE_RECHECK_AND_PUSH.
+    assessment: >
+      Premature "Complete" status wording has been replaced with an explicit
+      implemented/pending-gate state while Raze recheck and push remain pending.
+  - id: RAZE-ETS63-EVIDENCE-001
+    severity: MEDIUM
+    category: unverified_maven_claims
+    status: OPEN
+    result: partially_closed
+    evidence_checked:
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/formatter.log exists and shows BUILD SUCCESS, finished at 2026-08-01T06:35:50Z.
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/focused-red-reproduction.log exists and shows the intended compile red for missing releasedSystemScopedSystemEventsPath, isCollectionWithItemType, and Part2SystemEventSupport, with BUILD FAILURE.
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/focused-corrected.log exists and shows Tests run 84, Failures 0, Errors 0, Skipped 0, with BUILD SUCCESS.
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/coverage-update.log exists and shows VerifyReleasedAtsCoverage Tests run 1, Failures 0, Errors 0, Skipped 0, with BUILD SUCCESS.
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/coverage-audit.log exists and shows VerifyReleasedAtsCoverage Tests run 23, Failures 0, Errors 0, Skipped 0, with BUILD SUCCESS.
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/full-maven.log exists and shows Tests run 763, Failures 0, Errors 0, Skipped 3, with BUILD SUCCESS.
+      - git status --short --ignored ops/test-results/sprint-ets-63-part2-system-event-2026-08-01 reports the Sprint 63 directory as untracked and each Maven .log artifact as ignored.
+      - git check-ignore -v reports .gitignore:27:*.log for formatter.log, focused-red-reproduction.log, focused-corrected.log, coverage-update.log, coverage-audit.log, and full-maven.log.
+      - git ls-files ops/test-results/sprint-ets-63-part2-system-event-2026-08-01 returned no tracked Sprint 63 evidence files.
+    assessment: >
+      The new Maven evidence files exist and substantiate the claimed formatter,
+      focused red, corrected focused, coverage update, coverage audit, and full
+      Maven totals. The finding is not closed because the requested durable
+      tracked evidence condition is still false: every Maven .log artifact is
+      ignored by .gitignore and not present in git ls-files.
+    required_fix: >
+      Make the Sprint 63 Maven evidence durable in the repository, either by
+      force-adding the six .log files, converting them to unignored tracked
+      evidence filenames such as .txt, or adding a narrow .gitignore exception
+      for this Sprint 63 evidence directory, then update the docs if filenames
+      change.
+evidence_checked:
+  docs:
+    - epics/stories/s-ets-63-01-part2-system-event-closure.md
+    - openspec/change-proposals/CP-023-part2-system-event-closure.md
+    - epics/epic-ets-03-part2-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - .harness/contracts/sprint-ets-63.yaml
+  artifacts:
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/formatter.log
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/focused-red-reproduction.log
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/focused-corrected.log
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/coverage-update.log
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/coverage-audit.log
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/full-maven.log
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/local-osh-teamengine-smoke.xml
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/local-osh-teamengine-container-log.txt
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/smoke-console.txt
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/no-mutation-oracle.txt
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/iut-request-method-counts.txt
+    - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/teamengine6-runtime-verification.txt
+commands_not_rerun:
+  - Docker
+  - Maven
+  - TeamEngine
+implementation_files_changed: false
+required_fixes:
+  - RAZE-ETS63-EVIDENCE-001
+final_assessment: >
+  RAZE-ETS63-DOC-001 is closed. RAZE-ETS63-EVIDENCE-001 remains open only on
+  artifact durability: the logs now exist and substantiate the claimed totals,
+  but they are ignored/untracked and therefore do not yet satisfy the requested
+  tracked evidence condition.

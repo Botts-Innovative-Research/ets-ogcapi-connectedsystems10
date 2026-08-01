@@ -1892,14 +1892,14 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 24 S-ETS-24-01 — Part 2 System Events group =====
+	// ===== Sprint 63 S-ETS-63-01 — Part 2 System Events group =====
+	// Annex A.5 lists /conf/api-common and Part 1 /conf/system as direct prerequisites.
 
 	/**
-	 * Sprint 24 S-ETS-24-01 (REQ-ETS-PART2-005): the canonical testng.xml SHALL declare
-	 * {@code <group name="part2systemevent" depends-on="core common systemfeatures"/>}.
+	 * REQ-ETS-PART2-005; SCENARIO-ETS-PART2-005-DIRECT-PREREQUISITES-001.
 	 */
 	@org.junit.Test
-	public void testPart2SystemEventGroupDependsOnCoreCommonAndSystemFeatures() throws Exception {
+	public void testPart2SystemEventGroupDependsOnPart2ApiCommonAndSystemFeatures() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -1914,28 +1914,22 @@ public class VerifyTestNGSuiteDependency {
 								+ "' uses comma syntax, which TestNG treats as a nonexistent single group at runtime",
 						dependsOn.contains(","));
 				Set<String> dependencyTokens = dependencyTokens(dependsOn);
-				assertTrue("group '" + PART2_SYSTEM_EVENT_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ CORE_GROUP + "'", dependencyTokens.contains(CORE_GROUP));
-				assertTrue("group '" + PART2_SYSTEM_EVENT_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ COMMON_GROUP + "'", dependencyTokens.contains(COMMON_GROUP));
-				assertTrue("group '" + PART2_SYSTEM_EVENT_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ SYSTEMFEATURES_GROUP + "'", dependencyTokens.contains(SYSTEMFEATURES_GROUP));
-				assertFalse("group '" + PART2_SYSTEM_EVENT_GROUP
-						+ "' must not depend on part2apicommon; otherwise GeoRobotix would cascade-SKIP before the System Events prerequisite-honesty assertion can report missing /conf/api-common",
-						dependencyTokens.contains(PART2_API_COMMON_GROUP));
+				assertEquals("group '" + PART2_SYSTEM_EVENT_GROUP
+						+ "' must depend only on the exact Part 2 API Common and Part 1 System prerequisites in Sprint 63",
+						Set.of(PART2_API_COMMON_GROUP, SYSTEMFEATURES_GROUP), dependencyTokens);
 				foundDependency = true;
 				break;
 			}
 		}
 		assertTrue(
 				"testng.xml does not declare <group name=\"" + PART2_SYSTEM_EVENT_GROUP
-						+ "\" depends-on=\"core common systemfeatures\"/> — see Sprint 24 S-ETS-24-01.",
+						+ "\" depends-on=\"part2apicommon systemfeatures\"/> — see Sprint 63 S-ETS-63-01.",
 				foundDependency);
 	}
 
 	/**
-	 * Sprint 24 S-ETS-24-01: every Part 2 System Events @Test method SHALL carry
-	 * {@code groups = "part2systemevent"}.
+	 * REQ-ETS-PART2-005; SCENARIO-ETS-PART2-005-RELEASED-PROCEDURES-001. Every Part 2
+	 * System Events @Test method SHALL carry {@code groups = "part2systemevent"}.
 	 */
 	@org.junit.Test
 	public void testEveryPart2SystemEventTestMethodCarriesPart2SystemEventGroup() {
@@ -1962,19 +1956,16 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 24 S-ETS-24-01: Part 2 System Events classes MUST be co-located in the SAME
-	 * {@code <test>} block as Core, Common, and SystemFeatures.
+	 * REQ-ETS-PART2-005; SCENARIO-ETS-PART2-005-DIRECT-PREREQUISITES-001. Part 2 System
+	 * Events classes MUST be co-located in the SAME {@code <test>} block as Part 2 API
+	 * Common and Part 1 System.
 	 */
 	@org.junit.Test
-	public void testPart2SystemEventCoLocatedWithCoreCommonAndSystemFeatures() throws Exception {
+	public void testPart2SystemEventCoLocatedWithPart2ApiCommonAndSystemFeatures() throws Exception {
 		XmlSuite suite = parseShippedSuite();
-		Set<String> coreClassNames = new HashSet<>();
-		for (Class<?> c : CORE_CLASSES) {
-			coreClassNames.add(c.getName());
-		}
-		Set<String> commonClassNames = new HashSet<>();
-		for (Class<?> c : COMMON_CLASSES) {
-			commonClassNames.add(c.getName());
+		Set<String> part2ApiCommonClassNames = new HashSet<>();
+		for (Class<?> c : PART2_API_COMMON_CLASSES) {
+			part2ApiCommonClassNames.add(c.getName());
 		}
 		Set<String> systemFeaturesClassNames = new HashSet<>();
 		for (Class<?> c : SYSTEMFEATURES_CLASSES) {
@@ -1991,19 +1982,18 @@ public class VerifyTestNGSuiteDependency {
 			for (XmlClass xc : xt.getXmlClasses()) {
 				xtClasses.add(xc.getName());
 			}
-			boolean hasAllCore = xtClasses.containsAll(coreClassNames);
-			boolean hasAllCommon = xtClasses.containsAll(commonClassNames);
+			boolean hasAllPart2ApiCommon = xtClasses.containsAll(part2ApiCommonClassNames);
 			boolean hasAllSystemFeatures = xtClasses.containsAll(systemFeaturesClassNames);
 			boolean hasAnyPart2SystemEvent = !java.util.Collections.disjoint(xtClasses, part2SystemEventClassNames);
-			if (hasAllCore && hasAllCommon && hasAllSystemFeatures && hasAnyPart2SystemEvent) {
+			if (hasAllPart2ApiCommon && hasAllSystemFeatures && hasAnyPart2SystemEvent) {
 				coAlloc = true;
 				break;
 			}
 		}
-		assertTrue("Core (" + coreClassNames + "), Common (" + commonClassNames + "), SystemFeatures ("
-				+ systemFeaturesClassNames + "), and Part 2 System Events (" + part2SystemEventClassNames
+		assertTrue("Part 2 API Common (" + part2ApiCommonClassNames + "), SystemFeatures (" + systemFeaturesClassNames
+				+ "), and Part 2 System Events (" + part2SystemEventClassNames
 				+ ") must be declared in the SAME <test> block of testng.xml so the group dependency "
-				+ "(Part2SystemEvent → Core + Common + SystemFeatures) resolves within scope. See Sprint 24 S-ETS-24-01.",
+				+ "(Part2SystemEvent -> Part2ApiCommon + SystemFeatures) resolves within scope. See Sprint 63 S-ETS-63-01.",
 				coAlloc);
 	}
 

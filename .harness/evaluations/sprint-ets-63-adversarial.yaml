@@ -1,0 +1,158 @@
+verdict: GAPS_FOUND
+confidence: 0.94
+reviewer: Raze
+reviewed_at: "2026-08-01T06:27:54Z"
+review_mode: artifact_inspection_only_no_docker_rerun_no_implementation_changes
+scope:
+  sprint: ets-63
+  story: S-ETS-63-01
+  requirement: REQ-ETS-PART2-005
+  target_conformance_class: /conf/system-event
+  reviewed_files:
+    java_testng:
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java
+      - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventSupport.java
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/VerifyPart2SystemEventTests.java
+    specs_docs:
+      - openspec/change-proposals/CP-023-part2-system-event-closure.md
+      - epics/stories/s-ets-63-01-part2-system-event-closure.md
+      - .harness/contracts/sprint-ets-63.yaml
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+      - _bmad/traceability.md
+      - _bmad/architecture.md
+      - epics/epic-ets-03-part2-classes.md
+      - ops/status.md
+      - ops/test-results.md
+      - ops/changelog.md
+      - ops/known-issues.md
+    coverage:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+      - ops/ats-coverage-report.json
+    e2e_artifacts:
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/local-osh-teamengine-smoke.xml
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/local-osh-teamengine-container-log.txt
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/smoke-console.txt
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/no-mutation-oracle.txt
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/iut-request-method-counts.txt
+      - ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/teamengine6-runtime-verification.txt
+source_check:
+  official_source:
+    url: https://docs.ogc.org/is/23-002/23-002.html
+    checked: OGC 23-002 Clause 12 and Annex A.5
+  conclusion: >
+    Annex A.5 lists exactly five /conf/system-event tests and prerequisites
+    /conf/api-common plus Part 1 /conf/system. The implementation follows the
+    released Annex copy text, including A.40 itemType=ControlStream, A.42
+    canonical /systemEvents, and A.43 /systems/{sysId}/systemEvents despite the
+    Clause 12 Requirement 43 /systems/{sysId}/events wording.
+positive_evidence:
+  implementation_mapping:
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java:82
+      finding: canonical-url maps to /req/system-event/canonical-url and selects itemType=ControlStream collections.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java:124
+      finding: resources-endpoint validates /systemEvents through SystemEvent collection and item schemas.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java:135
+      finding: canonical-endpoint validates canonical /systemEvents.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java:146
+      finding: ref-from-system uses the released Annex A.43 /systems/{sysId}/systemEvents path.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java:160
+      finding: collections selects exact itemType=SystemEvent and validates the returned resources with SystemEvent schemas.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventSupport.java:38
+      finding: SystemEvent collection and item schema files are explicit and exist in src/main/resources/schemas/connected-systems-2/json/.
+  dependency_and_skip_behavior:
+    - evidence: src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:190
+      finding: part2systemevent depends on part2apicommon and systemfeatures.
+    - evidence: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventTests.java:60
+      finding: setup depends on the same prerequisite groups and runs a defensive skipped/failed prerequisite check.
+    - evidence: src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java:1902
+      finding: structural lint asserts the exact dependency tokens and rejects comma syntax.
+    - evidence: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/local-osh-teamengine-smoke.xml:1754
+      finding: local OSH setup SKIPs before SystemEvent IUT access because canonicalSystemsEndpointIsValid skipped.
+  coverage:
+    - evidence: ops/ats-coverage-report.json summary
+      finding: total coverage is 240 total, 135 exact, 2 helper, 90 candidate, 13 unmapped.
+    - evidence: parsed ops/ats-coverage-report.json
+      finding: 2:/conf/system-event is 5 total, 5 exact, 0 helper, 0 candidate, 0 unmapped.
+    - evidence: parsed src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+      finding: exactly five /conf/system-event reviewed exact mappings point to the five deployed SystemEvent methods.
+  e2e_and_mutation:
+    - evidence: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/local-osh-teamengine-smoke.xml:1
+      finding: "local OSH TeamEngine totals are honestly non-green: 251 total, 36 passed, 21 failed, 194 skipped."
+    - evidence: parsed local-osh-teamengine-smoke.xml
+      finding: all five Sprint 63 System Events methods have status SKIP with the prerequisite skipped-before-IUT-access reason.
+    - evidence: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/no-mutation-oracle.txt:1
+      finding: no-mutation oracle recognized 182 local-OSH IUT request logs and zero writes.
+    - evidence: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/iut-request-method-counts.txt:1
+      finding: IUT-bound request method count is GET only.
+    - evidence: parsed local-osh-teamengine-container-log.txt
+      finding: raw container log has 187 GET request lines total, 182 IUT-bound GETs, 5 external OGC OpenAPI GETs, and zero POST/PUT/PATCH/DELETE.
+    - evidence: ops/test-results/sprint-ets-63-part2-system-event-2026-08-01/teamengine6-runtime-verification.txt:5
+      finding: TeamEngine 6 runtime immutability verification passed.
+findings:
+  - id: RAZE-ETS63-DOC-001
+    severity: MEDIUM
+    category: premature_completion_wording
+    status: OPEN
+    summary: Several reconciliation docs mark Sprint 63 complete while Raze and push remain pending.
+    evidence:
+      - epics/stories/s-ets-63-01-part2-system-event-closure.md:3 says "Status: Complete".
+      - epics/stories/s-ets-63-01-part2-system-event-closure.md:71 leaves Raze review unchecked.
+      - epics/stories/s-ets-63-01-part2-system-event-closure.md:72 leaves push unchecked.
+      - ops/status.md:5 says "Sprint 63 Complete" while ops/status.md:49 says Raze review and commit/push are still pending.
+      - epics/epic-ets-03-part2-classes.md:32 says "Complete" and "Raze pending" in the same row.
+      - openspec/change-proposals/CP-023-part2-system-event-closure.md:3 says "Implemented in Sprint 63" while the verification plan at line 56 requires Raze before completion wording.
+      - .harness/contracts/sprint-ets-63.yaml:4 correctly keeps status at IMPLEMENTED_PENDING_RAZE_AND_PUSH.
+    impact: >
+      The implementation may be technically close, but project state is already
+      advertising completion before the mandatory Raze and push gates are closed.
+      That creates false handoff confidence and repeats the stale completion
+      pattern caught in prior Part 2 closures.
+    required_fix: >
+      Replace premature "Complete" wording with an explicit pending-gate state
+      in story, status, epic, and CP text until this Raze report has no
+      unresolved required fixes and the push is complete.
+  - id: RAZE-ETS63-EVIDENCE-001
+    severity: MEDIUM
+    category: unverified_maven_claims
+    status: OPEN
+    summary: Focused, coverage, formatter, and full Maven totals are claimed but no durable Sprint 63 Maven artifacts are tracked.
+    evidence:
+      - epics/stories/s-ets-63-01-part2-system-event-closure.md:44-51 claims test-first red, corrected focused 84/0/0/0, coverage update/audit, and full Docker Maven 763/0/0/3.
+      - ops/status.md:28-33 repeats the same verification totals.
+      - ops/test-results.md:20-30 repeats the same verification totals.
+      - "find ops/test-results/sprint-ets-63-part2-system-event-2026-08-01 -maxdepth 2 -type f shows only E2E/no-mutation/runtime files, not Maven logs."
+      - No tracked ops/test-results Sprint 63 Maven log was found for the focused red, corrected focused run, coverage update/audit, formatter, or full Docker Maven run.
+    impact: >
+      E2E/no-mutation evidence is durable and inspectable, but the Maven gate
+      claims are not independently auditable from repository artifacts. A later
+      reviewer cannot distinguish a real pass from a copied stale total without
+      rerunning expensive gates.
+    required_fix: >
+      Archive the Sprint 63 focused red/corrected focused, coverage update,
+      coverage audit, formatter, and full Docker Maven console outputs under the
+      Sprint 63 evidence directory and update story/status/test-results to point
+      at those files. If the logs were not captured, rerun the missing gates and
+      archive fresh output before final completion.
+non_findings:
+  - id: RAZE-ETS63-NONFINDING-001
+    summary: No implementation-level false PASS found for the five System Events methods.
+  - id: RAZE-ETS63-NONFINDING-002
+    summary: No incorrect OGC Annex A.5 mapping found; the implementation preserves the released copy text rather than the historical /systems/{sysId}/events substitution.
+  - id: RAZE-ETS63-NONFINDING-003
+    summary: TestNG dependency wiring, structural lint, and E2E skip behavior agree.
+  - id: RAZE-ETS63-NONFINDING-004
+    summary: E2E evidence is honestly non-green and does not claim all tests pass.
+  - id: RAZE-ETS63-NONFINDING-005
+    summary: No IUT-bound mutation or credential leak was found in archived Sprint 63 logs.
+required_fixes:
+  - RAZE-ETS63-DOC-001
+  - RAZE-ETS63-EVIDENCE-001
+final_assessment: >
+  Sprint 63's System Events implementation, exact OGC procedure mapping, TestNG
+  dependency wiring, reviewed ATS mappings, local OSH SKIP honesty, and
+  no-mutation evidence look technically sound from artifact inspection. Do not
+  close or push as complete until the premature completion wording is corrected
+  and the Maven verification claims have durable archived evidence.

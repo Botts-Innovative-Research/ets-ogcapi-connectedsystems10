@@ -1,6 +1,6 @@
 # Story S-ETS-65-01: Part 2 JSON Encoding Released ATS Closure
 
-> Status: Raze approved, pending push | Epic: epic-ets-03-part2-classes | Sprint: ets-65 | Last updated: 2026-08-01
+> Status: Done | Epic: epic-ets-03-part2-classes | Sprint: ets-65 | Last updated: 2026-08-01
 
 ## Context
 
@@ -84,7 +84,7 @@ Encoding", using official `/req/json` and `/conf/json` identifiers.
 - [x] Formatter and full Docker Maven run.
 - [x] Local OSH TeamEngine smoke and no-mutation oracle run.
 - [x] Raze review completes with no unresolved required fixes.
-- [ ] Commit is pushed to Botts `main`.
+- [x] Commit is pushed to Botts `main` as `1acfdfa`.
 
 ## Out Of Scope
 

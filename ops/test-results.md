@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T10:46Z
+Last updated: 2026-08-01T10:53Z
 
 ## Current Sprint Evidence
 
@@ -49,8 +49,8 @@ Sprint 65 Part 2 JSON Encoding released ATS:
 - TeamEngine 6 runtime immutability verification passed for smoke image
   `sha256:31e6b4eac77f8455638c94160c788f7156689566711c668ea266194837434637`.
 - Final Raze recheck approved the mediatype-write mixed-operation gapfix:
-  `APPROVE 0.96`, both findings closed, `required_fixes: []`. Commit and push
-  are pending.
+  `APPROVE 0.96`, both findings closed, `required_fixes: []`.
+- Implementation commit `1acfdfa` is pushed to Botts `main`.
 
 Sprint 64 Part 2 Advanced Filtering released ATS:
 

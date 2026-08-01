@@ -1,7 +1,7 @@
 sprint: ets-65
 story: S-ETS-65-01
 title: Part 2 JSON Encoding released ATS closure
-status: PENDING_PUSH
+status: COMPLETE
 date: 2026-08-01
 requirement: REQ-ETS-PART2-009
 scope:
@@ -34,7 +34,7 @@ verification:
   e2e_local_osh: "HONEST_NON_GREEN 258/29/20/209; Part 2 JSON skips before endpoint access due missing SWE JSON record-components prerequisite"
   no_mutation: "PASS 151 IUT-bound GETs; zero POST/PUT/PATCH/DELETE"
   raze: "APPROVE 0.96; required_fixes []"
-  pushed: PENDING
+  pushed: "PUSHED 1acfdfa to Botts main"
 evidence:
   directory: ops/test-results/sprint-ets-65-part2-json-2026-08-01/
   files:

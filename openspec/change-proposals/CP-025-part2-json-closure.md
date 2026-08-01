@@ -1,6 +1,6 @@
 # CP-025 - Part 2 JSON Encoding Released ATS Closure
 
-**Status**: Implemented, Raze approved, pending push
+**Status**: Implemented and pushed
 **Date**: 2026-08-01
 **Capability**: `ets-ogcapi-connectedsystems`
 **Requirement**: `REQ-ETS-PART2-009`
@@ -63,7 +63,7 @@ templates in service-desc OpenAPI metadata, and emits no mutation requests.
 Evidence directory:
 `ops/test-results/sprint-ets-65-part2-json-2026-08-01/`.
 
-Current verification after the Raze recheck gapfix, before push:
+Current verification after the Raze recheck gapfix:
 
 - Focused corrected: `88/0/0/0`.
 - Coverage audit: `23/0/0/0`; Part 2 JSON `14 exact / 0 candidate /
@@ -75,6 +75,7 @@ Current verification after the Raze recheck gapfix, before push:
 - No-mutation oracle: 151 IUT-bound GETs and zero POST/PUT/PATCH/DELETE.
 - Final Raze recheck: `APPROVE 0.96`, both previously open findings closed,
   `required_fixes: []`.
+- Implementation commit: `1acfdfa` pushed to Botts `main`.
 
 ## Non-Goals
 

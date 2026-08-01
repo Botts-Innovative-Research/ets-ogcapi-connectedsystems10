@@ -1,8 +1,8 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T10:46Z
+Last updated: 2026-08-01T10:53Z
 
-## Sprint 65 Raze Approved, Push Pending - Part 2 JSON Encoding Released ATS
+## Sprint 65 Complete - Part 2 JSON Encoding Released ATS
 
 - User instruction: "Continue until you need my input."
 - CP-025 and S-ETS-65-01 close the OGC 23-002 Part 2 `/conf/json` class as
@@ -43,8 +43,8 @@ Last updated: 2026-08-01T10:46Z
   `sha256:31e6b4eac77f8455638c94160c788f7156689566711c668ea266194837434637`.
   TeamEngine 6 runtime immutability verification passed.
 - Final Raze recheck approved the mediatype-write mixed-operation gapfix:
-  `APPROVE 0.96`, both findings closed, `required_fixes: []`. Commit and push
-  are still pending.
+  `APPROVE 0.96`, both findings closed, `required_fixes: []`.
+- Implementation commit `1acfdfa` is pushed to Botts `main`.
 
 ## Sprint 64 Complete - Part 2 Advanced Filtering Released ATS
 

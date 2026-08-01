@@ -1502,9 +1502,9 @@ be used for exact released ATS PASS evidence.
 
 #### REQ-ETS-PART2-009: Part 2 JSON Encoding
 - **Priority**: MUST
-- **Status**: IMPLEMENTED_RELEASED_ATS_RAZE_APPROVED_PENDING_PUSH (Sprint 65
-  CP-025; 14/14 exact mappings; final adversarial recheck approved, push
-  pending)
+- **Status**: IMPLEMENTED_RELEASED_ATS_RAZE_APPROVED_PUSHED (Sprint 65 CP-025;
+  14/14 exact mappings; final adversarial recheck approved; implementation
+  commit `1acfdfa` pushed to Botts `main`)
 - **Historical increments**: Sprint 28 declaration-gated read-only subset;
   Sprint 65 exact released ATS closure supersedes it.
 - **Description**: The ETS SHALL implement the released OGC 23-002 Clause
@@ -1542,7 +1542,8 @@ be used for exact released ATS PASS evidence.
   all GET, with zero POST/PUT/PATCH/DELETE. Evidence is archived under
   `ops/test-results/sprint-ets-65-part2-json-2026-08-01/`. Final Raze recheck
   is `APPROVE 0.96` with both previously open findings closed and
-  `required_fixes: []`.
+  `required_fixes: []`. Implementation commit `1acfdfa` is pushed to Botts
+  `main`.
 - **Maps to**: PRD FR-ETS-39.
 
 #### SCENARIO-ETS-PART2-009-RELEASED-PROCEDURES-001 (CRITICAL)

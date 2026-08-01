@@ -3014,7 +3014,7 @@ fail or SKIP as specified.
 - **Priority**: SHOULD
 - **Status**: IMPLEMENTED (2026-08-01: `scripts/session-metrics.py --self-test`
   passes and auto-discovery reads the current Codex rollout JSONL for this
-  checkout)
+  checkout; Raze approved and implementation/evidence pushed in `6e6d4f3`)
 - **Description**: The session metrics extractor SHALL support both legacy
   Claude Code assistant-message JSONL records and current Codex rollout JSONL
   records for the active checkout. Auto-discovery SHALL first preserve the

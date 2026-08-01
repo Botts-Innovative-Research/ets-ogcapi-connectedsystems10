@@ -1,8 +1,8 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T15:11Z
+Last updated: 2026-08-01T15:18Z
 
-## Codex Session Metrics Fix Raze Approved - Push Pending
+## Codex Session Metrics Fix Complete
 
 - User instruction: "Make the practical fix, then continue with the project -
   and don't stop unless you need my input."
@@ -24,12 +24,14 @@ Last updated: 2026-08-01T15:11Z
 - Initial Raze found a high sub-agent auto-discovery classification gap and a
   low premature epic completion label. The gapfix preserves sub-agent identity
   across mixed sub-agent/parent `session_meta` records, adds a self-test
-  regression, and changes the epic row back to Raze/push pending.
+  regression, and changed the epic row back to Raze/push pending before
+  final push reconciliation.
 - Post-gapfix evidence shows the problematic Sprint 66 Raze rollout is now
   classified as sub-agent while auto-discovery still selects the main rollout.
 - Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
   `required_fixes: []`.
-- Commit and push remain pending.
+- Implementation and evidence are committed and pushed in `6e6d4f3`; this
+  reconciliation records the post-push completion state.
 
 ## Sprint 66 Complete - Part 2 SWE Common JSON Encoding Released ATS
 

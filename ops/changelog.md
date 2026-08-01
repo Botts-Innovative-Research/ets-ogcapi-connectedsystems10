@@ -25,11 +25,13 @@ the project - and don't stop unless you need my input."
 - Initial Raze found a high sub-agent auto-discovery classification gap and a
   low premature epic completion label. The gapfix preserves sub-agent identity
   across mixed sub-agent/parent `session_meta` records, adds a self-test
-  regression, changes the epic row back to Raze/push pending, and archives
-  post-gapfix self-test/auto-discovery/sub-agent-classification evidence.
+  regression, changes the epic row back to Raze/push pending before final
+  push reconciliation, and archives post-gapfix self-test/auto-discovery/
+  sub-agent-classification evidence.
 - Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
   `required_fixes: []`.
-- Commit and push remain pending.
+- Implementation and evidence commit `6e6d4f3` is pushed to Botts `main`; this
+  reconciliation records the post-push completion state.
 
 ## 2026-08-01 - Sprint 66 Part 2 SWE Common JSON Encoding released ATS closure
 

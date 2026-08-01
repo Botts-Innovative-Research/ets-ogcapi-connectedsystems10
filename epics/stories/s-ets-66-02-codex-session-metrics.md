@@ -1,7 +1,7 @@
 # S-ETS-66-02: Codex Session Metrics JSONL Support
 
 ## Status
-DONE - PUSH PENDING.
+DONE - PUSHED.
 
 ## User Instruction
 Triggered by: "Make the practical fix, then continue with the project - and
@@ -23,7 +23,7 @@ don't stop unless you need my input."
 - [x] `python3 scripts/session-metrics.py` auto-discovers the current checkout
   Codex main rollout and prints non-zero usage totals.
 - [x] Raze review is approved with no unresolved required fixes.
-- [ ] Completion evidence is committed and pushed.
+- [x] Completion evidence is committed and pushed.
 
 ## Implementation Evidence
 - `ops/test-results/s-ets-66-02-codex-session-metrics-2026-08-01/self-test.txt`:
@@ -38,11 +38,13 @@ don't stop unless you need my input."
 - Initial Raze found `RAZE-ETS66-02-AUTODISCOVERY-001` and
   `RAZE-ETS66-02-DOC-001`. The gapfix preserves sub-agent identity across
   mixed sub-agent/parent `session_meta` records, extends `--self-test`, and
-  changes the epic status back to Raze/push pending.
+  changes the epic status back to Raze/push pending before final push
+  reconciliation.
 - Post-gapfix evidence:
   `self-test-after-raze-fix.txt`, `current-codex-session-after-raze-fix.txt`,
   and `subagent-classification-after-raze-fix.txt`.
 - Focused Raze recheck returned `APPROVE 0.96` with
   `RAZE-ETS66-02-AUTODISCOVERY-001` and `RAZE-ETS66-02-DOC-001` closed and
   `required_fixes: []`.
-- Commit and push remain pending.
+- Implementation and evidence are committed and pushed in `6e6d4f3`; this
+  reconciliation records the post-push completion state.

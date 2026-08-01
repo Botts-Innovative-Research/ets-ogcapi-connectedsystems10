@@ -42,6 +42,8 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
   `APPROVE 0.96`, both findings closed, `required_fixes: []`.
 - Implementation commit `1acfdfa` pushed to Botts `main`; this reconciliation
   records the post-push completion state.
+- Post-push handoff cleanup updates `ops/known-issues.md` and epic ETS-03 so
+  they no longer describe JSON Encoding as Sprint 28 partial work.
 
 ## 2026-08-01 - Sprint 64 Part 2 Advanced Filtering released ATS closure
 

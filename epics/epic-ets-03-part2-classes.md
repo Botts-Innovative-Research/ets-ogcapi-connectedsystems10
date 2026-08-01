@@ -1,6 +1,9 @@
 # Epic ETS-03: CS API Part 2 Conformance Classes
 
-> Status: Active - Sprints 59-63 close Part 2 API Common, Datastream, ControlStream, Feasibility, and System Events exact mappings; remaining Part 2 classes still need exact closure | Last updated: 2026-08-01
+> Status: Active - Sprints 59-65 close Part 2 API Common, Datastream,
+> ControlStream, Feasibility, System Events, Advanced Filtering, and JSON exact
+> mappings; remaining Part 2 classes still need exact closure | Last updated:
+> 2026-08-01
 
 ## Goal
 Implement all 12 released OGC 23-002 conformance classes and all 130 Annex A

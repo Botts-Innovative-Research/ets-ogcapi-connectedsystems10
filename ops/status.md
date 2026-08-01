@@ -1,13 +1,13 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T07:52Z
+Last updated: 2026-08-01T08:26Z
 
-## Sprint 64 Raze Approved - Part 2 Advanced Filtering Released ATS
+## Sprint 64 Complete - Part 2 Advanced Filtering Released ATS
 
 - User instruction: "Continue."
 - CP-024 and S-ETS-64-01 close the OGC 23-002 Part 2
   `/conf/advanced-filtering` class as exactly eighteen released Annex A.6
-  procedures, pending final Raze/push reconciliation.
+  procedures.
 - `Part2AdvancedFilteringTests` now exposes one independent TestNG method per
   released target across DataStream, Observation, ControlStream, Command,
   CommandStatus, and SystemEvent filters, removes the historical Sprint 25
@@ -51,7 +51,7 @@ Last updated: 2026-08-01T07:52Z
   TeamEngine 6 runtime immutability verification passed. The local OSH
   checkout mounted read-only at `/opt/osh` is clean at `4c87a65`, with
   `sensorhub-service-consys-2.0.1.jar`.
-- Commit and push remain pending.
+- Implementation commit `880c347` is pushed to Botts `main`.
 
 ## Sprint 63 Complete - Part 2 System Events Released ATS
 
@@ -201,8 +201,8 @@ Last updated: 2026-08-01T07:52Z
 
 ## Next Recommended Work
 
-- After Sprint 64 is Raze-approved and pushed, choose the next Part 2 exact
-  closure from the remaining classes: `/conf/create-replace-delete`
+- Sprint 64 is Raze-approved and pushed. Choose the next Part 2 exact closure
+  from the remaining classes: `/conf/create-replace-delete`
   (`0 exact / 12 candidate / 4 unmapped`), `/conf/update`
   (`0 exact / 14 candidate / 0 unmapped`), `/conf/json`
   (`0 exact / 13 candidate / 1 unmapped`), or the SWE Common encoding classes

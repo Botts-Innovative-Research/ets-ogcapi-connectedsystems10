@@ -1,6 +1,6 @@
 # Story S-ETS-64-01: Part 2 Advanced Filtering Released ATS Closure
 
-> Status: Raze Approved; Pending Push | Epic: epic-ets-03-part2-classes | Sprint: ets-64 | Last updated: 2026-08-01
+> Status: Done | Epic: epic-ets-03-part2-classes | Sprint: ets-64 | Last updated: 2026-08-01
 
 ## Context
 
@@ -55,6 +55,7 @@ official `/req/advanced-filtering` and `/conf/advanced-filtering` identifiers.
 - Post-gapfix local OSH TeamEngine smoke: `260 total / 36 passed / 21 failed / 203 skipped`. All eighteen Sprint 64 methods SKIP before Advanced Filtering IUT access because inherited Part 1 Advanced Filtering prerequisite `indirectPropertyFiltersAreTransitive` skipped; the failures are existing local OSH SensorML/Deployment/Procedure/Property/Sampling Feature gaps outside Sprint 64.
 - No-mutation oracle: `recognized_iut_request_logs=181`; request method counts `GET=186`, zero POST/PUT/PATCH/DELETE.
 - TeamEngine 6 runtime immutability passed for post-gapfix smoke image `sha256:fe3c3f03d1ffbc0b5e657a23f3e079c3983116203ec2457e6bbaf83f58f63f28`; local OSH remained clean at `4c87a65`, zero commits ahead, with `/opt/osh` mounted read-only.
+- Implementation commit `880c347` is pushed to Botts `main`.
 
 ## Definition of Done
 
@@ -66,7 +67,7 @@ official `/req/advanced-filtering` and `/conf/advanced-filtering` identifiers.
 - [x] Formatter and full Docker Maven run.
 - [x] Local OSH TeamEngine smoke and no-mutation oracle run.
 - [x] Raze review completes with no unresolved required fixes.
-- [ ] Commit is pushed to Botts `main`.
+- [x] Commit is pushed to Botts `main`.
 
 ## Out Of Scope
 

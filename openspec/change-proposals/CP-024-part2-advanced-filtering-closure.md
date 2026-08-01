@@ -1,6 +1,6 @@
 # CP-024 - Part 2 Advanced Filtering Released ATS Closure
 
-**Status**: Implemented in Sprint 64; Raze approved, pending push reconciliation
+**Status**: Implemented and pushed in Sprint 64
 **Date**: 2026-08-01
 **Capability**: `ets-ogcapi-connectedsystems`
 **Requirement**: `REQ-ETS-PART2-006`

@@ -33,7 +33,7 @@ formats). Sprint 25 correctly retired GeoRobotix's non-standard
 | S-ETS-03-05 | (placeholder) Implement `/conf/system-event` suite | Superseded by S-ETS-24-01 planning | REQ-ETS-PART2-005 |
 | S-ETS-03-06 | (placeholder) Implement `/conf/system-history` suite | Retired — not defined by OGC 23-002 Annex A | retired |
 | S-ETS-25-01 | Implement `/conf/advanced-filtering` (Part 2) read-only declaration-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-006 |
-| S-ETS-64-01 | Close `/conf/advanced-filtering` (Part 2) as eighteen exact released OGC 23-002 procedures | Raze approved; pending push | REQ-ETS-PART2-006 |
+| S-ETS-64-01 | Close `/conf/advanced-filtering` (Part 2) as eighteen exact released OGC 23-002 procedures | Complete; `18/18` exact, local OSH E2E honest non-green, Raze APPROVE, pushed `880c347` | REQ-ETS-PART2-006 |
 | S-ETS-03-07 | (placeholder) Implement `/conf/advanced-filtering` (Part 2) suite | Superseded by S-ETS-25-01 planning | REQ-ETS-PART2-006 |
 | S-ETS-26-01 | Implement first `/conf/create-replace-delete` (Part 2) safety-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-007 |
 | S-ETS-03-08 | (placeholder) Implement `/conf/create-replace-delete` (Part 2) suite | Superseded by S-ETS-26-01 | REQ-ETS-PART2-007 |

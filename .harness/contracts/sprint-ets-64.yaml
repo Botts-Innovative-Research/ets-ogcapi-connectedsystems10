@@ -1,7 +1,7 @@
 sprint: ets-64
 story: S-ETS-64-01
 title: Part 2 Advanced Filtering released ATS closure
-status: READY_TO_PUSH
+status: COMPLETE
 date: 2026-08-01
 requirement: REQ-ETS-PART2-006
 scope:
@@ -33,7 +33,8 @@ verification:
   e2e_local_osh: HONEST_NON_GREEN_EXISTING_IUT_GAPS
   no_mutation: PASS
   raze: PASS
-  pushed: PENDING
+  pushed: PASS
+  implementation_commit: 880c347
 evidence:
   directory: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/
   focused_corrected: focused-after-raze-falsepass-fix.txt

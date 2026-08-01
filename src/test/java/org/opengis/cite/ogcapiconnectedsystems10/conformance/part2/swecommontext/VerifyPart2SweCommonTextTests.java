@@ -4,30 +4,75 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 /**
- * Regression coverage for S-ETS-30-01 Part 2 SWE Common Text Encoding.
- *
- * <p>
- * Traceability: REQ-ETS-PART2-011,
- * SCENARIO-ETS-PART2-011-SWETEXT-CONFORMANCE-DECLARED-001,
- * SCENARIO-ETS-PART2-011-SWE-TEXT-ENCODING-RULES-PREREQUISITE-001,
- * SCENARIO-ETS-PART2-011-RESOURCE-CONDITION-GATES-001,
- * SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001,
- * SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001,
- * SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001,
- * SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001,
- * SCENARIO-ETS-PART2-011-MEDIATYPE-WRITE-ADVERTISEMENT-001,
- * SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001,
- * SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001, and
- * SCENARIO-ETS-PART2-011-SMOKE-NO-PUBLIC-MUTATION-001.
- * </p>
+ * Unit checks for the Sprint 67 Part 2 SWE Common Text released ATS closure.
  */
 public class VerifyPart2SweCommonTextTests {
+
+	private static final String REQ_BASE = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-text/";
+
+	private static final Set<String> RELEASED_TARGETS = Set.of(REQ_BASE + "mediatype-read",
+			REQ_BASE + "mediatype-write", REQ_BASE + "obsschema-schema", REQ_BASE + "obsschema-mapping",
+			REQ_BASE + "observation-encoding", REQ_BASE + "cmdschema-schema", REQ_BASE + "cmdschema-mapping",
+			REQ_BASE + "command-encoding");
+
+	@Test
+	public void releasedSuiteExposesExactlyOneTestMethodPerAnnexA11Target() {
+		List<Method> methods = releasedMethods();
+		assertEquals(
+				"SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001: Part 2 SWE Common Text must expose exactly the eight released Annex A.11 procedures.",
+				RELEASED_TARGETS.size(), methods.size());
+
+		Set<String> covered = new HashSet<>();
+		for (Method method : methods) {
+			org.testng.annotations.Test ann = method.getAnnotation(org.testng.annotations.Test.class);
+			List<String> matched = RELEASED_TARGETS.stream()
+				.filter(target -> containsCanonicalTarget(ann.description(), target))
+				.toList();
+			assertEquals("Each Part 2 SWE Common Text method must cite exactly one released target: " + method.getName()
+					+ " -> " + matched, 1, matched.size());
+			covered.add(matched.get(0));
+		}
+		assertEquals("Part 2 SWE Common Text released targets are not covered exactly once.", RELEASED_TARGETS,
+				covered);
+	}
+
+	@Test
+	public void releasedSuiteContainsNoStandaloneDeclarationPrerequisiteOrConditionProcedures() {
+		Set<String> methodNames = releasedMethods().stream().map(Method::getName).collect(Collectors.toSet());
+
+		assertFalse("Declaration is a setup gate, not a released Annex A.11 procedure.",
+				methodNames.contains("part2SweCommonTextConformanceDeclared"));
+		assertFalse("SWE prerequisite visibility is a setup gate, not a released Annex A.11 procedure.",
+				methodNames.contains("sweTextEncodingRulesPrerequisiteVisibleForFullClosure"));
+		assertFalse("Resource condition gates are per-procedure gates, not standalone Annex A.11 procedures.",
+				methodNames.contains("sweCommonTextResourceConditionGatesAreVisible"));
+		assertTrue("Released mediatype-read procedure is missing.", containsTarget(REQ_BASE + "mediatype-read"));
+	}
+
+	@Test
+	public void everyReleasedMethodTracesSprint67ScenarioAndRequirement() {
+		for (Method method : releasedMethods()) {
+			org.testng.annotations.Test ann = method.getAnnotation(org.testng.annotations.Test.class);
+			String description = ann.description();
+			assertTrue(method.getName() + " missing REQ-ETS-PART2-011 trace",
+					description.contains("REQ-ETS-PART2-011"));
+			assertTrue(method.getName() + " missing Sprint 67 released-procedure scenario trace",
+					description.contains("SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001"));
+			assertTrue(method.getName() + " should carry part2swecommontext group",
+					Arrays.asList(ann.groups()).contains(Part2SweCommonTextTests.GROUP));
+		}
+	}
 
 	@Test
 	public void officialPart2SweCommonTextIdentifiersAreExposed() {
@@ -74,9 +119,6 @@ public class VerifyPart2SweCommonTextTests {
 
 	@Test
 	public void sweCommonTextContentTypeRequiresExactMediaType() {
-		// REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001:
-		// Annex A.11 PASS evidence is exact application/swe+text, not CSV, binary,
-		// JSON, vendor, or auto/fallback media.
 		assertTrue(Part2SweCommonTextTests.isExactSweTextContentType("application/swe+text"));
 		assertTrue(Part2SweCommonTextTests.isExactSweTextContentType("application/swe+text; charset=utf-8"));
 		assertFalse(Part2SweCommonTextTests.isExactSweTextContentType("application/json"));
@@ -90,9 +132,6 @@ public class VerifyPart2SweCommonTextTests {
 
 	@Test
 	public void schemaMetadataCanBeJsonButNotAutoOrHtml() {
-		// REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001:
-		// schema metadata may be JSON, but text payload media, auto, HTML, and missing
-		// content types cannot be converted into schema PASS evidence.
 		assertTrue(Part2SweCommonTextTests.isJsonCompatibleContentType("application/json"));
 		assertTrue(Part2SweCommonTextTests.isJsonCompatibleContentType("application/swe+json"));
 		assertFalse(Part2SweCommonTextTests.isJsonCompatibleContentType("application/swe+text"));
@@ -161,6 +200,17 @@ public class VerifyPart2SweCommonTextTests {
 		assertTrue(Part2SweCommonTextTests.containsIssueTimeComponentWithCanonicalDefinition(issueTime));
 		assertFalse(Part2SweCommonTextTests.containsIssueTimeComponentWithCanonicalDefinition(nonIssueTime));
 		assertFalse(Part2SweCommonTextTests.containsIssueTimeComponentWithCanonicalDefinition(namedIssueTimeOnly));
+		assertFalse(Part2SweCommonTextTests.hasPresentNonCanonicalIssueTimeEvidence(nonIssueTime));
+		assertTrue(Part2SweCommonTextTests.hasPresentNonCanonicalIssueTimeEvidence(namedIssueTimeOnly));
+	}
+
+	@Test
+	public void issueTimeEvidenceFlagsPresentNonCanonicalDefinitions() {
+		Map<String, Object> wrongDefinition = Map.of("type", "DataRecord", "fields", List.of(Map.of("name", "issueTime",
+				"component", Map.of("type", "Time", "definition", "http://example.test/IssueTime"))));
+
+		assertFalse(Part2SweCommonTextTests.containsIssueTimeComponentWithCanonicalDefinition(wrongDefinition));
+		assertTrue(Part2SweCommonTextTests.hasPresentNonCanonicalIssueTimeEvidence(wrongDefinition));
 	}
 
 	@Test
@@ -168,16 +218,16 @@ public class VerifyPart2SweCommonTextTests {
 		Map<String, Object> apiDefinition = Map.of("paths", Map.of("/datastreams/{datastreamId}/observations", Map.of(
 				"post",
 				Map.of("requestBody", Map.of("content", Map.of("application/swe+text", Map.of("schema", Map.of())))))));
+		Map<String, List<String>> expected = Map.of("Observation resources",
+				List.of("/datastreams/{datastreamId}/observations"));
 
-		assertTrue(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(apiDefinition));
+		assertTrue(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(apiDefinition, expected).isEmpty());
 	}
 
 	@Test
 	public void apiDefinitionDoesNotPassFromOptionsJsonFallbackVendorDraftOrUnrelatedPaths() {
-		// REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001,
-		// SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001: mediatype-write
-		// cannot PASS from OPTIONS, JSON/CSV/binary/vendor media, unrelated paths, or
-		// subresource evidence.
+		Map<String, List<String>> expected = Map.of("Observation resources",
+				List.of("/datastreams/{datastreamId}/observations"));
 		Map<String, Object> optionsOnly = Map.of("paths", Map.of("/systems/{systemId}/datastreams",
 				Map.of("options", Map.of("requestBody", Map.of("content", Map.of("application/swe+text", Map.of()))))));
 		Map<String, Object> jsonOnly = Map.of("paths", Map.of("/systems/{systemId}/datastreams",
@@ -195,14 +245,15 @@ public class VerifyPart2SweCommonTextTests {
 		Map<String, Object> commandStatusSubresource = Map.of("paths", Map.of("/commands/{commandId}/status",
 				Map.of("put", Map.of("requestBody", Map.of("content", Map.of("application/swe+text", Map.of()))))));
 
-		assertFalse(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(optionsOnly));
-		assertFalse(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(jsonOnly));
-		assertFalse(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(vendorDraftOnly));
-		assertFalse(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(csvOnly));
-		assertFalse(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(binaryOnly));
-		assertFalse(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(sweJsonOnly));
-		assertFalse(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(unrelatedSweText));
-		assertFalse(Part2SweCommonTextTests.apiDefinitionAdvertisesSweTextWrite(commandStatusSubresource));
+		assertFalse(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(optionsOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(jsonOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(vendorDraftOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(csvOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(binaryOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(sweJsonOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(unrelatedSweText, expected).isEmpty());
+		assertFalse(Part2SweCommonTextTests.missingSweTextWriteAdvertisements(commandStatusSubresource, expected)
+			.isEmpty());
 		assertTrue(Part2SweCommonTextTests.isObservationOrCommandResourcePath("/observations"));
 		assertTrue(Part2SweCommonTextTests.isObservationOrCommandResourcePath("/observations/{obsId}"));
 		assertTrue(Part2SweCommonTextTests.isObservationOrCommandResourcePath("/controlstreams/{csId}/commands"));
@@ -212,8 +263,55 @@ public class VerifyPart2SweCommonTextTests {
 	}
 
 	@Test
+	public void apiDefinitionWriteAdvertisementRequiresEveryScopedWriteOperationToAdvertiseSweText() {
+		Map<String, List<String>> expected = Map.of("Observation resources",
+				List.of("/observations", "/observations/{observationId}"));
+		Map<String, Object> mixedOperations = Map.of("paths",
+				Map.of("/observations",
+						Map.of("post",
+								Map.of("requestBody",
+										Map.of("content", Map.of("application/swe+text", Map.of("schema", Map.of()))))),
+						"/observations/{id}", Map.of("put", Map.of("requestBody",
+								Map.of("content", Map.of("application/json", Map.of("schema", Map.of())))))));
+
+		assertEquals(List.of("Observation resources PUT /observations/{id}"),
+				Part2SweCommonTextTests.missingSweTextWriteAdvertisements(mixedOperations, expected));
+	}
+
+	@Test
 	public void groupNameIsStableForTestNgWiring() {
 		assertEquals("part2swecommontext", Part2SweCommonTextTests.GROUP);
+	}
+
+	private static List<Method> releasedMethods() {
+		return Arrays.stream(Part2SweCommonTextTests.class.getDeclaredMethods())
+			.filter(method -> method.getAnnotation(org.testng.annotations.Test.class) != null)
+			.toList();
+	}
+
+	private static boolean containsTarget(String target) {
+		return releasedMethods().stream()
+			.map(method -> method.getAnnotation(org.testng.annotations.Test.class).description())
+			.anyMatch(description -> containsCanonicalTarget(description, target));
+	}
+
+	private static boolean containsCanonicalTarget(String description, String target) {
+		int start = description.indexOf(target);
+		while (start >= 0) {
+			int end = start + target.length();
+			boolean leftBoundary = start == 0 || isTargetDelimiter(description.charAt(start - 1));
+			boolean rightBoundary = end == description.length() || isTargetDelimiter(description.charAt(end));
+			if (leftBoundary && rightBoundary) {
+				return true;
+			}
+			start = description.indexOf(target, start + 1);
+		}
+		return false;
+	}
+
+	private static boolean isTargetDelimiter(char character) {
+		return Character.isWhitespace(character) || character == '(' || character == ')' || character == ','
+				|| character == ';' || character == ':';
 	}
 
 }

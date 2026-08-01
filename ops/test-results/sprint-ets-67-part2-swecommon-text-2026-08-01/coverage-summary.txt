@@ -1,0 +1,7 @@
+total=240
+exact=183
+helper=2
+candidate=50
+unmapped=5
+part2=130/92/0/33/5
+2:/conf/swecommon-text=8/8/0/0/0

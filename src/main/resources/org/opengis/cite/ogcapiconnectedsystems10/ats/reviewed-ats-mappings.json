@@ -1607,6 +1607,78 @@
       "reviewedBy": "Codex Sprint 66 ATS line review",
       "reviewedOn": "2026-08-01",
       "evidence": "The released procedure requires ControlStream schema evidence and a concrete Command retrieved as application/swe+json before any positive result; until dedicated SWE Common data-value validation is available, it reports prerequisite-incomplete rather than passing from content-type or shape-only evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-text/mediatype-read",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#sweCommonTextMediatypeReadSupportedOnObservationOrCommandEndpoints()",
+      "reviewedBy": "Codex Sprint 67 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure gates exact /conf/swecommon-text plus the SWE Common Text Encoding Rules prerequisite, then requires concrete non-empty application/swe+text retrieval evidence from Observation endpoints when Datastream is declared and from Command endpoints when ControlStream is declared; non-404 HTTP failures and wrong content types fail rather than pass."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-text/mediatype-write",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#sweCommonTextMediatypeWriteAdvertisedByApiDefinitionOnly()",
+      "reviewedBy": "Codex Sprint 67 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure uses only API-definition evidence in the default read-only profile, fails when the API definition is unavailable, and requires every advertised scoped Observation or Command POST/PUT operation to include exact application/swe+text request-body media while ignoring OPTIONS, unrelated endpoints, subresources, CSV/binary/JSON fallback media, and vendor media."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-text/obsschema-schema",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#observationSchemaSweTextValidWhenDatastreamCandidateAvailable()",
+      "reviewedBy": "Codex Sprint 67 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure gates Datastream applicability, traverses every retrieved Datastream with bounded same-origin pagination, requests /datastreams/{id}/schema?obsFormat=application/swe+text, requires JSON-compatible schema metadata whose obsFormat member is application/swe+text, validates the Connected Systems Observation schema wrapper, and validates the embedded SWE Common record schema adapter."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-text/obsschema-mapping",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#observationSchemaSweMappingRequiresTimeComponentEvidence()",
+      "reviewedBy": "Codex Sprint 67 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure obtains scoped Datastream SWE Text schema evidence and fails unless the schema contains a canonical Time component definition with one of the released phenomenonTime, SamplingTime, or resultTime definition URIs."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-text/observation-encoding",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#observationSweTextEncodingRequiresParentSchemaAndCandidateEvidence()",
+      "reviewedBy": "Codex Sprint 67 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure requires Datastream schema evidence and a concrete Observation retrieved as non-empty application/swe+text before any positive result; until dedicated SWE Common Text data-value validation is available, it reports prerequisite-incomplete rather than passing from content-type or media-only evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-text/cmdschema-schema",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#commandSchemaSweTextValidWhenControlStreamCandidateAvailable()",
+      "reviewedBy": "Codex Sprint 67 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure gates ControlStream applicability, traverses every retrieved ControlStream with bounded same-origin pagination, requests /controlstreams/{id}/schema?cmdFormat=application/swe+text, requires JSON-compatible schema metadata whose commandFormat member is application/swe+text, validates the Connected Systems Command schema wrapper, and validates the embedded SWE Common record schema adapter."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-text/cmdschema-mapping",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent()",
+      "reviewedBy": "Codex Sprint 67 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure obtains scoped ControlStream SWE Text schema evidence, skips only when IssueTime mapping evidence is absent, and fails retrieved issueTime/IssueTime evidence that is not a Time component with the canonical IssueTime definition."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-text/command-encoding",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests#commandSweTextEncodingRequiresParentSchemaAndCandidateEvidence()",
+      "reviewedBy": "Codex Sprint 67 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure requires ControlStream schema evidence and a concrete Command retrieved as non-empty application/swe+text before any positive result; until dedicated SWE Common Text data-value validation is available, it reports prerequisite-incomplete rather than passing from content-type or media-only evidence."
     }
   ]
 }

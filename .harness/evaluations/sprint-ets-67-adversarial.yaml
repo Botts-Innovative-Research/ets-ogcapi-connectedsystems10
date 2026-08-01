@@ -1,0 +1,87 @@
+verdict: APPROVE
+confidence: 0.96
+reviewer: Raze
+reviewed_at_utc: "2026-08-01T16:19:34Z"
+reviewed_scope:
+  - "Sprint 67 Part 2 /conf/swecommon-text exact released ATS closure"
+  - "openspec/change-proposals/CP-027-part2-swecommon-text-closure.md"
+  - "epics/stories/s-ets-67-01-part2-swecommon-text-closure.md"
+  - ".harness/contracts/sprint-ets-67.yaml"
+  - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md#REQ-ETS-PART2-011"
+  - "_bmad/traceability.md row for REQ-ETS-PART2-011"
+  - "epics/epic-ets-03-part2-classes.md"
+  - "ops/status.md, ops/test-results.md, ops/changelog.md, ops/known-issues.md"
+  - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/Part2SweCommonTextTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommontext/VerifyPart2SweCommonTextTests.java"
+  - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+  - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+  - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json"
+  - "ops/ats-coverage-report.json"
+  - "ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/"
+commands_run:
+  - "date -u +\"%Y-%m-%dT%H:%M:%SZ\""
+  - "git status --short"
+  - "rg/sed/nl/jq artifact inspections only; no Maven, Docker, or TeamEngine reruns"
+  - "git check-ignore -v ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/* .harness/evaluations/sprint-ets-67-adversarial.yaml || true"
+  - "python3 XML inspection of ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/local-osh-smoke.xml"
+  - "git diff --check"
+  - "focused recheck only: inspected post-fix code, testng.xml, mappings, coverage report, docs, and after-raze-fixes evidence artifacts"
+verified_test_totals:
+  focused_after_raze_fixes: "115 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven_after_raze_fixes: "775 tests / 0 failures / 0 errors / 3 skipped"
+  local_osh_smoke: "254 total / 25 passed / 20 failed / 209 skipped"
+  local_osh_swecommon_text_test_methods: "0 PASS / 0 FAIL / 8 SKIP"
+  local_osh_swecommon_text_with_before_class: "0 PASS / 0 FAIL / 9 SKIP including fetchPart2SweCommonTextInputs"
+  coverage_summary: "240 total / 183 exact / 2 helper / 50 candidate / 5 unmapped; Part 2 130 total / 92 exact / 0 helper / 33 candidate / 5 unmapped; 2:/conf/swecommon-text 8 exact / 0 candidate / 0 unmapped"
+  no_mutation: "recognized_iut_request_logs=137; GET=137; OPTIONS=0; POST=0; PUT=0; PATCH=0; DELETE=0"
+  teamengine_runtime_immutability: "PASS for smoke image sha256:84423839aa6f4e5209b679a46ddf6a7cfbb3cbc3eb737ecce25d4e9d65167b0c"
+findings:
+  - id: RAZE-ETS67-FALSESKIP-001
+    severity: HIGH
+    status: CLOSED
+    title: "cmdschema-mapping can skip a present but noncanonical IssueTime mapping instead of failing"
+    affected_requirements:
+      - "REQ-ETS-PART2-011"
+      - "SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001"
+      - "/conf/swecommon-text/cmdschema-mapping"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1744-1749 says Command schema mapping PASS requires the same canonical IssueTime definition evidence required by /req/swecommon-json/cmdschema-mapping, and PASS must come from retrieved recordSchema evidence."
+      - "epics/stories/s-ets-67-01-part2-swecommon-text-closure.md:36 says mapping procedures require canonical Time and IssueTime definition evidence from retrieved recordSchema content."
+      - "src/main/java/.../Part2SweCommonTextTests.java:269-275 retrieves the Command Schema recordSchema, calls containsIssueTimeComponentWithCanonicalDefinition, and throws SkipException whenever the helper returns false."
+      - "src/main/java/.../Part2SweCommonTextTests.java:400-402 only searches for any Time component with the canonical IssueTime definition; it does not distinguish absent IssueTime evidence from an issueTime-like Time component with a missing or wrong definition."
+      - "src/test/java/.../VerifyPart2SweCommonTextTests.java:191-202 already proves named issueTime without the canonical definition returns false, but the runtime method maps that false value to SKIP rather than FAIL."
+      - "src/main/resources/.../ats/reviewed-ats-mappings.json:1667-1672 states that if issue-time evidence is present, it must use the canonical issue-time definition; the current runtime path does not enforce that present-but-wrong case."
+    impact: "A reachable Command Schema can expose an issueTime-like SWE Time component with a missing or noncanonical definition and receive prerequisite-incomplete SKIP instead of a conformance failure. That is a false-SKIP risk under the exact released ATS closure."
+    required_fix: "Add runtime logic and focused structural coverage that distinguish absent IssueTime evidence from present-but-noncanonical IssueTime evidence. SKIP only when IssueTime mapping evidence is truly absent; FAIL when a retrieved Command Schema exposes issueTime/IssueTime evidence that is not a SWE Time component with definition http://www.opengis.net/def/property/OGC/0/IssueTime. Then update reviewed mapping evidence if needed and rerun focused verification."
+    closure_evidence:
+      - "src/main/java/.../Part2SweCommonTextTests.java:272-280 now classifies IssueTimeEvidence; PRESENT_NONCANONICAL calls ETSAssert.failWithUri, while non-canonical absence still throws SkipException."
+      - "src/main/java/.../Part2SweCommonTextTests.java:881-952 implements ABSENT/CANONICAL/PRESENT_NONCANONICAL classification from issueTime/IssueTime name/id tokens and issue-time-like definitions."
+      - "src/test/java/.../VerifyPart2SweCommonTextTests.java:191-214 covers canonical IssueTime, absent non-IssueTime evidence, named issueTime without definition, and wrong IssueTime definition."
+      - "src/main/resources/.../ats/reviewed-ats-mappings.json:1667-1672 now states cmdschema-mapping skips only when IssueTime evidence is absent and fails retrieved noncanonical issueTime/IssueTime evidence."
+      - "ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/focused-after-raze-fixes.txt passed 115/0/0/0, including 16 SWE Common Text structural tests."
+  - id: RAZE-ETS67-DOC-001
+    severity: LOW
+    status: CLOSED
+    title: "Canonical testng.xml comment still labels the SWE Common Text group as Sprint 30 subset work"
+    affected_artifacts:
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+      - "S-ETS-67-01 documentation agreement"
+    evidence:
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:151-156 still says 'Sprint 30 S-ETS-30-01' and 'declaration-gated, read-only schema/media-validation subset'."
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java:2738-2870 correctly labels the structural checks as Sprint 67 S-ETS-67-01 exact group checks."
+      - "ops/status.md, ops/test-results.md, ops/changelog.md, story, contract, and traceability consistently describe Sprint 67 as the exact closure pending Raze/push."
+    impact: "No runtime wiring defect was found: the group remains part2swecommontext depends-on core common and the class is in the shipped suite. The stale shipped-suite comment is still a reconciliation gap in a canonical runtime artifact."
+    required_fix: "Update the testng.xml comment to Sprint 67 S-ETS-67-01 exact released ATS closure wording, then rerun the focused suite-dependency/structural checks or equivalent lightweight verification."
+    closure_evidence:
+      - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml:151-156 now labels the group as Sprint 67 S-ETS-67-01 exact released ATS work superseding Sprint 30."
+      - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java remains Sprint 67-labeled for the group dependency and co-location checks."
+      - "ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/focused-after-raze-fixes.txt passed VerifyTestNGSuiteDependency 76/0/0/0."
+checks_without_findings:
+  - "Exact OGC target inventory is present: ops/ats-coverage-report.json marks all eight /conf/swecommon-text targets exact with reviewed mappings to the eight Part2SweCommonTextTests methods."
+  - "TestNG method count and group wiring are covered by VerifyPart2SweCommonTextTests and VerifyTestNGSuiteDependency; post-fix focused evidence shows 76 suite-dependency tests, 16 SWE Common Text structural tests, and 23 coverage tests passed."
+  - "Class setup gates exact /conf/swecommon-text and SWE Common 3.0 /conf/text-encoding-rules before landing-page or SWE Common Text resource endpoint access."
+  - "mediatype-write requires service-desc JSON, fails unavailable/non-JSON API definition, and requires every advertised scoped POST/PUT operation matching Observation/Command templates to include exact application/swe+text."
+  - "Local OSH E2E wording is honest: the smoke is non-green at 254/25/20/209, all eight Sprint 67 TestNG methods SKIP because the SWE Text Encoding Rules prerequisite is missing, and the 20 failures are documented as outside Sprint 67."
+  - "No-mutation evidence is durable and unignored: check-ignore produced no ignored evidence paths, request counts are GET=137 with zero write methods, and runtime immutability evidence passed for smoke image sha256:84423839aa6f4e5209b679a46ddf6a7cfbb3cbc3eb737ecce25d4e9d65167b0c."
+required_fixes: []

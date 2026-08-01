@@ -1,0 +1,72 @@
+sprint: ets-67
+story: S-ETS-67-01
+title: Part 2 SWE Common Text Encoding released ATS closure
+status: RAZE_APPROVED_PUSH_PENDING
+date: 2026-08-01
+requirement: REQ-ETS-PART2-011
+scope:
+  include:
+    - OGC 23-002 /conf/swecommon-text eight released procedures
+    - exact mediatype-read and mediatype-write procedures
+    - Observation Schema and Command Schema SWE Common Text wrapper validation
+    - canonical Time and IssueTime mapping evidence
+    - honest Observation and Command encoding evidence guards
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - IUT mutation or seed-resource creation
+    - positive SWE Common Text write lifecycle behavior
+    - SWE Common Binary exact closure
+    - external validator dependency changes
+success_criteria:
+  - id: part2_swecommon_text_eight_methods
+    description: Part2SweCommonTextTests exposes exactly eight TestNG methods, one per released ATS target.
+  - id: part2_swecommon_text_mediatype_read_exact
+    description: /conf/swecommon-text/mediatype-read is implemented and reviewed exact.
+  - id: part2_swecommon_text_exact_coverage
+    description: coverage report shows 8 exact mappings and no candidates/unmapped tests for 2:/conf/swecommon-text.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: PASS
+  focused: PASS
+  coverage: PASS
+  formatter: PASS
+  full_maven: PASS_WITH_EXISTING_SKIPS
+  e2e_local_osh: HONEST_NON_GREEN
+  no_mutation: PASS
+  raze: APPROVE_0_96
+  pushed: PENDING
+evidence:
+  directory: ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/
+  files:
+    - focused-red.txt
+    - formatter-after-raze-fixes.txt
+    - focused-after-raze-fixes.txt
+    - coverage-update-after-raze-fixes.txt
+    - coverage-audit-after-raze-fixes.txt
+    - coverage-summary-after-raze-fixes.txt
+    - full-maven-after-raze-fixes.txt
+    - local-osh-smoke-after-raze-fixes.txt
+    - local-osh-smoke-after-raze-fixes.xml
+    - local-osh-swecommon-text-methods-after-raze-fixes.txt
+    - local-osh-container-after-raze-fixes.txt
+    - no-mutation-oracle-after-raze-fixes.txt
+    - request-method-counts-after-raze-fixes.txt
+    - smoke-image-id-after-raze-fixes.txt
+    - teamengine-runtime-immutability-after-raze-fixes.txt
+  totals:
+    focused: "115/0/0/0"
+    full_maven: "775/0/0/3"
+    local_osh_smoke: "254/25/20/209"
+    local_osh_sprint67_methods: "0 PASS / 0 FAIL / 8 SKIP"
+    no_mutation: "GET=137, POST=0, PUT=0, PATCH=0, DELETE=0"
+    smoke_image: "sha256:84423839aa6f4e5209b679a46ddf6a7cfbb3cbc3eb737ecce25d4e9d65167b0c"
+released_targets:
+  - /conf/swecommon-text/mediatype-read
+  - /conf/swecommon-text/mediatype-write
+  - /conf/swecommon-text/obsschema-schema
+  - /conf/swecommon-text/obsschema-mapping
+  - /conf/swecommon-text/observation-encoding
+  - /conf/swecommon-text/cmdschema-schema
+  - /conf/swecommon-text/cmdschema-mapping
+  - /conf/swecommon-text/command-encoding

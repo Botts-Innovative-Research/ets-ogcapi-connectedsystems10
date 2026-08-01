@@ -1,6 +1,67 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T15:18Z
+Last updated: 2026-08-01T16:21Z
+
+## Sprint 67 Raze Approved - Part 2 SWE Common Text Encoding Released ATS
+
+- User instruction: "Make the practical fix, then continue with the project -
+  and don't stop unless you need my input."
+- CP-027 and S-ETS-67-01 supersede the historical Sprint 30
+  `/conf/swecommon-text` subset with exactly eight released OGC 23-002 Annex
+  A.11 procedures. Initial Raze found two required fixes; both are applied and
+  focused Raze recheck approved the closure. Commit and push remain pending.
+- `Part2SweCommonTextTests` now exposes one independent TestNG method per
+  released target, including the formerly unmapped `mediatype-read`, and
+  removes standalone declaration/prerequisite/resource-gate helper procedures.
+- Runtime checks remain read-only. Setup gates exact `/conf/swecommon-text`
+  and SWE Common 3.0 Text Encoding Rules before SWE Common Text resource
+  endpoint access. Observation-side methods condition on `/conf/datastream`;
+  Command-side methods condition on `/conf/controlstream`.
+- `mediatype-read` requires concrete Observation or Command evidence returned
+  with exact `Content-Type: application/swe+text` and non-empty text content.
+  Schema procedures validate Connected Systems wrapper schemas plus extracted
+  SWE `recordSchema` content. Mapping procedures require canonical
+  Time/IssueTime evidence; absent IssueTime mapping evidence SKIPs, but
+  present noncanonical issueTime/IssueTime evidence FAILs.
+- Observation/Command encoding procedures SKIP rather than media-only PASS
+  when parent schema, candidate body, or a proven SWE Common Text data-value
+  validator is unavailable.
+- `mediatype-write` uses only service-desc OpenAPI metadata and requires exact
+  `application/swe+text` request bodies on every advertised POST/PUT operation
+  matching scoped Observation or Command endpoint templates. OPTIONS, unrelated
+  POST/PUT operations, partial scoped write coverage, and live mutation
+  requests cannot produce PASS evidence.
+- Reviewed coverage is now `240 total / 183 exact / 2 helper / 50 candidate /
+  5 unmapped`; Part 2 is `130 total / 92 exact / 0 helper / 33 candidate /
+  5 unmapped`; `2:/conf/swecommon-text` is
+  `8 exact / 0 candidate / 0 unmapped`.
+- Post-Raze-fix formatter passed; focused verification passed `115/0/0/0`;
+  coverage update/audit passed; full Docker Maven completed
+  `775 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke reached TeamEngine and the unmodified
+  local OSH IUT, then exited honestly non-green at
+  `254 total / 25 passed / 20 failed / 209 skipped`. All eight Sprint 67
+  methods SKIP before SWE Common Text resource endpoint access because local
+  OSH lacks `http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules`;
+  the 20 failures are existing local OSH SensorML/Deployment/Procedure/
+  Property gaps outside Sprint 67.
+- No-mutation oracle recognized 137 local-OSH IUT request logs. Method counts
+  are `GET=137`, zero POST/PUT/PATCH/DELETE. Tracked evidence:
+  `ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/`.
+- Smoke image:
+  `sha256:84423839aa6f4e5209b679a46ddf6a7cfbb3cbc3eb737ecce25d4e9d65167b0c`.
+  TeamEngine 6 runtime immutability verification passed.
+- Initial Raze report `.harness/evaluations/sprint-ets-67-adversarial.yaml`
+  returned `GAPS_FOUND 0.90` for `RAZE-ETS67-FALSESKIP-001` and
+  `RAZE-ETS67-DOC-001`. The gapfix adds present-noncanonical IssueTime
+  failure handling plus structural coverage and updates the shipped
+  `testng.xml` comment to Sprint 67 wording.
+- Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
+  `required_fixes: []`.
+- Next local action is commit, push, reconcile post-push state, then continue
+  to the next unblocked Part 2 item:
+  `/conf/swecommon-binary` exact closure, unless a dedicated mutable IUT is
+  provided for CRD/Update.
 
 ## Codex Session Metrics Fix Complete
 

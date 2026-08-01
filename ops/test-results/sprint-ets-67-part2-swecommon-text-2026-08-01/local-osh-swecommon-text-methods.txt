@@ -1,0 +1,18 @@
+totals={'ignored': '0', 'total': '254', 'passed': '25', 'failed': '20', 'skipped': '209'}
+class=org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommontext.Part2SweCommonTextTests
+SKIP commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent
+  http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.
+SKIP commandSchemaSweTextValidWhenControlStreamCandidateAvailable
+  http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.
+SKIP commandSweTextEncodingRequiresParentSchemaAndCandidateEvidence
+  http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.
+SKIP observationSchemaSweMappingRequiresTimeComponentEvidence
+  http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.
+SKIP observationSchemaSweTextValidWhenDatastreamCandidateAvailable
+  http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.
+SKIP observationSweTextEncodingRequiresParentSchemaAndCandidateEvidence
+  http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.
+SKIP sweCommonTextMediatypeReadSupportedOnObservationOrCommandEndpoints
+  http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.
+SKIP sweCommonTextMediatypeWriteAdvertisedByApiDefinitionOnly
+  http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.

@@ -1,8 +1,64 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T15:18Z
+Last updated: 2026-08-01T16:21Z
 
 ## Current Sprint Evidence
+
+Sprint 67 Part 2 SWE Common Text Encoding released ATS:
+
+- Trigger: user instructed to make the practical metrics fix, then continue the
+  project without stopping unless input is needed.
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/swecommon-text`.
+- Implementation: exactly eight TestNG methods, one per released Annex A.11
+  target; no standalone declaration/prerequisite/resource-condition helper
+  procedures; exact `/conf/swecommon-text` and SWE Common 3.0 Text Encoding
+  Rules setup gate; strict `application/swe+text` response media for read
+  evidence; Connected Systems wrapper plus reusable SWE `recordSchema`
+  validation; canonical Time/IssueTime mapping evidence; scoped non-mutating
+  service-desc OpenAPI mediatype-write checks requiring every advertised
+  scoped POST/PUT operation to include exact `application/swe+text`; no IUT
+  mutation.
+- Initial Raze found `RAZE-ETS67-FALSESKIP-001` because present but
+  noncanonical issueTime/IssueTime evidence could SKIP rather than FAIL, and
+  `RAZE-ETS67-DOC-001` because `testng.xml` still described the group as
+  Sprint 30 subset work. The gapfix distinguishes absent IssueTime evidence
+  from present noncanonical evidence, fails the present-invalid case, adds a
+  structural regression, and updates the shipped suite comment.
+- Observation/Command encoding methods intentionally SKIP without parent
+  schema, candidate body, and proven SWE Common Text data-value validator
+  evidence rather than passing from media or shape-only content.
+- Test-first red: `focused-red.txt` exited non-zero before implementation
+  because the exact Sprint 67 structural helper under test was missing.
+- Post-Raze-fix focused verification:
+  `115 tests / 0 failures / 0 errors / 0 skipped`
+  (`focused-after-raze-fixes.txt`).
+- Post-Raze-fix released ATS coverage update exits 0; coverage audit exits 0.
+  Current
+  coverage is `240 total / 183 exact / 2 helper / 50 candidate / 5 unmapped`;
+  Part 2 is `130 total / 92 exact / 0 helper / 33 candidate / 5 unmapped`;
+  Part 2 SWE Common Text is `8 exact / 0 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS (`formatter-after-raze-fixes.txt`).
+- Post-Raze-fix full Docker Maven completed
+  `775 tests / 0 failures / 0 errors / 3 skipped`
+  (`full-maven-after-raze-fixes.txt`).
+- Post-Raze-fix local OSH TeamEngine smoke exited honestly non-green at
+  `254 total / 25 passed / 20 failed / 209 skipped`
+  (`local-osh-smoke-after-raze-fixes.txt`).
+  All eight Sprint 67 methods SKIP with reason:
+  `http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.`
+  The 20 failures are existing local OSH SensorML/Deployment/Procedure/Property
+  gaps outside Sprint 67.
+- No-mutation oracle: `recognized_iut_request_logs=137`; request method counts
+  are `GET=137`, zero POST/PUT/PATCH/DELETE.
+- Evidence directory:
+  `ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/`.
+- TeamEngine 6 runtime immutability verification passed for smoke image
+  `sha256:84423839aa6f4e5209b679a46ddf6a7cfbb3cbc3eb737ecce25d4e9d65167b0c`.
+- Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
+  `required_fixes: []`.
+- Commit and push remain pending.
 
 S-ETS-66-02 Codex session metrics JSONL support:
 

@@ -4,11 +4,14 @@ import static io.restassured.RestAssured.given;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,9 @@ import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 import org.opengis.cite.ogcapiconnectedsystems10.ETSAssert;
 import org.opengis.cite.ogcapiconnectedsystems10.SuiteAttribute;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part1.apicommon.Part1ApiCommonSupport.TraversalResult;
+import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2CandidateSelection;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.Part2SchemaValidation;
 import org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.apicommon.Part2ApiCommonTests;
 import org.testng.ITestContext;
@@ -35,16 +41,9 @@ import io.restassured.response.Response;
  * ({@code /conf/swecommon-text}; OGC 23-002 Clause 16.3 and Annex A.11).
  *
  * <p>
- * Implements the first <strong>REQ-ETS-PART2-011</strong> increment: exact declaration,
- * SWE Common 3.0 Text Encoding Rules prerequisite visibility, resource-class condition
- * gates, read-only {@code application/swe+text} schema/media checks, bundled SWE schema
- * validation, mapping evidence guards, and non-mutating mediatype-write advertisement
- * checks.
- *
- * Traceability also covers SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001 and
- * SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001: exact
- * {@code application/swe+text} evidence is required, and reachable HTTP/schema/media
- * failures remain FAIL or SKIP rather than passing from declaration or sibling media.
+ * Implements <strong>REQ-ETS-PART2-011</strong> as the eight released Annex A.11
+ * procedures. Declaration, SWE Common prerequisite, and resource condition checks are
+ * setup/per-procedure gates, not standalone ATS procedures.
  * </p>
  */
 public class Part2SweCommonTextTests {
@@ -96,10 +95,6 @@ public class Part2SweCommonTextTests {
 
 	private static final String CONTROLSTREAM_COLLECTION_SCHEMA = "controlStreamCollection.json";
 
-	private static final String COMMAND_COLLECTION_SCHEMA = "commandCollection.json";
-
-	private static final String OBSERVATION_COLLECTION_SCHEMA = "observationCollection.json";
-
 	private static final String SCHEMA_RESOURCE_PREFIX = "/schemas/connected-systems-2/json/";
 
 	private static final String SCHEMA_IRI_PREFIX = "https://csapi-compliance.local/schemas/connected-systems-2/json/";
@@ -123,11 +118,11 @@ public class Part2SweCommonTextTests {
 	private Map<String, Object> landingBody;
 
 	/**
-	 * Fetches shared read-only inputs once. This class intentionally never issues POST,
-	 * PUT, PATCH, or DELETE.
+	 * Fetches shared read-only inputs and skips before SWE Common Text resource endpoint
+	 * access when the released class or SWE prerequisite is absent.
 	 * @param testContext TestNG test context.
 	 */
-	@BeforeClass
+	@BeforeClass(alwaysRun = true)
 	public void fetchPart2SweCommonTextInputs(ITestContext testContext) {
 		Object iutAttr = testContext.getSuite().getAttribute(SuiteAttribute.IUT.getName());
 		if (!(iutAttr instanceof URI)) {
@@ -141,20 +136,8 @@ public class Part2SweCommonTextTests {
 			.when()
 			.get(this.baseUri.resolve("conformance"))
 			.andReturn();
-		this.conformanceBody = parseBody(this.conformanceResponse);
-
-		this.landingResponse = given().accept("application/json").when().get(this.iutUri).andReturn();
-		this.landingBody = parseBody(this.landingResponse);
-	}
-
-	/**
-	 * SCENARIO-ETS-PART2-011-SWETEXT-CONFORMANCE-DECLARED-001.
-	 */
-	@Test(description = "OGC-23-002 " + REQ_SWE_COMMON_TEXT
-			+ ": /conformance declares exact Part 2 /conf/swecommon-text before SWE Common Text assertions run (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SWETEXT-CONFORMANCE-DECLARED-001)",
-			groups = GROUP)
-	public void part2SweCommonTextConformanceDeclared() {
 		ETSAssert.assertStatus(this.conformanceResponse, 200, REQ_SWE_COMMON_TEXT);
+		this.conformanceBody = parseBody(this.conformanceResponse);
 		if (this.conformanceBody == null) {
 			ETSAssert.failWithUri(REQ_SWE_COMMON_TEXT, "/conformance body did not parse as JSON. Content-Type was: "
 					+ this.conformanceResponse.getContentType());
@@ -162,44 +145,51 @@ public class Part2SweCommonTextTests {
 		ETSAssert.assertJsonObjectHas(this.conformanceBody, "conformsTo", List.class, REQ_SWE_COMMON_TEXT);
 		if (!declaresConformance(this.conformanceBody, CONF_SWE_COMMON_TEXT)) {
 			throw new SkipException(CONF_SWE_COMMON_TEXT
-					+ " - IUT does not declare the CS API Part 2 SWE Common Text Encoding conformance class. "
-					+ "Sibling /conf/json, /conf/swecommon-json, /conf/swecommon-binary, or resource-class declarations are not PASS evidence.");
+					+ " - IUT does not declare the CS API Part 2 SWE Common Text Encoding conformance class.");
 		}
-	}
-
-	/**
-	 * SCENARIO-ETS-PART2-011-SWE-TEXT-ENCODING-RULES-PREREQUISITE-001.
-	 */
-	@Test(description = "OGC-23-002 " + REQ_SWE_COMMON_TEXT
-			+ ": SWE Common 3.0 Text Encoding Rules prerequisite is visible before full /conf/swecommon-text closure (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SWE-TEXT-ENCODING-RULES-PREREQUISITE-001)",
-			groups = GROUP)
-	public void sweTextEncodingRulesPrerequisiteVisibleForFullClosure() {
-		skipIfSweCommonTextUndeclared();
 		if (!declaresConformance(this.conformanceBody, CONF_SWE_TEXT_ENCODING_RULES)) {
 			throw new SkipException(CONF_SWE_TEXT_ENCODING_RULES
-					+ " - /req/swecommon-text lists SWE Common 3.0 Text Encoding Rules as a prerequisite. "
-					+ "Scoped SWE Common Text resource checks may run, but full /conf/swecommon-text closure is prerequisite-incomplete.");
+					+ " - /req/swecommon-text prerequisite is missing; Sprint 67 SWE Common Text procedures skip before SWE Common Text resource endpoint access.");
 		}
-		Reporter.log("IUT declares /conf/swecommon-text and the SWE Common 3.0 Text Encoding Rules prerequisite.",
-				true);
+
+		this.landingResponse = given().accept("application/json").when().get(this.iutUri).andReturn();
+		this.landingBody = parseBody(this.landingResponse);
 	}
 
-	/**
-	 * SCENARIO-ETS-PART2-011-RESOURCE-CONDITION-GATES-001.
-	 */
-	@Test(description = "OGC-23-002 " + REQ_SWE_COMMON_TEXT
-			+ ": SWE Common Text assertions are condition-gated on Part 2 Datastream, ControlStream, and Create/Replace/Delete classes (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RESOURCE-CONDITION-GATES-001)",
-			groups = GROUP)
-	public void sweCommonTextResourceConditionGatesAreVisible() {
-		skipIfSweCommonTextUndeclared();
-		List<String> missing = missingConditionClasses(this.conformanceBody);
-		if (!missing.isEmpty()) {
-			throw new SkipException(REQ_SWE_COMMON_TEXT
-					+ " - SWE Common Text assertions are prerequisite-incomplete for missing condition classes: "
-					+ String.join("; ", missing));
+	@Test(description = "OGC-23-002 " + REQ_MEDIATYPE_READ
+			+ ": supported Observation and Command retrieval operations return application/swe+text documents (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001, SCENARIO-ETS-PART2-011-ANNEX-MEDIATYPE-HONESTY-001)",
+			groups = GROUP, alwaysRun = true)
+	public void sweCommonTextMediatypeReadSupportedOnObservationOrCommandEndpoints() {
+		boolean applicable = false;
+		List<String> missing = new ArrayList<>();
+		if (declaresConformance(this.conformanceBody, CONF_DATASTREAM)) {
+			applicable = true;
+			try {
+				SweCandidate observation = firstObservationEvidence(REQ_MEDIATYPE_READ);
+				Reporter.log("Observation SWE Common Text read evidence from " + observation.source(), true);
+			}
+			catch (SkipException ex) {
+				missing.add(ex.getMessage());
+			}
 		}
-		Reporter.log("Part 2 SWE Common Text condition classes are declared for Datastream, ControlStream, and CRD.",
-				true);
+		if (declaresConformance(this.conformanceBody, CONF_CONTROLSTREAM)) {
+			applicable = true;
+			try {
+				SweCandidate command = firstCommandEvidence(REQ_MEDIATYPE_READ);
+				Reporter.log("Command SWE Common Text read evidence from " + command.source(), true);
+			}
+			catch (SkipException ex) {
+				missing.add(ex.getMessage());
+			}
+		}
+		if (!applicable) {
+			throw new SkipException(REQ_MEDIATYPE_READ
+					+ " - neither Datastream nor ControlStream conformance is declared, so no Observation or Command SWE Common Text read endpoint is applicable.");
+		}
+		if (!missing.isEmpty()) {
+			throw new SkipException(REQ_MEDIATYPE_READ + " - no complete application/swe+text read evidence for all "
+					+ "declared applicable Observation/Command resources: " + String.join("; ", missing));
+		}
 	}
 
 	/**
@@ -209,23 +199,20 @@ public class Part2SweCommonTextTests {
 	 * SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_OBSSCHEMA_SCHEMA
-			+ ": selected Datastream Observation Schema validates as SWE Common Text metadata with TextEncoding (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
-			groups = GROUP)
+			+ ": selected Datastream Observation Schema validates as SWE Common Text metadata with TextEncoding (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001, SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
+			groups = GROUP, alwaysRun = true)
 	public void observationSchemaSweTextValidWhenDatastreamCandidateAvailable() {
-		Map<String, Object> schema = observationSweSchema(REQ_OBSSCHEMA_SCHEMA);
-		validateJsonValueAgainstSchema(schema, OBSERVATION_SCHEMA_SWE, REQ_OBSSCHEMA_SCHEMA,
-				"Observation Schema for obsFormat=application/swe+text");
-		assertMediaMember(schema, "obsFormat", REQ_OBSSCHEMA_SCHEMA, "Observation Schema");
-		assertRecordSchemaObject(schema, REQ_OBSSCHEMA_SCHEMA, "Observation Schema");
-		assertTextEncoding(schema, REQ_OBSSCHEMA_SCHEMA, "Observation Schema");
+		for (Map<String, Object> schema : observationSweSchemas(REQ_OBSSCHEMA_SCHEMA)) {
+			validateObservationSchemaWrapper(schema, REQ_OBSSCHEMA_SCHEMA);
+		}
 	}
 
 	/**
 	 * SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_OBSSCHEMA_MAPPING
-			+ ": Observation Schema mapping requires canonical Time definition evidence from retrieved SWE Common recordSchema (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001)",
-			groups = GROUP)
+			+ ": Observation Schema mapping requires canonical Time definition evidence from retrieved SWE Common recordSchema (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001, SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001)",
+			groups = GROUP, alwaysRun = true)
 	public void observationSchemaSweMappingRequiresTimeComponentEvidence() {
 		Map<String, Object> schema = observationSweSchema(REQ_OBSSCHEMA_MAPPING);
 		Object recordSchema = assertRecordSchemaObject(schema, REQ_OBSSCHEMA_MAPPING, "Observation Schema");
@@ -242,8 +229,8 @@ public class Part2SweCommonTextTests {
 	 * SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_OBSERVATION_ENCODING
-			+ ": Observation SWE Common Text encoding requires parent schema, candidate Observation, and encoding-validator evidence before PASS (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
-			groups = GROUP)
+			+ ": Observation SWE Common Text encoding requires parent schema, candidate Observation, and encoding-validator evidence before PASS (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001, SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
+			groups = GROUP, alwaysRun = true)
 	public void observationSweTextEncodingRequiresParentSchemaAndCandidateEvidence() {
 		Map<String, Object> schema = observationSweSchema(REQ_OBSERVATION_ENCODING);
 		assertRecordSchemaObject(schema, REQ_OBSERVATION_ENCODING, "Observation Schema");
@@ -265,27 +252,30 @@ public class Part2SweCommonTextTests {
 	 * SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_COMMANDSCHEMA_SCHEMA
-			+ ": selected ControlStream Command Schema validates as SWE Common Text metadata with TextEncoding (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
-			groups = GROUP)
+			+ ": selected ControlStream Command Schema validates as SWE Common Text metadata with TextEncoding (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001, SCENARIO-ETS-PART2-011-SCHEMA-VALIDATION-READONLY-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
+			groups = GROUP, alwaysRun = true)
 	public void commandSchemaSweTextValidWhenControlStreamCandidateAvailable() {
-		Map<String, Object> schema = commandSweSchema(REQ_COMMANDSCHEMA_SCHEMA);
-		validateJsonValueAgainstSchema(schema, COMMAND_SCHEMA_SWE, REQ_COMMANDSCHEMA_SCHEMA,
-				"Command Schema for cmdFormat=application/swe+text");
-		assertMediaMember(schema, "commandFormat", REQ_COMMANDSCHEMA_SCHEMA, "Command Schema");
-		assertRecordSchemaObject(schema, REQ_COMMANDSCHEMA_SCHEMA, "Command Schema");
-		assertTextEncoding(schema, REQ_COMMANDSCHEMA_SCHEMA, "Command Schema");
+		for (Map<String, Object> schema : commandSweSchemas(REQ_COMMANDSCHEMA_SCHEMA)) {
+			validateCommandSchemaWrapper(schema, REQ_COMMANDSCHEMA_SCHEMA);
+		}
 	}
 
 	/**
 	 * SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_COMMANDSCHEMA_MAPPING
-			+ ": Command Schema mapping requires canonical IssueTime Time component evidence when issue-time mapping is present (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001)",
-			groups = GROUP)
+			+ ": Command Schema mapping requires canonical IssueTime Time component evidence when issue-time mapping is present (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001, SCENARIO-ETS-PART2-011-SCHEMA-MAPPING-TIME-001)",
+			groups = GROUP, alwaysRun = true)
 	public void commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent() {
 		Map<String, Object> schema = commandSweSchema(REQ_COMMANDSCHEMA_MAPPING);
 		Object recordSchema = assertRecordSchemaObject(schema, REQ_COMMANDSCHEMA_MAPPING, "Command Schema");
-		if (!containsIssueTimeComponentWithCanonicalDefinition(recordSchema)) {
+		IssueTimeEvidence issueTimeEvidence = issueTimeEvidence(recordSchema);
+		if (issueTimeEvidence == IssueTimeEvidence.PRESENT_NONCANONICAL) {
+			ETSAssert.failWithUri(REQ_COMMANDSCHEMA_MAPPING,
+					"retrieved Command Schema exposes IssueTime mapping evidence, but it is not a Time component with canonical definition "
+							+ COMMAND_ISSUE_TIME_DEFINITION + ".");
+		}
+		if (issueTimeEvidence != IssueTimeEvidence.CANONICAL) {
 			throw new SkipException(REQ_COMMANDSCHEMA_MAPPING
 					+ " - retrieved Command Schema does not expose a Time component with canonical IssueTime definition evidence; no command issue-time mapping PASS was reported.");
 		}
@@ -298,8 +288,8 @@ public class Part2SweCommonTextTests {
 	 * SCENARIO-ETS-PART2-011-UNAVAILABLE-ENDPOINT-HONESTY-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_COMMAND_ENCODING
-			+ ": Command SWE Common Text encoding requires parent schema, candidate Command, and encoding-validator evidence before PASS (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
-			groups = GROUP)
+			+ ": Command SWE Common Text encoding requires parent schema, candidate Command, and encoding-validator evidence before PASS (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001, SCENARIO-ETS-PART2-011-OBSERVATION-COMMAND-ENCODING-GUARDS-001, SCENARIO-ETS-PART2-011-MEDIATYPE-READ-001)",
+			groups = GROUP, alwaysRun = true)
 	public void commandSweTextEncodingRequiresParentSchemaAndCandidateEvidence() {
 		Map<String, Object> schema = commandSweSchema(REQ_COMMAND_ENCODING);
 		assertRecordSchemaObject(schema, REQ_COMMAND_ENCODING, "Command Schema");
@@ -319,19 +309,21 @@ public class Part2SweCommonTextTests {
 	 * SCENARIO-ETS-PART2-011-SMOKE-NO-PUBLIC-MUTATION-001.
 	 */
 	@Test(description = "OGC-23-002 " + REQ_MEDIATYPE_WRITE
-			+ ": SWE Common Text write media type support is checked only from non-mutating API definition operation metadata, never OPTIONS alone or public-IUT mutation (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-MEDIATYPE-WRITE-ADVERTISEMENT-001, SCENARIO-ETS-PART2-011-SMOKE-NO-PUBLIC-MUTATION-001)",
-			groups = GROUP)
+			+ ": SWE Common Text write media type support is checked only from non-mutating API definition operation metadata, never OPTIONS alone or IUT mutation (REQ-ETS-PART2-011, SCENARIO-ETS-PART2-011-RELEASED-PROCEDURES-001, SCENARIO-ETS-PART2-011-MEDIATYPE-WRITE-ADVERTISEMENT-001, SCENARIO-ETS-PART2-011-SMOKE-NO-PUBLIC-MUTATION-001)",
+			groups = GROUP, alwaysRun = true)
 	public void sweCommonTextMediatypeWriteAdvertisedByApiDefinitionOnly() {
-		skipIfSweCommonTextUndeclared();
 		skipIfConditionClassUndeclared(CONF_CREATE_REPLACE_DELETE,
 				"Requirement 116 applies only when Part 2 Create/Replace/Delete is declared.");
-		Map<String, Object> apiDefinition = readJsonApiDefinitionOrSkip();
-		if (!apiDefinitionAdvertisesSweTextWrite(apiDefinition)) {
-			throw new SkipException(REQ_MEDIATYPE_WRITE
-					+ " - API definition does not advertise application/swe+text requestBody content for POST or PUT. OPTIONS evidence alone is not mediatype-write PASS evidence; no POST/PUT/PATCH/DELETE request was issued.");
+		Map<String, Object> apiDefinition = readJsonApiDefinitionOrFail();
+		List<String> missing = missingSweTextWriteAdvertisements(apiDefinition, sweTextWriteEndpointTemplatesByClass());
+		if (!missing.isEmpty()) {
+			ETSAssert.failWithUri(REQ_MEDIATYPE_WRITE,
+					"API definition does not advertise application/swe+text requestBody content for POST or PUT on supported Observation/Command resource endpoints "
+							+ missing
+							+ ". OPTIONS evidence alone is not mediatype-write PASS evidence; no POST/PUT/PATCH/DELETE request was issued.");
 		}
 		Reporter.log(
-				"API definition advertises application/swe+text requestBody content for a create/replace operation; no mutation request was issued.",
+				"API definition advertises application/swe+text requestBody content for supported Observation/Command create/replace resource endpoints; no mutation request was issued.",
 				true);
 	}
 
@@ -399,14 +391,6 @@ public class Part2SweCommonTextTests {
 		}
 	}
 
-	static boolean apiDefinitionAdvertisesSweTextWrite(Map<String, Object> apiDefinition) {
-		if (apiDefinition == null) {
-			return false;
-		}
-		Set<Map<?, ?>> operations = writeOperations(apiDefinition);
-		return operations.stream().anyMatch(Part2SweCommonTextTests::requestBodyContainsApplicationSweText);
-	}
-
 	static boolean schemaHasTextEncoding(Map<String, Object> schema) {
 		if (schema == null || !(schema.get("encoding") instanceof Map)) {
 			return false;
@@ -420,61 +404,94 @@ public class Part2SweCommonTextTests {
 	}
 
 	static boolean containsIssueTimeComponentWithCanonicalDefinition(Object value) {
-		return containsTimeComponentWithDefinition(value, Set.of(COMMAND_ISSUE_TIME_DEFINITION));
+		return issueTimeEvidence(value) == IssueTimeEvidence.CANONICAL;
+	}
+
+	static boolean hasPresentNonCanonicalIssueTimeEvidence(Object value) {
+		return issueTimeEvidence(value) == IssueTimeEvidence.PRESENT_NONCANONICAL;
 	}
 
 	private Map<String, Object> observationSweSchema(String reqUri) {
-		skipIfSweCommonTextUndeclared();
+		List<Map<String, Object>> schemas = observationSweSchemas(reqUri);
+		return schemas.get(0);
+	}
+
+	private List<Map<String, Object>> observationSweSchemas(String reqUri) {
 		skipIfConditionClassUndeclared(CONF_DATASTREAM,
 				"Observation-side SWE Common Text assertions require the Part 2 Datastream class.");
-		String datastreamId = requireString(
-				firstRequiredCollectionResource("datastreams", reqUri, DATASTREAM_COLLECTION_SCHEMA, "/datastreams"),
-				"id", reqUri);
-		return requiredJsonObject("datastreams/" + datastreamId + "/schema?obsFormat=application/swe+text", reqUri,
-				"/datastreams/" + datastreamId + "/schema?obsFormat=application/swe+text");
+		List<Map<String, Object>> schemas = new ArrayList<>();
+		for (Map<String, Object> datastream : requiredCollectionResources("datastreams", reqUri,
+				DATASTREAM_COLLECTION_SCHEMA, "/datastreams")) {
+			String datastreamId = requireString(datastream, "id", reqUri);
+			schemas.add(requiredJsonObject(
+					"datastreams/" + encodePathToken(datastreamId) + "/schema?obsFormat=application/swe+text", reqUri,
+					"/datastreams/" + datastreamId + "/schema?obsFormat=application/swe+text"));
+		}
+		return schemas;
 	}
 
 	private Map<String, Object> commandSweSchema(String reqUri) {
-		skipIfSweCommonTextUndeclared();
+		List<Map<String, Object>> schemas = commandSweSchemas(reqUri);
+		return schemas.get(0);
+	}
+
+	private List<Map<String, Object>> commandSweSchemas(String reqUri) {
 		skipIfConditionClassUndeclared(CONF_CONTROLSTREAM,
 				"Command-side SWE Common Text assertions require the Part 2 ControlStream class.");
-		String controlStreamId = requireString(firstRequiredCollectionResource("controlstreams", reqUri,
-				CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams"), "id", reqUri);
-		return requiredJsonObject("controlstreams/" + controlStreamId + "/schema?cmdFormat=application/swe+text",
-				reqUri, "/controlstreams/" + controlStreamId + "/schema?cmdFormat=application/swe+text");
+		List<Map<String, Object>> schemas = new ArrayList<>();
+		for (Map<String, Object> controlStream : requiredCollectionResources("controlstreams", reqUri,
+				CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams")) {
+			String controlStreamId = requireString(controlStream, "id", reqUri);
+			schemas.add(requiredJsonObject(
+					"controlstreams/" + encodePathToken(controlStreamId) + "/schema?cmdFormat=application/swe+text",
+					reqUri, "/controlstreams/" + controlStreamId + "/schema?cmdFormat=application/swe+text"));
+		}
+		return schemas;
 	}
 
 	private SweCandidate firstObservationEvidence(String reqUri) {
-		Map<String, Object> datastream = firstRequiredCollectionResource("datastreams", reqUri,
-				DATASTREAM_COLLECTION_SCHEMA, "/datastreams");
-		String datastreamId = requireString(datastream, "id", reqUri);
-		SweCandidate nested = firstOptionalSweTextCandidate("datastreams/" + datastreamId + "/observations?limit=1",
-				reqUri, "/datastreams/" + datastreamId + "/observations");
-		if (nested != null) {
-			return nested;
+		String firstDatastreamId = null;
+		for (Map<String, Object> datastream : requiredCollectionResources("datastreams", reqUri,
+				DATASTREAM_COLLECTION_SCHEMA, "/datastreams")) {
+			String datastreamId = requireString(datastream, "id", reqUri);
+			if (firstDatastreamId == null) {
+				firstDatastreamId = datastreamId;
+			}
+			SweCandidate nested = firstOptionalSweTextCandidate(
+					"datastreams/" + encodePathToken(datastreamId) + "/observations?limit=1", reqUri,
+					"/datastreams/" + datastreamId + "/observations");
+			if (nested != null) {
+				return nested;
+			}
 		}
 		SweCandidate global = firstOptionalSweTextCandidate("observations?limit=1", reqUri, "/observations");
 		if (global != null) {
 			return global;
 		}
-		throw new SkipException(reqUri + " - neither /datastreams/" + datastreamId
+		throw new SkipException(reqUri + " - neither /datastreams/" + firstDatastreamId
 				+ "/observations nor /observations exposed a candidate Observation resource for application/swe+text.");
 	}
 
 	private SweCandidate firstCommandEvidence(String reqUri) {
-		Map<String, Object> controlStream = firstRequiredCollectionResource("controlstreams", reqUri,
-				CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams");
-		String controlStreamId = requireString(controlStream, "id", reqUri);
-		SweCandidate nested = firstOptionalSweTextCandidate("controlstreams/" + controlStreamId + "/commands?limit=1",
-				reqUri, "/controlstreams/" + controlStreamId + "/commands");
-		if (nested != null) {
-			return nested;
+		String firstControlStreamId = null;
+		for (Map<String, Object> controlStream : requiredCollectionResources("controlstreams", reqUri,
+				CONTROLSTREAM_COLLECTION_SCHEMA, "/controlstreams")) {
+			String controlStreamId = requireString(controlStream, "id", reqUri);
+			if (firstControlStreamId == null) {
+				firstControlStreamId = controlStreamId;
+			}
+			SweCandidate nested = firstOptionalSweTextCandidate(
+					"controlstreams/" + encodePathToken(controlStreamId) + "/commands?limit=1", reqUri,
+					"/controlstreams/" + controlStreamId + "/commands");
+			if (nested != null) {
+				return nested;
+			}
 		}
 		SweCandidate global = firstOptionalSweTextCandidate("commands?limit=1", reqUri, "/commands");
 		if (global != null) {
 			return global;
 		}
-		throw new SkipException(reqUri + " - neither /controlstreams/" + controlStreamId
+		throw new SkipException(reqUri + " - neither /controlstreams/" + firstControlStreamId
 				+ "/commands nor /commands exposed a candidate Command resource for application/swe+text.");
 	}
 
@@ -483,33 +500,33 @@ public class Part2SweCommonTextTests {
 			.when()
 			.get(this.baseUri.resolve(pathWithQuery))
 			.andReturn();
-		if (response.getStatusCode() != 200) {
+		if (response.getStatusCode() == 404) {
 			return null;
 		}
+		ETSAssert.assertStatus(response, 200, reqUri);
 		assertExactSweTextContentType(response, reqUri, source);
 		String body = response.getBody() == null ? "" : response.getBody().asString();
+		if (body.isBlank()) {
+			return null;
+		}
 		return new SweCandidate(body, response, source);
 	}
 
-	private Map<String, Object> firstRequiredCollectionResource(String path, String reqUri, String collectionSchema,
+	private List<Map<String, Object>> requiredCollectionResources(String path, String reqUri, String collectionSchema,
 			String source) {
-		Response response = given().accept("application/json")
-			.queryParam("limit", 1)
-			.when()
-			.get(this.baseUri.resolve(path))
-			.andReturn();
-		Map<String, Object> body = assertRequiredJsonResponse(response, reqUri, source);
-		validateResponseAgainstSchema(response, collectionSchema, reqUri, source);
-		List<?> items = items(body);
-		if (items.isEmpty()) {
+		Optional<TraversalResult> evidence = Part1ApiCommonSupport.resourcesAtEndpoint(this.baseUri.resolve(path),
+				"application/json", Map.of("limit", String.valueOf(Part2CandidateSelection.CANDIDATE_PAGE_LIMIT)),
+				reqUri, Set.of("application/json"), page -> validateJsonValueAgainstSchema(page.body(),
+						collectionSchema, reqUri, page.source().toString()));
+		if (evidence.isEmpty()) {
+			ETSAssert.failWithUri(reqUri, source + " returned HTTP 404.");
+		}
+		List<Map<String, Object>> resources = evidence.orElseThrow().items();
+		if (resources.isEmpty()) {
 			throw new SkipException(reqUri + " - " + source
 					+ " returned an empty collection; no candidate resource is available for SWE Common Text PASS.");
 		}
-		Object first = items.get(0);
-		if (!(first instanceof Map)) {
-			ETSAssert.failWithUri(reqUri, source + " first item was not a JSON object: " + first);
-		}
-		return castMap(first);
+		return resources;
 	}
 
 	private Map<String, Object> requiredJsonObject(String pathWithQuery, String reqUri, String source) {
@@ -520,30 +537,51 @@ public class Part2SweCommonTextTests {
 		return assertRequiredJsonResponse(response, reqUri, source);
 	}
 
-	private Map<String, Object> readJsonApiDefinitionOrSkip() {
+	private Map<String, Object> readJsonApiDefinitionOrFail() {
 		if (this.landingResponse.getStatusCode() != 200 || this.landingBody == null) {
-			throw new SkipException(REQ_MEDIATYPE_WRITE
-					+ " - landing page is not readable JSON, so no service-desc API definition can be inspected.");
+			ETSAssert.failWithUri(REQ_MEDIATYPE_WRITE,
+					"landing page is not readable JSON, so no service-desc API definition can be inspected.");
 		}
 		URI serviceDescUri = serviceDescUri();
 		if (serviceDescUri == null) {
-			throw new SkipException(REQ_MEDIATYPE_WRITE
-					+ " - landing page does not expose a rel=service-desc link. service-doc/OPTIONS evidence is not mediatype-write PASS evidence.");
+			ETSAssert.failWithUri(REQ_MEDIATYPE_WRITE,
+					"landing page does not expose a rel=service-desc link. service-doc/OPTIONS evidence is not mediatype-write PASS evidence.");
 		}
 		Response response = given().accept("application/vnd.oai.openapi+json, application/json")
 			.when()
 			.get(serviceDescUri)
 			.andReturn();
-		if (response.getStatusCode() != 200) {
-			throw new SkipException(REQ_MEDIATYPE_WRITE + " - service-desc API definition returned HTTP "
-					+ response.getStatusCode() + "; no write media type advertisement PASS was reported.");
+		ETSAssert.assertStatus(response, 200, REQ_MEDIATYPE_WRITE);
+		if (!isJsonCompatibleContentType(response.getContentType())) {
+			ETSAssert.failWithUri(REQ_MEDIATYPE_WRITE, "service-desc API definition returned Content-Type '"
+					+ response.getContentType() + "'; expected JSON.");
 		}
 		Map<String, Object> body = parseBody(response);
 		if (body == null) {
-			throw new SkipException(REQ_MEDIATYPE_WRITE
-					+ " - service-desc API definition did not parse as JSON; no write media type advertisement PASS was reported.");
+			ETSAssert.failWithUri(REQ_MEDIATYPE_WRITE,
+					"service-desc API definition did not parse as JSON; no write media type advertisement PASS was reported.");
 		}
 		return body;
+	}
+
+	private Map<String, List<String>> sweTextWriteEndpointTemplatesByClass() {
+		Map<String, List<String>> templates = new LinkedHashMap<>();
+		if (declaresConformance(this.conformanceBody, CONF_DATASTREAM)) {
+			templates.put("Observation resources",
+					List.of("/observations", "/observations/{observationId}",
+							"/datastreams/{datastreamId}/observations",
+							"/datastreams/{datastreamId}/observations/{observationId}"));
+		}
+		if (declaresConformance(this.conformanceBody, CONF_CONTROLSTREAM)) {
+			templates.put("Command resources",
+					List.of("/commands", "/commands/{commandId}", "/controlstreams/{controlStreamId}/commands",
+							"/controlstreams/{controlStreamId}/commands/{commandId}"));
+		}
+		if (templates.isEmpty()) {
+			throw new SkipException(REQ_MEDIATYPE_WRITE
+					+ " - neither Datastream nor ControlStream conformance is declared, so no Observation or Command create/replace endpoint is applicable.");
+		}
+		return templates;
 	}
 
 	private URI serviceDescUri() {
@@ -561,13 +599,6 @@ public class Part2SweCommonTextTests {
 			}
 		}
 		return null;
-	}
-
-	private void skipIfSweCommonTextUndeclared() {
-		if (!declaresConformance(this.conformanceBody, CONF_SWE_COMMON_TEXT)) {
-			throw new SkipException(CONF_SWE_COMMON_TEXT
-					+ " - IUT does not declare the CS API Part 2 SWE Common Text Encoding conformance class in /conformance.");
-		}
 	}
 
 	private void skipIfConditionClassUndeclared(String conformanceClass, String reason) {
@@ -604,11 +635,6 @@ public class Part2SweCommonTextTests {
 		}
 	}
 
-	private static void validateResponseAgainstSchema(Response response, String schemaFile, String reqUri,
-			String source) {
-		validateJsonTextAgainstSchema(response.getBody().asString(), schemaFile, reqUri, source);
-	}
-
 	private static void validateJsonValueAgainstSchema(Object value, String schemaFile, String reqUri, String source) {
 		try {
 			JsonNode node = JSON.valueToTree(value);
@@ -616,18 +642,6 @@ public class Part2SweCommonTextTests {
 		}
 		catch (IllegalArgumentException ex) {
 			ETSAssert.failWithUri(reqUri, source + " could not be converted for schema validation against " + schemaFile
-					+ ": " + ex.getMessage());
-		}
-	}
-
-	private static void validateJsonTextAgainstSchema(String jsonText, String schemaFile, String reqUri,
-			String source) {
-		try {
-			JsonNode node = JSON.readTree(jsonText);
-			validateJsonNodeAgainstSchema(node, schemaFile, reqUri, source);
-		}
-		catch (IOException ex) {
-			ETSAssert.failWithUri(reqUri, source + " did not parse as JSON for schema validation against " + schemaFile
 					+ ": " + ex.getMessage());
 		}
 	}
@@ -691,29 +705,72 @@ public class Part2SweCommonTextTests {
 		}
 	}
 
-	private static Set<Map<?, ?>> writeOperations(Map<String, Object> apiDefinition) {
-		Set<Map<?, ?>> operations = new LinkedHashSet<>();
-		Object paths = apiDefinition.get("paths");
-		if (!(paths instanceof Map)) {
-			return operations;
+	private static void validateObservationSchemaWrapper(Map<String, Object> schema, String reqUri) {
+		validateJsonValueAgainstSchema(schema, OBSERVATION_SCHEMA_SWE, reqUri,
+				"Observation Schema for obsFormat=application/swe+text");
+		assertMediaMember(schema, "obsFormat", reqUri, "Observation Schema");
+		assertRecordSchemaObject(schema, reqUri, "Observation Schema");
+		assertTextEncoding(schema, reqUri, "Observation Schema");
+	}
+
+	private static void validateCommandSchemaWrapper(Map<String, Object> schema, String reqUri) {
+		validateJsonValueAgainstSchema(schema, COMMAND_SCHEMA_SWE, reqUri,
+				"Command Schema for cmdFormat=application/swe+text");
+		assertMediaMember(schema, "commandFormat", reqUri, "Command Schema");
+		assertRecordSchemaObject(schema, reqUri, "Command Schema");
+		assertTextEncoding(schema, reqUri, "Command Schema");
+	}
+
+	static List<String> missingSweTextWriteAdvertisements(Map<String, Object> apiDefinition,
+			Map<String, List<String>> endpointTemplatesByLabel) {
+		List<String> missing = new ArrayList<>();
+		if (endpointTemplatesByLabel == null || endpointTemplatesByLabel.isEmpty()) {
+			return missing;
 		}
-		for (Map.Entry<?, ?> pathEntry : ((Map<?, ?>) paths).entrySet()) {
-			if (!isObservationOrCommandResourcePath(pathEntry.getKey())) {
+		Object paths = apiDefinition == null ? null : apiDefinition.get("paths");
+		if (!(paths instanceof Map)) {
+			for (String label : endpointTemplatesByLabel.keySet()) {
+				missing.add(label + " (API definition paths missing)");
+			}
+			return missing;
+		}
+		for (Map.Entry<String, List<String>> expected : endpointTemplatesByLabel.entrySet()) {
+			missing.addAll(missingSweTextWriteOperations((Map<?, ?>) paths, expected.getKey(), expected.getValue()));
+		}
+		return missing;
+	}
+
+	private static List<String> missingSweTextWriteOperations(Map<?, ?> paths, String label,
+			List<String> endpointTemplates) {
+		List<String> missing = new ArrayList<>();
+		if (endpointTemplates == null || endpointTemplates.isEmpty()) {
+			return missing;
+		}
+		boolean operationSeen = false;
+		for (Map.Entry<?, ?> pathEntry : paths.entrySet()) {
+			Object apiPath = pathEntry.getKey();
+			if (!(apiPath instanceof String) || !matchesAnyTemplate((String) apiPath, endpointTemplates)) {
 				continue;
 			}
-			Object pathItem = pathEntry.getValue();
-			if (!(pathItem instanceof Map)) {
+			if (!(pathEntry.getValue() instanceof Map)) {
 				continue;
 			}
-			Map<?, ?> pathMap = (Map<?, ?>) pathItem;
+			Map<?, ?> pathMap = (Map<?, ?>) pathEntry.getValue();
 			for (String method : List.of("post", "put")) {
 				Object operation = pathMap.get(method);
-				if (operation instanceof Map) {
-					operations.add((Map<?, ?>) operation);
+				if (operation == null) {
+					continue;
+				}
+				operationSeen = true;
+				if (!(operation instanceof Map) || !requestBodyContainsApplicationSweText((Map<?, ?>) operation)) {
+					missing.add(label + " " + method.toUpperCase(Locale.ROOT) + " " + apiPath);
 				}
 			}
 		}
-		return operations;
+		if (!operationSeen) {
+			missing.add(label + " (no scoped POST/PUT operation advertised)");
+		}
+		return missing;
 	}
 
 	static boolean isObservationOrCommandResourcePath(Object path) {
@@ -738,6 +795,44 @@ public class Part2SweCommonTextTests {
 
 	private static boolean isTemplateSegment(String segment) {
 		return segment.startsWith("{") && segment.endsWith("}") && segment.length() > 2;
+	}
+
+	private static boolean matchesAnyTemplate(String apiPath, List<String> endpointTemplates) {
+		return endpointTemplates.stream().anyMatch(template -> pathMatchesTemplate(apiPath, template));
+	}
+
+	private static boolean pathMatchesTemplate(String apiPath, String template) {
+		List<String> actual = pathSegments(apiPath);
+		List<String> expected = pathSegments(template);
+		if (actual.size() < expected.size()) {
+			return false;
+		}
+		int offset = actual.size() - expected.size();
+		for (int i = 0; i < expected.size(); i++) {
+			String expectedSegment = expected.get(i);
+			String actualSegment = actual.get(i + offset);
+			if (!isTemplateSegment(expectedSegment) && !expectedSegment.equals(actualSegment)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static List<String> pathSegments(String path) {
+		if (path == null || path.isBlank()) {
+			return List.of();
+		}
+		String normalized = path.split("\\?", 2)[0].split("#", 2)[0];
+		while (normalized.startsWith("/")) {
+			normalized = normalized.substring(1);
+		}
+		while (normalized.endsWith("/")) {
+			normalized = normalized.substring(0, normalized.length() - 1);
+		}
+		if (normalized.isBlank()) {
+			return List.of();
+		}
+		return List.of(normalized.split("/"));
 	}
 
 	private static boolean requestBodyContainsApplicationSweText(Map<?, ?> operation) {
@@ -783,14 +878,86 @@ public class Part2SweCommonTextTests {
 		return false;
 	}
 
+	private enum IssueTimeEvidence {
+
+		ABSENT,
+
+		CANONICAL,
+
+		PRESENT_NONCANONICAL
+
+	}
+
+	private static IssueTimeEvidence issueTimeEvidence(Object value) {
+		return issueTimeEvidence(value, false, false);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static IssueTimeEvidence issueTimeEvidence(Object value, boolean insideIssueTimeCandidate,
+			boolean insideTimeComponent) {
+		if (value instanceof Map) {
+			Map<Object, Object> map = (Map<Object, Object>) value;
+			boolean issueTimeCandidate = insideIssueTimeCandidate || isIssueTimeToken(map.get("name"))
+					|| isIssueTimeToken(map.get("id"));
+			boolean timeComponent = insideTimeComponent || "Time".equals(map.get("type"));
+			Object definition = map.get("definition");
+			if (timeComponent && COMMAND_ISSUE_TIME_DEFINITION.equals(definition)) {
+				return IssueTimeEvidence.CANONICAL;
+			}
+			IssueTimeEvidence status = issueTimeCandidate || isIssueTimeDefinitionLike(definition)
+					? IssueTimeEvidence.PRESENT_NONCANONICAL : IssueTimeEvidence.ABSENT;
+			for (Object child : map.values()) {
+				status = strongerIssueTimeEvidence(status, issueTimeEvidence(child, issueTimeCandidate, timeComponent));
+				if (status == IssueTimeEvidence.CANONICAL) {
+					return status;
+				}
+			}
+			return status;
+		}
+		if (value instanceof Iterable) {
+			IssueTimeEvidence status = IssueTimeEvidence.ABSENT;
+			for (Object child : (Iterable<?>) value) {
+				status = strongerIssueTimeEvidence(status,
+						issueTimeEvidence(child, insideIssueTimeCandidate, insideTimeComponent));
+				if (status == IssueTimeEvidence.CANONICAL) {
+					return status;
+				}
+			}
+			return status;
+		}
+		return IssueTimeEvidence.ABSENT;
+	}
+
+	private static IssueTimeEvidence strongerIssueTimeEvidence(IssueTimeEvidence current, IssueTimeEvidence candidate) {
+		if (current == IssueTimeEvidence.CANONICAL || candidate == IssueTimeEvidence.CANONICAL) {
+			return IssueTimeEvidence.CANONICAL;
+		}
+		if (current == IssueTimeEvidence.PRESENT_NONCANONICAL || candidate == IssueTimeEvidence.PRESENT_NONCANONICAL) {
+			return IssueTimeEvidence.PRESENT_NONCANONICAL;
+		}
+		return IssueTimeEvidence.ABSENT;
+	}
+
+	private static boolean isIssueTimeToken(Object value) {
+		if (!(value instanceof String)) {
+			return false;
+		}
+		String normalized = ((String) value).replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT);
+		return "issuetime".equals(normalized);
+	}
+
+	private static boolean isIssueTimeDefinitionLike(Object definition) {
+		return definition instanceof String
+				&& ((String) definition).replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT).contains("issuetime");
+	}
+
 	private static String requireString(Map<String, Object> body, String key, String reqUri) {
 		ETSAssert.assertJsonObjectHas(body, key, String.class, reqUri);
 		return (String) body.get(key);
 	}
 
-	@SuppressWarnings("unchecked")
-	private static Map<String, Object> castMap(Object value) {
-		return (Map<String, Object>) value;
+	private static String encodePathToken(String value) {
+		return URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20");
 	}
 
 	private static List<?> items(Map<String, Object> body) {

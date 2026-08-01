@@ -148,9 +148,9 @@
        declaration, SWE JSON Encoding Rules prerequisite, resource condition gates,
        and public-IUT no-mutation behavior remain runtime-visible before
        SWE Common JSON resource endpoint access. -->
-  <!-- Sprint 30 S-ETS-30-01 (REQ-ETS-PART2-011): Part 2 SWE Common Text group
-       added as a declaration-gated, read-only schema/media-validation subset. It
-       depends on "core common" rather than Part2ApiCommon, resource-class groups, or
+  <!-- Sprint 67 S-ETS-67-01 (REQ-ETS-PART2-011): Part 2 SWE Common Text exact
+       released ATS group superseding the Sprint 30 subset. It depends on
+       "core common" rather than Part2ApiCommon, resource-class groups, or
        SystemFeatures so exact /conf/swecommon-text declaration, SWE Text Encoding Rules
        prerequisite visibility, resource condition gates, exact application/swe+text
        evidence, and public-IUT no-mutation behavior remain runtime-visible. -->

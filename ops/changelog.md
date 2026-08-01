@@ -2,6 +2,50 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-01 - Sprint 67 Part 2 SWE Common Text Encoding released ATS closure
+
+**Triggered by user instruction**: "Make the practical fix, then continue with
+the project - and don't stop unless you need my input."
+
+- Added CP-027, S-ETS-67-01, and the Sprint 67 contract for exact OGC 23-002
+  Part 2 `/conf/swecommon-text` closure.
+- Replaced the historical Sprint 30 helper/subset surface with exactly eight
+  released Annex A.11 procedure methods, including the formerly unmapped
+  `/conf/swecommon-text/mediatype-read`.
+- Removed non-ATS declaration/prerequisite/resource-gate helper methods from
+  the deployed Part 2 SWE Common Text class while preserving setup gates for
+  exact `/conf/swecommon-text` and SWE Common Text Encoding Rules before
+  resource endpoint access.
+- Implemented read-only `application/swe+text` media checks, Connected Systems
+  wrapper schema validation, reusable SWE `recordSchema` validation, canonical
+  Time/IssueTime mapping evidence, and explicit no-safe-evidence SKIPs for
+  Observation/Command encoding without proven data-value validator evidence.
+- Initial Raze found a high false-SKIP gap where present but noncanonical
+  issueTime/IssueTime evidence could SKIP rather than FAIL, and a low stale
+  `testng.xml` Sprint 30 comment. The gapfix distinguishes absent IssueTime
+  evidence from present noncanonical evidence, fails the present-invalid case,
+  adds structural coverage, and updates the shipped suite comment.
+- Scoped `mediatype-write` to non-mutating service-desc OpenAPI metadata and
+  require every advertised POST/PUT operation matching supported Observation
+  or Command endpoint templates to include exact `application/swe+text`.
+- Promoted all eight released mappings to reviewed exact and regenerated
+  coverage: `240 total / 183 exact / 2 helper / 50 candidate / 5 unmapped`,
+  with Part 2 SWE Common Text `8 exact / 0 candidate / 0 unmapped`.
+- Verification logs are archived under
+  `ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/`:
+  post-Raze-fix focused `115/0/0/0`, coverage audit pass, formatter pass,
+  full Docker Maven `775/0/0/3`, and local OSH TeamEngine `254/25/20/209`
+  with all eight methods SKIPping before SWE Common Text resource endpoint
+  access because local OSH lacks
+  `http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules`.
+- No-mutation oracle recognized 137 local-OSH IUT request logs; method counts
+  are `GET=137` and zero POST/PUT/PATCH/DELETE.
+- TeamEngine 6 runtime immutability verification passed for smoke image
+  `sha256:84423839aa6f4e5209b679a46ddf6a7cfbb3cbc3eb737ecce25d4e9d65167b0c`.
+- Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
+  `required_fixes: []`.
+- Commit and push remain pending.
+
 ## 2026-08-01 - Codex session metrics JSONL support
 
 **Triggered by user instruction**: "Make the practical fix, then continue with

@@ -190,10 +190,11 @@ public class VerifyTestNGSuiteDependency {
 	private static final String PART2_SWE_COMMON_JSON_GROUP = "part2swecommonjson";
 
 	/**
-	 * Sprint 30 S-ETS-30-01 — Part 2 SWE Common Text Encoding read-only subset group
-	 * (depends on Core and Common; runtime checks keep /conf/swecommon-text declaration,
-	 * SWE Text Encoding Rules prerequisite, resource condition gates, schema evidence,
-	 * exact application/swe+text evidence, and no-public-mutation behavior visible).
+	 * Sprint 67 S-ETS-67-01 — Part 2 SWE Common Text Encoding exact released ATS group,
+	 * superseding the Sprint 30 subset (depends on Core and Common; runtime checks keep
+	 * /conf/swecommon-text declaration, SWE Text Encoding Rules prerequisite, resource
+	 * condition gates, schema evidence, exact application/swe+text evidence, and
+	 * no-public-mutation behavior visible).
 	 */
 	private static final String PART2_SWE_COMMON_TEXT_GROUP = "part2swecommontext";
 
@@ -2734,10 +2735,10 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 30 S-ETS-30-01 — Part 2 SWE Common Text group =====
+	// ===== Sprint 67 S-ETS-67-01 — Part 2 SWE Common Text group =====
 
 	/**
-	 * Sprint 30 S-ETS-30-01 (REQ-ETS-PART2-011): the canonical testng.xml SHALL declare
+	 * Sprint 67 S-ETS-67-01 (REQ-ETS-PART2-011): the canonical testng.xml SHALL declare
 	 * {@code <group name="part2swecommontext" depends-on="core common"/>}.
 	 */
 	@org.junit.Test
@@ -2780,11 +2781,11 @@ public class VerifyTestNGSuiteDependency {
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + PART2_SWE_COMMON_TEXT_GROUP
-				+ "\" depends-on=\"core common\"/> — see Sprint 30 S-ETS-30-01.", foundDependency);
+				+ "\" depends-on=\"core common\"/> — see Sprint 67 S-ETS-67-01.", foundDependency);
 	}
 
 	/**
-	 * Sprint 30 S-ETS-30-01: every Part 2 SWE Common Text @Test method SHALL carry
+	 * Sprint 67 S-ETS-67-01: every Part 2 SWE Common Text @Test method SHALL carry
 	 * {@code groups = "part2swecommontext"}.
 	 */
 	@org.junit.Test
@@ -2811,7 +2812,7 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 30 S-ETS-30-01: Part 2 SWE Common Text classes MUST be co-located in the
+	 * Sprint 67 S-ETS-67-01: Part 2 SWE Common Text classes MUST be co-located in the
 	 * SAME {@code <test>} block as Core, Common, and the resource classes whose
 	 * declarations are checked at runtime.
 	 */
@@ -2865,7 +2866,7 @@ public class VerifyTestNGSuiteDependency {
 				+ part2DatastreamClassNames + "), Part 2 ControlStream (" + part2ControlStreamClassNames
 				+ "), Part 2 Create/Replace/Delete (" + part2CreateReplaceDeleteClassNames
 				+ "), and Part 2 SWE Common Text (" + part2SweCommonTextClassNames
-				+ ") must be declared in the SAME <test> block of testng.xml so declaration-gated runtime checks resolve within scope. See Sprint 30 S-ETS-30-01.",
+				+ ") must be declared in the SAME <test> block of testng.xml so declaration-gated runtime checks resolve within scope. See Sprint 67 S-ETS-67-01.",
 				coAlloc);
 	}
 

@@ -1,0 +1,21 @@
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+BASE_IMAGE_ID=sha256:9d53016965c4cca0f4d8baec136ad11258dccc552e9a8c969a1a6f889336d90c
+FINAL_IMAGE_ID=sha256:89ff1bb489c7e137f3195796ddc08ea86988dd49577d29e3050af622488ba17c
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+PASS: deployed SWE Common adapter executed valid and invalid components
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+PASS: deployed SensorML adapter executed valid and invalid documents
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+log4j:WARN No appenders could be found for logger (org.apache.http.client.protocol.RequestAddCookies).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+PASS: deployed SensorML OpenAPI 3.1 parser executed; external-fetch security probes executed
+PASS: renamed-coordinate rejection, functional-path rejection, exact multi-tuple output, and unused-entry rejection
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+ALLOWED_COLLISION|org.opengis.cite:ets-ogcapi-connectedsystems10|META-INF/services/com.occamlab.te.spi.jaxrs.TestSuiteController
+ALLOWED_COLLISION|org.opengis.cite:ets-ogcapi-connectedsystems10|test-run-props.xml
+PASS: added-jar coordinate and functional-path guard (1 added jars, 2 reviewed collisions)
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+PASS: TeamEngine 6 provenance, coordinate-aware dependency parity, base-file immutability, runtime invariants, and confidential history/context hygiene

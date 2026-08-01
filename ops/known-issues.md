@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T11:48Z
+Last updated: 2026-08-01T15:48Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -128,7 +128,7 @@ Last updated: 2026-08-01T11:48Z
   limitations remain useful interoperability context only.
 - Part 2 placeholder taxonomy was corrected during Sprint 25 planning and
   extended during Sprints 26, 27, 28, 29, 30, 31, 59, 60, 61, 62, 63, 64,
-  65, and 66. OpenSpec and epic ETS-03 now treat API Common as exact implemented
+  65, 66, and 67. OpenSpec and epic ETS-03 now treat API Common as exact implemented
   `REQ-ETS-PART2-001`, Datastreams & Observations as exact implemented
   `REQ-ETS-PART2-002`, Control Streams & Commands as exact implemented
   `REQ-ETS-PART2-003`, Command Feasibility as exact implemented
@@ -138,7 +138,7 @@ Last updated: 2026-08-01T11:48Z
   `REQ-ETS-PART2-007`, Update as partial implemented `REQ-ETS-PART2-008`,
   JSON Encoding as exact implemented `REQ-ETS-PART2-009`, SWE Common JSON
   Encoding as exact implemented `REQ-ETS-PART2-010`, SWE Common Text
-  Encoding as partial implemented `REQ-ETS-PART2-011`, SWE Common Binary
+  Encoding as exact implemented pending Raze/push `REQ-ETS-PART2-011`, SWE Common Binary
   Encoding as partial implemented `REQ-ETS-PART2-012`, and remaining
   observation-binding placeholder as `REQ-ETS-PART2-013`. The former
   `/conf/system-history` placeholder is retired because OGC 23-002 Annex A does
@@ -189,7 +189,21 @@ Last updated: 2026-08-01T11:48Z
   Sprint 66 evidence is archived
   under
   `ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/`.
-- Sprint ets-30 SWE Common Text Encoding implementation is PARTIAL and must not be read as full `/conf/swecommon-text` closure. `Part2SweCommonTextTests` adds exact declaration, SWE 3.0 `/conf/text-encoding-rules` prerequisite visibility, condition gates, exact `application/swe+text`, bundled schema metadata validation requiring `TextEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating mediatype-write API-definition checks. GeoRobotix declares `/conf/swecommon-text`, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete`, but does not expose SWE 3.0 `/conf/text-encoding-rules`. Mandatory Generator smoke failed `196 total / 33 passed / 28 failed / 135 skipped`; the new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP. Full positive closure remains open for valid SWE Common Text Observation Schema, Observation, Command Schema, Command, SWE 3.0 prerequisite, encoding-validator, and mediatype-write evidence. `scripts/no-mutation-oracle.py` recognized 91 IUT request logs, and explicit public log counts found 91 GeoRobotix GET lines and zero matched POST/PUT/PATCH/DELETE lines.
+- Sprint 67 supersedes Sprint 30 and closes SWE Common Text Encoding as exact
+  released ATS pending commit and push:
+  `2:/conf/swecommon-text` is
+  `8 exact / 0 candidate / 0 unmapped`. The current local OSH primary E2E
+  still SKIPs all eight Part 2 SWE Common Text procedures before resource
+  endpoint access because local OSH lacks
+  `http://www.opengis.net/spec/SWE/3.0/conf/text-encoding-rules`; this is an
+  IUT conformance limitation, not a reason to weaken the exact setup gate or
+  media/schema checks. Observation/Command encoding methods also preserve a
+  no-safe-evidence SKIP without parent schema, candidate body, and proven SWE
+  Common Text data-value validator evidence; present noncanonical
+  issueTime/IssueTime evidence now fails instead of SKIPping. Local OSH smoke is
+  `254/25/20/209`; no-mutation evidence is `GET=137`, zero writes. Focused
+  Raze recheck is `APPROVE 0.96`; commit and push remain pending. Sprint 67 evidence is archived under
+  `ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/`.
 - Sprint ets-31 SWE Common Binary Encoding is PARTIAL and must not be read as full `/conf/swecommon-binary` closure. `Part2SweCommonBinaryTests` adds exact declaration, SWE 3.0 `/conf/binary-encoding-rules` prerequisite visibility, condition gates, exact `application/swe+binary`, bundled schema metadata validation requiring `BinaryEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating mediatype-write API-definition checks. GeoRobotix declares `/conf/swecommon-binary`, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete`, but does not expose SWE 3.0 `/conf/binary-encoding-rules`. Mandatory Generator smoke failed `206 total / 35 passed / 34 failed / 137 skipped`; the new SWE Common Binary group produced 3 PASS, 6 FAIL, and 2 SKIP. Full positive closure remains open for valid SWE Common Binary Observation Schema, Observation, Command Schema, Command, SWE 3.0 prerequisite, encoding-validator, and mediatype-write evidence. `scripts/no-mutation-oracle.py` recognized 99 IUT request logs, and explicit public log counts found 99 GeoRobotix GET lines and zero POST/PUT/PATCH/DELETE lines.
 - Sprint ets-32 changes the development E2E default from GeoRobotix to self-provisioned local OSH. GeoRobotix public runs are advisory interoperability probes only and should not block local-OSH-backed development work. The 2026-06-01 local OSH planning smoke passed `206/65/0/141` with no read-only mutation (`GET=130`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`). The 2026-06-02 Generator local OSH smoke passed `211/68/0/143` with no read-only mutation (`GET=133`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`) both before and after Raze gapfixes. Local OSH currently has empty `/datastreams`, `/observations`, and `/controlstreams` collections and returns HTTP 400 for `/commands` and `/systemEvents`, so positive `REQ-ETS-PART2-013` Observation/Command binding closure still requires documented dynamic-data seed fixtures or precise SKIPs; declarations and empty collections are not PASS evidence. Sprint 33 planning adds `ops/local-osh-dynamic-data-seed-fixtures.json` as a planned/not-applied fixture contract and requires explicit dedicated mutable-IUT opt-in before any seed mutation; Raze planning recheck approved this safety framing at confidence 0.94 after traceability and public-IUT manifest fixes. Sprint 32 initial Raze implementation review found and the Generator fixed a future false-PASS risk for CommandStatus/CommandResult inline data and a SKIP-honesty issue for unavailable or uninspectable schema evidence; focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes. The remaining concern is regression-depth only: add dedicated inline CommandStatus/CommandResult skip/fail helper tests when extending populated-IUT closure.
 - Full positive `REQ-ETS-PART2-013` populated binding closure remains open

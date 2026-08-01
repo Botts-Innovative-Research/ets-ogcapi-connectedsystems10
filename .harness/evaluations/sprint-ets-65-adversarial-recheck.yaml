@@ -1,0 +1,124 @@
+verdict: GAPS_FOUND
+confidence: 0.88
+reviewer: "Red Team / Raze"
+review_type: "Sprint 65 Part 2 /conf/json exact released ATS adversarial recheck"
+timestamp_utc: "2026-08-01T10:22:17Z"
+
+reviewed_scope:
+  instructions:
+    - "AGENTS.md"
+    - "_bmad/agents/adversarial-reviewer.md"
+  sprint_artifacts:
+    - ".harness/contracts/sprint-ets-65.yaml"
+    - "epics/stories/s-ets-65-01-part2-json-closure.md"
+    - "openspec/change-proposals/CP-025-part2-json-closure.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/design.md"
+    - "_bmad/traceability.md"
+    - "_bmad/architecture.md"
+    - "ops/status.md"
+    - "ops/changelog.md"
+    - "ops/test-results.md"
+  implementation:
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonTests.java"
+    - "src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/Part2JsonSupport.java"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/json/VerifyPart2JsonTests.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml"
+    - "src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java"
+    - "src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json"
+    - "ops/ats-coverage-report.json"
+  evidence_directory: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/"
+
+review_method:
+  reran_docker_or_maven: false
+  rationale: "User requested artifact inspection unless reproduction was needed; existing durable artifacts were sufficient to evaluate the recheck."
+  worktree_write_policy: "No implementation code changed. This report is the only Raze review artifact written."
+
+prior_required_fixes:
+  nested_endpoint_coverage:
+    status: CLOSED
+    evidence:
+      - "Part2JsonTests.java:177-183 validates root /datastreams and repeats /systems/{sysId}/datastreams."
+      - "Part2JsonTests.java:213-220 validates root /observations and repeats /datastreams/{dsId}/observations."
+      - "Part2JsonTests.java:263-269 validates root /controlstreams and repeats /systems/{sysId}/controlstreams."
+      - "Part2JsonTests.java:611-619 validates root /commands and repeats /controlstreams/{csId}/commands."
+      - "Part2JsonTests.java:410-415 validates root /systemEvents and repeats /systems/{sysId}/events."
+      - "Part2JsonTests.java:524-546 skips/fails honestly when Part 1 System parents or nested endpoints are unavailable."
+  mediatype_write_global_scoping:
+    status: PARTIALLY_CLOSED
+    evidence:
+      - "Part2JsonTests.java:446-471 builds declared-class endpoint templates for DataStream, Observation, ControlStream, Command, and SystemEvent resources."
+      - "Part2JsonSupport.java:213-238 restricts POST/PUT inspection to paths matching those templates."
+      - "VerifyPart2JsonTests.java:154-168 proves an unrelated /systems POST no longer satisfies Command resource write evidence."
+    residual_gap: "The helper still passes a resource label when any one matching POST/PUT advertises application/json, even if another matching create/replace operation for the same resource does not."
+  all_page_resource_schema_traversal:
+    status: CLOSED
+    evidence:
+      - "Part2JsonTests.java:557-560 now obtains DataStream/ControlStream resources from requiredJsonCollection."
+      - "Part2JsonTests.java:500-505 uses Part1ApiCommonSupport.resourcesAtEndpoint with a page observer that validates every collection page."
+      - "Part1ApiCommonSupport.java:440-493 performs bounded same-origin pagination over all next links before returning traversal.items()."
+  docs_story_contract_pending_honesty:
+    status: MOSTLY_CLOSED
+    evidence:
+      - "Story line 3 remains Pending Raze + Push; lines 81-82 leave Raze and push unchecked."
+      - "Contract status is PENDING_RAZE_AND_PUSH and verification.raze/pushed remain PENDING."
+      - "ops/status.md:44 and ops/test-results.md:49 state final Raze recheck, commit, and push are pending."
+    residual_gap: "One spec scenario still names public GeoRobotix for the no-mutation smoke despite current AGENTS policy and evidence using local OSH as the primary E2E target."
+  durable_evidence:
+    status: CLOSED
+    evidence:
+      - "Evidence is stored as .txt and .xml artifacts, including local-osh-smoke-results-after-raze-fix.xml."
+      - "git check-ignore produced no ignored matches for the Sprint 65 evidence directory."
+
+findings:
+  - id: RAZE-ETS65-RECHECK-FALSEPASS-001
+    severity: HIGH
+    status: OPEN
+    title: "/req/json/mediatype-write can still false-PASS when only one scoped operation advertises application/json"
+    evidence:
+      - "Part2JsonSupport.java:136-147 reports a resource label missing only if apiDefinitionAdvertisesJsonWriteForTemplates returns false."
+      - "Part2JsonSupport.java:222-236 returns true on the first matching POST or PUT with application/json requestBody content."
+      - "The helper does not continue scanning other matching scoped POST/PUT operations to ensure each CREATE or REPLACE operation for that resource endpoint also advertises application/json."
+      - "VerifyPart2JsonTests.java:126-168 covers one positive scoped operation, OPTIONS-only rejection, non-application/json rejection, and unrelated-path rejection, but not the mixed-operation case where one scoped operation is good and another scoped operation lacks application/json."
+    impact: "A service-desc with POST /datastreams application/json and PUT /datastreams/{id} application/xml-only would pass the DataStream label even though a scoped replace operation lacks JSON write-media support. That is a false PASS risk for OGC 23-002 Annex A.9 Requirement 94 semantics."
+    required_fix: "Change mediatype-write evaluation to inspect all scoped POST/PUT create/replace operations that exist for the declared Part 2 resource endpoint templates and fail/report each operation whose requestBody content omits exact application/json. Add a regression covering mixed good/bad scoped operations. Reconcile mapping evidence if the implementation semantics change."
+
+  - id: RAZE-ETS65-RECHECK-DOC-001
+    severity: LOW
+    status: OPEN
+    title: "OpenSpec no-mutation scenario names public GeoRobotix while current policy and Sprint 65 evidence use local OSH"
+    evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1605-1609 says the no-mutation scenario is GIVEN TeamEngine smoke runs against the public GeoRobotix IUT."
+      - "AGENTS.md says primary development E2E target is a self-run local OSH instance, with GeoRobotix only advisory."
+      - "ops/status.md:31-40 and ops/test-results.md:36-45 document local OSH TeamEngine smoke and local-OSH request logs for Sprint 65."
+    impact: "This is not an implementation failure, but it leaves the Sprint 65 spec text inconsistent with the current E2E policy and evidence trail."
+    required_fix: "Update SCENARIO-ETS-PART2-009-SMOKE-NO-PUBLIC-MUTATION-001 to say local OSH or any configured primary IUT, and reserve GeoRobotix for optional advisory probes."
+
+evidence:
+  positive_findings:
+    - "Part2JsonTests exposes exactly fourteen TestNG methods; focused structural verification reports 87/0/0/0."
+    - "All fourteen /conf/json mappings are reviewed exact in ops/ats-coverage-report.json, with summary 2:/conf/json = 14 exact / 0 candidate / 0 unmapped."
+    - "Formatter and full Docker Maven evidence are durable: formatter-after-raze-wording.txt BUILD SUCCESS; full-maven-after-raze-fix.txt reports 765 tests / 0 failures / 0 errors / 3 skipped."
+    - "Local OSH smoke evidence is honest non-green, not overclaimed: local-osh-smoke-after-raze-fix.txt reports 258 total / 29 passed / 20 failed / 209 skipped."
+    - "All Part2Json runtime methods SKIP before JSON resource endpoint access because local OSH lacks http://www.opengis.net/spec/SWE/3.0/conf/json-record-components."
+    - "No-mutation evidence is durable: no-mutation-oracle-after-raze-fix.txt reports 151 recognized IUT request logs; request-method-counts-after-raze-fix.txt reports GET 151 and zero POST/PUT/PATCH/DELETE."
+    - "TeamEngine runtime immutability evidence uses the smoke image sha256:e2196e624b2c839d7e07f6ff3af4b135a9601f7bc64432ad159dfba7f9d08eb4 and passes."
+  exact_evidence_files:
+    - "formatter-after-raze-wording.txt"
+    - "focused-after-raze-wording.txt"
+    - "coverage-report-update-after-raze-fix.txt"
+    - "coverage-audit-after-raze-fix.txt"
+    - "coverage-summary-after-raze-fix.txt"
+    - "full-maven-after-raze-fix.txt"
+    - "local-osh-smoke-after-raze-fix.txt"
+    - "local-osh-smoke-results-after-raze-fix.xml"
+    - "local-osh-part2-json-statuses-after-raze-fix.txt"
+    - "local-osh-failures-after-raze-fix.txt"
+    - "no-mutation-oracle-after-raze-fix.txt"
+    - "request-method-counts-after-raze-fix.txt"
+    - "teamengine-runtime-immutability-after-raze-fix.txt"
+    - "smoke-image-id-after-raze-fix.txt"
+
+required_fixes:
+  - "Fix RAZE-ETS65-RECHECK-FALSEPASS-001 before claiming Sprint 65 exact closure approved by Raze."
+  - "Fix RAZE-ETS65-RECHECK-DOC-001 during reconciliation before final completion/push."

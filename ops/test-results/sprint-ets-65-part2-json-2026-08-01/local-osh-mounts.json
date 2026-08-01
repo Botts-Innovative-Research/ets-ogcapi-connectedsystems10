@@ -1,0 +1,18 @@
+[
+  {
+    "Type": "bind",
+    "Source": "/home/nh/docker/osh-core/build/install/osh-core",
+    "Destination": "/opt/osh",
+    "Mode": "ro",
+    "RW": false,
+    "Propagation": "rprivate"
+  },
+  {
+    "Type": "bind",
+    "Source": "/home/nh/docker/ets-ogcapi-connectedsystems10-local-osh/state",
+    "Destination": "/state",
+    "Mode": "",
+    "RW": true,
+    "Propagation": "rprivate"
+  }
+]

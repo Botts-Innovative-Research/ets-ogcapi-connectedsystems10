@@ -1,6 +1,50 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T08:26Z
+Last updated: 2026-08-01T10:46Z
+
+## Sprint 65 Raze Approved, Push Pending - Part 2 JSON Encoding Released ATS
+
+- User instruction: "Continue until you need my input."
+- CP-025 and S-ETS-65-01 close the OGC 23-002 Part 2 `/conf/json` class as
+  exactly fourteen released Annex A.9 procedures.
+- `Part2JsonTests` now exposes one independent TestNG method per released
+  target, including the formerly unmapped `mediatype-read`, and removes the
+  historical standalone declaration/prerequisite/resource-gate helper tests.
+- Runtime checks remain read-only. The implementation gates exact `/conf/json`
+  and the SWE JSON record-components prerequisite before JSON resource endpoint
+  access, validates bounded same-origin JSON collection pages, repeats the
+  released nested endpoints `/systems/{sysId}/datastreams`,
+  `/datastreams/{dsId}/observations`, `/systems/{sysId}/controlstreams`,
+  `/controlstreams/{csId}/commands`, and `/systems/{sysId}/events`, and
+  validates Observation/Command/CommandResult dynamic values against parent
+  JSON Schema evidence when present.
+- `mediatype-write` uses only service-desc OpenAPI metadata and requires exact
+  `application/json` request bodies on every advertised POST/PUT operation
+  matching supported Part 2 resource endpoint templates. OPTIONS, unrelated
+  POST/PUT operations, partial scoped write coverage, and live mutation
+  requests cannot produce PASS evidence.
+- Reviewed coverage is now `240 total / 167 exact / 2 helper / 64 candidate /
+  7 unmapped`; Part 2 is `130 total / 76 exact / 0 helper / 47 candidate /
+  7 unmapped`; `2:/conf/json` is `14 exact / 0 candidate / 0 unmapped`.
+- Formatter passed; focused corrected verification passed `88/0/0/0`;
+  coverage update passed; coverage audit passed `23/0/0/0`; full Docker Maven
+  completed `766 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke reached TeamEngine and the unmodified
+  local OSH IUT, then exited honestly non-green at
+  `258 total / 29 passed / 20 failed / 209 skipped`. All fourteen Sprint 65
+  JSON methods SKIP before JSON resource endpoint access because local OSH
+  lacks `http://www.opengis.net/spec/SWE/3.0/conf/json-record-components`;
+  the 20 failures are existing local OSH SensorML/Deployment/Procedure/
+  Property gaps outside Sprint 65.
+- No-mutation oracle recognized 151 local-OSH IUT request logs. Method counts
+  are `GET=151`, zero POST/PUT/PATCH/DELETE. Tracked evidence:
+  `ops/test-results/sprint-ets-65-part2-json-2026-08-01/`.
+- Smoke image:
+  `sha256:31e6b4eac77f8455638c94160c788f7156689566711c668ea266194837434637`.
+  TeamEngine 6 runtime immutability verification passed.
+- Final Raze recheck approved the mediatype-write mixed-operation gapfix:
+  `APPROVE 0.96`, both findings closed, `required_fixes: []`. Commit and push
+  are still pending.
 
 ## Sprint 64 Complete - Part 2 Advanced Filtering Released ATS
 
@@ -201,14 +245,13 @@ Last updated: 2026-08-01T08:26Z
 
 ## Next Recommended Work
 
-- Sprint 64 is Raze-approved and pushed. Choose the next Part 2 exact closure
-  from the remaining classes: `/conf/create-replace-delete`
+- Sprint 65 still needs final Raze, commit, and push. After it is pushed, the
+  remaining Part 2 exact-closure candidates are `/conf/create-replace-delete`
   (`0 exact / 12 candidate / 4 unmapped`), `/conf/update`
-  (`0 exact / 14 candidate / 0 unmapped`), `/conf/json`
-  (`0 exact / 13 candidate / 1 unmapped`), or the SWE Common encoding classes
+  (`0 exact / 14 candidate / 0 unmapped`), and the SWE Common encoding classes
   (each `0 exact / 7 candidate / 1 unmapped`). CRD/Update need stricter
-  mutation-IUT planning; JSON/SWE are more read-only but still depend on
-  healthy dynamic-resource evidence.
+  mutation-IUT planning; SWE classes are read-mostly but still depend on the
+  external SWE validator boundary and healthy dynamic-resource evidence.
 
 ## Sprint 60 Complete - Part 2 Datastreams and Observations Released ATS
 

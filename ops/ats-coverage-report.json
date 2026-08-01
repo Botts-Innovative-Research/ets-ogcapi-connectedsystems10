@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 260,
+  "suiteTestMethodCount" : 258,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -3066,126 +3066,238 @@
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/mediatype-read",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#jsonMediatypeReadSupportedOnRetrievalOperations()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/mediatype-read",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#jsonMediatypeReadSupportedOnRetrievalOperations()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates exact /conf/json and the SWE JSON record-components prerequisite, then requests each supported Part 2 retrieval collection with Accept: application/json and requires HTTP 200, exact application/json response media, and a parseable JSON object without issuing mutations."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/mediatype-write",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/mediatype-write",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#jsonMediatypeWriteAdvertisedByApiDefinitionOnly()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/mediatype-write",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#jsonMediatypeWriteAdvertisedByApiDefinitionOnly()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure applies only when Create/Replace/Delete is declared, reads the landing page service-desc API definition as JSON, and requires every advertised POST or PUT operation on the supported Part 2 resource endpoint templates implied by the declared Datastream, ControlStream, and SystemEvent classes to expose exact application/json requestBody content; OPTIONS, unrelated write operations, partially advertised scoped write sets, and mutation requests are deliberately not used as PASS evidence."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/datastream-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/datastream-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#datastreamJsonSchemasValidateAgainstAnnexA9()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/datastream-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#datastreamJsonSchemasValidateAgainstAnnexA9()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates DataStream conformance, traverses /datastreams as application/json with bounded same-origin pagination, validates every retrieved collection page against the bundled Annex A.9 DataStream collection schema, repeats collection validation for every available /systems/{sysId}/datastreams endpoint when the Part 1 System condition is declared, validates an inspected item against the DataStream schema, and dereferences that item at /datastreams/{id} for single-resource schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/obsschema-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/obsschema-schema",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationSchemaJsonValidWhenDatastreamCandidateAvailable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationSchemaJsonValidForEveryInspectedDatastream()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/obsschema-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationSchemaJsonValidForEveryInspectedDatastream()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates DataStream conformance, traverses every DataStream returned by bounded same-origin /datastreams pagination, requests /datastreams/{id}/schema?obsFormat=application/json for each resource, requires application/json, and validates the returned schema metadata against the bundled Observation schema JSON Schema."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/observation-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/observation-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationJsonSchemasValidateAgainstAnnexA9()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/observation-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationJsonSchemasValidateAgainstAnnexA9()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates DataStream conformance, validates every bounded same-origin /observations collection page, traverses all DataStreams, repeats Observation collection validation for every /datastreams/{dsId}/observations endpoint, validates an inspected Observation from root or scoped evidence against the bundled Annex A.9 schema, and dereferences /observations/{id} for single-resource schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/observation-constraints",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/observation-constraints",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationConstraintsRequireParentSchemaAndCandidateEvidence()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationConstraintsValidateAgainstParentSchemaEvidence()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/observation-constraints",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#observationConstraintsValidateAgainstParentSchemaEvidence()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure requires scoped DataStream/Observation evidence, reads the parent JSON observation schema, validates the child Observation against the released schema, and fails when present result or parameters values do not validate against matching parent resultSchema or parametersSchema members."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/controlstream-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/controlstream-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#controlStreamJsonSchemasValidateAgainstAnnexA9()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/controlstream-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#controlStreamJsonSchemasValidateAgainstAnnexA9()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates ControlStream conformance, traverses /controlstreams as application/json with bounded same-origin pagination, validates every retrieved collection page against the bundled Annex A.9 ControlStream collection schema, repeats collection validation for every available /systems/{sysId}/controlstreams endpoint when the Part 1 System condition is declared, validates an inspected item against the ControlStream schema, and dereferences that item at /controlstreams/{id} for single-resource schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/commandschema-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/commandschema-schema",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandSchemaJsonValidWhenControlStreamCandidateAvailable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandSchemaJsonValidForEveryInspectedControlStream()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/commandschema-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandSchemaJsonValidForEveryInspectedControlStream()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates ControlStream conformance, traverses every ControlStream returned by bounded same-origin /controlstreams pagination, requests /controlstreams/{id}/schema?cmdFormat=application/json for each resource, requires application/json, and validates the returned schema metadata against the bundled Command schema JSON Schema."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/command-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/command-schema",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandJsonSchemasValidateWhenCandidateAvailable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandJsonSchemasValidateAgainstAnnexA9()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/command-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandJsonSchemasValidateAgainstAnnexA9()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates ControlStream conformance, validates every bounded same-origin /commands collection page, traverses all ControlStreams, repeats Command collection validation for every /controlstreams/{csId}/commands endpoint, validates an inspected Command from root or scoped evidence against the bundled Annex A.9 schema, and dereferences /commands/{id} for single-resource schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/command-constraints",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/command-constraints",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandConstraintsRequireParentSchemaAndCandidateEvidence()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandConstraintsValidateAgainstParentSchemaEvidence()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/command-constraints",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandConstraintsValidateAgainstParentSchemaEvidence()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure requires scoped ControlStream/Command evidence, reads the parent JSON command schema, validates the child Command against the released schema, and fails when present Command parameters do not validate against the parent parametersSchema member."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/commandstatus-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/commandstatus-schema",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandStatusJsonSchemasValidateWhenCandidateAvailable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandStatusJsonSchemasValidateAgainstAnnexA9()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/commandstatus-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandStatusJsonSchemasValidateAgainstAnnexA9()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure obtains Command evidence, retrieves /commands/{id}/status as application/json, validates the collection and an inspected status item against bundled Annex A.9 schemas, and dereferences /commands/{id}/status/{statusId} for single-resource schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/commandresult-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/commandresult-schema",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandResultJsonSchemasValidateWhenCandidateAvailable()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandResultJsonSchemasValidateAgainstAnnexA9()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/commandresult-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandResultJsonSchemasValidateAgainstAnnexA9()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure obtains Command evidence, retrieves /commands/{id}/result as application/json, validates the collection and an inspected result item against bundled Annex A.9 schemas, and dereferences /commands/{id}/result/{resultId} for single-resource schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/commandresult-constraints",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/commandresult-constraints",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandResultConstraintsRequireParentSchemaAndCandidateEvidence()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandResultConstraintsValidateAgainstParentSchemaEvidence()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/commandresult-constraints",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#commandResultConstraintsValidateAgainstParentSchemaEvidence()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure requires scoped ControlStream/Command evidence, reads the parent JSON command schema, retrieves a CommandResult, validates it against the released schema, and fails when inline result/data does not validate against the parent resultSchema evidence."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/json/systemevent-schema",
     "classIdentifier" : "/conf/json",
     "target" : "/req/json/systemevent-schema",
     "supporting" : false,
-    "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#systemEventJsonSchemasValidateWhenEndpointEvidenceExists()" ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#systemEventJsonSchemasValidateAgainstAnnexA9()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/json/systemevent-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.json.Part2JsonTests#systemEventJsonSchemasValidateAgainstAnnexA9()",
+      "reviewedBy" : "Codex Sprint 65 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates SystemEvent conformance, traverses /systemEvents as application/json with bounded same-origin pagination, validates every collection page against the bundled Annex A.9 SystemEvent collection schema, repeats collection validation for every available /systems/{sysId}/events endpoint when the Part 1 System condition is declared, validates an inspected event against the SystemEvent schema, and dereferences /systemEvents/{id} for single-resource schema validation."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-json/mediatype-read",
@@ -3405,10 +3517,10 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 153,
+    "exact" : 167,
     "helper" : 2,
-    "candidate" : 77,
-    "unmapped" : 8,
+    "candidate" : 64,
+    "unmapped" : 7,
     "byPart" : {
       "1" : {
         "total" : 110,
@@ -3419,10 +3531,10 @@
       },
       "2" : {
         "total" : 130,
-        "exact" : 62,
+        "exact" : 76,
         "helper" : 0,
-        "candidate" : 60,
-        "unmapped" : 8
+        "candidate" : 47,
+        "unmapped" : 7
       }
     },
     "byClass" : {
@@ -3582,10 +3694,10 @@
       },
       "2:/conf/json" : {
         "total" : 14,
-        "exact" : 0,
+        "exact" : 14,
         "helper" : 0,
-        "candidate" : 13,
-        "unmapped" : 1
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "2:/conf/swecommon-json" : {
         "total" : 8,

@@ -1,0 +1,89 @@
+sprint: ets-65
+story: S-ETS-65-01
+title: Part 2 JSON Encoding released ATS closure
+status: PENDING_PUSH
+date: 2026-08-01
+requirement: REQ-ETS-PART2-009
+scope:
+  include:
+    - OGC 23-002 /conf/json fourteen released procedures
+    - exact mediatype-read and mediatype-write procedures
+    - DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, and SystemEvent JSON schema validation
+    - parent-schema constraint validation for Observation, Command, and CommandResult candidates
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - IUT mutation or seed-resource creation
+    - positive JSON write lifecycle behavior
+    - SWE Common JSON/Text/Binary exact closure
+    - external validator dependency changes
+success_criteria:
+  - id: part2_json_fourteen_methods
+    description: Part2JsonTests exposes exactly fourteen TestNG methods, one per released ATS target.
+  - id: part2_json_mediatype_read_exact
+    description: /conf/json/mediatype-read is implemented and reviewed exact.
+  - id: part2_json_exact_coverage
+    description: coverage report shows 14 exact mappings and no candidates/unmapped tests for 2:/conf/json.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: COMPLETE
+  focused: "PASS 88/0/0/0"
+  coverage: "PASS coverage audit 23/0/0/0; 2:/conf/json 14 exact / 0 candidate / 0 unmapped"
+  formatter: PASS
+  full_maven: "PASS 766/0/0/3"
+  e2e_local_osh: "HONEST_NON_GREEN 258/29/20/209; Part 2 JSON skips before endpoint access due missing SWE JSON record-components prerequisite"
+  no_mutation: "PASS 151 IUT-bound GETs; zero POST/PUT/PATCH/DELETE"
+  raze: "APPROVE 0.96; required_fixes []"
+  pushed: PENDING
+evidence:
+  directory: ops/test-results/sprint-ets-65-part2-json-2026-08-01/
+  files:
+    - formatter-after-raze-wording.txt
+    - focused-after-raze-wording.txt
+    - coverage-report-update-after-raze-fix.txt
+    - coverage-audit-after-raze-fix.txt
+    - coverage-summary-after-raze-fix.txt
+    - coverage-report-update-after-doc-reconcile.txt
+    - coverage-audit-after-doc-reconcile.txt
+    - coverage-summary-after-doc-reconcile.txt
+    - full-maven-after-raze-fix.txt
+    - local-osh-smoke-after-raze-fix.txt
+    - local-osh-smoke-results-after-raze-fix.xml
+    - local-osh-teamengine-container-after-raze-fix.txt
+    - local-osh-part2-json-statuses-after-raze-fix.txt
+    - local-osh-failures-after-raze-fix.txt
+    - no-mutation-oracle-after-raze-fix.txt
+    - request-method-counts-after-raze-fix.txt
+    - teamengine-runtime-immutability-after-raze-fix.txt
+    - smoke-image-id-after-raze-fix.txt
+    - formatter-after-raze-recheck-fix.txt
+    - focused-after-raze-recheck-fix.txt
+    - coverage-report-update-after-raze-recheck-fix.txt
+    - coverage-audit-after-raze-recheck-fix.txt
+    - coverage-summary-after-raze-recheck-fix.txt
+    - full-maven-after-raze-recheck-fix.txt
+    - local-osh-smoke-after-raze-recheck-fix.txt
+    - local-osh-smoke-results-after-raze-recheck-fix.xml
+    - local-osh-teamengine-container-after-raze-recheck-fix.txt
+    - local-osh-part2-json-statuses-after-raze-recheck-fix.txt
+    - local-osh-failures-after-raze-recheck-fix.txt
+    - no-mutation-oracle-after-raze-recheck-fix.txt
+    - request-method-counts-after-raze-recheck-fix.txt
+    - teamengine-runtime-immutability-after-raze-recheck-fix.txt
+    - smoke-image-id-after-raze-recheck-fix.txt
+    - .harness/evaluations/sprint-ets-65-adversarial-final-recheck.yaml
+released_targets:
+  - /conf/json/mediatype-read
+  - /conf/json/mediatype-write
+  - /conf/json/datastream-schema
+  - /conf/json/obsschema-schema
+  - /conf/json/observation-schema
+  - /conf/json/observation-constraints
+  - /conf/json/controlstream-schema
+  - /conf/json/commandschema-schema
+  - /conf/json/command-schema
+  - /conf/json/command-constraints
+  - /conf/json/commandstatus-schema
+  - /conf/json/commandresult-schema
+  - /conf/json/commandresult-constraints
+  - /conf/json/systemevent-schema

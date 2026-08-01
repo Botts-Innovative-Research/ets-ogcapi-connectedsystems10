@@ -2,6 +2,46 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-01 - Sprint 65 Part 2 JSON Encoding released ATS closure
+
+**Triggered by user instruction**: "Continue until you need my input."
+
+- Added CP-025, S-ETS-65-01, and the Sprint 65 contract for exact OGC 23-002
+  Part 2 `/conf/json` closure.
+- Replaced the historical Sprint 28 JSON helper/subset class with exactly
+  fourteen released Annex A.9 procedure methods, including the formerly
+  unmapped `/conf/json/mediatype-read`.
+- Removed non-ATS declaration/prerequisite/resource-gate helper methods from
+  the deployed Part 2 JSON class while preserving setup gates for exact
+  `/conf/json` and SWE JSON record-components before JSON resource endpoint
+  access.
+- Implemented read-only schema validation for root and nested JSON collection
+  endpoints with bounded same-origin pagination, including
+  `/systems/{sysId}/datastreams`, `/datastreams/{dsId}/observations`,
+  `/systems/{sysId}/controlstreams`, `/controlstreams/{csId}/commands`, and
+  `/systems/{sysId}/events`.
+- Scoped `mediatype-write` to non-mutating service-desc OpenAPI metadata and
+  require every advertised POST/PUT operation matching supported Part 2
+  resource endpoint templates to include exact `application/json`; OPTIONS,
+  unrelated POST/PUT operations, partial scoped write coverage, and live
+  mutations no longer count as PASS evidence.
+- Promoted all fourteen released mappings to reviewed exact and regenerated
+  coverage: `240 total / 167 exact / 2 helper / 64 candidate / 7 unmapped`,
+  with Part 2 JSON `14 exact / 0 candidate / 0 unmapped`.
+- Verification logs archived under
+  `ops/test-results/sprint-ets-65-part2-json-2026-08-01/`: focused corrected
+  `88/0/0/0`, coverage audit `23/0/0/0`, full Docker Maven `766/0/0/3`, and
+  local OSH TeamEngine `258/29/20/209` with all fourteen JSON methods SKIPping
+  before JSON resource endpoint access because local OSH lacks the SWE JSON
+  record-components prerequisite.
+- No-mutation oracle recognized 151 local-OSH IUT request logs; method counts
+  are `GET=151` and zero POST/PUT/PATCH/DELETE.
+- TeamEngine 6 runtime immutability verification passed for smoke image
+  `sha256:31e6b4eac77f8455638c94160c788f7156689566711c668ea266194837434637`.
+- Final Raze recheck approved the mediatype-write mixed-operation gapfix:
+  `APPROVE 0.96`, both findings closed, `required_fixes: []`. Commit and push
+  are still pending.
+
 ## 2026-08-01 - Sprint 64 Part 2 Advanced Filtering released ATS closure
 
 **Triggered by user instruction**: "Continue."

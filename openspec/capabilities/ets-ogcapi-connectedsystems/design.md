@@ -6,6 +6,28 @@
 **Status**: Approved (Sprint 1)
 **Authoritative ADRs**: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005 (in `_bmad/adrs/`)
 
+> Sprint 65 addition (2026-08-01): CP-025 replaces the historical Part 2 JSON
+> Encoding subset with exactly fourteen released OGC 23-002 Annex A.9
+> procedures. `Part2JsonTests` contains no standalone declaration,
+> prerequisite, or resource-condition helper tests; setup gates exact
+> `/conf/json` and the SWE JSON record-components prerequisite before JSON
+> resource endpoint access. Runtime checks remain read-only. Collection schema
+> assertions traverse bounded same-origin pagination through
+> `Part1ApiCommonSupport.resourcesAtEndpoint`, validate every collection page,
+> repeat the released nested endpoints
+> `/systems/{sysId}/datastreams`, `/datastreams/{dsId}/observations`,
+> `/systems/{sysId}/controlstreams`, `/controlstreams/{csId}/commands`, and
+> `/systems/{sysId}/events`, and inspect candidate resources for single-item
+> schema validation only when concrete evidence exists. `mediatype-write`
+> reads only service-desc OpenAPI metadata and requires exact
+> `application/json` request bodies on every advertised POST/PUT operation
+> matching supported Part 2 resource endpoint templates; OPTIONS, unrelated
+> POST/PUT operations, partial scoped write coverage, and live mutations cannot
+> produce PASS evidence. Coverage is `14/14 exact`; unmodified local OSH E2E
+> remains honestly non-green because OSH lacks the SWE JSON record-components
+> prerequisite, so all fourteen JSON procedures SKIP before JSON resource
+> endpoint access.
+
 > Sprint 61 addition (2026-07-31): CP-021 replaces the historical Part 2
 > Control Streams and Commands subset with exactly eighteen released OGC
 > 23-002 Annex A.3 procedures. `Part2ControlStreamTests` depends directly on
@@ -484,6 +506,17 @@ relation-type checks, parent-child Observation/Command binding evidence,
 TestNG dependency wiring, and TeamEngine reporting remain in this ETS.
 
 Any implementation that adds validator dependencies must extend the TeamEngine 6 runtime verifier to catch duplicate NetworkNT, ITU, Jackson, SLF4J, Jakarta, TestNG, or TeamEngine jar families and must preserve the selected-payload rule from REQ-ETS-TEAMENGINE-007. The adapter must translate external validator return types such as NetworkNT `ValidationMessage` into ETS-owned diagnostics before test classes see them, so shaded/relocated runtime types do not leak into the conformance-test API.
+
+Sprint 65 does not change that validator boundary. Part 2 JSON exact closure
+continues to use bundled OGC 23-002 JSON Schemas and the existing NetworkNT
+runtime already packaged by the ETS. It adds no SWE/SensorML dependency work.
+The JSON class boundary is fourteen released Annex A.9 procedures over
+non-mutating retrieval/API-definition evidence: class setup enforces exact
+`/conf/json` and SWE Common JSON record-components declarations before resource
+endpoint access; resource-specific methods gate on their Part 2 classes; and
+Observation/Command/CommandResult constraints validate candidate child values
+against parent JSON Schema members only when concrete parent/child evidence is
+available.
 
 The added-jar guard's executable self-test must construct at least two accepted
 coordinate/path collisions, capture stdout, and compare its complete sorted

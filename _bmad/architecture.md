@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.68 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 64 Part 2 Advanced Filtering exact closure)
+> Version: 2.0.69 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 65 Part 2 JSON Encoding exact closure)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -8,6 +8,20 @@
 > **Authority**: this document binds the Generator (Dana). Where the PRD or capability spec
 > conflicts with an ADR or with this file's section, the ADR is authoritative for the decision
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
+
+> Sprint 65 reconciliation: Part 2 JSON Encoding is now exact released ATS:
+> fourteen independent Annex A.9 TestNG procedures, no standalone
+> declaration/prerequisite/resource-condition helper methods, exact
+> `/conf/json` plus SWE JSON record-components setup gating before JSON
+> resource endpoint access, read-only bounded same-origin traversal for every
+> JSON collection page, released nested endpoint repetition for
+> `/systems/{sysId}/datastreams`, `/datastreams/{dsId}/observations`,
+> `/systems/{sysId}/controlstreams`, `/controlstreams/{csId}/commands`, and
+> `/systems/{sysId}/events`, scoped service-desc OpenAPI write-media checks
+> that require every advertised scoped POST/PUT operation to include exact
+> JSON requestBody content, exact reviewed mappings, and zero IUT-bound
+> mutation. It introduces no new runtime component and no OSH/TeamEngine
+> modification.
 
 > Sprint 64 reconciliation: Part 2 Advanced Filtering is now exact released
 > ATS: eighteen independent Annex A.6 TestNG procedures, direct Part 2 API

@@ -1,0 +1,4 @@
+host_osh_core_head=4c87a65c9a967d52af9df476e65d7862c7673a15
+host_osh_core_status:
+mounted_jars:
+/home/nh/docker/osh-core/build/install/osh-core/lib/sensorhub-service-consys-2.0.1.jar

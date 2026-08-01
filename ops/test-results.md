@@ -1,8 +1,56 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T08:26Z
+Last updated: 2026-08-01T10:46Z
 
 ## Current Sprint Evidence
+
+Sprint 65 Part 2 JSON Encoding released ATS:
+
+- Trigger: user instructed "Continue until you need my input."
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2 `/conf/json`.
+- Implementation: exactly fourteen TestNG methods, one per released Annex A.9
+  target; no standalone declaration/prerequisite/resource-condition helper
+  procedures; exact `/conf/json` and SWE JSON record-components setup gate;
+  strict `application/json` response media; bounded all-page root and nested
+  collection validation; scoped non-mutating service-desc OpenAPI
+  mediatype-write checks requiring every advertised scoped POST/PUT operation
+  to include exact `application/json`; no IUT mutation.
+- Raze initial review found three exactness gaps: nested endpoint repetitions
+  were optional/partial, mediatype-write accepted unrelated POST/PUT operations,
+  and DataStream/ControlStream schema procedures inspected only one candidate
+  page. The gapfix validates the released nested endpoints, scopes write
+  advertisements to Part 2 resource endpoint templates, requires every scoped
+  POST/PUT operation to advertise JSON, and traverses bounded same-origin
+  pagination for collection resources.
+- Focused corrected verification after the Raze recheck gapfix:
+  `88 tests / 0 failures / 0 errors / 0 skipped`
+  (`focused-after-raze-recheck-fix.txt`).
+- Released ATS coverage update exits 0; coverage audit exits 0 with
+  `23/0/0/0`. Current coverage is `240 total / 167 exact / 2 helper /
+  64 candidate / 7 unmapped`; Part 2 is `130 total / 76 exact / 0 helper /
+  47 candidate / 7 unmapped`; Part 2 JSON is
+  `14 exact / 0 candidate / 0 unmapped`
+  (`coverage-summary-after-raze-recheck-fix.txt`).
+- Formatter: BUILD SUCCESS (`formatter-after-raze-recheck-fix.txt`).
+- Full Docker Maven: `766 tests / 0 failures / 0 errors / 3 skipped`
+  (`full-maven-after-raze-recheck-fix.txt`).
+- Local OSH TeamEngine smoke exited honestly non-green at
+  `258 total / 29 passed / 20 failed / 209 skipped`
+  (`local-osh-smoke-after-raze-recheck-fix.txt`). All fourteen Sprint 65 Part 2 JSON
+  methods SKIP with reason:
+  `http://www.opengis.net/spec/SWE/3.0/conf/json-record-components - /req/json prerequisite is missing; Sprint 65 JSON procedures skip before JSON resource endpoint access.`
+  The 20 failures are existing local OSH SensorML/Deployment/Procedure/Property
+  gaps outside Sprint 65.
+- No-mutation oracle: `recognized_iut_request_logs=151`; request method counts
+  are `GET=151`, zero POST/PUT/PATCH/DELETE.
+- Evidence directory:
+  `ops/test-results/sprint-ets-65-part2-json-2026-08-01/`.
+- TeamEngine 6 runtime immutability verification passed for smoke image
+  `sha256:31e6b4eac77f8455638c94160c788f7156689566711c668ea266194837434637`.
+- Final Raze recheck approved the mediatype-write mixed-operation gapfix:
+  `APPROVE 0.96`, both findings closed, `required_fixes: []`. Commit and push
+  are pending.
 
 Sprint 64 Part 2 Advanced Filtering released ATS:
 

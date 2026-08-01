@@ -1502,11 +1502,55 @@ be used for exact released ATS PASS evidence.
 
 #### REQ-ETS-PART2-009: Part 2 JSON Encoding
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
-- **Historical increment**: (Sprint 28 Generator)
-- **Description**: The ETS SHALL implement the first declaration-gated, read-only OGC 23-002 Clause 16.1 JSON Encoding subset using official `/req/json` and `/conf/json` identifiers. Runtime checks SHALL gate on exact `/conf/json` declaration, keep the SWE Common 3.0 JSON record components prerequisite visible, condition resource-specific assertions on the underlying declared Part 2 resource classes, validate read responses against bundled Part 2 JSON Schemas where candidate resources are available, and treat write-media-type support as API-definition/readiness evidence only unless a safe dedicated mutable IUT is explicitly enabled in a later sprint.
-- **Rationale**: PRD SC-3 requires Part 2 coverage. OGC 23-002 Annex A.9 defines `/conf/json` with Requirements 93-106. Sprint 28 adds `Part2JsonTests`, TestNG `part2json` wiring, and helper regressions for the first read-only JSON Encoding subset. Current GeoRobotix declares `/conf/json`, `/conf/datastream`, `/conf/controlstream`, `/conf/system-event`, `/conf/create-replace-delete`, and SWE Common encoding classes, but still returns HTTP 500 for declared Datastream/Observation reads and exposes ControlStream JSON that fails the bundled `controlStreamCollection.json` schema. The ETS therefore fails or skips honestly instead of reporting false PASS from declaration alone.
+- **Status**: IMPLEMENTED_RELEASED_ATS_RAZE_APPROVED_PENDING_PUSH (Sprint 65
+  CP-025; 14/14 exact mappings; final adversarial recheck approved, push
+  pending)
+- **Historical increments**: Sprint 28 declaration-gated read-only subset;
+  Sprint 65 exact released ATS closure supersedes it.
+- **Description**: The ETS SHALL implement the released OGC 23-002 Clause
+  16.1 Requirements Class "JSON Encoding" using official `/req/json` and
+  `/conf/json` identifiers. Sprint 65 supersedes the Sprint 28 subset with
+  exact released ATS closure: one independent read-only procedure for each
+  Annex A.9 target, exact class/prerequisite gating before JSON resource
+  endpoint access, strict `application/json` retrieval evidence, bounded
+  all-page schema validation, released nested endpoint repetitions for
+  `/systems/{sysId}/datastreams`, `/datastreams/{dsId}/observations`,
+  `/systems/{sysId}/controlstreams`, `/controlstreams/{csId}/commands`, and
+  `/systems/{sysId}/events`, parent-schema constraint validation when evidence
+  exists, scoped non-mutating OpenAPI write-media advertisement checks that
+  require every advertised scoped POST/PUT operation to include exact
+  `application/json`, and no IUT mutation.
+- **In-scope normative statements for Sprint 65**: `/req/json/mediatype-read`, `/req/json/mediatype-write`, `/req/json/datastream-schema`, `/req/json/obsschema-schema`, `/req/json/observation-schema`, `/req/json/observation-constraints`, `/req/json/controlstream-schema`, `/req/json/commandschema-schema`, `/req/json/command-schema`, `/req/json/command-constraints`, `/req/json/commandstatus-schema`, `/req/json/commandresult-schema`, `/req/json/commandresult-constraints`, and `/req/json/systemevent-schema`.
+- **Rationale**: PRD SC-3 requires Part 2 coverage. OGC 23-002 Annex A.9
+  defines `/conf/json` with fourteen procedures; Sprint 65 closes the formerly
+  unmapped `mediatype-read` procedure, removes standalone declaration/
+  prerequisite/resource-gate helper tests from the deployed class, and converts
+  the remaining candidates to exact mappings without introducing mutation or
+  external validator work.
+- **Sprint 65 verification evidence**: Focused corrected verification after
+  the Raze recheck gapfix is `88/0/0/0`; coverage update and audit pass, with
+  coverage now
+  `240 total / 167 exact / 2 helper / 64 candidate / 7 unmapped`, Part 2
+  `130 total / 76 exact / 0 helper / 47 candidate / 7 unmapped`, and
+  `2:/conf/json` at `14 exact / 0 candidate / 0 unmapped`. Full Docker Maven
+  completed `766 tests / 0 failures / 0 errors / 3 skipped`. Mandatory local
+  OSH TeamEngine E2E reached the deployed stack and unmodified local OSH, then
+  exited honestly non-green at `258 total / 29 passed / 20 failed /
+  209 skipped`; all Part 2 JSON procedures SKIP before JSON resource access
+  because local OSH does not declare the SWE JSON record-components
+  prerequisite. No-mutation oracle recognized 151 local-OSH IUT request logs,
+  all GET, with zero POST/PUT/PATCH/DELETE. Evidence is archived under
+  `ops/test-results/sprint-ets-65-part2-json-2026-08-01/`. Final Raze recheck
+  is `APPROVE 0.96` with both previously open findings closed and
+  `required_fixes: []`.
 - **Maps to**: PRD FR-ETS-39.
+
+#### SCENARIO-ETS-PART2-009-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** the released OGC 23-002 Annex A.9 inventory for `/conf/json`
+**WHEN** Sprint 65 completes
+**THEN** the deployed `Part2JsonTests` class exposes exactly fourteen `@Test` procedures, one for each released target
+**AND** no standalone declaration, prerequisite, or resource-condition helper test is exposed as an ATS procedure
+**AND** `ops/ats-coverage-report.json` reports `2:/conf/json` as `14 exact / 0 candidate / 0 unmapped`.
 
 #### SCENARIO-ETS-PART2-009-JSON-CONFORMANCE-DECLARED-001 (CRITICAL)
 **GIVEN** the IUT exposes `/conformance`
@@ -1516,9 +1560,9 @@ be used for exact released ATS PASS evidence.
 
 #### SCENARIO-ETS-PART2-009-SWE-PREREQUISITE-VISIBLE-001 (NORMAL)
 **GIVEN** OGC 23-002 Clause 16.1 lists SWE Common 3.0 JSON record components as a prerequisite
-**WHEN** the ETS reports full `/conf/json` closure
-**THEN** the prerequisite `http://www.opengis.net/spec/SWE/3.0/conf/json-record-components` must be visible or explicitly reported as prerequisite-incomplete
-**AND** scoped JSON representation checks may still run when `/conf/json` and the relevant Part 2 resource class are declared.
+**WHEN** the Sprint 65 exact JSON procedures run
+**THEN** the prerequisite `http://www.opengis.net/spec/SWE/3.0/conf/json-record-components` must be visible before JSON resource endpoint access
+**AND** a declaring IUT with a missing prerequisite produces a precise prerequisite-incomplete SKIP rather than scoped PASS evidence.
 
 #### SCENARIO-ETS-PART2-009-RESOURCE-CONDITION-GATES-001 (CRITICAL)
 **GIVEN** Annex A.9 applies JSON representation tests to supported Part 2 resource classes
@@ -1531,7 +1575,7 @@ be used for exact released ATS PASS evidence.
 #### SCENARIO-ETS-PART2-009-MEDIATYPE-READ-001 (CRITICAL)
 **GIVEN** the IUT declares `/conf/json`
 **WHEN** the ETS requests supported Part 2 resources with `Accept: application/json`
-**THEN** each reachable declared resource endpoint must return HTTP 200, an `application/json` compatible content type, and JSON parseable content before mediatype-read PASS
+**THEN** each reachable declared resource endpoint must return HTTP 200, an `application/json` content type, and JSON parseable content before mediatype-read PASS
 **AND** HTTP 400, HTTP 500, HTML/text error bodies, or empty non-resource evidence cannot PASS.
 
 #### SCENARIO-ETS-PART2-009-SCHEMA-VALIDATION-READONLY-001 (CRITICAL)
@@ -1542,16 +1586,20 @@ be used for exact released ATS PASS evidence.
 
 #### SCENARIO-ETS-PART2-009-OBSERVATION-COMMAND-CONSTRAINTS-001 (NORMAL)
 **GIVEN** Requirements 98, 102, and 105 require Observation result/parameters, Command parameters, and CommandResult inline data to follow parent DataStream or ControlStream schemas
-**WHEN** parent schema evidence or candidate child resources are absent
-**THEN** the ETS SKIPs constraint checks with a precise no-safe-evidence reason
+**WHEN** parent schema evidence and candidate child resources are present
+**THEN** the ETS validates the child JSON values against the relevant parent JSON Schema member before PASS
+**AND** absent parent schema evidence or absent candidate child resources produce precise no-safe-evidence SKIP behavior
 **AND** it SHALL NOT PASS dynamic-schema constraints from collection shape, hardcoded examples, or sibling class declarations.
 
 #### SCENARIO-ETS-PART2-009-MEDIATYPE-WRITE-ADVERTISEMENT-001 (NORMAL)
 **GIVEN** Requirement 94 applies only when Create/Replace/Delete is implemented
 **WHEN** the ETS checks JSON write-media-type support in the first JSON increment
-**THEN** it uses API definition or explicit operation metadata to verify advertised `application/json` support for CREATE or REPLACE operations
-**AND** advisory public GeoRobotix probes do not issue POST, PUT, PATCH, or DELETE
-**AND** OPTIONS alone is readiness evidence, not mediatype-write PASS.
+**THEN** it uses API definition or explicit operation metadata to verify that
+every advertised CREATE or REPLACE operation on the supported Part 2 resource
+endpoint templates implied by declared resource classes includes exact
+`application/json` requestBody content
+**AND** unrelated POST/PUT operations, partial scoped write coverage,
+OPTIONS alone, or mutation requests are not mediatype-write PASS evidence.
 
 #### SCENARIO-ETS-PART2-009-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
 **GIVEN** the current public IUT may declare `/conf/json` while individual resource endpoints are unhealthy or unavailable
@@ -1560,7 +1608,8 @@ be used for exact released ATS PASS evidence.
 **AND** it never converts those outcomes into PASS from declaration, broad media-type lists, or existing sibling tests.
 
 #### SCENARIO-ETS-PART2-009-SMOKE-NO-PUBLIC-MUTATION-001 (CRITICAL)
-**GIVEN** TeamEngine smoke runs against the public GeoRobotix IUT
+**GIVEN** TeamEngine smoke runs against the primary local OSH IUT or any
+configured non-dedicated IUT
 **WHEN** the Part 2 JSON tests execute
 **THEN** request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests
 **AND** any JSON write-media-type or dynamic-schema behavior requiring mutation SKIPs or relies on non-mutating API-definition evidence only.
@@ -5829,7 +5878,11 @@ descendant groups SKIP.
 - REQ-ETS-PART2-006: partially implemented by Sprint 25 Advanced Filtering Generator.
 - REQ-ETS-PART2-007 (Part 2 Create/Replace/Delete) - partially implemented by Sprint 26 Generator; seeded local OSH E2E is accepted after fixture repair, while GeoRobotix public smoke remains advisory and currently fails with public-IUT HTTP 500 responses outside the new Part 2 CRD tests.
 - REQ-ETS-PART2-008 (Part 2 Update) - partially implemented by Sprint 27 Generator; positive PATCH lifecycle and concrete schema-rejection dispatch remain deferred.
-- REQ-ETS-PART2-009 (Part 2 JSON Encoding) - partially implemented by Sprint 28 Generator; full positive schema closure remains dependent on a healthy declaring IUT with valid DataStream, Observation, ControlStream, Command, CommandStatus, CommandResult, SystemEvent, SWE Common record-component, and mediatype-write evidence.
+- REQ-ETS-PART2-009 (Part 2 JSON Encoding) - Sprint 65 CP-025 supersedes the
+  Sprint 28 subset with 14/14 exact released Annex A.9 mappings, scoped
+  all-operation JSON write-advertisement checks, and honest E2E SKIP behavior
+  when a declaring IUT lacks the SWE JSON record-components prerequisite or
+  candidate resource evidence.
 - REQ-ETS-PART2-010 (Part 2 SWE Common JSON Encoding) - partially implemented by Sprint 29 Generator; full positive closure remains dependent on a healthy declaring IUT with SWE 3.0 JSON Encoding Rules visibility, valid DataStream/Observation SWE JSON reads, valid ControlStream/Command SWE Common JSON schema evidence, candidate Observation/Command resources, and non-mutating mediatype-write evidence. Mandatory GeoRobotix Generator smoke failed (`186 total / 31 passed / 22 failed / 133 skipped`) with zero matched public-IUT write requests.
 - REQ-ETS-PART2-011 (Part 2 SWE Common Text Encoding) - partially implemented by Sprint 30 Generator. `Part2SweCommonTextTests` implements exact `/conf/swecommon-text` declaration gating, SWE Common 3.0 `/conf/text-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+text` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `TextEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`258 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`196 total / 33 passed / 28 failed / 135 skipped`); the new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 91`, `POST/PUT/PATCH/DELETE 0`).
 - REQ-ETS-PART2-012 (Part 2 SWE Common Binary Encoding) - partially implemented by Sprint 31 Generator. `Part2SweCommonBinaryTests` implements exact `/conf/swecommon-binary` declaration gating, SWE Common 3.0 `/conf/binary-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+binary` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `BinaryEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`272 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`206 total / 35 passed / 34 failed / 137 skipped`); the new SWE Common Binary group produced 3 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 99`, `POST/PUT/PATCH/DELETE 0`).

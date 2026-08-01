@@ -1,0 +1,3 @@
+summary={"total":240,"exact":167,"helper":2,"candidate":64,"unmapped":7}
+part2json={"total":14,"exact":14,"helper":0,"candidate":0,"unmapped":0}
+part2={"total":130,"exact":76,"helper":0,"candidate":47,"unmapped":7}

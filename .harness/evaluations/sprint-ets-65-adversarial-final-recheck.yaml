@@ -1,0 +1,82 @@
+verdict: APPROVE
+confidence: 0.96
+reviewer: "Red Team / Raze"
+review_type: "Focused final recheck for Sprint 65 Part 2 /conf/json"
+timestamp_utc: "2026-08-01T10:49:30Z"
+
+scope:
+  prior_report: ".harness/evaluations/sprint-ets-65-adversarial-recheck.yaml"
+  focused_findings:
+    - "RAZE-ETS65-RECHECK-FALSEPASS-001"
+    - "RAZE-ETS65-RECHECK-DOC-001"
+  implementation_code_changes_made_by_reviewer: false
+  reran_docker_or_maven: false
+  method: "Artifact and source inspection only, per user request."
+
+findings:
+  - id: RAZE-ETS65-RECHECK-FALSEPASS-001
+    severity: HIGH
+    status: CLOSED
+    finding: "/req/json/mediatype-write could false-PASS when any one scoped operation advertised application/json."
+    closure_evidence:
+      - "Part2JsonSupport.java:136-152 now reports missing write advertisements by aggregating missingJsonWriteOperations across each label instead of returning true on the first passing operation."
+      - "Part2JsonSupport.java:218-248 scans every scoped POST/PUT operation; operationSeen only prevents no-operation false PASS, and each scoped operation lacking exact application/json is reported as '<label> <METHOD> <path>'."
+      - "Part2JsonSupport.java:293-304 keeps exact media-key matching to application/json only."
+      - "VerifyPart2JsonTests.java:170-184 adds mixed good/bad scoped operation coverage and expects DataStream resources PUT /datastreams/{id} to be reported."
+      - "VerifyPart2JsonTests.java:154-168 preserves unrelated-path and valid scoped-operation behavior."
+    conclusion: "Closed. The helper now fails/report each advertised scoped POST/PUT operation missing exact application/json."
+
+  - id: RAZE-ETS65-RECHECK-DOC-001
+    severity: LOW
+    status: CLOSED
+    finding: "OpenSpec no-mutation scenario named public GeoRobotix despite current primary local OSH policy and evidence."
+    closure_evidence:
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1607-1612 now says TeamEngine smoke runs against the primary local OSH IUT or any configured non-dedicated IUT."
+      - "The scenario still requires zero IUT-bound POST, PUT, PATCH, or DELETE requests."
+    conclusion: "Closed. The no-mutation scenario now matches the local OSH/non-dedicated IUT wording."
+
+evidence:
+  source_inspection:
+    - "Part2JsonSupport.java:136-152"
+    - "Part2JsonSupport.java:218-248"
+    - "Part2JsonSupport.java:293-304"
+    - "VerifyPart2JsonTests.java:170-184"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1607-1612"
+  latest_gapfix_artifacts:
+    formatter:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/formatter-after-raze-recheck-fix.txt"
+      result: "BUILD SUCCESS"
+    focused:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/focused-after-raze-recheck-fix.txt"
+      result: "88 tests / 0 failures / 0 errors / 0 skipped"
+    coverage_audit:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/coverage-audit-after-raze-recheck-fix.txt"
+      result: "23 tests / 0 failures / 0 errors / 0 skipped"
+    coverage_summary:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/coverage-summary-after-raze-recheck-fix.txt"
+      result: "240 total / 167 exact / 2 helper / 64 candidate / 7 unmapped; Part 2 JSON 14 exact / 0 candidate / 0 unmapped"
+    full_maven:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/full-maven-after-raze-recheck-fix.txt"
+      result: "766 tests / 0 failures / 0 errors / 3 skipped"
+    local_osh_smoke:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/local-osh-smoke-after-raze-recheck-fix.txt"
+      result: "honest non-green 258 total / 29 passed / 20 failed / 209 skipped"
+    local_osh_part2_json_statuses:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/local-osh-part2-json-statuses-after-raze-recheck-fix.txt"
+      result: "setup plus fourteen runtime Part2Json methods SKIP before JSON resource endpoint access because the SWE JSON record-components prerequisite is missing"
+    no_mutation_oracle:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/no-mutation-oracle-after-raze-recheck-fix.txt"
+      result: "recognized_iut_request_logs=151"
+    request_method_counts:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/request-method-counts-after-raze-recheck-fix.txt"
+      result: "GET 151; POST 0; PUT 0; PATCH 0; DELETE 0; HEAD 0; OPTIONS 0"
+    teamengine_runtime_immutability:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/teamengine-runtime-immutability-after-raze-recheck-fix.txt"
+      result: "PASS TeamEngine 6 runtime immutability and dependency hygiene"
+    smoke_image_id:
+      file: "ops/test-results/sprint-ets-65-part2-json-2026-08-01/smoke-image-id-after-raze-recheck-fix.txt"
+      result: "sha256:31e6b4eac77f8455638c94160c788f7156689566711c668ea266194837434637"
+  artifact_hygiene:
+    git_check_ignore: "No ignored matches for the requested after-raze-recheck-fix evidence artifacts or this final recheck path."
+
+required_fixes: []

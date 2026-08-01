@@ -135,11 +135,12 @@
        CRD/Features4 prerequisites, Clause 15 condition gates, OPTIONS PATCH readiness,
        unavailable endpoints, schema-rejection honesty, and public-IUT mutation denial
        visible. -->
-  <!-- Sprint 28 S-ETS-28-01 (REQ-ETS-PART2-009): Part 2 JSON group added as a
-       declaration-gated, read-only schema-validation subset. It depends on "core common"
+  <!-- Sprint 65 S-ETS-65-01 (REQ-ETS-PART2-009): Part 2 JSON now implements the
+       fourteen released Annex A procedures exactly. It still depends on "core common"
        rather than Part2ApiCommon, resource-class groups, or SystemFeatures so exact
-       /conf/json declaration, SWE prerequisite visibility, resource condition gates, and
-       public-IUT no-mutation behavior remain runtime-visible. -->
+       /conf/json declaration, the SWE JSON record-components prerequisite, resource
+       condition gates, and public-IUT no-mutation behavior remain runtime-visible before
+       JSON-specific resource endpoint access. -->
   <!-- Sprint 29 S-ETS-29-01 (REQ-ETS-PART2-010): Part 2 SWE Common JSON group
        added as a declaration-gated, read-only schema/media-validation subset. It
        depends on "core common" rather than Part2ApiCommon, resource-class groups, or

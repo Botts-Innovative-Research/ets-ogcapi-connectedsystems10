@@ -1,0 +1,41 @@
+1. .deploymentSensorMlMappingsAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+2. .deploymentSensorMlSchemasAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+3. .procedureSensorMlClassesAreCompatible
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+4. .procedureSensorMlMappingsAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+5. .procedureSensorMlSchemasAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+6. .propertySensorMlMappingsAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings - http://field-hub-osh-1:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.
+7. .propertySensorMlSchemasAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema - http://field-hub-osh-1:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.
+8. .sensorMlAssociationRelationTypesAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+9. .sensorMlCommonFeatureAttributesAreMapped
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+10. .sensorMlMediaTypeReadIsAdvertised
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read — https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml does not advertise application/sml+json for GET /collections/{collectionId}/items (parser diagnostics: attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'text/uri-list'.description is unexpected; attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'application/json'.description is unexpected; paths.'/collections/{collectionId}/items'. Declared path parameter collectionId needs to be defined as a path parameter in path or operation level).
+11. .sensorMlResourceIdsMatchCanonicalUrls
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+12. .systemSensorMlClassesAreCompatible
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+13. .systemSensorMlMappingsAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+14. .systemSensorMlSchemasAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema — http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+15. .propertyCollectionsAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections — http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with itemType=sosa:Property.
+16. .everyProcedureHasCanonicalUrl
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url — http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.
+17. .procedureCollectionsAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections — http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.
+18. .deploymentCollectionsAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections — http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.
+19. .deploymentsReferencedFromSystemsAreValid
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system — expected HTTP 200, got 400
+20. .everyDeploymentHasCanonicalUrl
+   http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url — http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.
+total_failures=20

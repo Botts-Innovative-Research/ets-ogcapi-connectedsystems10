@@ -174,10 +174,10 @@ public class VerifyTestNGSuiteDependency {
 	private static final String PART2_UPDATE_GROUP = "part2update";
 
 	/**
-	 * Sprint 28 S-ETS-28-01 — Part 2 JSON Encoding read-only subset group (depends on
-	 * Core and Common; runtime checks keep /conf/json declaration, SWE prerequisite,
-	 * resource condition gates, schema evidence, and no-public-mutation behavior
-	 * visible).
+	 * Sprint 65 S-ETS-65-01 — Part 2 JSON Encoding exact released ATS group (depends on
+	 * Core and Common; runtime checks keep /conf/json declaration, the SWE JSON
+	 * record-components prerequisite, resource condition gates, schema evidence, and
+	 * no-public-mutation behavior visible).
 	 */
 	private static final String PART2_JSON_GROUP = "part2json";
 
@@ -2456,10 +2456,10 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 28 S-ETS-28-01 — Part 2 JSON group =====
+	// ===== Sprint 65 S-ETS-65-01 — Part 2 JSON group =====
 
 	/**
-	 * Sprint 28 S-ETS-28-01 (REQ-ETS-PART2-009): the canonical testng.xml SHALL declare
+	 * Sprint 65 S-ETS-65-01 (REQ-ETS-PART2-009): the canonical testng.xml SHALL declare
 	 * {@code <group name="part2json" depends-on="core common"/>}.
 	 */
 	@org.junit.Test
@@ -2506,11 +2506,11 @@ public class VerifyTestNGSuiteDependency {
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + PART2_JSON_GROUP
-				+ "\" depends-on=\"core common\"/> — see Sprint 28 S-ETS-28-01.", foundDependency);
+				+ "\" depends-on=\"core common\"/> — see Sprint 65 S-ETS-65-01.", foundDependency);
 	}
 
 	/**
-	 * Sprint 28 S-ETS-28-01: every Part 2 JSON @Test method SHALL carry
+	 * Sprint 65 S-ETS-65-01: every Part 2 JSON @Test method SHALL carry
 	 * {@code groups = "part2json"}.
 	 */
 	@org.junit.Test
@@ -2537,7 +2537,7 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 28 S-ETS-28-01: Part 2 JSON classes MUST be co-located in the SAME
+	 * Sprint 65 S-ETS-65-01: Part 2 JSON classes MUST be co-located in the SAME
 	 * {@code <test>} block as Core, Common, and the resource classes whose declarations
 	 * are checked at runtime.
 	 */

@@ -154,9 +154,9 @@
        SystemFeatures so exact /conf/swecommon-text declaration, SWE Text Encoding Rules
        prerequisite visibility, resource condition gates, exact application/swe+text
        evidence, and public-IUT no-mutation behavior remain runtime-visible. -->
-  <!-- Sprint 31 S-ETS-31-01 (REQ-ETS-PART2-012): Part 2 SWE Common Binary group
-       added as a declaration-gated, read-only schema/media-validation subset. It
-       depends on "core common" rather than Part2ApiCommon, resource-class groups, or
+  <!-- Sprint 68 S-ETS-68-01 (REQ-ETS-PART2-012): Part 2 SWE Common Binary exact
+       released ATS group superseding the Sprint 31 subset. It depends on
+       "core common" rather than Part2ApiCommon, resource-class groups, or
        SystemFeatures so exact /conf/swecommon-binary declaration, SWE Binary Encoding
        Rules prerequisite visibility, resource condition gates, exact
        application/swe+binary evidence, and public-IUT no-mutation behavior remain

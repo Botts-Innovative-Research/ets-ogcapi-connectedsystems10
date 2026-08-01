@@ -1679,6 +1679,78 @@
       "reviewedBy": "Codex Sprint 67 ATS line review",
       "reviewedOn": "2026-08-01",
       "evidence": "The released procedure requires ControlStream schema evidence and a concrete Command retrieved as non-empty application/swe+text before any positive result; until dedicated SWE Common Text data-value validation is available, it reports prerequisite-incomplete rather than passing from content-type or media-only evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-binary/mediatype-read",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#sweCommonBinaryMediatypeReadSupportedOnObservationOrCommandEndpoints()",
+      "reviewedBy": "Codex Sprint 68 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure gates exact /conf/swecommon-binary plus the SWE Common Binary Encoding Rules prerequisite, then requires service-desc API-definition GET response-content advertisement for application/swe+binary on the selected Observation or Command resource endpoint and concrete non-empty application/swe+binary retrieval evidence; non-404 HTTP failures and wrong content types fail rather than pass."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-binary/mediatype-write",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#sweCommonBinaryMediatypeWriteAdvertisedByApiDefinitionOnly()",
+      "reviewedBy": "Codex Sprint 68 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure uses only API-definition evidence in the default read-only profile, fails when the API definition is unavailable, and requires every advertised scoped Observation or Command POST/PUT operation to include exact application/swe+binary request-body media while ignoring OPTIONS, unrelated endpoints, subresources, CSV/text/JSON fallback media, and vendor media."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-binary/obsschema-schema",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#observationSchemaSweBinaryValidWhenDatastreamCandidateAvailable()",
+      "reviewedBy": "Codex Sprint 68 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure gates Datastream applicability, traverses every retrieved Datastream with bounded same-origin pagination, requests /datastreams/{id}/schema?obsFormat=application/swe+binary, requires JSON-compatible schema metadata whose obsFormat member is application/swe+binary, validates the Connected Systems Observation schema wrapper, requires BinaryEncoding, and validates the embedded SWE Common record schema adapter."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-binary/obsschema-mapping",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#observationSchemaSweMappingRequiresTimeComponentEvidence()",
+      "reviewedBy": "Codex Sprint 68 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure obtains scoped Datastream SWE Binary schema evidence for every retrieved Datastream, validates each wrapper and embedded recordSchema, and fails any retrieved schema that lacks a canonical Time component definition with one of the released phenomenonTime, SamplingTime, or resultTime definition URIs."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-binary/observation-encoding",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#observationSweBinaryEncodingRequiresParentSchemaAndCandidateEvidence()",
+      "reviewedBy": "Codex Sprint 68 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure requires Datastream schema evidence and a concrete Observation retrieved as non-empty application/swe+binary before any positive result; until dedicated SWE Common Binary data-value validation is available, it reports prerequisite-incomplete rather than passing from content-type or media-only evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-binary/cmdschema-schema",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#commandSchemaSweBinaryValidWhenControlStreamCandidateAvailable()",
+      "reviewedBy": "Codex Sprint 68 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure gates ControlStream applicability, traverses every retrieved ControlStream with bounded same-origin pagination, requests /controlstreams/{id}/schema?cmdFormat=application/swe+binary, requires JSON-compatible schema metadata whose commandFormat member is application/swe+binary, validates the Connected Systems Command schema wrapper, requires BinaryEncoding, and validates the embedded SWE Common record schema adapter."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-binary/cmdschema-mapping",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#commandSchemaSweMappingRequiresIssueTimeEvidence()",
+      "reviewedBy": "Codex Sprint 68 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure obtains scoped ControlStream SWE Binary schema evidence for every retrieved ControlStream, validates each wrapper and embedded recordSchema, and fails any retrieved schema that lacks a Time component with the canonical IssueTime definition or exposes noncanonical issueTime/IssueTime evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/swecommon-binary/command-encoding",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonbinary.Part2SweCommonBinaryTests#commandSweBinaryEncodingRequiresParentSchemaAndCandidateEvidence()",
+      "reviewedBy": "Codex Sprint 68 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The released procedure requires ControlStream schema evidence and a concrete Command retrieved as non-empty application/swe+binary before any positive result; until dedicated SWE Common Binary data-value validation is available, it reports prerequisite-incomplete rather than passing from content-type or media-only evidence."
     }
   ]
 }

@@ -1,6 +1,66 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T16:23Z
+Last updated: 2026-08-01T16:57Z
+
+## Sprint 68 Implemented - Part 2 SWE Common Binary Encoding Released ATS
+
+- User instruction: "Make the practical fix, then continue with the project -
+  and don't stop unless you need my input."
+- CP-028 and S-ETS-68-01 supersede the historical Sprint 31
+  `/conf/swecommon-binary` subset with exactly eight released OGC 23-002 Annex
+  A.12 procedures. Initial Raze found three required exactness fixes and one
+  cosmetic typo; the gapfix is verified and focused Raze recheck returned
+  `APPROVE_WITH_CONCERNS 0.94` with no blocking gaps. Push reconciliation is
+  pending.
+- `Part2SweCommonBinaryTests` now exposes one independent TestNG method per
+  released target, including the formerly unmapped `mediatype-read`, and
+  removes standalone declaration/prerequisite/resource-gate helper procedures.
+- Runtime checks remain read-only. Setup gates exact `/conf/swecommon-binary`
+  and SWE Common 3.0 Binary Encoding Rules before SWE Common Binary resource
+  endpoint access. Observation-side methods condition on `/conf/datastream`;
+  Command-side methods condition on `/conf/controlstream`.
+- `mediatype-read` requires service-desc API-definition GET response-content
+  advertisement plus concrete Observation or Command evidence returned with
+  exact `Content-Type: application/swe+binary` and non-empty binary content.
+  Schema procedures validate Connected Systems wrapper schemas plus extracted
+  SWE `recordSchema` content and require `BinaryEncoding`. Mapping procedures
+  validate every retrieved schema and require canonical Time/IssueTime
+  evidence; missing or noncanonical issueTime/IssueTime evidence in a
+  retrieved Command Schema FAILs.
+- Observation/Command encoding procedures SKIP rather than media-only PASS
+  when parent schema, candidate body, or a proven SWE Common Binary data-value
+  validator is unavailable.
+- `mediatype-write` uses only service-desc OpenAPI metadata and requires exact
+  `application/swe+binary` request bodies on every advertised POST/PUT
+  operation matching scoped Observation or Command endpoint templates. OPTIONS,
+  unrelated POST/PUT operations, partial scoped write coverage, and live
+  mutation requests cannot produce PASS evidence.
+- Reviewed coverage is now `240 total / 191 exact / 2 helper / 43 candidate /
+  4 unmapped`; Part 2 is `130 total / 100 exact / 0 helper / 26 candidate /
+  4 unmapped`; `2:/conf/swecommon-binary` is
+  `8 exact / 0 candidate / 0 unmapped`.
+- Formatter passed; post-Raze-fix focused verification passed `120/0/0/0`;
+  coverage update/audit passed; full Docker Maven completed
+  `785 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke reached TeamEngine and the unmodified
+  local OSH IUT, then exited honestly non-green at
+  `252 total / 23 passed / 20 failed / 209 skipped`. All eight Sprint 68
+  methods SKIP before SWE Common Binary resource endpoint access because local
+  OSH lacks
+  `http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules`; the 20
+  failures are existing local OSH SensorML/Deployment/Procedure/Property gaps
+  outside Sprint 68.
+- No-mutation oracle recognized 130 local-OSH IUT request logs. Method counts
+  are `GET=130`, zero POST/PUT/PATCH/DELETE. Tracked evidence:
+  `ops/test-results/sprint-ets-68-part2-swecommon-binary-2026-08-01/`.
+- Smoke image:
+  `sha256:47ddcfe1b7143004eba7b9fc88b5173fe1f6b7fa47616459a5d5efde14eee21e`.
+  TeamEngine 6 runtime immutability verification passed.
+- Next local action is commit/push reconciliation.
+  After Sprint 68, the remaining exact ATS backlog is Part 1 and Part 2
+  Create/Replace/Delete and Update, plus internal Observation/Command binding
+  positive closure; the mutation classes still need a conforming dedicated
+  mutable IUT or future unmodified OSH support for positive lifecycle evidence.
 
 ## Sprint 67 Raze Approved - Part 2 SWE Common Text Encoding Released ATS
 

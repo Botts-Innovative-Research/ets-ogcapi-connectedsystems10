@@ -1,0 +1,111 @@
+verdict: GAPS_FOUND
+confidence: 0.91
+reviewed_on: "2026-08-01"
+reviewer: Raze
+scope:
+  story: S-ETS-68-01
+  requirement: REQ-ETS-PART2-012
+  class: /conf/swecommon-binary
+  inspected:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+    - .harness/contracts/sprint-ets-68.yaml
+    - openspec/change-proposals/CP-028-part2-swecommon-binary-closure.md
+    - epics/stories/s-ets-68-01-part2-swecommon-binary-closure.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - epics/epic-ets-03-part2-classes.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/known-issues.md
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/VerifyPart2SweCommonBinaryTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+    - ops/test-results/sprint-ets-68-part2-swecommon-binary-2026-08-01/
+official_ats_source:
+  url: https://docs.ogc.org/is/23-002/23-002.html
+  lines:
+    - "4419-4424: A.123 mediatype-read requires API-definition advertisement and a retrieval response with HTTP 200 plus Content-Type application/swe+binary."
+    - "4437-4442: A.125 validates every DataStream schema and then validates mapping."
+    - "4463-4468: A.128 validates every ControlStream schema and then validates mapping."
+    - "4471-4474: A.129 executes the SWE Common JSON command-schema mapping test."
+findings:
+  - id: RAZE-ETS68-FALSEPASS-001
+    severity: HIGH
+    title: mediatype-read can pass without API-definition read advertisement evidence
+    files:
+      - path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java
+        lines: "159-193, 499-513"
+      - path: src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/VerifyPart2SweCommonBinaryTests.java
+        lines: "1-316"
+    evidence:
+      - "A.123 step 1 requires verifying API-definition advertisement for application/swe+binary retrieval operations before the GET/content-type checks."
+      - "The implementation only probes live resources with Accept: application/swe+binary and validates HTTP 200, exact Content-Type, and non-empty body."
+      - "No structural regression rejects an IUT that returns application/swe+binary but omits the API-definition retrieval advertisement."
+      - "The method also accumulates missing evidence from all declared applicable resource sides and SKIPs if any side is missing, while A.123 says at least one Observation and/or Command resources endpoint is enough."
+    risk: "False PASS is possible for an IUT that serves the media type opportunistically but does not advertise it as required by the released ATS; false SKIP is possible when one advertised endpoint satisfies A.123 and another declared side lacks safe evidence."
+    required_fix: "Add read-side API-definition inspection for scoped Observation/Command GET operations, require exact application/swe+binary advertisement for the endpoint used as PASS evidence, add negative structural tests, and reconcile spec/story/docs wording to A.123's at-least-one endpoint semantics or explicitly document any stricter normative-policy choice outside the exact ATS claim."
+  - id: RAZE-ETS68-FALSEPASS-002
+    severity: HIGH
+    title: schema mapping procedures validate only the first retrieved schema
+    files:
+      - path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java
+        lines: "216-222, 269-281, 415-436"
+      - path: src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/VerifyPart2SweCommonBinaryTests.java
+        lines: "1-316"
+    evidence:
+      - "A.125 says for every DataStream resource, validate the Observation Schema and then validate the schema using /conf/swecommon-binary/obsschema-mapping."
+      - "A.128 says for every ControlStream resource, validate the Command Schema and then validate the schema using /conf/swecommon-binary/cmdschema-mapping."
+      - "The wrapper-schema methods iterate all retrieved schemas, but observationSchemaSweMappingRequiresTimeComponentEvidence() and commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent() call observationSweSchema()/commandSweSchema(), which return schemas.get(0)."
+      - "The current focused tests do not include a multi-resource negative where the first schema is valid and a later schema has invalid mapping evidence."
+    risk: "False PASS is possible when the first DataStream or ControlStream schema satisfies mapping requirements but a later retrieved schema violates the released mapping test."
+    required_fix: "Iterate all observationSweSchemas()/commandSweSchemas() in the mapping procedures, fail any retrieved schema with invalid mandatory mapping evidence, and add structural or controlled-HTTP regression coverage for second-candidate mapping failures."
+  - id: RAZE-ETS68-FALSESKIP-003
+    severity: HIGH
+    title: command schema mapping SKIPs absent IssueTime after a schema is retrieved
+    files:
+      - path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java
+        lines: "266-281"
+      - path: openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+        lines: "1854-1860"
+      - path: epics/stories/s-ets-68-01-part2-swecommon-binary-closure.md
+        lines: "34-38"
+    evidence:
+      - "A.129 executes the SWE Common JSON command schema mapping test; A.113 requires a Time component whose definition is http://www.opengis.net/def/property/OGC/0/IssueTime."
+      - "After retrieving a Command Schema recordSchema, the implementation fails present noncanonical IssueTime evidence but SKIPs when IssueTime evidence is absent."
+      - "The Sprint 68 spec/story text encodes the same weakened policy by saying canonical IssueTime is required only when issue-time mapping is present."
+    risk: "False SKIP is possible for a reachable Command Schema that omits the mandatory IssueTime mapping evidence required by the released ATS."
+    required_fix: "Fail a retrieved Command Schema whose recordSchema lacks canonical IssueTime Time evidence; reserve SKIP for missing prerequisites, missing condition classes, unavailable schema evidence, or no candidate ControlStream, and update specs/docs/tests accordingly."
+  - id: RAZE-ETS68-DOC-001
+    severity: LOW
+    title: one TestNG description has a cosmetic typo
+    files:
+      - path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java
+        lines: "318-320"
+    evidence:
+      - "The mediatype-write description contains ':SWE Common Binary' without a space after the colon."
+    risk: "No runtime or mapping impact; only report/readability polish."
+    required_fix: "Fix opportunistically with the required implementation changes."
+verification_evidence:
+  artifact_directory: ops/test-results/sprint-ets-68-part2-swecommon-binary-2026-08-01/
+  focused_maven: "92 tests / 0 failures / 0 errors / 0 skipped"
+  full_maven: "780 tests / 0 failures / 0 errors / 3 skipped"
+  coverage:
+    total: "240 total / 191 exact / 2 helper / 43 candidate / 4 unmapped"
+    part2: "130 total / 100 exact / 0 helper / 26 candidate / 4 unmapped"
+    swecommon_binary: "8 exact / 0 candidate / 0 unmapped"
+  local_osh_teamengine: "252 total / 23 passed / 20 failed / 209 skipped; smoke exit code 1"
+  sprint68_runtime_methods: "0 PASS / 0 FAIL / 8 SKIP due to missing http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules"
+  no_mutation: "recognized_iut_request_logs=130; GET=130, POST=0, PUT=0, PATCH=0, DELETE=0"
+  runtime_immutability: "PASS for smoke image sha256:d723e2c6da7f303d075b71a8e463221d4d96f322e2500e7a52340595f0d0e195"
+review_notes:
+  - "No expensive reruns were performed; artifact inspection was sufficient to identify exactness blockers."
+  - "E2E claims are honest: the local OSH run is non-green and the Sprint 68 procedures SKIP because the SWE Binary Encoding Rules prerequisite is absent."
+  - "No implementation files were modified by this review."
+required_fixes:
+  - RAZE-ETS68-FALSEPASS-001
+  - RAZE-ETS68-FALSEPASS-002
+  - RAZE-ETS68-FALSESKIP-003

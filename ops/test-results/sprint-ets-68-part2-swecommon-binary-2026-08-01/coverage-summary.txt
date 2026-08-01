@@ -1,0 +1,221 @@
+{
+  "total": 240,
+  "exact": 191,
+  "helper": 2,
+  "candidate": 43,
+  "unmapped": 4,
+  "byPart": {
+    "1": {
+      "total": 110,
+      "exact": 91,
+      "helper": 2,
+      "candidate": 17,
+      "unmapped": 0
+    },
+    "2": {
+      "total": 130,
+      "exact": 100,
+      "helper": 0,
+      "candidate": 26,
+      "unmapped": 4
+    }
+  },
+  "byClass": {
+    "1:null": {
+      "total": 2,
+      "exact": 0,
+      "helper": 2,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/api-common": {
+      "total": 4,
+      "exact": 4,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/system": {
+      "total": 6,
+      "exact": 6,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/subsystem": {
+      "total": 5,
+      "exact": 5,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/deployment": {
+      "total": 5,
+      "exact": 5,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/subdeployment": {
+      "total": 5,
+      "exact": 5,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/procedure": {
+      "total": 5,
+      "exact": 5,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/sf": {
+      "total": 5,
+      "exact": 5,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/property": {
+      "total": 4,
+      "exact": 4,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/advanced-filtering": {
+      "total": 25,
+      "exact": 25,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/create-replace-delete": {
+      "total": 12,
+      "exact": 0,
+      "helper": 0,
+      "candidate": 12,
+      "unmapped": 0
+    },
+    "1:/conf/update": {
+      "total": 5,
+      "exact": 0,
+      "helper": 0,
+      "candidate": 5,
+      "unmapped": 0
+    },
+    "1:/conf/geojson": {
+      "total": 12,
+      "exact": 12,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "1:/conf/sensorml": {
+      "total": 15,
+      "exact": 15,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/api-common": {
+      "total": 2,
+      "exact": 2,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/datastream": {
+      "total": 14,
+      "exact": 14,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/controlstream": {
+      "total": 18,
+      "exact": 18,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/feasibility": {
+      "total": 5,
+      "exact": 5,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/system-event": {
+      "total": 5,
+      "exact": 5,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/advanced-filtering": {
+      "total": 18,
+      "exact": 18,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/create-replace-delete": {
+      "total": 16,
+      "exact": 0,
+      "helper": 0,
+      "candidate": 12,
+      "unmapped": 4
+    },
+    "2:/conf/update": {
+      "total": 14,
+      "exact": 0,
+      "helper": 0,
+      "candidate": 14,
+      "unmapped": 0
+    },
+    "2:/conf/json": {
+      "total": 14,
+      "exact": 14,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/swecommon-json": {
+      "total": 8,
+      "exact": 8,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/swecommon-text": {
+      "total": 8,
+      "exact": 8,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    },
+    "2:/conf/swecommon-binary": {
+      "total": 8,
+      "exact": 8,
+      "helper": 0,
+      "candidate": 0,
+      "unmapped": 0
+    }
+  }
+}
+{
+  "total": 130,
+  "exact": 100,
+  "helper": 0,
+  "candidate": 26,
+  "unmapped": 4
+}
+{
+  "total": 8,
+  "exact": 8,
+  "helper": 0,
+  "candidate": 0,
+  "unmapped": 0
+}

@@ -4,30 +4,75 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 /**
- * Regression coverage for S-ETS-31-01 Part 2 SWE Common Binary Encoding.
- *
- * <p>
- * Traceability: REQ-ETS-PART2-012,
- * SCENARIO-ETS-PART2-012-SWEBINARY-CONFORMANCE-DECLARED-001,
- * SCENARIO-ETS-PART2-012-SWE-BINARY-ENCODING-RULES-PREREQUISITE-001,
- * SCENARIO-ETS-PART2-012-RESOURCE-CONDITION-GATES-001,
- * SCENARIO-ETS-PART2-012-MEDIATYPE-READ-001,
- * SCENARIO-ETS-PART2-012-SCHEMA-VALIDATION-READONLY-001,
- * SCENARIO-ETS-PART2-012-SCHEMA-MAPPING-TIME-001,
- * SCENARIO-ETS-PART2-012-OBSERVATION-COMMAND-ENCODING-GUARDS-001,
- * SCENARIO-ETS-PART2-012-MEDIATYPE-WRITE-ADVERTISEMENT-001,
- * SCENARIO-ETS-PART2-012-SOURCE-TYPO-HONESTY-001,
- * SCENARIO-ETS-PART2-012-UNAVAILABLE-ENDPOINT-HONESTY-001, and
- * SCENARIO-ETS-PART2-012-SMOKE-NO-PUBLIC-MUTATION-001.
- * </p>
+ * Unit checks for the Sprint 68 Part 2 SWE Common Binary released ATS closure.
  */
 public class VerifyPart2SweCommonBinaryTests {
+
+	private static final String REQ_BASE = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/swecommon-binary/";
+
+	private static final Set<String> RELEASED_TARGETS = Set.of(REQ_BASE + "mediatype-read",
+			REQ_BASE + "mediatype-write", REQ_BASE + "obsschema-schema", REQ_BASE + "obsschema-mapping",
+			REQ_BASE + "observation-encoding", REQ_BASE + "cmdschema-schema", REQ_BASE + "cmdschema-mapping",
+			REQ_BASE + "command-encoding");
+
+	@Test
+	public void releasedSuiteExposesExactlyOneTestMethodPerAnnexA12Target() {
+		List<Method> methods = releasedMethods();
+		assertEquals(
+				"SCENARIO-ETS-PART2-012-RELEASED-PROCEDURES-001: Part 2 SWE Common Binary must expose exactly the eight released Annex A.12 procedures.",
+				RELEASED_TARGETS.size(), methods.size());
+
+		Set<String> covered = new HashSet<>();
+		for (Method method : methods) {
+			org.testng.annotations.Test ann = method.getAnnotation(org.testng.annotations.Test.class);
+			List<String> matched = RELEASED_TARGETS.stream()
+				.filter(target -> containsCanonicalTarget(ann.description(), target))
+				.toList();
+			assertEquals("Each Part 2 SWE Common Binary method must cite exactly one released target: "
+					+ method.getName() + " -> " + matched, 1, matched.size());
+			covered.add(matched.get(0));
+		}
+		assertEquals("Part 2 SWE Common Binary released targets are not covered exactly once.", RELEASED_TARGETS,
+				covered);
+	}
+
+	@Test
+	public void releasedSuiteContainsNoStandaloneDeclarationPrerequisiteOrConditionProcedures() {
+		Set<String> methodNames = releasedMethods().stream().map(Method::getName).collect(Collectors.toSet());
+
+		assertFalse("Declaration is a setup gate, not a released Annex A.12 procedure.",
+				methodNames.contains("part2SweCommonBinaryConformanceDeclared"));
+		assertFalse("SWE prerequisite visibility is a setup gate, not a released Annex A.12 procedure.",
+				methodNames.contains("sweBinaryEncodingRulesPrerequisiteVisibleForFullClosure"));
+		assertFalse("Resource condition gates are per-procedure gates, not standalone Annex A.12 procedures.",
+				methodNames.contains("sweCommonBinaryResourceConditionGatesAreVisible"));
+		assertTrue("Released mediatype-read procedure is missing.", containsTarget(REQ_BASE + "mediatype-read"));
+	}
+
+	@Test
+	public void everyReleasedMethodTracesSprint68ScenarioAndRequirement() {
+		for (Method method : releasedMethods()) {
+			org.testng.annotations.Test ann = method.getAnnotation(org.testng.annotations.Test.class);
+			String description = ann.description();
+			assertTrue(method.getName() + " missing REQ-ETS-PART2-012 trace",
+					description.contains("REQ-ETS-PART2-012"));
+			assertTrue(method.getName() + " missing Sprint 68 released-procedure scenario trace",
+					description.contains("SCENARIO-ETS-PART2-012-RELEASED-PROCEDURES-001"));
+			assertTrue(method.getName() + " should carry part2swecommonbinary group",
+					Arrays.asList(ann.groups()).contains(Part2SweCommonBinaryTests.GROUP));
+		}
+	}
 
 	@Test
 	public void officialPart2SweCommonBinaryIdentifiersAreExposed() {
@@ -76,9 +121,6 @@ public class VerifyPart2SweCommonBinaryTests {
 
 	@Test
 	public void sweCommonBinaryContentTypeRequiresExactMediaType() {
-		// REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-SOURCE-TYPO-HONESTY-001:
-		// Annex A.12 PASS evidence is exact application/swe+binary plus BinaryEncoding
-		// evidence, not CSV, text, JSON, vendor, or auto/fallback media.
 		assertTrue(Part2SweCommonBinaryTests.isExactSweBinaryContentType("application/swe+binary"));
 		assertTrue(Part2SweCommonBinaryTests.isExactSweBinaryContentType("application/swe+binary; charset=utf-8"));
 		assertFalse(Part2SweCommonBinaryTests.isExactSweBinaryContentType("application/json"));
@@ -92,9 +134,6 @@ public class VerifyPart2SweCommonBinaryTests {
 
 	@Test
 	public void schemaMetadataCanBeJsonButNotAutoOrHtml() {
-		// REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-UNAVAILABLE-ENDPOINT-HONESTY-001:
-		// schema metadata may be JSON, but binary payload media, auto, HTML, and missing
-		// content types cannot be converted into schema PASS evidence.
 		assertTrue(Part2SweCommonBinaryTests.isJsonCompatibleContentType("application/json"));
 		assertTrue(Part2SweCommonBinaryTests.isJsonCompatibleContentType("application/swe+json"));
 		assertFalse(Part2SweCommonBinaryTests.isJsonCompatibleContentType("application/swe+binary"));
@@ -167,6 +206,117 @@ public class VerifyPart2SweCommonBinaryTests {
 		assertTrue(Part2SweCommonBinaryTests.containsIssueTimeComponentWithCanonicalDefinition(issueTime));
 		assertFalse(Part2SweCommonBinaryTests.containsIssueTimeComponentWithCanonicalDefinition(nonIssueTime));
 		assertFalse(Part2SweCommonBinaryTests.containsIssueTimeComponentWithCanonicalDefinition(namedIssueTimeOnly));
+		assertFalse(Part2SweCommonBinaryTests.hasPresentNonCanonicalIssueTimeEvidence(nonIssueTime));
+		assertTrue(Part2SweCommonBinaryTests.hasPresentNonCanonicalIssueTimeEvidence(namedIssueTimeOnly));
+	}
+
+	@Test
+	public void issueTimeEvidenceFlagsPresentNonCanonicalDefinitions() {
+		Map<String, Object> wrongDefinition = Map.of("type", "DataRecord", "fields", List.of(Map.of("name", "issueTime",
+				"component", Map.of("type", "Time", "definition", "http://example.test/IssueTime"))));
+
+		assertFalse(Part2SweCommonBinaryTests.containsIssueTimeComponentWithCanonicalDefinition(wrongDefinition));
+		assertTrue(Part2SweCommonBinaryTests.hasPresentNonCanonicalIssueTimeEvidence(wrongDefinition));
+	}
+
+	@Test
+	public void commandSchemaIssueTimeMappingFailsWhenCanonicalIssueTimeIsAbsent() {
+		// REQ-ETS-PART2-012,
+		// SCENARIO-ETS-PART2-012-SCHEMA-MAPPING-TIME-001: retrieved Command
+		// Schema evidence without canonical IssueTime fails instead of SKIPping.
+		Map<String, Object> commandSchema = Map.of("recordSchema", Map.of("type", "DataRecord", "fields", List.of(Map
+			.of("name", "command", "component", Map.of("type", "Text", "definition", "http://example.test/command")))));
+
+		try {
+			Part2SweCommonBinaryTests.assertCommandSchemaIssueTimeMappings(List.of(commandSchema),
+					Part2SweCommonBinaryTests.REQ_COMMANDSCHEMA_MAPPING);
+		}
+		catch (AssertionError expected) {
+			assertTrue(expected.getMessage().contains(Part2SweCommonBinaryTests.REQ_COMMANDSCHEMA_MAPPING));
+			assertTrue(expected.getMessage().contains("IssueTime"));
+			return;
+		}
+		throw new AssertionError("Missing canonical IssueTime mapping evidence should fail, not SKIP or PASS.");
+	}
+
+	@Test
+	public void observationSchemaMappingChecksEveryRetrievedSchema() {
+		// REQ-ETS-PART2-012,
+		// SCENARIO-ETS-PART2-012-SCHEMA-MAPPING-TIME-001: a later retrieved
+		// DataStream schema cannot be hidden by a valid first schema.
+		Map<String, Object> validFirst = Map.of("recordSchema",
+				Map.of("type", "DataRecord", "fields", List.of(Map.of("name", "phenomenonTime", "component",
+						Map.of("type", "Time", "definition", "http://www.w3.org/ns/sosa/phenomenonTime")))));
+		Map<String, Object> invalidSecond = Map.of("recordSchema",
+				Map.of("type", "DataRecord", "fields", List.of(Map.of("name", "result", "component",
+						Map.of("type", "Quantity", "definition", "http://example.test/result")))));
+
+		try {
+			Part2SweCommonBinaryTests.assertObservationSchemaTimeMappings(List.of(validFirst, invalidSecond),
+					Part2SweCommonBinaryTests.REQ_OBSSCHEMA_MAPPING);
+		}
+		catch (AssertionError expected) {
+			assertTrue(expected.getMessage().contains(Part2SweCommonBinaryTests.REQ_OBSSCHEMA_MAPPING));
+			assertTrue(expected.getMessage().contains("Observation Schema[1]"));
+			return;
+		}
+		throw new AssertionError("Second retrieved Observation Schema with invalid mapping should fail.");
+	}
+
+	@Test
+	public void commandSchemaMappingChecksEveryRetrievedSchema() {
+		// REQ-ETS-PART2-012,
+		// SCENARIO-ETS-PART2-012-SCHEMA-MAPPING-TIME-001: a later retrieved
+		// ControlStream schema cannot be hidden by a valid first schema.
+		Map<String, Object> validFirst = Map
+			.of("recordSchema", Map.of("type", "DataRecord", "fields", List.of(Map.of("name", "issueTime", "component",
+					Map.of("type", "Time", "definition", Part2SweCommonBinaryTests.COMMAND_ISSUE_TIME_DEFINITION)))));
+		Map<String, Object> invalidSecond = Map.of("recordSchema",
+				Map.of("type", "DataRecord", "fields", List.of(Map.of("name", "issueTime", "component",
+						Map.of("type", "Time", "definition", "http://example.test/IssueTime")))));
+
+		try {
+			Part2SweCommonBinaryTests.assertCommandSchemaIssueTimeMappings(List.of(validFirst, invalidSecond),
+					Part2SweCommonBinaryTests.REQ_COMMANDSCHEMA_MAPPING);
+		}
+		catch (AssertionError expected) {
+			assertTrue(expected.getMessage().contains(Part2SweCommonBinaryTests.REQ_COMMANDSCHEMA_MAPPING));
+			assertTrue(expected.getMessage().contains("Command Schema[1]"));
+			return;
+		}
+		throw new AssertionError("Second retrieved Command Schema with invalid IssueTime mapping should fail.");
+	}
+
+	@Test
+	public void apiDefinitionReadAdvertisementRequiresGetResponseSweBinaryContent() {
+		// REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-MEDIATYPE-READ-001:
+		// mediatype-read requires OpenAPI GET response advertisement evidence.
+		Map<String, Object> apiDefinition = Map.of("paths", Map.of("/datastreams/{datastreamId}/observations", Map.of(
+				"get",
+				Map.of("responses", Map.of("200", Map.of("content", Map.of("application/swe+binary", Map.of())))))));
+
+		assertTrue(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryRead(apiDefinition,
+				"/datastreams/{datastreamId}/observations"));
+	}
+
+	@Test
+	public void apiDefinitionReadAdvertisementRejectsRequestBodyPostVendorAndUnrelatedPaths() {
+		// REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-MEDIATYPE-READ-001:
+		// request bodies, write operations, vendor media, and unrelated paths are not
+		// read-advertisement PASS evidence.
+		Map<String, Object> requestBodyOnly = Map.of("paths", Map.of("/observations",
+				Map.of("get", Map.of("requestBody", Map.of("content", Map.of("application/swe+binary", Map.of()))))));
+		Map<String, Object> postOnly = Map.of("paths", Map.of("/observations", Map.of("post",
+				Map.of("responses", Map.of("200", Map.of("content", Map.of("application/swe+binary", Map.of())))))));
+		Map<String, Object> vendorDraftOnly = Map.of("paths", Map.of("/observations", Map.of("get", Map.of("responses",
+				Map.of("200", Map.of("content", Map.of("application/vnd.ogc.swe+binary", Map.of())))))));
+		Map<String, Object> unrelated = Map.of("paths", Map.of("/systems", Map.of("get",
+				Map.of("responses", Map.of("200", Map.of("content", Map.of("application/swe+binary", Map.of())))))));
+
+		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryRead(requestBodyOnly, "/observations"));
+		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryRead(postOnly, "/observations"));
+		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryRead(vendorDraftOnly, "/observations"));
+		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryRead(unrelated, "/observations"));
 	}
 
 	@Test
@@ -174,16 +324,16 @@ public class VerifyPart2SweCommonBinaryTests {
 		Map<String, Object> apiDefinition = Map.of("paths",
 				Map.of("/datastreams/{datastreamId}/observations", Map.of("post", Map.of("requestBody",
 						Map.of("content", Map.of("application/swe+binary", Map.of("schema", Map.of())))))));
+		Map<String, List<String>> expected = Map.of("Observation resources",
+				List.of("/datastreams/{datastreamId}/observations"));
 
-		assertTrue(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(apiDefinition));
+		assertTrue(Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(apiDefinition, expected).isEmpty());
 	}
 
 	@Test
 	public void apiDefinitionDoesNotPassFromOptionsJsonFallbackVendorDraftOrUnrelatedPaths() {
-		// REQ-ETS-PART2-012, SCENARIO-ETS-PART2-012-SOURCE-TYPO-HONESTY-001,
-		// SCENARIO-ETS-PART2-012-UNAVAILABLE-ENDPOINT-HONESTY-001: mediatype-write
-		// cannot PASS from OPTIONS, JSON/CSV/text/vendor media, unrelated paths, or
-		// subresource evidence.
+		Map<String, List<String>> expected = Map.of("Observation resources",
+				List.of("/datastreams/{datastreamId}/observations"));
 		Map<String, Object> optionsOnly = Map.of("paths", Map.of("/systems/{systemId}/datastreams", Map.of("options",
 				Map.of("requestBody", Map.of("content", Map.of("application/swe+binary", Map.of()))))));
 		Map<String, Object> jsonOnly = Map.of("paths", Map.of("/systems/{systemId}/datastreams",
@@ -201,14 +351,16 @@ public class VerifyPart2SweCommonBinaryTests {
 		Map<String, Object> commandStatusSubresource = Map.of("paths", Map.of("/commands/{commandId}/status",
 				Map.of("put", Map.of("requestBody", Map.of("content", Map.of("application/swe+binary", Map.of()))))));
 
-		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(optionsOnly));
-		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(jsonOnly));
-		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(vendorDraftOnly));
-		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(csvOnly));
-		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(textOnly));
-		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(sweJsonOnly));
-		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(unrelatedSweBinary));
-		assertFalse(Part2SweCommonBinaryTests.apiDefinitionAdvertisesSweBinaryWrite(commandStatusSubresource));
+		assertFalse(Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(optionsOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(jsonOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(vendorDraftOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(csvOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(textOnly, expected).isEmpty());
+		assertFalse(Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(sweJsonOnly, expected).isEmpty());
+		assertFalse(
+				Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(unrelatedSweBinary, expected).isEmpty());
+		assertFalse(Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(commandStatusSubresource, expected)
+			.isEmpty());
 		assertTrue(Part2SweCommonBinaryTests.isObservationOrCommandResourcePath("/observations"));
 		assertTrue(Part2SweCommonBinaryTests.isObservationOrCommandResourcePath("/observations/{obsId}"));
 		assertTrue(Part2SweCommonBinaryTests.isObservationOrCommandResourcePath("/controlstreams/{csId}/commands"));
@@ -218,8 +370,54 @@ public class VerifyPart2SweCommonBinaryTests {
 	}
 
 	@Test
+	public void apiDefinitionWriteAdvertisementRequiresEveryScopedWriteOperationToAdvertiseSweBinary() {
+		Map<String, List<String>> expected = Map.of("Observation resources",
+				List.of("/observations", "/observations/{observationId}"));
+		Map<String, Object> mixedOperations = Map.of("paths",
+				Map.of("/observations", Map.of("post",
+						Map.of("requestBody",
+								Map.of("content", Map.of("application/swe+binary", Map.of("schema", Map.of()))))),
+						"/observations/{id}", Map.of("put", Map.of("requestBody",
+								Map.of("content", Map.of("application/json", Map.of("schema", Map.of())))))));
+
+		assertEquals(List.of("Observation resources PUT /observations/{id}"),
+				Part2SweCommonBinaryTests.missingSweBinaryWriteAdvertisements(mixedOperations, expected));
+	}
+
+	@Test
 	public void groupNameIsStableForTestNgWiring() {
 		assertEquals("part2swecommonbinary", Part2SweCommonBinaryTests.GROUP);
+	}
+
+	private static List<Method> releasedMethods() {
+		return Arrays.stream(Part2SweCommonBinaryTests.class.getDeclaredMethods())
+			.filter(method -> method.getAnnotation(org.testng.annotations.Test.class) != null)
+			.toList();
+	}
+
+	private static boolean containsTarget(String target) {
+		return releasedMethods().stream()
+			.map(method -> method.getAnnotation(org.testng.annotations.Test.class).description())
+			.anyMatch(description -> containsCanonicalTarget(description, target));
+	}
+
+	private static boolean containsCanonicalTarget(String description, String target) {
+		int start = description.indexOf(target);
+		while (start >= 0) {
+			int end = start + target.length();
+			boolean leftBoundary = start == 0 || isTargetDelimiter(description.charAt(start - 1));
+			boolean rightBoundary = end == description.length() || isTargetDelimiter(description.charAt(end));
+			if (leftBoundary && rightBoundary) {
+				return true;
+			}
+			start = description.indexOf(target, start + 1);
+		}
+		return false;
+	}
+
+	private static boolean isTargetDelimiter(char character) {
+		return Character.isWhitespace(character) || character == '(' || character == ')' || character == ','
+				|| character == ';' || character == ':';
 	}
 
 }

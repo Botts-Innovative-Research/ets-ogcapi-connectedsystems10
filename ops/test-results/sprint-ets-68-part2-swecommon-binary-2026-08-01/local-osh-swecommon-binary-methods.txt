@@ -1,0 +1,20 @@
+SKIP fetchPart2SweCommonBinaryInputs
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+SKIP commandSchemaSweBinaryValidWhenControlStreamCandidateAvailable
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+SKIP commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+SKIP commandSweBinaryEncodingRequiresParentSchemaAndCandidateEvidence
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+SKIP observationSchemaSweBinaryValidWhenDatastreamCandidateAvailable
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+SKIP observationSchemaSweMappingRequiresTimeComponentEvidence
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+SKIP observationSweBinaryEncodingRequiresParentSchemaAndCandidateEvidence
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+SKIP sweCommonBinaryMediatypeReadSupportedOnObservationOrCommandEndpoints
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+SKIP sweCommonBinaryMediatypeWriteAdvertisedByApiDefinitionOnly
+  http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.
+runtime_counts PASS=0 FAIL=0 SKIP=8
+setup_counts PASS=0 FAIL=0 SKIP=1

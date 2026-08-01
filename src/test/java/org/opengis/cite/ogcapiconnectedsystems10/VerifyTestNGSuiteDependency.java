@@ -199,11 +199,11 @@ public class VerifyTestNGSuiteDependency {
 	private static final String PART2_SWE_COMMON_TEXT_GROUP = "part2swecommontext";
 
 	/**
-	 * Sprint 31 S-ETS-31-01 — Part 2 SWE Common Binary Encoding read-only subset group
-	 * (depends on Core and Common; runtime checks keep /conf/swecommon-binary
-	 * declaration, SWE Binary Encoding Rules prerequisite, resource condition gates,
-	 * schema evidence, exact application/swe+binary evidence, and no-public-mutation
-	 * behavior visible).
+	 * Sprint 68 S-ETS-68-01 — Part 2 SWE Common Binary Encoding exact released ATS group,
+	 * superseding the Sprint 31 subset (depends on Core and Common; runtime checks keep
+	 * /conf/swecommon-binary declaration, SWE Binary Encoding Rules prerequisite,
+	 * resource condition gates, schema evidence, exact application/swe+binary evidence,
+	 * and no-public-mutation behavior visible).
 	 */
 	private static final String PART2_SWE_COMMON_BINARY_GROUP = "part2swecommonbinary";
 
@@ -2870,10 +2870,10 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 31 S-ETS-31-01 — Part 2 SWE Common Binary group =====
+	// ===== Sprint 68 S-ETS-68-01 — Part 2 SWE Common Binary group =====
 
 	/**
-	 * Sprint 31 S-ETS-31-01 (REQ-ETS-PART2-012): the canonical testng.xml SHALL declare
+	 * Sprint 68 S-ETS-68-01 (REQ-ETS-PART2-012): the canonical testng.xml SHALL declare
 	 * {@code <group name="part2swecommonbinary" depends-on="core common"/>}.
 	 */
 	@org.junit.Test
@@ -2916,11 +2916,11 @@ public class VerifyTestNGSuiteDependency {
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + PART2_SWE_COMMON_BINARY_GROUP
-				+ "\" depends-on=\"core common\"/> — see Sprint 31 S-ETS-31-01.", foundDependency);
+				+ "\" depends-on=\"core common\"/> — see Sprint 68 S-ETS-68-01.", foundDependency);
 	}
 
 	/**
-	 * Sprint 31 S-ETS-31-01: every Part 2 SWE Common Binary @Test method SHALL carry
+	 * Sprint 68 S-ETS-68-01: every Part 2 SWE Common Binary @Test method SHALL carry
 	 * {@code groups = "part2swecommonbinary"}.
 	 */
 	@org.junit.Test
@@ -2947,7 +2947,7 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 31 S-ETS-31-01: Part 2 SWE Common Binary classes MUST be co-located in the
+	 * Sprint 68 S-ETS-68-01: Part 2 SWE Common Binary classes MUST be co-located in the
 	 * SAME {@code <test>} block as Core, Common, and the resource classes whose
 	 * declarations are checked at runtime.
 	 */
@@ -3002,7 +3002,7 @@ public class VerifyTestNGSuiteDependency {
 				+ part2DatastreamClassNames + "), Part 2 ControlStream (" + part2ControlStreamClassNames
 				+ "), Part 2 Create/Replace/Delete (" + part2CreateReplaceDeleteClassNames
 				+ "), and Part 2 SWE Common Binary (" + part2SweCommonBinaryClassNames
-				+ ") must be declared in the SAME <test> block of testng.xml so declaration-gated runtime checks resolve within scope. See Sprint 31 S-ETS-31-01.",
+				+ ") must be declared in the SAME <test> block of testng.xml so declaration-gated runtime checks resolve within scope. See Sprint 68 S-ETS-68-01.",
 				coAlloc);
 	}
 

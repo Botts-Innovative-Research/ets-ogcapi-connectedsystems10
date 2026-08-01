@@ -1,0 +1,2 @@
+/tmp/ets-sprint-68-local-osh.674iFm/s-ets-01-03-teamengine-smoke-2026-08-01.xml
+/tmp/ets-sprint-68-local-osh.674iFm/s-ets-01-03-teamengine-container-2026-08-01.log

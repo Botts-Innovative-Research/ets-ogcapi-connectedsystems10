@@ -1,0 +1,108 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.94
+reviewer: Raze
+reviewed_at: "2026-08-01T17:37:02Z"
+review_mode: read-only_gapfix_recheck_artifact_inspection
+duration_seconds: 144
+token_metadata: unavailable
+scope:
+  sprint: ets-68
+  story: S-ETS-68-01
+  requirement: REQ-ETS-PART2-012
+  conformance_class: /conf/swecommon-binary
+  prior_report: .harness/evaluations/sprint-ets-68-adversarial.yaml
+  inspected:
+    - _bmad/agents/adversarial-reviewer.md
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/Part2SweCommonBinaryTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonbinary/VerifyPart2SweCommonBinaryTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+    - ops/ats-coverage-report.json
+    - openspec/change-proposals/CP-028-part2-swecommon-binary-closure.md
+    - epics/stories/s-ets-68-01-part2-swecommon-binary-closure.md
+    - .harness/contracts/sprint-ets-68.yaml
+    - ops/test-results/sprint-ets-68-part2-swecommon-binary-2026-08-01/
+prior_gap_disposition:
+  RAZE-ETS68-FALSEPASS-001:
+    status: CLOSED
+    evidence:
+      - "Part2SweCommonBinaryTests lines 166-198 now read service-desc API definition evidence and fail when no applicable Observation/Command GET endpoint advertises application/swe+binary response content."
+      - "Part2SweCommonBinaryTests lines 460-552 require advertised endpoint evidence plus concrete HTTP 200 exact application/swe+binary non-empty retrieval before PASS."
+      - "VerifyPart2SweCommonBinaryTests lines 290-320 cover positive GET response-content advertisement and reject requestBody, POST-only, vendor media, and unrelated-path evidence."
+  RAZE-ETS68-FALSEPASS-002:
+    status: CLOSED
+    evidence:
+      - "Part2SweCommonBinaryTests lines 227-232 and 279-284 now pass every retrieved schema into mapping assertion helpers."
+      - "Part2SweCommonBinaryTests lines 774-794 fail any Observation Schema or Command Schema in the retrieved list that lacks required mapping evidence."
+      - "VerifyPart2SweCommonBinaryTests lines 242-288 include second-schema negative regressions for Observation and Command mapping."
+  RAZE-ETS68-FALSESKIP-003:
+    status: CLOSED
+    evidence:
+      - "Part2SweCommonBinaryTests lines 784-794 fail missing canonical IssueTime evidence in any retrieved Command Schema."
+      - "VerifyPart2SweCommonBinaryTests lines 222-240 assert missing canonical IssueTime fails rather than skips or passes."
+  RAZE-ETS68-DOC-001:
+    status: CLOSED
+    evidence:
+      - "Part2SweCommonBinaryTests lines 314-315 contain the corrected mediatype-write description without the ':SWE' typo."
+blocking_findings: []
+required_fixes: []
+evidence_checked:
+  formatter: "formatter-after-raze-docs.txt: BUILD SUCCESS, finished 2026-08-01T17:19:23Z."
+  coverage_update: "coverage-update-after-raze-docs.txt: VerifyReleasedAtsCoverage 23 tests / 0 failures / 0 errors / 0 skipped."
+  focused_maven: "focused-final-after-raze-fixes.txt: 120 tests / 0 failures / 0 errors / 0 skipped."
+  full_maven: "full-maven-after-raze-fixes.txt: 785 tests / 0 failures / 0 errors / 3 skipped; BUILD SUCCESS."
+  coverage_summary:
+    total: "240 total / 191 exact / 2 helper / 43 candidate / 4 unmapped"
+    part2: "130 total / 100 exact / 0 helper / 26 candidate / 4 unmapped"
+    swecommon_binary: "8 exact / 0 helper / 0 candidate / 0 unmapped"
+  mappings:
+    status: PASS
+    evidence:
+      - "reviewed-ats-mappings.json lines 1685-1753 map all eight /conf/swecommon-binary procedures as exact."
+      - "ops/ats-coverage-report.json lines 3575-3707 carries the same eight exact reviewed mappings."
+      - "ops/ats-coverage-report.json summary has 2:/conf/swecommon-binary = 8/8 exact."
+  testng_wiring:
+    status: PASS
+    evidence:
+      - "testng.xml lines 157-163 document Sprint 68 and lines 195-198 wire part2swecommonbinary to core common."
+      - "testng.xml lines 229-232 include Part2SweCommonBinaryTests in the shipped suite."
+      - "VerifyTestNGSuiteDependency lines 2875-3006 guard dependency tokens, groups, and same-test co-location."
+  local_osh_teamengine:
+    status: HONEST_NON_GREEN
+    evidence:
+      - "local-osh-smoke-after-raze-fixes.exitcode is 1."
+      - "local-osh-smoke-after-raze-fixes.txt reports 252 total / 23 passed / 20 failed / 209 skipped."
+      - "local-osh-swecommon-binary-methods-after-raze-fixes.txt reports setup SKIP plus 8 runtime SKIPs because local OSH lacks http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules."
+  no_mutation:
+    status: PASS
+    evidence:
+      - "no-mutation-oracle-after-raze-fixes.txt recognized 130 IUT request logs."
+      - "request-method-counts-after-raze-fixes.txt reports GET=130 and POST=PUT=PATCH=DELETE=OPTIONS=HEAD=0."
+  teamengine_runtime_immutability:
+    status: PASS
+    evidence:
+      - "teamengine-runtime-immutability-after-raze-fixes.txt reports PASS for final smoke image sha256:47ddcfe1b7143004eba7b9fc88b5173fe1f6b7fa47616459a5d5efde14eee21e."
+residual_concerns:
+  - id: RAZE-ETS68-RECHECK-CONCERN-001
+    severity: LOW
+    title: final Sprint 68 docs still cite pre-gapfix evidence names, Maven total, and smoke image
+    evidence:
+      - "CP-028 lines 76-84 cite full Docker Maven as 780 tests and smoke image sha256:d723e2c..., while the post-gapfix evidence is 785 tests and image sha256:47ddcfe...."
+      - "Story lines 83-103 and contract lines 45-66 still emphasize pre-final artifact names/totals instead of focused-final-after-raze-fixes.txt, full-maven-after-raze-fixes.txt, local-osh-smoke-after-raze-fixes.*, and teamengine-runtime-immutability-after-raze-fixes.txt."
+      - "The documents are already marked pending Raze/push, so this is not a blocking implementation gap, but it must be reconciled before final completion or push-status claims."
+    recommendation: "During normal post-review reconciliation, update CP, story, contract, OpenSpec, traceability, ops status, test-results, and changelog to cite the post-gapfix artifacts, 785/0/0/3 full Maven total, and sha256:47ddcfe1b7143004eba7b9fc88b5173fe1f6b7fa47616459a5d5efde14eee21e smoke image."
+  - id: RAZE-ETS68-RECHECK-CONCERN-002
+    severity: LOW
+    title: one structural-lint assertion message points reviewers to Sprint 31 instead of Sprint 68
+    evidence:
+      - "VerifyTestNGSuiteDependency line 3005 says 'See Sprint 31 S-ETS-31-01' inside the new Part 2 SWE Common Binary co-location assertion."
+    recommendation: "Change that failure-message reference to Sprint 68 S-ETS-68-01 when reconciling docs or before committing the implementation."
+final_assessment: >
+  The three high-severity exactness gaps from the initial Sprint 68 Raze review
+  are closed. The implementation now requires API-definition read advertisement,
+  validates mapping evidence across every retrieved schema, and fails missing
+  canonical IssueTime evidence after Command Schema retrieval. No blocking code,
+  mapping, TestNG wiring, E2E honesty, or no-mutation gaps remain. The sprint is
+  approved with low reconciliation concerns that must be handled before final
+  completion/push documentation.

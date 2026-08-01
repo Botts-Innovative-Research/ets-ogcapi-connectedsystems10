@@ -2,6 +2,53 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-01 - Sprint 68 Part 2 SWE Common Binary Encoding released ATS closure
+
+**Triggered by user instruction**: "Make the practical fix, then continue with
+the project - and don't stop unless you need my input."
+
+- Added CP-028, S-ETS-68-01, and the Sprint 68 contract for exact OGC 23-002
+  Part 2 `/conf/swecommon-binary` closure.
+- Replaced the historical Sprint 31 helper/subset surface with exactly eight
+  released Annex A.12 procedure methods, including the formerly unmapped
+  `/conf/swecommon-binary/mediatype-read`.
+- Removed non-ATS declaration/prerequisite/resource-gate helper methods from
+  the deployed Part 2 SWE Common Binary class while preserving setup gates for
+  exact `/conf/swecommon-binary` and SWE Common Binary Encoding Rules before
+  resource endpoint access.
+- Implemented read-only `application/swe+binary` media checks, service-desc
+  API-definition GET response-content advertisement checks for mediatype-read,
+  Connected Systems wrapper schema validation requiring `BinaryEncoding`,
+  reusable SWE `recordSchema` validation, canonical Time/IssueTime mapping
+  evidence across every retrieved schema, and explicit no-safe-evidence SKIPs
+  for Observation/Command encoding without proven binary data-value validator
+  evidence.
+- Initial Raze found three high exactness gaps and one cosmetic typo: missing
+  read-advertisement evidence, first-schema-only mapping checks, absent
+  IssueTime SKIP after Command Schema retrieval, and `:SWE` description
+  spacing. The gapfix adds read-advertisement parsing, all-schema mapping
+  validation, mandatory missing/noncanonical IssueTime failure, and the typo
+  fix.
+- Scoped `mediatype-write` to non-mutating service-desc OpenAPI metadata and
+  require every advertised POST/PUT operation matching supported Observation
+  or Command endpoint templates to include exact `application/swe+binary`.
+- Promoted all eight released mappings to reviewed exact and regenerated
+  coverage: `240 total / 191 exact / 2 helper / 43 candidate / 4 unmapped`,
+  with Part 2 SWE Common Binary `8 exact / 0 candidate / 0 unmapped`.
+- Verification logs are archived under
+  `ops/test-results/sprint-ets-68-part2-swecommon-binary-2026-08-01/`:
+  final post-Raze-fix focused `120/0/0/0`, coverage audit pass, formatter
+  pass, full Docker Maven `785/0/0/3`, and local OSH TeamEngine
+  `252/23/20/209` with all eight methods SKIPping before SWE Common Binary
+  resource endpoint access because local OSH lacks
+  `http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules`.
+- No-mutation oracle recognized 130 local-OSH IUT request logs; method counts
+  are `GET=130` and zero POST/PUT/PATCH/DELETE.
+- TeamEngine 6 runtime immutability verification passed for smoke image
+  `sha256:47ddcfe1b7143004eba7b9fc88b5173fe1f6b7fa47616459a5d5efde14eee21e`.
+- Focused Raze recheck returned `APPROVE_WITH_CONCERNS 0.94` with no blocking
+  gaps; push reconciliation is pending.
+
 ## 2026-08-01 - Sprint 67 Part 2 SWE Common Text Encoding released ATS closure
 
 **Triggered by user instruction**: "Make the practical fix, then continue with

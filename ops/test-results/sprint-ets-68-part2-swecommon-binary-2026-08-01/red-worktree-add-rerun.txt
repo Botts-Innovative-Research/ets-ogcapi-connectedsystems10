@@ -1,0 +1,2 @@
+Preparing worktree (detached HEAD 4731dad)
+HEAD is now at 4731dad Reconcile Sprint 67 push status

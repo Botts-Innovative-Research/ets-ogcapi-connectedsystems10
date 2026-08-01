@@ -1,8 +1,65 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T16:23Z
+Last updated: 2026-08-01T16:57Z
 
 ## Current Sprint Evidence
+
+Sprint 68 Part 2 SWE Common Binary Encoding released ATS:
+
+- Trigger: user instructed to make the practical metrics fix, then continue the
+  project without stopping unless input is needed.
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/swecommon-binary`.
+- Implementation: exactly eight TestNG methods, one per released Annex A.12
+  target; no standalone declaration/prerequisite/resource-condition helper
+  procedures; exact `/conf/swecommon-binary` and SWE Common 3.0 Binary
+  Encoding Rules setup gate; service-desc API-definition GET response-content
+  advertisement plus strict `application/swe+binary` response media for read
+  evidence; Connected Systems wrapper plus reusable SWE `recordSchema`
+  validation; required `BinaryEncoding`; canonical Time/IssueTime mapping
+  evidence across every retrieved schema; missing or noncanonical IssueTime
+  evidence fails after Command Schema retrieval; scoped non-mutating
+  service-desc OpenAPI mediatype-write checks requiring every advertised scoped
+  POST/PUT operation to include exact `application/swe+binary`; no IUT
+  mutation.
+- Observation/Command encoding methods intentionally SKIP without parent
+  schema, candidate body, and proven SWE Common Binary data-value validator
+  evidence rather than passing from media or non-empty bytes alone.
+- Test-first red: `focused-red.txt` exited non-zero before implementation
+  because the exact Sprint 68 structural helper methods under test were
+  missing on the Sprint 31 subset.
+- Initial Raze found `RAZE-ETS68-FALSEPASS-001` for missing API-definition
+  read advertisement evidence, `RAZE-ETS68-FALSEPASS-002` for first-schema-only
+  mapping checks, `RAZE-ETS68-FALSESKIP-003` for absent IssueTime SKIP after
+  Command Schema retrieval, and `RAZE-ETS68-DOC-001` for a cosmetic TestNG
+  description typo. The gapfix addresses all four; focused Raze recheck
+  returned `APPROVE_WITH_CONCERNS 0.94` with no blocking gaps.
+- Final post-Raze-fix focused verification:
+  `120 tests / 0 failures / 0 errors / 0 skipped`
+  (`focused-final-after-raze-fixes.txt`).
+- Released ATS coverage update exits 0; coverage audit exits 0. Current
+  coverage is `240 total / 191 exact / 2 helper / 43 candidate / 4 unmapped`;
+  Part 2 is `130 total / 100 exact / 0 helper / 26 candidate / 4 unmapped`;
+  Part 2 SWE Common Binary is `8 exact / 0 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS (`formatter-apply.txt`).
+- Full Docker Maven completed
+  `785 tests / 0 failures / 0 errors / 3 skipped`
+  (`full-maven-after-raze-fixes.txt`).
+- Local OSH TeamEngine smoke exited honestly non-green at
+  `252 total / 23 passed / 20 failed / 209 skipped`
+  (`local-osh-smoke-after-raze-fixes.txt`).
+  All eight Sprint 68 methods SKIP with reason:
+  `http://www.opengis.net/spec/SWE/3.0/conf/binary-encoding-rules - /req/swecommon-binary prerequisite is missing; Sprint 68 SWE Common Binary procedures skip before SWE Common Binary resource endpoint access.`
+  The 20 failures are existing local OSH SensorML/Deployment/Procedure/Property
+  gaps outside Sprint 68.
+- No-mutation oracle: `recognized_iut_request_logs=130`; request method counts
+  are `GET=130`, zero POST/PUT/PATCH/DELETE.
+- Evidence directory:
+  `ops/test-results/sprint-ets-68-part2-swecommon-binary-2026-08-01/`.
+- TeamEngine 6 runtime immutability verification passed for smoke image
+  `sha256:47ddcfe1b7143004eba7b9fc88b5173fe1f6b7fa47616459a5d5efde14eee21e`.
+- Push reconciliation is pending.
 
 Sprint 67 Part 2 SWE Common Text Encoding released ATS:
 

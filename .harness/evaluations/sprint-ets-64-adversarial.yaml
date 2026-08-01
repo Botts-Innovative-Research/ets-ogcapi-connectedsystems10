@@ -1,0 +1,80 @@
+verdict: GAPS_FOUND
+confidence: 0.92
+reviewed_at_utc: "2026-08-01T07:54:41Z"
+reviewer: Raze
+sprint: ets-64
+story: S-ETS-64-01
+scope_reviewed:
+  - AGENTS.md
+  - _bmad/agents/adversarial-reviewer.md
+  - .harness/contracts/sprint-ets-64.yaml
+  - openspec/change-proposals/CP-024-part2-advanced-filtering-closure.md
+  - epics/stories/s-ets-64-01-part2-advanced-filtering-closure.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+  - _bmad/traceability.md
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringTests.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringSupport.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/datastream/Part2DatastreamSupport.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/controlstream/Part2ControlStreamSupport.java
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/systemevent/Part2SystemEventSupport.java
+  - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+  - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/released-ats-inventory.json
+  - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+  - ops/ats-coverage-report.json
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java
+  - ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/
+summary:
+  structural_closure: "Exactly eighteen Part 2 /conf/advanced-filtering methods are present and mapped to the released inventory."
+  testng_dependency: "part2advancedfiltering depends directly on part2apicommon and advancedfiltering; structural lint enforces the tokenized dependency set."
+  coverage: "2:/conf/advanced-filtering reports 18 exact, 0 helper, 0 candidate, 0 unmapped."
+  maven: "Focused Docker Maven passed 83/0/0/0; full Docker Maven passed with existing skips at 762/0/0/3."
+  e2e: "Local OSH TeamEngine smoke is honestly non-green at 260/36/21/203; all eighteen Sprint 64 methods SKIP before Advanced Filtering IUT access."
+  no_mutation: "No IUT-bound write requests found; request method count evidence records GET=186."
+findings:
+  - id: RAZE-ETS64-FALSEPASS-001
+    severity: HIGH
+    status: OPEN
+    title: "event-by-type can PASS using generic SystemEvent type evidence instead of event type evidence"
+    risk: "A declaring IUT that ignores eventType filtering but returns SystemEvent resources with a generic type member can produce a false PASS for /conf/advanced-filtering/event-by-type."
+    evidence:
+      - "Part2AdvancedFilteringSupport.systemEventType() checks eventType, then type, then definition at src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringSupport.java:736."
+      - "The bundled SystemEvent schema requires definition, label, and time, not eventType or a generic resource type, at src/main/resources/schemas/connected-systems-2/json/systemEvent.json:17."
+      - "The referenced SensorML Event schema describes definition as the type of event at src/main/resources/schemas/connected-systems-shared/sensorml/schemas/json/Event.json:11."
+      - "The Sprint 64 scenario says the ETS checks eventType filtering using /systemEvents at openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:1348."
+      - "The structural test codifies the loose type fallback but does not cover the conflict case where type is generic and definition is the actual event type: src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java:120."
+    required_fix: "Remove the generic type fallback or make definition take precedence over type, and add a regression where a SystemEvent has type=SystemEvent plus definition=<actual-event-uri>; the event-by-type probe must query and validate the actual event type evidence, not the generic resource discriminator."
+  - id: RAZE-ETS64-E2E-001
+    severity: LOW
+    status: OBSERVED
+    title: "Local OSH E2E is honest but provides no positive Sprint 64 filter execution"
+    risk: "The archived E2E run verifies dependency-skip behavior, TeamEngine wiring, and no mutation, but it does not exercise the new filter predicates against a declaring IUT because all eighteen Sprint 64 methods skip before IUT access."
+    evidence:
+      - "advanced-filtering-smoke-summary.txt reports method_count 18 and status_counts {'SKIP': 18} with setup skipped because systemsFilterByFeatureOfInterest skipped."
+      - "local-osh-smoke.txt reports TestNG total=260 passed=36 failed=21 skipped=203 and exits non-green."
+      - "The story, status, changelog, test-results, and contract all describe this as an honest non-green local OSH limitation rather than a green completion claim."
+    required_fix: null
+  - id: RAZE-ETS64-ARTIFACT-001
+    severity: LOW
+    status: OBSERVED
+    title: "OSH upstream divergence field is ambiguous but not a completion blocker"
+    risk: "local-osh-provenance.txt labels the ahead/behind tuple as osh_upstream_behind_ahead=0 3, which future reviewers may misread as three local commits ahead."
+    evidence:
+      - "local-osh-provenance.txt records osh_checkout_status_entries=0 and osh_upstream_behind_ahead=0 3."
+      - "Independent git inspection shows the checkout is clean and zero local commits ahead, with three upstream commits not present locally."
+      - "Sprint 64 docs claim zero commits ahead, which is accurate; they do not claim zero commits behind."
+    required_fix: null
+evidence:
+  focused_red: "ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/focused-red-reproduction.txt"
+  focused_green: "ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/focused-green-3.txt"
+  full_maven: "ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/full-maven-test.txt"
+  coverage_audit: "ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/coverage-audit.txt"
+  coverage_report: "ops/ats-coverage-report.json"
+  e2e_console: "ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/local-osh-smoke.txt"
+  e2e_xml: "ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/s-ets-01-03-teamengine-smoke-2026-08-01.xml"
+  no_mutation_oracle: "ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/no-mutation-oracle.txt"
+  request_method_counts: "ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/request-method-counts.txt"
+  credential_scan: "No Authorization, Basic, Bearer, SMOKE_AUTH, auth-credential, password, or credential matches found in Sprint 64 evidence."
+required_fixes:
+  - RAZE-ETS64-FALSEPASS-001

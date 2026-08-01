@@ -1247,6 +1247,168 @@
       "reviewedBy": "Codex Sprint 63 ATS line review",
       "reviewedOn": "2026-08-01",
       "evidence": "The independent released procedure requires exact /conf/system-event declaration, selects every /collections entry whose itemType is exactly SystemEvent, follows its supported rel=items link with Part 1 collection-items traversal, and validates collection and item JSON against the released SystemEvent schemas."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/datastream-by-phenomenontime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#datastreamsFilterByPhenomenonTime()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure inherits Part 2 API Common and Part 1 Advanced Filtering, runtime-gates exact Part 2 Advanced Filtering and Datastream declarations, validates /datastreams with the released Datastream endpoint schema, derives a seed phenomenonTime, queries phenomenonTime, and requires every returned DataStream time extent to intersect the requested value."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/datastream-by-resulttime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#datastreamsFilterByResultTime()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure runtime-gates exact declarations, validates /datastreams with the released Datastream endpoint schema, derives a seed resultTime, queries resultTime, and requires every returned DataStream time extent to intersect the requested value."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/datastream-by-obsprop",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#datastreamsFilterByObservedProperty()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /datastreams with the released Datastream schema, derives observedProperty local or URI identifiers from observedProperties and optional /properties evidence, queries observedProperty with seed identifiers, and requires every returned DataStream to carry the requested observed property evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/datastream-by-foi",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#datastreamsFilterByFeatureOfInterest()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /datastreams and, where present, /datastreams/{id}/samplingFeatures with released schemas, derives sampling and ultimate feature local/global identifiers, queries foi, and replays the same evidence collection for every returned DataStream."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/obs-by-phenomenontime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#observationsFilterByPhenomenonTime()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /observations with the released Observation endpoint schema, derives a seed phenomenonTime, queries phenomenonTime, and requires every returned Observation phenomenonTime to intersect the requested value."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/obs-by-resulttime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#observationsFilterByResultTime()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /observations with the released Observation endpoint schema, derives a seed resultTime, queries resultTime, requires every returned Observation to intersect the requested value, and additionally exercises resultTime=latest when parseable resultTime seed evidence exists."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/obs-by-foi",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#observationsFilterByFeatureOfInterest()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /observations, derives sampling feature local/global identifiers from Observation FOI evidence and optional /samplingFeatures expansion, queries foi, and requires every returned Observation to carry the requested feature evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/controlstream-by-issuetime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#controlstreamsFilterByIssueTime()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /controlstreams with the released ControlStream endpoint schema, derives a seed issueTime, queries issueTime, and requires every returned ControlStream time extent to intersect the requested value."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/controlstream-by-exectime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#controlstreamsFilterByExecutionTime()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /controlstreams with the released ControlStream endpoint schema, derives a seed executionTime, queries executionTime, and requires every returned ControlStream time extent to intersect the requested value."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/controlstream-by-controlprop",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#controlstreamsFilterByControlledProperty()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /controlstreams with the released ControlStream schema, derives controlledProperty local or URI identifiers from controlledProperties and optional /properties evidence, queries controlledProperty, and requires every returned ControlStream to carry the requested controlled property evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/controlstream-by-foi",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#controlstreamsFilterByFeatureOfInterest()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates /controlstreams and, where present, /controlstreams/{id}/samplingFeatures with released schemas, derives sampling and ultimate feature local/global identifiers, queries foi, and replays the same evidence collection for every returned ControlStream."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/cmd-by-issuetime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandsFilterByIssueTime()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates root /commands and every discovered /controlstreams/{id}/commands endpoint with the released Command schema, derives seed issueTime evidence per available endpoint, queries issueTime, and requires every returned Command to intersect the requested value."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/cmd-by-exectime",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandsFilterByExecutionTime()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates root and nested Command endpoints, derives seed executionTime evidence per available endpoint, queries executionTime, and requires every returned Command to intersect the requested value."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/cmd-by-status",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandsFilterByStatusCode()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates root and nested Command endpoints, derives statusCode evidence from currentStatus, queries statusCode per endpoint, and requires every returned Command to expose the requested current status code."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/cmd-by-sender",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandsFilterBySender()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates root and nested Command endpoints, derives sender evidence per available endpoint, queries sender, and requires every returned Command to expose the requested sender value."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/cmd-by-foi",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandsFilterByFeatureOfInterest()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure validates root and nested Command endpoints, derives sampling feature local/global identifiers from Command FOI evidence and optional /samplingFeatures expansion, queries foi, and requires every returned Command to carry the requested feature evidence."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/status-by-statuscode",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#commandStatusFilterByStatusCode()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure obtains Commands from root and nested endpoints, validates each /commands/{cmdId}/status endpoint with the released CommandStatus schema, derives statusCode evidence, queries statusCode, and requires every returned CommandStatus item to expose the requested code."
+    },
+    {
+      "part": 2,
+      "test": "/conf/advanced-filtering/event-by-type",
+      "kind": "exact",
+      "implementation": "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests#systemEventsFilterByEventType()",
+      "reviewedBy": "Codex Sprint 64 ATS line review",
+      "reviewedOn": "2026-08-01",
+      "evidence": "The independent released procedure runtime-gates exact SystemEvent declaration, validates /systemEvents with the released SystemEvent endpoint schema, derives event type evidence from eventType, type, or definition, queries eventType, and requires every returned SystemEvent to expose the requested event type evidence."
     }
   ]
 }

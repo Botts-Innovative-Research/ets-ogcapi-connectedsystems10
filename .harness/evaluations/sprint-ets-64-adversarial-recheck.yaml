@@ -1,0 +1,88 @@
+verdict: APPROVE
+confidence: 0.97
+reviewer: Raze
+reviewed_at_utc: "2026-08-01T08:20:58Z"
+review_mode: focused_recheck_only_no_implementation_changes
+scope:
+  sprint: ets-64
+  story: S-ETS-64-01
+  finding: RAZE-ETS64-FALSEPASS-001
+  target_conformance_class: /conf/advanced-filtering
+  target_requirement: /req/advanced-filtering/event-by-type
+  prior_report: .harness/evaluations/sprint-ets-64-adversarial.yaml
+  checked:
+    - _bmad/agents/adversarial-reviewer.md
+    - .harness/contracts/sprint-ets-64.yaml
+    - openspec/change-proposals/CP-024-part2-advanced-filtering-closure.md
+    - epics/stories/s-ets-64-01-part2-advanced-filtering-closure.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+    - _bmad/traceability.md
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringSupport.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java
+    - ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/
+finding_status:
+  id: RAZE-ETS64-FALSEPASS-001
+  severity: HIGH
+  previous_status: OPEN
+  status: CLOSED
+  result: closed
+  assessment: >
+    The false PASS path is removed. SystemEvent event-type evidence now comes
+    from eventType first and definition second; the generic SystemEvent type
+    discriminator is no longer accepted as event-type evidence. A focused
+    regression covers type=SystemEvent plus an actual definition and proves
+    definition is selected for the event-by-type predicate.
+evidence:
+  code:
+    - path: src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/Part2AdvancedFilteringSupport.java:736
+      observed: "systemEventType() checks eventType and then definition; there is no fallback to event.get(\"type\")."
+    - path: src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java:120
+      observed: "Regression keeps eventType evidence accepted."
+    - path: src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java:122
+      observed: "Regression keeps definition evidence accepted."
+    - path: src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java:124
+      observed: "Regression covers type=SystemEvent plus definition=urn:ogc:event:calibration and expects the definition value."
+    - path: src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/advancedfiltering/VerifyPart2AdvancedFilteringTests.java:126
+      observed: "Regression rejects generic type=SystemEvent when no eventType or definition is present."
+  contract:
+    - path: .harness/contracts/sprint-ets-64.yaml
+      observed: "status is READY_FOR_RAZE_RECHECK; raze_findings marks RAZE-ETS64-FALSEPASS-001 as FIXED_PENDING_RECHECK; pushed remains PENDING."
+  verification_artifacts:
+    - path: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/formatter-after-raze-falsepass-fix.txt
+      observed: "spring-javaformat:apply BUILD SUCCESS, finished at 2026-08-01T08:02:23Z."
+    - path: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/focused-after-raze-falsepass-fix.txt
+      observed: "Focused Docker Maven ran VerifyTestNGSuiteDependency and VerifyPart2AdvancedFilteringTests: 83 tests, 0 failures, 0 errors, 0 skipped; BUILD SUCCESS."
+    - path: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/full-maven-after-raze-falsepass-fix.txt
+      observed: "Full Docker Maven completed with existing skips: 762 tests, 0 failures, 0 errors, 3 skipped; BUILD SUCCESS."
+    - path: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/local-osh-smoke-after-raze-falsepass-fix.txt
+      observed: "Local OSH TeamEngine smoke reached the IUT and exited honestly non-green: 260 total, 36 passed, 21 failed, 203 skipped."
+    - path: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/advanced-filtering-smoke-summary-after-raze-falsepass-fix.txt
+      observed: "All 18 Sprint 64 Advanced Filtering methods SKIP because prerequisite method indirectPropertyFiltersAreTransitive skipped before IUT access."
+    - path: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/no-mutation-oracle-after-raze-falsepass-fix.txt
+      observed: "recognized_iut_request_logs=181."
+    - path: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/request-method-counts-after-raze-falsepass-fix.txt
+      observed: "GET=186 and no POST, PUT, PATCH, or DELETE counts."
+    - path: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/teamengine-runtime-immutability-after-raze-falsepass-fix.txt
+      observed: "TeamEngine 6 runtime immutability and validator-adapter runtime checks pass for image sha256:fe3c3f03d1ffbc0b5e657a23f3e079c3983116203ec2457e6bbaf83f58f63f28."
+  documentation_honesty:
+    - path: openspec/change-proposals/CP-024-part2-advanced-filtering-closure.md
+      observed: "Status says the initial Raze gap is fixed and pending recheck/push reconciliation."
+    - path: epics/stories/s-ets-64-01-part2-advanced-filtering-closure.md
+      observed: "Status says Raze Gap Fixed; Pending Recheck/Push, and Definition of Done leaves Raze review and push unchecked."
+    - path: ops/status.md
+      observed: "Sprint 64 section says final Raze recheck, commit, and push remain pending."
+    - path: ops/test-results.md
+      observed: "Sprint 64 section says focused Raze recheck, commit, and push remain pending."
+    - path: ops/changelog.md
+      observed: "Sprint 64 entry says focused Raze recheck, commit, and push remain pending."
+    - path: _bmad/traceability.md
+      observed: "Sprint 64 row says RAZE GAP FIXED/PENDING RECHECK, not approved, complete, or pushed."
+assessment_notes:
+  - "No Docker, Maven, TeamEngine, or implementation reruns were performed during this focused recheck; Raze inspected the post-fix artifacts requested by the user."
+  - "The E2E evidence is present but not green; this is honestly documented as existing local OSH gaps and prerequisite skips, not as Sprint 64 positive filter execution."
+  - "Docs no longer overclaim completion before push for Sprint 64."
+required_fixes: []

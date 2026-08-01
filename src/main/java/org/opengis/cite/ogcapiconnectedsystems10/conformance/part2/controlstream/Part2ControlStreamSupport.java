@@ -93,7 +93,7 @@ public final class Part2ControlStreamSupport {
 				requirement);
 	}
 
-	static void validateFeatureOfInterestEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateFeatureOfInterestEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		if (endpoint == null || !endpoint.isAbsolute()) {
 			throw new IllegalArgumentException("endpoint must be an absolute URI");
 		}

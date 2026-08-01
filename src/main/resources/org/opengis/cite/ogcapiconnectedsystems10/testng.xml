@@ -118,12 +118,11 @@
        and Part 1 /req/system as prerequisites; every direct procedure remains
        runtime-gated for the System Events declaration and no streaming or mutation
        request is issued. -->
-  <!-- Sprint 25 S-ETS-25-01 (REQ-ETS-PART2-006): Part 2 Advanced Filtering group
-       added as a read-only declaration-gated subset. It depends on
-       "core common systemfeatures" rather than Part2ApiCommon, Part 1 AdvancedFiltering,
-       or Part 2 resource-class groups so exact /conf/advanced-filtering declaration
-       and prerequisite-honesty SKIPs remain visible instead of being hidden by
-       upstream cascade-SKIPs on the default GeoRobotix IUT. -->
+  <!-- Sprint 64 S-ETS-64-01 (REQ-ETS-PART2-006): Part 2 Advanced Filtering now
+       implements the eighteen released Annex A procedures exactly. It inherits
+       Part 2 API Common and Part 1 Advanced Filtering directly because OGC 23-002
+       /req/advanced-filtering lists both as prerequisites; resource-specific
+       conformance classes remain runtime gates inside each direct procedure. -->
   <!-- Sprint 26 S-ETS-26-01 (REQ-ETS-PART2-007): Part 2 Create/Replace/Delete group
        added as a safety-gated subset. It depends on "core common systemfeatures" so
        foundational resources are available, but not on Part2ApiCommon or Part 2
@@ -188,7 +187,7 @@
         <group name="part2controlstream" depends-on="part2apicommon"/>
         <group name="part2feasibility" depends-on="part2controlstream"/>
         <group name="part2systemevent" depends-on="part2apicommon systemfeatures"/>
-        <group name="part2advancedfiltering" depends-on="core common systemfeatures"/>
+        <group name="part2advancedfiltering" depends-on="part2apicommon advancedfiltering"/>
         <group name="part2createreplacedelete" depends-on="core common systemfeatures"/>
         <group name="part2update" depends-on="core common systemfeatures"/>
         <group name="part2json" depends-on="core common"/>

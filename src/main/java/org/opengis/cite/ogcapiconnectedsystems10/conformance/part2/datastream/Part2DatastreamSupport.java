@@ -31,15 +31,15 @@ import io.restassured.response.Response;
 /**
  * Exact released ATS support for OGC 23-002 Part 2 Datastreams and Observations.
  */
-final class Part2DatastreamSupport {
+public final class Part2DatastreamSupport {
 
-	static final String JSON = "application/json";
+	public static final String JSON = "application/json";
 
-	static final String GEOJSON = "application/geo+json";
+	public static final String GEOJSON = "application/geo+json";
 
-	static final Set<String> JSON_MEDIA = Set.of(JSON);
+	public static final Set<String> JSON_MEDIA = Set.of(JSON);
 
-	static final Set<String> FEATURE_OF_INTEREST_MEDIA = Set.of(GEOJSON, JSON);
+	public static final Set<String> FEATURE_OF_INTEREST_MEDIA = Set.of(GEOJSON, JSON);
 
 	static final String DATASTREAM_COLLECTION_SCHEMA = "dataStreamCollection.json";
 
@@ -72,17 +72,17 @@ final class Part2DatastreamSupport {
 	private Part2DatastreamSupport() {
 	}
 
-	static void validateDatastreamEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateDatastreamEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		validateJsonEndpoint(endpoint, pages, DATASTREAM_COLLECTION_SCHEMA, DATASTREAM_SCHEMA, "DataStream",
 				requirement);
 	}
 
-	static void validateObservationEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateObservationEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		validateJsonEndpoint(endpoint, pages, OBSERVATION_COLLECTION_SCHEMA, OBSERVATION_SCHEMA, "Observation",
 				requirement);
 	}
 
-	static void validateFeatureOfInterestEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateFeatureOfInterestEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		if (endpoint == null || !endpoint.isAbsolute()) {
 			throw new IllegalArgumentException("endpoint must be an absolute URI");
 		}
@@ -247,7 +247,7 @@ final class Part2DatastreamSupport {
 		}
 	}
 
-	static Map<String, Object> parseObject(Response response, URI source, String requirement) {
+	public static Map<String, Object> parseObject(Response response, URI source, String requirement) {
 		try {
 			Map<String, Object> body = response.jsonPath().getMap("$");
 			if (body == null) {
@@ -262,7 +262,7 @@ final class Part2DatastreamSupport {
 		}
 	}
 
-	static String encodePathToken(String value) {
+	public static String encodePathToken(String value) {
 		return URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20");
 	}
 

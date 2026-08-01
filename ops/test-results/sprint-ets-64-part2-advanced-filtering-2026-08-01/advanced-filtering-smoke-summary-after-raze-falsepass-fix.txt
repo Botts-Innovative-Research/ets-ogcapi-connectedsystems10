@@ -1,0 +1,24 @@
+testng_results {'ignored': '0', 'total': '260', 'passed': '36', 'failed': '21', 'skipped': '203'}
+class org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.advancedfiltering.Part2AdvancedFilteringTests
+method_count 18
+status_counts {'SKIP': 18}
+SKIP commandStatusFilterByStatusCode
+SKIP commandsFilterByExecutionTime
+SKIP commandsFilterByFeatureOfInterest
+SKIP commandsFilterByIssueTime
+SKIP commandsFilterBySender
+SKIP commandsFilterByStatusCode
+SKIP controlstreamsFilterByControlledProperty
+SKIP controlstreamsFilterByExecutionTime
+SKIP controlstreamsFilterByFeatureOfInterest
+SKIP controlstreamsFilterByIssueTime
+SKIP datastreamsFilterByFeatureOfInterest
+SKIP datastreamsFilterByObservedProperty
+SKIP datastreamsFilterByPhenomenonTime
+SKIP datastreamsFilterByResultTime
+SKIP observationsFilterByFeatureOfInterest
+SKIP observationsFilterByPhenomenonTime
+SKIP observationsFilterByResultTime
+SKIP systemEventsFilterByEventType
+setup SKIP fetchPart2AdvancedFilteringInputs
+setup_message Part 2 Advanced Filtering setup skipped before IUT access because prerequisite method indirectPropertyFiltersAreTransitive skipped.

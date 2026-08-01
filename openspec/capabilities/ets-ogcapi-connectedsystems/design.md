@@ -2383,6 +2383,26 @@ non-green because Part 1 System prerequisite evidence skips before SystemEvent
 access, while the implementation and coverage gates pass and no IUT mutation is
 emitted.
 
+## Sprint 64 Part 2 Advanced Filtering Exact Closure
+
+Sprint 64 replaces the historical Sprint 25 Part 2 Advanced Filtering subset
+with the exact released OGC 23-002 Annex A.6 procedures. The deployed class must
+contain eighteen independent TestNG methods and no standalone declaration or
+prerequisite helper procedures. Runtime declaration and prerequisite checks move
+to setup/support gates, and TestNG inheritance becomes
+`part2advancedfiltering -> part2apicommon advancedfiltering`, matching Clause
+13 prerequisites.
+
+Each procedure is read-only and seed-derived. It selects a value from existing
+DataStream, Observation, ControlStream, Command, CommandStatus, or SystemEvent
+resources, issues the released query parameter at the canonical endpoint and,
+where Annex A requires it, nested endpoints, validates response shape with the
+released resource-class helpers, and then checks every returned resource against
+the selected predicate. Empty seed data, unavailable endpoints, unsupported
+media, or missing association evidence SKIP with precise evidence-limitation
+messages instead of PASSing. The implementation must not create filter seed
+resources, subscribe to streams, or modify OSH/TeamEngine.
+
 ## Status
 
 **Approved for Sprint 1 + Sprint 2 + Sprint 3 + Sprint 4 ratifications**. Generator (Dana) may begin S-ETS-04-* work in Pat's recommended dependency order (S-ETS-04-04 → -01 → -03 → -02 → -05) per Sprint 4 contract `deferred_to_generator` block. Architect's 3 deferred decisions + 2 surfaced suggestions are now resolved; ADR-009 v2 amendment + ADR-010 v2 amendment + this Sprint 4 Ratifications section's stub-IUT credential-leak design + Subsystems coverage scope cover them.

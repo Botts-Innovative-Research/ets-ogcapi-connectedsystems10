@@ -1,8 +1,69 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T06:53Z
+Last updated: 2026-08-01T07:52Z
 
 ## Current Sprint Evidence
+
+Sprint 64 Part 2 Advanced Filtering released ATS:
+
+- Trigger: user instructed "Continue."
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/advanced-filtering`.
+- Implementation: exactly eighteen TestNG methods, one per released Annex A.6
+  target; direct `part2advancedfiltering -> part2apicommon advancedfiltering`
+  dependency; released DataStream, Observation, ControlStream, Command,
+  CommandStatus, and SystemEvent filtered-resource validation; seed-derived
+  predicate evidence for PASS; honest SKIP behavior for missing declaration,
+  incomplete prerequisites, unavailable endpoints, or absent positive seed
+  evidence; no mutation or streaming subscription.
+- Focused test-first red: formatter initially reported new-code formatting
+  violations; after formatting, the focused structural run reproduced the
+  Sprint 25 historical gap with stale TestNG dependency, nine methods instead
+  of eighteen, standalone declaration/prerequisite helpers, and missing Sprint
+  64 scenario trace. Final corrected focused verification: `83/0/0/0`.
+- Released ATS coverage update: `1/0/0/0`; coverage audit: `23/0/0/0`.
+  Overall coverage is `240 total / 153 exact / 2 helper / 77 candidate /
+  8 unmapped`; Part 2 is `130 total / 62 exact / 0 helper / 60 candidate /
+  8 unmapped`; Part 2 Advanced Filtering is
+  `18 exact / 0 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS (`formatter-after-unit-fix.txt`).
+- Initial Raze review found `RAZE-ETS64-FALSEPASS-001`: generic SystemEvent
+  `type` could be used as event-type evidence. The gapfix removes that fallback
+  and adds a regression proving `type=SystemEvent` plus actual `definition`
+  uses `definition` as the event type. Post-gapfix focused Docker Maven:
+  `83/0/0/0` (`focused-after-raze-falsepass-fix.txt`).
+- Focused Raze recheck: `APPROVE 0.97`,
+  `RAZE-ETS64-FALSEPASS-001` closed, `required_fixes: []`.
+- Post-gapfix full Docker Maven: `762 tests / 0 failures / 0 errors /
+  3 skipped` (`full-maven-after-raze-falsepass-fix.txt`).
+- Post-gapfix local OSH TeamEngine smoke exited honestly non-green at
+  `260 total / 36 passed / 21 failed / 203 skipped`. All eighteen Sprint 64
+  Advanced Filtering methods SKIP with reason:
+  `Part 2 Advanced Filtering setup skipped before IUT access because prerequisite method indirectPropertyFiltersAreTransitive skipped.`
+  The 21 failures are existing local OSH SensorML/Deployment/Procedure/
+  Property/Sampling Feature gaps outside Sprint 64.
+- No-mutation oracle: `recognized_iut_request_logs=181`; request method counts
+  are `GET=186`, zero POST/PUT/PATCH/DELETE.
+- Current evidence directory:
+  `ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/`;
+  durable tracked files include formatter/focused/coverage/full-Maven logs and
+  post-gapfix `local-osh-smoke-after-raze-falsepass-fix.txt`,
+  `s-ets-01-03-teamengine-smoke-after-raze-falsepass-fix-2026-08-01.xml`,
+  `s-ets-01-03-teamengine-container-after-raze-falsepass-fix-2026-08-01.txt`,
+  `advanced-filtering-smoke-summary-after-raze-falsepass-fix.txt`,
+  `no-mutation-oracle-after-raze-falsepass-fix.txt`,
+  `request-method-counts-after-raze-falsepass-fix.txt`,
+  `teamengine-runtime-immutability-after-raze-falsepass-fix.txt`, and
+  `local-osh-provenance.txt`.
+- TeamEngine 6 runtime immutability verification passed for post-gapfix smoke
+  image
+  `sha256:fe3c3f03d1ffbc0b5e657a23f3e079c3983116203ec2457e6bbaf83f58f63f28`;
+  local OSH is clean at checkout `4c87a65`, zero commits ahead, and mounted
+  read-only at `/opt/osh`.
+- No OSH or TeamEngine source/binary changes, hosted CI, streaming
+  subscriptions, or IUT mutation were introduced.
+- Commit and push remain pending.
 
 Sprint 63 Part 2 System Events released ATS:
 

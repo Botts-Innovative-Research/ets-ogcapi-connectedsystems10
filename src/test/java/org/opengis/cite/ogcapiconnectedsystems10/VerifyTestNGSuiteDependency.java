@@ -2000,12 +2000,12 @@ public class VerifyTestNGSuiteDependency {
 	// ===== Sprint 25 S-ETS-25-01 — Part 2 Advanced Filtering group =====
 
 	/**
-	 * Sprint 25 S-ETS-25-01 (REQ-ETS-PART2-006): the canonical testng.xml SHALL declare
+	 * Sprint 64 S-ETS-64-01 (REQ-ETS-PART2-006): the canonical testng.xml SHALL declare
 	 * {@code <group name="part2advancedfiltering" depends-on=
-	 * "core common systemfeatures"/>}.
+	 * "part2apicommon advancedfiltering"/>}.
 	 */
 	@org.junit.Test
-	public void testPart2AdvancedFilteringGroupDependsOnCoreCommonAndSystemFeatures() throws Exception {
+	public void testPart2AdvancedFilteringGroupDependsOnPart2ApiCommonAndPart1AdvancedFiltering() throws Exception {
 		XmlSuite suite = parseShippedSuite();
 		assertFalse("Expected at least one <test> block in testng.xml", suite.getTests().isEmpty());
 
@@ -2021,18 +2021,8 @@ public class VerifyTestNGSuiteDependency {
 								+ "' uses comma syntax, which TestNG treats as a nonexistent single group at runtime",
 						dependsOn.contains(","));
 				Set<String> dependencyTokens = dependencyTokens(dependsOn);
-				assertTrue("group '" + PART2_ADVANCED_FILTERING_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ CORE_GROUP + "'", dependencyTokens.contains(CORE_GROUP));
-				assertTrue("group '" + PART2_ADVANCED_FILTERING_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ COMMON_GROUP + "'", dependencyTokens.contains(COMMON_GROUP));
-				assertTrue("group '" + PART2_ADVANCED_FILTERING_GROUP + "' depends-on '" + dependsOn + "' missing '"
-						+ SYSTEMFEATURES_GROUP + "'", dependencyTokens.contains(SYSTEMFEATURES_GROUP));
-				assertFalse("group '" + PART2_ADVANCED_FILTERING_GROUP
-						+ "' must not depend on part2apicommon; otherwise GeoRobotix would cascade-SKIP before exact /conf/advanced-filtering declaration honesty can run",
-						dependencyTokens.contains(PART2_API_COMMON_GROUP));
-				assertFalse("group '" + PART2_ADVANCED_FILTERING_GROUP
-						+ "' must not depend on Part 1 advancedfiltering; otherwise default IUTs missing that prerequisite hide Part 2 declaration-honesty SKIPs",
-						dependencyTokens.contains(ADVANCEDFILTERING_GROUP));
+				assertEquals("group '" + PART2_ADVANCED_FILTERING_GROUP + "' has wrong dependency set",
+						Set.of(PART2_API_COMMON_GROUP, ADVANCEDFILTERING_GROUP), dependencyTokens);
 				assertFalse("group '" + PART2_ADVANCED_FILTERING_GROUP
 						+ "' must not depend on part2datastream; filter-specific skip reasons should remain runtime-visible",
 						dependencyTokens.contains(PART2_DATASTREAM_GROUP));
@@ -2048,7 +2038,7 @@ public class VerifyTestNGSuiteDependency {
 		}
 		assertTrue(
 				"testng.xml does not declare <group name=\"" + PART2_ADVANCED_FILTERING_GROUP
-						+ "\" depends-on=\"core common systemfeatures\"/> — see Sprint 25 S-ETS-25-01.",
+						+ "\" depends-on=\"part2apicommon advancedfiltering\"/> — see Sprint 64 S-ETS-64-01.",
 				foundDependency);
 	}
 

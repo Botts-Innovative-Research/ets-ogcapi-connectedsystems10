@@ -1,0 +1,9 @@
+osh_checkout_path=/home/nh/docker/osh-core
+osh_checkout_head=4c87a65c9a967d52af9df476e65d7862c7673a15
+osh_checkout_status_entries=0
+osh_upstream_behind_ahead=0	3
+osh_cons_sys_bundle_build=4c87a65
+osh_cons_sys_jar_sha256=4af3bb25e850c959126baa797cecd980dd54bab26cac1140611c91757274d942
+osh_runtime_image=sha256:a0249ce15f22ae01620eee65e6737735b2b01a50f0a58b3c580f3d2a1dd21c7e
+osh_runtime_mounts=/opt/osh=false;/state=true;
+

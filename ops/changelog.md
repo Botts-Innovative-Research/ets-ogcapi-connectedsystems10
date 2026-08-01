@@ -2,6 +2,48 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-01 - Sprint 64 Part 2 Advanced Filtering released ATS closure
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-024, S-ETS-64-01, and the Sprint 64 contract for exact OGC 23-002
+  Part 2 `/conf/advanced-filtering` closure.
+- Replaced the historical Sprint 25 nine-method Advanced Filtering subset with
+  exactly eighteen released Annex A.6 procedure methods.
+- Removed non-ATS declaration/prerequisite helper methods from the deployed
+  Part 2 Advanced Filtering class and changed `part2advancedfiltering` TestNG
+  inheritance to `part2apicommon advancedfiltering`.
+- Implemented read-only filter checks for DataStream, Observation,
+  ControlStream, Command, CommandStatus, and SystemEvent targets using
+  seed-derived predicate evidence and released resource-class schema helpers.
+- Promoted all eighteen released mappings to reviewed exact and regenerated
+  coverage: `240 total / 153 exact / 2 helper / 77 candidate / 8 unmapped`,
+  with Part 2 Advanced Filtering `18 exact / 0 candidate / 0 unmapped`.
+- Verification logs archived under
+  `ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/`:
+  focused red captured formatting plus historical structural gaps, final
+  focused `83/0/0/0`, coverage update `1/0/0/0`, coverage audit `23/0/0/0`,
+  post-gapfix full Docker Maven `762/0/0/3`, and post-gapfix local OSH
+  TeamEngine `260/36/21/203`
+  with all eighteen Sprint 64 methods SKIPping honestly because inherited Part
+  1 Advanced Filtering prerequisite `indirectPropertyFiltersAreTransitive`
+  skipped.
+- Raze initial review found `RAZE-ETS64-FALSEPASS-001`; the gapfix removed
+  generic SystemEvent `type` fallback from event-type evidence, kept
+  `eventType` then `definition`, added the requested regression, reran
+  formatter, focused Maven `83/0/0/0`, full Maven `762/0/0/3`, and local OSH
+  smoke `260/36/21/203`.
+- Focused Raze recheck returned `APPROVE 0.97` with
+  `RAZE-ETS64-FALSEPASS-001` closed and no required fixes.
+- No-mutation oracle recognized 181 local-OSH IUT request logs; method counts
+  are `GET=186` and zero POST/PUT/PATCH/DELETE.
+- TeamEngine 6 runtime immutability verification passed for post-gapfix smoke
+  image
+  `sha256:fe3c3f03d1ffbc0b5e657a23f3e079c3983116203ec2457e6bbaf83f58f63f28`;
+  local OSH remained a clean external checkout at `4c87a65`, zero commits
+  ahead, with `/opt/osh` mounted read-only.
+- Commit and push remain pending.
+
 ## 2026-08-01 - Sprint 63 Part 2 System Events released ATS closure
 
 **Triggered by user instruction**: "Continue."

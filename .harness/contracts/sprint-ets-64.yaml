@@ -1,0 +1,54 @@
+sprint: ets-64
+story: S-ETS-64-01
+title: Part 2 Advanced Filtering released ATS closure
+status: READY_TO_PUSH
+date: 2026-08-01
+requirement: REQ-ETS-PART2-006
+scope:
+  include:
+    - OGC 23-002 /conf/advanced-filtering eighteen released procedures
+    - direct TestNG dependency on part2apicommon and advancedfiltering
+    - read-only DataStream, Observation, ControlStream, Command, CommandStatus, and SystemEvent filter probes
+    - seed-derived predicate validation for returned resources
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - IUT mutation or seed-resource creation
+    - streaming or long-lived event subscriptions
+    - OSH or TeamEngine source or binary changes
+success_criteria:
+  - id: part2_advanced_filtering_eighteen_methods
+    description: Part2AdvancedFilteringTests exposes exactly eighteen TestNG methods, one per released ATS target.
+  - id: part2_advanced_filtering_direct_prerequisites
+    description: testng.xml declares part2advancedfiltering depends-on part2apicommon and advancedfiltering.
+  - id: part2_advanced_filtering_exact_coverage
+    description: coverage report shows 18 exact mappings and no candidates/unmapped tests for 2:/conf/advanced-filtering.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: PASS
+  focused: PASS
+  coverage: PASS
+  formatter: PASS
+  full_maven: PASS_WITH_EXISTING_SKIPS
+  e2e_local_osh: HONEST_NON_GREEN_EXISTING_IUT_GAPS
+  no_mutation: PASS
+  raze: PASS
+  pushed: PENDING
+evidence:
+  directory: ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/
+  focused_corrected: focused-after-raze-falsepass-fix.txt
+  coverage_update: coverage-report-update.txt
+  coverage_audit: coverage-audit.txt
+  full_maven: full-maven-after-raze-falsepass-fix.txt
+  e2e_smoke_console: local-osh-smoke-after-raze-falsepass-fix.txt
+  e2e_smoke_xml: s-ets-01-03-teamengine-smoke-after-raze-falsepass-fix-2026-08-01.xml
+  e2e_container_log: s-ets-01-03-teamengine-container-after-raze-falsepass-fix-2026-08-01.txt
+  no_mutation: no-mutation-oracle-after-raze-falsepass-fix.txt
+  request_methods: request-method-counts-after-raze-falsepass-fix.txt
+raze_findings:
+  RAZE-ETS64-FALSEPASS-001: CLOSED
+raze_review:
+  initial: .harness/evaluations/sprint-ets-64-adversarial.yaml
+  recheck: .harness/evaluations/sprint-ets-64-adversarial-recheck.yaml
+  verdict: APPROVE
+  confidence: 0.97

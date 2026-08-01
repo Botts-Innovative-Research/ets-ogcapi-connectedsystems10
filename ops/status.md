@@ -1,6 +1,57 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T06:53Z
+Last updated: 2026-08-01T07:52Z
+
+## Sprint 64 Raze Approved - Part 2 Advanced Filtering Released ATS
+
+- User instruction: "Continue."
+- CP-024 and S-ETS-64-01 close the OGC 23-002 Part 2
+  `/conf/advanced-filtering` class as exactly eighteen released Annex A.6
+  procedures, pending final Raze/push reconciliation.
+- `Part2AdvancedFilteringTests` now exposes one independent TestNG method per
+  released target across DataStream, Observation, ControlStream, Command,
+  CommandStatus, and SystemEvent filters, removes the historical Sprint 25
+  declaration/prerequisite helper tests, and depends directly on
+  `part2apicommon advancedfiltering`.
+- Runtime checks remain read-only and validate filtered resources through the
+  released Part 2 helper boundaries. PASS requires seed-derived predicate
+  evidence; undeclared `/conf/advanced-filtering`, unavailable endpoints, empty
+  positive evidence, or incomplete prerequisites SKIP with reason rather than
+  producing false PASS.
+- Reviewed coverage is now `240 total / 153 exact / 2 helper / 77 candidate /
+  8 unmapped`; Part 2 is `130 total / 62 exact / 0 helper / 60 candidate /
+  8 unmapped`; `2:/conf/advanced-filtering` is
+  `18 exact / 0 candidate / 0 unmapped`.
+- Focused test-first evidence first exposed formatting drift and then the
+  historical structural gaps. Final focused verification passed `83/0/0/0`.
+- Raze initial review found `RAZE-ETS64-FALSEPASS-001`: `event-by-type` could
+  use generic SystemEvent `type` evidence instead of actual event type
+  evidence. The gapfix removes generic `type` fallback, accepts only
+  `eventType` then `definition`, and adds the requested `type=SystemEvent` plus
+  actual `definition` regression. Post-gapfix focused verification passed
+  `83/0/0/0`.
+- Focused Raze recheck returned `APPROVE 0.97` with
+  `RAZE-ETS64-FALSEPASS-001` closed and no required fixes.
+- Coverage update passed `1/0/0/0`; coverage audit passed `23/0/0/0`;
+  formatter passed; post-gapfix full Docker Maven completed
+  `762 tests / 0 failures / 0 errors / 3 skipped`.
+- Post-gapfix mandatory local OSH TeamEngine smoke reached TeamEngine and the
+  unmodified local OSH IUT, then exited honestly non-green at
+  `260 total / 36 passed / 21 failed / 203 skipped`. All eighteen Sprint 64
+  methods SKIP before Advanced Filtering IUT access because inherited Part 1
+  Advanced Filtering prerequisite `indirectPropertyFiltersAreTransitive`
+  skipped;
+  the 21 failures are existing local OSH SensorML/Deployment/Procedure/
+  Property/Sampling Feature gaps outside Sprint 64.
+- No-mutation oracle recognized 181 local-OSH IUT request logs. Method counts
+  are `GET=186`, zero POST/PUT/PATCH/DELETE. Tracked evidence:
+  `ops/test-results/sprint-ets-64-part2-advanced-filtering-2026-08-01/`.
+- Post-gapfix smoke image:
+  `sha256:fe3c3f03d1ffbc0b5e657a23f3e079c3983116203ec2457e6bbaf83f58f63f28`.
+  TeamEngine 6 runtime immutability verification passed. The local OSH
+  checkout mounted read-only at `/opt/osh` is clean at `4c87a65`, with
+  `sensorhub-service-consys-2.0.1.jar`.
+- Commit and push remain pending.
 
 ## Sprint 63 Complete - Part 2 System Events Released ATS
 
@@ -150,10 +201,14 @@ Last updated: 2026-08-01T06:53Z
 
 ## Next Recommended Work
 
-- The next highest-value Part 2 exact closure is OGC 23-002
-  `/conf/advanced-filtering`: eighteen released procedures remain, currently
-  `0 exact / 13 candidate / 5 unmapped`, and it directly follows System Events
-  in Annex A.6.
+- After Sprint 64 is Raze-approved and pushed, choose the next Part 2 exact
+  closure from the remaining classes: `/conf/create-replace-delete`
+  (`0 exact / 12 candidate / 4 unmapped`), `/conf/update`
+  (`0 exact / 14 candidate / 0 unmapped`), `/conf/json`
+  (`0 exact / 13 candidate / 1 unmapped`), or the SWE Common encoding classes
+  (each `0 exact / 7 candidate / 1 unmapped`). CRD/Update need stricter
+  mutation-IUT planning; JSON/SWE are more read-only but still depend on
+  healthy dynamic-resource evidence.
 
 ## Sprint 60 Complete - Part 2 Datastreams and Observations Released ATS
 

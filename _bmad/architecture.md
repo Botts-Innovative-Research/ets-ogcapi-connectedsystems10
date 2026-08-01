@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.67 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 63 Part 2 System Events exact closure)
+> Version: 2.0.68 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 64 Part 2 Advanced Filtering exact closure)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -8,6 +8,15 @@
 > **Authority**: this document binds the Generator (Dana). Where the PRD or capability spec
 > conflicts with an ADR or with this file's section, the ADR is authoritative for the decision
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
+
+> Sprint 64 reconciliation: Part 2 Advanced Filtering is now exact released
+> ATS: eighteen independent Annex A.6 TestNG procedures, direct Part 2 API
+> Common and Part 1 Advanced Filtering group dependency, read-only
+> DataStream/Observation/ControlStream/Command/CommandStatus/SystemEvent
+> filtered-resource validation through released helpers, seed-derived predicate
+> evidence for PASS, honest prerequisite/declaration/seed SKIPs, exact
+> reviewed mappings, and zero IUT-bound mutation. It introduces no new runtime
+> component and no OSH/TeamEngine modification.
 
 > Sprint 63 reconciliation: Part 2 System Events is now exact released ATS:
 > five independent TestNG procedures, direct Part 2 API Common and Part 1

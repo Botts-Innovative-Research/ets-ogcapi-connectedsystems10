@@ -29,11 +29,11 @@ import io.restassured.response.Response;
 /**
  * Exact released ATS support for OGC 23-002 Part 2 System Events.
  */
-final class Part2SystemEventSupport {
+public final class Part2SystemEventSupport {
 
-	static final String JSON = "application/json";
+	public static final String JSON = "application/json";
 
-	static final Set<String> JSON_MEDIA = Set.of(JSON);
+	public static final Set<String> JSON_MEDIA = Set.of(JSON);
 
 	static final String SYSTEM_EVENT_COLLECTION_SCHEMA = "systemEventCollection.json";
 
@@ -50,7 +50,7 @@ final class Part2SystemEventSupport {
 	private Part2SystemEventSupport() {
 	}
 
-	static void validateSystemEventEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
+	public static void validateSystemEventEndpoint(URI endpoint, List<PageDocument> pages, String requirement) {
 		if (endpoint == null || !endpoint.isAbsolute()) {
 			throw new IllegalArgumentException("endpoint must be an absolute URI");
 		}
@@ -142,7 +142,7 @@ final class Part2SystemEventSupport {
 		return copied;
 	}
 
-	static Map<String, Object> parseObject(Response response, URI source, String requirement) {
+	public static Map<String, Object> parseObject(Response response, URI source, String requirement) {
 		try {
 			Map<String, Object> body = response.jsonPath().getMap("$");
 			if (body == null) {
@@ -157,7 +157,7 @@ final class Part2SystemEventSupport {
 		}
 	}
 
-	static String encodePathToken(String value) {
+	public static String encodePathToken(String value) {
 		return URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20");
 	}
 

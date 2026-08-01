@@ -1,0 +1,104 @@
+verdict: APPROVE
+confidence: 0.96
+reviewed_at_utc: 2026-08-01T11:52:01Z
+rechecked_at_utc: 2026-08-01T12:00:04Z
+reviewer: Raze
+scope: Sprint 66 Part 2 /conf/swecommon-json exact released ATS closure
+reviewed_scope:
+  - AGENTS.md
+  - _bmad/agents/adversarial-reviewer.md
+  - .harness/contracts/sprint-ets-66.yaml
+  - openspec/change-proposals/CP-026-part2-swecommon-json-closure.md
+  - epics/stories/s-ets-66-01-part2-swecommon-json-closure.md
+  - epics/epic-ets-03-part2-classes.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - _bmad/traceability.md
+  - _bmad/architecture.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/test-results.md
+  - ops/known-issues.md
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/Part2SweCommonJsonTests.java
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/swecommonjson/VerifyPart2SweCommonJsonTests.java
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+  - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+  - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/reviewed-ats-mappings.json
+  - ops/ats-coverage-report.json
+  - ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/
+reruns:
+  expensive_docker_maven_teamengine: not_run
+  reason: Artifact inspection was sufficient; no concrete blocker required reproduction.
+findings:
+  - id: RAZE-ETS66-DOC-001
+    severity: LOW
+    status: CLOSED
+    title: Sprint 66 exact closure leaves stale Sprint 29 subset wording in suite wiring comments.
+    files:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+      - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    evidence:
+      - Initial review found testng.xml describing the part2swecommonjson group as "Sprint 29 S-ETS-29-01" and "read-only schema/media-validation subset".
+      - Initial review found VerifyTestNGSuiteDependency labels and assertion messages still referencing "Sprint 29 S-ETS-29-01".
+      - Focused recheck confirmed testng.xml now identifies "Sprint 66 S-ETS-66-01", says the class supersedes the Sprint 29 subset, and describes eight exact released Annex A.10 procedures.
+      - Focused recheck confirmed VerifyTestNGSuiteDependency now labels the constant, section header, comments, and assertion messages as Sprint 66 S-ETS-66-01 exact released ATS wiring.
+      - Remaining Sprint 29 text in the scoped SWE Common JSON lines is explicit superseded-history context, not stale current-status wording.
+    impact: Closed; shipped suite-wiring comments now agree with Sprint 66 exact released ATS status.
+    required_fix: none
+observations:
+  - id: RAZE-ETS66-EXACTNESS-001
+    severity: INFO
+    status: REVIEWED_NO_REQUIRED_FIX
+    title: Eight Annex A.10 mappings are one-to-one and exact in the coverage inventory.
+    evidence:
+      - Part2SweCommonJsonTests exposes exactly eight TestNG @Test methods with one canonical /req/swecommon-json target per method.
+      - VerifyPart2SweCommonJsonTests enforces eight released targets, no standalone declaration/prerequisite/resource helper methods, exact media type helpers, schema resources, mapping evidence helpers, and write advertisement negatives.
+      - reviewed-ats-mappings.json marks the eight /conf/swecommon-json entries exact, and ops/ats-coverage-report.json reports 2:/conf/swecommon-json as 8 exact / 0 candidate / 0 unmapped.
+  - id: RAZE-ETS66-ENCODING-SKIP-001
+    severity: INFO
+    status: REVIEWED_NO_REQUIRED_FIX
+    title: Observation and Command encoding procedures avoid false PASS without data-value validator evidence.
+    evidence:
+      - observationSweJsonEncodingRequiresParentSchemaAndCandidateEvidence requires parent Observation Schema, JSONEncoding, candidate Observation, exact application/swe+json response media, and non-empty body, then SKIPs until a dedicated SWE Common JSON data-value validator is available.
+      - commandSweJsonEncodingRequiresParentSchemaAndCandidateEvidence applies the same guard to Command evidence.
+      - Story, contract, OpenSpec, traceability, ops/status.md, ops/test-results.md, and ops/known-issues.md document this as no-safe-evidence SKIP rather than positive conformance certification.
+  - id: RAZE-ETS66-WRITE-MEDIA-001
+    severity: INFO
+    status: REVIEWED_NO_REQUIRED_FIX
+    title: mediatype-write requires every scoped Observation/Command POST or PUT to advertise application/swe+json.
+    evidence:
+      - sweCommonJsonMediatypeWriteAdvertisedByApiDefinitionOnly reads service-desc OpenAPI metadata and fails when the API definition is unavailable.
+      - missingSweJsonWriteOperations iterates every matching scoped path and records each POST/PUT operation missing exact application/swe+json requestBody content.
+      - Structural negatives reject OPTIONS-only evidence, application/json fallback, vendor draft media, unrelated Datastream paths, and Command status subresources.
+  - id: RAZE-ETS66-E2E-001
+    severity: INFO
+    status: REVIEWED_NO_REQUIRED_FIX
+    title: Local OSH E2E and no-mutation evidence are documented honestly.
+    evidence:
+      - local-osh-smoke.txt reports TestNG total=256 passed=27 failed=20 skipped=209, not a green run.
+      - local-osh-smoke.xml shows all eight Part2SweCommonJsonTests methods SKIP before resource endpoint access because local OSH lacks http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules.
+      - no-mutation-oracle.txt reports recognized_iut_request_logs=144 and request-method-counts.txt reports GET=144 with DELETE=0, PATCH=0, POST=0, PUT=0.
+      - git ignore checks found Sprint 66 evidence files untracked but not ignored; this is acceptable before commit.
+verification_artifacts:
+  formatter: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/formatter.txt
+  focused_maven: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/focused-maven.txt
+  coverage_update: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/coverage-update-after-evidence-wording.txt
+  coverage_audit: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/coverage-audit-after-evidence-wording.txt
+  full_maven_initial_failure: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/full-maven.txt
+  full_maven_retry: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/full-maven-retry.txt
+  local_osh_smoke: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/local-osh-smoke.txt
+  local_osh_xml: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/local-osh-smoke.xml
+  no_mutation_oracle: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/no-mutation-oracle.txt
+  method_counts: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/request-method-counts.txt
+  runtime_immutability: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/teamengine-runtime-immutability-smoke-image.txt
+recheck:
+  id: RAZE-ETS66-DOC-001
+  verdict: CLOSED
+  evidence:
+    - ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/focused-raze-doc-fix.txt
+    - ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/formatter-raze-doc-fix.txt
+    - ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/focused-raze-doc-fix-retry.txt
+  result:
+    - First focused rerun failed during spring-javaformat validation, before focused tests, on VerifyTestNGSuiteDependency.java formatting.
+    - Formatter apply succeeded.
+    - Focused retry passed VerifyTestNGSuiteDependency with 76 tests / 0 failures / 0 errors / 0 skipped.
+required_fixes: []

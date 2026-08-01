@@ -1,8 +1,56 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T10:53Z
+Last updated: 2026-08-01T12:04Z
 
 ## Current Sprint Evidence
+
+Sprint 66 Part 2 SWE Common JSON Encoding released ATS:
+
+- Trigger: user instructed "Continue with Part 2."
+- Released source: OGC 23-002 `v1.0.0`, commit
+  `8e03b236a049849f2ccc24b4fd9fdce5ff69bed2`, Part 2
+  `/conf/swecommon-json`.
+- Implementation: exactly eight TestNG methods, one per released Annex A.10
+  target; no standalone declaration/prerequisite/resource-condition helper
+  procedures; exact `/conf/swecommon-json` and SWE Common 3.0 JSON Encoding
+  Rules setup gate; strict `application/swe+json` response media for read
+  evidence; Connected Systems wrapper plus reusable SWE `recordSchema`
+  validation; canonical Time/IssueTime mapping evidence; scoped
+  non-mutating service-desc OpenAPI mediatype-write checks requiring every
+  advertised scoped POST/PUT operation to include exact `application/swe+json`;
+  no IUT mutation.
+- Observation/Command encoding methods intentionally SKIP without parent
+  schema, candidate body, and proven SWE Common JSON data-value validator
+  evidence rather than passing from shape-only content.
+- Focused verification:
+  `114 tests / 0 failures / 0 errors / 0 skipped` (`focused-maven.txt`).
+- Released ATS coverage update exits 0; coverage audit exits 0. Current
+  coverage is `240 total / 175 exact / 2 helper / 57 candidate / 6 unmapped`;
+  Part 2 is `130 total / 84 exact / 0 helper / 40 candidate / 6 unmapped`;
+  Part 2 SWE Common JSON is `8 exact / 0 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS (`formatter.txt`).
+- Full Docker Maven initially failed before tests on a transient Maven Central
+  `tagsoup` transfer reset (`full-maven.txt`); retry passed
+  `770 tests / 0 failures / 0 errors / 3 skipped` (`full-maven-retry.txt`).
+- Local OSH TeamEngine smoke exited honestly non-green at
+  `256 total / 27 passed / 20 failed / 209 skipped` (`local-osh-smoke.txt`).
+  All eight Sprint 66 methods SKIP with reason:
+  `http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules - /req/swecommon-json prerequisite is missing; Sprint 66 SWE Common JSON procedures skip before SWE Common JSON resource endpoint access.`
+  The 20 failures are existing local OSH SensorML/Deployment/Procedure/Property
+  gaps outside Sprint 66.
+- No-mutation oracle: `recognized_iut_request_logs=144`; request method counts
+  are `GET=144`, zero POST/PUT/PATCH/DELETE.
+- Evidence directory:
+  `ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/`.
+- TeamEngine 6 runtime immutability verification passed for smoke image
+  `sha256:5e0b95d12d7639fe56d22e57aab875a45fc06227eed823f37b50ac7e5efa4b00`.
+- Raze initial review found one low stale Sprint 29 suite-wiring comment gap;
+  the gapfix updated `testng.xml` and `VerifyTestNGSuiteDependency`, formatter
+  passed, and focused retry passed `76 tests / 0 failures / 0 errors /
+  0 skipped`.
+- Final Raze recheck returned `APPROVE 0.96`; `RAZE-ETS66-DOC-001` is closed
+  with `required_fixes: []`.
+- Commit and push remain pending.
 
 Sprint 65 Part 2 JSON Encoding released ATS:
 

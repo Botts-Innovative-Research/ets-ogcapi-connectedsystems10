@@ -1,0 +1,67 @@
+sprint: ets-66
+story: S-ETS-66-01
+title: Part 2 SWE Common JSON Encoding released ATS closure
+status: VERIFIED_RAZE_APPROVED_PUSH_PENDING
+date: 2026-08-01
+requirement: REQ-ETS-PART2-010
+scope:
+  include:
+    - OGC 23-002 /conf/swecommon-json eight released procedures
+    - exact mediatype-read and mediatype-write procedures
+    - Observation Schema and Command Schema SWE Common JSON wrapper validation
+    - canonical Time and IssueTime mapping evidence
+    - honest Observation and Command encoding evidence guards
+    - released ATS exact mapping and coverage report update
+  exclude:
+    - IUT mutation or seed-resource creation
+    - positive SWE Common JSON write lifecycle behavior
+    - SWE Common Text or Binary exact closure
+    - external validator dependency changes
+success_criteria:
+  - id: part2_swecommon_json_eight_methods
+    description: Part2SweCommonJsonTests exposes exactly eight TestNG methods, one per released ATS target.
+  - id: part2_swecommon_json_mediatype_read_exact
+    description: /conf/swecommon-json/mediatype-read is implemented and reviewed exact.
+  - id: part2_swecommon_json_exact_coverage
+    description: coverage report shows 8 exact mappings and no candidates/unmapped tests for 2:/conf/swecommon-json.
+  - id: no_mutation
+    description: E2E request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests.
+verification:
+  test_first: OBSERVED_NOT_ARCHIVED
+  focused: PASS_114_0_0_0
+  coverage: PASS_8_EXACT_0_CANDIDATE_0_UNMAPPED
+  formatter: PASS
+  full_maven: PASS_ON_RETRY_770_0_0_3_AFTER_DEPENDENCY_TRANSFER_FAILURE
+  e2e_local_osh: HONEST_NON_GREEN_256_27_20_209
+  no_mutation: PASS_GET_144_ZERO_WRITES
+  raze: APPROVE_0_96_REQUIRED_FIXES_CLOSED
+  pushed: PENDING
+evidence:
+  directory: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/
+  files:
+    - coverage-update.txt
+    - coverage-audit.txt
+    - formatter.txt
+    - focused-maven.txt
+    - full-maven.txt
+    - full-maven-retry.txt
+    - local-osh-smoke.txt
+    - local-osh-smoke.xml
+    - local-osh-container.txt
+    - no-mutation-oracle.txt
+    - request-method-counts.txt
+    - teamengine-runtime-immutability-smoke-image.txt
+    - coverage-update-after-evidence-wording.txt
+    - coverage-audit-after-evidence-wording.txt
+    - focused-raze-doc-fix.txt
+    - formatter-raze-doc-fix.txt
+    - focused-raze-doc-fix-retry.txt
+released_targets:
+  - /conf/swecommon-json/mediatype-read
+  - /conf/swecommon-json/mediatype-write
+  - /conf/swecommon-json/obsschema-schema
+  - /conf/swecommon-json/obsschema-mapping
+  - /conf/swecommon-json/observation-encoding
+  - /conf/swecommon-json/cmdschema-schema
+  - /conf/swecommon-json/cmdschema-mapping
+  - /conf/swecommon-json/command-encoding

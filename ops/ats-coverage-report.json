@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 258,
+  "suiteTestMethodCount" : 256,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -3304,72 +3304,136 @@
     "classIdentifier" : "/conf/swecommon-json",
     "target" : "/req/swecommon-json/mediatype-read",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
-    "reviewedMapping" : null
+    "state" : "exact",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#sweCommonJsonMediatypeReadSupportedOnObservationOrCommandEndpoints()" ],
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/swecommon-json/mediatype-read",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#sweCommonJsonMediatypeReadSupportedOnObservationOrCommandEndpoints()",
+      "reviewedBy" : "Codex Sprint 66 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates exact /conf/swecommon-json plus the SWE Common JSON Encoding Rules prerequisite, then requires concrete application/swe+json retrieval evidence from Observation endpoints when Datastream is declared and from Command endpoints when ControlStream is declared; non-404 HTTP failures and wrong content types fail rather than pass."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-json/mediatype-write",
     "classIdentifier" : "/conf/swecommon-json",
     "target" : "/req/swecommon-json/mediatype-write",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#sweCommonJsonMediatypeWriteAdvertisedByApiDefinitionOnly()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/swecommon-json/mediatype-write",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#sweCommonJsonMediatypeWriteAdvertisedByApiDefinitionOnly()",
+      "reviewedBy" : "Codex Sprint 66 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure uses only API-definition evidence in the default read-only profile, fails when the API definition is unavailable, and requires every advertised scoped Observation or Command POST/PUT operation to include exact application/swe+json request-body media while ignoring OPTIONS, unrelated endpoints, subresources, and vendor media."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-json/obsschema-schema",
     "classIdentifier" : "/conf/swecommon-json",
     "target" : "/req/swecommon-json/obsschema-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSchemaSweJsonValidWhenDatastreamCandidateAvailable()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/swecommon-json/obsschema-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSchemaSweJsonValidWhenDatastreamCandidateAvailable()",
+      "reviewedBy" : "Codex Sprint 66 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates Datastream applicability, traverses every retrieved Datastream with bounded same-origin pagination, requests /datastreams/{id}/schema?obsFormat=application/swe+json, requires JSON-compatible schema metadata whose obsFormat member is application/swe+json, validates the Connected Systems Observation schema wrapper, and validates the embedded SWE Common record schema adapter."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-json/obsschema-mapping",
     "classIdentifier" : "/conf/swecommon-json",
     "target" : "/req/swecommon-json/obsschema-mapping",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSchemaSweMappingRequiresTimeComponentEvidence()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/swecommon-json/obsschema-mapping",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSchemaSweMappingRequiresTimeComponentEvidence()",
+      "reviewedBy" : "Codex Sprint 66 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure obtains scoped Datastream SWE JSON schema evidence and fails unless the schema contains a canonical Time component definition with the expected name, URI definition, SWE type, and presence outside the result and parameters component groups."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-json/observation-encoding",
     "classIdentifier" : "/conf/swecommon-json",
     "target" : "/req/swecommon-json/observation-encoding",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSweJsonEncodingRequiresParentSchemaAndCandidateEvidence()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/swecommon-json/observation-encoding",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#observationSweJsonEncodingRequiresParentSchemaAndCandidateEvidence()",
+      "reviewedBy" : "Codex Sprint 66 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure requires Datastream schema evidence and a concrete Observation retrieved as application/swe+json before any positive result; until dedicated SWE Common data-value validation is available, it reports prerequisite-incomplete rather than passing from content-type or shape-only evidence."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-json/cmdschema-schema",
     "classIdentifier" : "/conf/swecommon-json",
     "target" : "/req/swecommon-json/cmdschema-schema",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSchemaSweJsonValidWhenControlStreamCandidateAvailable()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/swecommon-json/cmdschema-schema",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSchemaSweJsonValidWhenControlStreamCandidateAvailable()",
+      "reviewedBy" : "Codex Sprint 66 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure gates ControlStream applicability, traverses every retrieved ControlStream with bounded same-origin pagination, requests /controlstreams/{id}/schema?cmdFormat=application/swe+json, requires JSON-compatible schema metadata whose commandFormat member is application/swe+json, validates the Connected Systems Command schema wrapper, and validates the embedded SWE Common record schema adapter."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-json/cmdschema-mapping",
     "classIdentifier" : "/conf/swecommon-json",
     "target" : "/req/swecommon-json/cmdschema-mapping",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/swecommon-json/cmdschema-mapping",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSchemaSweMappingRequiresIssueTimeEvidenceWhenPresent()",
+      "reviewedBy" : "Codex Sprint 66 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure obtains scoped ControlStream SWE JSON schema evidence and fails when an IssueTime component is present but does not use the canonical issueTime name, URI definition, and SWE Time type outside the command parameters component group."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-json/command-encoding",
     "classIdentifier" : "/conf/swecommon-json",
     "target" : "/req/swecommon-json/command-encoding",
     "supporting" : false,
-    "state" : "candidate",
+    "state" : "exact",
     "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSweJsonEncodingRequiresParentSchemaAndCandidateEvidence()" ],
-    "reviewedMapping" : null
+    "reviewedMapping" : {
+      "part" : 2,
+      "test" : "/conf/swecommon-json/command-encoding",
+      "kind" : "exact",
+      "implementation" : "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.swecommonjson.Part2SweCommonJsonTests#commandSweJsonEncodingRequiresParentSchemaAndCandidateEvidence()",
+      "reviewedBy" : "Codex Sprint 66 ATS line review",
+      "reviewedOn" : "2026-08-01",
+      "evidence" : "The released procedure requires ControlStream schema evidence and a concrete Command retrieved as application/swe+json before any positive result; until dedicated SWE Common data-value validation is available, it reports prerequisite-incomplete rather than passing from content-type or shape-only evidence."
+    }
   }, {
     "part" : 2,
     "identifier" : "/conf/swecommon-text/mediatype-read",
@@ -3517,10 +3581,10 @@
   } ],
   "summary" : {
     "total" : 240,
-    "exact" : 167,
+    "exact" : 175,
     "helper" : 2,
-    "candidate" : 64,
-    "unmapped" : 7,
+    "candidate" : 57,
+    "unmapped" : 6,
     "byPart" : {
       "1" : {
         "total" : 110,
@@ -3531,10 +3595,10 @@
       },
       "2" : {
         "total" : 130,
-        "exact" : 76,
+        "exact" : 84,
         "helper" : 0,
-        "candidate" : 47,
-        "unmapped" : 7
+        "candidate" : 40,
+        "unmapped" : 6
       }
     },
     "byClass" : {
@@ -3701,10 +3765,10 @@
       },
       "2:/conf/swecommon-json" : {
         "total" : 8,
-        "exact" : 0,
+        "exact" : 8,
         "helper" : 0,
-        "candidate" : 7,
-        "unmapped" : 1
+        "candidate" : 0,
+        "unmapped" : 0
       },
       "2:/conf/swecommon-text" : {
         "total" : 8,

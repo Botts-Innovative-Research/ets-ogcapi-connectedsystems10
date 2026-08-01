@@ -182,10 +182,10 @@ public class VerifyTestNGSuiteDependency {
 	private static final String PART2_JSON_GROUP = "part2json";
 
 	/**
-	 * Sprint 29 S-ETS-29-01 — Part 2 SWE Common JSON Encoding read-only subset group
-	 * (depends on Core and Common; runtime checks keep /conf/swecommon-json declaration,
-	 * SWE Encoding Rules prerequisite, resource condition gates, schema evidence, and
-	 * no-public-mutation behavior visible).
+	 * Sprint 66 S-ETS-66-01 — Part 2 SWE Common JSON Encoding exact released ATS group,
+	 * superseding the Sprint 29 subset (depends on Core and Common; runtime checks keep
+	 * /conf/swecommon-json declaration, SWE JSON Encoding Rules prerequisite, resource
+	 * condition gates, schema evidence, and no-public-mutation behavior visible).
 	 */
 	private static final String PART2_SWE_COMMON_JSON_GROUP = "part2swecommonjson";
 
@@ -2599,10 +2599,10 @@ public class VerifyTestNGSuiteDependency {
 				coAlloc);
 	}
 
-	// ===== Sprint 29 S-ETS-29-01 — Part 2 SWE Common JSON group =====
+	// ===== Sprint 66 S-ETS-66-01 — Part 2 SWE Common JSON exact released ATS group =====
 
 	/**
-	 * Sprint 29 S-ETS-29-01 (REQ-ETS-PART2-010): the canonical testng.xml SHALL declare
+	 * Sprint 66 S-ETS-66-01 (REQ-ETS-PART2-010): the canonical testng.xml SHALL declare
 	 * {@code <group name="part2swecommonjson" depends-on="core common"/>}.
 	 */
 	@org.junit.Test
@@ -2645,11 +2645,11 @@ public class VerifyTestNGSuiteDependency {
 			}
 		}
 		assertTrue("testng.xml does not declare <group name=\"" + PART2_SWE_COMMON_JSON_GROUP
-				+ "\" depends-on=\"core common\"/> — see Sprint 29 S-ETS-29-01.", foundDependency);
+				+ "\" depends-on=\"core common\"/> - see Sprint 66 S-ETS-66-01.", foundDependency);
 	}
 
 	/**
-	 * Sprint 29 S-ETS-29-01: every Part 2 SWE Common JSON @Test method SHALL carry
+	 * Sprint 66 S-ETS-66-01: every Part 2 SWE Common JSON @Test method SHALL carry
 	 * {@code groups = "part2swecommonjson"}.
 	 */
 	@org.junit.Test
@@ -2676,7 +2676,7 @@ public class VerifyTestNGSuiteDependency {
 	}
 
 	/**
-	 * Sprint 29 S-ETS-29-01: Part 2 SWE Common JSON classes MUST be co-located in the
+	 * Sprint 66 S-ETS-66-01: Part 2 SWE Common JSON classes MUST be co-located in the
 	 * SAME {@code <test>} block as Core, Common, and the resource classes whose
 	 * declarations are checked at runtime.
 	 */
@@ -2730,7 +2730,7 @@ public class VerifyTestNGSuiteDependency {
 				+ part2DatastreamClassNames + "), Part 2 ControlStream (" + part2ControlStreamClassNames
 				+ "), Part 2 Create/Replace/Delete (" + part2CreateReplaceDeleteClassNames
 				+ "), and Part 2 SWE Common JSON (" + part2SweCommonJsonClassNames
-				+ ") must be declared in the SAME <test> block of testng.xml so declaration-gated runtime checks resolve within scope. See Sprint 29 S-ETS-29-01.",
+				+ ") must be declared in the SAME <test> block of testng.xml so declaration-gated runtime checks resolve within scope. See Sprint 66 S-ETS-66-01.",
 				coAlloc);
 	}
 

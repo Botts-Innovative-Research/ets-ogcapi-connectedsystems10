@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.69 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 65 Part 2 JSON Encoding exact closure)
+> Version: 2.0.70 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 66 Part 2 SWE Common JSON exact closure Raze approved/push pending)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -8,6 +8,19 @@
 > **Authority**: this document binds the Generator (Dana). Where the PRD or capability spec
 > conflicts with an ADR or with this file's section, the ADR is authoritative for the decision
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
+
+> Sprint 66 reconciliation: Part 2 SWE Common JSON Encoding is now exact
+> released ATS with final Raze approval pending push: eight independent Annex A.10 TestNG
+> procedures, no standalone declaration/prerequisite/resource-condition helper
+> methods, exact `/conf/swecommon-json` plus SWE Common 3.0 JSON Encoding Rules
+> setup gating before SWE Common JSON resource endpoint access,
+> `application/swe+json` read evidence, Connected Systems wrapper plus
+> reusable SWE `recordSchema` validation, canonical Time/IssueTime mapping
+> evidence, no false PASS for Observation/Command encoding without data-value
+> validator evidence, scoped service-desc OpenAPI write-media checks requiring
+> every advertised scoped POST/PUT operation to include exact
+> `application/swe+json`, exact reviewed mappings, and zero IUT-bound mutation.
+> It introduces no new runtime component and no OSH/TeamEngine modification.
 
 > Sprint 65 reconciliation: Part 2 JSON Encoding is now exact released ATS:
 > fourteen independent Annex A.9 TestNG procedures, no standalone

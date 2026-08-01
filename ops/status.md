@@ -1,6 +1,61 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T10:53Z
+Last updated: 2026-08-01T12:04Z
+
+## Sprint 66 Raze Approved - Part 2 SWE Common JSON Encoding Released ATS
+
+- User instruction: "Continue with Part 2."
+- CP-026 and S-ETS-66-01 close the OGC 23-002 Part 2
+  `/conf/swecommon-json` class as exactly eight released Annex A.10
+  procedures. Raze is approved; commit and push remain pending.
+- `Part2SweCommonJsonTests` now exposes one independent TestNG method per
+  released target, including the formerly unmapped `mediatype-read`, and
+  removes the historical standalone declaration/prerequisite/resource-gate
+  helper tests.
+- Runtime checks remain read-only. Setup gates exact `/conf/swecommon-json`
+  and SWE Common 3.0 JSON Encoding Rules before SWE Common JSON resource
+  endpoint access. Observation-side methods condition on `/conf/datastream`;
+  Command-side methods condition on `/conf/controlstream`.
+- `mediatype-read` requires concrete Observation or Command evidence returned
+  with exact `Content-Type: application/swe+json` and parseable JSON.
+  Schema procedures validate Connected Systems wrapper schemas plus extracted
+  SWE `recordSchema` content, and mapping procedures require canonical
+  Time/IssueTime evidence.
+- Observation/Command encoding procedures SKIP rather than shape-PASS when
+  parent schema, candidate body, or a proven SWE Common JSON data-value
+  validator is unavailable.
+- `mediatype-write` uses only service-desc OpenAPI metadata and requires exact
+  `application/swe+json` request bodies on every advertised POST/PUT operation
+  matching scoped Observation or Command endpoint templates. OPTIONS, unrelated
+  POST/PUT operations, partial scoped write coverage, and live mutation
+  requests cannot produce PASS evidence.
+- Reviewed coverage is now `240 total / 175 exact / 2 helper / 57 candidate /
+  6 unmapped`; Part 2 is `130 total / 84 exact / 0 helper / 40 candidate /
+  6 unmapped`; `2:/conf/swecommon-json` is
+  `8 exact / 0 candidate / 0 unmapped`.
+- Formatter passed; focused verification passed `114/0/0/0`; coverage
+  update/audit passed; initial full Docker Maven failed before tests on a
+  transient Maven Central `tagsoup` transfer reset; retry completed
+  `770 tests / 0 failures / 0 errors / 3 skipped`.
+- Mandatory local OSH TeamEngine smoke reached TeamEngine and the unmodified
+  local OSH IUT, then exited honestly non-green at
+  `256 total / 27 passed / 20 failed / 209 skipped`. All eight Sprint 66
+  methods SKIP before SWE Common JSON resource endpoint access because local
+  OSH lacks `http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules`;
+  the 20 failures are existing local OSH SensorML/Deployment/Procedure/
+  Property gaps outside Sprint 66.
+- No-mutation oracle recognized 144 local-OSH IUT request logs. Method counts
+  are `GET=144`, zero POST/PUT/PATCH/DELETE. Tracked evidence:
+  `ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/`.
+- Smoke image:
+  `sha256:5e0b95d12d7639fe56d22e57aab875a45fc06227eed823f37b50ac7e5efa4b00`.
+  TeamEngine 6 runtime immutability verification passed.
+- Initial Raze review found one low stale Sprint 29 suite-wiring comment gap.
+  The gapfix updated `testng.xml` and `VerifyTestNGSuiteDependency`; formatter
+  passed and focused retry passed `76/0/0/0`.
+- Final Raze recheck is `APPROVE 0.96`; `RAZE-ETS66-DOC-001` is closed and
+  `required_fixes: []`.
+- Commit and push remain pending.
 
 ## Sprint 65 Complete - Part 2 JSON Encoding Released ATS
 

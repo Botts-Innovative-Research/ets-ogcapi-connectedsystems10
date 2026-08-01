@@ -2,6 +2,47 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-01 - Sprint 66 Part 2 SWE Common JSON Encoding released ATS closure
+
+**Triggered by user instruction**: "Continue with Part 2."
+
+- Added CP-026, S-ETS-66-01, and the Sprint 66 contract for exact OGC 23-002
+  Part 2 `/conf/swecommon-json` closure.
+- Replaced the historical Sprint 29 helper/subset class with exactly eight
+  released Annex A.10 procedure methods, including the formerly unmapped
+  `/conf/swecommon-json/mediatype-read`.
+- Removed non-ATS declaration/prerequisite/resource-gate helper methods from
+  the deployed Part 2 SWE Common JSON class while preserving setup gates for
+  exact `/conf/swecommon-json` and SWE Common JSON Encoding Rules before
+  resource endpoint access.
+- Implemented read-only `application/swe+json` media checks, Connected Systems
+  wrapper schema validation, reusable SWE `recordSchema` validation, canonical
+  Time/IssueTime mapping evidence, and explicit no-safe-evidence SKIPs for
+  Observation/Command encoding without proven data-value validator evidence.
+- Scoped `mediatype-write` to non-mutating service-desc OpenAPI metadata and
+  require every advertised POST/PUT operation matching supported Observation
+  or Command endpoint templates to include exact `application/swe+json`.
+- Promoted all eight released mappings to reviewed exact and regenerated
+  coverage: `240 total / 175 exact / 2 helper / 57 candidate / 6 unmapped`,
+  with Part 2 SWE Common JSON `8 exact / 0 candidate / 0 unmapped`.
+- Verification logs archived under
+  `ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/`: focused
+  `114/0/0/0`, coverage audit pass, formatter pass, full Docker Maven retry
+  `770/0/0/3` after an initial Maven Central dependency transfer failure, and
+  local OSH TeamEngine `256/27/20/209` with all eight methods SKIPping before
+  SWE Common JSON resource endpoint access because local OSH lacks
+  `http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules`.
+- No-mutation oracle recognized 144 local-OSH IUT request logs; method counts
+  are `GET=144` and zero POST/PUT/PATCH/DELETE.
+- TeamEngine 6 runtime immutability verification passed for smoke image
+  `sha256:5e0b95d12d7639fe56d22e57aab875a45fc06227eed823f37b50ac7e5efa4b00`.
+- Initial Raze review found one low stale Sprint 29 suite-wiring comment gap;
+  the gapfix updated `testng.xml` and `VerifyTestNGSuiteDependency`, formatter
+  passed, and focused retry passed `76/0/0/0`.
+- Final Raze recheck returned `APPROVE 0.96`; `RAZE-ETS66-DOC-001` is closed
+  with `required_fixes: []`.
+- Commit and push remain pending.
+
 ## 2026-08-01 - Sprint 65 Part 2 JSON Encoding released ATS closure
 
 **Triggered by user instruction**: "Continue until you need my input."

@@ -1617,10 +1617,10 @@ configured non-dedicated IUT
 
 #### REQ-ETS-PART2-010: Part 2 SWE Common JSON Encoding
 - **Priority**: MUST
-- **Status**: RELEASED_ATS_PARTIAL_UNREVIEWED
-- **Historical increment**: (Sprint 29 Generator; public GeoRobotix E2E failed)
-- **Description**: The ETS SHALL implement the first declaration-gated, read-only OGC 23-002 Clause 16.2 SWE Common JSON Encoding subset using official `/req/swecommon-json` and `/conf/swecommon-json` identifiers. Runtime checks SHALL gate on exact `/conf/swecommon-json` declaration, keep the SWE Common 3.0 JSON Encoding Rules prerequisite visible, condition Observation assertions on declared `/conf/datastream`, condition Command assertions on declared `/conf/controlstream`, verify `application/swe+json` read support only from advertised/retrieved Observation or Command evidence, validate SWE Common schema resources against bundled `observationSchemaSwe.json` and `commandSchemaSwe.json`, and treat write-media-type support as API-definition/readiness evidence only unless a safe dedicated mutable IUT is explicitly enabled in a later sprint.
-- **Rationale**: PRD SC-3 requires Part 2 coverage. OGC 23-002 Annex A.10 defines `/conf/swecommon-json` with Requirements 107-114. Sprint 29 implements the first read-only SWE Common JSON subset after Sprint 28 JSON Encoding through `Part2SweCommonJsonTests`, TestNG `part2swecommonjson` wiring, helper regressions, exact `application/swe+json` media checks, bundled SWE schema validation, and non-mutating API-definition write-media checks. Current GeoRobotix declares `/conf/swecommon-json`, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete`, but still returns HTTP 500 for DataStream/Observation read paths and fails reachable ControlStream schema preconditions before SWE Common Command Schema PASS evidence. The ETS therefore fails or skips honestly rather than passing from declaration, sibling classes, API format lists, or OPTIONS evidence alone.
+- **Status**: RELEASED_ATS_EXACT_RAZE_APPROVED_PUSH_PENDING
+- **Historical increment**: Sprint 29 Generator implemented the first partial subset. Sprint 66 replaces that surface with exact reviewed Annex A.10 procedures.
+- **Description**: The ETS SHALL implement the eight released OGC 23-002 Clause 16.2 SWE Common JSON Encoding procedures using official `/req/swecommon-json` and `/conf/swecommon-json` identifiers. Runtime checks SHALL gate on exact `/conf/swecommon-json` declaration and the SWE Common 3.0 JSON Encoding Rules prerequisite before SWE Common JSON resource endpoint access, condition Observation assertions on declared `/conf/datastream`, condition Command assertions on declared `/conf/controlstream`, verify `application/swe+json` read support only from concrete Observation or Command evidence, validate SWE Common schema resources against bundled `observationSchemaSwe.json` and `commandSchemaSwe.json` plus the reusable SWE Common `recordSchema` adapter, and treat write-media-type support as API-definition evidence only unless a safe dedicated mutable IUT is explicitly enabled in a later sprint.
+- **Rationale**: PRD SC-3 requires Part 2 coverage. OGC 23-002 Annex A.10 defines `/conf/swecommon-json` with Requirements 107-114. Sprint 66 supersedes the Sprint 29 helper/subset surface by requiring exactly one deployed TestNG method per released Annex A.10 target, adding the previously unmapped mediatype-read procedure, retaining read-only no-mutation behavior, and promoting only procedures with reviewed exact mapping evidence.
 - **Maps to**: PRD FR-ETS-40.
 
 #### SCENARIO-ETS-PART2-010-SWEJSON-CONFORMANCE-DECLARED-001 (CRITICAL)
@@ -1631,9 +1631,16 @@ configured non-dedicated IUT
 
 #### SCENARIO-ETS-PART2-010-SWE-JSON-ENCODING-RULES-PREREQUISITE-001 (NORMAL)
 **GIVEN** OGC 23-002 Clause 16.2 lists SWE Common 3.0 JSON Encoding Rules as a prerequisite
-**WHEN** the ETS reports full `/conf/swecommon-json` closure
-**THEN** `http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules` must be visible or explicitly reported as prerequisite-incomplete
-**AND** scoped read-only checks may still run when `/conf/swecommon-json` and the relevant Part 2 resource class are declared.
+**WHEN** the released Annex A.10 procedures execute
+**THEN** `http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules` must be visible before SWE Common JSON resource endpoint access
+**AND** missing prerequisite evidence produces setup-level SKIP behavior rather than PASS from scoped resource evidence.
+
+#### SCENARIO-ETS-PART2-010-RELEASED-PROCEDURES-001 (CRITICAL)
+**GIVEN** OGC 23-002 Annex A.10 defines eight SWE Common JSON test targets
+**WHEN** `Part2SweCommonJsonTests` is inspected or executed
+**THEN** the deployed class exposes exactly one TestNG method for each released target
+**AND** declaration, prerequisite, and resource-condition checks remain setup or per-procedure gates rather than standalone released ATS procedures
+**AND** `ops/ats-coverage-report.json` can promote the class only when all eight targets are reviewed exact.
 
 #### SCENARIO-ETS-PART2-010-RESOURCE-CONDITION-GATES-001 (CRITICAL)
 **GIVEN** Annex A.10 applies SWE Common JSON representation tests to Observation and Command resources
@@ -1670,10 +1677,10 @@ configured non-dedicated IUT
 
 #### SCENARIO-ETS-PART2-010-MEDIATYPE-WRITE-ADVERTISEMENT-001 (NORMAL)
 **GIVEN** Requirement 108 applies only when Create/Replace/Delete is implemented
-**WHEN** the ETS checks SWE Common JSON write-media-type support in the first increment
-**THEN** it uses API definition or explicit operation metadata to verify advertised `application/swe+json` support for CREATE or REPLACE operations on Observation or Command resource endpoints only
-**AND** advisory public GeoRobotix probes do not issue POST, PUT, PATCH, or DELETE
-**AND** OPTIONS, unrelated POST/PUT paths, and subresource paths such as Command status alone are readiness evidence, not mediatype-write PASS.
+**WHEN** the ETS checks SWE Common JSON write-media-type support
+**THEN** it uses API definition operation metadata to verify advertised `application/swe+json` support for CREATE or REPLACE operations on Observation or Command resource endpoints only
+**AND** every advertised scoped POST or PUT operation matching those endpoint templates must include exact `application/swe+json` requestBody content
+**AND** OPTIONS, unrelated POST/PUT paths, partial scoped write coverage, and subresource paths such as Command status alone are not mediatype-write PASS evidence.
 
 #### SCENARIO-ETS-PART2-010-UNAVAILABLE-ENDPOINT-HONESTY-001 (CRITICAL)
 **GIVEN** the current public IUT may declare `/conf/swecommon-json` while individual resource endpoints are unhealthy or inconsistent
@@ -1682,7 +1689,7 @@ configured non-dedicated IUT
 **AND** it never converts those outcomes into PASS from declaration, broad media-format lists, or existing sibling tests.
 
 #### SCENARIO-ETS-PART2-010-SMOKE-NO-PUBLIC-MUTATION-001 (CRITICAL)
-**GIVEN** TeamEngine smoke runs against the public GeoRobotix IUT
+**GIVEN** TeamEngine smoke runs against the local OSH IUT or any advisory public IUT
 **WHEN** the SWE Common JSON tests execute
 **THEN** request logs contain zero IUT-bound POST, PUT, PATCH, or DELETE requests
 **AND** any write-media-type or encoding behavior requiring mutation SKIPs or relies on non-mutating API-definition evidence only.
@@ -5884,7 +5891,7 @@ descendant groups SKIP.
   all-operation JSON write-advertisement checks, and honest E2E SKIP behavior
   when a declaring IUT lacks the SWE JSON record-components prerequisite or
   candidate resource evidence.
-- REQ-ETS-PART2-010 (Part 2 SWE Common JSON Encoding) - partially implemented by Sprint 29 Generator; full positive closure remains dependent on a healthy declaring IUT with SWE 3.0 JSON Encoding Rules visibility, valid DataStream/Observation SWE JSON reads, valid ControlStream/Command SWE Common JSON schema evidence, candidate Observation/Command resources, and non-mutating mediatype-write evidence. Mandatory GeoRobotix Generator smoke failed (`186 total / 31 passed / 22 failed / 133 skipped`) with zero matched public-IUT write requests.
+- REQ-ETS-PART2-010 (Part 2 SWE Common JSON Encoding) - Sprint 66 supersedes Sprint 29 with exact reviewed released ATS closure and final Raze approval pending push: eight Annex A.10 procedures, no standalone helper procedures, exact `application/swe+json` read evidence, bundled wrapper plus reusable SWE `recordSchema` validation, canonical Time/IssueTime mapping evidence, honest Observation/Command encoding SKIPs without proven data-value validator evidence, and non-mutating API-definition write checks requiring every advertised scoped POST/PUT operation to include exact `application/swe+json`. Coverage is `8 exact / 0 candidate / 0 unmapped`; focused Docker Maven passed `114/0/0/0`; full Docker Maven retry passed `770/0/0/3` after an initial dependency-transfer failure; mandatory local OSH TeamEngine E2E is honestly non-green at `256 total / 27 passed / 20 failed / 209 skipped`, with all eight Sprint 66 methods SKIPping before SWE Common JSON resource endpoint access because local OSH lacks `http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules`; no-mutation evidence is `GET=144`, zero POST/PUT/PATCH/DELETE; final Raze is `APPROVE 0.96` with no required fixes.
 - REQ-ETS-PART2-011 (Part 2 SWE Common Text Encoding) - partially implemented by Sprint 30 Generator. `Part2SweCommonTextTests` implements exact `/conf/swecommon-text` declaration gating, SWE Common 3.0 `/conf/text-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+text` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `TextEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`258 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`196 total / 33 passed / 28 failed / 135 skipped`); the new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 91`, `POST/PUT/PATCH/DELETE 0`).
 - REQ-ETS-PART2-012 (Part 2 SWE Common Binary Encoding) - partially implemented by Sprint 31 Generator. `Part2SweCommonBinaryTests` implements exact `/conf/swecommon-binary` declaration gating, SWE Common 3.0 `/conf/binary-encoding-rules` prerequisite visibility, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete` condition gates, exact `application/swe+binary` read checks, bundled `observationSchemaSwe.json`/`commandSchemaSwe.json` metadata validation with `BinaryEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating API-definition mediatype-write checks. Maven verification succeeded (`272 tests / 0 failures / 0 errors / 3 skipped`). Mandatory GeoRobotix Generator smoke failed (`206 total / 35 passed / 34 failed / 137 skipped`); the new SWE Common Binary group produced 3 PASS, 6 FAIL, and 2 SKIP, with no public-IUT mutation (`GET 99`, `POST/PUT/PATCH/DELETE 0`).
 - REQ-ETS-PART2-013 (Observation/Command binding cross-class closure) - partially implemented by Sprint 32 Generator as an internal project closure item, not a standalone OGC `/conf/observation-binding` class. `Part2ObservationCommandBindingTests` and helper regressions are implemented with group `part2binding`, no default fixture seeding, and GET-only positive closure guards. Sprints 33-38 add inline status/result regressions, local OSH seed/tasking fixture evidence, parent schema `f=json` request shaping, stream metadata and format assertions, and populated parent-candidate selection. Sprint 40's external OSH patch is retained as historical audit evidence only and is not an approved implementation path under CP-003/ADR-012. Full positive populated-IUT binding closure remains unclaimed and must proceed through ETS changes or an unmodified IUT.

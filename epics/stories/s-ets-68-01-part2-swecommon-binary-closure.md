@@ -1,9 +1,9 @@
 # S-ETS-68-01: Part 2 SWE Common Binary Encoding Released ATS Closure
 
 ## Status
-IMPLEMENTED_RAZE_APPROVED_PENDING_PUSH. Supersedes the historical Sprint 31
-partial `/conf/swecommon-binary` subset with exact reviewed released ATS
-mappings.
+DONE. Supersedes the historical Sprint 31 partial `/conf/swecommon-binary`
+subset with exact reviewed released ATS mappings. Implementation commit
+`bb3935e` is pushed to `origin/main`.
 
 ## User Instruction
 Triggered by: "Make the practical fix, then continue with the project - and
@@ -65,7 +65,7 @@ released procedures:
 - [x] Reviewed mappings promote `2:/conf/swecommon-binary` to
   `8 exact / 0 candidate / 0 unmapped`.
 - [x] Raze review is approved with no unresolved required fixes.
-- [ ] Completion evidence is committed and pushed.
+- [x] Completion evidence is committed and pushed.
 
 ## Implementation Evidence
 
@@ -108,6 +108,8 @@ Evidence directory:
 - TeamEngine 6 runtime immutability verification passed for smoke image
   `sha256:47ddcfe1b7143004eba7b9fc88b5173fe1f6b7fa47616459a5d5efde14eee21e`
   (`teamengine-runtime-immutability-after-raze-fixes.txt`).
+- Implementation and completion evidence are committed and pushed in
+  `bb3935e`.
 
 ## Out of Scope
 - IUT mutation or seed-resource creation.

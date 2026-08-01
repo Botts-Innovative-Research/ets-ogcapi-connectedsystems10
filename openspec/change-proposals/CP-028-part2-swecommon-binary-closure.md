@@ -1,6 +1,6 @@
 # CP-028 - Part 2 SWE Common Binary Encoding Released ATS Closure
 
-**Status**: Implemented; Raze approved with low concerns; pending push
+**Status**: Complete; pushed in `bb3935e`
 **Date**: 2026-08-01
 **Capability**: `ets-ogcapi-connectedsystems`
 **Requirement**: `REQ-ETS-PART2-012`
@@ -55,8 +55,8 @@ conformance class before endpoint access.
 
 ## Implementation Status
 
-Generator implementation and local verification are complete, with Raze
-recheck approval and push pending. `Part2SweCommonBinaryTests` now exposes exactly eight
+Generator implementation and local verification are complete and pushed in
+`bb3935e`. `Part2SweCommonBinaryTests` now exposes exactly eight
 released Annex A.12 TestNG methods, removes the Sprint 31 standalone helper
 procedures, adds the missing `mediatype-read` procedure, requires
 service-desc API-definition GET response-content advertisement plus concrete

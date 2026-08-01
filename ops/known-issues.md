@@ -139,7 +139,7 @@ Last updated: 2026-08-01T16:57Z
   JSON Encoding as exact implemented `REQ-ETS-PART2-009`, SWE Common JSON
   Encoding as exact implemented `REQ-ETS-PART2-010`, SWE Common Text
   Encoding as exact implemented `REQ-ETS-PART2-011`, SWE Common Binary
-  Encoding as exact implemented pending push `REQ-ETS-PART2-012`, and remaining
+  Encoding as exact implemented `REQ-ETS-PART2-012`, and remaining
   observation-binding placeholder as `REQ-ETS-PART2-013`. The former
   `/conf/system-history` placeholder is retired because OGC 23-002 Annex A does
   not define it; GeoRobotix's `/conf/system-history` declaration is treated as
@@ -206,7 +206,7 @@ Last updated: 2026-08-01T16:57Z
   pushed. Sprint 67 evidence is archived under
   `ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/`.
 - Sprint 68 supersedes Sprint 31 and closes SWE Common Binary Encoding as
-  exact released ATS pending push:
+  exact released ATS:
   `2:/conf/swecommon-binary` is
   `8 exact / 0 candidate / 0 unmapped`. The current local OSH primary E2E
   still SKIPs all eight Part 2 SWE Common Binary procedures before resource
@@ -219,8 +219,8 @@ Last updated: 2026-08-01T16:57Z
   issueTime/IssueTime evidence in a retrieved Command Schema fails instead of
   SKIPping. Local OSH smoke is
   `252/23/20/209`; no-mutation evidence is `GET=130`, zero writes. Focused
-  Raze recheck is `APPROVE_WITH_CONCERNS 0.94` with no blocking fixes; push
-  reconciliation is pending. Sprint 68 evidence is archived under
+  Raze recheck is `APPROVE_WITH_CONCERNS 0.94` with no blocking fixes, and
+  implementation commit `bb3935e` is pushed. Sprint 68 evidence is archived under
   `ops/test-results/sprint-ets-68-part2-swecommon-binary-2026-08-01/`.
 - Sprint ets-32 changes the development E2E default from GeoRobotix to self-provisioned local OSH. GeoRobotix public runs are advisory interoperability probes only and should not block local-OSH-backed development work. The 2026-06-01 local OSH planning smoke passed `206/65/0/141` with no read-only mutation (`GET=130`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`). The 2026-06-02 Generator local OSH smoke passed `211/68/0/143` with no read-only mutation (`GET=133`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`) both before and after Raze gapfixes. Local OSH currently has empty `/datastreams`, `/observations`, and `/controlstreams` collections and returns HTTP 400 for `/commands` and `/systemEvents`, so positive `REQ-ETS-PART2-013` Observation/Command binding closure still requires documented dynamic-data seed fixtures or precise SKIPs; declarations and empty collections are not PASS evidence. Sprint 33 planning adds `ops/local-osh-dynamic-data-seed-fixtures.json` as a planned/not-applied fixture contract and requires explicit dedicated mutable-IUT opt-in before any seed mutation; Raze planning recheck approved this safety framing at confidence 0.94 after traceability and public-IUT manifest fixes. Sprint 32 initial Raze implementation review found and the Generator fixed a future false-PASS risk for CommandStatus/CommandResult inline data and a SKIP-honesty issue for unavailable or uninspectable schema evidence; focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes. The remaining concern is regression-depth only: add dedicated inline CommandStatus/CommandResult skip/fail helper tests when extending populated-IUT closure.
 - Full positive `REQ-ETS-PART2-013` populated binding closure remains open

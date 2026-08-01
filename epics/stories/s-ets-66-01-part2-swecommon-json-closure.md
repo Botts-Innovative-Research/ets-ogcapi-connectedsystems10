@@ -1,7 +1,7 @@
 # S-ETS-66-01: Part 2 SWE Common JSON Encoding Released ATS Closure
 
 ## Status
-VERIFIED - RAZE APPROVED/PUSH PENDING. Supersedes the historical Sprint 29 partial
+DONE - PUSHED. Supersedes the historical Sprint 29 partial
 `/conf/swecommon-json` subset with exact reviewed released ATS mappings.
 
 ## User Instruction
@@ -61,7 +61,7 @@ released procedures:
 - [x] Reviewed mappings promote `2:/conf/swecommon-json` to
   `8 exact / 0 candidate / 0 unmapped`.
 - [x] Raze review is approved with no unresolved required fixes.
-- [ ] Completion evidence is committed and pushed.
+- [x] Completion evidence is committed and pushed.
 
 ## Implementation Evidence
 
@@ -94,7 +94,7 @@ released procedures:
   0 skipped`.
 - Final Raze recheck returned `APPROVE 0.96`, closed
   `RAZE-ETS66-DOC-001`, and reports `required_fixes: []`.
-- Commit and push remain pending.
+- Implementation commit `6e98ac9` is pushed to Botts `main`.
 
 ## Out of Scope
 - IUT mutation or seed-resource creation.

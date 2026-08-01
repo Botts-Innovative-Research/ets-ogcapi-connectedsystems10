@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.70 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 66 Part 2 SWE Common JSON exact closure Raze approved/push pending)
+> Version: 2.0.70 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 66 Part 2 SWE Common JSON exact closure pushed)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -10,7 +10,8 @@
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
 
 > Sprint 66 reconciliation: Part 2 SWE Common JSON Encoding is now exact
-> released ATS with final Raze approval pending push: eight independent Annex A.10 TestNG
+> released ATS with final Raze approval and pushed implementation commit
+> `6e98ac9`: eight independent Annex A.10 TestNG
 > procedures, no standalone declaration/prerequisite/resource-condition helper
 > methods, exact `/conf/swecommon-json` plus SWE Common 3.0 JSON Encoding Rules
 > setup gating before SWE Common JSON resource endpoint access,

@@ -1,7 +1,7 @@
 sprint: ets-66
 story: S-ETS-66-01
 title: Part 2 SWE Common JSON Encoding released ATS closure
-status: VERIFIED_RAZE_APPROVED_PUSH_PENDING
+status: COMPLETE
 date: 2026-08-01
 requirement: REQ-ETS-PART2-010
 scope:
@@ -35,7 +35,7 @@ verification:
   e2e_local_osh: HONEST_NON_GREEN_256_27_20_209
   no_mutation: PASS_GET_144_ZERO_WRITES
   raze: APPROVE_0_96_REQUIRED_FIXES_CLOSED
-  pushed: PENDING
+  pushed: PUSHED_6e98ac9
 evidence:
   directory: ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/
   files:

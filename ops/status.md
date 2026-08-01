@@ -1,13 +1,13 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T12:04Z
+Last updated: 2026-08-01T12:07Z
 
-## Sprint 66 Raze Approved - Part 2 SWE Common JSON Encoding Released ATS
+## Sprint 66 Complete - Part 2 SWE Common JSON Encoding Released ATS
 
 - User instruction: "Continue with Part 2."
 - CP-026 and S-ETS-66-01 close the OGC 23-002 Part 2
   `/conf/swecommon-json` class as exactly eight released Annex A.10
-  procedures. Raze is approved; commit and push remain pending.
+  procedures. Implementation commit `6e98ac9` is pushed to Botts `main`.
 - `Part2SweCommonJsonTests` now exposes one independent TestNG method per
   released target, including the formerly unmapped `mediatype-read`, and
   removes the historical standalone declaration/prerequisite/resource-gate
@@ -55,7 +55,8 @@ Last updated: 2026-08-01T12:04Z
   passed and focused retry passed `76/0/0/0`.
 - Final Raze recheck is `APPROVE 0.96`; `RAZE-ETS66-DOC-001` is closed and
   `required_fixes: []`.
-- Commit and push remain pending.
+- Implementation commit `6e98ac9` is pushed to Botts `main`; this
+  reconciliation records the post-push completion state.
 
 ## Sprint 65 Complete - Part 2 JSON Encoding Released ATS
 

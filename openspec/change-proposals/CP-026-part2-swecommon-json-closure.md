@@ -1,6 +1,6 @@
 # CP-026 - Part 2 SWE Common JSON Encoding Released ATS Closure
 
-**Status**: Implemented - Raze approved/push pending
+**Status**: Complete - pushed
 **Date**: 2026-08-01
 **Capability**: `ets-ogcapi-connectedsystems`
 **Requirement**: `REQ-ETS-PART2-010`
@@ -64,7 +64,7 @@ Sprint 66 methods SKIP before SWE Common JSON resource endpoint access because
 local OSH lacks `http://www.opengis.net/spec/SWE/3.0/conf/json-encoding-rules`.
 No-mutation evidence shows `GET=144` and zero POST/PUT/PATCH/DELETE. Raze
 returned `APPROVE 0.96` with `RAZE-ETS66-DOC-001` closed and no required
-fixes; push remains pending.
+fixes. Implementation commit `6e98ac9` is pushed to Botts `main`.
 
 ## Non-Goals
 

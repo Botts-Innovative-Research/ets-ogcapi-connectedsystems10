@@ -175,7 +175,7 @@ Last updated: 2026-08-01T11:48Z
   Sprint 65 evidence is archived under
   `ops/test-results/sprint-ets-65-part2-json-2026-08-01/`.
 - Sprint 66 supersedes Sprint 29 and closes SWE Common JSON Encoding as exact
-  released ATS with final Raze approval pending push:
+  released ATS:
   `2:/conf/swecommon-json` is
   `8 exact / 0 candidate / 0 unmapped`. The current local OSH primary E2E
   still SKIPs all eight Part 2 SWE Common JSON procedures before resource
@@ -185,7 +185,8 @@ Last updated: 2026-08-01T11:48Z
   media/schema checks. Observation/Command encoding methods also preserve a
   no-safe-evidence SKIP without parent schema, candidate body, and proven SWE
   Common JSON data-value validator evidence. Final Raze is `APPROVE 0.96`
-  with no required fixes. Sprint 66 evidence is archived
+  with no required fixes, and implementation commit `6e98ac9` is pushed.
+  Sprint 66 evidence is archived
   under
   `ops/test-results/sprint-ets-66-part2-swecommon-json-2026-08-01/`.
 - Sprint ets-30 SWE Common Text Encoding implementation is PARTIAL and must not be read as full `/conf/swecommon-text` closure. `Part2SweCommonTextTests` adds exact declaration, SWE 3.0 `/conf/text-encoding-rules` prerequisite visibility, condition gates, exact `application/swe+text`, bundled schema metadata validation requiring `TextEncoding`, canonical Time/IssueTime mapping evidence, Observation/Command encoding guards, and non-mutating mediatype-write API-definition checks. GeoRobotix declares `/conf/swecommon-text`, `/conf/datastream`, `/conf/controlstream`, and `/conf/create-replace-delete`, but does not expose SWE 3.0 `/conf/text-encoding-rules`. Mandatory Generator smoke failed `196 total / 33 passed / 28 failed / 135 skipped`; the new SWE Common Text group produced 2 PASS, 6 FAIL, and 2 SKIP. Full positive closure remains open for valid SWE Common Text Observation Schema, Observation, Command Schema, Command, SWE 3.0 prerequisite, encoding-validator, and mediatype-write evidence. `scripts/no-mutation-oracle.py` recognized 91 IUT request logs, and explicit public log counts found 91 GeoRobotix GET lines and zero matched POST/PUT/PATCH/DELETE lines.

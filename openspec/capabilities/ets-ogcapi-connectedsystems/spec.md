@@ -3010,6 +3010,27 @@ fail or SKIP as specified.
 - **Rationale**: Ignore rules reduce accidental inclusion but do not prove that protected material is absent from Git history or the effective Docker build context; unrelated scratch files also undermine auditable runtime analysis.
 - **Maps to**: PRD FR-ETS-25, NFR-ETS-08, CP-001, S-ETS-41-01.
 
+#### REQ-ETS-CLEANUP-022: Session Metrics JSONL Compatibility (Sprint 66 follow-up)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED (2026-08-01: `scripts/session-metrics.py --self-test`
+  passes and auto-discovery reads the current Codex rollout JSONL for this
+  checkout)
+- **Description**: The session metrics extractor SHALL support both legacy
+  Claude Code assistant-message JSONL records and current Codex rollout JSONL
+  records for the active checkout. Auto-discovery SHALL first preserve the
+  historical Claude project lookup, then find Codex logs under
+  `~/.codex/sessions` and `~/.codex/archived_sessions` whose metadata `cwd`
+  matches the current repository, preferring main-thread rollouts over
+  sub-agent rollouts. Codex extraction SHALL read `token_count` records from
+  `payload.info.last_token_usage`, split cached input and cache-write tokens
+  out of ordinary input tokens, and avoid double-counting cumulative
+  `total_token_usage` snapshots.
+- **Rationale**: The project metrics process was written for Claude Code but
+  the active environment is Codex. Without native Codex JSONL support,
+  `ops/metrics.md` cannot record authoritative main-session token totals even
+  though the data is available locally.
+- **Maps to**: PRD FR-ETS-25, S-ETS-66-02.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
@@ -5763,6 +5784,19 @@ descendant groups SKIP.
 **AND** the check reports only filenames/counts needed for audit and never prints protected contents
 **AND** unrelated `f10m.xml` scratch material is absent unless an explicit safe-fixture purpose is specified.
 *Maps to*: REQ-ETS-CLEANUP-021.
+
+#### SCENARIO-ETS-CLEANUP-CODEX-SESSION-METRICS-001 (NORMAL -- Sprint 66 follow-up)
+**GIVEN** the current checkout is running under Codex and has rollout JSONL
+records under `~/.codex/sessions` or `~/.codex/archived_sessions`
+**WHEN** `python3 scripts/session-metrics.py` runs without an explicit path
+**THEN** it selects the newest main-thread Codex rollout whose metadata `cwd`
+matches the checkout
+**AND** it reports input, output, cache-write, and cache-read totals from
+`payload.info.last_token_usage` token-count records without treating
+cumulative `total_token_usage` snapshots as separate API calls
+**AND** `python3 scripts/session-metrics.py --self-test` verifies both Claude
+and Codex JSONL parsing.
+*Maps to*: REQ-ETS-CLEANUP-022.
 
 ## Implementation Status (2026-04-28)
 

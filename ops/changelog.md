@@ -2,6 +2,35 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-01 - Codex session metrics JSONL support
+
+**Triggered by user instruction**: "Make the practical fix, then continue with
+the project - and don't stop unless you need my input."
+
+- Added `REQ-ETS-CLEANUP-022`,
+  `SCENARIO-ETS-CLEANUP-CODEX-SESSION-METRICS-001`, and story S-ETS-66-02 for
+  Codex-compatible session accounting.
+- Updated `scripts/session-metrics.py` to preserve Claude Code JSONL parsing
+  while auto-discovering current-checkout Codex rollout logs under
+  `~/.codex/sessions` and `~/.codex/archived_sessions`.
+- Codex extraction now reads `token_count` records from
+  `payload.info.last_token_usage`, splits cached input and cache-write tokens
+  out of ordinary input tokens, and avoids cumulative `total_token_usage`
+  double-counting.
+- Added `--self-test` coverage for both Claude and Codex JSONL shapes.
+- Verification artifacts are archived under
+  `ops/test-results/s-ets-66-02-codex-session-metrics-2026-08-01/`:
+  self-test pass, current main Codex auto-discovery with non-zero totals, and
+  explicit Sprint 66 Raze sub-agent Codex extraction.
+- Initial Raze found a high sub-agent auto-discovery classification gap and a
+  low premature epic completion label. The gapfix preserves sub-agent identity
+  across mixed sub-agent/parent `session_meta` records, adds a self-test
+  regression, changes the epic row back to Raze/push pending, and archives
+  post-gapfix self-test/auto-discovery/sub-agent-classification evidence.
+- Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
+  `required_fixes: []`.
+- Commit and push remain pending.
+
 ## 2026-08-01 - Sprint 66 Part 2 SWE Common JSON Encoding released ATS closure
 
 **Triggered by user instruction**: "Continue with Part 2."

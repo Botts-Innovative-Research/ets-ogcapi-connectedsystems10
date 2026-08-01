@@ -1,8 +1,35 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T12:07Z
+Last updated: 2026-08-01T15:11Z
 
 ## Current Sprint Evidence
+
+S-ETS-66-02 Codex session metrics JSONL support:
+
+- Trigger: user requested the practical fix for missing session JSONL metrics,
+  then asked to continue the project without stopping unless input is needed.
+- Scope: `scripts/session-metrics.py` now supports both Claude Code
+  assistant-message JSONL and Codex rollout JSONL.
+- Self-test: `python3 scripts/session-metrics.py --self-test` exits 0 with
+  `SELF-TEST PASS` (`self-test.txt`).
+- Current checkout extraction: `python3 scripts/session-metrics.py` exits 0,
+  selects
+  `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl`
+  as `Format: codex`, and reports non-zero totals
+  (`current-codex-session.txt`).
+- Explicit sub-agent extraction:
+  `python3 scripts/session-metrics.py /home/nh/.codex/sessions/2026/08/01/rollout-2026-08-01T07-51-48-019fbd2a-8549-7671-adf3-66a7430667e2.jsonl`
+  exits 0 as `Format: codex` (`subagent-codex-session.txt`).
+- Initial Raze found a high sub-agent auto-discovery classification gap and a
+  low premature epic completion label. Post-gapfix evidence:
+  `self-test-after-raze-fix.txt`,
+  `current-codex-session-after-raze-fix.txt`, and
+  `subagent-classification-after-raze-fix.txt`.
+- Evidence directory:
+  `ops/test-results/s-ets-66-02-codex-session-metrics-2026-08-01/`.
+- Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
+  `required_fixes: []`.
+- Commit and push remain pending.
 
 Sprint 66 Part 2 SWE Common JSON Encoding released ATS:
 

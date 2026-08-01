@@ -1,0 +1,4 @@
+/home/nh/.codex/sessions/2026/08/01/rollout-2026-08-01T07-51-48-019fbd2a-8549-7671-adf3-66a7430667e2.jsonl
+{'cwd_matches': True, 'thread_source': None, 'source': 'vscode', 'is_subagent': True, 'has_token_usage': True}
+subagent True
+selected /home/nh/.codex/sessions/2026/07/31/rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl

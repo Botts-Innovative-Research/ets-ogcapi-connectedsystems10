@@ -1,0 +1,91 @@
+verdict: APPROVE
+confidence: 0.96
+reviewer: Raze
+review_date_utc: "2026-08-01"
+story: S-ETS-66-02
+title: Codex session metrics JSONL support
+review_type: focused_recheck
+focused_recheck_scope:
+  - RAZE-ETS66-02-AUTODISCOVERY-001
+  - RAZE-ETS66-02-DOC-001
+reviewed_scope:
+  - scripts/session-metrics.py
+  - epics/epic-ets-04-teamengine-integration.md
+  - epics/stories/s-ets-66-02-codex-session-metrics.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/test-results.md
+  - ops/test-results/s-ets-66-02-codex-session-metrics-2026-08-01/
+commands_run:
+  - git status --short --untracked-files=all
+  - git diff -- scripts/session-metrics.py epics/epic-ets-04-teamengine-integration.md epics/stories/s-ets-66-02-codex-session-metrics.md ops/status.md ops/changelog.md ops/test-results.md .harness/evaluations/s-ets-66-02-codex-session-metrics-adversarial.yaml
+  - PYTHONDONTWRITEBYTECODE=1 python3 scripts/session-metrics.py --self-test
+  - PYTHONDONTWRITEBYTECODE=1 python3 scripts/session-metrics.py
+  - read-only Python import probe for read_codex_meta/is_codex_subagent/find_codex_session_jsonl
+  - read-only Python candidate-order probe over ~/.codex/sessions and ~/.codex/archived_sessions
+not_run:
+  - Docker
+  - TeamEngine smoke
+  - Maven
+summary:
+  result: >
+    Focused recheck closes both prior required findings. The extractor now keeps
+    a sticky is_subagent flag when any Codex session_meta record identifies a
+    sub-agent rollout, the self-test covers the mixed sub-agent/parent
+    session_meta regression, live auto-discovery still chooses the main rollout,
+    and the epic row no longer overclaims completion while Raze/push remain
+    pending.
+findings:
+  - id: RAZE-ETS66-02-AUTODISCOVERY-001
+    severity: HIGH
+    status: CLOSED
+    file: scripts/session-metrics.py
+    closure_evidence:
+      - >
+        scripts/session-metrics.py now initializes metadata["is_subagent"] and
+        sets it to True when any session_meta has thread_source=subagent or
+        source.subagent; is_codex_subagent checks that sticky flag before the
+        overwritten thread_source/source fields.
+      - >
+        The synthetic self-test now writes a Codex sub-agent session_meta
+        followed by a parent/source=vscode session_meta, then asserts
+        is_codex_subagent(read_codex_meta(...)).
+      - >
+        self-test-after-raze-fix.txt contains SELF-TEST PASS.
+      - >
+        subagent-classification-after-raze-fix.txt shows the previously
+        problematic rollout-2026-08-01T07-51-48... log now returns
+        is_subagent=True even though its final thread_source/source values are
+        None/vscode.
+      - >
+        Live read-only probe confirmed the same real log returns
+        {'cwd_matches': True, 'thread_source': None, 'source': 'vscode',
+        'is_subagent': True, 'has_token_usage': True} and
+        is_codex_subagent=True.
+      - >
+        Live auto-discovery and archived current-codex-session-after-raze-fix.txt
+        both select the main rollout
+        rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl.
+        The candidate-order probe listed a newer sub-agent after all main
+        candidates, confirming main rollout preference is applied.
+    required_fix: null
+
+  - id: RAZE-ETS66-02-DOC-001
+    severity: LOW
+    status: CLOSED
+    file: epics/epic-ets-04-teamengine-integration.md
+    closure_evidence:
+      - >
+        epics/epic-ets-04-teamengine-integration.md now records S-ETS-66-02 as
+        "Verified; Claude + Codex self-test and current checkout Codex
+        extraction pass; Raze/push pending" instead of "Complete".
+      - >
+        epics/stories/s-ets-66-02-codex-session-metrics.md keeps status
+        VERIFIED - RAZE/PUSH PENDING, with Raze approval and push acceptance
+        still unchecked.
+      - >
+        ops/status.md, ops/test-results.md, and ops/changelog.md consistently
+        describe the initial Raze findings, the gapfix, and focused Raze
+        recheck/commit/push as pending at the time of this recheck.
+    required_fix: null
+required_fixes: []

@@ -3,7 +3,8 @@
 ## How Metrics Are Collected
 
 - **Wall-clock time**: `date -u` at start/end of each turn
-- **Main conversation tokens**: Extracted from session JSONL via `python3 scripts/session-metrics.py`
+- **Main conversation tokens**: Extracted from Claude or Codex session JSONL
+  via `python3 scripts/session-metrics.py`
 - **Subagent tokens**: From agent result metadata (`total_tokens`, `duration_ms`)
 - **Cost**: Computed using current model pricing (see `scripts/session-metrics.py`)
 
@@ -11,6 +12,8 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 410 | 2026-08-01T15:08:40Z | 2026-08-01T15:10:44Z | 2m04s | User requested a focused Raze recheck only for `RAZE-ETS66-02-AUTODISCOVERY-001` and `RAZE-ETS66-02-DOC-001`, inspecting current uncommitted extractor/docs and post-gapfix evidence without Docker/TeamEngine/Maven. Updated `.harness/evaluations/s-ets-66-02-codex-session-metrics-adversarial.yaml` to `APPROVE 0.96`; both findings closed and `required_fixes: []`. |
+| 409 | 2026-08-01T14:59:52Z | 2026-08-01T15:06:29Z | 6m37s | User instructed: act as Raze for S-ETS-66-02 Codex session metrics JSONL support, reviewing only scoped uncommitted extractor/docs/evidence with lightweight/read-only checks and no Docker/TeamEngine. Wrote `.harness/evaluations/s-ets-66-02-codex-session-metrics-adversarial.yaml` with verdict `GAPS_FOUND 0.93` for subagent metadata overwrite and premature epic completion wording. |
 | 408 | 2026-08-01T14:51:53Z | 2026-08-01T14:53:18Z | 1m25s | User asked what is needed for the session JSONL to exist. Inspected `scripts/session-metrics.py`, confirmed it expects Claude Code JSONL under `~/.claude/projects/-docker-ets-ogcapi-connectedsystems10/*.jsonl`, observed this host only has a different Claude project JSONL, and confirmed Codex rollout JSONL files exist under `~/.codex/sessions/...` with token counters in `payload.info.*token_usage` but are not supported by the current Claude-specific extractor. |
 | 407 | 2026-08-01T12:00:04Z | 2026-08-01T12:01:28Z | 1m24s | User requested focused Raze recheck only for `RAZE-ETS66-DOC-001`, with no implementation code changes. Confirmed the scoped suite-wiring comments/assertion messages now identify Sprint 66 S-ETS-66-01 and only mention Sprint 29 as superseded history; verified first focused rerun failed on spring-javaformat validation, formatter apply passed, and focused retry passed `76/0/0/0`; updated `.harness/evaluations/sprint-ets-66-adversarial.yaml` to `APPROVE 0.96`, closed the finding, and set `required_fixes: []`. |
 | 406 | 2026-08-01T11:52:01Z | 2026-08-01T11:56:11Z | 4m10s | User requested: act as Raze for current uncommitted Sprint 66 Part 2 `/conf/swecommon-json` exact released ATS closure, without implementation code changes or expensive reruns unless blocked. Reviewed specs/docs/Java/TestNG/mappings/coverage/evidence; wrote `.harness/evaluations/sprint-ets-66-adversarial.yaml` with verdict `GAPS_FOUND 0.91`, one LOW required documentation fix for stale Sprint 29 suite-wiring comments, and no false-PASS finding for the eight exact mappings, encoding SKIPs, mediatype-write strictness, E2E honesty, no-mutation evidence, or unignored evidence hygiene. |
@@ -542,13 +545,22 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01 Sprint 65 Part 2 JSON closure)
+### Current Codex Session (2026-08-01 ETS continuation through Sprint 66)
 
-Attempted extraction at 2026-08-01T10:55:15Z via `python3 scripts/session-metrics.py`,
-but the script returned: `No session JSONL found in /home/nh/.claude/projects/-docker-ets-ogcapi-connectedsystems10`.
-Authoritative main-conversation token and cost totals are therefore unavailable
-in this workspace. Turn-level wall-clock metrics and Raze review durations are
-recorded above; subagent token metadata was unavailable from the tool surface.
+Extracted after S-ETS-66-02 with `python3 scripts/session-metrics.py`, which
+now supports Codex rollout JSONL. Auto-discovery selected
+`rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
+the current checkout.
+
+| Category | Tokens | Cost |
+|----------|--------|------|
+| Input | 11,766,558 | $176.50 |
+| Output | 827,628 | $62.07 |
+| Cache Write | 0 | $0.00 |
+| Cache Read | 229,704,704 | $344.56 |
+| **TOTAL** | **242,298,890** | **$583.13** |
+
+API calls (usage records): 1728
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

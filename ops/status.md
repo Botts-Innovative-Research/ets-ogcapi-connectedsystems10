@@ -1,6 +1,35 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T12:07Z
+Last updated: 2026-08-01T15:11Z
+
+## Codex Session Metrics Fix Raze Approved - Push Pending
+
+- User instruction: "Make the practical fix, then continue with the project -
+  and don't stop unless you need my input."
+- S-ETS-66-02 adds Codex rollout JSONL support to
+  `scripts/session-metrics.py` while preserving the historical Claude Code
+  assistant-message parser.
+- Auto-discovery now checks the legacy Claude project path first, then scans
+  `~/.codex/sessions` and `~/.codex/archived_sessions` for rollout JSONL
+  whose metadata `cwd` matches the current checkout. It prefers main-thread
+  rollouts over sub-agent rollouts.
+- Codex extraction reads `payload.info.last_token_usage` from `token_count`
+  records, splits `cached_input_tokens` and `cache_write_input_tokens` out of
+  ordinary input tokens, and ignores cumulative `total_token_usage` snapshots.
+- Verification is archived under
+  `ops/test-results/s-ets-66-02-codex-session-metrics-2026-08-01/`.
+  `--self-test` passed, auto-discovery selected the current main Codex rollout
+  and produced non-zero totals, and explicit-path extraction worked for the
+  Sprint 66 Raze sub-agent rollout.
+- Initial Raze found a high sub-agent auto-discovery classification gap and a
+  low premature epic completion label. The gapfix preserves sub-agent identity
+  across mixed sub-agent/parent `session_meta` records, adds a self-test
+  regression, and changes the epic row back to Raze/push pending.
+- Post-gapfix evidence shows the problematic Sprint 66 Raze rollout is now
+  classified as sub-agent while auto-discovery still selects the main rollout.
+- Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
+  `required_fixes: []`.
+- Commit and push remain pending.
 
 ## Sprint 66 Complete - Part 2 SWE Common JSON Encoding Released ATS
 

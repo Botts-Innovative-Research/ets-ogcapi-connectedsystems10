@@ -1,6 +1,6 @@
 # Story S-ETS-63-01: Part 2 System Events Released ATS Closure
 
-> Status: Implemented - Raze Approved Pending Push | Epic: epic-ets-03-part2-classes | Sprint: ets-63 | Last updated: 2026-08-01
+> Status: Complete | Epic: epic-ets-03-part2-classes | Sprint: ets-63 | Last updated: 2026-08-01
 
 ## Context
 
@@ -76,7 +76,7 @@ official `/req/system-event` and `/conf/system-event` identifiers.
 - [x] Formatter and full Docker Maven run.
 - [x] Local OSH TeamEngine smoke and no-mutation oracle run.
 - [x] Raze review completes with no unresolved required fixes.
-- [ ] Commit is pushed to Botts `main`.
+- [x] Commit `8d0c4fa` is pushed to Botts `main`.
 
 ## Out Of Scope
 

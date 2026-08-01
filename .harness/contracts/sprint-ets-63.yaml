@@ -1,7 +1,7 @@
 sprint: ets-63
 story: S-ETS-63-01
 title: Part 2 System Events released ATS closure
-status: IMPLEMENTED_PENDING_PUSH
+status: COMPLETE
 date: 2026-08-01
 requirement: REQ-ETS-PART2-005
 scope:
@@ -34,3 +34,4 @@ verification:
   e2e_local_osh: HONEST_NON_GREEN_251_36_21_194
   no_mutation: PASS_GET_182_WRITES_0
   raze: APPROVE_0_97_REQUIRED_FIXES_0
+  pushed: "8d0c4fa"

@@ -29,7 +29,7 @@ formats). Sprint 25 correctly retired GeoRobotix's non-standard
 | S-ETS-62-01 | Close `/conf/feasibility` (Part 2 Command Feasibility) as five exact released OGC 23-002 procedures | Complete; `5/5` exact, local OSH E2E honest non-green, Raze APPROVE | REQ-ETS-PART2-004 |
 | S-ETS-03-04 | (placeholder) Implement `/conf/feasibility` suite | Superseded by S-ETS-23-01 planning | REQ-ETS-PART2-004 |
 | S-ETS-24-01 | Implement `/conf/system-event` (Part 2 System Events) read-only declaration-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-005 |
-| S-ETS-63-01 | Close `/conf/system-event` (Part 2 System Events) as five exact released OGC 23-002 procedures | Implemented pending push; `5/5` exact, local OSH E2E honest non-green, Raze APPROVE | REQ-ETS-PART2-005 |
+| S-ETS-63-01 | Close `/conf/system-event` (Part 2 System Events) as five exact released OGC 23-002 procedures | Complete; `5/5` exact, local OSH E2E honest non-green, Raze APPROVE, pushed `8d0c4fa` | REQ-ETS-PART2-005 |
 | S-ETS-03-05 | (placeholder) Implement `/conf/system-event` suite | Superseded by S-ETS-24-01 planning | REQ-ETS-PART2-005 |
 | S-ETS-03-06 | (placeholder) Implement `/conf/system-history` suite | Retired — not defined by OGC 23-002 Annex A | retired |
 | S-ETS-25-01 | Implement `/conf/advanced-filtering` (Part 2) read-only declaration-gated subset using official OGC 23-002 identifiers | Historical increment complete; released ATS partial/unreviewed | REQ-ETS-PART2-006 |

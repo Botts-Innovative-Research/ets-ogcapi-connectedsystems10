@@ -1,6 +1,6 @@
 # CP-023 - Part 2 System Events Released ATS Closure
 
-**Status**: Implemented with Raze approval; push pending
+**Status**: Completed and pushed in Sprint 63
 **Date**: 2026-08-01
 **Capability**: `ets-ogcapi-connectedsystems`
 **Requirement**: `REQ-ETS-PART2-005`

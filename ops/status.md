@@ -1,8 +1,8 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T06:50Z
+Last updated: 2026-08-01T06:53Z
 
-## Sprint 63 Raze Approved - Part 2 System Events Released ATS (Push Pending)
+## Sprint 63 Complete - Part 2 System Events Released ATS
 
 - User instruction: "Continue."
 - CP-023 and S-ETS-63-01 close the OGC 23-002 Part 2
@@ -53,7 +53,7 @@ Last updated: 2026-08-01T06:50Z
   wording and missing durable Maven evidence. The first focused recheck closed
   wording and found ignored `.log` artifacts; the final focused recheck
   approved the tracked `.txt` evidence at `APPROVE 0.97` with no required
-  fixes. Commit/push is still pending.
+  fixes. Implementation commit `8d0c4fa` is pushed to Botts `main`.
 
 ## Sprint 62 Complete - Part 2 Command Feasibility Released ATS
 

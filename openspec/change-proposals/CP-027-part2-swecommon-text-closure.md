@@ -1,6 +1,6 @@
 # CP-027 - Part 2 SWE Common Text Encoding Released ATS Closure
 
-**Status**: Raze approved; push pending
+**Status**: Complete; pushed
 **Date**: 2026-08-01
 **Capability**: `ets-ogcapi-connectedsystems`
 **Requirement**: `REQ-ETS-PART2-011`
@@ -56,7 +56,7 @@ before endpoint access.
 ## Implementation Status
 
 Generator implementation and local verification are complete, with Raze
-approved and commit/push still pending. `Part2SweCommonTextTests` now exposes
+approved and commit `5f0a3f6` pushed. `Part2SweCommonTextTests` now exposes
 exactly eight released Annex A.11 TestNG methods, removes the Sprint 30
 standalone helper procedures, adds the missing `mediatype-read` procedure,
 strengthens `mediatype-write` to require every advertised scoped POST/PUT

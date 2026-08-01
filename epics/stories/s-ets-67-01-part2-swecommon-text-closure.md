@@ -1,7 +1,7 @@
 # S-ETS-67-01: Part 2 SWE Common Text Encoding Released ATS Closure
 
 ## Status
-RAZE APPROVED; PUSH PENDING. Supersedes the historical Sprint 30 partial
+DONE. Supersedes the historical Sprint 30 partial
 `/conf/swecommon-text` subset with exact reviewed released ATS mappings.
 
 ## User Instruction
@@ -61,7 +61,7 @@ released procedures:
 - [x] Reviewed mappings promote `2:/conf/swecommon-text` to
   `8 exact / 0 candidate / 0 unmapped`.
 - [x] Raze review is approved with no unresolved required fixes.
-- [ ] Completion evidence is committed and pushed.
+- [x] Completion evidence is committed and pushed.
 
 ## Implementation Evidence
 
@@ -102,6 +102,7 @@ Evidence directory:
 - Initial Raze found `RAZE-ETS67-FALSESKIP-001` and `RAZE-ETS67-DOC-001`.
   Both are closed by the focused recheck, which returned `APPROVE 0.96` with
   `required_fixes: []` (`.harness/evaluations/sprint-ets-67-adversarial.yaml`).
+- Commit `5f0a3f6` is pushed to Botts `main`.
 
 ## Out of Scope
 - IUT mutation or seed-resource creation.

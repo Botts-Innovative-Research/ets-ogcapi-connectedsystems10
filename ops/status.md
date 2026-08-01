@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T16:21Z
+Last updated: 2026-08-01T16:23Z
 
 ## Sprint 67 Raze Approved - Part 2 SWE Common Text Encoding Released ATS
 
@@ -9,7 +9,8 @@ Last updated: 2026-08-01T16:21Z
 - CP-027 and S-ETS-67-01 supersede the historical Sprint 30
   `/conf/swecommon-text` subset with exactly eight released OGC 23-002 Annex
   A.11 procedures. Initial Raze found two required fixes; both are applied and
-  focused Raze recheck approved the closure. Commit and push remain pending.
+  focused Raze recheck approved the closure. Implementation commit `5f0a3f6`
+  is pushed to Botts `main`.
 - `Part2SweCommonTextTests` now exposes one independent TestNG method per
   released target, including the formerly unmapped `mediatype-read`, and
   removes standalone declaration/prerequisite/resource-gate helper procedures.
@@ -58,7 +59,7 @@ Last updated: 2026-08-01T16:21Z
   `testng.xml` comment to Sprint 67 wording.
 - Focused Raze recheck returned `APPROVE 0.96`; both findings are closed and
   `required_fixes: []`.
-- Next local action is commit, push, reconcile post-push state, then continue
+- Implementation commit `5f0a3f6` is pushed. Next local action is continuing
   to the next unblocked Part 2 item:
   `/conf/swecommon-binary` exact closure, unless a dedicated mutable IUT is
   provided for CRD/Update.

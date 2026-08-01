@@ -1,7 +1,7 @@
 sprint: ets-67
 story: S-ETS-67-01
 title: Part 2 SWE Common Text Encoding released ATS closure
-status: RAZE_APPROVED_PUSH_PENDING
+status: COMPLETE_PUSHED
 date: 2026-08-01
 requirement: REQ-ETS-PART2-011
 scope:
@@ -35,7 +35,7 @@ verification:
   e2e_local_osh: HONEST_NON_GREEN
   no_mutation: PASS
   raze: APPROVE_0_96
-  pushed: PENDING
+  pushed: "5f0a3f6"
 evidence:
   directory: ops/test-results/sprint-ets-67-part2-swecommon-text-2026-08-01/
   files:

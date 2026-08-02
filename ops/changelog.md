@@ -2,6 +2,40 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-02 - Sprint 69 Part 2 Binding disposable Command probe diagnostics
+
+**Triggered by user instruction**: "Use a disposable local OSH mutable IUT and
+reset/reseed it as needed."
+
+- Added CP-029, S-ETS-69-01, and the Sprint 69 contract for diagnostic
+  `REQ-ETS-PART2-013` populated-IUT work.
+- Rebaselined the existing disposable populated local OSH workflow against the
+  current 252-method suite. Provisioning PASSed with `POST=7`, `GET=10`;
+  populated TeamEngine was `252/24/20/208`; Observation binding PASSed;
+  Command binding SKIPped for missing associated Command evidence; cleanup
+  PASSed; primary diff was empty; clean-primary TeamEngine was `252/23/20/209`.
+- Added optional `dynamicFixtures.commandProbe` to
+  `ops/local-osh-populated-fixtures.json`.
+- Extended `scripts/local-osh-populated-fixture.py` to record Command POST and
+  nested Command collection diagnostics under the existing owned loopback and
+  dedicated mutable-IUT gates without changing provisioning PASS or TestNG PASS
+  criteria.
+- Added Python regressions covering successful and timeout/empty optional
+  Command probe evidence.
+- Post-change disposable run `ets69cmdprobe-20260802T042211Z` records
+  `POST /controlstreams/040g/commands` timing out, nested Commands
+  `itemCount=0`, no Command id, provisioning `POST=8`/`GET=11`, populated
+  TeamEngine `252/24/20/208`, clean-primary `252/23/20/209`, cleanup PASS, and
+  empty primary diff.
+- Verification artifacts are archived under
+  `ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/`: Python
+  regressions `14` tests pass, fixture JSON validates, formatter passes, and
+  final Docker Maven passes `785/0/0/3`. Raze gapfix archives baseline and
+  command-probe SHA/provenance manifests under distinct subdirectories and
+  normalizes the copied run-summary paths.
+- Raze focused recheck returned `APPROVE_WITH_CONCERNS 0.96` with
+  `RAZE-S69-001` resolved and `required_fixes: []`.
+
 ## 2026-08-01 - Sprint 68 Part 2 SWE Common Binary Encoding released ATS closure
 
 **Triggered by user instruction**: "Make the practical fix, then continue with

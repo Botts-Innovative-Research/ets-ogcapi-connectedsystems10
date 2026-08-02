@@ -224,16 +224,20 @@ Last updated: 2026-08-01T16:57Z
   `ops/test-results/sprint-ets-68-part2-swecommon-binary-2026-08-01/`.
 - Sprint ets-32 changes the development E2E default from GeoRobotix to self-provisioned local OSH. GeoRobotix public runs are advisory interoperability probes only and should not block local-OSH-backed development work. The 2026-06-01 local OSH planning smoke passed `206/65/0/141` with no read-only mutation (`GET=130`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`). The 2026-06-02 Generator local OSH smoke passed `211/68/0/143` with no read-only mutation (`GET=133`, `OPTIONS=2`, `POST/PUT/PATCH/DELETE=0`) both before and after Raze gapfixes. Local OSH currently has empty `/datastreams`, `/observations`, and `/controlstreams` collections and returns HTTP 400 for `/commands` and `/systemEvents`, so positive `REQ-ETS-PART2-013` Observation/Command binding closure still requires documented dynamic-data seed fixtures or precise SKIPs; declarations and empty collections are not PASS evidence. Sprint 33 planning adds `ops/local-osh-dynamic-data-seed-fixtures.json` as a planned/not-applied fixture contract and requires explicit dedicated mutable-IUT opt-in before any seed mutation; Raze planning recheck approved this safety framing at confidence 0.94 after traceability and public-IUT manifest fixes. Sprint 32 initial Raze implementation review found and the Generator fixed a future false-PASS risk for CommandStatus/CommandResult inline data and a SKIP-honesty issue for unavailable or uninspectable schema evidence; focused Raze recheck returned `APPROVE_WITH_CONCERNS` with no required fixes. The remaining concern is regression-depth only: add dedicated inline CommandStatus/CommandResult skip/fail helper tests when extending populated-IUT closure.
 - Full positive `REQ-ETS-PART2-013` populated binding closure remains open
-  against unmodified OSH. Sprint 44 now reproducibly creates System, Procedure,
+  against unmodified OSH. Sprint 44 reproducibly creates System, Procedure,
   Deployment, SamplingFeature, DataStream, Observation, and ControlStream
-  fixtures through the supported loopback HTTP API. Provisioning is ready, but
-  TeamEngine still reports 28 failures because OSH omits required `live` on
-  DataStream collection items and omits `issueTime`, `executionTime`, `live`,
-  and `async` on ControlStream collection items. Supplying these read-only
-  fields in create payloads does not change OSH serialization. Command child
-  evidence also remains unavailable without an in-scope tasking fixture. These
-  are genuine unmodified-IUT limitations: preserve the FAIL/SKIP evidence or
-  use another unmodified conforming IUT; do not patch OSH or weaken the ETS.
+  fixtures through the supported loopback HTTP API. Sprint 69 revalidates that
+  the current populated suite can PASS Observation binding, but Command binding
+  still SKIPs because no ControlStream exposes associated Command evidence.
+  The optional Sprint 69 Command probe records `POST /controlstreams/040g/commands`
+  timing out, nested Commands `itemCount=0`, and no discovered Command id.
+  Provisioning is ready, but TeamEngine still reports known non-green totals
+  because OSH omits required `live` on DataStream collection items and omits
+  `issueTime`, `executionTime`, `live`, and `async` on ControlStream collection
+  items in broader JSON/SWE suites. Supplying these read-only fields in create
+  payloads does not change OSH serialization. These are genuine
+  unmodified-IUT limitations: preserve the FAIL/SKIP evidence or use another
+  unmodified conforming IUT; do not patch OSH or weaken the ETS.
 - Local OSH is the accepted Sprint 26 E2E gate and seeded mutable health target after the seedfix restored it as a clean full-suite run: `146 total / 62 passed / 0 failed / 84 skipped` on 2026-05-22 after adding Procedure/Deployment `featureType` metadata to the seeded records. It is still not evidence for out-of-scope CRD subrequirements such as non-system CRUD, cascade behavior, `text/uri-list`, or `/conf/update`. Existing Part 1 system CRD checks issued system POST/PUT/DELETE under explicit opt-in during that run; the new Part 2 lifecycle checks did not issue datastream, observation, controlstream, command, feasibility, or system-event lifecycle mutation.
 - GeoRobotix has historically declared `/conf/geojson`, but its sampled
   canonical responses use generic `application/json`. Sprint 54's exact

@@ -1,0 +1,23 @@
+sprint: ets-69
+story: S-ETS-69-01
+title: Part 2 Binding Populated Command Probe Diagnostics
+trigger: Use a disposable local OSH mutable IUT and reset/reseed it as needed.
+requirements:
+  - REQ-ETS-PART2-013
+scenarios:
+  - SCENARIO-ETS-PART2-013-EPHEMERAL-POPULATED-IUT-001
+  - SCENARIO-ETS-PART2-013-POPULATED-PROVISIONING-VERDICT-001
+  - SCENARIO-ETS-PART2-013-POPULATED-EVIDENCE-001
+  - SCENARIO-ETS-PART2-013-PRIMARY-STATE-ISOLATION-001
+  - SCENARIO-ETS-PART2-013-POPULATED-COMMAND-PROBE-DIAGNOSTICS-001
+acceptance:
+  - Baseline disposable populated local OSH evidence is archived.
+  - Seeder supports optional Command probe diagnostics under existing mutation gates.
+  - Command probe failure remains diagnostic and does not weaken provisioning or TestNG PASS criteria.
+  - Python regressions cover success and failure diagnostics.
+  - Docker Maven and disposable populated local OSH E2E evidence are archived.
+  - Raze review is complete before reporting completion.
+out_of_scope:
+  - OSH or TeamEngine source/binary patches.
+  - Full REQ-ETS-PART2-013 positive closure without TeamEngine-visible Command evidence.
+  - Primary or public IUT mutation.

@@ -164,6 +164,19 @@
           }
         }
       }
+    },
+    "commandProbe": {
+      "collection": "/controlstreams/{controlStreamId}/commands",
+      "nestedCollection": "/controlstreams/{controlStreamId}/commands?limit=10",
+      "method": "POST",
+      "mediaType": "application/json",
+      "timeout": 5.0,
+      "payload": {
+        "issueTime": "{timestamp}",
+        "parameters": {
+          "setpoint": 22.0
+        }
+      }
     }
   }
 }

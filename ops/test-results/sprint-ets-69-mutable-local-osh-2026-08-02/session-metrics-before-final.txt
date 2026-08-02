@@ -1,0 +1,13 @@
+Session: rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl
+Format: codex
+
+Category                          Tokens       Cost
+------------------------- -------------- ----------
+Input                         14,319,310 $  214.79
+Output                         1,085,992 $   81.45
+Cache Write                            0 $    0.00
+Cache Read                   316,924,160 $  475.39
+------------------------- -------------- ----------
+TOTAL                        332,329,462 $  771.63
+
+API calls (usage records): 2310

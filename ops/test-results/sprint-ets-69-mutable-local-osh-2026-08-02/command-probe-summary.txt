@@ -1,0 +1,6 @@
+populated: total=252 passed=24 failed=20 skipped=208 requestMethodCounts={'GET': 134}
+cleanPrimary: total=252 passed=23 failed=20 skipped=209 requestMethodCounts={'GET': 130}
+provisioningReady=True resourceIds={'system': '040g', 'procedure': '040g', 'deployment': '040g', 'samplingFeature': '040g', 'dataStream': '040g', 'observation': '040vd2trqc30000000', 'controlStream': '040g'} requestMethodCounts={'POST': 8, 'GET': 11}
+schemaEvidence={'dataStream': {'status': 200, 'contentType': 'application/json', 'fieldNames': ['temperature']}, 'controlStream': {'status': 200, 'contentType': 'application/json', 'fieldNames': ['setpoint']}} observationEvidence={'status': 200, 'contentType': 'application/json', 'itemCount': 1, 'associatedDataStreamId': '040g'}
+commandProbeEvidence={'attempted': True, 'path': '/controlstreams/040g/commands', 'mediaType': 'application/json', 'post': {'contentType': '', 'errorType': 'timeout', 'error': 'timed out'}, 'nestedCollection': {'path': '/controlstreams/040g/commands?limit=10', 'status': 200, 'contentType': 'application/json', 'itemCount': 0}, 'discoveredCommandId': None}
+cleanupVerdict=PASS primaryStateDiffBytes=0

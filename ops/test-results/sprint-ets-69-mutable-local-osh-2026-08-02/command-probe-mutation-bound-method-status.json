@@ -1,0 +1,632 @@
+[
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "deploymentsCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.deploymentsCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "proceduresCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.proceduresCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "propertiesCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.propertiesCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "resourcesAddToCustomCollections",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.resourcesAddToCustomCollections()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "resourcesCreateInCustomCollections",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.resourcesCreateInCustomCollections()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "resourcesDeleteInCustomCollections",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.resourcesDeleteInCustomCollections()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "resourcesReplaceInCustomCollections",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.resourcesReplaceInCustomCollections()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "samplingFeaturesCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.samplingFeaturesCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "subdeploymentsCreate",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.subdeploymentsCreate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "subsystemsCreate",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.subsystemsCreate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "systemDeleteCascade",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.systemDeleteCascade()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "createreplacedelete",
+    "name": "systemsCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.systemsCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@1a1f1fd3] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "controlStreamAndNestedCommandOptionsReadinessIsReadOnly",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.controlStreamAndNestedCommandOptionsReadinessIsReadOnly()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "controlStreamCommandLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.controlStreamCommandLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "datastreamAndObservationOptionsReadinessIsReadOnly",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.datastreamAndObservationOptionsReadinessIsReadOnly()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "datastreamObservationLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.datastreamObservationLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "feasibilitySystemEventLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "featuresPart4CreateReplaceDeletePrerequisiteVisibleForFullClosure",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.featuresPart4CreateReplaceDeletePrerequisiteVisibleForFullClosure()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "part2CreateReplaceDeleteConformanceDeclared",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.part2CreateReplaceDeleteConformanceDeclared()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "part2CreateReplaceDeleteMutationSafetyGate",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.part2CreateReplaceDeleteMutationSafetyGate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2createreplacedelete",
+    "name": "unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@55414ffe] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "clause15ResourceConditionGatesAreVisible",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.clause15ResourceConditionGatesAreVisible()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "controlStreamCommandPatchReadinessIsConditionGated",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.controlStreamCommandPatchReadinessIsConditionGated()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "datastreamObservationPatchLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.datastreamObservationPatchLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "datastreamObservationPatchReadinessIsConditionGated",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.datastreamObservationPatchReadinessIsConditionGated()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "feasibilityPatchLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.feasibilityPatchLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "feasibilityPatchReadinessIsConditionGated",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.feasibilityPatchReadinessIsConditionGated()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "part2UpdateConformanceDeclared",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.part2UpdateConformanceDeclared()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "part2UpdateMutationSafetyGate",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.part2UpdateMutationSafetyGate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "part2UpdatePrerequisitesVisibleForFullClosure",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.part2UpdatePrerequisitesVisibleForFullClosure()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "schemaRejectionPatchChecksRequireSafeEvidence",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.schemaRejectionPatchChecksRequireSafeEvidence()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "systemEventPatchLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.systemEventPatchLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "systemEventPatchReadinessIsConditionGated",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.systemEventPatchReadinessIsConditionGated()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2update",
+    "name": "unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@30889bdf] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "populated",
+    "groups": "update",
+    "name": "deploymentsUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.deploymentsUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@69019e9b] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "update",
+    "name": "proceduresUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.proceduresUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@69019e9b] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "update",
+    "name": "propertiesUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.propertiesUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@69019e9b] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "update",
+    "name": "samplingFeaturesUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.samplingFeaturesUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@69019e9b] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "update",
+    "name": "systemsUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.systemsUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@69019e9b] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "populated",
+    "groups": "part2binding",
+    "name": "bindingClosureRequiresInspectableJsonEvidenceForFirstIncrement",
+    "status": "PASS",
+    "message": ""
+  },
+  {
+    "run": "populated",
+    "groups": "part2binding",
+    "name": "commandBindingRequiresParentSchemaAndChildBodyEvidence",
+    "status": "SKIP",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/cmd-ref-from-controlstream - no ControlStream candidate on the inspected page exposed associated Command evidence through its scoped child collection or /commands; no binding PASS was reported."
+  },
+  {
+    "run": "populated",
+    "groups": "part2binding",
+    "name": "observationBindingRequiresParentSchemaAndChildBodyEvidence",
+    "status": "PASS",
+    "message": ""
+  },
+  {
+    "run": "populated",
+    "groups": "part2binding",
+    "name": "readOnlyBindingSuiteDoesNotSeedFixturesWithoutDedicatedMutationWork",
+    "status": "PASS",
+    "message": ""
+  },
+  {
+    "run": "populated",
+    "groups": "part2binding",
+    "name": "standaloneObservationBindingConformanceClassIsIgnored",
+    "status": "PASS",
+    "message": ""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "deploymentsCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.deploymentsCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "proceduresCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.proceduresCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "propertiesCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.propertiesCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "resourcesAddToCustomCollections",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.resourcesAddToCustomCollections()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "resourcesCreateInCustomCollections",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.resourcesCreateInCustomCollections()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "resourcesDeleteInCustomCollections",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.resourcesDeleteInCustomCollections()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "resourcesReplaceInCustomCollections",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.resourcesReplaceInCustomCollections()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "samplingFeaturesCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.samplingFeaturesCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "subdeploymentsCreate",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.subdeploymentsCreate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "subsystemsCreate",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.subsystemsCreate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "systemDeleteCascade",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.systemDeleteCascade()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "createreplacedelete",
+    "name": "systemsCreateReplaceDelete",
+    "status": "SKIP",
+    "message": "Method CreateReplaceDeleteTests.systemsCreateReplaceDelete()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.createreplacedelete.CreateReplaceDeleteTests@5c81458f] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "controlStreamAndNestedCommandOptionsReadinessIsReadOnly",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.controlStreamAndNestedCommandOptionsReadinessIsReadOnly()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "controlStreamCommandLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.controlStreamCommandLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "datastreamAndObservationOptionsReadinessIsReadOnly",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.datastreamAndObservationOptionsReadinessIsReadOnly()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "datastreamObservationLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.datastreamObservationLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "feasibilitySystemEventLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "featuresPart4CreateReplaceDeletePrerequisiteVisibleForFullClosure",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.featuresPart4CreateReplaceDeletePrerequisiteVisibleForFullClosure()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "part2CreateReplaceDeleteConformanceDeclared",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.part2CreateReplaceDeleteConformanceDeclared()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "part2CreateReplaceDeleteMutationSafetyGate",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.part2CreateReplaceDeleteMutationSafetyGate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2createreplacedelete",
+    "name": "unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence",
+    "status": "SKIP",
+    "message": "Method Part2CreateReplaceDeleteTests.unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests@6d0be3d6] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "clause15ResourceConditionGatesAreVisible",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.clause15ResourceConditionGatesAreVisible()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "controlStreamCommandPatchReadinessIsConditionGated",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.controlStreamCommandPatchReadinessIsConditionGated()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "datastreamObservationPatchLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.datastreamObservationPatchLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "datastreamObservationPatchReadinessIsConditionGated",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.datastreamObservationPatchReadinessIsConditionGated()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "feasibilityPatchLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.feasibilityPatchLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "feasibilityPatchReadinessIsConditionGated",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.feasibilityPatchReadinessIsConditionGated()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "part2UpdateConformanceDeclared",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.part2UpdateConformanceDeclared()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "part2UpdateMutationSafetyGate",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.part2UpdateMutationSafetyGate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "part2UpdatePrerequisitesVisibleForFullClosure",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.part2UpdatePrerequisitesVisibleForFullClosure()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "schemaRejectionPatchChecksRequireSafeEvidence",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.schemaRejectionPatchChecksRequireSafeEvidence()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "systemEventPatchLifecycleRequiresDedicatedMutableIut",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.systemEventPatchLifecycleRequiresDedicatedMutableIut()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "systemEventPatchReadinessIsConditionGated",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.systemEventPatchReadinessIsConditionGated()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2update",
+    "name": "unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence",
+    "status": "SKIP",
+    "message": "Method Part2UpdateTests.unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests@c8b3b5e] depends on not successfully finished methods in group \"systemfeatures\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "update",
+    "name": "deploymentsUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.deploymentsUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@6be40ee9] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "update",
+    "name": "proceduresUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.proceduresUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@6be40ee9] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "update",
+    "name": "propertiesUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.propertiesUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@6be40ee9] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "update",
+    "name": "samplingFeaturesUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.samplingFeaturesUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@6be40ee9] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "update",
+    "name": "systemsUpdate",
+    "status": "SKIP",
+    "message": "Method UpdateTests.systemsUpdate()[pri:0, instance:org.opengis.cite.ogcapiconnectedsystems10.conformance.update.UpdateTests@6be40ee9] depends on not successfully finished methods in group \"part1apicommon\""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2binding",
+    "name": "bindingClosureRequiresInspectableJsonEvidenceForFirstIncrement",
+    "status": "PASS",
+    "message": ""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2binding",
+    "name": "commandBindingRequiresParentSchemaAndChildBodyEvidence",
+    "status": "SKIP",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/controlstream/cmd-ref-from-controlstream - /controlstreams returned an empty collection; no local dynamic-data candidate is available for REQ-ETS-PART2-013 binding PASS."
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2binding",
+    "name": "observationBindingRequiresParentSchemaAndChildBodyEvidence",
+    "status": "SKIP",
+    "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/datastream/obs-ref-from-datastream - /datastreams returned an empty collection; no local dynamic-data candidate is available for REQ-ETS-PART2-013 binding PASS."
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2binding",
+    "name": "readOnlyBindingSuiteDoesNotSeedFixturesWithoutDedicatedMutationWork",
+    "status": "PASS",
+    "message": ""
+  },
+  {
+    "run": "clean-primary",
+    "groups": "part2binding",
+    "name": "standaloneObservationBindingConformanceClassIsIgnored",
+    "status": "PASS",
+    "message": ""
+  }
+]

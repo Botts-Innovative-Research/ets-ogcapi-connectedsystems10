@@ -1,0 +1,363 @@
+02-Aug-2026 04:22:23.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/10.1.42
+02-Aug-2026 04:22:24.016 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 5 2025 22:35:46 UTC
+02-Aug-2026 04:22:24.018 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 10.1.42.0
+02-Aug-2026 04:22:24.019 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+02-Aug-2026 04:22:24.019 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            6.17.0-1026-nvidia
+02-Aug-2026 04:22:24.020 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+02-Aug-2026 04:22:24.020 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /opt/java/openjdk
+02-Aug-2026 04:22:24.021 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.15+6
+02-Aug-2026 04:22:24.021 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+02-Aug-2026 04:22:24.022 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /usr/local/tomcat
+02-Aug-2026 04:22:24.022 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /usr/local/tomcat
+02-Aug-2026 04:22:24.086 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties
+02-Aug-2026 04:22:24.087 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+02-Aug-2026 04:22:24.088 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+02-Aug-2026 04:22:24.088 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx6144m
+02-Aug-2026 04:22:24.089 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -DTE_BASE=/usr/local/tomcat/te_base
+02-Aug-2026 04:22:24.090 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+02-Aug-2026 04:22:24.090 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+02-Aug-2026 04:22:24.091 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dsun.io.useCanonCaches=false
+02-Aug-2026 04:22:24.092 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+02-Aug-2026 04:22:24.093 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+02-Aug-2026 04:22:24.094 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+02-Aug-2026 04:22:24.095 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+02-Aug-2026 04:22:24.096 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+02-Aug-2026 04:22:24.096 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+02-Aug-2026 04:22:24.099 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+02-Aug-2026 04:22:24.100 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dlog4j2.formatMsgNoLookups=true
+02-Aug-2026 04:22:24.100 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/usr/local/tomcat
+02-Aug-2026 04:22:24.101 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/usr/local/tomcat
+02-Aug-2026 04:22:24.102 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/usr/local/tomcat/temp
+02-Aug-2026 04:22:24.121 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [2.0.9] using APR version [1.7.2].
+02-Aug-2026 04:22:24.166 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.0.13 30 Jan 2024]
+02-Aug-2026 04:22:25.748 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+02-Aug-2026 04:22:25.902 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [3197] milliseconds
+02-Aug-2026 04:22:26.115 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+02-Aug-2026 04:22:26.117 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/10.1.42]
+02-Aug-2026 04:22:26.166 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/usr/local/tomcat/webapps/teamengine]
+02-Aug-2026 04:25:53.053 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/usr/local/tomcat/webapps/teamengine] has finished in [206,880] ms
+02-Aug-2026 04:25:53.087 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+02-Aug-2026 04:25:53.150 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [207246] milliseconds
+[Fatal Error] entity-9992598931841779963.tmp:14:7: The element type "link" must be terminated by the matching end-tag "</link>".
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api
+	Accept=application/json
+log4j:WARN No appenders could be found for logger (org.apache.http.impl.conn.BasicClientConnectionManager).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api
+	Accept=application/json
+Request: GET https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml
+	Accept=*/*
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/?f=json
+	Accept=*/*
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json, application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties
+	Accept=application/sml+json, application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+IUT declares /conf/json; runtime binding checks still require parent schema and child JSON body evidence.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/controlstreams?limit=25
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/controlstreams/040g/commands?limit=1
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/commands?limit=1
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/datastreams?limit=25
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/datastreams/040g/observations?limit=1
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/datastreams/040g/schema?f=json
+	Accept=application/json
+REQ-ETS-PART2-013 first increment is read-only: it uses GET-only live evidence and does not seed DataStream, Observation, ControlStream, or Command fixtures.
+[WARNING] http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types - systems/040g UID 'urn:ets:local-osh:system:populated-alpha' is valid but is not a UUID URN or a URN in the bundled IANA registered-namespace snapshot.
+[WARNING] http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types - deployments/040g UID 'urn:ets:local-osh:deployment:populated-alpha' is valid but is not a UUID URN or a URN in the bundled IANA registered-namespace snapshot.
+[WARNING] http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types - procedures/040g UID 'urn:ets:local-osh:procedure:populated-alpha' is valid but is not a UUID URN or a URN in the bundled IANA registered-namespace snapshot.
+[WARNING] http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/rec/api-common/resource-uids-types - samplingFeatures/040g UID 'urn:ets:local-osh:sampling-feature:populated-alpha' is valid but is not a UUID URN or a URN in the bundled IANA registered-namespace snapshot.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Procedure direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-endpoint - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/location - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/resources-endpoint - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Deployment direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-endpoint - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/geo+json, application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/resources-endpoint - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/geo+json, application/sml+json, application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems/040g/deployments
+	Accept=application/geo+json, application/sml+json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Property Definitions direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/canonical-endpoint - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/resources-endpoint - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. GeoJSON direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/feature-attribute-mapping - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/deployment-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/deployment-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/relation-types - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/procedure-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/procedure-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/sf-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/sf-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/samplingFeatures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/geo+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/geojson/system-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. SensorML direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems
+	Accept=application/sml+json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Advanced Filtering direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/api-common/datetime - no advertised collection exposes both a usable temporal extent and a supported JSON items media type; no positive datetime-filter evidence is available. Part 2 API Common direct procedures will execute, but inherited conformance remains incomplete.
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json
+Request: GET http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/conformance
+	Accept=application/json

@@ -1,0 +1,319 @@
+{
+  "abortError": null,
+  "abortPhase": null,
+  "artifactManifest": "command-probe-manifests/artifact-manifest.sha256",
+  "cleanPrimary": {
+    "failures": [
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings: every available Deployment SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "deploymentSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema: canonical Deployment single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "deploymentSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class: every available Procedure uses a compatible SensorML class and omits position",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlClassesAreCompatible"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings: every available Procedure SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema: canonical Procedure single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings: every available Property SensorML document uses released URI mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings - http://field-hub-osh-1:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "propertySensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema: canonical Property single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema - http://field-hub-osh-1:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "propertySensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types: every available SensorML links-member association uses exact ogc-rel-prefixed resource vocabulary",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlAssociationRelationTypesAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping: every available SensorML resource uses released uniqueId, label, and description mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlCommonFeatureAttributesAreMapped"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read: API definition advertises application/sml+json for every supported canonical and advertised custom collection GET",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read \u2014 https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml does not advertise application/sml+json for GET /collections/{collectionId}/items (parser diagnostics: attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'text/uri-list'.description is unexpected; attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'application/json'.description is unexpected; paths.'/collections/{collectionId}/items'. Declared path parameter collectionId needs to be defined as a path parameter in path or operation level).",
+        "name": "sensorMlMediaTypeReadIsAdvertised"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id: every available canonical SensorML representation id exactly equals its URL id",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlResourceIdsMatchCanonicalUrls"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class: every available System SensorML class is compatible with unambiguous asset-type evidence",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlClassesAreCompatible"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings: every available System SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema: canonical System single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections: advertised Property collections use released metadata and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with itemType=sosa:Property.",
+        "name": "propertyCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url: every advertised Procedure resolves to equivalent canonical content",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+        "name": "everyProcedureHasCanonicalUrl"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections: advertised Procedure collections use released metadata, types, and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+        "name": "procedureCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections: advertised Deployment collections use released metadata and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+        "name": "deploymentCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system: every System's Deployment endpoint references its owning System",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system \u2014 expected HTTP 200, got 400",
+        "name": "deploymentsReferencedFromSystemsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url: every advertised Deployment resolves to equivalent canonical content",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+        "name": "everyDeploymentHasCanonicalUrl"
+      }
+    ],
+    "log": "command-probe-clean-primary-container.log",
+    "report": "command-probe-clean-primary-smoke.xml",
+    "requestMethodCounts": {
+      "GET": 130
+    },
+    "startupVerdict": "PASS",
+    "totals": {
+      "failed": 20,
+      "passed": 23,
+      "skipped": 209,
+      "total": 252
+    },
+    "verdict": "FAIL"
+  },
+  "cleanPrimaryConformanceVerdict": "FAIL",
+  "cleanPrimaryGateVerdict": "ERROR",
+  "cleanPrimaryStatus": 1,
+  "cleanupVerdict": "PASS",
+  "conformanceVerdict": "FAIL",
+  "finalizationErrors": [],
+  "generatedAt": "2026-08-02T04:32:01Z",
+  "oshImageProvenance": {
+    "imageId": "sha256:a0249ce15f22ae01620eee65e6737735b2b01a50f0a58b3c580f3d2a1dd21c7e",
+    "reference": "maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45",
+    "repoDigests": [
+      "maven@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45"
+    ]
+  },
+  "oshSourceProvenance": {
+    "ahead": 0,
+    "behind": 3,
+    "clean": true,
+    "conSysBundleBuildNumber": "4c87a65",
+    "conSysJar": "/home/nh/docker/sensorhub-driver-fabric/include/osh-core/build/install/osh-core/lib/sensorhub-service-consys-2.0.1.jar",
+    "headCommit": "4c87a65c9a967d52af9df476e65d7862c7673a15",
+    "headIsUpstreamAncestor": true,
+    "installManifest": "command-probe-manifests/installed-files.sha256",
+    "origin": "https://github.com/opensensorhub/osh-core.git",
+    "upstreamCommit": "ce8dd961c3f4dfdd739e5e2c78d42d8f62eb99bd",
+    "upstreamRef": "origin/master"
+  },
+  "overallWorkflowVerdict": "FAIL",
+  "populated": {
+    "failures": [
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings: every available Deployment SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "deploymentSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema: canonical Deployment single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "deploymentSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class: every available Procedure uses a compatible SensorML class and omits position",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlClassesAreCompatible"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings: every available Procedure SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema: canonical Procedure single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings: every available Property SensorML document uses released URI mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "propertySensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema: canonical Property single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "propertySensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types: every available SensorML links-member association uses exact ogc-rel-prefixed resource vocabulary",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlAssociationRelationTypesAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping: every available SensorML resource uses released uniqueId, label, and description mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlCommonFeatureAttributesAreMapped"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read: API definition advertises application/sml+json for every supported canonical and advertised custom collection GET",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read \u2014 https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml does not advertise application/sml+json for GET /collections/{collectionId}/items (parser diagnostics: attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'text/uri-list'.description is unexpected; attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'application/json'.description is unexpected; paths.'/collections/{collectionId}/items'. Declared path parameter collectionId needs to be defined as a path parameter in path or operation level).",
+        "name": "sensorMlMediaTypeReadIsAdvertised"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id: every available canonical SensorML representation id exactly equals its URL id",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlResourceIdsMatchCanonicalUrls"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class: every available System SensorML class is compatible with unambiguous asset-type evidence",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlClassesAreCompatible"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings: every available System SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema: canonical System single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema - http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections: advertised Property collections use released metadata and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections \u2014 http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections does not advertise a collection with itemType=sosa:Property.",
+        "name": "propertyCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url: every advertised Procedure resolves to equivalent canonical content",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url \u2014 http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+        "name": "everyProcedureHasCanonicalUrl"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections: advertised Procedure collections use released metadata, types, and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections \u2014 http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+        "name": "procedureCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections: advertised Deployment collections use released metadata and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections \u2014 http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+        "name": "deploymentCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system: every System's Deployment endpoint references its owning System",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system \u2014 expected HTTP 200, got 400",
+        "name": "deploymentsReferencedFromSystemsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url: every advertised Deployment resolves to equivalent canonical content",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url \u2014 http://ets-csapi-populated-osh-ets69cmdprobe-20260802T042211Z:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+        "name": "everyDeploymentHasCanonicalUrl"
+      }
+    ],
+    "log": "command-probe-populated-container.log",
+    "report": "command-probe-populated-smoke.xml",
+    "requestMethodCounts": {
+      "GET": 134
+    },
+    "startupVerdict": "PASS",
+    "totals": {
+      "failed": 20,
+      "passed": 24,
+      "skipped": 208,
+      "total": 252
+    },
+    "verdict": "FAIL"
+  },
+  "populatedGateVerdict": "COMPLETE_WITH_CONFORMANCE_FAILURE",
+  "populatedSmokeStatus": 1,
+  "primaryDifferences": [],
+  "primaryStateUnchanged": true,
+  "provisioningEvidence": "command-probe-provisioning-evidence.json",
+  "provisioningStatus": 0,
+  "provisioningVerdict": "PASS",
+  "retainedStatePath": null,
+  "runId": "ets69cmdprobe-20260802T042211Z",
+  "schemaVersion": 2,
+  "sourceFilesManifest": "command-probe-manifests/source-files.sha256",
+  "teamEngineImageId": "sha256:7d6874ab1478d1e595890806c1cbd196893da1dcbfa10b17a78d081b5f0c60da"
+}

@@ -1,6 +1,6 @@
 # E2E Test Plan — OGC API Connected Systems ETS
 
-Last updated: 2026-07-25T15:28Z
+Last updated: 2026-08-02T04:36Z
 
 ## Policy
 
@@ -69,9 +69,12 @@ docker run --privileged --rm tonistiigi/binfmt --install amd64
 - **Seed-state requirement**: For Part 2 dynamic-data work, use
   `ops/local-osh-populated-fixtures.json` and
   `scripts/local-osh-populated-e2e.sh` for the supported-interface
-  DataStream/Observation/ControlStream candidate. Record absent
-  Command/CommandStatus/CommandResult/SystemEvent evidence explicitly. Empty or
-  unsupported collections cannot be counted as positive conformance closure.
+  DataStream/Observation/ControlStream candidate. The manifest may include an
+  optional Command probe that records POST timeout/error/status and nested
+  Command collection diagnostics under the same dedicated mutable-IUT gates.
+  Record absent Command/CommandStatus/CommandResult/SystemEvent evidence
+  explicitly. Empty or unsupported collections cannot be counted as positive
+  conformance closure.
 - **Tasking-fixture isolation**: Sapient and SimUAV are configured as local tasking-capable fixtures but remain disabled by default for primary smoke. If a sprint enables either fixture to prove Command acknowledgement/result evidence, record the fixture ids, submitted Command body, terminal CommandStatus evidence, and any inline CommandResult data, then reset the OSH datastore and reseed the static fixtures before the primary read-only TeamEngine smoke.
 
 Local OSH command shape:

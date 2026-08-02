@@ -1,0 +1,5 @@
+populated: total=252 passed=24 failed=20 skipped=208 requestMethodCounts={'GET': 134}
+cleanPrimary: total=252 passed=23 failed=20 skipped=209 requestMethodCounts={'GET': 130}
+provisioningReady=True resourceIds={'system': '040g', 'procedure': '040g', 'deployment': '040g', 'samplingFeature': '040g', 'dataStream': '040g', 'observation': '040t7vlqqc30000000', 'controlStream': '040g'} requestMethodCounts={'POST': 7, 'GET': 10}
+schemaEvidence={'dataStream': {'status': 200, 'contentType': 'application/json', 'fieldNames': ['temperature']}, 'controlStream': {'status': 200, 'contentType': 'application/json', 'fieldNames': ['setpoint']}} observationEvidence={'status': 200, 'contentType': 'application/json', 'itemCount': 1, 'associatedDataStreamId': '040g'}
+cleanupVerdict=PASS primaryStateDiffBytes=0

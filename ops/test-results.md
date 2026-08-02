@@ -1,8 +1,45 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T17:46Z
+Last updated: 2026-08-02T04:36Z
 
 ## Current Sprint Evidence
+
+Sprint 69 Part 2 Binding disposable Command probe diagnostics:
+
+- Trigger: user instructed using a disposable local OSH mutable IUT and
+  reset/reseed as needed.
+- Scope: `REQ-ETS-PART2-013` populated-IUT diagnostics only. Full Command
+  binding closure is not claimed.
+- Baseline disposable run:
+  `ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/summary.txt`.
+  Provisioning PASS created System, Procedure, Deployment, SamplingFeature,
+  DataStream, Observation, and ControlStream fixtures with `POST=7`, `GET=10`.
+  Populated TeamEngine was `252/24/20/208`; Observation binding PASSed and
+  Command binding SKIPped for missing associated Command evidence. Cleanup
+  PASSed, primary diff was empty, and clean-primary TeamEngine was
+  `252/23/20/209`.
+- Harness change: `scripts/local-osh-populated-fixture.py` records optional
+  Command probe diagnostics from `ops/local-osh-populated-fixtures.json`
+  without making provisioning fail solely because Command evidence is absent.
+- Post-change disposable run:
+  `command-probe-summary.txt`, `command-probe-provisioning-evidence.json`,
+  `command-probe-populated-smoke.xml`, and `command-probe-clean-primary-smoke.xml`.
+  Provisioning PASS recorded `POST=8`, `GET=11`. Command probe diagnostics:
+  `POST /controlstreams/040g/commands` timed out;
+  `GET /controlstreams/040g/commands?limit=10` returned
+  `application/json` with `itemCount=0`; no Command id was discovered.
+- Post-change TeamEngine: populated `252/24/20/208` with Observation binding
+  PASS and Command binding SKIP; clean-primary `252/23/20/209`; cleanup PASS;
+  primary state diff empty. TeamEngine request counts remain read-only
+  (`GET=134` populated, `GET=130` clean-primary).
+- Verification: Python workflow regressions `14` tests pass
+  (`python-unittest-after-manifest-fix.txt`), fixture JSON validates, formatter
+  passes, and final Docker Maven passes `785 tests / 0 failures / 0 errors /
+  3 skipped` (`full-maven-final.txt`). Baseline and command-probe SHA and
+  provenance manifests are archived under `baseline-manifests/` and
+  `command-probe-manifests/`, and copied run summaries reference those
+  repository paths. Raze focused recheck returns `APPROVE_WITH_CONCERNS 0.96`
+  with `RAZE-S69-001` resolved and `required_fixes: []`.
 
 Sprint 68 Part 2 SWE Common Binary Encoding released ATS:
 

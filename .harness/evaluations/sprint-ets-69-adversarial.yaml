@@ -1,0 +1,48 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.96
+reviewed_scope: "Focused recheck for RAZE-S69-001 only: Sprint 69 baseline and command-probe provenance manifest archival and run-summary references."
+findings:
+  - id: RAZE-S69-001
+    status: RESOLVED
+    severity: medium
+    title: Referenced provenance manifests are not archived with the Sprint 69 evidence in the repository.
+    paths:
+      - path: ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-run-summary.json
+        lines: [4, 164, 317]
+      - path: ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/run-summary.json
+        lines: [4, 164, 317]
+      - path: ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/baseline-manifests/artifact-manifest.sha256
+      - path: ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/baseline-manifests/source-files.sha256
+      - path: ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/baseline-manifests/installed-files.sha256
+      - path: ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-manifests/artifact-manifest.sha256
+      - path: ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-manifests/source-files.sha256
+      - path: ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-manifests/installed-files.sha256
+    impact: Closed. Baseline and command-probe summaries now point at repository-archived manifest files instead of unarchived /tmp-only names.
+    evidence: run-summary.json references baseline-manifests/artifact-manifest.sha256, baseline-manifests/source-files.sha256, and baseline-manifests/installed-files.sha256; command-probe-run-summary.json references command-probe-manifests/artifact-manifest.sha256, command-probe-manifests/source-files.sha256, and command-probe-manifests/installed-files.sha256. A focused Python check found missing=NONE and empty=NONE for all six referenced files.
+    false_pass_or_false_skip_risk: Closed for the scoped provenance gap. No TestNG PASS/SKIP criteria were re-reviewed in this focused pass beyond confirming this manifest archival change does not alter runtime criteria.
+required_fixes: []
+evidence_reviewed:
+  files:
+    - ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/run-summary.json
+    - ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-run-summary.json
+    - ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/baseline-manifests/artifact-manifest.sha256
+    - ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/baseline-manifests/source-files.sha256
+    - ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/baseline-manifests/installed-files.sha256
+    - ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-manifests/artifact-manifest.sha256
+    - ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-manifests/source-files.sha256
+    - ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-manifests/installed-files.sha256
+  commands:
+    - git status --short
+    - find ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02 -maxdepth 2 -type f \( -path '*/baseline-manifests/*' -o -path '*/command-probe-manifests/*' \) -printf '%P\n' | sort
+    - jq '{artifactManifest, sourceFilesManifest, installManifest:.oshSourceProvenance.installManifest}' ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/run-summary.json
+    - jq '{artifactManifest, sourceFilesManifest, installManifest:.oshSourceProvenance.installManifest}' ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-run-summary.json
+    - python3 focused missing/empty referenced manifest check for run-summary.json and command-probe-run-summary.json
+    - wc -l ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/baseline-manifests/*.sha256 ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/command-probe-manifests/*.sha256
+review_notes:
+  focused_recheck:
+    status: resolved
+    details: The only reviewed gap, RAZE-S69-001, is closed by archiving baseline and command-probe provenance manifests and updating both summaries to repository-relative existing paths.
+residual_risks:
+  - Command probe discoveredCommandId is diagnostic only and may identify the first visible nested item rather than a command causally created by the POST; this is acceptable only while no TestNG PASS or provisioning PASS depends on it.
+  - The timeout POST could theoretically complete server-side after the client timeout, but current isolation evidence shows the owned ephemeral state was removed and the primary remained unchanged.
+  - The local OSH source checkout is behind origin/master by 3 commits; current summaries record headIsUpstreamAncestor=true and ahead=0, but future closure should reassess against updated OSH before treating local behavior as representative.

@@ -9,6 +9,7 @@ import json
 import os
 import pathlib
 import shutil
+import socket
 import stat
 import subprocess
 import sys
@@ -192,6 +193,60 @@ class ApiClient:
         except urllib.error.URLError as error:
             raise RuntimeError(f"{method} {path} failed: {error.reason}") from error
 
+    def request_diagnostic(self, method, path, media_type=None, payload=None, timeout=None):
+        self.method_counts[method] = self.method_counts.get(method, 0) + 1
+        headers = {"Accept": "application/json, application/geo+json, application/om+json"}
+        data = None
+        if payload is not None:
+            data = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+            headers["Content-Type"] = media_type
+        request = urllib.request.Request(
+            self.base_url + path, data=data, headers=headers, method=method
+        )
+        try:
+            with urllib.request.urlopen(
+                request, timeout=self.timeout if timeout is None else timeout
+            ) as response:
+                body = response.read().decode("utf-8")
+                return {
+                    "status": response.status,
+                    "location": response.headers.get("Location"),
+                    "contentType": response.headers.get("Content-Type", ""),
+                    "body": parse_json_or_text(body),
+                }
+        except urllib.error.HTTPError as error:
+            body = error.read().decode("utf-8", errors="replace")
+            return {
+                "status": error.code,
+                "location": error.headers.get("Location"),
+                "contentType": error.headers.get("Content-Type", ""),
+                "body": parse_json_or_text(body),
+                "errorType": "http-error",
+                "error": body[:500],
+            }
+        except (TimeoutError, socket.timeout) as error:
+            return {
+                "status": None,
+                "location": None,
+                "contentType": "",
+                "body": None,
+                "errorType": "timeout",
+                "error": str(error) or "timed out",
+            }
+        except urllib.error.URLError as error:
+            reason = error.reason
+            error_type = "url-error"
+            if isinstance(reason, (TimeoutError, socket.timeout)):
+                error_type = "timeout"
+            return {
+                "status": None,
+                "location": None,
+                "contentType": "",
+                "body": None,
+                "errorType": error_type,
+                "error": str(reason),
+            }
+
 
 def parse_json(body):
     if not body.strip():
@@ -200,6 +255,15 @@ def parse_json(body):
         return json.loads(body)
     except json.JSONDecodeError as error:
         raise RuntimeError(f"response was not JSON: {body[:500]}") from error
+
+
+def parse_json_or_text(body):
+    if not body.strip():
+        return None
+    try:
+        return json.loads(body)
+    except json.JSONDecodeError:
+        return body[:500]
 
 
 def resource_id(response, resource_name):
@@ -233,11 +297,17 @@ def validate_manifest(manifest):
     expected_names = {"system", "procedure", "deployment", "samplingFeature"}
     if {fixture.get("name") for fixture in static_fixtures} != expected_names:
         raise ValueError("static fixture names are incomplete or duplicated")
-    if not isinstance(dynamic_fixtures, dict) or set(dynamic_fixtures) != {
+    required_dynamic = {
         "dataStream",
         "observation",
         "controlStream",
-    }:
+    }
+    allowed_dynamic = required_dynamic | {"commandProbe"}
+    if (
+        not isinstance(dynamic_fixtures, dict)
+        or not required_dynamic.issubset(dynamic_fixtures)
+        or not set(dynamic_fixtures).issubset(allowed_dynamic)
+    ):
         raise ValueError("dynamic fixture definitions are incomplete")
 
 
@@ -246,6 +316,84 @@ def field_names(schema_body, member):
     component = schema.get(member, {}) if isinstance(schema, dict) else {}
     fields = component.get("fields", []) if isinstance(component, dict) else []
     return [field.get("name") for field in fields if isinstance(field, dict)]
+
+
+def diagnostic_resource_id(response):
+    location = response.get("location")
+    if location:
+        identifier = urllib.parse.urlsplit(location).path.rstrip("/").split("/")[-1]
+        if identifier:
+            return identifier
+    body = response.get("body")
+    if isinstance(body, dict):
+        for key in ("id", "@id"):
+            value = body.get(key)
+            if isinstance(value, str) and value:
+                return value
+    return None
+
+
+def item_count(body):
+    if isinstance(body, dict):
+        items = body.get("items")
+        if isinstance(items, list):
+            return len(items)
+    if isinstance(body, list):
+        return len(body)
+    return None
+
+
+def command_probe_evidence(client, command_probe, variables):
+    probe_path = substitute(command_probe["collection"], variables)
+    probe_timeout = float(command_probe.get("timeout", client.timeout))
+    payload = substitute(copy.deepcopy(command_probe["payload"]), variables)
+    post_response = client.request_diagnostic(
+        command_probe["method"],
+        probe_path,
+        command_probe["mediaType"],
+        payload,
+        timeout=probe_timeout,
+    )
+    nested_path = substitute(
+        command_probe.get(
+            "nestedCollection",
+            "/controlstreams/{controlStreamId}/commands?limit=10",
+        ),
+        variables,
+    )
+    nested_response = client.request_diagnostic("GET", nested_path)
+    discovered_command_id = diagnostic_resource_id(post_response)
+    nested_body = nested_response.get("body")
+    if discovered_command_id is None and isinstance(nested_body, dict):
+        items = nested_body.get("items")
+        if isinstance(items, list):
+            for item in items:
+                if isinstance(item, dict):
+                    discovered_command_id = diagnostic_resource_id({"body": item})
+                    if discovered_command_id:
+                        break
+    return {
+        "attempted": True,
+        "path": probe_path,
+        "mediaType": command_probe["mediaType"],
+        "post": {
+            key: post_response.get(key)
+            for key in ("status", "location", "contentType", "errorType", "error")
+            if post_response.get(key) is not None
+        },
+        "nestedCollection": {
+            "path": nested_path,
+            "status": nested_response.get("status"),
+            "contentType": nested_response.get("contentType", ""),
+            "itemCount": item_count(nested_response.get("body")),
+            **(
+                {"errorType": nested_response.get("errorType")}
+                if nested_response.get("errorType") is not None
+                else {}
+            ),
+        },
+        "discoveredCommandId": discovered_command_id,
+    }
 
 
 def provision(args):
@@ -283,6 +431,7 @@ def provision(args):
         "requestMethodCounts": client.method_counts,
         "schemaEvidence": {},
         "observationEvidence": {},
+        "commandProbeEvidence": {},
         "credentialSupplied": False,
         "errors": [],
     }
@@ -392,6 +541,11 @@ def provision(args):
             "itemCount": len(observation_items),
             "associatedDataStreamId": variables["dataStreamId"],
         }
+        command_probe = manifest["dynamicFixtures"].get("commandProbe")
+        if command_probe is not None:
+            evidence["commandProbeEvidence"] = command_probe_evidence(
+                client, command_probe, variables
+            )
         if evidence["schemaEvidence"]["dataStream"]["fieldNames"] != ["temperature"]:
             raise RuntimeError("DataStream schema did not retain temperature field")
         if evidence["schemaEvidence"]["controlStream"]["fieldNames"] != ["setpoint"]:

@@ -5,7 +5,8 @@
 # SCENARIO-ETS-PART2-013-EPHEMERAL-POPULATED-IUT-001;
 # SCENARIO-ETS-PART2-013-POPULATED-PROVISIONING-VERDICT-001;
 # SCENARIO-ETS-PART2-013-POPULATED-EVIDENCE-001;
-# SCENARIO-ETS-PART2-013-PRIMARY-STATE-ISOLATION-001.
+# SCENARIO-ETS-PART2-013-PRIMARY-STATE-ISOLATION-001;
+# SCENARIO-ETS-PART2-013-POPULATED-COMMAND-PROBE-DIAGNOSTICS-001.
 
 import copy
 import importlib.util
@@ -405,6 +406,118 @@ class SeederOwnershipBehaviorTests(unittest.TestCase):
                 self.write_evidence()
                 with self.assertRaises(ValueError):
                     self.validate()
+
+
+class FakeSeederClient:
+
+    def __init__(self, responses):
+        self.responses = list(responses)
+        self.calls = []
+        self.timeout = 30.0
+
+    def request_diagnostic(self, method, path, media_type=None, payload=None, timeout=None):
+        self.calls.append(
+            {
+                "method": method,
+                "path": path,
+                "mediaType": media_type,
+                "payload": payload,
+                "timeout": timeout,
+            }
+        )
+        if not self.responses:
+            raise AssertionError("unexpected diagnostic request")
+        return self.responses.pop(0)
+
+
+class SeederCommandProbeBehaviorTests(unittest.TestCase):
+
+    def test_command_probe_records_successful_post_and_nested_command_item(self):
+        command_probe = {
+            "collection": "/controlstreams/{controlStreamId}/commands",
+            "nestedCollection": "/controlstreams/{controlStreamId}/commands?limit=10",
+            "method": "POST",
+            "mediaType": "application/json",
+            "timeout": 5.0,
+            "payload": {
+                "issueTime": "{timestamp}",
+                "parameters": {
+                    "setpoint": 22.0,
+                },
+            },
+        }
+        client = FakeSeederClient(
+            [
+                {
+                    "status": 201,
+                    "location": "http://127.0.0.1/commands/cmd-1",
+                    "contentType": "application/json",
+                    "body": {"id": "cmd-1"},
+                },
+                {
+                    "status": 200,
+                    "contentType": "application/json",
+                    "body": {"items": [{"id": "cmd-1"}]},
+                },
+            ]
+        )
+
+        evidence = SEEDER.command_probe_evidence(
+            client,
+            command_probe,
+            {"controlStreamId": "cs-1", "timestamp": "2026-08-02T04:00:00Z"},
+        )
+
+        self.assertTrue(evidence["attempted"])
+        self.assertEqual(201, evidence["post"]["status"])
+        self.assertEqual(1, evidence["nestedCollection"]["itemCount"])
+        self.assertEqual("cmd-1", evidence["discoveredCommandId"])
+        self.assertEqual(5.0, client.calls[0]["timeout"])
+        self.assertEqual(
+            {"issueTime": "2026-08-02T04:00:00Z", "parameters": {"setpoint": 22.0}},
+            client.calls[0]["payload"],
+        )
+
+    def test_command_probe_records_timeout_and_empty_nested_collection_as_diagnostics(self):
+        command_probe = {
+            "collection": "/controlstreams/{controlStreamId}/commands",
+            "method": "POST",
+            "mediaType": "application/json",
+            "timeout": 1.0,
+            "payload": {
+                "parameters": {
+                    "setpoint": 22.0,
+                },
+            },
+        }
+        client = FakeSeederClient(
+            [
+                {
+                    "status": None,
+                    "location": None,
+                    "contentType": "",
+                    "body": None,
+                    "errorType": "timeout",
+                    "error": "timed out",
+                },
+                {
+                    "status": 200,
+                    "contentType": "application/json",
+                    "body": {"items": []},
+                },
+            ]
+        )
+
+        evidence = SEEDER.command_probe_evidence(
+            client,
+            command_probe,
+            {"controlStreamId": "cs-1", "timestamp": "2026-08-02T04:00:00Z"},
+        )
+
+        self.assertTrue(evidence["attempted"])
+        self.assertEqual("timeout", evidence["post"]["errorType"])
+        self.assertEqual(0, evidence["nestedCollection"]["itemCount"])
+        self.assertIsNone(evidence["discoveredCommandId"])
 
 
 if __name__ == "__main__":

@@ -1,0 +1,13 @@
+[smoke-test 03:59:28] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 03:59:28] step 2/8 — docker build ets-ogcapi-connectedsystems10:smoke (BuildKit 1)
+[smoke-test 03:59:29]   FINAL_IMAGE_ID=sha256:7d6874ab1478d1e595890806c1cbd196893da1dcbfa10b17a78d081b5f0c60da
+[smoke-test 03:59:29] step 3/8 — docker run on host port 8081
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+[smoke-test 03:59:29] step 4/8 — waiting for TeamEngine healthcheck (timeout 180s)
+[smoke-test 04:03:12]   healthcheck PASS at 04:03:12
+[smoke-test 04:03:12] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 04:03:15]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'OGC API - Connected Systems 1.0 Conformance Test Suite')
+[smoke-test 04:03:15] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=http://field-hub-osh-1:8081/sensorhub/api
+[smoke-test 04:04:22] step 7/8 — validating TestNG report → /tmp/ets-ogcapi-connectedsystems10-ets69-20260802T035352Z/clean-primary-results/s-ets-01-03-teamengine-smoke-2026-08-02.xml
+[smoke-test 04:04:22]   TestNG: total=252 passed=23 failed=20 skipped=209
+[smoke-test FATAL] TestNG report has failed=20 (>0); see /tmp/ets-ogcapi-connectedsystems10-ets69-20260802T035352Z/clean-primary-results/s-ets-01-03-teamengine-smoke-2026-08-02.xml

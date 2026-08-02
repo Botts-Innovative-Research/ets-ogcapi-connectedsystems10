@@ -12,6 +12,7 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 419 | 2026-08-02T03:50:40Z | 2026-08-02T04:55:53Z | 1h05m13s | User approved Plan 1: use a disposable local OSH mutable IUT and reset/reseed as needed, and asked future plans to be numbered. Completed and pushed Sprint 69 Part 2 Binding populated Command probe diagnostics as `0c6e01a`: baseline disposable OSH evidence revalidated Observation binding PASS and Command binding SKIP; added optional seeder Command probe diagnostics; verified Python 14 tests, fixture JSON, formatter, final Docker Maven `785/0/0/3`, disposable command-probe E2E `252/24/20/208`, clean-primary `252/23/20/209`, cleanup PASS, and primary unchanged; Raze focused recheck `APPROVE_WITH_CONCERNS 0.96`; full Command binding remains open on missing TeamEngine-visible Command evidence. |
 | 418 | 2026-08-02T04:45:34Z | 2026-08-02T04:47:46Z | 2m12s | User requested focused Raze recheck for `RAZE-S69-001` only after archiving baseline and command-probe provenance manifests and patching run summaries. Inspected only the manifest archival gapfix, verified both summaries point to repository-relative existing non-empty manifest files with missing=NONE and empty=NONE, updated `.harness/evaluations/sprint-ets-69-adversarial.yaml` to `APPROVE_WITH_CONCERNS 0.96` with `RAZE-S69-001` resolved and `required_fixes: []`, preserving residual risks. |
 | 417 | 2026-08-02T04:37:52Z | 2026-08-02T04:42:15Z | 4m23s | User instructed Raze review for Sprint 69 current uncommitted Part 2 Binding populated Command probe diagnostics without implementation fixes. Read `_bmad/agents/adversarial-reviewer.md`, inspected scoped diffs/docs/evidence, verified YAML syntax, and wrote `.harness/evaluations/sprint-ets-69-adversarial.yaml` with verdict `GAPS_FOUND 0.91` for missing archived provenance SHA manifests; no false PASS/SKIP issue found in TestNG criteria, and mutable-IUT isolation evidence was otherwise intact. |
 | 416 | 2026-08-02T03:09:21Z | 2026-08-02T03:09:43Z | 0m22s | User asked whether the next mutation-bound work can be done with a local OSH server populated with fake data. Reviewed current ops/known-issues/status/story evidence and confirmed this is feasible only as an explicit dedicated mutable local IUT for supported OSH behavior; fake data alone cannot satisfy exact closure where unmodified OSH omits required declarations, PATCH support, stream metadata, or command evidence. |
@@ -553,22 +554,24 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01 ETS continuation through Sprint 68)
+### Current Codex Session (2026-08-01/02 ETS continuation through Sprint 69)
 
-Extracted after Sprint 68 push reconciliation with
-`python3 scripts/session-metrics.py`. Auto-discovery selected
+Extracted after Sprint 69 implementation push with
+`python3 scripts/session-metrics.py`; raw output archived at
+`ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/session-metrics-before-final.txt`.
+Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
 the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 13,580,699 | $203.71 |
-| Output | 1,027,670 | $77.08 |
+| Input | 14,319,310 | $214.79 |
+| Output | 1,085,992 | $81.45 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 294,652,672 | $441.98 |
-| **TOTAL** | **309,261,041** | **$722.76** |
+| Cache Read | 316,924,160 | $475.39 |
+| **TOTAL** | **332,329,462** | **$771.63** |
 
-API calls (usage records): 2162
+API calls (usage records): 2310
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

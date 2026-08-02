@@ -1,6 +1,44 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T05:59Z
+Last updated: 2026-08-02T15:53Z
+
+## Sprint 71 Raze Approved Pending Push - Part 2 Update Released Method Surface
+
+- User instruction: "Continue."
+- Plan 1 scope: CP-031, S-ETS-71-01, and `sprint-ets-71.yaml` targeted the
+  Part 2 Update released-method surface, not positive PATCH lifecycle exact
+  closure.
+- `Part2UpdateTests` now exposes twenty-four deployed `@Test` methods:
+  ten parent declaration/prerequisite/condition-gate/readiness/honesty checks
+  carrying only `/req/update`, plus fourteen deferred lifecycle methods with
+  exactly one OGC 23-002 Annex A.8 child target each.
+- Coverage remains candidate-honest:
+  `2:/conf/update = 14 total / 0 exact / 0 helper / 14 candidate /
+  0 unmapped`. Overall coverage remains
+  `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+- Verification evidence is archived under
+  `ops/test-results/sprint-ets-71-part2-update-method-surface-2026-08-02/`:
+  structural red after formatting, formatter, focused structural Maven
+  `86/0/0/0`, coverage update/audit, full Docker Maven `787/0/0/3`, and a
+  repository-side `repo-evidence-manifest.sha256` that verifies in place.
+- Disposable local OSH mutable E2E ran as
+  `sprint-ets-71-update-20260802T153902Z`. Provisioning PASSed with owned
+  seed writes, cleanup PASSed, and primary state was unchanged. TeamEngine
+  smoke request counts were GET-only (`GET=134` populated, `GET=130`
+  clean-primary); all twenty-four in-scope Part 2 Update methods SKIP honestly
+  without PATCH dispatch.
+- Full TeamEngine smoke remains honestly non-green on the existing local OSH
+  twenty-failure baseline: populated `275/24/20/231`, clean-primary
+  `275/23/20/232`. These failures are outside Sprint 71.
+- Positive PATCH lifecycle and schema-rejection dispatch remain deferred until
+  a non-public dedicated mutable IUT declares `/conf/update`, advertises PATCH,
+  supports changed-field GET proof, and cleanup.
+- Raze returned `APPROVE_WITH_CONCERNS 0.96` with `required_fixes: []`.
+  The sole LOW note is artifact-manifest hygiene: the copied source local-OSH
+  manifest verifies in the original `/tmp` run tree, while
+  `repo-evidence-manifest.sha256` verifies the repository evidence subset in
+  place.
+- Commit and push are next.
 
 ## Sprint 70 Complete and Pushed - Part 2 CRD Released Method Surface
 

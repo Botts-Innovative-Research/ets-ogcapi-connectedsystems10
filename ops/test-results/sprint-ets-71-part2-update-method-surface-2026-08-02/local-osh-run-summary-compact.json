@@ -1,0 +1,43 @@
+{
+  "cleanPrimary": {
+    "failed": 20,
+    "passed": 23,
+    "skipped": 232,
+    "total": 275
+  },
+  "cleanPrimaryGateVerdict": "ERROR",
+  "cleanPrimaryRequestCounts": {
+    "GET": 130
+  },
+  "cleanupVerdict": "PASS",
+  "conformanceVerdict": "FAIL",
+  "generatedAt": "2026-08-02T15:49:36Z",
+  "overallWorkflowVerdict": "FAIL",
+  "populated": {
+    "failed": 20,
+    "passed": 24,
+    "skipped": 231,
+    "total": 275
+  },
+  "populatedGateVerdict": "COMPLETE_WITH_CONFORMANCE_FAILURE",
+  "populatedRequestCounts": {
+    "GET": 134
+  },
+  "primaryStateUnchanged": true,
+  "provisioningReady": true,
+  "provisioningRequestCounts": {
+    "GET": 11,
+    "POST": 8
+  },
+  "provisioningVerdict": "PASS",
+  "resourceIds": {
+    "controlStream": "040g",
+    "dataStream": "040g",
+    "deployment": "040g",
+    "observation": "040pjidtqc30000000",
+    "procedure": "040g",
+    "samplingFeature": "040g",
+    "system": "040g"
+  },
+  "runId": "sprint-ets-71-update-20260802T153902Z"
+}

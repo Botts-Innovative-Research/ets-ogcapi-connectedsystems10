@@ -202,7 +202,7 @@ public class Part2UpdateTests {
 	 * SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001.
 	 * SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_DATASTREAM + ", " + REQ_OBSERVATION
+	@Test(description = "OGC-23-002 " + REQ_UPDATE
 			+ ": DataStream and Observation OPTIONS PATCH readiness is checked only after /conf/update and /conf/datastream gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
 			groups = GROUP)
 	public void datastreamObservationPatchReadinessIsConditionGated() {
@@ -223,8 +223,7 @@ public class Part2UpdateTests {
 	 * SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001.
 	 * SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM + ", " + REQ_COMMAND + ", " + REQ_COMMAND_STATUS + ", and "
-			+ REQ_COMMAND_RESULT
+	@Test(description = "OGC-23-002 " + REQ_UPDATE
 			+ ": ControlStream/Command OPTIONS PATCH readiness is checked only after /conf/update and /conf/controlstream gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
 			groups = GROUP)
 	public void controlStreamCommandPatchReadinessIsConditionGated() {
@@ -245,8 +244,7 @@ public class Part2UpdateTests {
 	 * SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001.
 	 * SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY + ", " + REQ_FEASIBILITY_STATUS + ", and "
-			+ REQ_FEASIBILITY_RESULT
+	@Test(description = "OGC-23-002 " + REQ_UPDATE
 			+ ": Feasibility OPTIONS PATCH readiness is checked only after /conf/update and /conf/feasibility gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
 			groups = GROUP)
 	public void feasibilityPatchReadinessIsConditionGated() {
@@ -264,7 +262,7 @@ public class Part2UpdateTests {
 	 * SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001.
 	 * SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_SYSTEM_EVENT
+	@Test(description = "OGC-23-002 " + REQ_UPDATE
 			+ ": SystemEvent OPTIONS PATCH readiness is checked only after /conf/update and /conf/system-event gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
 			groups = GROUP)
 	public void systemEventPatchReadinessIsConditionGated() {
@@ -281,7 +279,7 @@ public class Part2UpdateTests {
 	/**
 	 * SCENARIO-ETS-PART2-008-UNAVAILABLE-ENDPOINT-HONESTY-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_COMMAND + ", " + REQ_FEASIBILITY + ", and " + REQ_SYSTEM_EVENT
+	@Test(description = "OGC-23-002 " + REQ_UPDATE
 			+ ": unavailable, HTTP 500, HTTP 400, or streaming-only endpoints are SKIP evidence, not Update lifecycle PASS evidence (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-UNAVAILABLE-ENDPOINT-HONESTY-001)",
 			groups = GROUP)
 	public void unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence() {
@@ -316,8 +314,7 @@ public class Part2UpdateTests {
 	/**
 	 * SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_DATASTREAM_UPDATE_SCHEMA + ", " + REQ_OBSERVATION_SCHEMA + ", "
-			+ REQ_CONTROLSTREAM_UPDATE_SCHEMA + ", and " + REQ_COMMAND_SCHEMA
+	@Test(description = "OGC-23-002 " + REQ_UPDATE
 			+ ": schema-rejection PATCH checks require safe mutation opt-in and concrete parent schema evidence (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
 			groups = GROUP)
 	public void schemaRejectionPatchChecksRequireSafeEvidence() {
@@ -334,48 +331,114 @@ public class Part2UpdateTests {
 	/**
 	 * SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_DATASTREAM + ", " + REQ_OBSERVATION
-			+ ": DataStream/Observation positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
+	@Test(description = "OGC-23-002 " + REQ_DATASTREAM
+			+ ": DataStream positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
 			groups = GROUP)
-	public void datastreamObservationPatchLifecycleRequiresDedicatedMutableIut() {
-		skipIfUpdateUndeclared();
-		skipIfConditionClassUndeclared(CONF_DATASTREAM,
-				"Requirements 79-82 require /conf/datastream before DataStream/Observation PATCH lifecycle checks.");
-		ensureMutationEnabledOrSkip(REQ_DATASTREAM);
-		throw new SkipException(REQ_DATASTREAM
-				+ " - positive DataStream/Observation PATCH lifecycle coverage is deferred until dedicated mutable-IUT fixtures, endpoint PATCH readiness, changed-field GET proof, and cleanup are implemented. No PATCH request was issued.");
+	public void datastreamPatchLifecycleRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_DATASTREAM, CONF_DATASTREAM,
+				"Requirement 79 requires /conf/datastream before DataStream PATCH lifecycle checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_DATASTREAM_UPDATE_SCHEMA
+			+ ": DataStream schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+			groups = GROUP)
+	public void datastreamSchemaUpdatePatchRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_DATASTREAM_UPDATE_SCHEMA, CONF_DATASTREAM,
+				"Requirement 80 requires /conf/datastream before DataStream schema update PATCH checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_OBSERVATION
+			+ ": Observation positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
+			groups = GROUP)
+	public void observationPatchLifecycleRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_OBSERVATION, CONF_DATASTREAM,
+				"Requirement 81 requires /conf/datastream before Observation PATCH lifecycle checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_OBSERVATION_SCHEMA
+			+ ": Observation schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+			groups = GROUP)
+	public void observationSchemaPatchRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_OBSERVATION_SCHEMA, CONF_DATASTREAM,
+				"Requirement 82 requires /conf/datastream before Observation schema update PATCH checks.");
 	}
 
 	/**
 	 * SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM + ", " + REQ_COMMAND + ", " + REQ_COMMAND_STATUS + ", and "
-			+ REQ_COMMAND_RESULT
-			+ ": ControlStream/Command positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM
+			+ ": ControlStream positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
 			groups = GROUP)
-	public void controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut() {
-		skipIfUpdateUndeclared();
-		skipIfConditionClassUndeclared(CONF_CONTROLSTREAM,
-				"Requirements 83-88 require /conf/controlstream before ControlStream/Command PATCH lifecycle checks.");
-		ensureMutationEnabledOrSkip(REQ_CONTROLSTREAM);
-		throw new SkipException(REQ_CONTROLSTREAM
-				+ " - positive ControlStream/Command PATCH lifecycle coverage is deferred until dedicated mutable-IUT fixtures, endpoint PATCH readiness, changed-field GET proof, and cleanup are implemented. No PATCH request was issued.");
+	public void controlStreamPatchLifecycleRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_CONTROLSTREAM, CONF_CONTROLSTREAM,
+				"Requirement 83 requires /conf/controlstream before ControlStream PATCH lifecycle checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM_UPDATE_SCHEMA
+			+ ": ControlStream schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+			groups = GROUP)
+	public void controlStreamSchemaUpdatePatchRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_CONTROLSTREAM_UPDATE_SCHEMA, CONF_CONTROLSTREAM,
+				"Requirement 84 requires /conf/controlstream before ControlStream schema update PATCH checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_COMMAND
+			+ ": Command positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+			groups = GROUP)
+	public void commandPatchLifecycleRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_COMMAND, CONF_CONTROLSTREAM,
+				"Requirement 85 requires /conf/controlstream before Command PATCH lifecycle checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_COMMAND_SCHEMA
+			+ ": Command schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+			groups = GROUP)
+	public void commandSchemaPatchRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_COMMAND_SCHEMA, CONF_CONTROLSTREAM,
+				"Requirement 86 requires /conf/controlstream before Command schema update PATCH checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_COMMAND_STATUS
+			+ ": Command status positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+			groups = GROUP)
+	public void commandStatusPatchRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_COMMAND_STATUS, CONF_CONTROLSTREAM,
+				"Requirement 87 requires /conf/controlstream before Command status PATCH lifecycle checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_COMMAND_RESULT
+			+ ": Command result positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+			groups = GROUP)
+	public void commandResultPatchRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_COMMAND_RESULT, CONF_CONTROLSTREAM,
+				"Requirement 88 requires /conf/controlstream before Command result PATCH lifecycle checks.");
 	}
 
 	/**
 	 * SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY + ", " + REQ_FEASIBILITY_STATUS + ", and "
-			+ REQ_FEASIBILITY_RESULT
+	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY
 			+ ": Feasibility positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
 			groups = GROUP)
 	public void feasibilityPatchLifecycleRequiresDedicatedMutableIut() {
-		skipIfUpdateUndeclared();
-		skipIfConditionClassUndeclared(CONF_FEASIBILITY,
-				"Requirements 89-91 require /conf/feasibility before Feasibility PATCH lifecycle checks.");
-		ensureMutationEnabledOrSkip(REQ_FEASIBILITY);
-		throw new SkipException(REQ_FEASIBILITY
-				+ " - positive Feasibility PATCH lifecycle coverage is deferred until dedicated mutable-IUT fixtures, endpoint PATCH readiness, changed-field GET proof, and cleanup are implemented. No PATCH request was issued.");
+		deferPatchLifecycleTarget(REQ_FEASIBILITY, CONF_FEASIBILITY,
+				"Requirement 89 requires /conf/feasibility before Feasibility PATCH lifecycle checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY_STATUS
+			+ ": Feasibility status positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+			groups = GROUP)
+	public void feasibilityStatusPatchRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_FEASIBILITY_STATUS, CONF_FEASIBILITY,
+				"Requirement 90 requires /conf/feasibility before Feasibility status PATCH lifecycle checks.");
+	}
+
+	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY_RESULT
+			+ ": Feasibility result positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+			groups = GROUP)
+	public void feasibilityResultPatchRequiresDedicatedMutableIut() {
+		deferPatchLifecycleTarget(REQ_FEASIBILITY_RESULT, CONF_FEASIBILITY,
+				"Requirement 91 requires /conf/feasibility before Feasibility result PATCH lifecycle checks.");
 	}
 
 	/**
@@ -385,12 +448,8 @@ public class Part2UpdateTests {
 			+ ": SystemEvent positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
 			groups = GROUP)
 	public void systemEventPatchLifecycleRequiresDedicatedMutableIut() {
-		skipIfUpdateUndeclared();
-		skipIfConditionClassUndeclared(CONF_SYSTEM_EVENT,
+		deferPatchLifecycleTarget(REQ_SYSTEM_EVENT, CONF_SYSTEM_EVENT,
 				"Requirement 92 requires /conf/system-event before SystemEvent PATCH lifecycle checks.");
-		ensureMutationEnabledOrSkip(REQ_SYSTEM_EVENT);
-		throw new SkipException(REQ_SYSTEM_EVENT
-				+ " - positive SystemEvent PATCH lifecycle coverage is deferred until dedicated mutable-IUT fixtures, endpoint PATCH readiness, changed-field GET proof, and cleanup are implemented. No PATCH request was issued.");
 	}
 
 	static boolean declaresConformance(Map<String, Object> body, String conformanceUri) {
@@ -475,6 +534,14 @@ public class Part2UpdateTests {
 		if (reason != null) {
 			throw new SkipException(reason);
 		}
+	}
+
+	private void deferPatchLifecycleTarget(String requirementUri, String conformanceUri, String prerequisiteReason) {
+		skipIfUpdateUndeclared();
+		skipIfConditionClassUndeclared(conformanceUri, prerequisiteReason);
+		ensureMutationEnabledOrSkip(requirementUri);
+		throw new SkipException(requirementUri
+				+ " - Part 2 Update PATCH behavior is deferred until dedicated mutable-IUT fixtures, endpoint PATCH readiness, changed-field GET proof, and cleanup are implemented. No PATCH request was issued.");
 	}
 
 	private void assertOptionsPatchReadiness(String path, String requirementUri) {

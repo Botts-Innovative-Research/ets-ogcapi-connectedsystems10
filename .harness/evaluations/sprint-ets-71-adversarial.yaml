@@ -1,0 +1,115 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.96
+reviewed_at_utc: "2026-08-02T16:00:04Z"
+reviewer: Raze
+reviewed_scope:
+  sprint: ets-71
+  story: S-ETS-71-01
+  requirement: REQ-ETS-PART2-008
+  conformance_class: "2:/conf/update"
+  change_type: released_method_surface_fidelity
+  implementation_files:
+    - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/update/Part2UpdateTests.java
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/update/VerifyPart2UpdateTests.java
+  scoped_documents:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+    - .harness/contracts/sprint-ets-71.yaml
+    - openspec/change-proposals/CP-031-part2-update-released-method-surface.md
+    - epics/stories/s-ets-71-01-part2-update-released-method-surface.md
+    - epics/epic-ets-03-part2-classes.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - ops/status.md
+    - ops/changelog.md
+    - ops/test-results.md
+    - ops/known-issues.md
+    - ops/ats-coverage-report.json
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml
+    - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/VerifyTestNGSuiteDependency.java
+    - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/released-ats-inventory.json
+    - ops/test-results/sprint-ets-71-part2-update-method-surface-2026-08-02/
+  review_method:
+    - Artifact inspection only; no Docker, Maven, or TeamEngine reruns.
+    - Verified archived exit codes, Maven summaries, coverage JSON, local OSH run summaries, TestNG status extraction, repository evidence manifest, TestNG wiring, and git hygiene.
+findings:
+  - id: RAZE-ETS71-EVIDENCE-001
+    severity: LOW
+    status: NON_BLOCKING
+    title: Copied raw local OSH artifact manifest is not self-verifying from the renamed repository evidence subset.
+    impact: >
+      Running sha256sum against local-osh-artifact-manifest.sha256 inside the
+      repository evidence directory fails because that manifest belongs to the
+      source /tmp run tree and references original filenames and nested result
+      paths that were not copied verbatim. This does not invalidate the Sprint
+      71 claims because repo-evidence-manifest.sha256 verifies the archived
+      repository subset in place, and the original /tmp artifact-manifest.sha256
+      currently verifies at the path recorded in local-osh-output-dir.txt.
+    evidence:
+      - path: ops/test-results/sprint-ets-71-part2-update-method-surface-2026-08-02/local-osh-artifact-manifest.sha256
+        observed: References source-run paths such as clean-primary-failures.json and populated-results/... that are not all present under the renamed repository evidence subset.
+      - command: "cd ops/test-results/sprint-ets-71-part2-update-method-surface-2026-08-02 && sha256sum -c local-osh-artifact-manifest.sha256 --quiet"
+        observed: "exit 1; 31 listed files could not be read from the repository evidence directory."
+      - command: "cd ops/test-results/sprint-ets-71-part2-update-method-surface-2026-08-02 && sha256sum -c repo-evidence-manifest.sha256 --quiet"
+        observed: "exit 0; repository evidence manifest verifies in place."
+      - command: "cd /tmp/ets-ogcapi-connectedsystems10-sprint-ets-71-update-20260802T153902Z && sha256sum -c artifact-manifest.sha256 --quiet"
+        observed: "exit 0; source local OSH output manifest verifies while the /tmp tree exists."
+    required_fix: null
+evidence:
+  method_surface:
+    status: PASS
+    details:
+      - Part2UpdateTests exposes twenty-four deployed TestNG @Test methods.
+      - Fourteen child-target lifecycle methods each carry exactly one OGC 23-002 Annex A.8 requirement URI.
+      - Parent declaration, prerequisite, condition-gate, readiness, unavailable-endpoint, mutation-safety, and schema-rejection honesty methods carry only /req/update in TestNG descriptions.
+      - VerifyPart2UpdateTests.releasedAnnexA8TargetsHaveOneDeployedMethodEach enforces one deployed method per released child target and no multi-child-target helper/readiness methods.
+  ogc_uri_mapping:
+    status: PASS
+    details:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/ats/released-ats-inventory.json lists the fourteen Part 2 /conf/update fullTarget URIs used by the implementation.
+      - ops/ats-coverage-report.json maps each Part 2 /conf/update target to one candidate Part2UpdateTests method and leaves reviewedMapping null.
+  false_pass_skip_risk:
+    status: PASS
+    details:
+      - Positive PATCH lifecycle behavior is not claimed.
+      - New child-target methods call skipIfUpdateUndeclared, condition-class gates, and ensureMutationEnabledOrSkip before throwing deferred SkipException.
+      - Readiness methods issue read-only OPTIONS only after /conf/update and condition-class gates.
+      - Public GeoRobotix remains hard-denied in mutationGateSkipReason even when mutation opt-in is set.
+  testng_wiring:
+    status: PASS
+    details:
+      - src/main/resources/org/opengis/cite/ogcapiconnectedsystems10/testng.xml declares part2update depends-on "core common systemfeatures".
+      - VerifyTestNGSuiteDependency checks the dependency tokens, prohibits hiding Part 2 Update runtime prerequisite gates behind part2apicommon, part2createreplacedelete, or condition-class dependencies, and confirms every Part 2 Update @Test carries group part2update.
+  verification:
+    status: PASS_WITH_HONEST_E2E_FAILURES
+    details:
+      - focused-red-structural-after-format.exitcode is 1; the archived log reports 86 tests, 1 failure, 0 errors, 0 skipped before implementation.
+      - formatter-after-impl.exitcode is 0.
+      - focused-green-structural.exitcode is 0; the archived log reports 86 tests, 0 failures, 0 errors, 0 skipped.
+      - coverage-update.exitcode and coverage-audit.exitcode are 0; coverage audit reports 23 tests, 0 failures, 0 errors, 0 skipped.
+      - full-maven.exitcode is 0; the archived log reports 787 tests, 0 failures, 0 errors, 3 skipped.
+      - local-osh-populated-workflow.exitcode is 1 because full TeamEngine smoke remains non-green on the existing twenty-failure local OSH baseline.
+  e2e_honesty:
+    status: PASS
+    details:
+      - local-osh-run-summary-compact.json records populated 275 total, 24 passed, 20 failed, 231 skipped and clean-primary 275 total, 23 passed, 20 failed, 232 skipped.
+      - local-osh-part2-update-statuses.json records all twenty-four populated and clean-primary Part 2 Update @Test methods as SKIP, with fetchPart2UpdateInputs PASS.
+      - TeamEngine smoke request counts are GET-only: populated GET=134 and clean-primary GET=130.
+      - Provisioning writes are isolated to the owned disposable IUT seeding phase: POST=8, GET=11.
+      - cleanupVerdict is PASS and primaryStateUnchanged is true; local-osh-primary-state-diff.txt is empty.
+      - The twenty full-smoke failures are outside Sprint 71: SensorML, Deployment, Procedure, and PropertyDefinitions classes.
+  docs_reconciliation:
+    status: PASS
+    details:
+      - Story, CP, OpenSpec, traceability, status, changelog, test-results, and known-issues consistently describe Sprint 71 as method-surface/candidate-only with positive PATCH deferred.
+      - No document inspected claims full TeamEngine conformance success or reviewed exact Part 2 Update promotion.
+  worktree_hygiene:
+    status: PASS
+    details:
+      - git status shows modified/untracked files are scoped to Sprint 71 docs, code, coverage, metrics, and evidence.
+      - git diff --check returned no whitespace errors.
+      - Evidence files under the Sprint 71 directory are not ignored by .gitignore.
+required_fixes: []
+residual_risks:
+  - Part 2 Update remains candidate only until a non-public dedicated mutable IUT declares /conf/update, advertises PATCH, supports changed-field GET proof, and cleanup.
+  - Full local OSH TeamEngine smoke is non-green on the existing twenty-failure baseline; this is documented honestly but remains a project-level conformance limitation outside the Sprint 71 method-surface scope.

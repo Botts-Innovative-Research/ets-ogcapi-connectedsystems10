@@ -2,6 +2,50 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-02 - Sprint 71 Part 2 Update released method surface
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-031, S-ETS-71-01, and the Sprint 71 contract for Part 2 Update
+  released-method-surface fidelity.
+- Updated OpenSpec and traceability with
+  `SCENARIO-ETS-PART2-008-RELEASED-METHOD-SURFACE-001`.
+- Added a test-first structural regression requiring exactly one deployed
+  method per released Annex A.8 Update child target and preventing helper or
+  readiness methods from carrying multiple child target URIs.
+- Split the historical coarse Part 2 Update lifecycle surface into fourteen
+  independent deferred methods: DataStream, DataStream schema update,
+  Observation, Observation schema, ControlStream, ControlStream schema update,
+  Command, Command schema/status/result, Feasibility, Feasibility
+  status/result, and SystemEvent.
+- Preserved mutation safety: lifecycle checks still gate on exact
+  `/conf/update`, the relevant Part 2 resource conformance class, and explicit
+  dedicated mutable-IUT opt-in before they SKIP as deferred; no public or
+  non-opted IUT PATCH path is enabled.
+- Regenerated released ATS coverage:
+  `2:/conf/update = 14 total / 0 exact / 0 helper / 14 candidate /
+  0 unmapped`; overall coverage remains
+  `240 / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+- Verification artifacts are archived under
+  `ops/test-results/sprint-ets-71-part2-update-method-surface-2026-08-02/`:
+  structural red, formatter, focused structural Maven `86/0/0/0`, coverage
+  update/audit `23/0/0/0`, full Docker Maven `787/0/0/3`, and
+  `repo-evidence-manifest.sha256` for in-place artifact verification.
+- Disposable local OSH E2E ran against owned mutable IUT
+  `sprint-ets-71-update-20260802T153902Z`; provisioning and cleanup PASSed,
+  primary-state diff is empty, and all twenty-four in-scope Part 2 Update
+  methods SKIP honestly. The full smoke remains non-green on the existing
+  local OSH twenty-failure baseline: populated `275/24/20/231`,
+  clean-primary `275/23/20/232`, with GET-only TeamEngine request counts and
+  zero PATCH/POST/PUT/DELETE during smoke.
+- Scope remains candidate method-surface cleanup only. Positive PATCH lifecycle
+  exact closure, schema-rejection PATCH dispatch, OSH changes, TeamEngine
+  changes, and public-IUT mutation are out of scope.
+- Raze returned `APPROVE_WITH_CONCERNS 0.96` with `required_fixes: []`. The
+  sole LOW non-blocking concern is that the copied source-run local OSH
+  manifest verifies in `/tmp`, while `repo-evidence-manifest.sha256` verifies
+  the repository evidence subset in place.
+
 ## 2026-08-02 - Sprint 70 Part 2 CRD released method surface
 
 **Triggered by user instruction**: "Continue."

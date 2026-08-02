@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T05:44Z
+Last updated: 2026-08-02T15:53Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -128,7 +128,7 @@ Last updated: 2026-08-02T05:44Z
   limitations remain useful interoperability context only.
 - Part 2 placeholder taxonomy was corrected during Sprint 25 planning and
   extended during Sprints 26, 27, 28, 29, 30, 31, 59, 60, 61, 62, 63, 64,
-  65, 66, 67, 68, and 70. OpenSpec and epic ETS-03 now treat API Common as exact implemented
+  65, 66, 67, 68, 70, and 71. OpenSpec and epic ETS-03 now treat API Common as exact implemented
   `REQ-ETS-PART2-001`, Datastreams & Observations as exact implemented
   `REQ-ETS-PART2-002`, Control Streams & Commands as exact implemented
   `REQ-ETS-PART2-003`, Command Feasibility as exact implemented
@@ -136,7 +136,9 @@ Last updated: 2026-08-02T05:44Z
   `REQ-ETS-PART2-005`, Advanced Filtering as exact implemented
   `REQ-ETS-PART2-006`, Create/Replace/Delete as partial implemented with a
   Sprint 70 one-method-per-Annex-A.7-target candidate surface and zero unmapped
-  released targets for `REQ-ETS-PART2-007`, Update as partial implemented `REQ-ETS-PART2-008`,
+  released targets for `REQ-ETS-PART2-007`, Update as partial implemented with
+  a Sprint 71 one-method-per-Annex-A.8-target candidate surface and zero
+  unmapped released targets for `REQ-ETS-PART2-008`,
   JSON Encoding as exact implemented `REQ-ETS-PART2-009`, SWE Common JSON
   Encoding as exact implemented `REQ-ETS-PART2-010`, SWE Common Text
   Encoding as exact implemented `REQ-ETS-PART2-011`, SWE Common Binary
@@ -165,7 +167,24 @@ Last updated: 2026-08-02T05:44Z
   currently declares the relevant Advanced Filtering class, so undeclared
   behavior remains SKIP evidence rather than PASS.
 - Sprint ets-12 and Sprint ets-26 Create/Replace/Delete work is mutation-safety constrained. GeoRobotix declares both Part 1 and Part 2 `/conf/create-replace-delete`, declares OGC API Features Part 4 `/conf/create-replace-delete`, and advertises POST/PUT/DELETE via broad OPTIONS, but default public smoke MUST NOT mutate the public IUT. OPTIONS evidence is readiness only, not lifecycle conformance. GeoRobotix also returns HTTP 400 for `/commands`, `/systemEvents`, and `/feasibility`, and returns HTTP 400 streaming-only for `/systems/{id}/events` when healthy, so Part 2 CRD lifecycle checks for those resources must SKIP unless a dedicated mutable IUT exposes JSON resource endpoints. Sprint 26 adds the first Part 2 CRD safety-gated runtime subset, but full Create/Replace/Delete remains PARTIAL until non-system CRUD and cascade requirements are implemented.
-- Sprint ets-27 Update implementation is mutation-safety constrained and condition-gated. GeoRobotix currently does not declare Part 2 `/conf/update`, sampled OPTIONS probes return broad `Allow` headers but omit PATCH, and current read-health probes still return HTTP 500 for existing `/systems/{id}`, `/datastreams`, and `/observations` reads. Clause 15 also requires resource-class condition gates before PASS: `/conf/datastream` for R79-R82, `/conf/controlstream` for R83-R88, `/conf/feasibility` for R89-R91, and `/conf/system-event` for R92. `Part2UpdateTests` adds the first safety-gated runtime subset, but positive PATCH lifecycle and schema-rejection dispatch remain deferred until a non-public dedicated mutable IUT declares `/conf/update`, advertises PATCH, supports changed-field GET proof, and cleanup. Mandatory GeoRobotix Generator smoke failed `160 total / 27 passed / 5 failed / 128 skipped`; all 14 Part 2 Update runtime tests SKIP through `systemfeatures`, and no GeoRobotix PATCH/POST/PUT/DELETE was logged. Accepted local OSH E2E passed `160 total / 62 passed / 0 failed / 98 skipped`; all 14 Part 2 Update runtime tests SKIP because local OSH does not declare `/conf/update`, and no PATCH request lines appear in the local OSH smoke log.
+- Sprint ets-27/ets-71 Update implementation is mutation-safety constrained
+  and condition-gated. Sprint 71 exposes one deployed method for each released
+  Annex A.8 target and keeps coverage at
+  `2:/conf/update = 14 candidate / 0 unmapped`, but positive PATCH lifecycle
+  and schema-rejection dispatch remain deferred until a non-public dedicated
+  mutable IUT declares `/conf/update`, advertises PATCH, supports changed-field
+  GET proof, and cleanup. GeoRobotix historically did not declare Part 2
+  `/conf/update`, sampled OPTIONS probes returned broad `Allow` headers but
+  omitted PATCH, and read-health probes returned HTTP 500 for existing
+  `/systems/{id}`, `/datastreams`, and `/observations` reads. Clause 15 also
+  requires resource-class condition gates before PASS: `/conf/datastream` for
+  R79-R82, `/conf/controlstream` for R83-R88, `/conf/feasibility` for R89-R91,
+  and `/conf/system-event` for R92. Sprint 71 disposable local OSH E2E run
+  `sprint-ets-71-update-20260802T153902Z` remained honestly non-green on the
+  existing twenty-failure local OSH baseline: populated `275/24/20/231`,
+  clean-primary `275/23/20/232`; all twenty-four Part 2 Update methods SKIP
+  without PATCH dispatch, TeamEngine request counts are GET-only, cleanup
+  PASSes, and primary-state isolation PASSes.
 - Sprint 65 supersedes Sprint 28 and closes JSON Encoding as exact released
   ATS: `2:/conf/json` is `14 exact / 0 candidate / 0 unmapped`, final Raze is
   `APPROVE 0.96`, and implementation commit `1acfdfa` is pushed. The current

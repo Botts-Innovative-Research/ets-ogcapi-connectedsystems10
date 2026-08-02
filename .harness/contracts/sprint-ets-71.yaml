@@ -1,0 +1,36 @@
+sprint: ets-71
+story: S-ETS-71-01
+title: Part 2 Update released method surface
+trigger: User instructed "Continue."
+scope:
+  requirement: REQ-ETS-PART2-008
+  conformance_class: 2:/conf/update
+  change_type: released_method_surface_fidelity
+  exact_promotion: false
+  mutation_policy: dedicated_mutable_iut_only
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-PART2-008-RELEASED-METHOD-SURFACE-001
+      expect: One deployed TestNG method carries each OGC 23-002 Annex A.8 child target, and no deployed helper carries multiple child targets.
+    - id: SCENARIO-ETS-PART2-008-PATCH-MUTATION-SAFETY-GATE-001
+      expect: PATCH lifecycle checks remain blocked unless mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut.
+    - id: SCENARIO-ETS-PART2-008-SMOKE-NO-PUBLIC-PATCH-001
+      expect: E2E request logs contain zero IUT-bound PATCH/POST/PUT/DELETE unless an explicit dedicated mutable IUT gate is active.
+  normal:
+    - id: coverage-candidate-honesty
+      expect: Part 2 Update remains candidate, not reviewed exact, until positive PATCH lifecycle evidence exists.
+    - id: no-unmapped-regression
+      expect: Released ATS coverage for 2:/conf/update remains zero unmapped.
+required_verification:
+  - test_first_structural_red
+  - spring_javaformat
+  - focused_maven_part2_update_verifier
+  - released_ats_coverage_audit
+  - full_docker_maven
+  - local_osh_teamengine_e2e
+  - raze_adversarial_review
+non_goals:
+  - Do not patch OSH or TeamEngine.
+  - Do not mutate public IUTs.
+  - Do not promote Part 2 Update exact mappings without positive PATCH lifecycle evidence.
+  - Do not implement JSON Patch or merge-patch lifecycle semantics in this method-surface sprint.

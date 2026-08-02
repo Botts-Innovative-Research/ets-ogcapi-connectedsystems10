@@ -1,0 +1,256 @@
+{
+  "cleanPrimary": [
+    {
+      "description": "",
+      "name": "fetchPart2UpdateInputs",
+      "status": "PASS"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: Clause 15 condition classes gate R79-R92 before any Update PASS evidence (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-RESOURCE-CONDITION-GATES-001)",
+      "name": "clause15ResourceConditionGatesAreVisible",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command: Command positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "commandPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-result: Command result positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "commandResultPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-schema: Command schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "commandSchemaPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-status: Command status positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "commandStatusPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: ControlStream/Command OPTIONS PATCH readiness is checked only after /conf/update and /conf/controlstream gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "controlStreamCommandPatchReadinessIsConditionGated",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/controlstream: ControlStream positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "controlStreamPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/controlstream-update-schema: ControlStream schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "controlStreamSchemaUpdatePatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: DataStream and Observation OPTIONS PATCH readiness is checked only after /conf/update and /conf/datastream gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
+      "name": "datastreamObservationPatchReadinessIsConditionGated",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/datastream: DataStream positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
+      "name": "datastreamPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/datastream-update-schema: DataStream schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "datastreamSchemaUpdatePatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility: Feasibility positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "feasibilityPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: Feasibility OPTIONS PATCH readiness is checked only after /conf/update and /conf/feasibility gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "feasibilityPatchReadinessIsConditionGated",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility-result: Feasibility result positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "feasibilityResultPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility-status: Feasibility status positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "feasibilityStatusPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/observation: Observation positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
+      "name": "observationPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/observation-schema: Observation schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "observationSchemaPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: /conformance declares Part 2 /conf/update before Update assertions run (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-UPDATE-CONFORMANCE-DECLARED-001)",
+      "name": "part2UpdateConformanceDeclared",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: PATCH lifecycle checks are blocked unless mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut, with public GeoRobotix hard-denied (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-PATCH-MUTATION-SAFETY-GATE-001, SCENARIO-ETS-PART2-008-SMOKE-NO-PUBLIC-PATCH-001)",
+      "name": "part2UpdateMutationSafetyGate",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: Part 2 Create/Replace/Delete and OGC API Features Part 4 Update prerequisites are visible before full class closure (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CRD-FEATURES4-PREREQUISITES-001)",
+      "name": "part2UpdatePrerequisitesVisibleForFullClosure",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: schema-rejection PATCH checks require safe mutation opt-in and concrete parent schema evidence (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "schemaRejectionPatchChecksRequireSafeEvidence",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/system-event: SystemEvent positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "systemEventPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: SystemEvent OPTIONS PATCH readiness is checked only after /conf/update and /conf/system-event gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "systemEventPatchReadinessIsConditionGated",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: unavailable, HTTP 500, HTTP 400, or streaming-only endpoints are SKIP evidence, not Update lifecycle PASS evidence (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-UNAVAILABLE-ENDPOINT-HONESTY-001)",
+      "name": "unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence",
+      "status": "SKIP"
+    }
+  ],
+  "populated": [
+    {
+      "description": "",
+      "name": "fetchPart2UpdateInputs",
+      "status": "PASS"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: Clause 15 condition classes gate R79-R92 before any Update PASS evidence (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-RESOURCE-CONDITION-GATES-001)",
+      "name": "clause15ResourceConditionGatesAreVisible",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command: Command positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "commandPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-result: Command result positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "commandResultPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-schema: Command schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "commandSchemaPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/command-status: Command status positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "commandStatusPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: ControlStream/Command OPTIONS PATCH readiness is checked only after /conf/update and /conf/controlstream gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "controlStreamCommandPatchReadinessIsConditionGated",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/controlstream: ControlStream positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CONTROLSTREAM-COMMAND-PATCH-OPTIN-001)",
+      "name": "controlStreamPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/controlstream-update-schema: ControlStream schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "controlStreamSchemaUpdatePatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: DataStream and Observation OPTIONS PATCH readiness is checked only after /conf/update and /conf/datastream gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
+      "name": "datastreamObservationPatchReadinessIsConditionGated",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/datastream: DataStream positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
+      "name": "datastreamPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/datastream-update-schema: DataStream schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "datastreamSchemaUpdatePatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility: Feasibility positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "feasibilityPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: Feasibility OPTIONS PATCH readiness is checked only after /conf/update and /conf/feasibility gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "feasibilityPatchReadinessIsConditionGated",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility-result: Feasibility result positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "feasibilityResultPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/feasibility-status: Feasibility status positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "feasibilityStatusPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/observation: Observation positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-DATASTREAM-OBSERVATION-PATCH-OPTIN-001)",
+      "name": "observationPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/observation-schema: Observation schema update PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "observationSchemaPatchRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: /conformance declares Part 2 /conf/update before Update assertions run (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-UPDATE-CONFORMANCE-DECLARED-001)",
+      "name": "part2UpdateConformanceDeclared",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: PATCH lifecycle checks are blocked unless mutation-tests-enabled=true and mutation-iut-policy=dedicated-mutable-iut, with public GeoRobotix hard-denied (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-PATCH-MUTATION-SAFETY-GATE-001, SCENARIO-ETS-PART2-008-SMOKE-NO-PUBLIC-PATCH-001)",
+      "name": "part2UpdateMutationSafetyGate",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: Part 2 Create/Replace/Delete and OGC API Features Part 4 Update prerequisites are visible before full class closure (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-CRD-FEATURES4-PREREQUISITES-001)",
+      "name": "part2UpdatePrerequisitesVisibleForFullClosure",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: schema-rejection PATCH checks require safe mutation opt-in and concrete parent schema evidence (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-SCHEMA-REJECTION-HONESTY-001)",
+      "name": "schemaRejectionPatchChecksRequireSafeEvidence",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update/system-event: SystemEvent positive PATCH checks require a dedicated mutable IUT and changed-field GET proof (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "systemEventPatchLifecycleRequiresDedicatedMutableIut",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: SystemEvent OPTIONS PATCH readiness is checked only after /conf/update and /conf/system-event gates (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-OPTIONS-PATCH-READINESS-001, SCENARIO-ETS-PART2-008-FEASIBILITY-SYSTEMEVENT-PATCH-OPTIN-001)",
+      "name": "systemEventPatchReadinessIsConditionGated",
+      "status": "SKIP"
+    },
+    {
+      "description": "OGC-23-002 http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/update: unavailable, HTTP 500, HTTP 400, or streaming-only endpoints are SKIP evidence, not Update lifecycle PASS evidence (REQ-ETS-PART2-008, SCENARIO-ETS-PART2-008-UNAVAILABLE-ENDPOINT-HONESTY-001)",
+      "name": "unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence",
+      "status": "SKIP"
+    }
+  ]
+}

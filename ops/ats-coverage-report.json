@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 265,
+  "suiteTestMethodCount" : 275,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -2941,7 +2941,7 @@
     "target" : "/req/update/datastream",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamObservationPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamObservationPatchReadinessIsConditionGated()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamPatchLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2950,7 +2950,7 @@
     "target" : "/req/update/datastream-update-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#schemaRejectionPatchChecksRequireSafeEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamSchemaUpdatePatchRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2959,7 +2959,7 @@
     "target" : "/req/update/observation",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamObservationPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#datastreamObservationPatchReadinessIsConditionGated()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#observationPatchLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2968,7 +2968,7 @@
     "target" : "/req/update/observation-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#schemaRejectionPatchChecksRequireSafeEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#observationSchemaPatchRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2977,7 +2977,7 @@
     "target" : "/req/update/controlstream",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchReadinessIsConditionGated()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamPatchLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2986,7 +2986,7 @@
     "target" : "/req/update/controlstream-update-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#schemaRejectionPatchChecksRequireSafeEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamSchemaUpdatePatchRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2995,7 +2995,7 @@
     "target" : "/req/update/command",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchReadinessIsConditionGated()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#commandPatchLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -3004,7 +3004,7 @@
     "target" : "/req/update/command-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#schemaRejectionPatchChecksRequireSafeEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#commandSchemaPatchRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -3013,7 +3013,7 @@
     "target" : "/req/update/command-status",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchReadinessIsConditionGated()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#commandStatusPatchRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -3022,7 +3022,7 @@
     "target" : "/req/update/command-result",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#controlStreamCommandPatchReadinessIsConditionGated()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#commandResultPatchRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -3031,7 +3031,7 @@
     "target" : "/req/update/feasibility",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchReadinessIsConditionGated()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -3040,7 +3040,7 @@
     "target" : "/req/update/feasibility-status",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchReadinessIsConditionGated()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityStatusPatchRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -3049,7 +3049,7 @@
     "target" : "/req/update/feasibility-result",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityPatchReadinessIsConditionGated()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#feasibilityResultPatchRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -3058,7 +3058,7 @@
     "target" : "/req/update/system-event",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#systemEventPatchLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#systemEventPatchReadinessIsConditionGated()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#unavailableEndpointsDoNotBecomeUpdateLifecycleEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.update.Part2UpdateTests#systemEventPatchLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,

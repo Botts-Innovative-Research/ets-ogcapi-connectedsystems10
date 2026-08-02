@@ -1,8 +1,51 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T05:59Z
+Last updated: 2026-08-02T15:53Z
 
 ## Current Sprint Evidence
+
+Sprint 71 Part 2 Update released method surface:
+
+- Trigger: user instructed "Continue."
+- Scope: `REQ-ETS-PART2-008` method-surface fidelity only. Full positive
+  PATCH lifecycle exact closure is not claimed.
+- Test-first red: `focused-red-structural-after-format.txt` failed as expected
+  because the historical class exposed multi-target child Update methods.
+- Implementation: fourteen independent deployed Part 2 Update child-target
+  methods now carry exactly one canonical requirement URI each; foundational
+  declaration, prerequisite, condition-gate, readiness, unavailable-endpoint,
+  mutation-safety, and schema-rejection honesty checks carry only the parent
+  `/req/update` target.
+- Coverage: update and audit both exit 0. `ops/ats-coverage-report.json`
+  records `2:/conf/update = 14 total / 0 exact / 0 helper / 14 candidate /
+  0 unmapped`; overall coverage is `240 total / 191 exact / 2 helper /
+  47 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS (`formatter-after-impl.txt`).
+- Focused structural verification:
+  `86 tests / 0 failures / 0 errors / 0 skipped`
+  (`focused-green-structural.txt`).
+- Full Docker Maven:
+  `787 tests / 0 failures / 0 errors / 3 skipped`
+  (`full-maven.txt`).
+- Disposable local OSH mutable E2E run:
+  `sprint-ets-71-update-20260802T153902Z`. Provisioning PASSed with owned
+  seeding writes, cleanup PASSed, and primary-state diff is empty.
+- Full TeamEngine E2E remains honestly non-green on the existing local OSH
+  twenty-failure baseline: populated `275 total / 24 passed / 20 failed /
+  231 skipped`, clean-primary `275 total / 23 passed / 20 failed /
+  232 skipped`. The failures are outside Sprint 71.
+- In-scope Part 2 Update E2E evidence:
+  `local-osh-part2-update-statuses.json` records all twenty-four deployed
+  Update `@Test` methods as SKIP in the populated run; populated request
+  counts are `GET=134`, clean-primary `GET=130`, and TeamEngine smoke issued
+  zero POST/PUT/PATCH/DELETE.
+- Evidence directory:
+  `ops/test-results/sprint-ets-71-part2-update-method-surface-2026-08-02/`.
+- `repo-evidence-manifest.sha256` verifies the archived repository evidence
+  subset in place.
+- Raze returned `APPROVE_WITH_CONCERNS 0.96`, with one LOW non-blocking
+  source-run manifest hygiene note and `required_fixes: []`
+  (`.harness/evaluations/sprint-ets-71-adversarial.yaml`).
 
 Sprint 70 Part 2 Create/Replace/Delete released method surface:
 

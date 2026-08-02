@@ -5,10 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -28,18 +33,69 @@ import org.junit.Test;
  */
 public class VerifyPart2UpdateTests {
 
+	private static final List<String> RELEASED_CHILD_TARGETS = List.of(Part2UpdateTests.REQ_DATASTREAM,
+			Part2UpdateTests.REQ_DATASTREAM_UPDATE_SCHEMA, Part2UpdateTests.REQ_OBSERVATION,
+			Part2UpdateTests.REQ_OBSERVATION_SCHEMA, Part2UpdateTests.REQ_CONTROLSTREAM,
+			Part2UpdateTests.REQ_CONTROLSTREAM_UPDATE_SCHEMA, Part2UpdateTests.REQ_COMMAND,
+			Part2UpdateTests.REQ_COMMAND_SCHEMA, Part2UpdateTests.REQ_COMMAND_STATUS,
+			Part2UpdateTests.REQ_COMMAND_RESULT, Part2UpdateTests.REQ_FEASIBILITY,
+			Part2UpdateTests.REQ_FEASIBILITY_STATUS, Part2UpdateTests.REQ_FEASIBILITY_RESULT,
+			Part2UpdateTests.REQ_SYSTEM_EVENT);
+
+	@BeforeClass
+	public static void verifyFixtureTargetsAreUnique() {
+		assertEquals("REQ-ETS-PART2-008 fixture should enumerate all fourteen released Annex A.8 child targets", 14,
+				new LinkedHashSet<>(RELEASED_CHILD_TARGETS).size());
+	}
+
 	@Test
 	public void officialPart2UpdateIdentifiersAreExposed() {
 		String joined = String.join(" ", Part2UpdateTests.CONF_UPDATE, Part2UpdateTests.REQ_UPDATE,
 				Part2UpdateTests.CONF_CREATE_REPLACE_DELETE, Part2UpdateTests.CONF_FEATURES4_UPDATE,
-				Part2UpdateTests.REQ_DATASTREAM, Part2UpdateTests.REQ_COMMAND, Part2UpdateTests.REQ_FEASIBILITY,
-				Part2UpdateTests.REQ_SYSTEM_EVENT);
+				String.join(" ", RELEASED_CHILD_TARGETS));
 
 		assertTrue(joined.contains("ogcapi-connectedsystems-2/1.0/conf/update"));
 		assertTrue(joined.contains("ogcapi-connectedsystems-2/1.0/req/update"));
 		assertTrue(joined.contains("ogcapi-connectedsystems-2/1.0/conf/create-replace-delete"));
 		assertTrue(joined.contains("ogcapi-features-4/1.0/conf/update"));
 		assertFalse(joined.contains("ogcapi-connectedsystems-1/1.0/conf/update"));
+	}
+
+	@Test
+	public void releasedAnnexA8TargetsHaveOneDeployedMethodEach() {
+		// REQ-ETS-PART2-008; SCENARIO-ETS-PART2-008-RELEASED-METHOD-SURFACE-001.
+		Map<String, List<String>> methodsByTarget = new HashMap<>();
+		List<String> multiTargetMethods = new ArrayList<>();
+		int releasedTargetMethods = 0;
+		for (Method method : Part2UpdateTests.class.getDeclaredMethods()) {
+			org.testng.annotations.Test annotation = method.getAnnotation(org.testng.annotations.Test.class);
+			if (annotation == null || !annotation.enabled()) {
+				continue;
+			}
+			List<String> matchedTargets = RELEASED_CHILD_TARGETS.stream()
+				.filter(target -> containsCanonicalTarget(annotation.description(), target))
+				.toList();
+			if (matchedTargets.size() > 1) {
+				multiTargetMethods.add(method.getName() + " -> " + matchedTargets);
+			}
+			if (matchedTargets.size() == 1) {
+				releasedTargetMethods++;
+				methodsByTarget.computeIfAbsent(matchedTargets.get(0), ignored -> new ArrayList<>())
+					.add(method.getName());
+			}
+		}
+
+		assertTrue(
+				"Foundational Part 2 Update safety/readiness methods must not carry multiple released child targets: "
+						+ multiTargetMethods,
+				multiTargetMethods.isEmpty());
+		assertEquals("Part 2 Update SHALL expose one deployed method per released Annex A.8 target", 14,
+				releasedTargetMethods);
+		for (String target : RELEASED_CHILD_TARGETS) {
+			List<String> methods = methodsByTarget.getOrDefault(target, List.of());
+			assertEquals("Expected exactly one deployed Part 2 Update method for " + target + ": " + methods, 1,
+					methods.size());
+		}
 	}
 
 	@Test
@@ -126,6 +182,25 @@ public class VerifyPart2UpdateTests {
 	@Test
 	public void groupNameIsStableForTestNgWiring() {
 		assertEquals("part2update", Part2UpdateTests.GROUP);
+	}
+
+	private static boolean containsCanonicalTarget(String description, String target) {
+		int start = description.indexOf(target);
+		while (start >= 0) {
+			int end = start + target.length();
+			boolean leftBoundary = start == 0 || isTargetDelimiter(description.charAt(start - 1));
+			boolean rightBoundary = end == description.length() || isTargetDelimiter(description.charAt(end));
+			if (leftBoundary && rightBoundary) {
+				return true;
+			}
+			start = description.indexOf(target, start + 1);
+		}
+		return false;
+	}
+
+	private static boolean isTargetDelimiter(char character) {
+		return Character.isWhitespace(character) || character == '(' || character == ')' || character == ','
+				|| character == ';' || character == ':';
 	}
 
 }

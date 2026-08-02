@@ -46,6 +46,7 @@ Sprint 71 Part 2 Update released method surface:
 - Raze returned `APPROVE_WITH_CONCERNS 0.96`, with one LOW non-blocking
   source-run manifest hygiene note and `required_fixes: []`
   (`.harness/evaluations/sprint-ets-71-adversarial.yaml`).
+- Implementation commit `081e09f` is pushed to Botts `main`.
 
 Sprint 70 Part 2 Create/Replace/Delete released method surface:
 

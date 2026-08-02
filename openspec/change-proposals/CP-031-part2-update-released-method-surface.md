@@ -2,7 +2,7 @@
 
 ## Status
 
-IMPLEMENTED_RAZE_APPROVED_PENDING_PUSH
+IMPLEMENTED_RAZE_APPROVED_PUSHED
 
 ## Trigger
 
@@ -64,3 +64,4 @@ honesty.
   LOW non-blocking artifact-hygiene note about the copied local OSH source-run
   manifest; `repo-evidence-manifest.sha256` verifies the repository evidence
   subset in place.
+- Implementation and evidence commit `081e09f` is pushed to Botts `main`.

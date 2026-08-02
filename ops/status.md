@@ -1,8 +1,8 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T15:53Z
+Last updated: 2026-08-02T16:08Z
 
-## Sprint 71 Raze Approved Pending Push - Part 2 Update Released Method Surface
+## Sprint 71 Complete and Pushed - Part 2 Update Released Method Surface
 
 - User instruction: "Continue."
 - Plan 1 scope: CP-031, S-ETS-71-01, and `sprint-ets-71.yaml` targeted the
@@ -38,7 +38,7 @@ Last updated: 2026-08-02T15:53Z
   manifest verifies in the original `/tmp` run tree, while
   `repo-evidence-manifest.sha256` verifies the repository evidence subset in
   place.
-- Commit and push are next.
+- Implementation commit `081e09f` is pushed to Botts `main`.
 
 ## Sprint 70 Complete and Pushed - Part 2 CRD Released Method Surface
 

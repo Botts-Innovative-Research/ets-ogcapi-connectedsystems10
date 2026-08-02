@@ -29,3 +29,4 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./local-osh-pr
 7deb67963d9605bb319b90164653ec1b69143623e53fd4a75424bb242b6feaf8  ./local-osh-run-id.txt
 206396b88806fd9e1304fd86023d0c693dd51dcd3a1c28f3dd4aace38fe86f8c  ./local-osh-run-summary-compact.json
 a984203fb6808a23cc65dc0d2c899a0a5be3a5c9a8f58f4ad776cb7945a78edc  ./local-osh-run-summary.json
+a2d9fd24859cbdec5d8d9efc742161acef71cedcad8f6820e3be3550104529bc  ./session-metrics-before-final.txt

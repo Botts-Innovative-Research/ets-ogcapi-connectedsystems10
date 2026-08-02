@@ -184,7 +184,8 @@ Last updated: 2026-08-02T15:53Z
   existing twenty-failure local OSH baseline: populated `275/24/20/231`,
   clean-primary `275/23/20/232`; all twenty-four Part 2 Update methods SKIP
   without PATCH dispatch, TeamEngine request counts are GET-only, cleanup
-  PASSes, and primary-state isolation PASSes.
+  PASSes, and primary-state isolation PASSes. Implementation commit `081e09f`
+  is pushed.
 - Sprint 65 supersedes Sprint 28 and closes JSON Encoding as exact released
   ATS: `2:/conf/json` is `14 exact / 0 candidate / 0 unmapped`, final Raze is
   `APPROVE 0.96`, and implementation commit `1acfdfa` is pushed. The current

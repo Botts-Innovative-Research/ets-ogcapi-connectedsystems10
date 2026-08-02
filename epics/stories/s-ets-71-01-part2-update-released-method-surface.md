@@ -2,7 +2,7 @@
 
 ## Status
 
-IMPLEMENTED_RAZE_APPROVED_PENDING_PUSH
+IMPLEMENTED_RAZE_APPROVED_PUSHED
 
 ## User Instruction
 
@@ -87,3 +87,4 @@ lifecycle conformance.
   local OSH source-run manifest verifies only in the original `/tmp` run tree.
   The repository evidence subset is independently verified by
   `repo-evidence-manifest.sha256`; `required_fixes: []`.
+- Implementation and evidence commit `081e09f` is pushed to Botts `main`.

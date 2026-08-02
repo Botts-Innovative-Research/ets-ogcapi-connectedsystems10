@@ -12,7 +12,8 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
-| 421 | 2026-08-02T05:46:40Z | 2026-08-02T05:51:09Z | 4m29s | User instructed Raze review for current uncommitted Sprint 70 Part 2 Create/Replace/Delete released method surface without implementation changes. Inspected AGENTS/Raze role, Sprint 70 contract, CP/story/spec/traceability/status/changelog/test-results/known-issues, coverage, changed CRD Java/test code, TestNG wiring, Maven artifacts, and disposable local OSH evidence; wrote `.harness/evaluations/sprint-ets-70-adversarial.yaml` with `APPROVE_WITH_CONCERNS 0.94`, one LOW non-blocking evidence-manifest archival concern, and `required_fixes: []`. |
+| 422 | 2026-08-02T05:09:04Z | 2026-08-02T05:59:37Z | 50m33s | User instructed: "Continue." Completed and pushed Sprint 70 Part 2 Create/Replace/Delete released method surface as `9ff24fb`: added CP/story/contract/spec anchors, split the CRD class into sixteen one-target candidate lifecycle methods, verified structural red then focused `86/0/0/0`, coverage update/audit `23/0/0/0`, full Docker Maven `786/0/0/3`, disposable local OSH honest non-green E2E with all twenty-two in-scope CRD methods SKIP and zero writes, mandatory Raze final `APPROVE 0.97`, and pushed-status reconciliation. Ran `python3 scripts/session-metrics.py`; Codex JSONL extraction reports 357,726,476 total tokens and $828.63 total cost. |
+| 421 | 2026-08-02T05:46:40Z | 2026-08-02T05:52:42Z | 6m02s | Agent-initiated mandatory Raze review and focused recheck for the uncommitted Sprint 70 Part 2 Create/Replace/Delete released method surface. Inspected AGENTS/Raze role, Sprint 70 contract, CP/story/spec/traceability/status/changelog/test-results/known-issues, coverage, changed CRD Java/test code, TestNG wiring, Maven artifacts, and disposable local OSH evidence; wrote `.harness/evaluations/sprint-ets-70-adversarial.yaml`, first `APPROVE_WITH_CONCERNS 0.94` for a LOW evidence-manifest archival concern, then final `APPROVE 0.97` after `repo-evidence-manifest.sha256` was added. Subagent token metadata was unavailable from the multi-agent tool result. |
 | 420 | 2026-08-02T05:04:29Z | 2026-08-02T05:05:23Z | 0m54s | User asked what is next and what percentage remains for work without validator dependencies. Reviewed `ops/status.md`, `ops/known-issues.md`, `_bmad/traceability.md`, and `ops/ats-coverage-report.json`; identified next best item as Sprint 70 Part 2 Create/Replace/Delete exact-mapping/gapfill focused on the four unmapped Annex A CRD procedures plus mutable-IUT blocker confirmation, and estimated the no-validator released ATS backlog at about 47/240 procedures, or 19.6%, excluding broader certification packaging and external validator replacement work. |
 | 419 | 2026-08-02T03:50:40Z | 2026-08-02T04:55:53Z | 1h05m13s | User approved Plan 1: use a disposable local OSH mutable IUT and reset/reseed as needed, and asked future plans to be numbered. Completed and pushed Sprint 69 Part 2 Binding populated Command probe diagnostics as `0c6e01a`: baseline disposable OSH evidence revalidated Observation binding PASS and Command binding SKIP; added optional seeder Command probe diagnostics; verified Python 14 tests, fixture JSON, formatter, final Docker Maven `785/0/0/3`, disposable command-probe E2E `252/24/20/208`, clean-primary `252/23/20/209`, cleanup PASS, and primary unchanged; Raze focused recheck `APPROVE_WITH_CONCERNS 0.96`; full Command binding remains open on missing TeamEngine-visible Command evidence. |
 | 418 | 2026-08-02T04:45:34Z | 2026-08-02T04:47:46Z | 2m12s | User requested focused Raze recheck for `RAZE-S69-001` only after archiving baseline and command-probe provenance manifests and patching run summaries. Inspected only the manifest archival gapfix, verified both summaries point to repository-relative existing non-empty manifest files with missing=NONE and empty=NONE, updated `.harness/evaluations/sprint-ets-69-adversarial.yaml` to `APPROVE_WITH_CONCERNS 0.96` with `RAZE-S69-001` resolved and `required_fixes: []`, preserving residual risks. |
@@ -556,24 +557,24 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/02 ETS continuation through Sprint 69)
+### Current Codex Session (2026-08-01/02 ETS continuation through Sprint 70)
 
-Extracted after Sprint 69 implementation push with
+Extracted after Sprint 70 implementation push with
 `python3 scripts/session-metrics.py`; raw output archived at
-`ops/test-results/sprint-ets-69-mutable-local-osh-2026-08-02/session-metrics-before-final.txt`.
+`ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/session-metrics-before-final.txt`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
 the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 14,319,310 | $214.79 |
-| Output | 1,085,992 | $81.45 |
+| Input | 15,282,242 | $229.23 |
+| Output | 1,166,410 | $87.48 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 316,924,160 | $475.39 |
-| **TOTAL** | **332,329,462** | **$771.63** |
+| Cache Read | 341,277,824 | $511.92 |
+| **TOTAL** | **357,726,476** | **$828.63** |
 
-API calls (usage records): 2310
+API calls (usage records): 2491
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

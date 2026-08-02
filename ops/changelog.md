@@ -37,8 +37,8 @@ Rolling 2-week work log. Remove entries older than 2 weeks.
 - Added `repo-evidence-manifest.sha256` so the archived repository evidence
   subset is independently hash-verifiable in place.
 - Raze final focused recheck returned `APPROVE 0.97`, closed
-  `RAZE-ETS70-EVIDENCE-001`, and has `required_fixes: []`. Commit and push are
-  pending.
+  `RAZE-ETS70-EVIDENCE-001`, and has `required_fixes: []`. Implementation
+  commit `9ff24fb` is pushed to Botts `main`.
 
 ## 2026-08-02 - Sprint 69 Part 2 Binding disposable Command probe diagnostics
 

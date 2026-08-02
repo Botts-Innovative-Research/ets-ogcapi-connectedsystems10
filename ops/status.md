@@ -1,8 +1,8 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T05:44Z
+Last updated: 2026-08-02T05:59Z
 
-## Sprint 70 Raze Approved Pending Push - Part 2 CRD Released Method Surface
+## Sprint 70 Complete and Pushed - Part 2 CRD Released Method Surface
 
 - User instruction: "Continue."
 - CP-030, S-ETS-70-01, and `sprint-ets-70.yaml` scope the work to the Part 2
@@ -34,8 +34,8 @@ Last updated: 2026-08-02T05:44Z
   (`GET=134` populated, `GET=130` clean-primary), with zero
   POST/PUT/PATCH/DELETE issued by the smoke logs.
 - Raze final focused recheck returned `APPROVE 0.97` with
-  `RAZE-ETS70-EVIDENCE-001` closed and `required_fixes: []`. Commit and push
-  are pending.
+  `RAZE-ETS70-EVIDENCE-001` closed and `required_fixes: []`. Implementation
+  commit `9ff24fb` is pushed to Botts `main`.
 
 ## Sprint 69 Implemented and Pushed - Part 2 Binding Disposable Command Probe Diagnostics
 

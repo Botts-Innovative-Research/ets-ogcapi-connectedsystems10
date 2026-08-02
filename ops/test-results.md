@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T05:44Z
+Last updated: 2026-08-02T05:59Z
 
 ## Current Sprint Evidence
 
@@ -43,8 +43,8 @@ Sprint 70 Part 2 Create/Replace/Delete released method surface:
 - `repo-evidence-manifest.sha256` verifies the archived repository evidence
   subset in place.
 - Raze final focused recheck returned `APPROVE 0.97`, closed
-  `RAZE-ETS70-EVIDENCE-001`, and has `required_fixes: []`. Commit and push are
-  pending.
+  `RAZE-ETS70-EVIDENCE-001`, and has `required_fixes: []`. Implementation
+  commit `9ff24fb` is pushed to Botts `main`.
 
 Sprint 69 Part 2 Binding disposable Command probe diagnostics:
 

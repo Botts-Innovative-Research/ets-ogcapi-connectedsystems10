@@ -2,6 +2,44 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-02 - Sprint 70 Part 2 CRD released method surface
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-030, S-ETS-70-01, and the Sprint 70 contract for the Part 2
+  Create/Replace/Delete released-method surface.
+- Added test-first structural coverage requiring all sixteen OGC 23-002 Annex
+  A.7 child targets to have exactly one deployed TestNG method and preventing
+  foundational safety/setup checks from carrying multiple child requirement
+  targets.
+- Split the historical coarse Part 2 CRD lifecycle surface into sixteen
+  independent deferred lifecycle methods: DataStream, DataStream schema update,
+  DataStream delete cascade, Observation, Observation schema, ControlStream,
+  ControlStream schema update, ControlStream delete cascade, Command, Command
+  schema/status/result, Feasibility, Feasibility status/result, and SystemEvent.
+- Preserved mutation safety: positive lifecycle methods remain gated by exact
+  `/conf/create-replace-delete`, explicit dedicated mutable-IUT opt-in, and the
+  relevant Part 2 resource conformance class before they SKIP as deferred; no
+  public or non-opted IUT write path is enabled.
+- Regenerated released ATS coverage:
+  `2:/conf/create-replace-delete = 16 total / 0 exact / 0 helper / 16 candidate / 0 unmapped`;
+  overall coverage is `240 / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+- Verification artifacts are archived under
+  `ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/`:
+  structural red, formatter, focused structural Maven `86/0/0/0`, coverage
+  update/audit `23/0/0/0`, and final Docker Maven `786/0/0/3`.
+- Disposable local OSH E2E ran against owned mutable IUT
+  `sprint-ets-70-crd-20260802T052626Z`; provisioning and cleanup PASSed,
+  primary-state diff is empty, and all in-scope Part 2 CRD methods SKIP
+  honestly. The full smoke remains non-green on the unchanged Sprint 69
+  baseline failure set: populated `265/24/20/221`, clean-primary
+  `265/23/20/222`, with GET-only request counts and zero writes.
+- Added `repo-evidence-manifest.sha256` so the archived repository evidence
+  subset is independently hash-verifiable in place.
+- Raze final focused recheck returned `APPROVE 0.97`, closed
+  `RAZE-ETS70-EVIDENCE-001`, and has `required_fixes: []`. Commit and push are
+  pending.
+
 ## 2026-08-02 - Sprint 69 Part 2 Binding disposable Command probe diagnostics
 
 **Triggered by user instruction**: "Use a disposable local OSH mutable IUT and

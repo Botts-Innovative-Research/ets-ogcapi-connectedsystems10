@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-01T16:57Z
+Last updated: 2026-08-02T05:44Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -128,14 +128,15 @@ Last updated: 2026-08-01T16:57Z
   limitations remain useful interoperability context only.
 - Part 2 placeholder taxonomy was corrected during Sprint 25 planning and
   extended during Sprints 26, 27, 28, 29, 30, 31, 59, 60, 61, 62, 63, 64,
-  65, 66, 67, and 68. OpenSpec and epic ETS-03 now treat API Common as exact implemented
+  65, 66, 67, 68, and 70. OpenSpec and epic ETS-03 now treat API Common as exact implemented
   `REQ-ETS-PART2-001`, Datastreams & Observations as exact implemented
   `REQ-ETS-PART2-002`, Control Streams & Commands as exact implemented
   `REQ-ETS-PART2-003`, Command Feasibility as exact implemented
   `REQ-ETS-PART2-004`, System Events as exact implemented
   `REQ-ETS-PART2-005`, Advanced Filtering as exact implemented
-  `REQ-ETS-PART2-006`, Create/Replace/Delete as partial implemented
-  `REQ-ETS-PART2-007`, Update as partial implemented `REQ-ETS-PART2-008`,
+  `REQ-ETS-PART2-006`, Create/Replace/Delete as partial implemented with a
+  Sprint 70 one-method-per-Annex-A.7-target candidate surface and zero unmapped
+  released targets for `REQ-ETS-PART2-007`, Update as partial implemented `REQ-ETS-PART2-008`,
   JSON Encoding as exact implemented `REQ-ETS-PART2-009`, SWE Common JSON
   Encoding as exact implemented `REQ-ETS-PART2-010`, SWE Common Text
   Encoding as exact implemented `REQ-ETS-PART2-011`, SWE Common Binary

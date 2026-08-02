@@ -1,0 +1,245 @@
+{
+  "cleanPrimaryRequestMethodCounts": {
+    "GET": 130
+  },
+  "cleanPrimaryTotals": {
+    "failed": 20,
+    "passed": 23,
+    "skipped": 222,
+    "total": 265
+  },
+  "cleanupVerdict": "PASS",
+  "failureSetComparison": {
+    "currentPopulatedFailures": [
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentCollectionsAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#deploymentsReferencedFromSystemsAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests#everyDeploymentHasCanonicalUrl",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#everyProcedureHasCanonicalUrl",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests#procedureCollectionsAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests#propertyCollectionsAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlMappingsAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#deploymentSensorMlSchemasAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlClassesAreCompatible",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlMappingsAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#procedureSensorMlSchemasAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlMappingsAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#propertySensorMlSchemasAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlAssociationRelationTypesAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlCommonFeatureAttributesAreMapped",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlMediaTypeReadIsAdvertised",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#sensorMlResourceIdsMatchCanonicalUrls",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlClassesAreCompatible",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlMappingsAreValid",
+      "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests#systemSensorMlSchemasAreValid"
+    ],
+    "newCleanPrimaryFailuresComparedToSprint69": [],
+    "newPopulatedFailuresComparedToSprint69": [],
+    "resolvedCleanPrimaryFailuresComparedToSprint69": [],
+    "resolvedPopulatedFailuresComparedToSprint69": [],
+    "sprint69CleanPrimaryFailureSetMatched": true,
+    "sprint69PopulatedFailureSetMatched": true
+  },
+  "inScopePart2CreateReplaceDelete": {
+    "cleanPrimary": {
+      "counts": {
+        "SKIP": 22
+      },
+      "methods": [
+        {
+          "name": "commandLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "commandResultLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "commandSchemaLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "commandStatusLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "controlStreamAndNestedCommandOptionsReadinessIsReadOnly",
+          "status": "SKIP"
+        },
+        {
+          "name": "controlStreamDeleteCascadeRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "controlStreamLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "controlStreamSchemaUpdateRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "datastreamAndObservationOptionsReadinessIsReadOnly",
+          "status": "SKIP"
+        },
+        {
+          "name": "datastreamDeleteCascadeRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "datastreamLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "datastreamSchemaUpdateRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "feasibilityLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "feasibilityResultLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "feasibilityStatusLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "featuresPart4CreateReplaceDeletePrerequisiteVisibleForFullClosure",
+          "status": "SKIP"
+        },
+        {
+          "name": "observationLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "observationSchemaLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "part2CreateReplaceDeleteConformanceDeclared",
+          "status": "SKIP"
+        },
+        {
+          "name": "part2CreateReplaceDeleteMutationSafetyGate",
+          "status": "SKIP"
+        },
+        {
+          "name": "systemEventLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence",
+          "status": "SKIP"
+        }
+      ]
+    },
+    "populated": {
+      "counts": {
+        "SKIP": 22
+      },
+      "methods": [
+        {
+          "name": "commandLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "commandResultLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "commandSchemaLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "commandStatusLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "controlStreamAndNestedCommandOptionsReadinessIsReadOnly",
+          "status": "SKIP"
+        },
+        {
+          "name": "controlStreamDeleteCascadeRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "controlStreamLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "controlStreamSchemaUpdateRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "datastreamAndObservationOptionsReadinessIsReadOnly",
+          "status": "SKIP"
+        },
+        {
+          "name": "datastreamDeleteCascadeRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "datastreamLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "datastreamSchemaUpdateRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "feasibilityLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "feasibilityResultLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "feasibilityStatusLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "featuresPart4CreateReplaceDeletePrerequisiteVisibleForFullClosure",
+          "status": "SKIP"
+        },
+        {
+          "name": "observationLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "observationSchemaLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "part2CreateReplaceDeleteConformanceDeclared",
+          "status": "SKIP"
+        },
+        {
+          "name": "part2CreateReplaceDeleteMutationSafetyGate",
+          "status": "SKIP"
+        },
+        {
+          "name": "systemEventLifecycleRequiresDedicatedMutableIut",
+          "status": "SKIP"
+        },
+        {
+          "name": "unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence",
+          "status": "SKIP"
+        }
+      ]
+    }
+  },
+  "overallWorkflowVerdict": "FAIL",
+  "populatedRequestMethodCounts": {
+    "GET": 134
+  },
+  "populatedTotals": {
+    "failed": 20,
+    "passed": 24,
+    "skipped": 221,
+    "total": 265
+  },
+  "primaryStateUnchanged": true
+}

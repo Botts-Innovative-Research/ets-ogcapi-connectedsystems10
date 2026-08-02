@@ -1,7 +1,7 @@
 {
   "schemaVersion" : "1.0",
   "inventoryCommit" : "8e03b236a049849f2ccc24b4fd9fdce5ff69bed2",
-  "suiteTestMethodCount" : 252,
+  "suiteTestMethodCount" : 265,
   "tests" : [ {
     "part" : 1,
     "identifier" : "/conf/api-common/canonical-resources",
@@ -2797,7 +2797,7 @@
     "target" : "/req/create-replace-delete/datastream",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamAndObservationOptionsReadinessIsReadOnly()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamObservationLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2805,8 +2805,8 @@
     "classIdentifier" : "/conf/create-replace-delete",
     "target" : "/req/create-replace-delete/datastream-update-schema",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamSchemaUpdateRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2814,8 +2814,8 @@
     "classIdentifier" : "/conf/create-replace-delete",
     "target" : "/req/create-replace-delete/datastream-delete-cascade",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamDeleteCascadeRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2824,7 +2824,7 @@
     "target" : "/req/create-replace-delete/observation",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamAndObservationOptionsReadinessIsReadOnly()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamObservationLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#observationLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2833,7 +2833,7 @@
     "target" : "/req/create-replace-delete/observation-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#datastreamObservationLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#observationSchemaLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2842,7 +2842,7 @@
     "target" : "/req/create-replace-delete/controlstream",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamAndNestedCommandOptionsReadinessIsReadOnly()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2850,8 +2850,8 @@
     "classIdentifier" : "/conf/create-replace-delete",
     "target" : "/req/create-replace-delete/controlstream-update-schema",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamSchemaUpdateRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2859,8 +2859,8 @@
     "classIdentifier" : "/conf/create-replace-delete",
     "target" : "/req/create-replace-delete/controlstream-delete-cascade",
     "supporting" : false,
-    "state" : "unmapped",
-    "candidateMappings" : [ ],
+    "state" : "candidate",
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamDeleteCascadeRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2869,7 +2869,7 @@
     "target" : "/req/create-replace-delete/command",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamAndNestedCommandOptionsReadinessIsReadOnly()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#commandLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2878,7 +2878,7 @@
     "target" : "/req/create-replace-delete/command-schema",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#commandSchemaLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2887,7 +2887,7 @@
     "target" : "/req/create-replace-delete/command-status",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#commandStatusLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2896,7 +2896,7 @@
     "target" : "/req/create-replace-delete/command-result",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#controlStreamCommandLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#commandResultLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2905,7 +2905,7 @@
     "target" : "/req/create-replace-delete/feasibility",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilityLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2914,7 +2914,7 @@
     "target" : "/req/create-replace-delete/feasibility-status",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilityStatusLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2923,7 +2923,7 @@
     "target" : "/req/create-replace-delete/feasibility-result",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilityResultLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -2932,7 +2932,7 @@
     "target" : "/req/create-replace-delete/system-event",
     "supporting" : false,
     "state" : "candidate",
-    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#feasibilitySystemEventLifecycleRequiresDedicatedMutableIut()", "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence()" ],
+    "candidateMappings" : [ "org.opengis.cite.ogcapiconnectedsystems10.conformance.part2.createreplacedelete.Part2CreateReplaceDeleteTests#systemEventLifecycleRequiresDedicatedMutableIut()" ],
     "reviewedMapping" : null
   }, {
     "part" : 2,
@@ -3711,8 +3711,8 @@
     "total" : 240,
     "exact" : 191,
     "helper" : 2,
-    "candidate" : 43,
-    "unmapped" : 4,
+    "candidate" : 47,
+    "unmapped" : 0,
     "byPart" : {
       "1" : {
         "total" : 110,
@@ -3725,8 +3725,8 @@
         "total" : 130,
         "exact" : 100,
         "helper" : 0,
-        "candidate" : 26,
-        "unmapped" : 4
+        "candidate" : 30,
+        "unmapped" : 0
       }
     },
     "byClass" : {
@@ -3874,8 +3874,8 @@
         "total" : 16,
         "exact" : 0,
         "helper" : 0,
-        "candidate" : 12,
-        "unmapped" : 4
+        "candidate" : 16,
+        "unmapped" : 0
       },
       "2:/conf/update" : {
         "total" : 14,

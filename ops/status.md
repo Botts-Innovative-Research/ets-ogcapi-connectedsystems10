@@ -1,6 +1,41 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T04:55Z
+Last updated: 2026-08-02T05:44Z
+
+## Sprint 70 Raze Approved Pending Push - Part 2 CRD Released Method Surface
+
+- User instruction: "Continue."
+- CP-030, S-ETS-70-01, and `sprint-ets-70.yaml` scope the work to the Part 2
+  Create/Replace/Delete released-method surface, not positive lifecycle exact
+  closure.
+- `Part2CreateReplaceDeleteTests` now exposes one deployed TestNG method for
+  each of the sixteen OGC 23-002 Annex A.7 child targets. Foundational
+  declaration, prerequisite, mutation-safety, OPTIONS-readiness, and
+  unavailable-endpoint honesty checks carry only the parent
+  `/req/create-replace-delete` target, so they no longer create duplicate
+  child-target candidate mappings.
+- `ops/ats-coverage-report.json` now records
+  `2:/conf/create-replace-delete = 16 total / 0 exact / 0 helper / 16 candidate / 0 unmapped`.
+  Overall coverage is `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+  No Part 2 CRD mapping was promoted to reviewed exact.
+- Verification evidence is archived under
+  `ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/`:
+  test-first structural red, formatter, focused structural Maven `86/0/0/0`,
+  coverage update/audit `23/0/0/0`, and final Docker Maven `786/0/0/3`.
+  `repo-evidence-manifest.sha256` verifies the archived repository evidence
+  subset in place.
+- Disposable local OSH mutable E2E ran as
+  `sprint-ets-70-crd-20260802T052626Z`. Provisioning PASSed and cleanup PASSed;
+  the primary local OSH state diff is empty. The full TeamEngine smoke remains
+  honestly non-green on the unchanged Sprint 69 baseline failure set:
+  populated `265/24/20/221`, clean-primary `265/23/20/222`.
+- In-scope E2E result: all twenty-two Part 2 CRD methods SKIP in both
+  populated and clean-primary runs; request counts are GET-only
+  (`GET=134` populated, `GET=130` clean-primary), with zero
+  POST/PUT/PATCH/DELETE issued by the smoke logs.
+- Raze final focused recheck returned `APPROVE 0.97` with
+  `RAZE-ETS70-EVIDENCE-001` closed and `required_fixes: []`. Commit and push
+  are pending.
 
 ## Sprint 69 Implemented and Pushed - Part 2 Binding Disposable Command Probe Diagnostics
 

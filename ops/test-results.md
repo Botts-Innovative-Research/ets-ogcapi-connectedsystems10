@@ -1,8 +1,50 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T04:55Z
+Last updated: 2026-08-02T05:44Z
 
 ## Current Sprint Evidence
+
+Sprint 70 Part 2 Create/Replace/Delete released method surface:
+
+- Trigger: user instructed "Continue."
+- Scope: `REQ-ETS-PART2-007` method-surface and coverage gapfill only. Full
+  positive lifecycle exact closure is not claimed.
+- Test-first red: `focused-red-structural.txt` failed as expected because the
+  historical class exposed multi-target coarse methods and left four Annex A.7
+  procedures unmapped.
+- Implementation: sixteen independent deployed Part 2 CRD child-target methods
+  now carry exactly one canonical requirement URI each; foundational safety and
+  readiness checks carry only the parent `/req/create-replace-delete` target.
+- Coverage: update and audit both exit 0. `ops/ats-coverage-report.json`
+  records `2:/conf/create-replace-delete = 16 total / 0 exact / 0 helper /
+  16 candidate / 0 unmapped`; overall coverage is `240 total / 191 exact /
+  2 helper / 47 candidate / 0 unmapped`.
+- Formatter: BUILD SUCCESS (`formatter-after-assertion-cleanup.txt`).
+- Focused structural verification:
+  `86 tests / 0 failures / 0 errors / 0 skipped`
+  (`focused-green-structural-final.txt`).
+- Full Docker Maven:
+  `786 tests / 0 failures / 0 errors / 3 skipped`
+  (`full-maven-final.txt`).
+- Disposable local OSH mutable E2E run:
+  `sprint-ets-70-crd-20260802T052626Z`. Provisioning PASSed, cleanup PASSed,
+  and primary-state diff is empty.
+- Full TeamEngine E2E remains honestly non-green on the same twenty failures
+  seen in the Sprint 69 baseline: populated `265 total / 24 passed /
+  20 failed / 221 skipped`, clean-primary `265 total / 23 passed / 20 failed /
+  222 skipped`. The failures are outside Sprint 70 and match the prior
+  SensorML/Deployment/Procedure/Property failure set.
+- In-scope Part 2 CRD E2E evidence:
+  `local-osh-part2-crd-statuses.json` records all twenty-two CRD methods as
+  SKIP in both populated and clean-primary runs, populated request counts
+  `GET=134`, clean-primary `GET=130`, and zero POST/PUT/PATCH/DELETE.
+- Evidence directory:
+  `ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/`.
+- `repo-evidence-manifest.sha256` verifies the archived repository evidence
+  subset in place.
+- Raze final focused recheck returned `APPROVE 0.97`, closed
+  `RAZE-ETS70-EVIDENCE-001`, and has `required_fixes: []`. Commit and push are
+  pending.
 
 Sprint 69 Part 2 Binding disposable Command probe diagnostics:
 

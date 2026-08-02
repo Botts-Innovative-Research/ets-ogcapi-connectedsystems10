@@ -5,10 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -24,18 +29,69 @@ import org.junit.Test;
  */
 public class VerifyPart2CreateReplaceDeleteTests {
 
+	private static final List<String> RELEASED_CHILD_TARGETS = List.of(Part2CreateReplaceDeleteTests.REQ_DATASTREAM,
+			Part2CreateReplaceDeleteTests.REQ_DATASTREAM_UPDATE_SCHEMA,
+			Part2CreateReplaceDeleteTests.REQ_DATASTREAM_DELETE_CASCADE, Part2CreateReplaceDeleteTests.REQ_OBSERVATION,
+			Part2CreateReplaceDeleteTests.REQ_OBSERVATION_SCHEMA, Part2CreateReplaceDeleteTests.REQ_CONTROLSTREAM,
+			Part2CreateReplaceDeleteTests.REQ_CONTROLSTREAM_UPDATE_SCHEMA,
+			Part2CreateReplaceDeleteTests.REQ_CONTROLSTREAM_DELETE_CASCADE, Part2CreateReplaceDeleteTests.REQ_COMMAND,
+			Part2CreateReplaceDeleteTests.REQ_COMMAND_SCHEMA, Part2CreateReplaceDeleteTests.REQ_COMMAND_STATUS,
+			Part2CreateReplaceDeleteTests.REQ_COMMAND_RESULT, Part2CreateReplaceDeleteTests.REQ_FEASIBILITY,
+			Part2CreateReplaceDeleteTests.REQ_FEASIBILITY_STATUS, Part2CreateReplaceDeleteTests.REQ_FEASIBILITY_RESULT,
+			Part2CreateReplaceDeleteTests.REQ_SYSTEM_EVENT);
+
+	@BeforeClass
+	public static void verifyFixtureTargetsAreUnique() {
+		assertEquals("REQ-ETS-PART2-007 fixture should enumerate all sixteen released Annex A.7 child targets", 16,
+				new LinkedHashSet<>(RELEASED_CHILD_TARGETS).size());
+	}
+
 	@Test
 	public void officialPart2AndFeatures4IdentifiersAreExposed() {
 		String joined = String.join(" ", Part2CreateReplaceDeleteTests.CONF_CREATE_REPLACE_DELETE,
 				Part2CreateReplaceDeleteTests.REQ_CREATE_REPLACE_DELETE,
 				Part2CreateReplaceDeleteTests.CONF_FEATURES4_CREATE_REPLACE_DELETE,
-				Part2CreateReplaceDeleteTests.REQ_DATASTREAM, Part2CreateReplaceDeleteTests.REQ_COMMAND,
-				Part2CreateReplaceDeleteTests.REQ_FEASIBILITY, Part2CreateReplaceDeleteTests.REQ_SYSTEM_EVENT);
+				String.join(" ", RELEASED_CHILD_TARGETS));
 
 		assertTrue(joined.contains("ogcapi-connectedsystems-2/1.0/conf/create-replace-delete"));
 		assertTrue(joined.contains("ogcapi-connectedsystems-2/1.0/req/create-replace-delete"));
 		assertTrue(joined.contains("ogcapi-features-4/1.0/conf/create-replace-delete"));
 		assertFalse(joined.contains("ogcapi-connectedsystems-1/1.0/conf/create-replace-delete"));
+	}
+
+	@Test
+	public void releasedAnnexA7TargetsHaveOneDeployedMethodEach() {
+		// REQ-ETS-PART2-007; SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+		Map<String, List<String>> methodsByTarget = new HashMap<>();
+		List<String> multiTargetMethods = new ArrayList<>();
+		int releasedTargetMethods = 0;
+		for (Method method : Part2CreateReplaceDeleteTests.class.getDeclaredMethods()) {
+			org.testng.annotations.Test annotation = method.getAnnotation(org.testng.annotations.Test.class);
+			if (annotation == null || !annotation.enabled()) {
+				continue;
+			}
+			List<String> matchedTargets = RELEASED_CHILD_TARGETS.stream()
+				.filter(target -> containsCanonicalTarget(annotation.description(), target))
+				.toList();
+			if (matchedTargets.size() > 1) {
+				multiTargetMethods.add(method.getName() + " -> " + matchedTargets);
+			}
+			if (matchedTargets.size() == 1) {
+				releasedTargetMethods++;
+				methodsByTarget.computeIfAbsent(matchedTargets.get(0), ignored -> new ArrayList<>())
+					.add(method.getName());
+			}
+		}
+
+		assertTrue("Foundational Part 2 CRD safety/setup methods must not carry multiple released child targets: "
+				+ multiTargetMethods, multiTargetMethods.isEmpty());
+		assertEquals("Part 2 CRD SHALL expose one deployed method per released Annex A.7 target", 16,
+				releasedTargetMethods);
+		for (String target : RELEASED_CHILD_TARGETS) {
+			List<String> methods = methodsByTarget.getOrDefault(target, List.of());
+			assertEquals("Expected exactly one deployed Part 2 CRD method for " + target + ": " + methods, 1,
+					methods.size());
+		}
 	}
 
 	@Test
@@ -124,6 +180,25 @@ public class VerifyPart2CreateReplaceDeleteTests {
 	@Test
 	public void groupNameIsStableForTestNgWiring() {
 		assertEquals("part2createreplacedelete", Part2CreateReplaceDeleteTests.GROUP);
+	}
+
+	private static boolean containsCanonicalTarget(String description, String target) {
+		int start = description.indexOf(target);
+		while (start >= 0) {
+			int end = start + target.length();
+			boolean leftBoundary = start == 0 || isTargetDelimiter(description.charAt(start - 1));
+			boolean rightBoundary = end == description.length() || isTargetDelimiter(description.charAt(end));
+			if (leftBoundary && rightBoundary) {
+				return true;
+			}
+			start = description.indexOf(target, start + 1);
+		}
+		return false;
+	}
+
+	private static boolean isTargetDelimiter(char character) {
+		return Character.isWhitespace(character) || character == '(' || character == ')' || character == ','
+				|| character == ';' || character == ':';
 	}
 
 }

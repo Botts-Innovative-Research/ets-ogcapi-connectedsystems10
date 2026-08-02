@@ -27,11 +27,12 @@ import io.restassured.response.Response;
  * ({@code /conf/create-replace-delete}; OGC 23-002 Annex A).
  *
  * <p>
- * Implements the first <strong>REQ-ETS-PART2-007</strong> increment: exact declaration,
- * visible OGC API Features Part 4 prerequisite, read-only OPTIONS readiness diagnostics,
- * unavailable-endpoint honesty, and public-IUT mutation hard-denial. Positive DataStream,
- * Observation, ControlStream, Command, Feasibility, and SystemEvent lifecycle mutation
- * paths remain deferred until a dedicated mutable-IUT fixture exists.
+ * Implements <strong>REQ-ETS-PART2-007</strong> safety gates and the Sprint 70
+ * released-method surface: exact class declaration, visible OGC API Features Part 4
+ * prerequisite, read-only OPTIONS readiness diagnostics, unavailable-endpoint honesty,
+ * public-IUT mutation hard-denial, and one deployed TestNG method for each released OGC
+ * 23-002 Annex A.7 child target. Positive lifecycle mutation paths remain deferred until
+ * dedicated mutable-IUT fixtures and cleanup exist.
  * </p>
  */
 public class Part2CreateReplaceDeleteTests {
@@ -45,6 +46,10 @@ public class Part2CreateReplaceDeleteTests {
 	static final String CONF_DATASTREAM = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream";
 
 	static final String CONF_CONTROLSTREAM = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream";
+
+	static final String CONF_FEASIBILITY = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility";
+
+	static final String CONF_SYSTEM_EVENT = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event";
 
 	static final String REQ_CREATE_REPLACE_DELETE = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/req/create-replace-delete";
 
@@ -176,7 +181,7 @@ public class Part2CreateReplaceDeleteTests {
 	/**
 	 * SCENARIO-ETS-PART2-007-OPTIONS-READINESS-READONLY-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_DATASTREAM + " and " + REQ_OBSERVATION
+	@Test(description = "OGC-23-002 " + REQ_CREATE_REPLACE_DELETE
 			+ ": DataStream and Observation OPTIONS checks are readiness-only and never lifecycle PASS evidence (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-OPTIONS-READINESS-READONLY-001)",
 			groups = GROUP)
 	public void datastreamAndObservationOptionsReadinessIsReadOnly() {
@@ -204,7 +209,7 @@ public class Part2CreateReplaceDeleteTests {
 	/**
 	 * SCENARIO-ETS-PART2-007-OPTIONS-READINESS-READONLY-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM + " and " + REQ_COMMAND
+	@Test(description = "OGC-23-002 " + REQ_CREATE_REPLACE_DELETE
 			+ ": ControlStream and nested Command OPTIONS checks are readiness-only and never lifecycle PASS evidence (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-OPTIONS-READINESS-READONLY-001)",
 			groups = GROUP)
 	public void controlStreamAndNestedCommandOptionsReadinessIsReadOnly() {
@@ -233,7 +238,7 @@ public class Part2CreateReplaceDeleteTests {
 	/**
 	 * SCENARIO-ETS-PART2-007-UNAVAILABLE-ENDPOINT-HONESTY-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_COMMAND + ", " + REQ_FEASIBILITY + ", and " + REQ_SYSTEM_EVENT
+	@Test(description = "OGC-23-002 " + REQ_CREATE_REPLACE_DELETE
 			+ ": unavailable /commands, /feasibility, /systemEvents, or /systems/{id}/events endpoints are SKIP evidence, not lifecycle PASS evidence (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-UNAVAILABLE-ENDPOINT-HONESTY-001)",
 			groups = GROUP)
 	public void unavailableCommandFeasibilityAndEventEndpointsDoNotBecomeLifecycleEvidence() {
@@ -261,43 +266,204 @@ public class Part2CreateReplaceDeleteTests {
 
 	/**
 	 * SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_DATASTREAM + ", " + REQ_OBSERVATION + ", and " + REQ_OBSERVATION_SCHEMA
-			+ ": DataStream/Observation positive lifecycle checks require a dedicated mutable IUT and are deferred in this safety-gated increment (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001)",
+	@Test(description = "OGC-23-002 " + REQ_DATASTREAM
+			+ ": DataStream positive Create/Replace/Delete lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
 			groups = GROUP)
-	public void datastreamObservationLifecycleRequiresDedicatedMutableIut() {
-		skipIfCreateReplaceDeleteUndeclared();
-		ensureMutationEnabledOrSkip(REQ_DATASTREAM);
-		throw new SkipException(REQ_DATASTREAM
-				+ " - positive DataStream/Observation POST/PUT/DELETE lifecycle coverage is deferred until dedicated mutable-IUT fixtures and cleanup are implemented. No POST/PUT/DELETE request was issued.");
+	public void datastreamLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_DATASTREAM, CONF_DATASTREAM, "DataStream CRD requires the Part 2 Datastream class.",
+				"DataStream");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_DATASTREAM_UPDATE_SCHEMA
+			+ ": DataStream schema replacement lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void datastreamSchemaUpdateRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_DATASTREAM_UPDATE_SCHEMA, CONF_DATASTREAM,
+				"DataStream schema replacement requires the Part 2 Datastream class.", "DataStream schema");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_DATASTREAM_DELETE_CASCADE
+			+ ": DataStream delete-cascade lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void datastreamDeleteCascadeRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_DATASTREAM_DELETE_CASCADE, CONF_DATASTREAM,
+				"DataStream delete-cascade checks require the Part 2 Datastream class.", "DataStream delete-cascade");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_OBSERVATION
+			+ ": Observation positive Create/Delete lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void observationLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_OBSERVATION, CONF_DATASTREAM, "Observation CRD requires the Part 2 Datastream class.",
+				"Observation");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_OBSERVATION_SCHEMA
+			+ ": Observation schema lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void observationSchemaLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_OBSERVATION_SCHEMA, CONF_DATASTREAM,
+				"Observation schema checks require the Part 2 Datastream class.", "Observation schema");
 	}
 
 	/**
 	 * SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM + ", " + REQ_COMMAND + ", " + REQ_COMMAND_SCHEMA + ", "
-			+ REQ_COMMAND_STATUS + ", and " + REQ_COMMAND_RESULT
-			+ ": ControlStream/Command positive lifecycle checks require a dedicated mutable IUT and are deferred in this safety-gated increment (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001)",
+	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM
+			+ ": ControlStream positive Create/Replace/Delete lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
 			groups = GROUP)
-	public void controlStreamCommandLifecycleRequiresDedicatedMutableIut() {
-		skipIfCreateReplaceDeleteUndeclared();
-		ensureMutationEnabledOrSkip(REQ_CONTROLSTREAM);
-		throw new SkipException(REQ_CONTROLSTREAM
-				+ " - positive ControlStream/Command POST/PUT/DELETE lifecycle coverage is deferred until dedicated mutable-IUT fixtures and cleanup are implemented. No POST/PUT/DELETE request was issued.");
+	public void controlStreamLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_CONTROLSTREAM, CONF_CONTROLSTREAM,
+				"ControlStream CRD requires the Part 2 ControlStream class.", "ControlStream");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM_UPDATE_SCHEMA
+			+ ": ControlStream schema replacement lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void controlStreamSchemaUpdateRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_CONTROLSTREAM_UPDATE_SCHEMA, CONF_CONTROLSTREAM,
+				"ControlStream schema replacement requires the Part 2 ControlStream class.", "ControlStream schema");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_CONTROLSTREAM_DELETE_CASCADE
+			+ ": ControlStream delete-cascade lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void controlStreamDeleteCascadeRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_CONTROLSTREAM_DELETE_CASCADE, CONF_CONTROLSTREAM,
+				"ControlStream delete-cascade checks require the Part 2 ControlStream class.",
+				"ControlStream delete-cascade");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_COMMAND
+			+ ": Command positive Create lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void commandLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_COMMAND, CONF_CONTROLSTREAM, "Command CRD requires the Part 2 ControlStream class.",
+				"Command");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_COMMAND_SCHEMA
+			+ ": Command schema lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void commandSchemaLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_COMMAND_SCHEMA, CONF_CONTROLSTREAM,
+				"Command schema checks require the Part 2 ControlStream class.", "Command schema");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_COMMAND_STATUS
+			+ ": CommandStatus lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void commandStatusLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_COMMAND_STATUS, CONF_CONTROLSTREAM,
+				"CommandStatus checks require the Part 2 ControlStream class.", "CommandStatus");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_COMMAND_RESULT
+			+ ": CommandResult lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void commandResultLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_COMMAND_RESULT, CONF_CONTROLSTREAM,
+				"CommandResult checks require the Part 2 ControlStream class.", "CommandResult");
 	}
 
 	/**
 	 * SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
 	 */
-	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY + ", " + REQ_FEASIBILITY_STATUS + ", " + REQ_FEASIBILITY_RESULT
-			+ ", and " + REQ_SYSTEM_EVENT
-			+ ": Feasibility/SystemEvent positive lifecycle checks require a dedicated mutable IUT and are deferred in this safety-gated increment (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001)",
+	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY
+			+ ": Feasibility positive Create/Delete lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
 			groups = GROUP)
-	public void feasibilitySystemEventLifecycleRequiresDedicatedMutableIut() {
+	public void feasibilityLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_FEASIBILITY, CONF_FEASIBILITY,
+				"Feasibility CRD requires the Part 2 Feasibility class.", "Feasibility");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY_STATUS
+			+ ": FeasibilityStatus lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void feasibilityStatusLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_FEASIBILITY_STATUS, CONF_FEASIBILITY,
+				"FeasibilityStatus checks require the Part 2 Feasibility class.", "FeasibilityStatus");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_FEASIBILITY_RESULT
+			+ ": FeasibilityResult lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void feasibilityResultLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_FEASIBILITY_RESULT, CONF_FEASIBILITY,
+				"FeasibilityResult checks require the Part 2 Feasibility class.", "FeasibilityResult");
+	}
+
+	/**
+	 * SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001.
+	 * SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001.
+	 */
+	@Test(description = "OGC-23-002 " + REQ_SYSTEM_EVENT
+			+ ": SystemEvent positive lifecycle evidence requires a dedicated mutable IUT fixture and remains deferred (REQ-ETS-PART2-007, SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001, SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001)",
+			groups = GROUP)
+	public void systemEventLifecycleRequiresDedicatedMutableIut() {
+		deferLifecycleTarget(REQ_SYSTEM_EVENT, CONF_SYSTEM_EVENT,
+				"SystemEvent CRD requires the Part 2 SystemEvent class.", "SystemEvent");
+	}
+
+	private void deferLifecycleTarget(String requirementUri, String conformanceUri, String prerequisiteReason,
+			String lifecycleScope) {
 		skipIfCreateReplaceDeleteUndeclared();
-		ensureMutationEnabledOrSkip(REQ_FEASIBILITY);
-		throw new SkipException(REQ_FEASIBILITY
-				+ " - positive Feasibility/SystemEvent POST/PUT/DELETE lifecycle coverage is deferred until dedicated mutable-IUT fixtures and cleanup are implemented. No POST/PUT/DELETE request was issued.");
+		ensureMutationEnabledOrSkip(requirementUri);
+		skipIfClassUndeclared(conformanceUri, prerequisiteReason);
+		throw new SkipException(requirementUri + " - positive " + lifecycleScope
+				+ " POST/PUT/DELETE lifecycle coverage is deferred until dedicated mutable-IUT fixtures, response proof, and cleanup are implemented. No POST/PUT/DELETE request was issued.");
 	}
 
 	static boolean declaresConformance(Map<String, Object> body, String conformanceUri) {

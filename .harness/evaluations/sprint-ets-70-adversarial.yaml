@@ -1,0 +1,113 @@
+verdict: APPROVE
+confidence: 0.97
+reviewer: Raze
+sprint: ets-70
+story: S-ETS-70-01
+reviewed_at_utc: "2026-08-02T05:46:40Z"
+focused_recheck_at_utc: "2026-08-02T05:52:42Z"
+scope:
+  - AGENTS.md
+  - _bmad/agents/adversarial-reviewer.md
+  - .harness/contracts/sprint-ets-70.yaml
+  - openspec/change-proposals/CP-030-part2-crd-released-method-surface.md
+  - epics/stories/s-ets-70-01-part2-crd-released-method-surface.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - _bmad/traceability.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/test-results.md
+  - ops/known-issues.md
+  - ops/ats-coverage-report.json
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/Part2CreateReplaceDeleteTests.java
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/conformance/part2/createreplacedelete/VerifyPart2CreateReplaceDeleteTests.java
+  - ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/
+summary:
+  outcome: >-
+    Sprint 70 satisfies the scoped contract: it exposes one deployed TestNG
+    method for each released OGC 23-002 Annex A.7 Part 2
+    Create/Replace/Delete child target, keeps those mappings candidate rather
+    than reviewed exact, and preserves public/non-opted IUT mutation safety.
+  no_implementation_changes_made: true
+  expensive_reruns: "Not run; existing Maven and TeamEngine evidence was sufficient."
+  focused_recheck: >-
+    RAZE-ETS70-EVIDENCE-001 is closed. The added repository evidence subset
+    manifest validates from the archived evidence directory with
+    `sha256sum -c repo-evidence-manifest.sha256 --quiet`.
+answers:
+  - question: "Does Sprint 70 only expose one deployed TestNG method per released child target without claiming reviewed exact positive lifecycle closure?"
+    answer: "Yes. Sixteen child-target methods are present; coverage remains candidate with reviewedMapping null and no resource reviewed mapping entries for these targets."
+  - question: "Does every child-target method carry exactly one canonical requirement URI, while setup/readiness/unavailable methods avoid duplicate child-target candidate mappings?"
+    answer: "Yes. The structural verifier passes 86/0/0/0, and the generated coverage section has exactly one candidate mapping per child target."
+  - question: "Do mutation gates prevent public/non-opted IUT writes, and does disposable local OSH E2E evidence support GET-only/no-primary-mutation claims?"
+    answer: "Yes. The runtime class contains no POST, PUT, DELETE, or PATCH client calls. TeamEngine smoke request method counts are GET-only, cleanup PASSed, and primary state was unchanged. Provisioning writes are confined to the owned disposable OSH setup."
+  - question: "Are non-green E2E claims honest?"
+    answer: "Yes. The workflow exit is nonzero, populated and clean-primary smokes both have 20 failures, and the failure comparison artifact reports no new failures compared to Sprint 69 while all in-scope Part 2 CRD methods SKIP."
+  - question: "Are specs/story/traceability/status/changelog/test-results coherent and not prematurely complete?"
+    answer: "Yes. They consistently say implemented pending Raze or Raze pending, and do not promote positive lifecycle closure."
+  - question: "Are Maven and coverage totals supported by artifacts?"
+    answer: "Yes. Focused structural Maven is 86/0/0/0, coverage audit is 23/0/0/0, full Maven is 786/0/0/3, and coverage totals are 240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped."
+findings:
+  - id: RAZE-ETS70-EVIDENCE-001
+    severity: LOW
+    status: CLOSED
+    title: "Repository evidence subset now has a self-contained manifest."
+    evidence:
+      - "`sha256sum -c ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/local-osh-artifact-manifest.sha256 --quiet` fails from the repository because the manifest entries are relative to `/tmp/ets-ogcapi-connectedsystems10-sprint-ets-70-crd-20260802T052626Z`."
+      - "`sha256sum -c artifact-manifest.sha256 --quiet` succeeds when run from the retained `/tmp/ets-ogcapi-connectedsystems10-sprint-ets-70-crd-20260802T052626Z` source artifact tree."
+      - "The repository evidence still includes the raw TeamEngine XML copies, failures JSON, run summary, Part 2 CRD status summary, provisioning evidence, run id, output-dir pointer, and primary-state diff needed for the Sprint 70 claims."
+      - "`ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/repo-evidence-manifest.sha256` exists and was generated for the archived repository evidence subset."
+      - "`sha256sum -c repo-evidence-manifest.sha256 --quiet` passes when run from `ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/`."
+    risk: >-
+      Closed for the archived repository subset. The full original `/tmp`
+      artifact manifest remains separate, but the repository evidence needed
+      for the Sprint 70 report is now independently hash-verifiable in place.
+    required: false
+    recommendation: >-
+      No required follow-up.
+evidence:
+  maven:
+    focused_structural:
+      artifact: ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/focused-green-structural-final.txt
+      exitcode: 0
+      totals: "86 tests / 0 failures / 0 errors / 0 skipped"
+    coverage_audit:
+      artifact: ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/coverage-audit.txt
+      exitcode: 0
+      totals: "23 tests / 0 failures / 0 errors / 0 skipped"
+    full_maven:
+      artifact: ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/full-maven-final.txt
+      exitcode: 0
+      totals: "786 tests / 0 failures / 0 errors / 3 skipped"
+  coverage:
+    overall: "240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped"
+    part2_create_replace_delete: "16 total / 0 exact / 0 helper / 16 candidate / 0 unmapped"
+    reviewed_exact_promotion: false
+  static_checks:
+    part2_crd_test_methods: 22
+    child_target_methods: 16
+    runtime_write_client_calls:
+      post: 0
+      put: 0
+      delete: 0
+      patch: 0
+    structural_test: "VerifyPart2CreateReplaceDeleteTests.releasedAnnexA7TargetsHaveOneDeployedMethodEach passes after the implementation and failed before it on multi-target descriptions."
+    testng_group: "part2createreplacedelete depends on core common systemfeatures and the class is included in testng.xml."
+  e2e:
+    run_id: sprint-ets-70-crd-20260802T052626Z
+    workflow_exitcode: 1
+    populated_totals: "265 total / 24 passed / 20 failed / 221 skipped"
+    clean_primary_totals: "265 total / 23 passed / 20 failed / 222 skipped"
+    in_scope_part2_crd: "22 SKIP in populated and 22 SKIP in clean-primary"
+    request_method_counts:
+      populated:
+        GET: 134
+      clean_primary:
+        GET: 130
+    cleanup_verdict: PASS
+    primary_state_unchanged: true
+    sprint69_failure_set_matched: true
+    new_failures_compared_to_sprint69: []
+    repo_evidence_manifest:
+      artifact: ops/test-results/sprint-ets-70-part2-crd-method-surface-2026-08-02/repo-evidence-manifest.sha256
+      verification: "sha256sum -c repo-evidence-manifest.sha256 --quiet from the evidence directory returned exit 0."
+required_fixes: []

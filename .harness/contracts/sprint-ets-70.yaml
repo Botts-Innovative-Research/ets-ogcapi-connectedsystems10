@@ -1,0 +1,29 @@
+sprint: ets-70
+story: S-ETS-70-01
+title: Part 2 Create/Replace/Delete Released Method Surface
+trigger: Continue
+requirements:
+  - REQ-ETS-PART2-007
+scenarios:
+  - SCENARIO-ETS-PART2-007-RELEASED-METHOD-SURFACE-001
+  - SCENARIO-ETS-PART2-007-CRD-CONFORMANCE-DECLARED-001
+  - SCENARIO-ETS-PART2-007-FEATURES4-PREREQUISITE-001
+  - SCENARIO-ETS-PART2-007-MUTATION-SAFETY-GATE-001
+  - SCENARIO-ETS-PART2-007-DATASTREAM-OBSERVATION-LIFECYCLE-OPTIN-001
+  - SCENARIO-ETS-PART2-007-CONTROLSTREAM-COMMAND-LIFECYCLE-OPTIN-001
+  - SCENARIO-ETS-PART2-007-FEASIBILITY-SYSTEMEVENT-LIFECYCLE-OPTIN-001
+  - SCENARIO-ETS-PART2-007-UNAVAILABLE-ENDPOINT-HONESTY-001
+  - SCENARIO-ETS-PART2-007-SMOKE-NO-PUBLIC-MUTATION-001
+acceptance:
+  - One deployed TestNG method exists for each of the sixteen released Annex A.7 targets.
+  - Each released-target method carries exactly one canonical Part 2 CRD requirement URI.
+  - Foundational safety/setup checks do not create duplicate child-target candidate mappings.
+  - Coverage report shows `2:/conf/create-replace-delete` as `0 exact / 16 candidate / 0 unmapped`.
+  - Positive lifecycle exact closure is not claimed without dedicated mutable-IUT POST/PUT/DELETE evidence.
+  - Public and non-opted-in IUTs remain protected from writes.
+  - Disposable local OSH E2E evidence, cleanup, and primary-state isolation are archived.
+  - Raze review is complete before reporting completion.
+out_of_scope:
+  - OSH or TeamEngine source/binary patches.
+  - Reviewed exact mapping promotion for Part 2 CRD.
+  - Part 1 CRD and Part 2 Update closure.

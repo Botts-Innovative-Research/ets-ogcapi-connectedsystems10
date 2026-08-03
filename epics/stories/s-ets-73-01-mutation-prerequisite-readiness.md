@@ -2,7 +2,7 @@
 
 ## Status
 
-COMPLETE_RAZE_APPROVED_WITH_CONCERNS_PUSH_PENDING
+COMPLETE_PUSHED
 
 ## User Instruction
 
@@ -70,3 +70,4 @@ remaining mutation-bound candidate procedures.
 - Raze returned `APPROVE_WITH_CONCERNS 0.94` with `required_fixes: []`. The
   LOW concern is documented: the prerequisite-ready field is declaration-only
   readiness, not proof that prerequisite TestNG groups passed.
+- Implementation and evidence commit `d110ccd` is pushed to Botts `main`.

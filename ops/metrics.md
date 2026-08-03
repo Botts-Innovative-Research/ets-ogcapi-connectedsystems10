@@ -12,6 +12,8 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 430 | 2026-08-03T03:01:16Z | 2026-08-03T03:06:50Z | 5m34s | User instructed: act as Raze for current uncommitted Sprint 73 mutation prerequisite readiness audit work, inspect scoped artifacts/evidence without implementation code changes or expensive reruns unless blocked, write `.harness/evaluations/sprint-ets-73-adversarial.yaml`, and report exact verification totals plus whether required fixes remain. Wrote verdict `APPROVE_WITH_CONCERNS 0.94` with one LOW non-blocking false-confidence wording concern, no required fixes, verified YAML syntax, repo manifest `46` files, disposable manifest `33` files, `47` unignored evidence files including `14` logs, and exact totals from archived logs. |
+| 429 | 2026-08-03T02:36:49Z | 2026-08-03T03:12:47Z | 35m58s | User instructed: "Continue." Completed Sprint 73 mutation prerequisite readiness audit: added CP/story/contract/spec anchors, extended the read-only audit with prerequisite-declaration readiness fields, verified Python `21/0/0/0`, formatter PASS, Docker Maven `787/0/0/3`, direct local OSH audit `GET=1 OPTIONS=25 unsafe=[] legacyReady=[1:/conf/create-replace-delete] prereqReady=[]`, disposable local OSH E2E `275/24/20/231` populated and `275/23/20/232` clean-primary with cleanup/primary isolation PASS, Raze `APPROVE_WITH_CONCERNS 0.94` and no required fixes, pushed implementation `d110ccd`, reconciled pushed status, and archived session metrics. |
 | 428 | 2026-08-03T02:27:04Z | 2026-08-03T02:30:02Z | 2m58s | User instructed: perform a focused Sprint 72 Raze recheck only for `RAZE-ETS72-EVIDENCE-001`, inspect `.gitignore` behavior, raw nested `.log` evidence reachability, manifest verification, and documentation gapfix notes without Docker/Maven reruns, then write `.harness/evaluations/sprint-ets-72-adversarial-recheck.yaml`. Verified all eight nested logs are addable, both manifests verify and have `0` exitcode artifacts, scoped docs mention the gapfix, and wrote `APPROVE 0.97` with `required_fixes: []`. |
 | 427 | 2026-08-03T02:17:54Z | 2026-08-03T02:24:02Z | 6m08s | User instructed: act as Raze for Sprint 72 mutation candidate readiness audit changes, inspect scoped code/spec/docs/evidence without rerunning expensive Docker unless necessary, and write `.harness/evaluations/sprint-ets-72-adversarial.yaml`. Wrote verdict `GAPS_FOUND 0.93`: audit behavior is read-only, credential-safe, candidate-honest, and E2E totals are honestly non-green, but Sprint 72 nested `.log` E2E artifacts are ignored by `.gitignore` and would be omitted from a normal evidence commit. Removed one generated untracked Python cache file; no tracked implementation files changed. |
 | 426 | 2026-08-03T01:32:46Z | 2026-08-03T02:34:45Z | 1h01m59s | User instructed: "Continue." Completed and pushed Sprint 72 mutation candidate readiness audit as `be56c50`: added CP/story/contract/spec anchors, implemented read-only `/conformance` + OPTIONS readiness audit for all 47 mutation-bound candidates, wired disposable local OSH populated workflow archival after provisioning, fixed long-run-id TeamEngine DNS access with a generated short OSH network alias, verified Python `20/0/0/0`, formatter PASS, full Docker Maven `787/0/0/3`, direct local OSH audit `GET=1 OPTIONS=25 unsafe=[]`, disposable local OSH honest non-green E2E `275/24/20/231` populated and `275/23/20/232` clean-primary with cleanup/primary isolation PASS, closed initial Raze evidence-log gap, received focused Raze `APPROVE 0.97`, pushed implementation `be56c50`, reconciled pushed status, and archived session metrics. |
@@ -563,24 +565,23 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 72)
+### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 73)
 
-Extracted after Sprint 72 implementation push with
-`python3 scripts/session-metrics.py`; raw output archived at
-`ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/session-metrics-before-final.txt`.
+Extracted after Sprint 73 pushed-status reconciliation with
+`python3 scripts/session-metrics.py`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
 the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 16,385,474 | $245.78 |
-| Output | 1,309,416 | $98.21 |
+| Input | 16,851,436 | $252.77 |
+| Output | 1,357,726 | $101.83 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 384,191,104 | $576.29 |
-| **TOTAL** | **401,885,994** | **$920.27** |
+| Cache Read | 399,691,136 | $599.54 |
+| **TOTAL** | **417,900,298** | **$954.14** |
 
-API calls (usage records): 2807
+API calls (usage records): 2921
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

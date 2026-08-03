@@ -2,7 +2,7 @@
 
 ## Status
 
-IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS_PUSH_PENDING
+IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS_PUSHED
 
 ## User Instruction
 
@@ -66,3 +66,4 @@ SKIPs before writes because API Common datetime evidence and exact inherited
 - Raze returned `APPROVE_WITH_CONCERNS 0.94` with `required_fixes: []`; the
   only LOW concern is that prerequisite readiness is declaration-only, not
   prerequisite TestNG execution proof.
+- Implementation and evidence commit `d110ccd` is pushed to Botts `main`.

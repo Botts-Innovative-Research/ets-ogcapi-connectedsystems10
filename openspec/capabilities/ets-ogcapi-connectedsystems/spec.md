@@ -3152,7 +3152,7 @@ to be a valid DNS label.
 
 #### REQ-ETS-CLEANUP-024: Mutation Prerequisite Readiness Audit (Sprint 73)
 - **Priority**: SHOULD
-- **Status**: IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS_PUSH_PENDING (Sprint 73
+- **Status**: IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS_PUSHED (Sprint 73
   S-ETS-73-01)
 - **Description**: The mutation-readiness audit SHALL distinguish direct
   declaration/method readiness from prerequisite-declaration readiness. For
@@ -3193,7 +3193,8 @@ to be a valid DNS label.
   `275/24/20/231`, clean-primary `275/23/20/232`; no mutation-bound candidate
   is promoted. Raze returned `APPROVE_WITH_CONCERNS 0.94` with
   `required_fixes: []`; its LOW concern is that prerequisite readiness is
-  declaration-only, not inherited TestNG execution proof.
+  declaration-only, not inherited TestNG execution proof. Implementation and
+  evidence commit `d110ccd` is pushed to Botts `main`.
 - **Maps to**: PRD FR-ETS-25, FR-ETS-54;
   REQ-ETS-CLEANUP-023; REQ-ETS-PART1-010, REQ-ETS-PART1-011,
   REQ-ETS-PART2-007, REQ-ETS-PART2-008.

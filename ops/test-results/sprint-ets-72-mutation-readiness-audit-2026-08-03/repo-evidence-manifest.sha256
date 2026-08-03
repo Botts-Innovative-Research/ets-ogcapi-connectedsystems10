@@ -59,3 +59,5 @@ f06c5f5563463e64256c65f74bdbad00f768f589ae98f84b62e723aefd54b8a6  ./local-osh-r2
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./python-py-compile.txt
 9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./python-unittest.exitcode
 2dcc2cf7875884b016fce88b2408806f62b502bdc898cef531b5468cfde64d2a  ./python-unittest.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./session-metrics-before-final.exitcode
+58dea4cde7e56ac4b26162127d1fff08e1b2d83f938360b88d9e6c4be51f8541  ./session-metrics-before-final.txt

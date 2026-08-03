@@ -1,7 +1,7 @@
 sprint: ets-72
 story: S-ETS-72-01
 title: Mutation candidate readiness audit
-status: complete_raze_approved_pending_push
+status: complete_pushed
 trigger: User instructed "Continue."
 scope:
   requirement: REQ-ETS-CLEANUP-023

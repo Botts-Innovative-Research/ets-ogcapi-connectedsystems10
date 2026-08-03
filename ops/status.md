@@ -2,7 +2,7 @@
 
 Last updated: 2026-08-03T02:10Z
 
-## Sprint 72 Complete Pending Push - Mutation Candidate Readiness Audit
+## Sprint 72 Complete and Pushed - Mutation Candidate Readiness Audit
 
 - User instruction: "Continue."
 - Plan 1 scope: CP-032, S-ETS-72-01, and `sprint-ets-72.yaml` add a
@@ -50,6 +50,7 @@ Last updated: 2026-08-03T02:10Z
   manifest verifies, and `repo-evidence-manifest.sha256` covers the repository
   evidence subset including the raw logs.
 - Raze focused recheck returned `APPROVE 0.97` with `required_fixes: []`.
+- Implementation and evidence commit `be56c50` is pushed to Botts `main`.
 - Remaining no-validator-dependency work is still dominated by positive
   mutation lifecycle evidence: the project has `240 total / 191 exact /
   2 helper / 47 candidate / 0 unmapped`, and all 47 candidates require a

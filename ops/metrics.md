@@ -14,7 +14,7 @@
 |------|-------------|-----------|----------|-------------|
 | 428 | 2026-08-03T02:27:04Z | 2026-08-03T02:30:02Z | 2m58s | User instructed: perform a focused Sprint 72 Raze recheck only for `RAZE-ETS72-EVIDENCE-001`, inspect `.gitignore` behavior, raw nested `.log` evidence reachability, manifest verification, and documentation gapfix notes without Docker/Maven reruns, then write `.harness/evaluations/sprint-ets-72-adversarial-recheck.yaml`. Verified all eight nested logs are addable, both manifests verify and have `0` exitcode artifacts, scoped docs mention the gapfix, and wrote `APPROVE 0.97` with `required_fixes: []`. |
 | 427 | 2026-08-03T02:17:54Z | 2026-08-03T02:24:02Z | 6m08s | User instructed: act as Raze for Sprint 72 mutation candidate readiness audit changes, inspect scoped code/spec/docs/evidence without rerunning expensive Docker unless necessary, and write `.harness/evaluations/sprint-ets-72-adversarial.yaml`. Wrote verdict `GAPS_FOUND 0.93`: audit behavior is read-only, credential-safe, candidate-honest, and E2E totals are honestly non-green, but Sprint 72 nested `.log` E2E artifacts are ignored by `.gitignore` and would be omitted from a normal evidence commit. Removed one generated untracked Python cache file; no tracked implementation files changed. |
-| 426 | 2026-08-03T01:32:46Z | IN_PROGRESS | IN_PROGRESS | User instructed: "Continue." Started post-Sprint 71 continuation from clean `main` at `efb0755`, confirmed architecture freshness, and began selecting the next practical no-input work item from the remaining mutation-bound candidate coverage and operational backlog. |
+| 426 | 2026-08-03T01:32:46Z | 2026-08-03T02:34:45Z | 1h01m59s | User instructed: "Continue." Completed and pushed Sprint 72 mutation candidate readiness audit as `be56c50`: added CP/story/contract/spec anchors, implemented read-only `/conformance` + OPTIONS readiness audit for all 47 mutation-bound candidates, wired disposable local OSH populated workflow archival after provisioning, fixed long-run-id TeamEngine DNS access with a generated short OSH network alias, verified Python `20/0/0/0`, formatter PASS, full Docker Maven `787/0/0/3`, direct local OSH audit `GET=1 OPTIONS=25 unsafe=[]`, disposable local OSH honest non-green E2E `275/24/20/231` populated and `275/23/20/232` clean-primary with cleanup/primary isolation PASS, closed initial Raze evidence-log gap, received focused Raze `APPROVE 0.97`, pushed implementation `be56c50`, reconciled pushed status, and archived session metrics. |
 | 425 | 2026-08-02T16:00:04Z | 2026-08-02T16:05:16Z | 5m12s | Agent-initiated mandatory Raze review for the current uncommitted Sprint 71 Part 2 Update released method-surface work. Raze inspected scoped artifacts and evidence without implementation fixes, wrote `.harness/evaluations/sprint-ets-71-adversarial.yaml`, and returned `APPROVE_WITH_CONCERNS 0.96` with one LOW non-blocking evidence-hygiene concern about the copied raw local OSH manifest not self-verifying from the renamed repository subset; `repo-evidence-manifest.sha256` verifies in place, source `/tmp` manifest verifies, and `required_fixes: []`. Subagent token metadata was unavailable from the tool result. |
 | 424 | 2026-08-02T15:53:54Z | 2026-08-02T16:11:58Z | 18m04s | User instructed: "Continue." Resumed Sprint 71 after context compaction with implementation and E2E evidence present; reconciled docs/evidence, completed mandatory Raze review, pushed implementation `081e09f`, updated pushed status, refreshed the Sprint 71 evidence manifest, archived session metrics, and pushed final reconciliation. |
 | 423 | 2026-08-02T15:22:42Z | 2026-08-02T15:53:54Z | 31m12s | User instructed: "Continue." Started numbered Plan 1 for Sprint 71 after pushed Sprint 70, checked for lingering aborted-turn processes, confirmed only standing OSH Java services are running, verified clean `main` at `322ddce`, added Sprint 71 spec/story/contract anchors, split Part 2 Update into one child-target method per Annex A.8 target, and archived formatter, focused Maven, coverage, full Maven, and disposable local OSH evidence before context compaction. |
@@ -563,24 +563,24 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/02 ETS continuation through Sprint 71)
+### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 72)
 
-Extracted after Sprint 71 implementation push with
+Extracted after Sprint 72 implementation push with
 `python3 scripts/session-metrics.py`; raw output archived at
-`ops/test-results/sprint-ets-71-part2-update-method-surface-2026-08-02/session-metrics-before-final.txt`.
+`ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/session-metrics-before-final.txt`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
 the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 15,691,017 | $235.37 |
-| Output | 1,230,819 | $92.31 |
+| Input | 16,385,474 | $245.78 |
+| Output | 1,309,416 | $98.21 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 360,721,920 | $541.08 |
-| **TOTAL** | **377,643,756** | **$868.76** |
+| Cache Read | 384,191,104 | $576.29 |
+| **TOTAL** | **401,885,994** | **$920.27** |
 
-API calls (usage records): 2636
+API calls (usage records): 2807
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

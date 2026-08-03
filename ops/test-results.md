@@ -49,6 +49,7 @@ Sprint 72 mutation candidate readiness audit:
 - Raze focused recheck
   `.harness/evaluations/sprint-ets-72-adversarial-recheck.yaml` returned
   `APPROVE 0.97` with `required_fixes: []`.
+- Implementation and evidence commit `be56c50` is pushed to Botts `main`.
 
 Sprint 71 Part 2 Update released method surface:
 

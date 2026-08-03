@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.3 | Status: Active ETS implementation | Last updated: 2026-07-31
+> Version: 1.3 | Status: Active ETS implementation | Last updated: 2026-08-03
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -21,7 +21,7 @@ This capability does NOT define web-app endpoints, UI components, REST APIs, or 
 
 #### REQ-ETS-SCAFFOLD-001: Archetype Generation
 - **Priority**: MUST
-- **Status**: SPECIFIED
+- **Status**: IMPLEMENTED_RAZE_APPROVED (Sprint 79 S-ETS-79-01)
 - **Description**: The deliverable SHALL be generated from `org.opengis.cite:ets-archetype-testng:2.7` with `groupId=org.opengis.cite`, `artifactId=ets-ogcapi-connectedsystems10`, `ets-code=ogcapi-connectedsystems10`, `ets-title='OGC API - Connected Systems Part 1'`. The generation command and any post-generation modernization SHALL be recorded in `ops/server.md` for reproducibility.
 - **Rationale**: OGC convention. Deviating from the archetype produces an ETS that CITE SC reviewers will not recognize structurally.
 - **Maps to**: PRD FR-ETS-01, R-PIVOT-01.
@@ -3468,6 +3468,53 @@ non-direct adjacent systems using current evidence
 **AND** README-only or public-claim-only repositories SHALL NOT be treated as
 runnable IUT evidence
 **AND** no mutation-bound candidate mapping SHALL be promoted to reviewed exact.
+
+#### REQ-ETS-CLEANUP-030: Release Readiness External Blocker Package (Sprint 79)
+- **Priority**: SHOULD
+- **Status**: SPECIFIED
+- **Description**: The project SHALL maintain a pre-beta release-readiness
+  package that separates implemented ETS capability from external mutable-IUT
+  certification evidence. The package SHALL record the current released ATS
+  totals, identify any remaining candidate mappings, name the exact blocker
+  classes, index the evidence supporting the blocker assessment, and classify
+  release gates as ready, blocked, deferred, or not-run. It SHALL explicitly
+  state when CITE submission, Maven Central publication, beta status, and the
+  three-implementation roster are not complete.
+- **Rationale**: With currently known open-source IUTs unable to close the
+  remaining mutation-bound candidates, the project needs a durable release
+  handoff that prevents false completion claims while making the current
+  implementation and external blockers reviewable.
+- **Implementation evidence**: Sprint 79 adds
+  `ops/release/sprint-79-release-readiness-external-blocker-package.md`,
+  `ops/release/sprint-79-release-readiness-external-blocker-package.json`, and
+  generated evidence under
+  `ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/`.
+  The package records `240 total / 191 exact / 2 helper / 47 candidate / 0
+  unmapped`, identifies the four remaining mutation-bound classes, classifies
+  known IUTs as non-promoting, and keeps CITE submission, Maven Central/OSSRH
+  publication, beta status, and the three-implementation roster incomplete.
+  Lightweight coverage/JSON/YAML/artifact/blocker-text/manifest/diff checks
+  pass. Initial Raze returned `GAPS_FOUND 0.86`; the manifest was regenerated
+  to cover `verification-summary.json`, and focused recheck returned
+  `APPROVE 0.96` with `required_fixes=[]`.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54, FR-ETS-70, FR-ETS-71, FR-ETS-72;
+  REQ-ETS-COVERAGE-001, REQ-ETS-CITE-001, REQ-ETS-CITE-002,
+  REQ-ETS-CITE-003.
+
+#### SCENARIO-ETS-CLEANUP-RELEASE-READINESS-BLOCKER-PACKAGE-001 (CRITICAL)
+**GIVEN** the released ATS inventory has zero unmapped procedures but known
+open-source IUTs cannot currently supply positive mutation evidence for all
+remaining Create/Replace/Delete and Update candidates
+**WHEN** the project prepares its release-readiness package
+**THEN** the package SHALL record the exact coverage totals and blocker classes
+**AND** it SHALL preserve mutation-bound candidates as candidates until a
+dedicated conforming mutable IUT supplies declarations, method readiness,
+positive lifecycle evidence, cleanup/isolation, and TeamEngine E2E execution
+**AND** it SHALL distinguish implemented ETS code from external validator and
+external IUT dependencies
+**AND** it SHALL NOT claim beta readiness, Maven Central publication, CITE
+submission, or three passing implementations unless those gates are actually
+complete.
 
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 

@@ -12,6 +12,10 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 450 | 2026-08-03T13:37:07Z | 2026-08-03T13:56:36Z | 19m29s | User instructed "Do plan 1." Completed Sprint 79 release-readiness external-blocker package: added CP-039, S-ETS-79-01, `REQ-ETS-CLEANUP-030`, Sprint 79 contract, `ops/release/` Markdown/JSON package, and evidence under `ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/`; recorded `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`, preserved all mutation-bound mappings as candidate, kept CITE/Maven Central/three-implementation gates incomplete, ran lightweight verification, fixed Raze manifest finding, and received focused Raze `APPROVE 0.96` with `required_fixes=[]`. |
+| 449 | 2026-08-03T13:51:02Z | 2026-08-03T13:52:34Z | 1m32s | User requested a focused Sprint 79 Raze recheck only for `RAZE-S79-001`, verifying regenerated manifest/check/verification/parse artifacts without Docker, Maven, TeamEngine, public writes, or IUT mutation. Confirmed `verification-summary.json` is now manifest-covered, checksum validation passes, and wrote `.harness/evaluations/sprint-ets-79-adversarial-recheck.yaml` with verdict `APPROVE 0.96` and `required_fixes=[]`. |
+| 448 | 2026-08-03T13:45:33Z | 2026-08-03T13:49:06Z | 3m33s | User requested acting as Raze for Sprint 79 release-readiness external-blocker package, reviewing only scoped documentation/evidence changes and writing `.harness/evaluations/sprint-ets-79-adversarial.yaml` without Docker, Maven, TeamEngine, public writes, or IUT mutation. Verdict `GAPS_FOUND 0.86` for `RAZE-S79-001`, an incomplete evidence manifest that omitted `verification-summary.json`. |
+| 447 | 2026-08-03T09:45:51Z | 2026-08-03T09:46:17Z | 0m26s | User asked what work remains given known open-source IUT limitations. Reviewed current status, known issues, test results, and traceability; no product code or evidence artifacts changed. |
 | 446 | 2026-08-03T09:25:39Z | 2026-08-03T09:34:24Z | 8m45s | User requested a focused Sprint 78 Raze recheck only for the four required fixes in `.harness/evaluations/sprint-ets-78-adversarial.yaml`, using scoped static checks and writing `.harness/evaluations/sprint-ets-78-adversarial-recheck.yaml` without Docker, Maven, TeamEngine, or public IUT mutation. Verdict `APPROVE 0.94`; all four prior required fixes closed and `required_fixes=[]`. |
 | 445 | 2026-08-03T09:17:33Z | 2026-08-03T09:22:19Z | 4m46s | User requested acting as Raze for the current uncommitted Sprint 78 alternate-IUT discovery follow-up, reviewing only scoped documentation/evidence changes and writing `.harness/evaluations/sprint-ets-78-adversarial.yaml` without Docker, Maven, TeamEngine, or public IUT mutation. Verdict `GAPS_FOUND 0.90` with required fixes for ignored `.log` evidence artifacts, stale candidate-summary scenario ID, under-archived/inconsistent 52North public conformance evidence, and stale JSON parse count. |
 | 444 | 2026-08-03T09:00:01Z | 2026-08-03T09:39:16Z | 39m15s | User instructed continuing alternate IUT discovery after Sprint 77 was pushed. Completed Sprint 78 discovery/doc follow-up: archived official-registry, GitHub, source-clone, safe public conformance/readiness, and candidate-summary evidence; classified 52North connected-systems-pygeoapi as the best practical source-run watch candidate, DGIWG Glaux Server as README-only direct-claim watchlist, and connected-systems-go public refresh as still non-promotable; no public mutation, Docker, Maven, TeamEngine, outreach filing, or exact promotion occurred. Verification passed for 19 JSON files, 5 YAML files, manifest, public probe policy, ignored-log hygiene, and diff check. Initial Raze `GAPS_FOUND 0.90`; focused recheck `APPROVE 0.94` with `required_fixes=[]`. Implementation/evidence commit `dcc11bc` pushed. |
@@ -581,9 +585,9 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 78)
+### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 79)
 
-Extracted after Sprint 78 alternate IUT discovery follow-up with
+Extracted after Sprint 79 release-readiness external-blocker package with
 `python3 scripts/session-metrics.py`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
@@ -591,13 +595,13 @@ the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 19,780,265 | $296.70 |
-| Output | 1,619,024 | $121.43 |
+| Input | 20,326,672 | $304.90 |
+| Output | 1,667,076 | $125.03 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 467,644,928 | $701.47 |
-| **TOTAL** | **489,044,217** | **$1119.60** |
+| Cache Read | 477,631,232 | $716.45 |
+| **TOTAL** | **499,624,980** | **$1146.38** |
 
-API calls (usage records): 3412
+API calls (usage records): 3482
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T08:16Z
+Last updated: 2026-08-03T13:37Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,6 +14,12 @@ Last updated: 2026-08-03T08:16Z
 
 ## Active Issues
 
+- Sprint 79 packages the current pre-beta release-readiness state but does not
+  remove any active external blocker. The current authoritative coverage
+  remains `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+  The release package under `ops/release/` is a reviewer handoff, not a CITE
+  submission, Maven Central publication, beta claim, or three-implementation
+  pass record.
 - Sprint 74 readiness audit confirms all 47 remaining mutation-bound released
   ATS procedures remain candidate. Direct primary local OSH evidence records
   `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`; populated disposable OSH

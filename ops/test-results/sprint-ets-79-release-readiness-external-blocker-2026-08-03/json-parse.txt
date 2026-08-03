@@ -1,0 +1,1 @@
+PASS: JSON artifacts parsed successfully, including verification-summary.json

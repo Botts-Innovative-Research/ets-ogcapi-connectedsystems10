@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "sprint-ets-79-verification-summary-v1",
+  "generatedAt": "2026-08-03T13:37:00Z",
+  "coverageAudit": true,
+  "jsonParse": true,
+  "yamlParse": true,
+  "artifactPresence": true,
+  "blockerTextCheck": true,
+  "gitDiffCheck": true,
+  "manifestCheck": true,
+  "manifestIncludesVerificationSummary": true,
+  "manifestExcludes": [
+    "repo-evidence-manifest.sha256",
+    "repo-evidence-manifest-check.txt"
+  ],
+  "razeInitial": {
+    "verdict": "GAPS_FOUND",
+    "confidence": 0.86,
+    "requiredFixes": [
+      "RAZE-S79-001"
+    ]
+  },
+  "razeRecheck": {
+    "verdict": "APPROVE",
+    "confidence": 0.96,
+    "requiredFixes": []
+  },
+  "dockerMaven": "NOT_RUN: documentation-only package with no Java/TestNG behavior change",
+  "teamEngine": "NOT_RUN: documentation-only package with no IUT mutation"
+}

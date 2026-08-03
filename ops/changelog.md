@@ -2,6 +2,33 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 79 release readiness external blocker package
+
+**Triggered by user instruction**: "Do plan 1", approving the recommended
+release-readiness and external-blocker package path.
+
+- Added CP-039, S-ETS-79-01, `REQ-ETS-CLEANUP-030`,
+  `SCENARIO-ETS-CLEANUP-RELEASE-READINESS-BLOCKER-PACKAGE-001`, and the
+  Sprint 79 contract.
+- Created `ops/release/sprint-79-release-readiness-external-blocker-package.md`
+  and `ops/release/sprint-79-release-readiness-external-blocker-package.json`.
+- Generated Sprint 79 evidence under
+  `ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/`:
+  coverage audit, coverage summary, and known-IUT readiness summary.
+- Recorded the current release-readiness state as pre-beta and externally
+  blocked: `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+- Preserved all 47 mutation-bound Create/Replace/Delete and Update procedures
+  as candidate mappings, with no exact promotion from local OSH,
+  `connected-systems-go`, 52North, or Glaux evidence.
+- Kept CITE submission, Maven Central/OSSRH publication, and the
+  three-implementation roster explicitly not complete.
+- Lightweight verification passed for coverage audit, JSON/YAML parse,
+  artifact presence, blocker text, evidence manifest, and `git diff --check`.
+- Raze initial review returned `GAPS_FOUND 0.86` for an incomplete evidence
+  manifest; the manifest was regenerated to cover `verification-summary.json`,
+  and focused Raze recheck returned `APPROVE 0.96` with
+  `required_fixes=[]`.
+
 ## 2026-08-03 - Sprint 78 alternate IUT Discovery follow-up
 
 **Triggered by user instruction**: act as BMAD Analyst / Discovery for Sprint

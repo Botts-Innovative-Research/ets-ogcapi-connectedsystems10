@@ -1,8 +1,39 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T09:33Z
+Last updated: 2026-08-03T13:37Z
 
 ## Current Sprint Evidence
+
+Sprint 79 release-readiness external-blocker package:
+
+- Trigger: user approved Plan 1, the release-readiness and external-blocker
+  package path.
+- Scope: documentation/release packaging only. No Java/TestNG behavior change,
+  no IUT mutation, no public write probes, no Maven/TeamEngine rerun, no CITE
+  filing, and no Maven Central publication.
+- Release package:
+  `ops/release/sprint-79-release-readiness-external-blocker-package.md`.
+- JSON companion:
+  `ops/release/sprint-79-release-readiness-external-blocker-package.json`.
+- Evidence directory:
+  `ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/`.
+- Coverage evidence:
+  `coverage-audit.txt` reports `PASS: committed ATS inventory is internally
+  consistent`; `coverage-summary.json` records `240 total / 191 exact / 2
+  helper / 47 candidate / 0 unmapped`.
+- IUT readiness evidence:
+  `iut-readiness-summary.json` summarizes existing Sprint 74, 76, 77, and 78
+  evidence and concludes no known IUT is exact-promotion ready for the 47
+  mutation-bound candidates.
+- CITE status:
+  not beta-ready, not submitted, no Maven Central/OSSRH publication, and no
+  three-implementation passing roster.
+- Verification:
+  JSON parse PASS, YAML parse PASS, required artifact presence PASS, blocker
+  text check PASS, evidence manifest PASS, and `git diff --check` PASS.
+  Initial Raze returned `GAPS_FOUND 0.86` for an incomplete evidence manifest;
+  the manifest was regenerated to cover `verification-summary.json`, and
+  focused Raze recheck returned `APPROVE 0.96` with `required_fixes=[]`.
 
 Sprint 78 alternate IUT Discovery follow-up:
 

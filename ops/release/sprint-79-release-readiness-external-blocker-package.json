@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "sprint-ets-79-release-readiness-external-blocker-package-v1",
+  "generatedAt": "2026-08-03T13:37:00Z",
+  "status": "pre_beta_external_blocker_package",
+  "notACiteSubmission": true,
+  "specAnchor": {
+    "requirement": "REQ-ETS-CLEANUP-030",
+    "scenario": "SCENARIO-ETS-CLEANUP-RELEASE-READINESS-BLOCKER-PACKAGE-001"
+  },
+  "coverage": {
+    "total": 240,
+    "exact": 191,
+    "helper": 2,
+    "candidate": 47,
+    "unmapped": 0,
+    "byPart": {
+      "1": {
+        "total": 110,
+        "exact": 91,
+        "helper": 2,
+        "candidate": 17,
+        "unmapped": 0
+      },
+      "2": {
+        "total": 130,
+        "exact": 100,
+        "helper": 0,
+        "candidate": 30,
+        "unmapped": 0
+      }
+    }
+  },
+  "remainingCandidateClasses": [
+    {
+      "part": 1,
+      "class": "/conf/create-replace-delete",
+      "candidateProcedures": 12,
+      "blocker": "positive_mutation_e2e"
+    },
+    {
+      "part": 1,
+      "class": "/conf/update",
+      "candidateProcedures": 5,
+      "blocker": "positive_patch_e2e"
+    },
+    {
+      "part": 2,
+      "class": "/conf/create-replace-delete",
+      "candidateProcedures": 16,
+      "blocker": "positive_mutation_e2e"
+    },
+    {
+      "part": 2,
+      "class": "/conf/update",
+      "candidateProcedures": 14,
+      "blocker": "positive_patch_e2e"
+    }
+  ],
+  "knownIuts": {
+    "localOsh": {
+      "disposition": "diagnostic_local_iut_not_exact_promotion_ready",
+      "remainingCandidateProcedures": 47,
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "classesWithDeclarationAndMethodReadiness": [
+        "1:/conf/create-replace-delete"
+      ],
+      "classesWithPrerequisiteDeclarationReadiness": [],
+      "exactPromotionReady": false,
+      "evidence": "ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-primary-prerequisite-declaration-readiness.json"
+    },
+    "connectedSystemsGoSelfRun": {
+      "disposition": "useful_lifecycle_diagnostic_not_exact_promotion_ready",
+      "directLifecycleStatus": "PASS",
+      "directLifecycleStepsPassed": 29,
+      "teamEngineStatus": "NON_GREEN_HONEST",
+      "teamEngine": {
+        "total": 275,
+        "passed": 15,
+        "failed": 1,
+        "skipped": 259
+      },
+      "exactPromotion": false,
+      "evidence": "ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/"
+    },
+    "connectedSystemsGoPublic": {
+      "disposition": "read_only_public_evidence_not_exact_promotion_ready",
+      "remainingCandidateProcedures": 47,
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "classesWithDeclarationAndMethodReadiness": [],
+      "classesWithPrerequisiteDeclarationReadiness": [],
+      "exactPromotionReady": false,
+      "evidence": "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/csapi-go-public-refresh-readiness.json"
+    },
+    "fiftyTwoNorthConnectedSystemsPygeoapi": {
+      "disposition": "source_run_watch_candidate_not_current_declaring_iut",
+      "remainingCandidateProcedures": 47,
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "classesWithDeclarationAndMethodReadiness": [],
+      "classesWithPrerequisiteDeclarationReadiness": [],
+      "exactPromotionReady": false,
+      "evidence": "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/52north-public-readiness-followup.json"
+    },
+    "dgiwgGlauxServer": {
+      "disposition": "direct_claim_watchlist_only_readme_level_public_evidence",
+      "exactPromotionReady": false,
+      "evidence": "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/candidate-summary.json"
+    }
+  },
+  "releaseChecklist": [
+    {
+      "gate": "released_ats_inventory",
+      "status": "ready_with_archived_evidence",
+      "evidence": "ops/ats-coverage-report.json"
+    },
+    {
+      "gate": "implemented_exact_mapping_surface",
+      "status": "ready_for_191_exact_and_2_helper_mappings_candidate_blocker_preserved",
+      "evidence": "ops/ats-coverage-report.json"
+    },
+    {
+      "gate": "positive_mutable_iut_e2e_for_remaining_candidates",
+      "status": "blocked_external_iut",
+      "evidence": "ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/iut-readiness-summary.json"
+    },
+    {
+      "gate": "fresh_release_candidate_docker_maven",
+      "status": "not_run_in_sprint_79_docs_only",
+      "evidence": "prior implementation sprint evidence only"
+    },
+    {
+      "gate": "fresh_release_candidate_teamengine_e2e",
+      "status": "not_run_in_sprint_79_docs_only",
+      "evidence": "prior implementation sprint evidence only"
+    },
+    {
+      "gate": "reproducible_double_build",
+      "status": "not_run_release_gate",
+      "evidence": "NFR-ETS-01 remains a release gate"
+    },
+    {
+      "gate": "three_implementation_roster",
+      "status": "blocked_not_secured",
+      "evidence": "ops/known-issues.md"
+    },
+    {
+      "gate": "maven_central_publication",
+      "status": "deferred_beta_milestone",
+      "evidence": "REQ-ETS-CITE-001"
+    },
+    {
+      "gate": "cite_sc_submission_ticket",
+      "status": "deferred_not_filed",
+      "evidence": "REQ-ETS-CITE-003"
+    }
+  ],
+  "externalValidatorDependencies": {
+    "sweCommon": "source_pinned_adapter_confirmed",
+    "sensorMl": "provisional_adapter_implemented_reusable_validator_replacement_deferred",
+    "countsToward47MutationBoundCandidates": false
+  },
+  "verification": {
+    "coverageAudit": "PASS",
+    "jsonParse": "PASS",
+    "yamlParse": "PASS",
+    "artifactPresence": "PASS",
+    "blockerTextCheck": "PASS",
+    "manifestCheck": "PASS: includes verification-summary.json",
+    "gitDiffCheck": "PASS",
+    "razeInitial": {
+      "verdict": "GAPS_FOUND",
+      "confidence": 0.86,
+      "requiredFix": "Include verification-summary.json in the Sprint 79 evidence manifest or narrow the manifestCheck claim."
+    },
+    "razeRecheck": {
+      "verdict": "APPROVE",
+      "confidence": 0.96,
+      "requiredFixes": []
+    },
+    "dockerMaven": "NOT_RUN: documentation-only package with no Java/TestNG behavior change",
+    "teamEngine": "NOT_RUN: documentation-only package with no IUT mutation"
+  },
+  "nonClaims": [
+    "full_ets_release_completion",
+    "beta_readiness",
+    "maven_central_publication",
+    "cite_sc_submission",
+    "three_passing_implementations",
+    "mutation_bound_exact_promotion",
+    "public_iut_mutation_evidence"
+  ],
+  "nextRecommendedGates": [
+    "targeted_connected_systems_go_outreach",
+    "optional_disposable_52north_source_run",
+    "fresh_release_candidate_docker_maven_and_teamengine_e2e_after_mutable_iut_availability"
+  ]
+}

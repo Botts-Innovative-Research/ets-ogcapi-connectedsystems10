@@ -1,0 +1,12 @@
+PASS: openspec/change-proposals/CP-039-release-readiness-external-blocker-package.md
+PASS: epics/stories/s-ets-79-01-release-readiness-external-blocker-package.md
+PASS: .harness/contracts/sprint-ets-79.yaml
+PASS: .harness/evaluations/sprint-ets-79-adversarial.yaml
+PASS: .harness/evaluations/sprint-ets-79-adversarial-recheck.yaml
+PASS: ops/release/sprint-79-release-readiness-external-blocker-package.md
+PASS: ops/release/sprint-79-release-readiness-external-blocker-package.json
+PASS: ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/coverage-audit.txt
+PASS: ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/coverage-summary.json
+PASS: ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/iut-readiness-summary.json
+PASS: ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/verification-summary.json
+PASS: verification-summary.json is manifest-covered

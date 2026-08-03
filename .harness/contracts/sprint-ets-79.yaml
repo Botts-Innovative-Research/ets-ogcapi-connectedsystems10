@@ -1,0 +1,47 @@
+sprint: ets-79
+story: S-ETS-79-01
+title: Release readiness external blocker package
+status: complete_raze_approved
+trigger: User approved Plan 1, the release-readiness and external-blocker package path.
+scope:
+  requirement: REQ-ETS-CLEANUP-030
+  change_type: documentation_and_release_packaging
+  exact_promotion: false
+  mutation_policy: no_iut_mutation
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-RELEASE-READINESS-BLOCKER-PACKAGE-001
+      expect: The package records the current ATS totals and preserves the 47 mutation-bound candidates as externally blocked.
+    - id: no_beta_overclaim
+      expect: The package does not claim Maven Central publication, CITE submission, beta status, or three passing implementations.
+    - id: known_iut_limitations
+      expect: Local OSH, connected-systems-go, 52North, and Glaux are classified consistently with archived Sprint 74-78 evidence.
+  normal:
+    - id: evidence_index
+      expect: The package points to authoritative coverage, readiness, discovery, outreach, and E2E artifacts.
+    - id: checklist_status
+      expect: Release gates are marked ready, blocked, deferred, or not-run with concrete rationale.
+    - id: ops_reconciliation
+      expect: Story, CP, contract, OpenSpec, traceability, status, changelog, test-results, and CITE epic notes agree.
+required_verification:
+  - coverage_audit
+  - json_parse
+  - yaml_parse
+  - markdown_artifact_presence
+  - blocker_text_check
+  - git_diff_check
+  - raze_adversarial_review
+verification_results:
+  coverage_audit: "PASS: committed ATS inventory is internally consistent; coverage summary is 240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped."
+  json_parse: "PASS: release package JSON, coverage summary, IUT readiness summary, and verification summary parse with jq."
+  yaml_parse: "PASS: Sprint 79 contract, initial Raze review, and focused Raze recheck parse with PyYAML."
+  markdown_artifact_presence: "PASS: CP-039, S-ETS-79-01, release package, JSON companion, verification artifacts, and Raze reports are present."
+  blocker_text_check: "PASS: release package records no beta/CITE/Maven Central/three-implementation/exact-promotion overclaim and preserves the 47-candidate blocker."
+  git_diff_check: "PASS: git diff --check completed without whitespace errors."
+  raze_adversarial_review: "PASS: initial Raze returned GAPS_FOUND 0.86 for manifest scope; focused recheck returned APPROVE 0.96 with required_fixes=[]."
+non_goals:
+  - Do not mutate any IUT.
+  - Do not run public POST, PUT, PATCH, or DELETE probes.
+  - Do not modify Java/TestNG implementation behavior.
+  - Do not file CITE or upstream issues from this environment.
+  - Do not publish release artifacts.

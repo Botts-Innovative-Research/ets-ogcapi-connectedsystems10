@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "sprint-ets-79-iut-readiness-summary-v1",
+  "generatedAt": "2026-08-03T13:37:00Z",
+  "policy": {
+    "source": "existing archived evidence only",
+    "publicMutation": false,
+    "exactPromotion": false
+  },
+  "knownIuts": {
+    "localOsh": {
+      "evidence": "ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-primary-prerequisite-declaration-readiness.json",
+      "remainingCandidateProcedures": 47,
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "classesWithDeclarationAndMethodReadiness": [
+        "1:/conf/create-replace-delete"
+      ],
+      "classesWithPrerequisiteDeclarationReadiness": [],
+      "exactPromotionReady": false
+    },
+    "connectedSystemsGoPublic": {
+      "evidence": "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/csapi-go-public-refresh-readiness.json",
+      "remainingCandidateProcedures": 47,
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "classesWithDeclarationAndMethodReadiness": [],
+      "classesWithPrerequisiteDeclarationReadiness": [],
+      "exactPromotionReady": false
+    },
+    "connectedSystemsGoSelfRun": {
+      "evidence": "ops/outreach/connected-systems-go-readiness-gap-request.json",
+      "directLifecycleStatus": "PASS",
+      "directLifecycleStepsPassed": 29,
+      "teamEngineStatus": "NON_GREEN_HONEST",
+      "teamEngineTotal": 275,
+      "teamEnginePassed": 15,
+      "teamEngineFailed": 1,
+      "teamEngineSkipped": 259,
+      "exactPromotion": false
+    },
+    "fiftyTwoNorthPublic": {
+      "evidence": "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/52north-public-readiness-followup.json",
+      "remainingCandidateProcedures": 47,
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "classesWithDeclarationAndMethodReadiness": [],
+      "classesWithPrerequisiteDeclarationReadiness": [],
+      "exactPromotionReady": false
+    },
+    "glauxServer": {
+      "evidence": "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/candidate-summary.json",
+      "disposition": "direct CS API server claim only; README-only public repo with no runnable source, license metadata, or endpoint evidence"
+    }
+  },
+  "conclusion": {
+    "remainingCandidateProcedures": 47,
+    "exactPromotionReady": false,
+    "reason": "No known open-source IUT currently supplies complete declaration, method, lifecycle, cleanup, and TeamEngine E2E evidence for the mutation-bound candidate set."
+  }
+}

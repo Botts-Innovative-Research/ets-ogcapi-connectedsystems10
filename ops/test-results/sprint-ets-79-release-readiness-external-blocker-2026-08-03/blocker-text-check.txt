@@ -1,0 +1,27 @@
+ops/release/sprint-79-release-readiness-external-blocker-package.md:3:Status: pre-beta package, not CITE submission  
+ops/release/sprint-79-release-readiness-external-blocker-package.md:16:| 240 | 191 | 2 | 47 | 0 |
+ops/release/sprint-79-release-readiness-external-blocker-package.md:18:The remaining 47 released ATS procedures are all mutation-bound. They stay
+ops/release/sprint-79-release-readiness-external-blocker-package.md:32:No released ATS procedures are unmapped. No mutation-bound candidate mapping is
+ops/release/sprint-79-release-readiness-external-blocker-package.md:39:| Local OSH | Sprint 74 readiness audit: `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, one declaration/method-ready class, zero prerequisite-declaration-ready classes. | Useful for local E2E, provisioning, cleanup, and no-mutation evidence; cannot close the 47 candidates today. |
+ops/release/sprint-79-release-readiness-external-blocker-package.md:49:| Released ATS inventory | Ready with archived evidence | `ops/ats-coverage-report.json` and Sprint 79 `coverage-audit.txt` record `240/191/2/47/0`. |
+ops/release/sprint-79-release-readiness-external-blocker-package.md:50:| Java/TestNG implementation surface | Ready for implemented classes; blocked for candidate promotion | Exact reviewed mappings cover 191 released procedures and 2 helpers; the four mutation classes remain candidate. |
+ops/release/sprint-79-release-readiness-external-blocker-package.md:54:| Reproducible double-build release check | Not run in Sprint 79 | Remains a release gate before tagging or Maven Central publication. |
+ops/release/sprint-79-release-readiness-external-blocker-package.md:57:| Three-implementation roster | Blocked | No three passing implementations are secured. |
+ops/release/sprint-79-release-readiness-external-blocker-package.md:58:| Maven Central / OSSRH publication | Deferred | `REQ-ETS-CITE-001` remains beta-milestone-bound. |
+ops/release/sprint-79-release-readiness-external-blocker-package.md:92:  `APPROVE 0.96` with `required_fixes=[]`.
+ops/release/sprint-79-release-readiness-external-blocker-package.md:100:- Maven Central publication;
+ops/release/sprint-79-release-readiness-external-blocker-package.md:102:- three passing implementations;
+ops/release/sprint-79-release-readiness-external-blocker-package.json:11:    "total": 240,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:12:    "exact": 191,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:14:    "candidate": 47,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:62:      "remainingCandidateProcedures": 47,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:72:      "exactPromotionReady": false,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:91:      "remainingCandidateProcedures": 47,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:99:      "exactPromotionReady": false,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:104:      "remainingCandidateProcedures": 47,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:112:      "exactPromotionReady": false,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:117:      "exactPromotionReady": false,
+ops/release/sprint-79-release-readiness-external-blocker-package.json:129:      "status": "ready_for_191_exact_and_2_helper_mappings_candidate_blocker_preserved",
+ops/release/sprint-79-release-readiness-external-blocker-package.json:134:      "status": "blocked_external_iut",
+ops/release/sprint-79-release-readiness-external-blocker-package.json:171:    "countsToward47MutationBoundCandidates": false
+PASS: required release/blocker phrases present

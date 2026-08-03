@@ -1,0 +1,16 @@
+verdict: APPROVE
+confidence: 0.96
+findings: []
+required_fixes: []
+verification_notes:
+  - Focused recheck scope was limited to RAZE-S79-001 from .harness/evaluations/sprint-ets-79-adversarial.yaml.
+  - Did not run Docker, Maven, TeamEngine, public write probes, or mutate any IUT.
+  - Reviewed repo-evidence-manifest.sha256, repo-evidence-manifest-check.txt, verification-summary.json, artifact-presence.txt, json-parse.txt, and yaml-parse.txt under ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/.
+  - repo-evidence-manifest.sha256 now contains an entry for ./verification-summary.json.
+  - sha256sum -c repo-evidence-manifest.sha256 reports OK for ./verification-summary.json and all other listed entries.
+  - repo-evidence-manifest-check.txt now reports ./verification-summary.json: OK.
+  - verification-summary.json sets manifestCheck=true and manifestIncludesVerificationSummary=true, and explicitly excludes repo-evidence-manifest.sha256 and repo-evidence-manifest-check.txt from manifest coverage.
+  - artifact-presence.txt includes verification-summary.json and says verification-summary.json is intentionally manifest-covered.
+  - json-parse.txt reports JSON artifacts parsed successfully, including verification-summary.json.
+  - yaml-parse.txt reports successful parsing for the Sprint 79 contract and prior Sprint 79 adversarial report.
+  - RAZE-S79-001 is fixed; required_fixes can be cleared.

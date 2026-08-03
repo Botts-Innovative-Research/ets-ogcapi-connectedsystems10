@@ -1,0 +1,77 @@
+verdict: GAPS_FOUND
+confidence: 0.86
+reviewed_scope:
+  - AGENTS.md
+  - _bmad/agents/adversarial-reviewer.md
+  - openspec/change-proposals/CP-039-release-readiness-external-blocker-package.md
+  - epics/stories/s-ets-79-01-release-readiness-external-blocker-package.md
+  - .harness/contracts/sprint-ets-79.yaml
+  - ops/release/sprint-79-release-readiness-external-blocker-package.md
+  - ops/release/sprint-79-release-readiness-external-blocker-package.json
+  - ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - _bmad/traceability.md
+  - epics/epic-ets-05-cite-submission.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/known-issues.md
+  - ops/test-results.md
+  - ops/metrics.md
+findings:
+  - id: RAZE-S79-001
+    severity: medium
+    title: Sprint 79 manifest check omits a primary verification artifact
+    evidence:
+      - ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/verification-summary.json:10 sets manifestCheck=true.
+      - ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/repo-evidence-manifest.sha256:1-9 hashes only artifact-presence.txt, blocker-text-check.txt, coverage-audit.txt, coverage-summary.json, git-diff-check.exitcode, git-diff-check.txt, iut-readiness-summary.json, json-parse.txt, and yaml-parse.txt.
+      - ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/repo-evidence-manifest-check.txt:1-9 confirms only those listed entries.
+      - A direct directory comparison found verification-summary.json and repo-evidence-manifest-check.txt outside the manifest; repo-evidence-manifest.sha256 itself is reasonably self-excluded.
+    impact: The verification summary is a Sprint 79 evidence artifact and claims manifestCheck=true, but it is not covered by the manifest being claimed. This is not a beta/CITE/exact-promotion overclaim, but it weakens the release package's evidence-integrity story.
+    required_fix: Regenerate or amend the evidence manifest/check so verification-summary.json is either hashed or explicitly documented as intentionally excluded, and make artifact-presence/check text align with that policy.
+required_fixes:
+  - id: RAZE-S79-001
+    action: Include verification-summary.json in the Sprint 79 manifest/check, or explicitly document its exclusion and narrow the manifestCheck claim.
+evidence_checked:
+  coverage:
+    authoritative_report: ops/ats-coverage-report.json
+    summary_verified: "240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped"
+    candidate_split_verified:
+      - "1:/conf/create-replace-delete = 12"
+      - "1:/conf/update = 5"
+      - "2:/conf/create-replace-delete = 16"
+      - "2:/conf/update = 14"
+    non_mutation_classes_with_candidates: 0
+  known_iuts:
+    local_osh:
+      evidence: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-primary-prerequisite-declaration-readiness.json
+      verified: "GET=1, OPTIONS=25, unsafeMethodsIssued=[], exactPromotionReady=false, remainingCandidateProcedures=47"
+    connected_systems_go_public:
+      evidence: ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/csapi-go-public-refresh-readiness.json
+      verified: "GET=1, OPTIONS=25, unsafeMethodsIssued=[], exactPromotionReady=false, remainingCandidateProcedures=47"
+    connected_systems_go_self_run:
+      evidence:
+        - ops/outreach/connected-systems-go-readiness-gap-request.json
+        - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/teamengine-smoke-summary.json
+      verified: "directLifecycleStatus=PASS, directLifecycleStepsPassed=29, TeamEngine=275/15/1/259, exactPromotion=false"
+    fifty_two_north:
+      evidence: ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/52north-public-readiness-followup.json
+      verified: "GET=1, OPTIONS=25, unsafeMethodsIssued=[], exactPromotionReady=false, remainingCandidateProcedures=47"
+    glaux:
+      evidence: ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/candidate-summary.json
+      verified: "watchlist only; README-only public glaux-server source, no runnable endpoint evidence"
+  release_claims:
+    no_beta_overclaim: true
+    no_cite_submission_overclaim: true
+    no_maven_central_or_ossrh_publication_overclaim: true
+    no_three_implementation_overclaim: true
+    no_exact_promotion_overclaim: true
+    no_public_iut_mutation_claim: true
+verification_notes:
+  - Read AGENTS.md and _bmad/agents/adversarial-reviewer.md before reviewing scoped artifacts.
+  - Did not run Docker, Maven, TeamEngine, public write probes, or any IUT mutation.
+  - Parsed Sprint 79 JSON artifacts successfully: release package JSON, coverage-summary.json, iut-readiness-summary.json, and verification-summary.json.
+  - Parsed .harness/contracts/sprint-ets-79.yaml successfully with PyYAML.
+  - Ran git diff --check; it produced no whitespace errors.
+  - Ran sha256sum -c against the Sprint 79 manifest; listed entries validate, but the manifest is incomplete as described in RAZE-S79-001.
+  - The Sprint 79 Markdown/JSON release package explicitly says pre-beta/not CITE submission and keeps Maven Central, CITE submission, and three-implementation gates deferred or blocked.
+  - Story/CP/contract/status/changelog/test-results/CITE epic notes agree that Sprint 79 is release packaging only and does not change Java/TestNG behavior.

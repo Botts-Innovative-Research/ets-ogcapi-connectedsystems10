@@ -1,0 +1,10 @@
+./artifact-presence.txt: OK
+./blocker-text-check.txt: OK
+./coverage-audit.txt: OK
+./coverage-summary.json: OK
+./git-diff-check.exitcode: OK
+./git-diff-check.txt: OK
+./iut-readiness-summary.json: OK
+./json-parse.txt: OK
+./verification-summary.json: OK
+./yaml-parse.txt: OK

@@ -1,6 +1,43 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T09:33Z
+Last updated: 2026-08-03T13:37Z
+
+## Sprint 79 Complete - Release Readiness External Blocker Package
+
+- User instruction: "Do plan 1", approving the release-readiness and
+  external-blocker package path after Sprint 78 confirmed no known
+  open-source IUT can close the remaining mutation-bound candidates.
+- Scope:
+  documentation/release packaging only. No Java/TestNG behavior change, no IUT
+  mutation, no public write probes, no CITE ticket filing, and no Maven Central
+  publication.
+- Release package:
+  `ops/release/sprint-79-release-readiness-external-blocker-package.md`.
+- Machine-readable companion:
+  `ops/release/sprint-79-release-readiness-external-blocker-package.json`.
+- Evidence directory:
+  `ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/`.
+- Current release-readiness verdict:
+  pre-beta external-blocker package only. The current ATS coverage remains
+  `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+- Remaining candidate classes:
+  Part 1 Create/Replace/Delete (`12`), Part 1 Update (`5`), Part 2
+  Create/Replace/Delete (`16`), and Part 2 Update (`14`).
+- External mutable-IUT blocker:
+  local OSH, `connected-systems-go`, 52North `connected-systems-pygeoapi`, and
+  DGIWG Glaux evidence does not currently provide complete declarations,
+  method readiness, positive mutation/PATCH lifecycle proof, cleanup/isolation,
+  and green TeamEngine E2E for the 47-candidate set.
+- CITE status:
+  not beta-ready, not submitted, no Maven Central/OSSRH publication, and no
+  three-implementation passing roster. `REQ-ETS-CITE-001..003` remain
+  beta-milestone gates.
+- Verification:
+  coverage audit PASS, JSON/YAML parse PASS, artifact presence PASS, blocker
+  text check PASS, evidence manifest PASS, and `git diff --check` PASS.
+  Initial Raze returned `GAPS_FOUND 0.86` for an incomplete evidence manifest;
+  the manifest was regenerated to cover `verification-summary.json`, and
+  focused Raze recheck returned `APPROVE 0.96` with `required_fixes=[]`.
 
 ## Sprint 78 Complete - Alternate IUT Discovery Follow-up
 

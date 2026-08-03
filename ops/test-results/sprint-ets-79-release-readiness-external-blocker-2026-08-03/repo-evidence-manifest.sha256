@@ -1,0 +1,10 @@
+ca49a9b759298bd5e38984a84ff506d119ee3ad3b0906d68430198c9199df1ca  ./artifact-presence.txt
+af40a2cc24170869cd175c9c84f2293824ff1110fea2e3d60a98ff2b721125c0  ./blocker-text-check.txt
+cd972d2da7c91bb1b4eb3137419875047b45515a3bcc67fc80e380f51b38012f  ./coverage-audit.txt
+6fe2b1bbee1b11c12eaa49a1f63886618e01db8400b5a245be8667b9601b62ed  ./coverage-summary.json
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./git-diff-check.exitcode
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./git-diff-check.txt
+0819d09cb4a5ccccbe55fe2088637a4bf0b7c39985e4c120ff96c442cc7c641d  ./iut-readiness-summary.json
+1703fe76413a8ee94fd805948316e79f311f420f985be2d2c1d609e770c7ddb0  ./json-parse.txt
+421da4db1c0398388c82fed125e020041c22dbffaef395ac89bb992080a0c0c7  ./verification-summary.json
+f13e18e0980e97f9d2d987aa43f682d159c0ecbf9781964791c6d41fdc6cfd3e  ./yaml-parse.txt

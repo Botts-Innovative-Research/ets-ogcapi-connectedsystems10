@@ -12,6 +12,7 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 432 | 2026-08-03T04:17:06Z | 2026-08-03T04:46:38Z | 29m32s | User instructed: "Continue." Completed and pushed Sprint 74 prerequisite declaration field clarity as `b265dc6`: added CP/story/contract/spec anchors, implemented explicit prerequisite-declaration readiness JSON fields while preserving Sprint 73 aliases, verified Python compile `pycompile:0`, Python unit tests `21/0/0/0`, formatter PASS, Docker Maven `787/0/0/3`, direct local OSH audit `GET=1 OPTIONS=25 unsafe=[] aliasEquality=true prereqDeclarationReady=[]`, disposable local OSH E2E `275/24/20/231` populated and `275/23/20/232` clean-primary with provisioning/cleanup/primary isolation PASS, Raze `APPROVE_WITH_CONCERNS 0.94` with no required fixes in 139s and token metadata unavailable, addressed the LOW pycompile-log status-line concern, and archived session metrics. |
 | 431 | 2026-08-03T04:15:08Z | 2026-08-03T04:15:39Z | 0m31s | User asked: "What’s next?" Reviewed pushed Sprint 73 handoff, known issues, git state, and coverage totals; recommended the next practical no-input item as Sprint 74 audit semantics hardening because all remaining 47 released ATS candidates are mutation-bound and IUT-blocked. |
 | 430 | 2026-08-03T03:01:16Z | 2026-08-03T03:06:50Z | 5m34s | User instructed: act as Raze for current uncommitted Sprint 73 mutation prerequisite readiness audit work, inspect scoped artifacts/evidence without implementation code changes or expensive reruns unless blocked, write `.harness/evaluations/sprint-ets-73-adversarial.yaml`, and report exact verification totals plus whether required fixes remain. Wrote verdict `APPROVE_WITH_CONCERNS 0.94` with one LOW non-blocking false-confidence wording concern, no required fixes, verified YAML syntax, repo manifest `46` files, disposable manifest `33` files, `47` unignored evidence files including `14` logs, and exact totals from archived logs. |
 | 429 | 2026-08-03T02:36:49Z | 2026-08-03T03:14:10Z | 37m21s | User instructed: "Continue." Completed Sprint 73 mutation prerequisite readiness audit: added CP/story/contract/spec anchors, extended the read-only audit with prerequisite-declaration readiness fields, verified Python `21/0/0/0`, formatter PASS, Docker Maven `787/0/0/3`, direct local OSH audit `GET=1 OPTIONS=25 unsafe=[] legacyReady=[1:/conf/create-replace-delete] prereqReady=[]`, disposable local OSH E2E `275/24/20/231` populated and `275/23/20/232` clean-primary with cleanup/primary isolation PASS, Raze `APPROVE_WITH_CONCERNS 0.94` and no required fixes, pushed implementation `d110ccd`, pushed reconciliation `73da402`, and archived session metrics. |
@@ -566,9 +567,9 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 73)
+### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 74)
 
-Extracted after Sprint 73 pushed-status reconciliation with
+Extracted after Sprint 74 pushed-status reconciliation with
 `python3 scripts/session-metrics.py`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
@@ -576,13 +577,13 @@ the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 16,851,436 | $252.77 |
-| Output | 1,357,726 | $101.83 |
+| Input | 17,433,039 | $261.50 |
+| Output | 1,399,611 | $104.97 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 399,691,136 | $599.54 |
-| **TOTAL** | **417,900,298** | **$954.14** |
+| Cache Read | 411,442,304 | $617.16 |
+| **TOTAL** | **430,274,954** | **$983.63** |
 
-API calls (usage records): 2921
+API calls (usage records): 3027
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

@@ -1,7 +1,7 @@
 sprint: ets-74
 story: S-ETS-74-01
 title: Prerequisite declaration field clarity
-status: implemented_e2e_non_green_raze_approved_with_concerns
+status: implemented_e2e_non_green_raze_approved_with_concerns_pushed
 trigger: User instructed "Continue."
 scope:
   requirement: REQ-ETS-CLEANUP-025
@@ -42,6 +42,7 @@ verification_summary:
   direct_local_osh_audit: "47 candidates; GET=1; OPTIONS=25; unsafeMethodsIssued=[]; alias equality true; zero prerequisite-declaration-ready classes"
   disposable_local_osh_e2e: "non-green existing local OSH baseline: populated 275/24/20/231; clean-primary 275/23/20/232; provisioning PASS; cleanup PASS; primary-state isolation PASS"
   raze: "APPROVE_WITH_CONCERNS 0.94; required_fixes=[]; LOW pycompile-log exit-status concern addressed by regenerated pycompile.log with pycompile:0 and refreshed repo-evidence-manifest.sha256"
+  pushed_commit: b265dc6
 non_goals:
   - Do not issue POST, PUT, PATCH, or DELETE from the audit.
   - Do not parse TestNG prerequisite execution outcomes inside the audit.

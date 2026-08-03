@@ -2,7 +2,7 @@
 
 ## Status
 
-IMPLEMENTED_E2E_NON_GREEN_RAZE_APPROVED_WITH_CONCERNS
+IMPLEMENTED_E2E_NON_GREEN_RAZE_APPROVED_WITH_CONCERNS_PUSHED
 
 ## User Instruction
 
@@ -59,3 +59,4 @@ aliases.
 - The LOW pycompile-log exit-status concern was addressed by regenerating
   `pycompile.log` with `pycompile:0` and refreshing the repository evidence
   manifest.
+- Implementation/evidence commit `b265dc6` is pushed to Botts `main`.

@@ -3215,7 +3215,7 @@ near-match `ogcapi-features-4` declarations
 
 #### REQ-ETS-CLEANUP-025: Prerequisite Declaration Readiness Field Clarity (Sprint 74)
 - **Priority**: SHOULD
-- **Status**: IMPLEMENTED_E2E_NON_GREEN_RAZE_APPROVED_WITH_CONCERNS (Sprint 74 S-ETS-74-01)
+- **Status**: IMPLEMENTED_E2E_NON_GREEN_RAZE_APPROVED_WITH_CONCERNS_PUSHED (Sprint 74 S-ETS-74-01)
 - **Description**: The mutation-readiness audit SHALL expose explicit
   prerequisite-declaration readiness field names so JSON consumers cannot
   confuse declaration-only readiness with inherited TestNG prerequisite
@@ -3249,7 +3249,8 @@ near-match `ogcapi-features-4` declarations
   TeamEngine baseline. Raze returned `APPROVE_WITH_CONCERNS 0.94` with
   `required_fixes: []`; the LOW pycompile-log exit-status concern was addressed
   before completion by regenerating `pycompile.log` with `pycompile:0` and
-  refreshing the repository evidence manifest.
+  refreshing the repository evidence manifest. Implementation/evidence commit
+  `b265dc6` is pushed to Botts `main`.
 - **Maps to**: PRD FR-ETS-25, FR-ETS-54; REQ-ETS-CLEANUP-023,
   REQ-ETS-CLEANUP-024.
 

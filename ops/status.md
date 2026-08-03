@@ -13,6 +13,8 @@ Last updated: 2026-08-03T09:33Z
   `.harness/handoffs/discovery-sprint-78-handoff.yaml`.
 - Evidence and notes:
   `ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/`.
+- Implementation/evidence commit:
+  pushed `dcc11bc`.
 - Finding:
   no newly discovered implementation is currently ready to close the remaining
   47 mutation-bound ETS candidates. 52North `connected-systems-pygeoapi` is

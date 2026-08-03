@@ -15,6 +15,8 @@ Sprint 78 alternate IUT Discovery follow-up:
   `.harness/handoffs/discovery-sprint-78-handoff.yaml`.
 - Evidence directory:
   `ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/`.
+- Implementation/evidence commit:
+  pushed `dcc11bc`.
 - Main finding:
   no new candidate is ready for exact promotion. 52North
   `connected-systems-pygeoapi` is the best practical source-run watch

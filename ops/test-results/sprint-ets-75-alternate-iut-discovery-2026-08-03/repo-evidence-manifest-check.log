@@ -1,0 +1,23 @@
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/52north-public-conformance.json: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/52north-public-options_controlstreams_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/52north-public-options_datastreams_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/52north-public-options_systems.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/52north-public-options_systems_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/52north-public-readiness.json: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/52north-public-readiness.log: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/alternate-iut-readiness-summary.json: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/csapi-go-public-conformance.json: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/csapi-go-public-options_controlstreams_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/csapi-go-public-options_datastreams_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/csapi-go-public-options_systems.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/csapi-go-public-options_systems_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/csapi-go-public-readiness.json: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/csapi-go-public-readiness.log: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/public-osh-conformance.json: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/public-osh-options_controlstreams_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/public-osh-options_datastreams_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/public-osh-options_systems.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/public-osh-options_systems_040g.headers: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/public-osh-readiness.json: OK
+ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/public-osh-readiness.log: OK
+manifest_check:0

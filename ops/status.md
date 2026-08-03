@@ -1,6 +1,46 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T04:45Z
+Last updated: 2026-08-03T05:08Z
+
+## Sprint 75 Complete - Alternate Mutable IUT Discovery
+
+- User instruction: continue the project as Discovery Agent / Analyst Mary;
+  research alternate open-source OGC API Connected Systems or adjacent mutable
+  IUT implementations beyond OSH, especially candidates claiming greater
+  coverage, mutation/update support, Part 2 support, or conformance
+  declarations.
+- Current blocker context is unchanged from Sprint 74: the project still has
+  `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`, and all
+  remaining candidates are mutation-bound.
+- Local OSH remains useful for disposable safety/provisioning/cleanup evidence
+  but cannot close the 47 candidates today. Sprint 74 readiness evidence shows
+  one declaration/method-ready class and zero prerequisite-declaration-ready
+  classes, with TeamEngine still non-green on the known local OSH baseline.
+- Discovery wrote `_bmad/product-brief.md` and
+  `.harness/handoffs/discovery-handoff.yaml` for "Alternate Mutable IUT
+  Discovery for OGC API Connected Systems."
+- Public read-only probes are archived under
+  `ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/`.
+  `connected-systems-go`, 52North CSA, and public OSH probes used only GET and
+  OPTIONS, record `unsafeMethodsIssued=[]`, and do not promote any mapping.
+- Best candidate found: `SomethingCreativeStudios/connected-systems-go`.
+  It is the only researched open-source implementation with live Part 1
+  `/conf/api-common`, Part 2 `/conf/api-common`, and Part 2
+  `/conf/create-replace-delete` declarations plus source-level POST/PUT/DELETE
+  route and e2e CRUD evidence. It is a future self-run disposable Part 2 CRD
+  candidate, not current exact-promotion evidence.
+- No researched candidate currently closes all 47 remaining mutation-bound
+  procedures. Update/PATCH closure remains blocked: no candidate produced
+  current `/conf/update` plus real PATCH-route evidence.
+- Next practical step: plan a controlled self-run `connected-systems-go`
+  readiness experiment with disposable storage, deterministic seed data,
+  service-description checks, `Allow`/route checks, positive POST/PUT/DELETE
+  lifecycle proof, cleanup, and primary-state isolation. Keep public demos
+  read-only.
+- Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`. The
+  LOW concerns are scoped caveats: `connected-systems-go` is future self-run
+  candidate evidence, not current exact-promotion evidence, and live public
+  demo observations should be refreshed before sprint entry.
 
 ## Sprint 74 Complete and Pushed - Prerequisite Declaration Field Clarity
 

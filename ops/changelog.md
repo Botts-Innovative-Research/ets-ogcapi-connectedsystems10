@@ -2,6 +2,41 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 75 alternate mutable IUT discovery
+
+**Triggered by user instruction**: Continue the project as Discovery Agent /
+Analyst Mary; research alternate open-source OGC API Connected Systems or
+adjacent mutable IUT implementations beyond OSH, especially candidates claiming
+greater coverage, mutation/update support, Part 2 support, or usable
+conformance declarations; write Discovery brief and handoff without code edits
+or expensive Maven/Docker/TeamEngine gates.
+
+- Inspected current local blocker context: Sprint 74 readiness audit,
+  `ops/status.md`, `ops/test-results.md`, `ops/known-issues.md`, and
+  `_bmad/traceability.md` still show `47` mutation-bound candidate procedures
+  and zero prerequisite-declaration-ready mutation classes on local OSH.
+- Performed current web and repository research for public/open-source
+  Connected Systems and adjacent SensorThings implementations.
+- Wrote `_bmad/product-brief.md` focused on Alternate Mutable IUT Discovery
+  for OGC API Connected Systems.
+- Wrote `.harness/handoffs/discovery-handoff.yaml` with status, timestamp,
+  outputs, summary, flags, confidence, and token/duration placeholders.
+- Reconciled Sprint 75 CP/story/contract/spec/traceability docs around the
+  discovery scope. No implementation code was edited.
+- Preserved archived public read-only probe evidence under
+  `ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/`:
+  `connected-systems-go`, 52North CSA, and public OSH probes used GET/OPTIONS
+  only, record `unsafeMethodsIssued=[]`, and do not promote any mutation-bound
+  candidate mapping.
+- Verdict: `connected-systems-go` is the best researched alternate
+  open-source candidate for a future self-run disposable Part 2
+  Create/Replace/Delete experiment, but no candidate currently closes all 47
+  mutation-bound procedures or provides Update/PATCH exactness.
+- Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`; the
+  LOW concerns are scoped caveats that `connected-systems-go` is future
+  self-run candidate evidence, not current exact-promotion evidence, and that
+  live public demo observations should be refreshed before sprint entry.
+
 ## 2026-08-03 - Sprint 74 prerequisite declaration field clarity
 
 **Triggered by user instruction**: "Continue."

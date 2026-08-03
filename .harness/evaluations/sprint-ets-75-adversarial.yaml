@@ -1,0 +1,50 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+reviewed_scope:
+  - "Discovery-only Sprint 75 documentation and evidence reconciliation."
+  - "_bmad/product-brief.md alternate mutable IUT research findings."
+  - ".harness/handoffs/discovery-handoff.yaml Discovery output handoff."
+  - "Read-only public probe evidence under ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/."
+  - "Sprint 75 CP/story/contract/spec/traceability/status/changelog/known-issues updates."
+findings:
+  - id: RAZE-S75-LOW-001
+    severity: LOW
+    status: accepted
+    issue: "The strongest candidate, connected-systems-go, is not ready for exact promotion from current evidence."
+    evidence:
+      - "Product brief states public probes remain read-only and no exact mapping promotion is supported."
+      - "Archived readiness summary records GET/OPTIONS only, unsafeMethodsIssued=[], and no declaration/method/prerequisite-ready mutation classes."
+      - "No /conf/update plus real PATCH route evidence was found."
+    recommendation: "Keep the next step scoped to a self-run disposable connected-systems-go experiment before any lifecycle closure sprint."
+  - id: RAZE-S75-LOW-002
+    severity: LOW
+    status: accepted
+    issue: "Research conclusions depend partly on live public demos that may change."
+    evidence:
+      - "Product brief cites current public conformance/readiness observations for connected-systems-go, 52North CSA, and public OSH."
+      - "Handoff confidence is 0.8 and explicitly notes live demos can change."
+    recommendation: "Refresh public probes before using this discovery result as sprint-entry evidence."
+evidence:
+  changed_files:
+    - ".gitignore"
+    - ".harness/contracts/sprint-ets-75.yaml"
+    - ".harness/evaluations/sprint-ets-75-adversarial.yaml"
+    - ".harness/handoffs/discovery-handoff.yaml"
+    - "_bmad/product-brief.md"
+    - "_bmad/traceability.md"
+    - "epics/stories/s-ets-75-01-alternate-mutable-iut-discovery.md"
+    - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md"
+    - "openspec/change-proposals/CP-035-alternate-mutable-iut-discovery.md"
+    - "ops/changelog.md"
+    - "ops/known-issues.md"
+    - "ops/metrics.md"
+    - "ops/status.md"
+    - "ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/"
+  verification:
+    - "git diff --check: PASS"
+    - "YAML parse for Discovery handoff and Sprint 75 contract: PASS"
+    - "Sprint 75 repo evidence manifest: PASS"
+    - "No Maven, Docker, or TeamEngine gates run, per user instruction."
+required_fixes: []
+duration_seconds: 94
+token_metadata: null

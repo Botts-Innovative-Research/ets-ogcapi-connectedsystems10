@@ -1,0 +1,36 @@
+sprint: ets-75
+story: S-ETS-75-01
+title: Alternate mutable IUT discovery
+status: complete
+trigger: User instructed continuing while starting Discovery research for other open-source OGC CS API implementations.
+scope:
+  requirement: REQ-ETS-CLEANUP-026
+  change_type: read_only_iut_discovery
+  exact_promotion: false
+  mutation_policy: no_public_mutation
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-ALTERNATE-IUT-DISCOVERY-001
+      expect: Public candidate IUT probes issue only GET and OPTIONS and record unsafeMethodsIssued=[].
+    - id: no_exact_promotion
+      expect: Discovery and probe evidence do not promote any mutation-bound candidate to reviewed exact.
+    - id: discovery_handoff
+      expect: Discovery writes a source-backed product brief and handoff with candidate implementations and risks.
+  normal:
+    - id: ops_handoff
+      expect: Ops docs summarize candidate findings and distinguish public read-only probes from dedicated mutable-IUT positive lifecycle evidence.
+required_verification:
+  - public_iut_readiness_audits
+  - evidence_manifest
+  - yaml_parse
+  - raze_adversarial_review
+verification_results:
+  public_iut_readiness_audits: "PASS: archived public probes for connected-systems-go, 52North CSA, and public OSH used GET/OPTIONS only and record unsafeMethodsIssued=[]."
+  evidence_manifest: "PASS: repo evidence manifest verifies in place."
+  yaml_parse: "PASS: final YAML parse succeeded for Discovery handoff, Sprint 75 contract, and Raze report."
+  raze_adversarial_review: "PASS: Raze returned APPROVE_WITH_CONCERNS 0.91 with required_fixes=[]."
+non_goals:
+  - Do not issue POST, PUT, PATCH, or DELETE against public candidate deployments.
+  - Do not patch OSH, TeamEngine, or third-party implementations.
+  - Do not treat public demo readiness as certification evidence.
+  - Do not promote mutation-bound candidates to reviewed exact mappings.

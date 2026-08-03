@@ -3266,6 +3266,50 @@ TestNG prerequisite execution
 **AND** the audit still issues only GET and OPTIONS
 **AND** no class reports `exactPromotionReady=true`.
 
+#### REQ-ETS-CLEANUP-026: Alternate Mutable IUT Discovery (Sprint 75)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS (Sprint 75 S-ETS-75-01)
+- **Description**: The project SHALL maintain read-only discovery evidence for
+  alternate open-source OGC API Connected Systems implementations that may be
+  viable future dedicated mutable IUTs for the remaining mutation-bound
+  candidate procedures. Discovery probes against public deployments SHALL issue
+  only GET and OPTIONS, SHALL record `unsafeMethodsIssued=[]`, SHALL NOT
+  promote any mutation-bound candidate to reviewed exact, and SHALL distinguish
+  public demo readiness evidence from positive lifecycle proof against a
+  controlled dedicated mutable IUT.
+- **Rationale**: The current local OSH target can support disposable mutable
+  workflow diagnostics, but Sprint 74 readiness evidence shows it cannot close
+  exact mutation mappings because prerequisite declarations, Update/PATCH
+  support, some Part 2 method/resource readiness, and positive lifecycle proof
+  are incomplete. Alternate open-source implementations may offer better
+  future IUT coverage and should be researched without unsafe public writes.
+- **Implementation evidence**: Initial Sprint 75 evidence under
+  `ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/`
+  archives read-only mutation-readiness probes for public `connected-systems-go`,
+  52North `connected-systems-pygeoapi`, and public OpenSensorHub deployments.
+  All three probes report `unsafeMethodsIssued=[]`; no probe reports a
+  declaration/method-ready or prerequisite-declaration-ready mutation class.
+  The Discovery product brief and handoff identify `connected-systems-go` as
+  the strongest researched alternate candidate for future self-run disposable
+  Part 2 Create/Replace/Delete lifecycle work, while recording that no
+  candidate currently closes all 47 mutation-bound procedures or Update/PATCH
+  exactness. Raze review returned `APPROVE_WITH_CONCERNS 0.91` with
+  `required_fixes=[]`.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54; REQ-ETS-CLEANUP-023,
+  REQ-ETS-CLEANUP-024, REQ-ETS-CLEANUP-025.
+
+#### SCENARIO-ETS-CLEANUP-ALTERNATE-IUT-DISCOVERY-001 (CRITICAL)
+**GIVEN** a public open-source Connected Systems API candidate IUT is being
+evaluated for future mutable-IUT work
+**WHEN** the ETS project archives readiness evidence for that candidate
+**THEN** the probe SHALL issue only GET and OPTIONS
+**AND** `unsafeMethodsIssued` SHALL be empty
+**AND** the evidence SHALL report missing declarations, missing prerequisite
+declarations, missing condition declarations, and missing advertised methods
+without issuing mutation requests
+**AND** no mutation-bound candidate mapping SHALL be promoted to reviewed exact
+from public read-only probe evidence.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)

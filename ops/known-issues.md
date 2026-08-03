@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T03:04Z
+Last updated: 2026-08-03T05:08Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,14 +14,16 @@ Last updated: 2026-08-03T03:04Z
 
 ## Active Issues
 
-- Sprint 73 readiness audit confirms all 47 remaining mutation-bound released
+- Sprint 74 readiness audit confirms all 47 remaining mutation-bound released
   ATS procedures remain candidate. Direct primary local OSH evidence records
   `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`; populated disposable OSH
   evidence records `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`. Only
   Part 1 Create/Replace/Delete currently has direct declaration/method
-  readiness, and Sprint 73 records zero prerequisite-ready classes. Part 1
-  Create/Replace/Delete remains blocked by missing Part 1 `/conf/api-common`,
-  missing exact inherited
+  readiness, and Sprint 74 records zero
+  prerequisite-declaration-ready classes. These fields are declaration-only
+  readiness evidence, not proof that inherited TestNG prerequisite groups
+  passed. Part 1 Create/Replace/Delete remains blocked by missing Part 1
+  `/conf/api-common`, missing exact inherited
   `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`,
   positive POST/PUT/DELETE lifecycle execution, changed-resource GET proof,
   cleanup/isolation proof for the mutated resource type, and
@@ -34,6 +36,16 @@ Last updated: 2026-08-03T03:04Z
   `/conf/update`, Features Part 4 Update, missing `/conf/feasibility`, and
   missing PATCH advertisement. Do not promote these candidates without
   completed positive lifecycle E2E against a dedicated mutable IUT.
+- Sprint 75 alternate-IUT discovery found one stronger open-source candidate
+  beyond OSH for future work: `SomethingCreativeStudios/connected-systems-go`.
+  It declares Part 1 `/conf/api-common`, Part 2 `/conf/api-common`, and Part 2
+  `/conf/create-replace-delete`, and source inspection found POST/PUT/DELETE
+  routes and e2e CRUD tests. It still does not close the active mutation issue:
+  no `/conf/update` or real PATCH-route evidence was found, public OPTIONS
+  probes did not provide `Allow` readiness, the public `/api` response was too
+  minimal for service-description write-operation checks, and public demos must
+  remain read-only. Treat it as a candidate for a future self-run disposable
+  Part 2 CRD experiment, not as current exact-promotion evidence.
 - Codex remote-control thread listing reports host
   `slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0` as
   `thread_list_unavailable`. The reachable task for this folder is idle and

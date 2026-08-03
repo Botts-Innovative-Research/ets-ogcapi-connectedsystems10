@@ -1,238 +1,179 @@
-# Product Brief — OGC CS API Conformance: TeamEngine ETS
-
-> Version: 2.0 | Status: Draft | Last updated: 2026-04-27
-> Author: Discovery Agent (Mary)
-> Triggered by: User pivot to TeamEngine ETS, 2026-04-27
-
-> **Supersedes v1.1 (2026-03-31).** v1.1 framed the problem as "build a standalone web app to fill the CS API compliance gap." v1.1 itself observed that "no ETS exists yet for CS API on the OGC Validator" but did not weigh whether the right response was a web app or an ETS. The user, after shipping v1.0 of the web app at HEAD `ab53658` (1003 unit tests, 9 epics, 39 stories), now believes the response should have been an ETS for OGC TeamEngine. This brief evaluates that pivot.
-
----
-
-## User Decisions (2026-04-27, post-Discovery gate)
-
-The user reviewed v2.0 of this brief and the Discovery handoff, and resolved Mary's three explicit gating questions before Planner runs:
-
-| Decision | Resolution | Source |
-|---|---|---|
-| **Repo topology** | Sibling repo `ets-ogcapi-connectedsystems10` (Approach A as recommended). Develop in our own org; propose contribution to OGC at beta milestone. | User confirm 2026-04-27 |
-| **First-cut scope** | Part 1 first, Part 2 follows. Smaller vertical slice; mirrors Approach A's phasing. | User confirm 2026-04-27 |
-| **Web-app fate** | Freeze v1.0 at HEAD `ab53658`. Reposition README as "developer pre-flight tool, not certification-track." No further sprint investment on the TS web app. | User confirm 2026-04-27 |
-
-The user also **named the third candidate implementation** for the OGC three-implementation rule (Risks #3): `https://github.com/SomethingCreativeStudios/connected-systems-go` — a Go implementation (99.7% Go, GORM + PostgreSQL/PostGIS) claiming both Part 1 and Part 2 conformance, referencing IS 23-001 and IS 24-008. **Caveat for Pat**: this brief uses doc number OGC 23-002 for Part 2 (per Mary's research); the connected-systems-go README cites IS 24-008. Pat must verify which is current — the discrepancy may reflect IS-as-published vs WG-draft numbering, or one is stale. Do not let this propagate untraced into REQ-* drafts.
-
-The three-implementation pool is therefore:
-1. GeoRobotix demo server (`api.georobotix.io/ogc/t18/api`) — already used as IUT for the v1.0 web app, known to pass.
-2. OpenSensorHub — confirmed by user as a candidate.
-3. `SomethingCreativeStudios/connected-systems-go` — confirmed by user as a candidate; needs an outreach step to secure participation in beta testing.
-
-This downgrades Risks #3 from "third implementation may not exist" (medium) to "third implementation candidate identified, beta participation must be secured" (low-medium).
-
----
+# Product Brief: Alternate Mutable IUT Discovery for OGC API Connected Systems
+**Date**: 2026-08-03T05:08:39Z
+**Status**: Reviewed
+**Triggered by**: User requested Discovery Agent research into open-source OGC API Connected Systems implementations, especially candidates with better coverage than OpenSensorHub (OSH), mutation/update support, Part 2 support, or conformance declarations.
 
 ## Problem Statement
 
-OGC API - Connected Systems Part 1 (OGC 23-001) and Part 2 (OGC 23-002) were approved as standards in mid-2025. CS API server implementers (OpenSensorHub, pygeoapi, vendor stacks) have **no path to OGC compliance certification** because no Executable Test Suite (ETS) has been published in the OGC CITE program for CS API. The OGC Compliance Programs Policy (08-134r11) defines the certification deliverable as an ETS executed by TeamEngine and reviewed by the CITE SubCommittee — not a vendor-hosted web tool.
+The ETS has `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped` released ATS procedures. The remaining 47 are mutation-bound across Part 1 Create/Replace/Delete, Part 1 Update, Part 2 Create/Replace/Delete, and Part 2 Update. Sprint 74 readiness evidence shows the current local OSH target is useful as a disposable mutable IUT for safety, provisioning, cleanup, and baseline diagnostics, but it cannot honestly close those 47 mappings as reviewed exact.
 
-The concrete user need is therefore: **a CITE-track ETS that an implementer can run against their CS API server to obtain (eventually) an OGC compliance badge**, with the corollary need that the same logic be usable for "shift-left" conformance checks during development.
+Current blocker evidence:
 
-The misframe in v1.1 was treating the gap as "no testing tool exists" rather than "no certification path exists." A shipped web app does not advance certification readiness one inch — it tests the same surface, but its results are not recognized by any OGC governance body.
+- Direct local OSH readiness audit: `47` candidates, `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, one declaration/method-ready class (`1:/conf/create-replace-delete`), zero prerequisite-declaration-ready classes.
+- Disposable local OSH Sprint 74 run `sprint-ets-74-fields-20260803T042511Z`: readiness audit `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`, provisioning PASS, cleanup PASS, primary-state isolation PASS.
+- TeamEngine remains non-green on the known local OSH baseline: populated `275/24/20/231`, clean-primary `275/23/20/232`.
+- `ops/known-issues.md` records the missing prerequisites: Part 1 and Part 2 `/conf/api-common`, exact inherited OGC API Features Part 4 create-replace-delete/update declarations, `/conf/update`, `/conf/feasibility`, PATCH advertisement, positive lifecycle proof, changed-resource GET proof, cleanup/isolation, cascade, collection propagation, and URI-list evidence.
 
----
+The discovery goal is therefore narrow: find an open-source implementation that can become a dedicated, controlled mutable IUT for future positive lifecycle evidence, without mutating public demo services and without promoting candidates from read-only probe evidence.
 
 ## Research Findings
 
-### Finding 1 — No CS API ETS exists or is in flight (high confidence)
+### Official Implementation Registry
 
-Direct GitHub search of the `opengeospatial` org (April 2026) returns ten `ets-ogcapi-*` repositories (`features10`, `processes10`, `processes10-part2`, `edr10`, `edr12`, `tiles10`, `maps10`, `coverages10`, `features10-part2`) but **no `ets-ogcapi-connectedsystems*`**. Code search for `connectedsystems` against the org's Java code returns nothing. The Connected Systems SWG repo (`opengeospatial/ogcapi-connected-systems`) lists work items as "SensorML Update, SWE Common Update, Connected Systems API, Definitions Server" — compliance testing is not an active workstream there. Sources:
-- https://github.com/opengeospatial?q=ets-ogcapi
-- https://github.com/opengeospatial/ogcapi-connected-systems
+The official OGC Connected Systems repository currently lists two server-side implementations:
 
-Implication: this is greenfield. The pivot does not collide with parallel OGC effort.
+- OpenSensorHub Server, open source, Java, status "In progress", claims OGC API Connected Systems Parts 1, 2, 3, 4, and 5.
+- 52North pygeoapi extension, open source, Python, status "In progress", claims Parts 1, 2, 3, and 5.
 
-### Finding 2 — TeamEngine is alive, TestNG is the path, CTL is legacy (high confidence)
+Source: https://github.com/opengeospatial/ogcapi-connected-systems/blob/master/implementations.adoc
 
-TeamEngine 5.6.x (currently 5.6.1) was released in December 2025. It supports both CTL and TestNG; recent ETSs (`ets-ogcapi-features10`, `ets-ogcapi-processes10`, `ets-ogcapi-edr10` last updated 2026-04-08) are all TestNG/Java/Maven. Sources:
-- https://github.com/opengeospatial/teamengine
-- https://opengeospatial.github.io/teamengine/testng-essentials.html
-- https://www.ogc.org/blog-article/the-new-v5-5-of-team-engine-on-the-ogc-validator/
+The OGC CSAPI developer site adds live public demo and ecosystem context:
 
-The reference stack from `ets-ogcapi-features10/pom.xml`:
-- `org.opengis.cite:ets-common:17` (shared ETS utilities)
-- `org.opengis.cite.teamengine:teamengine-spi` (TeamEngine plugin SPI)
-- `org.testng:testng` (test framework)
-- `io.rest-assured:rest-assured` (HTTP assertions)
-- `com.reprezen.kaizen:openapi-parser` (OpenAPI 3.0 parsing)
-- `org.locationtech.jts:jts-core` + `proj4j` (geometry validation)
-- Apache Maven 3.9, JDK 17
+- "CS GO Reference Server" is powered by `connected-systems-go` and implements Part 1 and Part 2.
+- The public OSH node exposes live sensors, datastreams, observations, SensorML, and SWE Common payloads through Part 1/2 endpoints.
+- The 52North CSA demo is powered by `connected-systems-pygeoapi`.
 
-There is an official Maven archetype: `org.opengis.cite:ets-archetype-testng:2.7` (last published 2019, still authoritative). Generation command: `mvn archetype:generate -B -DarchetypeGroupId=org.opengis.cite -DarchetypeArtifactId=ets-archetype-testng -DarchetypeVersion=2.7 -Dets-code=ogcapi-connectedsystems10 -Dets-title='OGC API - Connected Systems Part 1' -DartifactId=ets-ogcapi-connectedsystems10`. Sources:
-- http://opengeospatial.github.io/ets-archetype-testng/
-- https://search.maven.org/artifact/org.opengis.cite/ets-ogcapi-features10
+Source: https://csapi.developer.ogc.org/
 
-### Finding 3 — CITE certification is a 6+ month governance process, not a code milestone (high confidence)
+### Candidate Assessment
 
-Per Policy 08-134r11 and the OGC Compliance Roadmap page:
-1. ETS author (any party — does not need to be vendor or SWG) drafts ETS aligned with the standard's Abstract Test Suite (ATS, Annex A of OGC 23-001 / 23-002).
-2. ETS enters **beta** on a TeamEngine instance.
-3. CITE SubCommittee reviews; standard policy requires **three independent passing implementations** before official release. Exception: ≥6 months in beta + 1-2 passing implementations may pass with a CITE SC vote.
-4. Technical Committee (TC) approves a release motion.
-5. Planning Committee (PC) ratifies any policy-affecting changes.
-6. Compliance Testing Coordinator (CTC) coordinates the Compliance Test Package (CTP = ETS + test data + standard ref + TeamEngine version pin).
+| Candidate | Open source | CS API claim | Conformance declaration evidence | Mutation evidence | Update/PATCH evidence | Part 2 evidence | ETS usefulness |
+|---|---:|---|---|---|---|---|---|
+| `SomethingCreativeStudios/connected-systems-go` | Public GitHub repo; license not declared in GitHub API metadata | README says Go implementation of OGC API Connected Systems Part 1 Feature Resources and Part 2 Dynamic Data | Live `/conformance` declares Part 1 `/conf/api-common`, Part 2 `/conf/api-common`, Part 2 Datastream/Observation/ControlStream/Command/SystemEvent/JSON/Create-Replace-Delete | Source routes and e2e tests cover POST/PUT/DELETE for Part 1 and Part 2 resources; public read-only audit issued no writes | No `/conf/update`; no real PATCH routes found beyond global CORS method advertisement | Strongest found Part 2 CRD candidate; live demo has populated systems/datastreams/controlstreams/observations | Best next candidate for a self-run disposable mutable IUT, especially Part 2 CRD. Does not appear able to close Part 1 CRD or Update as-is. |
+| OS4CSAPI fork of `connected-systems-go` | Public fork | Same project lineage | OS4CSAPI developer site uses the Go server as reference integration target | Same as upstream unless fork diverges | Same concern as upstream | Same claim | Track if OS4CSAPI hosts deployment-specific patches, but upstream is fresher. |
+| `52North/connected-systems-pygeoapi` | Public GitHub repo, Apache-2.0 | 52North says Part 1 is fully implemented and Part 2 is actively developed | Public demo `/conformance` currently advertises only OGC API Common Core | Source has CS-specific GET/POST/PUT/DELETE routes and Part 2 datastream update/provider code comments | Route decorators do not expose PATCH; provider comments mention update targets but observation update is unsupported | Part 2 in active development; public demo `/datastreams` returned server error during probe | Promising medium-term self-run candidate, but public deployment is not a usable declaring IUT today. |
+| 52North `pygeoapi` `feature/connected-systems` branch | Public GitHub branch | Official registry links this branch | Static bundled OpenAPI uses older/historical CS URI names such as `system-features` and encoding classes | Generic pygeoapi feature write routes exist; CS route fit is unclear | No convincing current PATCH/update evidence found | Some Part 1/2 provider and OpenAPI assets exist | Not stronger than the standalone 52North CSA app for this ETS without branch reconciliation. |
+| OpenSensorHub / OSH | Public GitHub repo, MPL-2.0 | Broad CS API support; OS4CSAPI public demo advertises Parts 1, 2, and 3 classes | Public demo declares many CS classes including Part 1 CRD, Part 2 CRD, JSON, SWE Common JSON/Text/Binary, WebSocket, MQTT | Local disposable OSH workflow has safe provisioning/cleanup evidence, but readiness audit still blocks exact promotion | No Part 1/2 `/conf/update`; no PATCH readiness sufficient for exact closure | Broadest encoding coverage among found implementations | Keep as baseline and local disposable diagnostic IUT, but not enough for the remaining mutation exact closure. |
+| FROST-Server | Public GitHub repo, AGPL-3.0 | OGC SensorThings API reference implementation, not CS API | SensorThings conformance, not Connected Systems `/conformance` | Mature create/update/delete support in SensorThings | SensorThings Tasking support, not CS Part 2 Update | SensorThings Part 1/Part 2, not CS Part 2 | Useful adapter/substrate candidate only; not a direct CS API IUT. |
+| GOST | Public GitHub repo | SensorThings API Part 1 Sensing plus MQTT | SensorThings ETS badge/status, not CS API | SensorThings Create-Update-Delete tests reported | Tasking planned, not CS Update | SensorThings, not CS | Not a direct CS API IUT. |
+| istSOS4 | Public GitHub repo | SensorThings API server | SensorThings surface, not CS API | CRUD via SensorThings stack | No CS Update evidence | SensorThings, not CS | Not a direct CS API IUT. |
+
+### Connected Systems Go Details
+
+Repository: https://github.com/SomethingCreativeStudios/connected-systems-go
+
+Public demo: https://129-80-248-53.sslip.io/csapi-go-v2/
+
+The Go implementation is the strongest alternate IUT candidate found. Its README claims OGC API Connected Systems Part 1 and Part 2 support, and documents POST/PUT/DELETE routes for systems, deployments, procedures, properties, datastreams, observations, controlstreams, commands, and system events.
+
+Local source inspection of a research clone found:
+
+- `internal/api/conformance_handler.go` declares Part 1 `/conf/api-common` and Part 2 `/conf/api-common`, Datastream, Observation, ControlStream, Command, SystemEvent, JSON, and Create/Replace/Delete.
+- `internal/api/router.go` registers POST/PUT/DELETE routes for several Part 1 and Part 2 resources.
+- `e2e/systems_test.go` includes create, replace, GET proof, and delete proof tests for systems.
+- `e2e/control_streams_test.go` includes ControlStream CRUD, cascade delete, and schema update tests.
+- No actual PATCH route or `/conf/update` declaration was found. The global CORS header advertises PATCH, but that is not enough to treat Update readiness as proved.
+
+Live read-only probe evidence is archived under `ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/`:
+
+- `csapi-go-public-conformance.json` declares Part 1 `/conf/api-common` and Part 2 `/conf/api-common` plus Part 2 `/conf/create-replace-delete`.
+- `csapi-go-public-readiness.json` records `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, and no exact-promotion-ready mutation class because the public OPTIONS probes did not provide `Allow` evidence for expected mutation methods.
+- Public demo `/api` returned only a minimal OpenAPI skeleton during research, so service-description-based write operation checks may require self-run configuration or code-backed evidence.
+
+Interpretation: this is a viable open-source candidate beyond OSH for exploratory Part 2 Create/Replace/Delete lifecycle closure in a self-run disposable environment. It is not an all-47-candidate solution today.
+
+### 52North CSA / pygeoapi Details
+
+Project page: https://52north.org/software/software-components/ogc-api-connected-systems/
+
+Repository: https://github.com/52North/connected-systems-pygeoapi
+
+Public demo: https://csa.demo.52north.org/
+
+52North states that its implementation is Python-based, uses pygeoapi with Elasticsearch and TimescaleDB, has Part 1 already fully implemented, and is actively developing Part 2. The repository is Apache-2.0 and contains CS-specific routes and providers.
+
+The live public demo is not currently a usable declaring IUT for this ETS:
+
+- `/conformance` returned only `http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core`.
+- TLS validation failed because the certificate was expired during research; `curl -k` was required.
+- `/datastreams?limit=1` returned HTTP 500 during research.
+
+Interpretation: 52North is worth tracking and may be useful if self-run, seeded, and configured with current conformance declarations. It is not a better immediate target than connected-systems-go.
+
+### OpenSensorHub Details
+
+Repository: https://github.com/opensensorhub/osh-core
+
+Public OS4CSAPI demo: https://129-80-248-53.sslip.io/sensorhub/api
+
+The public OSH demo declares broad CS API classes, including Part 1 CRD, Part 2 CRD, JSON, SWE Common JSON/Text/Binary, and Part 3 WebSocket/MQTT. That breadth is valuable for read-only and encoding conformance work, but it does not solve the current mutation blockers because the exact current prerequisite declarations and Update/PATCH surface are missing.
+
+Interpretation: OSH remains useful, but current evidence supports the user's suspected gap: it is not enough for the remaining mutation exact closure.
+
+### SensorThings-Related Systems
+
+FROST-Server, GOST, and istSOS4 are mature open-source SensorThings implementations. They may be useful substrate projects if the ETS team later decides to build an adapter or seed data from SensorThings concepts, but they do not expose a current OGC API Connected Systems conformance surface and should not be treated as direct IUT candidates.
 
 Sources:
-- https://docs.ogc.org/pol/08-134r11.html
-- https://www.ogc.org/compliance/ogc-compliance-roadmap/
 
-Realistic calendar: ETS skeleton in 1-3 months → beta on TeamEngine → 6-12 months gathering implementations → CITE SC + TC vote → official release. v1 of the existing web app was a 51-turn AI sprint; this pivot is a **standards-process commitment** measured in quarters, not turns.
+- https://github.com/FraunhoferIOSB/FROST-Server
+- https://github.com/gost/server
+- https://github.com/istSOS/istSOS4/
 
-### Finding 4 — The existing web app has portable assets but its language is wrong (high confidence)
+## Proposed Approach
 
-Inventory of what we have at HEAD `ab53658`:
+Use `connected-systems-go` as the first alternate mutable-IUT investigation target, but keep the next sprint read-only unless and until a dedicated self-run instance is available.
 
-| Asset | Portability to ETS | Rationale |
-|---|---|---|
-| **126 bundled OGC JSON Schemas** (`/schemas/`) | **Direct port** — copy as-is | JSON Schema is language-agnostic; both Ajv (TS) and the Kaizen openapi-parser (Java) consume the same schemas |
-| **27 conformance-test registry modules** (`src/engine/registry/*.ts`) | **Logic ports as ATS-mapping reference; code does not** | Each module is a TypeScript object keyed by canonical OGC requirement URI (e.g. `/req/system/canonical-url`) with `testFn(ctx)`. The URI-mapping convention, the assertion catalog, the dependency DAG, the spec-trap fixtures (`featureType="sosa:System"` etc.) all transfer as design knowledge. The TypeScript bodies must be re-written in Java/TestNG/REST Assured. |
-| **Spec-trap test fixtures** (asymmetric `featureType` vs `itemType` corpus, half-conformant collection responses) | **Unique authored asset — port as TestNG `@DataProvider`** | These edge cases are not in the OGC ATS verbatim. They are accumulated knowledge from live testing against `api.georobotix.io`. They make the ETS more rigorous than a literal ATS port. |
-| **OpenAPI YAML pinning + schema-extraction script** (`scripts/fetch-schemas.ts`) | **Port concept; the Java ETS uses Kaizen at runtime instead of build-time bundling** | Kaizen openapi-parser loads the YAML directly; no extraction step needed. |
-| **Two-step discovery flow** (landing page → conformance → run) | **Port as TestNG `@BeforeSuite`** | Same logic, different idiom. |
-| **SSRF guard, credential masking, SSE broadcaster, session manager, result store, Express server, Next.js UI, PDFKit exporter** | **Throwaway** (in ETS context) | TeamEngine provides session management, result storage, HTML report rendering, and the web UI. None of this code has a home in an ETS. |
-| **1003 Vitest unit tests** | **Reference, not port** | Useful as a checklist of behaviors the Java ETS must also cover. The test bodies themselves are not portable. |
-| **27 Playwright E2E tests** | **Throwaway** | UI-only. |
+Recommended sequence:
 
-Rough split: of the ~15-20K LOC v1.0 codebase, perhaps 5-15% (the schemas + the registry's spec-knowledge) survives the pivot. The rest is web-app scaffolding.
-
-### Finding 5 — TypeScript was the wrong choice for a CITE submission (medium-high confidence)
-
-OGC tooling is JVM-centric: TeamEngine is Java, the SPI is Java, all 10 active `ets-ogcapi-*` repos are Java, the Maven archetype is Java, the `ets-common` utility library is Java. A non-Java ETS would either need to be wrapped in a Java shell that shells out to Node.js (operationally ugly, would likely fail CITE SC review) or would not be runnable inside TeamEngine at all. CTL (XML-based) is supported but is the legacy path; no ETS published since ~2020 chose CTL. The 2026 default is **Java 17 + Maven + TestNG + REST Assured**.
-
----
-
-## Proposed Approach (recommended)
-
-### Approach A — New Java/TestNG ETS, existing web app archived as "shift-left dev tool" (RECOMMENDED)
-
-**Shape**: New sibling repo `ets-ogcapi-connectedsystems10` (and a Part 2 repo when scoped) generated from `ets-archetype-testng:2.7`, mirroring the layout of `ets-ogcapi-features10`. The new ETS is the certification deliverable. The existing repo (`csapi_compliance`) stays in place, marked **"developer pre-flight tool, not certification-track"** in its README, and continues to be useful for implementers who want a browser UI during development.
-
-**What gets built**:
-1. ETS skeleton via Maven archetype, JDK 17, TestNG, REST Assured, Kaizen openapi-parser.
-2. One TestNG suite class per CS API conformance class. Each test method maps 1:1 to an ATS assertion via the canonical OGC requirement URI. Sprint 25 corrected the former 28-class shorthand because OGC 23-002 Annex A does not define `/conf/system-history`.
-3. Reuse the 126 JSON Schemas verbatim from `csapi_compliance/schemas/`.
-4. Port the spec-knowledge from the 27 TS registry modules into Java assertions — preserving the URI mapping, dependency DAG, and spec-trap data providers.
-5. CTL wrapper (`src/main/scripts/ctl/`) to register the ETS with TeamEngine.
-6. `Dockerfile` + Jenkinsfile pattern matching the `ets-ogcapi-processes10` repo.
-7. Asciidoc site documentation (`src/site/`) per OGC convention.
-
-**Path to certification**:
-- Phase 1 (1-3 months): ETS skeleton, Part 1 conformance classes only, runs locally via TeamEngine 5.6.x (currently 5.6.1) Docker image.
-- Phase 2 (3-6 months): Part 2 conformance classes; submit to OGC for beta status on `cite.opengeospatial.org/teamengine/`.
-- Phase 3 (6-12 months from beta): Drive 3 passing implementations (GeoRobotix demo server, OpenSensorHub, third TBD). CITE SC + TC vote. Official release.
-
-**Why recommended**:
-- Aligns with the only governance path that produces a real OGC compliance badge.
-- Greenfield in OGC's ETS catalog — no duplicated work, the SWG is not building a competing one.
-- Existing web app is preserved (sunk cost is not weaponized; it just stops being the primary deliverable).
-- The Maven archetype + nine reference repos make the scaffold a known quantity, not research.
+1. Keep public deployments strictly read-only. Public probes may fetch `/conformance`, service description, representative collection resources, and OPTIONS headers only.
+2. Create a dedicated local or disposable `connected-systems-go` IUT outside public demo infrastructure.
+3. Seed predictable systems, procedures, deployments, datastreams, controlstreams, observations, commands, and system events.
+4. Run the same readiness audit against that self-run instance and compare declarations, OpenAPI/service-description quality, OPTIONS `Allow` headers, and route behavior.
+5. If the self-run Go IUT can satisfy exact declarations and cleanup/isolation requirements, scope a future sprint to one narrow positive lifecycle slice, most likely Part 2 Create/Replace/Delete for Datastream or ControlStream.
+6. Do not pursue Update/PATCH exact closure from this candidate until `/conf/update` and real PATCH routes exist.
+7. Track 52North as a secondary self-run candidate, mainly for Part 1, after resolving public demo conformance, TLS, and runtime health issues.
 
 ### Alternatives Considered
 
-**Approach B — Wrap the existing TS engine in a Java/TeamEngine shim**: TeamEngine SPI invokes a thin Java class that shells out to a bundled Node.js process running the existing engine, parses its JSON output, and synthesizes TestNG results.
-- Rejected. Operational complexity (Node + Java in the same Docker image), CITE SC will likely flag the shell-out as a maintenance liability, and the shim layer becomes a permanent translation tax. Saves ~10% effort vs Approach A and adds long-term debt.
+**Use public `connected-systems-go` demo directly for mutations**: Rejected. Public demos are not controlled mutable IUTs. Positive lifecycle proof must be collected against a dedicated instance with cleanup and primary-state isolation.
 
-**Approach C — Stay the course: keep building the web app, ignore TeamEngine**: Treat the web app as the de-facto ecosystem tool, lobby OGC informally to recognize it.
-- Rejected. The user's premise is correct: this path produces no certification, no badge, no OGC governance recognition. It is a bet against OGC's own program. The user has explicitly signaled they want to be on the certification path.
+**Continue relying only on local OSH**: Rejected as a closure path for the remaining 47 candidates. Sprint 74 proves OSH is safe for diagnostics but currently lacks exact prerequisite/update declarations and sufficient mutation lifecycle evidence.
 
-**Approach D — CTL-based ETS**: Use the older XML/XSLT-based CTL framework.
-- Rejected. CTL is legacy. No `ets-ogcapi-*` repo since 2020 chose CTL. Adopting it would isolate the ETS from current OGC tooling momentum and the talent pool.
+**Use 52North public demo as the next IUT**: Rejected for immediate work. The public demo's conformance declaration currently exposes only OGC API Common Core, and `/datastreams` was unhealthy during research.
 
-**Approach E — Hybrid: ETS for certification + web app retained as primary product**: Build the ETS but keep the web app as the user-facing tool, with shared schemas.
-- Partial-fit alternative. This is actually compatible with Approach A — the recommended approach already preserves the web app as a dev tool. The distinction is just emphasis: Approach A says the ETS is the primary deliverable; Approach E says they are co-equal. Approach A is cleaner because the web app is ~complete (v1.0 shipped) and needs no further investment to keep its current dev-tool utility, while the ETS needs full focus.
+**Adapt a SensorThings server such as FROST-Server**: Deferred. These systems are strong open-source mutable sensor API stacks, but building a CS API facade would be implementation work, not discovery of an existing IUT.
 
----
+## Requirements Summary
 
-## Requirements Summary (for Pat the Planner)
-
-High-level requirements that the Planner should decompose into REQ-* / SCENARIO-* items in a new capability spec (suggested name: `ets-ogcapi-connectedsystems`):
-
-1. **R-PIVOT-01** — Generate an OGC-compliant ETS project from `ets-archetype-testng:2.7` named `ets-ogcapi-connectedsystems10` covering OGC 23-001 (Part 1).
-2. **R-PIVOT-02** — Mirror the structure of `ets-ogcapi-features10` (TestNG suite definition at `src/main/resources/.../testng.xml`, CTL wrapper at `src/main/scripts/ctl/`, TeamEngine SPI integration).
-3. **R-PIVOT-03** — Implement all 13 released Part 1 conformance classes and
-   all 110 OGC 23-001 Annex A tests, with class tests mapped 1:1 to TestNG
-   methods and the two supporting tests mapped to reviewed helpers.
-4. **R-PIVOT-04** — Implement TestNG test classes for the OGC 23-002 Part 2 conformance classes plus explicitly scoped project cross-class closures. Sprint 25 corrected the earlier "14 Part 2 classes" wording because OGC 23-002 Annex A does not define `/conf/system-history`.
-5. **R-PIVOT-05** — Reuse the 126 JSON Schemas from `csapi_compliance/schemas/` as the validation source. Pin the OGC OpenAPI YAML to a specific commit SHA in the ETS pom.xml.
-6. **R-PIVOT-06** — Port the spec-trap fixture corpus (asymmetric featureType/itemType cases, half-conformant collections, missing OGC 23-001 markers) as TestNG `@DataProvider` inputs.
-7. **R-PIVOT-07** — Provide a `Dockerfile` + docker-compose snippet that runs TeamEngine 5.6.x (currently 5.6.1) with this ETS pre-loaded, accessible at `http://localhost:8081/teamengine`.
-8. **R-PIVOT-08** — Publish the maven artifact to OSSRH/Maven Central per OGC convention (`org.opengis.cite:ets-ogcapi-connectedsystems10`).
-9. **R-PIVOT-09** — Achieve "all tests green" against the GeoRobotix demo server (`api.georobotix.io/ogc/t18/api`), which is already known to pass the existing web-app suite.
-10. **R-PIVOT-10** — Update the existing `csapi_compliance` repo's README to reposition it as a developer pre-flight tool, with a clear pointer to the certification-track ETS.
-11. **R-PIVOT-11** — Maintain traceability between the TS registry modules and the Java TestNG methods so spec-knowledge updates propagate (this is a tooling/process requirement, possibly enforced by a script that diffs the URI lists).
-12. **R-PIVOT-12** — Submit ETS to OGC CITE for beta status. (This is a process gate, not a code requirement, but the Planner should acknowledge it as a milestone.)
-
-The Planner should treat R-PIVOT-01 through R-PIVOT-09 as in-scope for the next several sprints; R-PIVOT-10 as a low-cost cleanup of the existing repo; R-PIVOT-11 as a quality-of-life automation to consider after R-09; R-PIVOT-12 as a calendar milestone driven by external OGC governance.
-
----
+- `REQ-ALT-IUT-001` - Maintain a source-backed inventory of open-source CS API and adjacent SensorThings implementations, including repository URL, license status, activity, conformance claims, mutation claims, and live-demo status.
+- `REQ-ALT-IUT-002` - Preserve public candidate probes as read-only evidence: GET and OPTIONS only, `unsafeMethodsIssued=[]`, no credentials logged, and no exact mapping promotion.
+- `REQ-ALT-IUT-003` - Distinguish public-demo readiness from positive lifecycle proof against a dedicated mutable IUT.
+- `REQ-ALT-IUT-004` - Prefer `connected-systems-go` for the first disposable alternate-IUT experiment because it is the only researched open-source candidate with live Part 2 API Common and Part 2 Create/Replace/Delete declarations.
+- `REQ-ALT-IUT-005` - Before any mutation exact closure sprint, require exact prerequisite declarations, actual method advertisement or equivalent service-description proof, POST/PUT/DELETE or PATCH lifecycle execution, changed-resource GET proof, cleanup/isolation evidence, and no public-IUT writes.
+- `REQ-ALT-IUT-006` - Treat Update/PATCH closure as blocked until an implementation declares `/conf/update` and exposes real PATCH handlers, not only CORS method strings.
 
 ## Risks and Open Questions
 
-### Risks (specific)
-
-1. **Java/TestNG/Maven skill load**. The team's demonstrated proficiency is TypeScript/Next.js/Vitest. The pivot adds a JVM toolchain. Mitigation: lean heavily on `ets-ogcapi-features10` and `ets-ogcapi-processes10` as templates; both have public source. Risk of slow learning curve in first 2-3 sprints is real.
-2. **Maven archetype is from 2019 (v2.7)**. JDK 17 is required, but the archetype itself has not been rev'd in five years. Generated scaffolds may need manual updates (e.g. dependency version bumps, security patches). Likely surmountable but adds setup cost.
-3. **Three-implementation rule**. CITE SC needs three independent passing implementations to release the ETS officially. Candidate pool (confirmed by user 2026-04-27): (a) GeoRobotix `api.georobotix.io/ogc/t18/api`, (b) OpenSensorHub, (c) `SomethingCreativeStudios/connected-systems-go`. **Residual risk**: candidates exist, but their willingness to formally participate in CITE beta testing is not yet secured. Mitigation: outreach step for OSH and connected-systems-go before beta submission; 6-month beta + 1-2 implementations + CITE SC vote is policy-permitted as a fallback.
-4. **Spec-trap fixture portability**. The asymmetric `featureType`/`itemType` corpus is custom edge-case knowledge. Porting to Java `@DataProvider` is straightforward but tedious; ~30-50 fixtures to translate.
-5. **Dual-maintenance burden**. Keeping the TS web app and the Java ETS in sync as OGC 23-001/23-002 errata land. Mitigation: shared JSON Schemas (no duplication) + a checklist file mapping TS registry modules to Java test classes (R-PIVOT-11).
-6. **TeamEngine-side issues**. TeamEngine 5.6.x (currently 5.6.1)'s TestNG support has rough edges (per the testng-essentials docs deferring registration details to "Part 2"). Risk of integration friction. Mitigation: use the `teamengine-integration-testing` repo's patterns.
-7. **OGC governance velocity**. CITE SC meets infrequently; TC voting cycles are quarterly. Risk: even with code-complete ETS, official release could slip 9-18 months. Outside our control.
-8. **SensorML / SWE Common JSON Schemas may be incomplete or in flux**. CS API Part 2 references SensorML and SWE Common — both have parallel SWG update workstreams in the same `ogcapi-connected-systems` repo. The schemas we bundled at v1.0 may not be final. Mitigation: pin to specific commit SHA, document the pin, plan to revisit.
-
-### Open Questions
-
-1. ~~**Repository topology**~~ — **RESOLVED 2026-04-27** (user gate): sibling repo `ets-ogcapi-connectedsystems10`, our org first, propose to OGC at beta milestone. See § User Decisions.
-2. ~~**Part 1 vs Part 1 + Part 2 first cut?**~~ — **RESOLVED 2026-04-27** (user gate): Part 1 first, Part 2 follows. See § User Decisions.
-3. ~~**Web app fate post-pivot**~~ — **RESOLVED 2026-04-27** (user gate): freeze v1.0, reposition README, no further sprint investment. See § User Decisions.
-4. **Verification topology**: Resolved by CP-003/ADR-012. Project-operated
-   hosted CI is outside scope. Development gates run locally; Jenkinsfiles are
-   retained only as inert OGC submission/build metadata.
-5. **Maven Central publishing**: Requires OSSRH account and GPG signing. Setup overhead. When is this needed — beta? Official release? **Pat to confirm timing.**
-6. **Test data hosting**: ETS may need fixture data (sample SensorML docs, SWE Common payloads). Where does this live in the repo? Per `ets-ogcapi-features10`, in `src/main/resources/data/`. **Pat to confirm.**
-7. **Architect should reconcile the full target architecture** with TeamEngine's plugin model before Generator starts.
-8. **Part 2 doc number discrepancy**: this brief cites OGC 23-002; the connected-systems-go repo cites IS 24-008. Pat must determine which is the current IS-published designation before drafting REQ-* IDs that reference Part 2.
-
----
+- `connected-systems-go` has no license declared in GitHub API metadata. Confirm legal reuse terms before embedding it into regular project automation.
+- `connected-systems-go` README cites Part 2 as IS 24-008, while this ETS project tracks Part 2 as OGC 23-002. Confirm the final standard designation before using the implementation as normative evidence.
+- `connected-systems-go` declares `system-history`, which the project has previously treated as non-released or at least not part of the current released ATS closure set. Ignore non-ATS declarations unless the standard mapping is reconciled.
+- Public `connected-systems-go` OPTIONS responses do not provide `Allow` method evidence in the archived readiness audit, even though source routes exist. Do not infer exact readiness from CORS alone.
+- The public `connected-systems-go` `/api` response was too minimal for service-description write-operation checks during research.
+- 52North public demo health is weak: expired TLS certificate, `/conformance` only Common Core, and `/datastreams` error response during research.
+- No researched candidate currently demonstrates complete Part 1 CRD, Part 1 Update, Part 2 CRD, and Part 2 Update closure for all 47 remaining candidates.
+- Mutation testing requires credentials, fixture ownership, deterministic cleanup, and evidence isolation. None of the public demos satisfy that bar by themselves.
 
 ## Feasibility Assessment
 
-- **Technical**: **FEASIBLE**. The OGC archetype, the 9 reference ETS repos, the live TeamEngine 5.6.x (currently 5.6.1) image, and the 126 JSON Schemas already in our repo make this a well-paved path. Risk is in language/toolchain proficiency, not in unknown technology.
-- **Complexity**: **MODERATE-COMPLEX**. Code complexity is moderate — TestNG + REST Assured + Maven is a mature, well-documented stack. The complexity is in (a) translating spec knowledge from TS to Java without losing the spec-trap fixtures, (b) navigating CITE SC governance, (c) getting three independent CS API implementations to pass. Item (c) is the highest-risk dimension and is partly out of our control.
-- **Dependencies (new)**:
-  - JDK 17 (build environment)
-  - Apache Maven 3.9 (build tool)
-  - `org.opengis.cite:ets-archetype-testng:2.7` (scaffold)
-  - `org.opengis.cite:ets-common:17` (utilities)
-  - `org.opengis.cite.teamengine:teamengine-spi` (plugin SPI)
-  - `org.testng:testng` (test framework)
-  - `io.rest-assured:rest-assured` (HTTP DSL)
-  - `com.reprezen.kaizen:openapi-parser` (OpenAPI parsing)
-  - `org.locationtech.jts:jts-core`, `proj4j`, `jts-io-common` (geometry)
-  - `ogccite/teamengine-production` Docker image (runtime host)
-- **Dependencies (preserved from v1.0)**:
-  - The 126 JSON Schemas at `csapi_compliance/schemas/`.
-  - The pinned OGC OpenAPI YAML commit SHAs.
-  - The spec-knowledge encoded in `csapi_compliance/src/engine/registry/*.ts` (as a porting reference, not a build dependency).
-
----
+- Technical: **FEASIBLE WITH CONCERNS**. A stronger alternate candidate exists beyond OSH: `connected-systems-go`. It plausibly supports enough Part 2 Create/Replace/Delete behavior to justify a self-run disposable-IUT experiment. It does not appear to support Update/PATCH closure today.
+- Complexity: **MODERATE** for a read-only compatibility audit and self-run Go instance. **COMPLEX** for exact mutation closure because declarations, service descriptions, fixture seeding, lifecycle proof, and cleanup evidence must all align with ETS expectations.
+- Dependencies: `connected-systems-go` local runtime, PostgreSQL/PostGIS or its documented storage stack, deterministic seed data, a non-public mutable-IUT URL, and maintainer/license clarification. 52North requires pygeoapi, Elasticsearch, TimescaleDB, seed data, and conformance configuration before it can compete as an IUT.
 
 ## Sources
 
-- OGC Compliance Programs Policy: https://docs.ogc.org/pol/08-134r11.html
-- OGC Compliance Roadmap: https://www.ogc.org/compliance/ogc-compliance-roadmap/
-- OGC CITE TeamEngine portal: https://cite.opengeospatial.org/teamengine/
-- TeamEngine project: https://github.com/opengeospatial/teamengine
-- TeamEngine TestNG essentials: https://opengeospatial.github.io/teamengine/testng-essentials.html
-- ETS TestNG archetype: http://opengeospatial.github.io/ets-archetype-testng/
-- Reference ETS — OGC API Features: https://github.com/opengeospatial/ets-ogcapi-features10
-- Reference ETS — OGC API Processes: https://github.com/opengeospatial/ets-ogcapi-processes10
-- CS API SWG repo (no ETS workstream): https://github.com/opengeospatial/ogcapi-connected-systems
-- CITE wiki TestNG conformance testing: https://github.com/opengeospatial/cite/wiki/Conformance-Testing-with-TestNG-Part-1
-- TeamEngine 5.6.x (currently 5.6.1) release blog: https://www.ogc.org/blog-article/the-new-v5-5-of-team-engine-on-the-ogc-validator/
+- OGC Connected Systems implementation registry: https://github.com/opengeospatial/ogcapi-connected-systems/blob/master/implementations.adoc
+- OGC CSAPI developer demos: https://csapi.developer.ogc.org/
+- `connected-systems-go`: https://github.com/SomethingCreativeStudios/connected-systems-go
+- Public `connected-systems-go` demo: https://129-80-248-53.sslip.io/csapi-go-v2/
+- OS4CSAPI `connected-systems-go` fork: https://github.com/OS4CSAPI/connected-systems-go
+- 52North CS API project page: https://52north.org/software/software-components/ogc-api-connected-systems/
+- 52North `connected-systems-pygeoapi`: https://github.com/52North/connected-systems-pygeoapi
+- 52North CSA demo: https://csa.demo.52north.org/
+- 52North pygeoapi feature branch: https://github.com/52North/pygeoapi/tree/feature/connected-systems
+- OpenSensorHub core: https://github.com/opensensorhub/osh-core
+- Public OSH demo: https://129-80-248-53.sslip.io/sensorhub/api
+- OS4CSAPI meta project: https://github.com/OS4CSAPI/os4csapi-meta
+- FROST-Server: https://github.com/FraunhoferIOSB/FROST-Server
+- GOST SensorThings server: https://github.com/gost/server
+- istSOS4: https://github.com/istSOS/istSOS4/

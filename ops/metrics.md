@@ -12,6 +12,8 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 436 | 2026-08-03T05:09:07Z | 2026-08-03T05:10:41Z | 1m34s | Agent-initiated mandatory Raze review for current uncommitted Sprint 75 alternate mutable IUT discovery work. Raze reviewed scoped docs/handoff/contract/evidence for read-only public probes, durable manifests, no exact-promotion overclaiming, and non-misleading source-backed implementation claims, without Java/TestNG edits or expensive Maven/Docker/TeamEngine reruns. Verdict `APPROVE_WITH_CONCERNS 0.91`, `required_fixes=[]`, duration 94s, token metadata unavailable. |
+| 435 | 2026-08-03T04:55:24Z | 2026-08-03T05:12:05Z | 16m41s | User instructed Discovery Agent / Analyst Mary to continue the project by researching alternate open-source OGC API Connected Systems or closely related mutable IUTs beyond OSH, inspect Sprint 74 readiness/known-issues blocker evidence, write `_bmad/product-brief.md` and `.harness/handoffs/discovery-handoff.yaml`, without implementation code edits or expensive Maven/Docker/TeamEngine gates. Completed source-backed product brief and handoff, reconciled Sprint 75 docs/ops evidence, preserved read-only public probe evidence with `unsafeMethodsIssued=[]`, found `connected-systems-go` as the strongest future self-run Part 2 CRD candidate, found no all-47 or Update/PATCH-capable open-source candidate, and refreshed session token totals via `scripts/session-metrics.py`. |
 | 434 | 2026-08-03T04:52:25Z | 2026-08-03T04:52:40Z | 0m15s | User asked why the local OSH cannot be used as the mutable IUT. Checked Sprint 74 readiness JSON, coverage summary, and known-issues/status evidence; confirmed local OSH can be used as a disposable mutable IUT for diagnostics and isolation evidence, but cannot honestly close the remaining 47 mutation-bound exact mappings because it lacks required prerequisite declarations, update declarations/PATCH advertisement, some Part 2 IDs/method readiness, and positive lifecycle proof. |
 | 433 | 2026-08-03T04:49:57Z | 2026-08-03T04:50:39Z | 0m42s | User asked: "What is next?" Reviewed clean pushed Sprint 74 status, active known issues, and coverage inventory; confirmed remaining released ATS work is still exactly `47` mutation-bound candidate procedures across Part 1/2 Create/Replace/Delete and Update, with `0` unmapped procedures. Recommended the next practical item as Sprint 75: reconcile the remaining readiness/known-issues handoff language to Sprint 74 terminology, then choose a mutation-bound implementation/evidence sprint only if a conforming mutable IUT path exists. |
 | 432 | 2026-08-03T04:17:06Z | 2026-08-03T04:46:38Z | 29m32s | User instructed: "Continue." Completed and pushed Sprint 74 prerequisite declaration field clarity as `b265dc6`: added CP/story/contract/spec anchors, implemented explicit prerequisite-declaration readiness JSON fields while preserving Sprint 73 aliases, verified Python compile `pycompile:0`, Python unit tests `21/0/0/0`, formatter PASS, Docker Maven `787/0/0/3`, direct local OSH audit `GET=1 OPTIONS=25 unsafe=[] aliasEquality=true prereqDeclarationReady=[]`, disposable local OSH E2E `275/24/20/231` populated and `275/23/20/232` clean-primary with provisioning/cleanup/primary isolation PASS, Raze `APPROVE_WITH_CONCERNS 0.94` with no required fixes in 139s and token metadata unavailable, addressed the LOW pycompile-log status-line concern, and archived session metrics. |
@@ -569,9 +571,9 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 74)
+### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 75)
 
-Extracted after Sprint 74 pushed-status reconciliation with
+Extracted after Sprint 75 alternate mutable IUT discovery with
 `python3 scripts/session-metrics.py`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
@@ -579,13 +581,13 @@ the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 17,433,039 | $261.50 |
-| Output | 1,399,611 | $104.97 |
+| Input | 17,802,308 | $267.03 |
+| Output | 1,436,102 | $107.71 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 411,442,304 | $617.16 |
-| **TOTAL** | **430,274,954** | **$983.63** |
+| Cache Read | 421,420,416 | $632.13 |
+| **TOTAL** | **440,658,826** | **$1006.87** |
 
-API calls (usage records): 3027
+API calls (usage records): 3105
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

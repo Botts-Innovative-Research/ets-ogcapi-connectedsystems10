@@ -45,6 +45,9 @@ Thumbs.db
 # Sprint 74 nested populated-OSH E2E logs are referenced by committed manifests.
 !ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/**/*.log
 
+# Sprint 75 alternate-IUT discovery logs are committed read-only probe evidence.
+!ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/**/*.log
+
 # CONFIDENTIAL — OGC-supplied material, must not be published to this public remote.
 # The te2 jar inventory was shared by OGC on the explicit condition it stay private.
 te2_webapp*

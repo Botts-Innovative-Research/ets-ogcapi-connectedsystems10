@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-08-03T04:59:00Z",
+  "probes": [
+    {
+      "id": "csapi-go-public",
+      "iutUrl": "https://129-80-248-53.sslip.io/csapi-go-v2",
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "declaredMutationRelevant": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/command",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/observation",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history"
+      ],
+      "classesWithDeclarationAndMethodReadiness": [],
+      "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": []
+    },
+    {
+      "id": "52north-public",
+      "iutUrl": "https://csa.demo.52north.org",
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "declaredMutationRelevant": [],
+      "classesWithDeclarationAndMethodReadiness": [],
+      "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": []
+    },
+    {
+      "id": "public-osh",
+      "iutUrl": "https://129-80-248-53.sslip.io/sensorhub/api",
+      "requestMethodCounts": {
+        "GET": 1,
+        "OPTIONS": 25
+      },
+      "unsafeMethodsIssued": [],
+      "declaredMutationRelevant": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+      ],
+      "classesWithDeclarationAndMethodReadiness": [],
+      "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": []
+    }
+  ]
+}

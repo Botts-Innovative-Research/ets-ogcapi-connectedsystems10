@@ -1,8 +1,45 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T04:45Z
+Last updated: 2026-08-03T05:10Z
 
 ## Current Sprint Evidence
+
+Sprint 75 alternate mutable IUT discovery:
+
+- Trigger: user instructed continuing while starting Discovery Agent research
+  into open-source OGC API Connected Systems implementations beyond OSH,
+  especially candidates claiming greater coverage.
+- Scope: `REQ-ETS-CLEANUP-026` read-only public-IUT discovery and operational
+  blocker evidence only. No Java/TestNG implementation code was edited, no
+  Maven/Docker/TeamEngine gate was rerun, no public IUT mutation was issued,
+  and no Create/Replace/Delete or Update candidate mapping is promoted.
+- Discovery artifacts:
+  `_bmad/product-brief.md` and `.harness/handoffs/discovery-handoff.yaml`.
+- Public probe evidence directory:
+  `ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/`.
+- Public candidate probes:
+  `connected-systems-go`, 52North CSA, and public OSH each record `GET=1`,
+  `OPTIONS=25`, `unsafeMethodsIssued=[]`, no
+  `classesWithDeclarationAndMethodReadiness`, and no
+  `classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness`.
+- Best alternate candidate found:
+  `SomethingCreativeStudios/connected-systems-go`, because current public and
+  source evidence show Part 1 `/conf/api-common`, Part 2 `/conf/api-common`,
+  Part 2 `/conf/create-replace-delete`, and source-level POST/PUT/DELETE
+  routes/e2e CRUD tests. It is a future self-run disposable Part 2
+  Create/Replace/Delete candidate, not current exact-promotion evidence.
+- Remaining blocker:
+  no researched candidate currently provides complete exact prerequisite
+  declarations, `/conf/update`, real PATCH-route evidence, `Allow` method
+  readiness, positive mutation lifecycle proof, cleanup/isolation, and
+  service-description write-operation evidence for all 47 remaining
+  mutation-bound procedures.
+- Lightweight verification:
+  JSON parse PASS for 7 archived JSON files; YAML parse PASS for the Sprint 75
+  contract, Discovery handoff, and Raze report; repository manifest
+  verification PASS for 22 manifest-listed evidence files; Sprint 75 `.log`
+  evidence is unignored.
+- Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`.
 
 Sprint 74 prerequisite declaration field clarity:
 

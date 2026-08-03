@@ -1,0 +1,811 @@
+{
+  "classes": [
+    {
+      "candidateProcedures": 12,
+      "conformanceClass": "1:/conf/create-replace-delete",
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false,
+      "exactPromotionBlockers": [
+        "missing required conformance declarations",
+        "missing inherited prerequisite conformance declarations",
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT POST/PUT/DELETE lifecycle execution",
+        "changed resource GET proof after write",
+        "identity-safe cleanup and primary-state isolation",
+        "cascade, collection propagation, and text/uri-list evidence where applicable"
+      ],
+      "exactPromotionReady": false,
+      "id": "part1CreateReplaceDelete",
+      "missingAdvertisedMethods": [
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/systems"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/systems/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/deployments"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/deployments/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/procedures"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/procedures/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/samplingFeatures"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/samplingFeatures/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/properties"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/properties/040g"
+        }
+      ],
+      "missingConditionConformance": [],
+      "missingPrerequisiteConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+        "http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete"
+      ],
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+      ],
+      "prerequisiteConformancePresent": false,
+      "prerequisiteDeclarationReadinessScope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "readinessProbes": [
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/systems",
+          "status": null,
+          "template": "/systems"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/systems/040g",
+          "status": null,
+          "template": "/systems/{system}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/deployments",
+          "status": null,
+          "template": "/deployments"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/deployments/040g",
+          "status": null,
+          "template": "/deployments/{deployment}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/procedures",
+          "status": null,
+          "template": "/procedures"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/procedures/040g",
+          "status": null,
+          "template": "/procedures/{procedure}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/samplingFeatures",
+          "status": null,
+          "template": "/samplingFeatures"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/samplingFeatures/040g",
+          "status": null,
+          "template": "/samplingFeatures/{samplingFeature}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/properties",
+          "status": null,
+          "template": "/properties"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/properties/040g",
+          "status": null,
+          "template": "/properties/{property}"
+        }
+      ],
+      "readinessScope": "declarations-and-advertised-methods-only",
+      "requiredConformancePresent": false,
+      "requirement": "REQ-ETS-PART1-010"
+    },
+    {
+      "candidateProcedures": 5,
+      "conformanceClass": "1:/conf/update",
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false,
+      "exactPromotionBlockers": [
+        "missing required conformance declarations",
+        "missing inherited prerequisite conformance declarations",
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT PATCH lifecycle execution",
+        "changed field GET proof after PATCH",
+        "identity-safe cleanup and primary-state isolation",
+        "applicability evidence for custom collections, async, and deadline behavior"
+      ],
+      "exactPromotionReady": false,
+      "id": "part1Update",
+      "missingAdvertisedMethods": [
+        {
+          "allowMethods": [],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/systems/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/deployments/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/procedures/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/samplingFeatures/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/properties/040g"
+        }
+      ],
+      "missingConditionConformance": [],
+      "missingPrerequisiteConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+        "http://www.opengis.net/spec/ogcapi-4/1.0/conf/update"
+      ],
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      ],
+      "prerequisiteConformancePresent": false,
+      "prerequisiteDeclarationReadinessScope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "readinessProbes": [
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/systems/040g",
+          "status": null,
+          "template": "/systems/{system}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/deployments/040g",
+          "status": null,
+          "template": "/deployments/{deployment}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/procedures/040g",
+          "status": null,
+          "template": "/procedures/{procedure}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/samplingFeatures/040g",
+          "status": null,
+          "template": "/samplingFeatures/{samplingFeature}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/properties/040g",
+          "status": null,
+          "template": "/properties/{property}"
+        }
+      ],
+      "readinessScope": "declarations-and-advertised-methods-only",
+      "requiredConformancePresent": false,
+      "requirement": "REQ-ETS-PART1-011"
+    },
+    {
+      "candidateProcedures": 16,
+      "conformanceClass": "2:/conf/create-replace-delete",
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false,
+      "exactPromotionBlockers": [
+        "missing required conformance declarations",
+        "missing inherited prerequisite conformance declarations",
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT POST/PUT/DELETE lifecycle execution",
+        "changed resource GET proof after write",
+        "identity-safe cleanup and primary-state isolation",
+        "resource-specific command, feasibility, result/status, and event evidence"
+      ],
+      "exactPromotionReady": false,
+      "id": "part2CreateReplaceDelete",
+      "missingAdvertisedMethods": [
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/systems/040g/datastreams"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/datastreams/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/datastreams/040g/observations"
+        },
+        {
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/observations/{observation}",
+          "reason": "empty resource id"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/systems/040g/controlstreams"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/controlstreams/040g"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/controlstreams/040g/commands"
+        },
+        {
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/commands/{command}",
+          "reason": "empty resource id"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/feasibility"
+        },
+        {
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/feasibility/{feasibility}",
+          "reason": "empty resource id"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "POST"
+          ],
+          "path": "/systemEvents"
+        },
+        {
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/systemEvents/{systemEvent}",
+          "reason": "empty resource id"
+        }
+      ],
+      "missingConditionConformance": [],
+      "missingPrerequisiteConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common"
+      ],
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+      ],
+      "prerequisiteConformancePresent": false,
+      "prerequisiteDeclarationReadinessScope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "readinessProbes": [
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/systems/040g/datastreams",
+          "status": null,
+          "template": "/systems/{system}/datastreams"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/datastreams/040g",
+          "status": null,
+          "template": "/datastreams/{dataStream}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/datastreams/040g/observations",
+          "status": null,
+          "template": "/datastreams/{dataStream}/observations"
+        },
+        {
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/observations/{observation}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/systems/040g/controlstreams",
+          "status": null,
+          "template": "/systems/{system}/controlstreams"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/controlstreams/040g",
+          "status": null,
+          "template": "/controlstreams/{controlStream}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/controlstreams/040g/commands",
+          "status": null,
+          "template": "/controlstreams/{controlStream}/commands"
+        },
+        {
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/commands/{command}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/feasibility",
+          "status": null,
+          "template": "/feasibility"
+        },
+        {
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/feasibility/{feasibility}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/systemEvents",
+          "status": null,
+          "template": "/systemEvents"
+        },
+        {
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/systemEvents/{systemEvent}"
+        }
+      ],
+      "readinessScope": "declarations-and-advertised-methods-only",
+      "requiredConformancePresent": false,
+      "requirement": "REQ-ETS-PART2-007"
+    },
+    {
+      "candidateProcedures": 14,
+      "conformanceClass": "2:/conf/update",
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false,
+      "exactPromotionBlockers": [
+        "missing required conformance declarations",
+        "missing inherited prerequisite conformance declarations",
+        "missing condition conformance declarations",
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT PATCH lifecycle execution",
+        "changed field GET proof after PATCH",
+        "identity-safe cleanup and primary-state isolation",
+        "schema-rejection PATCH dispatch evidence"
+      ],
+      "exactPromotionReady": false,
+      "id": "part2Update",
+      "missingAdvertisedMethods": [
+        {
+          "allowMethods": [],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/datastreams/040g"
+        },
+        {
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/observations/{observation}",
+          "reason": "empty resource id"
+        },
+        {
+          "allowMethods": [],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/controlstreams/040g"
+        },
+        {
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/commands/{command}",
+          "reason": "empty resource id"
+        },
+        {
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/feasibility/{feasibility}",
+          "reason": "empty resource id"
+        },
+        {
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/systemEvents/{systemEvent}",
+          "reason": "empty resource id"
+        }
+      ],
+      "missingConditionConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event"
+      ],
+      "missingPrerequisiteConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common"
+      ],
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      ],
+      "prerequisiteConformancePresent": false,
+      "prerequisiteDeclarationReadinessScope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "readinessProbes": [
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/datastreams/040g",
+          "status": null,
+          "template": "/datastreams/{dataStream}"
+        },
+        {
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/observations/{observation}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [],
+          "contentType": "",
+          "errorType": "URLError",
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/controlstreams/040g",
+          "status": null,
+          "template": "/controlstreams/{controlStream}"
+        },
+        {
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/commands/{command}"
+        },
+        {
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/feasibility/{feasibility}"
+        },
+        {
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/systemEvents/{systemEvent}"
+        }
+      ],
+      "readinessScope": "declarations-and-advertised-methods-only",
+      "requiredConformancePresent": false,
+      "requirement": "REQ-ETS-PART2-008"
+    }
+  ],
+  "classesWithDeclarationAndMethodReadiness": [],
+  "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": [],
+  "classesWithDeclarationMethodAndPrerequisiteReadiness": [],
+  "conformance": {
+    "contentType": "",
+    "declaredCount": 0,
+    "declaredMutationRelevant": [],
+    "status": null
+  },
+  "credentialSupplied": false,
+  "exactPromotionPolicy": "This audit is read-only readiness evidence only; it never promotes mutation candidates to reviewed exact mappings.",
+  "exactPromotionReady": false,
+  "generatedAt": "2026-08-03T04:57:32Z",
+  "iutUrl": "https://csa.demo.52north.org",
+  "prerequisiteDeclarationReadinessPolicy": "Prerequisite-declaration readiness requires inherited conformance declarations plus direct declarations and OPTIONS method advertisement; it is not proof that inherited TestNG prerequisite groups passed.",
+  "prerequisiteReadinessPolicy": "Prerequisite-declaration readiness requires inherited conformance declarations plus direct declarations and OPTIONS method advertisement; it is not proof that inherited TestNG prerequisite groups passed.",
+  "readinessScope": "Read-only declaration and OPTIONS method advertisement audit; positive lifecycle proof is still required before exact promotion.",
+  "remainingCandidateProcedures": 47,
+  "requestMethodCounts": {
+    "GET": 1,
+    "OPTIONS": 25
+  },
+  "resourceIds": {
+    "command": "",
+    "controlStream": "040g",
+    "dataStream": "040g",
+    "deployment": "040g",
+    "feasibility": "",
+    "observation": "",
+    "procedure": "040g",
+    "property": "040g",
+    "samplingFeature": "040g",
+    "system": "040g",
+    "systemEvent": ""
+  },
+  "schemaVersion": 1,
+  "unsafeMethodsIssued": []
+}

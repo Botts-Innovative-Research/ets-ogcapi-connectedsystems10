@@ -16,10 +16,11 @@ Publish the ETS to OSSRH/Maven Central, prepare an outreach package for OpenSens
 | S-ETS-05-01 | (placeholder) Define approved manual OSSRH credentials + GPG signing procedure | Backlog | REQ-ETS-CITE-001 |
 | S-ETS-05-02 | (placeholder) Maven Central publish at beta milestone | Backlog | REQ-ETS-CITE-001, NFR-ETS-14 |
 | S-ETS-05-03 | (placeholder) Outreach package for OpenSensorHub | Backlog | REQ-ETS-CITE-002 |
-| S-ETS-05-04 | (placeholder) Formal beta outreach package for connected-systems-go | Backlog; pre-beta technical gap package tracked by S-ETS-77-01 | REQ-ETS-CITE-002, REQ-ETS-CLEANUP-028 |
+| S-ETS-05-04 | (placeholder) Formal beta outreach package for connected-systems-go | Backlog; pre-beta technical gap package tracked by S-ETS-77-01 and filing handoff tracked by S-ETS-80-01 | REQ-ETS-CITE-002, REQ-ETS-CLEANUP-028, REQ-ETS-CLEANUP-031 |
 | S-ETS-05-05 | (placeholder) GeoRobotix beta-test record formalization | Backlog | REQ-ETS-CITE-002 |
 | S-ETS-05-06 | (placeholder) File CITE SC submission ticket | Backlog | REQ-ETS-CITE-003 |
 | S-ETS-79-01 | Pre-beta release-readiness and external-blocker package | Complete; packaging state only, not beta submission | REQ-ETS-CLEANUP-030, REQ-ETS-CITE-001..003 |
+| S-ETS-80-01 | connected-systems-go upstream filing handoff | Complete; Raze approved; issue-ready but not filed without authenticated GitHub issue tooling | REQ-ETS-CLEANUP-031, REQ-ETS-CITE-002 |
 
 ## Acceptance Criteria
 - [ ] Artifact `org.opengis.cite:ets-ogcapi-connectedsystems10:<version>` available on Maven Central

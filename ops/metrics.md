@@ -12,6 +12,10 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 454 | 2026-08-03T14:32:43Z | 2026-08-03T14:37:02Z | 4m19s | Agent-initiated final Sprint 80 Raze seal recheck only for the post-recheck transition from focused-recheck-pending to complete/Raze-approved, inspecting CP-040, S-ETS-80-01, Sprint 80 contract/spec/traceability/CITE/ops/current evidence without Docker, Maven, TeamEngine, public writes, authenticated GitHub filing, or IUT mutation. Wrote `.harness/evaluations/sprint-ets-80-adversarial-final-recheck.yaml` with verdict `APPROVE 0.96`; final wording does not overclaim upstream filing, CITE filing, Maven publication, IUT mutation, TeamEngine/Docker/Maven execution, or exact promotion; `required_fixes=[]`. |
+| 453 | 2026-08-03T14:10:06Z | 2026-08-03T14:39:41Z | 29m35s | User instructed "Do the next thing." Completed Sprint 80 connected-systems-go upstream filing handoff: added CP-040, S-ETS-80-01, `REQ-ETS-CLEANUP-031`, Sprint 80 contract, maintainer-ready GitHub issue body/API payload, refreshed upstream repository and duplicate-search evidence, recorded authenticated filing unavailable (`gh` absent, `GH_TOKEN`/`GITHUB_TOKEN` unset), and kept the upstream issue honestly not filed. Lightweight JSON/YAML/artifact/upstream/no-filing/manifest/diff verification passed; initial Raze `GAPS_FOUND 0.87` for status reconciliation was fixed; focused Raze returned `APPROVE 0.95`, and final seal returned `APPROVE 0.96`, both with `required_fixes=[]`. No IUT mutation, Docker, Maven, TeamEngine, CITE filing, publication, or exact promotion occurred. |
+| 452 | 2026-08-03T14:22:20Z | 2026-08-03T14:26:17Z | 3m57s | User requested a focused Sprint 80 Raze recheck only for `RAZE-ETS80-RECONCILE-001`, inspecting CP-040, S-ETS-80-01, Sprint 80 contract/spec/traceability/CITE/ops/evidence/outreach artifacts without Docker, Maven, TeamEngine, public writes, authenticated filing, or IUT mutation. Wrote `.harness/evaluations/sprint-ets-80-adversarial-recheck.yaml` with verdict `APPROVE 0.95`; status wording, filing honesty, secret/token-value hygiene, and lightweight-only checks passed; `required_fixes=[]`. |
+| 451 | 2026-08-03T14:15:27Z | 2026-08-03T14:19:34Z | 4m07s | User requested acting as Red Team / Raze for Sprint 80 connected-systems-go upstream filing handoff, reviewing only scoped documentation/evidence changes and writing `.harness/evaluations/sprint-ets-80-adversarial.yaml` without Docker, Maven, TeamEngine, public write probes, authenticated filing, or IUT mutation. Verdict `GAPS_FOUND 0.87` for unreconciled CP/story/contract/OpenSpec status; blocker fidelity, upstream evidence honesty, no-filing overclaim, token hygiene, and manifest coverage including `verification-summary.json` passed. |
 | 450 | 2026-08-03T13:37:07Z | 2026-08-03T13:56:36Z | 19m29s | User instructed "Do plan 1." Completed Sprint 79 release-readiness external-blocker package: added CP-039, S-ETS-79-01, `REQ-ETS-CLEANUP-030`, Sprint 79 contract, `ops/release/` Markdown/JSON package, and evidence under `ops/test-results/sprint-ets-79-release-readiness-external-blocker-2026-08-03/`; recorded `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`, preserved all mutation-bound mappings as candidate, kept CITE/Maven Central/three-implementation gates incomplete, ran lightweight verification, fixed Raze manifest finding, and received focused Raze `APPROVE 0.96` with `required_fixes=[]`. |
 | 449 | 2026-08-03T13:51:02Z | 2026-08-03T13:52:34Z | 1m32s | User requested a focused Sprint 79 Raze recheck only for `RAZE-S79-001`, verifying regenerated manifest/check/verification/parse artifacts without Docker, Maven, TeamEngine, public writes, or IUT mutation. Confirmed `verification-summary.json` is now manifest-covered, checksum validation passes, and wrote `.harness/evaluations/sprint-ets-79-adversarial-recheck.yaml` with verdict `APPROVE 0.96` and `required_fixes=[]`. |
 | 448 | 2026-08-03T13:45:33Z | 2026-08-03T13:49:06Z | 3m33s | User requested acting as Raze for Sprint 79 release-readiness external-blocker package, reviewing only scoped documentation/evidence changes and writing `.harness/evaluations/sprint-ets-79-adversarial.yaml` without Docker, Maven, TeamEngine, public writes, or IUT mutation. Verdict `GAPS_FOUND 0.86` for `RAZE-S79-001`, an incomplete evidence manifest that omitted `verification-summary.json`. |
@@ -585,9 +589,9 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 79)
+### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 80)
 
-Extracted after Sprint 79 release-readiness external-blocker package with
+Extracted after Sprint 80 connected-systems-go upstream filing handoff with
 `python3 scripts/session-metrics.py`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
@@ -595,13 +599,13 @@ the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 20,326,672 | $304.90 |
-| Output | 1,667,076 | $125.03 |
+| Input | 20,695,797 | $310.44 |
+| Output | 1,717,385 | $128.80 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 477,631,232 | $716.45 |
-| **TOTAL** | **499,624,980** | **$1146.38** |
+| Cache Read | 486,020,224 | $729.03 |
+| **TOTAL** | **508,433,406** | **$1168.27** |
 
-API calls (usage records): 3482
+API calls (usage records): 3547
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

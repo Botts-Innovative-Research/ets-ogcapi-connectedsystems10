@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "sprint-ets-80-upstream-status-v1",
+  "generatedAt": "2026-08-03T14:10:06Z",
+  "targetRepository": "https://github.com/SomethingCreativeStudios/connected-systems-go",
+  "auditedCommit": "7643bb38bc9fa95a50332ed2aa5b1007b56b5028",
+  "upstream": {
+    "lsRemote": "7643bb38bc9fa95a50332ed2aa5b1007b56b5028\tHEAD\n7643bb38bc9fa95a50332ed2aa5b1007b56b5028\trefs/heads/main\n",
+    "fullName": "SomethingCreativeStudios/connected-systems-go",
+    "archived": false,
+    "disabled": false,
+    "hasIssues": true,
+    "defaultBranch": "main",
+    "openIssuesCount": 0,
+    "pushedAt": "2026-07-08T02:52:34Z",
+    "updatedAt": "2026-07-08T02:44:51Z"
+  },
+  "duplicateSearch": {
+    "query": "repo:SomethingCreativeStudios/connected-systems-go Connected Systems Part 1 Core Allow PATCH",
+    "totalCount": 1,
+    "items": [
+      {
+        "number": 1,
+        "title": "[P2] GET /api returns 88-byte stub missing required 'paths' field; violates OAS 3.0.3 §4.7.1.1 and OGC 19-072 /req/landing-page/api-definition-success",
+        "state": "closed",
+        "htmlUrl": "https://github.com/SomethingCreativeStudios/connected-systems-go/issues/1"
+      }
+    ]
+  },
+  "localFilingCapability": "gh_cli=absent\nGH_TOKEN=unset\nGITHUB_TOKEN=unset\nissue_filing_attempted=false\nissue_filing_status=blocked_no_authenticated_github_issue_tooling\n",
+  "canFileFromThisEnvironment": false,
+  "reason": "gh CLI absent and GH_TOKEN/GITHUB_TOKEN unset"
+}

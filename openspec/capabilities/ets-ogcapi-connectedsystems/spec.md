@@ -3516,6 +3516,48 @@ external IUT dependencies
 submission, or three passing implementations unless those gates are actually
 complete.
 
+#### REQ-ETS-CLEANUP-031: connected-systems-go Upstream Filing Handoff (Sprint 80)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_RAZE_APPROVED
+- **Description**: The project SHALL maintain a maintainer-ready upstream
+  filing handoff for `SomethingCreativeStudios/connected-systems-go` that
+  preserves Sprint 76/77 blocker fidelity, records current upstream repository
+  status, records duplicate-search evidence, provides an authenticated GitHub
+  REST payload, and states whether an upstream issue was actually filed. If
+  this environment lacks authenticated GitHub issue-creation capability, the
+  handoff SHALL record that boundary without printing secrets and SHALL NOT
+  claim filing.
+- **Rationale**: `connected-systems-go` has the strongest currently observed
+  route-level mutable lifecycle evidence, but its declaration, OPTIONS, and
+  Update/PATCH blockers prevent exact ETS promotion. A targeted upstream issue
+  is the most practical next step after release-readiness packaging.
+- **Implementation evidence**: Sprint 80 created issue-ready authenticated
+  filing handoff artifacts under `ops/outreach/` and evidence under
+  `ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/`.
+  Evidence records upstream issues enabled, current `HEAD`/`main` matching
+  audited commit `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`, one closed
+  non-duplicate search hit, and no local GitHub issue-filing capability
+  (`gh` absent, `GH_TOKEN`/`GITHUB_TOKEN` unset). No upstream issue URL is
+  claimed. Initial Raze returned `GAPS_FOUND 0.87` for status reconciliation
+  only; focused recheck returned `APPROVE 0.95` with `required_fixes=[]`;
+  final seal recheck returned `APPROVE 0.96` with `required_fixes=[]`.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54, FR-ETS-71;
+  REQ-ETS-CLEANUP-028, REQ-ETS-CLEANUP-030, REQ-ETS-CITE-002.
+
+#### SCENARIO-ETS-CLEANUP-CSGO-UPSTREAM-FILING-HANDOFF-001 (CRITICAL)
+**GIVEN** the prepared `connected-systems-go` readiness gap package and current
+upstream repository metadata
+**WHEN** the project prepares or attempts targeted upstream filing
+**THEN** the handoff SHALL include a GitHub issue title, Markdown body, and
+JSON API payload
+**AND** it SHALL preserve blockers for Part 1 Core, Part 1
+Create/Replace/Delete declarations, OPTIONS `Allow`, OGC API Features Part 4
+Create/Replace/Delete, and Update/PATCH readiness
+**AND** it SHALL archive current upstream `HEAD`/`main`, issue-enabled status,
+duplicate-search result, and local filing capability
+**AND** it SHALL NOT claim an issue was filed unless an upstream issue URL is
+actually recorded.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)

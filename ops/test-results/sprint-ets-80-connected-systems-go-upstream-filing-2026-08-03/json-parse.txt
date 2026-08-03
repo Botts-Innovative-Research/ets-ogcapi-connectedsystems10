@@ -1,0 +1,4 @@
+PASS: ops/outreach/connected-systems-go-github-issue-payload.json
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/github-repo.json
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/github-duplicate-search.json
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/upstream-status-summary.json

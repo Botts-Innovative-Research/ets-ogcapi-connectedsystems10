@@ -1,8 +1,38 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T13:37Z
+Last updated: 2026-08-03T14:30Z
 
 ## Current Sprint Evidence
+
+Sprint 80 connected-systems-go upstream filing handoff:
+
+- Trigger: user instructed "Do the next thing" after Sprint 79.
+- Scope: documentation/outreach handoff only. No Java/TestNG behavior change,
+  no IUT mutation, no Docker/Maven/TeamEngine run, no CITE filing, and no exact
+  promotion.
+- Handoff artifacts:
+  `ops/outreach/connected-systems-go-github-issue-filing-handoff.md`,
+  `ops/outreach/connected-systems-go-github-issue-body.md`, and
+  `ops/outreach/connected-systems-go-github-issue-payload.json`.
+- Evidence directory:
+  `ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/`.
+- Upstream evidence:
+  `upstream-status-summary.json` records issues enabled, public/not archived
+  repository status, current `HEAD`/`main`
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`, and no open duplicate found by
+  the Sprint 80 query.
+- Auth boundary:
+  `filing-capability.txt` records `gh_cli=absent`, `GH_TOKEN=unset`,
+  `GITHUB_TOKEN=unset`, and `issue_filing_status=blocked_no_authenticated_github_issue_tooling`.
+- Lightweight verification:
+  JSON parse PASS, YAML parse PASS, artifact presence PASS, upstream evidence
+  check PASS, no-filing overclaim check PASS, evidence manifest PASS, and
+  `git diff --check` PASS.
+- Raze:
+  initial review returned `GAPS_FOUND 0.87` for unreconciled planned/pending
+  status text only. Focused Raze recheck returned `APPROVE 0.95` with
+  `required_fixes=[]`; final seal recheck returned `APPROVE 0.96` with
+  `required_fixes=[]`.
 
 Sprint 79 release-readiness external-blocker package:
 

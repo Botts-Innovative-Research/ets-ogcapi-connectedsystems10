@@ -1,0 +1,78 @@
+verdict: APPROVE
+confidence: 0.95
+reviewer: Raze
+review_type: focused_adversarial_recheck
+timestamp_utc: "2026-08-03T14:25:21Z"
+scope_note: >
+  Focused recheck only for RAZE-ETS80-RECONCILE-001 from
+  .harness/evaluations/sprint-ets-80-adversarial.yaml. No Docker, Maven,
+  TeamEngine, public write probes, authenticated GitHub filing, or IUT mutation
+  was run.
+reviewed_prior_fix_ids:
+  - RAZE-ETS80-RECONCILE-001
+reviewed_scope:
+  - AGENTS.md
+  - _bmad/agents/adversarial-reviewer.md
+  - .harness/evaluations/sprint-ets-80-adversarial.yaml
+  - openspec/change-proposals/CP-040-connected-systems-go-upstream-filing-handoff.md
+  - epics/stories/s-ets-80-01-connected-systems-go-upstream-filing-handoff.md
+  - .harness/contracts/sprint-ets-80.yaml
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md#REQ-ETS-CLEANUP-031
+  - _bmad/traceability.md
+  - epics/epic-ets-05-cite-submission.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/test-results.md
+  - ops/known-issues.md
+  - ops/outreach/connected-systems-go-github-issue-filing-handoff.md
+  - ops/outreach/connected-systems-go-github-issue-body.md
+  - ops/outreach/connected-systems-go-github-issue-payload.json
+  - ops/outreach/connected-systems-go-readiness-gap-request.md
+  - ops/outreach/connected-systems-go-readiness-gap-request.json
+  - ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/
+allowed_checks_performed:
+  - command: "python3 JSON parse over Sprint 80 evidence and outreach JSON artifacts"
+    result: "PASS: JSON artifacts parsed."
+  - command: "python3 PyYAML parse of Sprint 80 contract and initial Raze report"
+    result: "PASS: YAML artifacts parsed."
+  - command: "sha256sum -c repo-evidence-manifest.sha256 from the Sprint 80 evidence directory"
+    result: "PASS: all manifest-listed files verified, including verification-summary.json."
+  - command: "git diff --check"
+    result: "PASS: no whitespace errors."
+  - command: "scoped rg status-wording scan"
+    result: "PASS: CP-040, S-ETS-80-01, contract, REQ-ETS-CLEANUP-031, traceability, CITE epic, and ops current Sprint 80 sections no longer describe Sprint 80 as PROPOSED, PLANNED, or pending implementation."
+  - command: "scoped rg filing-overclaim scan"
+    result: "PASS: Sprint 80 artifacts record ready/not-filed status and no new upstream issue URL claim; archived issue URL evidence is limited to the closed pre-existing duplicate-search result."
+  - command: "scoped rg secret/token-value scan"
+    result: "PASS: Sprint 80 artifacts expose only unset environment-variable names and variable placeholders, not credential values."
+findings: []
+evidence:
+  - fix_id: RAZE-ETS80-RECONCILE-001
+    status: CLOSED
+    notes:
+      - "CP-040 now has status IMPLEMENTED - FOCUSED RAZE RECHECK PENDING, all acceptance items checked, and a result that records issue-ready authenticated filing handoff status."
+      - "S-ETS-80-01 now has status IMPLEMENTED - FOCUSED RAZE RECHECK PENDING, all acceptance criteria checked, and implementation notes that record no upstream filing because authenticated GitHub issue creation is unavailable."
+      - ".harness/contracts/sprint-ets-80.yaml now uses status implemented_pending_focused_raze_recheck, populated verification_results, and explicit not-run Docker/Maven/TeamEngine/IUT-mutation results."
+      - "REQ-ETS-CLEANUP-031 now has status IMPLEMENTED_PENDING_FOCUSED_RAZE_RECHECK and implementation evidence for the issue-ready handoff, unauthenticated filing boundary, initial Raze finding, and pending focused recheck."
+      - "_bmad/traceability.md row for REQ-ETS-CLEANUP-031 now points to S-ETS-80-01 with IMPLEMENTED_PENDING_FOCUSED_RAZE_RECHECK status instead of in-progress/planned wording."
+      - "epics/epic-ets-05-cite-submission.md now marks S-ETS-80-01 implemented, focused recheck pending, issue-ready, and not filed without authenticated GitHub issue tooling."
+      - "ops/status.md, ops/changelog.md, ops/test-results.md, and ops/known-issues.md now consistently say Sprint 80 is an issue-ready handoff, not an upstream filing, CITE filing, Maven publication, IUT mutation, or exact-promotion claim."
+  - check_id: sprint80_filing_honesty
+    status: PASS
+    notes:
+      - "ops/outreach/connected-systems-go-github-issue-filing-handoff.md says ready for authenticated filing and not filed from this environment."
+      - "filing-capability.txt records issue_filing_attempted=false and blocked_no_authenticated_github_issue_tooling."
+      - "upstream-status-summary.json records canFileFromThisEnvironment=false."
+      - "The only GitHub issue URL in Sprint 80 evidence is the closed pre-existing duplicate-search result, not a claimed new filing."
+  - check_id: sprint80_secret_and_token_hygiene
+    status: PASS
+    notes:
+      - "Filing capability evidence records GH_TOKEN and GITHUB_TOKEN as unset only."
+      - "The REST example uses Authorization: Bearer $GH_TOKEN as a variable placeholder and does not print a credential value."
+      - "Scoped secret/token-value scan found no Sprint 80 credential value output."
+  - check_id: sprint80_lightweight_only
+    status: PASS
+    notes:
+      - "verification-summary.json records Docker Maven, TeamEngine, and IUT mutation as NOT_RUN for the documentation/outreach handoff scope."
+      - "This recheck ran only file inspection, JSON/YAML parsing, sha256 manifest verification, git diff --check, and scoped rg scans."
+required_fixes: []

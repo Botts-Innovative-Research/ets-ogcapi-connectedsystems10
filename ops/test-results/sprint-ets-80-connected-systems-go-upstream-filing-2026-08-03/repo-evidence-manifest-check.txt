@@ -1,0 +1,13 @@
+./artifact-presence.txt: OK
+./filing-capability.txt: OK
+./git-diff-check.exitcode: OK
+./git-diff-check.txt: OK
+./github-duplicate-search.json: OK
+./github-repo.json: OK
+./json-parse.txt: OK
+./no-filing-overclaim-check.txt: OK
+./upstream-evidence-check.txt: OK
+./upstream-ls-remote.txt: OK
+./upstream-status-summary.json: OK
+./verification-summary.json: OK
+./yaml-parse.txt: OK

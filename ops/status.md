@@ -1,6 +1,38 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T13:37Z
+Last updated: 2026-08-03T14:30Z
+
+## Sprint 80 Implemented - connected-systems-go Upstream Filing Handoff
+
+- User instruction: "Do the next thing." Interpreted from Sprint 79 next gates
+  as targeted upstream outreach using the prepared `connected-systems-go`
+  package.
+- Scope:
+  documentation/outreach handoff only. No Java/TestNG behavior change, no IUT
+  mutation, no Docker/Maven/TeamEngine run, no CITE ticket filing, and no
+  mutation-bound exact promotion.
+- Upstream status:
+  `SomethingCreativeStudios/connected-systems-go` issues are enabled,
+  repository is public/not archived, and current `HEAD`/`main` still matches
+  audited commit `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`.
+- Filing capability:
+  this shell has no `gh` CLI and no `GH_TOKEN`/`GITHUB_TOKEN`; therefore the
+  upstream issue is ready but not filed from this environment.
+- Handoff artifacts:
+  `ops/outreach/connected-systems-go-github-issue-filing-handoff.md`,
+  `ops/outreach/connected-systems-go-github-issue-body.md`, and
+  `ops/outreach/connected-systems-go-github-issue-payload.json`.
+- Evidence directory:
+  `ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/`.
+- Verification:
+  JSON parse PASS, YAML parse PASS, artifact presence PASS, upstream evidence
+  check PASS, no-filing overclaim check PASS, evidence manifest PASS, and
+  `git diff --check` PASS.
+- Raze:
+  initial review returned `GAPS_FOUND 0.87` for unreconciled planned/pending
+  status text only. Focused Raze recheck returned `APPROVE 0.95` with
+  `required_fixes=[]`; final seal recheck returned `APPROVE 0.96` with
+  `required_fixes=[]`.
 
 ## Sprint 79 Complete - Release Readiness External Blocker Package
 

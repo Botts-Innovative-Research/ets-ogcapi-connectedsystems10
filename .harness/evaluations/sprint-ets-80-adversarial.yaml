@@ -1,0 +1,107 @@
+verdict: GAPS_FOUND
+confidence: 0.87
+reviewed_scope:
+  - AGENTS.md
+  - _bmad/agents/adversarial-reviewer.md
+  - openspec/change-proposals/CP-040-connected-systems-go-upstream-filing-handoff.md
+  - epics/stories/s-ets-80-01-connected-systems-go-upstream-filing-handoff.md
+  - .harness/contracts/sprint-ets-80.yaml
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - _bmad/traceability.md
+  - epics/epic-ets-05-cite-submission.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/known-issues.md
+  - ops/test-results.md
+  - ops/outreach/connected-systems-go-github-issue-filing-handoff.md
+  - ops/outreach/connected-systems-go-github-issue-body.md
+  - ops/outreach/connected-systems-go-github-issue-payload.json
+  - ops/outreach/connected-systems-go-readiness-gap-request.md
+  - ops/outreach/connected-systems-go-readiness-gap-request.json
+  - ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/
+  - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/source-provenance.json
+  - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/lifecycle-summary.json
+  - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-summary.json
+  - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/teamengine-smoke-summary.json
+findings:
+  - id: RAZE-ETS80-RECONCILE-001
+    severity: medium
+    title: Sprint 80 completion state is not reconciled across CP, story, contract, and OpenSpec
+    evidence:
+      - "openspec/change-proposals/CP-040-connected-systems-go-upstream-filing-handoff.md:5 still says Status PROPOSED."
+      - "openspec/change-proposals/CP-040-connected-systems-go-upstream-filing-handoff.md:42-50 leaves every acceptance checkbox unchecked."
+      - "openspec/change-proposals/CP-040-connected-systems-go-upstream-filing-handoff.md:55 still says Pending Sprint 80 implementation."
+      - "epics/stories/s-ets-80-01-connected-systems-go-upstream-filing-handoff.md:5 still says Status PLANNED."
+      - "epics/stories/s-ets-80-01-connected-systems-go-upstream-filing-handoff.md:20-26 leaves every acceptance criterion unchecked, and line 37 still says Pending Sprint 80 implementation."
+      - ".harness/contracts/sprint-ets-80.yaml:4 still says status: planned, and verification_results is still empty."
+      - "openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:3534 says Implementation evidence: Pending Sprint 80."
+      - "_bmad/traceability.md:99 and epics/epic-ets-05-cite-submission.md:25 keep Sprint 80 in progress, while ops/outreach/connected-systems-go-github-issue-filing-handoff.md:5 says the upstream issue package is ready for authenticated filing."
+      - "ops/status.md:24, ops/changelog.md:25, and ops/test-results.md:27 say Raze/final verification are pending, which was accurate before this report but must be reconciled before Sprint 80 is reported complete."
+    impact: The outreach handoff evidence is internally credible, but the authoritative spec/story/contract layer still records Sprint 80 as proposed or planned. Reporting the sprint as complete in this state would violate the Sprint 80 ops_reconciliation criterion and leave future maintainers unsure whether the handoff is approved, blocked, or merely drafted.
+    required_fix: Update CP-040, S-ETS-80-01, the Sprint 80 contract, OpenSpec implementation evidence, traceability, CITE epic, status, changelog, test-results, and known-issues to reflect this Raze `GAPS_FOUND` result or a later focused recheck before claiming Sprint 80 complete.
+required_fixes:
+  - id: RAZE-ETS80-RECONCILE-001
+    action: Reconcile Sprint 80 status, acceptance, verification_results, implementation evidence, and ops notes to this Raze result before reporting completion; if fixed, run a focused recheck.
+evidence_checked:
+  blocker_fidelity:
+    sprint_76_commit:
+      evidence: ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/source-provenance.json
+      verified: "sourceCommit=7643bb38bc9fa95a50332ed2aa5b1007b56b5028, mutationPolicy=local_disposable_iut_only"
+    lifecycle:
+      evidence: ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/lifecycle-summary.json
+      verified: "status=PASS, passedSteps=29, method counts GET=15 POST=5 PUT=4 DELETE=5, exactPromotion=false, cleanup expectation recorded"
+    readiness:
+      evidence: ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-summary.json
+      verified: "remainingCandidateProcedures=47, unsafeMethodsIssued=[], exactPromotionReady=false, zero declaration/method-ready classes, zero prerequisite-declaration-ready classes"
+    teamengine:
+      evidence: ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/teamengine-smoke-summary.json
+      verified: "status=NON_GREEN_HONEST, TestNG=275 total / 15 passed / 1 failed / 259 skipped, failure=conformancePageDeclaresCsCore, exactPromotion=false"
+    sprint_77_package:
+      evidence:
+        - ops/outreach/connected-systems-go-readiness-gap-request.md
+        - ops/outreach/connected-systems-go-readiness-gap-request.json
+      verified: "Sprint 80 issue body preserves the blocker classes for missing Part 1 Core, Part 1 CRD declarations, OPTIONS Allow write-method advertisement, inherited Features Part 4 CRD, Update/PATCH declarations, Part 2 feasibility, and exact-promotion=false."
+  upstream_evidence:
+    repository:
+      evidence: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/github-repo.json
+      verified: "full_name=SomethingCreativeStudios/connected-systems-go, private=false, archived=false, disabled=false, has_issues=true, open_issues_count=0, default_branch=main"
+    head:
+      evidence: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/upstream-ls-remote.txt
+      verified: "HEAD and refs/heads/main both equal audited commit 7643bb38bc9fa95a50332ed2aa5b1007b56b5028"
+    duplicate_search:
+      evidence: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/github-duplicate-search.json
+      verified: "total_count=1, only result is closed issue #1 for an API-definition topic; no open duplicate found by the archived Sprint 80 query"
+    filing_capability:
+      evidence:
+        - ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/filing-capability.txt
+        - ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/upstream-status-summary.json
+      verified: "gh_cli=absent, GH_TOKEN=unset, GITHUB_TOKEN=unset, issue_filing_attempted=false, canFileFromThisEnvironment=false"
+  filing_artifacts:
+    markdown_handoff: ops/outreach/connected-systems-go-github-issue-filing-handoff.md
+    issue_body: ops/outreach/connected-systems-go-github-issue-body.md
+    rest_payload: ops/outreach/connected-systems-go-github-issue-payload.json
+    verified: "Ready for authenticated filing, not filed from this environment; no upstream issue URL is claimed for the new request."
+  manifest:
+    evidence:
+      - ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/repo-evidence-manifest.sha256
+      - ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/repo-evidence-manifest-check.txt
+      - ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/verification-summary.json
+    verified: "sha256sum -c passed for all listed entries; verification-summary.json is included in the manifest and sets manifestIncludesVerificationSummary=true."
+  overclaim_and_secret_checks:
+    no_filing_overclaim: true
+    no_duplicate_filing_overclaim: true
+    no_cite_filing_overclaim: true
+    no_beta_or_maven_publication_overclaim: true
+    no_exact_promotion_overclaim: true
+    no_iut_mutation_claim: true
+    no_sprint_80_added_line_secret_pattern_matches: true
+verification_notes:
+  - Read AGENTS.md and _bmad/agents/adversarial-reviewer.md before reviewing scoped artifacts.
+  - Did not run Docker, Maven, TeamEngine, public write probes, authenticated GitHub filing, or IUT mutation.
+  - Parsed Sprint 80 JSON artifacts successfully, including github-repo.json, github-duplicate-search.json, upstream-status-summary.json, verification-summary.json, and connected-systems-go-github-issue-payload.json.
+  - Parsed .harness/contracts/sprint-ets-80.yaml successfully with PyYAML.
+  - Ran sha256sum -c against the Sprint 80 repo evidence manifest; all listed entries validate, including verification-summary.json.
+  - Ran git diff --check; it produced no whitespace errors.
+  - Ran added-line secret-pattern scan for Sprint 80 scoped changes; no matches were found. A broader scoped-file scan finds only pre-existing historical dummy bearer examples outside the Sprint 80 additions.
+  - The archived filing capability evidence records token presence as unset values only and does not print a token.
+  - The only required fix is reconciliation state; blocker fidelity, upstream evidence honesty, no-filing overclaim, token hygiene, and manifest coverage including verification-summary.json passed the review.

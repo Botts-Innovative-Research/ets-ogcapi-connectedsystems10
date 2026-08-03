@@ -1,0 +1,5 @@
+gh_cli=absent
+GH_TOKEN=unset
+GITHUB_TOKEN=unset
+issue_filing_attempted=false
+issue_filing_status=blocked_no_authenticated_github_issue_tooling

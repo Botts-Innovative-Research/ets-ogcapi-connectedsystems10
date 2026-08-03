@@ -1,0 +1,53 @@
+sprint: ets-80
+story: S-ETS-80-01
+title: connected-systems-go upstream filing handoff
+status: complete_raze_approved
+trigger: User instructed "Do the next thing" after Sprint 79 release-readiness packaging.
+scope:
+  requirement: REQ-ETS-CLEANUP-031
+  change_type: documentation_and_outreach_handoff
+  exact_promotion: false
+  mutation_policy: no_iut_mutation
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-CSGO-UPSTREAM-FILING-HANDOFF-001
+      expect: The package is ready for authenticated GitHub issue creation while honestly recording whether filing occurred.
+    - id: no_filing_overclaim
+      expect: Repository docs do not claim an upstream issue URL unless one exists.
+    - id: blocker_fidelity
+      expect: The issue body preserves Sprint 76/77 blockers without expanding or softening them.
+  normal:
+    - id: upstream_status
+      expect: Evidence records current upstream HEAD, issue-enabled status, and duplicate-search result.
+    - id: auth_boundary
+      expect: Evidence records GitHub issue-filing capability without printing secrets.
+    - id: ops_reconciliation
+      expect: CP, story, contract, OpenSpec, traceability, CITE epic, status, changelog, test-results, and known issues agree.
+required_verification:
+  - json_parse
+  - yaml_parse
+  - markdown_artifact_presence
+  - upstream_evidence_check
+  - no_filing_overclaim_check
+  - git_diff_check
+  - raze_adversarial_review
+verification_results:
+  json_parse: pass
+  yaml_parse: pass
+  markdown_artifact_presence: pass
+  upstream_evidence_check: pass
+  no_filing_overclaim_check: pass
+  git_diff_check: pass
+  evidence_manifest: pass
+  initial_raze_adversarial_review: gaps_found_0_87
+  initial_raze_required_fix: RAZE-ETS80-RECONCILE-001
+  focused_raze_recheck: approve_0_95_required_fixes_empty
+  final_raze_seal_recheck: approve_0_96_required_fixes_empty
+  docker_maven: not_run_documentation_outreach_handoff_only
+  teamengine: not_run_documentation_outreach_handoff_only
+  iut_mutation: not_run_no_iut_mutation
+non_goals:
+  - Do not mutate any IUT.
+  - Do not run Docker, Maven, or TeamEngine.
+  - Do not file CITE or publication artifacts.
+  - Do not promote mutation-bound candidates.

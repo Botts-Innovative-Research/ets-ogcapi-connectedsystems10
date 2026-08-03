@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "sprint-ets-80-verification-summary-v1",
+  "generatedAt": "2026-08-03T14:25:21Z",
+  "jsonParse": true,
+  "yamlParse": true,
+  "artifactPresence": true,
+  "upstreamEvidenceCheck": true,
+  "noFilingOverclaimCheck": true,
+  "gitDiffCheck": true,
+  "manifestCheck": true,
+  "manifestIncludesVerificationSummary": true,
+  "manifestExcludes": [
+    "repo-evidence-manifest.sha256",
+    "repo-evidence-manifest-check.txt"
+  ],
+  "razeInitial": {
+    "verdict": "GAPS_FOUND",
+    "confidence": 0.87,
+    "requiredFixes": [
+      "RAZE-ETS80-RECONCILE-001"
+    ]
+  },
+  "razeRecheck": {
+    "verdict": "APPROVE",
+    "confidence": 0.95,
+    "requiredFixes": []
+  },
+  "razeFinalSeal": {
+    "verdict": "APPROVE",
+    "confidence": 0.96,
+    "requiredFixes": []
+  },
+  "dockerMaven": "NOT_RUN: documentation/outreach handoff only",
+  "teamEngine": "NOT_RUN: documentation/outreach handoff only",
+  "iutMutation": "NOT_RUN: no IUT mutation"
+}

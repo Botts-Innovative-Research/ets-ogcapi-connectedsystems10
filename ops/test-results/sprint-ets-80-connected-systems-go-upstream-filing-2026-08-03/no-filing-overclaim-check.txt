@@ -1,0 +1,1 @@
+PASS: ready/not-filed/auth-boundary text present; no new upstream issue URL appears outside archived duplicate-search evidence

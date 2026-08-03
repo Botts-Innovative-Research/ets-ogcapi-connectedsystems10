@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T13:37Z
+Last updated: 2026-08-03T14:30Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -20,6 +20,11 @@ Last updated: 2026-08-03T13:37Z
   The release package under `ops/release/` is a reviewer handoff, not a CITE
   submission, Maven Central publication, beta claim, or three-implementation
   pass record.
+- Sprint 80 prepares the `connected-systems-go` upstream GitHub issue handoff
+  but does not file it because this environment lacks authenticated GitHub
+  issue tooling (`gh` absent, `GH_TOKEN`/`GITHUB_TOKEN` unset). The package is
+  ready under `ops/outreach/`, and no upstream issue URL should be claimed
+  until authenticated filing succeeds.
 - Sprint 74 readiness audit confirms all 47 remaining mutation-bound released
   ATS procedures remain candidate. Direct primary local OSH evidence records
   `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`; populated disposable OSH

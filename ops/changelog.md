@@ -2,6 +2,34 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 80 connected-systems-go upstream filing handoff
+
+**Triggered by user instruction**: "Do the next thing" after Sprint 79.
+
+- Added CP-040, S-ETS-80-01, `REQ-ETS-CLEANUP-031`,
+  `SCENARIO-ETS-CLEANUP-CSGO-UPSTREAM-FILING-HANDOFF-001`, and the Sprint 80
+  contract.
+- Refreshed upstream evidence for
+  `SomethingCreativeStudios/connected-systems-go`: repository is public, not
+  archived, issues are enabled, and current `HEAD`/`main` remains
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`.
+- Checked for an obvious duplicate using the Sprint 80 GitHub issue search;
+  one closed API-definition issue was found, and no open duplicate was found by
+  that query.
+- Created maintainer-ready filing artifacts:
+  `ops/outreach/connected-systems-go-github-issue-filing-handoff.md`,
+  `ops/outreach/connected-systems-go-github-issue-body.md`, and
+  `ops/outreach/connected-systems-go-github-issue-payload.json`.
+- Filing was not performed because this environment has no `gh` CLI and no
+  `GH_TOKEN`/`GITHUB_TOKEN`. No upstream issue URL exists yet.
+- Lightweight verification passed for JSON/YAML parse, artifact presence,
+  upstream evidence, no-filing overclaim, evidence manifest, and
+  `git diff --check`.
+- Initial Raze review returned `GAPS_FOUND 0.87` for unreconciled
+  planned/pending status text only. Focused Raze recheck returned
+  `APPROVE 0.95` with `required_fixes=[]`; final seal recheck returned
+  `APPROVE 0.96` with `required_fixes=[]`.
+
 ## 2026-08-03 - Sprint 79 release readiness external blocker package
 
 **Triggered by user instruction**: "Do plan 1", approving the recommended

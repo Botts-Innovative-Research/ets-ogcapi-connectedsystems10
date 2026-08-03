@@ -1,0 +1,85 @@
+{
+  "total_count": 1,
+  "incomplete_results": false,
+  "items": [
+    {
+      "url": "https://api.github.com/repos/SomethingCreativeStudios/connected-systems-go/issues/1",
+      "repository_url": "https://api.github.com/repos/SomethingCreativeStudios/connected-systems-go",
+      "labels_url": "https://api.github.com/repos/SomethingCreativeStudios/connected-systems-go/issues/1/labels{/name}",
+      "comments_url": "https://api.github.com/repos/SomethingCreativeStudios/connected-systems-go/issues/1/comments",
+      "events_url": "https://api.github.com/repos/SomethingCreativeStudios/connected-systems-go/issues/1/events",
+      "html_url": "https://github.com/SomethingCreativeStudios/connected-systems-go/issues/1",
+      "id": 4386794219,
+      "node_id": "I_kwDOQK4lss8AAAABBXkq6w",
+      "number": 1,
+      "title": "[P2] GET /api returns 88-byte stub missing required 'paths' field; violates OAS 3.0.3 §4.7.1.1 and OGC 19-072 /req/landing-page/api-definition-success",
+      "user": {
+        "login": "Sam-Bolling",
+        "id": 27629042,
+        "node_id": "MDQ6VXNlcjI3NjI5MDQy",
+        "avatar_url": "https://avatars.githubusercontent.com/u/27629042?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Sam-Bolling",
+        "html_url": "https://github.com/Sam-Bolling",
+        "followers_url": "https://api.github.com/users/Sam-Bolling/followers",
+        "following_url": "https://api.github.com/users/Sam-Bolling/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Sam-Bolling/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Sam-Bolling/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Sam-Bolling/subscriptions",
+        "organizations_url": "https://api.github.com/users/Sam-Bolling/orgs",
+        "repos_url": "https://api.github.com/users/Sam-Bolling/repos",
+        "events_url": "https://api.github.com/users/Sam-Bolling/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Sam-Bolling/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "labels": [
+
+      ],
+      "state": "closed",
+      "locked": false,
+      "assignees": [
+
+      ],
+      "milestone": null,
+      "comments": 1,
+      "created_at": "2026-05-05T20:05:26Z",
+      "updated_at": "2026-05-17T01:12:18Z",
+      "closed_at": "2026-05-17T01:12:18Z",
+      "assignee": null,
+      "author_association": "NONE",
+      "active_lock_reason": null,
+      "sub_issues_summary": {
+        "total": 0,
+        "completed": 0,
+        "percent_completed": 0
+      },
+      "issue_dependencies_summary": {
+        "blocked_by": 0,
+        "total_blocked_by": 0,
+        "blocking": 0,
+        "total_blocking": 0
+      },
+      "body": "### Context\n\ncs-go advertises `GET /api` on the landing page as\n`service-desc` with media type\n`application/vnd.oai.openapi+json;version=3.0`. The current handler\nreturns an 88-byte string literal containing only `openapi` and `info`\nfields, with the in-source comment `// TODO: Implement OpenAPI 3.0\nspec generation`. This filing reports that the response body fails\nboth the OAS 3.0 root-object schema (`paths` is REQUIRED) and the OGC\nAPI – Common Part 1 strict `SHALL` for the API-definition response.\n\nVerified live on `upstream/main` HEAD\n`df6da0dff8e2d3e76b64b00f856c0d43ed644f6d` (2026-05-05).\n\n### Claim\n\n1. The response body omits the `paths` field, which OAS 3.0.3\n   §4.7.1.1 marks REQUIRED at the root OpenAPI Object. The\n   server's own `Content-Type` header self-asserts OAS 3.0\n   conformance.\n2. The response is not consistent with the API-definition contract\n   declared via cs-go's own `/conformance` document\n   (`…/ogcapi-common-1/1.0/conf/landing-page`), which binds the\n   server to `/req/landing-page/api-definition-success` clauses\n   **B** and **C**.\n\n### Static evidence\n\n`internal/api/router.go`:\n\n```go\n// OpenAPI spec\nr.Get(\"/api\", func(w http.ResponseWriter, r *http.Request) {\n    w.Header().Set(\"Content-Type\", \"application/vnd.oai.openapi+json;version=3.0\")\n    fmt.Fprint(w, getOpenAPISpec(cfg))\n})\n\nfunc getOpenAPISpec(cfg *config.Config) string {\n    // TODO: Implement OpenAPI 3.0 spec generation\n    return `{\"openapi\": \"3.0.0\", \"info\": {\"title\": \"` + cfg.API.Title +\n        `\", \"version\": \"` + cfg.API.Version + `\"}}`\n}\n```\n\n`git grep -E 'go:embed|openapi.*\\.(yaml|json)' upstream/main -- internal/`\nreturns zero matches — no static OAS bundle exists that the handler\ncould serve as an alternative.\n\n### Live evidence\n\n```text\n$ curl -s -i https://<deployment>/api\nHTTP/1.1 200 OK\nContent-Type: application/vnd.oai.openapi+json;version=3.0\nContent-Length: 88\n\n{\"openapi\": \"3.0.0\", \"info\": {\"title\": \"OGC Connected Systems API\", \"version\": \"1.0.0\"}}\n```\n\n`GET /conformance` declares `…/ogcapi-common-1/1.0/conf/landing-page`\n(binding for this filing) but does **not** declare\n`…/ogcapi-common-1/1.0/conf/oas30`.\n\n### Spec authority\n\n- **OAS 3.0.3 §4.7.1.1** — *Fixed Fields* of the OpenAPI Object marks\n  `paths` as **REQUIRED**. The server's response declares\n  `\"openapi\": \"3.0.0\"` and the OAS 3.0 JSON media type, self-asserting\n  OAS 3.0 conformance. (In OAS 3.1, `paths` was relaxed to\n  optional-when-`webhooks`-or-`components`-is-present; that relaxation\n  does not apply here.)\n- **OGC 19-072** (OGC API – Common Part 1)\n  `/req/landing-page/api-definition-success`:\n  - **B** — *\"The content of that response SHALL be an API Definition\n    document.\"*\n  - **C** — *\"The API Definition document SHALL be consistent with the\n    media type identified through HTTP content negotiation.\"*\n\n  Both binding because cs-go's `/conformance` self-declares\n  `…/ogcapi-common-1/1.0/conf/landing-page`.\n\n**Precision note:** cs-go does not currently declare\n`…/conf/oas30`, so the stricter `/req/oas30/*` requirements\n(`oas-definition-2`, `completeness`, `oas-impl`) are **not** directly\nbinding. The binding `SHALL` for this filing is\n`landing-page/api-definition-success` B + C alone, plus the OAS 3.0\nschema rule itself.\n\n### Recommended fix\n\nThree options, presented with ranking and rationale:\n\n1. **Serve upstream OGC OAS bundles with patched `servers`\n   (recommended).** OGC publishes authoritative reusable OpenAPI\n   building blocks at `schemas.opengis.net/ogcapi/...`. Assemble the\n   CSAPI Part 1 + Part 2 bundle, patch `servers` at startup, serve.\n   Lowest authoring delta; highest spec fidelity.\n   - **Side-effect to be aware of:** upstream bundles are OAS 3.1, so\n     the response `Content-Type` would shift from\n     `application/vnd.oai.openapi+json;version=3.0` to\n     `application/vnd.oai.openapi+json;version=3.1`, and the\n     advertised media type on the landing-page `service-desc` link\n     should shift in step. This is an upgrade (matches the upstream\n     specs and modern tooling), but worth surfacing.\n2. **`//go:embed` a curated OAS bundle** (fallback). Hand-author and\n   embed an OpenAPI document covering the implemented CSAPI Part 1 +\n   Part 2 surface. Highest content control; meaningful authoring cost\n   but bounded.\n3. **Runtime generation via `swag` / `chi-openapi`.** Annotate\n   handlers and generate at build/start time. Acceptable but adds a\n   build-time dependency and ongoing annotation discipline; generators\n   tend to under-describe schemas without effort.\n\nThe implementation surface for any of the three is the\n`getOpenAPISpec(cfg *config.Config) string` function in\n`internal/api/router.go` and the matching `Content-Type` header on the\n`/api` route (and the matching landing-page `service-desc` link if the\nmedia type shifts under Option 1).\n\n### Scope guard\n\nOut of scope for this filing:\n\n- The landing page handler (correct as-is).\n- The `/conformance` endpoint (correct as-is).\n- The `/conformance` declarations themselves — adding `/conf/oas30`\n  would trigger the stricter `/req/oas30/*` binding and is a separate\n  decision.\n- The existing JSON encoder.\n\n### Validation chain (links)\n\nInternal evaluation and evidence (public on the OS4CSAPI fork):\n\n- Synthesis report:\n  `OS4CSAPI/connected-systems-go:main/docs/research/upstream-issue-reports/report-01-api-endpoint-stub.md`\n- Rigour-first evaluation:\n  `OS4CSAPI/connected-systems-go:main/docs/research/issue-evaluations/issue-014.md`\n- Static analysis:\n  `OS4CSAPI/connected-systems-go:main/docs/research/evidence/issue-014/static-analysis-2026-04-30.md`\n- Live test:\n  `OS4CSAPI/connected-systems-go:main/docs/research/evidence/issue-014/live-test-2026-04-30.md`\n- Spec authority:\n  `OS4CSAPI/connected-systems-go:main/docs/research/evidence/issue-014/spec-authority-2026-04-30.md`\n\nCross-reference: original fork-side issue\n`OS4CSAPI/connected-systems-go#14` (closed not-planned because this is\na cs-go upstream defect, not a fork-only concern).",
+      "reactions": {
+        "url": "https://api.github.com/repos/SomethingCreativeStudios/connected-systems-go/issues/1/reactions",
+        "total_count": 0,
+        "+1": 0,
+        "-1": 0,
+        "laugh": 0,
+        "hooray": 0,
+        "confused": 0,
+        "heart": 0,
+        "rocket": 0,
+        "eyes": 0
+      },
+      "timeline_url": "https://api.github.com/repos/SomethingCreativeStudios/connected-systems-go/issues/1/timeline",
+      "performed_via_github_app": null,
+      "state_reason": "completed",
+      "pinned_comment": null,
+      "score": 1.0
+    }
+  ],
+  "search_type": "lexical"
+}

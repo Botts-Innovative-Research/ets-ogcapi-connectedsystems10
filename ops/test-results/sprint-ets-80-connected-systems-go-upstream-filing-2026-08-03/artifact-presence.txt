@@ -1,0 +1,15 @@
+PASS: openspec/change-proposals/CP-040-connected-systems-go-upstream-filing-handoff.md
+PASS: epics/stories/s-ets-80-01-connected-systems-go-upstream-filing-handoff.md
+PASS: .harness/contracts/sprint-ets-80.yaml
+PASS: .harness/evaluations/sprint-ets-80-adversarial.yaml
+PASS: .harness/evaluations/sprint-ets-80-adversarial-recheck.yaml
+PASS: .harness/evaluations/sprint-ets-80-adversarial-final-recheck.yaml
+PASS: ops/outreach/connected-systems-go-github-issue-filing-handoff.md
+PASS: ops/outreach/connected-systems-go-github-issue-body.md
+PASS: ops/outreach/connected-systems-go-github-issue-payload.json
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/upstream-ls-remote.txt
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/github-repo.json
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/github-duplicate-search.json
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/filing-capability.txt
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/upstream-status-summary.json
+PASS: ops/test-results/sprint-ets-80-connected-systems-go-upstream-filing-2026-08-03/verification-summary.json

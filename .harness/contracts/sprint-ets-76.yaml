@@ -40,7 +40,7 @@ verification_results:
   cleanup_isolation: "PASS: direct lifecycle database counts returned to zero; direct and TeamEngine smoke disposable containers/networks were removed; primary local OSH was not used."
   evidence_manifest: "PASS: repo-evidence-manifest.sha256 verifies the archived Sprint 76 evidence tree."
   yaml_parse: "PASS: sprint-ets-76.yaml parsed with PyYAML."
-  raze_adversarial_review: "INITIAL_GAPS_FOUND 0.88: no evidence dishonesty found; required bookkeeping fixes were commit reachability, Raze-status reconciliation, and manifest check-log scope. Status and manifest scope are reconciled; commit reachability closes when this tree is committed and pushed."
+  raze_adversarial_review: "INITIAL_GAPS_FOUND 0.88: no evidence dishonesty found; required bookkeeping fixes were commit reachability, Raze-status reconciliation, and manifest check-log scope. Status and manifest scope are reconciled; evidence/docs are commit-reachable and pushed in a0f2803."
 non_goals:
   - Do not issue POST, PUT, PATCH, or DELETE against public candidate deployments.
   - Do not patch OSH, TeamEngine, this ETS, or third-party IUT source.

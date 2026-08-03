@@ -71,8 +71,7 @@ usable for the remaining mutation-bound ETS work.
   initial static review returned `GAPS_FOUND 0.88` for three bookkeeping gaps:
   commit reachability, Raze-pending status reconciliation, and manifest
   self-coverage scope. The status and manifest findings are addressed in this
-  reconciliation; commit reachability is closed by committing/pushing the
-  Sprint 76 tree.
+  reconciliation; commit reachability is closed by pushed commit `a0f2803`.
 - Outcome:
   `connected-systems-go` is a useful local Part 2 CRD route/lifecycle
   diagnostic, but it is not currently a conforming exact-promotion IUT for the

@@ -38,6 +38,10 @@ a controlled self-run `connected-systems-go` mutable-IUT readiness experiment.
   `ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/`.
   JSON/JSONL/YAML parse checks passed and the repository evidence manifest
   verifies.
+- Raze static review returned `GAPS_FOUND 0.88` for bookkeeping only: commit
+  reachability, status reconciliation, and manifest check-log scope. The
+  status/manifest fixes are applied, and evidence/docs are pushed in commit
+  `a0f2803`.
 - Outcome: `connected-systems-go` is useful as a local Part 2 CRD
   route/lifecycle diagnostic, but it cannot currently close the remaining
   mutation-bound exact mappings because declaration, `Allow`, and Update/PATCH

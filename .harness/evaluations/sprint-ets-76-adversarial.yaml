@@ -37,7 +37,7 @@ required_fixes:
   - Reconcile Raze-pending status fields after applying/accepting this verdict.
   - Regenerate or explicitly scope the evidence manifest regarding repo-evidence-manifest-check.log.
 fix_status:
-  sprint76-evidence-not-commit-reachable: pending_commit
+  sprint76-evidence-not-commit-reachable: addressed_by_pushed_commit_a0f2803
   raze-status-reconciliation-pending: addressed_after_review
   manifest-self-coverage-gap: addressed_after_review
 residual_concerns:

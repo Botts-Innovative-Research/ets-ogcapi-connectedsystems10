@@ -11,6 +11,7 @@ Last updated: 2026-08-03T07:31Z
   `csgo-s76:7643bb38` with disposable PostGIS storage.
 - Evidence is archived under
   `ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/`.
+  The evidence/docs commit is pushed as `a0f2803`.
 - Readiness audit result:
   `47` candidates remain, `GET=1`, `OPTIONS=25`,
   `unsafeMethodsIssued=[]`, zero declaration/method-ready classes, zero
@@ -37,6 +38,10 @@ Last updated: 2026-08-03T07:31Z
   diagnostic, but it is not currently a conforming exact-promotion IUT for the
   remaining mutation-bound ETS candidates because declaration/`Allow`/Update
   blockers remain.
+- Raze:
+  initial static review returned `GAPS_FOUND 0.88` for bookkeeping only. The
+  manifest scope and status fields are reconciled, and commit reachability is
+  closed by pushed commit `a0f2803`.
 - Next practical work:
   use Sprint 76 evidence to decide between either upstream outreach/fix
   requests for `connected-systems-go` declarations and `Allow` behavior, or

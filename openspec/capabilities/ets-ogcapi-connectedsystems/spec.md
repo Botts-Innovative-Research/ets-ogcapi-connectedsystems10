@@ -3347,7 +3347,7 @@ from public read-only probe evidence.
   static review returned `GAPS_FOUND 0.88` for bookkeeping only: commit
   reachability, Raze-pending status reconciliation, and manifest check-log
   scope. Status and manifest scope are reconciled; commit reachability is
-  closed by committing/pushing the Sprint 76 tree.
+  closed by pushed commit `a0f2803`.
 - **Maps to**: PRD FR-ETS-25, FR-ETS-54; REQ-ETS-CLEANUP-026.
 
 #### SCENARIO-ETS-CLEANUP-SELF-RUN-ALT-IUT-READINESS-001 (CRITICAL)

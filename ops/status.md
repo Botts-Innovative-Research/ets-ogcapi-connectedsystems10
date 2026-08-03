@@ -1,6 +1,31 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T05:14Z
+Last updated: 2026-08-03T06:56Z
+
+## Libby SWE Common Validator Pointer Triaged
+
+- User instruction: Libby pointed to
+  `opengeospatial/ets-swecommon30` branch
+  `issue-9-swecommon-validation-module` and
+  `docs/swecommon-validation-module.md`.
+- Finding: this is the same upstream SWE Common validator branch already
+  source-pinned by CP-002/Sprint 42. Current branch HEAD is
+  `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`, matching
+  `scripts/bootstrap-swecommon30-validator.sh`.
+- Existing implementation already depends on
+  `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT`, builds it from the
+  exact commit, imports `SweCommonJsonSchemaValidator` only through
+  `ConnectedSystemsSweValidatorAdapter`, and keeps TestNG/TeamEngine behavior
+  inside this ETS.
+- Focused verification rerun:
+  `bash scripts/mvn-test-via-docker.sh -Dtest=VerifyConnectedSystemsSweValidatorAdapter`
+  verified the exact upstream source, built only the parent plus
+  `swecommon30-validator`, and passed `4 tests / 0 failures / 0 errors /
+  0 skipped`.
+- Impact: no implementation code change is needed from Libby's note. It
+  confirms the SWE Common validator dependency path is already handled. The
+  remaining external validator risk is SensorML replacement availability, not
+  SWE Common.
 
 ## Sprint 75 Complete and Pushed - Alternate Mutable IUT Discovery
 

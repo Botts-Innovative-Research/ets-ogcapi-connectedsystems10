@@ -1,8 +1,29 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T05:10Z
+Last updated: 2026-08-03T06:56Z
 
 ## Current Sprint Evidence
+
+Libby SWE Common validator pointer triage:
+
+- Trigger: Libby pointed to `opengeospatial/ets-swecommon30` branch
+  `issue-9-swecommon-validation-module` and
+  `docs/swecommon-validation-module.md`.
+- Branch/doc finding: upstream `swecommon30-validator` is a reusable validator
+  module for ETS consumers and keeps TestNG/TeamEngine behavior in the
+  consuming ETS. The branch HEAD inspected locally is
+  `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`.
+- Local status: this project already source-pins that exact commit through
+  `scripts/bootstrap-swecommon30-validator.sh`, declares
+  `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT`, and consumes it
+  through `ConnectedSystemsSweValidatorAdapter`.
+- Focused Docker Maven verification:
+  `bash scripts/mvn-test-via-docker.sh -Dtest=VerifyConnectedSystemsSweValidatorAdapter`.
+- Result: upstream source verification PASS, validator bootstrap PASS, focused
+  adapter tests `4 tests / 0 failures / 0 errors / 0 skipped`, build SUCCESS.
+- Impact: no product code change required. This confirms the SWE Common
+  validator path is already integrated; it does not change the remaining
+  SensorML validator replacement risk or the 47 mutation-bound IUT blockers.
 
 Sprint 75 alternate mutable IUT discovery:
 

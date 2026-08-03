@@ -2,6 +2,29 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Libby SWE Common validator pointer triage
+
+**Triggered by user instruction**: Libby pointed to
+`opengeospatial/ets-swecommon30` branch
+`issue-9-swecommon-validation-module` and its
+`docs/swecommon-validation-module.md` instructions.
+
+- Inspected the upstream branch and documentation. The branch HEAD is
+  `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`.
+- Confirmed this is the exact upstream source already pinned by CP-002/Sprint
+  42 through `scripts/bootstrap-swecommon30-validator.sh`.
+- Confirmed the current ETS already consumes
+  `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT` through
+  `ConnectedSystemsSweValidatorAdapter`, not through the upstream TeamEngine
+  ETS module.
+- Reran focused validator verification with
+  `bash scripts/mvn-test-via-docker.sh -Dtest=VerifyConnectedSystemsSweValidatorAdapter`.
+  The wrapper verified the exact upstream commit, built only the parent plus
+  `swecommon30-validator`, and passed `4/0/0/0`.
+- Outcome: no implementation code change is needed from this note. SWE Common
+  validator integration is already complete; SensorML remains the only
+  external validator replacement risk.
+
 ## 2026-08-03 - Sprint 75 alternate mutable IUT discovery
 
 **Triggered by user instruction**: Continue the project as Discovery Agent /

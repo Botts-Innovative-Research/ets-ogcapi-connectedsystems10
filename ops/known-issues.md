@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T02:10Z
+Last updated: 2026-08-03T03:04Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -14,21 +14,26 @@ Last updated: 2026-08-03T02:10Z
 
 ## Active Issues
 
-- Sprint 72 readiness audit confirms all 47 remaining mutation-bound released
+- Sprint 73 readiness audit confirms all 47 remaining mutation-bound released
   ATS procedures remain candidate. Direct primary local OSH evidence records
   `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`; populated disposable OSH
   evidence records `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`. Only
-  Part 1 Create/Replace/Delete currently has declaration/method readiness, and
-  even that remains blocked by positive POST/PUT/DELETE lifecycle execution,
-  changed-resource GET proof, cleanup/isolation proof for the mutated resource
-  type, and cascade/collection/URI-list evidence where applicable. Part 1
-  Update is blocked by missing `/conf/update` and Features Part 4 Update
-  declarations plus missing PATCH advertisement. Part 2 Create/Replace/Delete
-  is blocked by missing advertised mutation methods on some readiness probes.
-  Part 2 Update is blocked by missing Part 2 `/conf/update`, Features Part 4
-  Update, missing `/conf/feasibility`, and missing PATCH advertisement. Do not
-  promote these candidates without completed positive lifecycle E2E against a
-  dedicated mutable IUT.
+  Part 1 Create/Replace/Delete currently has direct declaration/method
+  readiness, and Sprint 73 records zero prerequisite-ready classes. Part 1
+  Create/Replace/Delete remains blocked by missing Part 1 `/conf/api-common`,
+  missing exact inherited
+  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`,
+  positive POST/PUT/DELETE lifecycle execution, changed-resource GET proof,
+  cleanup/isolation proof for the mutated resource type, and
+  cascade/collection/URI-list evidence where applicable. Part 1 Update is
+  blocked by missing `/conf/update`, Features Part 4 Update, missing exact
+  `ogcapi-4` Update, and missing PATCH advertisement. Part 2
+  Create/Replace/Delete is blocked by missing Part 2 `/conf/api-common` and
+  missing advertised mutation methods on some readiness probes. Part 2 Update
+  is blocked by missing Part 2 `/conf/api-common`, missing Part 2
+  `/conf/update`, Features Part 4 Update, missing `/conf/feasibility`, and
+  missing PATCH advertisement. Do not promote these candidates without
+  completed positive lifecycle E2E against a dedicated mutable IUT.
 - Codex remote-control thread listing reports host
   `slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0` as
   `thread_list_unavailable`. The reachable task for this folder is idle and

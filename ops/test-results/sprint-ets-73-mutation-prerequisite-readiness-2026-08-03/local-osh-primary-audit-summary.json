@@ -1,0 +1,11 @@
+{
+  "counts": {
+    "GET": 1,
+    "OPTIONS": 25
+  },
+  "unsafe": [],
+  "legacyReady": [
+    "1:/conf/create-replace-delete"
+  ],
+  "prereqReady": []
+}

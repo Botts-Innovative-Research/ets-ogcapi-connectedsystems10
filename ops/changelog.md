@@ -2,6 +2,42 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 73 mutation prerequisite readiness audit
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-033, S-ETS-73-01, and the Sprint 73 contract for prerequisite-aware
+  mutation-readiness evidence.
+- Added `REQ-ETS-CLEANUP-024` and
+  `SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-AUDIT-001` to OpenSpec.
+- Scope remains read-only audit evidence: no POST/PUT/PATCH/DELETE from the
+  audit, no OSH or TeamEngine patches, and no exact promotion of the
+  47 mutation-bound candidate procedures.
+- Implemented prerequisite-aware audit fields:
+  `missingPrerequisiteConformance`, `prerequisiteConformancePresent`,
+  `prerequisiteReadinessScope`,
+  `declarationMethodAndPrerequisiteReadiness`, and root
+  `classesWithDeclarationMethodAndPrerequisiteReadiness`.
+- Added focused Python regression coverage for an IUT that is direct
+  declaration/method-ready but prerequisite-incomplete because exact inherited
+  declarations are missing.
+- Direct local OSH audit: `47` candidates, `GET=1`, `OPTIONS=25`,
+  `unsafeMethodsIssued=[]`, one direct declaration/method-ready class, and
+  zero prerequisite-ready classes.
+- Disposable local OSH run `sprint-ets-73-prereq-20260803T024709Z`: readiness
+  audit `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`; populated TeamEngine
+  `275/24/20/231`; clean-primary TeamEngine `275/23/20/232`; cleanup PASS;
+  primary-state isolation PASS. TeamEngine remains non-green on the existing
+  local OSH twenty-failure baseline.
+- Verification artifacts are archived under
+  `ops/test-results/sprint-ets-73-mutation-prerequisite-readiness-2026-08-03/`:
+  Python compile PASS, Python unit tests `21/0/0/0`, formatter BUILD SUCCESS,
+  full Docker Maven `787/0/0/3`, direct OSH audit, complete disposable OSH E2E
+  artifacts, and `repo-evidence-manifest.sha256`.
+- Raze returned `APPROVE_WITH_CONCERNS 0.94` with `required_fixes: []`. The
+  LOW concern is recorded as a wording/consumer-risk caveat: prerequisite-ready
+  means declaration-only readiness, not prerequisite TestNG execution proof.
+
 ## 2026-08-03 - Sprint 72 mutation candidate readiness audit
 
 **Triggered by user instruction**: "Continue."

@@ -1,8 +1,48 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T02:10Z
+Last updated: 2026-08-03T03:04Z
 
 ## Current Sprint Evidence
+
+Sprint 73 mutation prerequisite readiness audit:
+
+- Trigger: user instructed "Continue."
+- Scope: `REQ-ETS-CLEANUP-024` operational readiness refinement only. No
+  Create/Replace/Delete or Update lifecycle exact closure is claimed.
+- Implementation: `scripts/mutation-readiness-audit.py` now separates direct
+  declaration/method readiness from prerequisite-declaration readiness using
+  `missingPrerequisiteConformance`, `prerequisiteConformancePresent`,
+  `prerequisiteReadinessScope`,
+  `declarationMethodAndPrerequisiteReadiness`, and root
+  `classesWithDeclarationMethodAndPrerequisiteReadiness`.
+- Python compile: PASS (`python-pycompile.log`).
+- Python unit tests:
+  `21 tests / 0 failures / 0 errors` (`python-unittest.log`).
+- Formatter: BUILD SUCCESS (`spring-javaformat.log`).
+- Full Docker Maven:
+  `787 tests / 0 failures / 0 errors / 3 skipped`
+  (`docker-maven-test.log`).
+- Direct primary local OSH readiness audit:
+  `47` candidates, `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`,
+  `classesWithDeclarationAndMethodReadiness=["1:/conf/create-replace-delete"]`,
+  `classesWithDeclarationMethodAndPrerequisiteReadiness=[]`, and no exact
+  promotions.
+- Disposable local OSH mutable E2E:
+  `sprint-ets-73-prereq-20260803T024709Z`. The populated IUT readiness audit
+  reported `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`, one direct
+  declaration/method-ready class, zero prerequisite-ready classes, cleanup
+  PASS, and primary-state isolation PASS.
+- Full TeamEngine E2E remains honestly non-green on the existing local OSH
+  twenty-failure baseline: populated `275 total / 24 passed / 20 failed /
+  231 skipped`, clean-primary `275 total / 23 passed / 20 failed /
+  232 skipped`, with GET-only TeamEngine request counts.
+- Evidence directory:
+  `ops/test-results/sprint-ets-73-mutation-prerequisite-readiness-2026-08-03/`.
+- The copied disposable run `artifact-manifest.sha256` verifies in place, and
+  `repo-evidence-manifest.sha256` verifies the repository evidence subset.
+- Raze returned `APPROVE_WITH_CONCERNS 0.94` with `required_fixes: []`. The
+  LOW concern is recorded: prerequisite-ready means declaration-only readiness,
+  not prerequisite TestNG execution proof.
 
 Sprint 72 mutation candidate readiness audit:
 

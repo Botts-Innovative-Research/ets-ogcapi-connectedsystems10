@@ -1,0 +1,1269 @@
+{
+  "abortError": null,
+  "abortPhase": null,
+  "artifactManifest": "artifact-manifest.sha256",
+  "cleanPrimary": {
+    "failures": [
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings: every available Deployment SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "deploymentSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema: canonical Deployment single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema - http://field-hub-osh-1:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "deploymentSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class: every available Procedure uses a compatible SensorML class and omits position",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlClassesAreCompatible"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings: every available Procedure SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema: canonical Procedure single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema - http://field-hub-osh-1:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings: every available Property SensorML document uses released URI mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings - http://field-hub-osh-1:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "propertySensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema: canonical Property single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema - http://field-hub-osh-1:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "propertySensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types: every available SensorML links-member association uses exact ogc-rel-prefixed resource vocabulary",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlAssociationRelationTypesAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping: every available SensorML resource uses released uniqueId, label, and description mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlCommonFeatureAttributesAreMapped"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read: API definition advertises application/sml+json for every supported canonical and advertised custom collection GET",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read \u2014 https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml does not advertise application/sml+json for GET /collections/{collectionId}/items (parser diagnostics: attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'text/uri-list'.description is unexpected; attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'application/json'.description is unexpected; paths.'/collections/{collectionId}/items'. Declared path parameter collectionId needs to be defined as a path parameter in path or operation level).",
+        "name": "sensorMlMediaTypeReadIsAdvertised"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id: every available canonical SensorML representation id exactly equals its URL id",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlResourceIdsMatchCanonicalUrls"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class: every available System SensorML class is compatible with unambiguous asset-type evidence",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlClassesAreCompatible"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings: every available System SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema: canonical System single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema - http://field-hub-osh-1:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections: advertised Property collections use released metadata and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with itemType=sosa:Property.",
+        "name": "propertyCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url: every advertised Procedure resolves to equivalent canonical content",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+        "name": "everyProcedureHasCanonicalUrl"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections: advertised Procedure collections use released metadata, types, and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+        "name": "procedureCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections: advertised Deployment collections use released metadata and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+        "name": "deploymentCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system: every System's Deployment endpoint references its owning System",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system \u2014 expected HTTP 200, got 400",
+        "name": "deploymentsReferencedFromSystemsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url: every advertised Deployment resolves to equivalent canonical content",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url \u2014 http://field-hub-osh-1:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+        "name": "everyDeploymentHasCanonicalUrl"
+      }
+    ],
+    "log": "clean-primary-results/s-ets-01-03-teamengine-container-2026-08-03.log",
+    "report": "clean-primary-results/s-ets-01-03-teamengine-smoke-2026-08-03.xml",
+    "requestMethodCounts": {
+      "GET": 130
+    },
+    "startupVerdict": "PASS",
+    "totals": {
+      "failed": 20,
+      "passed": 23,
+      "skipped": 232,
+      "total": 275
+    },
+    "verdict": "FAIL"
+  },
+  "cleanPrimaryConformanceVerdict": "FAIL",
+  "cleanPrimaryGateVerdict": "ERROR",
+  "cleanPrimaryStatus": 1,
+  "cleanupVerdict": "PASS",
+  "conformanceVerdict": "FAIL",
+  "finalizationErrors": [],
+  "generatedAt": "2026-08-03T02:57:38Z",
+  "mutationReadiness": {
+    "classes": [
+      {
+        "candidateProcedures": 12,
+        "conformanceClass": "1:/conf/create-replace-delete",
+        "declarationAndMethodReadiness": true,
+        "declarationMethodAndPrerequisiteReadiness": false,
+        "exactPromotionBlockers": [
+          "missing inherited prerequisite conformance declarations",
+          "dedicated mutable-IUT POST/PUT/DELETE lifecycle execution",
+          "changed resource GET proof after write",
+          "identity-safe cleanup and primary-state isolation",
+          "cascade, collection propagation, and text/uri-list evidence where applicable"
+        ],
+        "exactPromotionReady": false,
+        "id": "part1CreateReplaceDelete",
+        "missingAdvertisedMethods": [],
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+          "http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete"
+        ],
+        "missingRequiredConformance": [],
+        "prerequisiteConformancePresent": false,
+        "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisites",
+        "readinessProbes": [
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/systems",
+            "status": 200,
+            "template": "/systems"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/systems/040g",
+            "status": 200,
+            "template": "/systems/{system}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/deployments",
+            "status": 200,
+            "template": "/deployments"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/deployments/040g",
+            "status": 200,
+            "template": "/deployments/{deployment}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/procedures",
+            "status": 200,
+            "template": "/procedures"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/procedures/040g",
+            "status": 200,
+            "template": "/procedures/{procedure}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/samplingFeatures",
+            "status": 200,
+            "template": "/samplingFeatures"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/samplingFeatures/040g",
+            "status": 200,
+            "template": "/samplingFeatures/{samplingFeature}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/properties",
+            "status": 200,
+            "template": "/properties"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/properties/040g",
+            "status": 200,
+            "template": "/properties/{property}"
+          }
+        ],
+        "readinessScope": "declarations-and-advertised-methods-only",
+        "requiredConformancePresent": true,
+        "requirement": "REQ-ETS-PART1-010"
+      },
+      {
+        "candidateProcedures": 5,
+        "conformanceClass": "1:/conf/update",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteReadiness": false,
+        "exactPromotionBlockers": [
+          "missing required conformance declarations",
+          "missing inherited prerequisite conformance declarations",
+          "missing advertised mutation methods on readiness probes",
+          "dedicated mutable-IUT PATCH lifecycle execution",
+          "changed field GET proof after PATCH",
+          "identity-safe cleanup and primary-state isolation",
+          "applicability evidence for custom collections, async, and deadline behavior"
+        ],
+        "exactPromotionReady": false,
+        "id": "part1Update",
+        "missingAdvertisedMethods": [
+          {
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/systems/040g"
+          },
+          {
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/deployments/040g"
+          },
+          {
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/procedures/040g"
+          },
+          {
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/samplingFeatures/040g"
+          },
+          {
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/properties/040g"
+          }
+        ],
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+          "http://www.opengis.net/spec/ogcapi-4/1.0/conf/update"
+        ],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+        ],
+        "prerequisiteConformancePresent": false,
+        "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisites",
+        "readinessProbes": [
+          {
+            "advertisesExpectedMethods": false,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "path": "/systems/040g",
+            "status": 200,
+            "template": "/systems/{system}"
+          },
+          {
+            "advertisesExpectedMethods": false,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "path": "/deployments/040g",
+            "status": 200,
+            "template": "/deployments/{deployment}"
+          },
+          {
+            "advertisesExpectedMethods": false,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "path": "/procedures/040g",
+            "status": 200,
+            "template": "/procedures/{procedure}"
+          },
+          {
+            "advertisesExpectedMethods": false,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "path": "/samplingFeatures/040g",
+            "status": 200,
+            "template": "/samplingFeatures/{samplingFeature}"
+          },
+          {
+            "advertisesExpectedMethods": false,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "path": "/properties/040g",
+            "status": 200,
+            "template": "/properties/{property}"
+          }
+        ],
+        "readinessScope": "declarations-and-advertised-methods-only",
+        "requiredConformancePresent": false,
+        "requirement": "REQ-ETS-PART1-011"
+      },
+      {
+        "candidateProcedures": 16,
+        "conformanceClass": "2:/conf/create-replace-delete",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteReadiness": false,
+        "exactPromotionBlockers": [
+          "missing inherited prerequisite conformance declarations",
+          "missing advertised mutation methods on readiness probes",
+          "dedicated mutable-IUT POST/PUT/DELETE lifecycle execution",
+          "changed resource GET proof after write",
+          "identity-safe cleanup and primary-state isolation",
+          "resource-specific command, feasibility, result/status, and event evidence"
+        ],
+        "exactPromotionReady": false,
+        "id": "part2CreateReplaceDelete",
+        "missingAdvertisedMethods": [
+          {
+            "missing": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/commands/{command}",
+            "reason": "empty resource id"
+          },
+          {
+            "missing": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/feasibility/{feasibility}",
+            "reason": "empty resource id"
+          },
+          {
+            "missing": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/systemEvents/{systemEvent}",
+            "reason": "empty resource id"
+          }
+        ],
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common"
+        ],
+        "missingRequiredConformance": [],
+        "prerequisiteConformancePresent": false,
+        "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisites",
+        "readinessProbes": [
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/systems/040g/datastreams",
+            "status": 200,
+            "template": "/systems/{system}/datastreams"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/datastreams/040g",
+            "status": 200,
+            "template": "/datastreams/{dataStream}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/datastreams/040g/observations",
+            "status": 200,
+            "template": "/datastreams/{dataStream}/observations"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/observations/040r10m0qc30000000",
+            "status": 200,
+            "template": "/observations/{observation}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/systems/040g/controlstreams",
+            "status": 200,
+            "template": "/systems/{system}/controlstreams"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "path": "/controlstreams/040g",
+            "status": 200,
+            "template": "/controlstreams/{controlStream}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/controlstreams/040g/commands",
+            "status": 200,
+            "template": "/controlstreams/{controlStream}/commands"
+          },
+          {
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "skipReason": "empty resource id",
+            "skipped": true,
+            "template": "/commands/{command}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/feasibility",
+            "status": 200,
+            "template": "/feasibility"
+          },
+          {
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "skipReason": "empty resource id",
+            "skipped": true,
+            "template": "/feasibility/{feasibility}"
+          },
+          {
+            "advertisesExpectedMethods": true,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "POST"
+            ],
+            "path": "/systemEvents",
+            "status": 200,
+            "template": "/systemEvents"
+          },
+          {
+            "expectedMethods": [
+              "PUT",
+              "DELETE"
+            ],
+            "skipReason": "empty resource id",
+            "skipped": true,
+            "template": "/systemEvents/{systemEvent}"
+          }
+        ],
+        "readinessScope": "declarations-and-advertised-methods-only",
+        "requiredConformancePresent": true,
+        "requirement": "REQ-ETS-PART2-007"
+      },
+      {
+        "candidateProcedures": 14,
+        "conformanceClass": "2:/conf/update",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteReadiness": false,
+        "exactPromotionBlockers": [
+          "missing required conformance declarations",
+          "missing inherited prerequisite conformance declarations",
+          "missing condition conformance declarations",
+          "missing advertised mutation methods on readiness probes",
+          "dedicated mutable-IUT PATCH lifecycle execution",
+          "changed field GET proof after PATCH",
+          "identity-safe cleanup and primary-state isolation",
+          "schema-rejection PATCH dispatch evidence"
+        ],
+        "exactPromotionReady": false,
+        "id": "part2Update",
+        "missingAdvertisedMethods": [
+          {
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/datastreams/040g"
+          },
+          {
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/observations/040r10m0qc30000000"
+          },
+          {
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/controlstreams/040g"
+          },
+          {
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/commands/{command}",
+            "reason": "empty resource id"
+          },
+          {
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/feasibility/{feasibility}",
+            "reason": "empty resource id"
+          },
+          {
+            "missing": [
+              "PATCH"
+            ],
+            "path": "/systemEvents/{systemEvent}",
+            "reason": "empty resource id"
+          }
+        ],
+        "missingConditionConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility"
+        ],
+        "missingPrerequisiteConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common"
+        ],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+        ],
+        "prerequisiteConformancePresent": false,
+        "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisites",
+        "readinessProbes": [
+          {
+            "advertisesExpectedMethods": false,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "path": "/datastreams/040g",
+            "status": 200,
+            "template": "/datastreams/{dataStream}"
+          },
+          {
+            "advertisesExpectedMethods": false,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "path": "/observations/040r10m0qc30000000",
+            "status": 200,
+            "template": "/observations/{observation}"
+          },
+          {
+            "advertisesExpectedMethods": false,
+            "allowMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "POST",
+              "PUT",
+              "TRACE"
+            ],
+            "contentType": "",
+            "errorType": null,
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "path": "/controlstreams/040g",
+            "status": 200,
+            "template": "/controlstreams/{controlStream}"
+          },
+          {
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "skipReason": "empty resource id",
+            "skipped": true,
+            "template": "/commands/{command}"
+          },
+          {
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "skipReason": "empty resource id",
+            "skipped": true,
+            "template": "/feasibility/{feasibility}"
+          },
+          {
+            "expectedMethods": [
+              "PATCH"
+            ],
+            "skipReason": "empty resource id",
+            "skipped": true,
+            "template": "/systemEvents/{systemEvent}"
+          }
+        ],
+        "readinessScope": "declarations-and-advertised-methods-only",
+        "requiredConformancePresent": false,
+        "requirement": "REQ-ETS-PART2-008"
+      }
+    ],
+    "classesWithDeclarationAndMethodReadiness": [
+      "1:/conf/create-replace-delete"
+    ],
+    "classesWithDeclarationMethodAndPrerequisiteReadiness": [],
+    "conformance": {
+      "contentType": "auto",
+      "declaredCount": 33,
+      "declaredMutationRelevant": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+      ],
+      "status": 200
+    },
+    "credentialSupplied": false,
+    "exactPromotionPolicy": "This audit is read-only readiness evidence only; it never promotes mutation candidates to reviewed exact mappings.",
+    "exactPromotionReady": false,
+    "generatedAt": "2026-08-03T02:47:17Z",
+    "iutUrl": "http://127.0.0.1:1044/sensorhub/api",
+    "prerequisiteReadinessPolicy": "Prerequisite-aware readiness also requires inherited conformance declarations; exact positive lifecycle proof is still required before exact promotion.",
+    "readinessScope": "Read-only declaration and OPTIONS method advertisement audit; positive lifecycle proof is still required before exact promotion.",
+    "remainingCandidateProcedures": 47,
+    "requestMethodCounts": {
+      "GET": 1,
+      "OPTIONS": 27
+    },
+    "resourceIds": {
+      "command": "",
+      "controlStream": "040g",
+      "dataStream": "040g",
+      "deployment": "040g",
+      "feasibility": "",
+      "observation": "040r10m0qc30000000",
+      "procedure": "040g",
+      "property": "040g",
+      "samplingFeature": "040g",
+      "system": "040g",
+      "systemEvent": ""
+    },
+    "schemaVersion": 1,
+    "unsafeMethodsIssued": []
+  },
+  "mutationReadinessEvidence": "populated-mutation-readiness.json",
+  "mutationReadinessStatus": 0,
+  "oshImageProvenance": {
+    "imageId": "sha256:a0249ce15f22ae01620eee65e6737735b2b01a50f0a58b3c580f3d2a1dd21c7e",
+    "reference": "maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45",
+    "repoDigests": [
+      "maven@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45"
+    ]
+  },
+  "oshSourceProvenance": {
+    "ahead": 0,
+    "behind": 3,
+    "clean": true,
+    "conSysBundleBuildNumber": "4c87a65",
+    "conSysJar": "/home/nh/docker/sensorhub-driver-fabric/include/osh-core/build/install/osh-core/lib/sensorhub-service-consys-2.0.1.jar",
+    "headCommit": "4c87a65c9a967d52af9df476e65d7862c7673a15",
+    "headIsUpstreamAncestor": true,
+    "installManifest": "installed-files.sha256",
+    "origin": "https://github.com/opensensorhub/osh-core.git",
+    "upstreamCommit": "ce8dd961c3f4dfdd739e5e2c78d42d8f62eb99bd",
+    "upstreamRef": "origin/master"
+  },
+  "overallWorkflowVerdict": "FAIL",
+  "populated": {
+    "failures": [
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings: every available Deployment SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-mappings - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "deploymentSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema: canonical Deployment single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/deployment-schema - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/deployments returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "deploymentSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class: every available Procedure uses a compatible SensorML class and omits position",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-sml-class - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlClassesAreCompatible"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings: every available Procedure SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-mappings - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema: canonical Procedure single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/procedure-schema - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/procedures returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "procedureSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings: every available Property SensorML document uses released URI mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-mappings - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "propertySensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema: canonical Property single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/property-schema - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/properties returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "propertySensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types: every available SensorML links-member association uses exact ogc-rel-prefixed resource vocabulary",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/relation-types - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlAssociationRelationTypesAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping: every available SensorML resource uses released uniqueId, label, and description mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/feature-attribute-mapping - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlCommonFeatureAttributesAreMapped"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read: API definition advertises application/sml+json for every supported canonical and advertised custom collection GET",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/mediatype-read \u2014 https://opengeospatial.github.io/ogcapi-connected-systems/api/part1/openapi/openapi-connectedsystems-1.yaml does not advertise application/sml+json for GET /collections/{collectionId}/items (parser diagnostics: attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'text/uri-list'.description is unexpected; attribute paths.'/collections/{collectionId}/items'(post).requestBody.content.'application/json'.description is unexpected; paths.'/collections/{collectionId}/items'. Declared path parameter collectionId needs to be defined as a path parameter in path or operation level).",
+        "name": "sensorMlMediaTypeReadIsAdvertised"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id: every available canonical SensorML representation id exactly equals its URL id",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/resource-id - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "sensorMlResourceIdsMatchCanonicalUrls"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class: every available System SensorML class is compatible with unambiguous asset-type evidence",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-sml-class - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlClassesAreCompatible"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings: every available System SensorML document uses released attribute and association mappings",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-mappings - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlMappingsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.sensorml.SensorMlTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema: canonical System single and collection SensorML documents validate against released schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema \u2014 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/sensorml/system-schema - http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/systems returned unsupported media type 'application/json'; representation parsing skipped.",
+        "name": "systemSensorMlSchemasAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.propertydefinitions.PropertyDefinitionsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections: advertised Property collections use released metadata and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/property/collections \u2014 http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/collections does not advertise a collection with itemType=sosa:Property.",
+        "name": "propertyCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url: every advertised Procedure resolves to equivalent canonical content",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/canonical-url \u2014 http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+        "name": "everyProcedureHasCanonicalUrl"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.procedures.ProceduresTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections: advertised Procedure collections use released metadata, types, and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/procedure/collections \u2014 http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Procedure.",
+        "name": "procedureCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections: advertised Deployment collections use released metadata and schemas",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/collections \u2014 http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+        "name": "deploymentCollectionsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system: every System's Deployment endpoint references its owning System",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/ref-from-system \u2014 expected HTTP 200, got 400",
+        "name": "deploymentsReferencedFromSystemsAreValid"
+      },
+      {
+        "class": "org.opengis.cite.ogcapiconnectedsystems10.conformance.deployments.DeploymentsTests",
+        "description": "OGC-23-001 http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url: every advertised Deployment resolves to equivalent canonical content",
+        "message": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/req/deployment/canonical-url \u2014 http://ets-csapi-osh-7a8e153fd5763430:8081/sensorhub/api/collections does not advertise a collection with featureType=sosa:Deployment.",
+        "name": "everyDeploymentHasCanonicalUrl"
+      }
+    ],
+    "log": "populated-results/s-ets-01-03-teamengine-container-2026-08-03.log",
+    "report": "populated-results/s-ets-01-03-teamengine-smoke-2026-08-03.xml",
+    "requestMethodCounts": {
+      "GET": 134
+    },
+    "startupVerdict": "PASS",
+    "totals": {
+      "failed": 20,
+      "passed": 24,
+      "skipped": 231,
+      "total": 275
+    },
+    "verdict": "FAIL"
+  },
+  "populatedGateVerdict": "COMPLETE_WITH_CONFORMANCE_FAILURE",
+  "populatedSmokeStatus": 1,
+  "primaryDifferences": [],
+  "primaryStateUnchanged": true,
+  "provisioningEvidence": "provisioning-evidence.json",
+  "provisioningStatus": 0,
+  "provisioningVerdict": "PASS",
+  "retainedStatePath": null,
+  "runId": "sprint-ets-73-prereq-20260803T024709Z",
+  "schemaVersion": 2,
+  "sourceFilesManifest": "source-files.sha256",
+  "teamEngineImageId": "sha256:d1804e3099879be33869d66675a95356ea1988b91ba1e0180e50c7fdc786c331"
+}

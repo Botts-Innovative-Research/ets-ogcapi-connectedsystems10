@@ -17,6 +17,7 @@ import urllib.request
 CS1 = "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf"
 CS2 = "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf"
 FEATURES4 = "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf"
+OGCAPI4 = "http://www.opengis.net/spec/ogcapi-4/1.0/conf"
 UNSAFE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
 
 DEFAULT_IDS = {
@@ -57,6 +58,10 @@ CLASS_AUDITS = [
             f"{CS1}/create-replace-delete",
             f"{FEATURES4}/create-replace-delete",
         ],
+        "prerequisiteConformance": [
+            f"{CS1}/api-common",
+            f"{OGCAPI4}/create-replace-delete",
+        ],
         "probes": [
             ("/systems", ["POST"]),
             ("/systems/{system}", ["PUT", "DELETE"]),
@@ -85,6 +90,10 @@ CLASS_AUDITS = [
             f"{CS1}/update",
             f"{FEATURES4}/update",
         ],
+        "prerequisiteConformance": [
+            f"{CS1}/api-common",
+            f"{OGCAPI4}/update",
+        ],
         "probes": [
             ("/systems/{system}", ["PATCH"]),
             ("/deployments/{deployment}", ["PATCH"]),
@@ -107,6 +116,9 @@ CLASS_AUDITS = [
         "requiredConformance": [
             f"{CS2}/create-replace-delete",
             f"{FEATURES4}/create-replace-delete",
+        ],
+        "prerequisiteConformance": [
+            f"{CS2}/api-common",
         ],
         "probes": [
             ("/systems/{system}/datastreams", ["POST"]),
@@ -138,6 +150,9 @@ CLASS_AUDITS = [
             f"{CS2}/update",
             f"{CS2}/create-replace-delete",
             f"{FEATURES4}/update",
+        ],
+        "prerequisiteConformance": [
+            f"{CS2}/api-common",
         ],
         "conditionConformance": [
             f"{CS2}/datastream",
@@ -282,12 +297,16 @@ class HttpClient:
 
 def audit_class(audit, declared, ids, client):
     required = audit["requiredConformance"]
+    prerequisites = audit.get("prerequisiteConformance", [])
     condition = audit.get("conditionConformance", [])
     missing_required = [uri for uri in required if uri not in declared]
+    missing_prerequisites = [uri for uri in prerequisites if uri not in declared]
     missing_condition = [uri for uri in condition if uri not in declared]
     blockers = []
     if missing_required:
         blockers.append("missing required conformance declarations")
+    if missing_prerequisites:
+        blockers.append("missing inherited prerequisite conformance declarations")
     if missing_condition:
         blockers.append("missing condition conformance declarations")
 
@@ -334,12 +353,19 @@ def audit_class(audit, declared, ids, client):
         "conformanceClass": audit["conformanceClass"],
         "candidateProcedures": audit["candidateProcedures"],
         "requiredConformancePresent": not missing_required,
+        "prerequisiteConformancePresent": not missing_prerequisites,
         "missingRequiredConformance": missing_required,
+        "missingPrerequisiteConformance": missing_prerequisites,
         "missingConditionConformance": missing_condition,
         "readinessProbes": probes,
         "missingAdvertisedMethods": missing_methods,
         "readinessScope": "declarations-and-advertised-methods-only",
         "declarationAndMethodReadiness": not missing_required
+        and not missing_condition
+        and not missing_methods,
+        "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisites",
+        "declarationMethodAndPrerequisiteReadiness": not missing_required
+        and not missing_prerequisites
         and not missing_condition
         and not missing_methods,
         "exactPromotionReady": False,
@@ -354,6 +380,9 @@ def build_audit(iut_url, client, ids, credential_supplied=False):
     ready_classes = [
         item["conformanceClass"] for item in classes if item["declarationAndMethodReadiness"]
     ]
+    prerequisite_ready_classes = [
+        item["conformanceClass"] for item in classes if item["declarationMethodAndPrerequisiteReadiness"]
+    ]
     return {
         "schemaVersion": 1,
         "generatedAt": utc_timestamp(),
@@ -364,6 +393,8 @@ def build_audit(iut_url, client, ids, credential_supplied=False):
         "remainingCandidateProcedures": total_candidates,
         "readinessScope": "Read-only declaration and OPTIONS method advertisement audit; positive lifecycle proof is still required before exact promotion.",
         "classesWithDeclarationAndMethodReadiness": ready_classes,
+        "classesWithDeclarationMethodAndPrerequisiteReadiness": prerequisite_ready_classes,
+        "prerequisiteReadinessPolicy": "Prerequisite-aware readiness also requires inherited conformance declarations; exact positive lifecycle proof is still required before exact promotion.",
         "exactPromotionReady": False,
         "exactPromotionPolicy": "This audit is read-only readiness evidence only; it never promotes mutation candidates to reviewed exact mappings.",
         "conformance": {
@@ -375,6 +406,8 @@ def build_audit(iut_url, client, ids, credential_supplied=False):
                 for item in declared
                 if "/create-replace-delete" in item
                 or "/update" in item
+                or "/api-common" in item
+                or item.startswith(OGCAPI4)
                 or item.startswith(CS2)
             ),
         },
@@ -409,7 +442,9 @@ def main(argv=None):
         "mutation readiness audit wrote "
         f"{args.output} with {audit['remainingCandidateProcedures']} candidate procedures; "
         f"declaration/method-ready classes: "
-        f"{len(audit['classesWithDeclarationAndMethodReadiness'])}"
+        f"{len(audit['classesWithDeclarationAndMethodReadiness'])}; "
+        f"prerequisite-ready classes: "
+        f"{len(audit['classesWithDeclarationMethodAndPrerequisiteReadiness'])}"
     )
     return 0
 

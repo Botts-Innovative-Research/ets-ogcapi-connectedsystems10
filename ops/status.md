@@ -1,6 +1,41 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T02:10Z
+Last updated: 2026-08-03T03:04Z
+
+## Sprint 73 Complete Pending Push - Mutation Prerequisite Readiness Audit
+
+- User instruction: "Continue."
+- Plan 1 scope: CP-033, S-ETS-73-01, and `sprint-ets-73.yaml` extend the
+  Sprint 72 read-only mutation-readiness audit with prerequisite-declaration
+  readiness evidence.
+- `scripts/mutation-readiness-audit.py` now emits
+  `prerequisiteConformancePresent`, `missingPrerequisiteConformance`,
+  `prerequisiteReadinessScope`,
+  `declarationMethodAndPrerequisiteReadiness`, and root
+  `classesWithDeclarationMethodAndPrerequisiteReadiness` fields.
+- Direct local OSH audit records `47` candidates, `GET=1`, `OPTIONS=25`,
+  `unsafeMethodsIssued=[]`, one direct declaration/method-ready class
+  (`1:/conf/create-replace-delete`), and zero prerequisite-ready classes.
+- Disposable local OSH run `sprint-ets-73-prereq-20260803T024709Z` records
+  readiness audit `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`, one direct
+  declaration/method-ready class, zero prerequisite-ready classes, cleanup
+  PASS, and primary-state isolation PASS.
+- Verification evidence is archived under
+  `ops/test-results/sprint-ets-73-mutation-prerequisite-readiness-2026-08-03/`:
+  Python compile PASS, Python unit tests `21/0/0/0`, formatter BUILD SUCCESS,
+  Docker Maven `787/0/0/3`, direct OSH audit, complete disposable OSH E2E
+  artifacts, and a repository evidence manifest that verifies in place.
+- Full TeamEngine smoke remains honestly non-green on the existing local OSH
+  twenty-failure baseline: populated `275/24/20/231`, clean-primary
+  `275/23/20/232`. This is not a Sprint 73 regression and does not promote any
+  mutation-bound candidate to reviewed exact.
+- Non-goals remain unchanged: no audit POST/PUT/PATCH/DELETE, no OSH or
+  TeamEngine patches, no TeamEngine verdict weakening, and no reviewed exact
+  promotion for the 47 mutation-bound candidate procedures.
+- Raze returned `APPROVE_WITH_CONCERNS 0.94` with `required_fixes: []`. The
+  LOW concern is documented: prerequisite-ready means declaration-only
+  readiness, not proof that prerequisite TestNG groups passed.
+- Push is pending.
 
 ## Sprint 72 Complete and Pushed - Mutation Candidate Readiness Audit
 

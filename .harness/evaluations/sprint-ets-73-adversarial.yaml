@@ -1,0 +1,182 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.94
+reviewer: Raze
+reviewed_at_utc: "2026-08-03T03:05:21Z"
+reviewed_scope:
+  - AGENTS.md
+  - _bmad/agents/adversarial-reviewer.md
+  - openspec/change-proposals/CP-033-mutation-prerequisite-readiness.md
+  - epics/stories/s-ets-73-01-mutation-prerequisite-readiness.md
+  - .harness/contracts/sprint-ets-73.yaml
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md#REQ-ETS-CLEANUP-024
+  - scripts/mutation-readiness-audit.py
+  - scripts/test_mutation_readiness_audit.py
+  - .gitignore
+  - _bmad/traceability.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/known-issues.md
+  - ops/test-results.md
+  - ops/test-results/sprint-ets-73-mutation-prerequisite-readiness-2026-08-03/
+summary: >
+  Sprint 73 satisfies its read-only mutation prerequisite readiness audit scope.
+  The audit adds prerequisite-declaration fields without issuing unsafe methods,
+  without serializing credential values, and without promoting any mutation
+  candidate to exact. E2E evidence is honestly non-green and packaged with
+  reachable nested logs and verifying manifests. One non-blocking wording risk
+  remains: the new prerequisite-ready label is declaration-only readiness, not
+  proof that prerequisite TestNG groups have passed.
+findings:
+  - id: RAZE-ETS73-FALSECONFIDENCE-001
+    severity: LOW
+    required: false
+    title: Prerequisite-ready output is declaration-only, not prerequisite execution proof
+    description: >
+      The implementation correctly keeps exactPromotionReady=false and states
+      that positive lifecycle proof remains required, but
+      declarationMethodAndPrerequisiteReadiness is computed only from declared
+      conformance URIs, condition URI declarations when configured, and OPTIONS
+      Allow headers. It does not evaluate whether inherited prerequisite TestNG
+      groups such as part1apicommon or part2apicommon actually pass. A future
+      IUT that declares the prerequisite URIs while still failing or skipping
+      prerequisite procedure evidence could therefore appear in
+      classesWithDeclarationMethodAndPrerequisiteReadiness unless readers treat
+      the field strictly as prerequisite-declaration readiness.
+    evidence:
+      - scripts/mutation-readiness-audit.py:302 checks missing prerequisites by URI membership in /conformance declarations.
+      - scripts/mutation-readiness-audit.py:366 labels the scope as declarations-advertised-methods-and-inherited-prerequisites.
+      - scripts/mutation-readiness-audit.py:367 computes declarationMethodAndPrerequisiteReadiness without consuming TeamEngine prerequisite outcomes.
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:3157 says prerequisite-complete readiness, while line 3159 narrows this to missing prerequisite declarations.
+      - ops/test-results.md:35 honestly records the full local OSH TeamEngine E2E as non-green.
+    impact: >
+      Non-blocking for Sprint 73 because every scoped artifact preserves
+      exactPromotionReady=false, records the empty local-OSH prerequisite-ready
+      list, and does not claim lifecycle conformance.
+    recommendation: >
+      In a future cleanup, rename or document the field as prerequisite
+      declaration readiness wherever a human might read it as prerequisite
+      execution/pass readiness.
+required_fixes: []
+verification:
+  reruns:
+    expensive_docker_maven_teamengine: false
+    rationale: >
+      Review was satisfied by artifact inspection and cheap manifest/hash/log
+      checks; no concrete blocker required rerunning Docker, Maven, or TeamEngine.
+  artifact_checks:
+    repo_evidence_manifest:
+      command: sha256sum -c ops/test-results/sprint-ets-73-mutation-prerequisite-readiness-2026-08-03/repo-evidence-manifest.sha256
+      result: PASS
+      files: 46
+    copied_disposable_run_manifest:
+      command: cd ops/test-results/sprint-ets-73-mutation-prerequisite-readiness-2026-08-03/local-osh-populated-run && sha256sum -c artifact-manifest.sha256
+      result: PASS
+      files: 33
+    unignored_repository_evidence:
+      command: git ls-files --others --exclude-standard ops/test-results/sprint-ets-73-mutation-prerequisite-readiness-2026-08-03
+      result: PASS
+      files: 47
+      log_files: 14
+  exact_totals:
+    python_pycompile: PASS
+    python_unittest:
+      total: 21
+      failures: 0
+      errors: 0
+    spring_javaformat: BUILD_SUCCESS
+    docker_maven:
+      total: 787
+      failures: 0
+      errors: 0
+      skipped: 3
+      build: BUILD_SUCCESS
+    direct_primary_local_osh_audit:
+      remaining_candidate_procedures: 47
+      request_method_counts:
+        GET: 1
+        OPTIONS: 25
+      unsafe_methods_issued: []
+      classes_with_declaration_and_method_readiness:
+        - "1:/conf/create-replace-delete"
+      classes_with_declaration_method_and_prerequisite_readiness: []
+      exact_promotion_ready: false
+    disposable_local_osh_readiness_audit:
+      run_id: sprint-ets-73-prereq-20260803T024709Z
+      request_method_counts:
+        GET: 1
+        OPTIONS: 27
+      unsafe_methods_issued: []
+      classes_with_declaration_and_method_readiness:
+        - "1:/conf/create-replace-delete"
+      classes_with_declaration_method_and_prerequisite_readiness: []
+      exact_promotion_ready: false
+    disposable_local_osh_teamengine_populated:
+      total: 275
+      passed: 24
+      failed: 20
+      skipped: 231
+      request_method_counts:
+        GET: 134
+      verdict: FAIL
+    clean_primary_teamengine:
+      total: 275
+      passed: 23
+      failed: 20
+      skipped: 232
+      request_method_counts:
+        GET: 130
+      verdict: FAIL
+    disposable_workflow:
+      exit_code: 1
+      provisioning: PASS
+      cleanup: PASS
+      primary_state_unchanged: true
+      overall_workflow_verdict: FAIL
+      e2e_honesty: >
+        The non-zero exit is expected for the current local OSH baseline because
+        the full TeamEngine conformance run remains non-green; Sprint 73 does
+        not claim that these failures are resolved.
+policy_checks:
+  false_pass_or_exact_promotion:
+    result: PASS
+    notes: >
+      Root and class-level exactPromotionReady stay false. All 47 mutation-bound
+      procedures remain candidate.
+  canonical_uri_mapping:
+    result: PASS
+    notes: >
+      Part 1 inherited checks use exact ogcapi-4 create-replace-delete/update
+      URIs and do not allow ogcapi-features-4 near matches to satisfy those
+      inherited prerequisites. Part 2 prerequisite declarations match the
+      runtime-visible Part 2 API Common and Features Part 4 gates currently in
+      the ETS.
+  read_only_audit:
+    result: PASS
+    notes: >
+      Audit evidence records only GET and OPTIONS requests, and
+      unsafeMethodsIssued is empty for both direct and disposable local OSH
+      audit JSON.
+  credential_serialization:
+    result: PASS
+    notes: >
+      The audit serializes only credentialSupplied; tests verify the supplied
+      credential value is omitted from JSON, and scoped evidence search found no
+      Sprint 73 credential value.
+  e2e_honesty:
+    result: PASS
+    notes: >
+      Ops/spec docs report the full local OSH TeamEngine baseline as non-green:
+      populated 275/24/20/231 and clean-primary 275/23/20/232.
+  evidence_packaging:
+    result: PASS
+    notes: >
+      Both manifests verify, and the Sprint 73 .gitignore exception leaves all
+      14 evidence log files reachable through git ls-files --others
+      --exclude-standard.
+  documentation_reconciliation:
+    result: PASS_WITH_CONCERN
+    notes: >
+      Spec, story, contract, traceability, status, changelog, known-issues, and
+      test-results agree on the non-green E2E state, zero exact promotions, and
+      empty prerequisite-ready list. The only concern is the declaration-only
+      semantics described in RAZE-ETS73-FALSECONFIDENCE-001.

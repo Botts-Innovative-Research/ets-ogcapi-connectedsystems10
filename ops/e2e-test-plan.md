@@ -1,6 +1,6 @@
 # E2E Test Plan — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T02:10Z
+Last updated: 2026-08-03T03:04Z
 
 ## Policy
 
@@ -46,12 +46,13 @@ loopback seeding URL, records no credential values, mounts the external OSH
 installation at `/opt/osh:ro`, and removes ephemeral state unless
 `LOCAL_OSH_KEEP_STATE=true` is explicitly selected for diagnostics.
 
-After fixture provisioning, the workflow runs the Sprint 72
+After fixture provisioning, the workflow runs the Sprint 72/Sprint 73
 `scripts/mutation-readiness-audit.py` probe and archives
 `populated-mutation-readiness.json` before starting TeamEngine. This audit is
 read-only readiness evidence only: it fetches `/conformance`, issues `OPTIONS`
-probes, strips any smoke credential from its subprocess environment, and never
-promotes mutation-bound candidate mappings to reviewed exact.
+probes, strips any smoke credential from its subprocess environment, records
+both direct declaration/method readiness and prerequisite-aware readiness, and
+never promotes mutation-bound candidate mappings to reviewed exact.
 
 The disposable OSH container may have a long ownership name derived from
 `LOCAL_OSH_RUN_ID`; TeamEngine IUT access must use the generated short Docker

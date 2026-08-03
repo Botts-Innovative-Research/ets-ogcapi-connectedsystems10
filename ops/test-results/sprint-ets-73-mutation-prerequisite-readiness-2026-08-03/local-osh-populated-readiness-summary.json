@@ -1,0 +1,67 @@
+{
+  "counts": {
+    "GET": 1,
+    "OPTIONS": 27
+  },
+  "unsafe": [],
+  "legacyReady": [
+    "1:/conf/create-replace-delete"
+  ],
+  "prereqReady": [],
+  "classes": [
+    {
+      "id": "part1CreateReplaceDelete",
+      "missingRequiredConformance": [],
+      "missingPrerequisiteConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+        "http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete"
+      ],
+      "missingConditionConformance": [],
+      "missingAdvertisedMethods": 0,
+      "declarationAndMethodReadiness": true,
+      "declarationMethodAndPrerequisiteReadiness": false
+    },
+    {
+      "id": "part1Update",
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      ],
+      "missingPrerequisiteConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+        "http://www.opengis.net/spec/ogcapi-4/1.0/conf/update"
+      ],
+      "missingConditionConformance": [],
+      "missingAdvertisedMethods": 5,
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false
+    },
+    {
+      "id": "part2CreateReplaceDelete",
+      "missingRequiredConformance": [],
+      "missingPrerequisiteConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common"
+      ],
+      "missingConditionConformance": [],
+      "missingAdvertisedMethods": 3,
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false
+    },
+    {
+      "id": "part2Update",
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      ],
+      "missingPrerequisiteConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common"
+      ],
+      "missingConditionConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility"
+      ],
+      "missingAdvertisedMethods": 6,
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false
+    }
+  ]
+}

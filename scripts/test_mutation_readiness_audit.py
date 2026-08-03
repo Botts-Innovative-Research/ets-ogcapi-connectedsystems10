@@ -3,6 +3,8 @@
 
 # REQ-ETS-CLEANUP-023;
 # SCENARIO-ETS-CLEANUP-MUTATION-READINESS-AUDIT-001.
+# REQ-ETS-CLEANUP-024;
+# SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-AUDIT-001.
 
 import importlib.util
 import pathlib
@@ -70,16 +72,60 @@ class MutationReadinessAuditTests(unittest.TestCase):
         self.assertEqual({"GET": 1, "OPTIONS": 33}, report["requestMethodCounts"])
         self.assertIn("positive lifecycle proof", report["readinessScope"])
         self.assertEqual([], report["classesWithDeclarationAndMethodReadiness"])
+        self.assertEqual([], report["classesWithDeclarationMethodAndPrerequisiteReadiness"])
         for class_report in report["classes"]:
             self.assertFalse(class_report["exactPromotionReady"])
             self.assertEqual(
                 "declarations-and-advertised-methods-only",
                 class_report["readinessScope"],
             )
+            self.assertEqual(
+                "declarations-advertised-methods-and-inherited-prerequisites",
+                class_report["prerequisiteReadinessScope"],
+            )
             self.assertIn(
                 "This audit is read-only readiness evidence only",
                 report["exactPromotionPolicy"],
             )
+
+    def test_direct_declaration_method_readiness_can_be_prerequisite_incomplete(self):
+        allow_by_path = {}
+        for class_audit in AUDITOR.CLASS_AUDITS:
+            for template, methods in class_audit["probes"]:
+                path, skip_reason = AUDITOR.format_probe_path(template, AUDITOR.DEFAULT_IDS)
+                if skip_reason is None:
+                    allow_by_path.setdefault(path, ["GET", "OPTIONS"]).extend(methods)
+        client = FakeClient(
+            declared=[
+                AUDITOR.CS1 + "/create-replace-delete",
+                AUDITOR.FEATURES4 + "/create-replace-delete",
+            ],
+            allow_by_path=allow_by_path,
+        )
+
+        report = AUDITOR.build_audit("http://example.test/api", client, dict(AUDITOR.DEFAULT_IDS))
+        part1_crd = next(item for item in report["classes"] if item["id"] == "part1CreateReplaceDelete")
+
+        self.assertTrue(part1_crd["declarationAndMethodReadiness"])
+        self.assertFalse(part1_crd["declarationMethodAndPrerequisiteReadiness"])
+        self.assertTrue(part1_crd["requiredConformancePresent"])
+        self.assertFalse(part1_crd["prerequisiteConformancePresent"])
+        self.assertEqual(
+            [
+                AUDITOR.CS1 + "/api-common",
+                AUDITOR.OGCAPI4 + "/create-replace-delete",
+            ],
+            part1_crd["missingPrerequisiteConformance"],
+        )
+        self.assertIn(
+            "missing inherited prerequisite conformance declarations",
+            part1_crd["exactPromotionBlockers"],
+        )
+        self.assertEqual(
+            ["1:/conf/create-replace-delete"],
+            report["classesWithDeclarationAndMethodReadiness"],
+        )
+        self.assertEqual([], report["classesWithDeclarationMethodAndPrerequisiteReadiness"])
 
     def test_missing_declarations_and_missing_ids_are_reported_as_blockers(self):
         client = FakeClient(declared=[])
@@ -90,7 +136,9 @@ class MutationReadinessAuditTests(unittest.TestCase):
         update = next(item for item in report["classes"] if item["id"] == "part2Update")
 
         self.assertFalse(update["requiredConformancePresent"])
+        self.assertFalse(update["prerequisiteConformancePresent"])
         self.assertIn(AUDITOR.CS2 + "/update", update["missingRequiredConformance"])
+        self.assertIn(AUDITOR.CS2 + "/api-common", update["missingPrerequisiteConformance"])
         self.assertTrue(update["missingConditionConformance"])
         skipped = [
             probe

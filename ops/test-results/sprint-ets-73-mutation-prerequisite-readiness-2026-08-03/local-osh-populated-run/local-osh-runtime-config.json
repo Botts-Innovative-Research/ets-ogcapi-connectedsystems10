@@ -1,0 +1,56 @@
+[
+  {
+    "autoStart": true,
+    "httpPort": 8081,
+    "id": "s42-http-server",
+    "moduleClass": "org.sensorhub.impl.service.HttpServer",
+    "name": "Sprint 42 HTTP Server",
+    "objClass": "org.sensorhub.impl.service.HttpServerConfig",
+    "proxyBaseUrl": "http://ets-csapi-osh-7a8e153fd5763430:8081",
+    "servletsRootUrl": "/sensorhub",
+    "staticDocsRootDir": "/tmp/osh-web"
+  },
+  {
+    "autoCommitBufferSize": 256,
+    "autoStart": true,
+    "databaseNum": 1,
+    "id": "s42-obs-database",
+    "indexObsLocation": false,
+    "memoryCacheSize": 256,
+    "moduleClass": "org.sensorhub.impl.datastore.h2.MVObsSystemDatabase",
+    "name": "Sprint 42 Observation Database",
+    "objClass": "org.sensorhub.impl.datastore.h2.MVObsSystemDatabaseConfig",
+    "readOnly": false,
+    "storagePath": "/state/all_obs_h2.dat",
+    "useCompression": false
+  },
+  {
+    "autoStart": true,
+    "customFormats": [],
+    "databaseID": "s42-obs-database",
+    "defaultLiveTimeout": 600.0,
+    "enableTransactional": false,
+    "endPoint": "/api",
+    "id": "s42-consys-api",
+    "maxResponseLimit": 100000,
+    "moduleClass": "org.sensorhub.impl.service.consys.ConSysApiService",
+    "name": "Sprint 42 Connected Systems API",
+    "objClass": "org.sensorhub.impl.service.consys.ConSysApiServiceConfig",
+    "ogcCapabilitiesInfo": {
+      "description": "Isolated read-only Connected Systems ETS target",
+      "keywords": [
+        "OpenSensorHub",
+        "Connected Systems"
+      ],
+      "objClass": "org.sensorhub.impl.service.ogc.OGCServiceConfig$CapabilitiesInfo",
+      "title": "Sprint 42 Local OpenSensorHub"
+    },
+    "security": {
+      "enableAccessControl": false,
+      "objClass": "org.sensorhub.api.security.SecurityConfig",
+      "requireAuth": false
+    },
+    "threadPoolSize": 0,
+    "uriPrefixMap": []
+  }
+]

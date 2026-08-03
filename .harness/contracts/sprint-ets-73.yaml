@@ -1,0 +1,35 @@
+sprint: ets-73
+story: S-ETS-73-01
+title: Mutation prerequisite readiness audit
+status: complete_raze_approved_with_concerns_push_pending
+trigger: User instructed "Continue."
+scope:
+  requirement: REQ-ETS-CLEANUP-024
+  change_type: operational_readiness_audit
+  exact_promotion: false
+  mutation_policy: read_only_audit
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-AUDIT-001
+      expect: The audit separates direct declaration/method readiness from prerequisite-declaration readiness for all 47 mutation-bound candidates.
+    - id: read_only
+      expect: The audit issues only GET and OPTIONS and records any unsafe method dispatch as invalid evidence.
+    - id: no_exact_promotion
+      expect: Every audited class and the root report keep exactPromotionReady=false.
+    - id: no_credential_serialization
+      expect: Credential values are never written to audit JSON.
+  normal:
+    - id: local_osh_evidence
+      expect: Direct and disposable local OSH evidence archive prerequisite-declaration readiness JSON without changing TeamEngine verdict handling.
+required_verification:
+  - python_unit_tests
+  - spring_javaformat
+  - focused_maven_or_full_maven
+  - local_osh_readiness_audit
+  - local_osh_teamengine_e2e
+  - raze_adversarial_review
+non_goals:
+  - Do not issue POST, PUT, PATCH, or DELETE from the audit.
+  - Do not patch OSH or TeamEngine.
+  - Do not promote mutation-bound candidates to reviewed exact mappings.
+  - Do not treat audit readiness as positive lifecycle conformance.

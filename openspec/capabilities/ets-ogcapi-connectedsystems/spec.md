@@ -3150,6 +3150,68 @@ candidate procedures
 Docker DNS-safe alias rather than requiring the full generated container name
 to be a valid DNS label.
 
+#### REQ-ETS-CLEANUP-024: Mutation Prerequisite Readiness Audit (Sprint 73)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS_PUSH_PENDING (Sprint 73
+  S-ETS-73-01)
+- **Description**: The mutation-readiness audit SHALL distinguish direct
+  declaration/method readiness from prerequisite-declaration readiness. For
+  each audited mutation class it SHALL report missing inherited prerequisite
+  conformance declarations separately from missing direct class declarations,
+  missing condition classes, missing advertised mutation methods, and missing
+  positive lifecycle proof. This prerequisite-readiness tier is declaration
+  evidence only; it is not proof that inherited TestNG prerequisite groups
+  passed. The audit SHALL emit class-level
+  `prerequisiteConformancePresent`, `missingPrerequisiteConformance`, and
+  `declarationMethodAndPrerequisiteReadiness` fields plus a root
+  `classesWithDeclarationMethodAndPrerequisiteReadiness` list. Part 1
+  mutation prerequisite checks SHALL require the exact released inherited
+  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete` or
+  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/update` URI as applicable;
+  similarly named `ogcapi-features-4` declarations SHALL NOT satisfy those
+  Part 1 inherited checks. The audit SHALL remain read-only and SHALL NOT
+  promote mutation-bound candidates to reviewed exact mappings.
+- **Rationale**: Sprint 72 showed useful method-advertisement evidence, but
+  direct declarations and broad `Allow` headers are not enough when the real
+  TestNG prerequisite chain still SKIPs before lifecycle writes. A separate
+  prerequisite-aware readiness tier prevents local OSH's current Part 1
+  Create/Replace/Delete declaration/method evidence from being misread as
+  close to positive lifecycle readiness.
+- **Implementation evidence**: Sprint 73 adds prerequisite-aware fields to
+  `scripts/mutation-readiness-audit.py` while preserving the Sprint 72
+  read-only and no-exact-promotion contract. Focused Python verification is
+  `21/0/0/0`, formatter passes, and full Docker Maven is `787/0/0/3`.
+  Direct local OSH evidence under
+  `ops/test-results/sprint-ets-73-mutation-prerequisite-readiness-2026-08-03/`
+  records `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`,
+  `classesWithDeclarationAndMethodReadiness=["1:/conf/create-replace-delete"]`,
+  and `classesWithDeclarationMethodAndPrerequisiteReadiness=[]`. Disposable
+  local OSH evidence records `GET=1`, `OPTIONS=27`,
+  `unsafeMethodsIssued=[]`, cleanup `PASS`, primary-state isolation `PASS`,
+  and the same prerequisite-ready empty list. TeamEngine remains honestly
+  non-green on the existing local OSH twenty-failure baseline: populated
+  `275/24/20/231`, clean-primary `275/23/20/232`; no mutation-bound candidate
+  is promoted. Raze returned `APPROVE_WITH_CONCERNS 0.94` with
+  `required_fixes: []`; its LOW concern is that prerequisite readiness is
+  declaration-only, not inherited TestNG execution proof.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54;
+  REQ-ETS-CLEANUP-023; REQ-ETS-PART1-010, REQ-ETS-PART1-011,
+  REQ-ETS-PART2-007, REQ-ETS-PART2-008.
+
+#### SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-AUDIT-001 (CRITICAL)
+**GIVEN** an IUT declares a mutation conformance class and advertises its
+mutation methods
+**WHEN** the mutation-readiness audit runs
+**THEN** direct declaration/method readiness and prerequisite-declaration
+readiness are reported as separate fields
+**AND** missing inherited prerequisite declarations are explicit blockers
+**AND** prerequisite-declaration readiness is not reported as prerequisite
+TestNG execution proof
+**AND** exact Part 1 `ogcapi-4` inherited declarations are not satisfied by
+near-match `ogcapi-features-4` declarations
+**AND** the audit still issues only GET and OPTIONS
+**AND** no class reports `exactPromotionReady=true`.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)

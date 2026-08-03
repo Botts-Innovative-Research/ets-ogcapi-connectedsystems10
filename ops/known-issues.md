@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T07:31Z
+Last updated: 2026-08-03T08:16Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -48,7 +48,11 @@ Last updated: 2026-08-03T07:31Z
   Part 2 CRD still lacks the inherited
   `http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete`
   declaration. Treat `connected-systems-go` as a local diagnostic and upstream
-  outreach candidate, not current exact-promotion evidence.
+  outreach candidate, not current exact-promotion evidence. Sprint 77 packages
+  these findings for future maintainer filing under `ops/outreach/`, including
+  Part 1 CRD, exact inherited `ogcapi-4` CRD, and Part 2 Feasibility condition
+  blockers; it does not file the issue, mutate an IUT, or reduce the
+  47-candidate blocker set.
 - Codex remote-control thread listing reports host
   `slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0` as
   `thread_list_unavailable`. The reachable task for this folder is idle and

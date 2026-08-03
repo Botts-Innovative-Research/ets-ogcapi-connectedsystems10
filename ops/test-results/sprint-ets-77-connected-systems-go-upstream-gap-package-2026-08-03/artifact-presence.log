@@ -1,0 +1,7 @@
+PASS ops/outreach/connected-systems-go-readiness-gap-request.md
+PASS ops/outreach/connected-systems-go-readiness-gap-request.json
+PASS ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/upstream-head.txt
+PASS .harness/evaluations/sprint-ets-77-adversarial.yaml
+PASS .harness/evaluations/sprint-ets-77-adversarial-recheck.yaml
+PASS .harness/evaluations/sprint-ets-77-adversarial-recheck-2.yaml
+PASS required blocker text

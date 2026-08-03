@@ -2,6 +2,41 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 77 connected-systems-go upstream gap package
+
+**Triggered by user instruction**: "Continue" after Sprint 76 self-run
+`connected-systems-go` readiness evidence was completed and pushed.
+
+- Added CP-037, S-ETS-77-01, `REQ-ETS-CLEANUP-028`,
+  `SCENARIO-ETS-CLEANUP-CSGO-UPSTREAM-GAP-PACKAGE-001`, and the Sprint 77
+  contract for a documentation-only upstream readiness handoff.
+- Created `ops/outreach/connected-systems-go-readiness-gap-request.md` and a
+  JSON companion that package the Sprint 76 blockers for future maintainer
+  filing.
+- Captured current upstream `HEAD`/`main` in
+  `ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/upstream-head.txt`;
+  it still matches the audited Sprint 76 commit
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`.
+- The request package records positive local route evidence separately from
+  conformance blockers: direct lifecycle `29/29` passed across DataStream,
+  Observation, ControlStream, and Command POST/GET/PUT/GET/DELETE/GET paths,
+  while TeamEngine remained non-green at `275/15/1/259` because Part 1 Core is
+  not declared.
+- Actionable blocker list now includes missing Part 1 Core declaration, missing
+  Part 1 Create/Replace/Delete and exact inherited
+  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`
+  declarations, incomplete OPTIONS `Allow` advertisement, missing inherited OGC
+  API Features Part 4 Create/Replace/Delete declaration, missing Part 2
+  Feasibility condition readiness, and absent Update/PATCH declarations plus
+  PATCH readiness.
+- Raze initial review returned `GAPS_FOUND 0.91` for underreported exact
+  blockers, premature completion wording, and one ambiguous OPTIONS example;
+  first focused recheck returned `GAPS_FOUND 0.88` for one OPTIONS table cell;
+  second focused recheck returned `APPROVE 0.97` with `required_fixes=[]`.
+- No IUT was mutated, no TeamEngine rerun was performed, no upstream issue was
+  filed from this environment, and no mutation-bound candidate was promoted to
+  reviewed exact.
+
 ## 2026-08-03 - Sprint 76 self-run connected-systems-go readiness
 
 **Triggered by user instruction**: "Do it" approving the next-step plan to run

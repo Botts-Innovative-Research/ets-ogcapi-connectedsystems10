@@ -1,8 +1,46 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T07:31Z
+Last updated: 2026-08-03T08:16Z
 
 ## Current Sprint Evidence
+
+Sprint 77 `connected-systems-go` upstream gap package:
+
+- Trigger: user instructed "Continue" after Sprint 76 self-run
+  `connected-systems-go` readiness evidence was completed and pushed.
+- Scope: `REQ-ETS-CLEANUP-028` documentation and upstream readiness handoff
+  only. No IUT was mutated and TeamEngine was not rerun in this sprint.
+- Outreach artifacts:
+  `ops/outreach/connected-systems-go-readiness-gap-request.md` and
+  `ops/outreach/connected-systems-go-readiness-gap-request.json`.
+- Evidence directory:
+  `ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/`.
+- Upstream HEAD check:
+  `upstream-head.txt` records `HEAD` and `refs/heads/main` at
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`, matching the Sprint 76 audited
+  source commit.
+- Package contents:
+  records positive direct lifecycle evidence (`29/29`, POST/PUT/DELETE
+  lifecycles for DataStream, Observation, ControlStream, and Command) while
+  preserving the blocking TeamEngine result (`275/15/1/259`, failure
+  `conformancePageDeclaresCsCore`) and readiness audit result (`47`
+  candidates, `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, zero
+  declaration/method-ready classes).
+- Blockers captured:
+  missing Connected Systems Part 1 Core declaration, missing Part 1
+  Create/Replace/Delete and exact inherited OGC API Features CRD prerequisite,
+  incomplete OPTIONS `Allow` method advertisement, missing inherited OGC API
+  Features Part 4 Create/Replace/Delete declaration, missing Part 2 Feasibility
+  condition readiness, and absent Update/PATCH declarations and method
+  readiness.
+- Outcome:
+  the package is ready to file or send manually, but it is not an upstream issue
+  submission and does not promote any mutation-bound candidate mapping.
+- Raze:
+  initial review returned `GAPS_FOUND 0.91` for underreported exact blockers,
+  premature completion wording, and one ambiguous OPTIONS example. First
+  focused recheck returned `GAPS_FOUND 0.88` for one OPTIONS table cell. Second
+  focused recheck returned `APPROVE 0.97` with `required_fixes=[]`.
 
 Sprint 76 self-run `connected-systems-go` readiness:
 

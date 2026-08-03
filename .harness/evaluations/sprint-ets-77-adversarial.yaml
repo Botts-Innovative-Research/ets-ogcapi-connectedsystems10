@@ -1,0 +1,148 @@
+verdict: GAPS_FOUND
+confidence: 0.91
+reviewer: Raze
+review_type: adversarial_documentation_review
+generated_at_utc: "2026-08-03T08:04:53Z"
+scope:
+  sprint: ets-77
+  story: S-ETS-77-01
+  change_type: documentation_only_upstream_gap_package
+  reviewed_files:
+    - openspec/change-proposals/CP-037-connected-systems-go-upstream-gap-package.md
+    - epics/stories/s-ets-77-01-connected-systems-go-upstream-gap-package.md
+    - .harness/contracts/sprint-ets-77.yaml
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - ops/outreach/connected-systems-go-readiness-gap-request.md
+    - ops/outreach/connected-systems-go-readiness-gap-request.json
+    - ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/known-issues.md
+    - _bmad/traceability.md
+    - _bmad/product-brief.md
+    - epics/epic-ets-05-cite-submission.md
+  explicit_non_actions:
+    - Did not run Docker.
+    - Did not run Maven.
+    - Did not run TeamEngine.
+    - Did not mutate any IUT.
+summary: >
+  The Sprint 77 package preserves the major no-filing, no-mutation, and
+  no-exact-promotion boundaries, and its copied headline Sprint 76 totals match
+  archived evidence. The package is not ready to close because it underreports
+  exact blocker URIs from Sprint 76 readiness evidence and one ops handoff file
+  prematurely labels the sprint complete while Raze is still pending.
+findings:
+  - id: RAZE-ETS77-FIDELITY-001
+    severity: MEDIUM
+    status: OPEN
+    title: Upstream package omits Sprint 76 exact blockers for Part 1 CRD and Part 2 Update condition readiness.
+    evidence:
+      - "REQ-ETS-CLEANUP-028 requires exact conformance-declaration blockers in openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:3372-3376 and SCENARIO-ETS-CLEANUP-CSGO-UPSTREAM-GAP-PACKAGE-001 requires exact missing/inconclusive declarations at lines 3404-3407."
+      - "The Markdown package lists Part 1 Core, OPTIONS Allow, one Features Part 4 CRD URI, and Update/PATCH in ops/outreach/connected-systems-go-readiness-gap-request.md:41-105."
+      - "The JSON companion mirrors only those blockers in ops/outreach/connected-systems-go-readiness-gap-request.json:49-74."
+      - "Sprint 76 readiness-summary.json also records missing Part 1 CRD URI http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete, missing exact inherited Part 1 prerequisite http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete, and missing Part 2 condition class http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility at ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-summary.json:13-19 and :59-67, repeated at :92-98 and :139-146."
+    impact: >
+      A maintainer filing based on the current package would likely miss blockers
+      required for all-47-candidate exact-use planning, especially Part 1 CRD
+      and Part 2 Update readiness. This is documentation-only, but it undermines
+      the sprint's stated purpose of avoiding future raw-log reinterpretation.
+    required_fix: >
+      Update the Markdown and JSON outreach artifacts, plus reconciled spec,
+      story, contract, ops status/test-results/changelog/known-issues/product
+      brief/traceability text as needed, to explicitly list the missing Part 1
+      CRD declaration, exact inherited ogcapi-4 CRD prerequisite, and Part 2
+      feasibility condition blocker. Keep the distinction between Part 1 exact
+      ogcapi-4 and Part 2 ogcapi-features-4 mappings clear.
+  - id: RAZE-ETS77-OPS-001
+    severity: MEDIUM
+    status: OPEN
+    title: ops/status.md prematurely marks Sprint 77 complete while Raze is pending.
+    evidence:
+      - "ops/status.md:5 says 'Sprint 77 Complete - connected-systems-go Upstream Gap Package'."
+      - "CP-037 and S-ETS-77-01 explicitly remain COMPLETE_LIGHTWEIGHT_VERIFIED_RAZE_PENDING at openspec/change-proposals/CP-037-connected-systems-go-upstream-gap-package.md:3-6 and epics/stories/s-ets-77-01-connected-systems-go-upstream-gap-package.md:3-6."
+      - "The Sprint 77 contract keeps raze_adversarial_review as PENDING in .harness/contracts/sprint-ets-77.yaml:24-36."
+      - "_bmad/traceability.md:96 says IMPLEMENTED_DOCS_PENDING_RAZE."
+    impact: >
+      The reconciled status files disagree on completion state. This is exactly
+      the kind of false-confidence bookkeeping drift the Raze gate is supposed
+      to catch before final closeout.
+    required_fix: >
+      Change ops/status.md to a Raze-pending/in-progress Sprint 77 heading until
+      required fixes are applied and Raze is rerun. After re-review, reconcile
+      CP, story, contract, traceability, status, test-results, and changelog to
+      the final Raze verdict without implying the package was filed upstream.
+  - id: RAZE-ETS77-FIDELITY-002
+    severity: LOW
+    status: OPEN
+    title: One OPTIONS Allow example is ambiguous against lifecycle-ID evidence.
+    evidence:
+      - "ops/outreach/connected-systems-go-readiness-gap-request.md:67-74 summarizes Part 2 route examples and says /controlstreams/{controlstreamId}/commands reported Allow: GET for the seeded probe."
+      - "Sprint 76 lifecycle-ID readiness actually records /controlstreams/{controlStream}/commands with allowMethods [POST] and advertisesExpectedMethods true, while the placeholder 040g audit records Allow GET."
+    impact: >
+      The overall OPTIONS blocker remains true, but this example could overstate
+      the command collection symptom if sent to maintainers without clarifying
+      which audit produced it.
+    required_fix: >
+      Rewrite the example table to distinguish placeholder-readiness audit
+      symptoms from lifecycle-ID audit symptoms, or replace the command
+      collection row with a route whose concrete lifecycle-ID probe still fails.
+positive_checks:
+  - The package clearly says it was not filed upstream and maintainers were not contacted.
+  - The package does not claim Sprint 77 mutated an IUT, reran TeamEngine, or promoted any mutation-bound candidate.
+  - Headline Sprint 76 totals in the package match archived evidence: direct lifecycle PASS with 29 steps, TeamEngine NON_GREEN_HONEST 275/15/1/259, readiness GET+OPTIONS only, 47 candidates, and zero declaration/method-ready classes.
+  - Lightweight parse evidence exists for the JSON companion and Sprint 77 contract.
+required_fixes:
+  - RAZE-ETS77-FIDELITY-001
+  - RAZE-ETS77-OPS-001
+  - RAZE-ETS77-FIDELITY-002
+evidence_checked:
+  guardrails:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+  sprint_77_artifacts:
+    - openspec/change-proposals/CP-037-connected-systems-go-upstream-gap-package.md
+    - epics/stories/s-ets-77-01-connected-systems-go-upstream-gap-package.md
+    - .harness/contracts/sprint-ets-77.yaml
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - ops/outreach/connected-systems-go-readiness-gap-request.md
+    - ops/outreach/connected-systems-go-readiness-gap-request.json
+    - ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/artifact-presence.log
+    - ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/git-diff-check.log
+    - ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/json-parse.log
+    - ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/upstream-head.txt
+    - ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/verification-summary.json
+    - ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/yaml-parse.log
+  reconciliations:
+    - ops/status.md
+    - ops/test-results.md
+    - ops/changelog.md
+    - ops/known-issues.md
+    - _bmad/traceability.md
+    - _bmad/product-brief.md
+    - epics/epic-ets-05-cite-submission.md
+  sprint_76_evidence_used_for_fidelity:
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/manifest.md
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-summary.json
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-audit.json
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-audit-lifecycle-ids.json
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/lifecycle-summary.json
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/teamengine-smoke-summary.json
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/health-conformance.json
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/source-provenance.json
+commands_run:
+  - 'date -u +"%Y-%m-%dT%H:%M:%SZ"'
+  - "sed -n '1,240p' AGENTS.md"
+  - "sed -n '1,260p' _bmad/agents/adversarial-reviewer.md"
+  - "git status --short"
+  - "find ops/outreach ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03 -maxdepth 3 -type f | sort"
+  - "sed -n on CP-037, S-ETS-77-01, .harness/contracts/sprint-ets-77.yaml, outreach Markdown/JSON, Sprint 77 verification artifacts, and reconciled ops/BMAD files"
+  - "rg -n -C 4 over Sprint 77 markers, no-filing/no-exact-promotion terms, TeamEngine totals, blocker URIs, and connected-systems-go references in scoped files"
+  - "jq checks against Sprint 76 readiness-summary.json, readiness-audit.json, readiness-audit-lifecycle-ids.json, lifecycle-summary.json, teamengine-smoke-summary.json, health-conformance.json, smoke-health-conformance.json, and source-provenance.json"
+  - "git diff --stat"
+  - "git diff --name-only"
+  - "git ls-files --others --exclude-standard"
+  - "python3 parse check for ops/outreach/connected-systems-go-readiness-gap-request.json and .harness/contracts/sprint-ets-77.yaml"
+  - "nl -ba line-reference reads for outreach package, ops/status.md, JSON companion, Sprint 76 readiness summary, contract, CP, story, traceability, and OpenSpec spec"
+  - "python3 parse check for .harness/evaluations/sprint-ets-77-adversarial.yaml"

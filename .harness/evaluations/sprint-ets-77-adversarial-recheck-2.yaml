@@ -1,0 +1,52 @@
+verdict: APPROVE
+confidence: 0.97
+reviewer: Raze
+review_type: second_focused_adversarial_recheck
+generated_at_utc: "2026-08-03T08:15:11Z"
+scope:
+  sprint: ets-77
+  focus_only:
+    - RAZE-ETS77-FIDELITY-002
+  inspected_artifact:
+    - ops/outreach/connected-systems-go-readiness-gap-request.md
+  explicit_non_actions:
+    - Did not run Docker.
+    - Did not run Maven.
+    - Did not run TeamEngine.
+    - Did not mutate any IUT.
+summary: >
+  RAZE-ETS77-FIDELITY-002 is closed. The OPTIONS example table now matches
+  Sprint 76 placeholder-readiness and lifecycle-ID readiness evidence for the
+  two previously disputed route examples, and no new contradiction was observed
+  in the scoped table rows.
+findings:
+  - id: RAZE-ETS77-FIDELITY-002
+    severity: LOW
+    status: CLOSED
+    title: OPTIONS example table now matches Sprint 76 lifecycle-ID evidence for the disputed routes.
+    evidence:
+      - "ops/outreach/connected-systems-go-readiness-gap-request.md:84 now says /datastreams/{datastreamId}/observations lifecycle-ID readiness reported Allow: GET."
+      - "Sprint 76 lifecycle-ID readiness evidence for /datastreams/{dataStream}/observations reports allowMethods [GET], expectedMethods [POST], advertisesExpectedMethods false, and status 405."
+      - "ops/outreach/connected-systems-go-readiness-gap-request.md:88 says /controlstreams/{controlstreamId}/commands lifecycle-ID readiness reported Allow: POST."
+      - "Sprint 76 lifecycle-ID readiness evidence for /controlstreams/{controlStream}/commands reports allowMethods [POST], expectedMethods [POST], advertisesExpectedMethods true, and status 405."
+      - "The placeholder-readiness column also matches Sprint 76 placeholder audit evidence for both routes: both placeholder probes report Allow: GET."
+      - "A scoped search of the outreach table found no conflicting Allow: POST/Allow: GET claim for these two route examples."
+    required_fix: null
+required_fixes: []
+evidence_checked:
+  outreach_table:
+    - ops/outreach/connected-systems-go-readiness-gap-request.md
+  sprint_76_lifecycle_id_evidence:
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-audit-lifecycle-ids.json
+  sprint_76_placeholder_evidence:
+    - ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-audit.json
+commands_run:
+  - 'date -u +"%Y-%m-%dT%H:%M:%SZ"'
+  - "nl -ba ops/outreach/connected-systems-go-readiness-gap-request.md | sed -n '71,94p'"
+  - "jq lifecycle-ID readiness probes for /datastreams/{dataStream}/observations and /controlstreams/{controlStream}/commands from readiness-audit-lifecycle-ids.json"
+  - "jq placeholder readiness probes for /datastreams/{dataStream}/observations and /controlstreams/{controlStream}/commands from readiness-audit.json"
+  - "rg scoped Allow/table search in ops/outreach/connected-systems-go-readiness-gap-request.md"
+  - "git status --short for scoped paths"
+  - "git diff -- ops/outreach/connected-systems-go-readiness-gap-request.md"
+  - "python3 parse check for .harness/evaluations/sprint-ets-77-adversarial-recheck-2.yaml"
+  - "git diff --check"

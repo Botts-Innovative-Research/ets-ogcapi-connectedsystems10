@@ -1,0 +1,8 @@
+JSON PASS ops/outreach/connected-systems-go-readiness-gap-request.json
+JSON PASS ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/verification-summary.json
+YAML PASS .harness/contracts/sprint-ets-77.yaml
+YAML PASS .harness/evaluations/sprint-ets-77-adversarial.yaml
+YAML PASS .harness/evaluations/sprint-ets-77-adversarial-recheck.yaml
+YAML PASS .harness/evaluations/sprint-ets-77-adversarial-recheck-2.yaml
+STRUCTURAL ASSERTIONS PASS
+FINAL_LIGHTWEIGHT_PASS

@@ -3363,6 +3363,60 @@ SHALL be attempted and archived
 **AND** the result SHALL NOT promote any mutation-bound candidate mapping to
 reviewed exact.
 
+#### REQ-ETS-CLEANUP-028: Connected Systems Go Upstream Gap Package (Sprint 77)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_LIGHTWEIGHT_VERIFIED_RAZE_APPROVED (Sprint 77 S-ETS-77-01)
+- **Description**: The project SHALL maintain an upstream-facing readiness gap
+  package for `SomethingCreativeStudios/connected-systems-go` before using that
+  implementation for any remaining mutation-bound exact-promotion sprint. The
+  package SHALL identify the target repository, audited source commit, current
+  upstream HEAD observed by this project, evidence directory, non-filing status,
+  positive route-level lifecycle behavior, TeamEngine result, exact
+  conformance-declaration blockers, OPTIONS `Allow` method-readiness blockers,
+  Part 1 CRD prerequisite blockers, Part 2 condition-class blockers,
+  Update/PATCH blockers, and the no-exact-promotion policy.
+- **Rationale**: Sprint 76 produced enough evidence to make
+  `connected-systems-go` an actionable upstream outreach candidate, but not a
+  conforming exact-promotion IUT. A concise handoff artifact prevents future
+  work from repeating raw log analysis or overstating lifecycle feasibility as
+  conformance closure.
+- **Implementation evidence**: Sprint 77 adds
+  `ops/outreach/connected-systems-go-readiness-gap-request.md` and
+  `ops/outreach/connected-systems-go-readiness-gap-request.json`. The package
+  records `SomethingCreativeStudios/connected-systems-go` audited commit
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`, current upstream `HEAD`/`main`
+  matching that commit, Sprint 76 evidence paths, positive direct Part 2
+  lifecycle evidence, TeamEngine `275/15/1/259` failure
+  `conformancePageDeclaresCsCore`, incomplete OPTIONS `Allow` readiness,
+  missing Part 1 Create/Replace/Delete and exact inherited
+  `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`,
+  missing inherited
+  `http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete`,
+  missing Part 2 Feasibility condition readiness, missing Update/PATCH
+  declarations and method readiness, and no exact promotion. Lightweight
+  verification artifacts under
+  `ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/`
+  record JSON parse PASS, YAML parse PASS, required artifact/blocker text PASS,
+  upstream HEAD capture, and `git diff --check` PASS. Initial Raze review
+  returned `GAPS_FOUND 0.91`; required fixes were applied and final second
+  focused recheck returned `APPROVE 0.97` with `required_fixes=[]`.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54, FR-ETS-71; REQ-ETS-CLEANUP-027,
+  REQ-ETS-CITE-002.
+
+#### SCENARIO-ETS-CLEANUP-CSGO-UPSTREAM-GAP-PACKAGE-001 (CRITICAL)
+**GIVEN** Sprint 76 evidence identifies `connected-systems-go` as useful but
+not yet conforming for exact mutation-bound ETS promotion
+**WHEN** the project prepares the upstream gap package
+**THEN** the package SHALL name the target repository, audited source commit,
+current upstream HEAD, evidence directory, and non-filing status
+**AND** it SHALL list the exact missing or inconclusive conformance declarations
+and method-readiness blockers
+**AND** it SHALL distinguish direct lifecycle success from TeamEngine and
+readiness failures
+**AND** it SHALL NOT claim that an upstream issue was filed
+**AND** it SHALL NOT promote any mutation-bound candidate mapping to reviewed
+exact.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)

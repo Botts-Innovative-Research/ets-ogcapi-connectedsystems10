@@ -1,0 +1,41 @@
+sprint: ets-77
+story: S-ETS-77-01
+title: Connected Systems Go upstream gap package
+status: complete_raze_approved
+trigger: User instructed continuing after Sprint 76 self-run connected-systems-go readiness evidence was completed and pushed.
+scope:
+  requirement: REQ-ETS-CLEANUP-028
+  change_type: documentation_and_upstream_readiness_handoff
+  exact_promotion: false
+  mutation_policy: no_iut_mutation_in_sprint
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-CSGO-UPSTREAM-GAP-PACKAGE-001
+      expect: The package identifies target repo, audited commit, evidence path, blockers, and non-filing status.
+    - id: exact_blocker_fidelity
+      expect: The package lists missing Part 1 Core, Part 1 CRD, exact inherited ogcapi-4 CRD, OPTIONS Allow, Features Part 4 CRD, Part 2 Feasibility condition, and Update/PATCH blockers without overstating route-level lifecycle proof.
+    - id: no_exact_promotion
+      expect: No mutation-bound candidate mapping is promoted from Sprint 77 documentation.
+  normal:
+    - id: evidence_links
+      expect: Sprint 76 evidence paths and current upstream HEAD are captured.
+    - id: ops_reconciliation
+      expect: Status, changelog, known issues, test results, traceability, and story status agree.
+required_verification:
+  - json_parse
+  - yaml_parse
+  - markdown_artifact_presence
+  - git_diff_check
+  - raze_adversarial_review
+verification_results:
+  json_parse: "PASS: ops/outreach/connected-systems-go-readiness-gap-request.json parsed and preserves exactPromotion=false plus expected TeamEngine failure metadata."
+  yaml_parse: "PASS: .harness/contracts/sprint-ets-77.yaml parsed with PyYAML."
+  markdown_artifact_presence: "PASS: outreach Markdown, JSON companion, and upstream-head evidence are present and non-empty; required blocker text covers Part 1 Core, Part 1 CRD, exact ogcapi-4 CRD, Options Allow, Features Part 4 CRD, Part 2 Feasibility, and Update/PATCH."
+  git_diff_check: "PASS: git diff --check completed without whitespace errors."
+  upstream_head: "PASS: git ls-remote records HEAD and refs/heads/main at 7643bb38bc9fa95a50332ed2aa5b1007b56b5028, matching the Sprint 76 audited commit."
+  raze_adversarial_review: "PASS: initial Raze review returned GAPS_FOUND 0.91; gapfix addressed underreported blockers, premature status wording, and an ambiguous OPTIONS example. First focused recheck returned GAPS_FOUND 0.88 for one table cell; second focused recheck returned APPROVE 0.97 with required_fixes=[]."
+non_goals:
+  - Do not contact maintainers or file a GitHub issue from this environment.
+  - Do not modify third-party source.
+  - Do not run IUT mutation or TeamEngine E2E in this documentation sprint.
+  - Do not promote Create/Replace/Delete or Update candidates to reviewed exact.

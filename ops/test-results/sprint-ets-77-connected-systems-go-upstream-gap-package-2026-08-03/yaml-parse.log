@@ -1,0 +1,4 @@
+PASS .harness/contracts/sprint-ets-77.yaml
+PASS .harness/evaluations/sprint-ets-77-adversarial.yaml
+PASS .harness/evaluations/sprint-ets-77-adversarial-recheck.yaml
+PASS .harness/evaluations/sprint-ets-77-adversarial-recheck-2.yaml

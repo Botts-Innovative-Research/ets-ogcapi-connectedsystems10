@@ -1,0 +1,23 @@
+{
+  "status": "PASS_RAZE_APPROVED",
+  "jsonParse": "PASS",
+  "yamlParse": "PASS",
+  "artifactPresence": "PASS",
+  "gitDiffCheck": "PASS",
+  "upstreamHead": [
+    "7643bb38bc9fa95a50332ed2aa5b1007b56b5028\tHEAD",
+    "7643bb38bc9fa95a50332ed2aa5b1007b56b5028\trefs/heads/main"
+  ],
+  "exactPromotion": false,
+  "iutMutation": false,
+  "teamEngineRerun": false,
+  "razeInitialVerdict": "GAPS_FOUND 0.91",
+  "razeFirstRecheckVerdict": "GAPS_FOUND 0.88",
+  "razeFinalRecheckVerdict": "APPROVE 0.97",
+  "razeRequiredFixes": [],
+  "razeRequiredFixesAddressed": [
+    "RAZE-ETS77-FIDELITY-001",
+    "RAZE-ETS77-OPS-001",
+    "RAZE-ETS77-FIDELITY-002"
+  ]
+}

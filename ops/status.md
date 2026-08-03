@@ -1,6 +1,49 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T07:31Z
+Last updated: 2026-08-03T08:16Z
+
+## Sprint 77 Complete - connected-systems-go Upstream Gap Package
+
+- User instruction: "Continue" after Sprint 76 self-run `connected-systems-go`
+  readiness evidence was completed and pushed.
+- Created a repo-local upstream-facing request package:
+  `ops/outreach/connected-systems-go-readiness-gap-request.md` and
+  `ops/outreach/connected-systems-go-readiness-gap-request.json`.
+- Current upstream check:
+  `ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/upstream-head.txt`
+  records `SomethingCreativeStudios/connected-systems-go` `HEAD` and `main` at
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`, matching the audited Sprint 76
+  commit.
+- The package separates positive route-level evidence from blockers:
+  Sprint 76 direct lifecycle passed `29/29` HTTP steps with POST/PUT/DELETE
+  lifecycles for DataStream, Observation, ControlStream, and Command, but
+  TeamEngine remained non-green at `275/15/1/259` because Part 1
+  `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core` is not
+  declared.
+- Actionable blockers captured for future maintainer filing:
+  missing Part 1 Core declaration, missing Part 1 Create/Replace/Delete and
+  exact inherited `http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete`
+  declarations, incomplete OPTIONS `Allow` advertisement for supported write
+  routes, missing inherited
+  `http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete`,
+  missing Part 2 Feasibility condition readiness, and absent Part 1/Part 2
+  Update declarations plus PATCH readiness.
+- Scope boundary:
+  the package is not a filed upstream issue, not the formal beta outreach
+  package, not IUT mutation evidence for Sprint 77, and not exact ATS
+  promotion. All 47 mutation-bound candidate procedures remain candidate.
+- Raze:
+  initial review returned `GAPS_FOUND 0.91` for underreported exact blockers,
+  premature completion wording, and one ambiguous OPTIONS example. First
+  focused recheck returned `GAPS_FOUND 0.88` for one OPTIONS table cell. Second
+  focused recheck returned `APPROVE 0.97` with `required_fixes=[]`.
+- Next practical work:
+  either file the prepared package upstream and ask maintainers whether the
+  declaration/OPTIONS/Update gaps are intentional or fixable, or continue
+  alternate-IUT discovery. Do not start an exact closure sprint until a
+  dedicated mutable IUT exposes the required declarations, method readiness,
+  positive lifecycle proof, cleanup/isolation, and TeamEngine base
+  conformance pass.
 
 ## Sprint 76 Complete - Self-Run connected-systems-go Readiness
 

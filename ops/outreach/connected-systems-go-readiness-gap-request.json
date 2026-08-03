@@ -1,0 +1,85 @@
+{
+  "title": "connected-systems-go readiness gaps for OGC API Connected Systems ETS exact mutation testing",
+  "status": "draft_repo_local_not_filed_upstream",
+  "targetRepository": "https://github.com/SomethingCreativeStudios/connected-systems-go",
+  "auditedSourceCommit": "7643bb38bc9fa95a50332ed2aa5b1007b56b5028",
+  "currentUpstreamHeadObservedAt": "2026-08-03",
+  "currentUpstreamHead": "7643bb38bc9fa95a50332ed2aa5b1007b56b5028",
+  "evidenceDirectory": "ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/",
+  "etsEvidenceCommit": "a0f2803",
+  "positiveEvidence": {
+    "directLifecycleStatus": "PASS",
+    "directLifecycleStepsPassed": 29,
+    "methodCounts": {
+      "GET": 15,
+      "POST": 5,
+      "PUT": 4,
+      "DELETE": 5
+    },
+    "resourceFamilies": [
+      "DataStream",
+      "Observation",
+      "ControlStream",
+      "Command"
+    ]
+  },
+  "teamEngineEvidence": {
+    "status": "NON_GREEN_HONEST",
+    "total": 275,
+    "passed": 15,
+    "failed": 1,
+    "skipped": 259,
+    "failure": "conformancePageDeclaresCsCore",
+    "missingUri": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core"
+  },
+  "readinessEvidence": {
+    "directAuditMethods": {
+      "GET": 1,
+      "OPTIONS": 25
+    },
+    "lifecycleIdAuditMethods": {
+      "GET": 1,
+      "OPTIONS": 29
+    },
+    "unsafeMethodsIssuedByReadinessAudit": [],
+    "remainingCandidateProcedures": 47,
+    "classesWithDeclarationAndMethodReadiness": 0,
+    "classesWithPrerequisiteDeclarationReadiness": 0
+  },
+  "blockers": [
+    {
+      "id": "missing_cs_part1_core",
+      "uri": "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core",
+      "requestedAction": "Declare Connected Systems Part 1 Core when satisfied, or document why it is intentionally omitted."
+    },
+    {
+      "id": "missing_part1_crd_declarations",
+      "uris": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+        "http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete"
+      ],
+      "requestedAction": "If Part 1 Create/Replace/Delete is in scope, declare the Connected Systems Part 1 CRD class and exact inherited OGC API Features CRD prerequisite expected for Part 1 exactness."
+    },
+    {
+      "id": "options_allow_write_methods",
+      "requestedAction": "Advertise actual POST, PUT, DELETE support through OPTIONS Allow on supported mutable collection and item routes; distinguish placeholder-readiness symptoms from lifecycle-ID probes where concrete ids advertise POST but item PUT/DELETE still remain blocked."
+    },
+    {
+      "id": "missing_features_part4_crd",
+      "uri": "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete",
+      "requestedAction": "Declare inherited OGC API Features Part 4 Create/Replace/Delete when satisfied."
+    },
+    {
+      "id": "missing_update_patch_surface",
+      "uris": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-4/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility"
+      ],
+      "requestedAction": "If Update is in scope, expose exact declarations, Part 2 feasibility condition readiness, OPTIONS Allow: PATCH, and positive PATCH lifecycle behavior."
+    }
+  ],
+  "exactPromotion": false
+}

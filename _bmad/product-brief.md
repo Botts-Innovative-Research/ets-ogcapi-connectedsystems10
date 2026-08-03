@@ -39,7 +39,7 @@ Source: https://csapi.developer.ogc.org/
 
 | Candidate | Open source | CS API claim | Conformance declaration evidence | Mutation evidence | Update/PATCH evidence | Part 2 evidence | ETS usefulness |
 |---|---:|---|---|---|---|---|---|
-| `SomethingCreativeStudios/connected-systems-go` | Public GitHub repo; license not declared in GitHub API metadata | README says Go implementation of OGC API Connected Systems Part 1 Feature Resources and Part 2 Dynamic Data | Live `/conformance` declares Part 1 `/conf/api-common`, Part 2 `/conf/api-common`, Part 2 Datastream/Observation/ControlStream/Command/SystemEvent/JSON/Create-Replace-Delete | Source routes and e2e tests cover POST/PUT/DELETE for Part 1 and Part 2 resources; public read-only audit issued no writes | No `/conf/update`; no real PATCH routes found beyond global CORS method advertisement | Strongest found Part 2 CRD candidate; live demo has populated systems/datastreams/controlstreams/observations | Best next candidate for a self-run disposable mutable IUT, especially Part 2 CRD. Does not appear able to close Part 1 CRD or Update as-is. |
+| `SomethingCreativeStudios/connected-systems-go` | Public GitHub repo; license not declared in GitHub API metadata | README says Go implementation of OGC API Connected Systems Part 1 Feature Resources and Part 2 Dynamic Data | Live/self-run `/conformance` declares Part 1 `/conf/api-common`, Part 2 `/conf/api-common`, Part 2 Datastream/Observation/ControlStream/Command/SystemEvent/JSON/Create-Replace-Delete; Sprint 76 found missing Part 1 `/conf/core`, missing Part 1 CRD/exact inherited `ogcapi-4` CRD, and missing inherited Features Part 4 CRD | Sprint 76 self-run direct lifecycle passed POST/PUT/DELETE for DataStream, Observation, ControlStream, and Command; public read-only audit issued no writes | No `/conf/update`; no real PATCH routes found beyond global CORS method advertisement; Part 2 Feasibility condition readiness is also missing for Update | Strongest found Part 2 CRD route/lifecycle candidate; Sprint 76 TeamEngine remained non-green at `275/15/1/259` | Best upstream outreach candidate for fixing declarations/OPTIONS readiness. Not current exact-promotion evidence. |
 | OS4CSAPI fork of `connected-systems-go` | Public fork | Same project lineage | OS4CSAPI developer site uses the Go server as reference integration target | Same as upstream unless fork diverges | Same concern as upstream | Same claim | Track if OS4CSAPI hosts deployment-specific patches, but upstream is fresher. |
 | `52North/connected-systems-pygeoapi` | Public GitHub repo, Apache-2.0 | 52North says Part 1 is fully implemented and Part 2 is actively developed | Public demo `/conformance` currently advertises only OGC API Common Core | Source has CS-specific GET/POST/PUT/DELETE routes and Part 2 datastream update/provider code comments | Route decorators do not expose PATCH; provider comments mention update targets but observation update is unsupported | Part 2 in active development; public demo `/datastreams` returned server error during probe | Promising medium-term self-run candidate, but public deployment is not a usable declaring IUT today. |
 | 52North `pygeoapi` `feature/connected-systems` branch | Public GitHub branch | Official registry links this branch | Static bundled OpenAPI uses older/historical CS URI names such as `system-features` and encoding classes | Generic pygeoapi feature write routes exist; CS route fit is unclear | No convincing current PATCH/update evidence found | Some Part 1/2 provider and OpenAPI assets exist | Not stronger than the standalone 52North CSA app for this ETS without branch reconciliation. |
@@ -60,6 +60,24 @@ Local source inspection of a research clone found:
 
 - `internal/api/conformance_handler.go` declares Part 1 `/conf/api-common` and Part 2 `/conf/api-common`, Datastream, Observation, ControlStream, Command, SystemEvent, JSON, and Create/Replace/Delete.
 - `internal/api/router.go` registers POST/PUT/DELETE routes for several Part 1 and Part 2 resources.
+
+Sprint 76 self-run readiness evidence found:
+
+- Upstream `main` commit `7643bb38bc9fa95a50332ed2aa5b1007b56b5028` ran
+  locally with disposable PostGIS storage.
+- Direct lifecycle proof passed `29/29` HTTP steps for DataStream, Observation,
+  ControlStream, and Command POST/GET/PUT/GET/DELETE/GET lifecycles.
+- TeamEngine E2E was honestly non-green at `275/15/1/259` because the service
+  omits Connected Systems Part 1 Core
+  `http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core`.
+- Readiness audits still reported zero declaration/method-ready classes due
+  incomplete OPTIONS `Allow` advertisement, missing Part 1 CRD and exact
+  inherited `ogcapi-4` CRD declarations, missing inherited Features Part 4 CRD
+  declaration, missing Part 2 Feasibility condition readiness, and missing
+  Update/PATCH declarations.
+- Sprint 77 captured these blockers in
+  `ops/outreach/connected-systems-go-readiness-gap-request.md` for future
+  maintainer filing.
 - `e2e/systems_test.go` includes create, replace, GET proof, and delete proof tests for systems.
 - `e2e/control_streams_test.go` includes ControlStream CRUD, cascade delete, and schema update tests.
 - No actual PATCH route or `/conf/update` declaration was found. The global CORS header advertises PATCH, but that is not enough to treat Update readiness as proved.
@@ -142,6 +160,9 @@ Recommended sequence:
 - `REQ-ALT-IUT-004` - Prefer `connected-systems-go` for the first disposable alternate-IUT experiment because it is the only researched open-source candidate with live Part 2 API Common and Part 2 Create/Replace/Delete declarations.
 - `REQ-ALT-IUT-005` - Before any mutation exact closure sprint, require exact prerequisite declarations, actual method advertisement or equivalent service-description proof, POST/PUT/DELETE or PATCH lifecycle execution, changed-resource GET proof, cleanup/isolation evidence, and no public-IUT writes.
 - `REQ-ALT-IUT-006` - Treat Update/PATCH closure as blocked until an implementation declares `/conf/update` and exposes real PATCH handlers, not only CORS method strings.
+- `REQ-ALT-IUT-007` - Preserve a repo-local upstream gap package for
+  `connected-systems-go` until maintainers confirm or remediate missing
+  declarations, OPTIONS `Allow` behavior, and Update/PATCH scope.
 
 ## Risks and Open Questions
 

@@ -1,0 +1,114 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 571B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/alpine:latest
+#2 DONE 0.6s
+
+#3 [internal] load metadata for docker.io/library/golang:1.25-alpine
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 303B done
+#4 DONE 0.0s
+
+#5 [stage-1 1/5] FROM docker.io/library/alpine:latest@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+#5 resolve docker.io/library/alpine:latest@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b done
+#5 sha256:e7a1a92a5bfeee40966aea60f0796b0e7917cc35591542701834f03a68fa3d18 1.02kB / 1.02kB done
+#5 sha256:1991bd789d7184290c3cce84fd6af068b8b745e9bddf178661ce7f5ecf68135c 627B / 627B done
+#5 sha256:5de55e5ef9c033997441461efe7ba23a986db059c0bb78b38f84ee0d72b99167 0B / 4.18MB 0.1s
+#5 sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b 9.22kB / 9.22kB done
+#5 sha256:5de55e5ef9c033997441461efe7ba23a986db059c0bb78b38f84ee0d72b99167 1.05MB / 4.18MB 0.3s
+#5 ...
+
+#6 [internal] load build context
+#6 transferring context: 185.38MB 0.4s done
+#6 DONE 0.4s
+
+#5 [stage-1 1/5] FROM docker.io/library/alpine:latest@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+#5 sha256:5de55e5ef9c033997441461efe7ba23a986db059c0bb78b38f84ee0d72b99167 2.10MB / 4.18MB 0.5s
+#5 sha256:5de55e5ef9c033997441461efe7ba23a986db059c0bb78b38f84ee0d72b99167 3.15MB / 4.18MB 0.6s
+#5 sha256:5de55e5ef9c033997441461efe7ba23a986db059c0bb78b38f84ee0d72b99167 4.18MB / 4.18MB 0.7s done
+#5 extracting sha256:5de55e5ef9c033997441461efe7ba23a986db059c0bb78b38f84ee0d72b99167 0.1s done
+#5 DONE 0.8s
+
+#7 [builder 1/7] FROM docker.io/library/golang:1.25-alpine@sha256:56961d79ea8129efddcc0b8643fd8a5416b4e6228cfd477e3fd61deb2672c587
+#7 resolve docker.io/library/golang:1.25-alpine@sha256:56961d79ea8129efddcc0b8643fd8a5416b4e6228cfd477e3fd61deb2672c587 done
+#7 sha256:b7143319540391a90eb612226c9385369f4128384e68542ad952284d2eb02b65 47.19MB / 57.74MB 1.0s
+#7 sha256:56961d79ea8129efddcc0b8643fd8a5416b4e6228cfd477e3fd61deb2672c587 10.30kB / 10.30kB done
+#7 sha256:6779780b49fee40ea72c8f30bb17e6f35c410129940be57ca3cba0efb1c4c777 1.92kB / 1.92kB done
+#7 sha256:86571d4881e62ff1e449ad3c3d0030b886e05f5534ba0e15814816def8260ebe 2.21kB / 2.21kB done
+#7 sha256:5de55e5ef9c033997441461efe7ba23a986db059c0bb78b38f84ee0d72b99167 4.18MB / 4.18MB 0.7s done
+#7 sha256:199fe782dffabc4068c0303c858ee5863b903d374fb872fc7ecffca5377b67ac 247.50kB / 247.50kB 0.2s done
+#7 sha256:c811100012b8ca1d97b11a640f930d0096c8b8fa10f51a020645f2d741e271ea 127B / 127B 0.3s done
+#7 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 32B / 32B 0.4s done
+#7 extracting sha256:5de55e5ef9c033997441461efe7ba23a986db059c0bb78b38f84ee0d72b99167 0.1s done
+#7 extracting sha256:199fe782dffabc4068c0303c858ee5863b903d374fb872fc7ecffca5377b67ac 0.0s done
+#7 sha256:b7143319540391a90eb612226c9385369f4128384e68542ad952284d2eb02b65 53.48MB / 57.74MB 1.1s
+#7 sha256:b7143319540391a90eb612226c9385369f4128384e68542ad952284d2eb02b65 57.74MB / 57.74MB 1.2s done
+#7 extracting sha256:b7143319540391a90eb612226c9385369f4128384e68542ad952284d2eb02b65
+#7 ...
+
+#8 [stage-1 2/5] RUN apk --no-cache add ca-certificates
+#8 0.697 (1/1) Installing ca-certificates (20260611-r0)
+#8 0.719 Executing busybox-1.37.0-r31.trigger
+#8 0.725 Executing ca-certificates-20260611-r0.trigger
+#8 0.745 OK: 8744 KiB in 17 packages
+#8 DONE 0.8s
+
+#9 [stage-1 3/5] WORKDIR /root/
+#9 DONE 0.0s
+
+#7 [builder 1/7] FROM docker.io/library/golang:1.25-alpine@sha256:56961d79ea8129efddcc0b8643fd8a5416b4e6228cfd477e3fd61deb2672c587
+#7 extracting sha256:b7143319540391a90eb612226c9385369f4128384e68542ad952284d2eb02b65 3.9s done
+#7 extracting sha256:c811100012b8ca1d97b11a640f930d0096c8b8fa10f51a020645f2d741e271ea done
+#7 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 done
+#7 DONE 5.2s
+
+#10 [builder 2/7] WORKDIR /app
+#10 DONE 0.1s
+
+#11 [builder 3/7] RUN apk add --no-cache git
+#11 0.404 ( 1/12) Installing brotli-libs (1.2.0-r1)
+#11 0.422 ( 2/12) Installing c-ares (1.34.8-r0)
+#11 0.432 ( 3/12) Installing libunistring (1.4.2-r0)
+#11 0.470 ( 4/12) Installing libidn2 (2.3.8-r0)
+#11 0.483 ( 5/12) Installing nghttp2-libs (1.69.0-r0)
+#11 0.493 ( 6/12) Installing libpsl (0.21.5-r3)
+#11 0.503 ( 7/12) Installing zstd-libs (1.5.7-r2)
+#11 0.517 ( 8/12) Installing libcurl (8.21.0-r0)
+#11 0.534 ( 9/12) Installing libexpat (2.8.2-r0)
+#11 0.545 (10/12) Installing pcre2 (10.47-r1)
+#11 0.563 (11/12) Installing git (2.54.0-r0)
+#11 0.647 (12/12) Installing git-init-template (2.54.0-r0)
+#11 0.657 Executing busybox-1.37.0-r31.trigger
+#11 0.663 OK: 21.5 MiB in 29 packages
+#11 DONE 0.7s
+
+#12 [builder 4/7] COPY go.mod go.sum ./
+#12 DONE 0.0s
+
+#13 [builder 5/7] RUN go mod download
+#13 DONE 14.7s
+
+#14 [builder 6/7] COPY . .
+#14 DONE 0.1s
+
+#15 [builder 7/7] RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server cmd/server/main.go
+#15 DONE 6.6s
+
+#16 [stage-1 4/5] COPY --from=builder /app/server .
+#16 DONE 0.0s
+
+#17 [stage-1 5/5] COPY --from=builder /app/config.example.yaml ./config.yaml
+#17 DONE 0.0s
+
+#18 exporting to image
+#18 exporting layers 0.1s done
+#18 writing image sha256:2aab27501798d2d7403bbcb71c55078a638cc0f7eafb1bc92efe7dc982f21a78
+#18 writing image sha256:2aab27501798d2d7403bbcb71c55078a638cc0f7eafb1bc92efe7dc982f21a78 done
+#18 naming to docker.io/library/csgo-s76:7643bb38 done
+#18 DONE 0.1s
+docker_build_exit=0

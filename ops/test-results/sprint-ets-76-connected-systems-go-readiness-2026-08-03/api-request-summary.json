@@ -1,0 +1,183 @@
+{
+  "directReadinessAndLifecycleLog": {
+    "methodCounts": {
+      "DELETE": 5,
+      "GET": 18,
+      "OPTIONS": 54,
+      "POST": 5,
+      "PUT": 4
+    },
+    "requestCount": 86,
+    "topPaths": [
+      [
+        "/commands/56b4f36c-cd3c-4f61-9571-54c34e2dfa57",
+        7
+      ],
+      [
+        "/controlstreams/fe967b54-5f6d-4f60-affe-728bd8a33937",
+        7
+      ],
+      [
+        "/datastreams/b4f5075d-ae34-45d2-b182-344a09a150d4",
+        7
+      ],
+      [
+        "/observations/b13f003e-a6e5-4365-b9c2-285fa72409c3",
+        7
+      ],
+      [
+        "/systems/0601d5f9-4575-45ec-9da0-b003052e0886",
+        5
+      ],
+      [
+        "/deployments/040g",
+        4
+      ],
+      [
+        "/procedures/040g",
+        4
+      ],
+      [
+        "/properties/040g",
+        4
+      ],
+      [
+        "/samplingFeatures/040g",
+        4
+      ],
+      [
+        "/conformance",
+        3
+      ],
+      [
+        "/systems",
+        3
+      ],
+      [
+        "/controlstreams/040g",
+        2
+      ],
+      [
+        "/controlstreams/fe967b54-5f6d-4f60-affe-728bd8a33937/commands",
+        2
+      ],
+      [
+        "/datastreams/040g",
+        2
+      ],
+      [
+        "/datastreams/b4f5075d-ae34-45d2-b182-344a09a150d4/observations",
+        2
+      ],
+      [
+        "/deployments",
+        2
+      ],
+      [
+        "/feasibility",
+        2
+      ],
+      [
+        "/procedures",
+        2
+      ],
+      [
+        "/properties",
+        2
+      ],
+      [
+        "/samplingFeatures",
+        2
+      ],
+      [
+        "/systemEvents",
+        2
+      ],
+      [
+        "/systems/040g",
+        2
+      ],
+      [
+        "/systems/0601d5f9-4575-45ec-9da0-b003052e0886/controlstreams",
+        2
+      ],
+      [
+        "/systems/0601d5f9-4575-45ec-9da0-b003052e0886/datastreams",
+        2
+      ],
+      [
+        "/",
+        1
+      ]
+    ]
+  },
+  "teamengineSeedAndSmokeLog": {
+    "methodCounts": {
+      "GET": 18,
+      "POST": 10
+    },
+    "requestCount": 28,
+    "topPaths": [
+      [
+        "/conformance",
+        11
+      ],
+      [
+        "/",
+        4
+      ],
+      [
+        "/?f=json",
+        1
+      ],
+      [
+        "/api",
+        1
+      ],
+      [
+        "/collections",
+        1
+      ],
+      [
+        "/controlstreams/8d889e2c-53ec-433e-a0bf-aa5e96c1573a/commands",
+        1
+      ],
+      [
+        "/datastreams/2ef465bd-f86c-4c47-bdf6-5d3781cfff31/observations",
+        1
+      ],
+      [
+        "/deployments",
+        1
+      ],
+      [
+        "/procedures",
+        1
+      ],
+      [
+        "/properties",
+        1
+      ],
+      [
+        "/systems",
+        1
+      ],
+      [
+        "/systems/da148235-e754-4636-9d50-d1231453c5a4/controlstreams",
+        1
+      ],
+      [
+        "/systems/da148235-e754-4636-9d50-d1231453c5a4/datastreams",
+        1
+      ],
+      [
+        "/systems/da148235-e754-4636-9d50-d1231453c5a4/events",
+        1
+      ],
+      [
+        "/systems/da148235-e754-4636-9d50-d1231453c5a4/samplingFeatures",
+        1
+      ]
+    ]
+  }
+}

@@ -1,0 +1,2 @@
+{"level":"info","ts":1785741340.4776568,"caller":"server/main.go:116","msg":"Starting server","host":"0.0.0.0","port":8080}
+2026/08/03 07:15:41 [29c6e3a39c26/rpPMe2MReH-000001] "GET http://localhost:18080/conformance HTTP/1.1" from 172.19.0.1:51798 - 200 1768B in 73.696µs

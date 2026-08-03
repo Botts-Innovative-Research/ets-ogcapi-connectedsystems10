@@ -1,0 +1,48 @@
+sprint: ets-76
+story: S-ETS-76-01
+title: Self-run connected-systems-go readiness
+status: complete
+trigger: User approved the next practical self-run alternate mutable IUT readiness experiment.
+scope:
+  requirement: REQ-ETS-CLEANUP-027
+  change_type: operational_mutable_iut_readiness_evidence
+  exact_promotion: false
+  mutation_policy: local_disposable_iut_only
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-SELF-RUN-ALT-IUT-READINESS-001
+      expect: A self-run connected-systems-go IUT is launched against disposable storage and exercised through real HTTP lifecycle requests.
+    - id: provenance
+      expect: Evidence records upstream repository URL, commit, image/runtime path, and launch configuration without secrets.
+    - id: cleanup_isolation
+      expect: Sprint-created resources and containers are removed or reset, and evidence distinguishes disposable IUT state from the primary local OSH state.
+    - id: no_exact_promotion
+      expect: No remaining mutation-bound candidate mapping is promoted to reviewed exact from readiness evidence alone.
+  normal:
+    - id: readiness_audit
+      expect: The existing mutation-readiness audit is archived against the local IUT and records actual issued methods.
+    - id: route_vs_allow_honesty
+      expect: Findings distinguish successful real HTTP mutation routes from missing OPTIONS Allow method advertisement.
+required_verification:
+  - source_provenance
+  - local_iut_launch
+  - readiness_audit
+  - lifecycle_probe
+  - cleanup_isolation
+  - evidence_manifest
+  - yaml_parse
+  - raze_adversarial_review
+verification_results:
+  source_provenance: "PASS: source-provenance.json records SomethingCreativeStudios/connected-systems-go commit 7643bb38bc9fa95a50332ed2aa5b1007b56b5028 and local image id sha256:2aab27501798d2d7403bbcb71c55078a638cc0f7eafb1bc92efe7dc982f21a78."
+  local_iut_launch: "PASS: disposable PostGIS and API containers launched twice; API reached /conformance; retry log records the transient PostGIS init-restart race in the smoke setup."
+  readiness_audit: "PASS: direct audit GET=1 OPTIONS=25 unsafeMethodsIssued=[]; lifecycle-ID audit GET=1 OPTIONS=29 unsafeMethodsIssued=[]; both report 47 remaining candidates and no exact-promotion-ready classes."
+  lifecycle_probe: "PASS: lifecycle-summary.json records 29/29 passed real HTTP steps and DataStream, Observation, ControlStream, and Command POST/GET/PUT/GET/DELETE/GET proof."
+  cleanup_isolation: "PASS: direct lifecycle database counts returned to zero; direct and TeamEngine smoke disposable containers/networks were removed; primary local OSH was not used."
+  evidence_manifest: "PASS: repo-evidence-manifest.sha256 verifies the archived Sprint 76 evidence tree."
+  yaml_parse: "PASS: sprint-ets-76.yaml parsed with PyYAML."
+  raze_adversarial_review: "INITIAL_GAPS_FOUND 0.88: no evidence dishonesty found; required bookkeeping fixes were commit reachability, Raze-status reconciliation, and manifest check-log scope. Status and manifest scope are reconciled; commit reachability closes when this tree is committed and pushed."
+non_goals:
+  - Do not issue POST, PUT, PATCH, or DELETE against public candidate deployments.
+  - Do not patch OSH, TeamEngine, this ETS, or third-party IUT source.
+  - Do not treat CORS methods as Allow method readiness.
+  - Do not promote mutation-bound candidates to reviewed exact mappings.

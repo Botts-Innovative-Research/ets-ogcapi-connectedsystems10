@@ -1,0 +1,160 @@
+{
+  "readiness-audit-lifecycle-ids.json": {
+    "classSummaries": [
+      {
+        "candidateProcedures": 12,
+        "conformanceClass": "1:/conf/create-replace-delete",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+        "exactPromotionReady": false,
+        "id": "part1CreateReplaceDelete",
+        "missingAdvertisedMethodsCount": 10,
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [
+          "http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete"
+        ],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+        ]
+      },
+      {
+        "candidateProcedures": 5,
+        "conformanceClass": "1:/conf/update",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+        "exactPromotionReady": false,
+        "id": "part1Update",
+        "missingAdvertisedMethodsCount": 5,
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [
+          "http://www.opengis.net/spec/ogcapi-4/1.0/conf/update"
+        ],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+        ]
+      },
+      {
+        "candidateProcedures": 16,
+        "conformanceClass": "2:/conf/create-replace-delete",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+        "exactPromotionReady": false,
+        "id": "part2CreateReplaceDelete",
+        "missingAdvertisedMethodsCount": 11,
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+        ]
+      },
+      {
+        "candidateProcedures": 14,
+        "conformanceClass": "2:/conf/update",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+        "exactPromotionReady": false,
+        "id": "part2Update",
+        "missingAdvertisedMethodsCount": 6,
+        "missingConditionConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility"
+        ],
+        "missingPrerequisiteConformance": [],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+        ]
+      }
+    ],
+    "classesWithDeclarationAndMethodReadiness": [],
+    "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": [],
+    "exactPromotionReady": false,
+    "exactPromotionReadyClasses": [],
+    "remainingCandidateProcedures": 47,
+    "requestMethodCounts": {
+      "GET": 1,
+      "OPTIONS": 29
+    },
+    "unsafeMethodsIssued": []
+  },
+  "readiness-audit.json": {
+    "classSummaries": [
+      {
+        "candidateProcedures": 12,
+        "conformanceClass": "1:/conf/create-replace-delete",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+        "exactPromotionReady": false,
+        "id": "part1CreateReplaceDelete",
+        "missingAdvertisedMethodsCount": 10,
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [
+          "http://www.opengis.net/spec/ogcapi-4/1.0/conf/create-replace-delete"
+        ],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+        ]
+      },
+      {
+        "candidateProcedures": 5,
+        "conformanceClass": "1:/conf/update",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+        "exactPromotionReady": false,
+        "id": "part1Update",
+        "missingAdvertisedMethodsCount": 5,
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [
+          "http://www.opengis.net/spec/ogcapi-4/1.0/conf/update"
+        ],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+        ]
+      },
+      {
+        "candidateProcedures": 16,
+        "conformanceClass": "2:/conf/create-replace-delete",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+        "exactPromotionReady": false,
+        "id": "part2CreateReplaceDelete",
+        "missingAdvertisedMethodsCount": 12,
+        "missingConditionConformance": [],
+        "missingPrerequisiteConformance": [],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+        ]
+      },
+      {
+        "candidateProcedures": 14,
+        "conformanceClass": "2:/conf/update",
+        "declarationAndMethodReadiness": false,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+        "exactPromotionReady": false,
+        "id": "part2Update",
+        "missingAdvertisedMethodsCount": 6,
+        "missingConditionConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility"
+        ],
+        "missingPrerequisiteConformance": [],
+        "missingRequiredConformance": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+          "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+        ]
+      }
+    ],
+    "classesWithDeclarationAndMethodReadiness": [],
+    "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": [],
+    "exactPromotionReady": false,
+    "exactPromotionReadyClasses": [],
+    "remainingCandidateProcedures": 47,
+    "requestMethodCounts": {
+      "GET": 1,
+      "OPTIONS": 25
+    },
+    "unsafeMethodsIssued": []
+  }
+}

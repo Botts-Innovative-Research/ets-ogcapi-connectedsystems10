@@ -1,6 +1,47 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T06:56Z
+Last updated: 2026-08-03T07:31Z
+
+## Sprint 76 Complete - Self-Run connected-systems-go Readiness
+
+- User instruction: "Do it" approving the controlled self-run
+  `connected-systems-go` mutable-IUT readiness experiment.
+- Ran upstream `SomethingCreativeStudios/connected-systems-go` commit
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028` locally from source as image
+  `csgo-s76:7643bb38` with disposable PostGIS storage.
+- Evidence is archived under
+  `ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/`.
+- Readiness audit result:
+  `47` candidates remain, `GET=1`, `OPTIONS=25`,
+  `unsafeMethodsIssued=[]`, zero declaration/method-ready classes, zero
+  prerequisite-declaration-ready classes, and no exact-promotion-ready classes.
+  The concrete lifecycle-ID audit issued `GET=1`, `OPTIONS=29` and reached the
+  same conclusion.
+- Positive local lifecycle result:
+  `lifecycle-summary.json` records PASS, `29/29` real HTTP steps, method counts
+  `GET=15`, `POST=5`, `PUT=4`, `DELETE=5`, and successful
+  POST/GET/PUT/GET/DELETE/GET lifecycles for DataStream, Observation,
+  ControlStream, and Command.
+- TeamEngine E2E result:
+  NON_GREEN_HONEST, `275 total / 15 passed / 1 failed / 259 skipped`.
+  The single failure is `conformancePageDeclaresCsCore`: the IUT declares Part
+  1 `/conf/api-common` but not Part 1 `/conf/core`. The TeamEngine
+  no-mutation oracle passed with `recognized_iut_request_logs=16` and
+  `no_mutation_oracle_exit=0`.
+- Cleanup/isolation:
+  direct lifecycle DB counts returned to zero before teardown; both disposable
+  IUT networks and containers were removed; the primary local OSH IUT was not
+  used or modified.
+- Outcome:
+  `connected-systems-go` is useful as a local Part 2 CRD route/lifecycle
+  diagnostic, but it is not currently a conforming exact-promotion IUT for the
+  remaining mutation-bound ETS candidates because declaration/`Allow`/Update
+  blockers remain.
+- Next practical work:
+  use Sprint 76 evidence to decide between either upstream outreach/fix
+  requests for `connected-systems-go` declarations and `Allow` behavior, or
+  continuing alternate-IUT discovery. Do not promote the 47 candidates without
+  a conforming dedicated mutable IUT and a separate ETS closure sprint.
 
 ## Libby SWE Common Validator Pointer Triaged
 

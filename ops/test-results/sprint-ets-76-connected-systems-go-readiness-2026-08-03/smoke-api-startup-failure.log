@@ -1,0 +1,4 @@
+
+2026/08/03 07:20:08 [35m/app/cmd/server/main.go:52
+{"level":"fatal","ts":1785741608.0165207,"caller":"server/main.go:54","msg":"Failed to connect to database","error":"failed to connect to `user=postgres database=connected_systems`: 172.19.0.2:5432 (csgo-s76-smoke-20260803T0720Z-db): dial error: dial tcp 172.19.0.2:5432: connect: connection refused","stacktrace":"main.main\n\t/app/cmd/server/main.go:54\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:285"}
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=postgres database=connected_systems`: 172.19.0.2:5432 (csgo-s76-smoke-20260803T0720Z-db): dial error: dial tcp 172.19.0.2:5432: connect: connection refused

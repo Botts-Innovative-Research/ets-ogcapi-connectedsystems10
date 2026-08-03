@@ -3310,6 +3310,59 @@ without issuing mutation requests
 **AND** no mutation-bound candidate mapping SHALL be promoted to reviewed exact
 from public read-only probe evidence.
 
+#### REQ-ETS-CLEANUP-027: Self-Run Alternate Mutable IUT Readiness (Sprint 76)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_E2E_NON_GREEN_RAZE_GAPS_ADDRESSED (Sprint 76 S-ETS-76-01)
+- **Description**: The project SHALL maintain controlled readiness evidence for
+  a self-run alternate open-source Connected Systems API mutable IUT before any
+  remaining mutation-bound ATS candidate is promoted to reviewed exact. The
+  readiness evidence SHALL run the alternate IUT against disposable local
+  storage, record upstream source provenance, archive launch and lifecycle
+  evidence, distinguish real HTTP mutation success from OPTIONS/`Allow`
+  advertisement readiness, verify cleanup/isolation, and explicitly state that
+  readiness evidence alone does not close Part 1 or Part 2
+  Create/Replace/Delete or Update exact mappings.
+- **Rationale**: Sprint 75 identified `connected-systems-go` as the strongest
+  researched alternate open-source candidate, but only a self-run disposable
+  instance can safely provide positive mutation lifecycle evidence. That
+  evidence is useful for selecting the next exact-closure path, while exact ATS
+  promotion still requires a separate ETS implementation sprint with complete
+  source mapping and TeamEngine verification.
+- **Implementation evidence**: Sprint 76 evidence under
+  `ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/`
+  runs upstream `connected-systems-go` commit
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028` as a local disposable IUT. The
+  direct readiness audit records `47` remaining candidate procedures, `GET=1`,
+  `OPTIONS=25`, `unsafeMethodsIssued=[]`, zero declaration/method-ready
+  classes, zero prerequisite-declaration-ready classes, and no exact-promotion
+  readiness. The lifecycle-ID audit records `GET=1`, `OPTIONS=29`, and the
+  same no-promotion result. The direct lifecycle probe passes 29 real HTTP
+  steps and demonstrates positive Part 2 DataStream, Observation,
+  ControlStream, and Command POST/GET/PUT/GET/DELETE/GET behavior. TeamEngine
+  E2E against the seeded self-run IUT is honestly non-green at
+  `275 total / 15 passed / 1 failed / 259 skipped`, with zero IUT-bound writes
+  in the TeamEngine no-mutation oracle. The single failure is
+  `conformancePageDeclaresCsCore`: the IUT omits Part 1 `/conf/core`. No
+  mutation-bound candidate mapping is promoted to reviewed exact. Initial Raze
+  static review returned `GAPS_FOUND 0.88` for bookkeeping only: commit
+  reachability, Raze-pending status reconciliation, and manifest check-log
+  scope. Status and manifest scope are reconciled; commit reachability is
+  closed by committing/pushing the Sprint 76 tree.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54; REQ-ETS-CLEANUP-026.
+
+#### SCENARIO-ETS-CLEANUP-SELF-RUN-ALT-IUT-READINESS-001 (CRITICAL)
+**GIVEN** an alternate open-source Connected Systems API implementation is the
+current mutable-IUT candidate
+**WHEN** the project evaluates it as a self-run local IUT
+**THEN** the evidence SHALL identify upstream source URL and commit
+**AND** the IUT SHALL run against disposable local storage
+**AND** readiness probes SHALL record actual issued methods
+**AND** at least one scoped real HTTP POST/GET/PUT/GET/DELETE/GET lifecycle
+SHALL be attempted and archived
+**AND** cleanup/isolation SHALL be archived
+**AND** the result SHALL NOT promote any mutation-bound candidate mapping to
+reviewed exact.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)

@@ -1,0 +1,49 @@
+[
+    {
+        "Id": "sha256:2aab27501798d2d7403bbcb71c55078a638cc0f7eafb1bc92efe7dc982f21a78",
+        "RepoTags": [
+            "csgo-s76:7643bb38"
+        ],
+        "RepoDigests": [],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-08-03T03:15:27.547498216-04:00",
+        "Config": {
+            "ExposedPorts": {
+                "8080/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "./server"
+            ],
+            "WorkingDir": "/root/",
+            "ArgsEscaped": true
+        },
+        "Architecture": "arm64",
+        "Os": "linux",
+        "Size": 45446458,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/gkhnv01azwi25aoawajrnou2a/diff:/var/lib/docker/overlay2/odthboswcb5fhl9fzkuczl9oz/diff:/var/lib/docker/overlay2/u62dgle5dt5xsdsng41bfxkq2/diff:/var/lib/docker/overlay2/07fef600608a94d08ecff150988134982f14783f81291596c63b9140958e5a18/diff",
+                "MergedDir": "/var/lib/docker/overlay2/fjwwwoiv7ay10t8vubceipl4q/merged",
+                "UpperDir": "/var/lib/docker/overlay2/fjwwwoiv7ay10t8vubceipl4q/diff",
+                "WorkDir": "/var/lib/docker/overlay2/fjwwwoiv7ay10t8vubceipl4q/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:b2848c02ac6ff53d265469b5b30f649f335e546a83330cd8916d54e65e640409",
+                "sha256:be925521a603d7b817a3aa1b2c67dbed25ac5dfac0c2c8d6b6f14b38785386b2",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:1ea1f45c0d5afa7e1196895a658cb450645d8e665ad43e8ac9eda3c3637e8a53",
+                "sha256:c3c91f7a9953dd5d1e6b7636c7c1ff07aeac7c97f5e0a87065a1281fcdcdf0da"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-08-03T03:15:27.613337367-04:00"
+        }
+    }
+]

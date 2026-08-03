@@ -1,0 +1,15 @@
+[smoke-test 07:23:13] step 1/8 — sanity check (multi-stage Dockerfile bakes mvn lifecycle)
+[smoke-test 07:23:13] step 2/8 — docker build ets-ogcapi-connectedsystems10:smoke-s76 (BuildKit 1)
+[smoke-test 07:24:02]   FINAL_IMAGE_ID=sha256:6534dcd932f7bd00fc5933dba7ac9d1cdadececc21acbe62408f52bf6f183c1d
+[smoke-test 07:24:02] step 3/8 — docker run on host port 8081
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+[smoke-test 07:24:02] step 4/8 — waiting for TeamEngine healthcheck (timeout 240s)
+[smoke-test 07:27:43]   healthcheck PASS at 07:27:43
+[smoke-test 07:27:43] step 5/8 — verifying ogcapi-connectedsystems10 is registered (code + version + title metadata)
+[smoke-test 07:27:46]   suite registered (code=ogcapi-connectedsystems10 version=0.1-SNAPSHOT title contains 'OGC API - Connected Systems 1.0 Conformance Test Suite')
+[smoke-test 07:27:46]   SMOKE_MOBILE_SYSTEM_ID set - forwarding to the released location-time procedure
+[smoke-test 07:27:46] step 6/8 — POST suite/ogcapi-connectedsystems10/run iut=http://csgo-s76-smoke-20260803T0720Z-api:8080
+[smoke-test 07:28:16] step 7/8 — validating TestNG report → /home/nh/docker/ets-ogcapi-connectedsystems10/ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/teamengine-smoke/s-ets-01-03-teamengine-smoke-2026-08-03.xml
+[smoke-test 07:28:16]   TestNG: total=275 passed=15 failed=1 skipped=259
+[smoke-test FATAL] TestNG report has failed=1 (>0); see /home/nh/docker/ets-ogcapi-connectedsystems10/ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/teamengine-smoke/s-ets-01-03-teamengine-smoke-2026-08-03.xml
+teamengine_smoke_exit=1

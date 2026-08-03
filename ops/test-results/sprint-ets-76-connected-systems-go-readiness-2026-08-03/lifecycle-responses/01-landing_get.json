@@ -1,0 +1,60 @@
+{
+  "description": "OGC API - Connected Systems - Part 1: Feature Resources",
+  "links": [
+    {
+      "href": "http://localhost:18080/",
+      "rel": "self",
+      "title": "This document",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:18080/api",
+      "rel": "service-desc",
+      "title": "API definition",
+      "type": "application/vnd.oai.openapi+json;version=3.0"
+    },
+    {
+      "href": "http://localhost:18080/conformance",
+      "rel": "conformance",
+      "title": "Conformance declaration",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:18080/collections",
+      "rel": "data",
+      "title": "Collections",
+      "type": "application/json"
+    },
+    {
+      "href": "http://localhost:18080/systems",
+      "rel": "data",
+      "title": "Systems",
+      "type": "application/geo+json"
+    },
+    {
+      "href": "http://localhost:18080/deployments",
+      "rel": "data",
+      "title": "Deployments",
+      "type": "application/geo+json"
+    },
+    {
+      "href": "http://localhost:18080/procedures",
+      "rel": "data",
+      "title": "Procedures",
+      "type": "application/geo+json"
+    },
+    {
+      "href": "http://localhost:18080/samplingFeatures",
+      "rel": "data",
+      "title": "Sampling Features",
+      "type": "application/geo+json"
+    },
+    {
+      "href": "http://localhost:18080/properties",
+      "rel": "data",
+      "title": "Properties",
+      "type": "application/json"
+    }
+  ],
+  "title": "OGC Connected Systems API"
+}

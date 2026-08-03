@@ -1,0 +1,17 @@
+{
+  "geometry": {
+    "coordinates": [
+      -117.1625,
+      32.715
+    ],
+    "type": "Point"
+  },
+  "id": "0601d5f9-4575-45ec-9da0-b003052e0886",
+  "properties": {
+    "assetType": "Equipment",
+    "featureType": "http://www.w3.org/ns/sosa/Sensor",
+    "name": "Sprint 76 system 40f1ef4c",
+    "uid": "urn:uuid:40f1ef4cbe2f4475a6df6a6a0f209fa3"
+  },
+  "type": "Feature"
+}

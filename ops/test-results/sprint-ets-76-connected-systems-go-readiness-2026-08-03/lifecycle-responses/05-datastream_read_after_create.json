@@ -1,0 +1,39 @@
+{
+  "formats": [
+    "application/json"
+  ],
+  "id": "b4f5075d-ae34-45d2-b182-344a09a150d4",
+  "links": [
+    {
+      "href": "http://localhost:18080/systems/0601d5f9-4575-45ec-9da0-b003052e0886",
+      "rel": "ogc-rel:systems"
+    },
+    {
+      "href": "http://localhost:18080/datastreams/b4f5075d-ae34-45d2-b182-344a09a150d4/observations",
+      "rel": "ogc-rel:observations"
+    }
+  ],
+  "name": "Sprint 76 datastream 40f1ef4c",
+  "outputName": "weather-output",
+  "schema": {
+    "obsFormat": "application/json",
+    "resultSchema": {
+      "fields": [
+        {
+          "name": "temperature",
+          "type": "Quantity"
+        },
+        {
+          "name": "humidity",
+          "type": "Quantity"
+        }
+      ],
+      "type": "DataRecord"
+    }
+  },
+  "system@link": {
+    "href": "http://localhost:18080/systems/0601d5f9-4575-45ec-9da0-b003052e0886",
+    "type": "application/geo+json"
+  },
+  "type": "observation"
+}

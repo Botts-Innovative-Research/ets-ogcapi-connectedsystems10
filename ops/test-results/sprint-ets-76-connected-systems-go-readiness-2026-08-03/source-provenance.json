@@ -1,0 +1,11 @@
+{
+  "runId": "csgo-s76-20260803T0712Z",
+  "sourceRepository": "https://github.com/SomethingCreativeStudios/connected-systems-go.git",
+  "sourceCommit": "7643bb38bc9fa95a50332ed2aa5b1007b56b5028",
+  "sourceRemote": "https://github.com/SomethingCreativeStudios/connected-systems-go.git",
+  "dockerfile": "Dockerfile",
+  "databaseImage": "imresamu/postgis:18-3.6.0-alpine3.22",
+  "apiImageTag": "csgo-s76:7643bb38",
+  "hostUrl": "http://localhost:18080",
+  "mutationPolicy": "local_disposable_iut_only"
+}

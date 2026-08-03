@@ -1,0 +1,63 @@
+{
+  "baseUrl": "http://localhost:18080",
+  "cleanupExpectation": "all created resources return 404 after DELETE before container teardown",
+  "createdResourceIds": {
+    "commandId": "56b4f36c-cd3c-4f61-9571-54c34e2dfa57",
+    "controlstreamId": "fe967b54-5f6d-4f60-affe-728bd8a33937",
+    "datastreamId": "b4f5075d-ae34-45d2-b182-344a09a150d4",
+    "observationId": "b13f003e-a6e5-4365-b9c2-285fa72409c3",
+    "systemId": "0601d5f9-4575-45ec-9da0-b003052e0886"
+  },
+  "error": null,
+  "exactPromotion": false,
+  "failedSteps": [],
+  "passedSteps": 29,
+  "policy": "local disposable IUT evidence only; no public deployment mutation; no ATS exact promotion",
+  "positiveLifecycleEvidence": {
+    "command": [
+      "POST",
+      "GET",
+      "PUT",
+      "GET",
+      "DELETE",
+      "GET"
+    ],
+    "controlstream": [
+      "POST",
+      "GET",
+      "PUT",
+      "GET",
+      "DELETE",
+      "GET"
+    ],
+    "datastream": [
+      "POST",
+      "GET",
+      "PUT",
+      "GET",
+      "DELETE",
+      "GET"
+    ],
+    "observation": [
+      "POST",
+      "GET",
+      "PUT",
+      "GET",
+      "DELETE",
+      "GET"
+    ]
+  },
+  "requestMethodCounts": {
+    "DELETE": 5,
+    "GET": 15,
+    "POST": 5,
+    "PUT": 4
+  },
+  "status": "PASS",
+  "stepCount": 29,
+  "unsafeMethodsIssued": [
+    "DELETE",
+    "POST",
+    "PUT"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "exactPromotion": false,
+  "exitCode": 1,
+  "failureCount": 1,
+  "failures": [
+    {
+      "class": null,
+      "durationMs": "83",
+      "exceptionClass": "java.lang.AssertionError",
+      "message": "\n              http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core \u2014 array did not contain any element matching: CS API Core conformance class URI 'http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/core' (declared classes: [http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core, http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/landing-page, http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/json, http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections, http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core, http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/geojson, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/system, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/subsystem, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/deployment, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/procedure, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/sf, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/property, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/advanced-filtering, http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/geojson, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/observation, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/command, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json, http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete]) (array size=24)\n            ",
+      "name": "conformancePageDeclaresCsCore"
+    }
+  ],
+  "firstPassNames": [
+    "fetchLandingPage",
+    "landingPageReturnsJson",
+    "landingPageReturnsHttp200",
+    "landingPageHasLinks",
+    "landingPageDoesNotRequireSelfRel",
+    "landingPageHasApiDefinitionLink",
+    "landingPageHasConformanceLink",
+    "verifyIutSet",
+    "fetchCreateReplaceDeleteArguments",
+    "fetchPart2CreateReplaceDeleteInputs",
+    "fetchLandingPage",
+    "apiDefinitionResourceReturnsContent",
+    "conformanceResourceShapeIsObject",
+    "fetchPart2UpdateInputs",
+    "fetchConformancePage",
+    "conformancePageReturnsHttp200",
+    "conformancePageReturnsJson",
+    "conformancePageHasConformsToArray",
+    "fetchUpdateArguments",
+    "fetchCommonResources"
+  ],
+  "iutUrl": "http://csgo-s76-smoke-20260803T0720Z-api:8080",
+  "mobileSystemIdForwarded": "da148235-e754-4636-9d50-d1231453c5a4",
+  "noMutationOracle": "recognized_iut_request_logs=16\nno_mutation_oracle_exit=0",
+  "policy": "TeamEngine smoke is E2E evidence against a real self-run IUT; non-green result is not promoted to exact closure.",
+  "skipCountByNameOccurrences": 280,
+  "status": "NON_GREEN_HONEST",
+  "testng": {
+    "failed": 1,
+    "ignored": 0,
+    "passed": 15,
+    "skipped": 259,
+    "total": 275
+  }
+}

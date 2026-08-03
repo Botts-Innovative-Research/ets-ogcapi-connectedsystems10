@@ -1,0 +1,9 @@
+{
+  "controlstream@id": "fe967b54-5f6d-4f60-affe-728bd8a33937",
+  "currentStatus": "PENDING",
+  "id": "56b4f36c-cd3c-4f61-9571-54c34e2dfa57",
+  "issueTime": "2026-08-03T07:18:01.724354Z",
+  "parameters": {
+    "setPoint": 22.5
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "baseUrl": "http://localhost:18081",
+  "error": null,
+  "exactPromotion": false,
+  "passedSteps": 10,
+  "policy": "local disposable IUT seed for TeamEngine smoke; no public mutation; exactPromotion=false",
+  "requestMethodCounts": {
+    "POST": 10
+  },
+  "resourceIds": {
+    "commandId": "f05b628a-9ac9-404c-9f66-9c69b2ddad19",
+    "controlstreamId": "8d889e2c-53ec-433e-a0bf-aa5e96c1573a",
+    "datastreamId": "2ef465bd-f86c-4c47-bdf6-5d3781cfff31",
+    "deploymentId": "b858ea7c-b977-438a-89f9-948e361beeac",
+    "observationId": "3236a8c4-2d74-44b6-8115-4e9524dff247",
+    "procedureId": "46ca211a-52a9-45d3-82fa-0b17d1d16b67",
+    "propertyId": "0a66b6b5-a561-49c9-a0e8-c7c2a4269e79",
+    "samplingFeatureId": "9bcd2cd5-4998-4a38-a8e8-4ee4f24dd6fb",
+    "systemEventId": "4a3f3f2c-6ed0-4c94-9560-9b33986afcbd",
+    "systemId": "da148235-e754-4636-9d50-d1231453c5a4"
+  },
+  "status": "PASS",
+  "stepCount": 10,
+  "unsafeMethodsIssued": [
+    "POST"
+  ]
+}

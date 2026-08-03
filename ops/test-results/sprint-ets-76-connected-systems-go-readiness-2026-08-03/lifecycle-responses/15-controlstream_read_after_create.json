@@ -1,0 +1,31 @@
+{
+  "formats": [
+    "application/json"
+  ],
+  "id": "fe967b54-5f6d-4f60-affe-728bd8a33937",
+  "inputName": "thermostat-set-point",
+  "links": [
+    {
+      "href": "http://localhost:18080/controlstreams/fe967b54-5f6d-4f60-affe-728bd8a33937/commands",
+      "rel": "ogc-rel:commands"
+    }
+  ],
+  "name": "Sprint 76 controlstream 40f1ef4c",
+  "schema": {
+    "commandFormat": "application/json",
+    "parametersSchema": {
+      "fields": [
+        {
+          "name": "setPoint",
+          "type": "Quantity"
+        }
+      ],
+      "type": "DataRecord"
+    }
+  },
+  "system@link": {
+    "href": "http://localhost:18080/systems/0601d5f9-4575-45ec-9da0-b003052e0886",
+    "type": "application/geo+json"
+  },
+  "uid": "urn:uuid:93cf4a9f-0fd1-4d66-88a5-5e2dde4d8c3c"
+}

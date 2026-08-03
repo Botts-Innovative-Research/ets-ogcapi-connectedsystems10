@@ -1,0 +1,45 @@
+gate: 4
+role: Raze
+sprint: ets-76
+story: S-ETS-76-01
+review_mode: static_file_inspection_only
+time_window_utc: 2026-08-03T07:33:12Z/2026-08-03T07:35:18Z
+verdict: GAPS_FOUND
+confidence: 0.88
+commands_not_run:
+  - Docker
+  - Maven
+  - network
+  - expensive_tests
+findings:
+  - severity: HIGH
+    id: sprint76-evidence-not-commit-reachable
+    finding: Sprint 76 docs/artifacts were still untracked or modified in git at review time.
+    required_fix: Stage and commit the Sprint 76 docs and complete evidence tree before claiming pushed or archived completion.
+  - severity: MEDIUM
+    id: raze-status-reconciliation-pending
+    finding: Sprint 76 status fields still had Raze-pending markers while the story was otherwise marked complete.
+    required_fix: Reconcile Sprint 76 status fields with the Raze verdict and applied fixes.
+  - severity: LOW
+    id: manifest-self-coverage-gap
+    finding: repo-evidence-manifest.sha256 did not cover repo-evidence-manifest-check.log.
+    required_fix: Regenerate the manifest or explicitly document the generated check log exclusion.
+passes:
+  no_public_deployment_mutation: PASS
+  exact_promotion_honesty: PASS
+  teamengine_non_green_honesty: PASS
+  route_vs_options_allow_distinction: PASS
+  cleanup_isolation_evidence: PASS_WITH_CONCERNS
+  spec_story_contract_traceability_ops_consistency: FAIL_PENDING_RECONCILIATION
+  evidence_manifest_coverage: PASS_WITH_LOW_GAP
+required_fixes:
+  - Make all Sprint 76 docs and evidence commit-reachable before push/completion.
+  - Reconcile Raze-pending status fields after applying/accepting this verdict.
+  - Regenerate or explicitly scope the evidence manifest regarding repo-evidence-manifest-check.log.
+fix_status:
+  sprint76-evidence-not-commit-reachable: pending_commit
+  raze-status-reconciliation-pending: addressed_after_review
+  manifest-self-coverage-gap: addressed_after_review
+residual_concerns:
+  - Static review only; Raze did not reproduce Docker runtime, Maven, TeamEngine, or network behavior.
+  - Smoke seed DB counts show one seeded resource per table before teardown; isolation relies on disposable container/network removal for the smoke seed.

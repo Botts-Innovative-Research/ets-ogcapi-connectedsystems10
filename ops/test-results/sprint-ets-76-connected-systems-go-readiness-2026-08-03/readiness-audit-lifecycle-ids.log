@@ -1,0 +1,2 @@
+mutation readiness audit wrote /home/nh/docker/ets-ogcapi-connectedsystems10/ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/readiness-audit-lifecycle-ids.json with 47 candidate procedures; declaration/method-ready classes: 0; prerequisite-declaration-ready classes: 0
+readiness_audit_lifecycle_ids_exit=0

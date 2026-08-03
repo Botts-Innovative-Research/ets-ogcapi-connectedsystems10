@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T05:08Z
+Last updated: 2026-08-03T07:31Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -36,16 +36,19 @@ Last updated: 2026-08-03T05:08Z
   `/conf/update`, Features Part 4 Update, missing `/conf/feasibility`, and
   missing PATCH advertisement. Do not promote these candidates without
   completed positive lifecycle E2E against a dedicated mutable IUT.
-- Sprint 75 alternate-IUT discovery found one stronger open-source candidate
-  beyond OSH for future work: `SomethingCreativeStudios/connected-systems-go`.
-  It declares Part 1 `/conf/api-common`, Part 2 `/conf/api-common`, and Part 2
-  `/conf/create-replace-delete`, and source inspection found POST/PUT/DELETE
-  routes and e2e CRUD tests. It still does not close the active mutation issue:
-  no `/conf/update` or real PATCH-route evidence was found, public OPTIONS
-  probes did not provide `Allow` readiness, the public `/api` response was too
-  minimal for service-description write-operation checks, and public demos must
-  remain read-only. Treat it as a candidate for a future self-run disposable
-  Part 2 CRD experiment, not as current exact-promotion evidence.
+- Sprint 75/76 alternate-IUT work found and self-ran one stronger open-source
+  candidate beyond OSH: `SomethingCreativeStudios/connected-systems-go`. Sprint
+  76 proves useful local Part 2 route behavior: DataStream, Observation,
+  ControlStream, and Command POST/GET/PUT/GET/DELETE/GET lifecycles pass against
+  disposable storage. It still does not close the active mutation issue:
+  readiness audits report zero declaration/method-ready classes because OPTIONS
+  `Allow` advertisement is incomplete; Part 1 `/conf/core` is missing and
+  TeamEngine therefore fails `conformancePageDeclaresCsCore`; Part 1/Part 2
+  Update remains blocked by missing `/conf/update` and absent PATCH routes; and
+  Part 2 CRD still lacks the inherited
+  `http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete`
+  declaration. Treat `connected-systems-go` as a local diagnostic and upstream
+  outreach candidate, not current exact-promotion evidence.
 - Codex remote-control thread listing reports host
   `slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0` as
   `thread_list_unavailable`. The reachable task for this folder is idle and

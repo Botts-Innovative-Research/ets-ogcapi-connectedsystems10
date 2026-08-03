@@ -2,6 +2,47 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 76 self-run connected-systems-go readiness
+
+**Triggered by user instruction**: "Do it" approving the next-step plan to run
+a controlled self-run `connected-systems-go` mutable-IUT readiness experiment.
+
+- Added CP-036, S-ETS-76-01, `REQ-ETS-CLEANUP-027`,
+  `SCENARIO-ETS-CLEANUP-SELF-RUN-ALT-IUT-READINESS-001`, and the Sprint 76
+  contract before running the mutable-IUT experiment.
+- Built upstream `SomethingCreativeStudios/connected-systems-go` commit
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028` into local image
+  `csgo-s76:7643bb38` with disposable PostGIS storage. The final local API
+  image id is
+  `sha256:2aab27501798d2d7403bbcb71c55078a638cc0f7eafb1bc92efe7dc982f21a78`.
+- Ran the existing non-mutating mutation-readiness audit against the local IUT:
+  `47` candidates, `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, zero
+  declaration/method-ready classes, zero prerequisite-declaration-ready classes,
+  and no exact-promotion-ready classes. Repeated with concrete lifecycle IDs:
+  `GET=1`, `OPTIONS=29`, same no-promotion result.
+- Ran a direct local lifecycle probe with real HTTP requests:
+  `29/29` steps passed, method counts `GET=15`, `POST=5`, `PUT=4`,
+  `DELETE=5`, proving DataStream, Observation, ControlStream, and Command
+  POST/GET/PUT/GET/DELETE/GET lifecycles.
+- Ran TeamEngine smoke against a seeded self-run IUT on the disposable Docker
+  network. Result is honestly non-green:
+  `275 total / 15 passed / 1 failed / 259 skipped`. The single failure is
+  `conformancePageDeclaresCsCore` because `connected-systems-go` omits Part 1
+  `/conf/core`. TeamEngine no-mutation oracle passed with
+  `recognized_iut_request_logs=16` and `no_mutation_oracle_exit=0`.
+- Verified cleanup/isolation: direct lifecycle resource counts returned to
+  zero, smoke seed state was confined to disposable storage, all Sprint 76 IUT
+  containers/networks were removed, and the primary local OSH IUT was not used
+  or modified.
+- Archived evidence under
+  `ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/`.
+  JSON/JSONL/YAML parse checks passed and the repository evidence manifest
+  verifies.
+- Outcome: `connected-systems-go` is useful as a local Part 2 CRD
+  route/lifecycle diagnostic, but it cannot currently close the remaining
+  mutation-bound exact mappings because declaration, `Allow`, and Update/PATCH
+  blockers remain.
+
 ## 2026-08-03 - Libby SWE Common validator pointer triage
 
 **Triggered by user instruction**: Libby pointed to

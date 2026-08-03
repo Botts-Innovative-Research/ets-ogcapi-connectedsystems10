@@ -1,0 +1,10 @@
+{
+  "datastream@id": "b4f5075d-ae34-45d2-b182-344a09a150d4",
+  "id": "b13f003e-a6e5-4365-b9c2-285fa72409c3",
+  "phenomenonTime": "2026-08-03T07:16:00Z",
+  "result": {
+    "humidity": 57.9,
+    "temperature": 21.4
+  },
+  "resultTime": "2026-08-03T07:16:00Z"
+}

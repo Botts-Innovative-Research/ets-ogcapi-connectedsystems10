@@ -48,6 +48,9 @@ Thumbs.db
 # Sprint 75 alternate-IUT discovery logs are committed read-only probe evidence.
 !ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/**/*.log
 
+# Sprint 76 self-run connected-systems-go logs are committed readiness evidence.
+!ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/**/*.log
+
 # CONFIDENTIAL — OGC-supplied material, must not be published to this public remote.
 # The te2 jar inventory was shared by OGC on the explicit condition it stay private.
 te2_webapp*

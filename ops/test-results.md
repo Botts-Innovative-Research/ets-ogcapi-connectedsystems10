@@ -1,8 +1,46 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T06:56Z
+Last updated: 2026-08-03T07:31Z
 
 ## Current Sprint Evidence
+
+Sprint 76 self-run `connected-systems-go` readiness:
+
+- Trigger: user approved running the controlled self-run alternate mutable IUT
+  readiness experiment.
+- Scope: `REQ-ETS-CLEANUP-027` operational readiness evidence only. This is not
+  exact ATS promotion evidence.
+- Source: `SomethingCreativeStudios/connected-systems-go` commit
+  `7643bb38bc9fa95a50332ed2aa5b1007b56b5028`.
+- Evidence directory:
+  `ops/test-results/sprint-ets-76-connected-systems-go-readiness-2026-08-03/`.
+- Direct readiness audit:
+  `47` remaining candidates, `GET=1`, `OPTIONS=25`,
+  `unsafeMethodsIssued=[]`, zero declaration/method-ready classes, zero
+  prerequisite-declaration-ready classes, and no exact-promotion-ready classes.
+- Lifecycle-ID readiness audit:
+  `GET=1`, `OPTIONS=29`, `unsafeMethodsIssued=[]`, zero
+  exact-promotion-ready classes.
+- Direct lifecycle probe:
+  PASS, `29/29` real HTTP steps, method counts `GET=15`, `POST=5`, `PUT=4`,
+  `DELETE=5`, and positive POST/GET/PUT/GET/DELETE/GET lifecycles for
+  DataStream, Observation, ControlStream, and Command.
+- Cleanup:
+  direct lifecycle resource counts returned to zero; all Sprint 76 disposable
+  containers and networks were removed; primary local OSH was not used.
+- TeamEngine E2E:
+  NON_GREEN_HONEST, `275 total / 15 passed / 1 failed / 259 skipped`.
+  The single failure is `conformancePageDeclaresCsCore` because the IUT omits
+  Part 1 `/conf/core`. TeamEngine no-mutation oracle passed:
+  `recognized_iut_request_logs=16`, `no_mutation_oracle_exit=0`.
+- Lightweight verification:
+  JSON parse PASS for 26 archived JSON files; JSONL parse PASS for 2 JSONL
+  files; YAML parse PASS for the Sprint 76 contract; evidence manifest
+  verification PASS.
+- Outcome:
+  route-level Part 2 CRD lifecycle feasibility is proven locally, but
+  declaration/OPTIONS/Update blockers keep all 47 mutation-bound candidates
+  non-promoted.
 
 Libby SWE Common validator pointer triage:
 

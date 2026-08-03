@@ -347,6 +347,13 @@ def audit_class(audit, declared, ids, client):
 
     positive_required = list(audit["positiveEvidenceRequired"])
     blockers.extend(positive_required)
+    declaration_method_readiness = not missing_required and not missing_condition and not missing_methods
+    prerequisite_declaration_readiness = (
+        declaration_method_readiness and not missing_prerequisites
+    )
+    prerequisite_declaration_scope = (
+        "declarations-advertised-methods-and-inherited-prerequisite-declarations-only"
+    )
     return {
         "id": audit["id"],
         "requirement": audit["requirement"],
@@ -360,14 +367,11 @@ def audit_class(audit, declared, ids, client):
         "readinessProbes": probes,
         "missingAdvertisedMethods": missing_methods,
         "readinessScope": "declarations-and-advertised-methods-only",
-        "declarationAndMethodReadiness": not missing_required
-        and not missing_condition
-        and not missing_methods,
-        "prerequisiteReadinessScope": "declarations-advertised-methods-and-inherited-prerequisites",
-        "declarationMethodAndPrerequisiteReadiness": not missing_required
-        and not missing_prerequisites
-        and not missing_condition
-        and not missing_methods,
+        "declarationAndMethodReadiness": declaration_method_readiness,
+        "prerequisiteDeclarationReadinessScope": prerequisite_declaration_scope,
+        "declarationMethodAndPrerequisiteDeclarationReadiness": prerequisite_declaration_readiness,
+        "prerequisiteReadinessScope": prerequisite_declaration_scope,
+        "declarationMethodAndPrerequisiteReadiness": prerequisite_declaration_readiness,
         "exactPromotionReady": False,
         "exactPromotionBlockers": blockers,
     }
@@ -381,8 +385,15 @@ def build_audit(iut_url, client, ids, credential_supplied=False):
         item["conformanceClass"] for item in classes if item["declarationAndMethodReadiness"]
     ]
     prerequisite_ready_classes = [
-        item["conformanceClass"] for item in classes if item["declarationMethodAndPrerequisiteReadiness"]
+        item["conformanceClass"]
+        for item in classes
+        if item["declarationMethodAndPrerequisiteDeclarationReadiness"]
     ]
+    prerequisite_declaration_policy = (
+        "Prerequisite-declaration readiness requires inherited conformance declarations plus direct "
+        "declarations and OPTIONS method advertisement; it is not proof that inherited TestNG "
+        "prerequisite groups passed."
+    )
     return {
         "schemaVersion": 1,
         "generatedAt": utc_timestamp(),
@@ -393,8 +404,10 @@ def build_audit(iut_url, client, ids, credential_supplied=False):
         "remainingCandidateProcedures": total_candidates,
         "readinessScope": "Read-only declaration and OPTIONS method advertisement audit; positive lifecycle proof is still required before exact promotion.",
         "classesWithDeclarationAndMethodReadiness": ready_classes,
+        "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": prerequisite_ready_classes,
         "classesWithDeclarationMethodAndPrerequisiteReadiness": prerequisite_ready_classes,
-        "prerequisiteReadinessPolicy": "Prerequisite-aware readiness also requires inherited conformance declarations; exact positive lifecycle proof is still required before exact promotion.",
+        "prerequisiteDeclarationReadinessPolicy": prerequisite_declaration_policy,
+        "prerequisiteReadinessPolicy": prerequisite_declaration_policy,
         "exactPromotionReady": False,
         "exactPromotionPolicy": "This audit is read-only readiness evidence only; it never promotes mutation candidates to reviewed exact mappings.",
         "conformance": {
@@ -443,8 +456,8 @@ def main(argv=None):
         f"{args.output} with {audit['remainingCandidateProcedures']} candidate procedures; "
         f"declaration/method-ready classes: "
         f"{len(audit['classesWithDeclarationAndMethodReadiness'])}; "
-        f"prerequisite-ready classes: "
-        f"{len(audit['classesWithDeclarationMethodAndPrerequisiteReadiness'])}"
+        f"prerequisite-declaration-ready classes: "
+        f"{len(audit['classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness'])}"
     )
     return 0
 

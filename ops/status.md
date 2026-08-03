@@ -1,6 +1,42 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T03:11Z
+Last updated: 2026-08-03T04:43Z
+
+## Sprint 74 Complete, Push Pending - Prerequisite Declaration Field Clarity
+
+- User instruction: "Continue."
+- Plan 1 scope: CP-034, S-ETS-74-01, and `sprint-ets-74.yaml` harden the
+  Sprint 73 audit semantics by adding explicit prerequisite-declaration
+  readiness field names.
+- `scripts/mutation-readiness-audit.py` now emits
+  `declarationMethodAndPrerequisiteDeclarationReadiness`,
+  `classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness`, and
+  `prerequisiteDeclarationReadinessPolicy`. Old Sprint 73 field names remain
+  present as compatibility aliases and equal the new explicit fields.
+- Verification evidence is archived under
+  `ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/`:
+  Python compile PASS, Python unit tests `21/0/0/0`, formatter BUILD SUCCESS,
+  Docker Maven `787/0/0/3`, direct OSH audit, complete disposable OSH E2E
+  artifacts, and a copied disposable-run manifest that verifies in place.
+- Direct local OSH audit records `47` candidates, `GET=1`, `OPTIONS=25`,
+  `unsafeMethodsIssued=[]`, one declaration/method-ready class
+  (`1:/conf/create-replace-delete`), zero prerequisite-declaration-ready
+  classes, and old/new alias equality.
+- Disposable local OSH run `sprint-ets-74-fields-20260803T042511Z` records
+  readiness audit `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`, old/new
+  alias equality, provisioning PASS, cleanup PASS, and primary-state isolation
+  PASS.
+- Full TeamEngine smoke remains honestly non-green on the existing local OSH
+  twenty-failure baseline: populated `275/24/20/231`, clean-primary
+  `275/23/20/232`. This is not a Sprint 74 regression and does not promote any
+  mutation-bound candidate to reviewed exact.
+- Non-goals: no audit POST/PUT/PATCH/DELETE, no TestNG prerequisite outcome
+  parsing inside the audit, no OSH or TeamEngine patches, and no exact
+  promotion for the 47 mutation-bound candidate procedures.
+- Raze returned `APPROVE_WITH_CONCERNS 0.94` with `required_fixes: []`. The
+  LOW pycompile-log exit-status concern was addressed before completion by
+  regenerating `pycompile.log` with `pycompile:0` and refreshing
+  `repo-evidence-manifest.sha256`.
 
 ## Sprint 73 Complete and Pushed - Mutation Prerequisite Readiness Audit
 

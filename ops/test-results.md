@@ -1,8 +1,53 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T03:11Z
+Last updated: 2026-08-03T04:43Z
 
 ## Current Sprint Evidence
+
+Sprint 74 prerequisite declaration field clarity:
+
+- Trigger: user instructed "Continue."
+- Scope: `REQ-ETS-CLEANUP-025` compatibility-preserving field clarity only. No
+  Create/Replace/Delete or Update lifecycle exact closure is claimed.
+- Implementation: `scripts/mutation-readiness-audit.py` now emits explicit
+  prerequisite-declaration readiness fields:
+  `declarationMethodAndPrerequisiteDeclarationReadiness`,
+  `classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness`, and
+  `prerequisiteDeclarationReadinessPolicy`.
+- Compatibility: Sprint 73 fields
+  `declarationMethodAndPrerequisiteReadiness`,
+  `classesWithDeclarationMethodAndPrerequisiteReadiness`, and
+  `prerequisiteReadinessPolicy` remain present and equal to the explicit
+  Sprint 74 fields.
+- Python compile: PASS (`pycompile.log`, `pycompile:0`).
+- Python unit tests:
+  `21 tests / 0 failures / 0 errors` (`unittest.log`).
+- Formatter: BUILD SUCCESS (`spring-javaformat.log`).
+- Full Docker Maven:
+  `787 tests / 0 failures / 0 errors / 3 skipped`
+  (`docker-maven-test.log`).
+- Direct primary local OSH readiness audit:
+  `47` candidates, `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`,
+  `classesWithDeclarationAndMethodReadiness=["1:/conf/create-replace-delete"]`,
+  `classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness=[]`, old/new
+  alias equality, and no exact promotions.
+- Disposable local OSH mutable E2E:
+  `sprint-ets-74-fields-20260803T042511Z`. The populated IUT readiness audit
+  reported `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`, one
+  declaration/method-ready class, zero prerequisite-declaration-ready classes,
+  old/new alias equality, cleanup PASS, and primary-state isolation PASS.
+- Full TeamEngine E2E remains honestly non-green on the existing local OSH
+  twenty-failure baseline: populated `275 total / 24 passed / 20 failed /
+  231 skipped`, clean-primary `275 total / 23 passed / 20 failed /
+  232 skipped`, with GET-only TeamEngine request counts.
+- Evidence directory:
+  `ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/`.
+- The copied disposable run `artifact-manifest.sha256` verifies in place.
+- `repo-evidence-manifest.sha256` verifies the repository evidence subset.
+- Raze returned `APPROVE_WITH_CONCERNS 0.94` with `required_fixes: []`. The
+  LOW pycompile-log exit-status concern was addressed by regenerating
+  `pycompile.log` with `pycompile:0` and refreshing the repository evidence
+  manifest.
 
 Sprint 73 mutation prerequisite readiness audit:
 

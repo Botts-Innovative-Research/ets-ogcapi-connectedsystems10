@@ -1,0 +1,21 @@
+...........mutation readiness audit wrote /tmp/tmpc3oprl2m/audit.json with 47 candidate procedures; declaration/method-ready classes: 0; prerequisite-declaration-ready classes: 0
+[local-osh-populated-e2e 00:21:46] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 00:21:46] populated attempt aborted in startup: injected startup failure
+[local-osh-populated-e2e 00:21:46] summary: /tmp/testsafe-output/run-summary.json
+...[local-osh-populated-e2e 00:21:46] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 00:21:46] populated attempt aborted in startup: injected startup failure
+[local-osh-populated-e2e 00:21:46] summary: /tmp/testsafe-output/run-summary.json
+[local-osh-populated-e2e 00:21:46] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 00:21:46] populated attempt aborted in provisioning: injected provisioning failure
+[local-osh-populated-e2e 00:21:46] summary: /tmp/testsafe-output/run-summary.json
+[local-osh-populated-e2e 00:21:46] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 00:21:46] populated attempt aborted in populated-smoke: injected populated-smoke failure
+[local-osh-populated-e2e 00:21:46] summary: /tmp/testsafe-output/run-summary.json
+[local-osh-populated-e2e 00:21:46] starting owned isolated OSH run testsafe-123
+[local-osh-populated-e2e 00:21:46] populated attempt aborted in evidence-parsing: injected evidence-parsing failure
+[local-osh-populated-e2e 00:21:46] summary: /tmp/testsafe-output/run-summary.json
+.......
+----------------------------------------------------------------------
+Ran 21 tests in 0.041s
+
+OK

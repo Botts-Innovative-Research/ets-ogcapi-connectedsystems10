@@ -1,0 +1,133 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.94
+reviewed_scope:
+  sprint: ets-74
+  story: S-ETS-74-01
+  requirement: REQ-ETS-CLEANUP-025
+  scenario: SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-DECLARATION-FIELDS-001
+  scope_statement: "Prerequisite declaration field clarity only: explicit declaration-only JSON fields, equal compatibility aliases, read-only audit behavior, and no exact promotion."
+  reviewed_inputs:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+    - .harness/contracts/sprint-ets-74.yaml
+    - openspec/change-proposals/CP-034-prerequisite-declaration-field-clarity.md
+    - epics/stories/s-ets-74-01-prerequisite-declaration-field-clarity.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/traceability.md
+    - scripts/mutation-readiness-audit.py
+    - scripts/test_mutation_readiness_audit.py
+    - ops/status.md
+    - ops/changelog.md
+    - ops/test-results.md
+    - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/
+findings:
+  - id: RAZE-ETS74-LOW-001
+    severity: LOW
+    title: "Pycompile evidence is an empty stdout artifact without an archived exit-status line"
+    affected_artifacts:
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/pycompile.log
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/repo-evidence-manifest.sha256
+    detail: "The empty pycompile log is consistent with a successful python -m py_compile run, and the manifest verifies the artifact, but the artifact itself does not independently record exit status. This is not blocking because the Python unit suite imports the audited modules successfully, Maven verification is unaffected, and the Sprint 74 contract does not rely on pycompile as the sole executable proof."
+    required: false
+evidence:
+  contract_alignment:
+    status: PASS
+    notes:
+      - "CP-034, S-ETS-74-01, sprint-ets-74.yaml, OpenSpec REQ-ETS-CLEANUP-025, and traceability all constrain the change to declaration-only field clarity."
+      - "Non-goals are explicit: no TestNG prerequisite outcome parsing, no OSH or TeamEngine patching, no mutation writes from the audit, and no exact candidate promotions."
+  implementation_review:
+    status: PASS
+    notes:
+      - "scripts/mutation-readiness-audit.py emits class-level declarationMethodAndPrerequisiteDeclarationReadiness and root classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness."
+      - "Sprint 73 aliases declarationMethodAndPrerequisiteReadiness, classesWithDeclarationMethodAndPrerequisiteReadiness, and prerequisiteReadinessPolicy remain present and are assigned from the same computed values as the new fields."
+      - "The new policy text states that prerequisite-declaration readiness is not proof that inherited TestNG prerequisite groups passed."
+      - "The audit still records unsafeMethodsIssued and only dispatches GET /conformance plus OPTIONS probes in normal operation."
+      - "Root exactPromotionReady and every class exactPromotionReady remain false."
+  python_unit_tests:
+    status: PASS
+    expected: "21/0/0/0"
+    observed: "21/0/0/0"
+    source: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/unittest.log
+  docker_maven:
+    status: PASS
+    expected: "787/0/0/3"
+    observed: "787/0/0/3"
+    source: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/docker-maven-test.log
+  direct_local_osh_readiness_audit:
+    status: PASS
+    expected:
+      remaining_candidates: 47
+      get_requests: 1
+      options_requests: 25
+      unsafe_methods_issued: []
+      declaration_method_ready_count: 1
+      prerequisite_declaration_ready_count: 0
+      alias_equality: true
+    observed:
+      remaining_candidates: 47
+      request_method_counts:
+        GET: 1
+        OPTIONS: 25
+      unsafe_methods_issued: []
+      classes_with_declaration_and_method_readiness:
+        - "1:/conf/create-replace-delete"
+      classes_with_declaration_method_and_prerequisite_declaration_readiness: []
+      alias_equality: true
+      exact_promotion_ready: false
+      any_class_exact_promotion_ready: false
+    sources:
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-primary-prerequisite-declaration-readiness.json
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-primary-prerequisite-declaration-readiness-summary.json
+  disposable_local_osh_e2e:
+    status: PASS_WITH_EXPECTED_NON_GREEN_CONFORMANCE
+    run_id: sprint-ets-74-fields-20260803T042511Z
+    expected:
+      provisioning: PASS
+      cleanup: PASS
+      primary_state_isolation: PASS
+      populated_teamengine: "275/24/20/231"
+      clean_primary_teamengine: "275/23/20/232"
+      readiness_get_requests: 1
+      readiness_options_requests: 27
+      unsafe_methods_issued: []
+      alias_equality: true
+    observed:
+      overall_workflow_verdict: FAIL
+      provisioning_verdict: PASS
+      cleanup_verdict: PASS
+      primary_state_unchanged: true
+      populated_gate_verdict: COMPLETE_WITH_CONFORMANCE_FAILURE
+      clean_primary_gate_verdict: ERROR
+      populated_teamengine: "275/24/20/231"
+      clean_primary_teamengine: "275/23/20/232"
+      readiness_request_method_counts:
+        GET: 1
+        OPTIONS: 27
+      unsafe_methods_issued: []
+      alias_equality: true
+      exact_promotion_ready: false
+      any_class_exact_promotion_ready: false
+    sources:
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-populated-summary.json
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-populated-e2e.log
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-populated-run/populated-results/s-ets-01-03-teamengine-smoke-2026-08-03.xml
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-populated-run/clean-primary-results/s-ets-01-03-teamengine-smoke-2026-08-03.xml
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-populated-run/populated-mutation-readiness.json
+  manifest_integrity:
+    status: PASS
+    notes:
+      - "Copied disposable artifact-manifest.sha256 verifies in place for 33 run artifacts."
+      - "Repository evidence manifest verifies in place for 45 archived evidence artifacts."
+      - "The Sprint 74 .gitignore exception makes nested E2E logs reachable for commit."
+    sources:
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-populated-manifest-check.log
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/repo-evidence-manifest-check.log
+      - ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/repo-evidence-manifest.sha256
+  documentation_honesty:
+    status: PASS
+    notes:
+      - "ops/status.md, ops/changelog.md, ops/test-results.md, OpenSpec, and traceability state that full TeamEngine E2E remains non-green on the existing local OSH twenty-failure baseline."
+      - "No reviewed exact mapping, Create/Replace/Delete lifecycle closure, Update lifecycle closure, OSH fix, or TeamEngine fix is claimed."
+required_fixes: []
+duration_seconds: 139
+approximate_token_usage: null

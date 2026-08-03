@@ -3213,6 +3213,58 @@ near-match `ogcapi-features-4` declarations
 **AND** the audit still issues only GET and OPTIONS
 **AND** no class reports `exactPromotionReady=true`.
 
+#### REQ-ETS-CLEANUP-025: Prerequisite Declaration Readiness Field Clarity (Sprint 74)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_E2E_NON_GREEN_RAZE_APPROVED_WITH_CONCERNS (Sprint 74 S-ETS-74-01)
+- **Description**: The mutation-readiness audit SHALL expose explicit
+  prerequisite-declaration readiness field names so JSON consumers cannot
+  confuse declaration-only readiness with inherited TestNG prerequisite
+  execution proof. The audit SHALL emit class-level
+  `declarationMethodAndPrerequisiteDeclarationReadiness` and root-level
+  `classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness`. For
+  compatibility, Sprint 73 field names
+  `declarationMethodAndPrerequisiteReadiness` and
+  `classesWithDeclarationMethodAndPrerequisiteReadiness` SHALL remain present
+  and SHALL equal the new explicit fields. The audit SHALL remain read-only,
+  SHALL NOT parse TeamEngine/TestNG prerequisite outcomes, and SHALL NOT
+  promote mutation-bound candidates to reviewed exact mappings.
+- **Rationale**: Sprint 73 Raze review found no blocking implementation issue,
+  but identified a LOW false-confidence risk in field naming. Explicit
+  declaration-only field names reduce consumer ambiguity while preserving
+  backward compatibility.
+- **Implementation evidence**: Sprint 74 adds the explicit
+  `declarationMethodAndPrerequisiteDeclarationReadiness` and
+  `classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness` fields,
+  keeps the Sprint 73 aliases present and equal, and records a policy that the
+  values are not proof that inherited TestNG prerequisite groups passed.
+  `scripts/test_mutation_readiness_audit.py` asserts
+  `REQ-ETS-CLEANUP-025` and the critical scenario. Verification evidence under
+  `ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/`
+  records Python compile PASS, Python unit tests `21/0/0/0`, formatter BUILD
+  SUCCESS, Docker Maven `787/0/0/3`, direct local OSH audit `GET=1`,
+  `OPTIONS=25`, `unsafeMethodsIssued=[]`, one declaration/method-ready class,
+  zero prerequisite-declaration-ready classes, and disposable local OSH E2E
+  `sprint-ets-74-fields-20260803T042511Z` with cleanup PASS,
+  primary-state isolation PASS, and unchanged local OSH twenty-failure
+  TeamEngine baseline. Raze returned `APPROVE_WITH_CONCERNS 0.94` with
+  `required_fixes: []`; the LOW pycompile-log exit-status concern was addressed
+  before completion by regenerating `pycompile.log` with `pycompile:0` and
+  refreshing the repository evidence manifest.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54; REQ-ETS-CLEANUP-023,
+  REQ-ETS-CLEANUP-024.
+
+#### SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-DECLARATION-FIELDS-001 (CRITICAL)
+**GIVEN** the mutation-readiness audit computes prerequisite declaration
+readiness
+**WHEN** it writes JSON evidence
+**THEN** class and root output include explicit prerequisite-declaration
+readiness fields
+**AND** the Sprint 73 compatibility aliases remain present and equal
+**AND** the output policy states that these fields do not prove inherited
+TestNG prerequisite execution
+**AND** the audit still issues only GET and OPTIONS
+**AND** no class reports `exactPromotionReady=true`.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)

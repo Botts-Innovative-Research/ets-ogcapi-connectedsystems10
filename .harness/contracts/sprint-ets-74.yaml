@@ -1,0 +1,49 @@
+sprint: ets-74
+story: S-ETS-74-01
+title: Prerequisite declaration field clarity
+status: implemented_e2e_non_green_raze_approved_with_concerns
+trigger: User instructed "Continue."
+scope:
+  requirement: REQ-ETS-CLEANUP-025
+  change_type: operational_readiness_audit
+  exact_promotion: false
+  mutation_policy: read_only_audit
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-DECLARATION-FIELDS-001
+      expect: The audit emits explicit prerequisite-declaration readiness fields and keeps Sprint 73 compatibility aliases equal to them.
+    - id: read_only
+      expect: The audit issues only GET and OPTIONS and records any unsafe method dispatch as invalid evidence.
+    - id: no_exact_promotion
+      expect: Every audited class and the root report keep exactPromotionReady=false.
+    - id: no_credential_serialization
+      expect: Credential values are never written to audit JSON.
+  normal:
+    - id: e2e_evidence
+      expect: Direct and disposable local OSH evidence archive explicit prerequisite-declaration readiness JSON without changing TeamEngine verdict handling.
+required_verification:
+  - python_unit_tests
+  - spring_javaformat
+  - focused_maven_or_full_maven
+  - local_osh_readiness_audit
+  - local_osh_teamengine_e2e
+  - raze_adversarial_review
+verification_evidence:
+  python_compile: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/pycompile.log
+  python_unit_tests: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/unittest.log
+  spring_javaformat: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/spring-javaformat.log
+  docker_maven: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/docker-maven-test.log
+  direct_local_osh_audit: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-primary-prerequisite-declaration-readiness.json
+  disposable_local_osh_e2e: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-populated-run/run-summary.json
+  disposable_summary: ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/local-osh-populated-summary.json
+verification_summary:
+  python_unit_tests: "21/0/0/0"
+  docker_maven: "787/0/0/3"
+  direct_local_osh_audit: "47 candidates; GET=1; OPTIONS=25; unsafeMethodsIssued=[]; alias equality true; zero prerequisite-declaration-ready classes"
+  disposable_local_osh_e2e: "non-green existing local OSH baseline: populated 275/24/20/231; clean-primary 275/23/20/232; provisioning PASS; cleanup PASS; primary-state isolation PASS"
+  raze: "APPROVE_WITH_CONCERNS 0.94; required_fixes=[]; LOW pycompile-log exit-status concern addressed by regenerated pycompile.log with pycompile:0 and refreshed repo-evidence-manifest.sha256"
+non_goals:
+  - Do not issue POST, PUT, PATCH, or DELETE from the audit.
+  - Do not parse TestNG prerequisite execution outcomes inside the audit.
+  - Do not patch OSH or TeamEngine.
+  - Do not promote mutation-bound candidates to reviewed exact mappings.

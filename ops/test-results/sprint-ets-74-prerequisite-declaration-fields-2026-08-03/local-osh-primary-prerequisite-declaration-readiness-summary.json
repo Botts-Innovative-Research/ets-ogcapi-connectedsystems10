@@ -1,0 +1,55 @@
+{
+  "remainingCandidateProcedures": 47,
+  "exactPromotionReady": false,
+  "unsafeMethodsIssued": [],
+  "requestMethodCounts": {
+    "GET": 1,
+    "OPTIONS": 25
+  },
+  "classesWithDeclarationAndMethodReadiness": [
+    "1:/conf/create-replace-delete"
+  ],
+  "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": [],
+  "classesWithDeclarationMethodAndPrerequisiteReadiness": [],
+  "aliasListsEqual": true,
+  "policy": "Prerequisite-declaration readiness requires inherited conformance declarations plus direct declarations and OPTIONS method advertisement; it is not proof that inherited TestNG prerequisite groups passed.",
+  "policyAliasEqual": true,
+  "perClass": [
+    {
+      "id": "part1CreateReplaceDelete",
+      "declarationAndMethodReadiness": true,
+      "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false,
+      "aliasEqual": true,
+      "scope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "scopeAliasEqual": true
+    },
+    {
+      "id": "part1Update",
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false,
+      "aliasEqual": true,
+      "scope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "scopeAliasEqual": true
+    },
+    {
+      "id": "part2CreateReplaceDelete",
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false,
+      "aliasEqual": true,
+      "scope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "scopeAliasEqual": true
+    },
+    {
+      "id": "part2Update",
+      "declarationAndMethodReadiness": false,
+      "declarationMethodAndPrerequisiteDeclarationReadiness": false,
+      "declarationMethodAndPrerequisiteReadiness": false,
+      "aliasEqual": true,
+      "scope": "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+      "scopeAliasEqual": true
+    }
+  ]
+}

@@ -2,6 +2,42 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 74 prerequisite declaration field clarity
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-034, S-ETS-74-01, and the Sprint 74 contract for explicit
+  prerequisite-declaration readiness field names.
+- Added `REQ-ETS-CLEANUP-025` and
+  `SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-DECLARATION-FIELDS-001` to
+  OpenSpec.
+- Scope remains read-only audit evidence: no POST/PUT/PATCH/DELETE from the
+  audit, no TestNG prerequisite outcome parsing, no OSH or TeamEngine patches,
+  and no exact promotion of the 47 mutation-bound candidate procedures.
+- Implemented explicit prerequisite-declaration readiness fields:
+  `declarationMethodAndPrerequisiteDeclarationReadiness`,
+  `classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness`, and
+  `prerequisiteDeclarationReadinessPolicy`.
+- Preserved Sprint 73 compatibility aliases and added tests proving old/new
+  equality and declaration-only policy wording.
+- Direct local OSH audit: `47` candidates, `GET=1`, `OPTIONS=25`,
+  `unsafeMethodsIssued=[]`, one declaration/method-ready class, zero
+  prerequisite-declaration-ready classes, and old/new alias equality.
+- Disposable local OSH run `sprint-ets-74-fields-20260803T042511Z`: readiness
+  audit `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`; populated TeamEngine
+  `275/24/20/231`; clean-primary TeamEngine `275/23/20/232`; provisioning
+  PASS; cleanup PASS; primary-state isolation PASS. TeamEngine remains
+  non-green on the existing local OSH twenty-failure baseline.
+- Verification artifacts are archived under
+  `ops/test-results/sprint-ets-74-prerequisite-declaration-fields-2026-08-03/`:
+  Python compile PASS, Python unit tests `21/0/0/0`, formatter BUILD SUCCESS,
+  full Docker Maven `787/0/0/3`, direct OSH audit, complete disposable OSH E2E
+  artifacts, and copied-run manifest verification.
+- Raze returned `APPROVE_WITH_CONCERNS 0.94` with `required_fixes: []`. The
+  LOW pycompile-log exit-status concern was addressed before completion by
+  regenerating `pycompile.log` with `pycompile:0` and refreshing
+  `repo-evidence-manifest.sha256`.
+
 ## 2026-08-03 - Sprint 73 mutation prerequisite readiness audit
 
 **Triggered by user instruction**: "Continue."

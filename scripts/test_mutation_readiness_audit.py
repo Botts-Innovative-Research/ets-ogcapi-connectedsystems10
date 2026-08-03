@@ -5,6 +5,8 @@
 # SCENARIO-ETS-CLEANUP-MUTATION-READINESS-AUDIT-001.
 # REQ-ETS-CLEANUP-024;
 # SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-AUDIT-001.
+# REQ-ETS-CLEANUP-025;
+# SCENARIO-ETS-CLEANUP-MUTATION-PREREQUISITE-DECLARATION-FIELDS-001.
 
 import importlib.util
 import pathlib
@@ -72,7 +74,20 @@ class MutationReadinessAuditTests(unittest.TestCase):
         self.assertEqual({"GET": 1, "OPTIONS": 33}, report["requestMethodCounts"])
         self.assertIn("positive lifecycle proof", report["readinessScope"])
         self.assertEqual([], report["classesWithDeclarationAndMethodReadiness"])
+        self.assertEqual([], report["classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness"])
         self.assertEqual([], report["classesWithDeclarationMethodAndPrerequisiteReadiness"])
+        self.assertEqual(
+            report["classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness"],
+            report["classesWithDeclarationMethodAndPrerequisiteReadiness"],
+        )
+        self.assertIn(
+            "not proof that inherited TestNG prerequisite groups passed",
+            report["prerequisiteDeclarationReadinessPolicy"],
+        )
+        self.assertEqual(
+            report["prerequisiteDeclarationReadinessPolicy"],
+            report["prerequisiteReadinessPolicy"],
+        )
         for class_report in report["classes"]:
             self.assertFalse(class_report["exactPromotionReady"])
             self.assertEqual(
@@ -80,8 +95,16 @@ class MutationReadinessAuditTests(unittest.TestCase):
                 class_report["readinessScope"],
             )
             self.assertEqual(
-                "declarations-advertised-methods-and-inherited-prerequisites",
+                "declarations-advertised-methods-and-inherited-prerequisite-declarations-only",
+                class_report["prerequisiteDeclarationReadinessScope"],
+            )
+            self.assertEqual(
+                class_report["prerequisiteDeclarationReadinessScope"],
                 class_report["prerequisiteReadinessScope"],
+            )
+            self.assertEqual(
+                class_report["declarationMethodAndPrerequisiteDeclarationReadiness"],
+                class_report["declarationMethodAndPrerequisiteReadiness"],
             )
             self.assertIn(
                 "This audit is read-only readiness evidence only",
@@ -107,7 +130,12 @@ class MutationReadinessAuditTests(unittest.TestCase):
         part1_crd = next(item for item in report["classes"] if item["id"] == "part1CreateReplaceDelete")
 
         self.assertTrue(part1_crd["declarationAndMethodReadiness"])
+        self.assertFalse(part1_crd["declarationMethodAndPrerequisiteDeclarationReadiness"])
         self.assertFalse(part1_crd["declarationMethodAndPrerequisiteReadiness"])
+        self.assertEqual(
+            part1_crd["declarationMethodAndPrerequisiteDeclarationReadiness"],
+            part1_crd["declarationMethodAndPrerequisiteReadiness"],
+        )
         self.assertTrue(part1_crd["requiredConformancePresent"])
         self.assertFalse(part1_crd["prerequisiteConformancePresent"])
         self.assertEqual(
@@ -125,7 +153,12 @@ class MutationReadinessAuditTests(unittest.TestCase):
             ["1:/conf/create-replace-delete"],
             report["classesWithDeclarationAndMethodReadiness"],
         )
+        self.assertEqual([], report["classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness"])
         self.assertEqual([], report["classesWithDeclarationMethodAndPrerequisiteReadiness"])
+        self.assertEqual(
+            report["classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness"],
+            report["classesWithDeclarationMethodAndPrerequisiteReadiness"],
+        )
 
     def test_missing_declarations_and_missing_ids_are_reported_as_blockers(self):
         client = FakeClient(declared=[])

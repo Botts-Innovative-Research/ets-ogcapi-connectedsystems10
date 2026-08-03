@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-03T04:35:40Z",
+  "runId": "sprint-ets-74-fields-20260803T042511Z",
+  "overallWorkflowVerdict": "FAIL",
+  "cleanupVerdict": "PASS",
+  "provisioningVerdict": "PASS",
+  "populatedGateVerdict": "COMPLETE_WITH_CONFORMANCE_FAILURE",
+  "cleanPrimaryGateVerdict": "ERROR",
+  "primaryStateUnchanged": true,
+  "primaryDifferences": [],
+  "mutationReadinessStatus": 0,
+  "mutationReadinessSummary": {
+    "remainingCandidateProcedures": 47,
+    "unsafeMethodsIssued": [],
+    "requestMethodCounts": {
+      "GET": 1,
+      "OPTIONS": 27
+    },
+    "classesWithDeclarationAndMethodReadiness": [
+      "1:/conf/create-replace-delete"
+    ],
+    "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": [],
+    "classesWithDeclarationMethodAndPrerequisiteReadiness": [],
+    "aliasListsEqual": true,
+    "policyAliasEqual": true
+  },
+  "populated": {
+    "totals": {
+      "failed": 20,
+      "passed": 24,
+      "skipped": 231,
+      "total": 275
+    },
+    "verdict": "FAIL",
+    "requestMethodCounts": {
+      "GET": 134
+    },
+    "failureCount": 20
+  },
+  "cleanPrimary": {
+    "totals": {
+      "failed": 20,
+      "passed": 23,
+      "skipped": 232,
+      "total": 275
+    },
+    "verdict": "FAIL",
+    "requestMethodCounts": {
+      "GET": 130
+    },
+    "failureCount": 20
+  },
+  "teamEngineImageId": "sha256:2ff6af026e39c15e686734e89f4628ebfd7a2fb37228de2f62ea741e387c273c",
+  "oshImageProvenance": {
+    "imageId": "sha256:a0249ce15f22ae01620eee65e6737735b2b01a50f0a58b3c580f3d2a1dd21c7e",
+    "reference": "maven:3.9-eclipse-temurin-17@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45",
+    "repoDigests": [
+      "maven@sha256:1ed5d1f54416b706707b4f3238f63a20bb06aab27c6d240090a2bb9ad895ed45"
+    ]
+  },
+  "oshSourceProvenance": {
+    "clean": true,
+    "headCommit": "4c87a65c9a967d52af9df476e65d7862c7673a15",
+    "upstreamCommit": "ce8dd961c3f4dfdd739e5e2c78d42d8f62eb99bd",
+    "behind": 3,
+    "ahead": 0
+  }
+}

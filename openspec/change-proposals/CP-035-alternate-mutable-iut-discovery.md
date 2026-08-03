@@ -56,4 +56,5 @@ evidence was found. 52North `connected-systems-pygeoapi` is promising but its
 public demo currently declares only OGC API Common Core and showed runtime
 health issues. SensorThings implementations are useful adjacent systems, not
 direct CS API IUTs. Raze review returned `APPROVE_WITH_CONCERNS 0.91` with
-`required_fixes=[]`.
+`required_fixes=[]`. Implementation/evidence commit `8e9bb93` is pushed to
+Botts `main`.

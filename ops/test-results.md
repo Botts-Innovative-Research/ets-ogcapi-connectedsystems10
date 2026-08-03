@@ -40,6 +40,7 @@ Sprint 75 alternate mutable IUT discovery:
   verification PASS for 22 manifest-listed evidence files; Sprint 75 `.log`
   evidence is unignored.
 - Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`.
+- Implementation/evidence commit `8e9bb93` is pushed to Botts `main`.
 
 Sprint 74 prerequisite declaration field clarity:
 

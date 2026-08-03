@@ -36,6 +36,7 @@ or expensive Maven/Docker/TeamEngine gates.
   LOW concerns are scoped caveats that `connected-systems-go` is future
   self-run candidate evidence, not current exact-promotion evidence, and that
   live public demo observations should be refreshed before sprint entry.
+- Implementation/evidence commit `8e9bb93` is pushed to Botts `main`.
 
 ## 2026-08-03 - Sprint 74 prerequisite declaration field clarity
 

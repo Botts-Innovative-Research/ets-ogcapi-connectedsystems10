@@ -3268,7 +3268,7 @@ TestNG prerequisite execution
 
 #### REQ-ETS-CLEANUP-026: Alternate Mutable IUT Discovery (Sprint 75)
 - **Priority**: SHOULD
-- **Status**: IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS (Sprint 75 S-ETS-75-01)
+- **Status**: IMPLEMENTED_RAZE_APPROVED_WITH_CONCERNS_PUSHED (Sprint 75 S-ETS-75-01)
 - **Description**: The project SHALL maintain read-only discovery evidence for
   alternate open-source OGC API Connected Systems implementations that may be
   viable future dedicated mutable IUTs for the remaining mutation-bound
@@ -3294,7 +3294,7 @@ TestNG prerequisite execution
   Part 2 Create/Replace/Delete lifecycle work, while recording that no
   candidate currently closes all 47 mutation-bound procedures or Update/PATCH
   exactness. Raze review returned `APPROVE_WITH_CONCERNS 0.91` with
-  `required_fixes=[]`.
+  `required_fixes=[]`. Implementation/evidence commit `8e9bb93` is pushed.
 - **Maps to**: PRD FR-ETS-25, FR-ETS-54; REQ-ETS-CLEANUP-023,
   REQ-ETS-CLEANUP-024, REQ-ETS-CLEANUP-025.
 

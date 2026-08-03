@@ -9,6 +9,8 @@ Last updated: 2026-08-03T08:16Z
 - Created a repo-local upstream-facing request package:
   `ops/outreach/connected-systems-go-readiness-gap-request.md` and
   `ops/outreach/connected-systems-go-readiness-gap-request.json`.
+- Implementation/evidence commit:
+  pushed `46f2217`.
 - Current upstream check:
   `ops/test-results/sprint-ets-77-connected-systems-go-upstream-gap-package-2026-08-03/upstream-head.txt`
   records `SomethingCreativeStudios/connected-systems-go` `HEAD` and `main` at

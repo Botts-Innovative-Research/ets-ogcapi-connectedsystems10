@@ -1,59 +1,62 @@
 agent: discovery
-status: complete
-timestamp: "2026-08-03T05:08:39Z"
-triggered_by: "User requested current research into alternate open-source OGC API Connected Systems or adjacent mutable IUT implementations beyond OSH."
+status: complete_raze_approved
+timestamp: "2026-08-03T09:00:01Z"
+triggered_by: "User instructed continuing alternate IUT discovery after Sprint 77 was pushed."
 
 outputs:
   - path: "_bmad/product-brief.md"
-    type: "product-brief"
-    title: "Alternate Mutable IUT Discovery for OGC API Connected Systems"
-  - path: "ops/test-results/sprint-ets-75-alternate-iut-discovery-2026-08-03/alternate-iut-readiness-summary.json"
-    type: "read-only-public-iut-readiness-summary"
-  - path: ".harness/evaluations/sprint-ets-75-adversarial.yaml"
-    type: "adversarial-review"
+    type: "product-brief-refresh"
+    title: "Alternate IUT Discovery Follow-up"
+  - path: ".harness/handoffs/discovery-sprint-78-handoff.yaml"
+    type: "sprint-handoff"
+  - path: "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/candidate-summary.json"
+    type: "candidate-summary"
+  - path: "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/README.md"
+    type: "evidence-manifest"
 
 summary: |
-  Discovery found one plausible open-source alternate mutable-IUT candidate beyond OSH: `SomethingCreativeStudios/connected-systems-go`. It is the strongest next target because its live demo declares Part 1 `/conf/api-common`, Part 2 `/conf/api-common`, and Part 2 `/conf/create-replace-delete`, while source inspection shows POST/PUT/DELETE routes and e2e CRUD tests for Part 1 and Part 2 resources. It does not appear to support `/conf/update` or real PATCH routes, and public OPTIONS probes did not provide `Allow` evidence, so it cannot close all 47 remaining mutation-bound candidate procedures today. 52North's Connected Systems pygeoapi work is promising but its public demo currently declares only OGC API Common Core and showed runtime health issues. SensorThings servers such as FROST-Server, GOST, and istSOS4 are mature mutable stacks but are not direct OGC API Connected Systems IUTs.
+  Sprint 78 refreshes alternate IUT discovery after the Sprint 76 self-run
+  `connected-systems-go` evidence and Sprint 77 upstream gap package. The
+  official OGC implementation registry still lists OpenSensorHub Server and
+  52North pygeoapi extension as server-side open-source CS API
+  implementations. 52North remains a plausible self-run watch candidate but
+  its current source conformance providers do not advertise the needed CS API
+  classes. DGIWG Glaux Server is a newly surfaced direct CS API server claim,
+  but current public evidence is README-only and not a runnable IUT. Public
+  probes remain GET/OPTIONS only and non-promoting.
 
 flags:
-  - id: CSAPI-GO-BEST-CANDIDATE-PART2-CRD
+  - id: DGIWG-GLAUX-WATCHLIST
     severity: medium
-    message: "`connected-systems-go` is the best candidate for a future self-run disposable Part 2 Create/Replace/Delete experiment, not for immediate exact promotion from public evidence."
-  - id: NO-ALL-47-CANDIDATE
-    severity: high
-    message: "No researched open-source implementation currently demonstrates the declarations, Update/PATCH surface, lifecycle proof, and cleanup evidence needed to close all 47 mutation-bound candidate procedures."
+    message: "DGIWG Glaux Server is a direct CS API server claim but currently has only README-level public evidence."
+  - id: FIFTYTWONORTH-SELF-RUN-WATCH
+    severity: medium
+    message: "52North connected-systems-pygeoapi has runnable-source signals but incomplete current conformance declarations."
   - id: PUBLIC-PROBES-READ-ONLY
     severity: high
-    message: "Archived public probes used GET and OPTIONS only and record `unsafeMethodsIssued=[]`; public demo evidence must not be treated as mutation lifecycle proof."
-  - id: CSAPI-GO-LICENSE-UNKNOWN
-    severity: medium
-    message: "GitHub API metadata did not expose a license for `connected-systems-go`; confirm license terms before relying on it in automated project workflows."
-  - id: UPDATE-PATCH-STILL-BLOCKED
+    message: "Sprint 78 public probes used GET and OPTIONS only and report unsafeMethodsIssued=[]."
+  - id: NO-EXACT-PROMOTION
     severity: high
-    message: "No candidate produced current `/conf/update` plus real PATCH-route evidence. CORS PATCH advertisement alone is insufficient."
-  - id: FIFTYTWONORTH-NOT-READY-PUBLICLY
-    severity: medium
-    message: "52North's public demo currently advertises only OGC API Common Core and had TLS/runtime health issues during research."
+    message: "No Sprint 78 candidate provides exact-promotion evidence for the 47 mutation-bound procedures."
 
-confidence: 0.8
+confidence: 0.82
 confidence_rationale: |
-  Confidence is medium-high because the conclusion is backed by official OGC implementation listings, current public demo probes, GitHub repository inspection, and local Sprint 74 blocker evidence. It is not higher because live demos can change, some implementation branches are in progress, and no expensive self-run alternate IUT deployment was attempted in this Discovery task.
+  Confidence is medium-high because findings are backed by current official
+  registry content, GitHub API metadata, read-only source clones, curated source
+  grep evidence, and public readiness probes. It is not higher because public
+  repositories and demos can change quickly, and no new self-run IUT was
+  deployed in this sprint.
 
 recommended_next_steps:
-  - "Keep public demos read-only; do not mutate OS4CSAPI or 52North public deployments."
-  - "Run a future Sprint 75/76 planner task to self-host `connected-systems-go` with disposable storage and deterministic seed data."
-  - "Audit exact declarations, service description, OPTIONS `Allow`, POST/PUT/DELETE lifecycle, changed-resource GET proof, cleanup, and isolation before any exact promotion."
-  - "Defer Update/PATCH closure until a candidate declares `/conf/update` and exposes actual PATCH handlers."
+  - "Keep public demos read-only."
+  - "Track DGIWG Glaux Server for source/license/endpoint publication before spending local deployment time."
+  - "Consider a future self-run 52North experiment only after resolving its Docker example mismatch and conformance TODOs."
+  - "Do not start exact mutation closure until a dedicated mutable IUT declares exact prerequisites and advertises real method readiness."
+verification:
+  lightweight: "PASS: 19 JSON files, 4 YAML files, artifact presence, public probe policy, ignored-log check, evidence manifest, and git diff --check."
+  raze: "PASS: initial GAPS_FOUND 0.90 addressed; focused recheck APPROVE 0.94 with required_fixes=[]."
 
-duration_seconds: 795
+duration_seconds: null
 token_metadata:
-  source: "python3 scripts/session-metrics.py"
-  session_jsonl: "rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl"
-  input_tokens: 17779457
-  output_tokens: 1432407
-  cache_write_tokens: 0
-  cache_read_tokens: 420386816
-  total_tokens: 439598680
-  total_cost_usd: 1004.70
-  api_calls: 3096
+  source: "ops/metrics.md turn 444 closeout"
   subagent_token_metadata: null

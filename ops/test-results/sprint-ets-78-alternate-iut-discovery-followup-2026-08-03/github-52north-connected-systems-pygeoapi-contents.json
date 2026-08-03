@@ -1,0 +1,226 @@
+[
+  {
+    "name": ".env.sample",
+    "path": ".env.sample",
+    "sha": "437514fc1b657308a131638844eefd2ddc717ea6",
+    "size": 985,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.env.sample?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/.env.sample",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/437514fc1b657308a131638844eefd2ddc717ea6",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/.env.sample",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.env.sample?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/437514fc1b657308a131638844eefd2ddc717ea6",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/.env.sample"
+    }
+  },
+  {
+    "name": ".github",
+    "path": ".github",
+    "sha": "b66564d71426fc6623886abd56797984c37b8bb8",
+    "size": 0,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.github?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/tree/main/.github",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/trees/b66564d71426fc6623886abd56797984c37b8bb8",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.github?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/trees/b66564d71426fc6623886abd56797984c37b8bb8",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/tree/main/.github"
+    }
+  },
+  {
+    "name": ".gitignore",
+    "path": ".gitignore",
+    "sha": "a820b26380ea02b0e250b9c86c0d52197a9d5126",
+    "size": 3112,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.gitignore?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/.gitignore",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/a820b26380ea02b0e250b9c86c0d52197a9d5126",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/.gitignore",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.gitignore?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/a820b26380ea02b0e250b9c86c0d52197a9d5126",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/.gitignore"
+    }
+  },
+  {
+    "name": ".gitmodules",
+    "path": ".gitmodules",
+    "sha": "2b12237b9b3ceef986d73b53bd54d170c5e0de9e",
+    "size": 166,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.gitmodules?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/.gitmodules",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/2b12237b9b3ceef986d73b53bd54d170c5e0de9e",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/.gitmodules",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.gitmodules?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/2b12237b9b3ceef986d73b53bd54d170c5e0de9e",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/.gitmodules"
+    }
+  },
+  {
+    "name": ".python-version",
+    "path": ".python-version",
+    "sha": "e4fba2183587225f216eeada4c78dfab6b2e65f5",
+    "size": 5,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.python-version?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/.python-version",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/e4fba2183587225f216eeada4c78dfab6b2e65f5",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/.python-version",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/.python-version?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/e4fba2183587225f216eeada4c78dfab6b2e65f5",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/.python-version"
+    }
+  },
+  {
+    "name": "Dockerfile",
+    "path": "Dockerfile",
+    "sha": "bde4d68105c3085c5d9a80153447633e66beb4ca",
+    "size": 1367,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/Dockerfile?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/Dockerfile",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/bde4d68105c3085c5d9a80153447633e66beb4ca",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/Dockerfile",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/Dockerfile?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/bde4d68105c3085c5d9a80153447633e66beb4ca",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/Dockerfile"
+    }
+  },
+  {
+    "name": "LICENSE",
+    "path": "LICENSE",
+    "sha": "28f41cca74e0c1deb028dac93f42fa38d91d9e7c",
+    "size": 11379,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/LICENSE?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/LICENSE",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/28f41cca74e0c1deb028dac93f42fa38d91d9e7c",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/LICENSE",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/LICENSE?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/28f41cca74e0c1deb028dac93f42fa38d91d9e7c",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/LICENSE"
+    }
+  },
+  {
+    "name": "README.md",
+    "path": "README.md",
+    "sha": "857607281cb5f3097509f260bec129176d1a7386",
+    "size": 2320,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/README.md?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/README.md",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/857607281cb5f3097509f260bec129176d1a7386",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/README.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/README.md?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/857607281cb5f3097509f260bec129176d1a7386",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/README.md"
+    }
+  },
+  {
+    "name": "connected-systems-api",
+    "path": "connected-systems-api",
+    "sha": "dfe635eed3076b7ce955dda519ae671a79617fb5",
+    "size": 0,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/connected-systems-api?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/tree/main/connected-systems-api",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/trees/dfe635eed3076b7ce955dda519ae671a79617fb5",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/connected-systems-api?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/trees/dfe635eed3076b7ce955dda519ae671a79617fb5",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/tree/main/connected-systems-api"
+    }
+  },
+  {
+    "name": "docker-compose-dev.yml",
+    "path": "docker-compose-dev.yml",
+    "sha": "b628272a7383ef1d211be7c013b199f4f11ef4d8",
+    "size": 7099,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/docker-compose-dev.yml?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/docker-compose-dev.yml",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/b628272a7383ef1d211be7c013b199f4f11ef4d8",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/docker-compose-dev.yml",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/docker-compose-dev.yml?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/b628272a7383ef1d211be7c013b199f4f11ef4d8",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/docker-compose-dev.yml"
+    }
+  },
+  {
+    "name": "docs",
+    "path": "docs",
+    "sha": "8dbdba03ebccd1b48a0fb2a8736d05b4f418504a",
+    "size": 0,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/docs?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/tree/main/docs",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/trees/8dbdba03ebccd1b48a0fb2a8736d05b4f418504a",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/docs?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/trees/8dbdba03ebccd1b48a0fb2a8736d05b4f418504a",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/tree/main/docs"
+    }
+  },
+  {
+    "name": "hypercorn.conf.py",
+    "path": "hypercorn.conf.py",
+    "sha": "2371dd2fb544a42c15451ec09fa9decf8c9915c1",
+    "size": 875,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/hypercorn.conf.py?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/hypercorn.conf.py",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/2371dd2fb544a42c15451ec09fa9decf8c9915c1",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/hypercorn.conf.py",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/hypercorn.conf.py?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/2371dd2fb544a42c15451ec09fa9decf8c9915c1",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/hypercorn.conf.py"
+    }
+  },
+  {
+    "name": "pyproject.toml",
+    "path": "pyproject.toml",
+    "sha": "f2dc5803a52fdf91c71719590a8c75f6a26eedb0",
+    "size": 1171,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/pyproject.toml?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/blob/main/pyproject.toml",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/f2dc5803a52fdf91c71719590a8c75f6a26eedb0",
+    "download_url": "https://raw.githubusercontent.com/52North/connected-systems-pygeoapi/main/pyproject.toml",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/pyproject.toml?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/blobs/f2dc5803a52fdf91c71719590a8c75f6a26eedb0",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/blob/main/pyproject.toml"
+    }
+  },
+  {
+    "name": "tools",
+    "path": "tools",
+    "sha": "382b32ae52ead0ca688d8d043a8929a35e886410",
+    "size": 0,
+    "url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/tools?ref=main",
+    "html_url": "https://github.com/52North/connected-systems-pygeoapi/tree/main/tools",
+    "git_url": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/trees/382b32ae52ead0ca688d8d043a8929a35e886410",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/52North/connected-systems-pygeoapi/contents/tools?ref=main",
+      "git": "https://api.github.com/repos/52North/connected-systems-pygeoapi/git/trees/382b32ae52ead0ca688d8d043a8929a35e886410",
+      "html": "https://github.com/52North/connected-systems-pygeoapi/tree/main/tools"
+    }
+  }
+]

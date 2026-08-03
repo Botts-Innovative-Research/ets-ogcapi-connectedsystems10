@@ -1,0 +1,8 @@
+Sprint 78 lightweight verification
+generated=2026-08-03T09:25:00Z
+json_parse=PASS count=19
+yaml_parse=PASS count=4
+markdown_artifact_presence=PASS
+public_probe_policy_check=PASS
+ignored_log_check=PASS
+git_diff_check=PASS

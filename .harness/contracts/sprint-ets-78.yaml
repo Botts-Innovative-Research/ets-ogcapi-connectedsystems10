@@ -1,0 +1,46 @@
+sprint: ets-78
+story: S-ETS-78-01
+title: Alternate IUT discovery follow-up
+status: complete_raze_approved
+trigger: User instructed "Continue alternate IUT discovery" after Sprint 77 was pushed.
+scope:
+  requirement: REQ-ETS-CLEANUP-029
+  change_type: documentation_and_discovery_evidence
+  exact_promotion: false
+  mutation_policy: public_probes_get_options_only
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-ALT-IUT-DISCOVERY-FOLLOWUP-001
+      expect: The follow-up discovery archive identifies current direct and adjacent open-source CS API candidates without mutating public IUTs.
+    - id: dgiwg_classification
+      expect: DGIWG Glaux Server is classified as a direct CS API server claim but not an immediate runnable IUT unless source, license, and endpoint evidence exist.
+    - id: no_exact_promotion
+      expect: No mutation-bound candidate mapping is promoted from Sprint 78 discovery evidence.
+  normal:
+    - id: public_probe_safety
+      expect: Public readiness probes record GET/OPTIONS-only behavior and unsafeMethodsIssued=[].
+    - id: evidence_links
+      expect: Official registry, GitHub metadata, source clone heads, public probes, and compact candidate summary are archived.
+    - id: ops_reconciliation
+      expect: Product brief, handoff, status, changelog, known issues, test results, traceability, and story status agree.
+required_verification:
+  - json_parse
+  - yaml_parse
+  - markdown_artifact_presence
+  - public_probe_policy_check
+  - ignored_log_check
+  - git_diff_check
+  - raze_adversarial_review
+verification_results:
+  json_parse: "PASS: 19 archived Sprint 78 JSON files parsed with jq."
+  yaml_parse: "PASS: Sprint 78 contract, both Discovery handoffs, and the initial Raze report parsed with PyYAML."
+  markdown_artifact_presence: "PASS: CP-038, S-ETS-78-01, product brief, evidence README, discovery notes, candidate summary, and source grep summary are present and non-empty."
+  public_probe_policy_check: "PASS: 52North and connected-systems-go public readiness outputs have unsafeMethodsIssued=[]; requestMethodCounts contain only GET/OPTIONS; exactPromotionReady=false."
+  ignored_log_check: "PASS: Sprint 78 evidence uses non-ignored .txt logs; no .log files remain in the evidence directory."
+  git_diff_check: "PASS: git diff --check completed without whitespace errors."
+  raze_adversarial_review: "PASS: initial Raze returned GAPS_FOUND 0.90; gapfix renamed ignored .log evidence to .txt, corrected candidate-summary scenario ID, archived 52North public conformance body, and updated JSON count; focused recheck returned APPROVE 0.94 with required_fixes=[]."
+non_goals:
+  - Do not contact maintainers or file GitHub issues from this environment.
+  - Do not modify third-party source.
+  - Do not run TeamEngine, Docker IUT deployment work, or Maven in this documentation sprint.
+  - Do not promote Create/Replace/Delete or Update candidates to reviewed exact.

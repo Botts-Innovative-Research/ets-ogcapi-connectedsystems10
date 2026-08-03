@@ -1,0 +1,24 @@
+# Sprint 78 Source Metadata
+
+## 52North connected-systems-pygeoapi
+commit=18c1ce803fcdb2de3aac9d227ab814306d8a718f
+commit_date=2025-10-30 12:27:38 +0100
+subject=refactor mimetype handling to be more stable
+remote=https://github.com/52North/connected-systems-pygeoapi
+license=Apache-2.0
+
+## 52North pygeoapi feature branch
+eb502577fd1ee0c836f709663f50800f4ce361a3	refs/heads/feature/connected-systems
+
+## OWSLib
+commit=9d8e5bac414dcce018bc39dfc90424cedd39758c
+commit_date=2026-06-16 23:21:35 +0200
+subject=Get version from TOML and update README with docs build (#1043)
+remote=https://github.com/geopython/OWSLib
+license=BSD-3-Clause
+
+## FROST-Server adjacent SensorThings implementation
+bf7976831b22bcac6dd20a1335d96fed7f809677	HEAD
+bf7976831b22bcac6dd20a1335d96fed7f809677	refs/heads/v2.x
+remote=https://github.com/FraunhoferIOSB/FROST-Server
+license=LGPL-3.0

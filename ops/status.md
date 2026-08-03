@@ -1,6 +1,57 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T08:16Z
+Last updated: 2026-08-03T09:33Z
+
+## Sprint 78 Complete - Alternate IUT Discovery Follow-up
+
+- User instruction: act as BMAD Analyst / Discovery for Sprint 78; research
+  current open-source OGC API Connected Systems server or closely adjacent
+  mutable-IUT implementations beyond local OSH and
+  `SomethingCreativeStudios/connected-systems-go`; do not mutate public IUTs;
+  do not run Docker, Maven, or TeamEngine.
+- Discovery handoff:
+  `.harness/handoffs/discovery-sprint-78-handoff.yaml`.
+- Evidence and notes:
+  `ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/`.
+- Finding:
+  no newly discovered implementation is currently ready to close the remaining
+  47 mutation-bound ETS candidates. 52North `connected-systems-pygeoapi` is
+  the best practical new source-run watch candidate; DGIWG Glaux Server is a
+  new direct CS API server claim but currently has only README-level public
+  evidence.
+- 52North evidence:
+  source HEAD `18c1ce803fcdb2de3aac9d227ab814306d8a718f`, Apache-2.0,
+  public readiness audit `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, zero
+  declaration/method-ready classes, and zero prerequisite-declaration-ready
+  classes. A separate safe `curl -k` probe reached public `/conformance` and
+  archived `52north-public-conformance.json`, which contains only OGC API
+  Common Core.
+- 52North blockers:
+  public Datastream GETs returned 500, ControlStream/Command/Feasibility
+  endpoints returned 404, Part 2 provider conformance returns `[]`, and PATCH
+  is not exposed.
+- DGIWG Glaux:
+  worth monitoring because public metadata claims a Connected Systems server,
+  but `DGIWG-P507/glaux-server` HEAD
+  `1ba41159d1465797f1fceab129486197eb80aadf` currently exposes only
+  `README.md`, no implementation language, no license metadata, and no public
+  endpoint evidence.
+- OWSLib and FROST-Server:
+  useful adjacent signals only. OWSLib is a client library; FROST-Server is a
+  mature SensorThings API server, not a Connected Systems IUT.
+- Next practical work:
+  run a future disposable local 52North `connected-systems-pygeoapi` source-run
+  experiment with generated local credentials and disposable
+  Elasticsearch/TimescaleDB state, then seed/probe only local lifecycle paths
+  before considering TeamEngine.
+- Verification:
+  lightweight JSON/YAML/artifact/public-probe/ignored-log/manifest/diff checks
+  passed. Initial Raze returned `GAPS_FOUND 0.90` for ignored `.log` evidence,
+  stale scenario/count metadata, and under-archived 52North conformance
+  evidence. Fixes renamed log evidence to `.txt`, corrected
+  `candidate-summary.json`, archived `52north-public-conformance.json`, and
+  updated verification counts. Focused Raze recheck returned `APPROVE 0.94`
+  with `required_fixes=[]`.
 
 ## Sprint 77 Complete - connected-systems-go Upstream Gap Package
 

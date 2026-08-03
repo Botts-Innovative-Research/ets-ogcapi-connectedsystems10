@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-08-03T09:25:00Z",
+  "evidenceDir": "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03",
+  "jsonParse": "PASS",
+  "jsonFileCount": 19,
+  "yamlParse": "PASS",
+  "yamlFileCount": 4,
+  "markdownArtifactPresence": "PASS",
+  "publicProbePolicyCheck": "PASS",
+  "ignoredLogCheck": "PASS",
+  "gitDiffCheck": "PASS",
+  "teamEngine": "NOT_RUN docs/discovery only",
+  "maven": "NOT_RUN docs/discovery only"
+}

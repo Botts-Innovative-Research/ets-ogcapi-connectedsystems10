@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "sprint-ets-78-candidate-summary-v1",
+  "generatedAt": "2026-08-03T09:00:00Z",
+  "scenario": "SCENARIO-ETS-CLEANUP-ALT-IUT-DISCOVERY-FOLLOWUP-001",
+  "policy": {
+    "publicProbes": "GET/OPTIONS only",
+    "unsafeMethodsAllowed": false,
+    "exactPromotionFromDiscovery": false
+  },
+  "officialRegistry": {
+    "url": "https://github.com/opengeospatial/ogcapi-connected-systems/blob/master/implementations.adoc",
+    "observedHead": "3fd86c73e744b7e2faaf7f1c17366bfb9ff4cd6f",
+    "serverImplementations": [
+      "OpenSensorHub Server",
+      "52North pygeoapi extension"
+    ]
+  },
+  "candidates": {
+    "connectedSystemsGoPublicRefresh": {
+      "repo": {
+        "fullName": "OS4CSAPI/connected-systems-go",
+        "url": "https://github.com/OS4CSAPI/connected-systems-go",
+        "description": null,
+        "updatedAt": "2026-05-06T01:37:24Z",
+        "pushedAt": "2026-05-06T01:37:21Z",
+        "license": null,
+        "fork": true,
+        "size": 10696,
+        "defaultBranch": "main"
+      },
+      "readiness": {
+        "iutUrl": "https://129-80-248-53.sslip.io/csapi-go-v2",
+        "conformanceStatus": 200,
+        "conformanceContentType": "application/json",
+        "declaredCount": 24,
+        "declaredMutationRelevant": [
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/api-common",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/api-common",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/command",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/observation",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event",
+          "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history"
+        ],
+        "remainingCandidateProcedures": 47,
+        "requestMethodCounts": {
+          "GET": 1,
+          "OPTIONS": 25
+        },
+        "unsafeMethodsIssued": [],
+        "classesWithDeclarationAndMethodReadiness": [],
+        "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": [],
+        "exactPromotionReady": false,
+        "safeConformanceBodyArtifact": "52north-public-conformance.json",
+        "safeConformanceBodyConformsTo": [
+          "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core"
+        ]
+      },
+      "disposition": "Still strongest previously researched alternate for self-run Part 2 CRD diagnostics, but public refresh remains non-promotable."
+    },
+    "fiftyTwoNorthConnectedSystemsPygeoapi": {
+      "repo": {
+        "fullName": "52North/connected-systems-pygeoapi",
+        "url": "https://github.com/52North/connected-systems-pygeoapi",
+        "description": "Proof of Concept of OGC Connected Systems API based on pygeoapi",
+        "updatedAt": "2026-03-01T08:57:23Z",
+        "pushedAt": "2026-03-15T14:27:18Z",
+        "license": "Apache-2.0",
+        "fork": false,
+        "size": 1607,
+        "defaultBranch": "main"
+      },
+      "observedHead": "18c1ce803fcdb2de3aac9d227ab814306d8a718f",
+      "readiness": {
+        "iutUrl": "https://csa.demo.52north.org",
+        "conformanceStatus": null,
+        "conformanceContentType": "",
+        "declaredCount": 0,
+        "declaredMutationRelevant": [],
+        "remainingCandidateProcedures": 47,
+        "requestMethodCounts": {
+          "GET": 1,
+          "OPTIONS": 25
+        },
+        "unsafeMethodsIssued": [],
+        "classesWithDeclarationAndMethodReadiness": [],
+        "classesWithDeclarationMethodAndPrerequisiteDeclarationReadiness": [],
+        "exactPromotionReady": false
+      },
+      "sourceSignals": [
+        "Apache-2.0",
+        "Dockerfile and docker-compose-dev.yml present",
+        "README documents simulator example data",
+        "routes expose POST/PUT/DELETE surfaces",
+        "Part 1 provider currently returns only OGC API Common Core conformance",
+        "Part 2 provider get_conformance returns [] with TODO"
+      ],
+      "disposition": "Promising self-run watch candidate, not an immediate declaring IUT."
+    },
+    "dgiwgGlaux": {
+      "repo": {
+        "fullName": "DGIWG-P507/glaux",
+        "url": "https://github.com/DGIWG-P507/glaux",
+        "description": "Meta-repository and documentation hub for the DGIWG Glaux ecosystem (NATO STANAG 4789 + OGC API - Connected Systems).",
+        "updatedAt": "2026-08-02T16:03:03Z",
+        "pushedAt": "2026-08-02T16:02:50Z",
+        "license": null,
+        "fork": false,
+        "size": 11672,
+        "defaultBranch": "main"
+      },
+      "observedHead": "b5e48426c17b5a2503e6958014c189051ab6cc5b",
+      "orgRepoCount": 7,
+      "disposition": "New direct-claim ecosystem watchlist candidate; meta/documentation repository, not an immediate IUT."
+    },
+    "dgiwgGlauxServer": {
+      "repo": {
+        "fullName": "DGIWG-P507/glaux-server",
+        "url": "https://github.com/DGIWG-P507/glaux-server",
+        "description": "Core OGC API - Connected Systems authority node with conformance-harness-backed interoperability.",
+        "updatedAt": "2026-06-07T12:47:12Z",
+        "pushedAt": "2026-06-07T12:36:29Z",
+        "license": null,
+        "fork": false,
+        "size": 1,
+        "defaultBranch": "main"
+      },
+      "observedHead": "1ba41159d1465797f1fceab129486197eb80aadf",
+      "repositoryFiles": [
+        "README.md"
+      ],
+      "disposition": "Direct CS API server claim, but repository is README-only with no runnable source, license metadata, or public endpoint found."
+    }
+  }
+}

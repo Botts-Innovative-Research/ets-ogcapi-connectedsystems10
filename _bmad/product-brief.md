@@ -18,6 +18,35 @@ The discovery goal is therefore narrow: find an open-source implementation that 
 
 ## Research Findings
 
+### Sprint 78 Follow-up Refresh
+
+Current refresh evidence is archived under
+`ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/`.
+The official OGC implementation registry still lists only two server-side
+open-source implementations: OpenSensorHub Server and the 52North pygeoapi
+extension. The refresh did not find an immediate replacement IUT that can close
+the remaining 47 mutation-bound candidates without further self-run setup and
+conformance work.
+
+New or refreshed candidate dispositions:
+
+- DGIWG Glaux Server is a new direct OGC API Connected Systems server claim,
+  but its public repository currently contains only a README, no license
+  metadata, no runnable source tree, and no public endpoint evidence. It should
+  be tracked as a watchlist item, not treated as an immediate IUT.
+- 52North `connected-systems-pygeoapi` remains a plausible self-run watch
+  candidate. Its repository is Apache-2.0, has a Dockerfile,
+  `docker-compose-dev.yml`, simulator seed tooling, and CS-specific
+  POST/PUT/DELETE route surfaces. Current source still returns only OGC API
+  Common Core from the Part 1 provider, returns an empty TODO result from the
+  Part 2 conformance provider, and the README references `./docker/` examples
+  that are absent from the current repository root. Its public demo readiness
+  probe is not usable as declaring IUT evidence.
+- The refreshed public `connected-systems-go` readiness probe still declares
+  useful Part 2 classes but remains non-promotable because required
+  declarations, inherited prerequisites, OPTIONS `Allow` readiness,
+  Feasibility condition readiness, and Update/PATCH evidence remain incomplete.
+
 ### Official Implementation Registry
 
 The official OGC Connected Systems repository currently lists two server-side implementations:
@@ -42,6 +71,7 @@ Source: https://csapi.developer.ogc.org/
 | `SomethingCreativeStudios/connected-systems-go` | Public GitHub repo; license not declared in GitHub API metadata | README says Go implementation of OGC API Connected Systems Part 1 Feature Resources and Part 2 Dynamic Data | Live/self-run `/conformance` declares Part 1 `/conf/api-common`, Part 2 `/conf/api-common`, Part 2 Datastream/Observation/ControlStream/Command/SystemEvent/JSON/Create-Replace-Delete; Sprint 76 found missing Part 1 `/conf/core`, missing Part 1 CRD/exact inherited `ogcapi-4` CRD, and missing inherited Features Part 4 CRD | Sprint 76 self-run direct lifecycle passed POST/PUT/DELETE for DataStream, Observation, ControlStream, and Command; public read-only audit issued no writes | No `/conf/update`; no real PATCH routes found beyond global CORS method advertisement; Part 2 Feasibility condition readiness is also missing for Update | Strongest found Part 2 CRD route/lifecycle candidate; Sprint 76 TeamEngine remained non-green at `275/15/1/259` | Best upstream outreach candidate for fixing declarations/OPTIONS readiness. Not current exact-promotion evidence. |
 | OS4CSAPI fork of `connected-systems-go` | Public fork | Same project lineage | OS4CSAPI developer site uses the Go server as reference integration target | Same as upstream unless fork diverges | Same concern as upstream | Same claim | Track if OS4CSAPI hosts deployment-specific patches, but upstream is fresher. |
 | `52North/connected-systems-pygeoapi` | Public GitHub repo, Apache-2.0 | 52North says Part 1 is fully implemented and Part 2 is actively developed | Public demo `/conformance` currently advertises only OGC API Common Core | Source has CS-specific GET/POST/PUT/DELETE routes and Part 2 datastream update/provider code comments | Route decorators do not expose PATCH; provider comments mention update targets but observation update is unsupported | Part 2 in active development; public demo `/datastreams` returned server error during probe | Promising medium-term self-run candidate, but public deployment is not a usable declaring IUT today. |
+| DGIWG Glaux Server | Public GitHub repo; no license metadata in GitHub API | README describes a central OGC API Connected Systems authority node with conformance-harness-backed interoperability | No runnable public endpoint or `/conformance` evidence found | No public source beyond README found | No PATCH/update source evidence found | Direct claim but no route or data evidence | Watchlist only until source, license, endpoint, and conformance evidence are published. |
 | 52North `pygeoapi` `feature/connected-systems` branch | Public GitHub branch | Official registry links this branch | Static bundled OpenAPI uses older/historical CS URI names such as `system-features` and encoding classes | Generic pygeoapi feature write routes exist; CS route fit is unclear | No convincing current PATCH/update evidence found | Some Part 1/2 provider and OpenAPI assets exist | Not stronger than the standalone 52North CSA app for this ETS without branch reconciliation. |
 | OpenSensorHub / OSH | Public GitHub repo, MPL-2.0 | Broad CS API support; OS4CSAPI public demo advertises Parts 1, 2, and 3 classes | Public demo declares many CS classes including Part 1 CRD, Part 2 CRD, JSON, SWE Common JSON/Text/Binary, WebSocket, MQTT | Local disposable OSH workflow has safe provisioning/cleanup evidence, but readiness audit still blocks exact promotion | No Part 1/2 `/conf/update`; no PATCH readiness sufficient for exact closure | Broadest encoding coverage among found implementations | Keep as baseline and local disposable diagnostic IUT, but not enough for the remaining mutation exact closure. |
 | FROST-Server | Public GitHub repo, AGPL-3.0 | OGC SensorThings API reference implementation, not CS API | SensorThings conformance, not Connected Systems `/conformance` | Mature create/update/delete support in SensorThings | SensorThings Tasking support, not CS Part 2 Update | SensorThings Part 1/Part 2, not CS Part 2 | Useful adapter/substrate candidate only; not a direct CS API IUT. |
@@ -100,6 +130,17 @@ Public demo: https://csa.demo.52north.org/
 
 52North states that its implementation is Python-based, uses pygeoapi with Elasticsearch and TimescaleDB, has Part 1 already fully implemented, and is actively developing Part 2. The repository is Apache-2.0 and contains CS-specific routes and providers.
 
+Sprint 78 source refresh inspected repository HEAD
+`18c1ce803fcdb2de3aac9d227ab814306d8a718f`. The source exposes CS-specific
+POST/PUT/DELETE routes for systems, procedures, deployments, datastreams,
+observations, and nested datastream observations. It also includes simulator
+tooling that POSTs systems, datastreams, and observations to a running
+instance. However, `provider/part1/part1.py` currently returns only OGC API
+Common Core from `get_conformance()`, while `provider/part2/part2.py` logs a
+TODO and returns an empty conformance list. The README's Docker instructions
+reference `./docker/` examples that are not present in the current repository
+root, although a top-level Dockerfile and `docker-compose-dev.yml` are present.
+
 The live public demo is not currently a usable declaring IUT for this ETS:
 
 - `/conformance` returned only `http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core`.
@@ -107,6 +148,27 @@ The live public demo is not currently a usable declaring IUT for this ETS:
 - `/datastreams?limit=1` returned HTTP 500 during research.
 
 Interpretation: 52North is worth tracking and may be useful if self-run, seeded, and configured with current conformance declarations. It is not a better immediate target than connected-systems-go.
+
+### DGIWG Glaux Details
+
+Repositories:
+
+- https://github.com/DGIWG-P507/glaux
+- https://github.com/DGIWG-P507/glaux-server
+
+Sprint 78 discovered DGIWG Glaux as a new direct-claim ecosystem. GitHub
+metadata describes `glaux` as a documentation hub for NATO STANAG 4789 plus
+OGC API Connected Systems, and `glaux-server` as a core OGC API Connected
+Systems authority node with conformance-harness-backed interoperability. The
+public `glaux-server` repository HEAD is
+`1ba41159d1465797f1fceab129486197eb80aadf`; clone and GitHub contents evidence
+show only `README.md`, no license metadata, no runnable source files, and no
+public endpoint.
+
+Interpretation: DGIWG Glaux Server is a meaningful watchlist item because it is
+a direct server claim, but it is not an immediate mutable IUT. Revisit it only
+when source, license, deployment instructions, and endpoint evidence are
+published.
 
 ### OpenSensorHub Details
 
@@ -163,6 +225,10 @@ Recommended sequence:
 - `REQ-ALT-IUT-007` - Preserve a repo-local upstream gap package for
   `connected-systems-go` until maintainers confirm or remediate missing
   declarations, OPTIONS `Allow` behavior, and Update/PATCH scope.
+- `REQ-ALT-IUT-008` - Refresh alternate-IUT discovery before each expensive
+  self-run or exact-closure attempt, classify README-only/direct-claim
+  candidates as watchlist unless runnable source and endpoint evidence exist,
+  and preserve all public probes as GET/OPTIONS-only non-promotion evidence.
 
 ## Risks and Open Questions
 
@@ -172,6 +238,12 @@ Recommended sequence:
 - Public `connected-systems-go` OPTIONS responses do not provide `Allow` method evidence in the archived readiness audit, even though source routes exist. Do not infer exact readiness from CORS alone.
 - The public `connected-systems-go` `/api` response was too minimal for service-description write-operation checks during research.
 - 52North public demo health is weak: expired TLS certificate, `/conformance` only Common Core, and `/datastreams` error response during research.
+- 52North current source has promising route surfaces but incomplete
+  conformance provider output; source-level routes are not exact promotion
+  evidence without a declaring, seeded, self-run IUT.
+- DGIWG Glaux Server may become relevant quickly, but current public evidence
+  is README-only. Do not treat its "reference implementation" wording as
+  runnable-IUT proof.
 - No researched candidate currently demonstrates complete Part 1 CRD, Part 1 Update, Part 2 CRD, and Part 2 Update closure for all 47 remaining candidates.
 - Mutation testing requires credentials, fixture ownership, deterministic cleanup, and evidence isolation. None of the public demos satisfy that bar by themselves.
 
@@ -192,6 +264,8 @@ Recommended sequence:
 - 52North `connected-systems-pygeoapi`: https://github.com/52North/connected-systems-pygeoapi
 - 52North CSA demo: https://csa.demo.52north.org/
 - 52North pygeoapi feature branch: https://github.com/52North/pygeoapi/tree/feature/connected-systems
+- DGIWG Glaux meta repository: https://github.com/DGIWG-P507/glaux
+- DGIWG Glaux Server: https://github.com/DGIWG-P507/glaux-server
 - OpenSensorHub core: https://github.com/opensensorhub/osh-core
 - Public OSH demo: https://129-80-248-53.sslip.io/sensorhub/api
 - OS4CSAPI meta project: https://github.com/OS4CSAPI/os4csapi-meta

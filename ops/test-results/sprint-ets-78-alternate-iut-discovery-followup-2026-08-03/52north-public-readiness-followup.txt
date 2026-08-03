@@ -1,0 +1,1 @@
+mutation readiness audit wrote /tmp/sprint78-52north-readiness.json with 47 candidate procedures; declaration/method-ready classes: 0; prerequisite-declaration-ready classes: 0

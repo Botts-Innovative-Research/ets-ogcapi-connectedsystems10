@@ -1,8 +1,57 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T08:16Z
+Last updated: 2026-08-03T09:33Z
 
 ## Current Sprint Evidence
+
+Sprint 78 alternate IUT Discovery follow-up:
+
+- Trigger: user instructed BMAD Analyst / Discovery research for alternate
+  open-source Connected Systems or adjacent mutable-IUT implementations beyond
+  local OSH and `SomethingCreativeStudios/connected-systems-go`.
+- Scope: discovery/source research and safe public probes only. Public probes
+  used GET/OPTIONS only; no Docker, Maven, TeamEngine, or public mutation.
+- Handoff:
+  `.harness/handoffs/discovery-sprint-78-handoff.yaml`.
+- Evidence directory:
+  `ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/`.
+- Main finding:
+  no new candidate is ready for exact promotion. 52North
+  `connected-systems-pygeoapi` is the best practical source-run watch
+  candidate; DGIWG Glaux Server is a direct CS API server claim but currently
+  README-only in public source.
+- 52North public readiness audit:
+  `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, zero
+  declaration/method-ready classes, zero prerequisite-declaration-ready
+  classes. The Python audit hit public TLS/URL errors for readiness details; a
+  separate safe `curl -k` probe archived `52north-public-conformance.json`,
+  which contains only OGC API Common Core.
+- 52North safe probe highlights:
+  `/systems` is live and OPTIONS advertises POST, item OPTIONS advertises
+  PUT/DELETE, Datastream and Observation OPTIONS advertise write methods, but
+  public Datastream GETs returned 500 and `/controlstreams`, `/commands`, and
+  `/feasibility` returned 404.
+- Source findings:
+  52North source exposes some Part 1 and Datastream/Observation write paths,
+  but Part 1 provider conformance returns only OGC API Common Core, Part 2
+  provider conformance returns `[]`, and PATCH is commented out.
+- Other candidates:
+  DGIWG Glaux Server is currently claim-only because the server repository
+  exposes only README content, no implementation language, no license metadata,
+  and no public endpoint evidence. OWSLib is a client library; FROST-Server is
+  adjacent SensorThings, not a Connected Systems server.
+- Compact summary:
+  `ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/candidate-summary.json`.
+- Lightweight verification:
+  PASS for 19 archived JSON files, 4 YAML files, required artifact presence,
+  public probe policy, ignored-log hygiene, evidence manifest verification, and
+  `git diff --check`.
+- Raze:
+  initial review returned `GAPS_FOUND 0.90`; required fixes were applied by
+  renaming ignored `.log` artifacts to `.txt`, correcting the Sprint 78
+  scenario in `candidate-summary.json`, archiving
+  `52north-public-conformance.json`, and updating the JSON parse count. Focused
+  Raze recheck returned `APPROVE 0.94` with `required_fixes=[]`.
 
 Sprint 77 `connected-systems-go` upstream gap package:
 

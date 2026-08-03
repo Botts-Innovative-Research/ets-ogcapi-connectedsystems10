@@ -1,0 +1,137 @@
+verdict: GAPS_FOUND
+confidence: 0.90
+reviewer: Raze
+review_type: scoped_adversarial_documentation_evidence_review
+timestamp_utc: "2026-08-03T09:17:33Z"
+scope_note: >
+  Reviewed only the uncommitted Sprint 78 alternate IUT discovery follow-up
+  documentation and evidence artifacts requested by the user. No Docker,
+  Maven, TeamEngine, public POST, public PUT, public PATCH, or public DELETE
+  was run.
+reviewed_scope:
+  - openspec/change-proposals/CP-038-alternate-iut-discovery-followup.md
+  - epics/stories/s-ets-78-01-alternate-iut-discovery-followup.md
+  - .harness/contracts/sprint-ets-78.yaml
+  - .harness/handoffs/discovery-handoff.yaml
+  - .harness/handoffs/discovery-sprint-78-handoff.yaml
+  - _bmad/product-brief.md
+  - _bmad/traceability.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/test-results.md
+  - ops/known-issues.md
+  - ops/metrics.md
+  - ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/
+checks_performed:
+  - command: "python3 JSON parse over Sprint 78 evidence"
+    result: "PASS: 18 archived JSON files parsed."
+  - command: "python3 PyYAML parse of sprint-ets-78.yaml and both Discovery handoffs"
+    result: "PASS: 3 YAML files parsed."
+  - command: "sha256sum -c ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/repo-evidence-manifest.sha256"
+    result: "PASS from repository root."
+  - command: "git diff --check"
+    result: "PASS: no whitespace errors."
+  - command: "jq policy summary for 52North and connected-systems-go public readiness JSON"
+    result: "PASS: requestMethodCounts keys are GET and OPTIONS only, unsafeMethodsIssued=[], exactPromotionReady=false."
+  - command: "git check-ignore -v ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/*.log"
+    result: "GAP: 7 Sprint 78 log files are ignored by .gitignore:27."
+explicitly_not_run:
+  - Docker
+  - Maven
+  - TeamEngine
+  - public IUT mutation
+findings:
+  - id: RAZE-ETS78-EVIDENCE-001
+    severity: HIGH
+    title: Ignored log artifacts are referenced by the evidence set and manifest but will be missed by normal git add.
+    problem: >
+      Seven Sprint 78 evidence log files are ignored by the repository-wide
+      '*.log' rule. The README and manifest treat these logs as part of the
+      durable evidence set, and the manifest verifies only while the files
+      remain locally present. A normal non-forced evidence commit would omit
+      them, weakening public probe, clone, verification, and manifest-check
+      replayability.
+    evidence:
+      - "git check-ignore -v ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/*.log reports .gitignore:27:*.log for 7 files."
+      - "Ignored files: 52north-csa-public-readiness.log, 52north-public-readiness-followup.log, clone-52north.log, clone-dgiwg-glaux-server.log, csapi-go-public-refresh-readiness.log, repo-evidence-manifest-check.log, verification.log."
+      - "repo-evidence-manifest.sha256 includes those log paths and verifies from repository root only because the local ignored files still exist."
+    required_fix: >
+      Either force-add the seven log artifacts, or rename/copy the durable
+      evidence to non-ignored extensions, update README/key-artifact references,
+      and regenerate repo-evidence-manifest.sha256 plus its check log.
+  - id: RAZE-ETS78-TRACEABILITY-001
+    severity: MEDIUM
+    title: candidate-summary.json uses the old Sprint 75 scenario ID instead of the Sprint 78 scenario.
+    problem: >
+      The compact candidate summary is the primary machine-readable Sprint 78
+      disposition artifact, but its scenario field points at
+      SCENARIO-ETS-CLEANUP-ALTERNATE-IUT-DISCOVERY-001. The Sprint 78 story,
+      contract, README, and OpenSpec anchor use
+      SCENARIO-ETS-CLEANUP-ALT-IUT-DISCOVERY-FOLLOWUP-001.
+    evidence:
+      - "candidate-summary.json:4 has SCENARIO-ETS-CLEANUP-ALTERNATE-IUT-DISCOVERY-001."
+      - ".harness/contracts/sprint-ets-78.yaml:13 has SCENARIO-ETS-CLEANUP-ALT-IUT-DISCOVERY-FOLLOWUP-001."
+      - "epics/stories/s-ets-78-01-alternate-iut-discovery-followup.md:21 has SCENARIO-ETS-CLEANUP-ALT-IUT-DISCOVERY-FOLLOWUP-001."
+      - "ops/test-results/.../README.md:3-4 scopes the evidence to the Sprint 78 follow-up scenario."
+    required_fix: >
+      Update candidate-summary.json to the Sprint 78 scenario ID and regenerate
+      the evidence manifest/check log.
+  - id: RAZE-ETS78-FIFTYTWONORTH-001
+    severity: MEDIUM
+    title: 52North public conformance evidence is internally inconsistent and under-archived.
+    problem: >
+      Several docs state that the 52North public /conformance response declares
+      only OGC API Common Core. The archived readiness JSON for the same public
+      IUT reports conformance.status=null and declaredCount=0, while the safe
+      probe log records only a 200 status and byte count, not the response body.
+      The conclusion that 52North is non-promoting is still correct, but the
+      exact public conformance statement is not durably supported by the
+      archived artifacts.
+    evidence:
+      - "candidate-summary.json:73-78 records 52North conformanceStatus=null, conformanceContentType='', declaredCount=0, declaredMutationRelevant=[]."
+      - "discovery-notes.md:66-67 says GET /conformance returned 200 and body declares only http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core."
+      - "52north-safe-public-probes.txt:5-6 records GET /conformance 200 bytes=76 and OPTIONS /conformance allow methods, but not the body."
+      - ".harness/handoffs/discovery-sprint-78-handoff.yaml records public_conformance as OGC API Common Core."
+    required_fix: >
+      Archive the actual 52North safe GET /conformance body, or reword the docs
+      to distinguish the manual safe probe from the readiness audit failure and
+      avoid claiming an unarchived response body. Regenerate affected summaries
+      and the manifest after the change.
+  - id: RAZE-ETS78-VERIFY-001
+    severity: LOW
+    title: Verification count in the sprint contract is stale.
+    problem: >
+      The Sprint 78 contract says the JSON parse gate covered 17 archived JSON
+      files. Static review parsed 18 JSON files under the Sprint 78 evidence
+      directory. This is small, but it is the kind of verification bookkeeping
+      drift that makes later replay harder.
+    evidence:
+      - ".harness/contracts/sprint-ets-78.yaml:34 says '17 archived Sprint 78 JSON files parsed with jq'."
+      - "Static review command output: json_parse_ok 18."
+    required_fix: >
+      Update the contract and any related verification summary text to the
+      actual JSON artifact count, or document which JSON file is deliberately
+      excluded from the claimed count.
+positive_findings:
+  - id: RAZE-ETS78-SAFETY-OK
+    note: >
+      Public probe safety is supported by the archived readiness JSONs:
+      52North public readiness, 52North follow-up readiness, and
+      connected-systems-go public refresh all have requestMethodCounts limited
+      to GET and OPTIONS, unsafeMethodsIssued=[], and exactPromotionReady=false.
+  - id: RAZE-ETS78-NO-EXACT-PROMOTION-OK
+    note: >
+      Scoped docs consistently avoid exact-promotion claims for the remaining
+      47 mutation-bound candidates. DGIWG Glaux Server is correctly classified
+      as README-only/watchlist, not a runnable IUT.
+  - id: RAZE-ETS78-NOT-RUN-HONESTY-OK
+    note: >
+      Maven and TeamEngine are honestly recorded as NOT_RUN for a docs/discovery
+      sprint in verification-summary.json, and I found no evidence that Docker,
+      Maven, or TeamEngine was run during this review.
+required_fixes:
+  - RAZE-ETS78-EVIDENCE-001
+  - RAZE-ETS78-TRACEABILITY-001
+  - RAZE-ETS78-FIFTYTWONORTH-001
+  - RAZE-ETS78-VERIFY-001

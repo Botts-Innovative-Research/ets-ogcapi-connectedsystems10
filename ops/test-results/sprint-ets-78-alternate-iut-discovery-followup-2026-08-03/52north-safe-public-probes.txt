@@ -1,0 +1,24 @@
+# Sprint 78 Safe Public Probes
+Generated: 2026-08-03T09:21:00Z
+Policy: GET and OPTIONS only; no public IUT mutation.
+
+GET /conformance                             200 bytes=76
+OPTIONS /conformance                         200 allow: OPTIONS, HEAD, GET;
+GET /openapi?f=json                          200 bytes=136845
+OPTIONS /openapi?f=json                      200 allow: OPTIONS, HEAD, GET;
+GET /systems                                 200 bytes=966
+OPTIONS /systems                             200 allow: OPTIONS, POST, HEAD, GET;
+GET /systems/040g                            404 bytes=70
+OPTIONS /systems/040g                        200 allow: PUT, DELETE, HEAD, OPTIONS, GET;
+GET /datastreams                             500 bytes=265
+OPTIONS /datastreams                         200 allow: PUT, DELETE, HEAD, OPTIONS, GET;
+GET /datastreams/040g                        500 bytes=265
+OPTIONS /datastreams/040g                    200 allow: PUT, DELETE, HEAD, OPTIONS, GET;
+GET /datastreams/040g/observations           500 bytes=265
+OPTIONS /datastreams/040g/observations       200 allow: PUT, POST, DELETE, HEAD, OPTIONS, GET;
+GET /controlstreams                          404 bytes=207
+OPTIONS /controlstreams                      404
+GET /commands                                404 bytes=207
+OPTIONS /commands                            404
+GET /feasibility                             404 bytes=207
+OPTIONS /feasibility                         404

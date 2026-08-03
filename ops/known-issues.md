@@ -53,6 +53,19 @@ Last updated: 2026-08-03T08:16Z
   Part 1 CRD, exact inherited `ogcapi-4` CRD, and Part 2 Feasibility condition
   blockers; it does not file the issue, mutate an IUT, or reduce the
   47-candidate blocker set.
+- Sprint 78 alternate-IUT follow-up does not reduce the 47-candidate blocker
+  set. 52North `connected-systems-pygeoapi` is now the best practical new
+  source-run watch candidate, but current evidence is not exact-promotion
+  ready: public readiness probes are GET/OPTIONS-only with
+  `unsafeMethodsIssued=[]`, zero declaration/method-ready classes, and zero
+  prerequisite-declaration-ready classes; current source conformance providers
+  return only OGC API Common Core for Part 1 and `[]` for Part 2; PATCH is not
+  exposed; and broader Part 2 ControlStream/Command/Feasibility routes were not
+  found usable in the public probe. DGIWG Glaux Server is a direct CS API server
+  claim, but its public repository currently has only README-level evidence, no
+  license metadata, no implementation language, and no public endpoint. Treat
+  both as watchlist items until a dedicated local mutable IUT can be run,
+  seeded, probed, cleaned up, and verified without public mutation.
 - Codex remote-control thread listing reports host
   `slingshot:env_e_6a62207f03888326a87cd6a61afb2ab0` as
   `thread_list_unavailable`. The reachable task for this folder is idle and

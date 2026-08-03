@@ -2,6 +2,49 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 78 alternate IUT Discovery follow-up
+
+**Triggered by user instruction**: act as BMAD Analyst / Discovery for Sprint
+78, researching current open-source OGC API Connected Systems or adjacent
+mutable-IUT implementations beyond local OSH and
+`SomethingCreativeStudios/connected-systems-go`, with no public mutation and no
+Docker/Maven/TeamEngine.
+
+- Wrote `.harness/handoffs/discovery-sprint-78-handoff.yaml` and
+  `ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/discovery-notes.md`.
+- Used current web/source checks for the OGC implementation listing, OGC CSAPI
+  developer site, 52North, DGIWG Glaux, OWSLib, and FROST-Server.
+- Archived 52North public readiness evidence:
+  `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, zero
+  declaration/method-ready classes, and zero prerequisite-declaration-ready
+  classes.
+- Confirmed 52North `connected-systems-pygeoapi` is the best practical new
+  source-run watch candidate for a future disposable self-run experiment, but
+  not ready for exact promotion: archived safe GET evidence for current public
+  `/conformance` shows only OGC API Common Core, public Datastream GETs return 500,
+  ControlStream/Command/Feasibility endpoints return 404, Part 2 provider
+  conformance returns `[]`, and PATCH is not exposed.
+- Recorded DGIWG Glaux Server as direct-claim watchlist only because
+  `glaux-server` currently exposes only README content, no implementation
+  language, no license metadata, and no public endpoint evidence.
+- Recorded OWSLib and FROST-Server as adjacent only: OWSLib is a client
+  library, and FROST-Server is a SensorThings server rather than a Connected
+  Systems IUT.
+- Recommended the next no-user-input experiment: a disposable local 52North
+  `connected-systems-pygeoapi` source run with generated credentials,
+  disposable Elasticsearch/TimescaleDB state, bundled seed fixtures, direct
+  readiness/lifecycle probes, and cleanup/isolation evidence before any
+  TeamEngine consideration.
+- No public IUT was mutated, no Docker/Maven/TeamEngine command was run, and no
+  mutation-bound candidate was promoted.
+- Lightweight verification passed for 19 JSON files, 4 YAML files, required
+  artifacts, public probe policy, ignored-log hygiene, manifest verification,
+  and `git diff --check`.
+- Raze initial review returned `GAPS_FOUND 0.90`; fixes renamed ignored `.log`
+  evidence to `.txt`, corrected the candidate-summary scenario, archived the
+  52North public conformance body, and updated the JSON count. Focused recheck
+  returned `APPROVE 0.94` with `required_fixes=[]`.
+
 ## 2026-08-03 - Sprint 77 connected-systems-go upstream gap package
 
 **Triggered by user instruction**: "Continue" after Sprint 76 self-run

@@ -12,6 +12,9 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 446 | 2026-08-03T09:25:39Z | 2026-08-03T09:34:24Z | 8m45s | User requested a focused Sprint 78 Raze recheck only for the four required fixes in `.harness/evaluations/sprint-ets-78-adversarial.yaml`, using scoped static checks and writing `.harness/evaluations/sprint-ets-78-adversarial-recheck.yaml` without Docker, Maven, TeamEngine, or public IUT mutation. Verdict `APPROVE 0.94`; all four prior required fixes closed and `required_fixes=[]`. |
+| 445 | 2026-08-03T09:17:33Z | 2026-08-03T09:22:19Z | 4m46s | User requested acting as Raze for the current uncommitted Sprint 78 alternate-IUT discovery follow-up, reviewing only scoped documentation/evidence changes and writing `.harness/evaluations/sprint-ets-78-adversarial.yaml` without Docker, Maven, TeamEngine, or public IUT mutation. Verdict `GAPS_FOUND 0.90` with required fixes for ignored `.log` evidence artifacts, stale candidate-summary scenario ID, under-archived/inconsistent 52North public conformance evidence, and stale JSON parse count. |
+| 444 | 2026-08-03T09:00:01Z | 2026-08-03T09:36:44Z | 36m43s | User instructed continuing alternate IUT discovery after Sprint 77 was pushed. Completed Sprint 78 discovery/doc follow-up: archived official-registry, GitHub, source-clone, safe public conformance/readiness, and candidate-summary evidence; classified 52North connected-systems-pygeoapi as the best practical source-run watch candidate, DGIWG Glaux Server as README-only direct-claim watchlist, and connected-systems-go public refresh as still non-promotable; no public mutation, Docker, Maven, TeamEngine, outreach filing, or exact promotion occurred. Verification passed for 19 JSON files, 5 YAML files, manifest, public probe policy, ignored-log hygiene, and diff check. Initial Raze `GAPS_FOUND 0.90`; focused recheck `APPROVE 0.94` with `required_fixes=[]`. |
 | 443 | 2026-08-03T08:13:56Z | 2026-08-03T08:15:11Z | 1m15s | Agent-initiated second focused Sprint 77 Raze recheck only for remaining `RAZE-ETS77-FIDELITY-002`, verifying the OPTIONS example table against Sprint 76 lifecycle-ID evidence for datastream observations and controlstream commands without Docker/Maven/TeamEngine/IUT mutation. Verdict `APPROVE 0.97`; the datastream-observation row now says lifecycle-ID `Allow: GET`, the controlstream-command row says lifecycle-ID `Allow: POST`, and `required_fixes=[]`. |
 | 442 | 2026-08-03T08:09:04Z | 2026-08-03T08:12:35Z | 3m31s | Agent-initiated focused Sprint 77 Raze recheck for `RAZE-ETS77-FIDELITY-001`, `RAZE-ETS77-OPS-001`, and `RAZE-ETS77-FIDELITY-002`, inspecting scoped documentation/verification artifacts only and avoiding Docker/Maven/TeamEngine/IUT mutation. Verdict `GAPS_FOUND 0.88`: `FIDELITY-001` and `OPS-001` closed; `FIDELITY-002` remained open because the updated OPTIONS table incorrectly said the lifecycle-ID datastream-observation probe reported `Allow: POST` when evidence reports `Allow: GET`. |
 | 441 | 2026-08-03T07:59:14Z | 2026-08-03T08:05:25Z | 6m11s | Agent-initiated mandatory Raze review for the current uncommitted Sprint 77 documentation-only `connected-systems-go` upstream gap package without Docker/Maven/TeamEngine reruns or IUT mutation, writing `.harness/evaluations/sprint-ets-77-adversarial.yaml`. Verdict `GAPS_FOUND 0.91`: required fixes for underreported Sprint 76 exact blockers, premature `ops/status.md` completion wording, and one ambiguous OPTIONS example; no Docker/Maven/TeamEngine/IUT mutation performed. |
@@ -578,9 +581,9 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 77)
+### Current Codex Session (2026-08-01/03 ETS continuation through Sprint 78)
 
-Extracted after Sprint 77 connected-systems-go upstream gap package with
+Extracted after Sprint 78 alternate IUT discovery follow-up with
 `python3 scripts/session-metrics.py`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
@@ -588,13 +591,13 @@ the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 19,174,120 | $287.61 |
-| Output | 1,559,993 | $117.00 |
+| Input | 19,780,265 | $296.70 |
+| Output | 1,619,024 | $121.43 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 450,356,352 | $675.53 |
-| **TOTAL** | **471,090,465** | **$1080.15** |
+| Cache Read | 467,644,928 | $701.47 |
+| **TOTAL** | **489,044,217** | **$1119.60** |
 
-API calls (usage records): 3307
+API calls (usage records): 3412
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

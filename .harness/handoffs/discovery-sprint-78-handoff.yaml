@@ -1,0 +1,113 @@
+agent: discovery
+bmad_role: "Analyst Mary"
+sprint: ets-78
+status: complete_raze_approved
+timestamp: "2026-08-03T09:33:00Z"
+triggered_by: "User requested Sprint 78 alternate-IUT Discovery beyond local OSH and SomethingCreativeStudios/connected-systems-go, with no public mutation and no Docker/Maven/TeamEngine."
+
+outputs:
+  - path: ".harness/handoffs/discovery-sprint-78-handoff.yaml"
+    type: "discovery-handoff"
+  - path: "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/discovery-notes.md"
+    type: "discovery-notes"
+  - path: "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/candidate-summary.json"
+    type: "candidate-summary"
+  - path: "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/52north-public-readiness-followup.json"
+    type: "read-only-public-readiness-audit"
+  - path: "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/52north-public-conformance.json"
+    type: "safe-public-conformance-body"
+  - path: "ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/52north-safe-public-probes.txt"
+    type: "safe-get-options-public-probe-log"
+
+sources:
+  - "https://github.com/opengeospatial/ogcapi-connected-systems/blob/master/implementations.adoc"
+  - "https://csapi.developer.ogc.org/"
+  - "https://52north.org/software/software-components/ogc-api-connected-systems/"
+  - "https://github.com/52North/connected-systems-pygeoapi"
+  - "https://github.com/52North/pygeoapi/tree/feature/connected-systems"
+  - "https://github.com/DGIWG-P507/glaux"
+  - "https://github.com/DGIWG-P507/glaux-server"
+  - "https://github.com/geopython/OWSLib"
+  - "https://github.com/FraunhoferIOSB/FROST-Server"
+
+summary: |
+  Discovery did not find a currently runnable open-source OGC API Connected Systems implementation beyond OSH and connected-systems-go that can close the remaining 47 mutation-bound ETS candidates. The only practical new direct candidate is 52North connected-systems-pygeoapi: it is open-source, has public demo/source evidence, advertises/implements some write surfaces, and has a disposable-stack shape through Elasticsearch and TimescaleDB. It is not exact-promotion ready because current public and source evidence show missing Connected Systems conformance declarations, no Part 2 conformance declarations, public Datastream 500s, no ControlStream/Command/Feasibility route surface, and no PATCH/Update exposure. DGIWG Glaux is worth monitoring because its public README claims a reference Connected Systems server, but the server repository currently contains no implementation code.
+
+candidate_findings:
+  - id: "52north-connected-systems-pygeoapi"
+    type: "direct_cs_api_server"
+    verdict: "best_new_candidate_for_future_self_run_experiment"
+    evidence:
+      source_head: "18c1ce803fcdb2de3aac9d227ab814306d8a718f"
+      license: "Apache-2.0"
+      public_iut_url: "https://csa.demo.52north.org"
+      public_readiness_methods: {"GET": 1, "OPTIONS": 25}
+      unsafe_methods_issued: []
+      ready_classes: []
+      public_conformance: ["http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core"]
+      blockers:
+        - "Part 1 provider get_conformance returns only OGC API Common Core."
+        - "Part 2 provider get_conformance returns []."
+        - "Public Datastream GETs returned 500."
+        - "ControlStream, Command, and Feasibility endpoints returned 404."
+        - "PATCH handler is commented out and routes do not advertise PATCH."
+    mutation_update_readiness: "Not ready for exact promotion; possible future local Part 1 CRD and Datastream/Observation diagnostics only."
+  - id: "dgiwg-glaux-server"
+    type: "claimed_direct_cs_api_server"
+    verdict: "monitor_only_until_code_published"
+    evidence:
+      source_head: "1ba41159d1465797f1fceab129486197eb80aadf"
+      public_contents: ["README.md"]
+      languages: {}
+      license: null
+    mutation_update_readiness: "No runnable code or public IUT evidence."
+  - id: "owslib-connectedsystems"
+    type: "client_library"
+    verdict: "useful_future_driver_not_iut"
+    evidence:
+      source_head: "9d8e5bac414dcce018bc39dfc90424cedd39758c"
+      license: "BSD-3-Clause"
+    mutation_update_readiness: "Not a server IUT."
+  - id: "frost-server"
+    type: "adjacent_sensorthings_server"
+    verdict: "adjacent_only_not_cs_api_iut"
+    evidence:
+      source_head: "bf7976831b22bcac6dd20a1335d96fed7f809677"
+      license: "LGPL-3.0"
+    mutation_update_readiness: "Mutable SensorThings server, not a Connected Systems IUT."
+
+recommended_next_no_user_input_experiment:
+  id: "S78-NEXT-52NORTH-DISPOSABLE-SOURCE-RUN"
+  description: "Run a future disposable local 52North connected-systems-pygeoapi experiment from pinned commit 18c1ce803fcdb2de3aac9d227ab814306d8a718f, using generated local credentials and disposable Elasticsearch/TimescaleDB state."
+  steps:
+    - "Seed minimum System, Procedure, Deployment, SamplingFeature, Property, Datastream, and Observation resources through local-only POSTs."
+    - "Run mutation-readiness-audit.py against the local URL, including concrete discovered IDs where possible."
+    - "Attempt only source-proven local POST/GET/PUT/GET/DELETE/GET lifecycles."
+    - "Archive cleanup/isolation evidence."
+    - "Defer TeamEngine until direct evidence shows at least one declaration/method-ready class."
+
+verification:
+  performed:
+    - "Read .harness/prompts/discovery.md."
+    - "Used web/search and source checks for OGC implementation listings, CSAPI developer site, 52North, DGIWG Glaux, OWSLib, and FROST-Server."
+    - "Cloned 52North connected-systems-pygeoapi and OWSLib to /tmp for static source inspection only."
+    - "Ran safe GET/OPTIONS probes against https://csa.demo.52north.org only."
+    - "Ran scripts/mutation-readiness-audit.py against https://csa.demo.52north.org; it issued GET/OPTIONS only."
+    - "Checked Sprint 78 evidence for unsafe request-method traces and private-key/token patterns; archived 52North sample compose defaults are public example strings, not active credentials."
+  prohibited_and_not_performed:
+    - "No public POST/PUT/PATCH/DELETE."
+    - "No Docker."
+    - "No Maven."
+    - "No TeamEngine."
+    - "No exact ETS promotion."
+  lightweight: "PASS: 19 JSON files, 4 YAML files, artifact presence, public probe policy, ignored-log check, evidence manifest, and git diff --check."
+  raze: "PASS: initial GAPS_FOUND 0.90 addressed; focused recheck APPROVE 0.94 with required_fixes=[]."
+
+confidence: 0.82
+confidence_rationale: |
+  Confidence is medium-high because official OGC listings, the CSAPI developer site, current GitHub metadata, source inspection, and safe public probes point to the same conclusion. Confidence is not higher because no self-run 52North instance was launched in this Discovery sprint and public demos can differ from local configurations.
+
+duration_seconds: null
+token_metadata:
+  source: "ops/metrics.md turn 444 closeout"
+  subagent_token_metadata: null

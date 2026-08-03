@@ -3417,6 +3417,58 @@ readiness failures
 **AND** it SHALL NOT promote any mutation-bound candidate mapping to reviewed
 exact.
 
+#### REQ-ETS-CLEANUP-029: Alternate IUT Discovery Follow-up (Sprint 78)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_RAZE_APPROVED (Sprint 78 S-ETS-78-01)
+- **Description**: The project SHALL maintain current source-backed follow-up
+  discovery evidence for direct and adjacent open-source OGC API Connected
+  Systems implementation candidates beyond the primary local OSH IUT and the
+  already audited `connected-systems-go` path. Public candidate probes SHALL
+  remain read-only, SHALL issue only GET and OPTIONS, SHALL record
+  `unsafeMethodsIssued=[]`, SHALL NOT use credentials or mutation methods
+  against public deployments, and SHALL NOT promote mutation-bound candidate
+  mappings to reviewed exact from discovery evidence.
+- **Rationale**: Sprint 75 identified `connected-systems-go` as the best
+  researched alternate candidate, Sprint 76 proved useful local Part 2
+  lifecycle behavior, and Sprint 77 captured its blockers for outreach. A
+  current follow-up prevents the project from over-investing in a stale or
+  non-runnable candidate and keeps newly surfaced implementation claims
+  separated from usable mutable-IUT proof.
+- **Implementation evidence**: Sprint 78 evidence is archived
+  under
+  `ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/`.
+  The evidence includes the official OGC implementation registry snapshot,
+  current GitHub metadata, read-only source clone heads, curated source grep,
+  safe public readiness probes for 52North CSA and public `connected-systems-go`,
+  and `candidate-summary.json`. Initial findings: the official registry still
+  lists OpenSensorHub Server and 52North pygeoapi extension as server-side
+  open-source CS API implementations; 52North remains a plausible self-run
+  watch candidate but current source conformance is incomplete; DGIWG Glaux
+  Server is a new direct CS API server claim but the public repo currently
+  exposes only README-level evidence; and no Sprint 78 evidence promotes any
+  of the 47 mutation-bound candidate procedures. Lightweight verification
+  passes for 19 JSON files, 4 YAML files, required artifact presence, public
+  probe policy, ignored-log hygiene, manifest verification, and
+  `git diff --check`. Initial Raze returned `GAPS_FOUND 0.90`; all required
+  fixes were applied, and focused recheck returned `APPROVE 0.94` with
+  `required_fixes=[]`.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54; REQ-ETS-CLEANUP-026,
+  REQ-ETS-CLEANUP-027, REQ-ETS-CLEANUP-028.
+
+#### SCENARIO-ETS-CLEANUP-ALT-IUT-DISCOVERY-FOLLOWUP-001 (CRITICAL)
+**GIVEN** alternate open-source Connected Systems API implementations may have
+changed since the last discovery sprint
+**WHEN** the ETS project refreshes the alternate-IUT inventory
+**THEN** the evidence SHALL identify official-registry, repository, source, and
+public-probe provenance
+**AND** public probes SHALL issue only GET and OPTIONS
+**AND** `unsafeMethodsIssued` SHALL be empty
+**AND** candidates SHALL be classified as immediate self-run, watchlist, or
+non-direct adjacent systems using current evidence
+**AND** README-only or public-claim-only repositories SHALL NOT be treated as
+runnable IUT evidence
+**AND** no mutation-bound candidate mapping SHALL be promoted to reviewed exact.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)

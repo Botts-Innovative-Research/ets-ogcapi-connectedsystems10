@@ -1,0 +1,82 @@
+verdict: APPROVE
+confidence: 0.94
+reviewer: Raze
+review_type: focused_adversarial_recheck
+timestamp_utc: "2026-08-03T09:31:14Z"
+scope_note: >
+  Reviewed only the four required fixes from
+  .harness/evaluations/sprint-ets-78-adversarial.yaml. No Docker, Maven,
+  TeamEngine, public POST, public PUT, public PATCH, public DELETE, or other
+  public IUT mutation was run.
+reviewed_prior_fix_ids:
+  - RAZE-ETS78-EVIDENCE-001
+  - RAZE-ETS78-TRACEABILITY-001
+  - RAZE-ETS78-FIFTYTWONORTH-001
+  - RAZE-ETS78-VERIFY-001
+reviewed_scope:
+  - .harness/contracts/sprint-ets-78.yaml
+  - .harness/handoffs/discovery-handoff.yaml
+  - .harness/handoffs/discovery-sprint-78-handoff.yaml
+  - _bmad/product-brief.md
+  - ops/status.md
+  - ops/test-results.md
+  - ops/known-issues.md
+  - ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/
+allowed_checks_performed:
+  - command: "python3 JSON parse over Sprint 78 evidence"
+    result: "PASS: 19 archived JSON files parsed."
+  - command: "python3 PyYAML parse of Sprint 78 contract, both Discovery handoffs, and initial Raze report"
+    result: "PASS: 4 YAML files parsed."
+  - command: "sha256sum -c ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03/repo-evidence-manifest.sha256"
+    result: "PASS: 44 manifest-listed evidence artifacts verified from repository root."
+  - command: "git check-ignore -v over manifest-listed evidence files, repo-evidence-manifest.sha256, and repo-evidence-manifest-check.txt"
+    result: "PASS: no ignored Sprint 78 evidence, manifest, or manifest-check artifacts reported."
+  - command: "find ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03 -maxdepth 1 -type f -name '*.log'"
+    result: "PASS: no Sprint 78 .log evidence artifacts remain."
+  - command: "git diff --check"
+    result: "PASS: no whitespace errors."
+  - command: "python3 readiness JSON policy parse for 52North public readiness, 52North follow-up readiness, and connected-systems-go public refresh"
+    result: "PASS: requestMethodCounts are limited to GET and OPTIONS, unsafeMethodsIssued=[], exactPromotionReady=false."
+findings: []
+evidence:
+  - fix_id: RAZE-ETS78-EVIDENCE-001
+    status: CLOSED
+    notes:
+      - "Sprint 78 evidence now uses .txt durable logs such as clone-52north.txt, verification.txt, and repo-evidence-manifest-check.txt."
+      - "No .log files exist at maxdepth 1 in ops/test-results/sprint-ets-78-alternate-iut-discovery-followup-2026-08-03."
+      - "git check-ignore produced no matches for manifest-listed artifacts, repo-evidence-manifest.sha256, or repo-evidence-manifest-check.txt."
+      - "repo-evidence-manifest.sha256 verifies 44 evidence artifacts from repository root."
+  - fix_id: RAZE-ETS78-TRACEABILITY-001
+    status: CLOSED
+    notes:
+      - "candidate-summary.json scenario is SCENARIO-ETS-CLEANUP-ALT-IUT-DISCOVERY-FOLLOWUP-001."
+      - ".harness/contracts/sprint-ets-78.yaml uses the same Sprint 78 scenario ID."
+  - fix_id: RAZE-ETS78-FIFTYTWONORTH-001
+    status: CLOSED
+    notes:
+      - "52north-public-conformance.json archives the safe GET /conformance body."
+      - "The archived body contains conformsTo=[http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core]."
+      - "README.md, discovery-notes.md, product brief, status, and test-results now point at the archived conformance artifact when saying the public demo currently advertises only OGC API Common Core."
+  - fix_id: RAZE-ETS78-VERIFY-001
+    status: CLOSED
+    notes:
+      - "Current JSON parse count is 19 after adding the archived 52North conformance/openapi evidence."
+      - ".harness/contracts/sprint-ets-78.yaml and verification-summary.json both record 19 archived Sprint 78 JSON files."
+      - "Scoped grep found no stale '17 archived', '17 JSON', 'json_parse_ok 17', or 'json_parse_ok 18' verification count in Sprint 78 docs/evidence."
+positive_findings:
+  - id: RAZE-ETS78-RECHECK-SAFETY-OK
+    note: >
+      Archived public-readiness evidence remains read-only: 52North public
+      readiness, 52North follow-up readiness, and connected-systems-go public
+      refresh all report GET/OPTIONS-only request methods, unsafeMethodsIssued=[],
+      exactPromotionReady=false, and remainingCandidateProcedures=47.
+  - id: RAZE-ETS78-RECHECK-CONFORMANCE-ARCHIVE-OK
+    note: >
+      The 52North conformance claim is now backed by a durable archived response
+      body and a passing SHA-256 manifest check.
+explicitly_not_run:
+  - Docker
+  - Maven
+  - TeamEngine
+  - public IUT mutation
+required_fixes: []

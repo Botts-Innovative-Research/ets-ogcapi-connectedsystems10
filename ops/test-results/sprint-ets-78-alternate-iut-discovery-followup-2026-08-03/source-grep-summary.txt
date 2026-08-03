@@ -1,0 +1,239 @@
+# Sprint 78 source grep summary
+
+52North clone: /tmp/sprint78-20260803T090427Z-52north-csa
+DGIWG Glaux Server clone: /tmp/sprint78-20260803T090427Z-dgiwg-glaux-server
+
+## 52North selected route/provider and request evidence
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:33:    response = requests.request("POST", url, json=payload, headers=headers, auth=basic)
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:39:def gen_observation(datastream_id: str) -> dict:
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:40:    # see https://docs.ogc.org/DRAFTS/23-002r0.html#clause-json-observation
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:44:    #   "datastream@id": "958tf25kjm2f6",
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:53:        "datastream@id": datastream_id,
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:100:def gen_datastream(system: Dict):
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:176:    # get datastream id
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:180:    datastream = gen_datastream(system)
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:181:    post(f"/systems/{system['id']}/datastreams", datastream)
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/simulator/simulator.py:184:        post(f"/datastreams/{datastream['id']}/observations", gen_observation(datastream['id']), "application/json")
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/requests/post_property_2.http:1:POST /properties?f=json HTTP/1.1
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/requests/post_property_1.http:1:POST /properties?f=json HTTP/1.1
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/requests/post_deployment.http:1:POST /deployments HTTP/1.1
+/tmp/sprint78-20260803T090427Z-52north-csa/tools/requests/post_system.http:1:POST /systems HTTP/1.1
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/coverages.py:10:@coverage.route('/collections/<path:collection_id>/coverage')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:10:@edr.route('/collections/<path:collection_id>/position')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:11:@edr.route('/collections/<path:collection_id>/area')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:12:@edr.route('/collections/<path:collection_id>/cube')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:13:@edr.route('/collections/<path:collection_id>/radius')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:14:@edr.route('/collections/<path:collection_id>/trajectory')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:15:@edr.route('/collections/<path:collection_id>/corridor')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:16:@edr.route('/collections/<path:collection_id>/locations/<location_id>')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:17:@edr.route('/collections/<path:collection_id>/locations')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:18:@edr.route('/collections/<path:collection_id>/instances/<instance_id>/position')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:19:@edr.route('/collections/<path:collection_id>/instances/<instance_id>/area')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:20:@edr.route('/collections/<path:collection_id>/instances/<instance_id>/cube')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:21:@edr.route('/collections/<path:collection_id>/instances/<instance_id>/radius')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:22:@edr.route('/collections/<path:collection_id>/instances/<instance_id>/trajectory')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:23:@edr.route('/collections/<path:collection_id>/instances/<instance_id>/corridor')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:24:@edr.route('/collections/<path:collection_id>/instances/<instance_id>/locations/<location_id>')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/edr.py:25:@edr.route('/collections/<path:collection_id>/instances/<instance_id>/locations')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/processes.py:10:@oapip.route('/processes')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/processes.py:11:@oapip.route('/processes/<process_id>')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/processes.py:23:@oapip.route('/jobs')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/processes.py:24:@oapip.route('/jobs/<job_id>', methods=['GET', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/processes.py:37:        if request.method == 'DELETE':  # dismiss job
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/processes.py:43:@oapip.route('/processes/<process_id>/execution', methods=['POST'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/processes.py:55:@oapip.route('/jobs/<job_id>/results',
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/processes.py:56:             methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:49:    datastream_validator: Validator
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:50:    observation_validator: Validator
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:62:                          ("datastream_validator", "schemas/datastream.schema"),
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:63:                          ("observation_validator", "schemas/observation.schema")]:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:87:                validator = self.datastream_validator
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:89:                validator = self.observation_validator
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:295:                handler = self.provider_part2.query_datastreams
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:300:                handler = self.provider_part2.query_datastreams
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:306:                handler = self.provider_part2.query_observations
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:366:        return await self._upsert(request, HTTPMethod.PUT, collection, path)
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:370:        return await self._upsert(request, HTTPMethod.POST, collection, path)
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:375:    #    return await self._upsert(request, HTTPMethod.PATCH, collection, path, False)
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:454:        # remove additional fields that cannot be set using POST/PUT but only through Path but pass validation
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:469:                case HTTPMethod.POST:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:471:                case HTTPMethod.PUT:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:473:                case HTTPMethod.PATCH:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/api.py:500:            if collection in ["subsystems", "datastreams", "deployments"]:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:16:@collections.route('/collections')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:17:@collections.route('/collections/<path:collection_id>')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:51:@collections.route('/collections/<path:collection_id>/items')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:52:@collections.route('/collections/<path:collection_id>/items/<path:item_id>')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:68:@collections.route('/collections/<path:collection_id>/schema')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:80:@collections.route('/collections/<path:collection_id>/queryables')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:92:@collections.route('/collections/<path:collection_id>/tiles')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:104:@collections.route('/collections/<path:collection_id>/tiles/<tileMatrixSetId>')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:105:@collections.route('/collections/<path:collection_id>/tiles/<tileMatrixSetId>/metadata')  # noqa
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:118:@collections.route('/collections/<path:collection_id>/tiles/\
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:138:@collections.route('/collections/<collection_id>/map')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/collections.py:139:@collections.route('/collections/<collection_id>/styles/<style_id>/map')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:147:            'rel': 'conformance',
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:150:            'href': f"{self.base_url}/conformance"
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:224:                    "description": "Systems are entities that can produce data feeds and/or receive commands (e.g. "
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:227:                                   "observations of one or more features of interest.",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:264:                                   "descriptions, datastream and control stream schemas, etc. Depending on the "
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:272:                    "collection_name": "datastreams",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:274:                    "description": "Datastreams allow access to observations produced by systems, in various formats. "
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:276:                                   "the observations. API clients can act both as sender of receiver of observations.",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:281:                    "collection_name": "observations",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:283:                    "description": "Access to historical and real-time observations.",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:354:            'href': f'{url}/datastreams?f={F_JSON.replace("+", "%2B")}',
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:359:            'href': f'{url}/observations?f={MimeType.F_OMJSON.value.replace("+", "%2B")}',
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:364:            'href': f'{url}/observations?f={MimeType.F_SMLJSON.value.replace("+", "%2B")}',
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:376:    async def conformance(self, request: AsyncAPIRequest) -> APIResponse:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:378:        Provide conformance definition
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:385:        conformance_list = []
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:387:            conformance_list = self.provider_part1.get_conformance()
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:388:        conformance = {
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:389:            'conformsTo': list(set(conformance_list))
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:394:            content = self.render_j2_template('conformance.html',
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:395:                                              conformance,
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/meta.py:399:        return headers, HTTPStatus.OK, to_json(conformance, self.pretty_print)
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:11:@csa_read.route('/connected-systems/')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:22:@csa_read.route('/systems', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:23:@csa_read.route('/systems/<path:path>', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:24:@csa_readwrite.route('/systems', methods=['GET', 'POST'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:25:@csa_readwrite.route('/systems/<path:path>', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:31:@csa_read.route('/procedures', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:32:@csa_read.route('/procedures/<path:path>', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:33:@csa_readwrite.route('/procedures', methods=['GET', 'POST'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:34:@csa_readwrite.route('/procedures/<path:path>', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:40:@csa_read.route('/systems/<path:path>/subsystems', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:41:@csa_read.route('/systems/<path:path>/deployments', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:42:@csa_read.route('/systems/<path:path>/samplingFeatures', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:43:@csa_read.route('/systems/<path:path>/datastreams', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:44:@csa_readwrite.route('/systems/<path:path>/subsystems', methods=['GET', 'POST'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:45:@csa_readwrite.route('/systems/<path:path>/deployments', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:46:@csa_readwrite.route('/systems/<path:path>/samplingFeatures', methods=['GET', 'POST'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:47:@csa_readwrite.route('/systems/<path:path>/datastreams', methods=['GET', 'POST'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:59:            case "datastreams":
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:61:    elif request.method == 'POST':
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:67:            case "datastreams":
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:71:@csa_read.route('/deployments', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:72:@csa_read.route('/deployments/<path:path>', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:73:@csa_readwrite.route('/deployments', methods=['GET', 'POST'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:74:@csa_readwrite.route('/deployments/<path:path>', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:80:@csa_read.route('/samplingFeatures', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:81:@csa_read.route('/samplingFeatures/<path:path>', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:82:@csa_readwrite.route('/samplingFeatures', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:83:@csa_readwrite.route('/samplingFeatures/<path:path>', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:89:@csa_read.route('/properties', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:90:@csa_read.route('/properties/<path:path>', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:91:@csa_readwrite.route('/properties', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:92:@csa_readwrite.route('/properties/<path:path>', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:98:@csa_read.route('/datastreams', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:99:@csa_read.route('/datastreams/<path:path>', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:100:@csa_readwrite.route('/datastreams', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:101:@csa_readwrite.route('/datastreams/<path:path>', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:102:async def datastreams_path(path=None):
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:103:    request.collection = "datastreams"
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:107:@csa_read.route('/datastreams/<path:path>/schema', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:108:@csa_readwrite.route('/datastreams/<path:path>/schema', methods=['GET', 'PUT'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:109:async def datastreams_schema(path=None):
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:117:@csa_read.route('/datastreams/<path:path>/observations', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:118:@csa_readwrite.route('/datastreams/<path:path>/observations', methods=['GET', 'POST'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:119:async def datastreams_observations(path=None):
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:120:    request.collection = "observations"
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:122:        return await to_response(await csapi_.get(request, EntityType.OBSERVATIONS, ("datastream", path)))
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:124:        return await to_response(await csapi_.post(request, EntityType.OBSERVATIONS, ("datastream", path)))
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:127:@csa_read.route('/observations', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:128:@csa_read.route('/observations/<path:path>', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:129:@csa_readwrite.route('/observations', methods=['GET'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:130:@csa_readwrite.route('/observations/<path:path>', methods=['GET', 'PUT', 'DELETE'])
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:131:async def observations_path(path=None):
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:132:    request.collection = "observations"
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:143:        case "PATCH":
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:145:        case "POST":
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:147:        case "PUT":
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/csa.py:149:        case "DELETE":
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/stac.py:10:@stac.route('/stac')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/routes/stac.py:20:@stac.route('/stac/<path:path>')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/app.py:126:@APP.get('/conformance')
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/app.py:127:async def conformance():
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/app.py:129:    return await to_response(await csapi_.conformance(request))
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/datastream.py:22:        name = "datastreams"
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/util.py:109:        "datastream": _verbatim,
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/definitions.py:170:    _parameters = ["f", "id", "q", "limit", "offset", "foi", "observedProperty", "datastream", "phenomenonTime",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/definitions.py:172:    datastream: Optional[str] = None
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/definitions.py:193:    def get_conformance(self) -> List[str]:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/definitions.py:194:        """Returns the list of conformance classes that are implemented by this provider"""
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/definitions.py:248:    async def query_datastreams(self, parameters: DatastreamsParams) -> CSAGetResponse:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/definitions.py:250:        implements queries on datastreams as specified in openapi-connectedsystems-2
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/definitions.py:257:    async def query_observations(self, parameters: ObservationsParams) -> CSAGetResponse:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/definitions.py:259:        implements queries on observations as specified in openapi-connectedsystems-2
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/util.py:12:    datastream_id: str  # id of the associated datastream
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/util.py:48:        Formats a schema-defined input to an observation
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/util.py:54:        Formats an observation into the specified output format
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/util.py:71:    def with_datastream(self, id: str) -> Self:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/util.py:72:        self.clauses.append(f"datastream_id=${len(self.clauses) + 1}")
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:26:from ..datastream import Datastream
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:55:    def get_conformance(self) -> List[str]:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:109:                "id": "all_datastreams",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:112:                "description": "All datastreams produced by systems registered on this server",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:114:                "featureType": "datastreams",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:119:                        "href": "/collections/all_datastreams",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:124:                        "title": "Access the datastreams in this collection (HTML)",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:125:                        "href": "/datastreams",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:130:                        "title": "Access the datastreams in this collection (JSON)",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:131:                        "href": "/datastreams?f=application/json",
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:255:        elif collection_id == "all_datastreams":
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:458:                        # reject if there are nested resources: subsystems, sampling features, datastreams, control streams
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part1/part1.py:476:                        # TODO: check datastream + control-stream
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:1196:    conformance:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:1200:            conformsTo:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:1290:            description: Access to system datastreams and command and control capabilities.
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:1294:            - href: https://data.example.com/api/conformance
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:1295:              rel: conformance
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:1511:              the datastream
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:1761:              (e.g. in a datastream)
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:3897:        conformsTo:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:3903:      - conformsTo
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:4406:          - http://www.opengis.net/def/rel/ogc/1.0/conformance
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:4958:  /conformance:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:4960:      description: API conformance definition
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:4972:      summary: API conformance definition
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/default-openapi.yml:5161:        (sampling features, datastreams, command streams, observations, and commmands)
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:15:from ..datastream import Datastream
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:28:    Small cache using circular buffer used for caching whether datastreams exist.
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:104:            statements.append("""DROP TABLE IF EXISTS observations;""")
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:105:            statements.append("""DROP TABLE IF EXISTS datastreams;""")
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:107:        statements.append("""CREATE TABLE IF NOT EXISTS observations (
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:111:                                                                datastream_id text NOT NULL,
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:120:                                        'observations',
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:127:        statements.append("""CREATE UNLOGGED TABLE IF NOT EXISTS datastreams (
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:139:                                   UPDATE datastreams SET
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:144:                                   WHERE id=NEW.datastream_id;
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:149:        statements.append("""CREATE OR REPLACE TRIGGER datastream_update AFTER INSERT ON observations
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:159:        # Potentially recover unlogged datastreams table
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:161:            result = await connection.fetch("SELECT * FROM datastreams LIMIT 1;")
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:163:                # Either we have no observations or table was truncated in a crash
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:164:                result = await connection.fetch("SELECT * FROM observations LIMIT 1;")
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:166:                    # We have no Datastreams but do have observations. We need to restore tables!
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:167:                    datastreams = await Datastream().search().execute()
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:168:                    LOGGER.error("TODO: Restore datastreams")
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:169:                    # Create row for each datastream
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:170:                    # find out first/last timestamps of associated observations
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:172:                    datastreams = await Datastream().search().execute()
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:173:                    for ds in datastreams:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:174:                        await connection.fetchval("INSERT INTO datastreams (id) VALUES ($1);", ds.get("id"))
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:176:    def get_conformance(self) -> List[str]:
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:177:        """Returns the list of conformance classes that are implemented by this provider"""
+/tmp/sprint78-20260803T090427Z-52north-csa/connected-systems-api/provider/part2/part2.py:178:        LOGGER.error("TODO: define conformance classes")
+
+## 52North Docker/development files
+/tmp/sprint78-20260803T090427Z-52north-csa/.env.sample
+/tmp/sprint78-20260803T090427Z-52north-csa/Dockerfile
+/tmp/sprint78-20260803T090427Z-52north-csa/docker-compose-dev.yml
+
+## DGIWG Glaux Server source tree depth 2
+/tmp/sprint78-20260803T090427Z-dgiwg-glaux-server/README.md
+
+## DGIWG direct CS API claim lines
+/tmp/sprint78-20260803T090427Z-dgiwg-glaux-server/README.md:3:The foundational **gold standard** reference implementation of **OGC API - Connected Systems** for the DGIWG Glaux ecosystem.
+/tmp/sprint78-20260803T090427Z-dgiwg-glaux-server/README.md:7:Glaux Server is the central authority node for secure sensor discovery, observation access, and tasking workflows in Joint ISR-aligned deployments.
+/tmp/sprint78-20260803T090427Z-dgiwg-glaux-server/README.md:11:Conformance is validated through an explicit **conformance test harness** and implementation profiles aligned to OGC and NATO interoperability requirements.

@@ -1,0 +1,92 @@
+{
+  "remainingCandidateProcedures": 47,
+  "requestMethodCounts": {
+    "GET": 1,
+    "OPTIONS": 27
+  },
+  "unsafeMethodsIssued": [],
+  "readinessScope": "Read-only declaration and OPTIONS method advertisement audit; positive lifecycle proof is still required before exact promotion.",
+  "classesWithDeclarationAndMethodReadiness": [
+    "1:/conf/create-replace-delete"
+  ],
+  "classes": [
+    {
+      "id": "part1CreateReplaceDelete",
+      "candidateProcedures": 12,
+      "requiredConformancePresent": true,
+      "missingRequiredConformance": [],
+      "missingConditionConformance": [],
+      "missingAdvertisedMethodsCount": 0,
+      "declarationAndMethodReadiness": true,
+      "exactPromotionReady": false,
+      "blockers": [
+        "dedicated mutable-IUT POST/PUT/DELETE lifecycle execution",
+        "changed resource GET proof after write",
+        "identity-safe cleanup and primary-state isolation",
+        "cascade, collection propagation, and text/uri-list evidence where applicable"
+      ]
+    },
+    {
+      "id": "part1Update",
+      "candidateProcedures": 5,
+      "requiredConformancePresent": false,
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      ],
+      "missingConditionConformance": [],
+      "missingAdvertisedMethodsCount": 5,
+      "declarationAndMethodReadiness": false,
+      "exactPromotionReady": false,
+      "blockers": [
+        "missing required conformance declarations",
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT PATCH lifecycle execution",
+        "changed field GET proof after PATCH",
+        "identity-safe cleanup and primary-state isolation",
+        "applicability evidence for custom collections, async, and deadline behavior"
+      ]
+    },
+    {
+      "id": "part2CreateReplaceDelete",
+      "candidateProcedures": 16,
+      "requiredConformancePresent": true,
+      "missingRequiredConformance": [],
+      "missingConditionConformance": [],
+      "missingAdvertisedMethodsCount": 3,
+      "declarationAndMethodReadiness": false,
+      "exactPromotionReady": false,
+      "blockers": [
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT POST/PUT/DELETE lifecycle execution",
+        "changed resource GET proof after write",
+        "identity-safe cleanup and primary-state isolation",
+        "resource-specific command, feasibility, result/status, and event evidence"
+      ]
+    },
+    {
+      "id": "part2Update",
+      "candidateProcedures": 14,
+      "requiredConformancePresent": false,
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      ],
+      "missingConditionConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility"
+      ],
+      "missingAdvertisedMethodsCount": 6,
+      "declarationAndMethodReadiness": false,
+      "exactPromotionReady": false,
+      "blockers": [
+        "missing required conformance declarations",
+        "missing condition conformance declarations",
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT PATCH lifecycle execution",
+        "changed field GET proof after PATCH",
+        "identity-safe cleanup and primary-state isolation",
+        "schema-rejection PATCH dispatch evidence"
+      ]
+    }
+  ]
+}

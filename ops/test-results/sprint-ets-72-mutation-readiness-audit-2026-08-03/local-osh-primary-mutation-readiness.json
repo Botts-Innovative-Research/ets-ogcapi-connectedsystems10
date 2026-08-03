@@ -1,0 +1,892 @@
+{
+  "classes": [
+    {
+      "candidateProcedures": 12,
+      "conformanceClass": "1:/conf/create-replace-delete",
+      "declarationAndMethodReadiness": true,
+      "exactPromotionBlockers": [
+        "dedicated mutable-IUT POST/PUT/DELETE lifecycle execution",
+        "changed resource GET proof after write",
+        "identity-safe cleanup and primary-state isolation",
+        "cascade, collection propagation, and text/uri-list evidence where applicable"
+      ],
+      "exactPromotionReady": false,
+      "id": "part1CreateReplaceDelete",
+      "missingAdvertisedMethods": [],
+      "missingConditionConformance": [],
+      "missingRequiredConformance": [],
+      "readinessProbes": [
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/systems",
+          "status": 200,
+          "template": "/systems"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/systems/040g",
+          "status": 200,
+          "template": "/systems/{system}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/deployments",
+          "status": 200,
+          "template": "/deployments"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/deployments/040g",
+          "status": 200,
+          "template": "/deployments/{deployment}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/procedures",
+          "status": 200,
+          "template": "/procedures"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/procedures/040g",
+          "status": 200,
+          "template": "/procedures/{procedure}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/samplingFeatures",
+          "status": 200,
+          "template": "/samplingFeatures"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/samplingFeatures/040g",
+          "status": 200,
+          "template": "/samplingFeatures/{samplingFeature}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/properties",
+          "status": 200,
+          "template": "/properties"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/properties/040g",
+          "status": 200,
+          "template": "/properties/{property}"
+        }
+      ],
+      "readinessScope": "declarations-and-advertised-methods-only",
+      "requiredConformancePresent": true,
+      "requirement": "REQ-ETS-PART1-010"
+    },
+    {
+      "candidateProcedures": 5,
+      "conformanceClass": "1:/conf/update",
+      "declarationAndMethodReadiness": false,
+      "exactPromotionBlockers": [
+        "missing required conformance declarations",
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT PATCH lifecycle execution",
+        "changed field GET proof after PATCH",
+        "identity-safe cleanup and primary-state isolation",
+        "applicability evidence for custom collections, async, and deadline behavior"
+      ],
+      "exactPromotionReady": false,
+      "id": "part1Update",
+      "missingAdvertisedMethods": [
+        {
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/systems/040g"
+        },
+        {
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/deployments/040g"
+        },
+        {
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/procedures/040g"
+        },
+        {
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/samplingFeatures/040g"
+        },
+        {
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/properties/040g"
+        }
+      ],
+      "missingConditionConformance": [],
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      ],
+      "readinessProbes": [
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/systems/040g",
+          "status": 200,
+          "template": "/systems/{system}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/deployments/040g",
+          "status": 200,
+          "template": "/deployments/{deployment}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/procedures/040g",
+          "status": 200,
+          "template": "/procedures/{procedure}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/samplingFeatures/040g",
+          "status": 200,
+          "template": "/samplingFeatures/{samplingFeature}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/properties/040g",
+          "status": 200,
+          "template": "/properties/{property}"
+        }
+      ],
+      "readinessScope": "declarations-and-advertised-methods-only",
+      "requiredConformancePresent": false,
+      "requirement": "REQ-ETS-PART1-011"
+    },
+    {
+      "candidateProcedures": 16,
+      "conformanceClass": "2:/conf/create-replace-delete",
+      "declarationAndMethodReadiness": false,
+      "exactPromotionBlockers": [
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT POST/PUT/DELETE lifecycle execution",
+        "changed resource GET proof after write",
+        "identity-safe cleanup and primary-state isolation",
+        "resource-specific command, feasibility, result/status, and event evidence"
+      ],
+      "exactPromotionReady": false,
+      "id": "part2CreateReplaceDelete",
+      "missingAdvertisedMethods": [
+        {
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/observations/{observation}",
+          "reason": "empty resource id"
+        },
+        {
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/commands/{command}",
+          "reason": "empty resource id"
+        },
+        {
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/feasibility/{feasibility}",
+          "reason": "empty resource id"
+        },
+        {
+          "missing": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/systemEvents/{systemEvent}",
+          "reason": "empty resource id"
+        }
+      ],
+      "missingConditionConformance": [],
+      "missingRequiredConformance": [],
+      "readinessProbes": [
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/systems/040g/datastreams",
+          "status": 200,
+          "template": "/systems/{system}/datastreams"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/datastreams/040g",
+          "status": 200,
+          "template": "/datastreams/{dataStream}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/datastreams/040g/observations",
+          "status": 200,
+          "template": "/datastreams/{dataStream}/observations"
+        },
+        {
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/observations/{observation}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/systems/040g/controlstreams",
+          "status": 200,
+          "template": "/systems/{system}/controlstreams"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "path": "/controlstreams/040g",
+          "status": 200,
+          "template": "/controlstreams/{controlStream}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/controlstreams/040g/commands",
+          "status": 200,
+          "template": "/controlstreams/{controlStream}/commands"
+        },
+        {
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/commands/{command}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/feasibility",
+          "status": 200,
+          "template": "/feasibility"
+        },
+        {
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/feasibility/{feasibility}"
+        },
+        {
+          "advertisesExpectedMethods": true,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "POST"
+          ],
+          "path": "/systemEvents",
+          "status": 200,
+          "template": "/systemEvents"
+        },
+        {
+          "expectedMethods": [
+            "PUT",
+            "DELETE"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/systemEvents/{systemEvent}"
+        }
+      ],
+      "readinessScope": "declarations-and-advertised-methods-only",
+      "requiredConformancePresent": true,
+      "requirement": "REQ-ETS-PART2-007"
+    },
+    {
+      "candidateProcedures": 14,
+      "conformanceClass": "2:/conf/update",
+      "declarationAndMethodReadiness": false,
+      "exactPromotionBlockers": [
+        "missing required conformance declarations",
+        "missing condition conformance declarations",
+        "missing advertised mutation methods on readiness probes",
+        "dedicated mutable-IUT PATCH lifecycle execution",
+        "changed field GET proof after PATCH",
+        "identity-safe cleanup and primary-state isolation",
+        "schema-rejection PATCH dispatch evidence"
+      ],
+      "exactPromotionReady": false,
+      "id": "part2Update",
+      "missingAdvertisedMethods": [
+        {
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/datastreams/040g"
+        },
+        {
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/observations/{observation}",
+          "reason": "empty resource id"
+        },
+        {
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/controlstreams/040g"
+        },
+        {
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/commands/{command}",
+          "reason": "empty resource id"
+        },
+        {
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/feasibility/{feasibility}",
+          "reason": "empty resource id"
+        },
+        {
+          "missing": [
+            "PATCH"
+          ],
+          "path": "/systemEvents/{systemEvent}",
+          "reason": "empty resource id"
+        }
+      ],
+      "missingConditionConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/feasibility"
+      ],
+      "missingRequiredConformance": [
+        "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/update",
+        "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/update"
+      ],
+      "readinessProbes": [
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/datastreams/040g",
+          "status": 200,
+          "template": "/datastreams/{dataStream}"
+        },
+        {
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/observations/{observation}"
+        },
+        {
+          "advertisesExpectedMethods": false,
+          "allowMethods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "POST",
+            "PUT",
+            "TRACE"
+          ],
+          "contentType": "",
+          "errorType": null,
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "path": "/controlstreams/040g",
+          "status": 200,
+          "template": "/controlstreams/{controlStream}"
+        },
+        {
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/commands/{command}"
+        },
+        {
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/feasibility/{feasibility}"
+        },
+        {
+          "expectedMethods": [
+            "PATCH"
+          ],
+          "skipReason": "empty resource id",
+          "skipped": true,
+          "template": "/systemEvents/{systemEvent}"
+        }
+      ],
+      "readinessScope": "declarations-and-advertised-methods-only",
+      "requiredConformancePresent": false,
+      "requirement": "REQ-ETS-PART2-008"
+    }
+  ],
+  "classesWithDeclarationAndMethodReadiness": [
+    "1:/conf/create-replace-delete"
+  ],
+  "conformance": {
+    "contentType": "auto",
+    "declaredCount": 33,
+    "declaredMutationRelevant": [
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-1/1.0/conf/create-replace-delete",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/controlstream",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/create-replace-delete",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/datastream",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/json",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-binary",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-json",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/swecommon-text",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-event",
+      "http://www.opengis.net/spec/ogcapi-connectedsystems-2/1.0/conf/system-history",
+      "http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/create-replace-delete"
+    ],
+    "status": 200
+  },
+  "credentialSupplied": false,
+  "exactPromotionPolicy": "This audit is read-only readiness evidence only; it never promotes mutation candidates to reviewed exact mappings.",
+  "exactPromotionReady": false,
+  "generatedAt": "2026-08-03T01:46:22Z",
+  "iutUrl": "http://172.18.0.2:8081/sensorhub/api",
+  "readinessScope": "Read-only declaration and OPTIONS method advertisement audit; positive lifecycle proof is still required before exact promotion.",
+  "remainingCandidateProcedures": 47,
+  "requestMethodCounts": {
+    "GET": 1,
+    "OPTIONS": 25
+  },
+  "resourceIds": {
+    "command": "",
+    "controlStream": "040g",
+    "dataStream": "040g",
+    "deployment": "040g",
+    "feasibility": "",
+    "observation": "",
+    "procedure": "040g",
+    "property": "040g",
+    "samplingFeature": "040g",
+    "system": "040g",
+    "systemEvent": ""
+  },
+  "schemaVersion": 1,
+  "unsafeMethodsIssued": []
+}

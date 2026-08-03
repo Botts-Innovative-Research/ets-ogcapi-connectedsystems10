@@ -1,0 +1,116 @@
+verdict: APPROVE
+confidence: 0.97
+reviewed_at_utc: "2026-08-03T02:28:52Z"
+reviewer: Raze
+reviewed_scope:
+  sprint: ets-72
+  story: S-ETS-72-01
+  prior_finding: RAZE-ETS72-EVIDENCE-001
+  focus: >
+    Focused recheck only of Sprint 72 evidence packaging after the initial
+    Raze review found ignored nested .log artifacts referenced by manifests.
+  scoped_files:
+    - .gitignore
+    - .harness/evaluations/sprint-ets-72-adversarial.yaml
+    - epics/stories/s-ets-72-01-mutation-readiness-audit.md
+    - openspec/change-proposals/CP-032-mutation-readiness-audit.md
+    - ops/status.md
+    - ops/changelog.md
+    - ops/test-results.md
+    - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/
+  constraints:
+    - No Docker reruns.
+    - No Maven reruns.
+    - Artifact and git-ignore inspection only.
+implementation_changes_made: []
+findings:
+  - id: RAZE-ETS72-EVIDENCE-001
+    severity: MEDIUM
+    status: CLOSED
+    title: Sprint 72 nested E2E log artifacts are now commit-reachable and manifest-covered.
+    evidence:
+      - path: .gitignore
+        observed: >
+          Line 40 adds the scoped negated pattern
+          !ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/**/*.log,
+          limited to the Sprint 72 evidence directory.
+      - command: "find ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts -type f -name '*.log' | wc -l"
+        observed: "8"
+      - command: "git ls-files --others --exclude-standard -- ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03"
+        observed: >
+          Lists all eight Sprint 72 nested .log artifacts, proving they are
+          unignored untracked files and therefore commit-reachable by a normal
+          git add of the evidence directory.
+      - command: "git add -n -- ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/*.log ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/*/*.log"
+        observed: >
+          Dry-run reports add for all eight files: clean-primary TeamEngine
+          container log, clean-primary smoke stdout, OSH complete log, OSH
+          startup log, populated mutation-readiness stdout, populated
+          TeamEngine container log, populated smoke stdout, and provisioning
+          stdout.
+      - path: ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifact-manifest-verify.exitcode
+        observed: "0"
+      - path: ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/repo-evidence-manifest-verify.exitcode
+        observed: "0"
+      - command: "sha256sum -c --quiet repo-evidence-manifest.sha256"
+        workdir: ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03
+        observed: "exit 0"
+      - command: "sha256sum -c --quiet artifact-manifest.sha256"
+        workdir: ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts
+        observed: "exit 0"
+      - path: ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/repo-evidence-manifest.sha256
+        observed: >
+          Includes all eight raw .log artifacts under local-osh-r2-artifacts,
+          including both TeamEngine container logs, both smoke stdout logs, OSH
+          startup/complete logs, populated mutation-readiness stdout, and
+          provisioning stdout.
+      - documents:
+          - epics/stories/s-ets-72-01-mutation-readiness-audit.md
+          - openspec/change-proposals/CP-032-mutation-readiness-audit.md
+          - ops/status.md
+          - ops/changelog.md
+          - ops/test-results.md
+        observed: >
+          Each scoped document records the initial Raze gap and the evidence
+          manifest gapfix; ops/test-results.md still correctly marks the
+          focused recheck pending before this artifact.
+required_fixes: []
+evidence:
+  raw_log_artifacts:
+    count: 8
+    commit_reachable: true
+    files:
+      - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/clean-primary-results/s-ets-01-03-teamengine-container-2026-08-03.log
+      - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/clean-primary-smoke.stdout.log
+      - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/local-osh-complete.log
+      - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/local-osh-startup.log
+      - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/populated-mutation-readiness.stdout.log
+      - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/populated-results/s-ets-01-03-teamengine-container-2026-08-03.log
+      - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/populated-smoke.stdout.log
+      - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/provisioning.stdout.log
+  git_ignore_behavior:
+    status: PASS
+    details:
+      - The matching ignore rule for sampled Sprint 72 logs is the scoped negated exception, not the global *.log exclusion.
+      - git add dry-run reports every nested Sprint 72 .log as addable.
+      - git status --short --untracked-files=all lists the raw nested .log files.
+  manifest_integrity:
+    status: PASS
+    details:
+      - Existing local-osh-r2-artifact-manifest-verify.exitcode is 0.
+      - Existing repo-evidence-manifest-verify.exitcode is 0.
+      - Both manifests also verified in place during this focused recheck with sha256sum -c --quiet.
+  documentation_reconciliation:
+    status: PASS
+    details:
+      - Story, CP, status, changelog, and test-results mention the initial Raze gap and manifest/log reachability fix.
+      - No document inspected claims the non-green local OSH TeamEngine run passed conformance.
+residual_risks:
+  - >
+    The log artifacts are not yet committed because Sprint 72 is still in an
+    uncommitted working tree, but they are no longer ignored and a normal git
+    add of the evidence directory will include them.
+  - >
+    This recheck is limited to RAZE-ETS72-EVIDENCE-001 and does not repeat the
+    broader Sprint 72 behavioral review, Docker runs, Maven runs, or TeamEngine
+    E2E execution.

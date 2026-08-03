@@ -1,8 +1,54 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T15:53Z
+Last updated: 2026-08-03T02:10Z
 
 ## Current Sprint Evidence
+
+Sprint 72 mutation candidate readiness audit:
+
+- Trigger: user instructed "Continue."
+- Scope: `REQ-ETS-CLEANUP-023` operational readiness evidence only. No
+  Create/Replace/Delete or Update lifecycle exact closure is claimed.
+- Implementation: `scripts/mutation-readiness-audit.py` reports all four
+  remaining mutation-bound candidate classes and all 47 candidate procedures,
+  issues only `GET` and `OPTIONS`, records class-level blockers, keeps
+  `exactPromotionReady=false`, and serializes only `credentialSupplied`.
+- Populated workflow integration:
+  `scripts/local_osh_populated_e2e.py` archives
+  `populated-mutation-readiness.json` after provisioning and before TeamEngine
+  smoke, strips `SMOKE_AUTH_CREDENTIAL` from the audit subprocess, and uses a
+  generated Docker DNS-safe OSH alias for TeamEngine IUT access.
+- Python compile: PASS (`python-py-compile.txt`).
+- Python unit tests:
+  `20 tests / 0 failures / 0 errors` (`python-unittest.txt`).
+- Formatter: BUILD SUCCESS (`formatter.txt`).
+- Full Docker Maven:
+  `787 tests / 0 failures / 0 errors / 3 skipped` (`full-maven.txt`).
+- Direct primary local OSH readiness audit:
+  `47` candidates, `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`,
+  `classesWithDeclarationAndMethodReadiness=["1:/conf/create-replace-delete"]`,
+  and no exact promotions.
+- Initial disposable run diagnostic: the long run id
+  `sprint-ets-72-readiness-20260803T014708Z` exposed a TeamEngine
+  `UnknownHostException` for an overlong generated OSH container hostname.
+- Final disposable local OSH mutable E2E:
+  `sprint-ets-72-readiness-r2-20260803T015933Z`. The populated IUT was reached
+  through `http://ets-csapi-osh-435115cf728c162b:8081/sensorhub/api`; readiness
+  audit reported `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`; cleanup
+  PASSed; primary-state diff is empty.
+- Full TeamEngine E2E remains honestly non-green on the existing local OSH
+  twenty-failure baseline: populated `275 total / 24 passed / 20 failed /
+  231 skipped`, clean-primary `275 total / 23 passed / 20 failed /
+  232 skipped`, with GET-only TeamEngine request counts.
+- Evidence directory:
+  `ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/`.
+- Initial Raze review returned `GAPS_FOUND 0.93` for ignored nested `.log`
+  evidence. The gapfix makes those logs commit-reachable, verifies
+  `local-osh-r2-artifacts/artifact-manifest.sha256`, and adds
+  `repo-evidence-manifest.sha256` for the repository evidence subset.
+- Raze focused recheck
+  `.harness/evaluations/sprint-ets-72-adversarial-recheck.yaml` returned
+  `APPROVE 0.97` with `required_fixes: []`.
 
 Sprint 71 Part 2 Update released method surface:
 

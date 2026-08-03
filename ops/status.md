@@ -1,6 +1,59 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-02T16:08Z
+Last updated: 2026-08-03T02:10Z
+
+## Sprint 72 Complete Pending Push - Mutation Candidate Readiness Audit
+
+- User instruction: "Continue."
+- Plan 1 scope: CP-032, S-ETS-72-01, and `sprint-ets-72.yaml` add a
+  read-only readiness audit for the 47 remaining mutation-bound candidate
+  procedures. This is operational blocker evidence, not exact conformance
+  promotion.
+- The audit target classes are Part 1 Create/Replace/Delete
+  (`12 candidate`), Part 1 Update (`5 candidate`), Part 2
+  Create/Replace/Delete (`16 candidate`), and Part 2 Update (`14 candidate`).
+- The audit fetches `/conformance`, issues only OPTIONS readiness probes,
+  records missing declarations, missing condition classes, missing advertised
+  mutation methods, and positive lifecycle evidence still required, and records
+  only whether credentials were supplied.
+- `scripts/mutation-readiness-audit.py` now emits machine-readable readiness
+  JSON with `exactPromotionReady=false`, `unsafeMethodsIssued=[]`, class-level
+  blockers, and an explicit declaration/method-readiness scope.
+- `scripts/local_osh_populated_e2e.py` archives
+  `populated-mutation-readiness.json` after provisioning and before
+  TeamEngine smoke. It strips `SMOKE_AUTH_CREDENTIAL` from the audit subprocess
+  and keeps TeamEngine conformance verdicts independent from readiness JSON.
+- During real E2E, the first long-run-id attempt exposed TeamEngine
+  `UnknownHostException` from an overlong generated OSH container hostname.
+  The workflow now creates a generated Docker DNS-safe network alias and uses
+  that alias in the OSH proxy base URL and TeamEngine IUT URL.
+- Verification evidence is archived under
+  `ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/`.
+  Python compile PASSes, Python unit tests are `20/0/0/0`, formatter BUILD
+  SUCCESS, and full Docker Maven is `787/0/0/3`.
+- Direct primary local OSH audit: `47` candidates, `GET=1`, `OPTIONS=25`,
+  `unsafeMethodsIssued=[]`, and only Part 1 Create/Replace/Delete has
+  declaration/method readiness. Exact promotion remains false.
+- Disposable local OSH mutable E2E run
+  `sprint-ets-72-readiness-r2-20260803T015933Z` reached the populated IUT
+  through short alias `ets-csapi-osh-435115cf728c162b`, archived readiness
+  JSON with `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`, removed the
+  isolated OSH state, and verified the primary OSH state was unchanged.
+- Full TeamEngine smoke remains honestly non-green on the existing local OSH
+  twenty-failure baseline: populated `275/24/20/231`, clean-primary
+  `275/23/20/232`. This is not a Sprint 72 regression and does not promote any
+  mutation-bound candidate to reviewed exact.
+- Initial Raze review returned `GAPS_FOUND 0.93` with one required
+  evidence-packaging fix: nested `.log` artifacts were ignored even though
+  `run-summary.json` and `artifact-manifest.sha256` referenced them. The fix is
+  applied: `.gitignore` now has a narrow Sprint 72 exception, the copied run
+  manifest verifies, and `repo-evidence-manifest.sha256` covers the repository
+  evidence subset including the raw logs.
+- Raze focused recheck returned `APPROVE 0.97` with `required_fixes: []`.
+- Remaining no-validator-dependency work is still dominated by positive
+  mutation lifecycle evidence: the project has `240 total / 191 exact /
+  2 helper / 47 candidate / 0 unmapped`, and all 47 candidates require a
+  conforming dedicated mutable IUT surface before exact closure.
 
 ## Sprint 71 Complete and Pushed - Part 2 Update Released Method Surface
 

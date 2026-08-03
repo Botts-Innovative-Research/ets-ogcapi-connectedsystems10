@@ -1,0 +1,135 @@
+verdict: GAPS_FOUND
+confidence: 0.93
+reviewed_at_utc: "2026-08-03T02:17:54Z"
+reviewer: Raze
+reviewed_scope:
+  sprint: ets-72
+  story: S-ETS-72-01
+  requirement: REQ-ETS-CLEANUP-023
+  change_type: mutation_candidate_readiness_audit
+  implementation_files:
+    - scripts/mutation-readiness-audit.py
+    - scripts/test_mutation_readiness_audit.py
+    - scripts/local_osh_populated_e2e.py
+    - scripts/test_local_osh_populated_workflow.py
+  scoped_documents:
+    - AGENTS.md
+    - _bmad/agents/adversarial-reviewer.md
+    - .harness/contracts/sprint-ets-72.yaml
+    - openspec/change-proposals/CP-032-mutation-readiness-audit.md
+    - epics/stories/s-ets-72-01-mutation-readiness-audit.md
+    - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+    - _bmad/architecture.md
+    - _bmad/traceability.md
+    - ops/status.md
+    - ops/changelog.md
+    - ops/test-results.md
+    - ops/known-issues.md
+    - ops/e2e-test-plan.md
+    - ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/
+  review_method:
+    - Artifact inspection only; no Docker, Maven, or TeamEngine reruns.
+    - Verified archived exit codes, audit JSON, workflow summaries, TestNG XML totals, Docker alias evidence, credential evidence, git hygiene, and .gitignore behavior.
+implementation_changes_made:
+  - Removed generated untracked file scripts/__pycache__/local_osh_populated_e2e.cpython-312.pyc and the empty scripts/__pycache__ directory.
+  - No tracked implementation files were changed by this review.
+findings:
+  - id: RAZE-ETS72-EVIDENCE-001
+    severity: MEDIUM
+    status: REQUIRED_FIX
+    title: Sprint 72 E2E log artifacts are ignored and will be omitted from the repository evidence commit.
+    impact: >
+      The Sprint 72 run-summary and artifact manifest reference TeamEngine
+      container logs, smoke stdout logs, OSH startup/complete logs, readiness
+      stdout, and provisioning stdout. Those files exist in the working tree,
+      but .gitignore's global *.log rule hides nested ops/test-results logs.
+      A normal git add would commit the JSON/XML summaries while omitting
+      eight raw log artifacts that support the real-IUT request counts,
+      TeamEngine reachability, alias proof, and startup evidence. This is an
+      evidence reproducibility gap, not a behavioral defect in the audit.
+    evidence:
+      - command: "git status --short --untracked-files=all"
+        observed: >
+          Lists Sprint 72 JSON, XML, txt, and sha256 artifacts, but does not
+          list local-osh-r2-artifacts/*.log or nested populated-results and
+          clean-primary-results container logs.
+      - command: "git check-ignore -v ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/populated-smoke.stdout.log ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/populated-results/s-ets-01-03-teamengine-container-2026-08-03.log ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/local-osh-startup.log"
+        observed: ".gitignore:27:*.log matches all three sampled Sprint 72 nested log artifacts."
+      - path: ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/local-osh-r2-artifacts/artifact-manifest.sha256
+        observed: >
+          References clean-primary-results/s-ets-01-03-teamengine-container-2026-08-03.log,
+          clean-primary-smoke.stdout.log, local-osh-complete.log,
+          local-osh-startup.log, populated-mutation-readiness.stdout.log,
+          populated-results/s-ets-01-03-teamengine-container-2026-08-03.log,
+          populated-smoke.stdout.log, and provisioning.stdout.log.
+      - command: "git ls-files --others -i --exclude-standard ops/test-results | rg '\\.log$' | wc -l"
+        observed: "51 ignored ops/test-results log files currently exist in the working tree, including 8 Sprint 72 logs."
+    required_fix: >
+      Before reporting Sprint 72 complete or pushing it, make the Sprint 72
+      log evidence commit-reachable. Acceptable fixes include force-adding the
+      eight Sprint 72 .log artifacts, renaming/copying them to tracked .txt
+      evidence files, or adding a narrowly scoped .gitignore exception for the
+      Sprint 72 evidence directory. Then add or refresh an in-repository
+      evidence manifest that verifies the committed artifact subset.
+evidence:
+  false_confidence:
+    status: PASS
+    details:
+      - The audit labels its scope as read-only declaration and OPTIONS method advertisement readiness.
+      - The top-level and class-level exactPromotionReady values are false.
+      - The docs, story, CP, traceability, status, known issues, and test results consistently say no Create/Replace/Delete or Update exact lifecycle conformance is claimed.
+      - Part 1 Create/Replace/Delete being in classesWithDeclarationAndMethodReadiness is not presented as exact lifecycle readiness; positive POST/PUT/DELETE proof remains listed as a blocker.
+  unsafe_methods:
+    status: PASS
+    details:
+      - scripts/mutation-readiness-audit.py only calls client.request("GET", "/conformance") and client.request("OPTIONS", path) in normal audit flow.
+      - Direct local OSH audit evidence records requestMethodCounts GET=1 and OPTIONS=25 with unsafeMethodsIssued=[].
+      - Disposable populated OSH audit evidence records requestMethodCounts GET=1 and OPTIONS=27 with unsafeMethodsIssued=[].
+  credential_handling:
+    status: PASS
+    details:
+      - The audit JSON records credentialSupplied only.
+      - grep over direct audit JSON, populated audit JSON, and run-summary JSON found credentialSupplied=false and no Authorization, Bearer, Basic, or SMOKE_AUTH_CREDENTIAL value.
+      - scripts/local_osh_populated_e2e.py removes SMOKE_AUTH_CREDENTIAL from the audit subprocess environment.
+      - scripts/test_local_osh_populated_workflow.py covers provisioned id forwarding and credential stripping.
+      - scripts/test_mutation_readiness_audit.py covers that --auth-credential input is not serialized.
+  disposable_local_osh_e2e:
+    status: PASS_WITH_HONEST_FAILURES
+    details:
+      - Final run id sprint-ets-72-readiness-r2-20260803T015933Z used a disposable OSH container with ownership labels and network alias ets-csapi-osh-435115cf728c162b.
+      - TeamEngine invoked the populated IUT at http://ets-csapi-osh-435115cf728c162b:8081/sensorhub/api.
+      - TestNG XML totals are populated 275 total, 24 passed, 20 failed, 231 skipped; clean-primary 275 total, 23 passed, 20 failed, 232 skipped.
+      - run-summary.json records overallWorkflowVerdict=FAIL and conformanceVerdict=FAIL, so the non-green E2E result is not hidden.
+      - cleanupVerdict=PASS, primaryStateUnchanged=true, and primary-state-diff.txt is empty.
+      - The populated and clean-primary requestMethodCounts are GET-only in run-summary.json.
+  docker_dns_alias:
+    status: PASS
+    details:
+      - The first long-run-id diagnostic reached TeamEngine and failed with UnknownHostException for the overlong container hostname.
+      - The final run used a 30-character generated alias, and local-osh-container.json records that alias in Docker's field-hub_default Aliases list.
+      - local-osh-runtime-config.json sets proxyBaseUrl to the alias host.
+      - scripts/test_local_osh_populated_workflow.py covers long run ids using a short network alias for TeamEngine access.
+  verification:
+    status: PASS
+    details:
+      - python-py-compile.exitcode is 0.
+      - python-unittest.exitcode is 0; the archived output reports 20 tests, 0 failures, 0 errors.
+      - formatter.exitcode is 0; formatter.txt reports BUILD SUCCESS.
+      - full-maven.exitcode is 0; full-maven.txt reports 787 tests, 0 failures, 0 errors, 3 skipped and BUILD SUCCESS.
+      - git-diff-check.exitcode is 0.
+  docs_reconciliation:
+    status: PASS
+    details:
+      - Contract, CP, story, OpenSpec, traceability, architecture, e2e-test-plan, known-issues, status, changelog, and test-results agree that Sprint 72 is implemented pending Raze.
+      - All inspected documents preserve the 47 candidate / 0 exact promotion state and the existing twenty-failure local OSH baseline.
+  worktree_hygiene:
+    status: PASS_AFTER_TRIVIAL_CLEANUP
+    details:
+      - Removed a generated untracked Python cache file produced during inspection.
+      - Remaining modified and untracked files are scoped to Sprint 72 code, specs, docs, metrics, evidence, and this Raze report.
+required_fixes:
+  - RAZE-ETS72-EVIDENCE-001
+residual_risks:
+  - The audit is not lifecycle conformance evidence. All 47 mutation-bound procedures remain candidates until positive POST/PUT/DELETE or PATCH E2E executes against a conforming dedicated mutable IUT with changed-resource proof and cleanup.
+  - The full local OSH TeamEngine run remains non-green on the existing twenty-failure baseline outside Sprint 72.
+  - The audit's candidate counts are intentionally hard-coded to the current released inventory; future inventory changes will need this operational audit updated.

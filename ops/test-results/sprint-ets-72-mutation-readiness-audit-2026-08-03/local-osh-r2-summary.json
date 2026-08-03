@@ -1,0 +1,49 @@
+{
+  "runId": "sprint-ets-72-readiness-r2-20260803T015933Z",
+  "overallWorkflowVerdict": "FAIL",
+  "provisioningStatus": 0,
+  "mutationReadinessStatus": 0,
+  "populatedSmokeStatus": 1,
+  "cleanPrimaryStatus": 1,
+  "cleanupVerdict": "PASS",
+  "primaryStateUnchanged": true,
+  "conformanceVerdict": "FAIL",
+  "cleanPrimaryConformanceVerdict": "FAIL",
+  "populated": {
+    "totals": {
+      "failed": 20,
+      "passed": 24,
+      "skipped": 231,
+      "total": 275
+    },
+    "requestMethodCounts": {
+      "GET": 134
+    },
+    "startupVerdict": "PASS",
+    "verdict": "FAIL"
+  },
+  "cleanPrimary": {
+    "totals": {
+      "failed": 20,
+      "passed": 23,
+      "skipped": 232,
+      "total": 275
+    },
+    "requestMethodCounts": {
+      "GET": 130
+    },
+    "startupVerdict": "PASS",
+    "verdict": "FAIL"
+  },
+  "mutationReadiness": {
+    "remainingCandidateProcedures": 47,
+    "requestMethodCounts": {
+      "GET": 1,
+      "OPTIONS": 27
+    },
+    "unsafeMethodsIssued": [],
+    "classesWithDeclarationAndMethodReadiness": [
+      "1:/conf/create-replace-delete"
+    ]
+  }
+}

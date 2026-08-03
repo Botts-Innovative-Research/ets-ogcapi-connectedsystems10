@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.70 | Status: Living Document | Last reconciled: 2026-08-01 (Sprint 66 Part 2 SWE Common JSON exact closure pushed)
+> Version: 2.0.72 | Status: Living Document | Last reconciled: 2026-08-03 (Sprint 72 mutation readiness audit and populated OSH DNS alias)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -8,6 +8,16 @@
 > **Authority**: this document binds the Generator (Dana). Where the PRD or capability spec
 > conflicts with an ADR or with this file's section, the ADR is authoritative for the decision
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
+
+> Sprint 72 reconciliation: the populated local OSH workflow now archives a
+> read-only mutation-readiness audit after provisioning and before TeamEngine
+> smoke. The audit fetches `/conformance`, issues only `OPTIONS` readiness
+> probes, records blockers for all 47 remaining mutation-bound candidates, and
+> never promotes exact mappings. E2E also exposed that legal long run ids can
+> produce generated container names longer than Docker's practical DNS-label
+> surface for TeamEngine. The workflow therefore uses a generated short Docker
+> network alias for OSH proxy links and TeamEngine IUT access while retaining
+> long ownership names and labels.
 
 > Sprint 66 reconciliation: Part 2 SWE Common JSON Encoding is now exact
 > released ATS with final Raze approval and pushed implementation commit
@@ -786,6 +796,8 @@ ephemeral OSH container + isolated state
              |
              +-- loopback random port --> ETS fixture seeder
              |
+             +-- loopback random port --> mutation-readiness audit
+             |
              +-- field-hub_default -----> TeamEngine 6 + Connected Systems ETS
                                                    |
                                                    v
@@ -826,6 +838,18 @@ IDs whose labels, names, and mounts still match the ownership record. Existing
 names are refused, including the primary OSH. The seeder accepts only the
 Docker-published loopback port proven by an orchestrator-generated ownership
 record for the isolated container and state source.
+
+For TeamEngine-facing IUT access, the workflow does not rely on the full
+generated OSH container name as a DNS label. It creates a deterministic short
+Docker network alias from the run id, records that alias in
+`ownership-evidence.json`, uses it in the generated OSH proxy base URL, and
+passes it to `scripts/smoke-test.sh` as the populated IUT hostname. This keeps
+long legal run ids usable without weakening container ownership checks.
+
+After fixture provisioning and before TeamEngine smoke, the workflow runs the
+read-only mutation-readiness audit. That audit is evidence for blocker
+classification only; it must issue no POST, PUT, PATCH, or DELETE and cannot
+change the TeamEngine conformance verdict or promote any candidate mapping.
 
 Every started attempt enters one finalizer that independently attempts owned
 cleanup, normalized primary identity/state comparison, clean-primary TeamEngine,

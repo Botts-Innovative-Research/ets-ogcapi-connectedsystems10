@@ -36,6 +36,9 @@ Thumbs.db
 # Ops test-result archives are committed evidence (S-ETS-01-03 smoke artifacts).
 !ops/test-results/*.log
 
+# Sprint 72 nested populated-OSH E2E logs are referenced by committed manifests.
+!ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/**/*.log
+
 # CONFIDENTIAL — OGC-supplied material, must not be published to this public remote.
 # The te2 jar inventory was shared by OGC on the explicit condition it stay private.
 te2_webapp*

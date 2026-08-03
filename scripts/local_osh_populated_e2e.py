@@ -78,6 +78,11 @@ def timestamp():
     return utc_now().isoformat().replace("+00:00", "Z")
 
 
+def docker_dns_alias(run_id):
+    digest = hashlib.sha256(run_id.encode("utf-8")).hexdigest()[:16]
+    return f"ets-csapi-osh-{digest}"
+
+
 def sha256_bytes(value):
     return hashlib.sha256(value).hexdigest()
 
@@ -328,6 +333,12 @@ class PopulatedWorkflow:
                 str(self.repo_root / "scripts/local-osh-populated-fixture.py"),
             )
         ).resolve()
+        self.readiness_auditor_script = pathlib.Path(
+            self.environment.get(
+                "LOCAL_OSH_READINESS_AUDITOR_SCRIPT",
+                str(self.repo_root / "scripts/mutation-readiness-audit.py"),
+            )
+        ).resolve()
         output_value = self.environment.get(
             "SMOKE_OUTPUT_DIR", "/tmp/ets-ogcapi-connectedsystems10-populated-local-osh"
         )
@@ -339,8 +350,11 @@ class PopulatedWorkflow:
         if not re.fullmatch(r"[A-Za-z0-9_.:-]{8,80}", self.run_id):
             raise WorkflowError("LOCAL_OSH_RUN_ID has unsupported format")
         self.osh_name = f"ets-csapi-populated-osh-{self.run_id}"
+        self.osh_alias = docker_dns_alias(self.run_id)
         self.populated_te_name = f"ets-csapi-populated-te-{self.run_id}"
         self.clean_te_name = f"ets-csapi-clean-primary-te-{self.run_id}"
+        if len(self.osh_alias) > 63 or not re.fullmatch(r"[a-z0-9-]+", self.osh_alias):
+            raise WorkflowError("generated OSH network alias is not a valid Docker DNS label")
         self.runtime_state = None
         self.owned_container_id = None
         self.loopback_url = None
@@ -354,6 +368,7 @@ class PopulatedWorkflow:
         self.cleanup_verdict = "NOT_RUN"
         self.retained_state_path = None
         self.provisioning_status = None
+        self.populated_readiness_status = None
         self.populated_smoke_status = None
         self.clean_smoke_status = None
         self.abort_phase = None
@@ -409,7 +424,13 @@ class PopulatedWorkflow:
             raise WorkflowError("LOCAL_OSH_SOURCE is not a Git checkout")
         if not (self.install / "lib").is_dir():
             raise WorkflowError("LOCAL_OSH_INSTALL has no lib directory")
-        for required in (self.config, self.fixtures, self.smoke_script, self.seeder_script):
+        for required in (
+            self.config,
+            self.fixtures,
+            self.smoke_script,
+            self.seeder_script,
+            self.readiness_auditor_script,
+        ):
             if not required.is_file():
                 raise WorkflowError(f"required file is missing: {required}")
         for command_name in (self.docker, "git", "python3", "bash"):
@@ -514,6 +535,8 @@ class PopulatedWorkflow:
             self.repo_root / "scripts/local-osh-populated-e2e.sh",
             pathlib.Path(__file__).resolve(),
             self.seeder_script,
+            self.readiness_auditor_script,
+            self.repo_root / "scripts/test_mutation_readiness_audit.py",
             self.smoke_script,
             self.repo_root / "scripts/test-local-osh-populated-workflow.sh",
             self.repo_root / "scripts/test_local_osh_populated_workflow.py",
@@ -557,7 +580,7 @@ class PopulatedWorkflow:
         runtime_config = json.loads(self.config.read_text(encoding="utf-8"))
         for module in runtime_config:
             if module.get("id") == "s42-http-server":
-                module["proxyBaseUrl"] = f"http://{self.osh_name}:8081"
+                module["proxyBaseUrl"] = f"http://{self.osh_alias}:8081"
         atomic_json(self.output / "local-osh-runtime-config.json", runtime_config)
         atomic_json(self.runtime_state / "config.json", runtime_config)
 
@@ -569,6 +592,13 @@ class PopulatedWorkflow:
             raise WorkflowError("created OSH container name changed")
         if labels.get(RUN_LABEL) != self.run_id or labels.get(ROLE_LABEL) != "populated-osh":
             raise WorkflowError("created OSH container ownership labels are invalid")
+        network_aliases = set(
+            (document.get("NetworkSettings", {}).get("Networks", {}).get(self.network, {}) or {})
+            .get("Aliases", [])
+            or []
+        )
+        if self.osh_alias not in network_aliases:
+            raise WorkflowError("created OSH network alias is missing")
         if not document.get("State", {}).get("Running"):
             raise WorkflowError("created OSH container is not running")
         state_mount = selected_mount(document, "/state")
@@ -593,6 +623,8 @@ class PopulatedWorkflow:
                 f"{ROLE_LABEL}=populated-osh",
                 "--network",
                 self.network,
+                "--network-alias",
+                self.osh_alias,
                 "-p",
                 "127.0.0.1::8081",
                 "--user",
@@ -632,12 +664,13 @@ class PopulatedWorkflow:
             raise WorkflowError("isolated OSH has no unique loopback-only published port")
         host_port = int(loopback_ports[0]["HostPort"])
         self.loopback_url = f"http://127.0.0.1:{host_port}/sensorhub/api"
-        self.docker_iut_url = f"http://{self.osh_name}:8081/sensorhub/api"
+        self.docker_iut_url = f"http://{self.osh_alias}:8081/sensorhub/api"
         ownership = {
             "schemaVersion": 1,
             "runId": self.run_id,
             "containerId": container_id,
             "containerName": self.osh_name,
+            "networkAlias": self.osh_alias,
             "runLabel": RUN_LABEL,
             "roleLabel": ROLE_LABEL,
             "role": "populated-osh",
@@ -695,6 +728,28 @@ class PopulatedWorkflow:
         if evidence.get("provisioningReady") is not True:
             raise WorkflowError("fixture provisioning did not report readiness")
 
+    def run_mutation_readiness_audit(self):
+        environment = dict(self.environment)
+        environment.pop("SMOKE_AUTH_CREDENTIAL", None)
+        self.populated_readiness_status = self.runner.stream(
+            [
+                "python3",
+                self.readiness_auditor_script,
+                "--iut-url",
+                self.loopback_url,
+                "--resource-ids-json",
+                self.output / "provisioning-evidence.json",
+                "--output",
+                self.output / "populated-mutation-readiness.json",
+            ],
+            self.output / "populated-mutation-readiness.stdout.log",
+            env=environment,
+        )
+        if self.populated_readiness_status != 0:
+            raise WorkflowError(
+                f"mutation readiness audit exited {self.populated_readiness_status}"
+            )
+
     def run_smoke(self, target_url, results_dir, container_name, stdout_name, mutation):
         self.require_name_available(container_name)
         environment = dict(self.environment)
@@ -737,6 +792,9 @@ class PopulatedWorkflow:
         self.phase = "provisioning"
         self.maybe_inject("provisioning")
         self.provision()
+        self.phase = "populated-mutation-readiness"
+        self.maybe_inject("populated-mutation-readiness")
+        self.run_mutation_readiness_audit()
         self.phase = "populated-smoke"
         self.maybe_inject("populated-smoke")
         self.populated_smoke_status = self.run_smoke(
@@ -913,6 +971,13 @@ class PopulatedWorkflow:
         provisioning_verdict = (
             "PASS" if provisioning and provisioning.get("provisioningReady") is True else "FAIL"
         )
+        mutation_readiness = None
+        readiness_path = self.output / "populated-mutation-readiness.json"
+        if readiness_path.is_file():
+            try:
+                mutation_readiness = json.loads(readiness_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as error:
+                self.finalization_errors.append(f"invalid mutation readiness evidence: {error}")
         populated = None
         clean = None
         try:
@@ -953,6 +1018,11 @@ class PopulatedWorkflow:
             "provisioningVerdict": provisioning_verdict,
             "provisioningStatus": self.provisioning_status,
             "provisioningEvidence": "provisioning-evidence.json",
+            "mutationReadinessStatus": self.populated_readiness_status,
+            "mutationReadinessEvidence": (
+                "populated-mutation-readiness.json" if mutation_readiness else None
+            ),
+            "mutationReadiness": mutation_readiness,
             "conformanceVerdict": conformance,
             "populatedGateVerdict": populated_gate,
             "populatedSmokeStatus": self.populated_smoke_status,

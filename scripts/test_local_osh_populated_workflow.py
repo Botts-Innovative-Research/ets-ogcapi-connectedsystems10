@@ -7,16 +7,20 @@
 # SCENARIO-ETS-PART2-013-POPULATED-EVIDENCE-001;
 # SCENARIO-ETS-PART2-013-PRIMARY-STATE-ISOLATION-001;
 # SCENARIO-ETS-PART2-013-POPULATED-COMMAND-PROBE-DIAGNOSTICS-001.
+# REQ-ETS-CLEANUP-023;
+# SCENARIO-ETS-CLEANUP-MUTATION-READINESS-AUDIT-001.
 
 import copy
 import importlib.util
 import json
 import os
 import pathlib
+import sys
 import tempfile
 import unittest
 from unittest import mock
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import local_osh_populated_e2e as workflow_module
 
 
@@ -36,6 +40,7 @@ def container_document(
     install_source="/tmp/owned-install",
     host_port="18082",
 ):
+    network_alias = workflow_module.docker_dns_alias(run_id)
     return {
         "Id": container_id,
         "Name": "/" + name,
@@ -67,7 +72,7 @@ def container_document(
             },
         ],
         "NetworkSettings": {
-            "Networks": {"field-hub_default": {}},
+            "Networks": {"field-hub_default": {"Aliases": [name, network_alias]}},
             "Ports": {"8081/tcp": [{"HostIp": "127.0.0.1", "HostPort": host_port}]},
         },
     }
@@ -106,6 +111,63 @@ class FakeDockerRunner:
             return workflow_module.subprocess.CompletedProcess(args, 0, args[-1], "")
         if args[1] == "logs":
             return workflow_module.subprocess.CompletedProcess(args, 0, "owned log\n", "")
+        raise AssertionError(f"unexpected fake Docker command: {args}")
+
+    def stream(self, args, output_file, *, env=None):
+        del args, output_file, env
+        raise AssertionError("stream was not expected")
+
+
+class StreamCaptureRunner:
+
+    def __init__(self, status=0):
+        self.status = status
+        self.calls = []
+
+    def run(self, args, *, check=True, env=None):
+        del args, check, env
+        raise AssertionError("run was not expected")
+
+    def stream(self, args, output_file, *, env=None):
+        self.calls.append(
+            {
+                "args": [str(arg) for arg in args],
+                "output": str(output_file),
+                "env": dict(env or {}),
+            }
+        )
+        pathlib.Path(output_file).write_text("audit stdout\n", encoding="utf-8")
+        return self.status
+
+
+class StartOshRunner:
+
+    def __init__(self, state, install):
+        self.state = pathlib.Path(state)
+        self.install = pathlib.Path(install)
+        self.calls = []
+        self.container_id = "c" * 64
+        self.workflow = None
+
+    def run(self, args, *, check=True, env=None):
+        del check, env
+        args = [str(arg) for arg in args]
+        self.calls.append(args)
+        if args[1] == "inspect" and args[-1] == self.workflow.osh_name:
+            return workflow_module.subprocess.CompletedProcess(args, 1, "", "missing")
+        if args[1] == "run":
+            return workflow_module.subprocess.CompletedProcess(args, 0, self.container_id + "\n", "")
+        if args[1] == "inspect" and args[-1] == self.container_id:
+            document = container_document(
+                container_id=self.container_id,
+                name=self.workflow.osh_name,
+                run_id=self.workflow.run_id,
+                state_source=str(self.state),
+                install_source=str(self.install),
+            )
+            return workflow_module.subprocess.CompletedProcess(
+                args, 0, json.dumps([document]), ""
+            )
         raise AssertionError(f"unexpected fake Docker command: {args}")
 
     def stream(self, args, output_file, *, env=None):
@@ -273,6 +335,41 @@ class WorkflowBehaviorTests(unittest.TestCase):
             workflow.require_name_available("unrelated")
         self.assertFalse(any(call[1:3] == ["rm", "-f"] for call in runner.calls))
 
+    def test_started_populated_iut_uses_short_network_alias_for_teamengine_url(self):
+        run_id = "sprint-ets-72-readiness-20260803T014708Z"
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            state = root / "state"
+            install = root / "install"
+            output = root / "output"
+            for path in (state, install, output):
+                path.mkdir()
+            runner = StartOshRunner(state, install)
+            workflow = workflow_module.PopulatedWorkflow(
+                runner=runner,
+                environment={
+                    "LOCAL_OSH_RUN_ID": run_id,
+                    "SMOKE_OUTPUT_DIR": str(output),
+                },
+            )
+            runner.workflow = workflow
+            workflow.runtime_state = state
+            workflow.install = install
+
+            workflow.start_osh()
+
+            docker_run = next(call for call in runner.calls if call[1] == "run")
+            self.assertGreater(len(workflow.osh_name), 63)
+            self.assertLessEqual(len(workflow.osh_alias), 63)
+            self.assertIn("--network-alias", docker_run)
+            self.assertIn(workflow.osh_alias, docker_run)
+            self.assertEqual(
+                f"http://{workflow.osh_alias}:8081/sensorhub/api",
+                workflow.docker_iut_url,
+            )
+            ownership = json.loads((output / "ownership-evidence.json").read_text())
+            self.assertEqual(workflow.osh_alias, ownership["networkAlias"])
+
     def test_every_started_abort_phase_runs_all_finalizers(self):
         for phase in ("startup", "provisioning", "populated-smoke", "evidence-parsing"):
             with self.subTest(phase=phase):
@@ -306,6 +403,31 @@ class WorkflowBehaviorTests(unittest.TestCase):
             workflow.calls,
         )
         self.assertIn("cleanup: injected cleanup failure", workflow.finalization_errors)
+
+    def test_mutation_readiness_audit_uses_provisioned_ids_without_forwarding_credentials(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner = StreamCaptureRunner()
+            workflow = workflow_module.PopulatedWorkflow(
+                runner=runner,
+                environment={
+                    "LOCAL_OSH_RUN_ID": "testsafe-123",
+                    "SMOKE_OUTPUT_DIR": directory,
+                    "SMOKE_AUTH_CREDENTIAL": "Bearer should-not-forward",
+                },
+            )
+            workflow.loopback_url = "http://127.0.0.1:18082/sensorhub/api"
+            (pathlib.Path(directory) / "provisioning-evidence.json").write_text(
+                json.dumps({"resourceIds": {"system": "s1"}}), encoding="utf-8"
+            )
+
+            workflow.run_mutation_readiness_audit()
+
+            self.assertEqual(0, workflow.populated_readiness_status)
+            self.assertEqual(1, len(runner.calls))
+            command = runner.calls[0]["args"]
+            self.assertIn("--resource-ids-json", command)
+            self.assertIn(str(pathlib.Path(directory) / "provisioning-evidence.json"), command)
+            self.assertNotIn("SMOKE_AUTH_CREDENTIAL", runner.calls[0]["env"])
 
 
 class SeederOwnershipBehaviorTests(unittest.TestCase):

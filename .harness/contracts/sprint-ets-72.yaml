@@ -1,0 +1,35 @@
+sprint: ets-72
+story: S-ETS-72-01
+title: Mutation candidate readiness audit
+status: complete_raze_approved_pending_push
+trigger: User instructed "Continue."
+scope:
+  requirement: REQ-ETS-CLEANUP-023
+  change_type: operational_readiness_audit
+  exact_promotion: false
+  mutation_policy: read_only_audit
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-MUTATION-READINESS-AUDIT-001
+      expect: The audit issues only GET and OPTIONS, reports the four remaining mutation-bound candidate classes, and never promotes exact mappings.
+    - id: no-credential-serialization
+      expect: The audit records only whether credentials were supplied and does not serialize credential values.
+    - id: populated-workflow-archive
+      expect: Disposable local OSH populated runs archive the mutation-readiness JSON after provisioning and before TeamEngine smoke.
+    - id: populated-workflow-dns-alias
+      expect: Disposable local OSH populated runs use a generated Docker DNS-safe network alias for TeamEngine IUT access.
+  normal:
+    - id: blocker-honesty
+      expect: Missing conformance declarations, missing condition classes, missing advertised write/PATCH methods, and missing positive lifecycle evidence are explicit blockers.
+required_verification:
+  - python_unit_tests
+  - spring_javaformat
+  - focused_maven_or_full_maven
+  - local_osh_readiness_audit
+  - local_osh_teamengine_e2e
+  - raze_adversarial_review
+non_goals:
+  - Do not issue POST, PUT, PATCH, or DELETE from the audit.
+  - Do not patch OSH or TeamEngine.
+  - Do not promote mutation-bound candidates to reviewed exact mappings.
+  - Do not treat OPTIONS advertisement as positive lifecycle conformance.

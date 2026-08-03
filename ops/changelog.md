@@ -2,6 +2,52 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-03 - Sprint 72 mutation candidate readiness audit
+
+**Triggered by user instruction**: "Continue."
+
+- Added CP-032, S-ETS-72-01, and the Sprint 72 contract for a read-only
+  mutation-readiness audit.
+- Added `REQ-ETS-CLEANUP-023` and
+  `SCENARIO-ETS-CLEANUP-MUTATION-READINESS-AUDIT-001` to OpenSpec.
+- Scope is operational blocker evidence only. The audit must issue no
+  POST/PUT/PATCH/DELETE, must not serialize credential values, and must not
+  promote any of the 47 mutation-bound candidate procedures to reviewed exact.
+- Implemented `scripts/mutation-readiness-audit.py` with JSON evidence for
+  Part 1 CRD, Part 1 Update, Part 2 CRD, and Part 2 Update readiness blockers.
+- Added Python regressions for read-only audit behavior, credential-value
+  omission, exact-promotion denial, provisioned-id forwarding, and populated
+  workflow credential stripping.
+- Wired the disposable local OSH populated workflow to run the readiness audit
+  after provisioning and before TeamEngine smoke without changing TeamEngine
+  conformance verdict logic.
+- Fixed an E2E-discovered populated workflow defect: long legal run ids could
+  create overlong Docker hostnames that TeamEngine could not resolve. The
+  workflow now uses a generated Docker DNS-safe network alias for OSH proxy
+  links and TeamEngine IUT access.
+- Direct local OSH readiness audit: 47 candidates, `GET=1`, `OPTIONS=25`,
+  `unsafeMethodsIssued=[]`, and no exact promotions.
+- Disposable local OSH run
+  `sprint-ets-72-readiness-r2-20260803T015933Z`: readiness audit `GET=1`,
+  `OPTIONS=27`, `unsafeMethodsIssued=[]`; populated TeamEngine
+  `275/24/20/231`; clean-primary TeamEngine `275/23/20/232`; cleanup PASS;
+  primary-state isolation PASS. TeamEngine remains non-green on the existing
+  local OSH twenty-failure baseline.
+- Verification artifacts are archived under
+  `ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/`:
+  Python compile PASS, Python unit tests `20/0/0/0`, formatter BUILD SUCCESS,
+  full Docker Maven `787/0/0/3`, direct OSH audit, complete disposable OSH E2E
+  artifacts, and the overlong-hostname diagnostic run summary.
+- Raze initial review returned `GAPS_FOUND 0.93` for
+  `RAZE-ETS72-EVIDENCE-001`: nested `.log` artifacts were ignored despite
+  being referenced by `run-summary.json` and `artifact-manifest.sha256`.
+  Added a narrowly scoped `.gitignore` exception for this Sprint 72 evidence
+  directory, verified the copied run manifest, and added
+  `repo-evidence-manifest.sha256` for the repository evidence subset.
+- Raze focused recheck
+  `.harness/evaluations/sprint-ets-72-adversarial-recheck.yaml` returned
+  `APPROVE 0.97` with `required_fixes: []`.
+
 ## 2026-08-02 - Sprint 71 Part 2 Update released method surface
 
 **Triggered by user instruction**: "Continue."

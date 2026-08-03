@@ -3095,6 +3095,61 @@ fail or SKIP as specified.
   though the data is available locally.
 - **Maps to**: PRD FR-ETS-25, S-ETS-66-02.
 
+#### REQ-ETS-CLEANUP-023: Mutation Candidate Readiness Audit (Sprint 72)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_RAZE_APPROVED (Sprint 72 S-ETS-72-01)
+- **Description**: The repository SHALL provide a read-only audit that probes
+  current IUT readiness for the four remaining mutation-bound candidate
+  classes: Part 1 Create/Replace/Delete, Part 1 Update, Part 2
+  Create/Replace/Delete, and Part 2 Update. The audit SHALL fetch
+  `/conformance`, issue only `OPTIONS` readiness probes for representative
+  resource endpoints, report the 47 remaining candidate procedures by class,
+  and record missing declarations, missing condition classes, missing
+  advertised mutation methods, and missing positive lifecycle proof as blockers.
+  The audit SHALL record only whether credentials were supplied; it SHALL NOT
+  serialize credential values. The disposable local OSH populated workflow SHALL
+  archive this JSON after provisioning and before TeamEngine smoke, without
+  changing the conformance gate verdict. The populated workflow SHALL expose
+  the isolated OSH container to TeamEngine through a generated Docker DNS-safe
+  network alias, so legal long run ids do not create overlong IUT hostnames.
+- **Rationale**: After Sprint 71 the released ATS inventory has zero unmapped
+  targets, but all remaining candidates are destructive lifecycle/update
+  procedures. A durable read-only readiness audit makes the residual blocker
+  concrete without issuing writes or promoting exact mappings from OPTIONS
+  evidence.
+- **Implementation evidence**: Sprint 72 adds
+  `scripts/mutation-readiness-audit.py`, Python regressions for audit
+  read-only behavior and populated-workflow integration, and disposable local
+  OSH run evidence under
+  `ops/test-results/sprint-ets-72-mutation-readiness-audit-2026-08-03/`.
+  Direct local OSH readiness evidence records `47` candidate procedures,
+  `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`, and
+  `exactPromotionReady=false`. Disposable populated OSH evidence records
+  `GET=1`, `OPTIONS=27`, `unsafeMethodsIssued=[]`, cleanup `PASS`,
+  primary-state isolation `PASS`, populated TeamEngine `275/24/20/231`, and
+  clean-primary TeamEngine `275/23/20/232`. The E2E smoke is intentionally
+  non-green on the existing local OSH twenty-failure baseline; no exact
+  mutation-bound candidate is promoted. Initial Raze returned
+  `GAPS_FOUND 0.93` for ignored nested `.log` evidence; the gapfix makes those
+  logs commit-reachable, verifies the copied run manifest, and adds
+  `repo-evidence-manifest.sha256`. Focused Raze recheck returned
+  `APPROVE 0.97` with `required_fixes: []`.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54;
+  REQ-ETS-PART1-010, REQ-ETS-PART1-011, REQ-ETS-PART2-007,
+  REQ-ETS-PART2-008.
+
+#### SCENARIO-ETS-CLEANUP-MUTATION-READINESS-AUDIT-001 (CRITICAL)
+**GIVEN** an IUT URL and optional fixture resource ids
+**WHEN** the mutation-readiness audit runs
+**THEN** it issues only GET and OPTIONS requests
+**AND** it reports readiness and blockers for all 47 remaining mutation-bound
+candidate procedures
+**AND** it keeps `exactPromotionReady=false` for every audited class
+**AND** credential values are not written to the JSON evidence
+**AND** the disposable populated workflow reaches the isolated OSH by a
+Docker DNS-safe alias rather than requiring the full generated container name
+to be a valid DNS label.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)

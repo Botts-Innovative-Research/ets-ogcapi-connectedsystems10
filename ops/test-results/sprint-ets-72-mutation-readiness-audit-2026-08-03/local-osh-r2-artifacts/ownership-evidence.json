@@ -1,0 +1,17 @@
+{
+  "apiPath": "/sensorhub/api",
+  "containerId": "d2c5f139a35aa6e55bfe17e8e1fbcfd64060347ba9cc1cab639458a8f870705d",
+  "containerName": "ets-csapi-populated-osh-sprint-ets-72-readiness-r2-20260803T015933Z",
+  "containerPort": 8081,
+  "host": "127.0.0.1",
+  "hostPort": 1043,
+  "installSource": "/home/nh/docker/sensorhub-driver-fabric/include/osh-core/build/install/osh-core",
+  "network": "field-hub_default",
+  "networkAlias": "ets-csapi-osh-435115cf728c162b",
+  "role": "populated-osh",
+  "roleLabel": "org.opengeospatial.ets.csapi.role",
+  "runId": "sprint-ets-72-readiness-r2-20260803T015933Z",
+  "runLabel": "org.opengeospatial.ets.csapi.run-id",
+  "schemaVersion": 1,
+  "stateSource": "/tmp/ets-csapi-populated-osh-state.4g3z1x3y"
+}

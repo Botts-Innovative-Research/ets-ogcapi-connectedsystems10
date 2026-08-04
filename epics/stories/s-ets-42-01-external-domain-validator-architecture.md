@@ -71,13 +71,18 @@ SensorML URL refresh on 2026-08-04:
   reusable validator dependency analogous to `swecommon30-validator`.
   Directly importing the suite jar remains out of bounds until it is split or
   wrapped behind a source-pinned backend with parity/runtime-closure review.
+- User decision after this triage: there is no external SensorML validator
+  available to consume now, so this ETS must build and maintain its own
+  SensorML validation backend until a reusable upstream module is made.
 
-## Provisional Architecture
+## Adapter Architecture
 
 Add a local adapter layer when implementation begins:
 
 - `ConnectedSystemsSweValidatorAdapter` delegates pure SWE Common schema validation to `swecommon30-validator`.
-- `ConnectedSystemsSensorMlValidatorAdapter` remains a placeholder until a reusable SensorML module is visible.
+- `ConnectedSystemsSensorMlValidatorAdapter` is the active first-party SensorML
+  validation boundary over the pinned bundled schema graph until a reusable
+  SensorML module is visible and passes parity/runtime-closure review.
 - Both adapters return ETS-friendly diagnostics with the correct OGC requirement URI and never own TestNG skip/fail policy.
 
 The ETS keeps ownership of:
@@ -93,7 +98,9 @@ The ETS keeps ownership of:
 
 1. Confirm upstream artifacts.
    - SWE: wait for PR 10 merge and Maven publication, or document a source-pinned local-install/prebuild path.
-   - SensorML: obtain the exact FCU/OGC repo, branch, artifact coordinates, and reusable API, or plan an upstream split from `ets-sensorml30`.
+   - SensorML: maintain the ETS-owned backend, track `ets-sensorml30` only as
+     source evidence, and replace the backend only after an upstream
+     `sensorml30-validator` split or equivalent reusable module is made.
 
 2. Add dependency and runtime guards.
    - Add dependency management/exclusions for validator dependencies.

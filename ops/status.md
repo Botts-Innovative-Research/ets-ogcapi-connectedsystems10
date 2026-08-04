@@ -1,6 +1,6 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-04T02:18Z
+Last updated: 2026-08-04T02:24Z
 
 ## SensorML Validator URL Triage - 2026-08-04
 
@@ -19,10 +19,10 @@ Last updated: 2026-08-04T02:18Z
 - Decision:
   this URL is useful official upstream source evidence, but it is not a
   drop-in reusable validator module like `swecommon30-validator`. Do not import
-  the `ets-sensorml30` suite jar directly into this ETS runtime. A future
-  replacement of the provisional SensorML backend should either use an upstream
-  `sensorml30-validator` split or a source-pinned backend/extraction story with
-  parity, diagnostics, runtime-closure, and local OSH E2E review.
+  the `ets-sensorml30` suite jar directly into this ETS runtime. The active
+  path is to build and maintain the ETS-owned SensorML backend until an
+  upstream `sensorml30-validator` split or equivalent reusable module is made
+  and passes parity, diagnostics, runtime-closure, and local OSH E2E review.
 - Evidence directory:
   `ops/test-results/sensorml-validator-url-triage-2026-08-04/`.
 - Verification:
@@ -30,6 +30,11 @@ Last updated: 2026-08-04T02:18Z
   `git diff --check` PASS. Raze returned `APPROVE 0.95` with no required
   fixes in
   `.harness/evaluations/sensorml-validator-url-triage-adversarial-2026-08-04.yaml`.
+- Follow-up direction:
+  the first-party SensorML backend wording was reconciled after the user
+  confirmed the ETS must build its own validator until an upstream one is made.
+  Focused Raze recheck returned `APPROVE 0.96` with `required_fixes=[]` in
+  `.harness/evaluations/sensorml-first-party-validator-direction-adversarial-2026-08-04.yaml`.
 
 ## Sprint 80 Implemented - connected-systems-go Upstream Filing Handoff
 

@@ -1,0 +1,194 @@
+verdict: APPROVE
+confidence: 0.96
+reviewer: Raze
+review_type: adversarial
+generated_at_utc: "2026-08-04T02:29:55Z"
+updated_at_utc: "2026-08-04T02:31:55Z"
+user_instruction: >-
+  Review only the current uncommitted SensorML first-party validator direction
+  documentation change after the user stated there is no external SensorML
+  validator and the ETS must build its own until one is made.
+
+reviewed_scope:
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - epics/stories/s-ets-42-01-external-domain-validator-architecture.md
+  - _bmad/traceability.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/known-issues.md
+  - ops/test-results.md
+
+review_constraints_observed:
+  docker: NOT_RUN
+  maven: NOT_RUN
+  teamengine: NOT_RUN
+  iut_mutation: NOT_RUN
+  network_writes: NOT_RUN
+  allowed_lightweight_commands_used:
+    - date
+    - git status --short
+    - git diff --check
+    - git diff
+    - rg
+    - sed
+    - nl
+    - find
+
+findings:
+  - id: RAZE-SENSORML-DIRECTION-LOW-001
+    severity: LOW
+    status: closed_by_focused_recheck
+    title: >-
+      Closed: active Sprint 58 OpenSpec wording now says "first-party
+      ETS-owned".
+    location:
+      file: openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      lines:
+        - 5013
+        - 5018
+    details: >-
+      Focused recheck confirmed both active Sprint 58 phrases were replaced:
+      line 5013 now says "first-party ETS-owned SensorML validator adapter",
+      and line 5018 now says "first-party ETS-owned SensorML adapter".
+    closure_evidence: >-
+      rg found no remaining old SensorML wording in the OpenSpec file, while
+      preserving first-party wording at the two affected lines.
+
+evidence:
+  direction_alignment:
+    status: PASS
+    details:
+      - >-
+        OpenSpec now states that no public reusable SensorML 3.0 validator
+        currently exists and that the ETS shall build and maintain its own
+        SensorML backend behind ConnectedSystemsSensorMlValidatorAdapter until
+        an upstream module is made and reviewed.
+      - >-
+        S-ETS-42-01 records the post-triage user decision that no external
+        SensorML validator is available now, and says the active
+        ConnectedSystemsSensorMlValidatorAdapter is the first-party SensorML
+        boundary over the pinned bundled schema graph.
+      - >-
+        Traceability row REQ-ETS-VALIDATOR-001 says CP-018 completed an
+        ETS-owned first-party SensorML adapter because no public reusable
+        FCU/OGC module exists, and that ets-sensorml30 remains excluded.
+      - >-
+        ops/status.md, ops/known-issues.md, and ops/test-results.md all keep
+        direct import of ets-sensorml30 excluded and name the ETS-owned backend
+        as the maintained path until a reusable upstream module is made.
+  prior_triage_consistency:
+    status: PASS
+    details:
+      - >-
+        The changed docs preserve the 2026-08-04 URL-triage conclusion:
+        opengeospatial/ets-sensorml30 is official upstream ETS source evidence
+        at d2b2a6308fdf48f113f7c7faed6712dc05e33130, not a standalone
+        sensorml30-validator module or drop-in runtime dependency.
+      - >-
+        The prior Raze URL-triage report approved the no-direct-import,
+        source-evidence-only conclusion; this change does not reverse that
+        conclusion.
+      - >-
+        Historical scenario id
+        SCENARIO-ETS-VALIDATOR-SENSORML-PROVISIONAL-ADAPTER-001 remains present
+        only as an identifier. No active changed text calls the SensorML adapter
+        a placeholder.
+  sprint_58_closure_consistency:
+    status: PASS
+    details:
+      - >-
+        Sprint 58 closure claims remain bounded to the prior implemented
+        SensorML adapter: full Maven 729/0/0/3, schema parity,
+        exact-image/security probes, unmodified-local-OSH E2E with zero writes,
+        and final Raze approval.
+      - >-
+        The current direction change does not claim those Java/TestNG,
+        Docker/Maven, TeamEngine, or E2E gates were rerun for this documentation
+        update.
+      - >-
+        Focused recheck closed RAZE-SENSORML-DIRECTION-LOW-001; active Sprint
+        58 OpenSpec wording now uses first-party ETS-owned terminology.
+  unsupported_claim_checks:
+    status: PASS
+    details:
+      - >-
+        Added operational/changelog/test-results text explicitly says no
+        Java/TestNG behavior change, dependency import, Docker/Maven/TeamEngine
+        run, IUT mutation, or exact promotion occurred.
+      - >-
+        No changed hunk claims a new SensorML dependency import, upstream
+        module availability, Maven Central publication, TeamEngine execution,
+        Docker execution, IUT mutation, CITE filing, publication, or exact
+        promotion for this direction-only change.
+      - >-
+        Existing Sprint 58 pass totals and runtime evidence are retained as
+        historical implementation evidence, not new verification for this
+        documentation edit.
+  secret_hygiene:
+    status: PASS
+    details:
+      - >-
+        Added-line credential/token/key scan returned no matches for common
+        token, private key, Authorization, bearer, GitHub token, API key, or
+        password patterns.
+  lightweight_checks:
+    status: PASS
+    details:
+      - "git status --short showed only the seven scoped documentation files modified before this report was added."
+      - "git diff --check exited clean."
+      - "No Docker, Maven, TeamEngine, IUT mutation, push, or network write command was run."
+
+required_fixes: []
+
+residual_risk:
+  - >-
+    The upstream opengeospatial/ets-sensorml30 repository can change after the
+    archived 2026-08-04T02:05:22Z evidence snapshot; this review checks the
+    docs against the archived snapshot, not a fresh live network state.
+  - >-
+    Because this was intentionally documentation-only, no new Java/TestNG,
+    dependency-closure, Docker/Maven, TeamEngine, or local OSH E2E behavior was
+    executed or revalidated.
+  - >-
+    Historical scenario identifiers and older audit entries may still contain
+    "provisional" terminology, but the active Sprint 58 OpenSpec phrases covered
+    by this finding now use first-party ETS-owned wording.
+
+focused_recheck:
+  generated_at_utc: "2026-08-04T02:31:55Z"
+  scope:
+    - RAZE-SENSORML-DIRECTION-LOW-001
+  verdict: APPROVE
+  confidence: 0.96
+  finding_status:
+    RAZE-SENSORML-DIRECTION-LOW-001: CLOSED
+  required_fixes: []
+  checks:
+    - >-
+      rg confirmed openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      line 5013 now says "first-party ETS-owned SensorML validator adapter".
+    - >-
+      rg confirmed openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+      line 5018 now says "first-party ETS-owned SensorML adapter".
+    - >-
+      rg SensorML-boundary scan found no new placeholder, direct-import,
+      dependency-import, IUT-mutation, exact-promotion, drop-in dependency, or
+      upstream-availability overclaim introduced by the focused wording change.
+    - "git diff --check exited clean."
+    - "YAML parse of this report succeeded before the focused report update."
+  constraints_observed:
+    docker: NOT_RUN
+    maven: NOT_RUN
+    teamengine: NOT_RUN
+    iut_mutation: NOT_RUN
+    push: NOT_RUN
+    network_writes: NOT_RUN
+
+changed_by_reviewer:
+  changed_only_report_file: false
+  files:
+    - .harness/evaluations/sensorml-first-party-validator-direction-adversarial-2026-08-04.yaml
+    - ops/metrics.md
+  reason_not_only_report_file: >-
+    AGENTS.md requires per-turn timing in ops/metrics.md; that metrics update is
+    not part of the reviewed change set.

@@ -2,6 +2,23 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-04 - SensorML first-party validator direction
+
+**Triggered by user instruction**: "So there is no external SensorML validator.
+In that case, we will have to build our own until one is made"
+
+- Reconciled the SensorML validator architecture language to treat the
+  ETS-owned SensorML backend as the maintained first-party path until an
+  upstream reusable `sensorml30-validator` or equivalent module exists.
+- Removed stale placeholder wording from S-ETS-42-01 and clarified that future
+  upstream work may replace only the backend after parity, diagnostics,
+  runtime-closure, and local OSH E2E review.
+- Raze initial review returned `APPROVE_WITH_CONCERNS 0.93`; the LOW stale
+  OpenSpec wording concern was fixed, and focused recheck returned
+  `APPROVE 0.96` with `required_fixes=[]`.
+- No Java/TestNG behavior change, dependency import, Docker/Maven/TeamEngine
+  run, IUT mutation, or exact promotion occurred.
+
 ## 2026-08-04 - SensorML validator URL triage
 
 **Triggered by user instruction**: "Here is the URL for the SensorML validator/

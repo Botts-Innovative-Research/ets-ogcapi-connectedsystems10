@@ -1,6 +1,6 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-04T02:18Z
+Last updated: 2026-08-04T02:24Z
 
 ## Current Sprint Evidence
 
@@ -25,12 +25,19 @@ SensorML validator URL triage:
   PhysicalSystem TestNG test.
 - Decision:
   the URL is official upstream source evidence, not a drop-in reusable
-  validator dependency. Direct import of `ets-sensorml30` remains excluded.
+  validator dependency. Direct import of `ets-sensorml30` remains excluded, and
+  the ETS-owned SensorML backend remains the maintained path until an upstream
+  reusable module is made.
 - Verification:
   JSON parse PASS, artifact presence PASS, evidence manifest PASS, and
   `git diff --check` PASS. Raze returned `APPROVE 0.95` with no required
   fixes in
   `.harness/evaluations/sensorml-validator-url-triage-adversarial-2026-08-04.yaml`.
+- Follow-up direction:
+  first-party SensorML backend wording was reconciled after the user confirmed
+  the ETS must build its own validator until an upstream one is made. Focused
+  Raze recheck returned `APPROVE 0.96` with `required_fixes=[]` in
+  `.harness/evaluations/sensorml-first-party-validator-direction-adversarial-2026-08-04.yaml`.
 
 Sprint 80 connected-systems-go upstream filing handoff:
 

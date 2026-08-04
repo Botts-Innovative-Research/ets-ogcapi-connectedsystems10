@@ -12,6 +12,7 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 457 | 2026-08-04T02:24:35Z | 2026-08-04T02:36:02Z | 11m27s | User concluded that there is no external SensorML validator and directed that the ETS must build its own until one is made. Reconciled OpenSpec, S-ETS-42-01, traceability, status, known-issues, test-results, and changelog to make the ETS-owned SensorML backend the maintained first-party path while preserving the direct-import ban on `ets-sensorml30`. Lightweight `git diff --check`, YAML parse, stale-wording scan, and added-line secret scan passed. Raze initial review returned `APPROVE_WITH_CONCERNS 0.93`; the LOW stale OpenSpec wording concern was fixed, focused recheck returned `APPROVE 0.96`, and `required_fixes=[]`. No Java/TestNG behavior change, dependency import, Docker, Maven, TeamEngine, IUT mutation, upstream availability claim, or exact promotion occurred. Subagent token metadata was unavailable. |
 | 456 | 2026-08-04T02:05:22Z | 2026-08-04T02:21:40Z | 16m18s | User supplied the SensorML validator URL `https://github.com/opengeospatial/ets-sensorml30`. Triaged the official upstream ETS source, archived GitHub/API/source evidence, reconciled REQ-ETS-VALIDATOR-001, S-ETS-42-01, traceability, ops status/changelog/test-results/known-issues, and the external-validator research artifact, and preserved the conclusion that this URL is source evidence rather than a drop-in `sensorml30-validator` dependency. Lightweight JSON/YAML/manifest/diff/secret-added-content checks passed. Mandatory Raze review wrote `.harness/evaluations/sensorml-validator-url-triage-adversarial-2026-08-04.yaml` with verdict `APPROVE 0.95`, `required_fixes=[]`; subagent token metadata was unavailable. No Docker, Maven, TeamEngine, public/network writes, IUT mutation, dependency import, Java behavior change, or exact promotion occurred. |
 | 455 | 2026-08-03T23:05:14Z | 2026-08-03T23:05:33Z | 0m19s | User asked whether the agent has a deployment key for the repository. Checked Git remote/auth state without printing key material: `origin` uses SSH, no ssh-agent identity is loaded, repo-local ignored `.repo-keys/github-botts-ets-ogcapi-connectedsystems10_ed25519` and `.pub` exist, `core.sshCommand` points to the private key, and `git ls-remote --exit-code origin HEAD` succeeded. |
 | 454 | 2026-08-03T14:32:43Z | 2026-08-03T14:37:02Z | 4m19s | Agent-initiated final Sprint 80 Raze seal recheck only for the post-recheck transition from focused-recheck-pending to complete/Raze-approved, inspecting CP-040, S-ETS-80-01, Sprint 80 contract/spec/traceability/CITE/ops/current evidence without Docker, Maven, TeamEngine, public writes, authenticated GitHub filing, or IUT mutation. Wrote `.harness/evaluations/sprint-ets-80-adversarial-final-recheck.yaml` with verdict `APPROVE 0.96`; final wording does not overclaim upstream filing, CITE filing, Maven publication, IUT mutation, TeamEngine/Docker/Maven execution, or exact promotion; `required_fixes=[]`. |
@@ -591,9 +592,9 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/04 ETS continuation through SensorML validator URL triage)
+### Current Codex Session (2026-08-01/04 ETS continuation through SensorML first-party validator direction)
 
-Extracted after SensorML validator URL triage with
+Extracted after SensorML first-party validator direction reconciliation with
 `python3 scripts/session-metrics.py`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
@@ -601,13 +602,13 @@ the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 21,180,663 | $317.71 |
-| Output | 1,747,530 | $131.06 |
+| Input | 21,324,457 | $319.87 |
+| Output | 1,770,642 | $132.80 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 492,121,984 | $738.18 |
-| **TOTAL** | **515,050,177** | **$1186.96** |
+| Cache Read | 496,209,920 | $744.31 |
+| **TOTAL** | **519,305,019** | **$1196.98** |
 
-API calls (usage records): 3597
+API calls (usage records): 3640
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

@@ -1,0 +1,1 @@
+PASS: git diff --cached --check after staging all Sprint 82 artifacts produced no whitespace errors

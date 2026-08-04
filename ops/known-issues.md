@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-04T02:24Z
+Last updated: 2026-08-04T05:32Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -20,6 +20,12 @@ Last updated: 2026-08-04T02:24Z
   The release package under `ops/release/` is a reviewer handoff, not a CITE
   submission, Maven Central publication, beta claim, or three-implementation
   pass record.
+- Sprint 82 adds `ops/release/current-release-readiness.md` and
+  `ops/release/current-release-readiness.json` as the current reviewer entry
+  point after Sprint 80 and Sprint 81. This overlay does not reduce the
+  47-candidate blocker set, does not claim a green local OSH TeamEngine run,
+  and does not satisfy beta, CITE, Maven Central, or three-implementation
+  gates.
 - Sprint 80 prepares the `connected-systems-go` upstream GitHub issue handoff
   but does not file it because this environment lacks authenticated GitHub
   issue tooling (`gh` absent, `GH_TOKEN`/`GITHUB_TOKEN` unset). The package is

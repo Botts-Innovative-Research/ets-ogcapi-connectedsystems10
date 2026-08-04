@@ -1,0 +1,49 @@
+sprint: ets-82
+story: S-ETS-82-01
+title: Current release packaging polish
+status: complete_raze_approved
+trigger: User asked to focus on whatever packaging or polish remained.
+scope:
+  requirement: REQ-ETS-CLEANUP-032
+  change_type: documentation_and_release_packaging
+  exact_promotion: false
+  mutation_policy: no_iut_mutation
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-CLEANUP-CURRENT-RELEASE-PACKAGE-001
+      expect: A current release package entry point links latest evidence and preserves all non-claims.
+    - id: coverage_honesty
+      expect: Coverage remains 240 total, 191 exact, 2 helper, 47 candidate, and 0 unmapped.
+    - id: e2e_honesty
+      expect: Latest local OSH TeamEngine result is recorded as non-green, not release-complete.
+    - id: validator_honesty
+      expect: SensorML is described as first-party maintained, not as a reusable upstream dependency.
+  normal:
+    - id: package_index
+      expect: Markdown and JSON package overlays agree on current gates, blockers, and evidence paths.
+    - id: ops_reconciliation
+      expect: Status, test-results, known-issues, changelog, traceability, README, and Epic ETS-05 agree.
+required_verification:
+  - json_parse
+  - yaml_parse
+  - package_consistency_check
+  - artifact_presence_check
+  - git_diff_check
+  - added_content_secret_scan
+  - raze_adversarial_review
+verification_results:
+  coverage_audit: PASS
+  json_parse: PASS
+  yaml_parse: PASS
+  package_consistency_check: PASS
+  artifact_presence_check: PASS after regeneration to cover all gate artifacts
+  stale_wording_and_overclaim_check: PASS
+  git_diff_check: PASS after staging intended commit contents
+  added_content_secret_scan: PASS
+  raze_adversarial_review: initial GAPS_FOUND 0.92 required_fixes=[RAZE-ETS82-VERIFY-001, RAZE-ETS82-RECONCILE-001, RAZE-ETS82-MANIFEST-001]; focused recheck APPROVE 0.94 required_fixes=[]
+non_goals:
+  - Do not change Java or TestNG behavior.
+  - Do not mutate any IUT.
+  - Do not promote candidate mappings or change coverage totals.
+  - Do not claim beta readiness, CITE submission, Maven Central publication, or three passing implementations.
+  - Do not file upstream issues or CITE tickets.

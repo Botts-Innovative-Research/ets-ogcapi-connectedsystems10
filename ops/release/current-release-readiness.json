@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "current-release-readiness-v1",
+  "generatedAt": "2026-08-04T05:32:04Z",
+  "status": "pre_beta_external_blocker_package_current_overlay",
+  "notACiteSubmission": true,
+  "specAnchor": {
+    "requirement": "REQ-ETS-CLEANUP-032",
+    "scenario": "SCENARIO-ETS-CLEANUP-CURRENT-RELEASE-PACKAGE-001"
+  },
+  "coverage": {
+    "total": 240,
+    "exact": 191,
+    "helper": 2,
+    "candidate": 47,
+    "unmapped": 0,
+    "byPart": {
+      "1": {
+        "total": 110,
+        "exact": 91,
+        "helper": 2,
+        "candidate": 17,
+        "unmapped": 0
+      },
+      "2": {
+        "total": 130,
+        "exact": 100,
+        "helper": 0,
+        "candidate": 30,
+        "unmapped": 0
+      }
+    }
+  },
+  "currentArtifacts": {
+    "releaseBlockerPackage": "ops/release/sprint-79-release-readiness-external-blocker-package.md",
+    "releaseBlockerPackageJson": "ops/release/sprint-79-release-readiness-external-blocker-package.json",
+    "currentPackage": "ops/release/current-release-readiness.md",
+    "connectedSystemsGoFilingHandoff": "ops/outreach/connected-systems-go-github-issue-filing-handoff.md",
+    "sensorMlHardeningEvidence": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/",
+    "sprint82Evidence": "ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/"
+  },
+  "latestVerification": {
+    "fullDockerMaven": {
+      "status": "PASS_WITH_SKIPS",
+      "total": 792,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "evidence": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/full-maven.txt"
+    },
+    "focusedSensorMlDockerMaven": {
+      "status": "PASS",
+      "total": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/focused-sensorml-validator-maven-final.txt"
+    },
+    "localOshTeamEngine": {
+      "status": "NON_GREEN_IUT_RESULT",
+      "total": 275,
+      "passed": 23,
+      "failed": 20,
+      "skipped": 232,
+      "evidence": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke-summary.json"
+    },
+    "sensorMlValidator": {
+      "status": "FIRST_PARTY_ETS_BACKEND_HARDENED",
+      "upstreamReusableModuleImported": false,
+      "evidence": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/source-watch-criteria.json"
+    }
+  },
+  "remainingCandidateClasses": [
+    {
+      "part": 1,
+      "class": "/conf/create-replace-delete",
+      "candidateProcedures": 12,
+      "blocker": "positive_mutation_e2e"
+    },
+    {
+      "part": 1,
+      "class": "/conf/update",
+      "candidateProcedures": 5,
+      "blocker": "positive_patch_e2e"
+    },
+    {
+      "part": 2,
+      "class": "/conf/create-replace-delete",
+      "candidateProcedures": 16,
+      "blocker": "positive_mutation_e2e"
+    },
+    {
+      "part": 2,
+      "class": "/conf/update",
+      "candidateProcedures": 14,
+      "blocker": "positive_patch_e2e"
+    }
+  ],
+  "blockedReleaseGates": [
+    "positive_mutable_iut_e2e_for_remaining_candidates",
+    "three_implementation_roster",
+    "maven_central_publication",
+    "cite_sc_submission_ticket",
+    "beta_status"
+  ],
+  "nonClaims": [
+    "beta_readiness",
+    "cite_sc_submission",
+    "maven_central_publication",
+    "three_passing_implementations",
+    "mutation_bound_exact_promotion",
+    "public_iut_mutation_evidence",
+    "green_local_osh_teamengine_run",
+    "reusable_upstream_sensorml_validator_dependency"
+  ],
+  "reviewerPath": [
+    "ops/release/current-release-readiness.md",
+    "ops/release/sprint-79-release-readiness-external-blocker-package.md",
+    "ops/outreach/connected-systems-go-github-issue-filing-handoff.md",
+    "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/"
+  ]
+}

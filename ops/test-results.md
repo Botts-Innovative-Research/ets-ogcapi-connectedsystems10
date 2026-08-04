@@ -1,8 +1,39 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-04T04:18Z
+Last updated: 2026-08-04T05:32Z
 
 ## Current Sprint Evidence
+
+Sprint 82 current release packaging polish:
+
+- Trigger: user asked to focus on remaining packaging or polish.
+- Scope: documentation and release package overlay only. No Java/TestNG
+  behavior change, Docker Maven rerun, TeamEngine rerun, IUT mutation, upstream
+  filing, CITE filing, Maven Central publication, or exact promotion.
+- Evidence directory:
+  `ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/`.
+- Current package:
+  `ops/release/current-release-readiness.md` and
+  `ops/release/current-release-readiness.json`.
+- Coverage:
+  unchanged at `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+- Latest gate evidence indexed:
+  Sprint 81 full Docker Maven BUILD SUCCESS `792/0/0/3`, focused SensorML
+  adapter PASS `9/0/0/0`, and local OSH TeamEngine non-green IUT result
+  `275 total / 23 passed / 20 failed / 232 skipped`.
+- Validator status:
+  SensorML is first-party ETS backend maintained; no reusable upstream
+  dependency is claimed.
+- Static verification:
+  coverage audit PASS, JSON parse PASS, YAML parse PASS, package consistency
+  PASS, artifact presence PASS after regeneration, stale wording and release
+  overclaim scan PASS, added-content secret scan PASS, and staged
+  `git diff --cached --check` PASS.
+- Raze:
+  initial review returned `GAPS_FOUND 0.92` for false unstaged whitespace
+  verification, unreconciled pending markers, and incomplete artifact-presence
+  evidence. Focused recheck returned `APPROVE 0.94` with
+  `required_fixes=[]`.
 
 Sprint 81 SensorML first-party validator hardening:
 

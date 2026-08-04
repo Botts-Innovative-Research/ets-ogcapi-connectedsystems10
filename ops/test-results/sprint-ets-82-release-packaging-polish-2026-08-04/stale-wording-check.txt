@@ -1,0 +1,4 @@
+SensorML stale wording scan
+PASS: no stale active SensorML provisional wording in release/status/spec surfaces
+Release overclaim scan
+PASS: no positive release overclaim wording in current package surfaces

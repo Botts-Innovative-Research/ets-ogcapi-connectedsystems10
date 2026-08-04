@@ -1,0 +1,78 @@
+verdict: APPROVE
+confidence: 0.94
+reviewed_at_utc: "2026-08-04T05:50:12Z"
+reviewer: Raze
+sprint: ets-82
+story: S-ETS-82-01
+title: Current release packaging polish focused recheck
+review_type: focused_recheck
+reviewed_scope:
+  - RAZE-ETS82-VERIFY-001
+  - RAZE-ETS82-RECONCILE-001
+  - RAZE-ETS82-MANIFEST-001
+  - staged commit candidate
+  - .harness/contracts/sprint-ets-82.yaml
+  - .harness/evaluations/sprint-ets-82-adversarial.yaml
+  - openspec/change-proposals/CP-042-current-release-packaging-polish.md
+  - epics/stories/s-ets-82-01-current-release-packaging-polish.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - ops/release/current-release-readiness.md
+  - ops/release/current-release-readiness.json
+  - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/
+  - ops/test-results.md
+  - ops/changelog.md
+  - _bmad/traceability.md
+  - README.adoc
+  - epics/epic-ets-05-cite-submission.md
+findings:
+  - id: RAZE-ETS82-VERIFY-001
+    severity: medium
+    status: closed
+    summary: Staged whitespace verification now covers the intended commit candidate, and the prior trailing whitespace is gone.
+    evidence:
+      - git diff --cached --check returned no whitespace errors against the staged candidate.
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/git-diff-check.txt:1 now records git diff --cached --check after staging all Sprint 82 artifacts.
+      - Staged ops/release/current-release-readiness.md lines 1 through 8 render cleanly with no trailing blanks on the status and generated timestamp lines.
+    impact: The previous false PASS condition is removed.
+    required_fix: none
+  - id: RAZE-ETS82-RECONCILE-001
+    severity: medium
+    status: closed
+    summary: Sprint 82 docs now reconcile static PASS evidence and the initial Raze GAPS_FOUND verdict.
+    evidence:
+      - epics/stories/s-ets-82-01-current-release-packaging-polish.md:53 through epics/stories/s-ets-82-01-current-release-packaging-polish.md:63 records coverage, JSON, YAML, package consistency, artifact presence, stale wording, secret scan, staged whitespace PASS, and the initial Raze GAPS_FOUND 0.92 fixes.
+      - .harness/contracts/sprint-ets-82.yaml verification_results now records PASS for completed static checks and initial Raze GAPS_FOUND 0.92 with fixes applied.
+      - ops/test-results.md:27 through ops/test-results.md:35 records the static PASS set and the initial Raze gaps with fixes applied.
+      - ops/changelog.md:24 through ops/changelog.md:29 records the static PASS set and the initial Raze required fixes as applied.
+      - _bmad/traceability.md:3 updates the traceability header to Sprint 82, and _bmad/traceability.md:100 records IMPLEMENTED_CURRENT_PACKAGE_INITIAL_RAZE_GAPS_ADDRESSED_RECHECK_PENDING.
+      - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:3592 through openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:3614 records the Sprint 82 status, evidence, coverage totals, latest Sprint 81 verification, and non-claims; lines 6557 through 6569 carry the implementation-status reconciliation.
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/verification-summary.json records the completed static checks as PASS and the initial Raze fixes as addressed, with this focused recheck pending.
+    impact: The previous status conflict is closed for the staged candidate. Pending focused-recheck wording is expected before this report is incorporated.
+    required_fix: none
+  - id: RAZE-ETS82-MANIFEST-001
+    severity: low
+    status: closed
+    summary: Artifact-presence evidence now covers the gate artifacts it relies on, including the initial Raze report.
+    evidence:
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/artifact-presence.txt lists .harness/evaluations/sprint-ets-82-adversarial.yaml.
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/artifact-presence.txt lists git-diff-check.txt, stale-wording-check.txt, added-content-secret-scan.txt, and verification-summary.json.
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/artifact-presence.txt also covers the CP, story, contract, release package Markdown and JSON, reconciled ops/docs surfaces, and other static gate logs.
+    impact: The previous evidence-manifest coverage gap is closed.
+    required_fix: none
+evidence:
+  - git status --short --branch --untracked-files=all showed all Sprint 82 artifacts staged before this recheck report was written.
+  - git diff --cached --name-status showed the initial Raze report, Sprint 82 contract, release package, reconciled docs, metrics, and evidence artifacts in the staged candidate.
+  - git diff --cached --check returned no output, indicating the staged whitespace gate passed.
+  - Staged JSON parse passed for current-release-readiness.json, sprint-79 release JSON, release-polish-summary.json, and verification-summary.json.
+  - Staged YAML parse passed for .harness/contracts/sprint-ets-82.yaml and .harness/evaluations/sprint-ets-82-adversarial.yaml.
+  - ops/release/current-release-readiness.md:10 through ops/release/current-release-readiness.md:21 keeps the package pre-beta and preserves 240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped.
+  - ops/release/current-release-readiness.md:43 through ops/release/current-release-readiness.md:58 keeps three implementations, CITE submission, Maven Central, beta readiness, exact promotion, green local OSH TeamEngine, and reusable upstream SensorML validator dependency as non-claims.
+  - ops/release/current-release-readiness.json coverage matches ops/ats-coverage-report.json summary at 240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped.
+  - Direct coverage script confirmed all 47 candidates are in only the four mutation-bound classes, with other_candidate_sum 0.
+  - ops/release/current-release-readiness.json latestVerification keeps Sprint 81 full Docker Maven at 792/0/0/3 and local OSH TeamEngine as NON_GREEN_IUT_RESULT 275 total / 23 passed / 20 failed / 232 skipped.
+  - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/stale-wording-check.txt reports no stale active SensorML provisional wording and no positive release overclaim wording.
+  - Independent staged-content scans produced only historical or explicit non-claim hits for release/beta/CITE/Maven Central/three-implementation/green-E2E/exact-promotion/SensorML-upstream patterns.
+  - Docker Maven and TeamEngine were not rerun because this was a documentation and release-packaging focused recheck and no concrete blocker required reproduction.
+required_fixes: []
+recommendations:
+  - Incorporate this recheck report into the final Sprint 82 closeout before commit and push.

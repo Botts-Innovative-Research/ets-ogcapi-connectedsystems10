@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "sprint-ets-82-verification-summary-v1",
+  "generatedAt": "2026-08-04T05:32:04Z",
+  "coverageAudit": "PASS",
+  "jsonParse": "PASS",
+  "yamlParse": "PASS",
+  "packageConsistency": "PASS",
+  "artifactPresence": "PASS",
+  "staleWordingCheck": "PASS",
+  "addedContentSecretScan": "PASS",
+  "gitDiffCheck": "PASS",
+  "raze": "Initial GAPS_FOUND 0.92; required fixes RAZE-ETS82-VERIFY-001, RAZE-ETS82-RECONCILE-001, and RAZE-ETS82-MANIFEST-001 addressed; focused recheck APPROVE 0.94 with required_fixes=[]",
+  "dockerMaven": "NOT_RUN: documentation and packaging overlay only; latest full Docker Maven evidence is Sprint 81 792/0/0/3",
+  "teamEngine": "NOT_RUN: documentation and packaging overlay only; latest local OSH TeamEngine evidence is Sprint 81 non-green 275 total / 23 passed / 20 failed / 232 skipped",
+  "iutMutation": false,
+  "exactPromotion": false
+}

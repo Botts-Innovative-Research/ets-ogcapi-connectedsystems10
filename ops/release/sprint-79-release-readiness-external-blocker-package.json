@@ -167,7 +167,7 @@
   ],
   "externalValidatorDependencies": {
     "sweCommon": "source_pinned_adapter_confirmed",
-    "sensorMl": "provisional_adapter_implemented_reusable_validator_replacement_deferred",
+    "sensorMl": "first_party_ets_backend_active_reusable_validator_replacement_deferred",
     "countsToward47MutationBoundCandidates": false
   },
   "verification": {

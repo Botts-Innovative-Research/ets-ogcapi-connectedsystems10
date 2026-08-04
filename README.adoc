@@ -16,6 +16,21 @@ and currently exercises implemented portions of:
 TeamEngine 6 is the forward runtime for this ETS. Earlier TeamEngine 5.6.1
 results are retained only as historical baseline evidence.
 
+== Current release status
+
+The current reviewer-facing release package is
+link:ops/release/current-release-readiness.md[ops/release/current-release-readiness.md],
+with a machine-readable companion at
+link:ops/release/current-release-readiness.json[ops/release/current-release-readiness.json].
+
+The ETS is in a reviewable pre-beta state for the implemented released ATS
+surface, but it is not a CITE submission and does not claim beta readiness,
+Maven Central publication, three passing implementations, or full mutation
+lifecycle closure. Current released ATS coverage is `240 total / 191 exact / 2
+helper / 47 candidate / 0 unmapped`. The remaining 47 procedures are
+mutation-bound and require a more compliant dedicated mutable IUT before they
+can be promoted.
+
 == Cross-repo note
 
 [NOTE]

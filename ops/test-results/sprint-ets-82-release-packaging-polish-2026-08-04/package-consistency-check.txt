@@ -1,0 +1,1 @@
+PASS: current release package matches coverage, evidence paths, blockers, non-claims, and SensorML wording

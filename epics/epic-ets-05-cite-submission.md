@@ -1,6 +1,6 @@
 # Epic ETS-05: CITE Submission + Three-Implementation Outreach
 
-> Status: Calendar-bound — activates at beta milestone, not a code epic | Last updated: 2026-08-03
+> Status: Calendar-bound — activates at beta milestone, not a code epic | Last updated: 2026-08-04
 
 ## Goal
 Publish the ETS to OSSRH/Maven Central, prepare an outreach package for OpenSensorHub and `SomethingCreativeStudios/connected-systems-go` to participate in CITE three-implementation testing, and file a CITE SubCommittee submission ticket requesting beta status. Owns sub-deliverable 7 of the new ETS capability.
@@ -21,6 +21,7 @@ Publish the ETS to OSSRH/Maven Central, prepare an outreach package for OpenSens
 | S-ETS-05-06 | (placeholder) File CITE SC submission ticket | Backlog | REQ-ETS-CITE-003 |
 | S-ETS-79-01 | Pre-beta release-readiness and external-blocker package | Complete; packaging state only, not beta submission | REQ-ETS-CLEANUP-030, REQ-ETS-CITE-001..003 |
 | S-ETS-80-01 | connected-systems-go upstream filing handoff | Complete; Raze approved; issue-ready but not filed without authenticated GitHub issue tooling | REQ-ETS-CLEANUP-031, REQ-ETS-CITE-002 |
+| S-ETS-82-01 | Current release packaging polish | Implemented; Raze pending; current reviewer entry point under `ops/release/current-release-readiness.*` | REQ-ETS-CLEANUP-032, REQ-ETS-CITE-001..003 |
 
 ## Acceptance Criteria
 - [ ] Artifact `org.opengis.cite:ets-ogcapi-connectedsystems10:<version>` available on Maven Central
@@ -33,3 +34,6 @@ Publish the ETS to OSSRH/Maven Central, prepare an outreach package for OpenSens
 - Outreach risk is the dominant non-code risk per Discovery flag THREE-IMPL-RULE-RISK.
 - Sprint 79 is a pre-beta blocker package. It does not satisfy Maven Central
   publication, three-implementation participation, or CITE ticket acceptance.
+- Sprint 82 adds the current release-readiness overlay after Sprint 80 and
+  Sprint 81. It is still a pre-beta package and does not satisfy the beta
+  milestone gates above.

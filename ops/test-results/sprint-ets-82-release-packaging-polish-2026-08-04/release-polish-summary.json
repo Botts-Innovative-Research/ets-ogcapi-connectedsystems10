@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "sprint-ets-82-release-packaging-polish-v1",
+  "generatedAt": "2026-08-04T05:32:04Z",
+  "trigger": "User asked to focus on remaining packaging or polish.",
+  "scope": "Documentation and release packaging overlay only.",
+  "coverage": {
+    "total": 240,
+    "exact": 191,
+    "helper": 2,
+    "candidate": 47,
+    "unmapped": 0
+  },
+  "changedArtifacts": [
+    "openspec/change-proposals/CP-042-current-release-packaging-polish.md",
+    "epics/stories/s-ets-82-01-current-release-packaging-polish.md",
+    ".harness/contracts/sprint-ets-82.yaml",
+    ".harness/evaluations/sprint-ets-82-adversarial.yaml",
+    ".harness/evaluations/sprint-ets-82-adversarial-recheck.yaml",
+    "ops/release/current-release-readiness.md",
+    "ops/release/current-release-readiness.json",
+    "ops/release/sprint-79-release-readiness-external-blocker-package.json",
+    "README.adoc",
+    "ops/status.md",
+    "ops/test-results.md",
+    "ops/known-issues.md",
+    "ops/changelog.md",
+    "ops/metrics.md",
+    "_bmad/traceability.md",
+    "_bmad/architecture.md",
+    "epics/epic-ets-05-cite-submission.md"
+  ],
+  "nonGoals": [
+    "No Java or TestNG behavior change.",
+    "No IUT mutation.",
+    "No exact promotion.",
+    "No upstream or CITE ticket filing.",
+    "No Maven Central publication."
+  ]
+}

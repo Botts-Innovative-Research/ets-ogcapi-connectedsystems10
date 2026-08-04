@@ -1,0 +1,84 @@
+verdict: GAPS_FOUND
+confidence: 0.92
+reviewed_at_utc: "2026-08-04T05:39:17Z"
+reviewer: Raze
+sprint: ets-82
+story: S-ETS-82-01
+title: Current release packaging polish
+reviewed_scope:
+  - AGENTS.md project workflow and Raze charter
+  - _bmad/agents/adversarial-reviewer.md
+  - REQ-ETS-CLEANUP-032
+  - SCENARIO-ETS-CLEANUP-CURRENT-RELEASE-PACKAGE-001
+  - openspec/change-proposals/CP-042-current-release-packaging-polish.md
+  - epics/stories/s-ets-82-01-current-release-packaging-polish.md
+  - .harness/contracts/sprint-ets-82.yaml
+  - ops/release/current-release-readiness.md
+  - ops/release/current-release-readiness.json
+  - ops/release/sprint-79-release-readiness-external-blocker-package.json
+  - README.adoc
+  - ops/status.md
+  - ops/test-results.md
+  - ops/known-issues.md
+  - ops/changelog.md
+  - _bmad/traceability.md
+  - _bmad/architecture.md
+  - epics/epic-ets-05-cite-submission.md
+  - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/
+findings:
+  - id: RAZE-ETS82-VERIFY-001
+    severity: medium
+    status: required_fix
+    summary: The archived git-diff whitespace gate is a false PASS because intended untracked artifacts were not included, and one untracked release file has trailing whitespace.
+    evidence:
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/git-diff-check.txt:1 says git diff --check produced no whitespace errors.
+      - git status --short --untracked-files=all shows the Sprint 82 package files and evidence are still untracked, so plain git diff --check did not inspect them.
+      - A direct untracked-file whitespace scan found trailing blanks in ops/release/current-release-readiness.md:3 and ops/release/current-release-readiness.md:4.
+    impact: The sprint can falsely record a clean diff gate while the actual commit candidate would fail once untracked files are staged.
+    required_fix: Remove the trailing spaces or replace them with normal Markdown line separation, then rerun the whitespace gate against the complete intended commit contents.
+  - id: RAZE-ETS82-RECONCILE-001
+    severity: medium
+    status: required_fix
+    summary: Sprint 82 verification state is not reconciled across story, contract, ops, changelog, and traceability after archived PASS artifacts were produced.
+    evidence:
+      - epics/stories/s-ets-82-01-current-release-packaging-polish.md:52 still records JSON parse as pending.
+      - epics/stories/s-ets-82-01-current-release-packaging-polish.md:53 still records YAML parse as pending.
+      - epics/stories/s-ets-82-01-current-release-packaging-polish.md:54 still records package consistency as pending.
+      - epics/stories/s-ets-82-01-current-release-packaging-polish.md:55 still records artifact presence as pending.
+      - epics/stories/s-ets-82-01-current-release-packaging-polish.md:56 still records git diff --check as pending.
+      - .harness/contracts/sprint-ets-82.yaml:35 through .harness/contracts/sprint-ets-82.yaml:40 keep the same completed static gates as PENDING.
+      - ops/test-results.md:27 through ops/test-results.md:28 says Static verification is pending.
+      - ops/changelog.md:24 says Static verification and Raze review are pending.
+      - _bmad/traceability.md:3 still says the matrix was last updated for Sprint 81, although _bmad/traceability.md:100 adds a Sprint 82 row.
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/verification-summary.json:4 through ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/verification-summary.json:11 record those static checks as PASS.
+    impact: The package does not satisfy its own ops_reconciliation criterion yet; future reviewers get conflicting status about which Sprint 82 gates actually ran.
+    required_fix: Reconcile the Sprint 82 story, contract verification_results, ops/test-results, changelog, and traceability header with the actual static evidence and this Raze verdict.
+  - id: RAZE-ETS82-MANIFEST-001
+    severity: low
+    status: required_fix
+    summary: The artifact-presence evidence does not cover every Sprint 82 verification artifact it relies on.
+    evidence:
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/artifact-presence.txt:1 through ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/artifact-presence.txt:10 omit verification-summary.json, git-diff-check.txt, stale-wording-check.txt, and added-content-secret-scan.txt.
+      - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/verification-summary.json:8 through ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/verification-summary.json:11 cite artifact presence, stale-wording, secret-scan, and git-diff gates as PASS.
+    impact: The evidence directory is mostly present, but its presence proof is narrower than the reported gate set.
+    required_fix: Regenerate artifact-presence.txt so it checks every required Sprint 82 evidence artifact, including verification-summary.json and the individual static gate logs.
+evidence:
+  - ops/release/current-release-readiness.md:3 states pre-beta external-blocker package and not CITE submission.
+  - ops/release/current-release-readiness.md:10 through ops/release/current-release-readiness.md:21 records reviewable implemented released ATS surface, not beta-ready, and 240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped.
+  - ops/release/current-release-readiness.md:43 through ops/release/current-release-readiness.md:45 keeps three implementations, CITE submission, and Maven Central blocked.
+  - ops/release/current-release-readiness.md:51 through ops/release/current-release-readiness.md:58 explicitly non-claims beta readiness, CITE SC submission, Maven Central publication, three passing implementations, exact promotion, public IUT mutation evidence, green local OSH TeamEngine, and reusable upstream SensorML dependency.
+  - ops/release/current-release-readiness.json:10 through ops/release/current-release-readiness.json:31 matches the claimed coverage totals and by-part split.
+  - ops/release/current-release-readiness.json:41 through ops/release/current-release-readiness.json:70 records Sprint 81 full Docker Maven 792/0/0/3, focused SensorML 9/0/0/0, local OSH TeamEngine NON_GREEN_IUT_RESULT 275/23/20/232, and no upstream reusable SensorML module import.
+  - ops/release/current-release-readiness.json:72 through ops/release/current-release-readiness.json:97 keeps all 47 mutation-bound procedures candidate across Part 1 CRD, Part 1 Update, Part 2 CRD, and Part 2 Update.
+  - ops/ats-coverage-report.json:3710 through ops/ats-coverage-report.json:3714 reports 240 total and 47 candidate; direct script cross-check found candidate sum 47 in only the four mutation-bound classes and other candidate sum 0.
+  - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/full-maven.txt:1878 reports Tests run 792, Failures 0, Errors 0, Skipped 3; line 1881 reports BUILD SUCCESS.
+  - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/focused-sensorml-validator-maven-final.txt:1657 reports Tests run 9, Failures 0, Errors 0, Skipped 0; line 1660 reports BUILD SUCCESS.
+  - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke-summary.json:3 through ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke-summary.json:8 records 275 total, 23 passed, 20 failed, 232 skipped.
+  - ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/stale-wording-check.txt:1 through ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/stale-wording-check.txt:4 reports no stale active SensorML provisional wording in release/status/spec surfaces and no positive release overclaim wording in current package surfaces.
+  - Static review did not rerun Docker Maven or TeamEngine because no Java/TestNG behavior changed and no concrete blocker required reproduction.
+required_fixes:
+  - RAZE-ETS82-VERIFY-001
+  - RAZE-ETS82-RECONCILE-001
+  - RAZE-ETS82-MANIFEST-001
+recommendations:
+  - After the required fixes, run a focused Raze recheck against the staged commit candidate rather than the mixed tracked/untracked worktree.

@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.73 | Status: Living Document | Last reconciled: 2026-08-04 (Sprint 81 SensorML first-party validator hardening)
+> Version: 2.0.74 | Status: Living Document | Last reconciled: 2026-08-04 (Sprint 82 current release packaging polish)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -8,6 +8,14 @@
 > **Authority**: this document binds the Generator (Dana). Where the PRD or capability spec
 > conflicts with an ADR or with this file's section, the ADR is authoritative for the decision
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
+
+> Sprint 82 reconciliation: the current reviewer-facing release package is
+> `ops/release/current-release-readiness.md` with JSON companion
+> `ops/release/current-release-readiness.json`. It overlays, but does not
+> rewrite, Sprint 79 release-blocker evidence, Sprint 80 outreach handoff
+> evidence, and Sprint 81 SensorML hardening evidence. Architecture remains
+> unchanged: no TeamEngine, OSH, Java/TestNG behavior, dependency, or exact
+> mapping change is introduced.
 
 > Sprint 81 reconciliation: the SensorML validator path is maintained as a
 > first-party ETS backend until a reusable upstream validator module exists. The

@@ -1,6 +1,6 @@
 # OGC API Connected Systems ETS — Specification
 
-> Version: 1.3 | Status: Active ETS implementation | Last updated: 2026-08-03
+> Version: 1.4 | Status: Active ETS implementation | Last updated: 2026-08-04
 >
 > **Capability scope**: A Java/TestNG Executable Test Suite for OGC TeamEngine that validates
 > conformance against OGC 23-001 (Part 1: Feature Resources) and OGC 23-002 (Part 2: Dynamic Data),
@@ -3589,6 +3589,48 @@ duplicate-search result, and local filing capability
 **AND** it SHALL NOT claim an issue was filed unless an upstream issue URL is
 actually recorded.
 
+#### REQ-ETS-CLEANUP-032: Current Release Packaging Polish (Sprint 82)
+- **Priority**: SHOULD
+- **Status**: IMPLEMENTED_RAZE_APPROVED
+- **Description**: The project SHALL maintain a current reviewer-facing release
+  overlay that supersedes but does not delete earlier sprint packages. The
+  overlay SHALL index the latest release-readiness package, outreach handoff,
+  SensorML validator hardening evidence, current coverage totals, current
+  verification gates, and remaining non-claims. It SHALL make stale package
+  language visible and corrected, especially where later sprints changed
+  validator status or fresh verification evidence.
+- **Rationale**: Sprint 79 created the pre-beta external-blocker package before
+  the Sprint 80 outreach handoff and Sprint 81 first-party SensorML hardening.
+  A compact current overlay gives reviewers and future sessions a single entry
+  point without rewriting historical evidence or overstating release status.
+- **Implementation evidence**: Sprint 82 adds
+  `ops/release/current-release-readiness.md`,
+  `ops/release/current-release-readiness.json`, and evidence under
+  `ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/`.
+  It preserves `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`,
+  updates SensorML release-package wording to the first-party maintained path,
+  references Sprint 81 full Docker Maven and local OSH TeamEngine evidence as
+  the latest verification, and keeps beta, CITE submission, Maven Central,
+  three-implementation, and mutation-bound exact-promotion claims incomplete.
+- **Maps to**: PRD FR-ETS-25, FR-ETS-54, FR-ETS-70, FR-ETS-71, FR-ETS-72;
+  REQ-ETS-CLEANUP-030, REQ-ETS-CLEANUP-031, REQ-ETS-VALIDATOR-001,
+  REQ-ETS-CITE-001, REQ-ETS-CITE-002, REQ-ETS-CITE-003.
+
+#### SCENARIO-ETS-CLEANUP-CURRENT-RELEASE-PACKAGE-001 (CRITICAL)
+**GIVEN** earlier release, outreach, validator, and E2E evidence exists across
+multiple sprint directories
+**WHEN** a reviewer asks for the current package state
+**THEN** the project SHALL provide one current release-readiness entry point
+that links to the latest evidence and machine-readable package summary
+**AND** preserves the 47 mutation-bound candidates as candidate mappings
+**AND** identifies the latest Docker Maven and local OSH TeamEngine results
+without claiming a green E2E run
+**AND** states that SensorML is currently maintained by the ETS-owned
+first-party backend until a reusable upstream module exists
+**AND** does not claim beta readiness, Maven Central publication, CITE
+submission, three passing implementations, public IUT mutation evidence, or
+mutation-bound exact promotion.
+
 > Sprint 11 selects AdvancedFiltering as the next Part 1 increment because it is read-only. The sprint is intentionally declaration-gated and partial: GeoRobotix currently does not declare `/conf/advanced-filtering`, so the default smoke expectation is SKIP-with-reason rather than false PASS. Planning probes show GeoRobotix accepts some query parameters, but undeclared behavior is not conformance evidence.
 
 #### REQ-ETS-PART1-009: AdvancedFiltering Conformance Class (`/conf/advanced-filtering`) (Sprint 11 target)
@@ -6512,6 +6554,18 @@ and Codex JSONL parsing.
   fixes; implementation commit `bb3935e` is pushed.
 - REQ-ETS-PART2-013 (Observation/Command binding cross-class closure) - partially implemented by Sprint 32 Generator as an internal project closure item, not a standalone OGC `/conf/observation-binding` class. `Part2ObservationCommandBindingTests` and helper regressions are implemented with group `part2binding`, no default fixture seeding, and GET-only positive closure guards. Sprints 33-38 add inline status/result regressions, local OSH seed/tasking fixture evidence, parent schema `f=json` request shaping, stream metadata and format assertions, and populated parent-candidate selection. Sprint 40's external OSH patch is retained as historical audit evidence only and is not an approved implementation path under CP-003/ADR-012. Full positive populated-IUT binding closure remains unclaimed and must proceed through ETS changes or an unmodified IUT.
 - REQ-ETS-VALIDATOR-001 (External SWE Common and SensorML Validator Integration) - IMPLEMENTED; SPRINT 81 RAZE APPROVED WITH CONCERNS. The SWE Common source-pinned adapter remains final-Raze approved, and Sprint 58 completes the first-party SensorML adapter over the pinned released schema graph because no reusable external SensorML validator exists. The backend-neutral SensorML API returns immutable deterministic ETS-owned diagnostics, keeps operational failures separate, validates all eight entry schemas, and is replaceable by a future reproducible FCU/OGC module without changing TestNG procedures or Connected Systems mappings. Sprint 81 adds explicit valid/invalid corpus coverage for every closed SensorML target, public contract checks, null-diagnostic operational failure coverage, and source-watch criteria for any future upstream replacement. Sprint 81 verification: focused Docker Maven `9/0/0/0`, full Docker Maven `792/0/0/3`, and local OSH TeamEngine smoke `275 total / 23 passed / 20 failed / 232 skipped` with failures concentrated in the current local OSH IUT's SensorML read advertising and collection metadata gaps. Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`.
+- REQ-ETS-CLEANUP-032 (Current Release Packaging Polish) - IMPLEMENTED; RAZE
+  APPROVED. Sprint 82 adds `ops/release/current-release-readiness.md` and
+  `ops/release/current-release-readiness.json` as the current reviewer-facing
+  overlay after Sprint 79 release packaging, Sprint 80 outreach handoff, and
+  Sprint 81 SensorML hardening. Coverage remains `240 total / 191 exact / 2
+  helper / 47 candidate / 0 unmapped`; all 47 mutation-bound procedures remain
+  candidate; latest verification is Sprint 81 full Docker Maven `792/0/0/3`
+  and local OSH TeamEngine non-green `275 total / 23 passed / 20 failed / 232
+  skipped`. No Java/TestNG behavior change, IUT mutation, exact promotion,
+  upstream filing, CITE filing, Maven Central publication, or beta claim
+  occurred. Initial Raze returned `GAPS_FOUND 0.92`; focused recheck returned
+  `APPROVE 0.94` with `required_fixes=[]`.
 - REQ-ETS-TEAMENGINE-006 (Local OSH Primary Development Target) - specified by Sprint 32 planning. Development E2E uses the self-provisioned local OSH IUT on `field-hub_default`; GeoRobotix is advisory-only and no longer the default development target.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.

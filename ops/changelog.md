@@ -2,6 +2,33 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-04 - Sprint 82 current release packaging polish
+
+**Triggered by user instruction**: "Do whatever packing or polish is left,
+that will be our focus now"
+
+- Added CP-042, S-ETS-82-01, `REQ-ETS-CLEANUP-032`,
+  `SCENARIO-ETS-CLEANUP-CURRENT-RELEASE-PACKAGE-001`, and the Sprint 82
+  contract.
+- Added `ops/release/current-release-readiness.md` and
+  `ops/release/current-release-readiness.json` as the current reviewer-facing
+  release package overlay after Sprint 80 and Sprint 81.
+- Corrected the historical Sprint 79 JSON's SensorML validator wording from
+  provisional to the current first-party ETS backend path.
+- Reconciled status, test-results, known-issues, traceability, architecture,
+  README, and Epic ETS-05 around the current package entry point.
+- Preserved the current coverage and release status honestly:
+  `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`; no
+  Java/TestNG behavior change, IUT mutation, exact promotion, upstream filing,
+  CITE filing, Maven Central publication, or beta claim occurred.
+- Static verification passed for coverage audit, JSON/YAML parse, package
+  consistency, artifact presence, stale wording/release overclaim, added-content
+  secret scan, and staged whitespace checks.
+- Initial Raze returned `GAPS_FOUND 0.92` for false unstaged whitespace
+  verification, unreconciled pending markers, and incomplete artifact-presence
+  evidence. Focused recheck returned `APPROVE 0.94` with
+  `required_fixes=[]`.
+
 ## 2026-08-04 - Sprint 81 SensorML first-party validator hardening
 
 **Triggered by user instruction**: "Do Plan 2. The creator of

@@ -1,6 +1,39 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-04T04:18Z
+Last updated: 2026-08-04T05:32Z
+
+## Sprint 82 Implemented - Current Release Packaging Polish
+
+- User instruction:
+  "Do whatever packing or polish is left, that will be our focus now."
+- Scope:
+  documentation and packaging polish only. No Java/TestNG behavior change, no
+  IUT mutation, no exact promotion, no upstream issue filing, no CITE ticket,
+  and no Maven Central publication.
+- Current release entry point:
+  `ops/release/current-release-readiness.md` with machine-readable companion
+  `ops/release/current-release-readiness.json`.
+- Coverage:
+  unchanged at `240 total / 191 exact / 2 helper / 47 candidate / 0 unmapped`.
+- Latest verification referenced by the current package:
+  Sprint 81 full Docker Maven BUILD SUCCESS `792/0/0/3`, focused SensorML
+  adapter PASS `9/0/0/0`, and local OSH TeamEngine non-green IUT result
+  `275 total / 23 passed / 20 failed / 232 skipped`.
+- Packaging polish:
+  the historical Sprint 79 machine-readable package now uses current SensorML
+  first-party wording while preserving its role as a historical release-blocker
+  package. Sprint 80 connected-systems-go filing handoff and Sprint 81
+  SensorML hardening evidence are indexed from the current overlay.
+- Remaining blockers:
+  all 47 mutation-bound procedures remain candidate until a more compliant
+  dedicated mutable IUT supplies declarations, method readiness, positive
+  lifecycle/PATCH evidence, cleanup/isolation proof, and TeamEngine E2E.
+- Evidence directory:
+  `ops/test-results/sprint-ets-82-release-packaging-polish-2026-08-04/`.
+- Raze:
+  initial review returned `GAPS_FOUND 0.92` for false unstaged whitespace
+  verification, unreconciled pending markers, and incomplete artifact-presence
+  evidence. Focused recheck returned `APPROVE 0.94` with `required_fixes=[]`.
 
 ## Sprint 81 Implemented - SensorML First-Party Validator Hardening
 
@@ -40,7 +73,8 @@ Last updated: 2026-08-04T04:18Z
   recommendation was addressed by archiving
   `local-osh-teamengine-container.txt` in the sprint evidence directory.
 - Next:
-  push Sprint 81 closeout.
+  Sprint 82 current release packaging overlay supersedes this handoff as the
+  reviewer-facing starting point.
 
 ## SensorML Validator URL Triage - 2026-08-04
 

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "sensorml-validator-url-triage-verification-v1",
+  "generatedAt": "2026-08-04T02:05:22Z",
+  "jsonParse": true,
+  "artifactPresence": true,
+  "triageSourceCheck": true,
+  "noImportOverclaimCheck": true,
+  "gitDiffCheck": true,
+  "manifestCheck": true,
+  "manifestIncludesVerificationSummary": true,
+  "razeReview": "APPROVE 0.95",
+  "razeRequiredFixes": 0,
+  "razeReport": ".harness/evaluations/sensorml-validator-url-triage-adversarial-2026-08-04.yaml",
+  "dockerMaven": "NOT_RUN: read-only URL/source triage only",
+  "teamEngine": "NOT_RUN: read-only URL/source triage only",
+  "iutMutation": "NOT_RUN: no IUT mutation"
+}

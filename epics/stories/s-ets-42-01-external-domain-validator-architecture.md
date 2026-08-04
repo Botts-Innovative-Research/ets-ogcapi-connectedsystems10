@@ -58,6 +58,20 @@ SensorML public state on 2026-07-22:
 - `opengeospatial/ets-sensorml30` exists at `d2b2a6308fdf48f113f7c7faed6712dc05e33130`, but it is an ETS scaffold, not a reusable validator module.
 - The ETS must not depend directly on `ets-sensorml30`; ask FCU/OGC for the private/unpublished library coordinates or propose extracting `sensorml30-validator`.
 
+SensorML URL refresh on 2026-08-04:
+
+- User supplied <https://github.com/opengeospatial/ets-sensorml30> as the
+  SensorML validator URL.
+- Fresh triage confirms `main` remains
+  `d2b2a6308fdf48f113f7c7faed6712dc05e33130`; the repository has one branch,
+  no tags, artifact `org.opengis.cite:ets-sensorml30:0.1-SNAPSHOT`, bundled
+  SensorML/SWE JSON schemas, `BaseJsonSchemaValidatorTest`, and one enabled
+  PhysicalSystem TestNG test.
+- It is useful upstream source evidence, but it is still not a drop-in
+  reusable validator dependency analogous to `swecommon30-validator`.
+  Directly importing the suite jar remains out of bounds until it is split or
+  wrapped behind a source-pinned backend with parity/runtime-closure review.
+
 ## Provisional Architecture
 
 Add a local adapter layer when implementation begins:

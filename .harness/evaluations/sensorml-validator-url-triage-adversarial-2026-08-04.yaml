@@ -1,0 +1,154 @@
+verdict: APPROVE
+confidence: 0.95
+reviewer: Raze
+review_type: adversarial
+generated_at_utc: "2026-08-04T02:15:54Z"
+user_instruction: >-
+  Review only the current SensorML validator URL triage change set for the
+  user-provided URL https://github.com/opengeospatial/ets-sensorml30.
+
+reviewed_scope:
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - epics/stories/s-ets-42-01-external-domain-validator-architecture.md
+  - _bmad/traceability.md
+  - ops/status.md
+  - ops/changelog.md
+  - ops/test-results.md
+  - ops/known-issues.md
+  - ops/test-results/external-validator-library-research-2026-07-22.md
+  - ops/test-results/sensorml-validator-url-triage-2026-08-04/
+
+review_constraints_observed:
+  docker: NOT_RUN
+  maven: NOT_RUN
+  teamengine: NOT_RUN
+  iut_mutation: NOT_RUN
+  network_writes: NOT_RUN
+  allowed_lightweight_commands_used:
+    - date
+    - git status --short
+    - git diff
+    - find
+    - sed
+    - nl
+    - rg
+    - python3 json/path parsing
+    - sha256sum -c
+
+findings: []
+
+required_fixes: []
+
+evidence:
+  upstream_fidelity:
+    status: PASS
+    details:
+      - >-
+        Evidence records public/not archived repository metadata, default
+        branch main, one branch, and no tags in
+        ops/test-results/sensorml-validator-url-triage-2026-08-04/triage-summary.json:5
+        through :26.
+      - >-
+        Evidence records main at
+        d2b2a6308fdf48f113f7c7faed6712dc05e33130 in
+        ops/test-results/sensorml-validator-url-triage-2026-08-04/triage-summary.json:17
+        through :24, corroborated by upstream-ls-remote.txt.
+      - >-
+        Evidence records artifact org.opengis.cite:ets-sensorml30:0.1-SNAPSHOT,
+        jar packaging, no sensorml30-validator module, teamengine-spi,
+        NetworkNT, and TestNGController in
+        ops/test-results/sensorml-validator-url-triage-2026-08-04/triage-summary.json:40
+        through :49.
+      - >-
+        Evidence records bundled SensorML/SWE schema families and no
+        src/test/java in
+        ops/test-results/sensorml-validator-url-triage-2026-08-04/triage-summary.json:33
+        through :38.
+      - >-
+        java-pom-surface.txt records BaseJsonSchemaValidatorTest,
+        PhysicalSystemTest with enabled @Test, and SimpleProcessTest with a
+        commented @Test at lines 26 through 68.
+  documentation_claims:
+    status: PASS
+    details:
+      - >-
+        Spec records the URL as upstream state, preserves no direct import, and
+        classifies the repository as not a standalone validator module at
+        openspec/capabilities/ets-ogcapi-connectedsystems/spec.md:2107 through
+        :2117.
+      - >-
+        Story records the supplied URL as source evidence but not a drop-in
+        dependency at
+        epics/stories/s-ets-42-01-external-domain-validator-architecture.md:61
+        through :73.
+      - >-
+        Status and test-results explicitly state documentation/read-only triage
+        scope with no Docker, Maven, TeamEngine, IUT mutation, behavior change,
+        dependency import, or exact promotion at ops/status.md:28 through :30
+        and ops/test-results.md:11 through :31.
+      - >-
+        Changelog states the same no-run/no-import/no-mutation boundary at
+        ops/changelog.md:21 through :27.
+      - >-
+        Known issues keeps the no-direct-import rule and parity/runtime/local
+        OSH E2E gate for any future backend replacement at ops/known-issues.md:28
+        through :37.
+  overclaim_checks:
+    status: PASS
+    details:
+      - >-
+        No changed doc hunk claims ets-sensorml30 is a reusable or drop-in
+        SensorML validator dependency.
+      - >-
+        No changed doc hunk claims a new Maven dependency, Java import,
+        TeamEngine/Docker/Maven execution, IUT mutation, behavior change, or
+        exact promotion for this URL triage.
+      - >-
+        _bmad/traceability.md:78 still contains pre-existing CP-018 validation
+        and E2E closure language for the existing provisional adapter. The new
+        URL sentence does not claim those gates were rerun for triage.
+  secret_hygiene:
+    status: PASS
+    details:
+      - >-
+        Credential/token/key scan over changed hunks returned no hits.
+      - >-
+        Evidence-directory scan returned only github-repo.json temp_clone_token:
+        null and SWE schema filenames allowedTokens1.json/allowedTokens2.json;
+        no credential value, token, private key, Authorization header, or bearer
+        secret was found.
+  evidence_completeness:
+    status: PASS
+    details:
+      - >-
+        Required evidence files are present with no extras or missing artifacts.
+      - >-
+        Python JSON parsing succeeded for github-repo.json, github-branches.json,
+        github-tags.json, triage-summary.json, and verification-summary.json.
+      - >-
+        sha256sum -c repo-evidence-manifest.sha256 verifies all listed evidence
+        files, and the manifest includes ./verification-summary.json at line 16.
+      - >-
+        verification-summary.json records jsonParse, artifactPresence,
+        triageSourceCheck, noImportOverclaimCheck, gitDiffCheck, manifestCheck,
+        and manifestIncludesVerificationSummary as true, while Docker Maven,
+        TeamEngine, and IUT mutation are explicitly NOT_RUN.
+
+residual_risk:
+  - >-
+    The upstream repository can change after the archived 2026-08-04T02:05:22Z
+    evidence snapshot; this review verifies the change set against the archived
+    snapshot, not a live mutable future state.
+  - >-
+    The single traceability row is dense and combines prior CP-018 implementation
+    closure with the URL triage sentence. Other scoped docs correctly fence the
+    triage as read-only/no-run, so no required fix is assigned.
+
+changed_by_reviewer:
+  changed_only_report_file: false
+  files:
+    - .harness/evaluations/sensorml-validator-url-triage-adversarial-2026-08-04.yaml
+    - ops/metrics.md
+  reason_not_only_report_file: >-
+    AGENTS.md requires per-turn timing in ops/metrics.md; that metrics update is
+    not part of the reviewed change set.

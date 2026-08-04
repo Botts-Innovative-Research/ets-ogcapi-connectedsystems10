@@ -2,6 +2,31 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-04 - SensorML validator URL triage
+
+**Triggered by user instruction**: "Here is the URL for the SensorML validator/
+https://github.com/opengeospatial/ets-sensorml30"
+
+- Verified the supplied `opengeospatial/ets-sensorml30` URL using GitHub,
+  `git ls-remote`, and a shallow source clone.
+- Archived evidence under
+  `ops/test-results/sensorml-validator-url-triage-2026-08-04/`.
+- Confirmed upstream `main` is
+  `d2b2a6308fdf48f113f7c7faed6712dc05e33130`, the repository has one branch,
+  no tags, bundled SensorML/SWE schemas, `BaseJsonSchemaValidatorTest`, and one
+  enabled PhysicalSystem TestNG test.
+- Confirmed the Maven artifact remains
+  `org.opengis.cite:ets-sensorml30:0.1-SNAPSHOT`; no standalone
+  `sensorml30-validator` module is present.
+- Updated REQ-ETS-VALIDATOR-001, S-ETS-42-01, traceability, status,
+  test-results, known issues, and the external-validator research artifact to
+  treat the URL as official upstream source evidence, not a direct runtime
+  dependency.
+- No Java/TestNG behavior change, dependency import, Docker/Maven/TeamEngine
+  run, IUT mutation, or exact promotion occurred.
+- Raze returned `APPROVE 0.95` with no required fixes in
+  `.harness/evaluations/sensorml-validator-url-triage-adversarial-2026-08-04.yaml`.
+
 ## 2026-08-03 - Sprint 80 connected-systems-go upstream filing handoff
 
 **Triggered by user instruction**: "Do the next thing" after Sprint 79.

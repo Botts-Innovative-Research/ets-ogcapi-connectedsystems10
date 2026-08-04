@@ -1,0 +1,16 @@
+./artifact-presence.txt: OK
+./git-diff-check.exitcode: OK
+./git-diff-check.txt: OK
+./github-branches.json: OK
+./github-repo.json: OK
+./github-tags.json: OK
+./java-file-list.txt: OK
+./java-pom-surface.txt: OK
+./json-parse.txt: OK
+./no-import-overclaim-check.txt: OK
+./source-file-list.txt: OK
+./source-head.txt: OK
+./triage-source-check.txt: OK
+./triage-summary.json: OK
+./upstream-ls-remote.txt: OK
+./verification-summary.json: OK

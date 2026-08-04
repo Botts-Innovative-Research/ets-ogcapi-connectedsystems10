@@ -1,0 +1,16 @@
+55bb6b08d50f1dcc3607539ae2ff6cfe1bd30ebca7e61d3eac3319141096b527  ./artifact-presence.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./git-diff-check.exitcode
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./git-diff-check.txt
+1fd466376db8c60e66ad987343ffa2d093a7970391d7559d04d15c9f781de4a8  ./github-branches.json
+4362159e9525433657ec9fdd5173f3cf29ce069cf77290cbedf521b74c7b03fc  ./github-repo.json
+2ba33ca0557f1bb5b7ba88d67f9d0093c7185a36ec51fe2b7bd9372d3e001d6d  ./github-tags.json
+d99303f9212ac9e211e3bc9bba0cf9e872eec752dfcf967df74754046d6f19bf  ./java-file-list.txt
+a35e6c60ad43d8ad64e5bd31bfa2a0a6f09a8e91e57ab141db8dad6deca277c4  ./java-pom-surface.txt
+6de27eb158ab1aca214b29f186ffd5ca186f35ea0d3fc371036721323543039c  ./json-parse.txt
+e9937c441b01d16cce2a3c8e5e07b5c21372ac8cc5dabe09be1fb4e9b058b49f  ./no-import-overclaim-check.txt
+a68798807c224d200be239f237c97445022e6ddcd7d701ceaa3704080efc75b6  ./source-file-list.txt
+d51d3555772bdc4f89c333d047bb22fcd4d87d996e446a13aad144d1e7e8c185  ./source-head.txt
+e76cd32bc326fac9034b0a658be2b5097096799bcf493b9fb70d5a831c273509  ./triage-source-check.txt
+28d91c536443afd549ee7f070758736dad6c8383800a3be6d45a2132bd304dcc  ./triage-summary.json
+7fc81ed517c57318fd5c444496d9e13a84529082fd2778fb3c0f2222ba4780ec  ./upstream-ls-remote.txt
+951ace1c4cea9fe27a5b5aae5a4643f24b1cb83b1f6f182197b36ae385890fb1  ./verification-summary.json

@@ -1,0 +1,1 @@
+PASS: docs record official source evidence without claiming a drop-in validator dependency or implementation change

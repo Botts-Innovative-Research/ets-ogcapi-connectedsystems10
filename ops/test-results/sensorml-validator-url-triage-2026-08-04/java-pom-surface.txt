@@ -1,0 +1,68 @@
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/resources/org/opengis/cite/sensorml30/testng.xml:18:      <class name="org.opengis.cite.sensorml30.SuitePreconditions" />
+/tmp/ets-sensorml30-triage.1AUYtQ/pom.xml:13:  <artifactId>ets-sensorml30</artifactId>
+/tmp/ets-sensorml30-triage.1AUYtQ/pom.xml:19:  <url>http://opengeospatial.github.io/ets-sensorml30/</url>
+/tmp/ets-sensorml30-triage.1AUYtQ/pom.xml:32:    <connection>scm:git:https://github.com/opengeospatial/ets-sensorml30.git</connection>
+/tmp/ets-sensorml30-triage.1AUYtQ/pom.xml:33:    <developerConnection>scm:git:git@github.com:opengeospatial/ets-sensorml30.git</developerConnection>
+/tmp/ets-sensorml30-triage.1AUYtQ/pom.xml:34:    <url>https://github.com/opengeospatial/ets-sensorml30</url>
+/tmp/ets-sensorml30-triage.1AUYtQ/pom.xml:39:    <url>https://github.com/opengeospatial/ets-sensorml30/issues</url>
+/tmp/ets-sensorml30-triage.1AUYtQ/pom.xml:123:              <mainClass>org.opengis.cite.sensorml30.TestNGController</mainClass>
+/tmp/ets-sensorml30-triage.1AUYtQ/pom.xml:363:      <url>scm:git:git@github.com:opengeospatial/ets-sensorml30.git</url>
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/TestRunArg.java:6:public enum TestRunArg {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/CommonFixture.java:27: * A supporting base class that sets up a common test fixture. These configuration methods
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/CommonFixture.java:30:public class CommonFixture {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/TestFailureListener.java:18:public class TestFailureListener extends TestListenerAdapter {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/TestNGController.java:31:public class TestNGController implements TestSuiteController {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/TestNGController.java:77:        TestNGController controller = new TestNGController(testRunArgs.getOutputDir());
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/TestNGController.java:86:    public TestNGController() {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/TestNGController.java:98:    public TestNGController(String outputDir) {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/TestNGController.java:105:        URL tngSuite = TestNGController.class.getResource("testng.xml");
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/SuitePreconditions.java:13:public class SuitePreconditions {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/ReusableEntityFilter.java:14:public class ReusableEntityFilter extends ClientFilter {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/Namespaces.java:11:public class Namespaces {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/SuiteAttribute.java:14:public enum SuiteAttribute {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/ETSAssert.java:33:public class ETSAssert {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/CommandLineArguments.java:27:public class CommandLineArguments {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/ErrorMessageKeys.java:9:public class ErrorMessageKeys {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:10:import com.networknt.schema.JsonSchemaFactory;
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:11:import com.networknt.schema.JsonSchema;
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:15:public class BaseJsonSchemaValidatorTest {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:33:    public JsonSchema getJsonSchemaFromClasspath2(String name) {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:34:        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:38:    public JsonSchema getJsonSchemaFromClasspath(String name) {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:39:        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:45:    public JsonSchema getJsonSchemaFromStringContent(String schemaContent) {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:46:        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:50:    public JsonSchema getJsonSchemaFromUrl(String uri) throws URISyntaxException {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:51:        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:55:    public JsonSchema getJsonSchemaFromJsonNode(JsonNode jsonNode) {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:56:        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:67:    public JsonSchema getJsonSchemaFromJsonNodeAutomaticVersion(JsonNode jsonNode) {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:68:        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersionDetector.detect(jsonNode));
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:92:    public JsonSchema getSchema(String schemaName) throws IOException {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/BaseJsonSchemaValidatorTest.java:98:        JsonSchema schema = getJsonSchemaFromJsonNodeAutomaticVersion(schemaNode);
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/ErrorMessage.java:7: * Utility class for retrieving and formatting localized error messages that
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/ErrorMessage.java:10:public class ErrorMessage {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/TestSuiteLogger.java:7: * Logging utility class that provides simple access to the JDK Logging API. Set
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/TestSuiteLogger.java:14:public class TestSuiteLogger {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/JsonUtils.java:9:public class JsonUtils {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/TestRunListener.java:17:public class TestRunListener implements IExecutionListener {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/ValidationUtils.java:28: * A utility class that provides convenience methods to support schema
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/ValidationUtils.java:31:public class ValidationUtils {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/physicalsystem/PhysicalSystemTest.java:5:import com.networknt.schema.JsonSchema;
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/physicalsystem/PhysicalSystemTest.java:6:import com.networknt.schema.JsonSchemaFactory;
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/physicalsystem/PhysicalSystemTest.java:9:import org.opengis.cite.sensorml30.BaseJsonSchemaValidatorTest;
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/physicalsystem/PhysicalSystemTest.java:22:public class PhysicalSystemTest extends CommonFixture {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/physicalsystem/PhysicalSystemTest.java:49:    @Test(description = "Implements Abstract Test A.33 (/conf/model/physicalSystem/definition)")
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/physicalsystem/PhysicalSystemTest.java:59:            BaseJsonSchemaValidatorTest tester = new BaseJsonSchemaValidatorTest();
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/physicalsystem/PhysicalSystemTest.java:62:            JsonSchema schema = tester.getJsonSchemaFromUrl("https://raw.githubusercontent.com/opengeospatial/ets-sensorml30/refs/heads/main/src/main/resources/org/opengis/cite/sensorml30/jsonschema/sensorML/3.0/json/PhysicalSystem.json");
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/SuiteFixtureListener.java:32:public class SuiteFixtureListener implements ISuiteListener {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/ClientUtils.java:34:public class ClientUtils {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/NamespaceBindings.java:15:public class NamespaceBindings implements NamespaceContext {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/URIUtils.java:27:public class URIUtils {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/util/XMLUtils.java:57:public class XMLUtils {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/simpleprocess/SimpleProcessTest.java:4:import com.networknt.schema.JsonSchema;
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/simpleprocess/SimpleProcessTest.java:6:import org.opengis.cite.sensorml30.BaseJsonSchemaValidatorTest;
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/simpleprocess/SimpleProcessTest.java:18:public class SimpleProcessTest extends CommonFixture {
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/simpleprocess/SimpleProcessTest.java:45:    //@Test(description = "Implements Abstract Test A.19 (/conf/model/simpleProcess/definition)")
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/simpleprocess/SimpleProcessTest.java:55:            BaseJsonSchemaValidatorTest tester = new BaseJsonSchemaValidatorTest();
+/tmp/ets-sensorml30-triage.1AUYtQ/src/main/java/org/opengis/cite/sensorml30/simpleprocess/SimpleProcessTest.java:58:            JsonSchema schema = tester.getJsonSchemaFromUrl(schemaToApply);

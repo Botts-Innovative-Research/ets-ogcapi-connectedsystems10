@@ -2100,7 +2100,20 @@ configured non-dedicated IUT
 - **Priority**: MUST before full SWE Common or SensorML validation closure.
 - **Status**: IMPLEMENTED. The source-pinned SWE Common adapter and the provisional SensorML adapter are both active behind ETS-owned boundaries. Candidate `a593953d8d79d977649db3077696148e90ffb44a` passes clean Docker Maven `729/0/0/3`, exact-image runtime and security probes, schema parity, credential/sabotage/hygiene gates, and unmodified-local-OSH E2E. Final SensorML Raze approved at `0.99` confidence with no required actions. Future replacement of the provisional SensorML backend by a reproducible FCU/OGC module is an architecture evolution, not an open requirement for the current adapter closure.
 - **Description**: The ETS SHALL prefer reusable OGC-owned SWE Common 3.0 and SensorML 3.0 validator modules over long-term homegrown domain-schema validation when those modules are available as reproducible artifacts or source-pinned prebuilds. External validators SHALL be consumed through a thin Connected Systems adapter layer. The adapter MAY delegate pure domain schema validation, but this ETS SHALL retain CS API endpoint discovery, candidate selection, `/conformance` and prerequisite gating, exact media-type evidence, Connected Systems-specific mapping assertions, TestNG pass/fail/skip policy, no-mutation safety, TeamEngine report integration, and TeamEngine 6 runtime packaging discipline.
-- **Upstream state on 2026-07-22**: `opengeospatial/ets-swecommon30` PR 10 exposes `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT` on branch `issue-9-swecommon-validation-module` at commit `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`, but the artifact is not published to Maven Central. No public SensorML validator module attributable to `FCU-GIS-Luke` was found; `opengeospatial/ets-sensorml30` is a public ETS scaffold at commit `d2b2a6308fdf48f113f7c7faed6712dc05e33130`, not a reusable validator dependency.
+- **Upstream state**: On 2026-07-22, `opengeospatial/ets-swecommon30`
+  PR 10 exposed `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT` on
+  branch `issue-9-swecommon-validation-module` at commit
+  `3ba75ceabe57cea85f4a8513c59e0f90e386ba96`, but the artifact was not
+  published to Maven Central. On 2026-08-04, the user supplied
+  `https://github.com/opengeospatial/ets-sensorml30` as the SensorML validator
+  URL; fresh triage confirmed public `main` at
+  `d2b2a6308fdf48f113f7c7faed6712dc05e33130`, one branch, no tags, bundled
+  SensorML/SWE schemas, `BaseJsonSchemaValidatorTest`, and an enabled
+  `PhysicalSystemTest`. The repository still exposes the executable suite
+  artifact `org.opengis.cite:ets-sensorml30:0.1-SNAPSHOT`, not a standalone
+  `sensorml30-validator` module. Direct import remains disallowed; use it only
+  as source evidence or an extraction/parity target until a reproducible
+  reusable validator module exists.
 - **Replacement boundary**: The first SWE implementation SHALL retain local Connected Systems wrapper-schema validation, extract each validated `recordSchema`, and pass that pure SWE component to `swecommon30-validator` through the adapter. Local format, encoding, media-type, mapping, binding, and PASS/SKIP assertions remain authoritative during this dual-validation stage. Local SWE validation SHALL be removed only after the external validator alone proves parity and supports required format assertions plus JSON, Text, and Binary encoding schemas. Sprint 58 SHALL replace minimal SensorML shape checks with full validation through `ConnectedSystemsSensorMlValidatorAdapter`. Until a reusable public FCU/OGC module exists, its provisional backend SHALL use the already pinned bundled SensorML schema graph with Draft 2020-12 format assertions. A later upstream module may replace only that backend after parity and diagnostic review. The ETS SHALL NOT depend directly on another TeamEngine ETS jar such as `ets-swecommon30` or `ets-sensorml30` to obtain domain validation.
 - **Rationale**: Reusing OGC-owned domain validators reduces duplicated schema logic and keeps SWE Common/SensorML semantics aligned across CITE suites, but importing another suite or unreviewed dependency closure could reintroduce TeamEngine classloader failures and false PASS behavior.
 - **Maps to**: PRD FR-ETS-23, FR-ETS-40, FR-ETS-41, FR-ETS-42, FR-ETS-54, NFR-ETS-11.

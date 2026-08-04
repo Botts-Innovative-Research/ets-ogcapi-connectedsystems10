@@ -1,6 +1,6 @@
 # Known Issues — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T14:30Z
+Last updated: 2026-08-04T02:05Z
 
 ## Scope Corrections (2026-07-23)
 
@@ -25,6 +25,16 @@ Last updated: 2026-08-03T14:30Z
   issue tooling (`gh` absent, `GH_TOKEN`/`GITHUB_TOKEN` unset). The package is
   ready under `ops/outreach/`, and no upstream issue URL should be claimed
   until authenticated filing succeeds.
+- The user-supplied SensorML validator URL,
+  <https://github.com/opengeospatial/ets-sensorml30>, is confirmed as the
+  official upstream SensorML ETS source, not as a reusable validator module.
+  Current triage at `d2b2a6308fdf48f113f7c7faed6712dc05e33130` finds
+  `org.opengis.cite:ets-sensorml30:0.1-SNAPSHOT`, TeamEngine/TestNG suite
+  packaging, bundled schemas, `BaseJsonSchemaValidatorTest`, and no
+  `sensorml30-validator` module. Do not import the suite jar directly; replace
+  the provisional SensorML backend only after an upstream validator split or a
+  source-pinned backend/extraction story passes parity, diagnostics,
+  runtime-closure, and local OSH E2E review.
 - Sprint 74 readiness audit confirms all 47 remaining mutation-bound released
   ATS procedures remain candidate. Direct primary local OSH evidence records
   `GET=1`, `OPTIONS=25`, `unsafeMethodsIssued=[]`; populated disposable OSH

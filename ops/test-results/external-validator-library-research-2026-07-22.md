@@ -53,6 +53,41 @@ The public SensorML candidate is an ETS scaffold, not a reusable validator libra
 
 The user's note that FCU-GIS-Luke is working on a SensorML library may still be correct, but the library is not publicly discoverable from current primary sources. It may be private, unpublished, in a fork without public visibility, or not yet pushed.
 
+### 2026-08-04 URL Refresh
+
+User supplied <https://github.com/opengeospatial/ets-sensorml30> as the
+SensorML validator URL. A fresh read-only triage archived evidence under
+`ops/test-results/sensorml-validator-url-triage-2026-08-04/`.
+
+Observed state:
+
+- GitHub repository is public, not archived, default branch `main`, with two
+  open issues reported by the GitHub API.
+- `main` remains `d2b2a6308fdf48f113f7c7faed6712dc05e33130`; there is one
+  branch and no tags.
+- POM artifact remains `org.opengis.cite:ets-sensorml30:0.1-SNAPSHOT` with
+  `teamengine-spi`, NetworkNT JSON Schema, and TestNG/TeamEngine suite
+  packaging. No `sensorml30-validator` module or artifact coordinate is
+  present.
+- The repository includes SensorML and SWE Common JSON Schema resources under
+  `src/main/resources/org/opengis/cite/sensorml30/jsonschema/`.
+- Java code includes `BaseJsonSchemaValidatorTest`; `PhysicalSystemTest` is
+  enabled in `testng.xml`, while `SimpleProcessTest` has its `@Test`
+  annotation commented out in the observed source.
+- GitHub API license metadata reports `NOASSERTION`; the POM and repository
+  license file declare Apache License 2.0.
+
+Updated decision:
+
+The URL is the official upstream SensorML ETS source and should be tracked, but
+it is still not a drop-in reusable validator module. The Connected Systems ETS
+must not import `ets-sensorml30` directly into its TeamEngine runtime. The
+practical next action is to ask OGC maintainers whether a
+`sensorml30-validator` module analogous to `swecommon30-validator` is planned,
+or to propose a source-pinned extraction/backend story with parity tests,
+diagnostic review, dependency closure, and local OSH E2E before replacing the
+current provisional SensorML backend.
+
 ## Local Code To Replace Or Wrap
 
 Replace or delegate when stable reusable validators exist:

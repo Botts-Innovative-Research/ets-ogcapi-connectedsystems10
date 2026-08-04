@@ -1,0 +1,9 @@
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/upstream-ls-remote.txt
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/github-repo.json
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/github-branches.json
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/github-tags.json
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/source-head.txt
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/source-file-list.txt
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/java-file-list.txt
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/java-pom-surface.txt
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/triage-summary.json

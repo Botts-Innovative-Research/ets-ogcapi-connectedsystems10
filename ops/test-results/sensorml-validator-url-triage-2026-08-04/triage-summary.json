@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "sensorml-validator-url-triage-v1",
+  "generatedAt": "2026-08-04T02:05:22Z",
+  "userProvidedUrl": "https://github.com/opengeospatial/ets-sensorml30",
+  "repository": {
+    "fullName": "opengeospatial/ets-sensorml30",
+    "htmlUrl": "https://github.com/opengeospatial/ets-sensorml30",
+    "private": false,
+    "archived": false,
+    "disabled": false,
+    "defaultBranch": "main",
+    "openIssuesCount": 2,
+    "pushedAt": "2026-05-22T14:33:57Z",
+    "updatedAt": "2026-07-12T17:50:02Z",
+    "license": "NOASSERTION"
+  },
+  "source": {
+    "mainCommit": "d2b2a6308fdf48f113f7c7faed6712dc05e33130",
+    "branchCount": 1,
+    "branches": [
+      {
+        "name": "main",
+        "commit": "d2b2a6308fdf48f113f7c7faed6712dc05e33130"
+      }
+    ],
+    "tagCount": 0,
+    "topLevelFiles": [
+      ".gitignore",
+      "LICENSE.txt",
+      "README.adoc",
+      "pom.xml"
+    ],
+    "mainJavaFileCount": 26,
+    "hasTestJavaDirectory": false,
+    "resourceSchemaFamilies": [
+      "src/main/resources/org/opengis/cite/sensorml30/jsonschema/sensorML/3.0/json/",
+      "src/main/resources/org/opengis/cite/sensorml30/jsonschema/sweCommon/3.0/json/"
+    ]
+  },
+  "maven": {
+    "groupId": "org.opengis.cite",
+    "artifactId": "ets-sensorml30",
+    "version": "0.1-SNAPSHOT",
+    "packaging": "jar",
+    "hasSensorml30ValidatorModule": false,
+    "hasTeamEngineSpiDependency": true,
+    "hasNetworkntDependency": true,
+    "mainClass": "org.opengis.cite.sensorml30.TestNGController"
+  },
+  "observedApiSurface": {
+    "hasBaseJsonSchemaValidatorTest": true,
+    "hasEnabledPhysicalSystemTest": true,
+    "simpleProcessTestIsCommentedInSource": true,
+    "testngSuiteIncludesPhysicalSystemPackage": true
+  },
+  "triageVerdict": "official_ets_repo_not_drop_in_reusable_validator_module",
+  "recommendedUse": "use as upstream source evidence and possible extraction/parity target; do not import ets-sensorml30 suite jar directly into the Connected Systems ETS runtime",
+  "nextAction": "ask OGC maintainers whether a sensorml30-validator module analogous to swecommon30-validator is planned, or propose a source-pinned backend/extraction story with parity and runtime-closure review"
+}

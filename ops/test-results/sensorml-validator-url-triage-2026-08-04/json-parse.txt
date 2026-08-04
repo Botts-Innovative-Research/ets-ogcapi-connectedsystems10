@@ -1,0 +1,4 @@
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/github-repo.json
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/github-branches.json
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/github-tags.json
+PASS: ops/test-results/sensorml-validator-url-triage-2026-08-04/triage-summary.json

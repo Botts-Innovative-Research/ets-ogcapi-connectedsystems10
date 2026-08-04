@@ -1,6 +1,35 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-03T14:30Z
+Last updated: 2026-08-04T02:18Z
+
+## SensorML Validator URL Triage - 2026-08-04
+
+- User supplied <https://github.com/opengeospatial/ets-sensorml30> as the
+  SensorML validator URL.
+- Current upstream evidence:
+  public `opengeospatial/ets-sensorml30` `main` is
+  `d2b2a6308fdf48f113f7c7faed6712dc05e33130`; GitHub API reports the
+  repository is public/not archived, has one branch, no tags, and two open
+  issues.
+- Source surface:
+  POM artifact is `org.opengis.cite:ets-sensorml30:0.1-SNAPSHOT`, with
+  TeamEngine/TestNG suite packaging, `teamengine-spi`, NetworkNT JSON Schema,
+  bundled SensorML/SWE schemas, `BaseJsonSchemaValidatorTest`, and one enabled
+  `PhysicalSystemTest` in `testng.xml`.
+- Decision:
+  this URL is useful official upstream source evidence, but it is not a
+  drop-in reusable validator module like `swecommon30-validator`. Do not import
+  the `ets-sensorml30` suite jar directly into this ETS runtime. A future
+  replacement of the provisional SensorML backend should either use an upstream
+  `sensorml30-validator` split or a source-pinned backend/extraction story with
+  parity, diagnostics, runtime-closure, and local OSH E2E review.
+- Evidence directory:
+  `ops/test-results/sensorml-validator-url-triage-2026-08-04/`.
+- Verification:
+  JSON parse PASS, artifact presence PASS, evidence manifest PASS, and
+  `git diff --check` PASS. Raze returned `APPROVE 0.95` with no required
+  fixes in
+  `.harness/evaluations/sensorml-validator-url-triage-adversarial-2026-08-04.yaml`.
 
 ## Sprint 80 Implemented - connected-systems-go Upstream Filing Handoff
 

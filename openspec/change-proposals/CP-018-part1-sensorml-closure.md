@@ -25,7 +25,7 @@ and leaves three released procedures unmapped.
 No public reusable SensorML validator module is available from FCU-GIS-Luke.
 The public `opengeospatial/ets-sensorml30` artifact is an executable TeamEngine
 suite, not a validator library, and SHALL NOT be imported. The already pinned
-released SensorML schema graph is sufficient for a provisional local backend
+released SensorML schema graph is sufficient for a first-party local backend
 behind the adapter boundary requested by `REQ-ETS-VALIDATOR-001`.
 
 ## Changed Requirement
@@ -97,7 +97,7 @@ without TestNG, `ETSAssert`, requirement URIs, or verdict policy. Operational
 schema/configuration failures SHALL propagate separately from IUT validation
 diagnostics.
 
-The provisional backend SHALL use NetworkNT Draft 2020-12 validation with
+The first-party backend SHALL use NetworkNT Draft 2020-12 validation with
 format assertions against the bundled released SensorML single/collection
 schema graph. This replaces duplicated homegrown shape/schema checks now. A
 future reproducible FCU/OGC validator may replace only the backend after

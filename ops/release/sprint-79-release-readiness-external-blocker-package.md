@@ -53,7 +53,7 @@ promoted by this package.
 | Positive mutable-IUT E2E for remaining candidates | Blocked | No known open-source IUT currently meets declaration, method, lifecycle, cleanup, and TeamEngine requirements. |
 | Reproducible double-build release check | Not run in Sprint 79 | Remains a release gate before tagging or Maven Central publication. |
 | SWE Common validator dependency | Ready | Existing source-pinned validator integration is confirmed by Libby's branch triage and focused adapter tests. |
-| SensorML reusable validator replacement | Deferred external dependency | Current provisional adapter is implemented; future reusable module replacement remains outside this package. |
+| SensorML reusable validator replacement | First-party ETS path active; reusable module deferred | Current first-party adapter/backend is implemented and maintained; future reusable module replacement remains outside this package. |
 | Three-implementation roster | Blocked | No three passing implementations are secured. |
 | Maven Central / OSSRH publication | Deferred | `REQ-ETS-CITE-001` remains beta-milestone-bound. |
 | CITE SC submission ticket | Deferred | `REQ-ETS-CITE-003` remains unfiled. |

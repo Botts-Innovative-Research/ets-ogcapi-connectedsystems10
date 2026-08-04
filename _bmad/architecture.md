@@ -1,6 +1,6 @@
 # Architecture — OGC API Connected Systems ETS (TeamEngine)
 
-> Version: 2.0.72 | Status: Living Document | Last reconciled: 2026-08-03 (Sprint 72 mutation readiness audit and populated OSH DNS alias)
+> Version: 2.0.73 | Status: Living Document | Last reconciled: 2026-08-04 (Sprint 81 SensorML first-party validator hardening)
 > **Supersedes v1.0** (preserved verbatim at `_bmad/architecture-v1-frozen.md`).
 > v1.0 was web-app-shaped (Next.js + Node + browser UI). v2.0 reflects the user pivot
 > 2026-04-27 to a Java/TestNG Executable Test Suite for OGC TeamEngine.
@@ -8,6 +8,14 @@
 > **Authority**: this document binds the Generator (Dana). Where the PRD or capability spec
 > conflicts with an ADR or with this file's section, the ADR is authoritative for the decision
 > in question and Sam (orchestrator) reconciles back to the PRD/spec at the next planning cycle.
+
+> Sprint 81 reconciliation: the SensorML validator path is maintained as a
+> first-party ETS backend until a reusable upstream validator module exists. The
+> adapter boundary remains backend-neutral, diagnostics remain immutable and
+> sorted, all eight released SensorML entry schemas now have explicit valid and
+> invalid corpus coverage, and source-watch criteria define the minimum bar for
+> replacing the backend. This sprint does not alter OSH or TeamEngine runtime
+> ownership.
 
 > Sprint 72 reconciliation: the populated local OSH workflow now archives a
 > read-only mutation-readiness audit after provisioning and before TeamEngine
@@ -737,7 +745,9 @@ returned `APPROVE` at `0.99` confidence with no required actions. S-ETS-41-01
 and the SWE Common S-ETS-42-02 increment are complete. At that Sprint 42 gate,
 the overall `REQ-ETS-VALIDATOR-001` remained partial because SensorML
 integration was deferred until FCU/OGC provided a reusable module. Sprint 58
-supersedes that status with the provisional SensorML adapter boundary.
+superseded that status with an ETS-owned SensorML adapter boundary, and
+Sprint 81 hardens it as the maintained first-party path until a reusable OGC
+module exists.
 
 **2026-07-22** — v2.0.9 documents the external SWE Common/SensorML validator architecture and the plan to replace local schema validation through adapters once upstream artifacts are reproducible.
 

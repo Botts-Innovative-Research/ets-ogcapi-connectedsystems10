@@ -432,7 +432,10 @@ Per @Test:
 
 ### External domain validator boundary
 
-S-ETS-42-01 adds a provisional boundary for reusable SWE Common 3.0 and SensorML 3.0 validators. These libraries are domain validators, not TeamEngine execution owners.
+S-ETS-42-01 introduced the adapter boundary for reusable SWE Common 3.0 and
+SensorML 3.0 validators. These libraries are domain validators, not TeamEngine
+execution owners. Sprint 81 keeps SensorML validation on the first-party ETS
+backend until a reusable validator module exists.
 
 Proposed local shape:
 
@@ -488,20 +491,20 @@ schema-resource lookup and relocated NetworkNT execute on TeamEngine's actual
 classpath.
 
 `ConnectedSystemsSensorMlValidatorAdapter` now provides the stable ETS-owned
-boundary over a provisional local backend and the pinned released SensorML
-schema graph. As of 2026-07-30, no public reusable SensorML validator library
-is visible under `FCU-GIS-Luke`, and `opengeospatial/ets-sensorml30` is an
-executable ETS rather than a dependency module. The ETS must not import another
-TeamEngine ETS jar to obtain SensorML validation. A reproducible future
-FCU/OGC validator may replace the backend after parity and diagnostic-contract
-review without changing the TestNG or Connected Systems mapping layers.
+boundary over the maintained first-party local backend and the pinned released
+SensorML schema graph. As of 2026-08-04, no public reusable SensorML validator
+module exists, and `opengeospatial/ets-sensorml30` is an executable ETS rather
+than a dependency module. The ETS must not import another TeamEngine ETS jar to
+obtain SensorML validation. A reproducible future OGC validator module may
+replace the backend after parity and diagnostic-contract review without
+changing the TestNG or Connected Systems mapping layers.
 
 SWE Common replacement is incremental. First add adapter parity tests for
 current valid/invalid schema fixtures and dual-validate extracted
 `recordSchema` objects without changing existing PASS/SKIP behavior. Only
 after external-only parity, format assertions, and complete encoding support
 may local SWE validation be removed. SensorML full JSON Schema validation is
-active through the provisional adapter. Connected Systems mapping assertions,
+active through the first-party adapter. Connected Systems mapping assertions,
 relation-type checks, parent-child Observation/Command binding evidence,
 TestNG dependency wiring, and TeamEngine reporting remain in this ETS.
 

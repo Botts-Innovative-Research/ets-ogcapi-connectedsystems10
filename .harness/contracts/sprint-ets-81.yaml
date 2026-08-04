@@ -1,0 +1,46 @@
+sprint: ets-81
+story: S-ETS-81-01
+title: SensorML first-party validator hardening
+status: complete_raze_approved_with_concerns
+trigger: User approved Plan 2 after confirming connected-systems-go outreach is handled separately.
+scope:
+  requirement: REQ-ETS-VALIDATOR-001
+  change_type: test_and_documentation_hardening
+  exact_promotion: false
+  mutation_policy: no_iut_mutation
+success_criteria:
+  critical:
+    - id: SCENARIO-ETS-VALIDATOR-SENSORML-FIRST-PARTY-HARDENING-001
+      expect: Valid and invalid fixture corpora cover every closed SensorML schema target and diagnostics remain deterministic, immutable, and backend-neutral.
+    - id: SCENARIO-ETS-VALIDATOR-SENSORML-SOURCE-WATCH-001
+      expect: The executable ets-sensorml30 suite jar remains excluded and future upstream replacement criteria are explicit.
+    - id: no_behavior_overclaim
+      expect: Docs do not claim Java/TestNG procedure behavior changes, exact promotion, new dependency import, or upstream validator availability.
+  normal:
+    - id: ops_reconciliation
+      expect: CP, story, contract, OpenSpec, traceability, status, changelog, and test-results agree.
+    - id: source_watch_artifact
+      expect: Machine-readable source-watch criteria are archived under ops/test-results.
+required_verification:
+  - focused_docker_maven_sensor_ml_validator
+  - full_docker_maven
+  - local_osh_teamengine_smoke
+  - json_parse
+  - yaml_parse
+  - git_diff_check
+  - added_content_secret_scan
+  - raze_adversarial_review
+verification_results:
+  focused_docker_maven_sensor_ml_validator: PASS 9 tests, 0 failures, 0 errors, 0 skipped
+  full_docker_maven: PASS_WITH_SKIPS 792 tests, 0 failures, 0 errors, 3 skipped
+  local_osh_teamengine_smoke: NON_GREEN_IUT_RESULT 275 total, 23 passed, 20 failed, 232 skipped
+  json_parse: PASS
+  yaml_parse: PASS
+  git_diff_check: PASS
+  added_content_secret_scan: PASS
+  raze_adversarial_review: APPROVE_WITH_CONCERNS 0.91, required_fixes=[]
+non_goals:
+  - Do not add external SensorML dependencies.
+  - Do not mutate any IUT beyond the standard read-only smoke gate.
+  - Do not promote candidate mappings or change exact counts.
+  - Do not claim a reusable upstream SensorML validator exists.

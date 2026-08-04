@@ -1,6 +1,46 @@
 # Operational Status — OGC API Connected Systems ETS
 
-Last updated: 2026-08-04T02:24Z
+Last updated: 2026-08-04T04:18Z
+
+## Sprint 81 Implemented - SensorML First-Party Validator Hardening
+
+- User instruction: "Do Plan 2. The creator of connected-systems-go has been
+  contacted separately."
+- Scope:
+  harden the ETS-owned SensorML backend as the maintained first-party path
+  until a reusable upstream SensorML validator module exists. No external
+  SensorML dependency was added, no ATS mappings were promoted, and no OSH or
+  TeamEngine source/binary was modified.
+- Code:
+  `ConnectedSystemsSensorMlValidatorAdapter` and its deployed runtime probe now
+  use first-party wording; the adapter boundary remains backend-neutral.
+- Tests:
+  `VerifyConnectedSystemsSensorMlValidatorAdapter` now covers valid and invalid
+  fixtures for all eight closed `SensorMlSchema` targets, immutable sorted
+  diagnostics, null backend result/diagnostic operational failures, public API
+  leakage checks, and absence of executable `ets-sensorml30` suite classes as
+  validator dependencies.
+- Evidence directory:
+  `ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/`.
+- Verification:
+  focused Docker Maven PASS `9/0/0/0`; full Docker Maven BUILD SUCCESS with
+  `792` tests, `0` failures, `0` errors, and `3` skips. Static JSON/YAML,
+  `git diff --check`, stale active wording, and added-content secret checks
+  passed.
+- E2E:
+  local OSH TeamEngine smoke ran against
+  `http://field-hub-osh-1:8081/sensorhub/api` and exited non-green with
+  `275 total / 23 passed / 20 failed / 232 skipped`. Failures are concentrated
+  in the current local OSH IUT's missing `application/sml+json` read
+  advertising, SensorML endpoint parsing, and Procedure/Deployment/Property
+  collection metadata gaps.
+- Raze:
+  `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]` in
+  `.harness/evaluations/sprint-ets-81-adversarial.yaml`. The low durability
+  recommendation was addressed by archiving
+  `local-osh-teamengine-container.txt` in the sprint evidence directory.
+- Next:
+  push Sprint 81 closeout.
 
 ## SensorML Validator URL Triage - 2026-08-04
 

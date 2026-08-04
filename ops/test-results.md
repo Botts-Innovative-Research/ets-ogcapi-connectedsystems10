@@ -1,8 +1,39 @@
 # Test Results — OGC API Connected Systems ETS
 
-Last updated: 2026-08-04T02:24Z
+Last updated: 2026-08-04T04:18Z
 
 ## Current Sprint Evidence
+
+Sprint 81 SensorML first-party validator hardening:
+
+- Trigger: user approved Plan 2 and confirmed connected-systems-go outreach is
+  handled separately.
+- Scope: Java test and documentation hardening only. No external SensorML
+  dependency, no direct import of `ets-sensorml30`, no ATS promotion, and no
+  OSH or TeamEngine source/binary modification.
+- Evidence directory:
+  `ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/`.
+- Source-watch artifact:
+  `source-watch-criteria.json` records replacement criteria for any future
+  reusable upstream SensorML validator module.
+- Focused verification:
+  `VerifyConnectedSystemsSensorMlValidatorAdapter` passed `9` tests with `0`
+  failures, `0` errors, and `0` skips.
+- Full Maven:
+  Docker Maven completed BUILD SUCCESS with `792` tests, `0` failures, `0`
+  errors, and `3` skips.
+- Local OSH TeamEngine smoke:
+  executed against `http://field-hub-osh-1:8081/sensorhub/api` and exited
+  non-green with `275 total / 23 passed / 20 failed / 232 skipped`. The failure
+  summary is archived in `local-osh-smoke-summary.json`; the full TestNG XML is
+  archived as `local-osh-smoke-results.xml`; the TeamEngine container log is
+  archived as `local-osh-teamengine-container.txt`.
+- Static verification:
+  JSON parse PASS, YAML parse PASS, `git diff --check` PASS, active stale
+  first-party wording scan PASS, and added-content secret scan PASS.
+- Raze:
+  `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]` in
+  `.harness/evaluations/sprint-ets-81-adversarial.yaml`.
 
 SensorML validator URL triage:
 

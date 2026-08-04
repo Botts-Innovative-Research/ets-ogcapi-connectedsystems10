@@ -2098,7 +2098,7 @@ configured non-dedicated IUT
 
 #### REQ-ETS-VALIDATOR-001: External SWE Common and SensorML Validator Integration
 - **Priority**: MUST before full SWE Common or SensorML validation closure.
-- **Status**: IMPLEMENTED. The source-pinned SWE Common adapter and the first-party SensorML adapter are both active behind ETS-owned boundaries. Candidate `a593953d8d79d977649db3077696148e90ffb44a` passes clean Docker Maven `729/0/0/3`, exact-image runtime and security probes, schema parity, credential/sabotage/hygiene gates, and unmodified-local-OSH E2E. Final SensorML Raze approved at `0.99` confidence with no required actions. Future replacement of the ETS-owned SensorML backend by a reproducible FCU/OGC module is an architecture evolution, not an open requirement for the current adapter closure.
+- **Status**: IMPLEMENTED; SPRINT 81 RAZE APPROVED WITH CONCERNS. The source-pinned SWE Common adapter and the first-party SensorML adapter are both active behind ETS-owned boundaries. Candidate `a593953d8d79d977649db3077696148e90ffb44a` previously passed clean Docker Maven `729/0/0/3`, exact-image runtime and security probes, schema parity, credential/sabotage/hygiene gates, and unmodified-local-OSH E2E. Sprint 81 hardens the first-party SensorML backend with explicit valid/invalid corpus coverage, diagnostic invariants, and source-watch criteria while preserving the no-direct-import boundary. Sprint 81 focused Docker Maven passed `9/0/0/0`, full Docker Maven passed with skips at `792/0/0/3`, and local OSH TeamEngine executed honestly non-green at `275 total / 23 passed / 20 failed / 232 skipped` because the current local OSH IUT still lacks required SensorML read advertising and collection metadata. Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`. Future replacement of the ETS-owned SensorML backend by a reproducible FCU/OGC module is an architecture evolution, not an open requirement for the current adapter closure.
 - **Description**: The ETS SHALL prefer reusable OGC-owned SWE Common 3.0 and SensorML 3.0 validator modules over long-term homegrown domain-schema validation when those modules are available as reproducible artifacts or source-pinned prebuilds. Because no public reusable SensorML 3.0 validator currently exists, this ETS SHALL build and maintain its own SensorML validation backend behind `ConnectedSystemsSensorMlValidatorAdapter` until an upstream module is made and passes parity, diagnostics, dependency-closure, and E2E review. External validators SHALL be consumed through a thin Connected Systems adapter layer. The adapter MAY delegate pure domain schema validation, but this ETS SHALL retain CS API endpoint discovery, candidate selection, `/conformance` and prerequisite gating, exact media-type evidence, Connected Systems-specific mapping assertions, TestNG pass/fail/skip policy, no-mutation safety, TeamEngine report integration, and TeamEngine 6 runtime packaging discipline.
 - **Upstream state**: On 2026-07-22, `opengeospatial/ets-swecommon30`
   PR 10 exposed `org.opengis.cite:swecommon30-validator:0.1-SNAPSHOT` on
@@ -2175,12 +2175,30 @@ configured non-dedicated IUT
 **AND** it SHALL NOT import `opengeospatial/ets-sensorml30` directly as a dependency while that project remains a TeamEngine ETS scaffold rather than a reusable validator module.
 
 #### SCENARIO-ETS-VALIDATOR-SENSORML-PROVISIONAL-ADAPTER-001 (CRITICAL)
+Historical identifier retained for traceability; the current adapter is the
+maintained first-party SensorML backend.
+
 **GIVEN** no reusable public FCU/OGC SensorML validator module is available
 **WHEN** the released Connected Systems SensorML procedures require complete domain schema validation
 **THEN** the ETS invokes an ETS-owned adapter over the pinned bundled SensorML schema graph
 **AND** the adapter accepts a closed schema target and Jackson tree, returns immutable deterministic ETS-owned diagnostics, and exposes no TestNG or requirement-URI policy
 **AND** schema resource or configuration failures remain operational errors
 **AND** a future reusable validator can replace the ETS-owned backend without changing TestNG procedures or Connected Systems mapping checks.
+
+#### SCENARIO-ETS-VALIDATOR-SENSORML-FIRST-PARTY-HARDENING-001 (CRITICAL)
+**GIVEN** no reusable public SensorML 3.0 validator module is available
+**WHEN** the ETS maintains its first-party SensorML backend
+**THEN** a valid and invalid fixture corpus SHALL cover every closed `SensorMlSchema` target
+**AND** every valid fixture SHALL return no diagnostics
+**AND** every invalid fixture SHALL return immutable, sorted, deterministic ETS-owned diagnostics
+**AND** null backend results or null diagnostics SHALL remain operational failures rather than IUT conformance diagnostics
+**AND** the adapter public contract SHALL expose neither NetworkNT validator result types nor TestNG verdict policy.
+
+#### SCENARIO-ETS-VALIDATOR-SENSORML-SOURCE-WATCH-001 (NORMAL)
+**GIVEN** `opengeospatial/ets-sensorml30` is official upstream ETS source evidence but not a reusable validator dependency
+**WHEN** the project watches for a future reusable SensorML validator
+**THEN** the executable suite jar SHALL NOT be imported or visible as a validator dependency
+**AND** replacement criteria SHALL require source or artifact coordinates, commit/tag provenance, a reusable non-TestNG API, compatible licensing, parity against the ETS valid/invalid corpus, backend-neutral diagnostics, dependency/runtime closure, and local OSH E2E review before the first-party backend is replaced.
 
 #### SCENARIO-ETS-VALIDATOR-HOMEGROWN-REPLACEMENT-001 (NORMAL)
 **GIVEN** the ETS has local SWE Common schema helpers and minimal SensorML shape checks
@@ -5070,7 +5088,7 @@ relation is present.
 
 #### SCENARIO-ETS-PART1-013-VALIDATOR-ADAPTER-001 (CRITICAL)
 **GIVEN** a SensorML document and one of the eight released schema targets
-**WHEN** the provisional adapter validates it
+**WHEN** the first-party adapter validates it
 **THEN** valid content returns no diagnostics and invalid content returns immutable deterministic ETS-owned diagnostics
 **AND** NetworkNT types, TestNG, requirement URIs, and verdict policy do not cross the adapter API
 **AND** missing schema or configuration faults remain operational errors.
@@ -6493,7 +6511,7 @@ and Codex JSONL parsing.
   focused Raze recheck returned `APPROVE_WITH_CONCERNS 0.94` with no blocking
   fixes; implementation commit `bb3935e` is pushed.
 - REQ-ETS-PART2-013 (Observation/Command binding cross-class closure) - partially implemented by Sprint 32 Generator as an internal project closure item, not a standalone OGC `/conf/observation-binding` class. `Part2ObservationCommandBindingTests` and helper regressions are implemented with group `part2binding`, no default fixture seeding, and GET-only positive closure guards. Sprints 33-38 add inline status/result regressions, local OSH seed/tasking fixture evidence, parent schema `f=json` request shaping, stream metadata and format assertions, and populated parent-candidate selection. Sprint 40's external OSH patch is retained as historical audit evidence only and is not an approved implementation path under CP-003/ADR-012. Full positive populated-IUT binding closure remains unclaimed and must proceed through ETS changes or an unmodified IUT.
-- REQ-ETS-VALIDATOR-001 (External SWE Common and SensorML Validator Integration) - IMPLEMENTED. The SWE Common source-pinned adapter remains final-Raze approved, and Sprint 58 completes the first-party SensorML adapter over the pinned released schema graph because no reusable external SensorML validator exists. The backend-neutral SensorML API returns immutable deterministic ETS-owned diagnostics, keeps operational failures separate, validates all eight entry schemas, and is replaceable by a future reproducible FCU/OGC module without changing TestNG procedures or Connected Systems mappings. Exact candidate `a593953d8d79d977649db3077696148e90ffb44a` passes full Maven `729/0/0/3`, 8-entry/63-transitive schema parity, exact-image adapter and external-fetch security probes, unmodified-local-OSH E2E with zero writes, and final Raze `APPROVED 0.99`.
+- REQ-ETS-VALIDATOR-001 (External SWE Common and SensorML Validator Integration) - IMPLEMENTED; SPRINT 81 RAZE APPROVED WITH CONCERNS. The SWE Common source-pinned adapter remains final-Raze approved, and Sprint 58 completes the first-party SensorML adapter over the pinned released schema graph because no reusable external SensorML validator exists. The backend-neutral SensorML API returns immutable deterministic ETS-owned diagnostics, keeps operational failures separate, validates all eight entry schemas, and is replaceable by a future reproducible FCU/OGC module without changing TestNG procedures or Connected Systems mappings. Sprint 81 adds explicit valid/invalid corpus coverage for every closed SensorML target, public contract checks, null-diagnostic operational failure coverage, and source-watch criteria for any future upstream replacement. Sprint 81 verification: focused Docker Maven `9/0/0/0`, full Docker Maven `792/0/0/3`, and local OSH TeamEngine smoke `275 total / 23 passed / 20 failed / 232 skipped` with failures concentrated in the current local OSH IUT's SensorML read advertising and collection metadata gaps. Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`.
 - REQ-ETS-TEAMENGINE-006 (Local OSH Primary Development Target) - specified by Sprint 32 planning. Development E2E uses the self-provisioned local OSH IUT on `field-hub_default`; GeoRobotix is advisory-only and no longer the default development target.
 - REQ-ETS-FIXTURES-001..003 (spec-trap port from `csapi_compliance/tests/fixtures/spec-traps/`) → epic-ets-06 parallel sprint after Sprint 1 closes.
 - REQ-ETS-CITE-001..003 — calendar-bound, not sprint-bound. Beta milestone gates these.

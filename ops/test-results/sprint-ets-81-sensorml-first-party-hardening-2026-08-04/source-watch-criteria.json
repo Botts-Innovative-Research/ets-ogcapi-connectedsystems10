@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "sensorml-source-watch-criteria-v1",
+  "generatedAt": "2026-08-04T03:51:19Z",
+  "userDirection": "Build and maintain the ETS-owned SensorML validator until an upstream reusable module is made.",
+  "currentExternalState": {
+    "reusableSensorMlValidatorAvailable": false,
+    "etsSensorMl30Role": "official upstream ETS source evidence only",
+    "etsSensorMl30DirectImportAllowed": false,
+    "etsSensorMl30ObservedCommit": "d2b2a6308fdf48f113f7c7faed6712dc05e33130"
+  },
+  "firstPartyBackend": {
+    "adapter": "org.opengis.cite.ogcapiconnectedsystems10.validation.sensorml.ConnectedSystemsSensorMlValidatorAdapter",
+    "backend": "org.opengis.cite.ogcapiconnectedsystems10.validation.sensorml.LocalSensorMlSchemaBackend",
+    "closedTargets": [
+      "SYSTEM",
+      "SYSTEM_COLLECTION",
+      "DEPLOYMENT",
+      "DEPLOYMENT_COLLECTION",
+      "PROCEDURE",
+      "PROCEDURE_COLLECTION",
+      "PROPERTY",
+      "PROPERTY_COLLECTION"
+    ],
+    "maintainedUntil": "A reusable upstream SensorML validator module is available and passes all replacement gates."
+  },
+  "replacementGates": [
+    "Public source repository or accepted artifact coordinates are available.",
+    "Commit, branch or tag provenance is reproducible and source-pinned.",
+    "The module exposes a reusable non-TestNG validator API.",
+    "The module is not the executable ets-sensorml30 TeamEngine suite jar.",
+    "License and dependency closure are compatible with the ETS runtime.",
+    "Valid and invalid fixture parity matches the first-party corpus for every closed SensorML target.",
+    "Diagnostics are deterministic, immutable from the ETS boundary, and backend-neutral.",
+    "Operational schema or configuration failures remain suite errors, not IUT conformance failures.",
+    "TeamEngine 6 final-image runtime closure shows no duplicate or conflicting dependency families.",
+    "Local OSH TeamEngine E2E runs against a real IUT and records exact totals before replacement is accepted."
+  ],
+  "disallowedShortcuts": [
+    "Importing org.opengis.cite:ets-sensorml30 as a library dependency.",
+    "Counting source similarity as validator parity without valid and invalid fixture results.",
+    "Letting NetworkNT, TestNG or upstream validator runtime result types escape the adapter API.",
+    "Removing the first-party backend before a replacement passes parity, diagnostics, runtime and E2E review."
+  ]
+}

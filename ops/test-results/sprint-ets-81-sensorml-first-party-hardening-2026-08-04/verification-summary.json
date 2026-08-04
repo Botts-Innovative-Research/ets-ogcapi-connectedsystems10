@@ -1,0 +1,75 @@
+{
+  "sprint": "ets-81",
+  "story": "S-ETS-81-01",
+  "generatedAtUtc": "2026-08-04T04:18:30Z",
+  "verification": {
+    "springJavaFormatApply": {
+      "status": "PASS",
+      "log": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/spring-javaformat-apply.txt"
+    },
+    "focusedDockerMavenSensorMlValidator": {
+      "status": "PASS",
+      "totals": {
+        "testsRun": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "log": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/focused-sensorml-validator-maven-final.txt",
+      "note": "final run on current source state."
+    },
+    "fullDockerMaven": {
+      "status": "PASS_WITH_SKIPS",
+      "totals": {
+        "testsRun": 792,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "log": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/full-maven.txt"
+    },
+    "localOshTeamEngineSmoke": {
+      "status": "NON_GREEN_EXISTING_IUT_LIMITATION",
+      "totals": {
+        "total": 275,
+        "passed": 23,
+        "failed": 20,
+        "skipped": 232
+      },
+      "stdoutLog": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke.txt",
+      "xml": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke-results.xml",
+      "summary": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke-summary.json",
+      "containerLog": "ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-teamengine-container.txt",
+      "externalOutputDir": "/tmp/ets-ogcapi-connectedsystems10-sprint81-local-osh-results-20260804T0403Z",
+      "failureGroups": [
+        "deployments",
+        "procedures",
+        "propertydefinitions",
+        "sensorml"
+      ]
+    },
+    "jsonParse": {
+      "status": "PASS"
+    },
+    "yamlParse": {
+      "status": "PASS",
+      "parser": "PyYAML"
+    },
+    "gitDiffCheck": {
+      "status": "PASS"
+    },
+    "staleProvisionalSensorMlActiveWordingScan": {
+      "status": "PASS"
+    },
+    "addedContentSecretScan": {
+      "status": "PASS"
+    }
+  },
+  "raze": {
+    "status": "APPROVE_WITH_CONCERNS",
+    "confidence": 0.91,
+    "requiredFixes": [],
+    "report": ".harness/evaluations/sprint-ets-81-adversarial.yaml",
+    "postReviewAction": "Archived the TeamEngine container log as a tracked .txt artifact under the sprint evidence directory after Raze's non-blocking durability recommendation."
+  }
+}

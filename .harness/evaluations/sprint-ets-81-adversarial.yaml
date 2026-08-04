@@ -1,0 +1,65 @@
+verdict: APPROVE_WITH_CONCERNS
+confidence: 0.91
+reviewed_at_utc: "2026-08-04T04:17:04Z"
+reviewer: Raze
+sprint: ets-81
+story: S-ETS-81-01
+title: SensorML first-party validator hardening
+reviewed_scope:
+  - AGENTS.md project workflow and Raze charter
+  - _bmad/agents/adversarial-reviewer.md
+  - .harness/contracts/sprint-ets-81.yaml
+  - openspec/change-proposals/CP-041-sensorml-first-party-validator-hardening.md
+  - epics/stories/s-ets-81-01-sensorml-first-party-validator-hardening.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/spec.md
+  - openspec/capabilities/ets-ogcapi-connectedsystems/design.md
+  - _bmad/traceability.md
+  - _bmad/architecture.md
+  - ops/status.md
+  - ops/test-results.md
+  - ops/changelog.md
+  - src/main/java/org/opengis/cite/ogcapiconnectedsystems10/validation/sensorml/
+  - src/test/java/org/opengis/cite/ogcapiconnectedsystems10/validation/sensorml/VerifyConnectedSystemsSensorMlValidatorAdapter.java
+  - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/
+findings:
+  - id: RAZE-ETS-81-001
+    severity: medium
+    status: non_blocking_concern
+    summary: Local OSH TeamEngine E2E remains non-green, but the sprint records it honestly and does not claim IUT conformance.
+    evidence:
+      - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/verification-summary.json:31 records NON_GREEN_EXISTING_IUT_LIMITATION with 275 total, 23 passed, 20 failed, 232 skipped.
+      - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke-summary.json:3 records the same totals.
+      - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke-summary.json:11 shows SensorML failures caused by unsupported application/json endpoint parsing rather than a green validator claim.
+      - ops/status.md:30 documents the E2E as non-green with missing application/sml+json advertising and collection metadata gaps.
+      - ops/test-results.md:25 documents the same non-green smoke totals.
+    impact: Sprint 81 may close as validator hardening, but the evidence must not be reused as a release-ready local OSH conformance pass.
+    required_fix: none
+  - id: RAZE-ETS-81-002
+    severity: low
+    status: non_blocking_concern
+    summary: The durable E2E archive contains stdout, XML, summary, and checksums, but one checksum entry references an external /tmp container log.
+    evidence:
+      - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/verification-summary.json:39 archives stdout, XML, and summary inside the repo evidence directory.
+      - ops/test-results/sprint-ets-81-sensorml-first-party-hardening-2026-08-04/local-osh-smoke-artifacts.sha256:2 references /tmp/ets-ogcapi-connectedsystems10-sprint81-local-osh-results-20260804T0403Z/s-ets-01-03-teamengine-container-2026-08-04.log.
+    impact: Core Sprint 81 evidence is present, but future forensic review may lose container log context if /tmp is cleaned.
+    required_fix: none
+evidence:
+  - Focused Docker Maven final log reports VerifyConnectedSystemsSensorMlValidatorAdapter PASS with 9 tests, 0 failures, 0 errors, 0 skipped.
+  - Full Docker Maven log reports BUILD SUCCESS with 792 tests, 0 failures, 0 errors, 3 skipped.
+  - Independent cheap parse confirmed JSON/YAML evidence and TestNG XML totals: total 275, passed 23, failed 20, skipped 232.
+  - git diff --check returned no whitespace errors during review.
+  - Added-content secret scan found only documentation mentions of the words secret/check and no credential material.
+  - VerifyConnectedSystemsSensorMlValidatorAdapter.java:44 verifies valid and invalid corpora cover every SensorMlSchema enum target.
+  - VerifyConnectedSystemsSensorMlValidatorAdapter.java:55 rejects every invalid fixture with non-empty sorted backend-neutral diagnostics.
+  - VerifyConnectedSystemsSensorMlValidatorAdapter.java:95 checks the adapter method signatures for backend/TestNG/JUnit leakage.
+  - VerifyConnectedSystemsSensorMlValidatorAdapter.java:108 verifies representative ets-sensorml30 executable suite classes are absent from the validator dependency path.
+  - VerifyConnectedSystemsSensorMlValidatorAdapter.java:144 keeps null backend diagnostics as operational failures.
+  - ConnectedSystemsSensorMlValidatorAdapter.java:8 keeps the public boundary first-party and backend-neutral.
+  - SensorMlValidationResult.java:14 canonicalizes diagnostics with null rejection, sorting, de-duplication, and immutability.
+  - .harness/contracts/sprint-ets-81.yaml:33 aligns verification results with ops/test-results and the evidence artifacts.
+  - openspec/change-proposals/CP-041-sensorml-first-party-validator-hardening.md:37 states no new dependency, no IUT mutation, and no upstream reusable module claim.
+  - epics/stories/s-ets-81-01-sensorml-first-party-validator-hardening.md:53 records focused/full Maven, local OSH smoke, and static checks honestly.
+required_fixes: []
+recommendations:
+  - Before release packaging, copy the TeamEngine container log referenced from /tmp into the Sprint 81 evidence directory or remove the non-durable checksum line.
+  - Keep the Sprint 81 E2E result described as non-green IUT evidence, not as an overall conformance pass.

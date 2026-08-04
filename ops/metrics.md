@@ -12,6 +12,7 @@
 
 | Turn | Start (UTC) | End (UTC) | Duration | Description |
 |------|-------------|-----------|----------|-------------|
+| 459 | 2026-08-04T03:51:19Z | 2026-08-04T04:27:16Z | 35m57s | User instructed: "Do Plan 2. The creator of connected-systems-go has been contacted separately." Completed Sprint 81 SensorML first-party validator hardening: added CP-041, S-ETS-81-01, Sprint 81 contract, source-watch criteria, expanded `VerifyConnectedSystemsSensorMlValidatorAdapter` to cover all eight valid/invalid SensorML schema targets, backend-neutral diagnostics, null diagnostics, public API leakage, and `ets-sensorml30` suite-class exclusion; reconciled OpenSpec/design/architecture/traceability/status/test-results/changelog/release docs. Formatter PASS; focused Docker Maven `9/0/0/0`; full Docker Maven `792/0/0/3`; local OSH TeamEngine smoke honestly non-green `275 total / 23 passed / 20 failed / 232 skipped`; JSON/YAML/diff/secret/stale-wording/checksum gates PASS. Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`; the low durability recommendation was addressed by archiving the TeamEngine container log. Subagent token and duration metadata unavailable from tool result. Session metrics extraction reports 537,826,636 total tokens, $1239.51 total cost, and 3766 API usage records. |
 | 458 | 2026-08-04T03:43:02Z | 2026-08-04T03:43:18Z | 0m16s | User asked "What's next?" Checked clean `main`, current ops handoff, known issues, and coverage/blocker summaries. No product code, spec, evidence, Docker, Maven, TeamEngine, IUT mutation, Raze, or push-affecting project behavior changed; answer identified the next practical path from current docs. |
 | 457 | 2026-08-04T02:24:35Z | 2026-08-04T02:36:02Z | 11m27s | User concluded that there is no external SensorML validator and directed that the ETS must build its own until one is made. Reconciled OpenSpec, S-ETS-42-01, traceability, status, known-issues, test-results, and changelog to make the ETS-owned SensorML backend the maintained first-party path while preserving the direct-import ban on `ets-sensorml30`. Lightweight `git diff --check`, YAML parse, stale-wording scan, and added-line secret scan passed. Raze initial review returned `APPROVE_WITH_CONCERNS 0.93`; the LOW stale OpenSpec wording concern was fixed, focused recheck returned `APPROVE 0.96`, and `required_fixes=[]`. No Java/TestNG behavior change, dependency import, Docker, Maven, TeamEngine, IUT mutation, upstream availability claim, or exact promotion occurred. Subagent token metadata was unavailable. |
 | 456 | 2026-08-04T02:05:22Z | 2026-08-04T02:21:40Z | 16m18s | User supplied the SensorML validator URL `https://github.com/opengeospatial/ets-sensorml30`. Triaged the official upstream ETS source, archived GitHub/API/source evidence, reconciled REQ-ETS-VALIDATOR-001, S-ETS-42-01, traceability, ops status/changelog/test-results/known-issues, and the external-validator research artifact, and preserved the conclusion that this URL is source evidence rather than a drop-in `sensorml30-validator` dependency. Lightweight JSON/YAML/manifest/diff/secret-added-content checks passed. Mandatory Raze review wrote `.harness/evaluations/sensorml-validator-url-triage-adversarial-2026-08-04.yaml` with verdict `APPROVE 0.95`, `required_fixes=[]`; subagent token metadata was unavailable. No Docker, Maven, TeamEngine, public/network writes, IUT mutation, dependency import, Java behavior change, or exact promotion occurred. |
@@ -593,9 +594,9 @@
 
 ## Session Summary
 
-### Current Codex Session (2026-08-01/04 ETS continuation through SensorML first-party validator direction)
+### Current Codex Session (2026-08-01/04 ETS continuation through Sprint 81 SensorML first-party validator hardening)
 
-Extracted after SensorML first-party validator direction reconciliation with
+Extracted after Sprint 81 closeout with
 `python3 scripts/session-metrics.py`.
 Auto-discovery selected
 `rollout-2026-07-31T03-34-10-019fb718-4ae0-7601-a699-7adbbcec5d77.jsonl` for
@@ -603,13 +604,13 @@ the current checkout.
 
 | Category | Tokens | Cost |
 |----------|--------|------|
-| Input | 21,324,457 | $319.87 |
-| Output | 1,770,642 | $132.80 |
+| Input | 22,131,355 | $331.97 |
+| Output | 1,823,153 | $136.74 |
 | Cache Write | 0 | $0.00 |
-| Cache Read | 496,209,920 | $744.31 |
-| **TOTAL** | **519,305,019** | **$1196.98** |
+| Cache Read | 513,872,128 | $770.81 |
+| **TOTAL** | **537,826,636** | **$1239.51** |
 
-API calls (usage records): 3640
+API calls (usage records): 3766
 
 ### Current Codex Session `7ab527bc` (2026-07-20 Sprint 41 TeamEngine 6 planning and implementation handoff)
 

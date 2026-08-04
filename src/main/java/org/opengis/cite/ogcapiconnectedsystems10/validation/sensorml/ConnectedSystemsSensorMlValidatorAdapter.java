@@ -6,7 +6,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Stable ETS boundary around the provisional SensorML validator backend.
+ * Stable ETS boundary around the first-party SensorML validator backend.
  *
  * <p>
  * The public contract intentionally exposes neither NetworkNT nor TestNG types so a

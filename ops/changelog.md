@@ -2,6 +2,33 @@
 
 Rolling 2-week work log. Remove entries older than 2 weeks.
 
+## 2026-08-04 - Sprint 81 SensorML first-party validator hardening
+
+**Triggered by user instruction**: "Do Plan 2. The creator of
+connected-systems-go has been contacted separately."
+
+- Added CP-041, S-ETS-81-01, Sprint 81 contract metadata, and source-watch
+  criteria for replacing the first-party SensorML backend only after a reusable
+  non-TestNG upstream module proves parity, diagnostics, dependency closure,
+  and local OSH E2E readiness.
+- Hardened `VerifyConnectedSystemsSensorMlValidatorAdapter` with valid and
+  invalid fixture corpus coverage for all eight closed `SensorMlSchema`
+  targets, null backend diagnostic operational failure coverage, public API
+  leakage checks, and an executable `ets-sensorml30` suite-class absence check.
+- Reconciled OpenSpec, design, architecture, traceability, status, and release
+  blocker wording so the ETS-owned SensorML backend is the maintained
+  first-party path until an upstream reusable validator module exists.
+- Verification: focused Docker Maven PASS `9/0/0/0`; full Docker Maven BUILD
+  SUCCESS `792/0/0/3`; JSON/YAML parse PASS; `git diff --check` PASS; active
+  stale wording and added-content secret scans PASS.
+- Local OSH TeamEngine E2E ran against the real self-run OSH IUT and exited
+  honestly non-green at `275 total / 23 passed / 20 failed / 232 skipped`,
+  with failures concentrated in current local OSH SensorML read advertising and
+  collection metadata gaps.
+- Raze returned `APPROVE_WITH_CONCERNS 0.91` with `required_fixes=[]`; the low
+  durability recommendation was addressed by archiving the TeamEngine container
+  log as tracked `.txt` evidence in the sprint evidence directory.
+
 ## 2026-08-04 - SensorML first-party validator direction
 
 **Triggered by user instruction**: "So there is no external SensorML validator.

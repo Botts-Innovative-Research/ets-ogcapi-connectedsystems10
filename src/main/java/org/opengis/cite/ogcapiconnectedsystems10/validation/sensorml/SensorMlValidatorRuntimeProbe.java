@@ -3,7 +3,7 @@ package org.opengis.cite.ogcapiconnectedsystems10.validation.sensorml;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Final-image probe for the provisional SensorML adapter and bundled schemas.
+ * Final-image probe for the first-party SensorML adapter and bundled schemas.
  */
 public final class SensorMlValidatorRuntimeProbe {
 

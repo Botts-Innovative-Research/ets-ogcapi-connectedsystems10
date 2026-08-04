@@ -11,7 +11,7 @@ Triggered by the user's instruction to start the next recommended project step.
 ## Scope
 
 Replace the historical SensorML subset with all fifteen released OGC 23-001
-`/conf/sensorml` procedures and introduce the provisional ETS-owned SensorML
+`/conf/sensorml` procedures and introduce the first-party ETS-owned SensorML
 validator adapter over pinned released schemas.
 
 - Requirements: `REQ-ETS-PART1-013`, `REQ-ETS-VALIDATOR-001`,
